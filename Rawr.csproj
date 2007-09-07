@@ -1,0 +1,179 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A0F124AB-2A3C-488C-A8AB-38FC5444CB37}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rawr</RootNamespace>
+    <AssemblyName>Rawr</AssemblyName>
+    <ApplicationIcon>RawrIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Armory.cs" />
+    <Compile Include="Buffs.cs" />
+    <Compile Include="Calculations.cs" />
+    <Compile Include="Character.cs" />
+    <Compile Include="ComparisonGraph.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ComparisonGraph.Designer.cs">
+      <DependentUpon>ComparisonGraph.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Enchant.cs" />
+    <Compile Include="FormEnterId.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEnterId.Designer.cs">
+      <DependentUpon>FormEnterId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormEnterNameRealm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEnterNameRealm.Designer.cs">
+      <DependentUpon>FormEnterNameRealm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormFillSockets.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormFillSockets.Designer.cs">
+      <DependentUpon>FormFillSockets.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormItemEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormItemEditor.Designer.cs">
+      <DependentUpon>FormItemEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSplash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSplash.Designer.cs">
+      <DependentUpon>FormSplash.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Item.cs" />
+    <Compile Include="ItemButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ItemCache.cs" />
+    <Compile Include="ItemComparison.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ItemComparison.Designer.cs">
+      <DependentUpon>ItemComparison.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ItemIcons.cs" />
+    <Compile Include="ItemTooltip.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ItemTooltip.Designer.cs">
+      <DependentUpon>ItemTooltip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Log.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ComparisonGraph.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ComparisonGraph.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEnterId.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormEnterId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEnterNameRealm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormEnterNameRealm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormFillSockets.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormFillSockets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormItemEditor.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormItemEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMain.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSplash.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormSplash.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ItemComparison.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ItemComparison.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ItemTooltip.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ItemTooltip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Stats.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bugs.txt" />
+    <Content Include="RawrIcon.ico" />
+    <Content Include="ReadMe.txt" />
+    <None Include="Resources\RawrIcon.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
