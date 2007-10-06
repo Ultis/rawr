@@ -179,12 +179,7 @@ namespace Rawr
 			while (panelItems.Controls.Count < ItemCalculations.Length)
 				panelItems.Controls.Add(new ItemSelectorItem());
 			while (panelItems.Controls.Count > ItemCalculations.Length)
-			{
-				Control oldCtrl = panelItems.Controls[panelItems.Controls.Count - 1];
 				panelItems.Controls.RemoveAt(panelItems.Controls.Count - 1);
-				oldCtrl.Dispose();
-				oldCtrl = null;
-			}
 			float maxRating = 0;
 			for (int i = 0; i < ItemCalculations.Length; i++)
 			{
