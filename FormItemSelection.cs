@@ -109,9 +109,10 @@ namespace Rawr
 			this.timerForceActivate.Enabled = true;
 		}
 
-		public void Show(Control ctrl, Character.CharacterSlot slot)
+		public void Show(ItemButton button, Character.CharacterSlot slot)
 		{
-			this.SetAutoLocation(ctrl);
+			_button = button;
+			this.SetAutoLocation(button);
 			this.LoadGearBySlot(slot);
 			base.Show();
 		}
@@ -150,6 +151,7 @@ namespace Rawr
 		}
 
 		private Character.CharacterSlot _characterSlot = (Character.CharacterSlot)(-1);
+		private ItemButton _button;
 		public void LoadGearBySlot(Character.CharacterSlot slot)
 		{
 			if (slot != _characterSlot)
@@ -188,6 +190,7 @@ namespace Rawr
 			{
 				ItemSelectorItem ctrl = panelItems.Controls[i] as ItemSelectorItem;
 				ItemCalculation calc = ItemCalculations[i];
+				calc.Equipped = calc.Item == _button.SelectedItem;
 				ctrl.ItemCalculation = calc;
 				ctrl.Sort = this.Sort;
 				ctrl.HideToolTip();
@@ -211,7 +214,7 @@ namespace Rawr
 
 		public void Select(Item item)
 		{
-			Character[_characterSlot] = item;
+			_button.SelectedItem = item;
 			_characterSlot = (Character.CharacterSlot)(-1);
 			this.Hide();
 		}

@@ -111,9 +111,9 @@ namespace Rawr
 			if (Character != null)
 			{
 				_selectedItem = Character[CharacterSlot];
-				this.Text = string.Empty;
-				this.Image = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem) : null;
 			}
+			this.Text = string.Empty;
+			this.Image = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem) : null;
 		}
 
 		public Item GetItem() { return SelectedItem; }
@@ -128,6 +128,8 @@ namespace Rawr
 			{
 				if (Character != null)
 					Character[CharacterSlot] = value;
+				else
+					_selectedItem = value;
 				UpdateSelectedItem();
 				//foreach (ToolStripMenuItem menuItem in menu.Items)
 				//	menuItem.Checked = (menuItem.Tag == _selectedItem);

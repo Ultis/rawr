@@ -1,4 +1,4 @@
-Rawr Beta 6
+Rawr Beta 6a
 ------------
 Thanks for helping test out Rawr. Since Beta 5, I've had alot of time, but been very busy. Honestly there aren't a ton of new features in Beta 6, but it took me a *ton* of time to get the new tooltips and dropdown menus working properly. Beta 7 should have all the fancy new features I promised, and I really hope to have Beta 7 out much quicker than Beta 6 took. Anyway, as usual, if you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
@@ -18,7 +18,10 @@ FAQ
 
 Version History
 ---------------
-Beta 6:
+Beta 6a:
+ -Fix for editing gems
+
+Beta 6: (private release)
  -Updated a few buffs for Patch 2.2
  -Implemented new ToolTips for items. While not a highly requested change (and functionally there have been no changes), it was necessary in order to implement the next item...
  -Implemented new item selection dropdowns. Instead of clicking on an item slot and getting a dropdown menu, there's now a much more feature rich popup to choose items. I fully intend to flesh this out with more features, but for now you can see what gems are in each item, see the tooltip for it, see the ratings for it, and have the list sorted by ratings/alpha. You can also type a part of the item name in the Filter box, to filter to items containing that text.
