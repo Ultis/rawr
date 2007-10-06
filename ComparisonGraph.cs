@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Rawr
 {
-	public partial class ComparisonGraph : UserControl
+	public partial class ComparisonGraph : UserControl, IItemProvider
 	{
 		private ItemCalculation[] _itemCalculations;
 		public ItemCalculation[] ItemCalculations
@@ -46,31 +46,32 @@ namespace Rawr
 			}
 		}
 
-		public ItemTooltip MoveTooltip(Point offset)
+		public Point GetTooltipLocation(Point offset)
 		{
-			ItemTooltip tooltip = null;
-			foreach (Control ctrl in this.FindForm().Controls)
-				if (ctrl is ItemTooltip)
-				{
-					tooltip = ctrl as ItemTooltip;
-					break;
-				}
-			if (tooltip == null)
-			{
-				tooltip = new ItemTooltip();
-				this.FindForm().Controls.Add(tooltip);
-			}
+			//ItemTooltip tooltip = ItemTooltip.Instance;
+			//foreach (Control ctrl in this.FindForm().Controls)
+			//    if (ctrl is ItemTooltip)
+			//    {
+			//        tooltip = ctrl as ItemTooltip;
+			//        break;
+			//    }
+			//if (tooltip == null)
+			//{
+			//    tooltip = new ItemTooltip();
+			//    this.FindForm().Controls.Add(tooltip);
+			//}
 
-			if (offset != Point.Empty)
-			{
-				System.Drawing.Point p = this.FindForm().PointToClient(this.Parent.PointToScreen(this.Location));
+			//if (offset != Point.Empty)
+			//{
+				System.Drawing.Point p = (this.Parent.PointToScreen(this.Location)); //this.FindForm().PointToClient
 				p.X += 2 + offset.X;
 				p.Y += 2 + offset.Y;
-				tooltip.Location = p;
-			}
-			tooltip.Visible = false;
+				return p;
+				//tooltip.Location = p;
+			//}
+			//tooltip.Visible = false;
 
-			return tooltip;
+			//return tooltip;
 		}
 
 		protected int CompareItemCalculations(ItemCalculation a, ItemCalculation b)
@@ -79,6 +80,8 @@ namespace Rawr
 				return b.MitigationPoints.CompareTo(a.MitigationPoints);
 			else if (Sort == ComparisonSort.Survival)
 				return b.SurvivalPoints.CompareTo(a.SurvivalPoints);
+			else if (Sort == ComparisonSort.Alphabetical)
+				return a.ItemName.CompareTo(b.ItemName);
 			else
 				return b.OverallPoints.CompareTo(a.OverallPoints);
 		}
@@ -94,7 +97,7 @@ namespace Rawr
 			}
 		}
 
-		public enum ComparisonSort { Mitigation, Survival, Overall }
+		public enum ComparisonSort { Mitigation, Survival, Overall, Alphabetical }
 
 		void _scrollBar_Scroll(object sender, ScrollEventArgs e)
 		{
@@ -115,7 +118,10 @@ namespace Rawr
 
 					if (ItemCalculations.Length > 0)
 					{
-						float maxOverallPoints = (float)Math.Ceiling(ItemCalculations[0].OverallPoints);
+						float maxOverallPoints = ItemCalculations[0].OverallPoints;
+						foreach (ItemCalculation calc in ItemCalculations)
+							maxOverallPoints = Math.Max(maxOverallPoints, calc.OverallPoints);
+						maxOverallPoints = (float)Math.Ceiling(maxOverallPoints);
 						float maxScale = 100f;//(float)(Math.Ceiling(ItemCalculations[0].OverallPoints / 400) * 400f);
 						while (maxOverallPoints > maxScale)
 							maxScale = (float)(Math.Ceiling((maxScale * 1.2f) / 800f) * 800f);
@@ -306,12 +312,12 @@ namespace Rawr
 
 		private void ComparisonGraph_MouseLeave(object sender, EventArgs e)
 		{
-			MoveTooltip(Point.Empty).Visible = false;
-			_lastTooltipItem = null;
+			//ItemTooltip.Instance.HideTooltip();
+			HideTooltip();
 		}
 
 		private Point _lastPoint = Point.Empty;
-		private Item _lastTooltipItem = null;
+		//private Item _lastTooltipItem = null;
 		private void ComparisonGraph_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (e.Location != _lastPoint)
@@ -322,23 +328,61 @@ namespace Rawr
 					int itemIndex = (int)Math.Floor(((float)(e.Y - 24f + _scrollBar.Value)) / 36f);
 					if (itemIndex >= 0 && itemIndex < ItemCalculations.Length)
 					{
-						if (ItemCalculations[itemIndex].Item != _lastTooltipItem)
+						if (ItemCalculations[itemIndex].Item != _tooltipItem)
 						{
-							_lastTooltipItem = ItemCalculations[itemIndex].Item;
-							MoveTooltip(new Point(96, 24 + (itemIndex*36) - _scrollBar.Value)).SetItem(ItemCalculations[itemIndex].Item);
+							int tipX = 98;
+							if (Parent.PointToScreen(Location).X + tipX + 249 > SystemInformation.WorkingArea.Right)
+								tipX = -249;
+				
+							ShowTooltip(ItemCalculations[itemIndex].Item, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
+							//ItemTooltip.Instance.SetItem(ItemCalculations[itemIndex].Item, GetTooltipLocation(new Point(96, 24 + (itemIndex * 36) - _scrollBar.Value)));
 						}
 					}
 					else
 					{
-						_lastTooltipItem = null;
-						MoveTooltip(Point.Empty).Visible = false;
+						HideTooltip();
+						//ItemTooltip.Instance.HideTooltip();
 					}
 				}
 				else
 				{
-					_lastTooltipItem = null;
-					MoveTooltip(Point.Empty).Visible = false;
+					HideTooltip();
+					//ItemTooltip.Instance.HideTooltip();
 				}
+			}
+		}
+
+		private void ShowTooltip(Item item, Point location)
+		{
+			if (_tooltipItem != item || _tooltipLocation != location)
+			{
+				_tooltipItem = item;
+				_tooltipLocation = location;
+				ShowHideTooltip();
+			}
+		}
+
+		private void HideTooltip()
+		{
+			if (_tooltipItem != null)
+			{
+				_tooltipItem = null;
+				ShowHideTooltip();
+			}
+		}
+
+		public Item GetItem() { return _tooltipItem; }
+		private Item _tooltipItem = null;
+		private Point _tooltipLocation = Point.Empty;
+		private void ShowHideTooltip()
+		{
+			if (_tooltipItem != null && _tooltipLocation != Point.Empty)
+			{
+				ItemToolTip.Instance.Show("tooltip", this, _tooltipLocation);
+			}
+			else
+			{
+				ItemToolTip.Instance.Hide(this);
 			}
 		}
 	}

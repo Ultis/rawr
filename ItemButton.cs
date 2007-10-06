@@ -2,39 +2,41 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace Rawr
 {
-	public class ItemButton : Button
+	public class ItemButton : Button, IItemProvider
 	{
-		public ItemTooltip Tooltip
+		public Point GetTooltipLocation()
 		{
-			get
-			{
-				ItemTooltip tooltip = null;
-				foreach (Control ctrl in this.FindForm().Controls)
-					if (ctrl is ItemTooltip)
-					{
-						tooltip = ctrl as ItemTooltip;
-						break;
-					}
-				if (tooltip == null)
-				{
-					tooltip = new ItemTooltip();
-					this.FindForm().Controls.Add(tooltip);
-				}
+			//get
+			//{
+				//ItemTooltip tooltip = ItemTooltip.Instance;
+				//foreach (Control ctrl in this.FindForm().Controls)
+				//    if (ctrl is ItemTooltip)
+				//    {
+				//        tooltip = ctrl as ItemTooltip;
+				//        break;
+				//    }
+				//if (tooltip == null)
+				//{
+				//    tooltip = new ItemTooltip();
+				//    this.FindForm().Controls.Add(tooltip);
+				//}
 
-				System.Drawing.Point p = this.FindForm().PointToClient(this.Parent.PointToScreen(this.Location));
+				System.Drawing.Point p = (this.Parent.PointToScreen(this.Location)); //this.FindForm().PointToClient
 				p.X += this.Width + 2;
 				p.Y += 2;
-				tooltip.Location = p;
-				tooltip.Visible = false;
+				//tooltip.Location = p;
+				//tooltip.Visible = false;
 
-				return tooltip;
-			}
+				//return tooltip;
+			//}
+				return p;
 		}
 
-		private ContextMenuStrip menu = new ContextMenuStrip();
+		//private ContextMenuStrip menu = new ContextMenuStrip();
 		public ItemButton()
 		{
 			this.Size = new System.Drawing.Size(70, 70);
@@ -42,21 +44,29 @@ namespace Rawr
 			this.Click += new EventHandler(ItemButton_Click);
 			this.MouseEnter += new EventHandler(ItemButton_MouseEnter);
 			this.MouseLeave += new EventHandler(ItemButton_MouseLeave);
+
+			ItemToolTip.Instance.SetToolTip(this, "");
 		}
 
 		void ItemButton_MouseLeave(object sender, EventArgs e)
 		{
-			Tooltip.Visible = false;
+			ItemToolTip.Instance.Hide(this);
 		}
 
 		void ItemButton_MouseEnter(object sender, EventArgs e)
 		{
-			Tooltip.SetItem(SelectedItem);
+			if (SelectedItem != null)
+			{
+				int tipX = this.Width;
+				if (Parent.PointToScreen(Location).X + tipX + 249 > SystemInformation.WorkingArea.Right)
+					tipX = -249;
+				ItemToolTip.Instance.Show("tooltip", this, tipX, 0);
+			}
 		}
 
 		void ItemButton_Click(object sender, EventArgs e)
 		{
-			menu.Show(this, this.Width, 0);
+			FormItemSelection.Instance.Show(this, CharacterSlot);
 		}
 
 		private Character.CharacterSlot _characterSlot = Character.CharacterSlot.Head;
@@ -66,12 +76,11 @@ namespace Rawr
 			set
 			{
 				_characterSlot = value;
-				Items = Items;
+				//Items = Items;
 			}
 		}
 
 		private Character _character;
-
 		public Character Character
 		{
 			get { return _character; }
@@ -97,6 +106,17 @@ namespace Rawr
 			}
 		}
 
+		public void UpdateSelectedItem()
+		{
+			if (Character != null)
+			{
+				_selectedItem = Character[CharacterSlot];
+				this.Text = string.Empty;
+				this.Image = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem) : null;
+			}
+		}
+
+		public Item GetItem() { return SelectedItem; }
 		private Item _selectedItem;
 		public Item SelectedItem
 		{
@@ -106,60 +126,60 @@ namespace Rawr
 			}
 			set
 			{
-				_selectedItem = value;
-				this.Text = string.Empty;
-				this.Image = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem) : null;
-				foreach (ToolStripMenuItem menuItem in menu.Items)
-					menuItem.Checked = (menuItem.Tag == _selectedItem);
-
 				if (Character != null)
-					Character[CharacterSlot] = SelectedItem;
+					Character[CharacterSlot] = value;
+				UpdateSelectedItem();
+				//foreach (ToolStripMenuItem menuItem in menu.Items)
+				//	menuItem.Checked = (menuItem.Tag == _selectedItem);
+
 			}
 		}
 
-		public Item[] _items = new Item[0];
-		public Item[] Items
-		{
-			get
-			{
-				return _items;
-			}
-			set
-			{
-				_items = value;
-				if (_items == null) _items = new Item[0];
+		//public Item[] _sortedItems = new Item[0];
+		//public Item[] _items = new Item[0];
+		//public Item[] Items
+		//{
+		//    get
+		//    {
+		//        return _items;
+		//    }
+		//    set
+		//    {
+		//        _items = value;
+		//        if (_items == null) _items = new Item[0];
+				
+		//        //_items = new List<Item>(sortedItems.Values).ToArray();
+		//        SortedList<string, Item> sortedItems = new SortedList<string, Item>();
+		//        foreach (Item item in _items)
+		//            if (item.FitsInSlot(CharacterSlot))
+		//                sortedItems.Add(item.Name + item.GemmedId + item.GetHashCode().ToString(), item);
+		//        _sortedItems = new List<Item>(sortedItems.Values).ToArray();
 
-				//_items = new List<Item>(sortedItems.Values).ToArray();
-				SortedList<string, Item> sortedItems = new SortedList<string, Item>();
-				foreach (Item item in _items)
-					if (item.FitsInSlot(CharacterSlot))
-						sortedItems.Add(item.Name + item.GemmedId + item.GetHashCode().ToString(), item);
+		//        //menu.Items.Clear();
+		//        //ToolStripMenuItem menuItem = new ToolStripMenuItem("None");
+		//        //menuItem.Height = 36;
+		//        //menuItem.Click += new EventHandler(menuItem_Click);
+		//        //menuItem.Checked = (SelectedItem == null);
+		//        //menu.Items.Add(menuItem);
+		//        //foreach (Item item in sortedItems.Values)
+		//        //{
+		//        //    //menu.Items.Add(item.ToString(), ItemIcons.GetItemIcon(item, true));
+		//        //    menuItem = new ToolStripMenuItem(item.ToString(), ItemIcons.GetItemIcon(item, true));
+		//        //    menuItem.Height = 36;
+		//        //    menuItem.ImageScaling = ToolStripItemImageScaling.None;
+		//        //    menuItem.Click += new EventHandler(menuItem_Click);
+		//        //    menuItem.Tag = item;
+		//        //    menuItem.Checked = (SelectedItem == item);
+		//        //    menu.Items.Add(menuItem);
+		//        //}
+		//        SelectedItem = _selectedItem;
+		//    }
+		//}
 
-				menu.Items.Clear();
-				ToolStripMenuItem menuItem = new ToolStripMenuItem("None");
-				menuItem.Height = 36;
-				menuItem.Click += new EventHandler(menuItem_Click);
-				menuItem.Checked = (SelectedItem == null);
-				menu.Items.Add(menuItem);
-				foreach (Item item in sortedItems.Values)
-				{
-					//menu.Items.Add(item.ToString(), ItemIcons.GetItemIcon(item, true));
-					menuItem = new ToolStripMenuItem(item.ToString(), ItemIcons.GetItemIcon(item, true));
-					menuItem.Height = 36;
-					menuItem.ImageScaling = ToolStripItemImageScaling.None;
-					menuItem.Click += new EventHandler(menuItem_Click);
-					menuItem.Tag = item;
-					menuItem.Checked = (SelectedItem == item);
-					menu.Items.Add(menuItem);
-				}
-				SelectedItem = _selectedItem;
-			}
-		}
-
-		void menuItem_Click(object sender, EventArgs e)
-		{
-			SelectedItem = (sender as ToolStripMenuItem).Tag as Item;
-		}
+		//void menuItem_Click(object sender, EventArgs e)
+		//{
+		//    SelectedItem = (sender as ToolStripMenuItem).Tag as Item;
+		//}
 	}
 
 

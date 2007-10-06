@@ -256,7 +256,7 @@ namespace Rawr
 
             Stats statsTotal = new Stats();
 			statsTotal.Agility = agiBase + (character.Buffs.BlessingOfKings ? (float)Math.Floor((agiBase * 0.1f) + agiBonus * 1.1f) : agiBonus);
-			statsTotal.Stamina = staBase + (character.Buffs.BlessingOfKings ? (float)Math.Round((staBonus * 0.1f) + staBonus * 1.1f) : staBonus);
+			statsTotal.Stamina = staBase + (character.Buffs.BlessingOfKings ? (float)Math.Round((staBase * 0.1f) + staBonus * 1.1f) : staBonus);
 			//statsTotal.Agility = (float)Math.Round((statsBaseGear.Agility + statsBuffs.Agility) * (character.Buffs.BlessingOfKings ? 1.133f : 1.03f));
             //statsTotal.Stamina = (float)Math.Round((((statsBaseGear.Stamina + statsBuffs.Stamina) * (character.Buffs.BlessingOfKings ? 1.133f : 1.03f)) * 1.5f) - 1f);
 			statsTotal.DefenseRating = statsRace.DefenseRating + statsBaseGear.DefenseRating + statsBuffs.DefenseRating;
@@ -309,6 +309,7 @@ namespace Rawr
                 (buffs.GraceOfAirTotem ?			77f : 0) +
                 (buffs.ImprovedGraceOfAirTotem ?	(float)Math.Floor(77f * 0.15f) : 0) +
                 (buffs.ElixirOfMajorAgility ?		35f : 0) + 
+                (buffs.FlaskOfChromaticWonder ?		18f : 0) + 
                 (buffs.ElixirOfMastery ?			15f : 0) + 
                 (buffs.ScrollOfAgility ?			20f : 0);
             statsTotal.Stamina =
@@ -319,6 +320,7 @@ namespace Rawr
                 (buffs.BloodPact ?					66f : 0) +
                 (buffs.ImprovedBloodPact ?			(float)Math.Floor(66f * 0.3f) : 0) +
                 (buffs.ElixirOfMastery ?			15f : 0) + 
+                (buffs.FlaskOfChromaticWonder ?		18f : 0) + 
                 (buffs.StaminaFood ?				30f : 0);
             statsTotal.DefenseRating =
                 (buffs.FlaskOfFortification ?		10f : 0);

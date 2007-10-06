@@ -39,7 +39,7 @@ namespace Rawr
 				if (_character != null)
 				{
 					this.Cursor = Cursors.WaitCursor;
-					itemComparison1.Character = itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
+					FormItemSelection.Instance.Character = itemComparison1.Character = itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
 						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
 						itemButtonHead.Character = itemButtonIdol.Character = itemButtonLegs.Character =
 						itemButtonNeck.Character = itemButtonShirt.Character = itemButtonShoulders.Character =
@@ -60,7 +60,8 @@ namespace Rawr
 					checkBoxBuffsMajorDefense.Checked = Character.Buffs.ElixirOfMajorDefense;
 					checkBoxBuffsMastery.Checked = Character.Buffs.ElixirOfMastery;
 					checkBoxBuffsMajorFortitude.Checked = Character.Buffs.ElixirOfMajorFortitude;
-					checkBoxBuffsFlask.Checked = Character.Buffs.FlaskOfFortification;
+					checkBoxBuffsFlaskOfFortification.Checked = Character.Buffs.FlaskOfFortification;
+					checkBoxBuffsFlaskOfChromaticWonder.Checked = Character.Buffs.FlaskOfChromaticWonder;
 					checkBoxBuffsGrace.Checked = Character.Buffs.GraceOfAirTotem;
 					checkBoxBuffsImpPact.Checked = Character.Buffs.ImprovedBloodPact;
 					checkBoxBuffsImpShout.Checked = Character.Buffs.ImprovedCommandingShout;
@@ -106,6 +107,16 @@ namespace Rawr
 		{
 			this.Cursor = Cursors.WaitCursor;
 			_unsavedChanges = true;
+
+			if (!_loadingCharacter)
+			{
+				itemButtonBack.UpdateSelectedItem(); itemButtonChest.UpdateSelectedItem(); itemButtonFeet.UpdateSelectedItem();
+				itemButtonFinger1.UpdateSelectedItem(); itemButtonFinger2.UpdateSelectedItem(); itemButtonHands.UpdateSelectedItem();
+				itemButtonHead.UpdateSelectedItem(); itemButtonIdol.UpdateSelectedItem(); itemButtonLegs.UpdateSelectedItem();
+				itemButtonNeck.UpdateSelectedItem(); itemButtonShirt.UpdateSelectedItem(); itemButtonShoulders.UpdateSelectedItem();
+				itemButtonTabard.UpdateSelectedItem(); itemButtonTrinket1.UpdateSelectedItem(); itemButtonTrinket2.UpdateSelectedItem();
+				itemButtonWaist.UpdateSelectedItem(); itemButtonWeapon.UpdateSelectedItem(); itemButtonWrist.UpdateSelectedItem();
+			}
 			//and the clouds above move closer / looking so dissatisfied
 			Calculations.ClearCache();
 			CalculatedStats calcs = Calculations.CalculateStats(Character);
@@ -182,11 +193,12 @@ namespace Rawr
 			Item[] items = ItemCache.GetItemsArray();
 			ItemIcons.CacheAllIcons(items);
 			itemComparison1.Items = items;
-			itemButtonBack.Items = itemButtonChest.Items = itemButtonFeet.Items = itemButtonFinger1.Items =
-					itemButtonFinger2.Items = itemButtonHands.Items = itemButtonHead.Items = itemButtonIdol.Items =
-					itemButtonLegs.Items = itemButtonNeck.Items = itemButtonShirt.Items = itemButtonShoulders.Items =
-					itemButtonTabard.Items = itemButtonTrinket1.Items = itemButtonTrinket2.Items = itemButtonWaist.Items =
-					itemButtonWeapon.Items = itemButtonWrist.Items = ItemCache.GetItemsArray();
+			FormItemSelection.Instance.Items = items;
+			//itemButtonBack.Items = itemButtonChest.Items = itemButtonFeet.Items = itemButtonFinger1.Items =
+			//        itemButtonFinger2.Items = itemButtonHands.Items = itemButtonHead.Items = itemButtonIdol.Items =
+			//        itemButtonLegs.Items = itemButtonNeck.Items = itemButtonShirt.Items = itemButtonShoulders.Items =
+			//        itemButtonTabard.Items = itemButtonTrinket1.Items = itemButtonTrinket2.Items = itemButtonWaist.Items =
+			//        itemButtonWeapon.Items = itemButtonWrist.Items = ItemCache.GetItemsArray();
 			this.Cursor = Cursors.Default;
 		}
 
@@ -358,12 +370,20 @@ namespace Rawr
 			checkBoxBuffsImpGrace.Enabled = checkBoxBuffsGrace.Checked;
 			checkBoxBuffsFoodAgility.Enabled = !checkBoxBuffsFoodStamina.Checked;
 			checkBoxBuffsFoodStamina.Enabled = !checkBoxBuffsFoodAgility.Checked;
-			checkBoxBuffsAgilityElixir.Enabled = !checkBoxBuffsFlask.Checked && !checkBoxBuffsMastery.Checked;
-			checkBoxBuffsMastery.Enabled = !checkBoxBuffsFlask.Checked && !checkBoxBuffsAgilityElixir.Checked;
-			checkBoxBuffsMajorDefense.Enabled = !checkBoxBuffsFlask.Checked && !checkBoxBuffsIronskin.Checked && !checkBoxBuffsMajorFortitude.Checked;
-			checkBoxBuffsIronskin.Enabled = !checkBoxBuffsFlask.Checked && !checkBoxBuffsMajorDefense.Checked && !checkBoxBuffsMajorFortitude.Checked;
-			checkBoxBuffsMajorFortitude.Enabled = !checkBoxBuffsFlask.Checked && !checkBoxBuffsMajorDefense.Checked && !checkBoxBuffsIronskin.Checked;
-			checkBoxBuffsFlask.Enabled = !checkBoxBuffsAgilityElixir.Checked && !checkBoxBuffsMajorDefense.Checked && !checkBoxBuffsIronskin.Checked && !checkBoxBuffsMastery.Checked && !checkBoxBuffsMajorFortitude.Checked;
+			checkBoxBuffsAgilityElixir.Enabled = !checkBoxBuffsFlaskOfFortification.Checked &&
+				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsMastery.Checked;
+			checkBoxBuffsMastery.Enabled = !checkBoxBuffsFlaskOfFortification.Checked &&
+				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsAgilityElixir.Checked;
+			checkBoxBuffsMajorDefense.Enabled = !checkBoxBuffsFlaskOfFortification.Checked && !checkBoxBuffsIronskin.Checked &&
+				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsMajorFortitude.Checked;
+			checkBoxBuffsIronskin.Enabled = !checkBoxBuffsFlaskOfFortification.Checked && !checkBoxBuffsMajorDefense.Checked &&
+				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsMajorFortitude.Checked;
+			checkBoxBuffsMajorFortitude.Enabled = !checkBoxBuffsFlaskOfFortification.Checked && !checkBoxBuffsMajorDefense.Checked &&
+				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsIronskin.Checked;
+			checkBoxBuffsFlaskOfFortification.Enabled = !checkBoxBuffsAgilityElixir.Checked && !checkBoxBuffsMajorDefense.Checked &&
+				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsIronskin.Checked && !checkBoxBuffsMastery.Checked && !checkBoxBuffsMajorFortitude.Checked;
+			checkBoxBuffsFlaskOfChromaticWonder.Enabled = !checkBoxBuffsAgilityElixir.Checked && !checkBoxBuffsMajorDefense.Checked &&
+				!checkBoxBuffsFlaskOfFortification.Checked && !checkBoxBuffsIronskin.Checked && !checkBoxBuffsMastery.Checked && !checkBoxBuffsMajorFortitude.Checked;
 
 			if (!_loadingCharacter)
 			{
@@ -377,7 +397,8 @@ namespace Rawr
 				Character.Buffs.ElixirOfMajorAgility = checkBoxBuffsAgilityElixir.Checked && checkBoxBuffsAgilityElixir.Enabled;
 				Character.Buffs.ElixirOfMajorDefense = checkBoxBuffsMajorDefense.Checked && checkBoxBuffsMajorDefense.Enabled;
 				Character.Buffs.ElixirOfMajorFortitude = checkBoxBuffsMajorFortitude.Checked && checkBoxBuffsMajorFortitude.Enabled;
-				Character.Buffs.FlaskOfFortification = checkBoxBuffsFlask.Checked && checkBoxBuffsFlask.Enabled;
+				Character.Buffs.FlaskOfFortification = checkBoxBuffsFlaskOfFortification.Checked && checkBoxBuffsFlaskOfFortification.Enabled;
+				Character.Buffs.FlaskOfChromaticWonder = checkBoxBuffsFlaskOfChromaticWonder.Checked && checkBoxBuffsFlaskOfChromaticWonder.Enabled;
 				Character.Buffs.GraceOfAirTotem = checkBoxBuffsGrace.Checked && checkBoxBuffsGrace.Enabled;
 				Character.Buffs.ImprovedBloodPact = checkBoxBuffsImpPact.Checked && checkBoxBuffsImpPact.Enabled;
 				Character.Buffs.ImprovedCommandingShout = checkBoxBuffsImpShout.Checked && checkBoxBuffsImpShout.Enabled;

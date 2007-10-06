@@ -645,7 +645,7 @@ namespace Rawr
 			// 
 			this.itemButtonGem1.Character = null;
 			this.itemButtonGem1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.itemButtonGem1.Items = new Rawr.Item[0];
+			//this.itemButtonGem1.Items = new Rawr.Item[0];
 			this.itemButtonGem1.Location = new System.Drawing.Point(60, 15);
 			this.itemButtonGem1.Name = "itemButtonGem1";
 			this.itemButtonGem1.SelectedItem = null;
@@ -659,7 +659,7 @@ namespace Rawr
 			// 
 			this.itemButtonGem2.Character = null;
 			this.itemButtonGem2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.itemButtonGem2.Items = new Rawr.Item[0];
+			//this.itemButtonGem2.Items = new Rawr.Item[0];
 			this.itemButtonGem2.Location = new System.Drawing.Point(190, 15);
 			this.itemButtonGem2.Name = "itemButtonGem2";
 			this.itemButtonGem2.SelectedItem = null;
@@ -673,7 +673,7 @@ namespace Rawr
 			// 
 			this.itemButtonGem3.Character = null;
 			this.itemButtonGem3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.itemButtonGem3.Items = new Rawr.Item[0];
+			//this.itemButtonGem3.Items = new Rawr.Item[0];
 			this.itemButtonGem3.Location = new System.Drawing.Point(320, 15);
 			this.itemButtonGem3.Name = "itemButtonGem3";
 			this.itemButtonGem3.SelectedItem = null;

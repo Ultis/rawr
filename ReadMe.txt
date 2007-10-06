@@ -1,6 +1,6 @@
-Rawr Beta 5a
+Rawr Beta 6
 ------------
-Thanks for helping test out Rawr. Since Beta 3, I've made a ton of additions to Rawr, primarily new functionality and tweaking things to be closer to perfect. Lots of improvements to the calculations, added graphs for enchants and buffs, added some logging, massively improved calculation performance, lots of little improvements all over. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
+Thanks for helping test out Rawr. Since Beta 5, I've had alot of time, but been very busy. Honestly there aren't a ton of new features in Beta 6, but it took me a *ton* of time to get the new tooltips and dropdown menus working properly. Beta 7 should have all the fancy new features I promised, and I really hope to have Beta 7 out much quicker than Beta 6 took. Anyway, as usual, if you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
 FAQ
 ---
@@ -18,6 +18,14 @@ FAQ
 
 Version History
 ---------------
+Beta 6:
+ -Updated a few buffs for Patch 2.2
+ -Implemented new ToolTips for items. While not a highly requested change (and functionally there have been no changes), it was necessary in order to implement the next item...
+ -Implemented new item selection dropdowns. Instead of clicking on an item slot and getting a dropdown menu, there's now a much more feature rich popup to choose items. I fully intend to flesh this out with more features, but for now you can see what gems are in each item, see the tooltip for it, see the ratings for it, and have the list sorted by ratings/alpha. You can also type a part of the item name in the Filter box, to filter to items containing that text.
+ -Added Alphabetical sorting to the graph
+ -Fixed a nasty bug with the calculations for Blessing of Kings. Sorry about that. :(
+ -Ugh, prolly a few other things I can't remember right now since it's been so long.
+
 Beta 5a:
  -Fix for the Back slot being broken. Oops.
 
@@ -133,3 +141,21 @@ Stuff I need to do...
 
 That's about it, let me know how it works (or doesn't) for you! Thanks!
 ~Astrylian on Kilrogg, cnervig@hotmail.com
+
+
+LICENSE
+-------
+
+   Copyright 2007 Chadd Nervig
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.

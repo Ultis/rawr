@@ -19,7 +19,7 @@ namespace Rawr
 		public FormFillSockets()
 		{
 			InitializeComponent();
-			gemButtonRed.Items = gemButtonBlue.Items = gemButtonYellow.Items = gemButtonMeta.Items = ItemCache.GetItemsArray();
+			//gemButtonRed.Items = gemButtonBlue.Items = gemButtonYellow.Items = gemButtonMeta.Items = ItemCache.GetItemsArray();
 		}
 
 		private void FormFillSockets_Load(object sender, EventArgs e)

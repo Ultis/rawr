@@ -126,7 +126,7 @@ namespace Rawr
 			// 
 			this.gemButtonMeta.Character = null;
 			this.gemButtonMeta.CharacterSlot = Rawr.Character.CharacterSlot.Metas;
-			this.gemButtonMeta.Items = new Rawr.Item[0];
+			//this.gemButtonMeta.Items = new Rawr.Item[0];
 			this.gemButtonMeta.Location = new System.Drawing.Point(240, 80);
 			this.gemButtonMeta.Name = "gemButtonMeta";
 			this.gemButtonMeta.SelectedItem = null;
@@ -139,7 +139,7 @@ namespace Rawr
 			// 
 			this.gemButtonYellow.Character = null;
 			this.gemButtonYellow.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.gemButtonYellow.Items = new Rawr.Item[0];
+			//this.gemButtonYellow.Items = new Rawr.Item[0];
 			this.gemButtonYellow.Location = new System.Drawing.Point(164, 80);
 			this.gemButtonYellow.Name = "gemButtonYellow";
 			this.gemButtonYellow.SelectedItem = null;
@@ -153,7 +153,7 @@ namespace Rawr
 			// 
 			this.gemButtonBlue.Character = null;
 			this.gemButtonBlue.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.gemButtonBlue.Items = new Rawr.Item[0];
+			//this.gemButtonBlue.Items = new Rawr.Item[0];
 			this.gemButtonBlue.Location = new System.Drawing.Point(88, 80);
 			this.gemButtonBlue.Name = "gemButtonBlue";
 			this.gemButtonBlue.SelectedItem = null;
@@ -166,7 +166,7 @@ namespace Rawr
 			// 
 			this.gemButtonRed.Character = null;
 			this.gemButtonRed.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.gemButtonRed.Items = new Rawr.Item[0];
+			//this.gemButtonRed.Items = new Rawr.Item[0];
 			this.gemButtonRed.Location = new System.Drawing.Point(12, 80);
 			this.gemButtonRed.Name = "gemButtonRed";
 			this.gemButtonRed.SelectedItem = null;

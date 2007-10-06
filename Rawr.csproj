@@ -10,6 +10,10 @@
     <RootNamespace>Rawr</RootNamespace>
     <AssemblyName>Rawr</AssemblyName>
     <ApplicationIcon>RawrIcon.ico</ApplicationIcon>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -72,6 +76,12 @@
     <Compile Include="FormItemEditor.Designer.cs">
       <DependentUpon>FormItemEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormItemSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormItemSelection.Designer.cs">
+      <DependentUpon>FormItemSelection.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,11 +106,14 @@
       <DependentUpon>ItemComparison.cs</DependentUpon>
     </Compile>
     <Compile Include="ItemIcons.cs" />
-    <Compile Include="ItemTooltip.cs">
+    <Compile Include="ItemSelectorItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ItemTooltip.Designer.cs">
-      <DependentUpon>ItemTooltip.cs</DependentUpon>
+    <Compile Include="ItemSelectorItem.Designer.cs">
+      <DependentUpon>ItemSelectorItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ItemToolTip.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Log.cs" />
     <Compile Include="Program.cs" />
@@ -125,6 +138,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>FormItemEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormItemSelection.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormItemSelection.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormMain.cs</DependentUpon>
@@ -137,14 +154,14 @@
       <SubType>Designer</SubType>
       <DependentUpon>ItemComparison.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ItemTooltip.resx">
+    <EmbeddedResource Include="ItemSelectorItem.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>ItemTooltip.cs</DependentUpon>
+      <DependentUpon>ItemSelectorItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

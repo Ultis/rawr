@@ -113,7 +113,7 @@ namespace Rawr
 				lvi.ImageKey = EnsureIconPath(item.IconPath);
 				listViewItems.Items.Add(lvi);
 			}
-			itemButtonGem1.Items = itemButtonGem2.Items = itemButtonGem3.Items = items;
+			//itemButtonGem1.Items = itemButtonGem2.Items = itemButtonGem3.Items = items;
 		}
 
 		private string EnsureIconPath(string iconPath)
