@@ -95,7 +95,11 @@ namespace Rawr
 
 		private void CheckToHide(object sender, EventArgs e)
 		{
-			this.Hide();
+			if (Visible)
+			{
+				ItemToolTip.Instance.Hide(this);
+				this.Hide();
+			}
 		}
 
 		private void timerForceActivate_Tick(object sender, System.EventArgs e)
@@ -211,6 +215,7 @@ namespace Rawr
 		{
 			_button.SelectedItem = item;
 			_characterSlot = (Character.CharacterSlot)(-1);
+			ItemToolTip.Instance.Hide(this);
 			this.Hide();
 		}
 	}

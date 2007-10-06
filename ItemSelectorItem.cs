@@ -55,7 +55,7 @@ namespace Rawr
 
 		public void HideToolTip()
 		{
-			if (_tooltipShown)
+			if (_tooltipShown && !IsDisposed)
 			{
 				_tooltipShown = false;
 				UpdateBackColors();
@@ -64,7 +64,7 @@ namespace Rawr
 
 		public void ShowToolTip()
 		{
-			if (!_tooltipShown)
+			if (!_tooltipShown && !IsDisposed)
 			{
 				_tooltipShown = true;
 				int tipX = this.Width + 20;
@@ -75,7 +75,7 @@ namespace Rawr
 				UpdateBackColors();
 				
 				foreach (ItemSelectorItem ctrl in Parent.Controls)
-					if (ctrl != this)
+					if (ctrl != this && !ctrl.IsDisposed)
 						ctrl.HideToolTip();
 			}
 		}
