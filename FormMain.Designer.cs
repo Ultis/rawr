@@ -2241,7 +2241,7 @@ namespace Rawr
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.Name = "FormMain";
-			this.Text = "Rawr (Beta 6a)";
+			this.Text = "Rawr (Beta 6a`)";
 			this.Load += new System.EventHandler(this.FormMain_Load);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
 			this.menuStripMain.ResumeLayout(false);
