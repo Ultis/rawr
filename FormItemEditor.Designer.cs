@@ -29,26 +29,26 @@ namespace Rawr
         private void InitializeComponent()
         {
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.ListViewGroup listViewGroup21 = new System.Windows.Forms.ListViewGroup("Head", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup22 = new System.Windows.Forms.ListViewGroup("Neck", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup23 = new System.Windows.Forms.ListViewGroup("Shoulders", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup24 = new System.Windows.Forms.ListViewGroup("Back", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup25 = new System.Windows.Forms.ListViewGroup("Chest", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup26 = new System.Windows.Forms.ListViewGroup("Shirt", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup27 = new System.Windows.Forms.ListViewGroup("Tabard", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup28 = new System.Windows.Forms.ListViewGroup("Wrist", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup29 = new System.Windows.Forms.ListViewGroup("Hands", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup30 = new System.Windows.Forms.ListViewGroup("Waist", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup31 = new System.Windows.Forms.ListViewGroup("Legs", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup32 = new System.Windows.Forms.ListViewGroup("Feet", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup33 = new System.Windows.Forms.ListViewGroup("Finger", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup34 = new System.Windows.Forms.ListViewGroup("Trinket", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup35 = new System.Windows.Forms.ListViewGroup("Weapon", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup36 = new System.Windows.Forms.ListViewGroup("Robe", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup37 = new System.Windows.Forms.ListViewGroup("One Hand", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup38 = new System.Windows.Forms.ListViewGroup("Wand", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup39 = new System.Windows.Forms.ListViewGroup("Idol", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup40 = new System.Windows.Forms.ListViewGroup("Gems", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Head", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Neck", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Shoulders", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Back", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Chest", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Shirt", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("Tabard", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("Wrist", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup9 = new System.Windows.Forms.ListViewGroup("Hands", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup10 = new System.Windows.Forms.ListViewGroup("Waist", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup11 = new System.Windows.Forms.ListViewGroup("Legs", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup12 = new System.Windows.Forms.ListViewGroup("Feet", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup13 = new System.Windows.Forms.ListViewGroup("Finger", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup14 = new System.Windows.Forms.ListViewGroup("Trinket", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup15 = new System.Windows.Forms.ListViewGroup("Weapon", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup16 = new System.Windows.Forms.ListViewGroup("Robe", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup17 = new System.Windows.Forms.ListViewGroup("One Hand", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup18 = new System.Windows.Forms.ListViewGroup("Wand", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup19 = new System.Windows.Forms.ListViewGroup("Idol", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup20 = new System.Windows.Forms.ListViewGroup("Gems", System.Windows.Forms.HorizontalAlignment.Left);
 			this.label1 = new System.Windows.Forms.Label();
 			this.numericUpDownId = new System.Windows.Forms.NumericUpDown();
 			this.textBoxName = new System.Windows.Forms.TextBox();
@@ -104,6 +104,8 @@ namespace Rawr
 			this.columnHeaderName = new System.Windows.Forms.ColumnHeader();
 			this.imageListItems = new System.Windows.Forms.ImageList(this.components);
 			this.buttonDuplicate = new System.Windows.Forms.Button();
+			this.textBoxFilter = new System.Windows.Forms.TextBox();
+			this.label22 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownArmor)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownStamina)).BeginInit();
@@ -154,7 +156,7 @@ namespace Rawr
 			this.textBoxName.Location = new System.Drawing.Point(295, 12);
 			this.textBoxName.Name = "textBoxName";
 			this.textBoxName.Size = new System.Drawing.Size(216, 20);
-			this.textBoxName.TabIndex = 3;
+			this.textBoxName.TabIndex = 1;
 			// 
 			// label2
 			// 
@@ -217,7 +219,7 @@ namespace Rawr
 			this.comboBoxSlot.Location = new System.Drawing.Point(551, 38);
 			this.comboBoxSlot.Name = "comboBoxSlot";
 			this.comboBoxSlot.Size = new System.Drawing.Size(109, 21);
-			this.comboBoxSlot.TabIndex = 5;
+			this.comboBoxSlot.TabIndex = 4;
 			// 
 			// label4
 			// 
@@ -247,7 +249,7 @@ namespace Rawr
             0});
 			this.numericUpDownArmor.Name = "numericUpDownArmor";
 			this.numericUpDownArmor.Size = new System.Drawing.Size(62, 20);
-			this.numericUpDownArmor.TabIndex = 2;
+			this.numericUpDownArmor.TabIndex = 0;
 			// 
 			// label7
 			// 
@@ -268,7 +270,7 @@ namespace Rawr
             0});
 			this.numericUpDownStamina.Name = "numericUpDownStamina";
 			this.numericUpDownStamina.Size = new System.Drawing.Size(62, 20);
-			this.numericUpDownStamina.TabIndex = 2;
+			this.numericUpDownStamina.TabIndex = 1;
 			// 
 			// label8
 			// 
@@ -302,7 +304,7 @@ namespace Rawr
 			this.groupBox1.Location = new System.Drawing.Point(251, 64);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(409, 45);
-			this.groupBox1.TabIndex = 6;
+			this.groupBox1.TabIndex = 5;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Stats";
 			// 
@@ -352,7 +354,7 @@ namespace Rawr
             0});
 			this.numericUpDownDefense.Name = "numericUpDownDefense";
 			this.numericUpDownDefense.Size = new System.Drawing.Size(62, 20);
-			this.numericUpDownDefense.TabIndex = 2;
+			this.numericUpDownDefense.TabIndex = 1;
 			// 
 			// label12
 			// 
@@ -373,7 +375,7 @@ namespace Rawr
             0});
 			this.numericUpDownDodge.Name = "numericUpDownDodge";
 			this.numericUpDownDodge.Size = new System.Drawing.Size(62, 20);
-			this.numericUpDownDodge.TabIndex = 2;
+			this.numericUpDownDodge.TabIndex = 0;
 			// 
 			// label13
 			// 
@@ -415,7 +417,7 @@ namespace Rawr
 			this.groupBox6.Location = new System.Drawing.Point(187, 19);
 			this.groupBox6.Name = "groupBox6";
 			this.groupBox6.Size = new System.Drawing.Size(216, 75);
-			this.groupBox6.TabIndex = 6;
+			this.groupBox6.TabIndex = 3;
 			this.groupBox6.TabStop = false;
 			this.groupBox6.Text = "Socket Bonus";
 			// 
@@ -429,7 +431,7 @@ namespace Rawr
             0});
 			this.numericUpDownBonusResil.Name = "numericUpDownBonusResil";
 			this.numericUpDownBonusResil.Size = new System.Drawing.Size(36, 20);
-			this.numericUpDownBonusResil.TabIndex = 2;
+			this.numericUpDownBonusResil.TabIndex = 4;
 			// 
 			// label19
 			// 
@@ -450,7 +452,7 @@ namespace Rawr
             0});
 			this.numericUpDownBonusAgility.Name = "numericUpDownBonusAgility";
 			this.numericUpDownBonusAgility.Size = new System.Drawing.Size(36, 20);
-			this.numericUpDownBonusAgility.TabIndex = 2;
+			this.numericUpDownBonusAgility.TabIndex = 0;
 			// 
 			// label18
 			// 
@@ -489,7 +491,7 @@ namespace Rawr
             0});
 			this.numericUpDownBonusDodge.Name = "numericUpDownBonusDodge";
 			this.numericUpDownBonusDodge.Size = new System.Drawing.Size(36, 20);
-			this.numericUpDownBonusDodge.TabIndex = 2;
+			this.numericUpDownBonusDodge.TabIndex = 3;
 			// 
 			// numericUpDownBonusDef
 			// 
@@ -522,7 +524,7 @@ namespace Rawr
             0});
 			this.numericUpDownBonusStamina.Name = "numericUpDownBonusStamina";
 			this.numericUpDownBonusStamina.Size = new System.Drawing.Size(36, 20);
-			this.numericUpDownBonusStamina.TabIndex = 2;
+			this.numericUpDownBonusStamina.TabIndex = 1;
 			// 
 			// label16
 			// 
@@ -564,7 +566,7 @@ namespace Rawr
 			this.comboBoxSocket3.Location = new System.Drawing.Point(72, 73);
 			this.comboBoxSocket3.Name = "comboBoxSocket3";
 			this.comboBoxSocket3.Size = new System.Drawing.Size(109, 21);
-			this.comboBoxSocket3.TabIndex = 5;
+			this.comboBoxSocket3.TabIndex = 2;
 			this.comboBoxSocket3.TextChanged += new System.EventHandler(this.comboBoxSocket_TextChanged);
 			// 
 			// comboBoxSocket2
@@ -580,7 +582,7 @@ namespace Rawr
 			this.comboBoxSocket2.Location = new System.Drawing.Point(72, 46);
 			this.comboBoxSocket2.Name = "comboBoxSocket2";
 			this.comboBoxSocket2.Size = new System.Drawing.Size(109, 21);
-			this.comboBoxSocket2.TabIndex = 5;
+			this.comboBoxSocket2.TabIndex = 1;
 			this.comboBoxSocket2.TextChanged += new System.EventHandler(this.comboBoxSocket_TextChanged);
 			// 
 			// comboBoxSocket1
@@ -596,7 +598,7 @@ namespace Rawr
 			this.comboBoxSocket1.Location = new System.Drawing.Point(72, 19);
 			this.comboBoxSocket1.Name = "comboBoxSocket1";
 			this.comboBoxSocket1.Size = new System.Drawing.Size(109, 21);
-			this.comboBoxSocket1.TabIndex = 5;
+			this.comboBoxSocket1.TabIndex = 0;
 			this.comboBoxSocket1.TextChanged += new System.EventHandler(this.comboBoxSocket_TextChanged);
 			// 
 			// groupBox5
@@ -610,7 +612,7 @@ namespace Rawr
 			this.groupBox5.Location = new System.Drawing.Point(251, 272);
 			this.groupBox5.Name = "groupBox5";
 			this.groupBox5.Size = new System.Drawing.Size(409, 95);
-			this.groupBox5.TabIndex = 9;
+			this.groupBox5.TabIndex = 8;
 			this.groupBox5.TabStop = false;
 			this.groupBox5.Text = "Gems";
 			// 
@@ -645,13 +647,12 @@ namespace Rawr
 			// 
 			this.itemButtonGem1.Character = null;
 			this.itemButtonGem1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			//this.itemButtonGem1.Items = new Rawr.Item[0];
 			this.itemButtonGem1.Location = new System.Drawing.Point(60, 15);
 			this.itemButtonGem1.Name = "itemButtonGem1";
 			this.itemButtonGem1.SelectedItem = null;
 			this.itemButtonGem1.SelectedItemId = 0;
 			this.itemButtonGem1.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonGem1.TabIndex = 2;
+			this.itemButtonGem1.TabIndex = 0;
 			this.itemButtonGem1.Text = "Gem #1";
 			this.itemButtonGem1.UseVisualStyleBackColor = true;
 			// 
@@ -659,13 +660,12 @@ namespace Rawr
 			// 
 			this.itemButtonGem2.Character = null;
 			this.itemButtonGem2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			//this.itemButtonGem2.Items = new Rawr.Item[0];
 			this.itemButtonGem2.Location = new System.Drawing.Point(190, 15);
 			this.itemButtonGem2.Name = "itemButtonGem2";
 			this.itemButtonGem2.SelectedItem = null;
 			this.itemButtonGem2.SelectedItemId = 0;
 			this.itemButtonGem2.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonGem2.TabIndex = 2;
+			this.itemButtonGem2.TabIndex = 1;
 			this.itemButtonGem2.Text = "Gem #2";
 			this.itemButtonGem2.UseVisualStyleBackColor = true;
 			// 
@@ -673,7 +673,6 @@ namespace Rawr
 			// 
 			this.itemButtonGem3.Character = null;
 			this.itemButtonGem3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			//this.itemButtonGem3.Items = new Rawr.Item[0];
 			this.itemButtonGem3.Location = new System.Drawing.Point(320, 15);
 			this.itemButtonGem3.Name = "itemButtonGem3";
 			this.itemButtonGem3.SelectedItem = null;
@@ -689,7 +688,7 @@ namespace Rawr
 			this.buttonOK.Location = new System.Drawing.Point(585, 377);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(75, 23);
-			this.buttonOK.TabIndex = 10;
+			this.buttonOK.TabIndex = 13;
 			this.buttonOK.Text = "OK";
 			this.buttonOK.UseVisualStyleBackColor = true;
 			// 
@@ -698,7 +697,7 @@ namespace Rawr
 			this.buttonAdd.Location = new System.Drawing.Point(12, 377);
 			this.buttonAdd.Name = "buttonAdd";
 			this.buttonAdd.Size = new System.Drawing.Size(75, 23);
-			this.buttonAdd.TabIndex = 10;
+			this.buttonAdd.TabIndex = 9;
 			this.buttonAdd.Text = "Add...";
 			this.buttonAdd.UseVisualStyleBackColor = true;
 			this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
@@ -719,7 +718,7 @@ namespace Rawr
 			this.buttonFillSockets.Location = new System.Drawing.Point(255, 377);
 			this.buttonFillSockets.Name = "buttonFillSockets";
 			this.buttonFillSockets.Size = new System.Drawing.Size(80, 23);
-			this.buttonFillSockets.TabIndex = 11;
+			this.buttonFillSockets.TabIndex = 12;
 			this.buttonFillSockets.Text = "Fill Sockets...";
 			this.buttonFillSockets.UseVisualStyleBackColor = true;
 			this.buttonFillSockets.Click += new System.EventHandler(this.buttonFillSockets_Click);
@@ -728,75 +727,75 @@ namespace Rawr
 			// 
 			this.listViewItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName});
-			listViewGroup21.Header = "Head";
-			listViewGroup21.Name = "listViewGroupHead";
-			listViewGroup22.Header = "Neck";
-			listViewGroup22.Name = "listViewGroupNeck";
-			listViewGroup23.Header = "Shoulders";
-			listViewGroup23.Name = "listViewGroupShoulders";
-			listViewGroup24.Header = "Back";
-			listViewGroup24.Name = "listViewGroupBack";
-			listViewGroup25.Header = "Chest";
-			listViewGroup25.Name = "listViewGroupChest";
-			listViewGroup26.Header = "Shirt";
-			listViewGroup26.Name = "listViewGroupShirt";
-			listViewGroup27.Header = "Tabard";
-			listViewGroup27.Name = "listViewGroupTabard";
-			listViewGroup28.Header = "Wrist";
-			listViewGroup28.Name = "listViewGroupWrist";
-			listViewGroup29.Header = "Hands";
-			listViewGroup29.Name = "listViewGroupHands";
-			listViewGroup30.Header = "Waist";
-			listViewGroup30.Name = "listViewGroupWaist";
-			listViewGroup31.Header = "Legs";
-			listViewGroup31.Name = "listViewGroupLegs";
-			listViewGroup32.Header = "Feet";
-			listViewGroup32.Name = "listViewGroupFeet";
-			listViewGroup33.Header = "Finger";
-			listViewGroup33.Name = "listViewGroupFinger";
-			listViewGroup34.Header = "Trinket";
-			listViewGroup34.Name = "listViewGroupTrinket";
-			listViewGroup35.Header = "Weapon";
-			listViewGroup35.Name = "listViewGroupWeapon";
-			listViewGroup36.Header = "Robe";
-			listViewGroup36.Name = "listViewGroupRobe";
-			listViewGroup37.Header = "One Hand";
-			listViewGroup37.Name = "listViewGroupOneHand";
-			listViewGroup38.Header = "Wand";
-			listViewGroup38.Name = "listViewGroupWand";
-			listViewGroup39.Header = "Idol";
-			listViewGroup39.Name = "listViewGroupIdol";
-			listViewGroup40.Header = "Gems";
-			listViewGroup40.Name = "listViewGroupGems";
+			listViewGroup1.Header = "Head";
+			listViewGroup1.Name = "listViewGroupHead";
+			listViewGroup2.Header = "Neck";
+			listViewGroup2.Name = "listViewGroupNeck";
+			listViewGroup3.Header = "Shoulders";
+			listViewGroup3.Name = "listViewGroupShoulders";
+			listViewGroup4.Header = "Back";
+			listViewGroup4.Name = "listViewGroupBack";
+			listViewGroup5.Header = "Chest";
+			listViewGroup5.Name = "listViewGroupChest";
+			listViewGroup6.Header = "Shirt";
+			listViewGroup6.Name = "listViewGroupShirt";
+			listViewGroup7.Header = "Tabard";
+			listViewGroup7.Name = "listViewGroupTabard";
+			listViewGroup8.Header = "Wrist";
+			listViewGroup8.Name = "listViewGroupWrist";
+			listViewGroup9.Header = "Hands";
+			listViewGroup9.Name = "listViewGroupHands";
+			listViewGroup10.Header = "Waist";
+			listViewGroup10.Name = "listViewGroupWaist";
+			listViewGroup11.Header = "Legs";
+			listViewGroup11.Name = "listViewGroupLegs";
+			listViewGroup12.Header = "Feet";
+			listViewGroup12.Name = "listViewGroupFeet";
+			listViewGroup13.Header = "Finger";
+			listViewGroup13.Name = "listViewGroupFinger";
+			listViewGroup14.Header = "Trinket";
+			listViewGroup14.Name = "listViewGroupTrinket";
+			listViewGroup15.Header = "Weapon";
+			listViewGroup15.Name = "listViewGroupWeapon";
+			listViewGroup16.Header = "Robe";
+			listViewGroup16.Name = "listViewGroupRobe";
+			listViewGroup17.Header = "One Hand";
+			listViewGroup17.Name = "listViewGroupOneHand";
+			listViewGroup18.Header = "Wand";
+			listViewGroup18.Name = "listViewGroupWand";
+			listViewGroup19.Header = "Idol";
+			listViewGroup19.Name = "listViewGroupIdol";
+			listViewGroup20.Header = "Gems";
+			listViewGroup20.Name = "listViewGroupGems";
 			this.listViewItems.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup21,
-            listViewGroup22,
-            listViewGroup23,
-            listViewGroup24,
-            listViewGroup25,
-            listViewGroup26,
-            listViewGroup27,
-            listViewGroup28,
-            listViewGroup29,
-            listViewGroup30,
-            listViewGroup31,
-            listViewGroup32,
-            listViewGroup33,
-            listViewGroup34,
-            listViewGroup35,
-            listViewGroup36,
-            listViewGroup37,
-            listViewGroup38,
-            listViewGroup39,
-            listViewGroup40});
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3,
+            listViewGroup4,
+            listViewGroup5,
+            listViewGroup6,
+            listViewGroup7,
+            listViewGroup8,
+            listViewGroup9,
+            listViewGroup10,
+            listViewGroup11,
+            listViewGroup12,
+            listViewGroup13,
+            listViewGroup14,
+            listViewGroup15,
+            listViewGroup16,
+            listViewGroup17,
+            listViewGroup18,
+            listViewGroup19,
+            listViewGroup20});
 			this.listViewItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-			this.listViewItems.Location = new System.Drawing.Point(12, 12);
+			this.listViewItems.Location = new System.Drawing.Point(12, 38);
 			this.listViewItems.MultiSelect = false;
 			this.listViewItems.Name = "listViewItems";
-			this.listViewItems.Size = new System.Drawing.Size(233, 355);
+			this.listViewItems.Size = new System.Drawing.Size(233, 329);
 			this.listViewItems.SmallImageList = this.imageListItems;
 			this.listViewItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
-			this.listViewItems.TabIndex = 12;
+			this.listViewItems.TabIndex = 0;
 			this.listViewItems.UseCompatibleStateImageBehavior = false;
 			this.listViewItems.View = System.Windows.Forms.View.Details;
 			this.listViewItems.SelectedIndexChanged += new System.EventHandler(this.listViewItems_SelectedIndexChanged);
@@ -816,17 +815,37 @@ namespace Rawr
 			this.buttonDuplicate.Location = new System.Drawing.Point(174, 377);
 			this.buttonDuplicate.Name = "buttonDuplicate";
 			this.buttonDuplicate.Size = new System.Drawing.Size(75, 23);
-			this.buttonDuplicate.TabIndex = 10;
+			this.buttonDuplicate.TabIndex = 11;
 			this.buttonDuplicate.Text = "Duplicate";
 			this.buttonDuplicate.UseVisualStyleBackColor = true;
 			this.buttonDuplicate.Click += new System.EventHandler(this.buttonDuplicate_Click);
 			// 
+			// textBoxFilter
+			// 
+			this.textBoxFilter.Location = new System.Drawing.Point(50, 12);
+			this.textBoxFilter.Name = "textBoxFilter";
+			this.textBoxFilter.Size = new System.Drawing.Size(195, 20);
+			this.textBoxFilter.TabIndex = 15;
+			this.textBoxFilter.TextChanged += new System.EventHandler(this.textBoxFilter_TextChanged);
+			// 
+			// label22
+			// 
+			this.label22.AutoSize = true;
+			this.label22.Location = new System.Drawing.Point(12, 15);
+			this.label22.Name = "label22";
+			this.label22.Size = new System.Drawing.Size(32, 13);
+			this.label22.TabIndex = 14;
+			this.label22.Text = "Filter:";
+			// 
 			// FormItemEditor
 			// 
+			this.AcceptButton = this.buttonOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(672, 416);
 			this.ControlBox = false;
+			this.Controls.Add(this.textBoxFilter);
+			this.Controls.Add(this.label22);
 			this.Controls.Add(this.listViewItems);
 			this.Controls.Add(this.buttonDuplicate);
 			this.Controls.Add(this.buttonFillSockets);
@@ -933,5 +952,7 @@ namespace Rawr
 		private System.Windows.Forms.ColumnHeader columnHeaderName;
 		private System.Windows.Forms.ImageList imageListItems;
 		private System.Windows.Forms.Button buttonDuplicate;
+		private System.Windows.Forms.TextBox textBoxFilter;
+		private System.Windows.Forms.Label label22;
     }
 }

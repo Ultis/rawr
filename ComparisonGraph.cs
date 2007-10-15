@@ -29,10 +29,17 @@ namespace Rawr
 					calcs.Sort(new System.Comparison<ItemCalculation>(CompareItemCalculations));
 					_itemCalculations = calcs.ToArray();
 				}
-				if(_prerenderedGraph != null) _prerenderedGraph.Dispose();
+				if (_prerenderedGraph != null) _prerenderedGraph.Dispose();
 				_prerenderedGraph = null;
 				this.Invalidate();
 			}
+		}
+
+		private bool _roundValues = true;
+		public bool RoundValues
+		{
+			get { return _roundValues; }
+			set { _roundValues = value; }
 		}
 
 		private ComparisonSort _sort = ComparisonSort.Overall;
@@ -63,11 +70,11 @@ namespace Rawr
 
 			//if (offset != Point.Empty)
 			//{
-				System.Drawing.Point p = (this.Parent.PointToScreen(this.Location)); //this.FindForm().PointToClient
-				p.X += 2 + offset.X;
-				p.Y += 2 + offset.Y;
-				return p;
-				//tooltip.Location = p;
+			System.Drawing.Point p = (this.Parent.PointToScreen(this.Location)); //this.FindForm().PointToClient
+			p.X += 2 + offset.X;
+			p.Y += 2 + offset.Y;
+			return p;
+			//tooltip.Location = p;
 			//}
 			//tooltip.Visible = false;
 
@@ -85,7 +92,7 @@ namespace Rawr
 			else
 				return b.OverallPoints.CompareTo(a.OverallPoints);
 		}
-		
+
 		private VScrollBar _scrollBar;
 		public VScrollBar ScrollBar
 		{
@@ -118,9 +125,10 @@ namespace Rawr
 
 					if (ItemCalculations.Length > 0)
 					{
-						float maxOverallPoints = ItemCalculations[0].OverallPoints;
+						float maxOverallPoints = 100f;
 						foreach (ItemCalculation calc in ItemCalculations)
-							maxOverallPoints = Math.Max(maxOverallPoints, calc.OverallPoints);
+							if (!float.IsPositiveInfinity(calc.OverallPoints))
+								maxOverallPoints = Math.Max(maxOverallPoints, calc.OverallPoints);
 						maxOverallPoints = (float)Math.Ceiling(maxOverallPoints);
 						float maxScale = 100f;//(float)(Math.Ceiling(ItemCalculations[0].OverallPoints / 400) * 400f);
 						while (maxOverallPoints > maxScale)
@@ -177,7 +185,7 @@ namespace Rawr
 
 						g.DrawString("Mitigation", new Font(this.Font.FontFamily, 6.0f), brushMitigation, rectMitigation, formatMitigationSurvival);
 						g.DrawString("Survival", new Font(this.Font.FontFamily, 6.0f), brushSurvival, rectSurvival, formatMitigationSurvival);
-								
+
 
 
 						float graphStart = 100f;
@@ -203,7 +211,7 @@ namespace Rawr
 						Brush black75brush = new SolidBrush(Color.FromArgb(75, 0, 0, 0));
 						Brush black50brush = new SolidBrush(Color.FromArgb(50, 0, 0, 0));
 						Brush black25brush = new SolidBrush(Color.FromArgb(25, 0, 0, 0));
-						
+
 						g.DrawLine(black200, 96, 20, graphEnd + 4, 20);
 						g.DrawLine(black200, 100, 16, 100, _prerenderedGraph.Height - 4);
 						g.DrawLine(black200, graphEnd, 16, graphEnd, 19);
@@ -234,7 +242,7 @@ namespace Rawr
 						g.DrawString((maxScale * 0.875f).ToString(), this.Font, black75brush, ticks[6], 16, formatTick);
 						#endregion
 
-						
+
 						for (int i = 0; i < ItemCalculations.Length; i++)
 						{
 							ItemCalculation item = ItemCalculations[i];
@@ -246,23 +254,26 @@ namespace Rawr
 							}
 							g.DrawString(item.ItemName, this.Font, brushItemNames, rectItemName, formatItemNames);
 
-							int OverallWidth = (int)Math.Round((item.OverallPoints / maxScale) * graphWidth);
-							if (OverallWidth > 0)
+							int overallWidth = (int)Math.Round((item.OverallPoints / maxScale) * graphWidth);
+							if (!RoundValues) overallWidth = (int)Math.Ceiling((item.OverallPoints / maxScale) * graphWidth);
+							if (float.IsPositiveInfinity(item.OverallPoints)) overallWidth = (int)Math.Ceiling(graphWidth + 50f);
+							if (overallWidth > 0)
 							{
-								int mitsurvWidth = (int)Math.Round((item.MitigationPoints / (item.MitigationPoints + item.SurvivalPoints)) * OverallWidth);
+								int mitsurvWidth = (int)Math.Round((item.MitigationPoints / (item.MitigationPoints + item.SurvivalPoints)) * overallWidth);
+								if (float.IsPositiveInfinity(item.MitigationPoints)) mitsurvWidth = overallWidth;							
 
 								rectMitigation = new Rectangle((int)graphStart + 1, 30 + i * 36, mitsurvWidth, 24);
-								rectSurvival = new Rectangle((int)graphStart + mitsurvWidth + 1, 30 + i * 36, OverallWidth - mitsurvWidth, 24);
+								rectSurvival = new Rectangle((int)graphStart + mitsurvWidth + 1, 30 + i * 36, overallWidth - mitsurvWidth, 24);
 
 								brushMitigationFill = new System.Drawing.Drawing2D.LinearGradientBrush(
-									new Rectangle(rectMitigation.X, rectMitigation.Y, OverallWidth, 24), colorMitigationA, colorMitigationB,
-									67f + (20f * (item.OverallPoints / maxScale)));
+									new Rectangle(rectMitigation.X, rectMitigation.Y, overallWidth, 24), colorMitigationA, colorMitigationB,
+									67f + (20f * (float.IsPositiveInfinity(item.OverallPoints) ? 1f : (item.OverallPoints / maxScale))));
 								blendMitigation = new System.Drawing.Drawing2D.ColorBlend(3);
 								blendMitigation.Colors = new Color[] { colorMitigationA, colorMitigationB, colorMitigationA };
 								blendMitigation.Positions = new float[] { 0f, 0.5f, 1f };
 								brushMitigationFill.InterpolationColors = blendMitigation;
 								brushSurvivalFill = new System.Drawing.Drawing2D.LinearGradientBrush(
-									new Rectangle(rectMitigation.X, rectMitigation.Y, OverallWidth, 24), colorSurvivalA, colorSurvivalB,
+									new Rectangle(rectMitigation.X, rectMitigation.Y, overallWidth, 24), colorSurvivalA, colorSurvivalB,
 									67f + (20f * (item.OverallPoints / maxScale)));
 								blendSurvival = new System.Drawing.Drawing2D.ColorBlend(3);
 								blendSurvival.Colors = new Color[] { colorSurvivalA, colorSurvivalB, colorSurvivalA };
@@ -279,9 +290,12 @@ namespace Rawr
 								g.DrawRectangle(new Pen(brushMitigationFill), rectMitigation);
 								g.DrawRectangle(new Pen(brushSurvivalFill), rectSurvival);
 
-								if (item.MitigationPoints > 0) g.DrawString(Math.Round(item.MitigationPoints).ToString(), this.Font, brushMitigation, rectMitigation, formatMitigationSurvival);
-								if (item.SurvivalPoints > 0) g.DrawString(Math.Round(item.SurvivalPoints).ToString(), this.Font, brushSurvival, rectSurvival, formatMitigationSurvival);
-								if (item.OverallPoints > 0) g.DrawString(Math.Round(item.OverallPoints).ToString(), this.Font, brushOverall, new Rectangle(rectSurvival.Right + 2, rectSurvival.Y, 50, rectSurvival.Height), formatOverall);
+								if (RoundValues && item.MitigationPoints > 0) g.DrawString(Math.Round(item.MitigationPoints).ToString(), 
+									this.Font, brushMitigation, rectMitigation, formatMitigationSurvival);
+								if (RoundValues && item.SurvivalPoints > 0) g.DrawString(Math.Round(item.SurvivalPoints).ToString(),
+									this.Font, brushSurvival, rectSurvival, formatMitigationSurvival);
+								if (item.OverallPoints > 0) g.DrawString(RoundValues ? Math.Round(item.OverallPoints).ToString() : 
+									item.OverallPoints.ToString(), this.Font, brushOverall, new Rectangle(rectSurvival.Right + 2, rectSurvival.Y, 50, rectSurvival.Height), formatOverall);
 							}
 						}
 					}
@@ -310,6 +324,22 @@ namespace Rawr
 			e.Graphics.DrawImageUnscaled(PrerenderedGraph, 0, 0 - (_scrollBar != null ? _scrollBar.Value : 0));
 		}
 
+		public Character.CharacterSlot EquipSlot = Character.CharacterSlot.None;
+		private void ComparisonGraph_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				if (e.X <= 96)
+				{
+					int itemIndex = (int)Math.Floor(((float)(e.Y - 24f + _scrollBar.Value)) / 36f);
+					if (itemIndex >= 0 && itemIndex < ItemCalculations.Length && ItemCalculations[itemIndex].Item != null && ItemCalculations[itemIndex].Item.Id != 0)
+					{
+						ItemContextualMenu.Instance.Show(ItemCalculations[itemIndex].Item, EquipSlot, true);
+					}
+				}
+			}
+		}
+
 		private void ComparisonGraph_MouseLeave(object sender, EventArgs e)
 		{
 			//ItemTooltip.Instance.HideTooltip();
@@ -331,9 +361,9 @@ namespace Rawr
 						if (ItemCalculations[itemIndex].Item != _tooltipItem)
 						{
 							int tipX = 98;
-							if (Parent.PointToScreen(Location).X + tipX + 249 > SystemInformation.WorkingArea.Right)
+							if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 								tipX = -249;
-				
+
 							ShowTooltip(ItemCalculations[itemIndex].Item, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
 							//ItemTooltip.Instance.SetItem(ItemCalculations[itemIndex].Item, GetTooltipLocation(new Point(96, 24 + (itemIndex * 36) - _scrollBar.Value)));
 						}

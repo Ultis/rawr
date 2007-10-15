@@ -108,10 +108,10 @@ namespace Rawr
 			{
 				string id = gemmedId.Split('.')[0];
 				Log.Write("Getting Item from Armory: " + id + "   Reason: " + logReason);
-			
+
 				string itemTooltipPath = string.Format("http://armory.worldofwarcraft.com/item-tooltip.xml?i={0}", id);
 				XmlDocument docItem = DownloadXml(itemTooltipPath);
-				
+
 				string name = string.Empty;
 				string iconPath = string.Empty;
 				Item.ItemSlot slot = Item.ItemSlot.None;
@@ -185,6 +185,7 @@ namespace Rawr
 									stats.DefenseRating = gemBonusValue;
 									break;
 								case "Resilience":
+								case "Resilience Rating":
 									stats.Resilience = gemBonusValue;
 									break;
 							}
@@ -291,7 +292,7 @@ namespace Rawr
 				string upgradeSearchPath = string.Format("http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}",
 					armoryDomain, character.Realm, character.Name, itemToUpgrade.Id);
 				XmlDocument docUpgradeSearch = DownloadXml(upgradeSearchPath);
-				
+
 				ItemCalculation currentCalculation = Calculations.GetItemCalculations(itemToUpgrade, character, slot);
 
 				foreach (XmlNode node in docUpgradeSearch.SelectNodes("page/armorySearch/searchResults/items/item"))
@@ -307,8 +308,8 @@ namespace Rawr
 						ItemCalculation upgradeCalculation = Calculations.GetItemCalculations(idealItem, character, slot);
 
 						if (upgradeCalculation.OverallPoints > (currentCalculation.OverallPoints * .8f))// ||
-							//upgradeCalculation.MitigationPoints > (currentCalculation.MitigationPoints * .8f) ||
-							//upgradeCalculation.SurvivalPoints > (currentCalculation.SurvivalPoints * .8f) )
+						//upgradeCalculation.MitigationPoints > (currentCalculation.MitigationPoints * .8f) ||
+						//upgradeCalculation.SurvivalPoints > (currentCalculation.SurvivalPoints * .8f) )
 						{
 							ItemCache.AddItem(idealItem);
 						}

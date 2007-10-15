@@ -16,6 +16,7 @@ namespace Rawr
 		private bool _unsavedChanges = false;
 		private CalculatedStats _calculatedStats = null;
 
+		private bool _loadingCharacter = false;
 		private Character _character = null;
 		public Character Character
 		{
@@ -39,7 +40,8 @@ namespace Rawr
 				if (_character != null)
 				{
 					this.Cursor = Cursors.WaitCursor;
-					FormItemSelection.Instance.Character = itemComparison1.Character = itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
+					FormItemSelection.Instance.Character = ItemContextualMenu.Instance.Character = buffSelector1.Character =
+						itemComparison1.Character = itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
 						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
 						itemButtonHead.Character = itemButtonIdol.Character = itemButtonLegs.Character =
 						itemButtonNeck.Character = itemButtonShirt.Character = itemButtonShoulders.Character =
@@ -49,36 +51,6 @@ namespace Rawr
 
 					_character.ItemsChanged += new EventHandler(_character_ItemsChanged);
 					_loadingCharacter = true;
-
-					checkBoxBuffsFoodAgility.Checked = Character.Buffs.AgilityFood;
-					checkBoxBuffsKings.Checked = Character.Buffs.BlessingOfKings;
-					checkBoxBuffsPact.Checked = Character.Buffs.BloodPact;
-					checkBoxBuffsShout.Checked = Character.Buffs.CommandingShout;
-					checkBoxBuffsDevo.Checked = Character.Buffs.DevotionAura;
-					checkBoxBuffsIronskin.Checked = Character.Buffs.ElixirOfIronskin;
-					checkBoxBuffsAgilityElixir.Checked = Character.Buffs.ElixirOfMajorAgility;
-					checkBoxBuffsMajorDefense.Checked = Character.Buffs.ElixirOfMajorDefense;
-					checkBoxBuffsMastery.Checked = Character.Buffs.ElixirOfMastery;
-					checkBoxBuffsMajorFortitude.Checked = Character.Buffs.ElixirOfMajorFortitude;
-					checkBoxBuffsFlaskOfFortification.Checked = Character.Buffs.FlaskOfFortification;
-					checkBoxBuffsFlaskOfChromaticWonder.Checked = Character.Buffs.FlaskOfChromaticWonder;
-					checkBoxBuffsGrace.Checked = Character.Buffs.GraceOfAirTotem;
-					checkBoxBuffsImpPact.Checked = Character.Buffs.ImprovedBloodPact;
-					checkBoxBuffsImpShout.Checked = Character.Buffs.ImprovedCommandingShout;
-					checkBoxBuffsImpDevo.Checked = Character.Buffs.ImprovedDevotionAura;
-					checkBoxBuffsImpGrace.Checked = Character.Buffs.ImprovedGraceOfAirTotem;
-					checkBoxBuffsImpMark.Checked = Character.Buffs.ImprovedMarkOfTheWild;
-					checkBoxBuffsImpFort.Checked = Character.Buffs.ImprovedPowerWordFortitude;
-					checkBoxBuffsInsectSwarm.Checked = Character.Buffs.InsectSwarm;
-					checkBoxBuffsMark.Checked = Character.Buffs.MarkOfTheWild;
-					checkBoxBuffsFort.Checked = Character.Buffs.PowerWordFortitude;
-					checkBoxBuffsScorpidSting.Checked = Character.Buffs.ScorpidSting;
-					checkBoxBuffsFoodStamina.Checked = Character.Buffs.StaminaFood;
-					checkBoxBuffsMalorne.Checked = Character.Buffs.Malorne4PieceBonus;
-					checkBoxBuffsScrollOfProtection.Checked = Character.Buffs.ScrollOfProtection;
-					checkBoxBuffsScrollOfAgility.Checked = Character.Buffs.ScrollOfAgility;
-					checkBoxBuffsShadowEmbrace.Checked = Character.Buffs.ShadowEmbrace;
-					checkBoxBuffsGladiatorResilience.Checked = Character.Buffs.GladiatorResilience;
 
 					comboBoxEnchantBack.SelectedItem = Character.BackEnchant;
 					comboBoxEnchantChest.SelectedItem = Character.ChestEnchant;
@@ -98,7 +70,7 @@ namespace Rawr
 					radioButtonRaceTauren.Checked = Character.Race == Character.CharacterRace.Tauren;
 
 					_loadingCharacter = false;
-					_character_ItemsChanged(null, null);
+					Character.OnItemsChanged();
 				}
 			}
 		}
@@ -137,17 +109,33 @@ namespace Rawr
 				labelDodgeRating.Text = (calcs.BasicStats.DodgeRating - 40).ToString();
 			labelResilience.Text = calcs.BasicStats.Resilience.ToString();
 
+			float chanceToBeCrit = 2.6f - calcs.CritReduction;
+
 			labelDodge.Text = calcs.Dodge.ToString() + "%";
 			labelMiss.Text = calcs.Miss.ToString() + "%";
 			labelMitigation.Text = calcs.Mitigation.ToString() + "%";
 			labelDodgePlusMiss.Text = calcs.DodgePlusMiss.ToString() + "%";
 			labelTotalMitigation.Text = calcs.TotalMitigation.ToString() + "%";
 			labelDamageTaken.Text = calcs.DamageTaken.ToString() + "%";
-			labelCritReduction.Text = (2.6f - calcs.CritReduction).ToString() + "%";
+			labelCritReduction.Text = chanceToBeCrit.ToString() + "%";
 			labelOverallPoints.Text = calcs.OverallPoints.ToString();
 			labelMitigationPoints.Text = calcs.MitigationPoints.ToString();
 			labelSurvivalPoints.Text = calcs.SurvivalPoints.ToString();
 
+			if (chanceToBeCrit == 0)
+			{
+				toolTipSimple.SetToolTip(labelCritReduction, "Exactly enough defense rating/resilience to be uncrittable by bosses.");
+			}
+			else if (chanceToBeCrit > 0)
+			{
+				toolTipSimple.SetToolTip(labelCritReduction, string.Format("CRITTABLE! Short by {0} defense rating or {1} resilience to be uncrittable by bosses.",
+					Math.Ceiling(chanceToBeCrit * 60f), Math.Ceiling(chanceToBeCrit * 39.423f)));
+			}
+			else
+			{
+				toolTipSimple.SetToolTip(labelCritReduction, string.Format("Uncrittable by bosses. {0} defense rating or {1} resilience wasted.",
+					Math.Floor(chanceToBeCrit * -60f), Math.Floor(chanceToBeCrit * -39.423f)));
+			}
 			
 			this.Cursor = Cursors.Default;
 			//and the ground below grew colder / as they put you down inside
@@ -193,6 +181,7 @@ namespace Rawr
 			Item[] items = ItemCache.GetItemsArray();
 			ItemIcons.CacheAllIcons(items);
 			itemComparison1.Items = items;
+			LoadComparisonData();
 			FormItemSelection.Instance.Items = items;
 			//itemButtonBack.Items = itemButtonChest.Items = itemButtonFeet.Items = itemButtonFinger1.Items =
 			//        itemButtonFinger2.Items = itemButtonHands.Items = itemButtonHead.Items = itemButtonIdol.Items =
@@ -358,68 +347,6 @@ namespace Rawr
 		}
 		#endregion
 
-		private bool _loadingCharacter = false;
-		private void BuffsControl_CheckedChanged(object sender, EventArgs e)
-		{
-			//If I was in World War II, they'd call me Spitfire!
-			checkBoxBuffsImpDevo.Enabled = checkBoxBuffsDevo.Checked;
-			checkBoxBuffsImpFort.Enabled = checkBoxBuffsFort.Checked;
-			checkBoxBuffsImpMark.Enabled = checkBoxBuffsMark.Checked;
-			checkBoxBuffsImpPact.Enabled = checkBoxBuffsPact.Checked;
-			checkBoxBuffsImpShout.Enabled = checkBoxBuffsShout.Checked;
-			checkBoxBuffsImpGrace.Enabled = checkBoxBuffsGrace.Checked;
-			checkBoxBuffsFoodAgility.Enabled = !checkBoxBuffsFoodStamina.Checked;
-			checkBoxBuffsFoodStamina.Enabled = !checkBoxBuffsFoodAgility.Checked;
-			checkBoxBuffsAgilityElixir.Enabled = !checkBoxBuffsFlaskOfFortification.Checked &&
-				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsMastery.Checked;
-			checkBoxBuffsMastery.Enabled = !checkBoxBuffsFlaskOfFortification.Checked &&
-				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsAgilityElixir.Checked;
-			checkBoxBuffsMajorDefense.Enabled = !checkBoxBuffsFlaskOfFortification.Checked && !checkBoxBuffsIronskin.Checked &&
-				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsMajorFortitude.Checked;
-			checkBoxBuffsIronskin.Enabled = !checkBoxBuffsFlaskOfFortification.Checked && !checkBoxBuffsMajorDefense.Checked &&
-				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsMajorFortitude.Checked;
-			checkBoxBuffsMajorFortitude.Enabled = !checkBoxBuffsFlaskOfFortification.Checked && !checkBoxBuffsMajorDefense.Checked &&
-				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsIronskin.Checked;
-			checkBoxBuffsFlaskOfFortification.Enabled = !checkBoxBuffsAgilityElixir.Checked && !checkBoxBuffsMajorDefense.Checked &&
-				!checkBoxBuffsFlaskOfChromaticWonder.Checked && !checkBoxBuffsIronskin.Checked && !checkBoxBuffsMastery.Checked && !checkBoxBuffsMajorFortitude.Checked;
-			checkBoxBuffsFlaskOfChromaticWonder.Enabled = !checkBoxBuffsAgilityElixir.Checked && !checkBoxBuffsMajorDefense.Checked &&
-				!checkBoxBuffsFlaskOfFortification.Checked && !checkBoxBuffsIronskin.Checked && !checkBoxBuffsMastery.Checked && !checkBoxBuffsMajorFortitude.Checked;
-
-			if (!_loadingCharacter)
-			{
-				Character.Buffs.AgilityFood = checkBoxBuffsFoodAgility.Checked && checkBoxBuffsFoodAgility.Enabled;
-				Character.Buffs.BlessingOfKings = checkBoxBuffsKings.Checked && checkBoxBuffsKings.Enabled;
-				Character.Buffs.BloodPact = checkBoxBuffsPact.Checked && checkBoxBuffsPact.Enabled;
-				Character.Buffs.CommandingShout = checkBoxBuffsShout.Checked && checkBoxBuffsShout.Enabled;
-				Character.Buffs.DevotionAura = checkBoxBuffsDevo.Checked && checkBoxBuffsDevo.Enabled;
-				Character.Buffs.ElixirOfIronskin = checkBoxBuffsIronskin.Checked && checkBoxBuffsIronskin.Enabled;
-				Character.Buffs.ElixirOfMastery = checkBoxBuffsMastery.Checked && checkBoxBuffsMastery.Enabled;
-				Character.Buffs.ElixirOfMajorAgility = checkBoxBuffsAgilityElixir.Checked && checkBoxBuffsAgilityElixir.Enabled;
-				Character.Buffs.ElixirOfMajorDefense = checkBoxBuffsMajorDefense.Checked && checkBoxBuffsMajorDefense.Enabled;
-				Character.Buffs.ElixirOfMajorFortitude = checkBoxBuffsMajorFortitude.Checked && checkBoxBuffsMajorFortitude.Enabled;
-				Character.Buffs.FlaskOfFortification = checkBoxBuffsFlaskOfFortification.Checked && checkBoxBuffsFlaskOfFortification.Enabled;
-				Character.Buffs.FlaskOfChromaticWonder = checkBoxBuffsFlaskOfChromaticWonder.Checked && checkBoxBuffsFlaskOfChromaticWonder.Enabled;
-				Character.Buffs.GraceOfAirTotem = checkBoxBuffsGrace.Checked && checkBoxBuffsGrace.Enabled;
-				Character.Buffs.ImprovedBloodPact = checkBoxBuffsImpPact.Checked && checkBoxBuffsImpPact.Enabled;
-				Character.Buffs.ImprovedCommandingShout = checkBoxBuffsImpShout.Checked && checkBoxBuffsImpShout.Enabled;
-				Character.Buffs.ImprovedDevotionAura = checkBoxBuffsImpDevo.Checked && checkBoxBuffsImpDevo.Enabled;
-				Character.Buffs.ImprovedGraceOfAirTotem = checkBoxBuffsImpGrace.Checked && checkBoxBuffsImpGrace.Enabled;
-				Character.Buffs.ImprovedMarkOfTheWild = checkBoxBuffsImpMark.Checked && checkBoxBuffsImpMark.Enabled;
-				Character.Buffs.ImprovedPowerWordFortitude = checkBoxBuffsImpFort.Checked && checkBoxBuffsImpFort.Enabled;
-				Character.Buffs.InsectSwarm = checkBoxBuffsInsectSwarm.Checked && checkBoxBuffsInsectSwarm.Enabled;
-				Character.Buffs.MarkOfTheWild = checkBoxBuffsMark.Checked && checkBoxBuffsMark.Enabled;
-				Character.Buffs.PowerWordFortitude = checkBoxBuffsFort.Checked && checkBoxBuffsFort.Enabled;
-				Character.Buffs.ScorpidSting = checkBoxBuffsScorpidSting.Checked && checkBoxBuffsScorpidSting.Enabled;
-				Character.Buffs.StaminaFood = checkBoxBuffsFoodStamina.Checked && checkBoxBuffsFoodStamina.Enabled;
-				Character.Buffs.Malorne4PieceBonus = checkBoxBuffsMalorne.Checked && checkBoxBuffsMalorne.Enabled;
-				Character.Buffs.ScrollOfProtection = checkBoxBuffsScrollOfProtection.Checked && checkBoxBuffsScrollOfProtection.Enabled;
-				Character.Buffs.ScrollOfAgility = checkBoxBuffsScrollOfAgility.Checked && checkBoxBuffsScrollOfAgility.Enabled;
-				Character.Buffs.ShadowEmbrace = checkBoxBuffsShadowEmbrace.Checked && checkBoxBuffsShadowEmbrace.Enabled;
-				Character.Buffs.GladiatorResilience = checkBoxBuffsGladiatorResilience.Checked && checkBoxBuffsGladiatorResilience.Enabled;
-				_character_ItemsChanged(null, null);
-			}
-		}
-
 		private void comboBoxEnchant_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!_loadingCharacter)
@@ -433,7 +360,7 @@ namespace Rawr
 				Character.ShouldersEnchant = comboBoxEnchantShoulders.SelectedItem as Enchant;
 				Character.WeaponEnchant = comboBoxEnchantWeapon.SelectedItem as Enchant;
 				Character.WristEnchant = comboBoxEnchantWrists.SelectedItem as Enchant;
-				_character_ItemsChanged(null, null);
+				Character.OnItemsChanged();
 			}   //...Fire!
 		}
 
@@ -442,7 +369,7 @@ namespace Rawr
 			if (!_loadingCharacter)
 			{
 				Character.Race = radioButtonRaceNightElf.Checked ? Character.CharacterRace.NightElf : Character.CharacterRace.Tauren;
-				_character_ItemsChanged(null, null);
+				Character.OnItemsChanged();
 			}
 		}
 
@@ -471,22 +398,6 @@ namespace Rawr
 				Character.Realm = textBoxRealm.Text;
 				_unsavedChanges = true;
 			}
-		}
-
-		private void trackBarValueOfArmor_Scroll(object sender, EventArgs e)
-		{
-			//Calculations.ValueOfArmor = ((float)trackBarValueOfArmor.Value) / 100f;
-			_character_ItemsChanged(null, null);
-		}
-
-		private void groupBox3_Enter(object sender, EventArgs e)
-		{
-
-		}
-
-		private void tabPageBuffs_Click(object sender, EventArgs e)
-		{
-
 		}
 
 		private void copyCharacterStatsToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
@@ -539,7 +450,15 @@ namespace Rawr
 							break;
 
 						case "Buffs":
-							itemComparison1.LoadBuffs(_calculatedStats);
+							itemComparison1.LoadBuffs(_calculatedStats, (Buffs.BuffCatagory)Enum.Parse(typeof(Buffs.BuffCatagory), tag[1]));
+							break;
+
+						case "Current Gear/Enchants/Buffs":
+							itemComparison1.LoadCurrentGearEnchantsBuffs(_calculatedStats);
+							break;
+
+						case "Combat Table":
+							itemComparison1.LoadCombatTable(_calculatedStats);
 							break;
 					}
 				}
@@ -576,6 +495,7 @@ namespace Rawr
 			_spash.Show();
 			Application.DoEvents();
 			Armory.LoadUpgradesFromArmory(Character);
+			ItemCache.OnItemsChanged();
 			_spash.Hide();
 			_spash.Dispose();
 			this.Cursor = Cursors.Default;

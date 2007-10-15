@@ -103,7 +103,7 @@ namespace Rawr
                 if (_race != value)
                 {
                     _race = value;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace Rawr
                 if (value == null || _head != value.GemmedId)
                 {
                     _head = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -135,7 +135,7 @@ namespace Rawr
                 if (value == null || _neck != value.GemmedId)
                 {
                     _neck = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -148,7 +148,7 @@ namespace Rawr
                 if (value == null || _shoulders != value.GemmedId)
                 {
                     _shoulders = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -161,7 +161,7 @@ namespace Rawr
                 if (value == null || _back != value.GemmedId)
                 {
                     _back = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -174,7 +174,7 @@ namespace Rawr
                 if (value == null || _chest != value.GemmedId)
                 {
                     _chest = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -187,7 +187,7 @@ namespace Rawr
                 if (value == null || _shirt != value.GemmedId)
                 {
                     _shirt = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -200,7 +200,7 @@ namespace Rawr
                 if (value == null || _tabard != value.GemmedId)
                 {
                     _tabard = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -213,7 +213,7 @@ namespace Rawr
                 if (value == null || _wrist != value.GemmedId)
                 {
                     _wrist = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -226,7 +226,7 @@ namespace Rawr
                 if (value == null || _hands != value.GemmedId)
                 {
                     _hands = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -239,7 +239,7 @@ namespace Rawr
                 if (value == null || _waist != value.GemmedId)
                 {
                     _waist = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -252,7 +252,7 @@ namespace Rawr
                 if (value == null || _legs != value.GemmedId)
                 {
                     _legs = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -265,7 +265,7 @@ namespace Rawr
                 if (value == null || _feet != value.GemmedId)
                 {
                     _feet = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -278,7 +278,7 @@ namespace Rawr
                 if (value == null || _finger1 != value.GemmedId)
                 {
                     _finger1 = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -291,7 +291,7 @@ namespace Rawr
                 if (value == null || _finger2 != value.GemmedId)
                 {
                     _finger2 = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -304,7 +304,7 @@ namespace Rawr
                 if (value == null || _trinket1 != value.GemmedId)
                 {
                     _trinket1 = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -317,7 +317,7 @@ namespace Rawr
                 if (value == null || _trinket2 != value.GemmedId)
                 {
                     _trinket2 = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -330,7 +330,7 @@ namespace Rawr
                 if (value == null || _weapon != value.GemmedId)
                 {
                     _weapon = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
         }
@@ -343,7 +343,7 @@ namespace Rawr
                 if (value == null || _idol != value.GemmedId)
                 {
                     _idol = value != null ? value.GemmedId : null;
-                    if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+                    OnItemsChanged();
                 }
             }
 		}
@@ -474,6 +474,11 @@ namespace Rawr
 		}
 
 		public event EventHandler ItemsChanged;
+		public void OnItemsChanged()
+		{
+			if (ItemsChanged != null) 
+				ItemsChanged(this, EventArgs.Empty);
+		}
 
         [System.Xml.Serialization.XmlIgnore]
         public Item this[CharacterSlot slot]
@@ -626,7 +631,8 @@ namespace Rawr
             Weapon = 15,
             Idol = 17,
 			Gems = 100,
-			Metas = 101
+			Metas = 101,
+			None = -1
         }
 
         public Character() { }

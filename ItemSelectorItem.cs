@@ -20,25 +20,32 @@ namespace Rawr
 			{
 				a.MouseMove += new MouseEventHandler(ItemSelectorItem_MouseEnterLeave);
 				a.MouseLeave += new EventHandler(ItemSelectorItem_MouseEnterLeave);
-				a.Click += new EventHandler(ItemSelectorItem_Click);
+				a.MouseClick += new MouseEventHandler(ItemSelectorItem_MouseClick);
 				foreach (Control b in a.Controls)
 			    {
 					b.MouseMove += new MouseEventHandler(ItemSelectorItem_MouseEnterLeave);
 					b.MouseLeave += new EventHandler(ItemSelectorItem_MouseEnterLeave);
-					b.Click += new EventHandler(ItemSelectorItem_Click);
+					b.MouseClick += new MouseEventHandler(ItemSelectorItem_MouseClick);
 					foreach (Control c in b.Controls)
 			        {
 						c.MouseMove += new MouseEventHandler(ItemSelectorItem_MouseEnterLeave);
 						c.MouseLeave += new EventHandler(ItemSelectorItem_MouseEnterLeave);
-						c.Click += new EventHandler(ItemSelectorItem_Click);
+						c.MouseClick += new MouseEventHandler(ItemSelectorItem_MouseClick);
 					}
 			    }				
 			}
 		}
 
-		void ItemSelectorItem_Click(object sender, EventArgs e)
+		void ItemSelectorItem_MouseClick(object sender, MouseEventArgs e)
 		{
-			(FindForm() as FormItemSelection).Select(_itemCalculation.Item);
+			if (e.Button == MouseButtons.Left)
+			{
+				(FindForm() as FormItemSelection).Select(_itemCalculation.Item);
+			}
+			else if (e.Button == MouseButtons.Right)
+			{
+				ItemContextualMenu.Instance.Show(ItemCalculation.Item, Character.CharacterSlot.None, !ItemCalculation.Equipped);
+			}
 		}
 
 		private bool _tooltipShown = false;
@@ -68,7 +75,7 @@ namespace Rawr
 			{
 				_tooltipShown = true;
 				int tipX = this.Width + 20;
-				if (Parent.PointToScreen(Location).X + tipX + 249 > SystemInformation.WorkingArea.Right)
+				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 					tipX = -249;
 				ItemToolTip.Instance.Show("tooltip", this, tipX, 0);
 
@@ -95,6 +102,7 @@ namespace Rawr
 			}
 		}
 
+		public Character.CharacterSlot CharacterSlot;
 		public Item GetItem() { return _itemCalculation.Item; }
 		private ItemCalculation _itemCalculation;
 		public ItemCalculation ItemCalculation

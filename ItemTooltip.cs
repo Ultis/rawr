@@ -37,6 +37,13 @@ namespace Rawr
 			this.UseAnimation = true;
 			this.UseFading = true;
 			LoadGraphicsObjects();
+
+			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+		}
+
+		void ItemCache_ItemsChanged(object sender, EventArgs e)
+		{
+			_currentItem = null;
 		}
 
 		protected Item _currentItem = null;
@@ -102,7 +109,7 @@ namespace Rawr
 								(i == 1 ? CurrentItem.Sockets.Color2 : CurrentItem.Sockets.Color3));
 							if (slotColor != Item.ItemSlot.None)
 							{
-								Rectangle rectGemBorder = new Rectangle(3 + (83 * (i)), 59, 36, 36);
+								Rectangle rectGemBorder = new Rectangle(3 + (83 * (i)), 59, 35, 35);
 								Brush brushGemBorder = new SolidBrush(Color.Silver);
 								switch (slotColor)
 								{

@@ -91,6 +91,10 @@ namespace Rawr
 				}
 				ItemCalculation enchantCalc = new ItemCalculation();
 				enchantCalc.ItemName = enchant.Name;
+				enchantCalc.Item = new Item();
+				enchantCalc.Item.Name = enchant.Name;
+				enchantCalc.Item.Stats = enchant.Stats;
+				enchantCalc.Equipped = isEquipped;
 				enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
 				enchantCalc.MitigationPoints = calcsEquipped.MitigationPoints - calcsUnequipped.MitigationPoints;
 				enchantCalc.SurvivalPoints = calcsEquipped.SurvivalPoints - calcsUnequipped.SurvivalPoints;
@@ -99,25 +103,16 @@ namespace Rawr
 			return enchantCalcs;
 		}
 
-		public static List<ItemCalculation> GetBuffCalculations(Character character, CalculatedStats currentCalcs)
+		public static List<ItemCalculation> GetBuffCalculations(Character character, CalculatedStats currentCalcs, Buffs.BuffCatagory buffCategory)
 		{
 			List<ItemCalculation> buffCalcs = new List<ItemCalculation>();
 			CalculatedStats calcsEquipped = null;
 			CalculatedStats calcsUnequipped = null;
-			foreach (string buff in Buffs.AllBuffs)
+			string[] buffs = buffCategory == Buffs.BuffCatagory.AllLongDurationBuffsNoDW ? Buffs.AllLongDurationBuffsNoDW : Buffs.AllBuffs;
+			foreach (string buff in buffs)
 			{
-				//if (buffCalcs.ContainsKey(buff.Id)) continue;
-
-				//bool isEquipped = character.Buffs[buff];
-				//if (isEquipped)
-				//{
-				//    calcsEquipped = currentCalcs;
-				//    Character charUnequipped = character.Clone();
-				//    charUnequipped.Buffs[buff] = false;
-				//    calcsUnequipped = GetCalculatedStatsFromBasicStats(charUnequipped.Buffs, GetCharacterStats(charUnequipped));
-				//}
-				//else
-				//{
+				if (buffCategory != Buffs.BuffCatagory.CurrentBuffs || character.Buffs[buff])
+				{
 					Character charUnequipped = character.Clone();
 					Character charEquipped = character.Clone();
 					charUnequipped.Buffs[buff] = false;
@@ -128,13 +123,15 @@ namespace Rawr
 					charEquipped.Buffs["Improved " + buff] = false;
 					calcsUnequipped = GetCalculatedStatsFromBasicStats(charUnequipped.Buffs, GetCharacterStats(charUnequipped));
 					calcsEquipped = GetCalculatedStatsFromBasicStats(charEquipped.Buffs, GetCharacterStats(charEquipped));
-				//}
-				ItemCalculation buffCalc = new ItemCalculation();
-				buffCalc.ItemName = buff;
-				buffCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
-				buffCalc.MitigationPoints = calcsEquipped.MitigationPoints - calcsUnequipped.MitigationPoints;
-				buffCalc.SurvivalPoints = calcsEquipped.SurvivalPoints - calcsUnequipped.SurvivalPoints;
-				buffCalcs.Add(buffCalc);
+					
+					ItemCalculation buffCalc = new ItemCalculation();
+					buffCalc.ItemName = buff;
+					buffCalc.Equipped = character.Buffs[buff];
+					buffCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+					buffCalc.MitigationPoints = calcsEquipped.MitigationPoints - calcsUnequipped.MitigationPoints;
+					buffCalc.SurvivalPoints = calcsEquipped.SurvivalPoints - calcsUnequipped.SurvivalPoints;
+					buffCalcs.Add(buffCalc);
+				}
 			}
 			return buffCalcs;
 		}
@@ -186,8 +183,8 @@ namespace Rawr
 		{
 			CalculatedStats calculatedStats = new CalculatedStats();
 			calculatedStats.BasicStats = stats;
-			calculatedStats.Dodge = stats.Agility / 14.7059f + stats.DodgeRating / 18.9231f + stats.DefenseRating / 59.134615f -0.6f;
-			calculatedStats.Miss = 5 + stats.DefenseRating / 60f + (buffs.ScorpidSting ? 5f : 0f) + (buffs.InsectSwarm ? 2f : 0f) - 0.6f;
+			calculatedStats.Miss = 5 + stats.DefenseRating / 60f + (buffs.DualWieldingMob ? 20f : 0f) + (buffs.ScorpidSting ? 5f : 0f) + (buffs.InsectSwarm ? 2f : 0f) - 0.6f;
+			calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, stats.Agility / 14.7059f + stats.DodgeRating / 18.9231f + stats.DefenseRating / 59.134615f -0.6f);
 			calculatedStats.Mitigation = (stats.Armor / (stats.Armor + 11959.5f)) * 100f;
 			calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
 			calculatedStats.DodgePlusMiss = calculatedStats.Dodge + calculatedStats.Miss;
@@ -263,7 +260,7 @@ namespace Rawr
 			statsTotal.DodgeRating = statsRace.DodgeRating + statsBaseGear.DodgeRating + statsBuffs.DodgeRating;
 			statsTotal.Resilience = statsRace.Resilience + statsBaseGear.Resilience + statsBuffs.Resilience;
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsBaseGear.Health + statsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
-			statsTotal.Armor = (float)Math.Round((statsBaseGear.Armor * 5.5f) + statsRace.Armor + statsBuffs.Armor + (statsTotal.Agility * 2f));
+			statsTotal.Armor = (float)Math.Round(((statsBaseGear.Armor * 5.5f) + statsRace.Armor + statsBuffs.Armor + (statsTotal.Agility * 2f)) * (character.Buffs.AncestralFortitude ? 1.25f : 1f) * (character.Buffs.ImprovedLayOnHands ? 1.3f : 1f));
 
             return statsTotal;
         }
@@ -292,14 +289,22 @@ namespace Rawr
             statsTotal.Health =
                 (buffs.CommandingShout ?            1080f : 0) +
                 (buffs.ImprovedCommandingShout ?    (float)Math.Floor(1080f * 0.25f) : 0) +
+                (buffs.HeroicPotion ?				700f : 0) +
+                (buffs.NightmareSeed ?				2000f : 0) +
+                (buffs.Heroic1750HealthTrinket ?			1750f : 0) +
+                (buffs.ArgussianCompass ?			1150f : 0) +
+                (buffs.BroochOfTheImmortalKing ?    1250f : 0) +
                 (buffs.ElixirOfMajorFortitude ?     250f : 0) +
-                (buffs.FlaskOfFortification ?           500f : 0);
+                (buffs.FlaskOfFortification ?       500f : 0);
             statsTotal.Armor =
                 (buffs.MarkOfTheWild ?              340f : 0) +
                 (buffs.ImprovedMarkOfTheWild ?      (float)Math.Floor(340f * 0.35f) : 0) +
                 (buffs.ElixirOfMajorDefense ?		550f : 0) +
                 (buffs.ScrollOfProtection	?		300f : 0) +
                 (buffs.Malorne4PieceBonus ?			1400f : 0) +
+                (buffs.IronshieldPotion ?			2500f : 0) +
+                (buffs.LivingRootOfTheWildheart ?	4070f : 0) +
+                (buffs.AdamantiteFigurine ?			1280f : 0) +
                 (buffs.DevotionAura ?				861f : 0) +
                 (buffs.ImprovedDevotionAura ?		(float)Math.Floor(861f * 0.4f) : 0);
             statsTotal.Agility =
@@ -311,6 +316,8 @@ namespace Rawr
                 (buffs.ElixirOfMajorAgility ?		35f : 0) + 
                 (buffs.FlaskOfChromaticWonder ?		18f : 0) + 
                 (buffs.ElixirOfMastery ?			15f : 0) + 
+                (buffs.BadgeOfTenacity ?			150f : 0) + 
+                (buffs.IdolOfTerror ?				65f : 0) + 
                 (buffs.ScrollOfAgility ?			20f : 0);
             statsTotal.Stamina =
                 (buffs.PowerWordFortitude ?			79f : 0) +
@@ -322,10 +329,15 @@ namespace Rawr
                 (buffs.ElixirOfMastery ?			15f : 0) + 
                 (buffs.FlaskOfChromaticWonder ?		18f : 0) + 
                 (buffs.StaminaFood ?				30f : 0);
-            statsTotal.DefenseRating =
+            statsTotal.DodgeRating =
+                (buffs.MoongladeRejuvination ?		35f : 0) + 
+                (buffs.DawnstoneCrab ?				125f : 0) + 
+                (buffs.MoroesLuckyPocketWatch ?		300f : 0);
+			statsTotal.DefenseRating =
                 (buffs.FlaskOfFortification ?		10f : 0);
 			statsTotal.Resilience =
 				(buffs.GladiatorResilience ?		35f : 0) +
+                (buffs.Season3ResilienceRelic ?				31f : 0) +
                 (buffs.ElixirOfIronskin ?			30f : 0);
             return statsTotal;
         }

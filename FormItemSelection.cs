@@ -86,6 +86,15 @@ namespace Rawr
 		{
 			InitializeComponent();
 			this.Activated += new EventHandler(FormItemSelection_Activated);
+
+			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+		}
+
+		void ItemCache_ItemsChanged(object sender, EventArgs e)
+		{
+			Character.CharacterSlot characterSlot = _characterSlot;
+			_characterSlot = Character.CharacterSlot.None;
+			LoadGearBySlot(characterSlot);
 		}
 
 		void FormItemSelection_Activated(object sender, EventArgs e)
@@ -125,13 +134,14 @@ namespace Rawr
 		{
 			Point ctrlScreen = ctrl.Parent.PointToScreen(ctrl.Location);
 			Point location = new Point(ctrlScreen.X + ctrl.Width, ctrlScreen.Y);
-			if (location.X < System.Windows.Forms.SystemInformation.WorkingArea.Left)
-				location.X = System.Windows.Forms.SystemInformation.WorkingArea.Left;
-			if (location.Y < System.Windows.Forms.SystemInformation.WorkingArea.Top)
-				location.Y = System.Windows.Forms.SystemInformation.WorkingArea.Top;
-			if (location.X + this.Width > System.Windows.Forms.SystemInformation.WorkingArea.Right)
+			Rectangle workingArea = System.Windows.Forms.Screen.GetWorkingArea(this);
+			if (location.X < workingArea.Left)
+				location.X = workingArea.Left;
+			if (location.Y < workingArea.Top)
+				location.Y = workingArea.Top;
+			if (location.X + this.Width > workingArea.Right)
 				location.X = ctrlScreen.X - this.Width;
-			if (location.Y + this.Height > System.Windows.Forms.SystemInformation.WorkingArea.Bottom)
+			if (location.Y + this.Height > workingArea.Bottom)
 				location.Y = ctrlScreen.Y + ctrl.Height - this.Height;
 			this.Location = location;
 		}
@@ -154,7 +164,7 @@ namespace Rawr
 			this.Cursor = Cursors.Default;
 		}
 
-		private Character.CharacterSlot _characterSlot = (Character.CharacterSlot)(-1);
+		private Character.CharacterSlot _characterSlot = Character.CharacterSlot.None;
 		private ItemButton _button;
 		public void LoadGearBySlot(Character.CharacterSlot slot)
 		{
@@ -214,7 +224,7 @@ namespace Rawr
 		public void Select(Item item)
 		{
 			_button.SelectedItem = item;
-			_characterSlot = (Character.CharacterSlot)(-1);
+			_characterSlot = Character.CharacterSlot.None;
 			ItemToolTip.Instance.Hide(this);
 			this.Hide();
 		}

@@ -41,11 +41,21 @@ namespace Rawr
 		{
 			this.Size = new System.Drawing.Size(70, 70);
 			this.Text = string.Empty;
-			this.Click += new EventHandler(ItemButton_Click);
+			this.MouseUp += new MouseEventHandler(ItemButton_MouseClick);
 			this.MouseEnter += new EventHandler(ItemButton_MouseEnter);
 			this.MouseLeave += new EventHandler(ItemButton_MouseLeave);
 
 			ItemToolTip.Instance.SetToolTip(this, "");
+
+			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+		}
+
+		void ItemCache_ItemsChanged(object sender, EventArgs e)
+		{
+			if (SelectedItem != null)
+			{
+				SelectedItem = ItemCache.FindItemById(SelectedItem.GemmedId);
+			}
 		}
 
 		void ItemButton_MouseLeave(object sender, EventArgs e)
@@ -58,15 +68,22 @@ namespace Rawr
 			if (SelectedItem != null)
 			{
 				int tipX = this.Width;
-				if (Parent.PointToScreen(Location).X + tipX + 249 > SystemInformation.WorkingArea.Right)
+				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 					tipX = -249;
 				ItemToolTip.Instance.Show("tooltip", this, tipX, 0);
 			}
 		}
 
-		void ItemButton_Click(object sender, EventArgs e)
+		void ItemButton_MouseClick(object sender, MouseEventArgs e)
 		{
-			FormItemSelection.Instance.Show(this, CharacterSlot);
+			if (e.Button == MouseButtons.Left)
+			{
+				FormItemSelection.Instance.Show(this, CharacterSlot);
+			}
+			else if (e.Button == MouseButtons.Right && SelectedItem != null)
+			{
+				ItemContextualMenu.Instance.Show(SelectedItem, Character.CharacterSlot.None, false);
+			}
 		}
 
 		private Character.CharacterSlot _characterSlot = Character.CharacterSlot.Head;

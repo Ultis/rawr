@@ -77,7 +77,7 @@ namespace Rawr
 
 		public static List<Enchant> FindEnchants(Item.ItemSlot slot)
 		{
-			return AllEnchants.FindAll(new Predicate<Enchant>(delegate(Enchant enchant) { return enchant.Slot == slot || enchant.Slot == Item.ItemSlot.None; }));
+			return AllEnchants.FindAll(new Predicate<Enchant>(delegate(Enchant enchant) { return enchant.Slot == slot || enchant.Slot == Item.ItemSlot.None || slot == Item.ItemSlot.None; }));
 		}
     }
 }

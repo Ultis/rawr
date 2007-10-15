@@ -28,6 +28,7 @@ namespace Rawr
         /// </summary>
         private void InitializeComponent()
         {
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
 			this.menuStripMain = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -124,35 +125,7 @@ namespace Rawr
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.tabPageBuffs = new System.Windows.Forms.TabPage();
-			this.checkBoxBuffsImpGrace = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsImpDevo = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsImpShout = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsImpPact = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsImpMark = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsImpFort = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsFoodStamina = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsFoodAgility = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsFlaskOfChromaticWonder = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsFlaskOfFortification = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsIronskin = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsAgilityElixir = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsMajorDefense = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsMastery = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsMajorFortitude = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsShadowEmbrace = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsGladiatorResilience = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsScrollOfAgility = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsMalorne = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsScrollOfProtection = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsKings = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsGrace = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsDevo = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsInsectSwarm = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsScorpidSting = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsShout = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsPact = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsMark = new System.Windows.Forms.CheckBox();
-			this.checkBoxBuffsFort = new System.Windows.Forms.CheckBox();
+			this.buffSelector1 = new Rawr.BuffSelector();
 			this.itemButtonBack = new Rawr.ItemButton();
 			this.itemButtonChest = new Rawr.ItemButton();
 			this.itemButtonFeet = new Rawr.ItemButton();
@@ -210,12 +183,19 @@ namespace Rawr
 			this.weaponToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.buffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.currentGearEnchantsBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.combatTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
 			this.toolStripDropDownButtonSort = new System.Windows.Forms.ToolStripDropDownButton();
 			this.overallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.survivalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mitigationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.alphabeticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolTipSimple = new System.Windows.Forms.ToolTip(this.components);
+			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+			this.allBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.allLongDurationBuffsNoDWToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.currentBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStripMain.SuspendLayout();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1211,374 +1191,28 @@ namespace Rawr
 			// 
 			// tabPageBuffs
 			// 
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsImpGrace);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsImpDevo);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsImpShout);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsImpPact);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsImpMark);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsImpFort);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsFoodStamina);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsFoodAgility);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsFlaskOfChromaticWonder);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsFlaskOfFortification);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsIronskin);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsAgilityElixir);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsMajorDefense);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsMastery);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsMajorFortitude);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsShadowEmbrace);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsGladiatorResilience);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsScrollOfAgility);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsMalorne);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsScrollOfProtection);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsKings);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsGrace);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsDevo);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsInsectSwarm);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsScorpidSting);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsShout);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsPact);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsMark);
-			this.tabPageBuffs.Controls.Add(this.checkBoxBuffsFort);
+			this.tabPageBuffs.Controls.Add(this.buffSelector1);
 			this.tabPageBuffs.Location = new System.Drawing.Point(4, 22);
 			this.tabPageBuffs.Name = "tabPageBuffs";
-			this.tabPageBuffs.Padding = new System.Windows.Forms.Padding(3);
 			this.tabPageBuffs.Size = new System.Drawing.Size(214, 549);
 			this.tabPageBuffs.TabIndex = 2;
 			this.tabPageBuffs.Text = "Buffs";
 			this.tabPageBuffs.UseVisualStyleBackColor = true;
-			this.tabPageBuffs.Click += new System.EventHandler(this.tabPageBuffs_Click);
 			// 
-			// checkBoxBuffsImpGrace
+			// buffSelector1
 			// 
-			this.checkBoxBuffsImpGrace.AutoSize = true;
-			this.checkBoxBuffsImpGrace.Enabled = false;
-			this.checkBoxBuffsImpGrace.Location = new System.Drawing.Point(24, 202);
-			this.checkBoxBuffsImpGrace.Name = "checkBoxBuffsImpGrace";
-			this.checkBoxBuffsImpGrace.Size = new System.Drawing.Size(70, 17);
-			this.checkBoxBuffsImpGrace.TabIndex = 0;
-			this.checkBoxBuffsImpGrace.Text = "Improved";
-			this.checkBoxBuffsImpGrace.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsImpGrace.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsImpDevo
-			// 
-			this.checkBoxBuffsImpDevo.AutoSize = true;
-			this.checkBoxBuffsImpDevo.Enabled = false;
-			this.checkBoxBuffsImpDevo.Location = new System.Drawing.Point(24, 166);
-			this.checkBoxBuffsImpDevo.Name = "checkBoxBuffsImpDevo";
-			this.checkBoxBuffsImpDevo.Size = new System.Drawing.Size(70, 17);
-			this.checkBoxBuffsImpDevo.TabIndex = 0;
-			this.checkBoxBuffsImpDevo.Text = "Improved";
-			this.checkBoxBuffsImpDevo.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsImpDevo.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsImpShout
-			// 
-			this.checkBoxBuffsImpShout.AutoSize = true;
-			this.checkBoxBuffsImpShout.Enabled = false;
-			this.checkBoxBuffsImpShout.Location = new System.Drawing.Point(24, 130);
-			this.checkBoxBuffsImpShout.Name = "checkBoxBuffsImpShout";
-			this.checkBoxBuffsImpShout.Size = new System.Drawing.Size(70, 17);
-			this.checkBoxBuffsImpShout.TabIndex = 0;
-			this.checkBoxBuffsImpShout.Text = "Improved";
-			this.checkBoxBuffsImpShout.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsImpShout.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsImpPact
-			// 
-			this.checkBoxBuffsImpPact.AutoSize = true;
-			this.checkBoxBuffsImpPact.Enabled = false;
-			this.checkBoxBuffsImpPact.Location = new System.Drawing.Point(24, 94);
-			this.checkBoxBuffsImpPact.Name = "checkBoxBuffsImpPact";
-			this.checkBoxBuffsImpPact.Size = new System.Drawing.Size(70, 17);
-			this.checkBoxBuffsImpPact.TabIndex = 0;
-			this.checkBoxBuffsImpPact.Text = "Improved";
-			this.checkBoxBuffsImpPact.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsImpPact.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsImpMark
-			// 
-			this.checkBoxBuffsImpMark.AutoSize = true;
-			this.checkBoxBuffsImpMark.Enabled = false;
-			this.checkBoxBuffsImpMark.Location = new System.Drawing.Point(24, 58);
-			this.checkBoxBuffsImpMark.Name = "checkBoxBuffsImpMark";
-			this.checkBoxBuffsImpMark.Size = new System.Drawing.Size(70, 17);
-			this.checkBoxBuffsImpMark.TabIndex = 0;
-			this.checkBoxBuffsImpMark.Text = "Improved";
-			this.checkBoxBuffsImpMark.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsImpMark.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsImpFort
-			// 
-			this.checkBoxBuffsImpFort.AutoSize = true;
-			this.checkBoxBuffsImpFort.Enabled = false;
-			this.checkBoxBuffsImpFort.Location = new System.Drawing.Point(24, 22);
-			this.checkBoxBuffsImpFort.Name = "checkBoxBuffsImpFort";
-			this.checkBoxBuffsImpFort.Size = new System.Drawing.Size(70, 17);
-			this.checkBoxBuffsImpFort.TabIndex = 0;
-			this.checkBoxBuffsImpFort.Text = "Improved";
-			this.checkBoxBuffsImpFort.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsImpFort.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsFoodStamina
-			// 
-			this.checkBoxBuffsFoodStamina.AutoSize = true;
-			this.checkBoxBuffsFoodStamina.Location = new System.Drawing.Point(6, 240);
-			this.checkBoxBuffsFoodStamina.Name = "checkBoxBuffsFoodStamina";
-			this.checkBoxBuffsFoodStamina.Size = new System.Drawing.Size(106, 17);
-			this.checkBoxBuffsFoodStamina.TabIndex = 0;
-			this.checkBoxBuffsFoodStamina.Text = "30 Stamina Food";
-			this.checkBoxBuffsFoodStamina.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsFoodStamina.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsFoodAgility
-			// 
-			this.checkBoxBuffsFoodAgility.AutoSize = true;
-			this.checkBoxBuffsFoodAgility.Location = new System.Drawing.Point(6, 221);
-			this.checkBoxBuffsFoodAgility.Name = "checkBoxBuffsFoodAgility";
-			this.checkBoxBuffsFoodAgility.Size = new System.Drawing.Size(95, 17);
-			this.checkBoxBuffsFoodAgility.TabIndex = 0;
-			this.checkBoxBuffsFoodAgility.Text = "20 Agility Food";
-			this.checkBoxBuffsFoodAgility.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsFoodAgility.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsFlaskOfChromaticWonder
-			// 
-			this.checkBoxBuffsFlaskOfChromaticWonder.AutoSize = true;
-			this.checkBoxBuffsFlaskOfChromaticWonder.Location = new System.Drawing.Point(6, 373);
-			this.checkBoxBuffsFlaskOfChromaticWonder.Name = "checkBoxBuffsFlaskOfChromaticWonder";
-			this.checkBoxBuffsFlaskOfChromaticWonder.Size = new System.Drawing.Size(154, 17);
-			this.checkBoxBuffsFlaskOfChromaticWonder.TabIndex = 0;
-			this.checkBoxBuffsFlaskOfChromaticWonder.Text = "Flask of Chromatic Wonder";
-			this.checkBoxBuffsFlaskOfChromaticWonder.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsFlaskOfChromaticWonder.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsFlaskOfFortification
-			// 
-			this.checkBoxBuffsFlaskOfFortification.AutoSize = true;
-			this.checkBoxBuffsFlaskOfFortification.Location = new System.Drawing.Point(6, 354);
-			this.checkBoxBuffsFlaskOfFortification.Name = "checkBoxBuffsFlaskOfFortification";
-			this.checkBoxBuffsFlaskOfFortification.Size = new System.Drawing.Size(120, 17);
-			this.checkBoxBuffsFlaskOfFortification.TabIndex = 0;
-			this.checkBoxBuffsFlaskOfFortification.Text = "Flask of Fortification";
-			this.checkBoxBuffsFlaskOfFortification.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsFlaskOfFortification.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsIronskin
-			// 
-			this.checkBoxBuffsIronskin.AutoSize = true;
-			this.checkBoxBuffsIronskin.Location = new System.Drawing.Point(6, 278);
-			this.checkBoxBuffsIronskin.Name = "checkBoxBuffsIronskin";
-			this.checkBoxBuffsIronskin.Size = new System.Drawing.Size(99, 17);
-			this.checkBoxBuffsIronskin.TabIndex = 0;
-			this.checkBoxBuffsIronskin.Text = "Elixir of Ironskin";
-			this.checkBoxBuffsIronskin.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsIronskin.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsAgilityElixir
-			// 
-			this.checkBoxBuffsAgilityElixir.AutoSize = true;
-			this.checkBoxBuffsAgilityElixir.Location = new System.Drawing.Point(6, 335);
-			this.checkBoxBuffsAgilityElixir.Name = "checkBoxBuffsAgilityElixir";
-			this.checkBoxBuffsAgilityElixir.Size = new System.Drawing.Size(118, 17);
-			this.checkBoxBuffsAgilityElixir.TabIndex = 0;
-			this.checkBoxBuffsAgilityElixir.Text = "Elixir of Major Agility";
-			this.checkBoxBuffsAgilityElixir.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsAgilityElixir.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsMajorDefense
-			// 
-			this.checkBoxBuffsMajorDefense.AutoSize = true;
-			this.checkBoxBuffsMajorDefense.Location = new System.Drawing.Point(6, 259);
-			this.checkBoxBuffsMajorDefense.Name = "checkBoxBuffsMajorDefense";
-			this.checkBoxBuffsMajorDefense.Size = new System.Drawing.Size(131, 17);
-			this.checkBoxBuffsMajorDefense.TabIndex = 0;
-			this.checkBoxBuffsMajorDefense.Text = "Elixir of Major Defense";
-			this.checkBoxBuffsMajorDefense.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsMajorDefense.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsMastery
-			// 
-			this.checkBoxBuffsMastery.AutoSize = true;
-			this.checkBoxBuffsMastery.Location = new System.Drawing.Point(6, 316);
-			this.checkBoxBuffsMastery.Name = "checkBoxBuffsMastery";
-			this.checkBoxBuffsMastery.Size = new System.Drawing.Size(99, 17);
-			this.checkBoxBuffsMastery.TabIndex = 0;
-			this.checkBoxBuffsMastery.Text = "Elixir of Mastery";
-			this.checkBoxBuffsMastery.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsMastery.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsMajorFortitude
-			// 
-			this.checkBoxBuffsMajorFortitude.AutoSize = true;
-			this.checkBoxBuffsMajorFortitude.Location = new System.Drawing.Point(6, 297);
-			this.checkBoxBuffsMajorFortitude.Name = "checkBoxBuffsMajorFortitude";
-			this.checkBoxBuffsMajorFortitude.Size = new System.Drawing.Size(132, 17);
-			this.checkBoxBuffsMajorFortitude.TabIndex = 0;
-			this.checkBoxBuffsMajorFortitude.Text = "Elixir of Major Fortitude";
-			this.checkBoxBuffsMajorFortitude.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsMajorFortitude.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsShadowEmbrace
-			// 
-			this.checkBoxBuffsShadowEmbrace.AutoSize = true;
-			this.checkBoxBuffsShadowEmbrace.Location = new System.Drawing.Point(6, 487);
-			this.checkBoxBuffsShadowEmbrace.Name = "checkBoxBuffsShadowEmbrace";
-			this.checkBoxBuffsShadowEmbrace.Size = new System.Drawing.Size(110, 17);
-			this.checkBoxBuffsShadowEmbrace.TabIndex = 0;
-			this.checkBoxBuffsShadowEmbrace.Text = "Shadow Embrace";
-			this.checkBoxBuffsShadowEmbrace.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsShadowEmbrace.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsGladiatorResilience
-			// 
-			this.checkBoxBuffsGladiatorResilience.AutoSize = true;
-			this.checkBoxBuffsGladiatorResilience.Location = new System.Drawing.Point(6, 525);
-			this.checkBoxBuffsGladiatorResilience.Name = "checkBoxBuffsGladiatorResilience";
-			this.checkBoxBuffsGladiatorResilience.Size = new System.Drawing.Size(189, 17);
-			this.checkBoxBuffsGladiatorResilience.TabIndex = 0;
-			this.checkBoxBuffsGladiatorResilience.Text = "Gladiator/Marshal\'s 2-Piece Bonus";
-			this.checkBoxBuffsGladiatorResilience.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsGladiatorResilience.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsScrollOfAgility
-			// 
-			this.checkBoxBuffsScrollOfAgility.AutoSize = true;
-			this.checkBoxBuffsScrollOfAgility.Location = new System.Drawing.Point(6, 449);
-			this.checkBoxBuffsScrollOfAgility.Name = "checkBoxBuffsScrollOfAgility";
-			this.checkBoxBuffsScrollOfAgility.Size = new System.Drawing.Size(104, 17);
-			this.checkBoxBuffsScrollOfAgility.TabIndex = 0;
-			this.checkBoxBuffsScrollOfAgility.Text = "Scroll of Agility V";
-			this.checkBoxBuffsScrollOfAgility.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsScrollOfAgility.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsMalorne
-			// 
-			this.checkBoxBuffsMalorne.AutoSize = true;
-			this.checkBoxBuffsMalorne.Location = new System.Drawing.Point(6, 506);
-			this.checkBoxBuffsMalorne.Name = "checkBoxBuffsMalorne";
-			this.checkBoxBuffsMalorne.Size = new System.Drawing.Size(136, 17);
-			this.checkBoxBuffsMalorne.TabIndex = 0;
-			this.checkBoxBuffsMalorne.Text = "Malorne 4-Piece Bonus";
-			this.checkBoxBuffsMalorne.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsMalorne.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsScrollOfProtection
-			// 
-			this.checkBoxBuffsScrollOfProtection.AutoSize = true;
-			this.checkBoxBuffsScrollOfProtection.Location = new System.Drawing.Point(6, 468);
-			this.checkBoxBuffsScrollOfProtection.Name = "checkBoxBuffsScrollOfProtection";
-			this.checkBoxBuffsScrollOfProtection.Size = new System.Drawing.Size(125, 17);
-			this.checkBoxBuffsScrollOfProtection.TabIndex = 0;
-			this.checkBoxBuffsScrollOfProtection.Text = "Scroll of Protection V";
-			this.checkBoxBuffsScrollOfProtection.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsScrollOfProtection.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsKings
-			// 
-			this.checkBoxBuffsKings.AutoSize = true;
-			this.checkBoxBuffsKings.Location = new System.Drawing.Point(6, 430);
-			this.checkBoxBuffsKings.Name = "checkBoxBuffsKings";
-			this.checkBoxBuffsKings.Size = new System.Drawing.Size(106, 17);
-			this.checkBoxBuffsKings.TabIndex = 0;
-			this.checkBoxBuffsKings.Text = "Blessing of Kings";
-			this.checkBoxBuffsKings.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsKings.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsGrace
-			// 
-			this.checkBoxBuffsGrace.AutoSize = true;
-			this.checkBoxBuffsGrace.Location = new System.Drawing.Point(6, 185);
-			this.checkBoxBuffsGrace.Name = "checkBoxBuffsGrace";
-			this.checkBoxBuffsGrace.Size = new System.Drawing.Size(115, 17);
-			this.checkBoxBuffsGrace.TabIndex = 0;
-			this.checkBoxBuffsGrace.Text = "Grace of Air Totem";
-			this.checkBoxBuffsGrace.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsGrace.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsDevo
-			// 
-			this.checkBoxBuffsDevo.AutoSize = true;
-			this.checkBoxBuffsDevo.Location = new System.Drawing.Point(6, 149);
-			this.checkBoxBuffsDevo.Name = "checkBoxBuffsDevo";
-			this.checkBoxBuffsDevo.Size = new System.Drawing.Size(94, 17);
-			this.checkBoxBuffsDevo.TabIndex = 0;
-			this.checkBoxBuffsDevo.Text = "Devotion Aura";
-			this.checkBoxBuffsDevo.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsDevo.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsInsectSwarm
-			// 
-			this.checkBoxBuffsInsectSwarm.AutoSize = true;
-			this.checkBoxBuffsInsectSwarm.Location = new System.Drawing.Point(6, 411);
-			this.checkBoxBuffsInsectSwarm.Name = "checkBoxBuffsInsectSwarm";
-			this.checkBoxBuffsInsectSwarm.Size = new System.Drawing.Size(90, 17);
-			this.checkBoxBuffsInsectSwarm.TabIndex = 0;
-			this.checkBoxBuffsInsectSwarm.Text = "Insect Swarm";
-			this.checkBoxBuffsInsectSwarm.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsInsectSwarm.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsScorpidSting
-			// 
-			this.checkBoxBuffsScorpidSting.AutoSize = true;
-			this.checkBoxBuffsScorpidSting.Location = new System.Drawing.Point(6, 392);
-			this.checkBoxBuffsScorpidSting.Name = "checkBoxBuffsScorpidSting";
-			this.checkBoxBuffsScorpidSting.Size = new System.Drawing.Size(89, 17);
-			this.checkBoxBuffsScorpidSting.TabIndex = 0;
-			this.checkBoxBuffsScorpidSting.Text = "Scorpid Sting";
-			this.checkBoxBuffsScorpidSting.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsScorpidSting.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsShout
-			// 
-			this.checkBoxBuffsShout.AutoSize = true;
-			this.checkBoxBuffsShout.Location = new System.Drawing.Point(6, 113);
-			this.checkBoxBuffsShout.Name = "checkBoxBuffsShout";
-			this.checkBoxBuffsShout.Size = new System.Drawing.Size(118, 17);
-			this.checkBoxBuffsShout.TabIndex = 0;
-			this.checkBoxBuffsShout.Text = "Commanding Shout";
-			this.checkBoxBuffsShout.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsShout.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsPact
-			// 
-			this.checkBoxBuffsPact.AutoSize = true;
-			this.checkBoxBuffsPact.Location = new System.Drawing.Point(6, 77);
-			this.checkBoxBuffsPact.Name = "checkBoxBuffsPact";
-			this.checkBoxBuffsPact.Size = new System.Drawing.Size(78, 17);
-			this.checkBoxBuffsPact.TabIndex = 0;
-			this.checkBoxBuffsPact.Text = "Blood Pact";
-			this.checkBoxBuffsPact.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsPact.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsMark
-			// 
-			this.checkBoxBuffsMark.AutoSize = true;
-			this.checkBoxBuffsMark.Location = new System.Drawing.Point(6, 41);
-			this.checkBoxBuffsMark.Name = "checkBoxBuffsMark";
-			this.checkBoxBuffsMark.Size = new System.Drawing.Size(104, 17);
-			this.checkBoxBuffsMark.TabIndex = 0;
-			this.checkBoxBuffsMark.Text = "Mark of the Wild";
-			this.checkBoxBuffsMark.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsMark.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
-			// 
-			// checkBoxBuffsFort
-			// 
-			this.checkBoxBuffsFort.AutoSize = true;
-			this.checkBoxBuffsFort.Location = new System.Drawing.Point(6, 5);
-			this.checkBoxBuffsFort.Name = "checkBoxBuffsFort";
-			this.checkBoxBuffsFort.Size = new System.Drawing.Size(132, 17);
-			this.checkBoxBuffsFort.TabIndex = 0;
-			this.checkBoxBuffsFort.Text = "Power Word: Fortitude";
-			this.checkBoxBuffsFort.UseVisualStyleBackColor = true;
-			this.checkBoxBuffsFort.CheckedChanged += new System.EventHandler(this.BuffsControl_CheckedChanged);
+			this.buffSelector1.AutoScroll = true;
+			this.buffSelector1.Character = null;
+			this.buffSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buffSelector1.Location = new System.Drawing.Point(0, 0);
+			this.buffSelector1.Name = "buffSelector1";
+			this.buffSelector1.Size = new System.Drawing.Size(214, 549);
+			this.buffSelector1.TabIndex = 0;
 			// 
 			// itemButtonBack
 			// 
 			this.itemButtonBack.Character = null;
 			this.itemButtonBack.CharacterSlot = Rawr.Character.CharacterSlot.Back;
-			//this.itemButtonBack.Items = new Rawr.Item[0];
 			this.itemButtonBack.Location = new System.Drawing.Point(3, 231);
 			this.itemButtonBack.Name = "itemButtonBack";
 			this.itemButtonBack.SelectedItem = null;
@@ -1592,7 +1226,6 @@ namespace Rawr
 			// 
 			this.itemButtonChest.Character = null;
 			this.itemButtonChest.CharacterSlot = Rawr.Character.CharacterSlot.Chest;
-			//this.itemButtonChest.Items = new Rawr.Item[0];
 			this.itemButtonChest.Location = new System.Drawing.Point(3, 307);
 			this.itemButtonChest.Name = "itemButtonChest";
 			this.itemButtonChest.SelectedItem = null;
@@ -1606,7 +1239,6 @@ namespace Rawr
 			// 
 			this.itemButtonFeet.Character = null;
 			this.itemButtonFeet.CharacterSlot = Rawr.Character.CharacterSlot.Feet;
-			//this.itemButtonFeet.Items = new Rawr.Item[0];
 			this.itemButtonFeet.Location = new System.Drawing.Point(307, 231);
 			this.itemButtonFeet.Name = "itemButtonFeet";
 			this.itemButtonFeet.SelectedItem = null;
@@ -1620,7 +1252,6 @@ namespace Rawr
 			// 
 			this.itemButtonFinger1.Character = null;
 			this.itemButtonFinger1.CharacterSlot = Rawr.Character.CharacterSlot.Finger1;
-			//this.itemButtonFinger1.Items = new Rawr.Item[0];
 			this.itemButtonFinger1.Location = new System.Drawing.Point(307, 307);
 			this.itemButtonFinger1.Name = "itemButtonFinger1";
 			this.itemButtonFinger1.SelectedItem = null;
@@ -1634,7 +1265,6 @@ namespace Rawr
 			// 
 			this.itemButtonFinger2.Character = null;
 			this.itemButtonFinger2.CharacterSlot = Rawr.Character.CharacterSlot.Finger2;
-			//this.itemButtonFinger2.Items = new Rawr.Item[0];
 			this.itemButtonFinger2.Location = new System.Drawing.Point(307, 383);
 			this.itemButtonFinger2.Name = "itemButtonFinger2";
 			this.itemButtonFinger2.SelectedItem = null;
@@ -1648,7 +1278,6 @@ namespace Rawr
 			// 
 			this.itemButtonHands.Character = null;
 			this.itemButtonHands.CharacterSlot = Rawr.Character.CharacterSlot.Hands;
-			//this.itemButtonHands.Items = new Rawr.Item[0];
 			this.itemButtonHands.Location = new System.Drawing.Point(307, 3);
 			this.itemButtonHands.Name = "itemButtonHands";
 			this.itemButtonHands.SelectedItem = null;
@@ -1662,7 +1291,6 @@ namespace Rawr
 			// 
 			this.itemButtonHead.Character = null;
 			this.itemButtonHead.CharacterSlot = Rawr.Character.CharacterSlot.Head;
-			//this.itemButtonHead.Items = new Rawr.Item[0];
 			this.itemButtonHead.Location = new System.Drawing.Point(3, 3);
 			this.itemButtonHead.Name = "itemButtonHead";
 			this.itemButtonHead.SelectedItem = null;
@@ -1676,7 +1304,6 @@ namespace Rawr
 			// 
 			this.itemButtonIdol.Character = null;
 			this.itemButtonIdol.CharacterSlot = Rawr.Character.CharacterSlot.Idol;
-			//this.itemButtonIdol.Items = new Rawr.Item[0];
 			this.itemButtonIdol.Location = new System.Drawing.Point(231, 584);
 			this.itemButtonIdol.Name = "itemButtonIdol";
 			this.itemButtonIdol.SelectedItem = null;
@@ -1690,7 +1317,6 @@ namespace Rawr
 			// 
 			this.itemButtonLegs.Character = null;
 			this.itemButtonLegs.CharacterSlot = Rawr.Character.CharacterSlot.Legs;
-			//this.itemButtonLegs.Items = new Rawr.Item[0];
 			this.itemButtonLegs.Location = new System.Drawing.Point(307, 155);
 			this.itemButtonLegs.Name = "itemButtonLegs";
 			this.itemButtonLegs.SelectedItem = null;
@@ -1704,7 +1330,6 @@ namespace Rawr
 			// 
 			this.itemButtonNeck.Character = null;
 			this.itemButtonNeck.CharacterSlot = Rawr.Character.CharacterSlot.Neck;
-			//this.itemButtonNeck.Items = new Rawr.Item[0];
 			this.itemButtonNeck.Location = new System.Drawing.Point(3, 79);
 			this.itemButtonNeck.Name = "itemButtonNeck";
 			this.itemButtonNeck.SelectedItem = null;
@@ -1719,7 +1344,6 @@ namespace Rawr
 			this.itemButtonOffhand.Character = null;
 			this.itemButtonOffhand.CharacterSlot = Rawr.Character.CharacterSlot.Head;
 			this.itemButtonOffhand.Enabled = false;
-			//this.itemButtonOffhand.Items = new Rawr.Item[0];
 			this.itemButtonOffhand.Location = new System.Drawing.Point(155, 584);
 			this.itemButtonOffhand.Name = "itemButtonOffhand";
 			this.itemButtonOffhand.SelectedItem = null;
@@ -1732,7 +1356,6 @@ namespace Rawr
 			// 
 			this.itemButtonShirt.Character = null;
 			this.itemButtonShirt.CharacterSlot = Rawr.Character.CharacterSlot.Shirt;
-			//this.itemButtonShirt.Items = new Rawr.Item[0];
 			this.itemButtonShirt.Location = new System.Drawing.Point(3, 383);
 			this.itemButtonShirt.Name = "itemButtonShirt";
 			this.itemButtonShirt.SelectedItem = null;
@@ -1746,7 +1369,6 @@ namespace Rawr
 			// 
 			this.itemButtonShoulders.Character = null;
 			this.itemButtonShoulders.CharacterSlot = Rawr.Character.CharacterSlot.Shoulders;
-			//this.itemButtonShoulders.Items = new Rawr.Item[0];
 			this.itemButtonShoulders.Location = new System.Drawing.Point(3, 155);
 			this.itemButtonShoulders.Name = "itemButtonShoulders";
 			this.itemButtonShoulders.SelectedItem = null;
@@ -1760,7 +1382,6 @@ namespace Rawr
 			// 
 			this.itemButtonTabard.Character = null;
 			this.itemButtonTabard.CharacterSlot = Rawr.Character.CharacterSlot.Tabard;
-			//this.itemButtonTabard.Items = new Rawr.Item[0];
 			this.itemButtonTabard.Location = new System.Drawing.Point(3, 459);
 			this.itemButtonTabard.Name = "itemButtonTabard";
 			this.itemButtonTabard.SelectedItem = null;
@@ -1774,7 +1395,6 @@ namespace Rawr
 			// 
 			this.itemButtonTrinket1.Character = null;
 			this.itemButtonTrinket1.CharacterSlot = Rawr.Character.CharacterSlot.Trinket1;
-			//this.itemButtonTrinket1.Items = new Rawr.Item[0];
 			this.itemButtonTrinket1.Location = new System.Drawing.Point(307, 459);
 			this.itemButtonTrinket1.Name = "itemButtonTrinket1";
 			this.itemButtonTrinket1.SelectedItem = null;
@@ -1788,7 +1408,6 @@ namespace Rawr
 			// 
 			this.itemButtonTrinket2.Character = null;
 			this.itemButtonTrinket2.CharacterSlot = Rawr.Character.CharacterSlot.Trinket2;
-			//this.itemButtonTrinket2.Items = new Rawr.Item[0];
 			this.itemButtonTrinket2.Location = new System.Drawing.Point(307, 535);
 			this.itemButtonTrinket2.Name = "itemButtonTrinket2";
 			this.itemButtonTrinket2.SelectedItem = null;
@@ -1802,7 +1421,6 @@ namespace Rawr
 			// 
 			this.itemButtonWaist.Character = null;
 			this.itemButtonWaist.CharacterSlot = Rawr.Character.CharacterSlot.Waist;
-			//this.itemButtonWaist.Items = new Rawr.Item[0];
 			this.itemButtonWaist.Location = new System.Drawing.Point(307, 79);
 			this.itemButtonWaist.Name = "itemButtonWaist";
 			this.itemButtonWaist.SelectedItem = null;
@@ -1816,7 +1434,6 @@ namespace Rawr
 			// 
 			this.itemButtonWeapon.Character = null;
 			this.itemButtonWeapon.CharacterSlot = Rawr.Character.CharacterSlot.Weapon;
-			//this.itemButtonWeapon.Items = new Rawr.Item[0];
 			this.itemButtonWeapon.Location = new System.Drawing.Point(79, 584);
 			this.itemButtonWeapon.Name = "itemButtonWeapon";
 			this.itemButtonWeapon.SelectedItem = null;
@@ -1830,7 +1447,6 @@ namespace Rawr
 			// 
 			this.itemButtonWrist.Character = null;
 			this.itemButtonWrist.CharacterSlot = Rawr.Character.CharacterSlot.Wrist;
-			//this.itemButtonWrist.Items = new Rawr.Item[0];
 			this.itemButtonWrist.Location = new System.Drawing.Point(3, 535);
 			this.itemButtonWrist.Name = "itemButtonWrist";
 			this.itemButtonWrist.SelectedItem = null;
@@ -1918,7 +1534,13 @@ namespace Rawr
             this.feetToolStripMenuItem1,
             this.weaponToolStripMenuItem1,
             this.toolStripSeparator6,
-            this.buffsToolStripMenuItem});
+            this.buffsToolStripMenuItem,
+            this.allBuffsToolStripMenuItem,
+            this.allLongDurationBuffsNoDWToolStripMenuItem,
+            this.currentBuffsToolStripMenuItem,
+            this.toolStripSeparator7,
+            this.currentGearEnchantsBuffsToolStripMenuItem,
+            this.combatTableToolStripMenuItem});
 			this.toolStripDropDownButtonSlot.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonSlot.Image")));
 			this.toolStripDropDownButtonSlot.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripDropDownButtonSlot.Name = "toolStripDropDownButtonSlot";
@@ -1930,13 +1552,13 @@ namespace Rawr
 			// 
 			this.gearToolStripMenuItem.Enabled = false;
 			this.gearToolStripMenuItem.Name = "gearToolStripMenuItem";
-			this.gearToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.gearToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.gearToolStripMenuItem.Text = "Gear";
 			// 
 			// headToolStripMenuItem
 			// 
 			this.headToolStripMenuItem.Name = "headToolStripMenuItem";
-			this.headToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.headToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.headToolStripMenuItem.Tag = "Gear.Head";
 			this.headToolStripMenuItem.Text = " Head";
 			this.headToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1944,7 +1566,7 @@ namespace Rawr
 			// neckToolStripMenuItem
 			// 
 			this.neckToolStripMenuItem.Name = "neckToolStripMenuItem";
-			this.neckToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.neckToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.neckToolStripMenuItem.Tag = "Gear.Neck";
 			this.neckToolStripMenuItem.Text = " Neck";
 			this.neckToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1952,7 +1574,7 @@ namespace Rawr
 			// shouldersToolStripMenuItem
 			// 
 			this.shouldersToolStripMenuItem.Name = "shouldersToolStripMenuItem";
-			this.shouldersToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.shouldersToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.shouldersToolStripMenuItem.Tag = "Gear.Shoulders";
 			this.shouldersToolStripMenuItem.Text = " Shoulders";
 			this.shouldersToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1960,7 +1582,7 @@ namespace Rawr
 			// backToolStripMenuItem
 			// 
 			this.backToolStripMenuItem.Name = "backToolStripMenuItem";
-			this.backToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.backToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.backToolStripMenuItem.Tag = "Gear.Back";
 			this.backToolStripMenuItem.Text = " Back";
 			this.backToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1968,7 +1590,7 @@ namespace Rawr
 			// chestToolStripMenuItem
 			// 
 			this.chestToolStripMenuItem.Name = "chestToolStripMenuItem";
-			this.chestToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.chestToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.chestToolStripMenuItem.Tag = "Gear.Chest";
 			this.chestToolStripMenuItem.Text = " Chest";
 			this.chestToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1976,7 +1598,7 @@ namespace Rawr
 			// wristsToolStripMenuItem
 			// 
 			this.wristsToolStripMenuItem.Name = "wristsToolStripMenuItem";
-			this.wristsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.wristsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.wristsToolStripMenuItem.Tag = "Gear.Wrist";
 			this.wristsToolStripMenuItem.Text = " Wrists";
 			this.wristsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1984,7 +1606,7 @@ namespace Rawr
 			// handsToolStripMenuItem
 			// 
 			this.handsToolStripMenuItem.Name = "handsToolStripMenuItem";
-			this.handsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.handsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.handsToolStripMenuItem.Tag = "Gear.Hands";
 			this.handsToolStripMenuItem.Text = " Hands";
 			this.handsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1992,7 +1614,7 @@ namespace Rawr
 			// waistToolStripMenuItem
 			// 
 			this.waistToolStripMenuItem.Name = "waistToolStripMenuItem";
-			this.waistToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.waistToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.waistToolStripMenuItem.Tag = "Gear.Waist";
 			this.waistToolStripMenuItem.Text = " Waist";
 			this.waistToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2000,7 +1622,7 @@ namespace Rawr
 			// legsToolStripMenuItem
 			// 
 			this.legsToolStripMenuItem.Name = "legsToolStripMenuItem";
-			this.legsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.legsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.legsToolStripMenuItem.Tag = "Gear.Legs";
 			this.legsToolStripMenuItem.Text = " Legs";
 			this.legsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2008,7 +1630,7 @@ namespace Rawr
 			// feetToolStripMenuItem
 			// 
 			this.feetToolStripMenuItem.Name = "feetToolStripMenuItem";
-			this.feetToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.feetToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.feetToolStripMenuItem.Tag = "Gear.Feet";
 			this.feetToolStripMenuItem.Text = " Feet";
 			this.feetToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2016,7 +1638,7 @@ namespace Rawr
 			// finger1ToolStripMenuItem
 			// 
 			this.finger1ToolStripMenuItem.Name = "finger1ToolStripMenuItem";
-			this.finger1ToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.finger1ToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.finger1ToolStripMenuItem.Tag = "Gear.Finger1";
 			this.finger1ToolStripMenuItem.Text = " Finger 1";
 			this.finger1ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2024,7 +1646,7 @@ namespace Rawr
 			// finger2ToolStripMenuItem
 			// 
 			this.finger2ToolStripMenuItem.Name = "finger2ToolStripMenuItem";
-			this.finger2ToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.finger2ToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.finger2ToolStripMenuItem.Tag = "Gear.Finger2";
 			this.finger2ToolStripMenuItem.Text = " Finger 2";
 			this.finger2ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2032,7 +1654,7 @@ namespace Rawr
 			// trinket1ToolStripMenuItem
 			// 
 			this.trinket1ToolStripMenuItem.Name = "trinket1ToolStripMenuItem";
-			this.trinket1ToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.trinket1ToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.trinket1ToolStripMenuItem.Tag = "Gear.Trinket1";
 			this.trinket1ToolStripMenuItem.Text = " Trinket 1";
 			this.trinket1ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2040,7 +1662,7 @@ namespace Rawr
 			// trinket2ToolStripMenuItem
 			// 
 			this.trinket2ToolStripMenuItem.Name = "trinket2ToolStripMenuItem";
-			this.trinket2ToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.trinket2ToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.trinket2ToolStripMenuItem.Tag = "Gear.Trinket2";
 			this.trinket2ToolStripMenuItem.Text = " Trinket 2";
 			this.trinket2ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2048,7 +1670,7 @@ namespace Rawr
 			// weaponToolStripMenuItem
 			// 
 			this.weaponToolStripMenuItem.Name = "weaponToolStripMenuItem";
-			this.weaponToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.weaponToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.weaponToolStripMenuItem.Tag = "Gear.Weapon";
 			this.weaponToolStripMenuItem.Text = " Weapon";
 			this.weaponToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2056,21 +1678,21 @@ namespace Rawr
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(126, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(248, 6);
 			this.toolStripSeparator1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// gemsToolStripMenuItem
 			// 
 			this.gemsToolStripMenuItem.Enabled = false;
 			this.gemsToolStripMenuItem.Name = "gemsToolStripMenuItem";
-			this.gemsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.gemsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.gemsToolStripMenuItem.Text = "Gems";
 			this.gemsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// normalToolStripMenuItem
 			// 
 			this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-			this.normalToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.normalToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.normalToolStripMenuItem.Tag = "Gems.Gems";
 			this.normalToolStripMenuItem.Text = " Normal";
 			this.normalToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2078,7 +1700,7 @@ namespace Rawr
 			// metaToolStripMenuItem
 			// 
 			this.metaToolStripMenuItem.Name = "metaToolStripMenuItem";
-			this.metaToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.metaToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.metaToolStripMenuItem.Tag = "Gems.Metas";
 			this.metaToolStripMenuItem.Text = " Meta";
 			this.metaToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2086,21 +1708,21 @@ namespace Rawr
 			// toolStripSeparator5
 			// 
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
-			this.toolStripSeparator5.Size = new System.Drawing.Size(126, 6);
+			this.toolStripSeparator5.Size = new System.Drawing.Size(248, 6);
 			this.toolStripSeparator5.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// enchantsToolStripMenuItem
 			// 
 			this.enchantsToolStripMenuItem.Enabled = false;
 			this.enchantsToolStripMenuItem.Name = "enchantsToolStripMenuItem";
-			this.enchantsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.enchantsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.enchantsToolStripMenuItem.Text = "Enchants";
 			this.enchantsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// headToolStripMenuItem1
 			// 
 			this.headToolStripMenuItem1.Name = "headToolStripMenuItem1";
-			this.headToolStripMenuItem1.Size = new System.Drawing.Size(129, 22);
+			this.headToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.headToolStripMenuItem1.Tag = "Enchants.Head";
 			this.headToolStripMenuItem1.Text = " Head";
 			this.headToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2108,7 +1730,7 @@ namespace Rawr
 			// shouldersToolStripMenuItem1
 			// 
 			this.shouldersToolStripMenuItem1.Name = "shouldersToolStripMenuItem1";
-			this.shouldersToolStripMenuItem1.Size = new System.Drawing.Size(129, 22);
+			this.shouldersToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.shouldersToolStripMenuItem1.Tag = "Enchants.Shoulders";
 			this.shouldersToolStripMenuItem1.Text = " Shoulders";
 			this.shouldersToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2116,7 +1738,7 @@ namespace Rawr
 			// backToolStripMenuItem1
 			// 
 			this.backToolStripMenuItem1.Name = "backToolStripMenuItem1";
-			this.backToolStripMenuItem1.Size = new System.Drawing.Size(129, 22);
+			this.backToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.backToolStripMenuItem1.Tag = "Enchants.Back";
 			this.backToolStripMenuItem1.Text = " Back";
 			this.backToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2124,7 +1746,7 @@ namespace Rawr
 			// chestToolStripMenuItem1
 			// 
 			this.chestToolStripMenuItem1.Name = "chestToolStripMenuItem1";
-			this.chestToolStripMenuItem1.Size = new System.Drawing.Size(129, 22);
+			this.chestToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.chestToolStripMenuItem1.Tag = "Enchants.Chest";
 			this.chestToolStripMenuItem1.Text = " Chest";
 			this.chestToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2132,7 +1754,7 @@ namespace Rawr
 			// wristsToolStripMenuItem1
 			// 
 			this.wristsToolStripMenuItem1.Name = "wristsToolStripMenuItem1";
-			this.wristsToolStripMenuItem1.Size = new System.Drawing.Size(129, 22);
+			this.wristsToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.wristsToolStripMenuItem1.Tag = "Enchants.Wrist";
 			this.wristsToolStripMenuItem1.Text = " Wrists";
 			this.wristsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2140,7 +1762,7 @@ namespace Rawr
 			// handsToolStripMenuItem1
 			// 
 			this.handsToolStripMenuItem1.Name = "handsToolStripMenuItem1";
-			this.handsToolStripMenuItem1.Size = new System.Drawing.Size(129, 22);
+			this.handsToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.handsToolStripMenuItem1.Tag = "Enchants.Hands";
 			this.handsToolStripMenuItem1.Text = " Hands";
 			this.handsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2148,7 +1770,7 @@ namespace Rawr
 			// legsToolStripMenuItem1
 			// 
 			this.legsToolStripMenuItem1.Name = "legsToolStripMenuItem1";
-			this.legsToolStripMenuItem1.Size = new System.Drawing.Size(129, 22);
+			this.legsToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.legsToolStripMenuItem1.Tag = "Enchants.Legs";
 			this.legsToolStripMenuItem1.Text = " Legs";
 			this.legsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2156,7 +1778,7 @@ namespace Rawr
 			// feetToolStripMenuItem1
 			// 
 			this.feetToolStripMenuItem1.Name = "feetToolStripMenuItem1";
-			this.feetToolStripMenuItem1.Size = new System.Drawing.Size(129, 22);
+			this.feetToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.feetToolStripMenuItem1.Tag = "Enchants.Feet";
 			this.feetToolStripMenuItem1.Text = " Feet";
 			this.feetToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2164,7 +1786,7 @@ namespace Rawr
 			// weaponToolStripMenuItem1
 			// 
 			this.weaponToolStripMenuItem1.Name = "weaponToolStripMenuItem1";
-			this.weaponToolStripMenuItem1.Size = new System.Drawing.Size(129, 22);
+			this.weaponToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.weaponToolStripMenuItem1.Tag = "Enchants.Weapon";
 			this.weaponToolStripMenuItem1.Text = " Weapon";
 			this.weaponToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -2172,16 +1794,33 @@ namespace Rawr
 			// toolStripSeparator6
 			// 
 			this.toolStripSeparator6.Name = "toolStripSeparator6";
-			this.toolStripSeparator6.Size = new System.Drawing.Size(126, 6);
+			this.toolStripSeparator6.Size = new System.Drawing.Size(248, 6);
 			this.toolStripSeparator6.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// buffsToolStripMenuItem
 			// 
+			this.buffsToolStripMenuItem.Enabled = false;
 			this.buffsToolStripMenuItem.Name = "buffsToolStripMenuItem";
-			this.buffsToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.buffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.buffsToolStripMenuItem.Tag = "Buffs";
 			this.buffsToolStripMenuItem.Text = "Buffs";
 			this.buffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// currentGearEnchantsBuffsToolStripMenuItem
+			// 
+			this.currentGearEnchantsBuffsToolStripMenuItem.Name = "currentGearEnchantsBuffsToolStripMenuItem";
+			this.currentGearEnchantsBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+			this.currentGearEnchantsBuffsToolStripMenuItem.Tag = "Current Gear/Enchants/Buffs";
+			this.currentGearEnchantsBuffsToolStripMenuItem.Text = "Current Gear/Enchants/Buffs";
+			this.currentGearEnchantsBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// combatTableToolStripMenuItem
+			// 
+			this.combatTableToolStripMenuItem.Name = "combatTableToolStripMenuItem";
+			this.combatTableToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+			this.combatTableToolStripMenuItem.Tag = "Combat Table";
+			this.combatTableToolStripMenuItem.Text = "Combat Table";
+			this.combatTableToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// toolStripLabel2
 			// 
@@ -2206,30 +1845,59 @@ namespace Rawr
 			// overallToolStripMenuItem
 			// 
 			this.overallToolStripMenuItem.Name = "overallToolStripMenuItem";
-			this.overallToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.overallToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
 			this.overallToolStripMenuItem.Text = "Overall";
 			this.overallToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
 			// 
 			// survivalToolStripMenuItem
 			// 
 			this.survivalToolStripMenuItem.Name = "survivalToolStripMenuItem";
-			this.survivalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.survivalToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
 			this.survivalToolStripMenuItem.Text = "Survival";
 			this.survivalToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
 			// 
 			// mitigationToolStripMenuItem
 			// 
 			this.mitigationToolStripMenuItem.Name = "mitigationToolStripMenuItem";
-			this.mitigationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.mitigationToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
 			this.mitigationToolStripMenuItem.Text = "Mitigation";
 			this.mitigationToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
 			// 
 			// alphabeticalToolStripMenuItem
 			// 
 			this.alphabeticalToolStripMenuItem.Name = "alphabeticalToolStripMenuItem";
-			this.alphabeticalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.alphabeticalToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
 			this.alphabeticalToolStripMenuItem.Text = "Alphabetical";
 			this.alphabeticalToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator7
+			// 
+			this.toolStripSeparator7.Name = "toolStripSeparator7";
+			this.toolStripSeparator7.Size = new System.Drawing.Size(248, 6);
+			// 
+			// allBuffsToolStripMenuItem
+			// 
+			this.allBuffsToolStripMenuItem.Name = "allBuffsToolStripMenuItem";
+			this.allBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+			this.allBuffsToolStripMenuItem.Tag = "Buffs.AllBuffs";
+			this.allBuffsToolStripMenuItem.Text = " All Buffs";
+			this.allBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// allLongDurationBuffsNoDWToolStripMenuItem
+			// 
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Name = "allLongDurationBuffsNoDWToolStripMenuItem";
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Tag = "Buffs.AllLongDurationBuffsNoDW";
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Text = " All Long-Duration Buffs (No DW)";
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// currentBuffsToolStripMenuItem
+			// 
+			this.currentBuffsToolStripMenuItem.Name = "currentBuffsToolStripMenuItem";
+			this.currentBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+			this.currentBuffsToolStripMenuItem.Tag = "Buffs.CurrentBuffs";
+			this.currentBuffsToolStripMenuItem.Text = " Current Buffs";
+			this.currentBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// FormMain
 			// 
@@ -2241,7 +1909,7 @@ namespace Rawr
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.Name = "FormMain";
-			this.Text = "Rawr (Beta 6a`)";
+			this.Text = "Rawr (Beta 7)";
 			this.Load += new System.EventHandler(this.FormMain_Load);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
 			this.menuStripMain.ResumeLayout(false);
@@ -2266,7 +1934,6 @@ namespace Rawr
 			this.tabPageEnchants.ResumeLayout(false);
 			this.tabPageEnchants.PerformLayout();
 			this.tabPageBuffs.ResumeLayout(false);
-			this.tabPageBuffs.PerformLayout();
 			this.groupBox4.ResumeLayout(false);
 			this.groupBox4.PerformLayout();
 			this.toolStripItemComparison.ResumeLayout(false);
@@ -2338,30 +2005,9 @@ namespace Rawr
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.CheckBox checkBoxBuffsFort;
-        private System.Windows.Forms.CheckBox checkBoxBuffsImpDevo;
-        private System.Windows.Forms.CheckBox checkBoxBuffsImpShout;
-        private System.Windows.Forms.CheckBox checkBoxBuffsImpPact;
-        private System.Windows.Forms.CheckBox checkBoxBuffsImpMark;
-        private System.Windows.Forms.CheckBox checkBoxBuffsImpFort;
-        private System.Windows.Forms.CheckBox checkBoxBuffsFoodAgility;
-        private System.Windows.Forms.CheckBox checkBoxBuffsAgilityElixir;
-        private System.Windows.Forms.CheckBox checkBoxBuffsKings;
-        private System.Windows.Forms.CheckBox checkBoxBuffsDevo;
-        private System.Windows.Forms.CheckBox checkBoxBuffsInsectSwarm;
-        private System.Windows.Forms.CheckBox checkBoxBuffsScorpidSting;
-        private System.Windows.Forms.CheckBox checkBoxBuffsShout;
-        private System.Windows.Forms.CheckBox checkBoxBuffsPact;
-        private System.Windows.Forms.CheckBox checkBoxBuffsMark;
+		private System.Windows.Forms.Label label9;
         private System.Windows.Forms.RadioButton radioButtonRaceNightElf;
-        private System.Windows.Forms.RadioButton radioButtonRaceTauren;
-        private System.Windows.Forms.CheckBox checkBoxBuffsMajorDefense;
-        private System.Windows.Forms.CheckBox checkBoxBuffsFlaskOfFortification;
-        private System.Windows.Forms.CheckBox checkBoxBuffsIronskin;
-        private System.Windows.Forms.CheckBox checkBoxBuffsFoodStamina;
-        private System.Windows.Forms.CheckBox checkBoxBuffsImpGrace;
-        private System.Windows.Forms.CheckBox checkBoxBuffsGrace;
+		private System.Windows.Forms.RadioButton radioButtonRaceTauren;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
@@ -2400,13 +2046,7 @@ namespace Rawr
 		private System.Windows.Forms.Label label17;
 		private System.Windows.Forms.GroupBox groupBox4;
 		private ItemComparison itemComparison1;
-		private System.Windows.Forms.CheckBox checkBoxBuffsMalorne;
-		private System.Windows.Forms.CheckBox checkBoxBuffsScrollOfAgility;
-		private System.Windows.Forms.CheckBox checkBoxBuffsScrollOfProtection;
-		private System.Windows.Forms.CheckBox checkBoxBuffsGladiatorResilience;
 		private System.Windows.Forms.ToolStripMenuItem loadFromArmoryToolStripMenuItem;
-		private System.Windows.Forms.CheckBox checkBoxBuffsMajorFortitude;
-		private System.Windows.Forms.CheckBox checkBoxBuffsMastery;
 		private System.Windows.Forms.ToolStripMenuItem copyCharacterStatsToClipboardToolStripMenuItem;
 		private System.Windows.Forms.ToolStrip toolStripItemComparison;
 		private System.Windows.Forms.ToolStripLabel toolStripLabel1;
@@ -2461,9 +2101,15 @@ namespace Rawr
 		private System.Windows.Forms.Label label23;
 		private System.Windows.Forms.Label label25;
 		private System.Windows.Forms.ToolStripMenuItem loadPossibleUpgradesFromArmoryToolStripMenuItem;
-		private System.Windows.Forms.CheckBox checkBoxBuffsShadowEmbrace;
-		private System.Windows.Forms.CheckBox checkBoxBuffsFlaskOfChromaticWonder;
 		private System.Windows.Forms.ToolStripMenuItem alphabeticalToolStripMenuItem;
+		private System.Windows.Forms.ToolTip toolTipSimple;
+		private System.Windows.Forms.ToolStripMenuItem currentGearEnchantsBuffsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem combatTableToolStripMenuItem;
+		private BuffSelector buffSelector1;
+		private System.Windows.Forms.ToolStripMenuItem allBuffsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem allLongDurationBuffsNoDWToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem currentBuffsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
     }
 }
 

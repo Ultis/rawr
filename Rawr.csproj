@@ -43,6 +43,12 @@
   <ItemGroup>
     <Compile Include="Armory.cs" />
     <Compile Include="Buffs.cs" />
+    <Compile Include="BuffSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BuffSelector.Designer.cs">
+      <DependentUpon>BuffSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="Calculations.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="ComparisonGraph.cs">
@@ -105,6 +111,9 @@
     <Compile Include="ItemComparison.Designer.cs">
       <DependentUpon>ItemComparison.cs</DependentUpon>
     </Compile>
+    <Compile Include="ItemContextualMenu.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ItemIcons.cs" />
     <Compile Include="ItemSelectorItem.cs">
       <SubType>UserControl</SubType>
@@ -118,6 +127,10 @@
     <Compile Include="Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BuffSelector.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>BuffSelector.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ComparisonGraph.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ComparisonGraph.cs</DependentUpon>

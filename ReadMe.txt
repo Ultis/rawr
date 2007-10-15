@@ -1,6 +1,6 @@
-Rawr Beta 6a
+Rawr Beta 7
 ------------
-Thanks for helping test out Rawr. Since Beta 5, I've had alot of time, but been very busy. Honestly there aren't a ton of new features in Beta 6, but it took me a *ton* of time to get the new tooltips and dropdown menus working properly. Beta 7 should have all the fancy new features I promised, and I really hope to have Beta 7 out much quicker than Beta 6 took. Anyway, as usual, if you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
+Thanks for helping test out Rawr. Beta 6 took quite a while to develop, and I wanted to change that with Beta 7. So beta 7 hasn't taken nearly as long (about 2 weeks, I think), but I've made a multitude of improvements and new features, which I think you'll enjoy. Some of these have been requested for quite a while. Check out the version history for details. Anyway, as usual, if you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
 FAQ
 ---
@@ -18,6 +18,32 @@ FAQ
 
 Version History
 ---------------
+Beta 7:
+ -Added Contextual Menus for items. You can now right click on an item on the main screen, in the popup item selector, to get a menu of things to do on that item:
+	-Edit: Opens the item editor to that item.
+	-Open in Wowhead: Opens a new web browser window and navigates to the item in wowhead.
+	-Refresh Item Data: Refreshes the data about the item from the armory.
+	-Equip: Equips the item.
+	-Delete: Deletes the item from Rawr's database.
+ -Implemented a ton of new temporary buffs. These buffs are typically from trinkets, or other procs, and most can't really be relied upon to base your gear selections around, but it is interesting to see your stats with these activated.
+ -There are now 3 different buff comparison graphs, which let you choose which subset of all the buffs to show: All Buffs, All Long-Duration Buffs (No Dual Wield), and Current Buffs.
+ -Made the buff selection tab less cramped, by splitting it into categories, and making it scroll.
+ -Added a tooltip to the Chance to be Crit % on the main screen, which will display how much you're over, or under the anti-crit cap, in terms of defense rating or resilience.
+ -Added a comparison graph for the Combat Table. This will display the chances of each possible combat swing outcome. If you sort by alphabetical, it will be displayed in the correct order of the combat table.
+ -Added another comparison graph, which will include all of your currently equipped gear, enchants, and buffs. While not particularly useful in making gear decisions, this is interesting to look at to see where your mitigation and survival come from.
+ -May have fixed the problem with tooltips appearing in the wrong spot on computers with multiple monitors.
+ -Enchants in the comparison graph will be highlighted if they are the currently selected enchant for that slot.
+ -Buffs will now be highlighted in the comparison graph if they are active.
+ -Tooltips will now show up for enchants in the comparison graph.
+ -Added a Filter box on the item editor, to make finding specific items in the list faster.
+ -Fixed a bug where resilience rating wasn't properly detected on items in a few cases, mostly on gems or socket bonuses.
+ -Made the comparison graph understand the concept of 'Infinity'. It will no longer bug out and be blank if any item has a mitigation or overall rating of infinity. This can occur when an item pushes you over 100% dodge.
+ -Capped dodge at 100-Miss. Functionally, this doesn't really matter, since it doesn't matter how much over 100% your Miss+Dodge is, if it is over 100%, but I made the change so that it the actual chances of each occurance are correct.
+ -Fixed the tab order on the item editor.
+ -Fixed some display issues with item tooltip content.
+ -Cleaned up the code all over the place.
+ -Minor bugfixes here and there.
+
 Beta 6a:
  -Fix for editing gems
 

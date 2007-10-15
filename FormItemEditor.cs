@@ -88,8 +88,27 @@ namespace Rawr
 		public FormItemEditor()
 		{
 			InitializeComponent();
-			LoadItems(ItemCache.GetItemsArray());
-			if (listViewItems.Items.Count > 0) listViewItems.SelectedIndices.Add(0);
+			LoadItems();
+			
+			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			this.FormClosing += new FormClosingEventHandler(FormItemEditor_FormClosing);
+		}
+
+		void FormItemEditor_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			this.textBoxName.Focus(); //Force data changes to be applied through databinding...
+			this.textBoxIcon.Focus(); //databinding doesn't seem to set the new value until focus has left the control
+		}
+
+		private bool _changingItemCache = false;
+		private void ItemCache_ItemsChanged(object sender, EventArgs e)
+		{
+			if (!_changingItemCache)
+			{
+				Item selectedItem = SelectedItem.Tag as Item;
+				LoadItems();
+				SelectItem(selectedItem);
+			}
 		}
 
 		void comboBoxSocket_TextChanged(object sender, EventArgs e)
@@ -99,21 +118,27 @@ namespace Rawr
 			itemButtonGem3.CharacterSlot = comboBoxSocket3.Text == Item.ItemSlot.Meta.ToString() ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
 		}
 
+		private void LoadItems() { LoadItems(ItemCache.GetItemsArray()); }
 		private void LoadItems(Item[] items)
 		{
 			listViewItems.Items.Clear();
+			List<ListViewItem> itemsToAdd = new List<ListViewItem>();
 			foreach (Item item in items)
 			{
-				string slot = item.Slot.ToString();
-				if (item.Slot == Item.ItemSlot.Red || item.Slot == Item.ItemSlot.Orange || item.Slot == Item.ItemSlot.Yellow
-					 || item.Slot == Item.ItemSlot.Green || item.Slot == Item.ItemSlot.Blue || item.Slot == Item.ItemSlot.Purple
-					 || item.Slot == Item.ItemSlot.Prismatic || item.Slot == Item.ItemSlot.Meta) slot = "Gems";
-				ListViewItem lvi = new ListViewItem(item.Name, listViewItems.Groups["listViewGroup" + slot]);
-				lvi.Tag = item;
-				lvi.ImageKey = EnsureIconPath(item.IconPath);
-				listViewItems.Items.Add(lvi);
+				if (string.IsNullOrEmpty(textBoxFilter.Text) || item.Name.ToLower().Contains(textBoxFilter.Text.ToLower()))
+				{
+					string slot = item.Slot.ToString();
+					if (item.Slot == Item.ItemSlot.Red || item.Slot == Item.ItemSlot.Orange || item.Slot == Item.ItemSlot.Yellow
+						 || item.Slot == Item.ItemSlot.Green || item.Slot == Item.ItemSlot.Blue || item.Slot == Item.ItemSlot.Purple
+						 || item.Slot == Item.ItemSlot.Prismatic || item.Slot == Item.ItemSlot.Meta) slot = "Gems";
+					ListViewItem lvi = new ListViewItem(item.Name, listViewItems.Groups["listViewGroup" + slot]);
+					lvi.Tag = item;
+					lvi.ImageKey = EnsureIconPath(item.IconPath);
+					itemsToAdd.Add(lvi);
+				}
 			}
-			//itemButtonGem1.Items = itemButtonGem2.Items = itemButtonGem3.Items = items;
+			listViewItems.Items.AddRange(itemsToAdd.ToArray());
+			if (listViewItems.Items.Count > 0) listViewItems.SelectedIndices.Add(0);
 		}
 
 		private string EnsureIconPath(string iconPath)
@@ -170,9 +195,11 @@ namespace Rawr
 
 		private void buttonDelete_Click(object sender, EventArgs e)
 		{
+			_changingItemCache = true;
 			ItemCache.DeleteItem(listViewItems.SelectedItems[0].Tag as Item);
 			listViewItems.Items.Remove(listViewItems.SelectedItems[0]);
 			listViewItems.SelectedIndices.Add(0);
+			_changingItemCache = false;
 		}
 
 		private void buttonFillSockets_Click(object sender, EventArgs e)
@@ -257,7 +284,9 @@ namespace Rawr
 								item.Sockets.Color2, item.Sockets.Color3, new Stats(item.Sockets.Stats.Armor, item.Sockets.Stats.Health, item.Sockets.Stats.Agility,
 								item.Sockets.Stats.Stamina, item.Sockets.Stats.DodgeRating, item.Sockets.Stats.DefenseRating, item.Sockets.Stats.Resilience)),
 								0, 0, 0);
+			_changingItemCache = true;
 			ItemCache.AddItem(copy);
+			_changingItemCache = false;
 
 			ListViewItem newLvi = new ListViewItem(copy.Name, 0, listViewItems.Groups["listViewGroup" + copy.Slot.ToString()]);
 			newLvi.Tag = copy;
@@ -272,6 +301,37 @@ namespace Rawr
 			newLvi.Selected = true;
 			listViewItems.Sort();
 			newLvi.EnsureVisible();
+		}
+
+		internal void SelectItem(Item item)
+		{
+			bool found = false;
+			foreach (ListViewItem lvi in listViewItems.Items)
+				if (lvi.Tag == item)
+				{
+					lvi.Selected = true;
+					found = true;
+				}
+			if (!found)
+			{
+				string filter = textBoxFilter.Text;
+				textBoxFilter.Text = "";
+				foreach (ListViewItem lvi in listViewItems.Items)
+					if (lvi.Tag == item)
+					{
+						lvi.Selected = true;
+						found = true;
+					}
+				if (!found)
+					textBoxFilter.Text = filter;
+			}
+		}
+
+		private void textBoxFilter_TextChanged(object sender, EventArgs e)
+		{
+			Item selectedItem = SelectedItem.Tag as Item;
+			LoadItems();
+			SelectItem(selectedItem);
 		}
 	}
 }
