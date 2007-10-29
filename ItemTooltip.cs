@@ -93,7 +93,31 @@ namespace Rawr
 						Color.FromArgb(212, 212, 255), Color.FromArgb(192, 192, 255), 90), rectBorder);
 					g.DrawRectangle(new Pen(Color.FromArgb(128, 0, 0, 0)), rectBorder);
 
-					g.DrawString(CurrentItem.Name, _fontName, SystemBrushes.InfoText, 2, 4);
+                    Brush nameBrush = null;
+                    switch (CurrentItem.Quality)
+                    {
+                        case Quality.Common:
+                            nameBrush = new SolidBrush(Color.FromKnownColor(KnownColor.InfoText));
+                            break;
+                        case Quality.Epic:
+                            nameBrush = new SolidBrush(Color.Purple);
+                            break;
+                        case Quality.Legendary:
+                            nameBrush = new SolidBrush(Color.Orange);
+                            break;
+                        case Quality.Poor:
+                            nameBrush = new SolidBrush(Color.Gray);
+                            break;
+                        case Quality.Rare:
+                            nameBrush = new SolidBrush(Color.Blue);
+                            break;
+                        case Quality.Uncommon:
+                            nameBrush = new SolidBrush(Color.Gray);
+                            break;
+                    }
+                    g.DrawString(CurrentItem.Name, _fontName, nameBrush, 2, 4);
+                    nameBrush.Dispose();
+
 					g.DrawString(CurrentItem.Stats.Armor.ToString() + " Armor", _fontStats, SystemBrushes.InfoText, 2, 21);
 					g.DrawString(CurrentItem.Stats.Stamina.ToString() + " Stamina", _fontStats, SystemBrushes.InfoText, 85, 21);
 					g.DrawString(CurrentItem.Stats.Agility.ToString() + " Agility", _fontStats, SystemBrushes.InfoText, 168, 21);

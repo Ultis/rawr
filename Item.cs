@@ -6,6 +6,16 @@ using System.Xml;
 
 namespace Rawr
 {
+    public enum Quality
+    {
+        Poor = 0,
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary,
+    }
+
 	[Serializable]
 	public class Item
 	{
@@ -27,6 +37,8 @@ namespace Rawr
 		public int _gem2Id;
 		[System.Xml.Serialization.XmlElement("Gem3Id")]
 		public int _gem3Id;
+        [System.Xml.Serialization.XmlElement("Quality")]
+        public Quality _quality;
 
 
 		[System.Xml.Serialization.XmlIgnore]
@@ -176,6 +188,14 @@ namespace Rawr
 				return _gemmedId;
 			}
 		}
+        [System.Xml.Serialization.XmlIgnore]
+        public Quality Quality
+        {
+            get
+            {
+                return _quality;
+            }
+        }
 
 		private void OnIdsChanging()
 		{
@@ -222,7 +242,7 @@ namespace Rawr
 		}
 
 		public Item() { }
-		public Item(string name, int id, string iconPath, ItemSlot slot, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id)
+		public Item(string name, Quality quality, int id, string iconPath, ItemSlot slot, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id)
 		{
 			_name = name;
 			_id = id;
@@ -233,6 +253,8 @@ namespace Rawr
 			_gem1Id = gem1Id;
 			_gem2Id = gem2Id;
 			_gem3Id = gem3Id;
+
+            _quality = quality;
 		}
 
 		public override string ToString()

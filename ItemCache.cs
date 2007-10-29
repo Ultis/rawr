@@ -44,7 +44,7 @@ namespace Rawr
 					if (key.StartsWith(keyStartsWith))
 					{
 						Item item = Items[key][0];
-						Item copy = new Item(item.Name, item.Id, item.IconPath, item.Slot, new Stats(item.Stats.Armor, item.Stats.Health, item.Stats.Agility,
+						Item copy = new Item(item.Name, item.Quality, item.Id, item.IconPath, item.Slot, new Stats(item.Stats.Armor, item.Stats.Health, item.Stats.Agility,
 							item.Stats.Stamina, item.Stats.DodgeRating, item.Stats.DefenseRating, item.Stats.Resilience), new Sockets(item.Sockets.Color1,
 							item.Sockets.Color2, item.Sockets.Color3, new Stats(item.Sockets.Stats.Armor, item.Sockets.Stats.Health, item.Sockets.Stats.Agility,
 							item.Sockets.Stats.Stamina, item.Sockets.Stats.DodgeRating, item.Sockets.Stats.DefenseRating, item.Sockets.Stats.Resilience)),
