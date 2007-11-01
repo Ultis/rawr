@@ -1,6 +1,6 @@
-Rawr Beta 7
+Rawr Beta 8
 ------------
-Thanks for helping test out Rawr. Beta 6 took quite a while to develop, and I wanted to change that with Beta 7. So beta 7 hasn't taken nearly as long (about 2 weeks, I think), but I've made a multitude of improvements and new features, which I think you'll enjoy. Some of these have been requested for quite a while. Check out the version history for details. Anyway, as usual, if you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
+Thanks for helping test out Rawr. Beta 8 doesn't include a ton of new features, but it does fill in enough for me to consider Rawr to be feature complete for bears. This'll be the last version for a while, as I'm going to begin on generalizing the code to support many different comparison systems, and. Check out the version history for details. Anyway, as usual, if you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
 FAQ
 ---
@@ -18,6 +18,16 @@ FAQ
 
 Version History
 ---------------
+Beta 8:
+ - Rawr now records and displays item quality (rare, epic, etc). If you reuse your ItemCache.xml from a previous version, you'll need to refresh the item data for each item you want to see the quality of. Thanks to Wicks for this functionality!
+ - Added support for Finger enchants.
+ - Gems in the comparison graph now show up highlighted in their color.
+ - Left clicking on an item in the comparison graph will popup the context menu for it, not just right clicking.
+ - When loading items from the Armory, Rawr will now retry 3 times if it fails. This should solve the errors caused by intermittant Armory problems. Additionally, if it still fails, it won't close Rawr.
+ - Fixed some display problems in the item editor. Also, if you add an item with an ID that doesn't exist, it'll offer to create the item as a blank item, for you to fill in.
+ - Clarified the tooltip for anticrit when you're uncrittable. (Defense over the cap isn't totally wasted)
+ - Attempting to refresh the data of an item with an item id that doesn't really exist will no longer delete that item. It will alert you to the fact that it could not find item data for that item, and revert to the current data.
+
 Beta 7:
  -Added Contextual Menus for items. You can now right click on an item on the main screen, in the popup item selector, to get a menu of things to do on that item:
 	-Edit: Opens the item editor to that item.

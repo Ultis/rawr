@@ -89,7 +89,12 @@ namespace Rawr
 		void _menuItemRefresh_Click(object sender, EventArgs e)
 		{
 			ItemCache.DeleteItem(_item);
-			Item.LoadFromId(_item.GemmedId, "Refreshing");
+			Item newItem = Item.LoadFromId(_item.GemmedId, true, "Refreshing");
+			if (newItem == null)
+			{
+				MessageBox.Show("Unable to find item " + _item.Id + ". Reverting to previous data.");
+				ItemCache.AddItem(_item);
+			}
 			ItemCache.OnItemsChanged();
 		}
 
@@ -106,7 +111,14 @@ namespace Rawr
 			{
 				editor = new FormItemEditor();
 				editor.SelectItem(_item);
-				editor.ShowDialog();
+				FormMain formMain = null;
+				foreach (Form form in Application.OpenForms)
+					if (form is FormMain)
+						formMain = form as FormMain;
+				if (formMain != null)
+					editor.ShowDialog(formMain);
+				else
+					editor.ShowDialog();
 				ItemCache.OnItemsChanged();
 			}
 			else

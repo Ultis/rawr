@@ -268,7 +268,7 @@ namespace Rawr
         public static Stats GetEnchantsStats(Character character)
         {
             Stats statsTotal = new Stats();
-			Stats[] enchantStatses = new Stats[] {character.BackEnchant.Stats, character.ChestEnchant.Stats, character.FeetEnchant.Stats, character.HandsEnchant.Stats, 
+			Stats[] enchantStatses = new Stats[] {character.BackEnchant.Stats, character.ChestEnchant.Stats, character.FeetEnchant.Stats, character.Finger1Enchant.Stats, character.Finger2Enchant.Stats, character.HandsEnchant.Stats, 
 				character.HeadEnchant.Stats, character.LegsEnchant.Stats, character.ShouldersEnchant.Stats, character.WeaponEnchant.Stats, character.WristEnchant.Stats};
             foreach (Stats enchantStats in enchantStatses)
             {

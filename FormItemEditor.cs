@@ -168,28 +168,32 @@ namespace Rawr
 			FormEnterId form = new FormEnterId();
 			if (form.ShowDialog() == DialogResult.OK)
 			{
-				//Item oldItem = ItemCache.FindItemById(form.Value + ".0.0.0");
-				//if (oldItem != null)
-				//    foreach (ListViewItem lvi in listViewItems.Items)
-				//        if (lvi.Tag == oldItem)
-				//            listViewItems.Items.Remove(lvi);
-
 				Item newItem = Item.LoadFromId(form.Value, true, "Manually Added");
-				//ItemCache.AddItem(newItem);
+				if (newItem == null)
+				{
+					if (MessageBox.Show("Unable to load item " + form.Value.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+					{
+						newItem = new Item("New Item", Quality.Epic, form.Value, "temp", Item.ItemSlot.Head, new Stats(), new Sockets(), 0, 0, 0);
+						ItemCache.AddItem(newItem);
+						SelectItem(newItem);
+					}
+				}
+				else
+				{
+					ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
+					newLvi.Tag = newItem;
+					newLvi.ImageKey = EnsureIconPath(newItem.IconPath);
+					string slot = newItem.Slot.ToString();
+					if (newItem.Slot == Item.ItemSlot.Red || newItem.Slot == Item.ItemSlot.Orange || newItem.Slot == Item.ItemSlot.Yellow
+						 || newItem.Slot == Item.ItemSlot.Green || newItem.Slot == Item.ItemSlot.Blue || newItem.Slot == Item.ItemSlot.Purple
+						 || newItem.Slot == Item.ItemSlot.Prismatic || newItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
+					newLvi.Group = listViewItems.Groups["listViewGroup" + slot];
 
-				ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
-				newLvi.Tag = newItem;
-				newLvi.ImageKey = EnsureIconPath(newItem.IconPath);
-				string slot = newItem.Slot.ToString();
-				if (newItem.Slot == Item.ItemSlot.Red || newItem.Slot == Item.ItemSlot.Orange || newItem.Slot == Item.ItemSlot.Yellow
-					 || newItem.Slot == Item.ItemSlot.Green || newItem.Slot == Item.ItemSlot.Blue || newItem.Slot == Item.ItemSlot.Purple
-					 || newItem.Slot == Item.ItemSlot.Prismatic || newItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
-				newLvi.Group = listViewItems.Groups["listViewGroup" + slot];
-
-				listViewItems.Items.Add(newLvi);
-				newLvi.Selected = true;
-				listViewItems.Sort();
-				newLvi.EnsureVisible();
+					listViewItems.Items.Add(newLvi);
+					newLvi.Selected = true;
+					listViewItems.Sort();
+					newLvi.EnsureVisible();
+				}
 			}
 		}
 
@@ -310,6 +314,7 @@ namespace Rawr
 				if (lvi.Tag == item)
 				{
 					lvi.Selected = true;
+					lvi.EnsureVisible();
 					found = true;
 				}
 			if (!found)
@@ -320,6 +325,7 @@ namespace Rawr
 					if (lvi.Tag == item)
 					{
 						lvi.Selected = true;
+						lvi.EnsureVisible();
 						found = true;
 					}
 				if (!found)

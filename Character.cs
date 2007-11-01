@@ -72,6 +72,10 @@ namespace Rawr
 		public int _legsEnchant = 0;
 		[System.Xml.Serialization.XmlElement("FeetEnchant")]
 		public int _feetEnchant = 0;
+		[System.Xml.Serialization.XmlElement("Finger1Enchant")]
+		public int _finger1Enchant = 0;
+		[System.Xml.Serialization.XmlElement("Finger2Enchant")]
+		public int _finger2Enchant = 0;
 		[System.Xml.Serialization.XmlElement("WeaponEnchant")]
 		public int _weaponEnchant = 0;
 
@@ -396,6 +400,18 @@ namespace Rawr
 			set { _feetEnchant = value == null ? 0 : value.Id; }
 		}
 		[System.Xml.Serialization.XmlIgnore]
+		public Enchant Finger1Enchant
+		{
+			get { return Enchant.FindEnchant(_finger1Enchant, Item.ItemSlot.Finger); }
+			set { _finger1Enchant = value == null ? 0 : value.Id; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public Enchant Finger2Enchant
+		{
+			get { return Enchant.FindEnchant(_finger2Enchant, Item.ItemSlot.Finger); }
+			set { _finger2Enchant = value == null ? 0 : value.Id; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
 		public Enchant WeaponEnchant
 		{
 			get { return Enchant.FindEnchant(_weaponEnchant, Item.ItemSlot.Weapon); }
@@ -429,6 +445,9 @@ namespace Rawr
 					break;
 				case Item.ItemSlot.Feet:
 					return FeetEnchant;
+					break;
+				case Item.ItemSlot.Finger:
+					return Finger1Enchant;
 					break;
 				case Item.ItemSlot.Weapon:
 					return WeaponEnchant;
@@ -466,6 +485,9 @@ namespace Rawr
 					break;
 				case Item.ItemSlot.Feet:
 					FeetEnchant = enchant;
+					break;
+				case Item.ItemSlot.Finger:
+					Finger1Enchant = enchant;
 					break;
 				case Item.ItemSlot.Weapon:
 					WeaponEnchant = enchant;
@@ -639,12 +661,12 @@ namespace Rawr
 		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
                 string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, string trinket1, string trinket2, string weapon, string idol) 
         : this(name, realm, region, race, head, neck, shoulders, back, chest, shirt, tabard, wrist, hands, waist, legs, feet, finger1, finger2, trinket1, trinket2, weapon, idol,
-			0, 0, 0, 0, 0, 0, 0, 0, 0)
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		{ }
 
 		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
                 string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, string trinket1, string trinket2, string weapon, string idol,
-			int enchantHead, int enchantShoulders, int enchantBack, int enchantChest, int enchantWrist, int enchantHands, int enchantLegs, int enchantFeet, int enchantWeapon)
+			int enchantHead, int enchantShoulders, int enchantBack, int enchantChest, int enchantWrist, int enchantHands, int enchantLegs, int enchantFeet, int enchantFinger1, int enchantFinger2, int enchantWeapon)
         {
             _name = name;
             _realm = realm;
@@ -677,6 +699,8 @@ namespace Rawr
 			_handsEnchant = enchantHands;
 			_legsEnchant = enchantLegs;
 			_feetEnchant = enchantFeet;
+			_finger1Enchant = enchantFinger1;
+			_finger2Enchant = enchantFinger2;
 			_weaponEnchant = enchantWeapon;
 		}
 
@@ -709,6 +733,8 @@ namespace Rawr
 						this.HandsEnchant.Id,
 						this.LegsEnchant.Id,
 						this.FeetEnchant.Id,
+						this.Finger1Enchant.Id,
+						this.Finger2Enchant.Id,
 						this.WeaponEnchant.Id);
 			foreach (string buff in Buffs.AllBuffs)
 				clone.Buffs[buff] = this.Buffs[buff];
@@ -749,276 +775,5 @@ namespace Rawr
 
             return character;
         }
-
-		//public static Character LoadFromArmory(Armory.Region region, string realm, string name)
-		//{
-		//    WebClient client = new WebClient();
-		//    string armoryDomain = region == Armory.Region.US ? "worldofwarcraft" : "wow-europe";
-		//    string characterSheetPath = string.Format("http://armory.{0}.com/character-sheet.xml?r={1}&n={2}",
-		//        armoryDomain, realm, name);
-		//    string armoryHtml = client.DownloadString(characterSheetPath);
-			
-			
-		//    #region Old Armory Html to Item Id code
-		//    /* 
-		//    int index = armoryHtml.IndexOf("itemsArray[0]  = [");
-		//    string headIdString = index < 0 ? " " : armoryHtml.Substring(index + 18, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[1]  = [");
-		//    string neckIdString = index < 0 ? " " : armoryHtml.Substring(index + 18, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[2]  = [");
-		//    string shouldersIdString = index < 0 ? " " : armoryHtml.Substring(index + 18, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[14]  = [");
-		//    string backIdString = index < 0 ? " " : armoryHtml.Substring(index + 19, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[4]  = [");
-		//    string chestIdString = index < 0 ? " " : armoryHtml.Substring(index + 18, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[3]  = [");
-		//    string shirtIdString = index < 0 ? " " : armoryHtml.Substring(index + 18, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[18]  = [");
-		//    string tabardIdString = index < 0 ? " " : armoryHtml.Substring(index + 19, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[8]  = [");
-		//    string wristIdString = index < 0 ? " " : armoryHtml.Substring(index + 18, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[9]  = [");
-		//    string handsIdString = index < 0 ? " " : armoryHtml.Substring(index + 18, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[5]  = [");
-		//    string waistIdString = index < 0 ? " " : armoryHtml.Substring(index + 18, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[6]  = [");
-		//    string legsIdString = index < 0 ? " " : armoryHtml.Substring(index + 18, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[7]  = [");
-		//    string feetIdString = index < 0 ? " " : armoryHtml.Substring(index + 18, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[10]  = [");
-		//    string finger1IdString = index < 0 ? " " : armoryHtml.Substring(index + 19, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[11]  = [");
-		//    string finger2IdString = index < 0 ? " " : armoryHtml.Substring(index + 19, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[12]  = [");
-		//    string trinket1IdString = index < 0 ? " " : armoryHtml.Substring(index + 19, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[13]  = [");
-		//    string trinket2IdString = index < 0 ? " " : armoryHtml.Substring(index + 19, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[15]  = [");
-		//    string weaponIdString = index < 0 ? " " : armoryHtml.Substring(index + 19, 50);
-		//    index = armoryHtml.IndexOf("itemsArray[17]  = [");
-		//    string idolIdString = index < 0 ? " " : armoryHtml.Substring(index + 19, 50);
-		//    headIdString = headIdString.Substring(0, headIdString.IndexOf(" "));
-		//    neckIdString = neckIdString.Substring(0, neckIdString.IndexOf(" "));
-		//    shouldersIdString = shouldersIdString.Substring(0, shouldersIdString.IndexOf(" "));
-		//    backIdString = backIdString.Substring(0, backIdString.IndexOf(" "));
-		//    chestIdString = chestIdString.Substring(0, chestIdString.IndexOf(" "));
-		//    shirtIdString = shirtIdString.Substring(0, shirtIdString.IndexOf(" "));
-		//    tabardIdString = tabardIdString.Substring(0, tabardIdString.IndexOf(" "));
-		//    wristIdString = wristIdString.Substring(0, wristIdString.IndexOf(" "));
-		//    handsIdString = handsIdString.Substring(0, handsIdString.IndexOf(" "));
-		//    waistIdString = waistIdString.Substring(0, waistIdString.IndexOf(" "));
-		//    legsIdString = legsIdString.Substring(0, legsIdString.IndexOf(" "));
-		//    feetIdString = feetIdString.Substring(0, feetIdString.IndexOf(" "));
-		//    finger1IdString = finger1IdString.Substring(0, finger1IdString.IndexOf(" "));
-		//    finger2IdString = finger2IdString.Substring(0, finger2IdString.IndexOf(" "));
-		//    trinket1IdString = trinket1IdString.Substring(0, trinket1IdString.IndexOf(" "));
-		//    trinket2IdString = trinket2IdString.Substring(0, trinket2IdString.IndexOf(" "));
-		//    weaponIdString = weaponIdString.Substring(0, weaponIdString.IndexOf(" "));
-		//    idolIdString = idolIdString.Substring(0, idolIdString.IndexOf(" "));
-		//    int headId = headIdString.Length == 0 ? 0 : int.Parse(headIdString);
-		//    int neckId = neckIdString.Length == 0 ? 0 : int.Parse(neckIdString);
-		//    int shouldersId = shouldersIdString.Length == 0 ? 0 : int.Parse(shouldersIdString);
-		//    int backId = backIdString.Length == 0 ? 0 : int.Parse(backIdString);
-		//    int chestId = chestIdString.Length == 0 ? 0 : int.Parse(chestIdString);
-		//    int shirtId = shirtIdString.Length == 0 ? 0 : int.Parse(shirtIdString);
-		//    int tabardId = tabardIdString.Length == 0 ? 0 : int.Parse(tabardIdString);
-		//    int wristId = wristIdString.Length == 0 ? 0 : int.Parse(wristIdString);
-		//    int handsId = handsIdString.Length == 0 ? 0 : int.Parse(handsIdString);
-		//    int waistId = waistIdString.Length == 0 ? 0 : int.Parse(waistIdString);
-		//    int legsId = legsIdString.Length == 0 ? 0 : int.Parse(legsIdString);
-		//    int feetId = feetIdString.Length == 0 ? 0 : int.Parse(feetIdString);
-		//    int finger1Id = finger1IdString.Length == 0 ? 0 : int.Parse(finger1IdString);
-		//    int finger2Id = finger2IdString.Length == 0 ? 0 : int.Parse(finger2IdString);
-		//    int trinket1Id = trinket1IdString.Length == 0 ? 0 : int.Parse(trinket1IdString);
-		//    int trinket2Id = trinket2IdString.Length == 0 ? 0 : int.Parse(trinket2IdString);
-		//    int weaponId = weaponIdString.Length == 0 ? 0 : int.Parse(weaponIdString);
-		//    int idolId = idolIdString.Length == 0 ? 0 : int.Parse(idolIdString);
-		//    */
-		//    #endregion
-
-		//    object[] headId = GetItemIdFromArmoryHtml(armoryHtml, 0, armoryDomain, realm, name, Item.ItemSlot.Head);
-		//    object[] neckId = GetItemIdFromArmoryHtml(armoryHtml, 1, armoryDomain, realm, name, Item.ItemSlot.Neck);
-		//    object[] shouldersId = GetItemIdFromArmoryHtml(armoryHtml, 2, armoryDomain, realm, name, Item.ItemSlot.Shoulders);
-		//    object[] backId = GetItemIdFromArmoryHtml(armoryHtml, 14, armoryDomain, realm, name, Item.ItemSlot.Back);
-		//    object[] chestId = GetItemIdFromArmoryHtml(armoryHtml, 4, armoryDomain, realm, name, Item.ItemSlot.Chest);
-		//    object[] shirtId = GetItemIdFromArmoryHtml(armoryHtml, 3, armoryDomain, realm, name, Item.ItemSlot.Shirt);
-		//    object[] tabardId = GetItemIdFromArmoryHtml(armoryHtml, 18, armoryDomain, realm, name, Item.ItemSlot.Tabard);
-		//    object[] wristId = GetItemIdFromArmoryHtml(armoryHtml, 8, armoryDomain, realm, name, Item.ItemSlot.Wrist);
-		//    object[] handsId = GetItemIdFromArmoryHtml(armoryHtml, 9, armoryDomain, realm, name, Item.ItemSlot.Hands);
-		//    object[] waistId = GetItemIdFromArmoryHtml(armoryHtml, 5, armoryDomain, realm, name, Item.ItemSlot.Waist);
-		//    object[] legsId = GetItemIdFromArmoryHtml(armoryHtml, 6, armoryDomain, realm, name, Item.ItemSlot.Legs);
-		//    object[] feetId = GetItemIdFromArmoryHtml(armoryHtml, 7, armoryDomain, realm, name, Item.ItemSlot.Feet);
-		//    object[] finger1Id = GetItemIdFromArmoryHtml(armoryHtml, 10, armoryDomain, realm, name, Item.ItemSlot.Finger);
-		//    object[] finger2Id = GetItemIdFromArmoryHtml(armoryHtml, 11, armoryDomain, realm, name, Item.ItemSlot.Finger);
-		//    object[] trinket1Id = GetItemIdFromArmoryHtml(armoryHtml, 12, armoryDomain, realm, name, Item.ItemSlot.Trinket);
-		//    object[] trinket2Id = GetItemIdFromArmoryHtml(armoryHtml, 13, armoryDomain, realm, name, Item.ItemSlot.Trinket);
-		//    object[] weaponId = GetItemIdFromArmoryHtml(armoryHtml, 15, armoryDomain, realm, name, Item.ItemSlot.Weapon);
-		//    object[] idolId = GetItemIdFromArmoryHtml(armoryHtml, 17, armoryDomain, realm, name, Item.ItemSlot.Idol);
-
-		//    CharacterRace race = armoryHtml.Contains("pinRace = \"Night Elf\"") ? CharacterRace.NightElf : CharacterRace.Tauren;
-
-		//    Character character = new Character(name, realm, region, race, headId[0].ToString(), neckId[0].ToString(), shouldersId[0].ToString(),
-		//        backId[0].ToString(), chestId[0].ToString(), shirtId[0].ToString(), tabardId[0].ToString(), wristId[0].ToString(), 
-		//        handsId[0].ToString(), waistId[0].ToString(), legsId[0].ToString(), feetId[0].ToString(), finger1Id[0].ToString(),
-		//        finger2Id[0].ToString(), trinket1Id[0].ToString(), trinket2Id[0].ToString(), weaponId[0].ToString(), idolId[0].ToString());
-
-		//    character._headEnchant = (int)headId[1];
-		//    character._shouldersEnchant = (int)shouldersId[1];
-		//    character._backEnchant = (int)backId[1];
-		//    character._chestEnchant = (int)chestId[1];
-		//    character._wristEnchant = (int)wristId[1];
-		//    character._handsEnchant = (int)handsId[1];
-		//    character._legsEnchant = (int)legsId[1];
-		//    character._feetEnchant = (int)feetId[1];
-		//    character._weaponEnchant = (int)weaponId[1];
-
-		//    return character;
-		//}
-
-
-		//private static object[] GetItemIdFromArmoryHtml(string armoryHtml, int itemsArrayIndex, string armoryDomain, string realm, string name, Item.ItemSlot slot)
-		//{
-		//    string itemsArrayKeyword = "itemsArray[" + itemsArrayIndex.ToString() + "]  = [";
-		//    int index = armoryHtml.IndexOf(itemsArrayKeyword);
-		//    string idString = index < 0 ? " " : armoryHtml.Substring(index + itemsArrayKeyword.Length, 50);
-		//    idString = idString.Substring(0, idString.IndexOf(" "));
-		//    int itemId = idString.Length == 0 ? 0 : int.Parse(idString);
-
-		//    //Lookup gems from the armory
-		//    WebClient client = new WebClient();
-		//    string tooltipHtml = client.DownloadString(string.Format("http://armory.{0}.com/item-tooltip.xml?i={1}&r={2}&n={3}",
-		//        armoryDomain, itemId, realm, name));
-		//    string[] tooltipParse = tooltipHtml.Split(new string[] { "21x21/" }, StringSplitOptions.None);
-		//    List<string> gemIds = new List<string>();
-		//    foreach (string tooltipPart in tooltipParse)
-		//    {
-		//        if (tooltipPart != tooltipParse[0])
-		//        {
-		//            string gemIconPath = tooltipPart.Substring(0, tooltipPart.IndexOf(".png") + 4);
-		//            string gemStatsCombined = tooltipPart.Substring(tooltipPart.IndexOf(".png") + 6);
-		//            gemStatsCombined = gemStatsCombined.Substring(0, gemStatsCombined.IndexOf("<br>"));
-		//            string[] gemStatsStrings = gemStatsCombined.Split(new string[] { " and ", " &amp; " }, StringSplitOptions.None);
-		//            Stats gemStats = new Stats(0, 0, 0, 0, 0, 0, 0);
-		//            foreach (string gemStatsString in gemStatsStrings)
-		//            {
-		//                int statNumber = 0;
-		//                try
-		//                {
-		//                    statNumber = int.Parse(gemStatsString.Split(' ')[0].TrimStart('+'));
-		//                } catch { }
-		//                string statName = gemStatsString.Split(' ')[1];
-		//                switch (statName)
-		//                {
-		//                    case "Agility":
-		//                        gemStats.Agility += statNumber;
-		//                        break;
-		//                    case "Armor":
-		//                        gemStats.Armor += statNumber;
-		//                        break;
-		//                    case "Defense":
-		//                        gemStats.DefenseRating += statNumber;
-		//                        break;
-		//                    case "Dodge":
-		//                        gemStats.DodgeRating += statNumber;
-		//                        break;
-		//                    case "Health":
-		//                        gemStats.Health += statNumber;
-		//                        break;
-		//                    case "Resilience":
-		//                        gemStats.Resilience += statNumber;
-		//                        break;
-		//                    case "Stamina":
-		//                        gemStats.Stamina += statNumber;
-		//                        break;
-		//                }
-		//            }
-
-
-		//            Item.ItemSlot gemColor = Item.ItemSlot.Meta;
-		//            if (gemIconPath.Contains("crimsonspinel") || gemIconPath.Contains("ruby") ||
-		//                gemIconPath.Contains("bloodstone") || gemIconPath.Contains("bloodgem"))
-		//                gemColor = Item.ItemSlot.Red;
-		//            if (gemIconPath.Contains("empyreansapphire") || gemIconPath.Contains("starofelune") ||
-		//                gemIconPath.Contains("azuredraenite") || gemIconPath.Contains("crystal_03"))
-		//                gemColor = Item.ItemSlot.Blue;
-		//            if (gemIconPath.Contains("seasprayemerald") || gemIconPath.Contains("talasite") ||
-		//                gemIconPath.Contains("deepperidot"))
-		//                gemColor = Item.ItemSlot.Green;
-		//            if (gemIconPath.Contains("pyrestone") || gemIconPath.Contains("nobletopaz") ||
-		//                gemIconPath.Contains("opal") || gemIconPath.Contains("flamespessarite"))
-		//                gemColor = Item.ItemSlot.Orange;
-		//            if (gemIconPath.Contains("shadowsongamethyst") || gemIconPath.Contains("nightseye") ||
-		//                gemIconPath.Contains("pearl") || gemIconPath.Contains("ebondraenite") || gemIconPath.Contains("sapphire_02"))
-		//                gemColor = Item.ItemSlot.Purple;
-		//            if (gemIconPath.Contains("lionseye") || gemIconPath.Contains("_topaz") ||
-		//                gemIconPath.Contains("dawnstone") || gemIconPath.Contains("goldendraenite"))
-		//                gemColor = Item.ItemSlot.Yellow;
-
-		//            Gem gem = ItemCache.FindGemByStats(gemStats, gemColor);
-		//            if (gem == null)
-		//            {
-		//                Random r = new Random();
-		//                int id = r.Next(99999);
-		//                while (ItemCache.FindItemById(id) != null) id = r.Next(99999);
-
-		//                gem = new Gem(gemStats.ToString(), id, gemIconPath, gemColor, gemStats);
-		//                ItemCache.AddGem(gem);
-		//            }
-		//            gemIds.Add(gem.Id.ToString());
-		//        }
-		//    }
-		//    while (gemIds.Count < 3) gemIds.Add("0");
-
-		//    int enchantId = 0;
-
-		//    if (tooltipHtml.Contains("<span class=\"bonusGreen\">"))
-		//    {
-		//        string enchantText = tooltipHtml.Substring(tooltipHtml.IndexOf("<span class=\"bonusGreen\">") + 25);
-		//        enchantText = enchantText.Substring(0, enchantText.IndexOf("</span>"));
-
-		//        List<Enchant> enchantsForSlot = null;
-
-		//        //switch (slot)
-		//        //{
-		//        //    case Item.ItemSlot.Head:
-		//        //        enchantsForSlot = Enchant.HeadEnchants;
-		//        //        break;
-		//        //    case Item.ItemSlot.Shoulders:
-		//        //        enchantsForSlot = Enchant.ShouldersEnchants;
-		//        //        break;
-		//        //    case Item.ItemSlot.Back:
-		//        //        enchantsForSlot = Enchant.BackEnchants;
-		//        //        break;
-		//        //    case Item.ItemSlot.Chest:
-		//        //        enchantsForSlot = Enchant.ChestEnchants;
-		//        //        break;
-		//        //    case Item.ItemSlot.Wrist:
-		//        //        enchantsForSlot = Enchant.WristEnchants;
-		//        //        break;
-		//        //    case Item.ItemSlot.Hands:
-		//        //        enchantsForSlot = Enchant.HandsEnchants;
-		//        //        break;
-		//        //    case Item.ItemSlot.Legs:
-		//        //        enchantsForSlot = Enchant.LegsEnchants;
-		//        //        break;
-		//        //    case Item.ItemSlot.Feet:
-		//        //        enchantsForSlot = Enchant.FeetEnchants;
-		//        //        break;
-		//        //    case Item.ItemSlot.Weapon:
-		//        //        enchantsForSlot = Enchant.WeaponEnchants;
-		//        //        break;
-		//        //}
-
-		//        //if (enchantsForSlot != null)
-		//        //    foreach (Enchant enchant in enchantsForSlot)
-		//        //        if (enchantText == enchant.TextOnItem)
-		//        //        {
-		//        //            enchantId = enchantsForSlot.IndexOf(enchant);
-		//        //            break;
-		//        //        }
-		//    }
-
-		//    return new object[] { string.Format("{0}.{1}.{2}.{3}", itemId.ToString(), gemIds[0], gemIds[1], gemIds[2]), enchantId };
-		//}
     }
 }

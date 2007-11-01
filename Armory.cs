@@ -88,6 +88,8 @@ namespace Rawr
 					enchants.ContainsKey(Character.CharacterSlot.Hands) ? enchants[Character.CharacterSlot.Hands] : 0,
 					enchants.ContainsKey(Character.CharacterSlot.Legs) ? enchants[Character.CharacterSlot.Legs] : 0,
 					enchants.ContainsKey(Character.CharacterSlot.Feet) ? enchants[Character.CharacterSlot.Feet] : 0,
+					enchants.ContainsKey(Character.CharacterSlot.Finger1) ? enchants[Character.CharacterSlot.Finger1] : 0,
+					enchants.ContainsKey(Character.CharacterSlot.Finger2) ? enchants[Character.CharacterSlot.Finger2] : 0,
 					enchants.ContainsKey(Character.CharacterSlot.Weapon) ? enchants[Character.CharacterSlot.Weapon] : 0
 					);
 
@@ -106,125 +108,139 @@ namespace Rawr
 			//Just close your eyes
 			try
 			{
-				string id = gemmedId.Split('.')[0];
-				Log.Write("Getting Item from Armory: " + id + "   Reason: " + logReason);
-
-				string itemTooltipPath = string.Format("http://armory.worldofwarcraft.com/item-tooltip.xml?i={0}", id);
-				XmlDocument docItem = DownloadXml(itemTooltipPath);
-
-                Quality quality = Quality.Common;
-				string name = string.Empty;
-				string iconPath = string.Empty;
-				Item.ItemSlot slot = Item.ItemSlot.None;
-				Stats stats = new Stats();
-				Sockets sockets = new Sockets();
-
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/icon")) { iconPath = node.InnerText; }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/overallQualityId")) { quality = (Quality)Enum.Parse(typeof(Quality), node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/inventoryType")) { slot = (Item.ItemSlot)int.Parse(node.InnerText); }
-
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAgility")) { stats.Agility = int.Parse(node.InnerText); }
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/armor")) { stats.Armor = int.Parse(node.InnerText); }
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDefenseSkillRating")) { stats.DefenseRating = int.Parse(node.InnerText); }
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDodgeRating")) { stats.DodgeRating = int.Parse(node.InnerText); }
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusResilienceRating")) { stats.Resilience = int.Parse(node.InnerText); }
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusStamina")) { stats.Stamina = int.Parse(node.InnerText); }
-
-				XmlNodeList socketNodes = docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socket");
-				if (socketNodes.Count > 0) sockets.Color1String = socketNodes[0].Attributes["color"].Value;
-				if (socketNodes.Count > 1) sockets.Color2String = socketNodes[1].Attributes["color"].Value;
-				if (socketNodes.Count > 2) sockets.Color3String = socketNodes[2].Attributes["color"].Value;
-				string socketBonus = string.Empty;
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socketMatchEnchant")) { socketBonus = node.InnerText.Trim('+'); }
-				if (!string.IsNullOrEmpty(socketBonus))
+				int retry = 0;
+				while (retry < 3)
 				{
 					try
 					{
-						int socketBonusValue = int.Parse(socketBonus.Substring(0, socketBonus.IndexOf(' ')));
-						switch (socketBonus.Substring(socketBonus.IndexOf(' ') + 1))
+						string id = gemmedId.Split('.')[0];
+						Log.Write("Getting Item from Armory: " + id + "   Reason: " + logReason);
+
+						string itemTooltipPath = string.Format("http://armory.worldofwarcraft.com/item-tooltip.xml?i={0}", id);
+						XmlDocument docItem = DownloadXml(itemTooltipPath);
+
+						Quality quality = Quality.Common;
+						string name = string.Empty;
+						string iconPath = string.Empty;
+						Item.ItemSlot slot = Item.ItemSlot.None;
+						Stats stats = new Stats();
+						Sockets sockets = new Sockets();
+
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/icon")) { iconPath = node.InnerText; }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/overallQualityId")) { quality = (Quality)Enum.Parse(typeof(Quality), node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/inventoryType")) { slot = (Item.ItemSlot)int.Parse(node.InnerText); }
+
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAgility")) { stats.Agility = int.Parse(node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/armor")) { stats.Armor = int.Parse(node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDefenseSkillRating")) { stats.DefenseRating = int.Parse(node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDodgeRating")) { stats.DodgeRating = int.Parse(node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusResilienceRating")) { stats.Resilience = int.Parse(node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusStamina")) { stats.Stamina = int.Parse(node.InnerText); }
+
+						XmlNodeList socketNodes = docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socket");
+						if (socketNodes.Count > 0) sockets.Color1String = socketNodes[0].Attributes["color"].Value;
+						if (socketNodes.Count > 1) sockets.Color2String = socketNodes[1].Attributes["color"].Value;
+						if (socketNodes.Count > 2) sockets.Color3String = socketNodes[2].Attributes["color"].Value;
+						string socketBonus = string.Empty;
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socketMatchEnchant")) { socketBonus = node.InnerText.Trim('+'); }
+						if (!string.IsNullOrEmpty(socketBonus))
 						{
-							case "Agility":
-								sockets.Stats.Agility = socketBonusValue;
-								break;
-							case "Stamina":
-								sockets.Stats.Stamina = socketBonusValue;
-								break;
-							case "Dodge Rating":
-								sockets.Stats.DodgeRating = socketBonusValue;
-								break;
-							case "Defense Rating":
-								sockets.Stats.DefenseRating = socketBonusValue;
-								break;
-							case "Resilience":
-							case "Resilience Rating":
-								sockets.Stats.Resilience = socketBonusValue;
-								break;
-						}
-					}
-					catch { }
-				}
-				foreach (XmlNode nodeGemProperties in docItem.SelectNodes("page/itemTooltips/itemTooltip/gemProperties"))
-				{
-					string[] gemBonuses = nodeGemProperties.InnerText.Split(new string[] { " and ", " & " }, StringSplitOptions.None);
-					foreach (string gemBonus in gemBonuses)
-					{
-						try
-						{
-							int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+'));
-							switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1))
+							try
 							{
-								case "Agility":
-									stats.Agility = gemBonusValue;
-									break;
-								case "Stamina":
-									stats.Stamina = gemBonusValue;
-									break;
-								case "Dodge Rating":
-									stats.DodgeRating = gemBonusValue;
-									break;
-								case "Defense Rating":
-									stats.DefenseRating = gemBonusValue;
-									break;
-								case "Resilience":
-								case "Resilience Rating":
-									stats.Resilience = gemBonusValue;
-									break;
+								int socketBonusValue = int.Parse(socketBonus.Substring(0, socketBonus.IndexOf(' ')));
+								switch (socketBonus.Substring(socketBonus.IndexOf(' ') + 1))
+								{
+									case "Agility":
+										sockets.Stats.Agility = socketBonusValue;
+										break;
+									case "Stamina":
+										sockets.Stats.Stamina = socketBonusValue;
+										break;
+									case "Dodge Rating":
+										sockets.Stats.DodgeRating = socketBonusValue;
+										break;
+									case "Defense Rating":
+										sockets.Stats.DefenseRating = socketBonusValue;
+										break;
+									case "Resilience":
+									case "Resilience Rating":
+										sockets.Stats.Resilience = socketBonusValue;
+										break;
+								}
+							}
+							catch { }
+						}
+						foreach (XmlNode nodeGemProperties in docItem.SelectNodes("page/itemTooltips/itemTooltip/gemProperties"))
+						{
+							string[] gemBonuses = nodeGemProperties.InnerText.Split(new string[] { " and ", " & " }, StringSplitOptions.None);
+							foreach (string gemBonus in gemBonuses)
+							{
+								try
+								{
+									int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+'));
+									switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1))
+									{
+										case "Agility":
+											stats.Agility = gemBonusValue;
+											break;
+										case "Stamina":
+											stats.Stamina = gemBonusValue;
+											break;
+										case "Dodge Rating":
+											stats.DodgeRating = gemBonusValue;
+											break;
+										case "Defense Rating":
+											stats.DefenseRating = gemBonusValue;
+											break;
+										case "Resilience":
+										case "Resilience Rating":
+											stats.Resilience = gemBonusValue;
+											break;
+									}
+								}
+								catch { }
 							}
 						}
-						catch { }
-					}
-				}
-				string desc = string.Empty;
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/desc")) { desc = node.InnerText; }
-				if (desc.Contains("Matches a "))
-				{
-					bool red = desc.Contains("Red");
-					bool blue = desc.Contains("Blue");
-					bool yellow = desc.Contains("Yellow");
-					slot = red && blue && yellow ? Item.ItemSlot.Prismatic :
-						red && blue ? Item.ItemSlot.Purple :
-						blue && yellow ? Item.ItemSlot.Green :
-						red && yellow ? Item.ItemSlot.Orange :
-						red ? Item.ItemSlot.Red :
-						blue ? Item.ItemSlot.Blue :
-						yellow ? Item.ItemSlot.Yellow :
-						Item.ItemSlot.None;
-				}
-				else if (desc.Contains("meta gem slot"))
-					slot = Item.ItemSlot.Meta;
+						string desc = string.Empty;
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/desc")) { desc = node.InnerText; }
+						if (desc.Contains("Matches a "))
+						{
+							bool red = desc.Contains("Red");
+							bool blue = desc.Contains("Blue");
+							bool yellow = desc.Contains("Yellow");
+							slot = red && blue && yellow ? Item.ItemSlot.Prismatic :
+								red && blue ? Item.ItemSlot.Purple :
+								blue && yellow ? Item.ItemSlot.Green :
+								red && yellow ? Item.ItemSlot.Orange :
+								red ? Item.ItemSlot.Red :
+								blue ? Item.ItemSlot.Blue :
+								yellow ? Item.ItemSlot.Yellow :
+								Item.ItemSlot.None;
+						}
+						else if (desc.Contains("meta gem slot"))
+							slot = Item.ItemSlot.Meta;
 
-				string[] ids = gemmedId.Split('.');
-				int gem1Id = ids.Length == 4 ? int.Parse(ids[1]) : 0;
-				int gem2Id = ids.Length == 4 ? int.Parse(ids[2]) : 0;
-				int gem3Id = ids.Length == 4 ? int.Parse(ids[3]) : 0;
-				Item item = new Item(name, quality, int.Parse(id), iconPath, slot, stats, sockets, gem1Id, gem2Id, gem3Id);
-				//And all will be revealed
-				return item;
+						string[] ids = gemmedId.Split('.');
+						int gem1Id = ids.Length == 4 ? int.Parse(ids[1]) : 0;
+						int gem2Id = ids.Length == 4 ? int.Parse(ids[2]) : 0;
+						int gem3Id = ids.Length == 4 ? int.Parse(ids[3]) : 0;
+						Item item = new Item(name, quality, int.Parse(id), iconPath, slot, stats, sockets, gem1Id, gem2Id, gem3Id);
+						retry = 3;
+						return item;
+					}
+					catch
+					{
+						retry++;
+						if (retry == 3) throw;
+					}
+					//And all will be revealed
+				}
+				return null;
 			}
 			catch (Exception ex)
 			{
-				System.Windows.Forms.MessageBox.Show("Rawr encountered an error getting Item from Armory: " + gemmedId + ". Please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace);
+				System.Windows.Forms.MessageBox.Show("Rawr encountered an error getting Item from Armory: " + gemmedId + ". If this is unexpected, please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace);
 				return null;
 			}
 		}

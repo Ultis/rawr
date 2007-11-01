@@ -247,11 +247,45 @@ namespace Rawr
 						{
 							ItemCalculation item = ItemCalculations[i];
 							Rectangle rectItemName = new Rectangle(0, 24 + i * 36, 96, 36);
+							Color bgColor = Color.Empty;
 							if (item.Equipped)
 							{
-								g.FillRectangle(new SolidBrush(Color.FromArgb(64, 0, 255, 0)), rectItemName);
-								g.DrawRectangle(new Pen(Color.FromArgb(64, 0, 255, 0)), rectItemName);
+								bgColor = Color.FromArgb(64, 0, 255, 0);
 							}
+							switch (item.Item.Slot)
+							{
+								case Item.ItemSlot.Red:
+									bgColor = Color.FromArgb(64, Color.Red);
+									break;
+								case Item.ItemSlot.Orange:
+									bgColor = Color.FromArgb(64, Color.Orange);
+									break;
+								case Item.ItemSlot.Yellow:
+									bgColor = Color.FromArgb(64, Color.Yellow);
+									break;
+								case Item.ItemSlot.Green:
+									bgColor = Color.FromArgb(64, Color.Green);
+									break;
+								case Item.ItemSlot.Blue:
+									bgColor = Color.FromArgb(64, Color.Blue);
+									break;
+								case Item.ItemSlot.Purple:
+									bgColor = Color.FromArgb(64, Color.Purple);
+									break;
+								case Item.ItemSlot.Meta:
+									bgColor = Color.FromArgb(64, Color.Silver);
+									break;
+								case Item.ItemSlot.Prismatic:
+									bgColor = Color.FromArgb(64, Color.DarkGray);
+									break;
+							}
+							if (bgColor != Color.Empty)
+							{
+								Rectangle rectBackground = new Rectangle(rectItemName.X, rectItemName.Y + 2, rectItemName.Width, rectItemName.Height - 4);
+								g.FillRectangle(new SolidBrush(bgColor), rectBackground);
+								g.DrawRectangle(new Pen(bgColor), rectBackground);
+							}
+
 							g.DrawString(item.ItemName, this.Font, brushItemNames, rectItemName, formatItemNames);
 
 							int overallWidth = (int)Math.Round((item.OverallPoints / maxScale) * graphWidth);
@@ -327,8 +361,8 @@ namespace Rawr
 		public Character.CharacterSlot EquipSlot = Character.CharacterSlot.None;
 		private void ComparisonGraph_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
-			if (e.Button == MouseButtons.Right)
-			{
+			//if (e.Button == MouseButtons.Right)
+			//{
 				if (e.X <= 96)
 				{
 					int itemIndex = (int)Math.Floor(((float)(e.Y - 24f + _scrollBar.Value)) / 36f);
@@ -337,7 +371,7 @@ namespace Rawr
 						ItemContextualMenu.Instance.Show(ItemCalculations[itemIndex].Item, EquipSlot, true);
 					}
 				}
-			}
+			//}
 		}
 
 		private void ComparisonGraph_MouseLeave(object sender, EventArgs e)

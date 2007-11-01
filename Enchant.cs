@@ -4,24 +4,24 @@ using System.Text;
 
 namespace Rawr
 {
-    public class Enchant
-    {
+	public class Enchant
+	{
 		public int Id;
 		public string Name;
 		public Item.ItemSlot Slot = Item.ItemSlot.Head;
-        public Stats Stats = new Stats();
+		public Stats Stats = new Stats();
 
-        public Enchant() { }
-        public Enchant(int id, string name, Item.ItemSlot slot, Stats stats)
-        {
+		public Enchant() { }
+		public Enchant(int id, string name, Item.ItemSlot slot, Stats stats)
+		{
 			Id = id;
 			Name = name;
 			Slot = slot;
-            Stats = stats;
-        }
+			Stats = stats;
+		}
 
-        public override string ToString()
-        {
+		public override string ToString()
+		{
 			string summary = Name + ": ";
 			summary += Stats.ToString();
 			summary = summary.TrimEnd(',', ' ', ':');
@@ -36,13 +36,13 @@ namespace Rawr
 				if (_allEnchants == null)
 				{
 					_allEnchants = new List<Enchant>();
-					_allEnchants.Add(new Enchant(0, "No Enchant", Item.ItemSlot.None, new Stats(0, 0, 0, 0, 0, 0, 0)));
+					_allEnchants.Add(new Enchant(0,    "No Enchant", Item.ItemSlot.None, new Stats(0, 0, 0, 0, 0, 0, 0)));
 					_allEnchants.Add(new Enchant(2999, "Glyph of the Defender", Item.ItemSlot.Head, new Stats(0, 0, 0, 0, 17, 16, 0)));
 					_allEnchants.Add(new Enchant(2991, "Greater Inscription of the Knight", Item.ItemSlot.Shoulders, new Stats(0, 0, 0, 0, 10, 15, 0)));
 					_allEnchants.Add(new Enchant(2990, "Inscription of the Knight", Item.ItemSlot.Shoulders, new Stats(0, 0, 0, 0, 0, 13, 0)));
 					_allEnchants.Add(new Enchant(2978, "Greater Inscription of Warding", Item.ItemSlot.Shoulders, new Stats(0, 0, 0, 0, 15, 10, 0)));
 					_allEnchants.Add(new Enchant(2977, "Inscription of Warding", Item.ItemSlot.Shoulders, new Stats(0, 0, 0, 0, 13, 0, 0)));
-					_allEnchants.Add(new Enchant(368, "Greater Agility", Item.ItemSlot.Back, new Stats(0, 0, 12, 0, 0, 0, 0)));
+					_allEnchants.Add(new Enchant(368,  "Greater Agility", Item.ItemSlot.Back, new Stats(0, 0, 12, 0, 0, 0, 0)));
 					_allEnchants.Add(new Enchant(2662, "Major Armor", Item.ItemSlot.Back, new Stats(120, 0, 0, 0, 0, 0, 0)));
 					_allEnchants.Add(new Enchant(2622, "Dodge", Item.ItemSlot.Back, new Stats(0, 0, 0, 0, 12, 0, 0)));
 					_allEnchants.Add(new Enchant(2659, "Exceptional Health", Item.ItemSlot.Chest, new Stats(0, 150, 0, 0, 0, 0, 0)));
@@ -64,6 +64,7 @@ namespace Rawr
 					_allEnchants.Add(new Enchant(2657, "Dexterity", Item.ItemSlot.Feet, new Stats(0, 0, 12, 0, 0, 0, 0)));
 					_allEnchants.Add(new Enchant(2649, "Fortitude", Item.ItemSlot.Feet, new Stats(0, 0, 0, 12, 0, 0, 0)));
 					_allEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Feet, new Stats(0, 0, 0, 0, 0, 8, 0)));
+					_allEnchants.Add(new Enchant(2931, "Stats", Item.ItemSlot.Finger, new Stats(0, 0, 4, 4, 0, 0, 0)));
 					_allEnchants.Add(new Enchant(2670, "Major Agility", Item.ItemSlot.Weapon, new Stats(0, 0, 35, 0, 0, 0, 0)));
 				}
 				return _allEnchants;
@@ -79,5 +80,5 @@ namespace Rawr
 		{
 			return AllEnchants.FindAll(new Predicate<Enchant>(delegate(Enchant enchant) { return enchant.Slot == slot || enchant.Slot == Item.ItemSlot.None || slot == Item.ItemSlot.None; }));
 		}
-    }
+	}
 }

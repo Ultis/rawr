@@ -112,9 +112,13 @@ namespace Rawr
 			this.comboBoxEnchantBack = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantHands = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantShoulders = new System.Windows.Forms.ComboBox();
+			this.comboBoxEnchantFinger2 = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantWeapon = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantWrists = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantHead = new System.Windows.Forms.ComboBox();
+			this.comboBoxEnchantFinger1 = new System.Windows.Forms.ComboBox();
+			this.label29 = new System.Windows.Forms.Label();
+			this.label27 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
@@ -180,9 +184,14 @@ namespace Rawr
 			this.handsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.legsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.feetToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.fingerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.weaponToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.buffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.allBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.allLongDurationBuffsNoDWToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.currentBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
 			this.currentGearEnchantsBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.combatTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
@@ -192,10 +201,6 @@ namespace Rawr
 			this.mitigationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.alphabeticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolTipSimple = new System.Windows.Forms.ToolTip(this.components);
-			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-			this.allBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.allLongDurationBuffsNoDWToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.currentBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStripMain.SuspendLayout();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -989,9 +994,13 @@ namespace Rawr
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantBack);
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantHands);
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantShoulders);
+			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantFinger2);
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantWeapon);
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantWrists);
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantHead);
+			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantFinger1);
+			this.tabPageEnchants.Controls.Add(this.label29);
+			this.tabPageEnchants.Controls.Add(this.label27);
 			this.tabPageEnchants.Controls.Add(this.label8);
 			this.tabPageEnchants.Controls.Add(this.label7);
 			this.tabPageEnchants.Controls.Add(this.label6);
@@ -1075,12 +1084,23 @@ namespace Rawr
 			this.comboBoxEnchantShoulders.TabIndex = 1;
 			this.comboBoxEnchantShoulders.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
+			// comboBoxEnchantFinger2
+			// 
+			this.comboBoxEnchantFinger2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEnchantFinger2.DropDownWidth = 260;
+			this.comboBoxEnchantFinger2.FormattingEnabled = true;
+			this.comboBoxEnchantFinger2.Location = new System.Drawing.Point(69, 249);
+			this.comboBoxEnchantFinger2.Name = "comboBoxEnchantFinger2";
+			this.comboBoxEnchantFinger2.Size = new System.Drawing.Size(139, 21);
+			this.comboBoxEnchantFinger2.TabIndex = 1;
+			this.comboBoxEnchantFinger2.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
+			// 
 			// comboBoxEnchantWeapon
 			// 
 			this.comboBoxEnchantWeapon.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBoxEnchantWeapon.DropDownWidth = 260;
 			this.comboBoxEnchantWeapon.FormattingEnabled = true;
-			this.comboBoxEnchantWeapon.Location = new System.Drawing.Point(69, 222);
+			this.comboBoxEnchantWeapon.Location = new System.Drawing.Point(69, 276);
 			this.comboBoxEnchantWeapon.Name = "comboBoxEnchantWeapon";
 			this.comboBoxEnchantWeapon.Size = new System.Drawing.Size(139, 21);
 			this.comboBoxEnchantWeapon.TabIndex = 1;
@@ -1108,10 +1128,39 @@ namespace Rawr
 			this.comboBoxEnchantHead.TabIndex = 1;
 			this.comboBoxEnchantHead.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
+			// comboBoxEnchantFinger1
+			// 
+			this.comboBoxEnchantFinger1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEnchantFinger1.DropDownWidth = 260;
+			this.comboBoxEnchantFinger1.FormattingEnabled = true;
+			this.comboBoxEnchantFinger1.Location = new System.Drawing.Point(69, 222);
+			this.comboBoxEnchantFinger1.Name = "comboBoxEnchantFinger1";
+			this.comboBoxEnchantFinger1.Size = new System.Drawing.Size(139, 21);
+			this.comboBoxEnchantFinger1.TabIndex = 1;
+			this.comboBoxEnchantFinger1.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
+			// 
+			// label29
+			// 
+			this.label29.AutoSize = true;
+			this.label29.Location = new System.Drawing.Point(6, 252);
+			this.label29.Name = "label29";
+			this.label29.Size = new System.Drawing.Size(48, 13);
+			this.label29.TabIndex = 0;
+			this.label29.Text = "Finger 2:";
+			// 
+			// label27
+			// 
+			this.label27.AutoSize = true;
+			this.label27.Location = new System.Drawing.Point(6, 225);
+			this.label27.Name = "label27";
+			this.label27.Size = new System.Drawing.Size(48, 13);
+			this.label27.TabIndex = 0;
+			this.label27.Text = "Finger 1:";
+			// 
 			// label8
 			// 
 			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(6, 225);
+			this.label8.Location = new System.Drawing.Point(6, 279);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(51, 13);
 			this.label8.TabIndex = 0;
@@ -1532,6 +1581,7 @@ namespace Rawr
             this.handsToolStripMenuItem1,
             this.legsToolStripMenuItem1,
             this.feetToolStripMenuItem1,
+            this.fingerToolStripMenuItem1,
             this.weaponToolStripMenuItem1,
             this.toolStripSeparator6,
             this.buffsToolStripMenuItem,
@@ -1783,6 +1833,14 @@ namespace Rawr
 			this.feetToolStripMenuItem1.Text = " Feet";
 			this.feetToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
+			// fingerToolStripMenuItem1
+			// 
+			this.fingerToolStripMenuItem1.Name = "fingerToolStripMenuItem1";
+			this.fingerToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
+			this.fingerToolStripMenuItem1.Tag = "Enchants.Finger";
+			this.fingerToolStripMenuItem1.Text = " Fingers";
+			this.fingerToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
 			// weaponToolStripMenuItem1
 			// 
 			this.weaponToolStripMenuItem1.Name = "weaponToolStripMenuItem1";
@@ -1805,6 +1863,35 @@ namespace Rawr
 			this.buffsToolStripMenuItem.Tag = "Buffs";
 			this.buffsToolStripMenuItem.Text = "Buffs";
 			this.buffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// allBuffsToolStripMenuItem
+			// 
+			this.allBuffsToolStripMenuItem.Name = "allBuffsToolStripMenuItem";
+			this.allBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+			this.allBuffsToolStripMenuItem.Tag = "Buffs.AllBuffs";
+			this.allBuffsToolStripMenuItem.Text = " All Buffs";
+			this.allBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// allLongDurationBuffsNoDWToolStripMenuItem
+			// 
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Name = "allLongDurationBuffsNoDWToolStripMenuItem";
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Tag = "Buffs.AllLongDurationBuffsNoDW";
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Text = " All Long-Duration Buffs (No DW)";
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// currentBuffsToolStripMenuItem
+			// 
+			this.currentBuffsToolStripMenuItem.Name = "currentBuffsToolStripMenuItem";
+			this.currentBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+			this.currentBuffsToolStripMenuItem.Tag = "Buffs.CurrentBuffs";
+			this.currentBuffsToolStripMenuItem.Text = " Current Buffs";
+			this.currentBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator7
+			// 
+			this.toolStripSeparator7.Name = "toolStripSeparator7";
+			this.toolStripSeparator7.Size = new System.Drawing.Size(248, 6);
 			// 
 			// currentGearEnchantsBuffsToolStripMenuItem
 			// 
@@ -1870,35 +1957,6 @@ namespace Rawr
 			this.alphabeticalToolStripMenuItem.Text = "Alphabetical";
 			this.alphabeticalToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
 			// 
-			// toolStripSeparator7
-			// 
-			this.toolStripSeparator7.Name = "toolStripSeparator7";
-			this.toolStripSeparator7.Size = new System.Drawing.Size(248, 6);
-			// 
-			// allBuffsToolStripMenuItem
-			// 
-			this.allBuffsToolStripMenuItem.Name = "allBuffsToolStripMenuItem";
-			this.allBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-			this.allBuffsToolStripMenuItem.Tag = "Buffs.AllBuffs";
-			this.allBuffsToolStripMenuItem.Text = " All Buffs";
-			this.allBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-			// 
-			// allLongDurationBuffsNoDWToolStripMenuItem
-			// 
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Name = "allLongDurationBuffsNoDWToolStripMenuItem";
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Tag = "Buffs.AllLongDurationBuffsNoDW";
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Text = " All Long-Duration Buffs (No DW)";
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-			// 
-			// currentBuffsToolStripMenuItem
-			// 
-			this.currentBuffsToolStripMenuItem.Name = "currentBuffsToolStripMenuItem";
-			this.currentBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-			this.currentBuffsToolStripMenuItem.Tag = "Buffs.CurrentBuffs";
-			this.currentBuffsToolStripMenuItem.Text = " Current Buffs";
-			this.currentBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-			// 
 			// FormMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1909,7 +1967,7 @@ namespace Rawr
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.Name = "FormMain";
-			this.Text = "Rawr (Beta 7)";
+			this.Text = "Rawr (Beta 8)";
 			this.Load += new System.EventHandler(this.FormMain_Load);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
 			this.menuStripMain.ResumeLayout(false);
@@ -2110,6 +2168,11 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripMenuItem allLongDurationBuffsNoDWToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem currentBuffsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+		private System.Windows.Forms.ComboBox comboBoxEnchantFinger1;
+		private System.Windows.Forms.Label label27;
+		private System.Windows.Forms.ComboBox comboBoxEnchantFinger2;
+		private System.Windows.Forms.Label label29;
+		private System.Windows.Forms.ToolStripMenuItem fingerToolStripMenuItem1;
     }
 }
 

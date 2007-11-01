@@ -55,6 +55,8 @@ namespace Rawr
 					comboBoxEnchantBack.SelectedItem = Character.BackEnchant;
 					comboBoxEnchantChest.SelectedItem = Character.ChestEnchant;
 					comboBoxEnchantFeet.SelectedItem = Character.FeetEnchant;
+					comboBoxEnchantFinger1.SelectedItem = Character.Finger1Enchant;
+					comboBoxEnchantFinger2.SelectedItem = Character.Finger2Enchant;
 					comboBoxEnchantHands.SelectedItem = Character.HandsEnchant;
 					comboBoxEnchantHead.SelectedItem = Character.HeadEnchant;
 					comboBoxEnchantLegs.SelectedItem = Character.LegsEnchant;
@@ -133,7 +135,7 @@ namespace Rawr
 			}
 			else
 			{
-				toolTipSimple.SetToolTip(labelCritReduction, string.Format("Uncrittable by bosses. {0} defense rating or {1} resilience wasted.",
+				toolTipSimple.SetToolTip(labelCritReduction, string.Format("Uncrittable by bosses. {0} defense rating or {1} resilience over the crit cap.",
 					Math.Floor(chanceToBeCrit * -60f), Math.Floor(chanceToBeCrit * -39.423f)));
 			}
 			
@@ -153,6 +155,8 @@ namespace Rawr
 			comboBoxEnchantBack.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Back).ToArray());
 			comboBoxEnchantChest.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Chest).ToArray());
 			comboBoxEnchantFeet.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Feet).ToArray());
+			comboBoxEnchantFinger1.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
+			comboBoxEnchantFinger2.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
 			comboBoxEnchantHands.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Hands).ToArray());
 			comboBoxEnchantHead.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Head).ToArray());
 			comboBoxEnchantLegs.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Legs).ToArray());
@@ -354,6 +358,8 @@ namespace Rawr
 				Character.BackEnchant = comboBoxEnchantBack.SelectedItem as Enchant;
 				Character.ChestEnchant = comboBoxEnchantChest.SelectedItem as Enchant;
 				Character.FeetEnchant = comboBoxEnchantFeet.SelectedItem as Enchant;
+				Character.Finger1Enchant = comboBoxEnchantFinger1.SelectedItem as Enchant;
+				Character.Finger2Enchant = comboBoxEnchantFinger2.SelectedItem as Enchant;
 				Character.HandsEnchant = comboBoxEnchantHands.SelectedItem as Enchant;
 				Character.HeadEnchant = comboBoxEnchantHead.SelectedItem as Enchant;
 				Character.LegsEnchant = comboBoxEnchantLegs.SelectedItem as Enchant;
