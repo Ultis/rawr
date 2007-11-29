@@ -13,7 +13,9 @@ namespace Rawr
 		private static XmlDocument DownloadXml(string url)
 		{
 			try
+			//can we get away...
 			{
+				//far away...
 				HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
 				if (_proxyRequiresAuthentication)
 				{
@@ -24,17 +26,20 @@ namespace Rawr
 				string xml = new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
 				XmlDocument doc = new XmlDocument();
 				doc.LoadXml(xml);
+				System.Windows.Forms.Application.DoEvents();
 				return doc;
 			}
 			catch (Exception ex)
+			//say goodnight... to gravity...
 			{
+				//the passing stars light the way...
 				if (!_proxyRequiresAuthentication && ex.Message.Contains("Proxy Authentication Required"))
 				{
 					_proxyRequiresAuthentication = true;
 					return DownloadXml(url);
 				}
 			}
-			return null;
+			return null; //lets go for a ride...
 		}
 
 		public static Character GetCharacter(Character.CharacterRegion region, string realm, string name)
@@ -116,7 +121,7 @@ namespace Rawr
 						string id = gemmedId.Split('.')[0];
 						Log.Write("Getting Item from Armory: " + id + "   Reason: " + logReason);
 
-						string itemTooltipPath = string.Format("http://armory.worldofwarcraft.com/item-tooltip.xml?i={0}", id);
+						string itemTooltipPath = string.Format("http://www.wowarmory.com/item-tooltip.xml?i={0}", id);
 						XmlDocument docItem = DownloadXml(itemTooltipPath);
 
 						Quality quality = Quality.Common;
@@ -249,7 +254,7 @@ namespace Rawr
 		{
 			if (!string.IsNullOrEmpty(character.Realm) && !string.IsNullOrEmpty(character.Name))
 			{
-				List<ItemCalculation> gemCalculations = new List<ItemCalculation>();
+				List<ItemBuffEnchantCalculation> gemCalculations = new List<ItemBuffEnchantCalculation>();
 				foreach (Item item in ItemCache.GetItemsArray())
 				{
 					if (item.Slot == Item.ItemSlot.Blue || item.Slot == Item.ItemSlot.Green || item.Slot == Item.ItemSlot.Meta
@@ -260,8 +265,8 @@ namespace Rawr
 					}
 				}
 
-				ItemCalculation idealRed = null, idealBlue = null, idealYellow = null, idealMeta = null;
-				foreach (ItemCalculation calc in gemCalculations)
+				ItemBuffEnchantCalculation idealRed = null, idealBlue = null, idealYellow = null, idealMeta = null;
+				foreach (ItemBuffEnchantCalculation calc in gemCalculations)
 				{
 					if (Item.GemMatchesSlot(calc.Item, Item.ItemSlot.Meta) && (idealMeta == null || idealMeta.OverallPoints < calc.OverallPoints))
 						idealMeta = calc;
@@ -311,7 +316,7 @@ namespace Rawr
 					armoryDomain, character.Realm, character.Name, itemToUpgrade.Id);
 				XmlDocument docUpgradeSearch = DownloadXml(upgradeSearchPath);
 
-				ItemCalculation currentCalculation = Calculations.GetItemCalculations(itemToUpgrade, character, slot);
+				ItemBuffEnchantCalculation currentCalculation = Calculations.GetItemCalculations(itemToUpgrade, character, slot);
 
 				foreach (XmlNode node in docUpgradeSearch.SelectNodes("page/armorySearch/searchResults/items/item"))
 				{
@@ -323,7 +328,7 @@ namespace Rawr
 
 					if (!ItemCache.Items.ContainsKey(idealItem.GemmedId))
 					{
-						ItemCalculation upgradeCalculation = Calculations.GetItemCalculations(idealItem, character, slot);
+						ItemBuffEnchantCalculation upgradeCalculation = Calculations.GetItemCalculations(idealItem, character, slot);
 
 						if (upgradeCalculation.OverallPoints > (currentCalculation.OverallPoints * .8f))// ||
 						//upgradeCalculation.MitigationPoints > (currentCalculation.MitigationPoints * .8f) ||

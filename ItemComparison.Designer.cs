@@ -50,7 +50,7 @@ namespace Rawr
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.comparisonGraph1.BackColor = System.Drawing.Color.White;
-			this.comparisonGraph1.ItemCalculations = new Rawr.ItemCalculation[0];
+			this.comparisonGraph1.ItemCalculations = new Rawr.ItemBuffEnchantCalculation[0];
 			this.comparisonGraph1.Location = new System.Drawing.Point(3, 3);
 			this.comparisonGraph1.Name = "comparisonGraph1";
 			this.comparisonGraph1.ScrollBar = this.vScrollBarGraph;

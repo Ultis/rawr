@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Armory.cs" />
-    <Compile Include="Buffs.cs" />
+    <Compile Include="Buff.cs" />
     <Compile Include="BuffSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>

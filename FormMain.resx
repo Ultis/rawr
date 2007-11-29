@@ -227,6 +227,37 @@
         YII=
 </value>
   </data>
+  <metadata name="toolTipSimple.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>341, 17</value>
+  </metadata>
+  <data name="label33.ToolTip" xml:space="preserve">
+    <value>Survival Points represents the total raw physical damage 
+(pre-mitigation) you can take before dying. Unlike 
+Mitigation Points, you should not attempt to maximize this, 
+but rather get 'enough' of it, and then focus on Mitigation. 
+'Enough' can vary greatly by fight and by your healers, but 
+keeping it roughly even with Mitigation Points is a good 
+way to maintain 'enough' as you progress. If you find that 
+you are being killed by burst damage, focus on Survival Points.</value>
+  </data>
+  <data name="label18.ToolTip" xml:space="preserve">
+    <value>Overall Points are a sum of Mitigation and Survival Points. 
+Overall is *typically*, but not always, the best way to rate gear. 
+For specific encounters, closer attention to Mitigation and 
+Survival Points individually may be important.</value>
+  </data>
+  <data name="label31.ToolTip" xml:space="preserve">
+    <value>Mitigation Points represent the amount of damage you mitigate, 
+on average, through armor mitigation and avoidance. It is directly 
+relational to your Damage Taken. Ideally, you want to maximize 
+Mitigation Points, while maintaining 'enough' Survival Points 
+(see Survival Points). If you find yourself dying due to healers 
+running OOM, or being too busy healing you and letting other 
+raid members die, then focus on Mitigation Points.</value>
+  </data>
+  <metadata name="toolStripItemComparison.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>152, 17</value>
+  </metadata>
   <metadata name="toolStripItemComparison.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>152, 17</value>
   </metadata>
@@ -260,9 +291,6 @@
         s1c0gHPmbrPTpHNJKOCo2G1mZs20zcwUJ5yp1AB5+8/zEwgF5GMVDxh4AAAAAElFTkSuQmCC
 </value>
   </data>
-  <metadata name="toolTipSimple.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>341, 17</value>
-  </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAUAQEAAAAEAGAAoMgAAVgAAADAwAAABABgAqBwAAH4yAAAgIAAAAQAYAKgMAAAmTwAAGBgAAAEA

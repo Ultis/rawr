@@ -5,7 +5,7 @@ using System.Net;
 using System.Windows.Forms;
 using System.IO;
 
-namespace Rawr
+namespace Rawr //O O . .
 {
     [Serializable]
     public class Character
@@ -18,8 +18,8 @@ namespace Rawr
 		public Character.CharacterRegion _region = CharacterRegion.US;
         [System.Xml.Serialization.XmlElement("Race")]
         public CharacterRace _race = CharacterRace.NightElf;
-        [System.Xml.Serialization.XmlElement("Buffs")]
-        public Buffs _buffs = new Buffs();
+        [System.Xml.Serialization.XmlElement("ActiveBuffs")]
+		public List<string> _activeBuffs = new List<string>();
         [System.Xml.Serialization.XmlElement("Head")]
         public string _head;
         [System.Xml.Serialization.XmlElement("Neck")]
@@ -112,10 +112,10 @@ namespace Rawr
             }
         }
         [System.Xml.Serialization.XmlIgnore]
-        public Buffs Buffs
+        public List<string> ActiveBuffs
         {
-            get { return _buffs; }
-            set { _buffs = value; }
+            get { return _activeBuffs; }
+			set { _activeBuffs = value; }
         }
         [System.Xml.Serialization.XmlIgnore]
         public Item Head
@@ -630,6 +630,15 @@ namespace Rawr
             }
         }
 
+		public CharacterSlot[] GetEquippedSlots(Item item)
+		{
+			List<CharacterSlot> listSlots = new List<CharacterSlot>();
+			foreach (CharacterSlot slot in Enum.GetValues(typeof(CharacterSlot)))
+				if (this[slot] == item)
+					listSlots.Add(slot);
+			return listSlots.ToArray();
+		}
+
 		public enum CharacterRegion { US, EU }
 		public enum CharacterRace { NightElf, Tauren }
         public enum CharacterSlot
@@ -736,8 +745,7 @@ namespace Rawr
 						this.Finger1Enchant.Id,
 						this.Finger2Enchant.Id,
 						this.WeaponEnchant.Id);
-			foreach (string buff in Buffs.AllBuffs)
-				clone.Buffs[buff] = this.Buffs[buff];
+			foreach (string buff in this.ActiveBuffs) clone.ActiveBuffs.Add(buff);
 			return clone;
 		}
     

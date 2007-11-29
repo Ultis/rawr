@@ -36,8 +36,8 @@ namespace Rawr
 			set { _character = value; }
 		}
 
-		private ItemCalculation[] _itemCalculations;
-		public ItemCalculation[] ItemCalculations
+		private ItemBuffEnchantCalculation[] _itemCalculations;
+		public ItemBuffEnchantCalculation[] ItemCalculations
 		{
 			get
 			{
@@ -47,12 +47,12 @@ namespace Rawr
 			{
 				if (value == null)
 				{
-					_itemCalculations = new ItemCalculation[0];
+					_itemCalculations = new ItemBuffEnchantCalculation[0];
 				}
 				else
 				{
-					List<ItemCalculation> calcs = new List<ItemCalculation>(value);
-					calcs.Sort(new System.Comparison<ItemCalculation>(CompareItemCalculations));
+					List<ItemBuffEnchantCalculation> calcs = new List<ItemBuffEnchantCalculation>(value);
+					calcs.Sort(new System.Comparison<ItemBuffEnchantCalculation>(CompareItemCalculations));
 					_itemCalculations = calcs.ToArray();
 				}
 				RebuildItemList();
@@ -70,14 +70,14 @@ namespace Rawr
 			}
 		}
 
-		protected int CompareItemCalculations(ItemCalculation a, ItemCalculation b)
+		protected int CompareItemCalculations(ItemBuffEnchantCalculation a, ItemBuffEnchantCalculation b)
 		{
 			if (Sort == ComparisonGraph.ComparisonSort.Mitigation)
 				return a.MitigationPoints.CompareTo(b.MitigationPoints);
 			else if (Sort == ComparisonGraph.ComparisonSort.Survival)
 				return a.SurvivalPoints.CompareTo(b.SurvivalPoints);
 			else if (Sort == ComparisonGraph.ComparisonSort.Alphabetical)
-				return b.ItemName.CompareTo(a.ItemName);
+				return b.Name.CompareTo(a.Name);
 			else
 				return a.OverallPoints.CompareTo(b.OverallPoints);
 		}
@@ -171,7 +171,7 @@ namespace Rawr
 			if (slot != _characterSlot)
 			{
 				_characterSlot = slot;
-				List<ItemCalculation> itemCalculations = new List<ItemCalculation>();
+				List<ItemBuffEnchantCalculation> itemCalculations = new List<ItemBuffEnchantCalculation>();
 				if (Items != null && Character != null)
 				{
 					foreach (Item item in Items)
@@ -198,12 +198,12 @@ namespace Rawr
 			for (int i = 0; i < ItemCalculations.Length; i++)
 			{
 				ItemSelectorItem ctrl = panelItems.Controls[i] as ItemSelectorItem;
-				ItemCalculation calc = ItemCalculations[i];
+				ItemBuffEnchantCalculation calc = ItemCalculations[i];
 				calc.Equipped = calc.Item == _button.SelectedItem;
 				ctrl.ItemCalculation = calc;
 				ctrl.Sort = this.Sort;
 				ctrl.HideToolTip();
-				bool visible = string.IsNullOrEmpty(this.toolStripTextBoxFilter.Text) || calc.ItemName.ToLower().Contains(this.toolStripTextBoxFilter.Text.ToLower());
+				bool visible = string.IsNullOrEmpty(this.toolStripTextBoxFilter.Text) || calc.Name.ToLower().Contains(this.toolStripTextBoxFilter.Text.ToLower());
 				ctrl.Visible = visible;
 				if (visible)
 					maxRating = Math.Max(maxRating,

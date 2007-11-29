@@ -202,10 +202,12 @@ namespace Rawr
 			ItemCache.DeleteItem(this, false);
 		}
 
+		public event EventHandler IdsChanged;
 		private void OnIdsChanged()
 		{
 			_gemmedId = string.Empty;
 			ItemCache.AddItem(this, false, false);
+			if (IdsChanged != null) IdsChanged(this, null);
 		}
 
 		public enum ItemSlot
@@ -260,7 +262,7 @@ namespace Rawr
 		public override string ToString()
 		{
 			string summary = this.Name + ": ";
-			summary += Calculations.GetItemTotalStats(this).ToString();
+			summary += this.GetTotalStats().ToString();
 			//summary += Stats.ToString();
 			//summary += Sockets.ToString();
 			if (summary.EndsWith(", ")) summary = summary.Substring(0, summary.Length - 2);
@@ -271,6 +273,20 @@ namespace Rawr
 				summary += " [EMPTY SOCKETS]";
 
 			return summary;
+		}
+
+		public Stats GetTotalStats()
+		{
+			Stats totalItemStats = new Stats();
+			totalItemStats += this.Stats;
+			bool eligibleForSocketBonus = GemMatchesSlot(Gem1, Sockets.Color1) &&
+				GemMatchesSlot(Gem2, Sockets.Color2) &&
+				GemMatchesSlot(Gem3, Sockets.Color3);
+			if (Gem1 != null) totalItemStats += Gem1.Stats;
+			if (Gem2 != null) totalItemStats += Gem2.Stats;
+			if (Gem3 != null) totalItemStats += Gem3.Stats;
+			if (eligibleForSocketBonus) totalItemStats += Sockets.Stats;
+			return totalItemStats;
 		}
 
 		public static bool GemMatchesSlot(Item gem, ItemSlot slotColor)

@@ -56,6 +56,7 @@ namespace Rawr
 			this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
 			this.tabControlCharacter = new System.Windows.Forms.TabControl();
 			this.tabPageStats = new System.Windows.Forms.TabPage();
+			this.label32 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.textBoxName = new System.Windows.Forms.TextBox();
 			this.textBoxRealm = new System.Windows.Forms.TextBox();
@@ -464,6 +465,7 @@ namespace Rawr
 			// 
 			// tabPageStats
 			// 
+			this.tabPageStats.Controls.Add(this.label32);
 			this.tabPageStats.Controls.Add(this.groupBox3);
 			this.tabPageStats.Controls.Add(this.groupBox2);
 			this.tabPageStats.Controls.Add(this.groupBox1);
@@ -475,6 +477,15 @@ namespace Rawr
 			this.tabPageStats.Text = "Stats";
 			this.tabPageStats.UseVisualStyleBackColor = true;
 			this.tabPageStats.Click += new System.EventHandler(this.tabPageStats_Click);
+			// 
+			// label32
+			// 
+			this.label32.AutoSize = true;
+			this.label32.Location = new System.Drawing.Point(3, 515);
+			this.label32.Name = "label32";
+			this.label32.Size = new System.Drawing.Size(131, 13);
+			this.label32.TabIndex = 4;
+			this.label32.Text = "* Mouse over for more info";
 			// 
 			// groupBox3
 			// 
@@ -665,18 +676,20 @@ namespace Rawr
 			this.label33.AutoSize = true;
 			this.label33.Location = new System.Drawing.Point(4, 181);
 			this.label33.Name = "label33";
-			this.label33.Size = new System.Drawing.Size(80, 13);
+			this.label33.Size = new System.Drawing.Size(87, 13);
 			this.label33.TabIndex = 1;
-			this.label33.Text = "Survival Points:";
+			this.label33.Text = "Survival Points: *";
+			this.toolTipSimple.SetToolTip(this.label33, resources.GetString("label33.ToolTip"));
 			// 
 			// label18
 			// 
 			this.label18.AutoSize = true;
 			this.label18.Location = new System.Drawing.Point(4, 145);
 			this.label18.Name = "label18";
-			this.label18.Size = new System.Drawing.Size(75, 13);
+			this.label18.Size = new System.Drawing.Size(82, 13);
 			this.label18.TabIndex = 1;
-			this.label18.Text = "Overall Points:";
+			this.label18.Text = "Overall Points: *";
+			this.toolTipSimple.SetToolTip(this.label18, resources.GetString("label18.ToolTip"));
 			// 
 			// labelMitigationPoints
 			// 
@@ -703,9 +716,10 @@ namespace Rawr
 			this.label31.AutoSize = true;
 			this.label31.Location = new System.Drawing.Point(4, 163);
 			this.label31.Name = "label31";
-			this.label31.Size = new System.Drawing.Size(87, 13);
+			this.label31.Size = new System.Drawing.Size(94, 13);
 			this.label31.TabIndex = 1;
-			this.label31.Text = "Mitigation Points:";
+			this.label31.Text = "Mitigation Points: *";
+			this.toolTipSimple.SetToolTip(this.label31, resources.GetString("label31.ToolTip"));
 			// 
 			// label20
 			// 
@@ -1868,7 +1882,7 @@ namespace Rawr
 			// 
 			this.allBuffsToolStripMenuItem.Name = "allBuffsToolStripMenuItem";
 			this.allBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-			this.allBuffsToolStripMenuItem.Tag = "Buffs.AllBuffs";
+			this.allBuffsToolStripMenuItem.Tag = "Buffs.All";
 			this.allBuffsToolStripMenuItem.Text = " All Buffs";
 			this.allBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
@@ -1876,7 +1890,7 @@ namespace Rawr
 			// 
 			this.allLongDurationBuffsNoDWToolStripMenuItem.Name = "allLongDurationBuffsNoDWToolStripMenuItem";
 			this.allLongDurationBuffsNoDWToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Tag = "Buffs.AllLongDurationBuffsNoDW";
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Tag = "Buffs.LongDurationNoDW";
 			this.allLongDurationBuffsNoDWToolStripMenuItem.Text = " All Long-Duration Buffs (No DW)";
 			this.allLongDurationBuffsNoDWToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
@@ -1884,7 +1898,7 @@ namespace Rawr
 			// 
 			this.currentBuffsToolStripMenuItem.Name = "currentBuffsToolStripMenuItem";
 			this.currentBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-			this.currentBuffsToolStripMenuItem.Tag = "Buffs.CurrentBuffs";
+			this.currentBuffsToolStripMenuItem.Tag = "Buffs.All+";
 			this.currentBuffsToolStripMenuItem.Text = " Current Buffs";
 			this.currentBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
@@ -1957,6 +1971,10 @@ namespace Rawr
 			this.alphabeticalToolStripMenuItem.Text = "Alphabetical";
 			this.alphabeticalToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
 			// 
+			// toolTipSimple
+			// 
+			this.toolTipSimple.AutomaticDelay = 100;
+			// 
 			// FormMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1967,7 +1985,7 @@ namespace Rawr
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.Name = "FormMain";
-			this.Text = "Rawr (Beta 8)";
+			this.Text = "Rawr (Beta 9)";
 			this.Load += new System.EventHandler(this.FormMain_Load);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
 			this.menuStripMain.ResumeLayout(false);
@@ -1979,6 +1997,7 @@ namespace Rawr
 			this.toolStripContainer1.PerformLayout();
 			this.tabControlCharacter.ResumeLayout(false);
 			this.tabPageStats.ResumeLayout(false);
+			this.tabPageStats.PerformLayout();
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox3.PerformLayout();
 			this.panel2.ResumeLayout(false);
@@ -2173,6 +2192,7 @@ namespace Rawr
 		private System.Windows.Forms.ComboBox comboBoxEnchantFinger2;
 		private System.Windows.Forms.Label label29;
 		private System.Windows.Forms.ToolStripMenuItem fingerToolStripMenuItem1;
+		private System.Windows.Forms.Label label32;
     }
 }
 

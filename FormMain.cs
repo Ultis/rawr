@@ -14,7 +14,7 @@ namespace Rawr
 		private FormSplash _spash = new FormSplash();
 		private string _characterPath = "";
 		private bool _unsavedChanges = false;
-		private CalculatedStats _calculatedStats = null;
+		private CharacterCalculation _calculatedStats = null;
 
 		private bool _loadingCharacter = false;
 		private Character _character = null;
@@ -93,7 +93,7 @@ namespace Rawr
 			}
 			//and the clouds above move closer / looking so dissatisfied
 			Calculations.ClearCache();
-			CalculatedStats calcs = Calculations.CalculateStats(Character);
+			CharacterCalculation calcs = Calculations.GetCharacterCalculations(Character);
 			_calculatedStats = calcs;
 
 			//ItemCalculations itemCalc = Calculations.GetItemCalculations(Character.Finger1, calcStats);
@@ -115,11 +115,11 @@ namespace Rawr
 
 			labelDodge.Text = calcs.Dodge.ToString() + "%";
 			labelMiss.Text = calcs.Miss.ToString() + "%";
-			labelMitigation.Text = calcs.Mitigation.ToString() + "%";
+			labelMitigation.Text = calcs.Mitigation.ToString() + "% *";
 			labelDodgePlusMiss.Text = calcs.DodgePlusMiss.ToString() + "%";
 			labelTotalMitigation.Text = calcs.TotalMitigation.ToString() + "%";
 			labelDamageTaken.Text = calcs.DamageTaken.ToString() + "%";
-			labelCritReduction.Text = chanceToBeCrit.ToString() + "%";
+			labelCritReduction.Text = chanceToBeCrit.ToString() + "% *";
 			labelOverallPoints.Text = calcs.OverallPoints.ToString();
 			labelMitigationPoints.Text = calcs.MitigationPoints.ToString();
 			labelSurvivalPoints.Text = calcs.SurvivalPoints.ToString();
@@ -138,7 +138,22 @@ namespace Rawr
 				toolTipSimple.SetToolTip(labelCritReduction, string.Format("Uncrittable by bosses. {0} defense rating or {1} resilience over the crit cap.",
 					Math.Floor(chanceToBeCrit * -60f), Math.Floor(chanceToBeCrit * -39.423f)));
 			}
-			
+
+			if (calcs.BasicStats.Armor == 35880)
+			{
+				toolTipSimple.SetToolTip(labelMitigation, "Exactly at the armor cap against bosses.");
+			}
+			else if (calcs.BasicStats.Armor > 35880)
+			{
+				toolTipSimple.SetToolTip(labelMitigation, string.Format("Over the armor cap by {0} armor.",
+					calcs.BasicStats.Armor - 35880));
+			}
+			else
+			{
+				toolTipSimple.SetToolTip(labelMitigation, string.Format("Short of the armor cap by {0} armor.",
+					35880 - calcs.BasicStats.Armor));
+			}
+
 			this.Cursor = Cursors.Default;
 			//and the ground below grew colder / as they put you down inside
 		}
@@ -197,7 +212,7 @@ namespace Rawr
 
 		private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			FormItemEditor itemEditor = new FormItemEditor();
+			FormItemEditor itemEditor = new FormItemEditor(Character);
 			itemEditor.ShowDialog();
 			ItemCache.OnItemsChanged();
 		}
@@ -456,7 +471,10 @@ namespace Rawr
 							break;
 
 						case "Buffs":
-							itemComparison1.LoadBuffs(_calculatedStats, (Buffs.BuffCatagory)Enum.Parse(typeof(Buffs.BuffCatagory), tag[1]));
+							string buffType = tag[1];
+							bool activeOnly = buffType.EndsWith("+");
+							buffType = buffType.Replace("+", "");
+							itemComparison1.LoadBuffs(_calculatedStats, (Buff.BuffType)Enum.Parse(typeof(Buff.BuffType), buffType), activeOnly);
 							break;
 
 						case "Current Gear/Enchants/Buffs":

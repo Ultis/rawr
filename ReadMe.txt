@@ -1,23 +1,29 @@
-Rawr Beta 8
+Rawr Beta 9
 ------------
-Thanks for helping test out Rawr. Beta 8 doesn't include a ton of new features, but it does fill in enough for me to consider Rawr to be feature complete for bears. This'll be the last version for a while, as I'm going to begin on generalizing the code to support many different comparison systems, and. Check out the version history for details. Anyway, as usual, if you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
+Thanks for helping test out Rawr. Beta 9 is mostly a bug fix and under-the-hood release. Beta 8 had several nasty bugs, most of which should be fixed in Beta 9. Additionally, alot has been done to prepare Rawr for being generalized so that we can have a cat version. You may notice that both enchants and buffs are now loaded dynamically from two new xml files, instead of being hard-coded in the app code. Due to the number of low-level changes in Beta 9, I honestly expect a bug or two to slip through, so please check for a new version (probably Beta 9a or 9b) soon. Check out the version history for details of what's changed since Beta 8. Anyway, as usual, if you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
 FAQ
 ---
- Q: I launched Rawr, but I just see a black window with some red text on it. Has it hung?
- A: No, just let it go for a min. On the first launch of Rawr, it will download all the icons for items it knows about, from the Armory. This can take 1-2 minutes, possibly more on slow connections. If anything goes wrong, it'll display an error message. Just be patient, please. :)
+ Q: The calculations don't match my character screen. Are they wrong?
+ A: Most likely, no. First, the calculations in Rawr are for combat against raid boss mobs, which changes the chances to be missed, to dodge, to be crushed, and to be crit, so you'll see values off by 0.6% from what the character sheet says. Additionall, WoW sometimes rounds stats oddly, when many buffs are involved. I've gone to great lengths to make Rawr as accurate as possible, but it'll still calculate Stamina and Agility off by 1 in about 5 to 10% of cases. That in turn may make your health, dodge, and armor off by a tiny amount as well. Anyway, that's rare, and even when it does happen, the difference is *extremely* negligable, so don't worry about it. If you do find a situation where other calculations are off, or any of those are off significantly, please let me know. I want to ensure Rawr is as accurate as possible.
 
  Q: I get an error on load, "To run this application you must first install..." or "The application failed to initialize properly (0xc0000135)." How do I fix this?
  A: Install .NET Framework 2.0 from Microsoft. If it still doesn't work, uninstall .NET Framework completely, reinstall .NET Framework 2.0, and try Rawr again. Download link for .NET Framework 2.0 from Microsoft: http://go.microsoft.com/fwlink/?linkid=32168 
 
  Q: There's an item missing! Can you please add [Some Item]?
- A: No, I designed Rawr so that I wouldn't need to update it with new items every time a new tanking item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that the Armory thinks are potential upgrades for you, and Rawr agrees are potentially upgrades. It's a good idea to run this a few days after a major content patch.
+ A: No, I designed Rawr so that I wouldn't need to update it with new items every time a new tanking item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
  
  Q: Can you make it, or does Rawr work for Cats, Moonkin, or Trees?
- A: Right now, no, my focus is on Bears. Once I'm fully satisfied with Rawr's support for Bears, I'll probably start on Cats.
+ A: I'm beginning to shift my focus from Bears to both Bears and Cats. A cat version is in the works, please be patient! After that's decently working, I expect many other spinoffs to be made, such as for Moonkin, Trees, or even different classes.
 
 Version History
 ---------------
+Beat 9:
+ - Fixed several crashing bugs introduced in Beta 8
+ - Buffs and Enchants are now dynamically loaded from xml files in the Rawr folder. While there is no way to edit them in Rawr, yet, you can at least edit buffs and enchants now, by editing the BuffCache.xml and EnchantCache.xml files, and relaunching Rawr.
+ - Added mouseovers giving more info for Overall/Mitigation/Survival Points, and Armor Mitigation value.
+ - Minor bugfixes and code cleanups in preparation for generalizing Rawr so that many modules can be made, like Rawr.Cat for kitties.
+
 Beta 8:
  - Rawr now records and displays item quality (rare, epic, etc). If you reuse your ItemCache.xml from a previous version, you'll need to refresh the item data for each item you want to see the quality of. Thanks to Wicks for this functionality!
  - Added support for Finger enchants.
@@ -130,19 +136,17 @@ ReadMe.txt - This ReadMe
 Rawr.exe - The Rawr application
 Source - This folder contains the Visual Studio 2005 C# project for Rawr. This is all of the source code, so that you can build it yourself, and peruse the source code if you are concerned about it containing anything malicious (it doesn't).
 ItemCache.xml - This is the file that Rawr saves its item database to. I've included my current one, which contains a fair number of items for each slot.
+BuffCache.xml - This is the file that Rawr saves its buff database to. This should be complete as of the time of writing (2.3.0). If new enchants come out, you can edit the xml and relaunch Rawr.
+EnchantCache.xml - Same as BuffCache, but for enchants.
+Images - This folder containts the images of all of the items that Rawr has in its item database. Whenever Rawr needs an item/gem's icon, it'll look here first. If you don't have the correct icon, it'll download it from the Armory. 
 
-
-After running Rawr, you'll see this folder in the Rawr folder as well:
-
-Images - This folder containts the images of all of the items that Rawr has in its item database. Whenever Rawr needs an item/gem's icon, it'll look here first. If you don't have the correct icon, it'll download it from the Armory. Because of that behavior, I haven't included my images folder.
-
-And this file:
+After running Rawr, you'll also see this file:
 
 Rawr.log - This file contains a log of what you downloaded from the armory, and why. If you have any bugs, I may ask for you to send me this log; it'll help me in solving the bug.
 
 Overview of Rawr
 ----------------
-Rawr is a little windows app, designed to help you design sets of gear for your Bear. You can play with different items, enchants, and buffs, and see how they affect your tanking stats. Based on your current stats, it will also display a graph of the value of known items for a selected slot, displaying a mitigation rating, a survival rating, and an overall rating. These ratings, along with most of the other calculations in the app, are based on the fine spreadsheet created by HugeHoss. Huge thanks to Hoss for the help with this project. 
+Rawr is a little windows app, designed to help you design sets of gear for your Bear. You can play with different items, enchants, and buffs, and see how they affect your tanking stats. Based on your current stats, it will also display a graph of the value of known items for a selected slot, displaying a mitigation rating, a survival rating, and an overall rating. These ratings, along with most of the other calculations in the app, were originally based on the fine spreadsheet created by HugeHoss. Huge thanks to Hoss for the help with this project. They have grown, since then, and are now as accurate as possible.
 
 
 How Rawr Handles Items
@@ -156,25 +160,11 @@ When loading a character from the armory, or starting a new blank character, all
 
 Instructions
 ------------
-There's no installer for Rawr (at least, not yet). Just unzip the zip anywhere you like, and run Rawr.exe.
+There's no installer for Rawr (at least, not yet). Just unzip the zip anywhere you like, and run Rawr.exe. (If you have any concern about Rawr doing anything malicious, the full source code is included for you to review and/or build yourself)
 
-Once you've got it running, you should see a basic character-screen-esque layout of items. All slots will start out blank, so you can either start filling in items, or open an armory profile. You'll probably want to open your own armory profile, so you can get some familiar items. Goto File->Load from Armory..., and type in your character name and server (exactly, and choose a region if necessary), and hit OK. After a few sec, it should load your profile. You can mouse over an item to see the stats for it, and click on an item to get a dropdown of all of the other items available for that slot. It'll be missing your buffs, so fill those out on the main screen. If any items aren't gemmed (mouse over them all and see if any show a socket, a solid square of color, with no gem in it) goto Tool->Item Editor, then click Fill Sockets, choose some gems you like, and hit OK, OK.
+Once you've got it running, you should see a basic character-screen-esque layout of items. All slots will start out blank, so you can either start filling in items, or open an armory profile. You'll probably want to open your own armory profile, so you can get some familiar items. Goto File->Load from Armory..., and type in your character name and server (exactly, and choose a region if necessary), and hit OK. After a few sec, it should load your profile. You can mouse over an item to see the stats for it, and click on an item to get a dropdown of all of the other items available for that slot. It'll be missing your buffs, so fill those out on the main screen. If any items aren't gemmed (mouse over them all and see if any show a socket, a solid square of color, with no gem in it) right click on it, hit edit, and fill in some gems, or goto Tool->Item Editor, then click Fill Sockets, choose some gems you like, and hit OK, OK.
 
-Now that you have your current character fairly well defined, use the item comparison are on the right side of the main window. You can choose a slot and a sort method at the top. The ratings calculated in this graph are based on HugeHoss' excellent spreadsheet, and will update as you make changes to your gear/enchants/buffs.
-
-
-TODO
-----
-Stuff I need to do...
-
--Splash Graphic
--Popup Item Editor
--Some way to show all 3 tabs if you have room
--Tooltips on buffs
--Links to Wowhead
--Eventually track more data about items (str, ap, hit, etc)
--Make the level modifier for calculations customizable
--Eventually track dps too
+Now that you have your current character fairly well defined, use the item comparison are on the right side of the main window. You can choose a slot and a sort method at the top. The ratings calculated in this graph will update as you make changes to your gear/enchants/buffs, to always be as accurate as possible.
 
 
 

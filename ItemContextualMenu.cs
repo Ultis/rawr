@@ -109,7 +109,7 @@ namespace Rawr
 			foreach (Form form in Application.OpenForms) if (form is FormItemEditor) editor = form as FormItemEditor;
 			if (editor == null)
 			{
-				editor = new FormItemEditor();
+				editor = new FormItemEditor(Character);
 				editor.SelectItem(_item);
 				FormMain formMain = null;
 				foreach (Form form in Application.OpenForms)

@@ -10,8 +10,8 @@ namespace Rawr
 {
 	public partial class ComparisonGraph : UserControl, IItemProvider
 	{
-		private ItemCalculation[] _itemCalculations;
-		public ItemCalculation[] ItemCalculations
+		private ItemBuffEnchantCalculation[] _itemCalculations;
+		public ItemBuffEnchantCalculation[] ItemCalculations
 		{
 			get
 			{
@@ -21,12 +21,12 @@ namespace Rawr
 			{
 				if (value == null)
 				{
-					_itemCalculations = new ItemCalculation[0];
+					_itemCalculations = new ItemBuffEnchantCalculation[0];
 				}
 				else
 				{
-					List<ItemCalculation> calcs = new List<ItemCalculation>(value);
-					calcs.Sort(new System.Comparison<ItemCalculation>(CompareItemCalculations));
+					List<ItemBuffEnchantCalculation> calcs = new List<ItemBuffEnchantCalculation>(value);
+					calcs.Sort(new System.Comparison<ItemBuffEnchantCalculation>(CompareItemCalculations));
 					_itemCalculations = calcs.ToArray();
 				}
 				if (_prerenderedGraph != null) _prerenderedGraph.Dispose();
@@ -81,14 +81,14 @@ namespace Rawr
 			//return tooltip;
 		}
 
-		protected int CompareItemCalculations(ItemCalculation a, ItemCalculation b)
+		protected int CompareItemCalculations(ItemBuffEnchantCalculation a, ItemBuffEnchantCalculation b)
 		{
 			if (Sort == ComparisonSort.Mitigation)
 				return b.MitigationPoints.CompareTo(a.MitigationPoints);
 			else if (Sort == ComparisonSort.Survival)
 				return b.SurvivalPoints.CompareTo(a.SurvivalPoints);
 			else if (Sort == ComparisonSort.Alphabetical)
-				return a.ItemName.CompareTo(b.ItemName);
+				return a.Name.CompareTo(b.Name);
 			else
 				return b.OverallPoints.CompareTo(a.OverallPoints);
 		}
@@ -126,7 +126,7 @@ namespace Rawr
 					if (ItemCalculations.Length > 0)
 					{
 						float maxOverallPoints = 100f;
-						foreach (ItemCalculation calc in ItemCalculations)
+						foreach (ItemBuffEnchantCalculation calc in ItemCalculations)
 							if (!float.IsPositiveInfinity(calc.OverallPoints))
 								maxOverallPoints = Math.Max(maxOverallPoints, calc.OverallPoints);
 						maxOverallPoints = (float)Math.Ceiling(maxOverallPoints);
@@ -245,40 +245,41 @@ namespace Rawr
 
 						for (int i = 0; i < ItemCalculations.Length; i++)
 						{
-							ItemCalculation item = ItemCalculations[i];
+							ItemBuffEnchantCalculation item = ItemCalculations[i];
 							Rectangle rectItemName = new Rectangle(0, 24 + i * 36, 96, 36);
 							Color bgColor = Color.Empty;
 							if (item.Equipped)
 							{
 								bgColor = Color.FromArgb(64, 0, 255, 0);
 							}
-							switch (item.Item.Slot)
-							{
-								case Item.ItemSlot.Red:
-									bgColor = Color.FromArgb(64, Color.Red);
-									break;
-								case Item.ItemSlot.Orange:
-									bgColor = Color.FromArgb(64, Color.Orange);
-									break;
-								case Item.ItemSlot.Yellow:
-									bgColor = Color.FromArgb(64, Color.Yellow);
-									break;
-								case Item.ItemSlot.Green:
-									bgColor = Color.FromArgb(64, Color.Green);
-									break;
-								case Item.ItemSlot.Blue:
-									bgColor = Color.FromArgb(64, Color.Blue);
-									break;
-								case Item.ItemSlot.Purple:
-									bgColor = Color.FromArgb(64, Color.Purple);
-									break;
-								case Item.ItemSlot.Meta:
-									bgColor = Color.FromArgb(64, Color.Silver);
-									break;
-								case Item.ItemSlot.Prismatic:
-									bgColor = Color.FromArgb(64, Color.DarkGray);
-									break;
-							}
+							if (item.Item != null)
+								switch (item.Item.Slot)
+								{
+									case Item.ItemSlot.Red:
+										bgColor = Color.FromArgb(64, Color.Red);
+										break;
+									case Item.ItemSlot.Orange:
+										bgColor = Color.FromArgb(64, Color.Orange);
+										break;
+									case Item.ItemSlot.Yellow:
+										bgColor = Color.FromArgb(64, Color.Yellow);
+										break;
+									case Item.ItemSlot.Green:
+										bgColor = Color.FromArgb(64, Color.Green);
+										break;
+									case Item.ItemSlot.Blue:
+										bgColor = Color.FromArgb(64, Color.Blue);
+										break;
+									case Item.ItemSlot.Purple:
+										bgColor = Color.FromArgb(64, Color.Purple);
+										break;
+									case Item.ItemSlot.Meta:
+										bgColor = Color.FromArgb(64, Color.Silver);
+										break;
+									case Item.ItemSlot.Prismatic:
+										bgColor = Color.FromArgb(64, Color.DarkGray);
+										break;
+								}
 							if (bgColor != Color.Empty)
 							{
 								Rectangle rectBackground = new Rectangle(rectItemName.X, rectItemName.Y + 2, rectItemName.Width, rectItemName.Height - 4);
@@ -286,7 +287,7 @@ namespace Rawr
 								g.DrawRectangle(new Pen(bgColor), rectBackground);
 							}
 
-							g.DrawString(item.ItemName, this.Font, brushItemNames, rectItemName, formatItemNames);
+							g.DrawString(item.Name, this.Font, brushItemNames, rectItemName, formatItemNames);
 
 							int overallWidth = (int)Math.Round((item.OverallPoints / maxScale) * graphWidth);
 							if (!RoundValues) overallWidth = (int)Math.Ceiling((item.OverallPoints / maxScale) * graphWidth);

@@ -21,6 +21,7 @@ namespace Rawr
 				{
 					Item oldItem = _selectedItem.Tag as Item;
 					_selectedItem.Text = oldItem.Name;
+					oldItem.IdsChanged -= new EventHandler(Item_IdsChanged);
 					string slot = oldItem.Slot.ToString();
 					if (oldItem.Slot == Item.ItemSlot.Red || oldItem.Slot == Item.ItemSlot.Orange || oldItem.Slot == Item.ItemSlot.Yellow
 						 || oldItem.Slot == Item.ItemSlot.Green || oldItem.Slot == Item.ItemSlot.Blue || oldItem.Slot == Item.ItemSlot.Purple
@@ -33,7 +34,9 @@ namespace Rawr
 				_selectedItem = value;
 
 				Item selectedItem = _selectedItem.Tag as Item;
-
+				selectedItem.IdsChanged += new EventHandler(Item_IdsChanged);
+				_equippedSlots = _character.GetEquippedSlots(selectedItem);
+					
 				textBoxName.DataBindings.Clear();
 				textBoxIcon.DataBindings.Clear();
 				numericUpDownAgility.DataBindings.Clear();
@@ -83,11 +86,19 @@ namespace Rawr
 			}
 		}
 
+		void Item_IdsChanged(object sender, EventArgs e)
+		{
+			Item item = (sender as Item);
+			foreach (Character.CharacterSlot slot in _equippedSlots)
+				_character[slot] = item;
+		}
 
-
-		public FormItemEditor()
+		private Character.CharacterSlot[] _equippedSlots;
+		private Character _character;
+		public FormItemEditor(Character character)
 		{
 			InitializeComponent();
+			_character = character;
 			LoadItems();
 			
 			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
@@ -145,7 +156,11 @@ namespace Rawr
 		{
 			if (!imageListItems.Images.ContainsKey(iconPath))
 			{
-				imageListItems.Images.Add(iconPath, ItemIcons.GetItemIcon(iconPath, true));
+				try
+				{
+					imageListItems.Images.Add(iconPath, ItemIcons.GetItemIcon(iconPath, true));
+				}
+				catch { }
 			}
 			return iconPath;
 		}
@@ -168,31 +183,39 @@ namespace Rawr
 			FormEnterId form = new FormEnterId();
 			if (form.ShowDialog() == DialogResult.OK)
 			{
-				Item newItem = Item.LoadFromId(form.Value, true, "Manually Added");
-				if (newItem == null)
+				_changingItemCache = true;
+				try
 				{
-					if (MessageBox.Show("Unable to load item " + form.Value.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+					Item newItem = Item.LoadFromId(form.Value, true, "Manually Added");
+					if (newItem == null)
 					{
-						newItem = new Item("New Item", Quality.Epic, form.Value, "temp", Item.ItemSlot.Head, new Stats(), new Sockets(), 0, 0, 0);
-						ItemCache.AddItem(newItem);
-						SelectItem(newItem);
+						if (MessageBox.Show("Unable to load item " + form.Value.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+						{
+							newItem = new Item("New Item", Quality.Epic, form.Value, "temp", Item.ItemSlot.Head, new Stats(), new Sockets(), 0, 0, 0);
+							ItemCache.AddItem(newItem);
+							SelectItem(newItem);
+						}
+					}
+					else
+					{
+						ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
+						newLvi.Tag = newItem;
+						newLvi.ImageKey = EnsureIconPath(newItem.IconPath);
+						string slot = newItem.Slot.ToString();
+						if (newItem.Slot == Item.ItemSlot.Red || newItem.Slot == Item.ItemSlot.Orange || newItem.Slot == Item.ItemSlot.Yellow
+							 || newItem.Slot == Item.ItemSlot.Green || newItem.Slot == Item.ItemSlot.Blue || newItem.Slot == Item.ItemSlot.Purple
+							 || newItem.Slot == Item.ItemSlot.Prismatic || newItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
+						newLvi.Group = listViewItems.Groups["listViewGroup" + slot];
+
+						listViewItems.Items.Add(newLvi);
+						newLvi.Selected = true;
+						listViewItems.Sort();
+						newLvi.EnsureVisible();
 					}
 				}
-				else
+				finally
 				{
-					ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
-					newLvi.Tag = newItem;
-					newLvi.ImageKey = EnsureIconPath(newItem.IconPath);
-					string slot = newItem.Slot.ToString();
-					if (newItem.Slot == Item.ItemSlot.Red || newItem.Slot == Item.ItemSlot.Orange || newItem.Slot == Item.ItemSlot.Yellow
-						 || newItem.Slot == Item.ItemSlot.Green || newItem.Slot == Item.ItemSlot.Blue || newItem.Slot == Item.ItemSlot.Purple
-						 || newItem.Slot == Item.ItemSlot.Prismatic || newItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
-					newLvi.Group = listViewItems.Groups["listViewGroup" + slot];
-
-					listViewItems.Items.Add(newLvi);
-					newLvi.Selected = true;
-					listViewItems.Sort();
-					newLvi.EnsureVisible();
+					_changingItemCache = false;
 				}
 			}
 		}

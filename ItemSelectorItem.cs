@@ -104,8 +104,8 @@ namespace Rawr
 
 		public Character.CharacterSlot CharacterSlot;
 		public Item GetItem() { return _itemCalculation.Item; }
-		private ItemCalculation _itemCalculation;
-		public ItemCalculation ItemCalculation
+		private ItemBuffEnchantCalculation _itemCalculation;
+		public ItemBuffEnchantCalculation ItemCalculation
 		{
 			get { return _itemCalculation; }
 			set
