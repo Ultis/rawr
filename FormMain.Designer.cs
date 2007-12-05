@@ -1974,6 +1974,7 @@ namespace Rawr
 			// toolTipSimple
 			// 
 			this.toolTipSimple.AutomaticDelay = 100;
+			this.toolTipSimple.AutoPopDelay = 100000;
 			// 
 			// FormMain
 			// 
@@ -1985,7 +1986,7 @@ namespace Rawr
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.Name = "FormMain";
-			this.Text = "Rawr (Beta 9)";
+			this.Text = "Rawr (Beta 9a)";
 			this.Load += new System.EventHandler(this.FormMain_Load);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
 			this.menuStripMain.ResumeLayout(false);

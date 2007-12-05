@@ -66,7 +66,7 @@ namespace Rawr
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(56, 14);
 			this.label1.TabIndex = 0;
-			this.label1.Text = "Beta 9";
+			this.label1.Text = "Beta 9a";
 			// 
 			// label4
 			// 

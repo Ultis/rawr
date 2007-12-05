@@ -1,4 +1,4 @@
-Rawr Beta 9
+Rawr Beta 9a
 ------------
 Thanks for helping test out Rawr. Beta 9 is mostly a bug fix and under-the-hood release. Beta 8 had several nasty bugs, most of which should be fixed in Beta 9. Additionally, alot has been done to prepare Rawr for being generalized so that we can have a cat version. You may notice that both enchants and buffs are now loaded dynamically from two new xml files, instead of being hard-coded in the app code. Due to the number of low-level changes in Beta 9, I honestly expect a bug or two to slip through, so please check for a new version (probably Beta 9a or 9b) soon. Check out the version history for details of what's changed since Beta 8. Anyway, as usual, if you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
@@ -18,7 +18,12 @@ FAQ
 
 Version History
 ---------------
-Beat 9:
+Beta 9a:
+ - Fixed a bug that made the new tooltips disappear really fast
+ - Fixed a bug that made Load Upgrades From Armory skip waist items
+ - Added better error messages for all Armory interactions, to indicate whether or not any response was received at all, what that response was, and if no response was received, that you should check your firewall/proxy settings first.
+
+Beta 9:
  - Fixed several crashing bugs introduced in Beta 8
  - Buffs and Enchants are now dynamically loaded from xml files in the Rawr folder. While there is no way to edit them in Rawr, yet, you can at least edit buffs and enchants now, by editing the BuffCache.xml and EnchantCache.xml files, and relaunching Rawr.
  - Added mouseovers giving more info for Overall/Mitigation/Survival Points, and Armor Mitigation value.

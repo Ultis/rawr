@@ -44,6 +44,7 @@ namespace Rawr
 
 		public static Character GetCharacter(Character.CharacterRegion region, string realm, string name)
 		{
+			XmlDocument docCharacter = null;
 			try
 			{
 				Log.Write("Getting Character from Armory: " + name + "@" + region.ToString() + "-" + realm);
@@ -51,7 +52,7 @@ namespace Rawr
 				string armoryDomain = region == Character.CharacterRegion.US ? "www" : "eu";
 				string characterSheetPath = string.Format("http://{0}.wowarmory.com/character-sheet.xml?r={1}&n={2}",
 					armoryDomain, realm, name);
-				XmlDocument docCharacter = DownloadXml(characterSheetPath);
+				docCharacter = DownloadXml(characterSheetPath);
 
 				Character.CharacterRace race = docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["race"].Value == "Night Elf" ?
 					Character.CharacterRace.NightElf : Character.CharacterRace.Tauren;
@@ -103,7 +104,24 @@ namespace Rawr
 			}
 			catch (Exception ex)
 			{
-				System.Windows.Forms.MessageBox.Show("Rawr encountered an error getting Character from Armory: " + name + "@" + region.ToString() + "-" + realm + ". Please check to make sure you've spelled the character name and realm exactly right, and chosen the correct Region. If you still encounter this error, please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace);
+				if (docCharacter == null || docCharacter.InnerXml.Length == 0)
+				{
+					System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Character " +
+					"from Armory: {0}@{1}-{2}. Please check to make sure you've spelled the character name and realm" +
+					" exactly right, and chosen the correct Region. Rawr recieved no response to its query for character" +
+					" data, so if the character name/region/realm are correct, please check to make sure that no firewall " +
+					"or proxy software is blocking Rawr. If you still encounter this error, please copy and" +
+					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {3}\r\n\r\n\r\n{4}\r\n\r\n{5}",
+					name, region.ToString(), realm, "null", ex.Message, ex.StackTrace));
+				}
+				else
+				{
+					System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Character " +
+					"from Armory: {0}@{1}-{2}. Please check to make sure you've spelled the character name and realm" + 
+					" exactly right, and chosen the correct Region. If you still encounter this error, please copy and" +
+					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {3}\r\n\r\n\r\n{4}\r\n\r\n{5}",
+					name, region.ToString(), realm, docCharacter.OuterXml, ex.Message, ex.StackTrace));
+				}
 				return null;
 			}
 		}
@@ -111,6 +129,7 @@ namespace Rawr
 		public static Item GetItem(string gemmedId, string logReason)
 		{
 			//Just close your eyes
+			XmlDocument docItem = null;
 			try
 			{
 				int retry = 0;
@@ -122,7 +141,7 @@ namespace Rawr
 						Log.Write("Getting Item from Armory: " + id + "   Reason: " + logReason);
 
 						string itemTooltipPath = string.Format("http://www.wowarmory.com/item-tooltip.xml?i={0}", id);
-						XmlDocument docItem = DownloadXml(itemTooltipPath);
+						docItem = DownloadXml(itemTooltipPath);
 
 						Quality quality = Quality.Common;
 						string name = string.Empty;
@@ -245,7 +264,22 @@ namespace Rawr
 			}
 			catch (Exception ex)
 			{
-				System.Windows.Forms.MessageBox.Show("Rawr encountered an error getting Item from Armory: " + gemmedId + ". If this is unexpected, please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace);
+				if (docItem == null || docItem.InnerXml.Length == 0)
+				{
+					System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Item " +
+					"from Armory: {0}. Rawr recieved no response to its query for item" +
+					" data, so please check to make sure that no firewall " +
+					"or proxy software is blocking Rawr. If you still encounter this error, please copy and" +
+					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {1}\r\n\r\n\r\n{2}\r\n\r\n{3}",
+					gemmedId, "null", ex.Message, ex.StackTrace));
+				}
+				else
+				{
+					System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Item " +
+					"from Armory: {0}. If you still encounter this error, please copy and" +
+					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {1}\r\n\r\n\r\n{2}\r\n\r\n{3}",
+					gemmedId, docItem.OuterXml, ex.Message, ex.StackTrace));
+				}
 				return null;
 			}
 		}
@@ -291,7 +325,7 @@ namespace Rawr
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Chest, idealGems);
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Wrist, idealGems);
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Hands, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Wrist, idealGems);
+				LoadUpgradesForSlot(character, Character.CharacterSlot.Waist, idealGems);
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Legs, idealGems);
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Feet, idealGems);
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Finger1, idealGems);
@@ -308,37 +342,59 @@ namespace Rawr
 
 		private static void LoadUpgradesForSlot(Character character, Character.CharacterSlot slot, Dictionary<Item.ItemSlot, int> idealGems)
 		{
-			Item itemToUpgrade = character[slot];
-			if (itemToUpgrade != null)
+			XmlDocument docUpgradeSearch = null;
+			try
 			{
-				string armoryDomain = character.Region == Character.CharacterRegion.US ? "www" : "eu";
-				string upgradeSearchPath = string.Format("http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}",
-					armoryDomain, character.Realm, character.Name, itemToUpgrade.Id);
-				XmlDocument docUpgradeSearch = DownloadXml(upgradeSearchPath);
-
-				ItemBuffEnchantCalculation currentCalculation = Calculations.GetItemCalculations(itemToUpgrade, character, slot);
-
-				foreach (XmlNode node in docUpgradeSearch.SelectNodes("page/armorySearch/searchResults/items/item"))
+				Item itemToUpgrade = character[slot];
+				if (itemToUpgrade != null)
 				{
-					string id = node.Attributes["id"].Value + ".0.0.0";
-					Item idealItem = GetItem(id, "Loading Upgrades");
-					idealItem._gem1Id = idealGems[idealItem.Sockets.Color1];
-					idealItem._gem2Id = idealGems[idealItem.Sockets.Color2];
-					idealItem._gem3Id = idealGems[idealItem.Sockets.Color3];
+					string armoryDomain = character.Region == Character.CharacterRegion.US ? "www" : "eu";
+					string upgradeSearchPath = string.Format("http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}",
+						armoryDomain, character.Realm, character.Name, itemToUpgrade.Id);
+					docUpgradeSearch = DownloadXml(upgradeSearchPath);
 
-					if (!ItemCache.Items.ContainsKey(idealItem.GemmedId))
+					ItemBuffEnchantCalculation currentCalculation = Calculations.GetItemCalculations(itemToUpgrade, character, slot);
+
+					foreach (XmlNode node in docUpgradeSearch.SelectNodes("page/armorySearch/searchResults/items/item"))
 					{
-						ItemBuffEnchantCalculation upgradeCalculation = Calculations.GetItemCalculations(idealItem, character, slot);
+						string id = node.Attributes["id"].Value + ".0.0.0";
+						Item idealItem = GetItem(id, "Loading Upgrades");
+						idealItem._gem1Id = idealGems[idealItem.Sockets.Color1];
+						idealItem._gem2Id = idealGems[idealItem.Sockets.Color2];
+						idealItem._gem3Id = idealGems[idealItem.Sockets.Color3];
 
-						if (upgradeCalculation.OverallPoints > (currentCalculation.OverallPoints * .8f))// ||
-						//upgradeCalculation.MitigationPoints > (currentCalculation.MitigationPoints * .8f) ||
-						//upgradeCalculation.SurvivalPoints > (currentCalculation.SurvivalPoints * .8f) )
+						if (!ItemCache.Items.ContainsKey(idealItem.GemmedId))
 						{
-							ItemCache.AddItem(idealItem);
+							ItemBuffEnchantCalculation upgradeCalculation = Calculations.GetItemCalculations(idealItem, character, slot);
+
+							if (upgradeCalculation.OverallPoints > (currentCalculation.OverallPoints * .8f))// ||
+							//upgradeCalculation.MitigationPoints > (currentCalculation.MitigationPoints * .8f) ||
+							//upgradeCalculation.SurvivalPoints > (currentCalculation.SurvivalPoints * .8f) )
+							{
+								ItemCache.AddItem(idealItem);
+							}
 						}
 					}
 				}
-				itemToUpgrade.ToString();
+			}
+			catch (Exception ex)
+			{
+				if (docUpgradeSearch == null || docUpgradeSearch.InnerXml.Length == 0)
+				{
+					System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Upgrades " +
+					"from Armory: {0}. Rawr recieved no response to its query for upgrade" +
+					" data, so please check to make sure that no firewall " +
+					"or proxy software is blocking Rawr. If you still encounter this error, please copy and" +
+					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {1}\r\n\r\n\r\n{2}\r\n\r\n{3}",
+					slot.ToString(), "null", ex.Message, ex.StackTrace));
+				}
+				else
+				{
+					System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Upgrades " +
+					"from Armory: {0}. If you still encounter this error, please copy and" +
+					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {1}\r\n\r\n\r\n{2}\r\n\r\n{3}",
+					slot.ToString(), docUpgradeSearch.OuterXml, ex.Message, ex.StackTrace));
+				}
 			}
 		}
 	}
