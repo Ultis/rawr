@@ -4,7 +4,7 @@ using System.Text;
 using System.Net;
 using System.IO;
 using System.Xml;
-
+  
 namespace Rawr
 {
 	public static class Armory
