@@ -10,6 +10,8 @@ namespace Rawr
 {
 	public partial class ItemComparison : UserControl
 	{
+        private delegate void LoadGearBySlotCallback(Character.CharacterSlot slot);
+	    
 		public Item[] Items;
 
 		public ComparisonGraph.ComparisonSort Sort
@@ -35,6 +37,13 @@ namespace Rawr
 
 		public void LoadGearBySlot(Character.CharacterSlot slot)
 		{
+            //Check for thread context
+            if (InvokeRequired)
+            {
+                LoadGearBySlotCallback d = new LoadGearBySlotCallback(LoadGearBySlot);
+                Invoke(d, new object[] { slot });
+            }
+		    
 			List<ItemBuffEnchantCalculation> itemCalculations = new List<ItemBuffEnchantCalculation>();
 			if (Items != null && Character != null)
 			{
