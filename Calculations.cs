@@ -6,17 +6,41 @@ namespace Rawr
 {
 	public class Calculations
 	{
+		public enum CalculationModel
+		{
+			Bear,
+			Cat
+		}
+
+		public static void LoadModel(CalculationModel model)
+		{
+			switch (model)
+			{
+				case CalculationModel.Bear:
+					Instance = new CalculationsBear();
+					break;
+				case CalculationModel.Cat:
+					Instance = new CalculationsCat();
+					break;
+			}
+		}
+
 		private static CalculationsBase _instance;
 		private static CalculationsBase Instance
 		{
 			get
 			{
 				if (_instance == null)
-					//_instance = new CalculationsBear();
-					_instance = new CalculationsCat();
+					_instance = new CalculationsBear();
 				return _instance;
 			}
+			set
+			{
+				_instance = value;
+			}
 		}
+
+
 		public static Character CachedCharacter
 		{
 			get { return Instance.CachedCharacter; } 

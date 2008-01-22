@@ -492,7 +492,7 @@ namespace Rawr
 		{
 			if (_tooltipItem != null && _tooltipLocation != Point.Empty)
 			{
-				ItemToolTip.Instance.Show("tooltip", this, _tooltipLocation);
+				ItemToolTip.Instance.Show(_tooltipItem.Name, this, _tooltipLocation);
 			}
 			else
 			{

@@ -19,6 +19,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -31,7 +32,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -52,6 +52,26 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -68,6 +88,12 @@
     </Compile>
     <Compile Include="BuffSelector.Designer.cs">
       <DependentUpon>BuffSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CalculationOptionsBear.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CalculationOptionsBear.Designer.cs">
+      <DependentUpon>CalculationOptionsBear.cs</DependentUpon>
     </Compile>
     <Compile Include="Calculations.cs" />
     <Compile Include="Character.cs" />
@@ -122,6 +148,12 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormModelChooser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormModelChooser.Designer.cs">
+      <DependentUpon>FormModelChooser.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormSplash.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,6 +191,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>BuffSelector.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CalculationOptionsBear.resx">
+      <DependentUpon>CalculationOptionsBear.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="ComparisonGraph.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ComparisonGraph.cs</DependentUpon>
@@ -190,6 +226,10 @@
     <EmbeddedResource Include="FormMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormModelChooser.resx">
+      <DependentUpon>FormModelChooser.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSplash.resx">
       <SubType>Designer</SubType>

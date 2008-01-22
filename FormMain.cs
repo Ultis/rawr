@@ -162,6 +162,7 @@ namespace Rawr
 		{
 			_spash.Show();
 
+			new FormModelChooser().ShowDialog();
 			
 			Application.DoEvents();
 			InitializeComponent();
