@@ -10,8 +10,6 @@ namespace Rawr
 {
 	public partial class ItemComparison : UserControl
 	{
-        private delegate void LoadGearBySlotCallback(Character.CharacterSlot slot);
-	    
 		public Item[] Items;
 
 		public ComparisonGraph.ComparisonSort Sort
@@ -37,14 +35,7 @@ namespace Rawr
 
 		public void LoadGearBySlot(Character.CharacterSlot slot)
 		{
-            //Check for thread context
-            if (InvokeRequired)
-            {
-                LoadGearBySlotCallback d = new LoadGearBySlotCallback(LoadGearBySlot);
-                Invoke(d, new object[] { slot });
-            }
-		    
-			List<ItemBuffEnchantCalculation> itemCalculations = new List<ItemBuffEnchantCalculation>();
+			List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
 			if (Items != null && Character != null)
 			{
 				foreach (Item item in Items)
@@ -62,7 +53,7 @@ namespace Rawr
 				Character.CharacterSlot.None : slot;
 		}
 
-		public void LoadEnchantsBySlot(Item.ItemSlot slot, CharacterCalculation currentCalculations)
+		public void LoadEnchantsBySlot(Item.ItemSlot slot, CharacterCalculationsBase currentCalculations)
 		{
 			if (Items != null && Character != null)
 			{
@@ -72,7 +63,7 @@ namespace Rawr
 			}
 		}
 
-		public void LoadBuffs(CharacterCalculation currentCalculations, Buff.BuffType buffType, bool activeOnly)
+		public void LoadBuffs(CharacterCalculationsBase currentCalculations, Buff.BuffType buffType, bool activeOnly)
 		{
 			if (Items != null && Character != null)
 			{
@@ -82,20 +73,20 @@ namespace Rawr
 			}
 		}
 
-		public void LoadCurrentGearEnchantsBuffs(CharacterCalculation currentCalculations)
+		public void LoadCurrentGearEnchantsBuffs(CharacterCalculationsBase currentCalculations)
 		{
-			List<ItemBuffEnchantCalculation> itemCalculations = new List<ItemBuffEnchantCalculation>();
+			List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
 			if (Items != null && Character != null)
 			{
 				foreach (Character.CharacterSlot slot in Enum.GetValues(typeof(Character.CharacterSlot)))
 					if (Character[slot] != null)
 						itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
 
-				foreach (ItemBuffEnchantCalculation calc in Calculations.GetEnchantCalculations(Item.ItemSlot.None, Character, currentCalculations))
+				foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(Item.ItemSlot.None, Character, currentCalculations))
 					if (calc.Equipped)
 						itemCalculations.Add(calc);
 
-				foreach (ItemBuffEnchantCalculation calc in Calculations.GetBuffCalculations(Character, currentCalculations, Buff.BuffType.All, true))
+				foreach (ComparisonCalculationBase calc in Calculations.GetBuffCalculations(Character, currentCalculations, Buff.BuffType.All, true))
 					itemCalculations.Add(calc);
 			}
 
@@ -104,31 +95,10 @@ namespace Rawr
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
 		}
 
-		public void LoadCombatTable(CharacterCalculation currentCalculations)
+		public void LoadCombatTable(CharacterCalculationsBase currentCalculations)
 		{
-			ItemBuffEnchantCalculation calcMiss = new ItemBuffEnchantCalculation();
-			ItemBuffEnchantCalculation calcDodge = new ItemBuffEnchantCalculation();
-			ItemBuffEnchantCalculation calcCrit = new ItemBuffEnchantCalculation();
-			ItemBuffEnchantCalculation calcCrush = new ItemBuffEnchantCalculation();
-			ItemBuffEnchantCalculation calcHit = new ItemBuffEnchantCalculation();
-			calcMiss.Name =  "    Miss    ";
-			calcDodge.Name = "   Dodge   ";
-			calcCrit.Name =  "  Crit  ";
-			calcCrush.Name = " Crush ";
-			calcHit.Name =   "Hit";
-
-			float crits = 2.6f - currentCalculations.CappedCritReduction;
-			float crushes = Math.Max(Math.Min(100f - (crits + (currentCalculations.DodgePlusMiss)), 15f), 0f);
-			float hits = Math.Max(100f - (crits + crushes + (currentCalculations.DodgePlusMiss)), 0f);
-			
-			calcMiss.OverallPoints = calcMiss.MitigationPoints = currentCalculations.Miss;
-			calcDodge.OverallPoints = calcDodge.MitigationPoints = currentCalculations.Dodge;
-			calcCrit.OverallPoints = calcCrit.SurvivalPoints = crits;
-			calcCrush.OverallPoints = calcCrush.SurvivalPoints = crushes;
-			calcHit.OverallPoints = calcHit.SurvivalPoints = hits;
-
 			comparisonGraph1.RoundValues = false;
-			comparisonGraph1.ItemCalculations = new ItemBuffEnchantCalculation[] { calcMiss, calcDodge, calcCrit, calcCrush, calcHit };
+			comparisonGraph1.ItemCalculations = Calculations.GetCombatTable(currentCalculations);
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
 		}
 	}

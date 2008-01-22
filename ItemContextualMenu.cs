@@ -88,12 +88,12 @@ namespace Rawr
 
 		void _menuItemRefresh_Click(object sender, EventArgs e)
 		{
-			ItemCache.DeleteItem(_item);
+			//ItemCache.DeleteItem(_item);
 			Item newItem = Item.LoadFromId(_item.GemmedId, true, "Refreshing");
 			if (newItem == null)
 			{
 				MessageBox.Show("Unable to find item " + _item.Id + ". Reverting to previous data.");
-				ItemCache.AddItem(_item);
+				ItemCache.AddItem(_item, true, false);
 			}
 			ItemCache.OnItemsChanged();
 		}

@@ -32,8 +32,10 @@ namespace Rawr
 						c.MouseLeave += new EventHandler(ItemSelectorItem_MouseEnterLeave);
 						c.MouseClick += new MouseEventHandler(ItemSelectorItem_MouseClick);
 					}
-			    }				
+			    }
 			}
+
+			CreateSubPointPanels();
 		}
 
 		void ItemSelectorItem_MouseClick(object sender, MouseEventArgs e)
@@ -104,8 +106,8 @@ namespace Rawr
 
 		public Character.CharacterSlot CharacterSlot;
 		public Item GetItem() { return _itemCalculation.Item; }
-		private ItemBuffEnchantCalculation _itemCalculation;
-		public ItemBuffEnchantCalculation ItemCalculation
+		private ComparisonCalculationBase _itemCalculation;
+		public ComparisonCalculationBase ItemCalculation
 		{
 			get { return _itemCalculation; }
 			set
@@ -181,16 +183,40 @@ namespace Rawr
 				if (_sort != value)
 				{
 					_sort = value;
-					panelMitigation.Visible = _sort != ComparisonGraph.ComparisonSort.Survival;
-					panelSurvival.Visible = _sort != ComparisonGraph.ComparisonSort.Mitigation;
+					foreach (Panel panelSubPoint in panelBottom.Controls)
+					{
+						panelSubPoint.Visible = (int)_sort == (int)panelSubPoint.Tag || _sort == ComparisonGraph.ComparisonSort.Overall || _sort == ComparisonGraph.ComparisonSort.Alphabetical;
+					}
+					//panelMitigation.Visible = _sort != ComparisonGraph.ComparisonSort.Survival;
+					//panelSurvival.Visible = _sort != ComparisonGraph.ComparisonSort.Mitigation;
 				}
 			}
 		}
 
+		private void CreateSubPointPanels()
+		{
+			panelBottom.SuspendLayout();
+			panelBottom.Controls.Clear();
+			foreach (KeyValuePair<string, Color> subPointNameColors in Calculations.SubPointNameColors)
+			{
+				Panel panelSubPoint = new Panel();
+				panelSubPoint.BackColor = subPointNameColors.Value;
+				panelSubPoint.Tag = panelBottom.Controls.Count;
+				panelSubPoint.Dock = DockStyle.Left;
+				panelBottom.Controls.Add(panelSubPoint);
+				panelSubPoint.BringToFront();
+			}
+			panelBottom.ResumeLayout();
+		}
+
 		public void SetMaxRating(float maxRating)
 		{
-			panelMitigation.Width = (int)Math.Floor((float)(panelBottom.Width - panelBottom.Padding.Horizontal) * (_itemCalculation.MitigationPoints / maxRating));
-			panelSurvival.Width = (int)Math.Floor((float)(panelBottom.Width - panelBottom.Padding.Horizontal) * (_itemCalculation.SurvivalPoints / maxRating));
+			foreach (Panel panelSubPoint in panelBottom.Controls)
+			{
+				panelSubPoint.Width = (int)Math.Floor((float)(panelBottom.Width - panelBottom.Padding.Horizontal) * (_itemCalculation.SubPoints[(int)panelSubPoint.Tag] / maxRating));
+			}
+			//panelMitigation.Width = (int)Math.Floor((float)(panelBottom.Width - panelBottom.Padding.Horizontal) * (_itemCalculation.MitigationPoints / maxRating));
+			//panelSurvival.Width = (int)Math.Floor((float)(panelBottom.Width - panelBottom.Padding.Horizontal) * (_itemCalculation.SurvivalPoints / maxRating));
 		}
 	}
 }

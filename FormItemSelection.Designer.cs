@@ -30,6 +30,7 @@ namespace Rawr
 		{
 			this.components = new System.ComponentModel.Container();
 			this.panelMain = new System.Windows.Forms.Panel();
+			this.panelLine = new System.Windows.Forms.Panel();
 			this.panelItems = new System.Windows.Forms.Panel();
 			this.toolStripItemComparison = new System.Windows.Forms.ToolStrip();
 			this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
@@ -37,11 +38,8 @@ namespace Rawr
 			this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
 			this.toolStripDropDownButtonSort = new System.Windows.Forms.ToolStripDropDownButton();
 			this.overallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.mitigationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.survivalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.alphabeticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.timerForceActivate = new System.Windows.Forms.Timer(this.components);
-			this.panelLine = new System.Windows.Forms.Panel();
 			this.panelMain.SuspendLayout();
 			this.toolStripItemComparison.SuspendLayout();
 			this.SuspendLayout();
@@ -58,6 +56,16 @@ namespace Rawr
 			this.panelMain.Name = "panelMain";
 			this.panelMain.Size = new System.Drawing.Size(290, 537);
 			this.panelMain.TabIndex = 0;
+			// 
+			// panelLine
+			// 
+			this.panelLine.AutoScroll = true;
+			this.panelLine.BackColor = System.Drawing.SystemColors.ControlText;
+			this.panelLine.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panelLine.Location = new System.Drawing.Point(0, 25);
+			this.panelLine.Name = "panelLine";
+			this.panelLine.Size = new System.Drawing.Size(288, 1);
+			this.panelLine.TabIndex = 6;
 			// 
 			// panelItems
 			// 
@@ -104,8 +112,6 @@ namespace Rawr
 			this.toolStripDropDownButtonSort.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.toolStripDropDownButtonSort.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.overallToolStripMenuItem,
-            this.mitigationToolStripMenuItem,
-            this.survivalToolStripMenuItem,
             this.alphabeticalToolStripMenuItem});
 			this.toolStripDropDownButtonSort.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripDropDownButtonSort.Name = "toolStripDropDownButtonSort";
@@ -121,20 +127,6 @@ namespace Rawr
 			this.overallToolStripMenuItem.Text = "Overall";
 			this.overallToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
 			// 
-			// mitigationToolStripMenuItem
-			// 
-			this.mitigationToolStripMenuItem.Name = "mitigationToolStripMenuItem";
-			this.mitigationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.mitigationToolStripMenuItem.Text = "Mitigation";
-			this.mitigationToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
-			// 
-			// survivalToolStripMenuItem
-			// 
-			this.survivalToolStripMenuItem.Name = "survivalToolStripMenuItem";
-			this.survivalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.survivalToolStripMenuItem.Text = "Survival";
-			this.survivalToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
-			// 
 			// alphabeticalToolStripMenuItem
 			// 
 			this.alphabeticalToolStripMenuItem.Name = "alphabeticalToolStripMenuItem";
@@ -145,16 +137,6 @@ namespace Rawr
 			// timerForceActivate
 			// 
 			this.timerForceActivate.Tick += new System.EventHandler(this.timerForceActivate_Tick);
-			// 
-			// panelLine
-			// 
-			this.panelLine.AutoScroll = true;
-			this.panelLine.BackColor = System.Drawing.SystemColors.ControlText;
-			this.panelLine.Dock = System.Windows.Forms.DockStyle.Top;
-			this.panelLine.Location = new System.Drawing.Point(0, 25);
-			this.panelLine.Name = "panelLine";
-			this.panelLine.Size = new System.Drawing.Size(288, 1);
-			this.panelLine.TabIndex = 6;
 			// 
 			// FormItemSelection
 			// 
@@ -192,8 +174,6 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripLabel toolStripLabel2;
 		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButtonSort;
 		private System.Windows.Forms.ToolStripMenuItem overallToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem mitigationToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem survivalToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem alphabeticalToolStripMenuItem;
 		private System.Windows.Forms.Panel panelLine;
 	}

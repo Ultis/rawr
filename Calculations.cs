@@ -1,326 +1,345 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Rawr
 {
-    public class Calculations
-    {
-        //my insides all turned to ash / so slow
-        //and blew away as i collapsed / so cold
-        //public static float ValueOfArmor = 1.77f;
-        private static CharacterCalculation _cachedCharacterStatsWithSlotEmpty = null;
-        private static Character.CharacterSlot _cachedSlot = Character.CharacterSlot.Shirt;
-        private static Character _cachedCharacter = null;
+	public class Calculations
+	{
+		private static CalculationsBase _instance;
+		private static CalculationsBase Instance
+		{
+			get
+			{
+				if (_instance == null)
+					//_instance = new CalculationsBear();
+					_instance = new CalculationsCat();
+				return _instance;
+			}
+		}
+		public static Character CachedCharacter
+		{
+			get { return Instance.CachedCharacter; } 
+		}
+		public static string[] CharacterDisplayCalculationLabels
+		{
+			get { return Instance.CharacterDisplayCalculationLabels; }
+		}
+		public static Dictionary<string, System.Drawing.Color> SubPointNameColors
+		{
+			get { return Instance.SubPointNameColors; }
+		}
+		public static System.Windows.Forms.Panel CalculationOptionsPanel
+		{
+			get { return Instance.CalculationOptionsPanel; }
+		}
 
-        public static void ClearCache()
-        {
-            _cachedCharacter = null;
-        }
+		public static ComparisonCalculationBase CreateNewComparisonCalculation()
+		{
+			return Instance.CreateNewComparisonCalculation();
+		}
+		public static CharacterCalculationsBase CreateNewCharacterCalculations()
+		{
+			return Instance.CreateNewCharacterCalculations();
+		}
+		public static void ClearCache()
+		{
+			Instance.ClearCache();
+		}
+		public static ComparisonCalculationBase GetItemCalculations(Item item, Character character, Character.CharacterSlot slot)
+		{
+			return Instance.GetItemCalculations(item, character, slot);
+		}
+		public static List<ComparisonCalculationBase> GetEnchantCalculations(Item.ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
+		{
+			return Instance.GetEnchantCalculations(slot, character, currentCalcs);
+		}
+		public static List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, Buff.BuffType buffType, bool activeOnly)
+		{
+			return Instance.GetBuffCalculations(character, currentCalcs, buffType, activeOnly);
+		}
+		public static CharacterCalculationsBase GetCharacterCalculations(Character character)
+		{
+			return Instance.GetCharacterCalculations(character);
+		}
+		public static Stats GetCharacterStats(Character character)
+		{
+			return Instance.GetCharacterStats(character);
+		}
+		public static Stats GetCharacterStats(Character character, Item additionalItem)
+		{
+			return Instance.GetCharacterStats(character, additionalItem);
+		}
+		public static Stats GetEnchantsStats(Character character)
+		{
+			return Instance.GetEnchantsStats(character);
+		}
+		public static Stats GetBuffsStats(List<string> buffs)
+		{
+			return Instance.GetBuffsStats(buffs);
+		}
+		public static ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations)
+		{
+			return Instance.GetCombatTable(currentCalculations);
+		}
+		public static string[] GetRelevantStats(Stats stats)
+		{
+			return Instance.GetRelevantStats(stats);
+		}
+		public static bool HasRelevantStats(Stats stats)
+		{
+			return Instance.HasRelevantStats(stats);
+		}
+		public static string GetCharacterStatsString(Character character)
+		{
+			return Instance.GetCharacterStatsString(character);
+		}
+	}
 
-        public static ItemBuffEnchantCalculation GetItemCalculations(Item item, Character character,
-                                                                     Character.CharacterSlot slot)
-        {
-            bool useCache = character == _cachedCharacter && slot == _cachedSlot;
-            Character characterWithSlotEmpty = null;
+	public abstract class CalculationsBase
+	{
+		protected CharacterCalculationsBase _cachedCharacterStatsWithSlotEmpty = null;
+		protected Character.CharacterSlot _cachedSlot = Character.CharacterSlot.Shirt;
+		protected Character _cachedCharacter = null;
+		public virtual Character CachedCharacter { get { return _cachedCharacter; } }
+		
+		public abstract Dictionary<string, System.Drawing.Color> SubPointNameColors { get; }
+		public abstract string[] CharacterDisplayCalculationLabels { get; }
+		public abstract System.Windows.Forms.Panel CalculationOptionsPanel { get; }
 
-            if (!useCache)
-                characterWithSlotEmpty = character.Clone();
-            Character characterWithNewItem = character.Clone();
+		public abstract ComparisonCalculationBase CreateNewComparisonCalculation();
+		public abstract CharacterCalculationsBase CreateNewCharacterCalculations();
 
-            if (slot != Character.CharacterSlot.Metas && slot != Character.CharacterSlot.Gems)
-            {
-                if (!useCache) characterWithSlotEmpty[slot] = null;
-                characterWithNewItem[slot] = item;
-            }
+		public abstract CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem);
+		public abstract Stats GetCharacterStats(Character character, Item additionalItem);
+		public abstract ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations);
+		public abstract string[] GetRelevantStats(Stats stats);
+		public abstract bool HasRelevantStats(Stats stats);
+
+		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character) { return GetCharacterCalculations(character, null); }
+		public virtual Stats GetCharacterStats(Character character) { return GetCharacterStats(character, null); }
+		
+		public virtual void ClearCache()
+		{
+			_cachedCharacter = null;
+			_cachedSlot = Character.CharacterSlot.Shirt;
+		}
+
+		public virtual ComparisonCalculationBase GetItemCalculations(Item item, Character character, Character.CharacterSlot slot)
+		{
+			bool useCache = character == _cachedCharacter && slot == _cachedSlot;
+			Character characterWithSlotEmpty = null;
+
+			if (!useCache)
+				characterWithSlotEmpty = character.Clone();
+			Character characterWithNewItem = character.Clone();
+
+			if (slot != Character.CharacterSlot.Metas && slot != Character.CharacterSlot.Gems)
+			{
+				if (!useCache) characterWithSlotEmpty[slot] = null;
+				characterWithNewItem[slot] = item;
+			}
 
 
-            CharacterCalculation characterStatsWithSlotEmpty;
-            if (useCache)
-                characterStatsWithSlotEmpty = _cachedCharacterStatsWithSlotEmpty;
-            else
-            {
-                characterStatsWithSlotEmpty =
-                    GetCharacterCalculationsFromBasicStats(GetCharacterStats(characterWithSlotEmpty));
-                _cachedCharacter = character;
-                _cachedSlot = slot;
-                _cachedCharacterStatsWithSlotEmpty = characterStatsWithSlotEmpty;
-            }
+			CharacterCalculationsBase characterStatsWithSlotEmpty;
+			if (useCache)
+				characterStatsWithSlotEmpty = _cachedCharacterStatsWithSlotEmpty;
+			else
+			{
+				characterStatsWithSlotEmpty = GetCharacterCalculations(characterWithSlotEmpty);
+				_cachedCharacter = character;
+				_cachedSlot = slot;
+				_cachedCharacterStatsWithSlotEmpty = characterStatsWithSlotEmpty;
+			}
 
 
-            Item additionalItem = null;
-            if (item.FitsInSlot(Character.CharacterSlot.Gems) || item.FitsInSlot(Character.CharacterSlot.Metas))
-                additionalItem = item;
-            CharacterCalculation characterStatsWithNewItem =
-                GetCharacterCalculationsFromBasicStats(GetCharacterStats(characterWithNewItem, additionalItem));
+			Item additionalItem = null;
+			if (item.FitsInSlot(Character.CharacterSlot.Gems) || item.FitsInSlot(Character.CharacterSlot.Metas)) additionalItem = item;
+			CharacterCalculationsBase characterStatsWithNewItem = GetCharacterCalculations(characterWithNewItem, additionalItem);
 
-            ItemBuffEnchantCalculation itemCalc = new ItemBuffEnchantCalculation();
-            itemCalc.Item = item;
-            itemCalc.Name = item.Name;
-            itemCalc.Equipped = character[slot] == item;
-            itemCalc.OverallPoints = characterStatsWithNewItem.OverallPoints - characterStatsWithSlotEmpty.OverallPoints;
-            itemCalc.MitigationPoints = characterStatsWithNewItem.MitigationPoints -
-                                        characterStatsWithSlotEmpty.MitigationPoints;
-            itemCalc.SurvivalPoints = characterStatsWithNewItem.SurvivalPoints -
-                                      characterStatsWithSlotEmpty.SurvivalPoints;
+			ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
+			itemCalc.Item = item;
+			itemCalc.Name = item.Name;
+			itemCalc.Equipped = character[slot] == item;
+			itemCalc.OverallPoints = characterStatsWithNewItem.OverallPoints - characterStatsWithSlotEmpty.OverallPoints;
+			float[] subPoints = new float[characterStatsWithNewItem.SubPoints.Length];
+			for (int i = 0; i < characterStatsWithNewItem.SubPoints.Length; i++)
+			{
+				subPoints[i] = characterStatsWithNewItem.SubPoints[i] - characterStatsWithSlotEmpty.SubPoints[i];
+			}
+			itemCalc.SubPoints = subPoints;
 
-            characterStatsWithNewItem.ToString();
+			characterStatsWithNewItem.ToString();
 
-            return itemCalc;
-        }
+			return itemCalc;
+		}
 
-        public static List<ItemBuffEnchantCalculation> GetEnchantCalculations(Item.ItemSlot slot, Character character,
-                                                                              CharacterCalculation currentCalcs)
-        {
-            List<ItemBuffEnchantCalculation> enchantCalcs = new List<ItemBuffEnchantCalculation>();
-            CharacterCalculation calcsEquipped;
-            CharacterCalculation calcsUnequipped;
-            foreach (Enchant enchant in Enchant.FindEnchants(slot))
-            {
-                //if (enchantCalcs.ContainsKey(enchant.Id)) continue;
+		public virtual List<ComparisonCalculationBase> GetEnchantCalculations(Item.ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
+		{
+			List<ComparisonCalculationBase> enchantCalcs = new List<ComparisonCalculationBase>();
+			CharacterCalculationsBase calcsEquipped = null;
+			CharacterCalculationsBase calcsUnequipped = null;
+			foreach (Enchant enchant in Enchant.FindEnchants(slot))
+			{
+				//if (enchantCalcs.ContainsKey(enchant.Id)) continue;
 
-                bool isEquipped = character.GetEnchantBySlot(enchant.Slot) == enchant;
-                if (isEquipped)
-                {
-                    calcsEquipped = currentCalcs;
-                    Character charUnequipped = character.Clone();
-                    charUnequipped.SetEnchantBySlot(enchant.Slot, null);
-                    calcsUnequipped = GetCharacterCalculationsFromBasicStats(GetCharacterStats(charUnequipped));
-                }
-                else
-                {
-                    Character charUnequipped = character.Clone();
-                    Character charEquipped = character.Clone();
-                    charUnequipped.SetEnchantBySlot(enchant.Slot, null);
-                    charEquipped.SetEnchantBySlot(enchant.Slot, enchant);
-                    calcsUnequipped = GetCharacterCalculationsFromBasicStats(GetCharacterStats(charUnequipped));
-                    calcsEquipped = GetCharacterCalculationsFromBasicStats(GetCharacterStats(charEquipped));
-                }
-                ItemBuffEnchantCalculation enchantCalc = new ItemBuffEnchantCalculation();
-                enchantCalc.Name = enchant.Name;
-                enchantCalc.Item = new Item();
-                enchantCalc.Item.Name = enchant.Name;
-                enchantCalc.Item.Stats = enchant.Stats;
-                enchantCalc.Equipped = isEquipped;
-                enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
-                enchantCalc.MitigationPoints = calcsEquipped.MitigationPoints - calcsUnequipped.MitigationPoints;
-                enchantCalc.SurvivalPoints = calcsEquipped.SurvivalPoints - calcsUnequipped.SurvivalPoints;
-                enchantCalcs.Add(enchantCalc);
-            }
-            return enchantCalcs;
-        }
+				bool isEquipped = character.GetEnchantBySlot(enchant.Slot) == enchant;
+				if (isEquipped)
+				{
+					calcsEquipped = currentCalcs;
+					Character charUnequipped = character.Clone();
+					charUnequipped.SetEnchantBySlot(enchant.Slot, null);
+					calcsUnequipped = GetCharacterCalculations(charUnequipped);
+				}
+				else
+				{
+					Character charUnequipped = character.Clone();
+					Character charEquipped = character.Clone();
+					charUnequipped.SetEnchantBySlot(enchant.Slot, null);
+					charEquipped.SetEnchantBySlot(enchant.Slot, enchant);
+					calcsUnequipped = GetCharacterCalculations(charUnequipped);
+					calcsEquipped = GetCharacterCalculations(charEquipped);
+				}
+				ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
+				enchantCalc.Name = enchant.Name;
+				enchantCalc.Item = new Item();
+				enchantCalc.Item.Name = enchant.Name;
+				enchantCalc.Item.Stats = enchant.Stats;
+				enchantCalc.Equipped = isEquipped;
+				enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+				float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+				for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
+				{
+					subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
+				}
+				enchantCalc.SubPoints = subPoints;
+				enchantCalcs.Add(enchantCalc);
+			}
+			return enchantCalcs;
+		}
 
-        public static List<ItemBuffEnchantCalculation> GetBuffCalculations(Character character,
-                                                                           CharacterCalculation currentCalcs,
-                                                                           Buff.BuffType buffType, bool activeOnly)
-        {
-            List<ItemBuffEnchantCalculation> buffCalcs = new List<ItemBuffEnchantCalculation>();
-            CharacterCalculation calcsEquipped;
-            CharacterCalculation calcsUnequipped;
-            foreach (Buff buff in Buff.GetBuffsByType(buffType))
-            {
-                if (!activeOnly || character.ActiveBuffs.Contains(buff.Name))
-                {
-                    Character charUnequipped = character.Clone();
-                    Character charEquipped = character.Clone();
-                    if (charUnequipped.ActiveBuffs.Contains(buff.Name))
-                        charUnequipped.ActiveBuffs.Remove(buff.Name);
-                    if (string.IsNullOrEmpty(buff.RequiredBuff))
-                    {
-                        if (charUnequipped.ActiveBuffs.Contains("Improved " + buff.Name))
-                            charUnequipped.ActiveBuffs.Remove("Improved " + buff.Name);
-                    }
-                    else if (charUnequipped.ActiveBuffs.Contains(buff.RequiredBuff))
-                        charUnequipped.ActiveBuffs.Remove(buff.RequiredBuff);
+		public virtual List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, Buff.BuffType buffType, bool activeOnly)
+		{
+			List<ComparisonCalculationBase> buffCalcs = new List<ComparisonCalculationBase>();
+			CharacterCalculationsBase calcsEquipped = null;
+			CharacterCalculationsBase calcsUnequipped = null;
+			foreach (Buff buff in Buff.GetBuffsByType(buffType))
+			{
+				if (!activeOnly || character.ActiveBuffs.Contains(buff.Name))
+				{
+					Character charUnequipped = character.Clone();
+					Character charEquipped = character.Clone();
+					if (charUnequipped.ActiveBuffs.Contains(buff.Name))
+						charUnequipped.ActiveBuffs.Remove(buff.Name);
+					if (string.IsNullOrEmpty(buff.RequiredBuff))
+					{
+						if (charUnequipped.ActiveBuffs.Contains("Improved " + buff.Name))
+							charUnequipped.ActiveBuffs.Remove("Improved " + buff.Name);
+					}
+					else
+						if (charUnequipped.ActiveBuffs.Contains(buff.RequiredBuff))
+							charUnequipped.ActiveBuffs.Remove(buff.RequiredBuff);
 
-                    if (!charEquipped.ActiveBuffs.Contains(buff.Name))
-                        charEquipped.ActiveBuffs.Add(buff.Name);
-                    if (string.IsNullOrEmpty(buff.RequiredBuff))
-                    {
-                        if (charEquipped.ActiveBuffs.Contains("Improved " + buff.Name))
-                            charEquipped.ActiveBuffs.Remove("Improved " + buff.Name);
-                    }
-                    else if (!charEquipped.ActiveBuffs.Contains(buff.RequiredBuff))
-                        charEquipped.ActiveBuffs.Add(buff.RequiredBuff);
+					if (!charEquipped.ActiveBuffs.Contains(buff.Name))
+						charEquipped.ActiveBuffs.Add(buff.Name);
+					if (string.IsNullOrEmpty(buff.RequiredBuff))
+					{
+						if (charEquipped.ActiveBuffs.Contains("Improved " + buff.Name))
+							charEquipped.ActiveBuffs.Remove("Improved " + buff.Name);
+					}
+					else
+						if (!charEquipped.ActiveBuffs.Contains(buff.RequiredBuff))
+							charEquipped.ActiveBuffs.Add(buff.RequiredBuff);
 
-                    calcsUnequipped = GetCharacterCalculationsFromBasicStats(GetCharacterStats(charUnequipped));
-                    calcsEquipped = GetCharacterCalculationsFromBasicStats(GetCharacterStats(charEquipped));
+					foreach (string conflictingBuff in buff.ConflictingBuffs)
+					{
+						if (charEquipped.ActiveBuffs.Contains(conflictingBuff))
+							charEquipped.ActiveBuffs.Remove(conflictingBuff);
+						if (charUnequipped.ActiveBuffs.Contains(conflictingBuff))
+							charUnequipped.ActiveBuffs.Remove(conflictingBuff);
+					}
 
-                    ItemBuffEnchantCalculation buffCalc = new ItemBuffEnchantCalculation();
-                    buffCalc.Name = buff.Name;
-                    buffCalc.Equipped = character.ActiveBuffs.Contains(buff.Name);
-                    buffCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
-                    buffCalc.MitigationPoints = calcsEquipped.MitigationPoints - calcsUnequipped.MitigationPoints;
-                    buffCalc.SurvivalPoints = calcsEquipped.SurvivalPoints - calcsUnequipped.SurvivalPoints;
-                    buffCalcs.Add(buffCalc);
-                }
-            }
-            return buffCalcs;
-        }
+					calcsUnequipped = GetCharacterCalculations(charUnequipped);
+					calcsEquipped = GetCharacterCalculations(charEquipped);
 
-        public static CharacterCalculation GetCharacterCalculations(Character character)
-        {
-            return GetCharacterCalculationsFromBasicStats(GetCharacterStats(character));
-        }
+					ComparisonCalculationBase buffCalc = CreateNewComparisonCalculation();
+					buffCalc.Name = buff.Name;
+					buffCalc.Equipped = character.ActiveBuffs.Contains(buff.Name);
+					buffCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+					float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+					for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
+					{
+						subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
+					}
+					buffCalc.SubPoints = subPoints;
+					buffCalcs.Add(buffCalc);
+				}
+			}
+			return buffCalcs;
+		}
 
-        private static CharacterCalculation GetCharacterCalculationsFromBasicStats(Stats stats)
-        {
-            CharacterCalculation calculatedStats = new CharacterCalculation();
-            calculatedStats.BasicStats = stats;
-            calculatedStats.Miss = 5 + stats.DefenseRating/60f + stats.Miss - 0.6f;
-            calculatedStats.Dodge =
-                Math.Min(100f - calculatedStats.Miss,
-                         stats.Agility/14.7059f + stats.DodgeRating/18.9231f + stats.DefenseRating/59.134615f - 0.6f);
-            calculatedStats.Mitigation = (stats.Armor/(stats.Armor + 11959.5f))*100f;
-            calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
-            calculatedStats.DodgePlusMiss = calculatedStats.Dodge + calculatedStats.Miss;
-            calculatedStats.CritReduction = stats.DefenseRating/60f + stats.Resilience/39.423f;
-            calculatedStats.CappedCritReduction = Math.Min(2.6f, calculatedStats.CritReduction);
-            //Out of 100 attacks, you'll take...
-            float crits = 2.6f - calculatedStats.CappedCritReduction;
-            float crushes = Math.Max(Math.Min(100f - (crits + (calculatedStats.DodgePlusMiss)), 15f), 0f);
-            float hits = Math.Max(100f - (crits + crushes + (calculatedStats.DodgePlusMiss)), 0f);
-            //Apply armor and multipliers for each attack type...
-            crits *= (100f - calculatedStats.CappedMitigation)*.02f;
-            crushes *= (100f - calculatedStats.CappedMitigation)*.015f;
-            hits *= (100f - calculatedStats.CappedMitigation)*.01f;
-            calculatedStats.DamageTaken = hits + crushes + crits;
-            calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
+		public virtual Stats GetItemStats(Character character, Item additionalItem)
+		{
+			List<Item> items = new List<Item>(new Item[] {character.Back, character.Chest, character.Feet, character.Finger1,
+				character.Finger2, character.Hands, character.Head, character.Idol, character.Legs, character.Neck,
+				character.Shirt, character.Shoulders, character.Tabard, character.Trinket1, character.Trinket2,
+				character.Waist, character.Weapon, character.Wrist});
+			if (additionalItem != null)
+				items.Add(additionalItem);
 
-            calculatedStats.SurvivalPoints = (stats.Health/(1f - (calculatedStats.CappedMitigation/100f)));
-            // / (buffs.ShadowEmbrace ? 0.95f : 1f);
-            calculatedStats.MitigationPoints = (7000f*(1f/(calculatedStats.DamageTaken/100f)));
-            // / (buffs.ShadowEmbrace ? 0.95f : 1f);
-            calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints;
-            return calculatedStats;
-        }
+			Stats statsItems = new Stats();
+			foreach (Item item in items)
+				if (item != null)
+					statsItems += item.GetTotalStats();
 
-        public static Stats GetCharacterStats(Character character)
-        {
-            return GetCharacterStats(character, null);
-        }
+			return statsItems;
+		}
 
-        public static Stats GetCharacterStats(Character character, Item additionalItem)
-        {
-            Stats statsRace = character.Race == Character.CharacterRace.NightElf
-                                  ? new Stats(0, 3434, 75, 82, 59, 0, 0)
-                                  : new Stats(0, 3434, 64, 85, 40, 0, 0);
-            Stats statsBaseGear = new Stats();
-            List<Item> items = new List<Item>(new Item[]
-                                                  {
-                                                      character.Back, character.Chest, character.Feet, character.Finger1
-                                                      ,
-                                                      character.Finger2, character.Hands, character.Head, character.Idol
-                                                      , character.Legs, character.Neck,
-                                                      character.Shirt, character.Shoulders, character.Tabard,
-                                                      character.Trinket1, character.Trinket2,
-                                                      character.Waist, character.Weapon, character.Wrist
-                                                  });
-            if (additionalItem != null) items.Add(additionalItem);
+		public virtual Stats GetEnchantsStats(Character character)
+		{
+			return character.BackEnchant.Stats + character.ChestEnchant.Stats + character.FeetEnchant.Stats + character.Finger1Enchant.Stats + character.Finger2Enchant.Stats + character.HandsEnchant.Stats +
+				character.HeadEnchant.Stats + character.LegsEnchant.Stats + character.ShouldersEnchant.Stats + character.WeaponEnchant.Stats + character.WristEnchant.Stats;
+		}
 
-            foreach (Item item in items)
-                if (item != null)
-                    statsBaseGear += item.GetTotalStats();
+		public virtual Stats GetBuffsStats(IEnumerable<string> buffs)
+		{
+			Stats statsBuffs = new Stats();
+			foreach (string buffName in buffs)
+				statsBuffs += Buff.GetBuffByName(buffName).Stats;
 
-            Stats statsEnchants = GetEnchantsStats(character);
-            statsBaseGear.Agility += statsEnchants.Agility;
-            statsBaseGear.DefenseRating += statsEnchants.DefenseRating;
-            statsBaseGear.DodgeRating += statsEnchants.DodgeRating;
-            statsBaseGear.Resilience += statsEnchants.Resilience;
-            statsBaseGear.Stamina += statsEnchants.Stamina;
+			return statsBuffs;
+		}
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            statsBuffs.Health += statsEnchants.Health;
-            statsBuffs.Armor += statsEnchants.Armor;
+		public virtual string GetCharacterStatsString(Character character)
+		{
+			StringBuilder stats = new StringBuilder();
+			stats.AppendFormat("Character:\t\t{0}@{1}-{2}\r\nRace:\t\t{3}",
+				character.Name, character.Region, character.Realm, character.Race);
 
-            float agiBase = (float) Math.Floor(statsRace.Agility*1.03f);
-            float agiBonus = (float) Math.Floor((statsBaseGear.Agility + statsBuffs.Agility)*1.03f);
-            float staBase = (float) Math.Floor(statsRace.Stamina*1.03f*1.25f);
-            float staBonus = (statsBaseGear.Stamina + statsBuffs.Stamina)*1.03f*1.25f;
-            float staHotW = (statsRace.Stamina*1.03f*1.25f + staBonus)*0.2f;
-            staBonus = (float) Math.Round(Math.Floor(staBonus) + staHotW);
+			foreach (KeyValuePair<string, string> kvp in GetCharacterCalculations(character).GetCharacterDisplayCalculationValues())
+			{
+				stats.AppendFormat("\r\n{0}:\t\t{1}", kvp.Key, kvp.Value.Split('*')[0]);
+			}
 
-            Stats statsTotal = new Stats();
-            statsTotal.Agility = agiBase +
-                                 (float)
-                                 Math.Floor((agiBase*statsBuffs.BonusAgilityMultiplier) +
-                                            agiBonus*(1 + statsBuffs.BonusAgilityMultiplier));
-            statsTotal.Stamina = staBase +
-                                 (float)
-                                 Math.Round((staBase*statsBuffs.BonusStaminaMultiplier) +
-                                            staBonus*(1 + statsBuffs.BonusStaminaMultiplier));
-            statsTotal.DefenseRating = statsRace.DefenseRating + statsBaseGear.DefenseRating + statsBuffs.DefenseRating;
-            statsTotal.DodgeRating = statsRace.DodgeRating + statsBaseGear.DodgeRating + statsBuffs.DodgeRating;
-            statsTotal.Resilience = statsRace.Resilience + statsBaseGear.Resilience + statsBuffs.Resilience;
-            statsTotal.Health =
-                (float)
-                Math.Round(((statsRace.Health + statsBaseGear.Health + statsBuffs.Health + (statsTotal.Stamina*10f))*
-                            (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
-            statsTotal.Armor =
-                (float)
-                Math.Round(((statsBaseGear.Armor*5.5f) + statsRace.Armor + statsBuffs.Armor + (statsTotal.Agility*2f))*
-                           (1 + statsBuffs.BonusArmorMultiplier));
-            statsTotal.Miss = statsBuffs.Miss;
+			return stats.ToString();
+		}
 
-            return statsTotal;
-        }
+	}
 
-        public static Stats GetEnchantsStats(Character character)
-        {
-            Stats statsTotal = new Stats();
-            Stats[] enchantStatses = new Stats[]
-                {
-                    character.BackEnchant.Stats, character.ChestEnchant.Stats, character.FeetEnchant.Stats,
-                    character.Finger1Enchant.Stats, character.Finger2Enchant.Stats, character.HandsEnchant.Stats,
-                    character.HeadEnchant.Stats, character.LegsEnchant.Stats, character.ShouldersEnchant.Stats,
-                    character.WeaponEnchant.Stats, character.WristEnchant.Stats
-                };
-            foreach (Stats enchantStats in enchantStatses)
-                statsTotal += enchantStats;
+	public abstract class CharacterCalculationsBase
+	{
+		public abstract float OverallPoints { get; set; }
+		public abstract float[] SubPoints { get; set; }
+		public abstract Dictionary<string, string> GetCharacterDisplayCalculationValues();
+	}
 
-            return statsTotal;
-        }
-
-        public static Stats GetBuffsStats(List<string> buffs)
-        {
-            Stats totalStats = new Stats();
-            foreach (string buffName in buffs)
-                totalStats += Buff.GetBuffByName(buffName).Stats;
-
-            return totalStats;
-        }
-    }
-
-    public class CharacterCalculation
-    {
-        public Stats BasicStats;
-        public float Dodge;
-        public float Miss;
-        public float Mitigation;
-        public float CappedMitigation;
-        public float DodgePlusMiss;
-        public float TotalMitigation;
-        public float DamageTaken;
-        public float CritReduction;
-        public float CappedCritReduction;
-        public float OverallPoints;
-        public float MitigationPoints;
-        public float SurvivalPoints;
-    }
-
-    public class ItemBuffEnchantCalculation
-    {
-        public string Name = string.Empty;
-        public float OverallPoints = 0f;
-        public float MitigationPoints = 0f;
-        public float SurvivalPoints = 0f;
-        public Item Item = null;
-        public bool Equipped = false;
-
-        public override string ToString()
-        {
-            return
-                string.Format("{0}: ({1}O {2}M {3}S)", Name, Math.Round(OverallPoints), Math.Round(MitigationPoints),
-                              Math.Round(SurvivalPoints));
-        }
-    }
+	public abstract class ComparisonCalculationBase
+	{
+		public abstract string Name { get; set; }
+		public abstract float OverallPoints { get; set; }
+		public abstract float[] SubPoints { get; set; }
+		public abstract Item Item { get; set; }
+		public abstract bool Equipped { get; set; }
+	}
 }
+//takemyhandigiveittoyounowyouownmealliamyousaidyouwouldneverleavemeibelieveyouibelieve

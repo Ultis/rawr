@@ -1,704 +1,557 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Rawr
 {
-    public partial class FormMain : Form
-    {
-        private delegate void SetProgressCallback(double percent);
-        private delegate void SetStatusCallback(string text);
-        private delegate void SetItemSlotCallback(Character.CharacterSlot slot);
-        private delegate void ResetProgressCallback();
-        private delegate void ResetItemSlotCallback();
-        private delegate void ResetStatusCallback();
-        
-        private FormSplash _spash = new FormSplash();
-        private string _characterPath = "";
-        private bool _unsavedChanges = false;
-        private CharacterCalculation _calculatedStats = null;
-        private static FormMain _instance;
-        private bool _loadingCharacter = false;
-        private Character _character = null;
+	public partial class FormMain : Form
+	{
+		private FormSplash _spash = new FormSplash();
+		private string _characterPath = "";
+		private bool _unsavedChanges = false;
+		private CharacterCalculationsBase _calculatedStats = null;
 
-        public Character Character
-        {
-            get
-            {
-                if (_character == null)
-                {
-                    Character = new Character();
-                    _characterPath = string.Empty;
-                    _unsavedChanges = false;
-                }
-                return _character;
-            }
-            set
-            {
-                if (_character != null)
-                {
-                    _character.ItemsChanged -= new EventHandler(_character_ItemsChanged);
-                }
-                _character = value;
-                if (_character != null)
-                {
-                    Cursor = Cursors.WaitCursor;
-                    FormItemSelection.Instance.Character =
-                        ItemContextualMenu.Instance.Character = buffSelector1.Character =
-                                                                itemComparison1.Character =
-                                                                itemButtonBack.Character =
-                                                                itemButtonChest.Character = itemButtonFeet.Character =
-                                                                                            itemButtonFinger1.Character
-                                                                                            =
-                                                                                            itemButtonFinger2.Character
-                                                                                            =
-                                                                                            itemButtonHands.Character =
-                                                                                            itemButtonHead.Character =
-                                                                                            itemButtonIdol.Character =
-                                                                                            itemButtonLegs.Character =
-                                                                                            itemButtonNeck.Character =
-                                                                                            itemButtonShirt.Character =
-                                                                                            itemButtonShoulders.
-                                                                                                Character =
-                                                                                            itemButtonTabard.Character =
-                                                                                            itemButtonTrinket1.Character
-                                                                                            =
-                                                                                            itemButtonTrinket2.Character
-                                                                                            =
-                                                                                            itemButtonWaist.Character =
-                                                                                            itemButtonWeapon.Character =
-                                                                                            itemButtonWrist.Character =
-                                                                                            _character;
-                    //Ahhh ahhh ahhh ahhh ahhh ahhh ahhh ahhh...
+		private bool _loadingCharacter = false;
+		private Character _character = null;
+		public Character Character
+		{
+			get
+			{
+				if (_character == null)
+				{
+					Character = new Character();
+					_characterPath = string.Empty;
+					_unsavedChanges = false;
+				}
+				return _character;
+			}
+			set
+			{
+				if (_character != null)
+				{
+					_character.ItemsChanged -= new EventHandler(_character_ItemsChanged);
+				}
+				_character = value;
+				if (_character != null)
+				{
+					this.Cursor = Cursors.WaitCursor;
+					FormItemSelection.Instance.Character = ItemContextualMenu.Instance.Character = buffSelector1.Character =
+						itemComparison1.Character = itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
+						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
+						itemButtonHead.Character = itemButtonIdol.Character = itemButtonLegs.Character =
+						itemButtonNeck.Character = itemButtonShirt.Character = itemButtonShoulders.Character =
+						itemButtonTabard.Character = itemButtonTrinket1.Character = itemButtonTrinket2.Character =
+						itemButtonWaist.Character = itemButtonWeapon.Character = itemButtonWrist.Character = _character;
+					//Ahhh ahhh ahhh ahhh ahhh ahhh ahhh ahhh...
 
-                    _character.ItemsChanged += new EventHandler(_character_ItemsChanged);
-                    _loadingCharacter = true;
+					_character.ItemsChanged += new EventHandler(_character_ItemsChanged);
+					_loadingCharacter = true;
 
-                    comboBoxEnchantBack.SelectedItem = Character.BackEnchant;
-                    comboBoxEnchantChest.SelectedItem = Character.ChestEnchant;
-                    comboBoxEnchantFeet.SelectedItem = Character.FeetEnchant;
-                    comboBoxEnchantFinger1.SelectedItem = Character.Finger1Enchant;
-                    comboBoxEnchantFinger2.SelectedItem = Character.Finger2Enchant;
-                    comboBoxEnchantHands.SelectedItem = Character.HandsEnchant;
-                    comboBoxEnchantHead.SelectedItem = Character.HeadEnchant;
-                    comboBoxEnchantLegs.SelectedItem = Character.LegsEnchant;
-                    comboBoxEnchantShoulders.SelectedItem = Character.ShouldersEnchant;
-                    comboBoxEnchantWeapon.SelectedItem = Character.WeaponEnchant;
-                    comboBoxEnchantWrists.SelectedItem = Character.WristEnchant;
+					comboBoxEnchantBack.SelectedItem = Character.BackEnchant;
+					comboBoxEnchantChest.SelectedItem = Character.ChestEnchant;
+					comboBoxEnchantFeet.SelectedItem = Character.FeetEnchant;
+					comboBoxEnchantFinger1.SelectedItem = Character.Finger1Enchant;
+					comboBoxEnchantFinger2.SelectedItem = Character.Finger2Enchant;
+					comboBoxEnchantHands.SelectedItem = Character.HandsEnchant;
+					comboBoxEnchantHead.SelectedItem = Character.HeadEnchant;
+					comboBoxEnchantLegs.SelectedItem = Character.LegsEnchant;
+					comboBoxEnchantShoulders.SelectedItem = Character.ShouldersEnchant;
+					comboBoxEnchantWeapon.SelectedItem = Character.WeaponEnchant;
+					comboBoxEnchantWrists.SelectedItem = Character.WristEnchant;
 
-                    textBoxName.Text = Character.Name;
-                    textBoxRealm.Text = Character.Realm;
-                    radioButtonRegionUS.Checked = Character.Region == Character.CharacterRegion.US;
-                    radioButtonRegionEU.Checked = Character.Region == Character.CharacterRegion.EU;
-                    radioButtonRaceNightElf.Checked = Character.Race == Character.CharacterRace.NightElf;
-                    radioButtonRaceTauren.Checked = Character.Race == Character.CharacterRace.Tauren;
+					textBoxName.Text = Character.Name;
+					textBoxRealm.Text = Character.Realm;
+					radioButtonRegionUS.Checked = Character.Region == Character.CharacterRegion.US;
+					radioButtonRegionEU.Checked = Character.Region == Character.CharacterRegion.EU;
+					radioButtonRaceNightElf.Checked = Character.Race == Character.CharacterRace.NightElf;
+					radioButtonRaceTauren.Checked = Character.Race == Character.CharacterRace.Tauren;
 
-                    _loadingCharacter = false;
-                    Character.OnItemsChanged();
-                }
-            }
-        }
+					_loadingCharacter = false;
+					Character.OnItemsChanged();
+				}
+			}
+		}
 
-        private void _character_ItemsChanged(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            _unsavedChanges = true;
+		void _character_ItemsChanged(object sender, EventArgs e)
+		{
+			this.Cursor = Cursors.WaitCursor;
+			_unsavedChanges = true;
 
-            if (!_loadingCharacter)
-            {
-                itemButtonBack.UpdateSelectedItem();
-                itemButtonChest.UpdateSelectedItem();
-                itemButtonFeet.UpdateSelectedItem();
-                itemButtonFinger1.UpdateSelectedItem();
-                itemButtonFinger2.UpdateSelectedItem();
-                itemButtonHands.UpdateSelectedItem();
-                itemButtonHead.UpdateSelectedItem();
-                itemButtonIdol.UpdateSelectedItem();
-                itemButtonLegs.UpdateSelectedItem();
-                itemButtonNeck.UpdateSelectedItem();
-                itemButtonShirt.UpdateSelectedItem();
-                itemButtonShoulders.UpdateSelectedItem();
-                itemButtonTabard.UpdateSelectedItem();
-                itemButtonTrinket1.UpdateSelectedItem();
-                itemButtonTrinket2.UpdateSelectedItem();
-                itemButtonWaist.UpdateSelectedItem();
-                itemButtonWeapon.UpdateSelectedItem();
-                itemButtonWrist.UpdateSelectedItem();
-            }
-            //and the clouds above move closer / looking so dissatisfied
-            Calculations.ClearCache();
-            CharacterCalculation calcs = Calculations.GetCharacterCalculations(Character);
-            _calculatedStats = calcs;
+			if (!_loadingCharacter)
+			{
+				itemButtonBack.UpdateSelectedItem(); itemButtonChest.UpdateSelectedItem(); itemButtonFeet.UpdateSelectedItem();
+				itemButtonFinger1.UpdateSelectedItem(); itemButtonFinger2.UpdateSelectedItem(); itemButtonHands.UpdateSelectedItem();
+				itemButtonHead.UpdateSelectedItem(); itemButtonIdol.UpdateSelectedItem(); itemButtonLegs.UpdateSelectedItem();
+				itemButtonNeck.UpdateSelectedItem(); itemButtonShirt.UpdateSelectedItem(); itemButtonShoulders.UpdateSelectedItem();
+				itemButtonTabard.UpdateSelectedItem(); itemButtonTrinket1.UpdateSelectedItem(); itemButtonTrinket2.UpdateSelectedItem();
+				itemButtonWaist.UpdateSelectedItem(); itemButtonWeapon.UpdateSelectedItem(); itemButtonWrist.UpdateSelectedItem();
+			}
+			//and the clouds above move closer / looking so dissatisfied
+			Calculations.ClearCache();
+			CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(Character);
+			_calculatedStats = calcs;
 
-            //ItemCalculations itemCalc = Calculations.GetItemCalculations(Character.Finger1, calcStats);
-            //MessageBox.Show(string.Format("{0}H, {1}M, {2}S", itemCalc.HossPoints, itemCalc.MitigationPoints, itemCalc.SurvivalPoints));
-            LoadComparisonData();
+			LoadComparisonData();
 
-            labelHealth.Text = calcs.BasicStats.Health.ToString();
-            labelArmor.Text = calcs.BasicStats.Armor.ToString();
-            labelAgility.Text = calcs.BasicStats.Agility.ToString();
-            labelStamina.Text = calcs.BasicStats.Stamina.ToString();
-            labelDefenseRating.Text = calcs.BasicStats.DefenseRating.ToString();
-            if (radioButtonRaceNightElf.Checked)
-                labelDodgeRating.Text = (calcs.BasicStats.DodgeRating - 59).ToString();
-            else
-                labelDodgeRating.Text = (calcs.BasicStats.DodgeRating - 40).ToString();
-            labelResilience.Text = calcs.BasicStats.Resilience.ToString();
+			calculationDisplay1.SetCalculations(calcs);
 
-            float chanceToBeCrit = 2.6f - calcs.CritReduction;
+			//labelHealth.Text = calcs.BasicStats.Health.ToString();
+			//labelArmor.Text = calcs.BasicStats.Armor.ToString();
+			//labelAgility.Text = calcs.BasicStats.Agility.ToString();
+			//labelStamina.Text = calcs.BasicStats.Stamina.ToString();
+			//labelDefenseRating.Text = calcs.BasicStats.DefenseRating.ToString();
+			//if (radioButtonRaceNightElf.Checked)
+			//    labelDodgeRating.Text = (calcs.BasicStats.DodgeRating - 59).ToString();
+			//else
+			//    labelDodgeRating.Text = (calcs.BasicStats.DodgeRating - 40).ToString();
+			//labelResilience.Text = calcs.BasicStats.Resilience.ToString();
 
-            labelDodge.Text = calcs.Dodge.ToString() + "%";
-            labelMiss.Text = calcs.Miss.ToString() + "%";
-            labelMitigation.Text = calcs.Mitigation.ToString() + "% *";
-            labelDodgePlusMiss.Text = calcs.DodgePlusMiss.ToString() + "%";
-            labelTotalMitigation.Text = calcs.TotalMitigation.ToString() + "%";
-            labelDamageTaken.Text = calcs.DamageTaken.ToString() + "%";
-            labelCritReduction.Text = chanceToBeCrit.ToString() + "% *";
-            labelOverallPoints.Text = calcs.OverallPoints.ToString();
-            labelMitigationPoints.Text = calcs.MitigationPoints.ToString();
-            labelSurvivalPoints.Text = calcs.SurvivalPoints.ToString();
+			//float chanceToBeCrit = 2.6f - calcs.CritReduction;
 
-            if (chanceToBeCrit == 0)
-            {
-                toolTipSimple.SetToolTip(labelCritReduction,
-                                         "Exactly enough defense rating/resilience to be uncrittable by bosses.");
-            }
-            else if (chanceToBeCrit > 0)
-            {
-                toolTipSimple.SetToolTip(labelCritReduction,
-                                         string.Format(
-                                             "CRITTABLE! Short by {0} defense rating or {1} resilience to be uncrittable by bosses.",
-                                             Math.Ceiling(chanceToBeCrit*60f), Math.Ceiling(chanceToBeCrit*39.423f)));
-            }
-            else
-            {
-                toolTipSimple.SetToolTip(labelCritReduction,
-                                         string.Format(
-                                             "Uncrittable by bosses. {0} defense rating or {1} resilience over the crit cap.",
-                                             Math.Floor(chanceToBeCrit*-60f), Math.Floor(chanceToBeCrit*-39.423f)));
-            }
+			//labelDodge.Text = calcs.Dodge.ToString() + "%";
+			//labelMiss.Text = calcs.Miss.ToString() + "%";
+			//labelMitigation.Text = calcs.Mitigation.ToString() + "% *";
+			//labelDodgePlusMiss.Text = calcs.DodgePlusMiss.ToString() + "%";
+			//labelTotalMitigation.Text = calcs.TotalMitigation.ToString() + "%";
+			//labelDamageTaken.Text = calcs.DamageTaken.ToString() + "%";
+			//labelCritReduction.Text = chanceToBeCrit.ToString() + "% *";
+			//labelOverallPoints.Text = calcs.OverallPoints.ToString();
+			//labelMitigationPoints.Text = calcs.MitigationPoints.ToString();
+			//labelSurvivalPoints.Text = calcs.SurvivalPoints.ToString();
 
-            if (calcs.BasicStats.Armor == 35880)
-            {
-                toolTipSimple.SetToolTip(labelMitigation, "Exactly at the armor cap against bosses.");
-            }
-            else if (calcs.BasicStats.Armor > 35880)
-            {
-                toolTipSimple.SetToolTip(labelMitigation, string.Format("Over the armor cap by {0} armor.",
-                                                                        calcs.BasicStats.Armor - 35880));
-            }
-            else
-            {
-                toolTipSimple.SetToolTip(labelMitigation, string.Format("Short of the armor cap by {0} armor.",
-                                                                        35880 - calcs.BasicStats.Armor));
-            }
+			//if (chanceToBeCrit == 0)
+			//{
+			//    toolTipSimple.SetToolTip(labelCritReduction, "Exactly enough defense rating/resilience to be uncrittable by bosses.");
+			//}
+			//else if (chanceToBeCrit > 0)
+			//{
+			//    toolTipSimple.SetToolTip(labelCritReduction, string.Format("CRITTABLE! Short by {0} defense rating or {1} resilience to be uncrittable by bosses.",
+			//        Math.Ceiling(chanceToBeCrit * 60f), Math.Ceiling(chanceToBeCrit * 39.423f)));
+			//}
+			//else
+			//{
+			//    toolTipSimple.SetToolTip(labelCritReduction, string.Format("Uncrittable by bosses. {0} defense rating or {1} resilience over the crit cap.",
+			//        Math.Floor(chanceToBeCrit * -60f), Math.Floor(chanceToBeCrit * -39.423f)));
+			//}
 
-            Cursor = Cursors.Default;
-            //and the ground below grew colder / as they put you down inside
-        }
+			//if (calcs.BasicStats.Armor == 35880)
+			//{
+			//    toolTipSimple.SetToolTip(labelMitigation, "Exactly at the armor cap against bosses.");
+			//}
+			//else if (calcs.BasicStats.Armor > 35880)
+			//{
+			//    toolTipSimple.SetToolTip(labelMitigation, string.Format("Over the armor cap by {0} armor.",
+			//        calcs.BasicStats.Armor - 35880));
+			//}
+			//else
+			//{
+			//    toolTipSimple.SetToolTip(labelMitigation, string.Format("Short of the armor cap by {0} armor.",
+			//        35880 - calcs.BasicStats.Armor));
+			//}
 
-        public static FormMain Instance
-        {
-            get { return _instance; }
-        }
+			this.Cursor = Cursors.Default;
+			//and the ground below grew colder / as they put you down inside
+		}
 
-        public FormMain()
-        {
-            _spash.Show();
-            Application.DoEvents();
-            InitializeComponent();
-            Shown += new EventHandler(FormMain_Shown);
-            ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
-            ItemCache_ItemsChanged(null, null);
+		public FormMain()
+		{
+			_spash.Show();
 
-            comboBoxEnchantBack.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Back).ToArray());
-            comboBoxEnchantChest.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Chest).ToArray());
-            comboBoxEnchantFeet.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Feet).ToArray());
-            comboBoxEnchantFinger1.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
-            comboBoxEnchantFinger2.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
-            comboBoxEnchantHands.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Hands).ToArray());
-            comboBoxEnchantHead.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Head).ToArray());
-            comboBoxEnchantLegs.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Legs).ToArray());
-            comboBoxEnchantShoulders.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Shoulders).ToArray());
-            comboBoxEnchantWeapon.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Weapon).ToArray());
-            comboBoxEnchantWrists.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Wrist).ToArray());
+			
+			Application.DoEvents();
+			InitializeComponent();
+			
+			overallToolStripMenuItem.Tag = -1;
+			alphabeticalToolStripMenuItem.Tag = -2;
+			foreach (string name in Calculations.SubPointNameColors.Keys)
+			{
+				ToolStripMenuItem toolStripMenuItemSubPoint = new ToolStripMenuItem(name);
+				toolStripMenuItemSubPoint.Tag = toolStripDropDownButtonSort.DropDownItems.Count - 2;
+				toolStripMenuItemSubPoint.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
+				toolStripDropDownButtonSort.DropDownItems.Add(toolStripMenuItemSubPoint);
+			}
+			Calculations.CalculationOptionsPanel.Dock = DockStyle.Fill;
+			tabPageOptions.Controls.Add(Calculations.CalculationOptionsPanel);
 
-            sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
-            slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
-            _instance = this;
-        
-            ResetProgressBar();
-        }
+			this.Shown += new EventHandler(FormMain_Shown);
+			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			ItemCache_ItemsChanged(null, null);
 
-        public void ResetItemSlotText()
-        {
-            // InvokeRequired required compares the thread ID of the
-            // calling thread to the thread ID of the creating thread.
-            // If these threads are different, it returns true.
-            if (StatusStrip.InvokeRequired)
-            {
-                ResetItemSlotCallback d = new ResetItemSlotCallback(ResetItemSlotText);
-                Invoke(d);
-            }
-            else
-            {
-                if (StatusStrip != null && StatusStrip.Items["ItemSlot"] != null)
-                    StatusStrip.Items["ItemSlot"].Text = "";
-            }
-        }
+			comboBoxEnchantBack.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Back).ToArray());
+			comboBoxEnchantChest.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Chest).ToArray());
+			comboBoxEnchantFeet.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Feet).ToArray());
+			comboBoxEnchantFinger1.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
+			comboBoxEnchantFinger2.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
+			comboBoxEnchantHands.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Hands).ToArray());
+			comboBoxEnchantHead.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Head).ToArray());
+			comboBoxEnchantLegs.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Legs).ToArray());
+			comboBoxEnchantShoulders.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Shoulders).ToArray());
+			comboBoxEnchantWeapon.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Weapon).ToArray());
+			comboBoxEnchantWrists.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Wrist).ToArray());
 
-        public void SetItemSlotText(Character.CharacterSlot slot)
-        {
-            // InvokeRequired required compares the thread ID of the
-            // calling thread to the thread ID of the creating thread.
-            // If these threads are different, it returns true.
-            if (StatusStrip.InvokeRequired)
-            {
-                SetItemSlotCallback d = new SetItemSlotCallback(SetItemSlotText);
-                Invoke(d, new object[] { slot });
-            }
-            else
-            {
-                if (StatusStrip != null && StatusStrip.Items["ItemSlot"] != null)
-                    StatusStrip.Items["ItemSlot"].Text = "Slot: " + Enum.GetName(typeof(Character.CharacterSlot), slot);
-            }
-        }
+			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
+			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
+		}
 
-        public void SetStatusText(string text)
-        {
-            // InvokeRequired required compares the thread ID of the
-            // calling thread to the thread ID of the creating thread.
-            // If these threads are different, it returns true.
-            if (StatusStrip.InvokeRequired)
-            {
-                SetStatusCallback d = new SetStatusCallback(SetStatusText);
-                Invoke(d, new object[] { text });
-            }
-            else
-            {
-                if (StatusStrip != null && StatusStrip.Items["StatusLabel"] != null)
-                 StatusStrip.Items["StatusLabel"].Text = text;
-            }
-        }
+		void FormMain_Shown(object sender, EventArgs e)
+		{
+			_spash.Close();
+			_spash.Dispose();
+		}
 
-        public void ResetStatusText()
-        {
-            // InvokeRequired required compares the thread ID of the
-            // calling thread to the thread ID of the creating thread.
-            // If these threads are different, it returns true.
-            if (StatusStrip.InvokeRequired)
-            {
-                ResetStatusCallback d = new ResetStatusCallback(ResetStatusText);
-                Invoke(d);
-            }
-            else
-            {
-                if (StatusStrip != null && StatusStrip.Items["StatusLabel"] != null)
-                    StatusStrip.Items["StatusLabel"].Text = "";
-            }
-        }
+		private void FormMain_Load(object sender, EventArgs e)
+		{
+			Character.ToString(); //Load the saved character
+		}
 
-        public void ResetProgressBar()
-        {
-            // InvokeRequired required compares the thread ID of the
-            // calling thread to the thread ID of the creating thread.
-            // If these threads are different, it returns true.
-            if (StatusStrip.InvokeRequired)
-            {
-                ResetProgressCallback d = new ResetProgressCallback(ResetProgressBar);
-                Invoke(d);
-            }
-            else
-            {
-                if (StatusStrip != null && StatusStrip.Items["ProgressBar"] != null)
-                {
-                    (StatusStrip.Items["ProgressBar"]).Visible = false;
-                    ((ToolStripProgressBar)StatusStrip.Items["ProgressBar"]).Value = 0;
-                }
-                    
-            }
-        }
+		void ItemCache_ItemsChanged(object sender, EventArgs e)
+		{
+			this.Cursor = Cursors.WaitCursor;
+			Item[] items = ItemCache.GetItemsArray();
+			ItemIcons.CacheAllIcons(items);
+			itemComparison1.Items = items;
+			LoadComparisonData();
+			FormItemSelection.Instance.Items = items;
+			//itemButtonBack.Items = itemButtonChest.Items = itemButtonFeet.Items = itemButtonFinger1.Items =
+			//        itemButtonFinger2.Items = itemButtonHands.Items = itemButtonHead.Items = itemButtonIdol.Items =
+			//        itemButtonLegs.Items = itemButtonNeck.Items = itemButtonShirt.Items = itemButtonShoulders.Items =
+			//        itemButtonTabard.Items = itemButtonTrinket1.Items = itemButtonTrinket2.Items = itemButtonWaist.Items =
+			//        itemButtonWeapon.Items = itemButtonWrist.Items = ItemCache.GetItemsArray();
+			this.Cursor = Cursors.Default;
+		}
 
-        public void SetProgressBar(double percent)
-        {
-            // InvokeRequired required compares the thread ID of the
-            // calling thread to the thread ID of the creating thread.
-            // If these threads are different, it returns true.
-            if (StatusStrip.InvokeRequired)
-            {
-                SetProgressCallback d = new SetProgressCallback(SetProgressBar);
-                Invoke(d, new object[] { percent });
-            }
-            else
-            {
-                if (StatusStrip != null && StatusStrip.Items["ProgressBar"] != null)
-                {
-                    if (!(StatusStrip.Items["ProgressBar"]).Visible)
-                        (StatusStrip.Items["ProgressBar"]).Visible = true;
-                    ((ToolStripProgressBar)StatusStrip.Items["ProgressBar"]).Value = Convert.ToInt32(percent);
-                }
-            }
-        }
+		private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			FormItemEditor itemEditor = new FormItemEditor(Character);
+			itemEditor.ShowDialog();
+			ItemCache.OnItemsChanged();
+		}
 
-        public StatusStrip StatusStrip
-        {
-            get { return statusStrip; }
-            set { statusStrip = value; }
-        }
+		private void editGemsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			//FormGemEditor gemEditor = new FormGemEditor();
+			//gemEditor.ShowDialog();
+			ItemCache.OnItemsChanged();
+		}
 
-        private void FormMain_Shown(object sender, EventArgs e)
-        {
-            _spash.Close();
-            _spash.Dispose();
-        }
+		#region File Commands
+		private void newToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (PromptToSaveBeforeClosing())
+			{
+				Character = new Character();
+				_characterPath = string.Empty;
+				_unsavedChanges = false;
+			}
+		}
 
-        private void FormMain_Load(object sender, EventArgs e)
-        {
-            Character.ToString(); //Load the saved character
-        }
+		private void openToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (PromptToSaveBeforeClosing())
+			{
+				OpenFileDialog dialog = new OpenFileDialog();
+				dialog.DefaultExt = ".xml";
+				dialog.Filter = "Rawr Xml Character Files | *.xml";
+				dialog.Multiselect = false;
+				if (dialog.ShowDialog() == DialogResult.OK)
+				{
+					this.Cursor = Cursors.WaitCursor;
+					Character = Character.Load(dialog.FileName);
+					_characterPath = dialog.FileName;
+					_unsavedChanges = false;
+					this.Cursor = Cursors.Default;
+				}
+			}
+		}
 
-        private void ItemCache_ItemsChanged(object sender, EventArgs e)
-        {
-            //Cursor = Cursors.WaitCursor;
-            Item[] items = ItemCache.GetItemsArray();
-            ItemIcons.CacheAllIcons(items);
-            itemComparison1.Items = items;
-            LoadComparisonData();
-            FormItemSelection.Instance.Items = items;
-            //itemButtonBack.Items = itemButtonChest.Items = itemButtonFeet.Items = itemButtonFinger1.Items =
-            //        itemButtonFinger2.Items = itemButtonHands.Items = itemButtonHead.Items = itemButtonIdol.Items =
-            //        itemButtonLegs.Items = itemButtonNeck.Items = itemButtonShirt.Items = itemButtonShoulders.Items =
-            //        itemButtonTabard.Items = itemButtonTrinket1.Items = itemButtonTrinket2.Items = itemButtonWaist.Items =
-            //        itemButtonWeapon.Items = itemButtonWrist.Items = ItemCache.GetItemsArray();
-            //Cursor = Cursors.Default;
-        }
+		private void loadFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			///Code to Remove Dupes. Run until it doesn't remove any.
+			//List<Item> itemsToRemove = new List<Item>();
+			//foreach (Item itemA in ItemCache.Items)
+			//    foreach (Item itemB in ItemCache.Items)
+			//        if (itemA != itemB && itemA.GemmedId == itemB.GemmedId)
+			//            itemsToRemove.Add(itemB);
+			//List<string> idsRemoved = new List<string>();
+			//foreach (Item item in itemsToRemove)
+			//    if (ItemCache.Items.Contains(item) && !idsRemoved.Contains(item.GemmedId))
+			//    {
+			//        idsRemoved.Add(item.GemmedId);
+			//        ItemCache.Items.Remove(item);
+			//    }
 
-        private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FormItemEditor itemEditor = new FormItemEditor(Character);
-            itemEditor.ShowDialog();
-            ItemCache.OnItemsChanged();
-        }
+			if (PromptToSaveBeforeClosing())
+			{
+				FormEnterNameRealm form = new FormEnterNameRealm();
+				if (form.ShowDialog() == DialogResult.OK)
+				{
+					this.Cursor = Cursors.WaitCursor;
 
-        //private void editGemsToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    //FormGemEditor gemEditor = new FormGemEditor();
-        //    //gemEditor.ShowDialog();
-        //    ItemCache.OnItemsChanged();
-        //}
+					if (form.ArmoryRegion == Character.CharacterRegion.US && form.Realm == "Dragonmaw" && form.CharacterName == "Emposter")
+					{
+						Form formForEmposter = new Form();
+						Label labelForEmposter = new Label();
+						labelForEmposter.Font = new Font(labelForEmposter.Font.FontFamily, 42);
+						labelForEmposter.Dock = DockStyle.Fill;
+						labelForEmposter.ForeColor = System.Drawing.Color.Red;
+						labelForEmposter.Text = "HEY EMPOSTER!\r\n*SLAP SLAP*";
+						labelForEmposter.TextAlign = ContentAlignment.MiddleCenter;
+						formForEmposter.Controls.Add(labelForEmposter);
+						formForEmposter.Width += 100;
+						formForEmposter.StartPosition = FormStartPosition.CenterParent;
+						formForEmposter.Show(this);
+						Application.DoEvents();
+					}
+					//Character = Character.LoadFromArmory(form.ArmoryRegion, form.Realm, form.CharacterName);
+					Character = Armory.GetCharacter(form.ArmoryRegion, form.Realm, form.CharacterName);
+					_characterPath = string.Empty;
+					_unsavedChanges = true;
+					this.Cursor = Cursors.Default;
+				}
+			}
+		}
 
-        #region File Commands
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (!string.IsNullOrEmpty(_characterPath))
+			{
+				this.Cursor = Cursors.WaitCursor;
+				Character.Save(_characterPath);
+				_unsavedChanges = false;
+				this.Cursor = Cursors.Default;
+			}
+			else
+			{
+				saveAsToolStripMenuItem_Click(null, null);
+			}
+		}
 
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (PromptToSaveBeforeClosing())
-            {
-                Character = new Character();
-                _characterPath = string.Empty;
-                _unsavedChanges = false;
-            }
-        }
+		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SaveFileDialog dialog = new SaveFileDialog();
+			dialog.DefaultExt = ".xml";
+			dialog.Filter = "Rawr Xml Character Files | *.xml";
+			if (dialog.ShowDialog() == DialogResult.OK)
+			{
+				this.Cursor = Cursors.WaitCursor;
+				Character.Save(dialog.FileName);
+				_characterPath = dialog.FileName;
+				_unsavedChanges = false;
+				this.Cursor = Cursors.Default;
+			}
+		}
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (PromptToSaveBeforeClosing())
-            {
-                OpenFileDialog dialog = new OpenFileDialog();
-                dialog.DefaultExt = ".xml";
-                dialog.Filter = "Rawr Xml Character Files | *.xml";
-                dialog.Multiselect = false;
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    Cursor = Cursors.WaitCursor;
-                    Character = Character.Load(dialog.FileName);
-                    _characterPath = dialog.FileName;
-                    _unsavedChanges = false;
-                    Cursor = Cursors.Default;
-                }
-            }
-        }
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
 
-        private void loadFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ///Code to Remove Dupes. Run until it doesn't remove any.
-            //List<Item> itemsToRemove = new List<Item>();
-            //foreach (Item itemA in ItemCache.Items)
-            //    foreach (Item itemB in ItemCache.Items)
-            //        if (itemA != itemB && itemA.GemmedId == itemB.GemmedId)
-            //            itemsToRemove.Add(itemB);
-            //List<string> idsRemoved = new List<string>();
-            //foreach (Item item in itemsToRemove)
-            //    if (ItemCache.Items.Contains(item) && !idsRemoved.Contains(item.GemmedId))
-            //    {
-            //        idsRemoved.Add(item.GemmedId);
-            //        ItemCache.Items.Remove(item);
-            //    }
+		private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			ItemCache.Save();
+			e.Cancel = !PromptToSaveBeforeClosing();
+		}
 
-            if (PromptToSaveBeforeClosing())
-            {
-                FormEnterNameRealm form = new FormEnterNameRealm();
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    Cursor = Cursors.WaitCursor;
+		private bool PromptToSaveBeforeClosing()
+		{
+			if (_unsavedChanges)
+			{
+				DialogResult result = MessageBox.Show("Would you like to save the current character before closing it?", "Rawr - Save?", MessageBoxButtons.YesNoCancel);
+				switch (result)
+				{
+					case DialogResult.Yes:
+						saveToolStripMenuItem_Click(null, null);
+						return !string.IsNullOrEmpty(_characterPath);
+						break;
+					case DialogResult.No:
+						return true;
+						break;
+					default:
+						return false;
+						break;
+				}
+			}
+			else
+				return true;
+		}
+		#endregion
 
-                    if (form.ArmoryRegion == Character.CharacterRegion.US && form.Realm == "Dragonmaw" &&
-                        form.CharacterName == "Emposter")
-                    {
-                        Form formForEmposter = new Form();
-                        Label labelForEmposter = new Label();
-                        labelForEmposter.Font = new Font(labelForEmposter.Font.FontFamily, 42);
-                        labelForEmposter.Dock = DockStyle.Fill;
-                        labelForEmposter.ForeColor = Color.Red;
-                        labelForEmposter.Text = "HEY EMPOSTER!\r\n*SLAP SLAP*";
-                        labelForEmposter.TextAlign = ContentAlignment.MiddleCenter;
-                        formForEmposter.Controls.Add(labelForEmposter);
-                        formForEmposter.Width += 100;
-                        formForEmposter.StartPosition = FormStartPosition.CenterParent;
-                        formForEmposter.Show(this);
-                        Application.DoEvents();
-                    }
-                    //Character = Character.LoadFromArmory(form.ArmoryRegion, form.Realm, form.CharacterName);
-                    Character = Armory.Instance.GetCharacter(form.ArmoryRegion, form.Realm, form.CharacterName);
-                    _characterPath = string.Empty;
-                    _unsavedChanges = true;
-                    Cursor = Cursors.Default;
-                }
-            }
-        }
+		private void comboBoxEnchant_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (!_loadingCharacter)
+			{   //If I was in World War II, they'd call me S-
+				Character.BackEnchant = comboBoxEnchantBack.SelectedItem as Enchant;
+				Character.ChestEnchant = comboBoxEnchantChest.SelectedItem as Enchant;
+				Character.FeetEnchant = comboBoxEnchantFeet.SelectedItem as Enchant;
+				Character.Finger1Enchant = comboBoxEnchantFinger1.SelectedItem as Enchant;
+				Character.Finger2Enchant = comboBoxEnchantFinger2.SelectedItem as Enchant;
+				Character.HandsEnchant = comboBoxEnchantHands.SelectedItem as Enchant;
+				Character.HeadEnchant = comboBoxEnchantHead.SelectedItem as Enchant;
+				Character.LegsEnchant = comboBoxEnchantLegs.SelectedItem as Enchant;
+				Character.ShouldersEnchant = comboBoxEnchantShoulders.SelectedItem as Enchant;
+				Character.WeaponEnchant = comboBoxEnchantWeapon.SelectedItem as Enchant;
+				Character.WristEnchant = comboBoxEnchantWrists.SelectedItem as Enchant;
+				Character.OnItemsChanged();
+			}   //...Fire!
+		}
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(_characterPath))
-            {
-                Cursor = Cursors.WaitCursor;
-                Character.Save(_characterPath);
-                _unsavedChanges = false;
-                Cursor = Cursors.Default;
-            }
-            else
-            {
-                saveAsToolStripMenuItem_Click(null, null);
-            }
-        }
+		private void radioButtonRace_CheckedChanged(object sender, EventArgs e)
+		{
+			if (!_loadingCharacter)
+			{
+				Character.Race = radioButtonRaceNightElf.Checked ? Character.CharacterRace.NightElf : Character.CharacterRace.Tauren;
+				Character.OnItemsChanged();
+			}
+		}
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog dialog = new SaveFileDialog();
-            dialog.DefaultExt = ".xml";
-            dialog.Filter = "Rawr Xml Character Files | *.xml";
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                Cursor = Cursors.WaitCursor;
-                Character.Save(dialog.FileName);
-                _characterPath = dialog.FileName;
-                _unsavedChanges = false;
-                Cursor = Cursors.Default;
-            }
-        }
+		private void radioButtonRegion_CheckedChanged(object sender, EventArgs e)
+		{
+			if (!_loadingCharacter)
+			{
+				Character.Region = radioButtonRegionUS.Checked ? Character.CharacterRegion.US : Character.CharacterRegion.EU;
+				_unsavedChanges = true;
+			}
+		}
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
+		private void textBoxName_TextChanged(object sender, EventArgs e)
+		{
+			if (!_loadingCharacter)
+			{
+				Character.Name = textBoxName.Text;
+				_unsavedChanges = true;
+			}
+		}
 
-        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            ItemCache.Save();
-            e.Cancel = !PromptToSaveBeforeClosing();
-        }
+		private void textBoxRealm_TextChanged(object sender, EventArgs e)
+		{
+			if (!_loadingCharacter)
+			{
+				Character.Realm = textBoxRealm.Text;
+				_unsavedChanges = true;
+			}
+		}
 
-        private bool PromptToSaveBeforeClosing()
-        {
-            if (_unsavedChanges)
-            {
-                DialogResult result =
-                    MessageBox.Show("Would you like to save the current character before closing it?", "Rawr - Save?",
-                                    MessageBoxButtons.YesNoCancel);
-                switch (result)
-                {
-                    case DialogResult.Yes:
-                        saveToolStripMenuItem_Click(null, null);
-                        return !string.IsNullOrEmpty(_characterPath);
-                        
-                    case DialogResult.No:
-                        return true;
-                        
-                    default:
-                        return false;
-                        
-                }
-            }
-            else
-                return true;
-        }
+		private void copyCharacterStatsToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			////Uncomment and run to refresh data for all known items
+			//foreach (Item item in ItemCache.GetItemsArray())
+			//{
+			//    Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing");
+			//    if (newItem == null)
+			//    {
+			//        MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
+			//        ItemCache.AddItem(item, true, false);
+			//    }
+			//}
+			//ItemCache.OnItemsChanged();
+			
+			//string stats = string.Format("Character:\t\t{18}@{19}-{20}\r\nRace:\t\t{0}\r\nHealth:\t\t{1}\r\nArmor:\t\t{2}\r\nAgility:\t\t{3}\r\nStamina:\t\t{4}\r\nDefense Rating:\t{5}\r\nDodge Rating:\t{6}\r\nResilience:\t{7}\r\nDodge:\t\t{8}\r\nMiss:\t\t{9}\r\nArmor Mitigation:\t{10}\r\nDodge+Miss:\t{11}\r\nTotal Mitigation:\t{12}\r\nDamage Taken:\t{13}\r\nChance to be Crit:\t{14}\r\nOverall Points:\t{15}\r\nMitigation Points:\t{16}\r\nSurvival Points:\t{17}",
+			//    Character.Race, labelHealth.Text, labelArmor.Text, labelAgility.Text, labelStamina.Text, labelDefenseRating.Text, 
+			//    labelDodgeRating.Text, labelResilience.Text, labelDodge.Text, labelMiss.Text, labelMitigation.Text, 
+			//    labelDodgePlusMiss.Text, labelTotalMitigation.Text, labelDamageTaken.Text, labelCritReduction.Text, 
+			//    labelOverallPoints.Text, labelMitigationPoints.Text, labelSurvivalPoints.Text, textBoxName.Text,
+			//    Character.Region.ToString(), textBoxRealm.Text);
+			Clipboard.SetText(Calculations.GetCharacterStatsString(Character), TextDataFormat.Text);
+		}
 
-        #endregion
+		private void slotToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.Cursor = Cursors.WaitCursor;
+			foreach (ToolStripItem item in toolStripDropDownButtonSlot.DropDownItems)
+			{
+				if (item is ToolStripMenuItem)
+				{
+					(item as ToolStripMenuItem).Checked = item == sender;
+					if ((item as ToolStripMenuItem).Checked)
+					{
+						string[] tag = item.Tag.ToString().Split('.');
+						toolStripDropDownButtonSlot.Text = tag[0];
+						if (tag.Length > 1) toolStripDropDownButtonSlot.Text += " > " + item.Text;
+					}
+				}
+			}
+			LoadComparisonData();
+			this.Cursor = Cursors.Default;
+		}
 
-        private void comboBoxEnchant_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCharacter)
-            {
-                //If I was in World War II, they'd call me S-
-                Character.BackEnchant = comboBoxEnchantBack.SelectedItem as Enchant;
-                Character.ChestEnchant = comboBoxEnchantChest.SelectedItem as Enchant;
-                Character.FeetEnchant = comboBoxEnchantFeet.SelectedItem as Enchant;
-                Character.Finger1Enchant = comboBoxEnchantFinger1.SelectedItem as Enchant;
-                Character.Finger2Enchant = comboBoxEnchantFinger2.SelectedItem as Enchant;
-                Character.HandsEnchant = comboBoxEnchantHands.SelectedItem as Enchant;
-                Character.HeadEnchant = comboBoxEnchantHead.SelectedItem as Enchant;
-                Character.LegsEnchant = comboBoxEnchantLegs.SelectedItem as Enchant;
-                Character.ShouldersEnchant = comboBoxEnchantShoulders.SelectedItem as Enchant;
-                Character.WeaponEnchant = comboBoxEnchantWeapon.SelectedItem as Enchant;
-                Character.WristEnchant = comboBoxEnchantWrists.SelectedItem as Enchant;
-                Character.OnItemsChanged();
-            } //...Fire!
-        }
+		private void LoadComparisonData()
+		{
+			foreach (ToolStripItem item in toolStripDropDownButtonSlot.DropDownItems)
+			{
+				if (item is ToolStripMenuItem && (item as ToolStripMenuItem).Checked && item.Tag != null)
+				{
+					string[] tag = item.Tag.ToString().Split('.');
+					switch (tag[0])
+					{
+						case "Gear":
+						case "Gems":
+							itemComparison1.LoadGearBySlot((Character.CharacterSlot)Enum.Parse(typeof(Character.CharacterSlot), tag[1]));
+							break;
 
-        private void radioButtonRace_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCharacter)
-            {
-                Character.Race = radioButtonRaceNightElf.Checked
-                                     ? Character.CharacterRace.NightElf
-                                     : Character.CharacterRace.Tauren;
-                Character.OnItemsChanged();
-            }
-        }
+						case "Enchants":
+							itemComparison1.LoadEnchantsBySlot((Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), tag[1]), _calculatedStats);
+							break;
 
-        private void radioButtonRegion_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCharacter)
-            {
-                Character.Region = radioButtonRegionUS.Checked
-                                       ? Character.CharacterRegion.US
-                                       : Character.CharacterRegion.EU;
-                _unsavedChanges = true;
-            }
-        }
+						case "Buffs":
+							string buffType = tag[1];
+							bool activeOnly = buffType.EndsWith("+");
+							buffType = buffType.Replace("+", "");
+							itemComparison1.LoadBuffs(_calculatedStats, (Buff.BuffType)Enum.Parse(typeof(Buff.BuffType), buffType), activeOnly);
+							break;
 
-        private void textBoxName_TextChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCharacter)
-            {
-                Character.Name = textBoxName.Text;
-                _unsavedChanges = true;
-            }
-        }
+						case "Current Gear/Enchants/Buffs":
+							itemComparison1.LoadCurrentGearEnchantsBuffs(_calculatedStats);
+							break;
 
-        private void textBoxRealm_TextChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCharacter)
-            {
-                Character.Realm = textBoxRealm.Text;
-                _unsavedChanges = true;
-            }
-        }
+						case "Combat Table":
+							itemComparison1.LoadCombatTable(_calculatedStats);
+							break;
+					}
+				}
+			}
+		}
 
-        private void copyCharacterStatsToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string stats =
-                string.Format(
-                    "Character:\t\t{18}@{19}-{20}\r\nRace:\t\t{0}\r\nHealth:\t\t{1}\r\nArmor:\t\t{2}\r\nAgility:\t\t{3}\r\nStamina:\t\t{4}\r\nDefense Rating:\t{5}\r\nDodge Rating:\t{6}\r\nResilience:\t{7}\r\nDodge:\t\t{8}\r\nMiss:\t\t{9}\r\nArmor Mitigation:\t{10}\r\nDodge+Miss:\t{11}\r\nTotal Mitigation:\t{12}\r\nDamage Taken:\t{13}\r\nChance to be Crit:\t{14}\r\nOverall Points:\t{15}\r\nMitigation Points:\t{16}\r\nSurvival Points:\t{17}",
-                    Character.Race, labelHealth.Text, labelArmor.Text, labelAgility.Text, labelStamina.Text,
-                    labelDefenseRating.Text,
-                    labelDodgeRating.Text, labelResilience.Text, labelDodge.Text, labelMiss.Text, labelMitigation.Text,
-                    labelDodgePlusMiss.Text, labelTotalMitigation.Text, labelDamageTaken.Text, labelCritReduction.Text,
-                    labelOverallPoints.Text, labelMitigationPoints.Text, labelSurvivalPoints.Text, textBoxName.Text,
-                    Character.Region.ToString(), textBoxRealm.Text);
-            Clipboard.SetText(stats, TextDataFormat.Text);
-        }
+		private void sortToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.Cursor = Cursors.WaitCursor;
+			ComparisonGraph.ComparisonSort sort = ComparisonGraph.ComparisonSort.Overall;
+			foreach (ToolStripItem item in toolStripDropDownButtonSort.DropDownItems)
+			{
+				if (item is ToolStripMenuItem)
+				{
+					(item as ToolStripMenuItem).Checked = item == sender;
+					if ((item as ToolStripMenuItem).Checked)
+					{
+						toolStripDropDownButtonSort.Text = item.Text;
+						sort = (ComparisonGraph.ComparisonSort)((int)item.Tag);
+					}
+				}
+			}
+			itemComparison1.Sort = sort; //(ComparisonGraph.ComparisonSort)Enum.Parse(typeof(ComparisonGraph.ComparisonSort), toolStripDropDownButtonSort.Text);
+			this.Cursor = Cursors.Default;
+		}
 
-        private void slotToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            foreach (ToolStripItem item in toolStripDropDownButtonSlot.DropDownItems)
-            {
-                if (item is ToolStripMenuItem)
-                {
-                    (item as ToolStripMenuItem).Checked = item == sender;
-                    if ((item as ToolStripMenuItem).Checked)
-                    {
-                        string[] tag = item.Tag.ToString().Split('.');
-                        toolStripDropDownButtonSlot.Text = tag[0];
-                        if (tag.Length > 1) toolStripDropDownButtonSlot.Text += " > " + item.Text;
-                    }
-                }
-            }
-            LoadComparisonData();
-            Cursor = Cursors.Default;
-        }
+		private void tabPageStats_Click(object sender, EventArgs e)
+		{
 
-        private void LoadComparisonData()
-        {
-            foreach (ToolStripItem item in toolStripDropDownButtonSlot.DropDownItems)
-            {
-                if (item is ToolStripMenuItem && (item as ToolStripMenuItem).Checked && item.Tag != null)
-                {
-                    string[] tag = item.Tag.ToString().Split('.');
-                    switch (tag[0])
-                    {
-                        case "Gear":
-                        case "Gems":
-                            itemComparison1.LoadGearBySlot(
-                                (Character.CharacterSlot) Enum.Parse(typeof (Character.CharacterSlot), tag[1]));
-                            break;
+		}
 
-                        case "Enchants":
-                            itemComparison1.LoadEnchantsBySlot(
-                                (Item.ItemSlot) Enum.Parse(typeof (Item.ItemSlot), tag[1]), _calculatedStats);
-                            break;
-
-                        case "Buffs":
-                            string buffType = tag[1];
-                            bool activeOnly = buffType.EndsWith("+");
-                            buffType = buffType.Replace("+", "");
-                            itemComparison1.LoadBuffs(_calculatedStats,
-                                                      (Buff.BuffType) Enum.Parse(typeof (Buff.BuffType), buffType),
-                                                      activeOnly);
-                            break;
-
-                        case "Current Gear/Enchants/Buffs":
-                            itemComparison1.LoadCurrentGearEnchantsBuffs(_calculatedStats);
-                            break;
-
-                        case "Combat Table":
-                            itemComparison1.LoadCombatTable(_calculatedStats);
-                            break;
-                    }
-                }
-            }
-        }
-
-        private void sortToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            foreach (ToolStripItem item in toolStripDropDownButtonSort.DropDownItems)
-            {
-                if (item is ToolStripMenuItem)
-                {
-                    (item as ToolStripMenuItem).Checked = item == sender;
-                    if ((item as ToolStripMenuItem).Checked)
-                    {
-                        toolStripDropDownButtonSort.Text = item.Text;
-                    }
-                }
-            }
-            itemComparison1.Sort =
-                (ComparisonGraph.ComparisonSort)
-                Enum.Parse(typeof (ComparisonGraph.ComparisonSort), toolStripDropDownButtonSort.Text);
-            Cursor = Cursors.Default;
-        }
-
-        private void tabPageStats_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void loadPossibleUpgradesFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            Armory.Instance.LoadUpgradesFromArmory(Character);
-            ItemCache.OnItemsChanged();
-            Cursor = Cursors.Default;
-        }
-    }
+		private void loadPossibleUpgradesFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.Cursor = Cursors.WaitCursor;
+			_spash = new FormSplash();
+			_spash.Show();
+			Application.DoEvents();
+			Armory.LoadUpgradesFromArmory(Character);
+			ItemCache.OnItemsChanged();
+			_spash.Hide();
+			_spash.Dispose();
+			this.Cursor = Cursors.Default;
+		}
+	}
 }
