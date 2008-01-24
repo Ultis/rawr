@@ -32,5 +32,11 @@ namespace Rawr
 			Calculations.LoadModel((Calculations.CalculationModel)listBoxModels.SelectedItem);
 			this.Close();
 		}
+
+        private void listBoxModels_DoubleClick(object sender, EventArgs e)
+        {
+            Calculations.LoadModel((Calculations.CalculationModel) listBoxModels.SelectedItem);
+            this.Close();
+        }
 	}
 }
