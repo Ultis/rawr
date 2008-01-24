@@ -83,7 +83,11 @@ namespace Rawr
                     bool hasSockets = CurrentItem.Sockets.Color1 != Item.ItemSlot.None ||
                                       CurrentItem.Sockets.Color2 != Item.ItemSlot.None ||
                                       CurrentItem.Sockets.Color3 != Item.ItemSlot.None;
-                    _cachedToolTipImage = new Bitmap(249, hasSockets ? 115 : 57, PixelFormat.Format32bppArgb);
+                    var positiveStats = CurrentItem.Stats.Values(x => x > 0);
+                    int statHeight = (positiveStats.Count + 2) / 3; // number of lines
+                    statHeight *= 17;// * line height
+                    _cachedToolTipImage = new Bitmap(249, hasSockets ? 81 + statHeight : 23 + statHeight, PixelFormat.Format32bppArgb);
+
                     Graphics g = Graphics.FromImage(_cachedToolTipImage);
                     g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -121,19 +125,34 @@ namespace Rawr
                     g.DrawString(CurrentItem.Name, _fontName, nameBrush, 2, 4);
                     nameBrush.Dispose();
 
-                    g.DrawString(CurrentItem.Stats.Armor.ToString() + " Armor", _fontStats, SystemBrushes.InfoText, 2,
-                                 21);
-                    g.DrawString(CurrentItem.Stats.Stamina.ToString() + " Stamina", _fontStats, SystemBrushes.InfoText,
-                                 85, 21);
-                    g.DrawString(CurrentItem.Stats.Agility.ToString() + " Agility", _fontStats, SystemBrushes.InfoText,
-                                 168, 21);
-                    g.DrawString(CurrentItem.Stats.DodgeRating.ToString() + " Dodge", _fontStats, SystemBrushes.InfoText,
-                                 2, 38);
-                    g.DrawString(CurrentItem.Stats.DefenseRating.ToString() + " Defense", _fontStats,
-                                 SystemBrushes.InfoText, 85, 38);
-                    g.DrawString(CurrentItem.Stats.Resilience.ToString() + " Resilience", _fontStats,
-                                 SystemBrushes.InfoText, 168, 38);
+                    var xGrid = new
+                    {
+                        initial = 2,
+                        step = 83,
+                        max = 168,
+                    };
 
+                    var yGrid = new
+                    {
+                        initial = 21,
+                        step = 17,
+                        max = statHeight,
+                    };
+
+                    int xPos = xGrid.initial;
+                    int yPos = yGrid.initial;
+
+                    foreach (System.Reflection.PropertyInfo info in positiveStats.Keys)
+                    {
+                        g.DrawString(string.Format("{0} {1}", positiveStats[info], Extensions.LongName(info)), _fontStats, SystemBrushes.InfoText, xPos, yPos);
+
+                        xPos += xGrid.step;
+                        if (xPos > xGrid.max)
+                        {
+                            xPos = xGrid.initial;
+                            yPos += yGrid.step;
+                        }
+                    }
                     if (hasSockets)
                     {
                         for (int i = 0; i < 3; i++)
@@ -144,7 +163,7 @@ namespace Rawr
                                                        (i == 1 ? CurrentItem.Sockets.Color2 : CurrentItem.Sockets.Color3));
                             if (slotColor != Item.ItemSlot.None)
                             {
-                                Rectangle rectGemBorder = new Rectangle(3 + (83*(i)), 59, 35, 35);
+                                Rectangle rectGemBorder = new Rectangle(3 + (83*(i)), 25+statHeight, 35, 35);
                                 Brush brushGemBorder = new SolidBrush(Color.Silver);
                                 switch (slotColor)
                                 {
@@ -189,7 +208,7 @@ namespace Rawr
                             (CurrentItem.Sockets.Stats.ToString().Length == 0
                                  ? "None"
                                  : CurrentItem.Sockets.Stats.ToString()),
-                            _fontStats, brushBonus, 2, 97);
+                            _fontStats, brushBonus, 2, 63 + statHeight);
                     }
 
                     g.Dispose();
