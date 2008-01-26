@@ -89,13 +89,15 @@
     <Compile Include="BuffSelector.Designer.cs">
       <DependentUpon>BuffSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="CalculationOptionsBear.cs">
+    <Compile Include="CalculationOptionsPanelBear.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CalculationOptionsBear.Designer.cs">
-      <DependentUpon>CalculationOptionsBear.cs</DependentUpon>
+    <Compile Include="CalculationOptionsPanelBear.Designer.cs">
+      <DependentUpon>CalculationOptionsPanelBear.cs</DependentUpon>
     </Compile>
-    <Compile Include="Calculations.cs" />
+    <Compile Include="Calculations.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Character.cs" />
     <Compile Include="ComparisonGraph.cs">
       <SubType>UserControl</SubType>
@@ -111,6 +113,12 @@
       <DependentUpon>CalculationDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="CalculationsCat.cs" />
+    <Compile Include="CalculationOptionsPanelCat.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CalculationOptionsPanelCat.Designer.cs">
+      <DependentUpon>CalculationOptionsPanelCat.cs</DependentUpon>
+    </Compile>
     <Compile Include="Enchant.cs" />
     <Compile Include="FormEnterId.cs">
       <SubType>Form</SubType>
@@ -191,8 +199,8 @@
       <SubType>Designer</SubType>
       <DependentUpon>BuffSelector.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CalculationOptionsBear.resx">
-      <DependentUpon>CalculationOptionsBear.cs</DependentUpon>
+    <EmbeddedResource Include="CalculationOptionsPanelBear.resx">
+      <DependentUpon>CalculationOptionsPanelBear.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ComparisonGraph.resx">
@@ -201,6 +209,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CalculationDisplay.resx">
       <DependentUpon>CalculationDisplay.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CalculationOptionsPanelCat.resx">
+      <DependentUpon>CalculationOptionsPanelCat.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEnterId.resx">

@@ -192,18 +192,26 @@ namespace Rawr
 						
 						//all the constant
 						_allBuffs.Add(new Buff() { Name = "30 Stamina Food", Category = BuffCategory.OtherConsumables,
-							Stats = new Stats() { Stamina = 30 }, ConflictingBuffs = new string[] { "20 Agility Food", "20 Hit Rating Food" }});
+							Stats = new Stats() { Stamina = 30 }, ConflictingBuffs = new string[] { "20 Agility Food", "20 Hit Rating Food", "20 Strength Food", "40 Attack Power Food"}});
 						_allBuffs.Add(new Buff() { Name = "20 Agility Food", Category = BuffCategory.OtherConsumables,
-							Stats = new Stats() { Agility = 20 }, ConflictingBuffs = new string[] { "30 Stamina Food", "20 Hit Rating Food" }});
+							Stats = new Stats() { Agility = 20 }, ConflictingBuffs = new string[] { "30 Stamina Food", "20 Hit Rating Food", "20 Strength Food", "40 Attack Power Food" }});
+						_allBuffs.Add(new Buff() { Name = "20 Strength Food", Category = BuffCategory.OtherConsumables,
+							Stats = new Stats() { Strength = 20 }, ConflictingBuffs = new string[] { "30 Stamina Food", "20 Hit Rating Food", "20 Agility Food", "40 Attack Power Food" }});
+						_allBuffs.Add(new Buff() { Name = "40 Attack Power Food", Category = BuffCategory.OtherConsumables,
+							Stats = new Stats() { AttackPower = 40 }, ConflictingBuffs = new string[] { "30 Stamina Food", "20 Hit Rating Food", "20 Strength Food", "20 Agility Food" }});
 						_allBuffs.Add(new Buff() { Name = "20 Hit Rating Food", Category = BuffCategory.OtherConsumables,
-							Stats = new Stats() { HitRating = 20 }, ConflictingBuffs = new string[] { "20 Agility Food", "30 Stamina Food" }});
+							Stats = new Stats() { HitRating = 20 }, ConflictingBuffs = new string[] { "20 Agility Food", "30 Stamina Food", "20 Strength Food", "40 Attack Power Food" }});
 						_allBuffs.Add(new Buff() { Name = "Scroll of Protection", Category = BuffCategory.OtherConsumables,
 							Stats = new Stats() { Armor = 300 }});
 						_allBuffs.Add(new Buff() { Name = "Scroll of Agility", Category = BuffCategory.OtherConsumables,
 							Stats = new Stats() { Agility = 20 }});
 						_allBuffs.Add(new Buff() { Name = "Scroll of Strength", Category = BuffCategory.OtherConsumables,
 							Stats = new Stats() { Strength = 20 }});
-
+						_allBuffs.Add(new Buff() { Name = "Adamantite Weightstone", Category = BuffCategory.OtherConsumables,
+							Stats = new Stats() { CritRating = 14 }, ConflictingBuffs = new string[] { "Elemental Sharpening Stone" }});
+						_allBuffs.Add(new Buff() { Name = "Elemental Sharpening Stone", Category = BuffCategory.OtherConsumables,
+							Stats = new Stats() { CritRating = 28 }, ConflictingBuffs = new string[] { "Adamantite Weightstone" }});
+						
 						//super color motion
 						_allBuffs.Add(new Buff() { Name = "Scorpid Sting", Category = BuffCategory.Debuffs,
 							Stats = new Stats() { Miss = 5 }});

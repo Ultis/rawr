@@ -53,7 +53,7 @@ namespace Rawr
 		{
 			get { return Instance.SubPointNameColors; }
 		}
-		public static System.Windows.Forms.Panel CalculationOptionsPanel
+		public static CalculationOptionsPanelBase CalculationOptionsPanel
 		{
 			get { return Instance.CalculationOptionsPanel; }
 		}
@@ -129,7 +129,7 @@ namespace Rawr
 		
 		public abstract Dictionary<string, System.Drawing.Color> SubPointNameColors { get; }
 		public abstract string[] CharacterDisplayCalculationLabels { get; }
-		public abstract System.Windows.Forms.Panel CalculationOptionsPanel { get; }
+		public abstract CalculationOptionsPanelBase CalculationOptionsPanel { get; }
 
 		public abstract ComparisonCalculationBase CreateNewComparisonCalculation();
 		public abstract CharacterCalculationsBase CreateNewCharacterCalculations();
@@ -364,6 +364,25 @@ namespace Rawr
 		public abstract float[] SubPoints { get; set; }
 		public abstract Item Item { get; set; }
 		public abstract bool Equipped { get; set; }
+	}
+
+	public class CalculationOptionsPanelBase : System.Windows.Forms.UserControl
+	{
+		private Character _character = null;
+		public Character Character
+		{
+			get
+			{
+				return _character;
+			}
+			set
+			{
+				_character = value;
+				LoadCalculationOptions();
+			}
+		}
+
+		protected virtual void LoadCalculationOptions() { }
 	}
 }
 //takemyhandigiveittoyounowyouownmealliamyousaidyouwouldneverleavemeibelieveyouibelieve

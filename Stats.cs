@@ -1,145 +1,275 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Reflection;
 
 namespace Rawr
 {
-    public delegate bool StatFilter(float value);
-
-    [AttributeUsage(AttributeTargets.Property)]
-    public class DisplayNameAttribute:Attribute
-    {
-        public DisplayNameAttribute():this(null,null){}
-        public DisplayNameAttribute(string longName, string shortName)
-        {
-            Short = shortName;
-            Long = longName;
-        }
-
-        public string Short {get;set;}        
-        public string Long {get;set;}
-        public override string ToString()
-        {
-            return Long;
-        }
-    }
-
-    public static class Extensions
-    {
-        // requires .net 3.5 public static string LongName(this PropertyInfo info)
-        // allows it to be called like
-        //   info.LongName()
-        // instead of
-        //   Extensions.LongName(info)
-        public static string LongName(PropertyInfo info)
-        {
-            string prettyName = null;
-
-            object[] attributes = info.GetCustomAttributes(typeof(DisplayNameAttribute), false);
-            if (attributes.Length == 1 && attributes[0] is DisplayNameAttribute && (attributes[0] as DisplayNameAttribute).Long != null)
-            {
-                prettyName = (attributes[0] as DisplayNameAttribute).Long;
-            }
-            else
-            {
-                prettyName = System.Text.RegularExpressions.Regex.Replace(
-                    info.Name,
-                    "([A-Z])",
-                    " $1",
-                    System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
-            }
-            return prettyName;
-        }
-        public static string ShortName(PropertyInfo info)
-        {
-            string prettyName = null;
-
-            object[] attributes = info.GetCustomAttributes(typeof(DisplayNameAttribute), false);
-            if (attributes.Length == 1 && attributes[0] is DisplayNameAttribute && (attributes[0] as DisplayNameAttribute).Short != null)
-            {
-                prettyName = (attributes[0] as DisplayNameAttribute).Short;
-            }
-            else
-            {
-                prettyName = System.Text.RegularExpressions.Regex.Replace(
-                    info.Name,
-                    "([a-z])",
-                    "",
-                    System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
-            }
-            return prettyName;
-        }
-    }
-
-
     [Serializable]
     public class Stats
     {
-        [DisplayName(Short = "AC")]
-        public float Armor{get;set;}        
-        //[DisplayName(Long = "", Short = "")]
-        public float Health{get;set;}        
-        [DisplayName(Short = "AGI")]
-        public float Agility{get;set;}        
-        [DisplayName(Short = "STA")]
-        public float Stamina{get;set;}
-        [DisplayName(Short = "DODGE")]
-        public float DodgeRating{get;set;}
-        [DisplayName(Short = "DEF")]
-        public float DefenseRating{get;set;}
-        [DisplayName(Short = "RES")]
-        public float Resilience{get;set;}
-		[DisplayName(Short = "MISS")]
-        public float Miss{get;set;}        
-        [DisplayName(Long="Agi scale", Short = "%AGI")]
-        public float BonusAgilityMultiplier{get;set;}        
-		[DisplayName(Long = "Str scale", Short = "%STR")]
-        public float BonusStrengthMultiplier{get;set;}        
-		[DisplayName(Long = "Sta scale", Short = "%STA")]
-        public float BonusStaminaMultiplier{get;set;}        
-		[DisplayName(Long = "AC scale", Short = "%AC")]
-        public float BonusArmorMultiplier{get;set;}        
-		[DisplayName(Long = "AP scale", Short = "%AP")]
-        public float BonusAttackPowerMultiplier{get;set;}   
-		[DisplayName(Long = "Crit scale", Short = "%CRIT")]
-        public float BonusCritMultiplier{get;set;}     
-		[DisplayName(Long = "AP")]
-        public float AttackPower{get;set;}
-		[DisplayName(Short = "STR")]
-        public float Strength{get;set;}
-		[DisplayName(Short = "CRIT")]
-        public float CritRating{get;set;}
-		[DisplayName(Short = "HIT")]
-        public float HitRating{get;set;}
-		[DisplayName(Short = "DMG")]
-        public float WeaponDamage{get;set;}        
-		[DisplayName(Short = "EXP")]
-        public float ExpertiseRating{get;set;}
-		[DisplayName(Long = "", Short = "HASTE")]
-        public float HasteRating{get;set;}        
-		[DisplayName(Long = "ArP", Short = "ArP")]
-        public float ArmorPenetration{get;set;}
-		[DisplayName(Long = "Shred Bonus", Short = "SHRED")]
-        public float BonusShredDamage{get;set;}
-		[DisplayName(Long = "Mangle Bonus", Short = "MNGL")]
-        public float BonusMangleDamage{get;set;}
-		[DisplayName(Long = "Rip scale", Short = "%RIP")]
-        public float BonusRipDamageMultiplier{get;set;}
-		[DisplayName(Long = "Mangle Cost",Short = "CMNGL")]
-        public float MangleCostReduction{get;set;}
-		[DisplayName(Short = "BLPRC")]
-        public float BloodlustProc{get;set;}
-		[DisplayName(Short = "TRPRC")]
-        public float TerrorProc{get;set;}
+        [System.Xml.Serialization.XmlElement("Armor")]
+        public float _armor;
+        [System.Xml.Serialization.XmlElement("Health")]
+        public float _health;
+        [System.Xml.Serialization.XmlElement("Agility")]
+        public float _agility;
+        [System.Xml.Serialization.XmlElement("Stamina")]
+        public float _stamina;
+        [System.Xml.Serialization.XmlElement("DodgeRating")]
+        public float _dodgeRating;
+        [System.Xml.Serialization.XmlElement("DefenseRating")]
+        public float _defenseRating;
+        [System.Xml.Serialization.XmlElement("Resilience")]
+        public float _resilience;
+		[System.Xml.Serialization.XmlElement("Miss")]
+		public float _miss;
+		[System.Xml.Serialization.XmlElement("BonusAgilityMultiplier")]
+		public float _bonusAgilityMultiplier;
+		[System.Xml.Serialization.XmlElement("BonusStrengthMultiplier")]
+		public float _bonusStrengthMultiplier;
+		[System.Xml.Serialization.XmlElement("BonusStaminaMultiplier")]
+		public float _bonusStaminaMultiplier;
+		[System.Xml.Serialization.XmlElement("BonusArmorMultiplier")]
+		public float _bonusArmorMultiplier;
+		[System.Xml.Serialization.XmlElement("BonusAttackPowerMultiplier")]
+		public float _bonusAttackPowerMultiplier;
+		[System.Xml.Serialization.XmlElement("AttackPower")]
+		public float _attackPower;
+		[System.Xml.Serialization.XmlElement("Strength")]
+		public float _strength;
+		[System.Xml.Serialization.XmlElement("CritRating")]
+		public float _critRating;
+		[System.Xml.Serialization.XmlElement("HitRating")]
+		public float _hitRating;
+		[System.Xml.Serialization.XmlElement("WeaponDamage")]
+		public float _weaponDamage;
+		[System.Xml.Serialization.XmlElement("ExpertiseRating")]
+		public float _expertiseRating;
+		[System.Xml.Serialization.XmlElement("HasteRating")]
+		public float _hasteRating;
+		[System.Xml.Serialization.XmlElement("ArmorPenetration")]
+		public float _armorPentration;
+		[System.Xml.Serialization.XmlElement("BonusCritMultiplier")]
+		public float _bonusCritMultiplier;
+		[System.Xml.Serialization.XmlElement("BonusShredDamage")]
+		public float _bonusShredDamage;
+		[System.Xml.Serialization.XmlElement("BonusMangleDamage")]
+		public float _bonusMangleDamage;
+		[System.Xml.Serialization.XmlElement("BonusRipDamageMultiplier")]
+		public float _bonusRipDamageMultiplier;
+		[System.Xml.Serialization.XmlElement("MangleCostReduction")]
+		public float _mangleCostReduction;
+		[System.Xml.Serialization.XmlElement("BloodlustProc")]
+		public float _bloodlustProc;
+		[System.Xml.Serialization.XmlElement("TerrorProc")]
+		public float _terrorProc;
+				
+        [System.Xml.Serialization.XmlIgnore]
+        public float Armor
+        {
+            get { return _armor; }
+            set { _armor = value; }
+        }
+        [System.Xml.Serialization.XmlIgnore]
+        public float Health
+        {
+            get { return _health; }
+            set { _health = value; }
+        }
+        [System.Xml.Serialization.XmlIgnore]
+        public float Agility
+        {
+            get { return _agility; }
+            set { _agility = value; }
+        }
+        [System.Xml.Serialization.XmlIgnore]
+        public float Stamina
+        {
+            get { return _stamina; }
+            set { _stamina = value; }
+        }
+        [System.Xml.Serialization.XmlIgnore]
+        public float DodgeRating
+        {
+            get { return _dodgeRating; }
+            set { _dodgeRating = value; }
+        }
+        [System.Xml.Serialization.XmlIgnore]
+        public float DefenseRating
+        {
+            get { return _defenseRating; }
+            set { _defenseRating = value; }
+        }
+        [System.Xml.Serialization.XmlIgnore]
+        public float Resilience
+        {
+            get { return _resilience; }
+            set { _resilience = value; }
+        }
+		[System.Xml.Serialization.XmlIgnore]
+		public float Miss
+		{
+			get { return _miss; }
+			set { _miss = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float BonusAgilityMultiplier
+		{
+			get { return _bonusAgilityMultiplier; }
+			set { _bonusAgilityMultiplier = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float BonusStrengthMultiplier
+		{
+			get { return _bonusStrengthMultiplier; }
+			set { _bonusStrengthMultiplier = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float BonusStaminaMultiplier
+		{
+			get { return _bonusStaminaMultiplier; }
+			set { _bonusStaminaMultiplier = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float BonusArmorMultiplier
+		{
+			get { return _bonusArmorMultiplier; }
+			set { _bonusArmorMultiplier = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float BonusAttackPowerMultiplier
+		{
+			get { return _bonusAttackPowerMultiplier; }
+			set { _bonusAttackPowerMultiplier = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float AttackPower
+		{
+			get { return _attackPower; }
+			set { _attackPower = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float Strength
+		{
+			get { return _strength; }
+			set { _strength = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float CritRating
+		{
+			get { return _critRating; }
+			set { _critRating = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float HitRating
+		{
+			get { return _hitRating; }
+			set { _hitRating = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float WeaponDamage
+		{
+			get { return _weaponDamage; }
+			set { _weaponDamage = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float ExpertiseRating
+		{
+			get { return _expertiseRating; }
+			set { _expertiseRating = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float HasteRating
+		{
+			get { return _hasteRating; }
+			set { _hasteRating = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float ArmorPenetration
+		{
+			get { return _armorPentration; }
+			set { _armorPentration = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float BonusCritMultiplier
+		{
+			get { return _bonusCritMultiplier; }
+			set { _bonusCritMultiplier = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float BonusShredDamage
+		{
+			get { return _bonusShredDamage; }
+			set { _bonusShredDamage = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float BonusMangleDamage
+		{
+			get { return _bonusMangleDamage; }
+			set { _bonusMangleDamage = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float BonusRipDamageMultiplier
+		{
+			get { return _bonusRipDamageMultiplier; }
+			set { _bonusRipDamageMultiplier = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float MangleCostReduction
+		{
+			get { return _mangleCostReduction; }
+			set { _mangleCostReduction = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float BloodlustProc
+		{
+			get { return _bloodlustProc; }
+			set { _bloodlustProc = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float TerrorProc
+		{
+			get { return _terrorProc; }
+			set { _terrorProc = value; }
+		}
 		
 		//with hands high into the sky so blue
         public Stats() { }
-		
 
 		public Stats Clone()
 		{
-            return (Stats)this.MemberwiseClone();
+			return new Stats()
+			{
+				Armor = this.Armor,
+				Agility = this.Agility,
+				ArmorPenetration = this.ArmorPenetration,
+				AttackPower = this.AttackPower,
+				BloodlustProc = this.BloodlustProc,
+				TerrorProc = this.TerrorProc,
+				BonusAgilityMultiplier = this.BonusAgilityMultiplier,
+				BonusStrengthMultiplier = this.BonusStrengthMultiplier,
+				BonusArmorMultiplier = this.BonusArmorMultiplier,
+				BonusAttackPowerMultiplier = this.BonusAttackPowerMultiplier,
+				BonusCritMultiplier = this.BonusCritMultiplier,
+				BonusRipDamageMultiplier = this.BonusRipDamageMultiplier,
+				BonusStaminaMultiplier = this.BonusStaminaMultiplier,
+				BonusMangleDamage = this.BonusMangleDamage,
+				BonusShredDamage = this.BonusShredDamage,
+				CritRating = this.CritRating,
+				DefenseRating = this.DefenseRating,
+				DodgeRating = this.DodgeRating,
+				ExpertiseRating = this.ExpertiseRating,
+				HasteRating = this.HasteRating,
+				Health = this.Health,
+				HitRating = this.HitRating,
+				MangleCostReduction = this.MangleCostReduction,
+				Miss = this.Miss,
+				Resilience = this.Resilience,
+				Stamina = this.Stamina,
+				Strength = this.Strength,
+				WeaponDamage = this.WeaponDamage
+			};
+
 		}
 
 		//as the ocean opens up to swallow you
@@ -179,16 +309,6 @@ namespace Rawr
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            var values = Values(x => x > 0);
-            foreach ( PropertyInfo info in values.Keys)
-            {
-                sb.AppendFormat("{0} {1}, ", Extensions.ShortName(info), values[info]);
-            }
-
-            return sb.ToString().TrimEnd(' ', ',');
-            /*
-
             string summary = string.Empty;
             if (Armor > 0) summary += Armor.ToString() + "AC, ";
             if (Health > 0) summary += Health.ToString() + "HP, ";
@@ -219,30 +339,6 @@ namespace Rawr
 			if (TerrorProc > 0) summary += "Terror, ";
 			summary = summary.TrimEnd(' ', ',', ':');
             return summary;
-             */
-        }
-
-        private class PropertyComparer : IComparer<PropertyInfo>
-        {
-
-            public int Compare(PropertyInfo x, PropertyInfo y)
-            {
-                return x.Name.CompareTo(y.Name);
-            }
-        }
-
-        public SortedList<PropertyInfo, float> Values(StatFilter filter)
-        {
-            SortedList<PropertyInfo, float> dict = new SortedList<PropertyInfo, float>(new PropertyComparer());
-            foreach (PropertyInfo info in GetType().GetProperties())
-            {
-                float value = (float)info.GetValue(this, null);
-                if (filter(value))
-                {
-                    dict[info] = value;
-                }
-            }
-            return dict;
         }
     }
 }

@@ -110,7 +110,7 @@ namespace Rawr
 			if (editor == null)
 			{
 				editor = new FormItemEditor(Character);
-				editor.SelectItem(_item);
+				editor.SelectItem(_item, true);
 				FormMain formMain = null;
 				foreach (Form form in Application.OpenForms)
 					if (form is FormMain)
@@ -123,7 +123,7 @@ namespace Rawr
 			}
 			else
 			{
-				editor.SelectItem(_item);
+				editor.SelectItem(_item, true);
 				editor.Focus();
 			}
 		}

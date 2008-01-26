@@ -118,7 +118,7 @@ namespace Rawr
 			{
 				Item selectedItem = SelectedItem.Tag as Item;
 				LoadItems();
-				SelectItem(selectedItem);
+				SelectItem(selectedItem, true);
 			}
 		}
 
@@ -193,7 +193,7 @@ namespace Rawr
 						{
 							newItem = new Item("New Item", Quality.Epic, form.Value, "temp", Item.ItemSlot.Head, string.Empty, new Stats(), new Sockets(), 0, 0, 0);
 							ItemCache.AddItem(newItem);
-							SelectItem(newItem);
+							SelectItem(newItem, true);
 						}
 					}
 					else
@@ -327,7 +327,7 @@ namespace Rawr
 			newLvi.EnsureVisible();
 		}
 
-		internal void SelectItem(Item item)
+		internal void SelectItem(Item item, bool force)
 		{
 			bool found = false;
 			foreach (ListViewItem lvi in listViewItems.Items)
@@ -337,7 +337,7 @@ namespace Rawr
 					lvi.EnsureVisible();
 					found = true;
 				}
-			if (!found)
+			if (!found && force)
 			{
 				string filter = textBoxFilter.Text;
 				textBoxFilter.Text = "";
@@ -357,7 +357,7 @@ namespace Rawr
 		{
 			Item selectedItem = SelectedItem.Tag as Item;
 			LoadItems();
-			SelectItem(selectedItem);
+			SelectItem(selectedItem, false);
 		}
 	}
 }

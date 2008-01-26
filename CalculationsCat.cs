@@ -8,42 +8,18 @@ namespace Rawr
 	{
 		//my insides all turned to ash / so slow
 		//and blew away as i collapsed / so cold
-		private int _targetLevel = 73;
-		private int _baseArmor = 7000;
-		private int _powershift = 0;
 
-		//TODO
-		private System.Windows.Forms.Panel _calculationOptionsPanel = null;
-		public override System.Windows.Forms.Panel CalculationOptionsPanel
+		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+		public override CalculationOptionsPanelBase CalculationOptionsPanel
 		{
 			get
 			{
 				if (_calculationOptionsPanel == null)
 				{
-					_calculationOptionsPanel = new System.Windows.Forms.Panel();
-					
-					System.Windows.Forms.Label labelTargetLevel = new System.Windows.Forms.Label();
-					labelTargetLevel.Text = "Target Level: ";
-					labelTargetLevel.AutoSize = true;
-					labelTargetLevel.Location = new System.Drawing.Point(4, 4);
-					_calculationOptionsPanel.Controls.Add(labelTargetLevel);
-
-					System.Windows.Forms.ComboBox comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
-					comboBoxTargetLevel.Items.AddRange(new object[] { "70", "71", "72", "73" });
-					comboBoxTargetLevel.Location = new System.Drawing.Point(labelTargetLevel.Right + 8, 4);
-					comboBoxTargetLevel.SelectedValueChanged += new EventHandler(comboBoxTargetLevel_SelectedValueChanged);
-					comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-					comboBoxTargetLevel.Text = _targetLevel.ToString();
-					_calculationOptionsPanel.Controls.Add(comboBoxTargetLevel);
+					_calculationOptionsPanel = new CalculationOptionsPanelCat();
 				}
 				return _calculationOptionsPanel;
 			}
-		}
-
-		void comboBoxTargetLevel_SelectedValueChanged(object sender, EventArgs e)
-		{
-			_targetLevel = int.Parse((sender as System.Windows.Forms.ComboBox).Text.ToString());
-			if (CachedCharacter != null) CachedCharacter.OnItemsChanged();
 		}
 
 		private string[] _characterDisplayCalculationLabels = null;
@@ -77,8 +53,8 @@ namespace Rawr
 					"Complex Stats:Melee Damage",
 					"Complex Stats:Rip Damage",
 					"Complex Stats:Bite Damage",
-					"Complex Stats:Overall Points",
-					"Complex Stats:DPS Points"
+					"Complex Stats:DPS Points*DPS Points is your theoretical DPS, multiplied by 100, so that values are the correct scale for Rawr's graphs.",
+					"Complex Stats:Overall Points*Rawr is designed to support an Overall point value, comprised of one or more sub point values. Cats only have DPS, so Overall Points will always be identical to DPS Points."
 				};
 				return _characterDisplayCalculationLabels;
 			}
@@ -92,7 +68,7 @@ namespace Rawr
 				if (_subPointNameColors == null)
 				{
 					_subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-					_subPointNameColors.Add("DPS", System.Drawing.Color.Purple);
+					_subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(160, 0, 224));
 				}
 				return _subPointNameColors;
 			}
@@ -104,17 +80,22 @@ namespace Rawr
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			_cachedCharacter = character;
+			int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
+			float targetArmor = int.Parse(character.CalculationOptions["TargetArmor"]);
+			int powershift = int.Parse(character.CalculationOptions["Powershift"]);
+			string primaryAttack = character.CalculationOptions["PrimaryAttack"];
+			string finisher = character.CalculationOptions["Finisher"];
 			Stats stats = GetCharacterStats(character, additionalItem);
-			float levelDifference = (_targetLevel - 70f) * 0.2f;
+			float levelDifference = (targetLevel - 70f) * 0.2f;
 			CharacterCalculationsCat calculatedStats = new CharacterCalculationsCat();
 			calculatedStats.BasicStats = stats;
-			calculatedStats.TargetLevel = _targetLevel;
+			calculatedStats.TargetLevel = targetLevel;
 
 			//Begin Toskk's 
 			
 			#region Calculate Basic Chances, Costs, and Damage
 
-			float baseArmor = Math.Max(0f, this._baseArmor - stats.ArmorPenetration);
+			float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
 			float modArmor = (baseArmor / (baseArmor + 10557.5f )) * 100f;
 
 
@@ -131,7 +112,7 @@ namespace Rawr
 			float meleeDamage = stats.WeaponDamage + (768f + stats.AttackPower) / 14f;
 			float mangleCost = 40f - stats.MangleCostReduction;
 			float totalMangleCost = 1f / (1f - chanceMiss) * (mangleCost * (1f - chanceMiss) + mangleCost / 5f * chanceMiss);
-			float mangleDamage = 1.1f * (meleeDamage * 1.6f + 264f + stats.BonusMangleDamage);
+			float mangleDamage = 1.2f * (meleeDamage * 1.6f + 264f + stats.BonusMangleDamage);
 
 			float shredCost = 42f;
 			float totalShredCost = chanceMiss * shredCost / 5f + (1f - chanceMiss) * shredCost;
@@ -148,31 +129,42 @@ namespace Rawr
 
 			#endregion
 
+			float dmgMelee = 0f;
+			float cycleTime = 0f;
+			float segmentTime = 0f;
+			float energyCount = 10f;
+			float terrorTicker = 0f;
+			float comboPoints = 0f;
+			float dmgMangles = 0f;
+					
+			
 			#region Mangle
 
-			// Starting immediately after Ripping, with energy to Mangle and GCD running
-			float dmgMelee = 0f;
-			float cycleTime = 1.0f;
-			float segmentTime = 1.0f;
-			float energyCount = mangleCost  + 10f;
-
-			dmgMelee += segmentTime / attackSpeed * meleeDamage * (0.7f * 0.25f + (0.75f - chanceMiss - chanceWhiteCrit) +
-				critMultiplier * chanceWhiteCrit);
-			energyCount += segmentTime / attackSpeed * stats.BloodlustProc;
-
-			//GCD ends, Manlge hits
-
-			energyCount -= totalMangleCost * (1f - segmentTime / 30f);
-			float dmgMangles = meleeDamage * ((1f - chanceCrit) + critMultiplier * chanceCrit);
-			float comboPoints = 1f + chanceCrit;
-			energyCount += segmentTime / attackSpeed * stats.BloodlustProc;
-
-			float terrorTicker = 0;
-			if (stats.TerrorProc > 0)
+			if (primaryAttack == "Mangle" || primaryAttack == "Both")
 			{
-				attackPower += 65f * 0.85f * (1f + stats.BonusAgilityMultiplier) * (1f + stats.BonusAttackPowerMultiplier);
-				chanceCrit += 65f * 0.85f * stats.BonusAgilityMultiplier / 25 / 100;
-				terrorTicker = 10;
+				// Starting immediately after Ripping, with energy to Mangle and GCD running
+				dmgMelee = 0f;
+				cycleTime = 1.0f;
+				segmentTime = 1.0f;
+				energyCount = mangleCost + 10f;
+
+				dmgMelee += segmentTime / attackSpeed * meleeDamage * (0.7f * 0.25f + (0.75f - chanceMiss - chanceWhiteCrit) +
+					critMultiplier * chanceWhiteCrit);
+				energyCount += segmentTime / attackSpeed * stats.BloodlustProc;
+
+				//GCD ends, Mangle hits
+
+				energyCount -= totalMangleCost * (1f - segmentTime / 30f);
+				dmgMangles = mangleDamage * ((1f - chanceCrit) + critMultiplier * chanceCrit);
+				comboPoints = 1f + chanceCrit;
+				energyCount += segmentTime / attackSpeed * stats.BloodlustProc;
+
+				if (stats.TerrorProc > 0)
+				{
+					attackPower += 65f * 0.85f * (1f + stats.BonusAgilityMultiplier) * (1f + stats.BonusAttackPowerMultiplier);
+					chanceCrit += 65f * 0.85f * stats.BonusAgilityMultiplier / 25 / 100;
+					terrorTicker = 10;
+				}
 			}
 
 			#endregion
@@ -213,15 +205,15 @@ namespace Rawr
 
 			#region Powershifting
 
-			if (_powershift > 0)
+			if (powershift > 0)
 			{
-				energyCount = 17 / _powershift;
+				energyCount = 17f / powershift;
 			}
 			//Ignoring the wolf helm since it's pretty craptacular
 
 			// 5 Combo points generated, waiting for energy to Rip + Mangle
 
-			segmentTime = (mangleCost + totalRipCost * (1f - totalRipCost / 10f / 30f) - energyCount) / 10f;
+			segmentTime = (((primaryAttack == "Mangle" || primaryAttack == "Both") ? mangleCost : 0) + totalRipCost * (1f - totalRipCost / 10f / 30f) - energyCount) / 10f;
 			segmentTime -= segmentTime / attackSpeed * stats.BloodlustProc / 10f;
 
 			cycleTime += segmentTime;
@@ -277,6 +269,8 @@ namespace Rawr
 			calculatedStats.DPSPoints = dps * 100f;
 			calculatedStats.OverallPoints = dps * 100f;
 			calculatedStats.AvoidedAttacks = chanceMiss * 100f;
+			calculatedStats.DodgedAttacks = chanceDodge * 100f;
+			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks - calculatedStats.DodgedAttacks;
 			calculatedStats.WhiteCrit = chanceWhiteCrit * 100f;
 			calculatedStats.YellowCrit = (1f - chanceMiss) * chanceCrit * 100f;
 			calculatedStats.ShredsPerCycle = numberShreds;
@@ -302,29 +296,31 @@ namespace Rawr
 			//TODO: Find correct BonusCritMultiplier, AttackPower, Strength, CritRating
 			Stats statsRace = character.Race == Character.CharacterRace.NightElf ? 
 				new Stats() { 
-					Health = 3434, 
-					Strength = 68, 
-					Agility = 75, 
-					Stamina = 82, 
-					DodgeRating = 59, 
-					BonusCritMultiplier = 0.1f, 
-					CritRating = 90f, 
-					BonusAttackPowerMultiplier = 1.1f,
-					BonusAgilityMultiplier = 1.03f,
-					BonusStrengthMultiplier = 1.03f,
-					BonusStaminaMultiplier = 1.03f} : 
+					Health = 3434f, 
+					Strength = 73f, 
+					Agility = 75f,
+					Stamina = 82f,
+					DodgeRating = 59f,
+					AttackPower = 225f,
+					BonusCritMultiplier = 0.1f,
+					CritRating = 264.0768f, 
+					BonusAttackPowerMultiplier = 0.1f,
+					BonusAgilityMultiplier = 0.03f,
+					BonusStrengthMultiplier = 0.03f,
+					BonusStaminaMultiplier = 0.03f} : 
 				new Stats() { 
-					Health = 3434, 
-					Strength = 72, 
-					Agility = 64, 
-					Stamina = 85, 
-					DodgeRating = 40, 
-					BonusCritMultiplier = 0.1f, 
-					CritRating = 90f, 
-					BonusAttackPowerMultiplier = 1.1f,
-					BonusAgilityMultiplier = 1.03f,
-					BonusStrengthMultiplier = 1.03f,
-					BonusStaminaMultiplier = 1.03f}; 
+					Health = 3434f,
+					Strength = 81f,
+					Agility = 64.5f,
+					Stamina = 85f,
+					DodgeRating = 40f,
+					AttackPower = 227f,
+					BonusCritMultiplier = 0.1f,
+					CritRating = 264.0768f, 
+					BonusAttackPowerMultiplier = 0.1f,
+					BonusAgilityMultiplier = 0.03f,
+					BonusStrengthMultiplier = 0.03f,
+					BonusStaminaMultiplier = 0.03f}; 
 			Stats statsBaseGear = GetItemStats(character, additionalItem);
 			Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -332,12 +328,12 @@ namespace Rawr
 			Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
 
-			float agiBase = (float)Math.Floor(statsRace.Agility * statsRace.BonusAgilityMultiplier);
-			float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * statsRace.BonusAgilityMultiplier);
-			float strBase = (float)Math.Floor(statsRace.Strength * statsRace.BonusStrengthMultiplier);
-			float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * statsRace.BonusStrengthMultiplier);
-			float staBase = (float)Math.Floor(statsRace.Stamina * statsRace.BonusStaminaMultiplier);
-			float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * statsRace.BonusStaminaMultiplier);
+			float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
+			float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
+			float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
+			float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
+			float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
+			float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier));
 						
 			Stats statsTotal = new Stats();
 			statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
@@ -409,10 +405,12 @@ namespace Rawr
 					stats.Strength.ToString() + " Strength",
 					stats.AttackPower.ToString() + " AP",
 					stats.CritRating.ToString() + " Crit",
-					stats.HasteRating.ToString() + " Haste",
+					stats.HitRating.ToString() + " Hit",
 					stats.Stamina.ToString() + " Stamina"
 				});
 
+			if (stats.HasteRating > 0)
+				listStats.Add(stats.HasteRating + " Haste");
 			if (stats.ExpertiseRating > 0)
 				listStats.Add(stats.ExpertiseRating + " Expertise");
 			if (stats.ArmorPenetration > 0)
@@ -420,7 +418,7 @@ namespace Rawr
 			if (stats.BloodlustProc > 0)
 				listStats.Add("Bloodlust Proc");
 			if (stats.TerrorProc > 0)
-				listStats.Add("Terror Dmg");
+				listStats.Add("Terror Proc");
 			if (stats.BonusMangleDamage > 0)
 				listStats.Add(stats.BonusMangleDamage + " Mangle Dmg");
 			if (stats.BonusShredDamage > 0)
@@ -483,6 +481,20 @@ namespace Rawr
 		{
 			get { return _avoidedAttacks; }
 			set { _avoidedAttacks = value; }
+		}
+
+		private float _dodgedAttacks;
+		public float DodgedAttacks
+		{
+			get { return _dodgedAttacks; }
+			set { _dodgedAttacks = value; }
+		}
+
+		private float _missedAttacks;
+		public float MissedAttacks
+		{
+			get { return _missedAttacks; }
+			set { _missedAttacks = value; }
 		}
 
 		private float _whiteCrit;
@@ -581,11 +593,8 @@ namespace Rawr
 			float critRating = BasicStats.CritRating;
 			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Improved Judgement of the Crusade"))
 				critRating -= 66.24f;
-			if (Calculations.CachedCharacter.Race == Character.CharacterRace.NightElf)
-				critRating -= 90f;
-			else
-				critRating -= 90f;
-
+			critRating -= 264.0768f; //Base 5% + 6% from talents
+			
 			float hitRating = BasicStats.HitRating;
 			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Improved Faerie Fire"))
 				hitRating -= 47.3077f;
@@ -603,10 +612,14 @@ namespace Rawr
 				armorPenetration -= 2000f;
 			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Improved Expose Armor (5cp)"))
 				armorPenetration -= 1000f;
+
+			float attackPower = BasicStats.AttackPower;
+			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Improved Hunter's Mark"))
+				attackPower -= 121f;
 			
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
 			dictValues.Add("Health", BasicStats.Health.ToString());
-			dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
+			dictValues.Add("Attack Power", attackPower.ToString());
 			dictValues.Add("Agility", BasicStats.Agility.ToString());
 			dictValues.Add("Strength", BasicStats.Strength.ToString());
 			dictValues.Add("Crit Rating", critRating.ToString());
@@ -615,7 +628,7 @@ namespace Rawr
 			dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
 			dictValues.Add("Armor Penetration", armorPenetration.ToString());
 			dictValues.Add("Weapon Damage", "+" + BasicStats.WeaponDamage.ToString());
-			dictValues.Add("Avoided Attacks", AvoidedAttacks.ToString() + "%");
+			dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
 			dictValues.Add("White Crit", WhiteCrit.ToString() + "%");
 			dictValues.Add("Yellow Crit", YellowCrit.ToString() + "%");
 			dictValues.Add("Attack Speed", AttackSpeed.ToString() + "s");
@@ -629,8 +642,8 @@ namespace Rawr
 			dictValues.Add("Melee Damage", MeleeDamage.ToString() + "%");
 			dictValues.Add("Rip Damage", RipDamage.ToString() + "%");
 			dictValues.Add("Bite Damage", FerociousBiteDamage.ToString() + "%");
+			dictValues.Add("DPS Points", DPSPoints.ToString() + "*" + (DPSPoints / 100f).ToString() + " DPS");
 			dictValues.Add("Overall Points", OverallPoints.ToString());
-			dictValues.Add("DPS Points", DPSPoints.ToString());
 			
 			return dictValues;
 		}

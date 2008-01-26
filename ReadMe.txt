@@ -1,9 +1,19 @@
-Rawr Beta 9a
+Rawr Beta 10
 ------------
-Thanks for helping test out Rawr. Beta 9 is mostly a bug fix and under-the-hood release. Beta 8 had several nasty bugs, most of which should be fixed in Beta 9. Additionally, alot has been done to prepare Rawr for being generalized so that we can have a cat version. You may notice that both enchants and buffs are now loaded dynamically from two new xml files, instead of being hard-coded in the app code. Due to the number of low-level changes in Beta 9, I honestly expect a bug or two to slip through, so please check for a new version (probably Beta 9a or 9b) soon. Check out the version history for details of what's changed since Beta 8. Anyway, as usual, if you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
+*Cat support*! It's finally here! Cat support has been a long time coming. b10 is a huge upgrade for Rawr. I've added quite a few things for Bears as well. Since there's so much new stuff in b10, I honestly expect there to be a few bugs. I'll be releasing a new version to fix whatever bugs are found, probably within a week. So I ask for your patience in whatever goes wrong with b10. :) It's very important to note that the Cat side of things is only like 80% complete. There are several features that aren't done for b10. Please see the "Missing Features" section below, for details. I know some of these are important features, and will be getting them in b11, as soon as I can. Also, because it can't be said enough, huge thanks to Toskk for all of his Cat theorycrafting. Rawr.Cat would not be possible without Toskk.
+
+Anyway, as usual, thanks very much for testing Rawr. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
 FAQ
 ---
+ Q: Why are some features disabled on the Options tab for Cat?
+ Q: How do I change the stats of an item for Cat? It still shows the bear stats!
+ Q: Can I switch between Cat & Bear without restarting Rawr?
+ Q: Why is the Combat Table blank for Cat?
+ Q: Why are the values for most of the idols all wrong?
+ Q: Can I see the values of each stat, like on Toskk's Calculator?
+ A: See the "Missing Features" section below. All of these will be solved in the next major version, b11.
+
  Q: The calculations don't match my character screen. Are they wrong?
  A: Most likely, no. First, the calculations in Rawr are for combat against raid boss mobs, which changes the chances to be missed, to dodge, to be crushed, and to be crit, so you'll see values off by 0.6% from what the character sheet says. Additionall, WoW sometimes rounds stats oddly, when many buffs are involved. I've gone to great lengths to make Rawr as accurate as possible, but it'll still calculate Stamina and Agility off by 1 in about 5 to 10% of cases. That in turn may make your health, dodge, and armor off by a tiny amount as well. Anyway, that's rare, and even when it does happen, the difference is *extremely* negligable, so don't worry about it. If you do find a situation where other calculations are off, or any of those are off significantly, please let me know. I want to ensure Rawr is as accurate as possible.
 
@@ -14,10 +24,36 @@ FAQ
  A: No, I designed Rawr so that I wouldn't need to update it with new items every time a new tanking item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
  
  Q: Can you make it, or does Rawr work for Cats, Moonkin, or Trees?
- A: I'm beginning to shift my focus from Bears to both Bears and Cats. A cat version is in the works, please be patient! After that's decently working, I expect many other spinoffs to be made, such as for Moonkin, Trees, or even different classes.
+ A: Rawr finally has Cat support! After Cat is cleaned up and fully functional, I expect many other spinoffs to be made, such as for Moonkin, Trees, or even different classes.
+ 
+Missing Features
+----------------
+ In order to release Rawr b10 sooner, I chose to cut out several significant features. I plan to implement these all in b11, but until then, you'll just have to do without. Here's a list of what's on my list:
+ 
+ * More Calculation Options - You'll notice on the Options tab in Cat mode, that there are a number of items that are disabled (grey'd out), including Target Level, Primary Attack, and Finisher. These will be the biggest new feature in b11, most likely.
+ * Item Editor for Cat - If you bring up the Item Editor in Cat mode, you'll see that it still shows all the fields for Bear stats, not Cat stats. Rawr will still keep track of all the Cat stats, they're just not all editable in the Item Editor. If you *really* want to edit some cat items, you'll have to do it in the xml for now, which I know would be a huge pain in the ass. Sorry. :(
+ * Swapping Between Cat & Bear - Currently the different calculation models are only loaded at startup. I hope to allow swapping in b11. Just save and relaunch for now.
+ * Combat Table - It's blank... Need to implement multiple combat tables, since it's different for white and yellow attacks.
+ * Temporary Buffs - There's a ton of buffs for Bear that are short buffs like potions and other consumables... I plan to add things like this for cat.
+ * Values of Idols - Everbloom and Terror are correct. Others, not so much. 
+ * Relative Stat Values - Toskk's calculator displays the values of each stat, compared to AP. I may do something like this, except compared to DPS. Not sure.
+
 
 Version History
 ---------------
+Beta 10:
+ - Cat Support! When Rawr opens, you'll be given a choice of loading the Bear of Cat calculation model. Choose Cat to start using Rawr for optimizing your dps! Most of the Cat calculations are based on Toskk's cat calculator. Huge thanks to Toskk for this!
+ - Rawr automatically will detect and activate set bonuses as appropriate.
+ - Cat stats are now loaded from the armory, in addition to Bear stats. Only stats relevant to your current mode will be visible.
+ - Procs and Uses are now averaged out for Cat, but remain off with optional buffs for Bear.
+ - The calculation models are now completely modular. Rawr is very extensible now. It will be much easier to add another model now. If anyone's interested in writing Rawr.Tree, or Rawr.Moonkin, or Rawr.Afflliction, or Rawr.Mutilation or any other class/spec, let me know.
+ - There's now an Options tab which contains additional options for the calculations, for both Cat and Bear. For Bear, there's only Target Level. There's much more for Cat though (although most of the Cat options aren't done yet). Currently you can change the Target Armor and choose how often you Powershift.
+ - The legend on the comparison graph is gone. I hope to re-implement that at some point, but not a high priority.
+ - Improved rendering of tooltips slightly.
+ - Fixed a bug with the Filter box on the Item Editor.
+ - Probably a dozen other little things that I can't remember cause I've been working on this for so long.
+ 
+
 Beta 9a:
  - Fixed a bug that made the new tooltips disappear really fast
  - Fixed a bug that made Load Upgrades From Armory skip waist items
@@ -141,17 +177,17 @@ ReadMe.txt - This ReadMe
 Rawr.exe - The Rawr application
 Source - This folder contains the Visual Studio 2005 C# project for Rawr. This is all of the source code, so that you can build it yourself, and peruse the source code if you are concerned about it containing anything malicious (it doesn't).
 ItemCache.xml - This is the file that Rawr saves its item database to. I've included my current one, which contains a fair number of items for each slot.
-BuffCache.xml - This is the file that Rawr saves its buff database to. This should be complete as of the time of writing (2.3.0). If new enchants come out, you can edit the xml and relaunch Rawr.
-EnchantCache.xml - Same as BuffCache, but for enchants.
 Images - This folder containts the images of all of the items that Rawr has in its item database. Whenever Rawr needs an item/gem's icon, it'll look here first. If you don't have the correct icon, it'll download it from the Armory. 
 
-After running Rawr, you'll also see this file:
+After running Rawr, you'll also see:
 
 Rawr.log - This file contains a log of what you downloaded from the armory, and why. If you have any bugs, I may ask for you to send me this log; it'll help me in solving the bug.
+BuffCache.xml - This is the file that Rawr saves its buff database to. This should be complete as of the time of writing (2.3.3). If new enchants come out, you can edit the xml and relaunch Rawr.
+EnchantCache.xml - Same as BuffCache, but for enchants.
 
 Overview of Rawr
 ----------------
-Rawr is a little windows app, designed to help you design sets of gear for your Bear. You can play with different items, enchants, and buffs, and see how they affect your tanking stats. Based on your current stats, it will also display a graph of the value of known items for a selected slot, displaying a mitigation rating, a survival rating, and an overall rating. These ratings, along with most of the other calculations in the app, were originally based on the fine spreadsheet created by HugeHoss. Huge thanks to Hoss for the help with this project. They have grown, since then, and are now as accurate as possible.
+Rawr is a little windows app, designed to help you design sets of gear for your Bear & Cat. You can play with different items, enchants, and buffs, and see how they affect your tanking stats & dps stats. Based on your current stats, it will also display a graph of the value of known items for a selected slot, displaying a mitigation rating, a survival rating, and an overall rating for Bear, and a dps rating for Cat. The Bear ratings, along with most of the other Bear calculations in the app, were originally based on the fine spreadsheet created by HugeHoss. Most of the Cat calculations are based on Toskk's Cat Calculator and other hard work by Toskk. Huge thanks to Hoss & Toskk for the help with this project. They calculations for both Cat & Bear have grown, since then, and are now as accurate as possible.
 
 
 How Rawr Handles Items
@@ -174,13 +210,13 @@ Now that you have your current character fairly well defined, use the item compa
 
 
 That's about it, let me know how it works (or doesn't) for you! Thanks!
-~Astrylian on Kilrogg, cnervig@hotmail.com
+~Astrylian on Kilrogg (soon transferring to Whisperwind), cnervig@hotmail.com
 
 
 LICENSE
 -------
 
-   Copyright 2007 Chadd Nervig
+   Copyright 2007 Chadd Nervig, "HugeHoss", and "Toskk"
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

@@ -8,39 +8,18 @@ namespace Rawr
 	{
 		//my insides all turned to ash / so slow
 		//and blew away as i collapsed / so cold
-		private int _targetLevel = 73;
 
-		private System.Windows.Forms.Panel _calculationOptionsPanel = null;
-		public override System.Windows.Forms.Panel CalculationOptionsPanel
+		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+		public override CalculationOptionsPanelBase CalculationOptionsPanel
 		{
 			get
 			{
 				if (_calculationOptionsPanel == null)
 				{
-					_calculationOptionsPanel = new System.Windows.Forms.Panel();
-					
-					System.Windows.Forms.Label labelTargetLevel = new System.Windows.Forms.Label();
-					labelTargetLevel.Text = "Target Level: ";
-					labelTargetLevel.AutoSize = true;
-					labelTargetLevel.Location = new System.Drawing.Point(4, 4);
-					_calculationOptionsPanel.Controls.Add(labelTargetLevel);
-
-					System.Windows.Forms.ComboBox comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
-					comboBoxTargetLevel.Items.AddRange(new object[] { "70", "71", "72", "73" });
-					comboBoxTargetLevel.Location = new System.Drawing.Point(labelTargetLevel.Right + 8, 4);
-					comboBoxTargetLevel.SelectedValueChanged += new EventHandler(comboBoxTargetLevel_SelectedValueChanged);
-					comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-					comboBoxTargetLevel.Text = _targetLevel.ToString();
-					_calculationOptionsPanel.Controls.Add(comboBoxTargetLevel);
+					_calculationOptionsPanel = new CalculationOptionsPanelBear();
 				}
 				return _calculationOptionsPanel;
 			}
-		}
-
-		void comboBoxTargetLevel_SelectedValueChanged(object sender, EventArgs e)
-		{
-			_targetLevel = int.Parse((sender as System.Windows.Forms.ComboBox).Text.ToString());
-			if (CachedCharacter != null) CachedCharacter.OnItemsChanged();
 		}
 
 		private string[] _characterDisplayCalculationLabels = null;
@@ -109,21 +88,22 @@ you are being killed by burst damage, focus on Survival Points."
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			_cachedCharacter = character;
+			int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
 			Stats stats = GetCharacterStats(character, additionalItem);
-			float levelDifference = (_targetLevel - 70f) * 0.2f;
+			float levelDifference = (targetLevel - 70f) * 0.2f;
 			CharacterCalculationsBear calculatedStats = new CharacterCalculationsBear();
 			calculatedStats.BasicStats = stats;
-			calculatedStats.TargetLevel = _targetLevel;
+			calculatedStats.TargetLevel = targetLevel;
 			calculatedStats.Miss = 5 + stats.DefenseRating / 60f + stats.Miss - levelDifference;
 			calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, stats.Agility / 14.7059f + stats.DodgeRating / 18.9231f + stats.DefenseRating / 59.134615f - levelDifference);
-			calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * _targetLevel))) * 100f; //(stats.Armor / (stats.Armor + 11959.5f)) * 100f; for only 73s
+			calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f; //(stats.Armor / (stats.Armor + 11959.5f)) * 100f; for only 73s
 			calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
 			calculatedStats.DodgePlusMiss = calculatedStats.Dodge + calculatedStats.Miss;
 			calculatedStats.CritReduction = stats.DefenseRating / 60f + stats.Resilience / 39.423f;
 			calculatedStats.CappedCritReduction = Math.Min(2f + levelDifference, calculatedStats.CritReduction);
 			//Out of 100 attacks, you'll take...
 			float crits = 2f + (0.2f * levelDifference) - calculatedStats.CappedCritReduction;
-			float crushes = _targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (calculatedStats.DodgePlusMiss)), 15f), 0f) : 0f;
+			float crushes = targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (calculatedStats.DodgePlusMiss)), 15f), 0f) : 0f;
 			float hits = Math.Max(100f - (crits + crushes + (calculatedStats.DodgePlusMiss)), 0f);
 			//Apply armor and multipliers for each attack type...
 			crits *= (100f - calculatedStats.CappedMitigation) * .02f;
@@ -190,8 +170,10 @@ you are being killed by burst damage, focus on Survival Points."
 				calcCrush.Name = " Crush ";
 				calcHit.Name = "Hit";
 
-				float crits = 2f + (0.2f * (_targetLevel - 70)) - currentCalculationsBear.CappedCritReduction;
-				float crushes = _targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (currentCalculationsBear.DodgePlusMiss)), 15f), 0f) : 0f;
+
+
+				float crits = 2f + (0.2f * (currentCalculationsBear.TargetLevel - 70)) - currentCalculationsBear.CappedCritReduction;
+				float crushes = currentCalculationsBear.TargetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (currentCalculationsBear.DodgePlusMiss)), 15f), 0f) : 0f;
 				float hits = Math.Max(100f - (crits + crushes + (currentCalculationsBear.DodgePlusMiss)), 0f);
 
 				calcMiss.OverallPoints = calcMiss.MitigationPoints = currentCalculationsBear.Miss;

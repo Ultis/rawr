@@ -78,6 +78,8 @@ namespace Rawr //O O . .
 		public int _finger2Enchant = 0;
 		[System.Xml.Serialization.XmlElement("WeaponEnchant")]
 		public int _weaponEnchant = 0;
+		[System.Xml.Serialization.XmlElement("CalculationOptions")]
+		public string[] _calculationOptionsStrings = new string[0];
 
 
         [System.Xml.Serialization.XmlIgnore]
@@ -416,6 +418,42 @@ namespace Rawr //O O . .
 		{
 			get { return Enchant.FindEnchant(_weaponEnchant, Item.ItemSlot.Weapon); }
 			set { _weaponEnchant = value == null ? 0 : value.Id; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public string[] CalculationOptionsStrings
+		{
+			get { return _calculationOptionsStrings; }
+			set { _calculationOptionsStrings = value; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		private Dictionary<string, string> _calculationOptions = null;
+		[System.Xml.Serialization.XmlIgnore]
+		public Dictionary<string, string> CalculationOptions
+		{
+			get
+			{
+				if (_calculationOptions == null)
+				{
+					_calculationOptions = new Dictionary<string, string>();
+					if (_calculationOptionsStrings != null)
+					{
+						foreach (string calcOpt in _calculationOptionsStrings)
+						{
+							string[] calcOptSplit = calcOpt.Split('=');
+							_calculationOptions.Add(calcOptSplit[0], calcOptSplit[1]);
+						}
+					}
+				}
+				return _calculationOptions;
+			}
+			set { _calculationOptions = value; }
+		}
+		private void SerializeCalculationOptions()
+		{
+			List<string> listCalcOpts = new List<string>();
+			foreach (KeyValuePair<string, string> kvp in _calculationOptions)
+				listCalcOpts.Add(string.Format("{0}={1}", kvp.Key, kvp.Value));
+			_calculationOptionsStrings = listCalcOpts.ToArray();
 		}
 
 		public Enchant GetEnchantBySlot(Item.ItemSlot slot)
@@ -777,11 +815,14 @@ namespace Rawr //O O . .
 						this.Finger2Enchant.Id,
 						this.WeaponEnchant.Id);
 			foreach (string buff in this.ActiveBuffs) clone.ActiveBuffs.Add(buff);
+			SerializeCalculationOptions();
+			clone.CalculationOptionsStrings = CalculationOptionsStrings;
 			return clone;
 		}
     
         public void Save(string path)
         {
+			SerializeCalculationOptions();
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
             StringBuilder sb = new StringBuilder();
             System.IO.StringWriter writer = new System.IO.StringWriter(sb);
@@ -803,7 +844,7 @@ namespace Rawr //O O . .
 					character = (Character)serializer.Deserialize(reader);
 					reader.Close();
 				}
-				catch
+				catch (Exception ex)
 				{
 					MessageBox.Show("There was an error attempting to open this character. Most likely, it was saved with a previous beta of Rawr, and isn't upgradable to the new format. Sorry. Please load your character from the armory to begin.");
 					character = new Character();
