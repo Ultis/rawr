@@ -39,6 +39,7 @@ namespace Rawr
 					
 				textBoxName.DataBindings.Clear();
 				textBoxIcon.DataBindings.Clear();
+/* XXX
 				numericUpDownAgility.DataBindings.Clear();
 				numericUpDownArmor.DataBindings.Clear();
 				numericUpDownDefense.DataBindings.Clear();
@@ -46,11 +47,9 @@ namespace Rawr
 				numericUpDownId.DataBindings.Clear();
 				numericUpDownResil.DataBindings.Clear();
 				numericUpDownStamina.DataBindings.Clear();
-				numericUpDownBonusAgility.DataBindings.Clear();
-				numericUpDownBonusDef.DataBindings.Clear();
-				numericUpDownBonusDodge.DataBindings.Clear();
-				numericUpDownBonusResil.DataBindings.Clear();
-				numericUpDownBonusStamina.DataBindings.Clear();
+*/
+                numericUpDownBonus1.DataBindings.Clear();
+                numericUpDownBonus2.DataBindings.Clear();
 				comboBoxSlot.DataBindings.Clear();
 				comboBoxSocket1.DataBindings.Clear();
 				comboBoxSocket2.DataBindings.Clear();
@@ -59,22 +58,22 @@ namespace Rawr
 				itemButtonGem2.DataBindings.Clear();
 				itemButtonGem3.DataBindings.Clear();
 
+
 				if (selectedItem != null)
 				{
 					textBoxName.DataBindings.Add("Text", selectedItem, "Name");
 					textBoxIcon.DataBindings.Add("Text", selectedItem, "IconPath");
 					numericUpDownId.DataBindings.Add("Value", selectedItem, "Id");
+/*XXX
 					numericUpDownArmor.DataBindings.Add("Value", selectedItem.Stats, "Armor");
 					numericUpDownAgility.DataBindings.Add("Value", selectedItem.Stats, "Agility");
 					numericUpDownDefense.DataBindings.Add("Value", selectedItem.Stats, "DefenseRating");
 					numericUpDownDodge.DataBindings.Add("Value", selectedItem.Stats, "DodgeRating");
 					numericUpDownResil.DataBindings.Add("Value", selectedItem.Stats, "Resilience");
 					numericUpDownStamina.DataBindings.Add("Value", selectedItem.Stats, "Stamina");
-					numericUpDownBonusAgility.DataBindings.Add("Value", selectedItem.Sockets.Stats, "Agility");
-					numericUpDownBonusDef.DataBindings.Add("Value", selectedItem.Sockets.Stats, "DefenseRating");
-					numericUpDownBonusDodge.DataBindings.Add("Value", selectedItem.Sockets.Stats, "DodgeRating");
-					numericUpDownBonusResil.DataBindings.Add("Value", selectedItem.Sockets.Stats, "Resilience");
-					numericUpDownBonusStamina.DataBindings.Add("Value", selectedItem.Sockets.Stats, "Stamina");
+
+*/
+
 					comboBoxSlot.DataBindings.Add("Text", selectedItem, "SlotString");
 					comboBoxSocket1.DataBindings.Add("Text", selectedItem.Sockets, "Color1String");
 					comboBoxSocket2.DataBindings.Add("Text", selectedItem.Sockets, "Color2String");
@@ -82,6 +81,31 @@ namespace Rawr
 					itemButtonGem1.DataBindings.Add("SelectedItemId", selectedItem, "Gem1Id");
 					itemButtonGem2.DataBindings.Add("SelectedItemId", selectedItem, "Gem2Id");
 					itemButtonGem3.DataBindings.Add("SelectedItemId", selectedItem, "Gem3Id");
+
+                    propertyGridStats.SelectedObject = selectedItem.Stats;
+
+                    var socketBonuses = selectedItem.Sockets.Stats.Values(x=> x > 0).GetEnumerator();
+                    if (!socketBonuses.MoveNext())
+                    {
+                        comboBoxBonus1.SelectedIndex = 0;
+                        comboBoxBonus2.SelectedIndex = 0;
+                    }
+                    else
+                    {
+
+                        comboBoxBonus1.SelectedIndex = comboBoxBonus1.Items.IndexOf(Extensions.SpaceCamel(socketBonuses.Current.Key.Name));
+                        numericUpDownBonus1.Value = (decimal)socketBonuses.Current.Value;
+                        if (!socketBonuses.MoveNext())
+                        {
+                            comboBoxBonus2.SelectedIndex = 0;
+                        }
+                        else
+                        {
+
+                            comboBoxBonus2.SelectedIndex = comboBoxBonus1.Items.IndexOf(Extensions.SpaceCamel(socketBonuses.Current.Key.Name));
+                            numericUpDownBonus2.Value = (decimal)socketBonuses.Current.Value;
+                        }
+                    }
 				}
 			}
 		}
@@ -99,8 +123,19 @@ namespace Rawr
 		{
 			InitializeComponent();
 			_character = character;
-			LoadItems();
-			
+            LoadItems();
+
+
+
+            comboBoxBonus1.Tag = numericUpDownBonus1;
+            comboBoxBonus1.Items.Add("None");
+            comboBoxBonus1.Items.AddRange(Stats.StatNames);
+
+
+            comboBoxBonus2.Tag = numericUpDownBonus2;
+            comboBoxBonus2.Items.Add("None");
+            comboBoxBonus2.Items.AddRange(Stats.StatNames);
+
 			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 			this.FormClosing += new FormClosingEventHandler(FormItemEditor_FormClosing);
 		}
@@ -359,5 +394,55 @@ namespace Rawr
 			LoadItems();
 			SelectItem(selectedItem, false);
 		}
+
+        private void comboBoxBonus_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Item selectedItem = SelectedItem.Tag as Item;
+            UpdateStatDataBindings(sender as ComboBox, selectedItem.Sockets.Stats, true);
+        }
+
+        private void comboBoxStat_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Item selectedItem = SelectedItem.Tag as Item;
+            UpdateStatDataBindings(sender as ComboBox, selectedItem.Stats, false);
+        }
+
+        private void UpdateStatDataBindings(ComboBox combo, Stats boundStats, bool clearExistingValue)
+        {
+            if (null != combo)
+            {
+                NumericUpDown ud = (combo.Tag as NumericUpDown);
+                if (ud != null)
+                {
+                    decimal value = ud.Value;
+                    if(clearExistingValue)
+                    {
+                        ud.Value = 0;
+
+                        for (int i = 0; i < ud.DataBindings.Count; i++)
+                        {
+                            ud.DataBindings[i].WriteValue();
+                        }
+                        ud.DataBindings.Clear();
+                        ud.Enabled = (combo.SelectedIndex != 0);
+                    }
+                    
+                    if (ud.Enabled)
+                    {
+                        string v = Extensions.UnSpaceCamel(combo.Items[combo.SelectedIndex].ToString());
+                        ud.DataBindings.Add("Value", boundStats, v);
+                       
+                        if(clearExistingValue)
+                        {
+                            ud.Value = value;
+                            for (int i = 0; i < ud.DataBindings.Count; i++)
+                            {
+                                ud.DataBindings[i].WriteValue();
+                            }
+                        }
+                    }
+                }
+            }
+        }
 	}
 }

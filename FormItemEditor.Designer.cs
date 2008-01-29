@@ -28,166 +28,136 @@ namespace Rawr
         /// </summary>
         private void InitializeComponent()
         {
-			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Head", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Neck", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Shoulders", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Back", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Chest", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Shirt", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("Tabard", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("Wrist", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup9 = new System.Windows.Forms.ListViewGroup("Hands", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup10 = new System.Windows.Forms.ListViewGroup("Waist", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup11 = new System.Windows.Forms.ListViewGroup("Legs", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup12 = new System.Windows.Forms.ListViewGroup("Feet", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup13 = new System.Windows.Forms.ListViewGroup("Finger", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup14 = new System.Windows.Forms.ListViewGroup("Trinket", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup15 = new System.Windows.Forms.ListViewGroup("Weapon", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup16 = new System.Windows.Forms.ListViewGroup("Robe", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup17 = new System.Windows.Forms.ListViewGroup("One Hand", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup18 = new System.Windows.Forms.ListViewGroup("Wand", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup19 = new System.Windows.Forms.ListViewGroup("Idol", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup20 = new System.Windows.Forms.ListViewGroup("Gems", System.Windows.Forms.HorizontalAlignment.Left);
-			this.label1 = new System.Windows.Forms.Label();
-			this.numericUpDownId = new System.Windows.Forms.NumericUpDown();
-			this.textBoxName = new System.Windows.Forms.TextBox();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
-			this.textBoxIcon = new System.Windows.Forms.TextBox();
-			this.comboBoxSlot = new System.Windows.Forms.ComboBox();
-			this.label4 = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
-			this.numericUpDownArmor = new System.Windows.Forms.NumericUpDown();
-			this.label7 = new System.Windows.Forms.Label();
-			this.numericUpDownStamina = new System.Windows.Forms.NumericUpDown();
-			this.label8 = new System.Windows.Forms.Label();
-			this.numericUpDownAgility = new System.Windows.Forms.NumericUpDown();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.numericUpDownResil = new System.Windows.Forms.NumericUpDown();
-			this.label11 = new System.Windows.Forms.Label();
-			this.numericUpDownDefense = new System.Windows.Forms.NumericUpDown();
-			this.label12 = new System.Windows.Forms.Label();
-			this.numericUpDownDodge = new System.Windows.Forms.NumericUpDown();
-			this.label13 = new System.Windows.Forms.Label();
-			this.groupBox3 = new System.Windows.Forms.GroupBox();
-			this.groupBox6 = new System.Windows.Forms.GroupBox();
-			this.numericUpDownBonusResil = new System.Windows.Forms.NumericUpDown();
-			this.label19 = new System.Windows.Forms.Label();
-			this.numericUpDownBonusAgility = new System.Windows.Forms.NumericUpDown();
-			this.label18 = new System.Windows.Forms.Label();
-			this.label17 = new System.Windows.Forms.Label();
-			this.label20 = new System.Windows.Forms.Label();
-			this.numericUpDownBonusDodge = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDownBonusDef = new System.Windows.Forms.NumericUpDown();
-			this.label21 = new System.Windows.Forms.Label();
-			this.numericUpDownBonusStamina = new System.Windows.Forms.NumericUpDown();
-			this.label16 = new System.Windows.Forms.Label();
-			this.label15 = new System.Windows.Forms.Label();
-			this.label14 = new System.Windows.Forms.Label();
-			this.comboBoxSocket3 = new System.Windows.Forms.ComboBox();
-			this.comboBoxSocket2 = new System.Windows.Forms.ComboBox();
-			this.comboBoxSocket1 = new System.Windows.Forms.ComboBox();
-			this.groupBox5 = new System.Windows.Forms.GroupBox();
-			this.label10 = new System.Windows.Forms.Label();
-			this.label9 = new System.Windows.Forms.Label();
-			this.label6 = new System.Windows.Forms.Label();
-			this.itemButtonGem1 = new Rawr.ItemButton();
-			this.itemButtonGem2 = new Rawr.ItemButton();
-			this.itemButtonGem3 = new Rawr.ItemButton();
-			this.buttonOK = new System.Windows.Forms.Button();
-			this.buttonAdd = new System.Windows.Forms.Button();
-			this.buttonDelete = new System.Windows.Forms.Button();
-			this.buttonFillSockets = new System.Windows.Forms.Button();
-			this.listViewItems = new System.Windows.Forms.ListView();
-			this.columnHeaderName = new System.Windows.Forms.ColumnHeader();
-			this.imageListItems = new System.Windows.Forms.ImageList(this.components);
-			this.buttonDuplicate = new System.Windows.Forms.Button();
-			this.textBoxFilter = new System.Windows.Forms.TextBox();
-			this.label22 = new System.Windows.Forms.Label();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownArmor)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownStamina)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownAgility)).BeginInit();
-			this.groupBox1.SuspendLayout();
-			this.groupBox2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownResil)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDefense)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDodge)).BeginInit();
-			this.groupBox3.SuspendLayout();
-			this.groupBox6.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonusResil)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonusAgility)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonusDodge)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonusDef)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonusStamina)).BeginInit();
-			this.groupBox5.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(251, 15);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(38, 13);
-			this.label1.TabIndex = 1;
-			this.label1.Text = "Name:";
-			// 
-			// numericUpDownId
-			// 
-			this.numericUpDownId.Location = new System.Drawing.Point(551, 12);
-			this.numericUpDownId.Maximum = new decimal(new int[] {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Head", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Neck", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Shoulders", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Back", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Chest", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Shirt", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("Tabard", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("Wrist", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup9 = new System.Windows.Forms.ListViewGroup("Hands", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup10 = new System.Windows.Forms.ListViewGroup("Waist", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup11 = new System.Windows.Forms.ListViewGroup("Legs", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup12 = new System.Windows.Forms.ListViewGroup("Feet", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup13 = new System.Windows.Forms.ListViewGroup("Finger", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup14 = new System.Windows.Forms.ListViewGroup("Trinket", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup15 = new System.Windows.Forms.ListViewGroup("Weapon", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup16 = new System.Windows.Forms.ListViewGroup("Robe", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup17 = new System.Windows.Forms.ListViewGroup("One Hand", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup18 = new System.Windows.Forms.ListViewGroup("Wand", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup19 = new System.Windows.Forms.ListViewGroup("Idol", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup20 = new System.Windows.Forms.ListViewGroup("Gems", System.Windows.Forms.HorizontalAlignment.Left);
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericUpDownId = new System.Windows.Forms.NumericUpDown();
+            this.textBoxName = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxIcon = new System.Windows.Forms.TextBox();
+            this.comboBoxSlot = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownBonus2 = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxBonus2 = new System.Windows.Forms.ComboBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.comboBoxSocket3 = new System.Windows.Forms.ComboBox();
+            this.comboBoxSocket2 = new System.Windows.Forms.ComboBox();
+            this.comboBoxSocket1 = new System.Windows.Forms.ComboBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonAdd = new System.Windows.Forms.Button();
+            this.buttonDelete = new System.Windows.Forms.Button();
+            this.buttonFillSockets = new System.Windows.Forms.Button();
+            this.listViewItems = new System.Windows.Forms.ListView();
+            this.columnHeaderName = new System.Windows.Forms.ColumnHeader();
+            this.imageListItems = new System.Windows.Forms.ImageList(this.components);
+            this.buttonDuplicate = new System.Windows.Forms.Button();
+            this.textBoxFilter = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.comboBoxBonus1 = new System.Windows.Forms.ComboBox();
+            this.numericUpDownBonus1 = new System.Windows.Forms.NumericUpDown();
+            this.itemButtonGem1 = new Rawr.ItemButton();
+            this.itemButtonGem2 = new Rawr.ItemButton();
+            this.itemButtonGem3 = new Rawr.ItemButton();
+            this.propertyGridStats = new System.Windows.Forms.PropertyGrid();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonus2)).BeginInit();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonus1)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(251, 15);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(38, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Name:";
+            // 
+            // numericUpDownId
+            // 
+            this.numericUpDownId.Location = new System.Drawing.Point(551, 12);
+            this.numericUpDownId.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
-			this.numericUpDownId.Minimum = new decimal(new int[] {
+            this.numericUpDownId.Minimum = new decimal(new int[] {
             100000,
             0,
             0,
             -2147483648});
-			this.numericUpDownId.Name = "numericUpDownId";
-			this.numericUpDownId.Size = new System.Drawing.Size(109, 20);
-			this.numericUpDownId.TabIndex = 2;
-			// 
-			// textBoxName
-			// 
-			this.textBoxName.Location = new System.Drawing.Point(295, 12);
-			this.textBoxName.Name = "textBoxName";
-			this.textBoxName.Size = new System.Drawing.Size(216, 20);
-			this.textBoxName.TabIndex = 1;
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(517, 15);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(21, 13);
-			this.label2.TabIndex = 1;
-			this.label2.Text = "ID:";
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(251, 41);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(31, 13);
-			this.label3.TabIndex = 1;
-			this.label3.Text = "Icon:";
-			// 
-			// textBoxIcon
-			// 
-			this.textBoxIcon.Location = new System.Drawing.Point(295, 38);
-			this.textBoxIcon.Name = "textBoxIcon";
-			this.textBoxIcon.Size = new System.Drawing.Size(216, 20);
-			this.textBoxIcon.TabIndex = 3;
-			// 
-			// comboBoxSlot
-			// 
-			this.comboBoxSlot.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxSlot.FormattingEnabled = true;
-			this.comboBoxSlot.Items.AddRange(new object[] {
+            this.numericUpDownId.Name = "numericUpDownId";
+            this.numericUpDownId.Size = new System.Drawing.Size(109, 20);
+            this.numericUpDownId.TabIndex = 2;
+            // 
+            // textBoxName
+            // 
+            this.textBoxName.Location = new System.Drawing.Point(295, 12);
+            this.textBoxName.Name = "textBoxName";
+            this.textBoxName.Size = new System.Drawing.Size(216, 20);
+            this.textBoxName.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(517, 15);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(21, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "ID:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(251, 41);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(31, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Icon:";
+            // 
+            // textBoxIcon
+            // 
+            this.textBoxIcon.Location = new System.Drawing.Point(295, 38);
+            this.textBoxIcon.Name = "textBoxIcon";
+            this.textBoxIcon.Size = new System.Drawing.Size(216, 20);
+            this.textBoxIcon.TabIndex = 3;
+            // 
+            // comboBoxSlot
+            // 
+            this.comboBoxSlot.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSlot.FormattingEnabled = true;
+            this.comboBoxSlot.Items.AddRange(new object[] {
             "Head",
             "Neck",
             "Shoulders",
@@ -216,558 +186,269 @@ namespace Rawr
             "Meta",
             "",
             "Prismatic"});
-			this.comboBoxSlot.Location = new System.Drawing.Point(551, 38);
-			this.comboBoxSlot.Name = "comboBoxSlot";
-			this.comboBoxSlot.Size = new System.Drawing.Size(109, 21);
-			this.comboBoxSlot.TabIndex = 4;
-			// 
-			// label4
-			// 
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(517, 41);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(28, 13);
-			this.label4.TabIndex = 1;
-			this.label4.Text = "Slot:";
-			// 
-			// label5
-			// 
-			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(6, 21);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(37, 13);
-			this.label5.TabIndex = 1;
-			this.label5.Text = "Armor:";
-			// 
-			// numericUpDownArmor
-			// 
-			this.numericUpDownArmor.Location = new System.Drawing.Point(54, 19);
-			this.numericUpDownArmor.Maximum = new decimal(new int[] {
-            7777,
-            0,
-            0,
-            0});
-			this.numericUpDownArmor.Name = "numericUpDownArmor";
-			this.numericUpDownArmor.Size = new System.Drawing.Size(62, 20);
-			this.numericUpDownArmor.TabIndex = 0;
-			// 
-			// label7
-			// 
-			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(127, 21);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(48, 13);
-			this.label7.TabIndex = 1;
-			this.label7.Text = "Stamina:";
-			// 
-			// numericUpDownStamina
-			// 
-			this.numericUpDownStamina.Location = new System.Drawing.Point(183, 19);
-			this.numericUpDownStamina.Maximum = new decimal(new int[] {
-            777,
-            0,
-            0,
-            0});
-			this.numericUpDownStamina.Name = "numericUpDownStamina";
-			this.numericUpDownStamina.Size = new System.Drawing.Size(62, 20);
-			this.numericUpDownStamina.TabIndex = 1;
-			// 
-			// label8
-			// 
-			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(257, 21);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(37, 13);
-			this.label8.TabIndex = 1;
-			this.label8.Text = "Agility:";
-			// 
-			// numericUpDownAgility
-			// 
-			this.numericUpDownAgility.Location = new System.Drawing.Point(300, 19);
-			this.numericUpDownAgility.Maximum = new decimal(new int[] {
-            777,
-            0,
-            0,
-            0});
-			this.numericUpDownAgility.Name = "numericUpDownAgility";
-			this.numericUpDownAgility.Size = new System.Drawing.Size(62, 20);
-			this.numericUpDownAgility.TabIndex = 2;
-			// 
-			// groupBox1
-			// 
-			this.groupBox1.Controls.Add(this.numericUpDownAgility);
-			this.groupBox1.Controls.Add(this.label8);
-			this.groupBox1.Controls.Add(this.numericUpDownStamina);
-			this.groupBox1.Controls.Add(this.label7);
-			this.groupBox1.Controls.Add(this.numericUpDownArmor);
-			this.groupBox1.Controls.Add(this.label5);
-			this.groupBox1.Location = new System.Drawing.Point(251, 64);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(409, 45);
-			this.groupBox1.TabIndex = 5;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Stats";
-			// 
-			// groupBox2
-			// 
-			this.groupBox2.Controls.Add(this.numericUpDownResil);
-			this.groupBox2.Controls.Add(this.label11);
-			this.groupBox2.Controls.Add(this.numericUpDownDefense);
-			this.groupBox2.Controls.Add(this.label12);
-			this.groupBox2.Controls.Add(this.numericUpDownDodge);
-			this.groupBox2.Controls.Add(this.label13);
-			this.groupBox2.Location = new System.Drawing.Point(251, 115);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(409, 45);
-			this.groupBox2.TabIndex = 6;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Ratings";
-			// 
-			// numericUpDownResil
-			// 
-			this.numericUpDownResil.Location = new System.Drawing.Point(300, 19);
-			this.numericUpDownResil.Maximum = new decimal(new int[] {
-            777,
-            0,
-            0,
-            0});
-			this.numericUpDownResil.Name = "numericUpDownResil";
-			this.numericUpDownResil.Size = new System.Drawing.Size(62, 20);
-			this.numericUpDownResil.TabIndex = 2;
-			// 
-			// label11
-			// 
-			this.label11.AutoSize = true;
-			this.label11.Location = new System.Drawing.Point(257, 21);
-			this.label11.Name = "label11";
-			this.label11.Size = new System.Drawing.Size(33, 13);
-			this.label11.TabIndex = 1;
-			this.label11.Text = "Resil:";
-			// 
-			// numericUpDownDefense
-			// 
-			this.numericUpDownDefense.Location = new System.Drawing.Point(183, 19);
-			this.numericUpDownDefense.Maximum = new decimal(new int[] {
-            777,
-            0,
-            0,
-            0});
-			this.numericUpDownDefense.Name = "numericUpDownDefense";
-			this.numericUpDownDefense.Size = new System.Drawing.Size(62, 20);
-			this.numericUpDownDefense.TabIndex = 1;
-			// 
-			// label12
-			// 
-			this.label12.AutoSize = true;
-			this.label12.Location = new System.Drawing.Point(127, 21);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(50, 13);
-			this.label12.TabIndex = 1;
-			this.label12.Text = "Defense:";
-			// 
-			// numericUpDownDodge
-			// 
-			this.numericUpDownDodge.Location = new System.Drawing.Point(54, 19);
-			this.numericUpDownDodge.Maximum = new decimal(new int[] {
-            7777,
-            0,
-            0,
-            0});
-			this.numericUpDownDodge.Name = "numericUpDownDodge";
-			this.numericUpDownDodge.Size = new System.Drawing.Size(62, 20);
-			this.numericUpDownDodge.TabIndex = 0;
-			// 
-			// label13
-			// 
-			this.label13.AutoSize = true;
-			this.label13.Location = new System.Drawing.Point(6, 21);
-			this.label13.Name = "label13";
-			this.label13.Size = new System.Drawing.Size(42, 13);
-			this.label13.TabIndex = 1;
-			this.label13.Text = "Dodge:";
-			// 
-			// groupBox3
-			// 
-			this.groupBox3.Controls.Add(this.groupBox6);
-			this.groupBox3.Controls.Add(this.label16);
-			this.groupBox3.Controls.Add(this.label15);
-			this.groupBox3.Controls.Add(this.label14);
-			this.groupBox3.Controls.Add(this.comboBoxSocket3);
-			this.groupBox3.Controls.Add(this.comboBoxSocket2);
-			this.groupBox3.Controls.Add(this.comboBoxSocket1);
-			this.groupBox3.Location = new System.Drawing.Point(251, 166);
-			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(409, 100);
-			this.groupBox3.TabIndex = 7;
-			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = "Sockets";
-			// 
-			// groupBox6
-			// 
-			this.groupBox6.Controls.Add(this.numericUpDownBonusResil);
-			this.groupBox6.Controls.Add(this.label19);
-			this.groupBox6.Controls.Add(this.numericUpDownBonusAgility);
-			this.groupBox6.Controls.Add(this.label18);
-			this.groupBox6.Controls.Add(this.label17);
-			this.groupBox6.Controls.Add(this.label20);
-			this.groupBox6.Controls.Add(this.numericUpDownBonusDodge);
-			this.groupBox6.Controls.Add(this.numericUpDownBonusDef);
-			this.groupBox6.Controls.Add(this.label21);
-			this.groupBox6.Controls.Add(this.numericUpDownBonusStamina);
-			this.groupBox6.Location = new System.Drawing.Point(187, 19);
-			this.groupBox6.Name = "groupBox6";
-			this.groupBox6.Size = new System.Drawing.Size(216, 75);
-			this.groupBox6.TabIndex = 3;
-			this.groupBox6.TabStop = false;
-			this.groupBox6.Text = "Socket Bonus";
-			// 
-			// numericUpDownBonusResil
-			// 
-			this.numericUpDownBonusResil.Location = new System.Drawing.Point(135, 45);
-			this.numericUpDownBonusResil.Maximum = new decimal(new int[] {
-            777,
-            0,
-            0,
-            0});
-			this.numericUpDownBonusResil.Name = "numericUpDownBonusResil";
-			this.numericUpDownBonusResil.Size = new System.Drawing.Size(36, 20);
-			this.numericUpDownBonusResil.TabIndex = 4;
-			// 
-			// label19
-			// 
-			this.label19.AutoSize = true;
-			this.label19.Location = new System.Drawing.Point(96, 47);
-			this.label19.Name = "label19";
-			this.label19.Size = new System.Drawing.Size(33, 13);
-			this.label19.TabIndex = 1;
-			this.label19.Text = "Resil:";
-			// 
-			// numericUpDownBonusAgility
-			// 
-			this.numericUpDownBonusAgility.Location = new System.Drawing.Point(33, 19);
-			this.numericUpDownBonusAgility.Maximum = new decimal(new int[] {
-            777,
-            0,
-            0,
-            0});
-			this.numericUpDownBonusAgility.Name = "numericUpDownBonusAgility";
-			this.numericUpDownBonusAgility.Size = new System.Drawing.Size(36, 20);
-			this.numericUpDownBonusAgility.TabIndex = 0;
-			// 
-			// label18
-			// 
-			this.label18.AutoSize = true;
-			this.label18.Location = new System.Drawing.Point(6, 47);
-			this.label18.Name = "label18";
-			this.label18.Size = new System.Drawing.Size(42, 13);
-			this.label18.TabIndex = 1;
-			this.label18.Text = "Dodge:";
-			// 
-			// label17
-			// 
-			this.label17.AutoSize = true;
-			this.label17.Location = new System.Drawing.Point(145, 21);
-			this.label17.Name = "label17";
-			this.label17.Size = new System.Drawing.Size(27, 13);
-			this.label17.TabIndex = 1;
-			this.label17.Text = "Def:";
-			// 
-			// label20
-			// 
-			this.label20.AutoSize = true;
-			this.label20.Location = new System.Drawing.Point(6, 21);
-			this.label20.Name = "label20";
-			this.label20.Size = new System.Drawing.Size(25, 13);
-			this.label20.TabIndex = 1;
-			this.label20.Text = "Agi:";
-			// 
-			// numericUpDownBonusDodge
-			// 
-			this.numericUpDownBonusDodge.Location = new System.Drawing.Point(54, 45);
-			this.numericUpDownBonusDodge.Maximum = new decimal(new int[] {
-            777,
-            0,
-            0,
-            0});
-			this.numericUpDownBonusDodge.Name = "numericUpDownBonusDodge";
-			this.numericUpDownBonusDodge.Size = new System.Drawing.Size(36, 20);
-			this.numericUpDownBonusDodge.TabIndex = 3;
-			// 
-			// numericUpDownBonusDef
-			// 
-			this.numericUpDownBonusDef.Location = new System.Drawing.Point(174, 19);
-			this.numericUpDownBonusDef.Maximum = new decimal(new int[] {
-            777,
-            0,
-            0,
-            0});
-			this.numericUpDownBonusDef.Name = "numericUpDownBonusDef";
-			this.numericUpDownBonusDef.Size = new System.Drawing.Size(36, 20);
-			this.numericUpDownBonusDef.TabIndex = 2;
-			// 
-			// label21
-			// 
-			this.label21.AutoSize = true;
-			this.label21.Location = new System.Drawing.Point(75, 21);
-			this.label21.Name = "label21";
-			this.label21.Size = new System.Drawing.Size(26, 13);
-			this.label21.TabIndex = 1;
-			this.label21.Text = "Sta:";
-			// 
-			// numericUpDownBonusStamina
-			// 
-			this.numericUpDownBonusStamina.Location = new System.Drawing.Point(103, 19);
-			this.numericUpDownBonusStamina.Maximum = new decimal(new int[] {
-            777,
-            0,
-            0,
-            0});
-			this.numericUpDownBonusStamina.Name = "numericUpDownBonusStamina";
-			this.numericUpDownBonusStamina.Size = new System.Drawing.Size(36, 20);
-			this.numericUpDownBonusStamina.TabIndex = 1;
-			// 
-			// label16
-			// 
-			this.label16.AutoSize = true;
-			this.label16.Location = new System.Drawing.Point(6, 76);
-			this.label16.Name = "label16";
-			this.label16.Size = new System.Drawing.Size(60, 13);
-			this.label16.TabIndex = 1;
-			this.label16.Text = "Socket #3:";
-			// 
-			// label15
-			// 
-			this.label15.AutoSize = true;
-			this.label15.Location = new System.Drawing.Point(6, 49);
-			this.label15.Name = "label15";
-			this.label15.Size = new System.Drawing.Size(60, 13);
-			this.label15.TabIndex = 1;
-			this.label15.Text = "Socket #2:";
-			// 
-			// label14
-			// 
-			this.label14.AutoSize = true;
-			this.label14.Location = new System.Drawing.Point(6, 22);
-			this.label14.Name = "label14";
-			this.label14.Size = new System.Drawing.Size(60, 13);
-			this.label14.TabIndex = 1;
-			this.label14.Text = "Socket #1:";
-			// 
-			// comboBoxSocket3
-			// 
-			this.comboBoxSocket3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxSocket3.FormattingEnabled = true;
-			this.comboBoxSocket3.Items.AddRange(new object[] {
+            this.comboBoxSlot.Location = new System.Drawing.Point(551, 38);
+            this.comboBoxSlot.Name = "comboBoxSlot";
+            this.comboBoxSlot.Size = new System.Drawing.Size(109, 21);
+            this.comboBoxSlot.TabIndex = 4;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(517, 41);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(28, 13);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "Slot:";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.groupBox6);
+            this.groupBox3.Controls.Add(this.label16);
+            this.groupBox3.Controls.Add(this.label15);
+            this.groupBox3.Controls.Add(this.label14);
+            this.groupBox3.Controls.Add(this.comboBoxSocket3);
+            this.groupBox3.Controls.Add(this.comboBoxSocket2);
+            this.groupBox3.Controls.Add(this.comboBoxSocket1);
+            this.groupBox3.Location = new System.Drawing.Point(251, 65);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(226, 181);
+            this.groupBox3.TabIndex = 7;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Sockets";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.numericUpDownBonus2);
+            this.groupBox6.Controls.Add(this.comboBoxBonus2);
+            this.groupBox6.Controls.Add(this.numericUpDownBonus1);
+            this.groupBox6.Controls.Add(this.comboBoxBonus1);
+            this.groupBox6.Location = new System.Drawing.Point(9, 100);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(210, 75);
+            this.groupBox6.TabIndex = 3;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Socket Bonus";
+            // 
+            // numericUpDownBonus2
+            // 
+            this.numericUpDownBonus2.Enabled = false;
+            this.numericUpDownBonus2.Location = new System.Drawing.Point(151, 49);
+            this.numericUpDownBonus2.Name = "numericUpDownBonus2";
+            this.numericUpDownBonus2.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownBonus2.TabIndex = 3;
+            // 
+            // comboBoxBonus2
+            // 
+            this.comboBoxBonus2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBonus2.FormattingEnabled = true;
+            this.comboBoxBonus2.Location = new System.Drawing.Point(6, 48);
+            this.comboBoxBonus2.Name = "comboBoxBonus2";
+            this.comboBoxBonus2.Size = new System.Drawing.Size(139, 21);
+            this.comboBoxBonus2.TabIndex = 2;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(63, 76);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(60, 13);
+            this.label16.TabIndex = 1;
+            this.label16.Text = "Socket #3:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(63, 49);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(60, 13);
+            this.label15.TabIndex = 1;
+            this.label15.Text = "Socket #2:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(63, 22);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(60, 13);
+            this.label14.TabIndex = 1;
+            this.label14.Text = "Socket #1:";
+            // 
+            // comboBoxSocket3
+            // 
+            this.comboBoxSocket3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSocket3.FormattingEnabled = true;
+            this.comboBoxSocket3.Items.AddRange(new object[] {
             "None",
             "Red",
             "Blue",
             "Yellow",
             "Meta"});
-			this.comboBoxSocket3.Location = new System.Drawing.Point(72, 73);
-			this.comboBoxSocket3.Name = "comboBoxSocket3";
-			this.comboBoxSocket3.Size = new System.Drawing.Size(109, 21);
-			this.comboBoxSocket3.TabIndex = 2;
-			this.comboBoxSocket3.TextChanged += new System.EventHandler(this.comboBoxSocket_TextChanged);
-			// 
-			// comboBoxSocket2
-			// 
-			this.comboBoxSocket2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxSocket2.FormattingEnabled = true;
-			this.comboBoxSocket2.Items.AddRange(new object[] {
+            this.comboBoxSocket3.Location = new System.Drawing.Point(129, 73);
+            this.comboBoxSocket3.Name = "comboBoxSocket3";
+            this.comboBoxSocket3.Size = new System.Drawing.Size(82, 21);
+            this.comboBoxSocket3.TabIndex = 2;
+            this.comboBoxSocket3.TextChanged += new System.EventHandler(this.comboBoxSocket_TextChanged);
+            // 
+            // comboBoxSocket2
+            // 
+            this.comboBoxSocket2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSocket2.FormattingEnabled = true;
+            this.comboBoxSocket2.Items.AddRange(new object[] {
             "None",
             "Red",
             "Blue",
             "Yellow",
             "Meta"});
-			this.comboBoxSocket2.Location = new System.Drawing.Point(72, 46);
-			this.comboBoxSocket2.Name = "comboBoxSocket2";
-			this.comboBoxSocket2.Size = new System.Drawing.Size(109, 21);
-			this.comboBoxSocket2.TabIndex = 1;
-			this.comboBoxSocket2.TextChanged += new System.EventHandler(this.comboBoxSocket_TextChanged);
-			// 
-			// comboBoxSocket1
-			// 
-			this.comboBoxSocket1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxSocket1.FormattingEnabled = true;
-			this.comboBoxSocket1.Items.AddRange(new object[] {
+            this.comboBoxSocket2.Location = new System.Drawing.Point(129, 46);
+            this.comboBoxSocket2.Name = "comboBoxSocket2";
+            this.comboBoxSocket2.Size = new System.Drawing.Size(82, 21);
+            this.comboBoxSocket2.TabIndex = 1;
+            this.comboBoxSocket2.TextChanged += new System.EventHandler(this.comboBoxSocket_TextChanged);
+            // 
+            // comboBoxSocket1
+            // 
+            this.comboBoxSocket1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSocket1.FormattingEnabled = true;
+            this.comboBoxSocket1.Items.AddRange(new object[] {
             "None",
             "Red",
             "Blue",
             "Yellow",
             "Meta"});
-			this.comboBoxSocket1.Location = new System.Drawing.Point(72, 19);
-			this.comboBoxSocket1.Name = "comboBoxSocket1";
-			this.comboBoxSocket1.Size = new System.Drawing.Size(109, 21);
-			this.comboBoxSocket1.TabIndex = 0;
-			this.comboBoxSocket1.TextChanged += new System.EventHandler(this.comboBoxSocket_TextChanged);
-			// 
-			// groupBox5
-			// 
-			this.groupBox5.Controls.Add(this.label10);
-			this.groupBox5.Controls.Add(this.label9);
-			this.groupBox5.Controls.Add(this.label6);
-			this.groupBox5.Controls.Add(this.itemButtonGem1);
-			this.groupBox5.Controls.Add(this.itemButtonGem2);
-			this.groupBox5.Controls.Add(this.itemButtonGem3);
-			this.groupBox5.Location = new System.Drawing.Point(251, 272);
-			this.groupBox5.Name = "groupBox5";
-			this.groupBox5.Size = new System.Drawing.Size(409, 95);
-			this.groupBox5.TabIndex = 8;
-			this.groupBox5.TabStop = false;
-			this.groupBox5.Text = "Gems";
-			// 
-			// label10
-			// 
-			this.label10.AutoSize = true;
-			this.label10.Location = new System.Drawing.Point(266, 19);
-			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(48, 13);
-			this.label10.TabIndex = 1;
-			this.label10.Text = "Gem #3:";
-			// 
-			// label9
-			// 
-			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(136, 19);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(48, 13);
-			this.label9.TabIndex = 1;
-			this.label9.Text = "Gem #2:";
-			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(6, 19);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(48, 13);
-			this.label6.TabIndex = 1;
-			this.label6.Text = "Gem #1:";
-			// 
-			// itemButtonGem1
-			// 
-			this.itemButtonGem1.Character = null;
-			this.itemButtonGem1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.itemButtonGem1.Location = new System.Drawing.Point(60, 15);
-			this.itemButtonGem1.Name = "itemButtonGem1";
-			this.itemButtonGem1.SelectedItem = null;
-			this.itemButtonGem1.SelectedItemId = 0;
-			this.itemButtonGem1.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonGem1.TabIndex = 0;
-			this.itemButtonGem1.Text = "Gem #1";
-			this.itemButtonGem1.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonGem2
-			// 
-			this.itemButtonGem2.Character = null;
-			this.itemButtonGem2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.itemButtonGem2.Location = new System.Drawing.Point(190, 15);
-			this.itemButtonGem2.Name = "itemButtonGem2";
-			this.itemButtonGem2.SelectedItem = null;
-			this.itemButtonGem2.SelectedItemId = 0;
-			this.itemButtonGem2.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonGem2.TabIndex = 1;
-			this.itemButtonGem2.Text = "Gem #2";
-			this.itemButtonGem2.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonGem3
-			// 
-			this.itemButtonGem3.Character = null;
-			this.itemButtonGem3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.itemButtonGem3.Location = new System.Drawing.Point(320, 15);
-			this.itemButtonGem3.Name = "itemButtonGem3";
-			this.itemButtonGem3.SelectedItem = null;
-			this.itemButtonGem3.SelectedItemId = 0;
-			this.itemButtonGem3.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonGem3.TabIndex = 2;
-			this.itemButtonGem3.Text = "Gem #3";
-			this.itemButtonGem3.UseVisualStyleBackColor = true;
-			// 
-			// buttonOK
-			// 
-			this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.buttonOK.Location = new System.Drawing.Point(585, 377);
-			this.buttonOK.Name = "buttonOK";
-			this.buttonOK.Size = new System.Drawing.Size(75, 23);
-			this.buttonOK.TabIndex = 13;
-			this.buttonOK.Text = "OK";
-			this.buttonOK.UseVisualStyleBackColor = true;
-			// 
-			// buttonAdd
-			// 
-			this.buttonAdd.Location = new System.Drawing.Point(12, 377);
-			this.buttonAdd.Name = "buttonAdd";
-			this.buttonAdd.Size = new System.Drawing.Size(75, 23);
-			this.buttonAdd.TabIndex = 9;
-			this.buttonAdd.Text = "Add...";
-			this.buttonAdd.UseVisualStyleBackColor = true;
-			this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
-			// 
-			// buttonDelete
-			// 
-			this.buttonDelete.Location = new System.Drawing.Point(93, 377);
-			this.buttonDelete.Name = "buttonDelete";
-			this.buttonDelete.Size = new System.Drawing.Size(75, 23);
-			this.buttonDelete.TabIndex = 10;
-			this.buttonDelete.Text = "Delete";
-			this.buttonDelete.UseVisualStyleBackColor = true;
-			this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
-			// 
-			// buttonFillSockets
-			// 
-			this.buttonFillSockets.AutoSize = true;
-			this.buttonFillSockets.Location = new System.Drawing.Point(255, 377);
-			this.buttonFillSockets.Name = "buttonFillSockets";
-			this.buttonFillSockets.Size = new System.Drawing.Size(80, 23);
-			this.buttonFillSockets.TabIndex = 12;
-			this.buttonFillSockets.Text = "Fill Sockets...";
-			this.buttonFillSockets.UseVisualStyleBackColor = true;
-			this.buttonFillSockets.Click += new System.EventHandler(this.buttonFillSockets_Click);
-			// 
-			// listViewItems
-			// 
-			this.listViewItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.comboBoxSocket1.Location = new System.Drawing.Point(129, 19);
+            this.comboBoxSocket1.Name = "comboBoxSocket1";
+            this.comboBoxSocket1.Size = new System.Drawing.Size(82, 21);
+            this.comboBoxSocket1.TabIndex = 0;
+            this.comboBoxSocket1.TextChanged += new System.EventHandler(this.comboBoxSocket_TextChanged);
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.label10);
+            this.groupBox5.Controls.Add(this.label9);
+            this.groupBox5.Controls.Add(this.label6);
+            this.groupBox5.Controls.Add(this.itemButtonGem1);
+            this.groupBox5.Controls.Add(this.itemButtonGem2);
+            this.groupBox5.Controls.Add(this.itemButtonGem3);
+            this.groupBox5.Location = new System.Drawing.Point(251, 252);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(409, 95);
+            this.groupBox5.TabIndex = 8;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Gems";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(266, 19);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(48, 13);
+            this.label10.TabIndex = 1;
+            this.label10.Text = "Gem #3:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(136, 19);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(48, 13);
+            this.label9.TabIndex = 1;
+            this.label9.Text = "Gem #2:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 19);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(48, 13);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "Gem #1:";
+            // 
+            // buttonOK
+            // 
+            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonOK.Location = new System.Drawing.Point(584, 353);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
+            this.buttonOK.TabIndex = 13;
+            this.buttonOK.Text = "OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            // 
+            // buttonAdd
+            // 
+            this.buttonAdd.Location = new System.Drawing.Point(11, 353);
+            this.buttonAdd.Name = "buttonAdd";
+            this.buttonAdd.Size = new System.Drawing.Size(75, 23);
+            this.buttonAdd.TabIndex = 9;
+            this.buttonAdd.Text = "Add...";
+            this.buttonAdd.UseVisualStyleBackColor = true;
+            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
+            // 
+            // buttonDelete
+            // 
+            this.buttonDelete.Location = new System.Drawing.Point(92, 353);
+            this.buttonDelete.Name = "buttonDelete";
+            this.buttonDelete.Size = new System.Drawing.Size(75, 23);
+            this.buttonDelete.TabIndex = 10;
+            this.buttonDelete.Text = "Delete";
+            this.buttonDelete.UseVisualStyleBackColor = true;
+            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
+            // 
+            // buttonFillSockets
+            // 
+            this.buttonFillSockets.AutoSize = true;
+            this.buttonFillSockets.Location = new System.Drawing.Point(254, 353);
+            this.buttonFillSockets.Name = "buttonFillSockets";
+            this.buttonFillSockets.Size = new System.Drawing.Size(80, 23);
+            this.buttonFillSockets.TabIndex = 12;
+            this.buttonFillSockets.Text = "Fill Sockets...";
+            this.buttonFillSockets.UseVisualStyleBackColor = true;
+            this.buttonFillSockets.Click += new System.EventHandler(this.buttonFillSockets_Click);
+            // 
+            // listViewItems
+            // 
+            this.listViewItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName});
-			listViewGroup1.Header = "Head";
-			listViewGroup1.Name = "listViewGroupHead";
-			listViewGroup2.Header = "Neck";
-			listViewGroup2.Name = "listViewGroupNeck";
-			listViewGroup3.Header = "Shoulders";
-			listViewGroup3.Name = "listViewGroupShoulders";
-			listViewGroup4.Header = "Back";
-			listViewGroup4.Name = "listViewGroupBack";
-			listViewGroup5.Header = "Chest";
-			listViewGroup5.Name = "listViewGroupChest";
-			listViewGroup6.Header = "Shirt";
-			listViewGroup6.Name = "listViewGroupShirt";
-			listViewGroup7.Header = "Tabard";
-			listViewGroup7.Name = "listViewGroupTabard";
-			listViewGroup8.Header = "Wrist";
-			listViewGroup8.Name = "listViewGroupWrist";
-			listViewGroup9.Header = "Hands";
-			listViewGroup9.Name = "listViewGroupHands";
-			listViewGroup10.Header = "Waist";
-			listViewGroup10.Name = "listViewGroupWaist";
-			listViewGroup11.Header = "Legs";
-			listViewGroup11.Name = "listViewGroupLegs";
-			listViewGroup12.Header = "Feet";
-			listViewGroup12.Name = "listViewGroupFeet";
-			listViewGroup13.Header = "Finger";
-			listViewGroup13.Name = "listViewGroupFinger";
-			listViewGroup14.Header = "Trinket";
-			listViewGroup14.Name = "listViewGroupTrinket";
-			listViewGroup15.Header = "Weapon";
-			listViewGroup15.Name = "listViewGroupWeapon";
-			listViewGroup16.Header = "Robe";
-			listViewGroup16.Name = "listViewGroupRobe";
-			listViewGroup17.Header = "One Hand";
-			listViewGroup17.Name = "listViewGroupOneHand";
-			listViewGroup18.Header = "Wand";
-			listViewGroup18.Name = "listViewGroupWand";
-			listViewGroup19.Header = "Idol";
-			listViewGroup19.Name = "listViewGroupIdol";
-			listViewGroup20.Header = "Gems";
-			listViewGroup20.Name = "listViewGroupGems";
-			this.listViewItems.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1.Header = "Head";
+            listViewGroup1.Name = "listViewGroupHead";
+            listViewGroup2.Header = "Neck";
+            listViewGroup2.Name = "listViewGroupNeck";
+            listViewGroup3.Header = "Shoulders";
+            listViewGroup3.Name = "listViewGroupShoulders";
+            listViewGroup4.Header = "Back";
+            listViewGroup4.Name = "listViewGroupBack";
+            listViewGroup5.Header = "Chest";
+            listViewGroup5.Name = "listViewGroupChest";
+            listViewGroup6.Header = "Shirt";
+            listViewGroup6.Name = "listViewGroupShirt";
+            listViewGroup7.Header = "Tabard";
+            listViewGroup7.Name = "listViewGroupTabard";
+            listViewGroup8.Header = "Wrist";
+            listViewGroup8.Name = "listViewGroupWrist";
+            listViewGroup9.Header = "Hands";
+            listViewGroup9.Name = "listViewGroupHands";
+            listViewGroup10.Header = "Waist";
+            listViewGroup10.Name = "listViewGroupWaist";
+            listViewGroup11.Header = "Legs";
+            listViewGroup11.Name = "listViewGroupLegs";
+            listViewGroup12.Header = "Feet";
+            listViewGroup12.Name = "listViewGroupFeet";
+            listViewGroup13.Header = "Finger";
+            listViewGroup13.Name = "listViewGroupFinger";
+            listViewGroup14.Header = "Trinket";
+            listViewGroup14.Name = "listViewGroupTrinket";
+            listViewGroup15.Header = "Weapon";
+            listViewGroup15.Name = "listViewGroupWeapon";
+            listViewGroup16.Header = "Robe";
+            listViewGroup16.Name = "listViewGroupRobe";
+            listViewGroup17.Header = "One Hand";
+            listViewGroup17.Name = "listViewGroupOneHand";
+            listViewGroup18.Header = "Wand";
+            listViewGroup18.Name = "listViewGroupWand";
+            listViewGroup19.Header = "Idol";
+            listViewGroup19.Name = "listViewGroupIdol";
+            listViewGroup20.Header = "Gems";
+            listViewGroup20.Name = "listViewGroupGems";
+            this.listViewItems.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
             listViewGroup1,
             listViewGroup2,
             listViewGroup3,
@@ -788,110 +469,161 @@ namespace Rawr
             listViewGroup18,
             listViewGroup19,
             listViewGroup20});
-			this.listViewItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-			this.listViewItems.Location = new System.Drawing.Point(12, 38);
-			this.listViewItems.MultiSelect = false;
-			this.listViewItems.Name = "listViewItems";
-			this.listViewItems.Size = new System.Drawing.Size(233, 329);
-			this.listViewItems.SmallImageList = this.imageListItems;
-			this.listViewItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
-			this.listViewItems.TabIndex = 0;
-			this.listViewItems.UseCompatibleStateImageBehavior = false;
-			this.listViewItems.View = System.Windows.Forms.View.Details;
-			this.listViewItems.SelectedIndexChanged += new System.EventHandler(this.listViewItems_SelectedIndexChanged);
-			// 
-			// columnHeaderName
-			// 
-			this.columnHeaderName.Width = 229;
-			// 
-			// imageListItems
-			// 
-			this.imageListItems.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-			this.imageListItems.ImageSize = new System.Drawing.Size(32, 32);
-			this.imageListItems.TransparentColor = System.Drawing.Color.Transparent;
-			// 
-			// buttonDuplicate
-			// 
-			this.buttonDuplicate.Location = new System.Drawing.Point(174, 377);
-			this.buttonDuplicate.Name = "buttonDuplicate";
-			this.buttonDuplicate.Size = new System.Drawing.Size(75, 23);
-			this.buttonDuplicate.TabIndex = 11;
-			this.buttonDuplicate.Text = "Duplicate";
-			this.buttonDuplicate.UseVisualStyleBackColor = true;
-			this.buttonDuplicate.Click += new System.EventHandler(this.buttonDuplicate_Click);
-			// 
-			// textBoxFilter
-			// 
-			this.textBoxFilter.Location = new System.Drawing.Point(50, 12);
-			this.textBoxFilter.Name = "textBoxFilter";
-			this.textBoxFilter.Size = new System.Drawing.Size(195, 20);
-			this.textBoxFilter.TabIndex = 15;
-			this.textBoxFilter.TextChanged += new System.EventHandler(this.textBoxFilter_TextChanged);
-			// 
-			// label22
-			// 
-			this.label22.AutoSize = true;
-			this.label22.Location = new System.Drawing.Point(12, 15);
-			this.label22.Name = "label22";
-			this.label22.Size = new System.Drawing.Size(32, 13);
-			this.label22.TabIndex = 14;
-			this.label22.Text = "Filter:";
-			// 
-			// FormItemEditor
-			// 
-			this.AcceptButton = this.buttonOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(672, 416);
-			this.ControlBox = false;
-			this.Controls.Add(this.textBoxFilter);
-			this.Controls.Add(this.label22);
-			this.Controls.Add(this.listViewItems);
-			this.Controls.Add(this.buttonDuplicate);
-			this.Controls.Add(this.buttonFillSockets);
-			this.Controls.Add(this.buttonDelete);
-			this.Controls.Add(this.buttonAdd);
-			this.Controls.Add(this.buttonOK);
-			this.Controls.Add(this.groupBox5);
-			this.Controls.Add(this.groupBox3);
-			this.Controls.Add(this.groupBox2);
-			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.comboBoxSlot);
-			this.Controls.Add(this.textBoxIcon);
-			this.Controls.Add(this.textBoxName);
-			this.Controls.Add(this.numericUpDownId);
-			this.Controls.Add(this.label4);
-			this.Controls.Add(this.label3);
-			this.Controls.Add(this.label2);
-			this.Controls.Add(this.label1);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.Name = "FormItemEditor";
-			this.Text = "Item Editor...";
-			this.Load += new System.EventHandler(this.FormItemEditor_Load);
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownArmor)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownStamina)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownAgility)).EndInit();
-			this.groupBox1.ResumeLayout(false);
-			this.groupBox1.PerformLayout();
-			this.groupBox2.ResumeLayout(false);
-			this.groupBox2.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownResil)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDefense)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDodge)).EndInit();
-			this.groupBox3.ResumeLayout(false);
-			this.groupBox3.PerformLayout();
-			this.groupBox6.ResumeLayout(false);
-			this.groupBox6.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonusResil)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonusAgility)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonusDodge)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonusDef)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonusStamina)).EndInit();
-			this.groupBox5.ResumeLayout(false);
-			this.groupBox5.PerformLayout();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+            this.listViewItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewItems.Location = new System.Drawing.Point(12, 38);
+            this.listViewItems.MultiSelect = false;
+            this.listViewItems.Name = "listViewItems";
+            this.listViewItems.Size = new System.Drawing.Size(233, 309);
+            this.listViewItems.SmallImageList = this.imageListItems;
+            this.listViewItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.listViewItems.TabIndex = 0;
+            this.listViewItems.UseCompatibleStateImageBehavior = false;
+            this.listViewItems.View = System.Windows.Forms.View.Details;
+            this.listViewItems.SelectedIndexChanged += new System.EventHandler(this.listViewItems_SelectedIndexChanged);
+            // 
+            // columnHeaderName
+            // 
+            this.columnHeaderName.Width = 229;
+            // 
+            // imageListItems
+            // 
+            this.imageListItems.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.imageListItems.ImageSize = new System.Drawing.Size(32, 32);
+            this.imageListItems.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // buttonDuplicate
+            // 
+            this.buttonDuplicate.Location = new System.Drawing.Point(173, 353);
+            this.buttonDuplicate.Name = "buttonDuplicate";
+            this.buttonDuplicate.Size = new System.Drawing.Size(75, 23);
+            this.buttonDuplicate.TabIndex = 11;
+            this.buttonDuplicate.Text = "Duplicate";
+            this.buttonDuplicate.UseVisualStyleBackColor = true;
+            this.buttonDuplicate.Click += new System.EventHandler(this.buttonDuplicate_Click);
+            // 
+            // textBoxFilter
+            // 
+            this.textBoxFilter.Location = new System.Drawing.Point(50, 12);
+            this.textBoxFilter.Name = "textBoxFilter";
+            this.textBoxFilter.Size = new System.Drawing.Size(195, 20);
+            this.textBoxFilter.TabIndex = 15;
+            this.textBoxFilter.TextChanged += new System.EventHandler(this.textBoxFilter_TextChanged);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(12, 15);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(32, 13);
+            this.label22.TabIndex = 14;
+            this.label22.Text = "Filter:";
+            // 
+            // comboBoxBonus1
+            // 
+            this.comboBoxBonus1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBonus1.FormattingEnabled = true;
+            this.comboBoxBonus1.Location = new System.Drawing.Point(6, 19);
+            this.comboBoxBonus1.Name = "comboBoxBonus1";
+            this.comboBoxBonus1.Size = new System.Drawing.Size(139, 21);
+            this.comboBoxBonus1.TabIndex = 0;
+            this.comboBoxBonus1.SelectedIndexChanged += new System.EventHandler(this.comboBoxBonus_SelectedIndexChanged);
+            // 
+            // numericUpDownBonus1
+            // 
+            this.numericUpDownBonus1.Enabled = false;
+            this.numericUpDownBonus1.Location = new System.Drawing.Point(151, 19);
+            this.numericUpDownBonus1.Name = "numericUpDownBonus1";
+            this.numericUpDownBonus1.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownBonus1.TabIndex = 1;
+            // 
+            // itemButtonGem1
+            // 
+            this.itemButtonGem1.Character = null;
+            this.itemButtonGem1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.itemButtonGem1.Location = new System.Drawing.Point(60, 15);
+            this.itemButtonGem1.Name = "itemButtonGem1";
+            this.itemButtonGem1.SelectedItem = null;
+            this.itemButtonGem1.SelectedItemId = 0;
+            this.itemButtonGem1.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonGem1.TabIndex = 0;
+            this.itemButtonGem1.Text = "Gem #1";
+            this.itemButtonGem1.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonGem2
+            // 
+            this.itemButtonGem2.Character = null;
+            this.itemButtonGem2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.itemButtonGem2.Location = new System.Drawing.Point(190, 15);
+            this.itemButtonGem2.Name = "itemButtonGem2";
+            this.itemButtonGem2.SelectedItem = null;
+            this.itemButtonGem2.SelectedItemId = 0;
+            this.itemButtonGem2.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonGem2.TabIndex = 1;
+            this.itemButtonGem2.Text = "Gem #2";
+            this.itemButtonGem2.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonGem3
+            // 
+            this.itemButtonGem3.Character = null;
+            this.itemButtonGem3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.itemButtonGem3.Location = new System.Drawing.Point(320, 15);
+            this.itemButtonGem3.Name = "itemButtonGem3";
+            this.itemButtonGem3.SelectedItem = null;
+            this.itemButtonGem3.SelectedItemId = 0;
+            this.itemButtonGem3.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonGem3.TabIndex = 2;
+            this.itemButtonGem3.Text = "Gem #3";
+            this.itemButtonGem3.UseVisualStyleBackColor = true;
+            // 
+            // propertyGridStats
+            // 
+            this.propertyGridStats.HelpVisible = false;
+            this.propertyGridStats.Location = new System.Drawing.Point(484, 65);
+            this.propertyGridStats.Name = "propertyGridStats";
+            this.propertyGridStats.Size = new System.Drawing.Size(176, 181);
+            this.propertyGridStats.TabIndex = 16;
+            this.propertyGridStats.ToolbarVisible = false;
+            // 
+            // FormItemEditor
+            // 
+            this.AcceptButton = this.buttonOK;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(672, 383);
+            this.ControlBox = false;
+            this.Controls.Add(this.propertyGridStats);
+            this.Controls.Add(this.textBoxFilter);
+            this.Controls.Add(this.label22);
+            this.Controls.Add(this.listViewItems);
+            this.Controls.Add(this.buttonDuplicate);
+            this.Controls.Add(this.buttonFillSockets);
+            this.Controls.Add(this.buttonDelete);
+            this.Controls.Add(this.buttonAdd);
+            this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.comboBoxSlot);
+            this.Controls.Add(this.textBoxIcon);
+            this.Controls.Add(this.textBoxName);
+            this.Controls.Add(this.numericUpDownId);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Name = "FormItemEditor";
+            this.Text = "Item Editor...";
+            this.Load += new System.EventHandler(this.FormItemEditor_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonus2)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonus1)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -905,34 +637,10 @@ namespace Rawr
         private System.Windows.Forms.TextBox textBoxIcon;
         private System.Windows.Forms.ComboBox comboBoxSlot;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numericUpDownArmor;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.NumericUpDown numericUpDownStamina;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.NumericUpDown numericUpDownAgility;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.NumericUpDown numericUpDownResil;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.NumericUpDown numericUpDownDefense;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.NumericUpDown numericUpDownDodge;
-        private System.Windows.Forms.Label label13;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.NumericUpDown numericUpDownBonusDef;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.NumericUpDown numericUpDownBonusDodge;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.NumericUpDown numericUpDownBonusResil;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.NumericUpDown numericUpDownBonusAgility;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.NumericUpDown numericUpDownBonusStamina;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
@@ -954,5 +662,10 @@ namespace Rawr
 		private System.Windows.Forms.Button buttonDuplicate;
 		private System.Windows.Forms.TextBox textBoxFilter;
 		private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.NumericUpDown numericUpDownBonus2;
+        private System.Windows.Forms.ComboBox comboBoxBonus2;
+        private System.Windows.Forms.ComboBox comboBoxBonus1;
+        private System.Windows.Forms.NumericUpDown numericUpDownBonus1;
+        private System.Windows.Forms.PropertyGrid propertyGridStats;
     }
 }
