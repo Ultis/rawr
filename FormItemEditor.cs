@@ -39,15 +39,8 @@ namespace Rawr
 					
 				textBoxName.DataBindings.Clear();
 				textBoxIcon.DataBindings.Clear();
-/* XXX
-				numericUpDownAgility.DataBindings.Clear();
-				numericUpDownArmor.DataBindings.Clear();
-				numericUpDownDefense.DataBindings.Clear();
-				numericUpDownDodge.DataBindings.Clear();
-				numericUpDownId.DataBindings.Clear();
-				numericUpDownResil.DataBindings.Clear();
-				numericUpDownStamina.DataBindings.Clear();
-*/
+
+                numericUpDownId.DataBindings.Clear();
                 numericUpDownBonus1.DataBindings.Clear();
                 numericUpDownBonus2.DataBindings.Clear();
 				comboBoxSlot.DataBindings.Clear();
@@ -64,15 +57,6 @@ namespace Rawr
 					textBoxName.DataBindings.Add("Text", selectedItem, "Name");
 					textBoxIcon.DataBindings.Add("Text", selectedItem, "IconPath");
 					numericUpDownId.DataBindings.Add("Value", selectedItem, "Id");
-/*XXX
-					numericUpDownArmor.DataBindings.Add("Value", selectedItem.Stats, "Armor");
-					numericUpDownAgility.DataBindings.Add("Value", selectedItem.Stats, "Agility");
-					numericUpDownDefense.DataBindings.Add("Value", selectedItem.Stats, "DefenseRating");
-					numericUpDownDodge.DataBindings.Add("Value", selectedItem.Stats, "DodgeRating");
-					numericUpDownResil.DataBindings.Add("Value", selectedItem.Stats, "Resilience");
-					numericUpDownStamina.DataBindings.Add("Value", selectedItem.Stats, "Stamina");
-
-*/
 
 					comboBoxSlot.DataBindings.Add("Text", selectedItem, "SlotString");
 					comboBoxSocket1.DataBindings.Add("Text", selectedItem.Sockets, "Color1String");
