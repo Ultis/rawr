@@ -88,7 +88,7 @@ namespace Rawr
 
 		void _menuItemRefresh_Click(object sender, EventArgs e)
 		{
-			//ItemCache.DeleteItem(_item);
+			ItemCache.DeleteItem(_item);
 			Item newItem = Item.LoadFromId(_item.GemmedId, true, "Refreshing");
 			if (newItem == null)
 			{

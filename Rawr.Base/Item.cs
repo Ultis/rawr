@@ -17,7 +17,7 @@ namespace Rawr
 	}
 
 	[Serializable]
-	public class Item
+	public class Item :IComparable<Item>
 	{
 		[System.Xml.Serialization.XmlElement("Name")]
 		public string _name;
@@ -410,7 +410,17 @@ namespace Rawr
 				return newItem;
 			}
 		}
-	}
+
+
+        #region IComparable<Item> Members
+
+        public int CompareTo(Item other)
+        {
+            return ToString().CompareTo(other.ToString());
+        }
+
+        #endregion
+    }
 
 	[Serializable]
 	public class Sockets
