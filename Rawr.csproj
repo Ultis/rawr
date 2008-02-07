@@ -81,45 +81,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Armory.cs" />
-    <Compile Include="Buff.cs" />
     <Compile Include="BuffSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="BuffSelector.Designer.cs">
       <DependentUpon>BuffSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="CalculationOptionsPanelBear.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CalculationOptionsPanelBear.Designer.cs">
-      <DependentUpon>CalculationOptionsPanelBear.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Calculations.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Character.cs" />
     <Compile Include="ComparisonGraph.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ComparisonGraph.Designer.cs">
       <DependentUpon>ComparisonGraph.cs</DependentUpon>
     </Compile>
-    <Compile Include="CalculationsBear.cs" />
     <Compile Include="CalculationDisplay.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CalculationDisplay.Designer.cs">
       <DependentUpon>CalculationDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="CalculationsCat.cs" />
-    <Compile Include="CalculationOptionsPanelCat.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CalculationOptionsPanelCat.Designer.cs">
-      <DependentUpon>CalculationOptionsPanelCat.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Enchant.cs" />
     <Compile Include="FormEnterId.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -168,11 +147,9 @@
     <Compile Include="FormSplash.Designer.cs">
       <DependentUpon>FormSplash.cs</DependentUpon>
     </Compile>
-    <Compile Include="Item.cs" />
     <Compile Include="ItemButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ItemCache.cs" />
     <Compile Include="ItemComparison.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -192,16 +169,11 @@
     <Compile Include="ItemToolTip.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BuffSelector.resx">
       <SubType>Designer</SubType>
       <DependentUpon>BuffSelector.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CalculationOptionsPanelBear.resx">
-      <DependentUpon>CalculationOptionsPanelBear.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ComparisonGraph.resx">
       <SubType>Designer</SubType>
@@ -209,10 +181,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CalculationDisplay.resx">
       <DependentUpon>CalculationDisplay.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CalculationOptionsPanelCat.resx">
-      <DependentUpon>CalculationOptionsPanelCat.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEnterId.resx">
@@ -264,7 +232,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Stats.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Bugs.txt" />
@@ -289,6 +256,12 @@
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Rawr.Base\Rawr.Base.csproj">
+      <Project>{842B74C7-EE94-44D9-A02F-4074166EF506}</Project>
+      <Name>Rawr.Base</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

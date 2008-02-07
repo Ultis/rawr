@@ -36,7 +36,7 @@ namespace Rawr
 				{
 					_character.ItemsChanged -= new EventHandler(_character_ItemsChanged);
 				}
-				_character = value;
+				_character = value; 
 				if (_character != null)
 				{
 					this.Cursor = Cursors.WaitCursor;
@@ -163,11 +163,18 @@ namespace Rawr
 		{
 			_spash.Show();
 
-			new FormModelChooser().ShowDialog();
+            new FormModelChooser().ShowDialog();
+
 			
 			Application.DoEvents();
 			InitializeComponent();
-			
+
+
+            if (Calculations.CalculationOptionsPanel.Icon != null)
+            {
+                Icon = Calculations.CalculationOptionsPanel.Icon;
+            }
+
 			overallToolStripMenuItem.Tag = -1;
 			alphabeticalToolStripMenuItem.Tag = -2;
 			foreach (string name in Calculations.SubPointNameColors.Keys)
@@ -369,13 +376,10 @@ namespace Rawr
 					case DialogResult.Yes:
 						saveToolStripMenuItem_Click(null, null);
 						return !string.IsNullOrEmpty(_characterPath);
-						break;
 					case DialogResult.No:
 						return true;
-						break;
 					default:
 						return false;
-						break;
 				}
 			}
 			else
@@ -458,7 +462,24 @@ namespace Rawr
 			//    labelDodgePlusMiss.Text, labelTotalMitigation.Text, labelDamageTaken.Text, labelCritReduction.Text, 
 			//    labelOverallPoints.Text, labelMitigationPoints.Text, labelSurvivalPoints.Text, textBoxName.Text,
 			//    Character.Region.ToString(), textBoxRealm.Text);
-			Clipboard.SetText(Calculations.GetCharacterStatsString(Character), TextDataFormat.Text);
+
+            StringBuilder sb = new StringBuilder();
+            foreach (int slotNum in Enum.GetValues(typeof(Character.CharacterSlot)))
+            {
+                Character.CharacterSlot slot = (Character.CharacterSlot)(slotNum);
+                Item item = Character[slot];
+                if (item != null)
+                {
+                    sb.AppendFormat("{0}\t{1}", slot,item.Name);
+                    sb.AppendLine();
+                }
+            }
+       
+           
+
+            sb.AppendLine(Calculations.GetCharacterStatsString(Character));
+
+			Clipboard.SetText(sb.ToString(), TextDataFormat.Text);
 		}
 
 		private void slotToolStripMenuItem_Click(object sender, EventArgs e)
@@ -555,5 +576,20 @@ namespace Rawr
 			_spash.Dispose();
 			this.Cursor = Cursors.Default;
 		}
+
+        private void updateAllItemsToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            //Uncomment and run to refresh data for all known items
+            foreach (Item item in ItemCache.GetItemsArray())
+            {
+                Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing");
+                if (newItem == null)
+                {
+                    MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
+                    ItemCache.AddItem(item, true, false);
+                }
+            }
+            ItemCache.OnItemsChanged();
+        }
 	}
 }

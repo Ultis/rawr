@@ -462,37 +462,26 @@ namespace Rawr //O O . .
 			{
 				case Item.ItemSlot.Head:
 					return HeadEnchant;
-					break;
 				case Item.ItemSlot.Shoulders:
 					return ShouldersEnchant;
-					break;
 				case Item.ItemSlot.Back:
 					return BackEnchant;
-					break;
 				case Item.ItemSlot.Chest:
 					return ChestEnchant;
-					break;
 				case Item.ItemSlot.Wrist:
 					return WristEnchant;
-					break;
 				case Item.ItemSlot.Hands:
 					return HandsEnchant;
-					break;
 				case Item.ItemSlot.Legs:
 					return LegsEnchant;
-					break;
 				case Item.ItemSlot.Feet:
 					return FeetEnchant;
-					break;
 				case Item.ItemSlot.Finger:
 					return Finger1Enchant;
-					break;
 				case Item.ItemSlot.Weapon:
 					return WeaponEnchant;
-					break;
 				default:
 					return null;
-					break;
 			}
 		}
 
@@ -580,61 +569,60 @@ namespace Rawr //O O . .
                 {
                     case CharacterSlot.Head:
                         return this.Head;
-                        break;
+
                     case CharacterSlot.Neck:
                         return this.Neck;
-                        break;
+
                     case CharacterSlot.Shoulders:
                         return this.Shoulders;
-                        break;
+
                     case CharacterSlot.Back:
                         return this.Back;
-                        break;
+
                     case CharacterSlot.Chest:
                         return this.Chest;
-                        break;
+
                     case CharacterSlot.Shirt:
                         return this.Shirt;
-                        break;
+
                     case CharacterSlot.Tabard:
                         return this.Tabard;
-                        break;
+
                     case CharacterSlot.Wrist:
                         return this.Wrist;
-                        break;
+
                     case CharacterSlot.Hands:
                         return this.Hands;
-                        break;
+
                     case CharacterSlot.Waist:
                         return this.Waist;
-                        break;
+
                     case CharacterSlot.Legs:
                         return this.Legs;
-                        break;
+
                     case CharacterSlot.Feet:
                         return this.Feet;
-                        break;
+
                     case CharacterSlot.Finger1:
                         return this.Finger1;
-                        break;
+
                     case CharacterSlot.Finger2:
                         return this.Finger2;
-                        break;
+
                     case CharacterSlot.Trinket1:
                         return this.Trinket1;
-                        break;
+
                     case CharacterSlot.Trinket2:
                         return this.Trinket2;
-                        break;
+
                     case CharacterSlot.Weapon:
                         return this.Weapon;
-                        break;
+
                     case CharacterSlot.Idol:
                         return this.Idol;
-                        break;
+
                     default:
                         return null;
-                        break;
                 }
             }
             set
@@ -844,7 +832,7 @@ namespace Rawr //O O . .
 					character = (Character)serializer.Deserialize(reader);
 					reader.Close();
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
 					MessageBox.Show("There was an error attempting to open this character. Most likely, it was saved with a previous beta of Rawr, and isn't upgradable to the new format. Sorry. Please load your character from the armory to begin.");
 					character = new Character();

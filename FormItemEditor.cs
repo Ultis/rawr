@@ -42,7 +42,6 @@ namespace Rawr
 
                 numericUpDownId.DataBindings.Clear();
                 numericUpDownBonus1.DataBindings.Clear();
-                numericUpDownBonus2.DataBindings.Clear();
 				comboBoxSlot.DataBindings.Clear();
 				comboBoxSocket1.DataBindings.Clear();
 				comboBoxSocket2.DataBindings.Clear();
@@ -72,13 +71,14 @@ namespace Rawr
                     if (!socketBonuses.MoveNext())
                     {
                         comboBoxBonus1.SelectedIndex = 0;
-                        comboBoxBonus2.SelectedIndex = 0;
                     }
                     else
                     {
 
                         comboBoxBonus1.SelectedIndex = comboBoxBonus1.Items.IndexOf(Extensions.SpaceCamel(socketBonuses.Current.Key.Name));
                         numericUpDownBonus1.Value = (decimal)socketBonuses.Current.Value;
+/*
+ // if there is ever more than one socket
                         if (!socketBonuses.MoveNext())
                         {
                             comboBoxBonus2.SelectedIndex = 0;
@@ -89,6 +89,7 @@ namespace Rawr
                             comboBoxBonus2.SelectedIndex = comboBoxBonus1.Items.IndexOf(Extensions.SpaceCamel(socketBonuses.Current.Key.Name));
                             numericUpDownBonus2.Value = (decimal)socketBonuses.Current.Value;
                         }
+*/
                     }
 				}
 			}
@@ -116,9 +117,11 @@ namespace Rawr
             comboBoxBonus1.Items.AddRange(Stats.StatNames);
 
 
-            comboBoxBonus2.Tag = numericUpDownBonus2;
+ /*
+           comboBoxBonus2.Tag = numericUpDownBonus2;
             comboBoxBonus2.Items.Add("None");
             comboBoxBonus2.Items.AddRange(Stats.StatNames);
+*/
 
 			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 			this.FormClosing += new FormClosingEventHandler(FormItemEditor_FormClosing);

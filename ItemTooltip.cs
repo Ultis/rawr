@@ -86,7 +86,7 @@ namespace Rawr
                     var positiveStats = CurrentItem.Stats.Values(x => x > 0);
                     int statHeight = (positiveStats.Count + 2) / 3; // number of lines
                     statHeight *= 17;// * line height
-                    _cachedToolTipImage = new Bitmap(279, hasSockets ? 81 + statHeight : 23 + statHeight, PixelFormat.Format32bppArgb);
+                    _cachedToolTipImage = new Bitmap(309, hasSockets ? 81 + statHeight : 23 + statHeight, PixelFormat.Format32bppArgb);
 
                     Graphics g = Graphics.FromImage(_cachedToolTipImage);
                     g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -128,8 +128,8 @@ namespace Rawr
                     var xGrid = new
                     {
                         initial = 2,
-                        step = 93,
-                        max = 198,
+                        step = 103,
+                        max = 218,
                     };
 
                     var yGrid = new
@@ -144,7 +144,7 @@ namespace Rawr
 
                     foreach (System.Reflection.PropertyInfo info in positiveStats.Keys)
                     {
-                        g.DrawString(string.Format("{0} {1}", positiveStats[info], Extensions.ShortName(info)), _fontStats, SystemBrushes.InfoText, xPos, yPos);
+                        g.DrawString(string.Format("{0} {1}", positiveStats[info], Extensions.DisplayName(info)), _fontStats, SystemBrushes.InfoText, xPos, yPos);
 
                         xPos += xGrid.step;
                         if (xPos > xGrid.max)
@@ -163,7 +163,7 @@ namespace Rawr
                                                        (i == 1 ? CurrentItem.Sockets.Color2 : CurrentItem.Sockets.Color3));
                             if (slotColor != Item.ItemSlot.None)
                             {
-                                Rectangle rectGemBorder = new Rectangle(3 + (93*(i)), 25+statHeight, 35, 35);
+                                Rectangle rectGemBorder = new Rectangle(3 + (103*(i)), 25+statHeight, 35, 35);
                                 Brush brushGemBorder = new SolidBrush(Color.Silver);
                                 switch (slotColor)
                                 {

@@ -104,15 +104,24 @@ namespace Rawr
 			{
 				if (_allBuffs == null)
 				{
-					//so you both come crashing over ground
-					if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "BuffCache.xml")))
-					{
-						string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "BuffCache.xml"));
-						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Buff>));
-						System.IO.StringReader reader = new System.IO.StringReader(xml);
-						_allBuffs = (List<Buff>)serializer.Deserialize(reader);
-						reader.Close();
-					}
+                    try
+                    {
+                        //so you both come crashing over ground
+                        if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "BuffCache.xml")))
+                        {
+                            string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "BuffCache.xml"));
+                            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Buff>));
+                            System.IO.StringReader reader = new System.IO.StringReader(xml);
+
+                            _allBuffs = (List<Buff>) serializer.Deserialize(reader);
+
+                            reader.Close();
+                        }
+                    }
+                    catch (System.Exception)
+                    {
+                    	//The designer really doesn't like loading the stuff from a file
+                    }
 
 					if (_allBuffs == null) //new machines have born their notion
 					{
@@ -123,10 +132,11 @@ namespace Rawr
 						_allBuffs.Add(new Buff() { Name = "Improved Power Word: Fortitude", Category = BuffCategory.ClassBuffs,
 							Stats = new Stats() { Stamina = (float)Math.Floor(79f * 0.3f) }, RequiredBuff = "Power Word: Fortitude"});
 						_allBuffs.Add(new Buff() { Name = "Mark of the Wild", Category = BuffCategory.ClassBuffs,
-							Stats = new Stats() { Armor = 340, Strength = 14, Agility = 14, Stamina = 14 }});
+							Stats = new Stats() { Armor = 340, Strength = 14, Agility = 14, Stamina = 14, AllResist=25 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Mark of the Wild", Category = BuffCategory.ClassBuffs,
 							Stats = new Stats() { Armor = (float)Math.Floor(340f * 0.35f), Strength = (float)Math.Floor(14f * 0.35f), 
-								Agility = (float)Math.Floor(14f * 0.35f), Stamina = (float)Math.Floor(14f * 0.35f) }, RequiredBuff = "Mark of the Wild"});
+								Agility = (float)Math.Floor(14f * 0.35f), Stamina = (float)Math.Floor(14f * 0.35f),
+                                AllResist=(float)Math.Floor(25f * 0.35f)}, RequiredBuff = "Mark of the Wild"});
 						_allBuffs.Add(new Buff() { Name = "Blood Pact", Category = BuffCategory.ClassBuffs,
 							Stats = new Stats() { Stamina = 66 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Blood Pact", Category = BuffCategory.ClassBuffs,
@@ -183,7 +193,7 @@ namespace Rawr
 							Stats = new Stats() { Health = 500, DefenseRating = 10 },
 							ConflictingBuffs = new string[] { "Elixir of Ironskin", "Elixir of Major Defense", "Elixir of Major Fortitude", "Elixir of Major Agility", "Elixir of Mastery", "Flask of Chromatic Wonder", "Flask of Relentless Assault" }});
 						_allBuffs.Add(new Buff() { Name = "Flask of Chromatic Wonder", Category = BuffCategory.ElixirsAndFlasks,
-							Stats = new Stats() { Agility = 18, Strength = 18, Stamina = 18 },
+							Stats = new Stats() { Agility = 18, Strength = 18, Stamina = 18, AllResist=35},
 							ConflictingBuffs = new string[] { "Elixir of Ironskin", "Elixir of Major Defense", "Elixir of Major Fortitude", "Elixir of Major Agility", "Elixir of Mastery", "Flask of Fortification", "Flask of Relentless Assault" }});
 						_allBuffs.Add(new Buff() { Name = "Flask of Relentless Assault", Category = BuffCategory.ElixirsAndFlasks,
 							Stats = new Stats() { AttackPower = 120 }, 

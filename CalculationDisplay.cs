@@ -26,8 +26,15 @@ namespace Rawr
 		private void BuildControls()
 		{
 			this.Controls.Clear();
-			string[] displayLabelConfigurationStrings = Calculations.CharacterDisplayCalculationLabels;
-
+            string[] displayLabelConfigurationStrings = null;
+            if (Calculations.Instance != null)
+            {
+                displayLabelConfigurationStrings = Calculations.CharacterDisplayCalculationLabels;
+            }
+            else
+            {
+                displayLabelConfigurationStrings = new string[0];
+            }
 			this.SuspendLayout();
 			foreach (string displayLabelConfigurationString in displayLabelConfigurationStrings)
 			{

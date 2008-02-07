@@ -107,6 +107,7 @@ namespace Rawr
 						_allEnchants.Add(new Enchant(2658, "Surefooted", Item.ItemSlot.Feet, new Stats() { HitRating = 10 }));
 						_allEnchants.Add(new Enchant(2929, "Striking", Item.ItemSlot.Finger, new Stats() { WeaponDamage = 2 }));
 						_allEnchants.Add(new Enchant(2667, "Savagery", Item.ItemSlot.Weapon, new Stats() { AttackPower = 70 }));
+
 						
 						
 

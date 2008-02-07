@@ -100,19 +100,17 @@ namespace Rawr
 		public static void DeleteItem(Item item, bool raiseEvent)
 		{
 			Item[] existing;
-			Item[] newArray;
 			if (Items.TryGetValue(item.GemmedId, out existing))
 			{
 				if (existing.Length > 1)
 				{
-					newArray = new Item[existing.Length - 1];
-					int k = 0;
+                    List<Item> newArray = new List<Item>();
 					for (int i = 0; i < existing.Length; i++)
-						if (existing[i] != item)
-						{
-							newArray[k++] = existing[i];
-						}
-					Items[item.GemmedId] = newArray;
+					if (existing[i] != item)
+					{
+                        newArray.Add(existing[i]);
+					}
+					Items[item.GemmedId] = newArray.ToArray();
 				}
 				else
 					Items.Remove(item.GemmedId);

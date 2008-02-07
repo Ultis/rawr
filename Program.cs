@@ -12,23 +12,29 @@ namespace Rawr
 		[STAThread]
 		static void Main()
 		{
-			try
-			{
-				bool bAppFirstInstance;
-				System.Threading.Mutex oMutex = new System.Threading.Mutex(true, "Global\\Rawr", out bAppFirstInstance);
-				if (bAppFirstInstance)
-				{
-					RawrCatIntro();
-					Application.EnableVisualStyles();
-					Application.SetCompatibleTextRenderingDefault(false);
-					Application.Run(new FormMain());
-				}
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show("Rawr encountered a serious error. Please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace);
-			}
-			Log.Close();
+            try
+            {
+                bool bAppFirstInstance;
+                System.Threading.Mutex oMutex = new System.Threading.Mutex(true, "Global\\Rawr", out bAppFirstInstance);
+                if (bAppFirstInstance)
+                {
+                    RawrCatIntro();
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new FormMain());
+                }
+            }
+            catch (TypeLoadException ex)
+            {
+                MessageBox.Show(ex.Message, "when cat durid is FITE do not ask for HEEL and NINIRVATE!");
+            }
+#if !DEBUG 
+            catch (Exception ex)
+            {
+                MessageBox.Show("Rawr encountered a serious error. Please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace);
+            }
+#endif //DEBUG
+            Log.Close();
 		}
 
 		private static void RawrCatIntro()

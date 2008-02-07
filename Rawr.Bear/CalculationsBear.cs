@@ -9,6 +9,8 @@ namespace Rawr
 		//my insides all turned to ash / so slow
 		//and blew away as i collapsed / so cold
 
+        public override String DisplayName{get{return "Bear";}}
+
 		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
 		{
@@ -28,7 +30,7 @@ namespace Rawr
 			get
 			{
 				if (_characterDisplayCalculationLabels == null)
-					_characterDisplayCalculationLabels = new string[] {
+                    _characterDisplayCalculationLabels = new string[] {
 					"Basic Stats:Health",
 					"Basic Stats:Armor",
 					"Basic Stats:Agility",
@@ -36,6 +38,11 @@ namespace Rawr
 					"Basic Stats:Dodge Rating",
 					"Basic Stats:Defense Rating",
 					"Basic Stats:Resilience",
+					"Basic Stats:Nature Resist",
+					"Basic Stats:Fire Resist",
+					"Basic Stats:Frost Resist",
+					"Basic Stats:Shadow Resist",
+					"Basic Stats:Arcane Resist",
 					"Complex Stats:Dodge",
 					"Complex Stats:Miss",
 					"Complex Stats:Mitigation",
@@ -61,7 +68,12 @@ but rather get 'enough' of it, and then focus on Mitigation.
 'Enough' can vary greatly by fight and by your healers, but 
 keeping it roughly even with Mitigation Points is a good 
 way to maintain 'enough' as you progress. If you find that 
-you are being killed by burst damage, focus on Survival Points."
+you are being killed by burst damage, focus on Survival Points.",
+                    "Complex Stats:Nature Survival",
+                    "Complex Stats:Fire Survival",
+                    "Complex Stats:Frost Survival",
+                    "Complex Stats:Shadow Survival",
+                    "Complex Stats:Arcane Survival",
 				};
 				return _characterDisplayCalculationLabels;
 			}
@@ -115,12 +127,21 @@ you are being killed by burst damage, focus on Survival Points."
 			calculatedStats.SurvivalPoints = (stats.Health / (1f - (calculatedStats.CappedMitigation / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
 			calculatedStats.MitigationPoints = (7000f * (1f / (calculatedStats.DamageTaken / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
 			calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints;
+
+            float cappedResist = targetLevel * 5;
+
+            calculatedStats.NatureSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.NatureResistance + stats.AllResist) / cappedResist) * .75)));
+            calculatedStats.FrostSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FrostResistance + stats.AllResist) / cappedResist) * .75)));
+            calculatedStats.FireSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FireResistance + stats.AllResist) / cappedResist) * .75)));
+            calculatedStats.ShadowSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ShadowResistance + stats.AllResist) / cappedResist) * .75)));
+            calculatedStats.ArcaneSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ArcaneResistance + stats.AllResist) / cappedResist) * .75)));
+
 			return calculatedStats;
 		}
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-			Stats statsRace = character.Race == Character.CharacterRace.NightElf ? new Stats() { Health = 3434, Agility = 75, Stamina = 82, DodgeRating = 59 } : new Stats() { Health = 3434, Agility = 64, Stamina = 85, DodgeRating = 40 };
+			Stats statsRace = character.Race == Character.CharacterRace.NightElf ? new Stats() { Health = 3434, Agility = 75, Stamina = 82, DodgeRating = 59 } : new Stats() { Health = 3434, Agility = 64, Stamina = 85, DodgeRating = 40, NatureResistance=10 };
 			Stats statsBaseGear = GetItemStats(character, additionalItem);
 			Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -150,8 +171,13 @@ you are being killed by burst damage, focus on Survival Points."
 			statsTotal.Health = (float)Math.Round(((statsRace.Health + statsBaseGear.Health + statsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
 			statsTotal.Armor = (float)Math.Round(((statsBaseGear.Armor * 5.5f) + statsRace.Armor + statsBuffs.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
 			statsTotal.Miss = statsBuffs.Miss;
-
-			return statsTotal;
+            statsTotal.NatureResistance = statsRace.NatureResistance + statsBaseGear.NatureResistance + statsBuffs.NatureResistance;
+            statsTotal.FireResistance = statsRace.FireResistance + statsBaseGear.FireResistance + statsBuffs.FireResistance;
+            statsTotal.FrostResistance = statsRace.FrostResistance + statsBaseGear.FrostResistance + statsBuffs.FrostResistance;
+            statsTotal.ShadowResistance = statsRace.ShadowResistance + statsBaseGear.ShadowResistance + statsBuffs.ShadowResistance;
+            statsTotal.ArcaneResistance = statsRace.ArcaneResistance + statsBaseGear.ArcaneResistance + statsBuffs.ArcaneResistance;
+            statsTotal.AllResist = statsRace.AllResist + statsBaseGear.AllResist + statsBuffs.AllResist;
+            return statsTotal;
 		}
 
 		public override ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations)
@@ -206,7 +232,8 @@ you are being killed by burst damage, focus on Survival Points."
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health +
 				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc) > 0;
 		}
-	}
+
+    }
 
     public class CharacterCalculationsBear : CharacterCalculationsBase
     {
@@ -313,12 +340,23 @@ you are being killed by burst damage, focus on Survival Points."
 			set { _cappedCritReduction = value; }
 		}
 
+        public float NatureSurvivalPoints{get;set;}
+        public float FrostSurvivalPoints{get;set;}
+        public float FireSurvivalPoints{get;set;}
+        public float ShadowSurvivalPoints{get;set;}
+        public float ArcaneSurvivalPoints{get;set;}
+
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
 			int armorCap = (int)Math.Ceiling((1402.5f * TargetLevel) - 66502.5f);
 			float levelDifference = 0.2f * (TargetLevel - 70);
-			
+
+            dictValues["Nature Resist"] = (BasicStats.NatureResistance+BasicStats.AllResist).ToString();
+            dictValues["Arcane Resist"] = (BasicStats.ArcaneResistance+BasicStats.AllResist).ToString();
+            dictValues["Frost Resist"] = (BasicStats.FrostResistance+BasicStats.AllResist).ToString();
+            dictValues["Fire Resist"] = (BasicStats.FireResistance+BasicStats.AllResist).ToString();
+            dictValues["Shadow Resist"] = (BasicStats.ShadowResistance + BasicStats.AllResist).ToString();
 			dictValues.Add("Health", BasicStats.Health.ToString());
 			dictValues.Add("Agility", BasicStats.Agility.ToString());
 			dictValues.Add("Armor", BasicStats.Armor.ToString());
@@ -357,7 +395,12 @@ you are being killed by burst damage, focus on Survival Points."
 			dictValues.Add("Overall Points", OverallPoints.ToString());
 			dictValues.Add("Mitigation Points", MitigationPoints.ToString());
 			dictValues.Add("Survival Points", SurvivalPoints.ToString());
-			
+
+            dictValues["Nature Survival"] = NatureSurvivalPoints.ToString();
+            dictValues["Frost Survival"] = FrostSurvivalPoints.ToString();
+            dictValues["Fire Survival"] = FireSurvivalPoints.ToString();
+            dictValues["Shadow Survival"] = ShadowSurvivalPoints.ToString();
+            dictValues["Arcane Survival"] = ArcaneSurvivalPoints.ToString(); 
 			return dictValues;
 		}
     }

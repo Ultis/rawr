@@ -6,35 +6,21 @@ namespace Rawr
 {
 	public class Calculations
 	{
-		public enum CalculationModel
-		{
-			Bear,
-			Cat
-		}
 
-		public static void LoadModel(CalculationModel model)
+        public static void LoadModel(CalculationsBase model)
 		{
-			switch (model)
-			{
-				case CalculationModel.Bear:
-					Instance = new CalculationsBear();
-					break;
-				case CalculationModel.Cat:
-					Instance = new CalculationsCat();
-					break;
-			}
+            Instance = model;
+
 		}
 
 		private static CalculationsBase _instance;
-		private static CalculationsBase Instance
+		public static CalculationsBase Instance
 		{
 			get
 			{
-				if (_instance == null)
-					_instance = new CalculationsBear();
 				return _instance;
 			}
-			set
+			private set
 			{
 				_instance = value;
 			}
@@ -112,7 +98,9 @@ namespace Rawr
 		}
 		public static bool HasRelevantStats(Stats stats)
 		{
-			return Instance.HasRelevantStats(stats);
+            if(Instance != null)
+    			return Instance.HasRelevantStats(stats);
+            return false;
 		}
 		public static string GetCharacterStatsString(Character character)
 		{
@@ -139,7 +127,7 @@ namespace Rawr
 		public abstract ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations);
 		public abstract string[] GetRelevantStats(Stats stats);
 		public abstract bool HasRelevantStats(Stats stats);
-
+        public abstract String DisplayName{get;}
 		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character) { return GetCharacterCalculations(character, null); }
 		public virtual Stats GetCharacterStats(Character character) { return GetCharacterStats(character, null); }
 		
@@ -368,6 +356,13 @@ namespace Rawr
 
 	public class CalculationOptionsPanelBase : System.Windows.Forms.UserControl
 	{
+
+        public virtual System.Drawing.Icon Icon
+        {
+            get;
+            set;
+        }
+
 		private Character _character = null;
 		public Character Character
 		{
@@ -384,5 +379,6 @@ namespace Rawr
 
 		protected virtual void LoadCalculationOptions() { }
 	}
+
 }
 //takemyhandigiveittoyounowyouownmealliamyousaidyouwouldneverleavemeibelieveyouibelieve

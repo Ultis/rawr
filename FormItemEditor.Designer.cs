@@ -59,8 +59,8 @@ namespace Rawr
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.numericUpDownBonus2 = new System.Windows.Forms.NumericUpDown();
-            this.comboBoxBonus2 = new System.Windows.Forms.ComboBox();
+            this.numericUpDownBonus1 = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxBonus1 = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -71,6 +71,9 @@ namespace Rawr
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.itemButtonGem1 = new Rawr.ItemButton();
+            this.itemButtonGem2 = new Rawr.ItemButton();
+            this.itemButtonGem3 = new Rawr.ItemButton();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonDelete = new System.Windows.Forms.Button();
@@ -81,18 +84,12 @@ namespace Rawr
             this.buttonDuplicate = new System.Windows.Forms.Button();
             this.textBoxFilter = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
-            this.comboBoxBonus1 = new System.Windows.Forms.ComboBox();
-            this.numericUpDownBonus1 = new System.Windows.Forms.NumericUpDown();
-            this.itemButtonGem1 = new Rawr.ItemButton();
-            this.itemButtonGem2 = new Rawr.ItemButton();
-            this.itemButtonGem3 = new Rawr.ItemButton();
             this.propertyGridStats = new System.Windows.Forms.PropertyGrid();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownId)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonus2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownBonus1)).BeginInit();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonus1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -209,42 +206,41 @@ namespace Rawr
             this.groupBox3.Controls.Add(this.comboBoxSocket3);
             this.groupBox3.Controls.Add(this.comboBoxSocket2);
             this.groupBox3.Controls.Add(this.comboBoxSocket1);
-            this.groupBox3.Location = new System.Drawing.Point(251, 65);
+            this.groupBox3.Location = new System.Drawing.Point(251, 64);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(226, 181);
+            this.groupBox3.Size = new System.Drawing.Size(226, 160);
             this.groupBox3.TabIndex = 7;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Sockets";
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.numericUpDownBonus2);
-            this.groupBox6.Controls.Add(this.comboBoxBonus2);
             this.groupBox6.Controls.Add(this.numericUpDownBonus1);
             this.groupBox6.Controls.Add(this.comboBoxBonus1);
             this.groupBox6.Location = new System.Drawing.Point(9, 100);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(210, 75);
+            this.groupBox6.Size = new System.Drawing.Size(210, 50);
             this.groupBox6.TabIndex = 3;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Socket Bonus";
             // 
-            // numericUpDownBonus2
+            // numericUpDownBonus1
             // 
-            this.numericUpDownBonus2.Enabled = false;
-            this.numericUpDownBonus2.Location = new System.Drawing.Point(151, 49);
-            this.numericUpDownBonus2.Name = "numericUpDownBonus2";
-            this.numericUpDownBonus2.Size = new System.Drawing.Size(51, 20);
-            this.numericUpDownBonus2.TabIndex = 3;
+            this.numericUpDownBonus1.Enabled = false;
+            this.numericUpDownBonus1.Location = new System.Drawing.Point(151, 19);
+            this.numericUpDownBonus1.Name = "numericUpDownBonus1";
+            this.numericUpDownBonus1.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownBonus1.TabIndex = 1;
             // 
-            // comboBoxBonus2
+            // comboBoxBonus1
             // 
-            this.comboBoxBonus2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxBonus2.FormattingEnabled = true;
-            this.comboBoxBonus2.Location = new System.Drawing.Point(6, 48);
-            this.comboBoxBonus2.Name = "comboBoxBonus2";
-            this.comboBoxBonus2.Size = new System.Drawing.Size(139, 21);
-            this.comboBoxBonus2.TabIndex = 2;
+            this.comboBoxBonus1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBonus1.FormattingEnabled = true;
+            this.comboBoxBonus1.Location = new System.Drawing.Point(6, 19);
+            this.comboBoxBonus1.Name = "comboBoxBonus1";
+            this.comboBoxBonus1.Size = new System.Drawing.Size(139, 21);
+            this.comboBoxBonus1.TabIndex = 0;
+            this.comboBoxBonus1.SelectedIndexChanged += new System.EventHandler(this.comboBoxBonus_SelectedIndexChanged);
             // 
             // label16
             // 
@@ -329,7 +325,7 @@ namespace Rawr
             this.groupBox5.Controls.Add(this.itemButtonGem1);
             this.groupBox5.Controls.Add(this.itemButtonGem2);
             this.groupBox5.Controls.Add(this.itemButtonGem3);
-            this.groupBox5.Location = new System.Drawing.Point(251, 252);
+            this.groupBox5.Location = new System.Drawing.Point(251, 230);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(409, 95);
             this.groupBox5.TabIndex = 8;
@@ -363,10 +359,49 @@ namespace Rawr
             this.label6.TabIndex = 1;
             this.label6.Text = "Gem #1:";
             // 
+            // itemButtonGem1
+            // 
+            this.itemButtonGem1.Character = null;
+            this.itemButtonGem1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.itemButtonGem1.Location = new System.Drawing.Point(60, 15);
+            this.itemButtonGem1.Name = "itemButtonGem1";
+            this.itemButtonGem1.SelectedItem = null;
+            this.itemButtonGem1.SelectedItemId = 0;
+            this.itemButtonGem1.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonGem1.TabIndex = 0;
+            this.itemButtonGem1.Text = "Gem #1";
+            this.itemButtonGem1.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonGem2
+            // 
+            this.itemButtonGem2.Character = null;
+            this.itemButtonGem2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.itemButtonGem2.Location = new System.Drawing.Point(190, 15);
+            this.itemButtonGem2.Name = "itemButtonGem2";
+            this.itemButtonGem2.SelectedItem = null;
+            this.itemButtonGem2.SelectedItemId = 0;
+            this.itemButtonGem2.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonGem2.TabIndex = 1;
+            this.itemButtonGem2.Text = "Gem #2";
+            this.itemButtonGem2.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonGem3
+            // 
+            this.itemButtonGem3.Character = null;
+            this.itemButtonGem3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.itemButtonGem3.Location = new System.Drawing.Point(320, 15);
+            this.itemButtonGem3.Name = "itemButtonGem3";
+            this.itemButtonGem3.SelectedItem = null;
+            this.itemButtonGem3.SelectedItemId = 0;
+            this.itemButtonGem3.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonGem3.TabIndex = 2;
+            this.itemButtonGem3.Text = "Gem #3";
+            this.itemButtonGem3.UseVisualStyleBackColor = true;
+            // 
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(584, 353);
+            this.buttonOK.Location = new System.Drawing.Point(584, 331);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 13;
@@ -375,7 +410,7 @@ namespace Rawr
             // 
             // buttonAdd
             // 
-            this.buttonAdd.Location = new System.Drawing.Point(11, 353);
+            this.buttonAdd.Location = new System.Drawing.Point(11, 331);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 23);
             this.buttonAdd.TabIndex = 9;
@@ -385,7 +420,7 @@ namespace Rawr
             // 
             // buttonDelete
             // 
-            this.buttonDelete.Location = new System.Drawing.Point(92, 353);
+            this.buttonDelete.Location = new System.Drawing.Point(92, 331);
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.Size = new System.Drawing.Size(75, 23);
             this.buttonDelete.TabIndex = 10;
@@ -396,7 +431,7 @@ namespace Rawr
             // buttonFillSockets
             // 
             this.buttonFillSockets.AutoSize = true;
-            this.buttonFillSockets.Location = new System.Drawing.Point(254, 353);
+            this.buttonFillSockets.Location = new System.Drawing.Point(254, 331);
             this.buttonFillSockets.Name = "buttonFillSockets";
             this.buttonFillSockets.Size = new System.Drawing.Size(80, 23);
             this.buttonFillSockets.TabIndex = 12;
@@ -473,7 +508,7 @@ namespace Rawr
             this.listViewItems.Location = new System.Drawing.Point(12, 38);
             this.listViewItems.MultiSelect = false;
             this.listViewItems.Name = "listViewItems";
-            this.listViewItems.Size = new System.Drawing.Size(233, 309);
+            this.listViewItems.Size = new System.Drawing.Size(233, 287);
             this.listViewItems.SmallImageList = this.imageListItems;
             this.listViewItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewItems.TabIndex = 0;
@@ -493,7 +528,7 @@ namespace Rawr
             // 
             // buttonDuplicate
             // 
-            this.buttonDuplicate.Location = new System.Drawing.Point(173, 353);
+            this.buttonDuplicate.Location = new System.Drawing.Point(173, 331);
             this.buttonDuplicate.Name = "buttonDuplicate";
             this.buttonDuplicate.Size = new System.Drawing.Size(75, 23);
             this.buttonDuplicate.TabIndex = 11;
@@ -518,69 +553,12 @@ namespace Rawr
             this.label22.TabIndex = 14;
             this.label22.Text = "Filter:";
             // 
-            // comboBoxBonus1
-            // 
-            this.comboBoxBonus1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxBonus1.FormattingEnabled = true;
-            this.comboBoxBonus1.Location = new System.Drawing.Point(6, 19);
-            this.comboBoxBonus1.Name = "comboBoxBonus1";
-            this.comboBoxBonus1.Size = new System.Drawing.Size(139, 21);
-            this.comboBoxBonus1.TabIndex = 0;
-            this.comboBoxBonus1.SelectedIndexChanged += new System.EventHandler(this.comboBoxBonus_SelectedIndexChanged);
-            // 
-            // numericUpDownBonus1
-            // 
-            this.numericUpDownBonus1.Enabled = false;
-            this.numericUpDownBonus1.Location = new System.Drawing.Point(151, 19);
-            this.numericUpDownBonus1.Name = "numericUpDownBonus1";
-            this.numericUpDownBonus1.Size = new System.Drawing.Size(51, 20);
-            this.numericUpDownBonus1.TabIndex = 1;
-            // 
-            // itemButtonGem1
-            // 
-            this.itemButtonGem1.Character = null;
-            this.itemButtonGem1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-            this.itemButtonGem1.Location = new System.Drawing.Point(60, 15);
-            this.itemButtonGem1.Name = "itemButtonGem1";
-            this.itemButtonGem1.SelectedItem = null;
-            this.itemButtonGem1.SelectedItemId = 0;
-            this.itemButtonGem1.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonGem1.TabIndex = 0;
-            this.itemButtonGem1.Text = "Gem #1";
-            this.itemButtonGem1.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonGem2
-            // 
-            this.itemButtonGem2.Character = null;
-            this.itemButtonGem2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-            this.itemButtonGem2.Location = new System.Drawing.Point(190, 15);
-            this.itemButtonGem2.Name = "itemButtonGem2";
-            this.itemButtonGem2.SelectedItem = null;
-            this.itemButtonGem2.SelectedItemId = 0;
-            this.itemButtonGem2.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonGem2.TabIndex = 1;
-            this.itemButtonGem2.Text = "Gem #2";
-            this.itemButtonGem2.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonGem3
-            // 
-            this.itemButtonGem3.Character = null;
-            this.itemButtonGem3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-            this.itemButtonGem3.Location = new System.Drawing.Point(320, 15);
-            this.itemButtonGem3.Name = "itemButtonGem3";
-            this.itemButtonGem3.SelectedItem = null;
-            this.itemButtonGem3.SelectedItemId = 0;
-            this.itemButtonGem3.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonGem3.TabIndex = 2;
-            this.itemButtonGem3.Text = "Gem #3";
-            this.itemButtonGem3.UseVisualStyleBackColor = true;
-            // 
             // propertyGridStats
             // 
             this.propertyGridStats.HelpVisible = false;
-            this.propertyGridStats.Location = new System.Drawing.Point(484, 65);
+            this.propertyGridStats.Location = new System.Drawing.Point(484, 64);
             this.propertyGridStats.Name = "propertyGridStats";
-            this.propertyGridStats.Size = new System.Drawing.Size(176, 181);
+            this.propertyGridStats.Size = new System.Drawing.Size(176, 160);
             this.propertyGridStats.TabIndex = 16;
             this.propertyGridStats.ToolbarVisible = false;
             // 
@@ -589,7 +567,7 @@ namespace Rawr
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(672, 383);
+            this.ClientSize = new System.Drawing.Size(672, 365);
             this.ControlBox = false;
             this.Controls.Add(this.propertyGridStats);
             this.Controls.Add(this.textBoxFilter);
@@ -612,16 +590,16 @@ namespace Rawr
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FormItemEditor";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Item Editor...";
             this.Load += new System.EventHandler(this.FormItemEditor_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownId)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox6.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonus2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownBonus1)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonus1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -661,9 +639,7 @@ namespace Rawr
 		private System.Windows.Forms.ImageList imageListItems;
 		private System.Windows.Forms.Button buttonDuplicate;
 		private System.Windows.Forms.TextBox textBoxFilter;
-		private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.NumericUpDown numericUpDownBonus2;
-        private System.Windows.Forms.ComboBox comboBoxBonus2;
+        private System.Windows.Forms.Label label22;
         private System.Windows.Forms.ComboBox comboBoxBonus1;
         private System.Windows.Forms.NumericUpDown numericUpDownBonus1;
         private System.Windows.Forms.PropertyGrid propertyGridStats;

@@ -9,6 +9,9 @@ namespace Rawr
 		//my insides all turned to ash / so slow
 		//and blew away as i collapsed / so cold
 
+        
+        public override String DisplayName{get{return "Cat";}}
+
 		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
 		{

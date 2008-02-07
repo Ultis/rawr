@@ -144,7 +144,7 @@ namespace Rawr
 		{
 			Point ctrlScreen = ctrl.Parent.PointToScreen(ctrl.Location);
 			Point location = new Point(ctrlScreen.X + ctrl.Width, ctrlScreen.Y);
-			Rectangle workingArea = System.Windows.Forms.Screen.GetWorkingArea(this);
+			Rectangle workingArea = System.Windows.Forms.Screen.GetWorkingArea(ctrl.Parent);
 			if (location.X < workingArea.Left)
 				location.X = workingArea.Left;
 			if (location.Y < workingArea.Top)

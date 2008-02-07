@@ -331,19 +331,14 @@ namespace Rawr
 			{
 				case ItemSlot.Red:
 					return gem != null && (gem.Slot == ItemSlot.Red || gem.Slot == ItemSlot.Orange || gem.Slot == ItemSlot.Purple || gem.Slot == ItemSlot.Prismatic);
-					break;
-				case ItemSlot.Yellow:
+			case ItemSlot.Yellow:
 					return gem != null && (gem.Slot == ItemSlot.Yellow || gem.Slot == ItemSlot.Orange || gem.Slot == ItemSlot.Green || gem.Slot == ItemSlot.Prismatic);
-					break;
-				case ItemSlot.Blue:
+			case ItemSlot.Blue:
 					return gem != null && (gem.Slot == ItemSlot.Blue || gem.Slot == ItemSlot.Green || gem.Slot == ItemSlot.Purple || gem.Slot == ItemSlot.Prismatic);
-					break;
 				case ItemSlot.Meta:
 					return gem != null && (gem.Slot == ItemSlot.Meta);
-					break;
 				default:
 					return gem == null;
-					break;
 			}
 		}
 
