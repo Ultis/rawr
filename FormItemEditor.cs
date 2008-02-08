@@ -425,7 +425,7 @@ namespace Rawr
                     
                     if (ud.Enabled)
                     {
-                        string v = Extensions.UnSpaceCamel(combo.Items[combo.SelectedIndex].ToString());
+                        string v = Extensions.UnDisplayName(combo.Items[combo.SelectedIndex].ToString()).Name;
                         ud.DataBindings.Add("Value", boundStats, v);
                        
                         if(clearExistingValue)

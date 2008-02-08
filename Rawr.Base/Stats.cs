@@ -21,6 +21,16 @@ namespace Rawr
         // instead of
         //   Extensions.LongName(info)
 
+		public static PropertyInfo UnDisplayName(string displayName)
+		{
+			foreach (PropertyInfo info in Stats.PropertyInfoCache)
+			{
+				if (DisplayName(info).Trim() == displayName.Trim())
+					return info;
+			}
+			return null;
+		}
+
         public static string DisplayName(PropertyInfo info)
         {
             string prettyName = null;
@@ -34,6 +44,8 @@ namespace Rawr
             {
                 prettyName = SpaceCamel(info.Name);
             }
+			if (!prettyName.StartsWith("%"))
+				prettyName = " " + prettyName;
             return prettyName;
         }
         public static string SpaceCamel(String name)
@@ -143,6 +155,7 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float TerrorProc { get; set; }
 
+		[DisplayName("% Miss")]
         public float Miss { get; set; }
 
         public float BonusShredDamage{get;set;}
@@ -151,26 +164,32 @@ namespace Rawr
 
         public float MangleCostReduction{get;set;}
 
-        [Multiplicative]
+		[Multiplicative]
+		[DisplayName("% Agility")]
         public float BonusAgilityMultiplier { get; set; }
 
-        [Multiplicative]
+		[Multiplicative]
+		[DisplayName("% Strength")]
         public float BonusStrengthMultiplier { get; set; }
 
-        [Multiplicative]
+		[Multiplicative]
+		[DisplayName("% Stamina")]
         public float BonusStaminaMultiplier { get; set; }
 
-        [Multiplicative]
+		[Multiplicative]
+		[DisplayName("% Armor")]
         public float BonusArmorMultiplier { get; set; }
 
-        [Multiplicative]
+		[Multiplicative]
+		[DisplayName("% AP")]
         public float BonusAttackPowerMultiplier { get; set; }
 
         [Multiplicative]
-        [DisplayName("%Crit")]
+        [DisplayName("% Crit Dmg")]
         public float BonusCritMultiplier { get; set; }
 
-        [Multiplicative]
+		[Multiplicative]
+		[DisplayName("% Rip Dmg")]
         public float BonusRipDamageMultiplier { get; set; }
 		
 
@@ -202,7 +221,7 @@ namespace Rawr
 
             foreach (PropertyInfo info in _propertyInfoCache)
             {
-                if (null == info.GetCustomAttributes(typeof(MultiplicativeAttribute), false))
+                if (info.GetCustomAttributes(typeof(MultiplicativeAttribute), false).Length > 0)
                 {
                     _multiplicativeProperties.Add(info); 
                 }
@@ -211,13 +230,13 @@ namespace Rawr
 
 
 
-		private static PropertyInfo[] PropertyInfoCache
+		public static PropertyInfo[] PropertyInfoCache
 		{
 			get { return _propertyInfoCache; }
         }
 
 
-        private static bool IsMultiplicative(PropertyInfo info)
+        public static bool IsMultiplicative(PropertyInfo info)
         {
             return _multiplicativeProperties.Contains(info);
         }
@@ -280,7 +299,7 @@ namespace Rawr
 
 					value = (float)Math.Round(value * 100f) / 100f;
 
-					sb.AppendFormat("{0} {1}, ", value, Extensions.DisplayName(info));
+					sb.AppendFormat("{0}{1}, ", value, Extensions.DisplayName(info));
 				}
 			}
 
@@ -303,8 +322,15 @@ namespace Rawr
                 String[] names = new string[PropertyInfoCache.Length];
                 for (int i = 0; i < PropertyInfoCache.Length; i++)
                 {
-
-                    names[i] = Extensions.SpaceCamel(PropertyInfoCache[i].Name);
+					object[] attributes = PropertyInfoCache[i].GetCustomAttributes(typeof(DisplayNameAttribute), false);
+					if (attributes.Length == 1 && attributes[0] is DisplayNameAttribute && (attributes[0] as DisplayNameAttribute).DisplayName != null)
+					{
+						names[i] = (attributes[0] as DisplayNameAttribute).DisplayName;
+					}
+					else
+					{
+						names[i] = Extensions.SpaceCamel(PropertyInfoCache[i].Name);
+					}
                 }
                 Array.Sort(names);
                 return names;
