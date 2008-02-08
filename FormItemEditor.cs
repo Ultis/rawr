@@ -208,36 +208,45 @@ namespace Rawr
 				_changingItemCache = true;
 				try
 				{
-					Item newItem = Item.LoadFromId(form.Value, true, "Manually Added");
-					if (newItem == null)
-					{
-						if (MessageBox.Show("Unable to load item " + form.Value.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-						{
-							newItem = new Item("New Item", Quality.Epic, form.Value, "temp", Item.ItemSlot.Head, string.Empty, new Stats(), new Sockets(), 0, 0, 0);
-							ItemCache.AddItem(newItem);
-							SelectItem(newItem, true);
-						}
-					}
-					else
-					{
-						ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
-						newLvi.Tag = newItem;
-						newLvi.ImageKey = EnsureIconPath(newItem.IconPath);
-						string slot = newItem.Slot.ToString();
-						if (newItem.Slot == Item.ItemSlot.Red || newItem.Slot == Item.ItemSlot.Orange || newItem.Slot == Item.ItemSlot.Yellow
-							 || newItem.Slot == Item.ItemSlot.Green || newItem.Slot == Item.ItemSlot.Blue || newItem.Slot == Item.ItemSlot.Purple
-							 || newItem.Slot == Item.ItemSlot.Prismatic || newItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
-						newLvi.Group = listViewItems.Groups["listViewGroup" + slot];
-
-						listViewItems.Items.Add(newLvi);
-						newLvi.Selected = true;
-						listViewItems.Sort();
-						newLvi.EnsureVisible();
-					}
+					AddItemById(form.Value);
 				}
 				finally
 				{
 					_changingItemCache = false;
+				}
+			}
+		}
+
+		private void AddItemById(int id) { AddItemsById(new int[] { id }); }
+		private void AddItemsById(int[] ids)
+		{
+			foreach (int id in ids)
+			{
+				Item newItem = Item.LoadFromId(id, true, "Manually Added");
+				if (newItem == null)
+				{
+					if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+					{
+						newItem = new Item("New Item", Quality.Epic, id, "temp", Item.ItemSlot.Head, string.Empty, new Stats(), new Sockets(), 0, 0, 0);
+						ItemCache.AddItem(newItem);
+						SelectItem(newItem, true);
+					}
+				}
+				else
+				{
+					ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
+					newLvi.Tag = newItem;
+					newLvi.ImageKey = EnsureIconPath(newItem.IconPath);
+					string slot = newItem.Slot.ToString();
+					if (newItem.Slot == Item.ItemSlot.Red || newItem.Slot == Item.ItemSlot.Orange || newItem.Slot == Item.ItemSlot.Yellow
+						 || newItem.Slot == Item.ItemSlot.Green || newItem.Slot == Item.ItemSlot.Blue || newItem.Slot == Item.ItemSlot.Purple
+						 || newItem.Slot == Item.ItemSlot.Prismatic || newItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
+					newLvi.Group = listViewItems.Groups["listViewGroup" + slot];
+
+					listViewItems.Items.Add(newLvi);
+					newLvi.Selected = true;
+					listViewItems.Sort();
+					newLvi.EnsureVisible();
 				}
 			}
 		}

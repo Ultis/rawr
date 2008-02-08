@@ -92,7 +92,7 @@ namespace Rawr
 		{
 			return Instance.GetCombatTable(currentCalculations);
 		}
-		public static string[] GetRelevantStats(Stats stats)
+		public static Stats GetRelevantStats(Stats stats)
 		{
 			return Instance.GetRelevantStats(stats);
 		}
@@ -125,7 +125,7 @@ namespace Rawr
 		public abstract CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem);
 		public abstract Stats GetCharacterStats(Character character, Item additionalItem);
 		public abstract ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations);
-		public abstract string[] GetRelevantStats(Stats stats);
+		public abstract Stats GetRelevantStats(Stats stats);
 		public abstract bool HasRelevantStats(Stats stats);
         public abstract String DisplayName{get;}
 		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character) { return GetCharacterCalculations(character, null); }

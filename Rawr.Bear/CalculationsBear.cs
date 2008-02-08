@@ -211,19 +211,23 @@ you are being killed by burst damage, focus on Survival Points.",
 			return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcCrit, calcCrush, calcHit };
 		}
 
-		public override string[] GetRelevantStats(Stats stats)
+		public override Stats GetRelevantStats(Stats stats)
 		{
-			string[] stringStats = new string[stats.TerrorProc > 0 ? 7 : 6];
-			stringStats[0] = stats.Armor.ToString() + " Armor";
-			stringStats[1] = stats.Stamina.ToString() + " Stamina";
-			stringStats[2] = stats.Agility.ToString() + " Agility";
-			stringStats[3] = stats.DodgeRating.ToString() + " Dodge";
-			stringStats[4] = stats.DefenseRating.ToString() + " Defense";
-			stringStats[5] = stats.Resilience.ToString() + " Resilience";
-			if (stats.TerrorProc > 0)
-				stringStats[6] = "Terror Proc";
-
-			return stringStats;
+			return new Stats()
+			{
+				Armor = stats.Armor,
+				Stamina = stats.Stamina,
+				Agility = stats.Agility,
+				DodgeRating = stats.DodgeRating,
+				DefenseRating = stats.DefenseRating,
+				Resilience = stats.Resilience,
+				TerrorProc = stats.TerrorProc,
+				BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+				BonusArmorMultiplier = stats.BonusArmorMultiplier,
+				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+				Health = stats.Health,
+				Miss = stats.Miss
+			};
 		}
 
 		public override bool HasRelevantStats(Stats stats)

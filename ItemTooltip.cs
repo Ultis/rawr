@@ -83,7 +83,7 @@ namespace Rawr
                     bool hasSockets = CurrentItem.Sockets.Color1 != Item.ItemSlot.None ||
                                       CurrentItem.Sockets.Color2 != Item.ItemSlot.None ||
                                       CurrentItem.Sockets.Color3 != Item.ItemSlot.None;
-                    var positiveStats = CurrentItem.Stats.Values(x => x > 0);
+                    var positiveStats = Calculations.GetRelevantStats(CurrentItem.Stats).Values(x => x > 0);
                     int statHeight = (positiveStats.Count + 2) / 3; // number of lines
                     statHeight *= 17;// * line height
                     _cachedToolTipImage = new Bitmap(309, hasSockets ? 81 + statHeight : 23 + statHeight, PixelFormat.Format32bppArgb);
@@ -144,7 +144,8 @@ namespace Rawr
 
                     foreach (System.Reflection.PropertyInfo info in positiveStats.Keys)
                     {
-                        g.DrawString(string.Format("{0} {1}", positiveStats[info], Extensions.DisplayName(info)), _fontStats, SystemBrushes.InfoText, xPos, yPos);
+						float value = (float)Math.Round(positiveStats[info] * 100f) / 100f;
+						g.DrawString(string.Format("{0} {1}", value, Extensions.DisplayName(info)), _fontStats, SystemBrushes.InfoText, xPos, yPos);
 
                         xPos += xGrid.step;
                         if (xPos > xGrid.max)

@@ -185,16 +185,11 @@ namespace Rawr
 		}
 
         private static PropertyInfo[] _propertyInfoCache = null;
-        private static SortedList<PropertyInfo, PropertyInfo> _multiplicativeProperties = new SortedList<PropertyInfo,PropertyInfo>();
-
-        
-        delegate Stats Adder(Stats a, Stats b);
-
-        private static Adder _add = null;
+		private static List<PropertyInfo> _multiplicativeProperties = new List<PropertyInfo>();
 
         static Stats()
         {
-            System.Collections.ArrayList items = new System.Collections.ArrayList();
+			List<PropertyInfo> items = new List<PropertyInfo>();
 
             foreach (PropertyInfo info in typeof(Stats).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.ExactBinding))
             {
@@ -203,129 +198,91 @@ namespace Rawr
                     items.Add(info);
                 }
             }
-            _propertyInfoCache = (PropertyInfo[]) items.ToArray(typeof(PropertyInfo));
+            _propertyInfoCache = items.ToArray();
 
             foreach (PropertyInfo info in _propertyInfoCache)
             {
                 if (null == info.GetCustomAttributes(typeof(MultiplicativeAttribute), false))
                 {
-                    _multiplicativeProperties[info] = info; 
+                    _multiplicativeProperties.Add(info); 
                 }
             }
-
-
-            // i'm a bad bad bobo
-            DynamicMethod dm = new DynamicMethod(
-                "Add",
-                typeof(Stats),
-                new Type[2] { typeof(Stats), typeof(Stats) },
-                typeof(Stats),
-                false);
-            ILGenerator il = dm.GetILGenerator();
-            MethodInfo mi;
-            il.DeclareLocal(typeof(Stats));
-            il.DeclareLocal(typeof(Stats));
-            il.Emit(OpCodes.Newobj, typeof(Stats).GetConstructor(System.Type.EmptyTypes));
-            il.Emit(OpCodes.Stloc_1);
-
-            foreach (PropertyInfo pInfo in _propertyInfoCache)
-            {
-                if (!IsMultiplicative(pInfo))
-                {
-                    mi = pInfo.GetGetMethod();
-                    il.Emit(OpCodes.Ldloc_1);
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.EmitCall(OpCodes.Callvirt, mi, null);
-
-                    il.Emit(OpCodes.Ldarg_1);
-                    il.EmitCall(OpCodes.Callvirt, mi, null);
-
-                    il.Emit(OpCodes.Add);
-
-                    mi = pInfo.GetSetMethod();
-                    il.EmitCall(OpCodes.Callvirt, mi, null);
-                }
-                else
-                {
-                    mi = pInfo.GetGetMethod();
-                    il.Emit(OpCodes.Ldloc_1);
-                    il.Emit(OpCodes.Ldc_R4, 1.0f);
-                    il.Emit(OpCodes.Ldarg_0);
-                    il.EmitCall(OpCodes.Callvirt, mi, null);
-                    il.Emit(OpCodes.Add);
-
-                    il.Emit(OpCodes.Ldc_R4, 1.0f);
-                    il.Emit(OpCodes.Ldarg_1);
-                    il.EmitCall(OpCodes.Callvirt, mi, null);
-
-                    il.Emit(OpCodes.Add);
-                    il.Emit(OpCodes.Mul);
-
-                    il.Emit(OpCodes.Ldc_R4, 1.0f);
-                    il.Emit(OpCodes.Sub);
-
-                    mi = pInfo.GetSetMethod();
-                    il.EmitCall(OpCodes.Callvirt, mi, null);
-                }
-            }
-
-            il.Emit(OpCodes.Ldloc_1);
-            il.Emit(OpCodes.Stloc_0);
-            il.Emit(OpCodes.Ldloc_0);
-            il.Emit(OpCodes.Ret);
-
-
-            _add = (Adder) dm.CreateDelegate(typeof(Adder));
-
-            //this should be a little faster while still maintaining the
-            //intent of the pure reflective code i.e. adding new stats is
-            //easy and not prone to errors
-            //don't try this at home.
-
         }
 
 
 
-        private static PropertyInfo[] PropertyInfoCache
-        {
-            get
-            {
-                return _propertyInfoCache;
-            }
+		private static PropertyInfo[] PropertyInfoCache
+		{
+			get { return _propertyInfoCache; }
         }
 
 
         private static bool IsMultiplicative(PropertyInfo info)
         {
-            return _multiplicativeProperties.ContainsKey(info);
+            return _multiplicativeProperties.Contains(info);
         }
 
       
 		//as the ocean opens up to swallow you
 		public static Stats operator +(Stats a, Stats b)
         {
-            return _add(a, b);
+			return new Stats()
+				{
+					Armor = a.Armor + b.Armor,
+					Health = a.Health + b.Health,
+					Agility = a.Agility + b.Agility,
+					Stamina = a.Stamina + b.Stamina,
+					AttackPower = a.AttackPower + b.AttackPower,
+					Strength = a.Strength + b.Strength,
+					WeaponDamage = a.WeaponDamage + b.WeaponDamage,
+					ArmorPenetration = a.ArmorPenetration + b.ArmorPenetration,
+					FrostResistance = a.FrostResistance + b.FrostResistance,
+					NatureResistance = a.NatureResistance + b.NatureResistance,
+					FireResistance = a.FireResistance + b.FireResistance,
+					ShadowResistance = a.ShadowResistance + b.ShadowResistance,
+					ArcaneResistance = a.ArcaneResistance + b.ArcaneResistance,
+					AllResist = a.AllResist + b.AllResist,
+					CritRating = a.CritRating + b.CritRating,
+					HitRating = a.HitRating + b.HitRating,
+					DodgeRating = a.DodgeRating + b.DodgeRating,
+					DefenseRating = a.DefenseRating + b.DefenseRating,
+					Resilience = a.Resilience + b.Resilience,
+					ExpertiseRating = a.ExpertiseRating + b.ExpertiseRating,
+					HasteRating = a.HasteRating + b.HasteRating,
+					BloodlustProc = a.BloodlustProc + b.BloodlustProc,
+					TerrorProc = a.TerrorProc + b.TerrorProc,
+					Miss = a.Miss + b.Miss,
+					BonusShredDamage = a.BonusShredDamage + b.BonusShredDamage,
+					BonusMangleDamage = a.BonusMangleDamage + b.BonusMangleDamage,
+					MangleCostReduction = a.MangleCostReduction + b.MangleCostReduction,
+					BonusAgilityMultiplier = (1f + a.BonusAgilityMultiplier) * (1f + b.BonusAgilityMultiplier) - 1f,
+					BonusStrengthMultiplier = (1f + a.BonusStrengthMultiplier) * (1f + b.BonusStrengthMultiplier) - 1f,
+					BonusStaminaMultiplier = (1f + a.BonusStaminaMultiplier) * (1f + b.BonusStaminaMultiplier) - 1f,
+					BonusArmorMultiplier = (1f + a.BonusArmorMultiplier) * (1f + b.BonusArmorMultiplier) - 1f,
+					BonusAttackPowerMultiplier = (1f + a.BonusAttackPowerMultiplier) * (1f + b.BonusAttackPowerMultiplier) - 1f,
+					BonusCritMultiplier = (1f + a.BonusCritMultiplier) * (1f + b.BonusCritMultiplier) - 1f,
+					BonusRipDamageMultiplier = (1f + a.BonusRipDamageMultiplier) * (1f + b.BonusRipDamageMultiplier) - 1f
+				};
 		}
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            foreach (PropertyInfo info in PropertyInfoCache)
-            {
-                if (info.PropertyType.IsAssignableFrom(typeof(float)))
-                {
-                    float value = (float)info.GetValue(this, null);
-                    if(value != 0)
-                    {
-                        if (IsMultiplicative(info))
-                        {
-                            value *= 100;
-                        }
+			foreach (PropertyInfo info in PropertyInfoCache)
+			{
+				float value = (float)info.GetValue(this, null);
+				if (value != 0)
+				{
+					if (IsMultiplicative(info))
+					{
+						value *= 100;
+					}
 
-                        sb.AppendFormat("{0} {1}, ", Extensions.DisplayName(info), value);
-                    }
-                }
-            }
+					value = (float)Math.Round(value * 100f) / 100f;
+
+					sb.AppendFormat("{0} {1}, ", value, Extensions.DisplayName(info));
+				}
+			}
 
             return sb.ToString().TrimEnd(' ', ',');
         }

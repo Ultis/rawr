@@ -108,7 +108,9 @@ namespace Rawr
 			float hitBonus = stats.HitRating * 52f / 82f / 1000f;
 			float expertiseBonus = stats.ExpertiseRating * 52f / 82f / 2.5f * 0.0025f;
 
-			float chanceCrit = Math.Min(0.75f, (stats.CritRating / 22.08f + (stats.Agility / 25f)) / 100f);
+			float glancingRate = 0.2335774f; // Glancing rate data from Toskk
+
+			float chanceCrit = Math.Min(0.75f, (stats.CritRating / 22.08f + (stats.Agility / 25f)) / 100f) - 0.042f; // Crit Reduction data from Toskk
 			float chanceDodge = Math.Max(0f, 0.05f - expertiseBonus);
 			float chanceMiss = Math.Max(0f, 0.09f - hitBonus) + chanceDodge;
 						
@@ -124,7 +126,7 @@ namespace Rawr
 			float ripCost = 30f;
 			float totalRipCost = 1f / (1f - chanceMiss) * ripCost;
 
-			float chanceWhiteCrit = Math.Min(chanceCrit, 0.75f - chanceMiss);
+			float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceMiss);
 
 			float hasteBonus = stats.HasteRating / 15.76f / 100f;
 			float attackSpeed = 1f / (1f + hasteBonus);
@@ -151,7 +153,7 @@ namespace Rawr
 				segmentTime = 1.0f;
 				energyCount = mangleCost + 10f;
 
-				dmgMelee += segmentTime / attackSpeed * meleeDamage * (0.7f * 0.25f + (0.75f - chanceMiss - chanceWhiteCrit) +
+				dmgMelee += segmentTime / attackSpeed * meleeDamage * (0.7f * glancingRate + ((1 - glancingRate) - chanceMiss - chanceWhiteCrit) +
 					critMultiplier * chanceWhiteCrit);
 				energyCount += segmentTime / attackSpeed * stats.BloodlustProc;
 
@@ -188,8 +190,8 @@ namespace Rawr
 
 			terrorTicker -= segmentTime;
 
-			dmgMelee += segmentTime / attackSpeed * (stats.WeaponDamage + (768f + attackPower) / 14f) * 
-				(0.7f * 0.25f + (0.75f - chanceMiss - chanceWhiteCrit) + critMultiplier * chanceWhiteCrit);
+			dmgMelee += segmentTime / attackSpeed * (stats.WeaponDamage + (768f + attackPower) / 14f) *
+				(0.7f * glancingRate + ((1 - glancingRate) - chanceMiss - chanceWhiteCrit) + critMultiplier * chanceWhiteCrit);
 
 			float dmgPerShred = ((stats.WeaponDamage + (768f + attackPower) / 14f) * 2.25f + 405f + stats.BonusShredDamage);
 			float dmgShreds = 0;
@@ -225,11 +227,11 @@ namespace Rawr
 
 			if (stats.TerrorProc > 0)
 				dmgMelee += (terrorTicker / segmentTime) * (segmentTime / attackSpeed * (stats.WeaponDamage + (768f +
-					attackPower) / 14f) * (0.7f * 0.25f + (0.75f - chanceMiss - chanceWhiteCrit) + critMultiplier *
+					attackPower) / 14f) * (0.7f * glancingRate + ((1 - glancingRate) - chanceMiss - chanceWhiteCrit) + critMultiplier *
 					chanceWhiteCrit)) + (1f - terrorTicker / segmentTime) * (segmentTime / attackSpeed * meleeDamage *
-					(0.7f * 0.25f + (0.75f - chanceMiss - chanceWhiteCrit) + critMultiplier * chanceWhiteCrit));
+					(0.7f * glancingRate + ((1 - glancingRate) - chanceMiss - chanceWhiteCrit) + critMultiplier * chanceWhiteCrit));
 			else
-				dmgMelee += segmentTime / attackSpeed * meleeDamage * (0.7f * 0.25f + (0.75f - chanceMiss -
+				dmgMelee += segmentTime / attackSpeed * meleeDamage * (0.7f * glancingRate + ((1 - glancingRate) - chanceMiss -
 					chanceWhiteCrit) + critMultiplier * chanceWhiteCrit);
 			#endregion
 
@@ -246,7 +248,7 @@ namespace Rawr
 				cycleTime += segmentTime;
 				energyCount = segmentTime * 10f;
 
-				dmgMelee += segmentTime / attackSpeed * meleeDamage * (0.7f * 0.25f + (0.75f - chanceMiss - chanceWhiteCrit) +
+				dmgMelee += segmentTime / attackSpeed * meleeDamage * (0.7f * glancingRate + ((1 - glancingRate) - chanceMiss - chanceWhiteCrit) +
 					critMultiplier * chanceWhiteCrit);
 
 				energyCount += segmentTime / attackSpeed * stats.BloodlustProc;
@@ -296,7 +298,6 @@ namespace Rawr
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-			//TODO: Find correct BonusCritMultiplier, AttackPower, Strength, CritRating
 			Stats statsRace = character.Race == Character.CharacterRace.NightElf ? 
 				new Stats() { 
 					Health = 3434f, 
@@ -400,36 +401,33 @@ namespace Rawr
 			return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcCrit, calcCrush, calcHit };
 		}
 
-		public override string[] GetRelevantStats(Stats stats)
+		public override Stats GetRelevantStats(Stats stats)
 		{
-			List<string> listStats = new List<string>(
-				new string[] {
-					stats.Agility.ToString() + " Agility",
-					stats.Strength.ToString() + " Strength",
-					stats.AttackPower.ToString() + " AP",
-					stats.CritRating.ToString() + " Crit",
-					stats.HitRating.ToString() + " Hit",
-					stats.Stamina.ToString() + " Stamina"
-				});
-
-			if (stats.HasteRating > 0)
-				listStats.Add(stats.HasteRating + " Haste");
-			if (stats.ExpertiseRating > 0)
-				listStats.Add(stats.ExpertiseRating + " Expertise");
-			if (stats.ArmorPenetration > 0)
-				listStats.Add(stats.ArmorPenetration + " Armor Penetration");
-			if (stats.BloodlustProc > 0)
-				listStats.Add("Bloodlust Proc");
-			if (stats.TerrorProc > 0)
-				listStats.Add("Terror Proc");
-			if (stats.BonusMangleDamage > 0)
-				listStats.Add(stats.BonusMangleDamage + " Mangle Dmg");
-			if (stats.BonusShredDamage > 0)
-				listStats.Add(stats.BonusShredDamage + " Shred Dmg");
-			if (stats.WeaponDamage > 0)
-				listStats.Add(stats.WeaponDamage + " Weapon Dmg");
-
-			return listStats.ToArray(); ;
+			return new Stats()
+				{
+					Agility = stats.Agility,
+					Strength = stats.Strength,
+					AttackPower = stats.AttackPower,
+					CritRating = stats.CritRating,
+					HitRating = stats.HitRating,
+					Stamina = stats.Stamina,
+					HasteRating = stats.HasteRating,
+					ExpertiseRating = stats.ExpertiseRating,
+					ArmorPenetration = stats.ArmorPenetration,
+					BloodlustProc = stats.BloodlustProc,
+					TerrorProc = stats.TerrorProc,
+					BonusMangleDamage = stats.BonusMangleDamage,
+					BonusShredDamage = stats.BonusShredDamage,
+					WeaponDamage = stats.WeaponDamage,
+					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
+					BonusCritMultiplier = stats.BonusCritMultiplier,
+					BonusRipDamageMultiplier = stats.BonusRipDamageMultiplier,
+					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
+					Health = stats.Health,
+					MangleCostReduction = stats.MangleCostReduction
+				};
 		}
 
 		public override bool HasRelevantStats(Stats stats)
