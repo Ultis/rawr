@@ -75,7 +75,7 @@ namespace Rawr
                     else
                     {
 
-                        comboBoxBonus1.SelectedIndex = comboBoxBonus1.Items.IndexOf(Extensions.SpaceCamel(socketBonuses.Current.Key.Name));
+                        comboBoxBonus1.SelectedIndex = comboBoxBonus1.Items.IndexOf(Extensions.DisplayName(socketBonuses.Current.Key));
                         numericUpDownBonus1.Value = (decimal)socketBonuses.Current.Value;
 /*
  // if there is ever more than one socket
