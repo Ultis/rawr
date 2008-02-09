@@ -303,7 +303,7 @@ namespace Rawr
 			Stats statsItems = new Stats();
 			foreach (Item item in items)
 				if (item != null)
-					statsItems += item.GetTotalStats();
+					statsItems += item.GetTotalStats(character);
 
 			return statsItems;
 		}

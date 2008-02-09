@@ -42,6 +42,8 @@ namespace Rawr
 				Character.CalculationOptions["PrimaryAttack"] = "Both";
 			if (!Character.CalculationOptions.ContainsKey("Finisher"))
 				Character.CalculationOptions["Finisher"] = "Rip";
+			if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
+				Character.CalculationOptions["EnforceMetagemRequirements"] = "Yes";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
 			trackBarTargetArmor.Value = int.Parse(Character.CalculationOptions["TargetArmor"]);
@@ -52,7 +54,8 @@ namespace Rawr
 			radioButtonRip.Checked = Character.CalculationOptions["Finisher"] == "Rip";
 			radioButtonFerociousBite.Checked = Character.CalculationOptions["Finisher"] == "Ferocious Bite";
 			radioButtonNone.Checked = Character.CalculationOptions["Finisher"] == "None";
-
+			checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
+		
 			_loadingCalculationOptions = false;
 		}
 
@@ -81,6 +84,12 @@ namespace Rawr
 		private void CalculationOptionsPanelCat_Load(object sender, EventArgs e)
 		{
 
+		}
+
+		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
+		{
+			Character.CalculationOptions["EnforceMetagemRequirements"] = checkBoxEnforceMetagemRequirements.Checked ? "Yes" : "No";
+			Character.OnItemsChanged();
 		}
 	}
 }

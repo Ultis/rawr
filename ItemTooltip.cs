@@ -10,7 +10,6 @@ namespace Rawr
     public class ItemToolTip : ToolTip
     {
         private static ItemToolTip _instance = null;
-
         public static ItemToolTip Instance
         {
             get
@@ -22,6 +21,24 @@ namespace Rawr
                 return _instance;
             }
         }
+
+		private Character _character = null;
+		public Character Character
+		{
+			get { return _character; }
+			set
+			{
+				if (_character != null)
+				{
+					_character.ItemsChanged -= new EventHandler(CharacterItemCache_ItemsChanged);
+				}
+				_character = value;
+				if (_character != null)
+				{
+					_character.ItemsChanged += new EventHandler(CharacterItemCache_ItemsChanged);
+				}
+			}
+		}
 
         public ItemToolTip()
         {
@@ -36,10 +53,10 @@ namespace Rawr
             UseFading = true;
             LoadGraphicsObjects();
 
-            ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			ItemCache.ItemsChanged += new EventHandler(CharacterItemCache_ItemsChanged);
         }
 
-        private void ItemCache_ItemsChanged(object sender, EventArgs e)
+        private void CharacterItemCache_ItemsChanged(object sender, EventArgs e)
         {
             _currentItem = null;
         }
@@ -189,14 +206,21 @@ namespace Rawr
                                     g.DrawImageUnscaled(ItemIcons.GetItemIcon(gem, true), rectGemBorder.X + 2,
                                                         rectGemBorder.Y + 2);
 
+									Character characterWithItemEquipped = Character.Clone();
+									characterWithItemEquipped[Character.CharacterSlot.Head] = CurrentItem;
+									bool active = gem.MeetsRequirements(characterWithItemEquipped);
+
                                     string[] stats = gem.Stats.ToString().Split(',');
                                     if (stats.Length > 0)
-                                        g.DrawString(stats[0].Trim(), _fontStats, SystemBrushes.InfoText,
+                                        g.DrawString(stats[0].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
                                                      rectGemBorder.X + 39, rectGemBorder.Y + 3);
 
                                     if (stats.Length > 1)
-                                        g.DrawString(stats[1].Trim(), _fontStats, SystemBrushes.InfoText,
+                                        g.DrawString(stats[1].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
                                                      rectGemBorder.X + 39, rectGemBorder.Y + 20);
+
+									if (!active)
+										g.FillRectangle(new SolidBrush(Color.FromArgb(128, Color.Silver)), rectGemBorder);
                                 }
                             }
                         }

@@ -522,6 +522,21 @@ namespace Rawr //O O . .
 			}
 		}
 
+        public int GetGemColorCount(Item.ItemSlot slotColor)
+        {
+            int count = 0;
+			foreach (CharacterSlot slot in Enum.GetValues(typeof(CharacterSlot)))
+			{
+				Item item = this[slot];
+				if (item == null) continue;
+
+				if (Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
+				if (Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
+				if (Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
+			}
+            return count;
+        }
+		
 		public event EventHandler ItemsChanged;
 		public void OnItemsChanged()
 		{

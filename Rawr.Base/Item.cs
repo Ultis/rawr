@@ -311,16 +311,17 @@ namespace Rawr
 			return summary;
 		}
 
-		public Stats GetTotalStats()
+		public Stats GetTotalStats() { return GetTotalStats(null); }
+		public Stats GetTotalStats(Character character)
 		{
 			Stats totalItemStats = new Stats();
 			totalItemStats += this.Stats;
 			bool eligibleForSocketBonus = GemMatchesSlot(Gem1, Sockets.Color1) &&
 				GemMatchesSlot(Gem2, Sockets.Color2) &&
 				GemMatchesSlot(Gem3, Sockets.Color3);
-			if (Gem1 != null) totalItemStats += Gem1.Stats;
-			if (Gem2 != null) totalItemStats += Gem2.Stats;
-			if (Gem3 != null) totalItemStats += Gem3.Stats;
+			if (Gem1 != null && Gem1.MeetsRequirements(character)) totalItemStats += Gem1.Stats;
+			if (Gem2 != null && Gem2.MeetsRequirements(character)) totalItemStats += Gem2.Stats;
+			if (Gem3 != null && Gem3.MeetsRequirements(character)) totalItemStats += Gem3.Stats;
 			if (eligibleForSocketBonus) totalItemStats += Sockets.Stats;
 			return totalItemStats;
 		}
@@ -392,6 +393,55 @@ namespace Rawr
 			}
 			//I wouldn't be out here... alone tonight
 		}
+
+		public bool MeetsRequirements(Character character)
+		{
+			if (character == null || character.CalculationOptions["EnforceMetagemRequirements"] != "Yes") return true;
+			int redGems = character.GetGemColorCount(ItemSlot.Red);
+			int yellowGems = character.GetGemColorCount(ItemSlot.Yellow);
+			int blueGems = character.GetGemColorCount(ItemSlot.Blue);
+
+			//TODO: Make this dynamic, by loading the gem requirements from the armory
+			switch (this.Id)
+			{
+				case 25899:
+				case 25890:
+				case 25901:
+				case 32409:
+				case 32410:
+					return redGems >= 2 && yellowGems >= 2 && blueGems >= 2;
+
+				case 25897:
+					return redGems > blueGems;
+
+				case 25895:
+					return redGems > yellowGems;
+
+				case 25893:
+				case 32640:
+					return blueGems > yellowGems;
+
+				case 34220:
+					return blueGems >= 2;
+
+				case 25896:
+					return blueGems >= 3;
+
+				case 25898:
+					return blueGems >= 5;
+
+				case 32641:
+					return yellowGems == 3;
+
+				case 25894:
+				case 28557:
+				case 28556:
+					return yellowGems >= 2 && redGems >= 1;
+			}
+			return true;
+		}
+
+
 
 		public static Item LoadFromId(int id, string logReason) { return LoadFromId(id, false, logReason); }
 		public static Item LoadFromId(int id, bool forceRefresh, string logReason) { return LoadFromId(id.ToString() + ".0.0.0", forceRefresh, logReason); }
