@@ -18,6 +18,12 @@ namespace Rawr
 			ToolTip.AutoPopDelay = 100000;
 			
 			BuildControls();
+			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+		}
+
+		void Calculations_ModelChanged(object sender, EventArgs e)
+		{
+			BuildControls();
 		}
 
 		Dictionary<string, GroupBox> GroupBoxes = new Dictionary<string, GroupBox>();
@@ -26,6 +32,10 @@ namespace Rawr
 		private void BuildControls()
 		{
 			this.Controls.Clear();
+			GroupBoxes.Clear();
+			LabelLabels.Clear();
+			ValueLabels.Clear();
+			ToolTip.RemoveAll();
             string[] displayLabelConfigurationStrings = null;
             if (Calculations.Instance != null)
             {

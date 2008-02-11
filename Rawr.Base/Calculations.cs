@@ -6,11 +6,17 @@ namespace Rawr
 {
 	public class Calculations
 	{
+		public static event EventHandler ModelChanged;
+		protected static void OnModelChanged()
+		{
+			if (ModelChanged != null)
+				ModelChanged(null, EventArgs.Empty);
+		}
 
         public static void LoadModel(CalculationsBase model)
 		{
             Instance = model;
-
+			OnModelChanged();
 		}
 
 		private static CalculationsBase _instance;
@@ -127,7 +133,6 @@ namespace Rawr
 		public abstract ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations);
 		public abstract Stats GetRelevantStats(Stats stats);
 		public abstract bool HasRelevantStats(Stats stats);
-        public abstract String DisplayName{get;}
 		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character) { return GetCharacterCalculations(character, null); }
 		public virtual Stats GetCharacterStats(Character character) { return GetCharacterStats(character, null); }
 		

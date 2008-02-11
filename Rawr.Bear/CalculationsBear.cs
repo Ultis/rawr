@@ -4,13 +4,11 @@ using System.Text;
 
 namespace Rawr
 {
+	[System.ComponentModel.DisplayName("Bear")]
 	public class CalculationsBear : CalculationsBase
 	{
 		//my insides all turned to ash / so slow
 		//and blew away as i collapsed / so cold
-
-        public override String DisplayName{get{return "Bear";}}
-
 		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
 		{

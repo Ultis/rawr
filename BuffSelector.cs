@@ -14,8 +14,11 @@ namespace Rawr
 		public BuffSelector()
 		{
 			InitializeComponent();
-			this.Controls.Clear();
-			BuildControls();
+			if (!this.DesignMode)
+			{
+				this.Controls.Clear();
+				BuildControls();
+			}
 		}
 
 		//i want to be free... from desolation and despair

@@ -159,24 +159,59 @@ namespace Rawr
 			//and the ground below grew colder / as they put you down inside
 		}
 
+		private void modelToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem modelToolStripMenuItem = sender as ToolStripMenuItem;
+			if (!modelToolStripMenuItem.Checked)
+			{
+				foreach (ToolStripMenuItem item in (modelToolStripMenuItem.OwnerItem as ToolStripMenuItem).DropDownItems)
+					item.Checked = item == modelToolStripMenuItem;
+				CalculationsBase model = (CalculationsBase)Activator.CreateInstance(modelToolStripMenuItem.Tag as Type);
+				Calculations.LoadModel(model);
+			}
+		}
+
 		public FormMain()
 		{
 			_spash.Show();
 
-            new FormModelChooser().ShowDialog();
-
+            FormModelChooser formModelChooser = new FormModelChooser();
+			formModelChooser.ShowDialog();
 			
 			Application.DoEvents();
 			InitializeComponent();
 
+			ToolStripMenuItem modelsToolStripMenuItem = new ToolStripMenuItem("Models");
+			menuStripMain.Items.Add(modelsToolStripMenuItem);
+			foreach (KeyValuePair<string, Type> kvp in formModelChooser.Models)
+			{
+				ToolStripMenuItem modelToolStripMenuItem = new ToolStripMenuItem(kvp.Key);
+				modelToolStripMenuItem.Click += new EventHandler(modelToolStripMenuItem_Click);
+				modelToolStripMenuItem.Checked = kvp.Value == Calculations.Instance.GetType();
+				modelToolStripMenuItem.Tag = kvp.Value;
+				modelsToolStripMenuItem.DropDownItems.Add(modelToolStripMenuItem);					
+			}
 
-            if (Calculations.CalculationOptionsPanel.Icon != null)
-            {
-                Icon = Calculations.CalculationOptionsPanel.Icon;
-            }
+			this.Shown += new EventHandler(FormMain_Shown);
+			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+			Calculations_ModelChanged(null, null);
+			
+			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
+			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
+		}
 
-			overallToolStripMenuItem.Tag = -1;
-			alphabeticalToolStripMenuItem.Tag = -2;
+		void Calculations_ModelChanged(object sender, EventArgs e)
+		{
+			bool unsavedChanges = _unsavedChanges;
+			if (Calculations.CalculationOptionsPanel.Icon != null)
+			{
+				Icon = Calculations.CalculationOptionsPanel.Icon;
+			}
+
+			toolStripDropDownButtonSort.DropDownItems.Clear();
+			toolStripDropDownButtonSort.DropDownItems.Add(overallToolStripMenuItem);
+			toolStripDropDownButtonSort.DropDownItems.Add(alphabeticalToolStripMenuItem);
 			foreach (string name in Calculations.SubPointNameColors.Keys)
 			{
 				ToolStripMenuItem toolStripMenuItemSubPoint = new ToolStripMenuItem(name);
@@ -184,13 +219,18 @@ namespace Rawr
 				toolStripMenuItemSubPoint.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
 				toolStripDropDownButtonSort.DropDownItems.Add(toolStripMenuItemSubPoint);
 			}
-			Calculations.CalculationOptionsPanel.Dock = DockStyle.Fill;
-			tabPageOptions.Controls.Add(Calculations.CalculationOptionsPanel);
 
-			this.Shown += new EventHandler(FormMain_Shown);
-			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
-			ItemCache_ItemsChanged(null, null);
-
+			comboBoxEnchantBack.Items.Clear();
+			comboBoxEnchantChest.Items.Clear();
+			comboBoxEnchantFeet.Items.Clear();
+			comboBoxEnchantFinger1.Items.Clear();
+			comboBoxEnchantFinger2.Items.Clear();
+			comboBoxEnchantHands.Items.Clear();
+			comboBoxEnchantHead.Items.Clear();
+			comboBoxEnchantLegs.Items.Clear();
+			comboBoxEnchantShoulders.Items.Clear();
+			comboBoxEnchantWeapon.Items.Clear();
+			comboBoxEnchantWrists.Items.Clear();
 			comboBoxEnchantBack.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Back).ToArray());
 			comboBoxEnchantChest.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Chest).ToArray());
 			comboBoxEnchantFeet.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Feet).ToArray());
@@ -203,8 +243,14 @@ namespace Rawr
 			comboBoxEnchantWeapon.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Weapon).ToArray());
 			comboBoxEnchantWrists.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Wrist).ToArray());
 
-			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
-			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
+			Calculations.CalculationOptionsPanel.Dock = DockStyle.Fill;
+			tabPageOptions.Controls.Clear();
+			tabPageOptions.Controls.Add(Calculations.CalculationOptionsPanel);
+			Character = Character;
+
+			ItemCache.OnItemsChanged();
+			Character.OnItemsChanged();
+			_unsavedChanges = unsavedChanges;
 		}
 
 		void FormMain_Shown(object sender, EventArgs e)
@@ -579,17 +625,98 @@ namespace Rawr
 
         private void updateAllItemsToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            //Uncomment and run to refresh data for all known items
-            foreach (Item item in ItemCache.GetItemsArray())
-            {
-                Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing");
-                if (newItem == null)
-                {
-                    MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
-                    ItemCache.AddItem(item, true, false);
-                }
-            }
-            ItemCache.OnItemsChanged();
+			foreach (Item item in ItemCache.GetItemsArray())
+			{
+				Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing");
+				if (newItem == null)
+				{
+					MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
+					ItemCache.AddItem(item, true, false);
+				}
+			}
+			ItemCache.OnItemsChanged();
+			//AddPTRItems();
         }
+
+		private void AddPTRItems()
+		{
+			Item[] ptrItems = new Item[]
+			{
+				new Item() { Name = "Hard Khorium Choker", Id = 90001, Slot = Item.ItemSlot.Neck, IconPath = "temp", Stats = new Stats()
+				{ Stamina = 42, HasteRating = 29, AttackPower = 58, ArmorPenetration = 150 }},
+				new Item() { Name = "Hard Khorium Band", Id = 90002, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
+				{ Agility = 30, Stamina = 42, HasteRating = 28, AttackPower = 58 }},
+				new Item() { Name = "Bladed Chaos Tunic", Id = 90003, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
+				{ Armor = 474, Agility = 42, Stamina = 45, CritRating = 38, AttackPower = 120, ArmorPenetration = 210 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Blue, Color2 = Item.ItemSlot.Yellow, Color3 = Item.ItemSlot.Red,
+				    Stats = new Stats() { AttackPower = 8 }}},
+				new Item() { Name = "Gloves of the Forest Drifter", Id = 90004, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
+				{ Armor = 539, Strength = 34, Agility = 34, Stamina = 45, ArmorPenetration = 140 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
+				    Stats = new Stats() { Agility = 3 }}},
+				new Item() { Name = "Harness of Carnal Instinct", Id = 90005, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
+				{ Armor = 727, Strength = 52, Agility = 44, Stamina = 64, ArmorPenetration = 196 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Yellow, Color3 = Item.ItemSlot.Blue,
+				    Stats = new Stats() { Agility = 4 }}},
+				new Item() { Name = "Shadowed Gauntlets of Paroxysm", Id = 90006, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
+				{ Armor = 252, Agility = 41, Stamina = 33, HasteRating = 30, AttackPower = 82 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
+				    Stats = new Stats() { Agility = 3 }}},
+				new Item() { Name = "Demontooth Shoulderpads", Id = 90007, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
+				{ Armor = 484, Strength = 38, Agility = 38, Stamina = 38, CritRating = 20, ArmorPenetration = 105 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
+				    Stats = new Stats() { Agility = 3 }}},
+				new Item() { Name = "Shoulderpads of Vehemence", Id = 90008, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
+				{ Armor = 333, Agility = 33, Stamina = 45, HitRating = 26, HasteRating = 30, AttackPower = 90 }},
+				new Item() { Name = "Leggings of the Immortal Beast", Id = 90009, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
+				{ Armor = 765, Strength = 44, Agility = 46, Stamina = 66, ArmorPenetration = 169 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Blue,
+				    Stats = new Stats() { Agility = 4 }}},
+				new Item() { Name = "Leggings of the Immortal Night", Id = 90010, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
+				{ Armor = 380, Agility = 41, Stamina = 48, HitRating = 32, AttackPower = 124, ArmorPenetration = 224 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Red,
+				    Stats = new Stats() { Agility = 4 }}},
+				new Item() { Name = "Mask of the Furry Hunter", Id = 90011, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
+				{ Armor = 611, Strength = 50, Agility = 50, Stamina = 58, CritRating = 30 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Meta,
+				    Stats = new Stats() { Stamina = 6 }}},
+				new Item() { Name = "Duplicitous Guise", Id = 90012, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
+				{ Armor = 373, Agility = 43, Stamina = 57, HitRating = 30, HasteRating = 34, AttackPower = 126 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Meta, Color2 = Item.ItemSlot.Red,
+				    Stats = new Stats() { HitRating = 4 }}},
+				new Item() { Name = "Gloves of Immortal Dusk", Id = 90013, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
+				{ Armor = 252, Agility = 30, Stamina = 33, CritRating = 30, AttackPower = 90, ArmorPenetration = 154 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red,
+				    Stats = new Stats() { CritRating = 3 }}},
+				new Item() { Name = "Carapace of Sun and Shadow", Id = 90014, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
+				{ Armor = 474, Agility = 42, Stamina = 45, HasteRating = 38, HitRating = 30, AttackPower = 120 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Red,
+				    Stats = new Stats() { AttackPower = 8 }}},
+				new Item() { Name = "Quad Deathblow X44 Goggles", Id = 90015, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
+				{ Armor = 326, Agility = 61, Stamina = 47, HitRating = 24, AttackPower = 104 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Meta, Color2 = Item.ItemSlot.Blue,
+				    Stats = new Stats() { Agility = 4 }}},
+				new Item() { Name = "Thunderheart Treads", Id = 90016, Slot = Item.ItemSlot.Feet, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
+				{ Armor = 515, Strength = 35, Agility = 35, Stamina = 54, ExpertiseRating = 20 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
+				    Stats = new Stats() { Stamina = 3 }}},
+				new Item() { Name = "Thunderheart Waistguard", Id = 90017, Slot = Item.ItemSlot.Waist, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
+				{ Armor = 319, Strength = 38, Agility = 40, Stamina = 34, HitRating = 22 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
+				    Stats = new Stats() { Stamina = 3 }}},
+				new Item() { Name = "Thunderheart Wristguards", Id = 90018, Slot = Item.ItemSlot.Wrist, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
+				{ Armor = 264, Strength = 28, Agility = 28, Stamina = 39, ArmorPenetration = 91 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
+				    Stats = new Stats() { Stamina = 3 }}},
+				new Item() { Name = "Stanchion of Primal Instinct", Id = 90019, Slot = Item.ItemSlot.Weapon, IconPath = "temp", Stats = new Stats()
+				{ Stamina = 50, Strength = 75, AttackPower = 1197, Agility = 47, ArmorPenetration = 350 }}
+			};
+
+			foreach (Item ptrItem in ptrItems)
+			{
+				ItemCache.AddItem(ptrItem, true, false);
+			}
+			ItemCache.OnItemsChanged();
+		}
 	}
 }

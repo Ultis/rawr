@@ -41,7 +41,8 @@ namespace Rawr
 			this.Size = new System.Drawing.Size(150, 138);
 			this.MouseLeave += new System.EventHandler(this.ComparisonGraph_MouseLeave);
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ComparisonGraph_MouseMove);
-			this.MouseClick += new System.Windows.Forms.MouseEventHandler(ComparisonGraph_MouseClick);
+			this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ComparisonGraph_MouseClick);
+			this.Resize += new System.EventHandler(this.ComparisonGraph_Resize);
 			this.ResumeLayout(false);
 
 		}

@@ -8,7 +8,9 @@ namespace Rawr
 {
 	public partial class FormModelChooser : Form
 	{
-        private SortedList<String,CalculationsBase> _models = new SortedList<String,CalculationsBase>();
+        private SortedList<String, Type> _models = new SortedList<String, Type>();
+		public SortedList<String, Type> Models { get { return _models; } }
+
 		public FormModelChooser()
 		{
 			InitializeComponent();
@@ -27,8 +29,11 @@ namespace Rawr
                     {
                         if(type.IsSubclassOf(typeof(CalculationsBase)))
                         {
-                            CalculationsBase model = (CalculationsBase) Activator.CreateInstance(type);
-                            _models[model.DisplayName] = model;
+							System.ComponentModel.DisplayNameAttribute[] displayNameAttributes = type.GetCustomAttributes(typeof(System.ComponentModel.DisplayNameAttribute), false) as System.ComponentModel.DisplayNameAttribute[];
+							string displayName = type.Name;
+							if (displayNameAttributes.Length > 0) 
+								displayName = displayNameAttributes[0].DisplayName;
+							_models[displayName] = type;
                         }
                     }
                 }
@@ -69,8 +74,10 @@ namespace Rawr
 
         private void LoadModel()
         {
-            Calculations.LoadModel(_models[listBoxModels.SelectedItem.ToString()]);
-            _models.Clear();
+
+            CalculationsBase model = (CalculationsBase)Activator.CreateInstance(_models[listBoxModels.SelectedItem.ToString()]);
+            Calculations.LoadModel(model);
+            //_models.Clear();
             this.Close();
         }
 	}

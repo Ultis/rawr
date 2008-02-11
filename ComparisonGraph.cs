@@ -399,6 +399,24 @@ namespace Rawr
 			this.UpdateStyles();
 
 			InitializeComponent();
+
+			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+		}
+
+		private void ComparisonGraph_Resize(object sender, EventArgs e)
+		{
+			int scrollValue = -1;
+			if (_scrollBar != null) scrollValue = _scrollBar.Value;
+			_prerenderedGraph = null;
+			this.Invalidate();
+			PrerenderedGraph.ToString(); //render it, so we can scroll back to the previous spot
+			if (scrollValue > 0) _scrollBar.Value = scrollValue;
+		}
+
+		void Calculations_ModelChanged(object sender, EventArgs e)
+		{
+			_prerenderedGraph = null;
+			this.Invalidate();
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -437,14 +455,14 @@ namespace Rawr
 			if (e.Location != _lastPoint)
 			{
 				_lastPoint = e.Location;
-				if (e.X <= 96)
+				if (e.X <= 108)
 				{
 					int itemIndex = (int)Math.Floor(((float)(e.Y - 24f + _scrollBar.Value)) / 36f);
 					if (itemIndex >= 0 && itemIndex < ItemCalculations.Length)
 					{
 						if (ItemCalculations[itemIndex].Item != _tooltipItem)
 						{
-							int tipX = 98;
+							int tipX = 108;
 							if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 								tipX = -249;
 
