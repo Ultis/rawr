@@ -15,7 +15,7 @@ namespace Rawr
 		{
 			InitializeComponent();
 			if (!this.DesignMode)
-			{
+			{ 
 				this.Controls.Clear();
 				BuildControls();
 			}

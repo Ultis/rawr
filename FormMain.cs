@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using System.Configuration;
 
 namespace Rawr
 {
@@ -159,15 +160,78 @@ namespace Rawr
 			//and the ground below grew colder / as they put you down inside
 		}
 
-		private void modelToolStripMenuItem_Click(object sender, EventArgs e)
+		private Configuration _config = null;
+		public Configuration Config
 		{
-			ToolStripMenuItem modelToolStripMenuItem = sender as ToolStripMenuItem;
-			if (!modelToolStripMenuItem.Checked)
+			get
 			{
-				foreach (ToolStripMenuItem item in (modelToolStripMenuItem.OwnerItem as ToolStripMenuItem).DropDownItems)
-					item.Checked = item == modelToolStripMenuItem;
-				CalculationsBase model = (CalculationsBase)Activator.CreateInstance(modelToolStripMenuItem.Tag as Type);
-				Calculations.LoadModel(model);
+				if (_config == null)
+				{
+					_config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+					if (_config.AppSettings.Settings["Model"] == null)
+						_config.AppSettings.Settings.Add("Model", "Bear");
+					if (_config.AppSettings.Settings["RecentCharacters"] == null)
+						_config.AppSettings.Settings.Add("RecentCharacters", "");
+				}
+				return _config;
+			}
+		}
+
+		public string ConfigModel
+		{
+			get { return Config.AppSettings.Settings["Model"].Value; }
+			set { Config.AppSettings.Settings["Model"].Value = value; }
+		}
+
+		public string[] ConfigRecentCharacters
+		{
+			get
+			{
+				string recentCharacters = Config.AppSettings.Settings["RecentCharacters"].Value;
+				if (string.IsNullOrEmpty(recentCharacters))
+					return new string[0];
+				else
+					return recentCharacters.Split(';'); 
+			}
+			set { Config.AppSettings.Settings["RecentCharacters"].Value = string.Join(";", value); }
+		}
+
+		public void AddRecentCharacter(string character)
+		{
+			List<string> recentCharacters = new List<string>(ConfigRecentCharacters);
+			recentCharacters.Remove(character);
+			recentCharacters.Add(character);
+			while (recentCharacters.Count > 8)
+				recentCharacters.RemoveRange(0, recentCharacters.Count - 8);
+			ConfigRecentCharacters = recentCharacters.ToArray();
+			UpdateRecentCharacterMenuItems();
+		}
+
+		private List<ToolStripMenuItem> _recentCharacterMenuItems = new List<ToolStripMenuItem>();
+		public void UpdateRecentCharacterMenuItems()
+		{
+			foreach (ToolStripMenuItem item in _recentCharacterMenuItems)
+			{
+				fileToolStripMenuItem.DropDownItems.Remove(item);
+				item.Dispose();
+			}
+			_recentCharacterMenuItems.Clear();
+			foreach (string recentCharacter in ConfigRecentCharacters)
+			{
+				string fileName = System.IO.Path.GetFileName(recentCharacter);
+				ToolStripMenuItem recentCharacterMenuItem = new ToolStripMenuItem(fileName);
+				recentCharacterMenuItem.Tag = recentCharacter;
+				recentCharacterMenuItem.Click += new EventHandler(recentCharacterMenuItem_Click);
+				_recentCharacterMenuItems.Add(recentCharacterMenuItem);
+				fileToolStripMenuItem.DropDownItems.Insert(4, recentCharacterMenuItem);
+			}
+		}
+
+		void recentCharacterMenuItem_Click(object sender, EventArgs e)
+		{
+			if (PromptToSaveBeforeClosing())
+			{
+				LoadCharacter((sender as ToolStripMenuItem).Tag.ToString());
 			}
 		}
 
@@ -175,15 +239,14 @@ namespace Rawr
 		{
 			_spash.Show();
 
-            FormModelChooser formModelChooser = new FormModelChooser();
-			formModelChooser.ShowDialog();
-			
+			Calculations.LoadModel(Config.AppSettings.Settings["Model"].Value);
 			Application.DoEvents();
 			InitializeComponent();
+			UpdateRecentCharacterMenuItems();
 
 			ToolStripMenuItem modelsToolStripMenuItem = new ToolStripMenuItem("Models");
 			menuStripMain.Items.Add(modelsToolStripMenuItem);
-			foreach (KeyValuePair<string, Type> kvp in formModelChooser.Models)
+			foreach (KeyValuePair<string, Type> kvp in Calculations.Models)
 			{
 				ToolStripMenuItem modelToolStripMenuItem = new ToolStripMenuItem(kvp.Key);
 				modelToolStripMenuItem.Click += new EventHandler(modelToolStripMenuItem_Click);
@@ -201,7 +264,19 @@ namespace Rawr
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
 		}
 
-		void Calculations_ModelChanged(object sender, EventArgs e)
+		private void modelToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ToolStripMenuItem modelToolStripMenuItem = sender as ToolStripMenuItem;
+			if (!modelToolStripMenuItem.Checked)
+			{
+				foreach (ToolStripMenuItem item in (modelToolStripMenuItem.OwnerItem as ToolStripMenuItem).DropDownItems)
+					item.Checked = item == modelToolStripMenuItem;
+				Calculations.LoadModel(modelToolStripMenuItem.Tag as Type);
+				ConfigModel = modelToolStripMenuItem.Text;
+			}
+		}
+
+		private void Calculations_ModelChanged(object sender, EventArgs e)
 		{
 			bool unsavedChanges = _unsavedChanges;
 			if (Calculations.CalculationOptionsPanel.Icon != null)
@@ -299,9 +374,7 @@ namespace Rawr
 		{
 			if (PromptToSaveBeforeClosing())
 			{
-				Character = new Character();
-				_characterPath = string.Empty;
-				_unsavedChanges = false;
+				LoadCharacter(new Character(), string.Empty);
 			}
 		}
 
@@ -315,31 +388,25 @@ namespace Rawr
 				dialog.Multiselect = false;
 				if (dialog.ShowDialog() == DialogResult.OK)
 				{
-					this.Cursor = Cursors.WaitCursor;
-					Character = Character.Load(dialog.FileName);
-					_characterPath = dialog.FileName;
-					_unsavedChanges = false;
-					this.Cursor = Cursors.Default;
+					LoadCharacter(dialog.FileName);
 				}
 			}
 		}
 
+		private void LoadCharacter(string characterPath) { LoadCharacter(Character.Load(characterPath), characterPath); }
+		private void LoadCharacter(Character character, string characterPath)
+		{
+			this.Cursor = Cursors.WaitCursor;
+			Character = character;
+			_characterPath = characterPath;
+			_unsavedChanges = false;
+			if (!string.IsNullOrEmpty(characterPath))
+				AddRecentCharacter(characterPath);
+			this.Cursor = Cursors.Default;
+		}
+
 		private void loadFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			///Code to Remove Dupes. Run until it doesn't remove any.
-			//List<Item> itemsToRemove = new List<Item>();
-			//foreach (Item itemA in ItemCache.Items)
-			//    foreach (Item itemB in ItemCache.Items)
-			//        if (itemA != itemB && itemA.GemmedId == itemB.GemmedId)
-			//            itemsToRemove.Add(itemB);
-			//List<string> idsRemoved = new List<string>();
-			//foreach (Item item in itemsToRemove)
-			//    if (ItemCache.Items.Contains(item) && !idsRemoved.Contains(item.GemmedId))
-			//    {
-			//        idsRemoved.Add(item.GemmedId);
-			//        ItemCache.Items.Remove(item);
-			//    }
-
 			if (PromptToSaveBeforeClosing())
 			{
 				FormEnterNameRealm form = new FormEnterNameRealm();
@@ -362,11 +429,9 @@ namespace Rawr
 						formForEmposter.Show(this);
 						Application.DoEvents();
 					}
-					//Character = Character.LoadFromArmory(form.ArmoryRegion, form.Realm, form.CharacterName);
-					Character = Armory.GetCharacter(form.ArmoryRegion, form.Realm, form.CharacterName);
-					_characterPath = string.Empty;
+
+					LoadCharacter(Armory.GetCharacter(form.ArmoryRegion, form.Realm, form.CharacterName), string.Empty);
 					_unsavedChanges = true;
-					this.Cursor = Cursors.Default;
 				}
 			}
 		}
@@ -378,6 +443,7 @@ namespace Rawr
 				this.Cursor = Cursors.WaitCursor;
 				Character.Save(_characterPath);
 				_unsavedChanges = false;
+				AddRecentCharacter(_characterPath);
 				this.Cursor = Cursors.Default;
 			}
 			else
@@ -397,6 +463,7 @@ namespace Rawr
 				Character.Save(dialog.FileName);
 				_characterPath = dialog.FileName;
 				_unsavedChanges = false;
+				AddRecentCharacter(_characterPath);
 				this.Cursor = Cursors.Default;
 			}
 		}
@@ -408,6 +475,7 @@ namespace Rawr
 
 		private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
 		{
+			Config.Save();
 			ItemCache.Save();
 			e.Cancel = !PromptToSaveBeforeClosing();
 		}

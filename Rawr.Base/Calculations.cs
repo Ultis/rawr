@@ -1,11 +1,55 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+using System.Reflection;
+using System.ComponentModel;
 
 namespace Rawr
 {
 	public class Calculations
 	{
+		private static SortedList<string, Type> _models = null;
+		public static SortedList<string, Type> Models
+		{
+			get
+			{
+				if (_models == null)
+				{
+					_models = new SortedList<string, Type>();
+
+					DirectoryInfo info = new DirectoryInfo(".");
+					foreach (FileInfo file in info.GetFiles("*.dll"))
+					{
+						try
+						{
+							Assembly assembly = Assembly.LoadFile(file.FullName);
+
+							foreach (Type type in assembly.GetTypes())
+							{
+								if (type.IsSubclassOf(typeof(CalculationsBase)))
+								{
+									DisplayNameAttribute[] displayNameAttributes = type.GetCustomAttributes(typeof(DisplayNameAttribute), false) as DisplayNameAttribute[];
+									string displayName = type.Name;
+									if (displayNameAttributes.Length > 0)
+										displayName = displayNameAttributes[0].DisplayName;
+									_models[displayName] = type;
+								}
+							}
+						}
+						catch (Exception e)
+						{
+							System.Diagnostics.Debug.Write(e.Message);
+						}
+					}
+
+					if (_models.Count == 0)
+						throw new TypeLoadException("Unable to find any model plug in dlls.  Please check that the files exist and are in the correct location");
+				}
+				return _models;
+			}
+		}
+
 		public static event EventHandler ModelChanged;
 		protected static void OnModelChanged()
 		{
@@ -13,7 +57,9 @@ namespace Rawr
 				ModelChanged(null, EventArgs.Empty);
 		}
 
-        public static void LoadModel(CalculationsBase model)
+		public static void LoadModel(string displayName) { LoadModel(Models[displayName]); }
+		public static void LoadModel(Type type) { LoadModel((CalculationsBase)Activator.CreateInstance(type)); }
+		public static void LoadModel(CalculationsBase model)
 		{
             Instance = model;
 			OnModelChanged();
