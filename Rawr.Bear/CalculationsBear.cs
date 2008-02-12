@@ -109,7 +109,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f; //(stats.Armor / (stats.Armor + 11959.5f)) * 100f; for only 73s
 			calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
 			calculatedStats.DodgePlusMiss = calculatedStats.Dodge + calculatedStats.Miss;
-			calculatedStats.CritReduction = stats.DefenseRating / 60f + stats.Resilience / 39.423f;
+			calculatedStats.CritReduction = stats.DefenseRating / 59f + stats.Resilience / 39.423f;
 			calculatedStats.CappedCritReduction = Math.Min(2f + levelDifference, calculatedStats.CritReduction);
 			//Out of 100 attacks, you'll take...
 			float crits = 2f + (0.2f * levelDifference) - calculatedStats.CappedCritReduction;
