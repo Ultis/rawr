@@ -120,22 +120,22 @@ namespace Rawr
                     Brush nameBrush = null;
                     switch (CurrentItem.Quality)
                     {
-                        case Quality.Common:
+						case Item.ItemQuality.Common:
                             nameBrush = new SolidBrush(Color.FromKnownColor(KnownColor.InfoText));
                             break;
-                        case Quality.Epic:
+						case Item.ItemQuality.Epic:
                             nameBrush = new SolidBrush(Color.Purple);
                             break;
-                        case Quality.Legendary:
+						case Item.ItemQuality.Legendary:
                             nameBrush = new SolidBrush(Color.Orange);
                             break;
-                        case Quality.Poor:
+						case Item.ItemQuality.Poor:
                             nameBrush = new SolidBrush(Color.Gray);
                             break;
-                        case Quality.Rare:
+						case Item.ItemQuality.Rare:
                             nameBrush = new SolidBrush(Color.Blue);
                             break;
-                        case Quality.Uncommon:
+						case Item.ItemQuality.Uncommon:
                             nameBrush = new SolidBrush(Color.Gray);
                             break;
                     }
@@ -245,16 +245,17 @@ namespace Rawr
             }
         }
 
+		public void Show(Item item, IWin32Window window, Point point)
+		{
+			CurrentItem = item;
+			CachedToolTipImage.ToString();
+			base.Show(item.Name, window, point);
+		}
+
         private void ItemToolTip_Popup(object sender, PopupEventArgs e)
         {
-            if (e.AssociatedControl is IItemProvider)
-            {
-                //with hands held high into the sky so blue
-                CurrentItem = (e.AssociatedControl as IItemProvider).GetItem();
-                if (CachedToolTipImage != null)
-                    e.ToolTipSize = CachedToolTipImage.Size;
-            }
-        }
+			e.ToolTipSize = CachedToolTipImage.Size;
+		}
 
         private void ItemToolTip_Draw(object sender, DrawToolTipEventArgs e)
         {
@@ -262,10 +263,5 @@ namespace Rawr
                 //the emotion opens up swallow you
                 e.Graphics.DrawImageUnscaled(CachedToolTipImage, 0, 0);
         }
-    }
-
-    public interface IItemProvider
-    {
-        Item GetItem();
     }
 }

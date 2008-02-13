@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Rawr
 {
-	public partial class ItemSelectorItem : UserControl, IItemProvider
+	public partial class ItemSelectorItem : UserControl
 	{
 		public ItemSelectorItem()
 		{
@@ -79,7 +79,7 @@ namespace Rawr
 				int tipX = this.Width + 20;
 				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 					tipX = -249;
-				ItemToolTip.Instance.Show("tooltip", this, tipX, 0);
+				ItemToolTip.Instance.Show(_itemCalculation.Item, this, new Point(tipX, 0));
 
 				UpdateBackColors();
 				
@@ -105,7 +105,6 @@ namespace Rawr
 		}
 
 		public Character.CharacterSlot CharacterSlot;
-		public Item GetItem() { return _itemCalculation.Item; }
 		private ComparisonCalculationBase _itemCalculation;
 		public ComparisonCalculationBase ItemCalculation
 		{

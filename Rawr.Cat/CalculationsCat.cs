@@ -437,6 +437,13 @@ namespace Rawr
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCostReduction + stats.Stamina +
 				stats.Strength + stats.TerrorProc + stats.WeaponDamage) > 0;
 		}
+
+		public override bool IsItemRelevant(Item item)
+		{
+			return item.ArmorType != Item.ItemArmorType.Mail &&
+				item.ArmorType != Item.ItemArmorType.Plate &&
+				HasRelevantStats(item.Stats);
+		}
 	}
 
     public class CharacterCalculationsCat : CharacterCalculationsBase

@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Rawr
 {
-	public class ItemButton : Button, IItemProvider
+	public class ItemButton : Button
 	{
 		public Point GetTooltipLocation()
 		{
@@ -73,7 +73,7 @@ namespace Rawr
 				int tipX = this.Width;
 				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 					tipX = -249;
-				ItemToolTip.Instance.Show("tooltip", this, tipX, 0);
+				ItemToolTip.Instance.Show(SelectedItem, this, new Point(tipX, 0));
 			}
 		}
 
@@ -136,7 +136,6 @@ namespace Rawr
 			this.Image = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem) : null;
 		}
 
-		public Item GetItem() { return SelectedItem; }
 		private Item _selectedItem;
 		public Item SelectedItem
 		{

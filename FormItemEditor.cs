@@ -151,7 +151,7 @@ namespace Rawr
 			itemButtonGem3.CharacterSlot = comboBoxSocket3.Text == Item.ItemSlot.Meta.ToString() ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
 		}
 
-		private void LoadItems() { LoadItems(ItemCache.GetItemsArray()); }
+		private void LoadItems() { LoadItems(ItemCache.AllItems); }
 		private void LoadItems(Item[] items)
 		{
 			listViewItems.Items.Clear();
@@ -227,7 +227,7 @@ namespace Rawr
 				{
 					if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
-						newItem = new Item("New Item", Quality.Epic, id, "temp", Item.ItemSlot.Head, string.Empty, new Stats(), new Sockets(), 0, 0, 0);
+						newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemArmorType.None, id, "temp", Item.ItemSlot.Head, string.Empty, new Stats(), new Sockets(), 0, 0, 0);
 						ItemCache.AddItem(newItem);
 						SelectItem(newItem, true);
 					}
@@ -265,7 +265,7 @@ namespace Rawr
 			FormFillSockets form = new FormFillSockets();
 			if (form.ShowDialog() == DialogResult.OK)
 			{
-				foreach (Item item in ItemCache.GetItemsArray())
+				foreach (Item item in ItemCache.AllItems)
 				{
 					if (item.Sockets.Color1 != Item.ItemSlot.None && (!form.FillEmptySockets || item.Gem1Id == 0))
 					{
@@ -337,7 +337,7 @@ namespace Rawr
 		private void buttonDuplicate_Click(object sender, EventArgs e)
 		{
 			Item item = listViewItems.SelectedItems[0].Tag as Item;
-			Item copy = new Item(item.Name, item.Quality, item.Id, item.IconPath, item.Slot, item.SetName, item.Stats.Clone(),
+			Item copy = new Item(item.Name, item.Quality, item.ArmorType, item.Id, item.IconPath, item.Slot, item.SetName, item.Stats.Clone(),
 				item.Sockets.Clone(), 0, 0, 0);
 			_changingItemCache = true;
 			ItemCache.AddItem(copy);

@@ -150,9 +150,15 @@ namespace Rawr
 		}
 		public static bool HasRelevantStats(Stats stats)
 		{
-            if(Instance != null)
-    			return Instance.HasRelevantStats(stats);
-            return false;
+			if (Instance != null)
+				return Instance.HasRelevantStats(stats);
+			return false;
+		}
+		public static bool IsItemRelevant(Item item)
+		{
+			if (Instance != null)
+				return Instance.IsItemRelevant(item);
+			return false;
 		}
 		public static string GetCharacterStatsString(Character character)
 		{
@@ -179,6 +185,7 @@ namespace Rawr
 		public abstract ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations);
 		public abstract Stats GetRelevantStats(Stats stats);
 		public abstract bool HasRelevantStats(Stats stats);
+		public abstract bool IsItemRelevant(Item item);
 		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character) { return GetCharacterCalculations(character, null); }
 		public virtual Stats GetCharacterStats(Character character) { return GetCharacterStats(character, null); }
 		

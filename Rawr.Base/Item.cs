@@ -6,16 +6,6 @@ using System.Xml;
 
 namespace Rawr
 {
-	public enum Quality
-	{
-		Poor = 0,
-		Common,
-		Uncommon,
-		Rare,
-		Epic,
-		Legendary,
-	}
-
 	[Serializable]
 	public class Item :IComparable<Item>
 	{
@@ -38,9 +28,11 @@ namespace Rawr
 		[System.Xml.Serialization.XmlElement("Gem3Id")]
 		public int _gem3Id;
 		[System.Xml.Serialization.XmlElement("Quality")]
-		public Quality _quality;
+		public ItemQuality _quality;
 		[System.Xml.Serialization.XmlElement("SetName")]
 		public string _setName;
+		[System.Xml.Serialization.XmlElement("ArmorType")]
+		public ItemArmorType _armorType = ItemArmorType.None;
 
 
 		[System.Xml.Serialization.XmlIgnore]
@@ -191,7 +183,7 @@ namespace Rawr
 			}
 		}
 		[System.Xml.Serialization.XmlIgnore]
-		public Quality Quality
+		public ItemQuality Quality
 		{
 			get
 			{
@@ -214,6 +206,18 @@ namespace Rawr
 				_setName = value;
 			}
 		}
+		[System.Xml.Serialization.XmlIgnore]
+		public ItemArmorType ArmorType
+		{
+			get
+			{
+				return _armorType;
+			}
+			set
+			{
+				_armorType = value;
+			}
+		}
 
 		private void OnIdsChanging()
 		{
@@ -228,6 +232,25 @@ namespace Rawr
 			if (IdsChanged != null) IdsChanged(this, null);
 		}
 
+		public enum ItemQuality
+		{
+			Poor = 0,
+			Common,
+			Uncommon,
+			Rare,
+			Epic,
+			Legendary
+		}
+
+		public enum ItemArmorType
+		{
+			None,
+			Cloth,
+			Leather,
+			Mail,
+			Plate
+		}
+		
 		public enum ItemSlot
 		{
 			None = 0,
@@ -262,7 +285,7 @@ namespace Rawr
 		}
 
 		public Item() { }
-		public Item(string name, Quality quality, int id, string iconPath, ItemSlot slot, string setName, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id)
+		public Item(string name, ItemQuality quality, ItemArmorType armorType, int id, string iconPath, ItemSlot slot, string setName, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id)
 		{
 			_name = name;
 			_id = id;
@@ -275,6 +298,7 @@ namespace Rawr
 			_gem3Id = gem3Id;
 			_setName = setName;
 			_quality = quality;
+			_armorType = armorType;
 		}
 
 		public Item Clone()

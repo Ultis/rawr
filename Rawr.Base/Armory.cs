@@ -143,7 +143,8 @@ namespace Rawr
 						string itemTooltipPath = string.Format("http://www.wowarmory.com/item-tooltip.xml?i={0}", id);
 						docItem = DownloadXml(itemTooltipPath);
 
-						Quality quality = Quality.Common;
+						Item.ItemQuality quality = Item.ItemQuality.Common;
+						Item.ItemArmorType armorType = Item.ItemArmorType.None;
 						string name = string.Empty;
 						string iconPath = string.Empty;
 						string setName = string.Empty;
@@ -153,8 +154,9 @@ namespace Rawr
 
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/icon")) { iconPath = node.InnerText; }
-						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/overallQualityId")) { quality = (Quality)Enum.Parse(typeof(Quality), node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/overallQualityId")) { quality = (Item.ItemQuality)Enum.Parse(typeof(Item.ItemQuality), node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/inventoryType")) { slot = (Item.ItemSlot)int.Parse(node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/subclassName")) { armorType = (Item.ItemArmorType)Enum.Parse(typeof(Item.ItemArmorType), node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/setData/name")) { setName = node.InnerText; }
 
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAgility")) { stats.Agility = int.Parse(node.InnerText); }
@@ -480,7 +482,7 @@ namespace Rawr
 						int gem1Id = ids.Length == 4 ? int.Parse(ids[1]) : 0;
 						int gem2Id = ids.Length == 4 ? int.Parse(ids[2]) : 0;
 						int gem3Id = ids.Length == 4 ? int.Parse(ids[3]) : 0;
-						Item item = new Item(name, quality, int.Parse(id), iconPath, slot, setName, stats, sockets, gem1Id, gem2Id, gem3Id);
+						Item item = new Item(name, quality, armorType, int.Parse(id), iconPath, slot, setName, stats, sockets, gem1Id, gem2Id, gem3Id);
 						retry = 3;
 						return item;
 					}
@@ -520,7 +522,7 @@ namespace Rawr
 			if (!string.IsNullOrEmpty(character.Realm) && !string.IsNullOrEmpty(character.Name))
 			{
 				List<ComparisonCalculationBase> gemCalculations = new List<ComparisonCalculationBase>();
-				foreach (Item item in ItemCache.GetItemsArray())
+				foreach (Item item in ItemCache.AllItems)
 				{
 					if (item.Slot == Item.ItemSlot.Blue || item.Slot == Item.ItemSlot.Green || item.Slot == Item.ItemSlot.Meta
 						 || item.Slot == Item.ItemSlot.Orange || item.Slot == Item.ItemSlot.Prismatic || item.Slot == Item.ItemSlot.Purple

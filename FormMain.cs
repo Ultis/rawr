@@ -341,16 +341,11 @@ namespace Rawr
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
 		{
 			this.Cursor = Cursors.WaitCursor;
-			Item[] items = ItemCache.GetItemsArray();
+			Item[] items = ItemCache.RelevantItems;
 			ItemIcons.CacheAllIcons(items);
 			itemComparison1.Items = items;
 			LoadComparisonData();
 			FormItemSelection.Instance.Items = items;
-			//itemButtonBack.Items = itemButtonChest.Items = itemButtonFeet.Items = itemButtonFinger1.Items =
-			//        itemButtonFinger2.Items = itemButtonHands.Items = itemButtonHead.Items = itemButtonIdol.Items =
-			//        itemButtonLegs.Items = itemButtonNeck.Items = itemButtonShirt.Items = itemButtonShoulders.Items =
-			//        itemButtonTabard.Items = itemButtonTrinket1.Items = itemButtonTrinket2.Items = itemButtonWaist.Items =
-			//        itemButtonWeapon.Items = itemButtonWrist.Items = ItemCache.GetItemsArray();
 			this.Cursor = Cursors.Default;
 		}
 
@@ -692,7 +687,7 @@ namespace Rawr
 
         private void updateAllItemsToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-			foreach (Item item in ItemCache.GetItemsArray())
+			foreach (Item item in ItemCache.AllItems)
 			{
 				Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing");
 				if (newItem == null)

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Rawr
 {
-	public partial class ComparisonGraph : UserControl, IItemProvider
+	public partial class ComparisonGraph : UserControl
 	{
 		private ComparisonCalculationBase[] _itemCalculations;
 		public ComparisonCalculationBase[] ItemCalculations
@@ -503,14 +503,13 @@ namespace Rawr
 			}
 		}
 
-		public Item GetItem() { return _tooltipItem; }
 		private Item _tooltipItem = null;
 		private Point _tooltipLocation = Point.Empty;
 		private void ShowHideTooltip()
 		{
 			if (_tooltipItem != null && _tooltipLocation != Point.Empty)
 			{
-				ItemToolTip.Instance.Show(_tooltipItem.Name, this, _tooltipLocation);
+				ItemToolTip.Instance.Show(_tooltipItem, this, _tooltipLocation);
 			}
 			else
 			{

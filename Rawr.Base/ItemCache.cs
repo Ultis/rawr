@@ -31,9 +31,6 @@ namespace Rawr
 					return ret[0];
 				else if (!createIfCorrectGemmingNotFound)
 					return null;
-				//foreach (Item item in Items)
-				//    if (item.GemmedId == gemmedId)
-				//        return item;
 				string[] ids = gemmedId.Split('.');
 				int id = int.Parse(ids[0]);
 				int id1 = ids.Length == 4 ? int.Parse(ids[1]) : 0;
@@ -61,21 +58,6 @@ namespace Rawr
 			if (removeOldCopy)
 			{
 				DeleteItem(item, false);
-				//if (Items.TryGetValue(item.GemmedId, out existing))
-				//{
-				//    if (existing.Length > 1)
-				//    {
-				//        newArray = new Item[existing.Length - 1];
-				//        for (int i = 1; i < existing.Length; i++)
-				//            newArray[i - 1] = existing[i];
-				//        Items[item.GemmedId] = newArray;
-				//    }
-				//    else
-				//        Items.Remove(item.GemmedId);
-				//}
-				//Item cachedItem = FindItemById(item.GemmedId);
-				//if (cachedItem != null)
-				//	Items.Remove(cachedItem);
 			}
 
 			if (Items.TryGetValue(item.GemmedId, out existing))
@@ -119,68 +101,42 @@ namespace Rawr
 			if (raiseEvent) OnItemsChanged();
 		}
 
-		public static Item[] GetItemsArray()
+		private static Item[] _allItems = null;
+		public static Item[] AllItems
 		{
-			List<Item> items = new List<Item>();
-			foreach (Item[] itemArray in Items.Values)
-				foreach (Item item in itemArray)
-					items.Add(item);
-			return items.ToArray();
+			get
+			{
+				if (_allItems == null)
+				{
+					List<Item> items = new List<Item>();
+					foreach (Item[] itemArray in Items.Values)
+						foreach (Item item in itemArray)
+							items.Add(item);
+					_allItems = items.ToArray();
+				}
+				return _allItems;
+			}
 		}
 
-		//private static List<Gem> _gems;
-		//public static List<Gem> Gems
-		//{
-		//    get
-		//    {
-		//        if (_gems == null)
-		//            Load();
-		//        return _gems;
-		//    }
-		//}
-
-		//public static Gem FindItemById(int id)
-		//{
-		//    foreach (Gem gem in Gems)
-		//        if (gem.Id == id)
-		//            return gem;
-		//    return null;
-		//}
-
-		//public static Gem FindGemByStats(Stats stats, Item.ItemSlot color)
-		//{
-		//    foreach (Gem gem in Gems)
-		//        if (gem.Stats.Agility == stats.Agility &&
-		//            gem.Stats.Armor == stats.Armor &&
-		//            gem.Stats.DefenseRating == stats.DefenseRating &&
-		//            gem.Stats.DodgeRating == stats.DodgeRating &&
-		//            gem.Stats.Health == stats.Health &&
-		//            gem.Stats.Resilience == stats.Resilience &&
-		//            gem.Stats.Stamina == stats.Stamina &&
-		//            gem.Color == color)
-		//            return gem;
-		//    return null;
-		//}
-
-		//public static Gem AddGem(Gem gem)
-		//{
-		//    Gem cachedGem = FindItemById(gem.Id);
-		//    if (cachedGem != null)
-		//        Gems.Remove(cachedGem);
-		//    Gems.Add(gem);
-		//    OnItemsChanged();
-		//    return gem;
-		//}
-
-		//public static void DeleteGem(Gem gem)
-		//{
-		//    Gems.Remove(gem);
-		//    OnItemsChanged();
-		//}
+		private static Item[] _relevantItems = null;
+		public static Item[] RelevantItems
+		{
+			get
+			{
+				if (_relevantItems == null)
+				{
+					_relevantItems = new List<Item>(AllItems).FindAll(new Predicate<Item>(delegate(Item item)
+						{ return Calculations.IsItemRelevant(item); })).ToArray();
+				}
+				return _relevantItems;
+			}
+		}
 
 		public static event EventHandler ItemsChanged;
 		public static void OnItemsChanged()
 		{
+			_allItems = null;
+			_relevantItems = null;
 			if (ItemsChanged != null) ItemsChanged(null, null);
 		}
 
@@ -189,16 +145,9 @@ namespace Rawr
 			System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Item>));
 			StringBuilder sb = new StringBuilder();
 			System.IO.StringWriter writer = new System.IO.StringWriter(sb);
-			serializer.Serialize(writer, new List<Item>(GetItemsArray()));
+			serializer.Serialize(writer, new List<Item>(AllItems));
 			writer.Close();
 			System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml"), sb.ToString());
-
-			//serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Gem>));
-			//sb = new StringBuilder();
-			//writer = new System.IO.StringWriter(sb);
-			//serializer.Serialize(writer, Gems);
-			//writer.Close();
-			//System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "GemCache.xml"), sb.ToString());
 		}
 
 		public static void Load()
@@ -218,22 +167,12 @@ namespace Rawr
 				AddItem(item, false, false);
 			}
 
-			//else
-			//    _items = new List<Item>();
+			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+		}
 
-			//if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "GemCache.xml")))
-			//{
-			//    string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "GemCache.xml")).Replace("/images/icons/", "");
-			//    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Gem>));
-			//    System.IO.StringReader reader = new System.IO.StringReader(xml);
-			//    _gems = (List<Gem>)serializer.Deserialize(reader);
-			//    reader.Close();
-			//}
-			//else
-			//{
-			//    _gems = new List<Gem>();
-			//    _gems.Add(new Gem("No Gem", 0, "/images/icons/temp.png", Item.ItemSlot.None, new Stats(0, 0, 0, 0, 0, 0, 0)));
-			//}
+		static void Calculations_ModelChanged(object sender, EventArgs e)
+		{
+			_relevantItems = null;
 		}
 	}
 }

@@ -235,6 +235,12 @@ you are being killed by burst damage, focus on Survival Points.",
 				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc) > 0;
 		}
 
+		public override bool IsItemRelevant(Item item)
+		{
+			return item.ArmorType != Item.ItemArmorType.Mail && 
+				item.ArmorType != Item.ItemArmorType.Plate && 
+				HasRelevantStats(item.Stats);
+		}
     }
 
     public class CharacterCalculationsBear : CharacterCalculationsBase
