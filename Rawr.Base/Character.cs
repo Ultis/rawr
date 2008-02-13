@@ -712,7 +712,19 @@ namespace Rawr //O O . .
 		}
 
 		public enum CharacterRegion { US, EU }
-		public enum CharacterRace { NightElf, Tauren }
+		public enum CharacterRace
+		{ 
+			NightElf, 
+			Tauren,
+			Human,
+			Orc,
+			Gnome,
+			Troll,
+			Dwarf,
+			Undead,
+			Draenei,
+			BloodElf
+		}
         public enum CharacterSlot
         {
             Head = 0,

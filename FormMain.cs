@@ -70,9 +70,8 @@ namespace Rawr
 					textBoxRealm.Text = Character.Realm;
 					radioButtonRegionUS.Checked = Character.Region == Character.CharacterRegion.US;
 					radioButtonRegionEU.Checked = Character.Region == Character.CharacterRegion.EU;
-					radioButtonRaceNightElf.Checked = Character.Race == Character.CharacterRace.NightElf;
-					radioButtonRaceTauren.Checked = Character.Race == Character.CharacterRace.Tauren;
-
+					comboBoxRace.Text = Character.Race.ToString();
+					
 					_loadingCharacter = false;
 					Character.OnItemsChanged();
 				}
@@ -520,11 +519,11 @@ namespace Rawr
 			}   //...Fire!
 		}
 
-		private void radioButtonRace_CheckedChanged(object sender, EventArgs e)
+		private void comboBoxRace_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!_loadingCharacter)
 			{
-				Character.Race = radioButtonRaceNightElf.Checked ? Character.CharacterRace.NightElf : Character.CharacterRace.Tauren;
+				Character.Race = (Character.CharacterRace)Enum.Parse(typeof(Character.CharacterRace), comboBoxRace.Text);
 				Character.OnItemsChanged();
 			}
 		}

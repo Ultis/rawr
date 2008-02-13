@@ -35,6 +35,7 @@ namespace Rawr
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -64,9 +65,6 @@ namespace Rawr
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.radioButtonRegionUS = new System.Windows.Forms.RadioButton();
 			this.radioButtonRegionEU = new System.Windows.Forms.RadioButton();
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.radioButtonRaceTauren = new System.Windows.Forms.RadioButton();
-			this.radioButtonRaceNightElf = new System.Windows.Forms.RadioButton();
 			this.label19 = new System.Windows.Forms.Label();
 			this.label21 = new System.Windows.Forms.Label();
 			this.label23 = new System.Windows.Forms.Label();
@@ -166,7 +164,7 @@ namespace Rawr
 			this.toolStripDropDownButtonSort = new System.Windows.Forms.ToolStripDropDownButton();
 			this.overallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.alphabeticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+			this.comboBoxRace = new System.Windows.Forms.ComboBox();
 			this.menuStripMain.SuspendLayout();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -175,7 +173,6 @@ namespace Rawr
 			this.tabPageStats.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.panel2.SuspendLayout();
-			this.panel1.SuspendLayout();
 			this.tabPageEnchants.SuspendLayout();
 			this.tabPageBuffs.SuspendLayout();
 			this.groupBox4.SuspendLayout();
@@ -246,6 +243,11 @@ namespace Rawr
 			this.toolStripSeparator.Name = "toolStripSeparator";
 			this.toolStripSeparator.Size = new System.Drawing.Size(221, 6);
 			// 
+			// toolStripSeparator8
+			// 
+			this.toolStripSeparator8.Name = "toolStripSeparator8";
+			this.toolStripSeparator8.Size = new System.Drawing.Size(221, 6);
+			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
@@ -294,20 +296,20 @@ namespace Rawr
 			// 
 			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
 			this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.undoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.undoToolStripMenuItem.Text = "&Undo";
 			// 
 			// redoToolStripMenuItem
 			// 
 			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
 			this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.redoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.redoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.redoToolStripMenuItem.Text = "&Redo";
 			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(141, 6);
 			// 
 			// cutToolStripMenuItem
 			// 
@@ -315,7 +317,7 @@ namespace Rawr
 			this.cutToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
 			this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.cutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.cutToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.cutToolStripMenuItem.Text = "Cu&t";
 			// 
 			// copyToolStripMenuItem
@@ -324,7 +326,7 @@ namespace Rawr
 			this.copyToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
 			this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.copyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.copyToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.copyToolStripMenuItem.Text = "&Copy";
 			// 
 			// pasteToolStripMenuItem
@@ -333,18 +335,18 @@ namespace Rawr
 			this.pasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
 			this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.pasteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.pasteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.pasteToolStripMenuItem.Text = "&Paste";
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(149, 6);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(141, 6);
 			// 
 			// selectAllToolStripMenuItem
 			// 
 			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.selectAllToolStripMenuItem.Text = "Select &All";
 			// 
 			// toolsToolStripMenuItem
@@ -453,9 +455,9 @@ namespace Rawr
 			// calculationDisplay1
 			// 
 			this.calculationDisplay1.AutoScroll = true;
-			this.calculationDisplay1.Location = new System.Drawing.Point(0, 152);
+			this.calculationDisplay1.Location = new System.Drawing.Point(0, 134);
 			this.calculationDisplay1.Name = "calculationDisplay1";
-			this.calculationDisplay1.Size = new System.Drawing.Size(214, 378);
+			this.calculationDisplay1.Size = new System.Drawing.Size(214, 396);
 			this.calculationDisplay1.TabIndex = 5;
 			// 
 			// label32
@@ -469,17 +471,17 @@ namespace Rawr
 			// 
 			// groupBox3
 			// 
+			this.groupBox3.Controls.Add(this.comboBoxRace);
 			this.groupBox3.Controls.Add(this.textBoxName);
 			this.groupBox3.Controls.Add(this.textBoxRealm);
 			this.groupBox3.Controls.Add(this.panel2);
-			this.groupBox3.Controls.Add(this.panel1);
 			this.groupBox3.Controls.Add(this.label19);
 			this.groupBox3.Controls.Add(this.label21);
 			this.groupBox3.Controls.Add(this.label23);
 			this.groupBox3.Controls.Add(this.label25);
 			this.groupBox3.Location = new System.Drawing.Point(6, 6);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(202, 140);
+			this.groupBox3.Size = new System.Drawing.Size(202, 122);
 			this.groupBox3.TabIndex = 3;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Character Definition";
@@ -533,39 +535,6 @@ namespace Rawr
 			this.radioButtonRegionEU.UseVisualStyleBackColor = true;
 			this.radioButtonRegionEU.CheckedChanged += new System.EventHandler(this.radioButtonRegion_CheckedChanged);
 			// 
-			// panel1
-			// 
-			this.panel1.Controls.Add(this.radioButtonRaceTauren);
-			this.panel1.Controls.Add(this.radioButtonRaceNightElf);
-			this.panel1.Location = new System.Drawing.Point(105, 94);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(91, 43);
-			this.panel1.TabIndex = 2;
-			// 
-			// radioButtonRaceTauren
-			// 
-			this.radioButtonRaceTauren.AutoSize = true;
-			this.radioButtonRaceTauren.Location = new System.Drawing.Point(0, 23);
-			this.radioButtonRaceTauren.Name = "radioButtonRaceTauren";
-			this.radioButtonRaceTauren.Size = new System.Drawing.Size(59, 17);
-			this.radioButtonRaceTauren.TabIndex = 0;
-			this.radioButtonRaceTauren.Text = "Tauren";
-			this.radioButtonRaceTauren.UseVisualStyleBackColor = true;
-			this.radioButtonRaceTauren.CheckedChanged += new System.EventHandler(this.radioButtonRace_CheckedChanged);
-			// 
-			// radioButtonRaceNightElf
-			// 
-			this.radioButtonRaceNightElf.AutoSize = true;
-			this.radioButtonRaceNightElf.Checked = true;
-			this.radioButtonRaceNightElf.Location = new System.Drawing.Point(0, 0);
-			this.radioButtonRaceNightElf.Name = "radioButtonRaceNightElf";
-			this.radioButtonRaceNightElf.Size = new System.Drawing.Size(65, 17);
-			this.radioButtonRaceNightElf.TabIndex = 0;
-			this.radioButtonRaceNightElf.TabStop = true;
-			this.radioButtonRaceNightElf.Text = "Night Elf";
-			this.radioButtonRaceNightElf.UseVisualStyleBackColor = true;
-			this.radioButtonRaceNightElf.CheckedChanged += new System.EventHandler(this.radioButtonRace_CheckedChanged);
-			// 
 			// label19
 			// 
 			this.label19.AutoSize = true;
@@ -596,7 +565,7 @@ namespace Rawr
 			// label25
 			// 
 			this.label25.AutoSize = true;
-			this.label25.Location = new System.Drawing.Point(4, 96);
+			this.label25.Location = new System.Drawing.Point(6, 97);
 			this.label25.Name = "label25";
 			this.label25.Size = new System.Drawing.Size(36, 13);
 			this.label25.TabIndex = 1;
@@ -1581,10 +1550,26 @@ namespace Rawr
 			this.alphabeticalToolStripMenuItem.Text = "Alphabetical";
 			this.alphabeticalToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
 			// 
-			// toolStripSeparator8
+			// comboBoxRace
 			// 
-			this.toolStripSeparator8.Name = "toolStripSeparator8";
-			this.toolStripSeparator8.Size = new System.Drawing.Size(221, 6);
+			this.comboBoxRace.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxRace.FormattingEnabled = true;
+			this.comboBoxRace.Items.AddRange(new object[] {
+            "NightElf",
+            "Tauren",
+            "Human",
+            "Orc",
+            "Gnome",
+            "Troll",
+            "Dwarf",
+            "Undead",
+            "Draenei",
+            "BloodElf"});
+			this.comboBoxRace.Location = new System.Drawing.Point(105, 94);
+			this.comboBoxRace.Name = "comboBoxRace";
+			this.comboBoxRace.Size = new System.Drawing.Size(91, 21);
+			this.comboBoxRace.TabIndex = 4;
+			this.comboBoxRace.SelectedIndexChanged += new System.EventHandler(this.comboBoxRace_SelectedIndexChanged);
 			// 
 			// FormMain
 			// 
@@ -1612,8 +1597,6 @@ namespace Rawr
 			this.groupBox3.PerformLayout();
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
-			this.panel1.ResumeLayout(false);
-			this.panel1.PerformLayout();
 			this.tabPageEnchants.ResumeLayout(false);
 			this.tabPageEnchants.PerformLayout();
 			this.tabPageBuffs.ResumeLayout(false);
@@ -1689,8 +1672,6 @@ namespace Rawr
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.RadioButton radioButtonRaceNightElf;
-		private System.Windows.Forms.RadioButton radioButtonRaceTauren;
 		private System.Windows.Forms.GroupBox groupBox4;
 		private ItemComparison itemComparison1;
 		private System.Windows.Forms.ToolStripMenuItem loadFromArmoryToolStripMenuItem;
@@ -1741,7 +1722,6 @@ namespace Rawr
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.RadioButton radioButtonRegionUS;
 		private System.Windows.Forms.RadioButton radioButtonRegionEU;
-		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Label label19;
 		private System.Windows.Forms.Label label21;
 		private System.Windows.Forms.Label label23;
@@ -1765,6 +1745,7 @@ namespace Rawr
 		private System.Windows.Forms.TabPage tabPageOptions;
         private System.Windows.Forms.ToolStripMenuItem updateItemCacheToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+		private System.Windows.Forms.ComboBox comboBoxRace;
     }
 }
 
