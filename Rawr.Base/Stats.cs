@@ -97,6 +97,14 @@ namespace Rawr
         [DisplayName("Penetration")]
         public float ArmorPenetration { get; set; }
 
+        [Category("Base Stats")]
+        [DisplayName("Intellect")]
+        public float Intellect { get; set; }
+
+        [Category("Base Stats")]
+        [DisplayName("Spirit")]
+        public float Spirit { get; set; }
+
         [Category("Resistances")]
         [DisplayName("Frost Res")]
         public float FrostResistance { get; set; }
@@ -148,6 +156,10 @@ namespace Rawr
         [Category("Combat Ratings")]
         [DisplayName("Haste")]
         public float HasteRating { get; set; }
+
+        [Category("Combat Ratings")]
+        [DisplayName("Mp5")]
+        public float Mp5 { get; set; }
 
         [Category("Equipment Procs")]
         public float BloodlustProc { get; set; }
@@ -253,6 +265,8 @@ namespace Rawr
 					Stamina = a.Stamina + b.Stamina,
 					AttackPower = a.AttackPower + b.AttackPower,
 					Strength = a.Strength + b.Strength,
+                    Intellect = a.Intellect + b.Intellect,
+                    Spirit = a.Spirit + b.Spirit,
 					WeaponDamage = a.WeaponDamage + b.WeaponDamage,
 					ArmorPenetration = a.ArmorPenetration + b.ArmorPenetration,
 					FrostResistance = a.FrostResistance + b.FrostResistance,
@@ -268,6 +282,7 @@ namespace Rawr
 					Resilience = a.Resilience + b.Resilience,
 					ExpertiseRating = a.ExpertiseRating + b.ExpertiseRating,
 					HasteRating = a.HasteRating + b.HasteRating,
+                    Mp5 = a.Mp5 + b.Mp5,
 					BloodlustProc = a.BloodlustProc + b.BloodlustProc,
 					TerrorProc = a.TerrorProc + b.TerrorProc,
 					Miss = a.Miss + b.Miss,
