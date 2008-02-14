@@ -6,14 +6,52 @@ using System.IO;
 
 namespace Rawr
 {
+	/// <summary>
+	/// An object representing an Enchantment to be placed on a slot on a character.
+	/// </summary>
 	public class Enchant
 	{
+		/// <summary>
+		/// The ID of the enchant. This is determined by viewing the enchant spell on Wowhead, and
+		/// noting the Enchant Item Permenant ID in the spell effect data.
+		/// 
+		/// EXAMPLE:
+		/// Enchant Gloves - Superior Agility. This enchant is applied by spell 25080, which you can find
+		/// by searching on Wowhead (http://www.wowhead.com/?spell=25080). In the spell Effect section, it
+		/// says "Enchant Item Permanent (2564)". The Enchant ID is 2564.
+		/// </summary>
 		public int Id;
+
+		/// <summary>
+		/// The name of the enchant.
+		/// </summary>
 		public string Name;
+		
+		/// <summary>
+		/// The slot that the enchant is applied to. If the enchant is available on multiple slots,
+		/// define the enchant multiple times, once for each slot.
+		/// 
+		/// IMPORTANT: Currently, all weapon enchants should be defined as applying to the MainHand slot.
+		/// </summary>
 		public Item.ItemSlot Slot = Item.ItemSlot.Head;
+
+		/// <summary>
+		/// The stats that the enchant gives the character.
+		/// </summary>
 		public Stats Stats = new Stats();
 
 		public Enchant() { }
+		/// <summary>
+		/// Creates a new Enchant, representing an enchant to a single slot.
+		/// 
+		/// EXAMPLE:
+		/// new Enchant(2564, "Superior Agility", Item.ItemSlot.Hands, new Stats() { Agility = 15 })
+		/// </summary>
+		/// <param name="id">The Enchant ID for the enchant. See the Id property for details of how to find this.</param>
+		/// <param name="name">The name of the enchant.</param>
+		/// <param name="slot">The slot that this instance of the enchant applies to. (Create multiple Enchant
+		/// objects for enchants which may be applied to multiple slots)</param>
+		/// <param name="stats">The stats that the enchant gives the character.</param>
 		public Enchant(int id, string name, Item.ItemSlot slot, Stats stats)
 		{
 			Id = id;
@@ -31,12 +69,17 @@ namespace Rawr
 		}
 
 		private static List<Enchant> _allEnchants = null;
+		/// <summary>
+		/// A List<Enchant> containing all known enchants relevant to all models.
+		/// </summary>
 		public static List<Enchant> AllEnchants
 		{
 			get
 			{
 				if (_allEnchants == null)
 				{
+					//Rawr will load enchants from the EnchantCache file, if it exists, so that users can
+					//modify/add to the enchants known to Rawr.
 					if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "EnchantCache.xml")))
 					{
 						string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "EnchantCache.xml"));
@@ -47,9 +90,12 @@ namespace Rawr
 						reader.Close();
 					}
 					
+					//If enchants aren't loaded from EnchantCache, it will instead load from this list,
+					//and then save to EnchantCache. This means that if you make changes here, you'll need
+					//to either call this code through debugging, or simply delete your EnchantCache file,
+					//in order to see your changes.
 					if (_allEnchants == null)
 					{
-						//Default Enchants
 						_allEnchants = new List<Enchant>();
 						_allEnchants.Add(new Enchant(0,    "No Enchant", Item.ItemSlot.None, new Stats()));
 						_allEnchants.Add(new Enchant(2999, "Glyph of the Defender", Item.ItemSlot.Head, new Stats() { DefenseRating = 16, DodgeRating = 17 }));
@@ -91,7 +137,8 @@ namespace Rawr
 						_allEnchants.Add(new Enchant(2841, "Heavy Knothide Armor Kit", Item.ItemSlot.Legs, new Stats() { Stamina = 10 }));
 						_allEnchants.Add(new Enchant(2841, "Heavy Knothide Armor Kit", Item.ItemSlot.Hands, new Stats() { Stamina = 10 }));
 						_allEnchants.Add(new Enchant(2841, "Heavy Knothide Armor Kit", Item.ItemSlot.Feet, new Stats() { Stamina = 10 }));
-
+						_allEnchants.Add(new Enchant(3260, "Glove Reinforcements", Item.ItemSlot.Hands, new Stats() { Armor = 240 }));
+						
 						_allEnchants.Add(new Enchant(2543, "Arcanum of Rapidity", Item.ItemSlot.Head, new Stats() { HasteRating = 10 }));
 						_allEnchants.Add(new Enchant(3003, "Glyph of Ferocity", Item.ItemSlot.Head, new Stats() { AttackPower = 34, HitRating = 16 }));
 						_allEnchants.Add(new Enchant(3096, "Glyph of the Outcast", Item.ItemSlot.Head, new Stats() { Strength = 17 }));
@@ -102,8 +149,8 @@ namespace Rawr
 						_allEnchants.Add(new Enchant(2983, "Inscription of Vengeance", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 26 }));
 						_allEnchants.Add(new Enchant(2606, "Zandalar Signet of Might", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 30 }));
 						_allEnchants.Add(new Enchant(2647, "Brawn", Item.ItemSlot.Wrist, new Stats() { Strength = 12 }));
-						_allEnchants.Add(new Enchant(684, "Major Strength", Item.ItemSlot.Hands, new Stats() { Strength = 15 }));
-						_allEnchants.Add(new Enchant(931, "Minor Haste", Item.ItemSlot.Hands, new Stats() { HasteRating = 10 }));
+						_allEnchants.Add(new Enchant(684,  "Major Strength", Item.ItemSlot.Hands, new Stats() { Strength = 15 }));
+						_allEnchants.Add(new Enchant(931,  "Minor Haste", Item.ItemSlot.Hands, new Stats() { HasteRating = 10 }));
 						_allEnchants.Add(new Enchant(3012, "Nethercobra Leg Armor", Item.ItemSlot.Legs, new Stats() { AttackPower = 50, CritRating = 12 }));
 						_allEnchants.Add(new Enchant(3010, "Cobrahide Leg Armor", Item.ItemSlot.Legs, new Stats() { AttackPower = 40, CritRating = 10 }));
 						_allEnchants.Add(new Enchant(2658, "Surefooted", Item.ItemSlot.Feet, new Stats() { HitRating = 10 }));
