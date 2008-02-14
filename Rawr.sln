@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr", "Rawr.csproj", "{A0F124AB-2A3C-488C-A8AB-38FC5444CB37}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BF91EA62-997E-4094-BD99-9F8917FF66AA} = {BF91EA62-997E-4094-BD99-9F8917FF66AA}
+		{20DCE3DB-4074-449C-BC62-DDF7AEBF81A3} = {20DCE3DB-4074-449C-BC62-DDF7AEBF81A3}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Base", "Rawr.Base\Rawr.Base.csproj", "{842B74C7-EE94-44D9-A02F-4074166EF506}"
 EndProject
@@ -10,23 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Bear", "Rawr.Bear\Rawr.Bear.csproj", "{BF91EA62-997E-4094-BD99-9F8917FF66AA}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs03.codeplex.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Rawr.csproj
-		SccLocalPath1 = .
-		SccProjectUniqueName2 = Rawr.Base\\Rawr.Base.csproj
-		SccProjectName2 = Rawr.Base
-		SccLocalPath2 = Rawr.Base
-		SccProjectUniqueName3 = Rawr.Cat\\Rawr.Cat.csproj
-		SccProjectName3 = Rawr.Cat
-		SccLocalPath3 = Rawr.Cat
-		SccProjectUniqueName4 = Rawr.Bear\\Rawr.Bear.csproj
-		SccProjectName4 = Rawr.Bear
-		SccLocalPath4 = Rawr.Bear
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
@@ -63,5 +50,22 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs03.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Rawr.csproj
+		SccLocalPath1 = .
+		SccProjectUniqueName2 = Rawr.Base\\Rawr.Base.csproj
+		SccProjectName2 = Rawr.Base
+		SccLocalPath2 = Rawr.Base
+		SccProjectUniqueName3 = Rawr.Cat\\Rawr.Cat.csproj
+		SccProjectName3 = Rawr.Cat
+		SccLocalPath3 = Rawr.Cat
+		SccProjectUniqueName4 = Rawr.Bear\\Rawr.Bear.csproj
+		SccProjectName4 = Rawr.Bear
+		SccLocalPath4 = Rawr.Bear
 	EndGlobalSection
 EndGlobal

@@ -292,15 +292,7 @@ namespace Rawr
                 String[] names = new string[PropertyInfoCache.Length];
                 for (int i = 0; i < PropertyInfoCache.Length; i++)
                 {
-					object[] attributes = PropertyInfoCache[i].GetCustomAttributes(typeof(DisplayNameAttribute), false);
-					if (attributes.Length == 1 && attributes[0] is DisplayNameAttribute && (attributes[0] as DisplayNameAttribute).DisplayName != null)
-					{
-						names[i] = (attributes[0] as DisplayNameAttribute).DisplayName;
-					}
-					else
-					{
-						names[i] = Extensions.SpaceCamel(PropertyInfoCache[i].Name);
-					}
+                    names[i] = Extensions.DisplayName(PropertyInfoCache[i]);
                 }
                 Array.Sort(names);
                 return names;

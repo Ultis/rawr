@@ -229,10 +229,9 @@ namespace Rawr
 					{
 						newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemType.None, id, "temp", Item.ItemSlot.Head, string.Empty, new Stats(), new Sockets(), 0, 0, 0, 0, 0, 0f);
 						ItemCache.AddItem(newItem);
-						SelectItem(newItem, true);
+                        SelectItem(newItem, true);
 					}
 				}
-				else
 				{
 					ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
 					newLvi.Tag = newItem;
@@ -379,8 +378,10 @@ namespace Rawr
 						lvi.EnsureVisible();
 						found = true;
 					}
-				if (!found)
-					textBoxFilter.Text = filter;
+                if (!found)
+                {
+                    textBoxFilter.Text = filter;
+                }
 			}
 		}
 
@@ -420,7 +421,7 @@ namespace Rawr
                             ud.DataBindings[i].WriteValue();
                         }
                         ud.DataBindings.Clear();
-                        ud.Enabled = (combo.SelectedIndex != 0);
+                        ud.Enabled = (combo.SelectedIndex > 0);
                     }
                     
                     if (ud.Enabled)

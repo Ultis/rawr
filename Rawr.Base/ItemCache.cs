@@ -164,7 +164,7 @@ namespace Rawr
 					listItems = (List<Item>)serializer.Deserialize(reader);
 					reader.Close();
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
 					MessageBox.Show("Rawr was unable to load the Item Cache. It appears to have been made with a previous incompatible version of Rawr. Please use the ItemCache included with this version of Rawr to start from.");
 				}
