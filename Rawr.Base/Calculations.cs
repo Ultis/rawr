@@ -528,7 +528,9 @@ namespace Rawr
 		
 		/// <summary>
 		/// The Sub rating points for the whole character, in the order defined in SubPointNameColors.
-		/// Should sum up to OverallPoints.
+		/// Should sum up to OverallPoints. You could have this field build/parse an array of floats based
+		/// on floats stored in other fields, or you could have this get/set a private float[], and
+		/// have the fields of your individual Sub points refer to specific indexes of this field.
 		/// </summary>
 		public abstract float[] SubPoints { get; set; }
 
@@ -544,30 +546,63 @@ namespace Rawr
 	}
 
 	/// <summary>
-	/// TODO
+	/// Base ComparisonCalculation class, which will hold the final result data of rating calculations
+	/// of an individual Item/Enchant/Buff/etc. Most likely, no additional fields will be needed,
+	/// other than fields for each individual Sub rating.
 	/// </summary>
 	public abstract class ComparisonCalculationBase
 	{
+		/// <summary>
+		/// The Name of the object being rated. This will show up as the label on the left, in the chart.
+		/// </summary>
 		public abstract string Name { get; set; }
+
+		/// <summary>
+		/// The Overall rating points for the object being rated.
+		/// </summary>
 		public abstract float OverallPoints { get; set; }
+
+		/// <summary>
+		/// The Sub rating points for the object being rated, in ther order defined in SubPointNameColors.
+		/// May refer to a private float[], or build/parse a float[] and get/set the individual Sub point
+		/// fields.
+		/// </summary>
 		public abstract float[] SubPoints { get; set; }
+
+		/// <summary>
+		/// The Item, or other object, being rated. This property is used to build the tooltip for this
+		/// object in the chart. If this is null, no tooltip will be displayed. If the object is not an
+		/// Item, a new blank item may be created for this field, containing just a Name and Stats.
+		/// </summary>
 		public abstract Item Item { get; set; }
+
+		/// <summary>
+		/// Whether the object beign rated is currently equipped by the character. This controls whether
+		/// the item's label is highlighted in light blue on the charts.
+		/// </summary>
 		public abstract bool Equipped { get; set; }
 	}
 
 	/// <summary>
-	/// TODO
+	/// Base CalculationOptionsPanel class which should be inherited by a custom user control for the model.
+	/// The instance of the custom class returned by CalculationOptionsPanel will be placed in the Options 
+	/// tab on the main form when the model is active. Should contain controls to edit the CalculationOptions
+	/// on the character.
 	/// </summary>
 	public class CalculationOptionsPanelBase : System.Windows.Forms.UserControl
 	{
-
-        public virtual System.Drawing.Icon Icon
-        {
-            get;
-            set;
-        }
+		/// <summary>
+		/// An icon to be used for the main form when the model is active.
+		/// </summary>
+        public virtual System.Drawing.Icon Icon { get; set; }
 
 		private Character _character = null;
+		/// <summary>
+		/// The current character. Will be set whenever the model loads or a character is loaded.
+		/// 
+		/// IMPORTANT: Call Character.OnItemsChanged() after changing the value of any CalculationOptions,
+		/// other than in LoadCalculationOptions().
+		/// </summary>
 		public Character Character
 		{
 			get
@@ -581,6 +616,13 @@ namespace Rawr
 			}
 		}
 
+		/// <summary>
+		/// Sets default values for each CalculationOption used by the model, if they don't already exist, 
+		/// and then populates the controls with the current values in Character.CalculationOptions. You
+		/// don't need to call Character.OnItemsChanged() at the end of this method, only after changing the
+		/// value of any CalculationOptions from other methods (such as value changing event handlers on
+		/// the controls).
+		/// </summary>
 		protected virtual void LoadCalculationOptions() { }
 	}
 
