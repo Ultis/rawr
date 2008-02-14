@@ -40,6 +40,7 @@ namespace Rawr
 					if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "EnchantCache.xml")))
 					{
 						string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "EnchantCache.xml"));
+						xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>MainHand</Slot>");
 						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
 						System.IO.StringReader reader = new System.IO.StringReader(xml);
 						_allEnchants = (List<Enchant>)serializer.Deserialize(reader);
@@ -75,7 +76,7 @@ namespace Rawr
 						_allEnchants.Add(new Enchant(2657, "Dexterity", Item.ItemSlot.Feet, new Stats() { Agility =  12 }));
 						_allEnchants.Add(new Enchant(2649, "Fortitude", Item.ItemSlot.Feet, new Stats() { Stamina = 12 }));
 						_allEnchants.Add(new Enchant(2931, "Stats", Item.ItemSlot.Finger, new Stats() { Agility = 4, Strength = 4, Stamina = 4 }));
-						_allEnchants.Add(new Enchant(2670, "Major Agility", Item.ItemSlot.Weapon, new Stats() { Agility = 35 }));
+						_allEnchants.Add(new Enchant(2670, "Major Agility", Item.ItemSlot.MainHand, new Stats() { Agility = 35 }));
 						_allEnchants.Add(new Enchant(2792, "Knothide Armor Kit", Item.ItemSlot.Chest, new Stats() { Stamina = 8 }));
 						_allEnchants.Add(new Enchant(2792, "Knothide Armor Kit", Item.ItemSlot.Legs, new Stats() { Stamina = 8 }));
 						_allEnchants.Add(new Enchant(2792, "Knothide Armor Kit", Item.ItemSlot.Hands, new Stats() { Stamina = 8 }));
@@ -107,7 +108,7 @@ namespace Rawr
 						_allEnchants.Add(new Enchant(3010, "Cobrahide Leg Armor", Item.ItemSlot.Legs, new Stats() { AttackPower = 40, CritRating = 10 }));
 						_allEnchants.Add(new Enchant(2658, "Surefooted", Item.ItemSlot.Feet, new Stats() { HitRating = 10 }));
 						_allEnchants.Add(new Enchant(2929, "Striking", Item.ItemSlot.Finger, new Stats() { WeaponDamage = 2 }));
-						_allEnchants.Add(new Enchant(2667, "Savagery", Item.ItemSlot.Weapon, new Stats() { AttackPower = 70 }));
+						_allEnchants.Add(new Enchant(2667, "Savagery", Item.ItemSlot.MainHand, new Stats() { AttackPower = 70 }));
 
 						
 						

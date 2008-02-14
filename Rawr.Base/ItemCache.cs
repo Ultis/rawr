@@ -155,11 +155,19 @@ namespace Rawr
 			List<Item> listItems = new List<Item>();
 			if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml")))
 			{
-				string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml")).Replace("/images/icons/", "");
-				System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Item>));
-				System.IO.StringReader reader = new System.IO.StringReader(xml);
-				listItems = (List<Item>)serializer.Deserialize(reader);
-				reader.Close();
+				try
+				{
+					string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml")).Replace("/images/icons/", "");
+					xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>TwoHand</Slot>").Replace("<Slot>Idol</Slot", "<Slot>Ranged</Slot>").Replace("<Slot>Robe</Slot", "<Slot>Chest</Slot>");
+					System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Item>));
+					System.IO.StringReader reader = new System.IO.StringReader(xml);
+					listItems = (List<Item>)serializer.Deserialize(reader);
+					reader.Close();
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show("Rawr was unable to load the Item Cache. It appears to have been made with a previous incompatible version of Rawr. Please use the ItemCache included with this version of Rawr to start from.");
+				}
 			}
 			_items = new Dictionary<string, Item[]>();
 			foreach (Item item in listItems)

@@ -232,10 +232,8 @@
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Bugs.txt" />
     <Content Include="RawrIcon.ico" />
     <Content Include="ReadMe.txt" />
-    <Content Include="Toskk.htm" />
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

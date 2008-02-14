@@ -31,8 +31,14 @@ namespace Rawr
 		public ItemQuality _quality;
 		[System.Xml.Serialization.XmlElement("SetName")]
 		public string _setName;
-		[System.Xml.Serialization.XmlElement("ArmorType")]
-		public ItemArmorType _armorType = ItemArmorType.None;
+		[System.Xml.Serialization.XmlElement("Type")]
+		public ItemType _type = ItemType.None;
+		[System.Xml.Serialization.XmlElement("MinDamage")]
+		public int _minDamage = 0;
+		[System.Xml.Serialization.XmlElement("MaxDamage")]
+		public int _maxDamage = 0;
+		[System.Xml.Serialization.XmlElement("Speed")]
+		public float _speed = 0f;
 
 
 		[System.Xml.Serialization.XmlIgnore]
@@ -207,17 +213,63 @@ namespace Rawr
 			}
 		}
 		[System.Xml.Serialization.XmlIgnore]
-		public ItemArmorType ArmorType
+		public ItemType Type
 		{
 			get
 			{
-				return _armorType;
+				return _type;
 			}
 			set
 			{
-				_armorType = value;
+				_type = value;
 			}
 		}
+		[System.Xml.Serialization.XmlIgnore]
+		public int MinDamage
+		{
+			get
+			{
+				return _minDamage;
+			}
+			set
+			{
+				_minDamage = value;
+			}
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public int MaxDamage
+		{
+			get
+			{
+				return _maxDamage;
+			}
+			set
+			{
+				_maxDamage = value;
+			}
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float Speed
+		{
+			get
+			{
+				return _speed;
+			}
+			set
+			{
+				_speed = value;
+			}
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public float DPS
+		{
+			get
+			{
+				if (Speed == 0f) return 0f;
+				else return ((float)(MinDamage + MaxDamage) * 0.5f) / Speed;
+			}
+		}
+
 
 		private void OnIdsChanging()
 		{
@@ -242,50 +294,121 @@ namespace Rawr
 			Legendary
 		}
 
-		public enum ItemArmorType
+		public enum ItemType
 		{
 			None,
+
 			Cloth,
 			Leather,
 			Mail,
-			Plate
+			Plate,
+
+			Dagger,
+			FistWeapon,
+			OneHandAxe,
+			TwoHandAxe,
+			OneHandMace,
+			TwoHandMace,
+			OneHandSword,
+			TwoHandSword,
+			Polearm,
+			Staff,
+			Shield,
+
+			Bow,
+			Crossbow,
+			Gun,
+			Wand,
+			Thrown,
+
+			Idol,
+			Libram,
+			Totem,
+
+			Arrow,
+			Bullet,
+			Quiver,
+			AmmoPouch
 		}
 		
 		public enum ItemSlot
 		{
-			None = 0,
-			Head = 1,
-			Neck = 2,
-			Shoulders = 3,
-			Back = 16,
-			Chest = 5,
-			Shirt = 4,
-			Tabard = 19,
-			Wrist = 9,
-			Hands = 10,
-			Waist = 6,
-			Legs = 7,
-			Feet = 8,
-			Finger = 11,
-			Trinket = 12,
-			Weapon = 17,
-			Robe = 20,
-			OneHand = 21,
-			Wand = 26,
-			Idol = 28,
+			None,
 
-			Meta = 101,
-			Red = 102,
-			Orange = 103,
-			Yellow = 104,
-			Green = 105,
-			Prismatic = 106,
-			Purple = 107,
-			Blue = 108
+			Head,
+			Neck,
+			Shoulders,
+			Back,
+			Chest,
+			Shirt,
+			Tabard,
+			Wrist,
+			Hands,
+			Waist,
+			Legs,
+			Feet,
+			Finger,
+			Trinket,
+			OneHand,
+			TwoHand,
+			MainHand,
+			OffHand,
+			Ranged,
+			Projectile,
+			ProjectileBag,
+
+			Meta,
+			Red,
+			Orange,
+			Yellow,
+			Green,
+			Blue,
+			Purple,
+			Prismatic
+
+			//None = 0,
+			//Head = 1,
+			//Neck = 2,
+			//Shoulders = 3,
+			//Shirt = 4,
+			//Chest = 5,
+			//Waist = 6,
+			//Legs = 7,
+			//Feet = 8,
+			//Wrist = 9,
+			//Hands = 10,
+			//Finger = 11,
+			//Trinket = 12,
+			//OneHand = 13,
+			//OffHand = 14,
+			//Ranged = 15,
+			//Back = 16,
+			//TwoHand = 17,
+
+			//Tabard = 19,
+			//Robe = 20,
+			//MainHand = 21,
+			//OffHandB = 22,
+
+
+			//Thrown = 25,
+			//Wand = 26,
+			//Relic = 28,
+
+			//Weapon = 97,
+
+			//Meta = 101,
+			//Red = 102,
+			//Orange = 103,
+			//Yellow = 104,
+			//Green = 105,
+			//Prismatic = 106,
+			//Purple = 107,
+			//Blue = 108
 		}
 
 		public Item() { }
-		public Item(string name, ItemQuality quality, ItemArmorType armorType, int id, string iconPath, ItemSlot slot, string setName, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id)
+		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id, int minDamage, int maxDamage, float speed)
 		{
 			_name = name;
 			_id = id;
@@ -298,7 +421,10 @@ namespace Rawr
 			_gem3Id = gem3Id;
 			_setName = setName;
 			_quality = quality;
-			_armorType = armorType;
+			_type = type;
+			_minDamage = minDamage;
+			_maxDamage = maxDamage;
+			_speed = speed;
 		}
 
 		public Item Clone()
@@ -315,7 +441,11 @@ namespace Rawr
 				Gem1Id = this.Gem1Id,
 				Gem2Id = this.Gem2Id,
 				Gem3Id = this.Gem3Id,
-				SetName = this.SetName
+				SetName = this.SetName,
+				Type = this.Type,
+				MinDamage = this.MinDamage,
+				MaxDamage = this.MaxDamage,
+				Speed = this.Speed
 			};
 		}
 
@@ -381,7 +511,7 @@ namespace Rawr
 				case Character.CharacterSlot.Back:
 					return this.Slot == ItemSlot.Back;
 				case Character.CharacterSlot.Chest:
-					return this.Slot == ItemSlot.Chest || this.Slot == ItemSlot.Robe;
+					return this.Slot == ItemSlot.Chest;
 				case Character.CharacterSlot.Shirt:
 					return this.Slot == ItemSlot.Shirt;
 				case Character.CharacterSlot.Tabard:
@@ -402,10 +532,16 @@ namespace Rawr
 				case Character.CharacterSlot.Trinket1:
 				case Character.CharacterSlot.Trinket2:
 					return this.Slot == ItemSlot.Trinket;
-				case Character.CharacterSlot.Weapon:
-					return this.Slot == ItemSlot.Weapon || this.Slot == ItemSlot.OneHand;
-				case Character.CharacterSlot.Idol:
-					return this.Slot == ItemSlot.Idol;
+				case Character.CharacterSlot.MainHand:
+					return this.Slot == ItemSlot.TwoHand || this.Slot == ItemSlot.OneHand || this.Slot == ItemSlot.MainHand;
+				case Character.CharacterSlot.OffHand:
+					return this.Slot == ItemSlot.OneHand || this.Slot == ItemSlot.OffHand;
+				case Character.CharacterSlot.Ranged:
+					return this.Slot == ItemSlot.Ranged;
+				case Character.CharacterSlot.Projectile:
+					return this.Slot == ItemSlot.Projectile;
+				case Character.CharacterSlot.ProjectileBag:
+					return this.Slot == ItemSlot.ProjectileBag;
 				case Character.CharacterSlot.Gems:
 					return this.Slot == ItemSlot.Red || this.Slot == ItemSlot.Blue || this.Slot == ItemSlot.Yellow
 						|| this.Slot == ItemSlot.Purple || this.Slot == ItemSlot.Green || this.Slot == ItemSlot.Orange

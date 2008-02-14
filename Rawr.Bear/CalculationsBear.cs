@@ -92,6 +92,26 @@ you are being killed by burst damage, focus on Survival Points.",
 			}
 		}
 
+		private List<Item.ItemType> _relevantItemTypes = null;
+		public override List<Item.ItemType> RelevantItemTypes
+		{
+			get
+			{
+				if (_relevantItemTypes == null)
+				{
+					_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+					{
+						Item.ItemType.None,
+						Item.ItemType.Leather,
+						Item.ItemType.Idol,
+						Item.ItemType.Staff,
+						Item.ItemType.TwoHandMace
+					});
+				}
+				return _relevantItemTypes;
+			}
+		}
+
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationBear(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsBear(); }
 
@@ -233,13 +253,6 @@ you are being killed by burst damage, focus on Survival Points.",
 			return (stats.Agility + stats.Armor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health +
 				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc) > 0;
-		}
-
-		public override bool IsItemRelevant(Item item)
-		{
-			return item.ArmorType != Item.ItemArmorType.Mail && 
-				item.ArmorType != Item.ItemArmorType.Plate && 
-				HasRelevantStats(item.Stats);
 		}
     }
 

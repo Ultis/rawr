@@ -42,13 +42,16 @@ namespace Rawr
 				{
 					this.Cursor = Cursors.WaitCursor;
 					Calculations.CalculationOptionsPanel.Character = _character;
-					ItemToolTip.Instance.Character = FormItemSelection.Instance.Character = ItemContextualMenu.Instance.Character = buffSelector1.Character =
-						itemComparison1.Character = itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
+					ItemToolTip.Instance.Character = FormItemSelection.Instance.Character = 
+						ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
+						itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
 						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
-						itemButtonHead.Character = itemButtonIdol.Character = itemButtonLegs.Character =
+						itemButtonHead.Character = itemButtonRanged.Character = itemButtonLegs.Character =
 						itemButtonNeck.Character = itemButtonShirt.Character = itemButtonShoulders.Character =
 						itemButtonTabard.Character = itemButtonTrinket1.Character = itemButtonTrinket2.Character =
-						itemButtonWaist.Character = itemButtonWeapon.Character = itemButtonWrist.Character = _character;
+						itemButtonWaist.Character = itemButtonMainHand.Character = itemButtonOffHand.Character =
+						itemButtonProjectile.Character = itemButtonProjectileBag.Character = 
+						itemButtonWrist.Character = _character;
 					//Ahhh ahhh ahhh ahhh ahhh ahhh ahhh ahhh...
 
 					_character.ItemsChanged += new EventHandler(_character_ItemsChanged);
@@ -63,7 +66,9 @@ namespace Rawr
 					comboBoxEnchantHead.SelectedItem = Character.HeadEnchant;
 					comboBoxEnchantLegs.SelectedItem = Character.LegsEnchant;
 					comboBoxEnchantShoulders.SelectedItem = Character.ShouldersEnchant;
-					comboBoxEnchantWeapon.SelectedItem = Character.WeaponEnchant;
+					comboBoxEnchantMainHand.SelectedItem = Character.MainHandEnchant;
+					comboBoxEnchantOffHand.SelectedItem = Character.OffHandEnchant;
+					comboBoxEnchantRanged.SelectedItem = Character.RangedEnchant;
 					comboBoxEnchantWrists.SelectedItem = Character.WristEnchant;
 
 					textBoxName.Text = Character.Name;
@@ -83,14 +88,16 @@ namespace Rawr
 			this.Cursor = Cursors.WaitCursor;
 			_unsavedChanges = true;
 
+			itemButtonOffHand.Enabled = _character.MainHand == null || _character.MainHand.Slot != Item.ItemSlot.TwoHand;
 			if (!_loadingCharacter)
 			{
 				itemButtonBack.UpdateSelectedItem(); itemButtonChest.UpdateSelectedItem(); itemButtonFeet.UpdateSelectedItem();
 				itemButtonFinger1.UpdateSelectedItem(); itemButtonFinger2.UpdateSelectedItem(); itemButtonHands.UpdateSelectedItem();
-				itemButtonHead.UpdateSelectedItem(); itemButtonIdol.UpdateSelectedItem(); itemButtonLegs.UpdateSelectedItem();
+				itemButtonHead.UpdateSelectedItem(); itemButtonRanged.UpdateSelectedItem(); itemButtonLegs.UpdateSelectedItem();
 				itemButtonNeck.UpdateSelectedItem(); itemButtonShirt.UpdateSelectedItem(); itemButtonShoulders.UpdateSelectedItem();
 				itemButtonTabard.UpdateSelectedItem(); itemButtonTrinket1.UpdateSelectedItem(); itemButtonTrinket2.UpdateSelectedItem();
-				itemButtonWaist.UpdateSelectedItem(); itemButtonWeapon.UpdateSelectedItem(); itemButtonWrist.UpdateSelectedItem();
+				itemButtonWaist.UpdateSelectedItem(); itemButtonMainHand.UpdateSelectedItem(); itemButtonOffHand.UpdateSelectedItem();
+				itemButtonProjectile.UpdateSelectedItem(); itemButtonProjectileBag.UpdateSelectedItem(); itemButtonWrist.UpdateSelectedItem();
 			}
 			//and the clouds above move closer / looking so dissatisfied
 			Calculations.ClearCache();
@@ -100,60 +107,6 @@ namespace Rawr
 			LoadComparisonData();
 
 			calculationDisplay1.SetCalculations(calcs);
-
-			//labelHealth.Text = calcs.BasicStats.Health.ToString();
-			//labelArmor.Text = calcs.BasicStats.Armor.ToString();
-			//labelAgility.Text = calcs.BasicStats.Agility.ToString();
-			//labelStamina.Text = calcs.BasicStats.Stamina.ToString();
-			//labelDefenseRating.Text = calcs.BasicStats.DefenseRating.ToString();
-			//if (radioButtonRaceNightElf.Checked)
-			//    labelDodgeRating.Text = (calcs.BasicStats.DodgeRating - 59).ToString();
-			//else
-			//    labelDodgeRating.Text = (calcs.BasicStats.DodgeRating - 40).ToString();
-			//labelResilience.Text = calcs.BasicStats.Resilience.ToString();
-
-			//float chanceToBeCrit = 2.6f - calcs.CritReduction;
-
-			//labelDodge.Text = calcs.Dodge.ToString() + "%";
-			//labelMiss.Text = calcs.Miss.ToString() + "%";
-			//labelMitigation.Text = calcs.Mitigation.ToString() + "% *";
-			//labelDodgePlusMiss.Text = calcs.DodgePlusMiss.ToString() + "%";
-			//labelTotalMitigation.Text = calcs.TotalMitigation.ToString() + "%";
-			//labelDamageTaken.Text = calcs.DamageTaken.ToString() + "%";
-			//labelCritReduction.Text = chanceToBeCrit.ToString() + "% *";
-			//labelOverallPoints.Text = calcs.OverallPoints.ToString();
-			//labelMitigationPoints.Text = calcs.MitigationPoints.ToString();
-			//labelSurvivalPoints.Text = calcs.SurvivalPoints.ToString();
-
-			//if (chanceToBeCrit == 0)
-			//{
-			//    toolTipSimple.SetToolTip(labelCritReduction, "Exactly enough defense rating/resilience to be uncrittable by bosses.");
-			//}
-			//else if (chanceToBeCrit > 0)
-			//{
-			//    toolTipSimple.SetToolTip(labelCritReduction, string.Format("CRITTABLE! Short by {0} defense rating or {1} resilience to be uncrittable by bosses.",
-			//        Math.Ceiling(chanceToBeCrit * 60f), Math.Ceiling(chanceToBeCrit * 39.423f)));
-			//}
-			//else
-			//{
-			//    toolTipSimple.SetToolTip(labelCritReduction, string.Format("Uncrittable by bosses. {0} defense rating or {1} resilience over the crit cap.",
-			//        Math.Floor(chanceToBeCrit * -60f), Math.Floor(chanceToBeCrit * -39.423f)));
-			//}
-
-			//if (calcs.BasicStats.Armor == 35880)
-			//{
-			//    toolTipSimple.SetToolTip(labelMitigation, "Exactly at the armor cap against bosses.");
-			//}
-			//else if (calcs.BasicStats.Armor > 35880)
-			//{
-			//    toolTipSimple.SetToolTip(labelMitigation, string.Format("Over the armor cap by {0} armor.",
-			//        calcs.BasicStats.Armor - 35880));
-			//}
-			//else
-			//{
-			//    toolTipSimple.SetToolTip(labelMitigation, string.Format("Short of the armor cap by {0} armor.",
-			//        35880 - calcs.BasicStats.Armor));
-			//}
 
 			this.Cursor = Cursors.Default;
 			//and the ground below grew colder / as they put you down inside
@@ -303,7 +256,9 @@ namespace Rawr
 			comboBoxEnchantHead.Items.Clear();
 			comboBoxEnchantLegs.Items.Clear();
 			comboBoxEnchantShoulders.Items.Clear();
-			comboBoxEnchantWeapon.Items.Clear();
+			comboBoxEnchantMainHand.Items.Clear();
+			comboBoxEnchantOffHand.Items.Clear();
+			comboBoxEnchantRanged.Items.Clear();
 			comboBoxEnchantWrists.Items.Clear();
 			comboBoxEnchantBack.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Back).ToArray());
 			comboBoxEnchantChest.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Chest).ToArray());
@@ -314,7 +269,9 @@ namespace Rawr
 			comboBoxEnchantHead.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Head).ToArray());
 			comboBoxEnchantLegs.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Legs).ToArray());
 			comboBoxEnchantShoulders.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Shoulders).ToArray());
-			comboBoxEnchantWeapon.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Weapon).ToArray());
+			comboBoxEnchantMainHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.MainHand).ToArray());
+			comboBoxEnchantOffHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.MainHand).ToArray());
+			comboBoxEnchantRanged.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Ranged).ToArray());
 			comboBoxEnchantWrists.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Wrist).ToArray());
 
 			Calculations.CalculationOptionsPanel.Dock = DockStyle.Fill;
@@ -508,7 +465,9 @@ namespace Rawr
 				Character.HeadEnchant = comboBoxEnchantHead.SelectedItem as Enchant;
 				Character.LegsEnchant = comboBoxEnchantLegs.SelectedItem as Enchant;
 				Character.ShouldersEnchant = comboBoxEnchantShoulders.SelectedItem as Enchant;
-				Character.WeaponEnchant = comboBoxEnchantWeapon.SelectedItem as Enchant;
+				Character.MainHandEnchant = comboBoxEnchantMainHand.SelectedItem as Enchant;
+				Character.OffHandEnchant = comboBoxEnchantOffHand.SelectedItem as Enchant;
+				Character.RangedEnchant = comboBoxEnchantRanged.SelectedItem as Enchant;
 				Character.WristEnchant = comboBoxEnchantWrists.SelectedItem as Enchant;
 				Character.OnItemsChanged();
 			}   //...Fire!
@@ -552,26 +511,7 @@ namespace Rawr
 
 		private void copyCharacterStatsToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			////Uncomment and run to refresh data for all known items
-			//foreach (Item item in ItemCache.GetItemsArray())
-			//{
-			//    Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing");
-			//    if (newItem == null)
-			//    {
-			//        MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
-			//        ItemCache.AddItem(item, true, false);
-			//    }
-			//}
-			//ItemCache.OnItemsChanged();
-			
-			//string stats = string.Format("Character:\t\t{18}@{19}-{20}\r\nRace:\t\t{0}\r\nHealth:\t\t{1}\r\nArmor:\t\t{2}\r\nAgility:\t\t{3}\r\nStamina:\t\t{4}\r\nDefense Rating:\t{5}\r\nDodge Rating:\t{6}\r\nResilience:\t{7}\r\nDodge:\t\t{8}\r\nMiss:\t\t{9}\r\nArmor Mitigation:\t{10}\r\nDodge+Miss:\t{11}\r\nTotal Mitigation:\t{12}\r\nDamage Taken:\t{13}\r\nChance to be Crit:\t{14}\r\nOverall Points:\t{15}\r\nMitigation Points:\t{16}\r\nSurvival Points:\t{17}",
-			//    Character.Race, labelHealth.Text, labelArmor.Text, labelAgility.Text, labelStamina.Text, labelDefenseRating.Text, 
-			//    labelDodgeRating.Text, labelResilience.Text, labelDodge.Text, labelMiss.Text, labelMitigation.Text, 
-			//    labelDodgePlusMiss.Text, labelTotalMitigation.Text, labelDamageTaken.Text, labelCritReduction.Text, 
-			//    labelOverallPoints.Text, labelMitigationPoints.Text, labelSurvivalPoints.Text, textBoxName.Text,
-			//    Character.Region.ToString(), textBoxRealm.Text);
-
-            StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
             foreach (int slotNum in Enum.GetValues(typeof(Character.CharacterSlot)))
             {
                 Character.CharacterSlot slot = (Character.CharacterSlot)(slotNum);
@@ -582,8 +522,6 @@ namespace Rawr
                     sb.AppendLine();
                 }
             }
-       
-           
 
             sb.AppendLine(Calculations.GetCharacterStatsString(Character));
 
@@ -663,13 +601,8 @@ namespace Rawr
 					}
 				}
 			}
-			itemComparison1.Sort = sort; //(ComparisonGraph.ComparisonSort)Enum.Parse(typeof(ComparisonGraph.ComparisonSort), toolStripDropDownButtonSort.Text);
+			itemComparison1.Sort = sort;
 			this.Cursor = Cursors.Default;
-		}
-
-		private void tabPageStats_Click(object sender, EventArgs e)
-		{
-
 		}
 
 		private void loadPossibleUpgradesFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -770,7 +703,7 @@ namespace Rawr
 				{ Armor = 264, Strength = 28, Agility = 28, Stamina = 39, ArmorPenetration = 91 },
 				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
 				    Stats = new Stats() { Stamina = 3 }}},
-				new Item() { Name = "Stanchion of Primal Instinct", Id = 90019, Slot = Item.ItemSlot.Weapon, IconPath = "temp", Stats = new Stats()
+				new Item() { Name = "Stanchion of Primal Instinct", Id = 90019, Slot = Item.ItemSlot.TwoHand, IconPath = "temp", Stats = new Stats()
 				{ Stamina = 50, Strength = 75, AttackPower = 1197, Agility = 47, ArmorPenetration = 350 }}
 			};
 

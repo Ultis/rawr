@@ -176,7 +176,8 @@ namespace Rawr
 		public abstract Dictionary<string, System.Drawing.Color> SubPointNameColors { get; }
 		public abstract string[] CharacterDisplayCalculationLabels { get; }
 		public abstract CalculationOptionsPanelBase CalculationOptionsPanel { get; }
-
+		public abstract List<Item.ItemType> RelevantItemTypes { get; }
+		
 		public abstract ComparisonCalculationBase CreateNewComparisonCalculation();
 		public abstract CharacterCalculationsBase CreateNewCharacterCalculations();
 
@@ -185,7 +186,6 @@ namespace Rawr
 		public abstract ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations);
 		public abstract Stats GetRelevantStats(Stats stats);
 		public abstract bool HasRelevantStats(Stats stats);
-		public abstract bool IsItemRelevant(Item item);
 		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character) { return GetCharacterCalculations(character, null); }
 		public virtual Stats GetCharacterStats(Character character) { return GetCharacterStats(character, null); }
 		
@@ -352,9 +352,10 @@ namespace Rawr
 		public virtual Stats GetItemStats(Character character, Item additionalItem)
 		{
 			List<Item> items = new List<Item>(new Item[] {character.Back, character.Chest, character.Feet, character.Finger1,
-				character.Finger2, character.Hands, character.Head, character.Idol, character.Legs, character.Neck,
+				character.Finger2, character.Hands, character.Head, character.Legs, character.Neck,
 				character.Shirt, character.Shoulders, character.Tabard, character.Trinket1, character.Trinket2,
-				character.Waist, character.Weapon, character.Wrist});
+				character.Waist, character.MainHand, character.OffHand, character.Ranged, character.Projectile, 
+				character.ProjectileBag, character.Wrist});
 			if (additionalItem != null)
 				items.Add(additionalItem);
 
@@ -368,8 +369,11 @@ namespace Rawr
 
 		public virtual Stats GetEnchantsStats(Character character)
 		{
-			return character.BackEnchant.Stats + character.ChestEnchant.Stats + character.FeetEnchant.Stats + character.Finger1Enchant.Stats + character.Finger2Enchant.Stats + character.HandsEnchant.Stats +
-				character.HeadEnchant.Stats + character.LegsEnchant.Stats + character.ShouldersEnchant.Stats + character.WeaponEnchant.Stats + character.WristEnchant.Stats;
+			return character.BackEnchant.Stats + character.ChestEnchant.Stats + character.FeetEnchant.Stats + 
+				character.Finger1Enchant.Stats + character.Finger2Enchant.Stats + character.HandsEnchant.Stats +
+				character.HeadEnchant.Stats + character.LegsEnchant.Stats + character.ShouldersEnchant.Stats + 
+				(character.OffHand == null ? character.MainHandEnchant.Stats : character.MainHandEnchant.Stats + 
+				character.OffHandEnchant.Stats) + character.RangedEnchant.Stats + character.WristEnchant.Stats;
 		}
 
 		public virtual Stats GetBuffsStats(IEnumerable<string> buffs)
@@ -395,6 +399,11 @@ namespace Rawr
 			return stats.ToString();
 		}
 
+		public virtual bool IsItemRelevant(Item item)
+		{
+			return (item.Type == null || RelevantItemTypes.Contains(item.Type)) &&
+				HasRelevantStats(item.Stats);
+		}
 	}
 
 	public abstract class CharacterCalculationsBase

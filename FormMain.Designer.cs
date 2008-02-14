@@ -60,6 +60,7 @@ namespace Rawr
 			this.calculationDisplay1 = new Rawr.CalculationDisplay();
 			this.label32 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.comboBoxRace = new System.Windows.Forms.ComboBox();
 			this.textBoxName = new System.Windows.Forms.TextBox();
 			this.textBoxRealm = new System.Windows.Forms.TextBox();
 			this.panel2 = new System.Windows.Forms.Panel();
@@ -77,11 +78,15 @@ namespace Rawr
 			this.comboBoxEnchantHands = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantShoulders = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantFinger2 = new System.Windows.Forms.ComboBox();
-			this.comboBoxEnchantWeapon = new System.Windows.Forms.ComboBox();
+			this.comboBoxEnchantRanged = new System.Windows.Forms.ComboBox();
+			this.comboBoxEnchantOffHand = new System.Windows.Forms.ComboBox();
+			this.comboBoxEnchantMainHand = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantWrists = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantHead = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantFinger1 = new System.Windows.Forms.ComboBox();
+			this.label11 = new System.Windows.Forms.Label();
 			this.label29 = new System.Windows.Forms.Label();
+			this.label10 = new System.Windows.Forms.Label();
 			this.label27 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
@@ -102,17 +107,19 @@ namespace Rawr
 			this.itemButtonFinger2 = new Rawr.ItemButton();
 			this.itemButtonHands = new Rawr.ItemButton();
 			this.itemButtonHead = new Rawr.ItemButton();
-			this.itemButtonIdol = new Rawr.ItemButton();
+			this.itemButtonRanged = new Rawr.ItemButton();
 			this.itemButtonLegs = new Rawr.ItemButton();
 			this.itemButtonNeck = new Rawr.ItemButton();
-			this.itemButtonOffhand = new Rawr.ItemButton();
+			this.itemButtonProjectileBag = new Rawr.ItemButton();
+			this.itemButtonProjectile = new Rawr.ItemButton();
+			this.itemButtonOffHand = new Rawr.ItemButton();
 			this.itemButtonShirt = new Rawr.ItemButton();
 			this.itemButtonShoulders = new Rawr.ItemButton();
 			this.itemButtonTabard = new Rawr.ItemButton();
 			this.itemButtonTrinket1 = new Rawr.ItemButton();
 			this.itemButtonTrinket2 = new Rawr.ItemButton();
 			this.itemButtonWaist = new Rawr.ItemButton();
-			this.itemButtonWeapon = new Rawr.ItemButton();
+			this.itemButtonMainHand = new Rawr.ItemButton();
 			this.itemButtonWrist = new Rawr.ItemButton();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.itemComparison1 = new Rawr.ItemComparison();
@@ -164,7 +171,6 @@ namespace Rawr
 			this.toolStripDropDownButtonSort = new System.Windows.Forms.ToolStripDropDownButton();
 			this.overallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.alphabeticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.comboBoxRace = new System.Windows.Forms.ComboBox();
 			this.menuStripMain.SuspendLayout();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -401,17 +407,19 @@ namespace Rawr
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonFinger2);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonHands);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonHead);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonIdol);
+			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonRanged);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonLegs);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonNeck);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonOffhand);
+			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonProjectileBag);
+			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonProjectile);
+			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonOffHand);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonShirt);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonShoulders);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonTabard);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonTrinket1);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonTrinket2);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonWaist);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonWeapon);
+			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonMainHand);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonWrist);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.groupBox4);
 			this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(851, 657);
@@ -450,7 +458,6 @@ namespace Rawr
 			this.tabPageStats.TabIndex = 0;
 			this.tabPageStats.Text = "Stats";
 			this.tabPageStats.UseVisualStyleBackColor = true;
-			this.tabPageStats.Click += new System.EventHandler(this.tabPageStats_Click);
 			// 
 			// calculationDisplay1
 			// 
@@ -485,6 +492,27 @@ namespace Rawr
 			this.groupBox3.TabIndex = 3;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Character Definition";
+			// 
+			// comboBoxRace
+			// 
+			this.comboBoxRace.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxRace.FormattingEnabled = true;
+			this.comboBoxRace.Items.AddRange(new object[] {
+            "NightElf",
+            "Tauren",
+            "Human",
+            "Orc",
+            "Gnome",
+            "Troll",
+            "Dwarf",
+            "Undead",
+            "Draenei",
+            "BloodElf"});
+			this.comboBoxRace.Location = new System.Drawing.Point(105, 94);
+			this.comboBoxRace.Name = "comboBoxRace";
+			this.comboBoxRace.Size = new System.Drawing.Size(91, 21);
+			this.comboBoxRace.TabIndex = 4;
+			this.comboBoxRace.SelectedIndexChanged += new System.EventHandler(this.comboBoxRace_SelectedIndexChanged);
 			// 
 			// textBoxName
 			// 
@@ -580,11 +608,15 @@ namespace Rawr
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantHands);
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantShoulders);
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantFinger2);
-			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantWeapon);
+			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantRanged);
+			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantOffHand);
+			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantMainHand);
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantWrists);
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantHead);
 			this.tabPageEnchants.Controls.Add(this.comboBoxEnchantFinger1);
+			this.tabPageEnchants.Controls.Add(this.label11);
 			this.tabPageEnchants.Controls.Add(this.label29);
+			this.tabPageEnchants.Controls.Add(this.label10);
 			this.tabPageEnchants.Controls.Add(this.label27);
 			this.tabPageEnchants.Controls.Add(this.label8);
 			this.tabPageEnchants.Controls.Add(this.label7);
@@ -680,16 +712,38 @@ namespace Rawr
 			this.comboBoxEnchantFinger2.TabIndex = 1;
 			this.comboBoxEnchantFinger2.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
-			// comboBoxEnchantWeapon
+			// comboBoxEnchantRanged
 			// 
-			this.comboBoxEnchantWeapon.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantWeapon.DropDownWidth = 260;
-			this.comboBoxEnchantWeapon.FormattingEnabled = true;
-			this.comboBoxEnchantWeapon.Location = new System.Drawing.Point(69, 276);
-			this.comboBoxEnchantWeapon.Name = "comboBoxEnchantWeapon";
-			this.comboBoxEnchantWeapon.Size = new System.Drawing.Size(139, 21);
-			this.comboBoxEnchantWeapon.TabIndex = 1;
-			this.comboBoxEnchantWeapon.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
+			this.comboBoxEnchantRanged.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEnchantRanged.DropDownWidth = 260;
+			this.comboBoxEnchantRanged.FormattingEnabled = true;
+			this.comboBoxEnchantRanged.Location = new System.Drawing.Point(69, 330);
+			this.comboBoxEnchantRanged.Name = "comboBoxEnchantRanged";
+			this.comboBoxEnchantRanged.Size = new System.Drawing.Size(139, 21);
+			this.comboBoxEnchantRanged.TabIndex = 1;
+			this.comboBoxEnchantRanged.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
+			// 
+			// comboBoxEnchantOffHand
+			// 
+			this.comboBoxEnchantOffHand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEnchantOffHand.DropDownWidth = 260;
+			this.comboBoxEnchantOffHand.FormattingEnabled = true;
+			this.comboBoxEnchantOffHand.Location = new System.Drawing.Point(69, 303);
+			this.comboBoxEnchantOffHand.Name = "comboBoxEnchantOffHand";
+			this.comboBoxEnchantOffHand.Size = new System.Drawing.Size(139, 21);
+			this.comboBoxEnchantOffHand.TabIndex = 1;
+			this.comboBoxEnchantOffHand.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
+			// 
+			// comboBoxEnchantMainHand
+			// 
+			this.comboBoxEnchantMainHand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxEnchantMainHand.DropDownWidth = 260;
+			this.comboBoxEnchantMainHand.FormattingEnabled = true;
+			this.comboBoxEnchantMainHand.Location = new System.Drawing.Point(69, 276);
+			this.comboBoxEnchantMainHand.Name = "comboBoxEnchantMainHand";
+			this.comboBoxEnchantMainHand.Size = new System.Drawing.Size(139, 21);
+			this.comboBoxEnchantMainHand.TabIndex = 1;
+			this.comboBoxEnchantMainHand.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// comboBoxEnchantWrists
 			// 
@@ -724,6 +778,15 @@ namespace Rawr
 			this.comboBoxEnchantFinger1.TabIndex = 1;
 			this.comboBoxEnchantFinger1.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
+			// label11
+			// 
+			this.label11.AutoSize = true;
+			this.label11.Location = new System.Drawing.Point(6, 333);
+			this.label11.Name = "label11";
+			this.label11.Size = new System.Drawing.Size(48, 13);
+			this.label11.TabIndex = 0;
+			this.label11.Text = "Ranged:";
+			// 
 			// label29
 			// 
 			this.label29.AutoSize = true;
@@ -732,6 +795,15 @@ namespace Rawr
 			this.label29.Size = new System.Drawing.Size(48, 13);
 			this.label29.TabIndex = 0;
 			this.label29.Text = "Finger 2:";
+			// 
+			// label10
+			// 
+			this.label10.AutoSize = true;
+			this.label10.Location = new System.Drawing.Point(6, 306);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(53, 13);
+			this.label10.TabIndex = 0;
+			this.label10.Text = "Off Hand:";
 			// 
 			// label27
 			// 
@@ -747,9 +819,9 @@ namespace Rawr
 			this.label8.AutoSize = true;
 			this.label8.Location = new System.Drawing.Point(6, 279);
 			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(51, 13);
+			this.label8.Size = new System.Drawing.Size(62, 13);
 			this.label8.TabIndex = 0;
-			this.label8.Text = "Weapon:";
+			this.label8.Text = "Main Hand:";
 			// 
 			// label7
 			// 
@@ -944,18 +1016,18 @@ namespace Rawr
 			this.itemButtonHead.Text = "Head";
 			this.itemButtonHead.UseVisualStyleBackColor = true;
 			// 
-			// itemButtonIdol
+			// itemButtonRanged
 			// 
-			this.itemButtonIdol.Character = null;
-			this.itemButtonIdol.CharacterSlot = Rawr.Character.CharacterSlot.Idol;
-			this.itemButtonIdol.Location = new System.Drawing.Point(231, 584);
-			this.itemButtonIdol.Name = "itemButtonIdol";
-			this.itemButtonIdol.SelectedItem = null;
-			this.itemButtonIdol.SelectedItemId = 0;
-			this.itemButtonIdol.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonIdol.TabIndex = 2;
-			this.itemButtonIdol.Text = "Idol";
-			this.itemButtonIdol.UseVisualStyleBackColor = true;
+			this.itemButtonRanged.Character = null;
+			this.itemButtonRanged.CharacterSlot = Rawr.Character.CharacterSlot.Ranged;
+			this.itemButtonRanged.Location = new System.Drawing.Point(231, 584);
+			this.itemButtonRanged.Name = "itemButtonRanged";
+			this.itemButtonRanged.SelectedItem = null;
+			this.itemButtonRanged.SelectedItemId = 0;
+			this.itemButtonRanged.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonRanged.TabIndex = 2;
+			this.itemButtonRanged.Text = "Idol";
+			this.itemButtonRanged.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonLegs
 			// 
@@ -983,18 +1055,44 @@ namespace Rawr
 			this.itemButtonNeck.Text = "Neck";
 			this.itemButtonNeck.UseVisualStyleBackColor = true;
 			// 
-			// itemButtonOffhand
+			// itemButtonProjectileBag
 			// 
-			this.itemButtonOffhand.Character = null;
-			this.itemButtonOffhand.CharacterSlot = Rawr.Character.CharacterSlot.Head;
-			this.itemButtonOffhand.Enabled = false;
-			this.itemButtonOffhand.Location = new System.Drawing.Point(155, 584);
-			this.itemButtonOffhand.Name = "itemButtonOffhand";
-			this.itemButtonOffhand.SelectedItem = null;
-			this.itemButtonOffhand.SelectedItemId = 0;
-			this.itemButtonOffhand.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonOffhand.TabIndex = 2;
-			this.itemButtonOffhand.UseVisualStyleBackColor = true;
+			this.itemButtonProjectileBag.Character = null;
+			this.itemButtonProjectileBag.CharacterSlot = Rawr.Character.CharacterSlot.ProjectileBag;
+			this.itemButtonProjectileBag.Location = new System.Drawing.Point(342, 611);
+			this.itemButtonProjectileBag.Name = "itemButtonProjectileBag";
+			this.itemButtonProjectileBag.SelectedItem = null;
+			this.itemButtonProjectileBag.SelectedItemId = 0;
+			this.itemButtonProjectileBag.Size = new System.Drawing.Size(35, 35);
+			this.itemButtonProjectileBag.TabIndex = 2;
+			this.itemButtonProjectileBag.Text = "ProjBag";
+			this.itemButtonProjectileBag.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonProjectile
+			// 
+			this.itemButtonProjectile.Character = null;
+			this.itemButtonProjectile.CharacterSlot = Rawr.Character.CharacterSlot.Projectile;
+			this.itemButtonProjectile.Location = new System.Drawing.Point(307, 611);
+			this.itemButtonProjectile.Name = "itemButtonProjectile";
+			this.itemButtonProjectile.SelectedItem = null;
+			this.itemButtonProjectile.SelectedItemId = 0;
+			this.itemButtonProjectile.Size = new System.Drawing.Size(35, 35);
+			this.itemButtonProjectile.TabIndex = 2;
+			this.itemButtonProjectile.Text = "Proj";
+			this.itemButtonProjectile.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonOffHand
+			// 
+			this.itemButtonOffHand.Character = null;
+			this.itemButtonOffHand.CharacterSlot = Rawr.Character.CharacterSlot.OffHand;
+			this.itemButtonOffHand.Location = new System.Drawing.Point(155, 584);
+			this.itemButtonOffHand.Name = "itemButtonOffHand";
+			this.itemButtonOffHand.SelectedItem = null;
+			this.itemButtonOffHand.SelectedItemId = 0;
+			this.itemButtonOffHand.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonOffHand.TabIndex = 2;
+			this.itemButtonOffHand.Text = "OffHand";
+			this.itemButtonOffHand.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonShirt
 			// 
@@ -1074,18 +1172,18 @@ namespace Rawr
 			this.itemButtonWaist.Text = "Waist";
 			this.itemButtonWaist.UseVisualStyleBackColor = true;
 			// 
-			// itemButtonWeapon
+			// itemButtonMainHand
 			// 
-			this.itemButtonWeapon.Character = null;
-			this.itemButtonWeapon.CharacterSlot = Rawr.Character.CharacterSlot.Weapon;
-			this.itemButtonWeapon.Location = new System.Drawing.Point(79, 584);
-			this.itemButtonWeapon.Name = "itemButtonWeapon";
-			this.itemButtonWeapon.SelectedItem = null;
-			this.itemButtonWeapon.SelectedItemId = 0;
-			this.itemButtonWeapon.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonWeapon.TabIndex = 2;
-			this.itemButtonWeapon.Text = "Weapon";
-			this.itemButtonWeapon.UseVisualStyleBackColor = true;
+			this.itemButtonMainHand.Character = null;
+			this.itemButtonMainHand.CharacterSlot = Rawr.Character.CharacterSlot.MainHand;
+			this.itemButtonMainHand.Location = new System.Drawing.Point(79, 584);
+			this.itemButtonMainHand.Name = "itemButtonMainHand";
+			this.itemButtonMainHand.SelectedItem = null;
+			this.itemButtonMainHand.SelectedItemId = 0;
+			this.itemButtonMainHand.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonMainHand.TabIndex = 2;
+			this.itemButtonMainHand.Text = "MainHand";
+			this.itemButtonMainHand.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonWrist
 			// 
@@ -1550,27 +1648,6 @@ namespace Rawr
 			this.alphabeticalToolStripMenuItem.Text = "Alphabetical";
 			this.alphabeticalToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
 			// 
-			// comboBoxRace
-			// 
-			this.comboBoxRace.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxRace.FormattingEnabled = true;
-			this.comboBoxRace.Items.AddRange(new object[] {
-            "NightElf",
-            "Tauren",
-            "Human",
-            "Orc",
-            "Gnome",
-            "Troll",
-            "Dwarf",
-            "Undead",
-            "Draenei",
-            "BloodElf"});
-			this.comboBoxRace.Location = new System.Drawing.Point(105, 94);
-			this.comboBoxRace.Name = "comboBoxRace";
-			this.comboBoxRace.Size = new System.Drawing.Size(91, 21);
-			this.comboBoxRace.TabIndex = 4;
-			this.comboBoxRace.SelectedIndexChanged += new System.EventHandler(this.comboBoxRace_SelectedIndexChanged);
-			// 
 			// FormMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1617,16 +1694,16 @@ namespace Rawr
         private ItemButton itemButtonShirt;
         private ItemButton itemButtonTabard;
         private ItemButton itemButtonWrist;
-        private ItemButton itemButtonWeapon;
+        private ItemButton itemButtonMainHand;
         private ItemButton itemButtonTrinket1;
-        private ItemButton itemButtonIdol;
+        private ItemButton itemButtonRanged;
         private ItemButton itemButtonFinger2;
         private ItemButton itemButtonFinger1;
         private ItemButton itemButtonFeet;
         private ItemButton itemButtonLegs;
         private ItemButton itemButtonWaist;
         private ItemButton itemButtonHands;
-        private ItemButton itemButtonOffhand;
+        private ItemButton itemButtonOffHand;
         private ItemButton itemButtonBack;
         private ItemButton itemButtonTrinket2;
         private System.Windows.Forms.MenuStrip menuStripMain;
@@ -1660,7 +1737,7 @@ namespace Rawr
         private System.Windows.Forms.ComboBox comboBoxEnchantBack;
         private System.Windows.Forms.ComboBox comboBoxEnchantHands;
         private System.Windows.Forms.ComboBox comboBoxEnchantShoulders;
-        private System.Windows.Forms.ComboBox comboBoxEnchantWeapon;
+        private System.Windows.Forms.ComboBox comboBoxEnchantMainHand;
         private System.Windows.Forms.ComboBox comboBoxEnchantWrists;
         private System.Windows.Forms.ComboBox comboBoxEnchantHead;
         private System.Windows.Forms.Label label8;
@@ -1746,6 +1823,12 @@ namespace Rawr
         private System.Windows.Forms.ToolStripMenuItem updateItemCacheToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
 		private System.Windows.Forms.ComboBox comboBoxRace;
+		private ItemButton itemButtonProjectileBag;
+		private ItemButton itemButtonProjectile;
+		private System.Windows.Forms.ComboBox comboBoxEnchantRanged;
+		private System.Windows.Forms.ComboBox comboBoxEnchantOffHand;
+		private System.Windows.Forms.Label label11;
+		private System.Windows.Forms.Label label10;
     }
 }
 

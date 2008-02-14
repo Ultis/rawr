@@ -52,10 +52,16 @@ namespace Rawr //O O . .
         public string _trinket1;
         [System.Xml.Serialization.XmlElement("Trinket2")]
         public string _trinket2;
-        [System.Xml.Serialization.XmlElement("Weapon")]
-        public string _weapon;
-        [System.Xml.Serialization.XmlElement("Idol")]
-        public string _idol;
+		[System.Xml.Serialization.XmlElement("MainHand")]
+		public string _mainHand;
+		[System.Xml.Serialization.XmlElement("OffHand")]
+		public string _offHand;
+		[System.Xml.Serialization.XmlElement("Ranged")]
+		public string _ranged;
+		[System.Xml.Serialization.XmlElement("Projectile")]
+		public string _projectile;
+		[System.Xml.Serialization.XmlElement("ProjectileBag")]
+		public string _projectileBag;
 		[System.Xml.Serialization.XmlElement("HeadEnchant")]
 		public int _headEnchant = 0;
 		[System.Xml.Serialization.XmlElement("ShouldersEnchant")]
@@ -76,8 +82,12 @@ namespace Rawr //O O . .
 		public int _finger1Enchant = 0;
 		[System.Xml.Serialization.XmlElement("Finger2Enchant")]
 		public int _finger2Enchant = 0;
-		[System.Xml.Serialization.XmlElement("WeaponEnchant")]
-		public int _weaponEnchant = 0;
+		[System.Xml.Serialization.XmlElement("MainHandEnchant")]
+		public int _mainHandEnchant = 0;
+		[System.Xml.Serialization.XmlElement("OffHandEnchant")]
+		public int _offHandEnchant = 0;
+		[System.Xml.Serialization.XmlElement("RangedEnchant")]
+		public int _rangedEnchant = 0;
 		[System.Xml.Serialization.XmlElement("CalculationOptions")]
 		public string[] _calculationOptionsStrings = new string[0];
 
@@ -328,30 +338,71 @@ namespace Rawr //O O . .
             }
         }
         [System.Xml.Serialization.XmlIgnore]
-        public Item Weapon
+        public Item MainHand
         {
-			get { return Item.LoadFromId(_weapon, "Equipped Weapon"); }
+			get { return Item.LoadFromId(_mainHand, "Equipped MainHand"); }
             set
             {
-                if (value == null || _weapon != value.GemmedId)
+				if (value == null || _mainHand != value.GemmedId)
                 {
-                    _weapon = value != null ? value.GemmedId : null;
+					_mainHand = value != null ? value.GemmedId : null;
+					if (MainHand != null && MainHand.Slot == Item.ItemSlot.TwoHand)
+						OffHand = null;
                     OnItemsChanged();
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
-        public Item Idol
+		[System.Xml.Serialization.XmlIgnore]
+		public Item OffHand
+		{
+			get { return Item.LoadFromId(_offHand, "Equipped OffHand"); }
+			set
+			{
+				if (value == null || _offHand != value.GemmedId)
+				{
+					_offHand = value != null ? value.GemmedId : null;
+					OnItemsChanged();
+				}
+			}
+		}
+		[System.Xml.Serialization.XmlIgnore]
+        public Item Ranged
         {
-			get { return Item.LoadFromId(_idol, "Equipped Idol"); }
+			get { return Item.LoadFromId(_ranged, "Equipped Ranged"); }
             set
             {
-                if (value == null || _idol != value.GemmedId)
+				if (value == null || _ranged != value.GemmedId)
                 {
-                    _idol = value != null ? value.GemmedId : null;
+					_ranged = value != null ? value.GemmedId : null;
                     OnItemsChanged();
                 }
             }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public Item Projectile
+		{
+			get { return Item.LoadFromId(_projectile, "Equipped Projectile"); }
+			set
+			{
+				if (value == null || _projectile != value.GemmedId)
+				{
+					_projectile = value != null ? value.GemmedId : null;
+					OnItemsChanged();
+				}
+			}
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public Item ProjectileBag
+		{
+			get { return Item.LoadFromId(_projectileBag, "Equipped ProjectileBag"); }
+			set
+			{
+				if (value == null || _projectileBag != value.GemmedId)
+				{
+					_projectileBag = value != null ? value.GemmedId : null;
+					OnItemsChanged();
+				}
+			}
 		}
 		[System.Xml.Serialization.XmlIgnore]
 		public Enchant HeadEnchant
@@ -414,10 +465,22 @@ namespace Rawr //O O . .
 			set { _finger2Enchant = value == null ? 0 : value.Id; }
 		}
 		[System.Xml.Serialization.XmlIgnore]
-		public Enchant WeaponEnchant
+		public Enchant MainHandEnchant
 		{
-			get { return Enchant.FindEnchant(_weaponEnchant, Item.ItemSlot.Weapon); }
-			set { _weaponEnchant = value == null ? 0 : value.Id; }
+			get { return Enchant.FindEnchant(_mainHandEnchant, Item.ItemSlot.MainHand); }
+			set { _mainHandEnchant = value == null ? 0 : value.Id; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public Enchant OffHandEnchant
+		{
+			get { return Enchant.FindEnchant(_offHandEnchant, Item.ItemSlot.MainHand); }
+			set { _offHandEnchant = value == null ? 0 : value.Id; }
+		}
+		[System.Xml.Serialization.XmlIgnore]
+		public Enchant RangedEnchant
+		{
+			get { return Enchant.FindEnchant(_rangedEnchant, Item.ItemSlot.Ranged); }
+			set { _rangedEnchant = value == null ? 0 : value.Id; }
 		}
 		[System.Xml.Serialization.XmlIgnore]
 		public string[] CalculationOptionsStrings
@@ -478,8 +541,14 @@ namespace Rawr //O O . .
 					return FeetEnchant;
 				case Item.ItemSlot.Finger:
 					return Finger1Enchant;
-				case Item.ItemSlot.Weapon:
-					return WeaponEnchant;
+				case Item.ItemSlot.MainHand:
+				case Item.ItemSlot.OneHand:
+				case Item.ItemSlot.TwoHand:
+					return MainHandEnchant;
+				case Item.ItemSlot.OffHand:
+					return OffHandEnchant;
+				case Item.ItemSlot.Ranged:
+					return RangedEnchant;
 				default:
 					return null;
 			}
@@ -516,8 +585,16 @@ namespace Rawr //O O . .
 				case Item.ItemSlot.Finger:
 					Finger1Enchant = enchant;
 					break;
-				case Item.ItemSlot.Weapon:
-					WeaponEnchant = enchant;
+				case Item.ItemSlot.MainHand:
+				case Item.ItemSlot.OneHand:
+				case Item.ItemSlot.TwoHand:
+					MainHandEnchant = enchant;
+					break;
+				case Item.ItemSlot.OffHand:
+					OffHandEnchant = enchant;
+					break;
+				case Item.ItemSlot.Ranged:
+					RangedEnchant = enchant;
 					break;
 			}
 		}
@@ -542,8 +619,8 @@ namespace Rawr //O O . .
 		{
 			//Compute Set Bonuses
 			Dictionary<string, int> setCounts = new Dictionary<string, int>();
-			foreach (Item item in new Item[] {Back, Chest, Feet, Finger1, Finger2, Hands, Head, Idol, Legs, Neck,
-                Shirt, Shoulders, Tabard, Trinket1, Trinket2, Waist, Weapon, Wrist})
+			foreach (Item item in new Item[] {Back, Chest, Feet, Finger1, Finger2, Hands, Head, Legs, Neck,
+                Shirt, Shoulders, Tabard, Trinket1, Trinket2, Waist, MainHand, OffHand, Ranged, Wrist})
 			{
 				if (item != null && !string.IsNullOrEmpty(item.SetName))
 				{
@@ -630,13 +707,22 @@ namespace Rawr //O O . .
                     case CharacterSlot.Trinket2:
                         return this.Trinket2;
 
-                    case CharacterSlot.Weapon:
-                        return this.Weapon;
+					case CharacterSlot.MainHand:
+						return this.MainHand;
 
-                    case CharacterSlot.Idol:
-                        return this.Idol;
+					case CharacterSlot.OffHand:
+						return this.OffHand;
 
-                    default:
+					case CharacterSlot.Ranged:
+						return this.Ranged;
+
+					case CharacterSlot.Projectile:
+						return this.Projectile;
+
+					case CharacterSlot.ProjectileBag:
+						return this.ProjectileBag;
+
+					default:
                         return null;
                 }
             }
@@ -690,13 +776,22 @@ namespace Rawr //O O . .
                         this.Trinket1 = value;
                         break;
                     case CharacterSlot.Trinket2:
-                        this.Trinket2 = value;
-                        break;
-                    case CharacterSlot.Weapon:
-                        this.Weapon = value;
-                        break;
-                    case CharacterSlot.Idol:
-                        this.Idol = value;
+						this.Trinket2 = value;
+						break;
+					case CharacterSlot.MainHand:
+						this.MainHand = value;
+						break;
+					case CharacterSlot.OffHand:
+						this.OffHand = value;
+						break;
+					case CharacterSlot.Ranged:
+						this.Ranged = value;
+						break;
+					case CharacterSlot.Projectile:
+						this.Projectile = value;
+						break;
+					case CharacterSlot.ProjectileBag:
+						this.ProjectileBag = value;
                         break;
                 }
             }
@@ -727,39 +822,43 @@ namespace Rawr //O O . .
 		}
         public enum CharacterSlot
         {
-            Head = 0,
-            Neck = 1,
-            Shoulders = 2,
-            Back = 14,
-            Chest = 4,
-            Shirt = 3,
-            Tabard = 18,
-            Wrist = 8,
-            Hands = 9,
-            Waist = 5,
-            Legs = 6,
-            Feet = 7,
-            Finger1 = 10,
-            Finger2 = 11,
-            Trinket1 = 12,
-            Trinket2 = 13,
-            Weapon = 15,
-            Idol = 17,
+			None = -1,
+			Head = 1,
+            Neck = 2,
+            Shoulders = 3,
+            Back = 15,
+            Chest = 5,
+            Shirt = 4,
+            Tabard = 19,
+            Wrist = 9,
+            Hands = 10,
+            Waist = 6,
+            Legs = 7,
+            Feet = 8,
+            Finger1 = 11,
+            Finger2 = 12,
+            Trinket1 = 13,
+            Trinket2 = 14,
+            MainHand = 16,
+			OffHand = 17,
+            Ranged = 18,
+			Projectile = 0,
+			
 			Gems = 100,
 			Metas = 101,
-			None = -1
+			ProjectileBag = 102
         }
 
         public Character() { }
 		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
-                string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, string trinket1, string trinket2, string weapon, string idol) 
-        : this(name, realm, region, race, head, neck, shoulders, back, chest, shirt, tabard, wrist, hands, waist, legs, feet, finger1, finger2, trinket1, trinket2, weapon, idol,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+                string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, string projectileBag) 
+        : this(name, realm, region, race, head, neck, shoulders, back, chest, shirt, tabard, wrist, hands, waist, legs, feet, finger1, finger2, trinket1, trinket2, mainHand, offHand, ranged, projectile, projectileBag,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		{ }
 
 		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
-                string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, string trinket1, string trinket2, string weapon, string idol,
-			int enchantHead, int enchantShoulders, int enchantBack, int enchantChest, int enchantWrist, int enchantHands, int enchantLegs, int enchantFeet, int enchantFinger1, int enchantFinger2, int enchantWeapon)
+				string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, string projectileBag,
+			int enchantHead, int enchantShoulders, int enchantBack, int enchantChest, int enchantWrist, int enchantHands, int enchantLegs, int enchantFeet, int enchantFinger1, int enchantFinger2, int enchantMainHand, int enchantOffHand, int enchantRanged)
         {
             _name = name;
             _realm = realm;
@@ -781,8 +880,11 @@ namespace Rawr //O O . .
             _finger2 = finger2;
             _trinket1 = trinket1;
             _trinket2 = trinket2;
-            _weapon = weapon;
-            _idol = idol;
+			_mainHand = mainHand;
+			_offHand = offHand;
+			_ranged = ranged;
+			_projectile = projectile;
+			_projectileBag = projectileBag;
 
 			_headEnchant = enchantHead;
 			_shouldersEnchant = enchantShoulders;
@@ -794,7 +896,9 @@ namespace Rawr //O O . .
 			_feetEnchant = enchantFeet;
 			_finger1Enchant = enchantFinger1;
 			_finger2Enchant = enchantFinger2;
-			_weaponEnchant = enchantWeapon;
+			_mainHandEnchant = enchantMainHand;
+			_offHandEnchant = enchantOffHand;
+			_rangedEnchant = enchantRanged;
 		}
 
 		public Character Clone()
@@ -816,8 +920,11 @@ namespace Rawr //O O . .
 						this.Finger2 == null ? null : this.Finger2.GemmedId,
 						this.Trinket1 == null ? null : this.Trinket1.GemmedId,
 						this.Trinket2 == null ? null : this.Trinket2.GemmedId,
-						this.Weapon == null ? null : this.Weapon.GemmedId,
-						this.Idol == null ? null : this.Idol.GemmedId,
+						this.MainHand == null ? null : this.MainHand.GemmedId,
+						this.OffHand == null ? null : this.OffHand.GemmedId,
+						this.Ranged == null ? null : this.Ranged.GemmedId,
+						this.Projectile == null ? null : this.Projectile.GemmedId,
+						this.ProjectileBag == null ? null : this.ProjectileBag.GemmedId,
 						this.HeadEnchant.Id,
 						this.ShouldersEnchant.Id,
 						this.BackEnchant.Id,
@@ -828,7 +935,9 @@ namespace Rawr //O O . .
 						this.FeetEnchant.Id,
 						this.Finger1Enchant.Id,
 						this.Finger2Enchant.Id,
-						this.WeaponEnchant.Id);
+						this.MainHandEnchant.Id,
+						this.OffHandEnchant.Id,
+						this.RangedEnchant.Id);
 			foreach (string buff in this.ActiveBuffs) clone.ActiveBuffs.Add(buff);
 			SerializeCalculationOptions();
 			clone.CalculationOptionsStrings = CalculationOptionsStrings;
@@ -849,11 +958,11 @@ namespace Rawr //O O . .
         public static Character Load(string path)
         {
             Character character;
-			if (File.Exists(path))//Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Character.xml")))
+			if (File.Exists(path))
             {
 				try
 				{
-					string xml = System.IO.File.ReadAllText(path).Replace("<Region>en", "<Region>US");//Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Character.xml")).Replace("<Region>en","<Region>US");
+					string xml = System.IO.File.ReadAllText(path).Replace("<Region>en", "<Region>US").Replace("<Weapon>", "<MainHand>").Replace("</Weapon>", "</MainHand>").Replace("<Idol>", "<Ranged>").Replace("</Idol>", "</Ranged>").Replace("<WeaponEnchant>", "<MainHandEnchant>").Replace("</WeaponEnchant>", "</MainHandEnchant>");
 					System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
 					System.IO.StringReader reader = new System.IO.StringReader(xml);
 					character = (Character)serializer.Deserialize(reader);

@@ -75,6 +75,29 @@ namespace Rawr
 			}
 		}
 
+		private List<Item.ItemType> _relevantItemTypes = null;
+		public override List<Item.ItemType> RelevantItemTypes
+		{
+			get
+			{
+				if (_relevantItemTypes == null)
+				{
+					_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+					{
+						Item.ItemType.None,
+						Item.ItemType.Leather,
+						Item.ItemType.Idol,
+						Item.ItemType.OneHandSword,
+						Item.ItemType.Dagger,
+						Item.ItemType.OneHandMace,
+						Item.ItemType.Staff,
+						Item.ItemType.TwoHandMace
+					});
+				}
+				return _relevantItemTypes;
+			}
+		}
+
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationCat(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsCat(); }
 
@@ -436,13 +459,6 @@ namespace Rawr
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCostReduction + stats.Stamina +
 				stats.Strength + stats.TerrorProc + stats.WeaponDamage) > 0;
-		}
-
-		public override bool IsItemRelevant(Item item)
-		{
-			return item.ArmorType != Item.ItemArmorType.Mail &&
-				item.ArmorType != Item.ItemArmorType.Plate &&
-				HasRelevantStats(item.Stats);
 		}
 	}
 

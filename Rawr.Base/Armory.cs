@@ -61,7 +61,7 @@ namespace Rawr
 
 				foreach (XmlNode itemNode in docCharacter.SelectNodes("page/characterInfo/characterTab/items/item"))
 				{
-					int slot = int.Parse(itemNode.Attributes["slot"].Value);
+					int slot = int.Parse(itemNode.Attributes["slot"].Value) + 1;
 					items[(Character.CharacterSlot)slot] = string.Format("{0}.{1}.{2}.{3}", itemNode.Attributes["id"].Value,
 						itemNode.Attributes["gem0Id"].Value, itemNode.Attributes["gem1Id"].Value, itemNode.Attributes["gem2Id"].Value);
 					enchants[(Character.CharacterSlot)slot] = int.Parse(itemNode.Attributes["permanentenchant"].Value);
@@ -84,8 +84,11 @@ namespace Rawr
 					items.ContainsKey(Character.CharacterSlot.Finger2) ? items[Character.CharacterSlot.Finger2] : null,
 					items.ContainsKey(Character.CharacterSlot.Trinket1) ? items[Character.CharacterSlot.Trinket1] : null,
 					items.ContainsKey(Character.CharacterSlot.Trinket2) ? items[Character.CharacterSlot.Trinket2] : null,
-					items.ContainsKey(Character.CharacterSlot.Weapon) ? items[Character.CharacterSlot.Weapon] : null,
-					items.ContainsKey(Character.CharacterSlot.Idol) ? items[Character.CharacterSlot.Idol] : null,
+					items.ContainsKey(Character.CharacterSlot.MainHand) ? items[Character.CharacterSlot.MainHand] : null,
+					items.ContainsKey(Character.CharacterSlot.OffHand) ? items[Character.CharacterSlot.OffHand] : null,
+					items.ContainsKey(Character.CharacterSlot.Ranged) ? items[Character.CharacterSlot.Ranged] : null,
+					items.ContainsKey(Character.CharacterSlot.Projectile) ? items[Character.CharacterSlot.Projectile] : null,
+					null,
 					enchants.ContainsKey(Character.CharacterSlot.Head) ? enchants[Character.CharacterSlot.Head] : 0,
 					enchants.ContainsKey(Character.CharacterSlot.Shoulders) ? enchants[Character.CharacterSlot.Shoulders] : 0,
 					enchants.ContainsKey(Character.CharacterSlot.Back) ? enchants[Character.CharacterSlot.Back] : 0,
@@ -96,7 +99,9 @@ namespace Rawr
 					enchants.ContainsKey(Character.CharacterSlot.Feet) ? enchants[Character.CharacterSlot.Feet] : 0,
 					enchants.ContainsKey(Character.CharacterSlot.Finger1) ? enchants[Character.CharacterSlot.Finger1] : 0,
 					enchants.ContainsKey(Character.CharacterSlot.Finger2) ? enchants[Character.CharacterSlot.Finger2] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.Weapon) ? enchants[Character.CharacterSlot.Weapon] : 0
+					enchants.ContainsKey(Character.CharacterSlot.MainHand) ? enchants[Character.CharacterSlot.MainHand] : 0,
+					enchants.ContainsKey(Character.CharacterSlot.OffHand) ? enchants[Character.CharacterSlot.OffHand] : 0,
+					enchants.ContainsKey(Character.CharacterSlot.Ranged) ? enchants[Character.CharacterSlot.Ranged] : 0
 					);
 
 				//I will tell you how he lived.
@@ -144,20 +149,35 @@ namespace Rawr
 						docItem = DownloadXml(itemTooltipPath);
 
 						Item.ItemQuality quality = Item.ItemQuality.Common;
-						Item.ItemArmorType armorType = Item.ItemArmorType.None;
+						Item.ItemType type = Item.ItemType.None;
 						string name = string.Empty;
 						string iconPath = string.Empty;
 						string setName = string.Empty;
 						Item.ItemSlot slot = Item.ItemSlot.None;
 						Stats stats = new Stats();
 						Sockets sockets = new Sockets();
+						int inventoryType = -1;
+						int classId = -1;
+						string subclassName = string.Empty;
+						int minDamage = 0;
+						int maxDamage = 0;
+						float speed = 0f;
 
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/icon")) { iconPath = node.InnerText; }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/overallQualityId")) { quality = (Item.ItemQuality)Enum.Parse(typeof(Item.ItemQuality), node.InnerText); }
-						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/inventoryType")) { slot = (Item.ItemSlot)int.Parse(node.InnerText); }
-						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/subclassName")) { armorType = (Item.ItemArmorType)Enum.Parse(typeof(Item.ItemArmorType), node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/classId")) { classId = int.Parse(node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/inventoryType")) { inventoryType = int.Parse(node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/subclassName")) { subclassName = node.InnerText; }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/min")) { minDamage = int.Parse(node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/max")) { maxDamage = int.Parse(node.InnerText); }
+						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/speed")) { speed = float.Parse(node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/setData/name")) { setName = node.InnerText; }
+
+						if (inventoryType >= 0)
+							slot = GetItemSlot(inventoryType, classId);
+						if (!string.IsNullOrEmpty(subclassName))
+							type = GetItemType(subclassName, inventoryType, classId);
 
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAgility")) { stats.Agility = int.Parse(node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/armor")) { stats.Armor = int.Parse(node.InnerText); }
@@ -482,7 +502,7 @@ namespace Rawr
 						int gem1Id = ids.Length == 4 ? int.Parse(ids[1]) : 0;
 						int gem2Id = ids.Length == 4 ? int.Parse(ids[2]) : 0;
 						int gem3Id = ids.Length == 4 ? int.Parse(ids[3]) : 0;
-						Item item = new Item(name, quality, armorType, int.Parse(id), iconPath, slot, setName, stats, sockets, gem1Id, gem2Id, gem3Id);
+						Item item = new Item(name, quality, type, int.Parse(id), iconPath, slot, setName, stats, sockets, gem1Id, gem2Id, gem3Id, minDamage, maxDamage, speed);
 						retry = 3;
 						return item;
 					}
@@ -514,6 +534,179 @@ namespace Rawr
 					gemmedId, docItem.OuterXml, ex.Message, ex.StackTrace));
 				}
 				return null;
+			}
+		}
+
+		private static Item.ItemType GetItemType(string subclassName, int inventoryType, int classId)
+		{
+			switch (subclassName)
+			{
+				case "Cloth":
+					return Item.ItemType.Cloth;
+
+				case "Leather":
+					return Item.ItemType.Leather;
+
+				case "Mail":
+					return Item.ItemType.Mail;
+
+				case "Plate":
+					return Item.ItemType.Plate;
+
+				case "Dagger":
+					return Item.ItemType.Dagger;
+
+				case "Fist Weapon":
+					return Item.ItemType.FistWeapon;
+
+				case "Axe":
+					if (inventoryType == 17)
+						return Item.ItemType.TwoHandAxe;
+					else
+						return Item.ItemType.OneHandAxe;
+
+				case "Mace":
+					if (inventoryType == 17)
+						return Item.ItemType.TwoHandMace;
+					else
+						return Item.ItemType.OneHandMace;
+
+				case "Sword":
+					if (inventoryType == 17)
+						return Item.ItemType.TwoHandSword;
+					else
+						return Item.ItemType.OneHandSword;
+
+				case "Polearm":
+					return Item.ItemType.Polearm;
+
+				case "Staff":
+					return Item.ItemType.Staff;
+
+				case "Shield":
+					return Item.ItemType.Shield;
+
+				case "Bow":
+					return Item.ItemType.Bow;
+
+				case "Crowssbow":
+					return Item.ItemType.Crossbow;
+
+				case "Gun":
+					return Item.ItemType.Gun;
+
+				case "Wand":
+					return Item.ItemType.Wand;
+
+				case "Thrown":
+					return Item.ItemType.Thrown;
+
+				case "Idol":
+					return Item.ItemType.Idol;
+
+				case "Libram":
+					return Item.ItemType.Libram;
+
+				case "Totem":
+					return Item.ItemType.Totem;
+
+				case "Arrow":
+					return Item.ItemType.Arrow;
+
+				case "Bullet":
+					return Item.ItemType.Bullet;
+
+				case "Quiver":
+					return Item.ItemType.Quiver;
+
+				case "Ammo Pouch":
+					return Item.ItemType.AmmoPouch;
+
+				default:
+					return Item.ItemType.None;
+			}
+		}
+
+		private static Item.ItemSlot GetItemSlot(int inventoryType, int classId)
+		{
+			switch (classId)
+			{
+				case 6:
+					return Item.ItemSlot.Projectile;
+
+				case 11:
+					return Item.ItemSlot.ProjectileBag;
+			}
+					
+			switch (inventoryType)
+			{
+				case 1:
+					return Item.ItemSlot.Head;
+
+				case 2:
+					return Item.ItemSlot.Neck;
+
+				case 3:
+					return Item.ItemSlot.Shoulders;
+
+				case 16:
+					return Item.ItemSlot.Back;
+
+				case 5:
+				case 20:
+					return Item.ItemSlot.Chest;
+
+				case 4:
+					return Item.ItemSlot.Shirt;
+
+				case 19:
+					return Item.ItemSlot.Tabard;
+
+				case 9:
+					return Item.ItemSlot.Wrist;
+
+				case 10:
+					return Item.ItemSlot.Hands;
+
+				case 6:
+					return Item.ItemSlot.Waist;
+
+				case 7:
+					return Item.ItemSlot.Legs;
+
+				case 8:
+					return Item.ItemSlot.Feet;
+
+				case 11:
+					return Item.ItemSlot.Finger;
+
+				case 12:
+					return Item.ItemSlot.Trinket;
+
+				case 13:
+					return Item.ItemSlot.OneHand;
+
+				case 17:
+					return Item.ItemSlot.TwoHand;
+
+				case 21:
+					return Item.ItemSlot.MainHand;
+
+				case 14:
+				case 22:
+				case 23:
+					return Item.ItemSlot.OffHand;
+
+				case 15:
+				case 25:
+				case 26:
+					return Item.ItemSlot.Ranged;
+
+				case 24:
+					return Item.ItemSlot.Projectile;			
+				
+				default:
+					return Item.ItemSlot.None;
 			}
 		}
 
@@ -565,7 +758,9 @@ namespace Rawr
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Finger2, idealGems);
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Trinket1, idealGems);
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Trinket2, idealGems);
-				LoadUpgradesForSlot(character, Character.CharacterSlot.Weapon, idealGems);
+				LoadUpgradesForSlot(character, Character.CharacterSlot.MainHand, idealGems);
+				LoadUpgradesForSlot(character, Character.CharacterSlot.OffHand, idealGems);
+				LoadUpgradesForSlot(character, Character.CharacterSlot.Ranged, idealGems);
 			}
 			else
 			{

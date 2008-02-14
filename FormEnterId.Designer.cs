@@ -83,6 +83,7 @@ namespace Rawr
 			this.Controls.Add(this.buttonOK);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Name = "FormEnterId";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Enter Item Id...";
 			this.Load += new System.EventHandler(this.FormEnterId_Load);
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownValue)).EndInit();
