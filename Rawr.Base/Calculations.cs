@@ -68,16 +68,9 @@ namespace Rawr
 		private static CalculationsBase _instance;
 		public static CalculationsBase Instance
 		{
-			get
-			{
-				return _instance;
-			}
-			private set
-			{
-				_instance = value;
-			}
+			get { return _instance; }
+			private set { _instance = value; }
 		}
-
 
 		public static Character CachedCharacter
 		{
@@ -166,6 +159,9 @@ namespace Rawr
 		}
 	}
 
+	/// <summary>
+	/// CalculationsBase is the base class which each model's main Calculations class will inherit from.
+	/// </summary>
 	public abstract class CalculationsBase
 	{
 		protected CharacterCalculationsBase _cachedCharacterStatsWithSlotEmpty = null;
@@ -173,21 +169,132 @@ namespace Rawr
 		protected Character _cachedCharacter = null;
 		public virtual Character CachedCharacter { get { return _cachedCharacter; } }
 		
+		/// <summary>
+		/// Dictionary<string, Color> that includes the names of each rating which your model will use,
+		/// and a color for each. These colors will be used in the charts.
+		/// 
+		/// EXAMPLE: 
+		/// subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+		/// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
+		/// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
+		/// </summary>
 		public abstract Dictionary<string, System.Drawing.Color> SubPointNameColors { get; }
+		
+		/// <summary>
+		/// An array of strings which will be used to build the calculation display.
+		/// Each string must be in the format of "Heading:Label". Heading will be used as the
+		/// text of the group box containing all labels that have the same Heading.
+		/// Label will be the label of that calculation, and may be appended with '*' followed by
+		/// a description of that calculation which will be displayed in a tooltip for that label.
+		/// Label (without the tooltip string) must be unique.
+		/// 
+		/// EXAMPLE:
+		/// characterDisplayCalculationLabels = new string[]
+		/// {
+		///		"Basic Stats:Health",
+		///		"Basic Stats:Armor",
+		///		"Advanced Stats:Dodge",
+		///		"Advanced Stats:Miss*Chance to be missed"
+		/// };
+		/// </summary>
 		public abstract string[] CharacterDisplayCalculationLabels { get; }
+
+		/// <summary>
+		/// A custom panel inheriting from CalculationOptionsPanelBase which contains controls for
+		/// setting CalculationOptions for the model. CalculationOptions are stored in the Character,
+		/// and can be used by multiple models. See comments on CalculationOptionsPanelBase for more details.
+		/// </summary>
 		public abstract CalculationOptionsPanelBase CalculationOptionsPanel { get; }
+
+		/// <summary>
+		/// List<Item.ItemType> containing all of the ItemTypes relevant to this model. Typically this
+		/// means all types of armor/weapons that the intended class is able to use, but may also
+		/// be trimmed down further if some aren't typically used. Item.ItemType.None should almost
+		/// always be included, because that type includes items with no proficiancy requirement, such
+		/// as rings, necklaces, cloaks, held in off hand items, etc.
+		/// 
+		/// EXAMPLE:
+		/// relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+		/// {
+		///     Item.ItemType.None,
+		///     Item.ItemType.Leather,
+		///     Item.ItemType.Idol,
+		///     Item.ItemType.Staff,
+		///     Item.ItemType.TwoHandMace
+		/// });
+		/// </summary>
 		public abstract List<Item.ItemType> RelevantItemTypes { get; }
 		
+		
+		/// <summary>
+		/// Method to get a new instance of the model's custom ComparisonCalculation class.
+		/// </summary>
+		/// <returns>A new instance of the model's custom ComparisonCalculation class, 
+		/// which inherits from ComparisonCalculationBase</returns>
 		public abstract ComparisonCalculationBase CreateNewComparisonCalculation();
+
+		/// <summary>
+		/// Method to get a new instance of the model's custom CharacterCalculations class.
+		/// </summary>
+		/// <returns>A new instance of the model's custom CharacterCalculations class, 
+		/// which inherits from CharacterCalculationsBase</returns>
 		public abstract CharacterCalculationsBase CreateNewCharacterCalculations();
 
-		public abstract CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem);
-		public abstract Stats GetCharacterStats(Character character, Item additionalItem);
-		public abstract ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations);
-		public abstract Stats GetRelevantStats(Stats stats);
-		public abstract bool HasRelevantStats(Stats stats);
+
 		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character) { return GetCharacterCalculations(character, null); }
+		/// <summary>
+		/// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
+		/// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
+		/// those total stats for the character, and any calculationoptions on the character, perform all the 
+		/// calculations required to come up with the final calculations defined in 
+		/// CharacterDisplayCalculationLabels, including an Overall rating, and all Sub ratings defined in 
+		/// SubPointNameColors.
+		/// </summary>
+		/// <param name="character">The character to perform calculations for.</param>
+		/// <param name="additionalItem">An additional item to treat the character as wearing.
+		/// This is used for gems, which don't have a slot on the character to fit in, so are just
+		/// added onto the character, in order to get gem calculations.</param>
+		/// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
+		/// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
+		/// CharacterCalculationsBase comments for more details.</returns>
+		public abstract CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem);
+		
 		public virtual Stats GetCharacterStats(Character character) { return GetCharacterStats(character, null); }
+		/// <summary>
+		/// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
+		/// combine all of the information about the character, including race, gear, enchants, buffs,
+		/// calculationoptions, etc., to form a single combined Stats object. Three of the methods below
+		/// can be called from this method to help total up stats: GetItemStats(character, additionalItem),
+		/// GetEnchantsStats(character), and GetBuffsStats(character.ActiveBuffs).
+		/// </summary>
+		/// <param name="character">The character whose stats should be totaled.</param>
+		/// <param name="additionalItem">An additional item to treat the character as wearing.
+		/// This is used for gems, which don't have a slot on the character to fit in, so are just
+		/// added onto the character, in order to get gem calculations.</param>
+		/// <returns>A Stats object containing the final totaled values of all character stats.</returns>
+		public abstract Stats GetCharacterStats(Character character, Item additionalItem);
+		
+		/// <summary>
+		/// Depreciated. Functions currently, and is required, but feel free to just return an empty array.
+		/// I'll be revamping this into a system for models to define custom charts.
+		/// </summary>
+		/// <param name="currentCalculations"></param>
+		/// <returns></returns>
+		public abstract ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations);
+		
+		/// <summary>
+		/// Filters a Stats object to just the stats relevant to the model.
+		/// </summary>
+		/// <param name="stats">A complete Stats object containing all stats.</param>
+		/// <returns>A filtered Stats object containing only the stats relevant to the model.</returns>
+		public abstract Stats GetRelevantStats(Stats stats);
+
+		/// <summary>
+		/// Tests whether there are positive relevant stats in the Stats object.
+		/// </summary>
+		/// <param name="stats">The complete Stats object containing all stats.</param>
+		/// <returns>True if any of the positive stats in the Stats are relevant.</returns>
+		public abstract bool HasRelevantStats(Stats stats);
 		
 		public virtual void ClearCache()
 		{
@@ -406,13 +513,39 @@ namespace Rawr
 		}
 	}
 
+	/// <summary>
+	/// Base CharacterCalculations class, which will hold the final result data of the calculations from
+	/// GetCharacterCalculations(). Your class should inherit from this, and include fields to hold the
+	/// needed data. May also include additional data needed to properly format the display calculations,
+	/// such as values of some of the CalculationOptions.
+	/// </summary>
 	public abstract class CharacterCalculationsBase
 	{
+		/// <summary>
+		/// The Overall rating points for the whole character.
+		/// </summary>
 		public abstract float OverallPoints { get; set; }
+		
+		/// <summary>
+		/// The Sub rating points for the whole character, in the order defined in SubPointNameColors.
+		/// Should sum up to OverallPoints.
+		/// </summary>
 		public abstract float[] SubPoints { get; set; }
+
+		/// <summary>
+		/// Builds a dictionary containing the values to display for each of the calculations defined in 
+		/// CharacterDisplayCalculationLabels. The key should be the Label of each display calculation, 
+		/// and the value should be the value to display, optionally appended with '*' followed by any 
+		/// string you'd like displayed as a tooltip on the value.
+		/// </summary>
+		/// <returns>A Dictionary<string, string> containing the values to display for each of the 
+		/// calculations defined in CharacterDisplayCalculationLabels.</returns>
 		public abstract Dictionary<string, string> GetCharacterDisplayCalculationValues();
 	}
 
+	/// <summary>
+	/// TODO
+	/// </summary>
 	public abstract class ComparisonCalculationBase
 	{
 		public abstract string Name { get; set; }
@@ -422,6 +555,9 @@ namespace Rawr
 		public abstract bool Equipped { get; set; }
 	}
 
+	/// <summary>
+	/// TODO
+	/// </summary>
 	public class CalculationOptionsPanelBase : System.Windows.Forms.UserControl
 	{
 
