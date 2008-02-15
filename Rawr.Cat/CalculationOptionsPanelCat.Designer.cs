@@ -45,9 +45,12 @@
 			this.radioButtonFerociousBite = new System.Windows.Forms.RadioButton();
 			this.radioButtonRip = new System.Windows.Forms.RadioButton();
 			this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.trackBarExposeWeakness = new System.Windows.Forms.TrackBar();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
 			this.groupBoxPrimaryAttack.SuspendLayout();
 			this.groupBoxFinisher.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarExposeWeakness)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -80,7 +83,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(3, 33);
+			this.label2.Location = new System.Drawing.Point(3, 84);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(74, 13);
 			this.label2.TabIndex = 0;
@@ -89,7 +92,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(3, 124);
+			this.label3.Location = new System.Drawing.Point(3, 175);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(62, 13);
 			this.label3.TabIndex = 0;
@@ -108,7 +111,7 @@
             "Every 3rd Cycle",
             "Every 4th Cycle",
             "Every 5th Cycle"});
-			this.comboBoxPowershift.Location = new System.Drawing.Point(83, 121);
+			this.comboBoxPowershift.Location = new System.Drawing.Point(83, 172);
 			this.comboBoxPowershift.Name = "comboBoxPowershift";
 			this.comboBoxPowershift.Size = new System.Drawing.Size(123, 21);
 			this.comboBoxPowershift.TabIndex = 1;
@@ -120,14 +123,14 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.trackBarTargetArmor.LargeChange = 1000;
-			this.trackBarTargetArmor.Location = new System.Drawing.Point(75, 30);
+			this.trackBarTargetArmor.Location = new System.Drawing.Point(75, 81);
 			this.trackBarTargetArmor.Maximum = 9000;
 			this.trackBarTargetArmor.Minimum = 3000;
 			this.trackBarTargetArmor.Name = "trackBarTargetArmor";
 			this.trackBarTargetArmor.Size = new System.Drawing.Size(139, 45);
 			this.trackBarTargetArmor.SmallChange = 100;
 			this.trackBarTargetArmor.TabIndex = 2;
-			this.trackBarTargetArmor.TickFrequency = 200;
+			this.trackBarTargetArmor.TickFrequency = 300;
 			this.trackBarTargetArmor.Value = 7700;
 			this.trackBarTargetArmor.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
@@ -135,7 +138,7 @@
 			// 
 			this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.labelTargetArmorDescription.Location = new System.Drawing.Point(6, 78);
+			this.labelTargetArmorDescription.Location = new System.Drawing.Point(6, 129);
 			this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
 			this.labelTargetArmorDescription.Size = new System.Drawing.Size(200, 40);
 			this.labelTargetArmorDescription.TabIndex = 0;
@@ -167,7 +170,7 @@
 			this.groupBoxPrimaryAttack.Controls.Add(this.radioButtonShred);
 			this.groupBoxPrimaryAttack.Controls.Add(this.radioButtonMangle);
 			this.groupBoxPrimaryAttack.Enabled = false;
-			this.groupBoxPrimaryAttack.Location = new System.Drawing.Point(3, 148);
+			this.groupBoxPrimaryAttack.Location = new System.Drawing.Point(3, 199);
 			this.groupBoxPrimaryAttack.Name = "groupBoxPrimaryAttack";
 			this.groupBoxPrimaryAttack.Size = new System.Drawing.Size(203, 170);
 			this.groupBoxPrimaryAttack.TabIndex = 4;
@@ -217,7 +220,7 @@
 			this.groupBoxFinisher.Controls.Add(this.radioButtonFerociousBite);
 			this.groupBoxFinisher.Controls.Add(this.radioButtonRip);
 			this.groupBoxFinisher.Enabled = false;
-			this.groupBoxFinisher.Location = new System.Drawing.Point(3, 324);
+			this.groupBoxFinisher.Location = new System.Drawing.Point(3, 375);
 			this.groupBoxFinisher.Name = "groupBoxFinisher";
 			this.groupBoxFinisher.Size = new System.Drawing.Size(203, 170);
 			this.groupBoxFinisher.TabIndex = 4;
@@ -277,13 +280,40 @@
 			// checkBoxEnforceMetagemRequirements
 			// 
 			this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-			this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 500);
+			this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 551);
 			this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
 			this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
 			this.checkBoxEnforceMetagemRequirements.TabIndex = 5;
 			this.checkBoxEnforceMetagemRequirements.Text = "Enforce Metagem Requirements";
 			this.checkBoxEnforceMetagemRequirements.UseVisualStyleBackColor = true;
 			this.checkBoxEnforceMetagemRequirements.CheckedChanged += new System.EventHandler(this.checkBoxEnforceMetagemRequirements_CheckedChanged);
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(16, 33);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(58, 39);
+			this.label4.TabIndex = 0;
+			this.label4.Text = "Expose\r\nWeakness\r\nAP Bonus:";
+			this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// trackBarExposeWeakness
+			// 
+			this.trackBarExposeWeakness.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.trackBarExposeWeakness.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.trackBarExposeWeakness.LargeChange = 50;
+			this.trackBarExposeWeakness.Location = new System.Drawing.Point(75, 30);
+			this.trackBarExposeWeakness.Maximum = 500;
+			this.trackBarExposeWeakness.Minimum = 50;
+			this.trackBarExposeWeakness.Name = "trackBarExposeWeakness";
+			this.trackBarExposeWeakness.Size = new System.Drawing.Size(139, 45);
+			this.trackBarExposeWeakness.SmallChange = 10;
+			this.trackBarExposeWeakness.TabIndex = 2;
+			this.trackBarExposeWeakness.TickFrequency = 25;
+			this.trackBarExposeWeakness.Value = 200;
+			this.trackBarExposeWeakness.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// CalculationOptionsPanelCat
 			// 
@@ -293,19 +323,21 @@
 			this.Controls.Add(this.groupBoxFinisher);
 			this.Controls.Add(this.groupBoxPrimaryAttack);
 			this.Controls.Add(this.labelTargetArmorDescription);
+			this.Controls.Add(this.trackBarExposeWeakness);
 			this.Controls.Add(this.trackBarTargetArmor);
 			this.Controls.Add(this.comboBoxPowershift);
+			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.comboBoxTargetLevel);
 			this.Controls.Add(this.label1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "CalculationOptionsPanelCat";
-			this.Size = new System.Drawing.Size(209, 544);
-			this.Load += new System.EventHandler(this.CalculationOptionsPanelCat_Load);
+			this.Size = new System.Drawing.Size(209, 597);
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
 			this.groupBoxPrimaryAttack.ResumeLayout(false);
 			this.groupBoxFinisher.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.trackBarExposeWeakness)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -329,5 +361,7 @@
 		private System.Windows.Forms.RadioButton radioButtonFerociousBite;
 		private System.Windows.Forms.RadioButton radioButtonRip;
 		private System.Windows.Forms.CheckBox checkBoxEnforceMetagemRequirements;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.TrackBar trackBarExposeWeakness;
 	}
 }

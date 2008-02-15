@@ -54,17 +54,6 @@ namespace Rawr
 
 		//washing virgin halo
 		public Buff() { }
-		//public Buff(string name, BuffCategory category, Stats stats) : this(name, category, stats, BuffType.LongDurationNoDW, string.Empty, new string[0]) { }
-		//public Buff(string name, BuffCategory category, Stats stats, BuffType type) : this(name, category, stats, type, string.Empty, new string[0]) { }
-		//public Buff(string name, BuffCategory category, Stats stats, BuffType type, string requiredBuff, string[] conflictingBuffs)
-		//{
-		//    Name = name;
-		//    Category = category;
-		//    Stats = stats;
-		//    Type = type;
-		//    RequiredBuff = requiredBuff;
-		//    ConflictingBuffs = conflictingBuffs;
-		//}
 
 		//you're in agreement
 		public override string ToString()
@@ -244,6 +233,8 @@ namespace Rawr
 							Stats = new Stats() { ArmorPenetration = 800 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Hunters Mark", Category = BuffCategory.Debuffs,
 							Stats = new Stats() { AttackPower = 110 }});
+						_allBuffs.Add(new Buff() { Name = "Expose Weakness", Category = BuffCategory.Debuffs,
+							Stats = new Stats() { ExposeWeakness = 1 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Judgement of the Crusade", Category = BuffCategory.Debuffs,
 							Stats = new Stats() { CritRating = 66.24f }});
 						

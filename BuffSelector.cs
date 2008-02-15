@@ -16,9 +16,15 @@ namespace Rawr
 			InitializeComponent();
 			if (!this.DesignMode)
 			{ 
-				this.Controls.Clear();
 				BuildControls();
 			}
+			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+		}
+
+		void Calculations_ModelChanged(object sender, EventArgs e)
+		{
+			BuildControls();
+			LoadBuffsFromCharacter();
 		}
 
 		//i want to be free... from desolation and despair
@@ -26,6 +32,9 @@ namespace Rawr
 		Dictionary<Buff, CheckBox> CheckBoxes = new Dictionary<Buff, CheckBox>();
 		private void BuildControls()
 		{
+			this.Controls.Clear();
+			this.GroupBoxes.Clear();
+			this.CheckBoxes.Clear();
 			this.SuspendLayout();
 			foreach (Buff.BuffCategory category in Enum.GetValues(typeof(Buff.BuffCategory)))
 			{

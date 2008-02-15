@@ -36,6 +36,8 @@ namespace Rawr
 				Character.CalculationOptions["TargetLevel"] = "73";
 			if (!Character.CalculationOptions.ContainsKey("TargetArmor"))
 				Character.CalculationOptions["TargetArmor"] = "7700";
+			if (!Character.CalculationOptions.ContainsKey("ExposeWeaknessAPValue"))
+				Character.CalculationOptions["ExposeWeaknessAPValue"] = "200";
 			if (!Character.CalculationOptions.ContainsKey("Powershift"))
 				Character.CalculationOptions["Powershift"] = "4";
 			if (!Character.CalculationOptions.ContainsKey("PrimaryAttack"))
@@ -47,6 +49,7 @@ namespace Rawr
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
 			trackBarTargetArmor.Value = int.Parse(Character.CalculationOptions["TargetArmor"]);
+			trackBarExposeWeakness.Value = int.Parse(Character.CalculationOptions["ExposeWeaknessAPValue"]);
 			comboBoxPowershift.SelectedIndex = int.Parse(Character.CalculationOptions["Powershift"]);
 			radioButtonMangle.Checked = Character.CalculationOptions["PrimaryAttack"] == "Mangle";
 			radioButtonShred.Checked = Character.CalculationOptions["PrimaryAttack"] == "Shred";
@@ -69,6 +72,7 @@ namespace Rawr
 
 				Character.CalculationOptions["TargetLevel"] = comboBoxTargetLevel.SelectedItem.ToString();
 				Character.CalculationOptions["TargetArmor"] = trackBarTargetArmor.Value.ToString();
+				Character.CalculationOptions["ExposeWeaknessAPValue"] = trackBarExposeWeakness.Value.ToString();
 				Character.CalculationOptions["Powershift"] = comboBoxPowershift.SelectedIndex.ToString();
 				foreach (RadioButton radioButtonPrimaryAttack in groupBoxPrimaryAttack.Controls)
 					if (radioButtonPrimaryAttack.Checked)
@@ -79,11 +83,6 @@ namespace Rawr
 
 				Character.OnItemsChanged();
 			}
-		}
-
-		private void CalculationOptionsPanelCat_Load(object sender, EventArgs e)
-		{
-
 		}
 
 		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)

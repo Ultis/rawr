@@ -106,6 +106,7 @@ namespace Rawr
 			_cachedCharacter = character;
 			int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
 			float targetArmor = int.Parse(character.CalculationOptions["TargetArmor"]);
+			float exposeWeaknessAPValue = int.Parse(character.CalculationOptions["ExposeWeaknessAPValue"]);
 			int powershift = int.Parse(character.CalculationOptions["Powershift"]);
 			string primaryAttack = character.CalculationOptions["PrimaryAttack"];
 			string finisher = character.CalculationOptions["Finisher"];
@@ -124,7 +125,7 @@ namespace Rawr
 
 
 			float critMultiplier = 2 * (1 + stats.BonusCritMultiplier);
-			float attackPower = stats.AttackPower;
+			float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
 
 			float hitBonus = stats.HitRating * 52f / 82f / 1000f;
 			float expertiseBonus = stats.ExpertiseRating * 52f / 82f / 2.5f * 0.0025f;
@@ -388,6 +389,7 @@ namespace Rawr
 			statsTotal.MangleCostReduction = statsRace.MangleCostReduction + statsGearEnchantsBuffs.MangleCostReduction;
 			statsTotal.TerrorProc = statsRace.TerrorProc + statsGearEnchantsBuffs.TerrorProc;
 			statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
+			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 
 			return statsTotal;
 		}
@@ -447,7 +449,8 @@ namespace Rawr
 					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
 					Health = stats.Health,
-					MangleCostReduction = stats.MangleCostReduction
+					MangleCostReduction = stats.MangleCostReduction,
+					ExposeWeakness = stats.ExposeWeakness
 				};
 		}
 
@@ -458,7 +461,7 @@ namespace Rawr
 				stats.BonusMangleDamage + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCostReduction + stats.Stamina +
-				stats.Strength + stats.TerrorProc + stats.WeaponDamage) > 0;
+				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness) > 0;
 		}
 	}
 

@@ -123,7 +123,9 @@ namespace Rawr
 
         public float BonusMangleDamage{get;set;}
 
-        public float MangleCostReduction{get;set;}
+		public float MangleCostReduction { get; set; }
+
+		public float ExposeWeakness { get; set; }
 
 		[Multiplicative]
 		[DisplayName("% Agility")]
@@ -197,6 +199,7 @@ namespace Rawr
 				BonusShredDamage = a.BonusShredDamage + b.BonusShredDamage,
 				BonusMangleDamage = a.BonusMangleDamage + b.BonusMangleDamage,
 				MangleCostReduction = a.MangleCostReduction + b.MangleCostReduction,
+				ExposeWeakness = a.ExposeWeakness + b.ExposeWeakness,
 				BonusAgilityMultiplier = (1f + a.BonusAgilityMultiplier) * (1f + b.BonusAgilityMultiplier) - 1f,
 				BonusStrengthMultiplier = (1f + a.BonusStrengthMultiplier) * (1f + b.BonusStrengthMultiplier) - 1f,
 				BonusStaminaMultiplier = (1f + a.BonusStaminaMultiplier) * (1f + b.BonusStaminaMultiplier) - 1f,
