@@ -70,6 +70,9 @@ namespace Rawr
 			get { return _slot; }
 			set { _slot = value; }
 		}
+		/// <summary>
+		/// String version of Slot, to facilitate databinding.
+		/// </summary>
 		[System.Xml.Serialization.XmlIgnore]
 		public string SlotString
 		{
@@ -223,6 +226,15 @@ namespace Rawr
 			{
 				_type = value;
 			}
+		}
+		/// <summary>
+		/// String version of Type, to facilitate databinding
+		/// </summary>
+		[System.Xml.Serialization.XmlIgnore]
+		public string TypeString
+		{
+			get { return _type.ToString(); }
+			set { _type = (ItemType)Enum.Parse(typeof(ItemType), value); }
 		}
 		[System.Xml.Serialization.XmlIgnore]
 		public int MinDamage

@@ -180,6 +180,8 @@ namespace Rawr
 
 		public static List<Enchant> FindEnchants(Item.ItemSlot slot)
 		{
+			if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.TwoHand || slot == Item.ItemSlot.OneHand) 
+				slot = Item.ItemSlot.MainHand; //All enchants are defined for mainhand, currently
 			return AllEnchants.FindAll(new Predicate<Enchant>(
 				delegate(Enchant enchant)
 				{

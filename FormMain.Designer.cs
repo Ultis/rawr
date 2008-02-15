@@ -142,7 +142,10 @@ namespace Rawr
 			this.trinket1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trinket2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.weaponToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.idolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.gemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.normalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -158,6 +161,8 @@ namespace Rawr
 			this.legsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.feetToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.fingerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
 			this.weaponToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.buffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1263,7 +1268,10 @@ namespace Rawr
             this.trinket1ToolStripMenuItem,
             this.trinket2ToolStripMenuItem,
             this.weaponToolStripMenuItem,
+            this.toolStripMenuItem1,
             this.idolToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3,
             this.toolStripSeparator1,
             this.gemsToolStripMenuItem,
             this.normalToolStripMenuItem,
@@ -1279,6 +1287,8 @@ namespace Rawr
             this.legsToolStripMenuItem1,
             this.feetToolStripMenuItem1,
             this.fingerToolStripMenuItem1,
+            this.toolStripMenuItem4,
+            this.toolStripMenuItem5,
             this.weaponToolStripMenuItem1,
             this.toolStripSeparator6,
             this.buffsToolStripMenuItem,
@@ -1418,17 +1428,41 @@ namespace Rawr
 			// 
 			this.weaponToolStripMenuItem.Name = "weaponToolStripMenuItem";
 			this.weaponToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-			this.weaponToolStripMenuItem.Tag = "Gear.Weapon";
-			this.weaponToolStripMenuItem.Text = " Weapon";
+			this.weaponToolStripMenuItem.Tag = "Gear.MainHand";
+			this.weaponToolStripMenuItem.Text = " Main Hand";
 			this.weaponToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
+			this.toolStripMenuItem1.Tag = "Gear.OffHand";
+			this.toolStripMenuItem1.Text = " Off Hand";
+			this.toolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// idolToolStripMenuItem
 			// 
 			this.idolToolStripMenuItem.Name = "idolToolStripMenuItem";
 			this.idolToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-			this.idolToolStripMenuItem.Tag = "Gear.Idol";
-			this.idolToolStripMenuItem.Text = " Idol";
+			this.idolToolStripMenuItem.Tag = "Gear.Ranged";
+			this.idolToolStripMenuItem.Text = " Ranged";
 			this.idolToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem2
+			// 
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(251, 22);
+			this.toolStripMenuItem2.Tag = "Gear.Projectile";
+			this.toolStripMenuItem2.Text = " Projectile";
+			this.toolStripMenuItem2.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem3
+			// 
+			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+			this.toolStripMenuItem3.Size = new System.Drawing.Size(251, 22);
+			this.toolStripMenuItem3.Tag = "Gear.ProjectileBag";
+			this.toolStripMenuItem3.Text = " Projectile Bag";
+			this.toolStripMenuItem3.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
@@ -1546,12 +1580,28 @@ namespace Rawr
 			this.fingerToolStripMenuItem1.Text = " Fingers";
 			this.fingerToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
+			// toolStripMenuItem4
+			// 
+			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+			this.toolStripMenuItem4.Size = new System.Drawing.Size(251, 22);
+			this.toolStripMenuItem4.Tag = "Enchants.MainHand";
+			this.toolStripMenuItem4.Text = " Main Hand";
+			this.toolStripMenuItem4.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem5
+			// 
+			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+			this.toolStripMenuItem5.Size = new System.Drawing.Size(251, 22);
+			this.toolStripMenuItem5.Tag = "Enchants.OffHand";
+			this.toolStripMenuItem5.Text = " Off Hand";
+			this.toolStripMenuItem5.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
 			// weaponToolStripMenuItem1
 			// 
 			this.weaponToolStripMenuItem1.Name = "weaponToolStripMenuItem1";
 			this.weaponToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
-			this.weaponToolStripMenuItem1.Tag = "Enchants.Weapon";
-			this.weaponToolStripMenuItem1.Text = " Weapon";
+			this.weaponToolStripMenuItem1.Tag = "Enchants.Ranged";
+			this.weaponToolStripMenuItem1.Text = " Ranged";
 			this.weaponToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator6
@@ -1829,6 +1879,11 @@ namespace Rawr
 		private System.Windows.Forms.ComboBox comboBoxEnchantOffHand;
 		private System.Windows.Forms.Label label11;
 		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
     }
 }
 

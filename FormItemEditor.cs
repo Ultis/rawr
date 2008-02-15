@@ -40,9 +40,13 @@ namespace Rawr
 				textBoxName.DataBindings.Clear();
 				textBoxIcon.DataBindings.Clear();
 
-                numericUpDownId.DataBindings.Clear();
+				numericUpDownId.DataBindings.Clear();
+				numericUpDownMin.DataBindings.Clear();
+				numericUpDownMax.DataBindings.Clear();
+				numericUpDownSpeed.DataBindings.Clear();
                 numericUpDownBonus1.DataBindings.Clear();
 				comboBoxSlot.DataBindings.Clear();
+				comboBoxType.DataBindings.Clear();
 				comboBoxSocket1.DataBindings.Clear();
 				comboBoxSocket2.DataBindings.Clear();
 				comboBoxSocket3.DataBindings.Clear();
@@ -56,8 +60,12 @@ namespace Rawr
 					textBoxName.DataBindings.Add("Text", selectedItem, "Name");
 					textBoxIcon.DataBindings.Add("Text", selectedItem, "IconPath");
 					numericUpDownId.DataBindings.Add("Value", selectedItem, "Id");
+					numericUpDownMin.DataBindings.Add("Value", selectedItem, "MinDamage");
+					numericUpDownMax.DataBindings.Add("Value", selectedItem, "MaxDamage");
+					numericUpDownSpeed.DataBindings.Add("Value", selectedItem, "Speed");
 
 					comboBoxSlot.DataBindings.Add("Text", selectedItem, "SlotString");
+					comboBoxType.DataBindings.Add("Text", selectedItem, "TypeString");
 					comboBoxSocket1.DataBindings.Add("Text", selectedItem.Sockets, "Color1String");
 					comboBoxSocket2.DataBindings.Add("Text", selectedItem.Sockets, "Color2String");
 					comboBoxSocket3.DataBindings.Add("Text", selectedItem.Sockets, "Color3String");

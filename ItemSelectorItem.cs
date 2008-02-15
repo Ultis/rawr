@@ -35,6 +35,12 @@ namespace Rawr
 			    }
 			}
 
+			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+			CreateSubPointPanels();
+		}
+
+		void Calculations_ModelChanged(object sender, EventArgs e)
+		{
 			CreateSubPointPanels();
 		}
 
@@ -186,8 +192,6 @@ namespace Rawr
 					{
 						panelSubPoint.Visible = (int)_sort == (int)panelSubPoint.Tag || _sort == ComparisonGraph.ComparisonSort.Overall || _sort == ComparisonGraph.ComparisonSort.Alphabetical;
 					}
-					//panelMitigation.Visible = _sort != ComparisonGraph.ComparisonSort.Survival;
-					//panelSurvival.Visible = _sort != ComparisonGraph.ComparisonSort.Mitigation;
 				}
 			}
 		}
@@ -206,16 +210,21 @@ namespace Rawr
 				panelSubPoint.BringToFront();
 			}
 			panelBottom.ResumeLayout();
+			SetMaxRating(_lastMaxRating);
 		}
 
+		private float _lastMaxRating = 100f;
 		public void SetMaxRating(float maxRating)
 		{
+			_lastMaxRating = maxRating;
 			foreach (Panel panelSubPoint in panelBottom.Controls)
 			{
-				panelSubPoint.Width = (int)Math.Floor((float)(panelBottom.Width - panelBottom.Padding.Horizontal) * (_itemCalculation.SubPoints[(int)panelSubPoint.Tag] / maxRating));
+				try
+				{
+					panelSubPoint.Width = (int)Math.Floor((float)(panelBottom.Width - panelBottom.Padding.Horizontal) * (_itemCalculation.SubPoints[(int)panelSubPoint.Tag] / maxRating));
+				}
+				catch { }
 			}
-			//panelMitigation.Width = (int)Math.Floor((float)(panelBottom.Width - panelBottom.Padding.Horizontal) * (_itemCalculation.MitigationPoints / maxRating));
-			//panelSurvival.Width = (int)Math.Floor((float)(panelBottom.Width - panelBottom.Padding.Horizontal) * (_itemCalculation.SurvivalPoints / maxRating));
 		}
 	}
 }
