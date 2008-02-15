@@ -179,6 +179,25 @@ namespace Rawr
 			}
 		}
 
+		private List<ToolStripMenuItem> _customChartMenuItems = new List<ToolStripMenuItem>();
+		public void UpdateCustomChartMenuItems()
+		{
+			foreach (ToolStripMenuItem item in _customChartMenuItems)
+			{
+				toolStripDropDownButtonSlot.DropDownItems.Remove(item);
+				item.Dispose();
+			}
+			_customChartMenuItems.Clear();
+			foreach (string chartName in Calculations.CustomChartNames)
+			{
+				ToolStripMenuItem customChartMenuItem = new ToolStripMenuItem(chartName);
+				customChartMenuItem.Tag = "Custom." + chartName;
+				customChartMenuItem.Click += new EventHandler(slotToolStripMenuItem_Click);
+				_customChartMenuItems.Add(customChartMenuItem);
+				toolStripDropDownButtonSlot.DropDownItems.Add(customChartMenuItem);
+			}
+		}
+
 		void recentCharacterMenuItem_Click(object sender, EventArgs e)
 		{
 			if (PromptToSaveBeforeClosing())
@@ -221,6 +240,10 @@ namespace Rawr
 			ToolStripMenuItem modelToolStripMenuItem = sender as ToolStripMenuItem;
 			if (!modelToolStripMenuItem.Checked)
 			{
+				foreach (ToolStripMenuItem item in _customChartMenuItems)
+					if (item.Checked)
+						slotToolStripMenuItem_Click(toolStripDropDownButtonSlot.DropDownItems[1], null);
+
 				foreach (ToolStripMenuItem item in (modelToolStripMenuItem.OwnerItem as ToolStripMenuItem).DropDownItems)
 					item.Checked = item == modelToolStripMenuItem;
 				Calculations.LoadModel(modelToolStripMenuItem.Tag as Type);
@@ -236,6 +259,7 @@ namespace Rawr
 				Icon = Calculations.CalculationOptionsPanel.Icon;
 			}
 
+			UpdateCustomChartMenuItems();
 			toolStripDropDownButtonSort.DropDownItems.Clear();
 			toolStripDropDownButtonSort.DropDownItems.Add(overallToolStripMenuItem);
 			toolStripDropDownButtonSort.DropDownItems.Add(alphabeticalToolStripMenuItem);
@@ -577,8 +601,8 @@ namespace Rawr
 							itemComparison1.LoadCurrentGearEnchantsBuffs(_calculatedStats);
 							break;
 
-						case "Combat Table":
-							itemComparison1.LoadCombatTable(_calculatedStats);
+						case "Custom":
+							itemComparison1.LoadCustomChart(tag[1]);
 							break;
 					}
 				}
@@ -622,11 +646,14 @@ namespace Rawr
         {
 			foreach (Item item in ItemCache.AllItems)
 			{
-				Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing");
-				if (newItem == null)
+				if (item.Id < 90000)
 				{
-					MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
-					ItemCache.AddItem(item, true, false);
+					Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing");
+					if (newItem == null)
+					{
+						MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
+						ItemCache.AddItem(item, true, false);
+					}
 				}
 			}
 			ItemCache.OnItemsChanged();

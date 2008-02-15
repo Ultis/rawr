@@ -31,8 +31,6 @@ Missing Features
  In order to release Rawr b10 sooner, I chose to cut out several significant features. I plan to implement these all in b11, but until then, you'll just have to do without. Here's a list of what's on my list:
  
  * More Calculation Options - You'll notice on the Options tab in Cat mode, that there are a number of items that are disabled (grey'd out), including Target Level, Primary Attack, and Finisher. These will be the biggest new feature in b11, most likely.
- * Item Editor for Cat - If you bring up the Item Editor in Cat mode, you'll see that it still shows all the fields for Bear stats, not Cat stats. Rawr will still keep track of all the Cat stats, they're just not all editable in the Item Editor. If you *really* want to edit some cat items, you'll have to do it in the xml for now, which I know would be a huge pain in the ass. Sorry. :(
- * Swapping Between Cat & Bear - Currently the different calculation models are only loaded at startup. I hope to allow swapping in b11. Just save and relaunch for now.
  * Combat Table - It's blank... Need to implement multiple combat tables, since it's different for white and yellow attacks.
  * Temporary Buffs - There's a ton of buffs for Bear that are short buffs like potions and other consumables... I plan to add things like this for cat.
  * Values of Idols - Everbloom and Terror are correct. Others, not so much. 

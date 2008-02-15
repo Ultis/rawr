@@ -160,7 +160,6 @@ namespace Rawr
 							Stats = new Stats() { BonusAttackPowerMultiplier = 0.1f }}); 
 						_allBuffs.Add(new Buff() { Name = "Heroic Presence", Category = BuffCategory.ClassBuffs,
 							Stats = new Stats() { HitRating = 15.769f }}); 
-						
 
 						//what can i say... you're crazy
 						_allBuffs.Add(new Buff() { Name = "Elixir of Ironskin", Category = BuffCategory.ElixirsAndFlasks,
@@ -207,7 +206,7 @@ namespace Rawr
 						_allBuffs.Add(new Buff() { Name = "Scroll of Strength", Category = BuffCategory.OtherConsumables,
 							Stats = new Stats() { Strength = 20 }});
 						_allBuffs.Add(new Buff() { Name = "Adamantite Weightstone", Category = BuffCategory.OtherConsumables,
-							Stats = new Stats() { CritRating = 14 }, ConflictingBuffs = new string[] { "Elemental Sharpening Stone" }});
+							Stats = new Stats() { WeaponDamage = 12, CritRating = 14 }, ConflictingBuffs = new string[] { "Elemental Sharpening Stone" }});
 						_allBuffs.Add(new Buff() { Name = "Elemental Sharpening Stone", Category = BuffCategory.OtherConsumables,
 							Stats = new Stats() { CritRating = 28 }, ConflictingBuffs = new string[] { "Adamantite Weightstone" }});
 						
@@ -237,7 +236,6 @@ namespace Rawr
 							Stats = new Stats() { ExposeWeakness = 1 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Judgement of the Crusade", Category = BuffCategory.Debuffs,
 							Stats = new Stats() { CritRating = 66.24f }});
-						
 
 						//burning senses
 						_allBuffs.Add(new Buff() { Name = "Malorne 2 Piece Bonus", Category = BuffCategory.SetBonuses,
@@ -254,6 +252,12 @@ namespace Rawr
 							Stats = new Stats() { Resilience = 35 }, SetName = "Gladiator's Sanctuary", SetThreshold = 2});
 
 						//i think you're slipping
+						_allBuffs.Add(new Buff() { Name = "Bloodlust", Category = BuffCategory.TemporaryBuffs,
+							Stats = new Stats() { Bloodlust = 0.3f }}); 
+						_allBuffs.Add(new Buff() { Name = "Drums of Battle", Category = BuffCategory.TemporaryBuffs,
+							Stats = new Stats() { DrumsOfBattle = 80 }}); 
+						_allBuffs.Add(new Buff() { Name = "Drums of War", Category = BuffCategory.TemporaryBuffs,
+							Stats = new Stats() { DrumsOfWar = 60 }}); 
 						_allBuffs.Add(new Buff() { Name = "Badge of Tenacity", Category = BuffCategory.TemporaryBuffs,
 							Stats = new Stats() { Agility = 150f }, Type = BuffType.ShortDurationDW});
 						_allBuffs.Add(new Buff() { Name = "Moroes' Lucky Pocket Watch", Category = BuffCategory.TemporaryBuffs,

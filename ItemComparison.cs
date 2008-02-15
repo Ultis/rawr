@@ -95,10 +95,10 @@ namespace Rawr
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
 		}
 
-		public void LoadCombatTable(CharacterCalculationsBase currentCalculations)
+		public void LoadCustomChart(string chartName)
 		{
 			comparisonGraph1.RoundValues = false;
-			comparisonGraph1.ItemCalculations = Calculations.GetCombatTable(currentCalculations);
+			comparisonGraph1.ItemCalculations = Calculations.GetCustomChartData(Character, chartName);
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
 		}
 	}

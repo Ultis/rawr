@@ -134,8 +134,13 @@ namespace Rawr
 								maxOverallPoints = Math.Max(maxOverallPoints, calc.OverallPoints);
 						maxOverallPoints = (float)Math.Ceiling(maxOverallPoints);
 						float maxScale = 100f;//(float)(Math.Ceiling(ItemCalculations[0].OverallPoints / 400) * 400f);
-						while (maxOverallPoints > maxScale)
-							maxScale = (float)(Math.Ceiling((maxScale * 1.2f) / 800f) * 800f);
+						if (maxOverallPoints < 800)
+							maxScale = 100f * (float)Math.Ceiling(maxOverallPoints / 100f);
+						else
+						{
+							while (maxOverallPoints > maxScale)
+								maxScale = (float)(Math.Ceiling((maxScale * 1.2f) / 800f) * 800f);
+						}
 
 						Dictionary<string, Color> subPointNameColors = Calculations.SubPointNameColors;
 						string[] subPointNames = new string[subPointNameColors.Count];

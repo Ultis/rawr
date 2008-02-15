@@ -80,6 +80,10 @@ namespace Rawr
 		{
 			get { return Instance.CharacterDisplayCalculationLabels; }
 		}
+		public static string[] CustomChartNames
+		{
+			get { return Instance.CustomChartNames; }
+		}
 		public static Dictionary<string, System.Drawing.Color> SubPointNameColors
 		{
 			get { return Instance.SubPointNameColors; }
@@ -133,9 +137,9 @@ namespace Rawr
 		{
 			return Instance.GetBuffsStats(buffs);
 		}
-		public static ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations)
+		public static ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
 		{
-			return Instance.GetCombatTable(currentCalculations);
+			return Instance.GetCustomChartData(character, chartName);
 		}
 		public static Stats GetRelevantStats(Stats stats)
 		{
@@ -198,6 +202,11 @@ namespace Rawr
 		/// };
 		/// </summary>
 		public abstract string[] CharacterDisplayCalculationLabels { get; }
+
+		/// <summary>
+		/// The names of all custom charts provided by the model
+		/// </summary>
+		public abstract string[] CustomChartNames { get; }
 
 		/// <summary>
 		/// A custom panel inheriting from CalculationOptionsPanelBase which contains controls for
@@ -275,12 +284,12 @@ namespace Rawr
 		public abstract Stats GetCharacterStats(Character character, Item additionalItem);
 		
 		/// <summary>
-		/// Depreciated. Functions currently, and is required, but feel free to just return an empty array.
-		/// I'll be revamping this into a system for models to define custom charts.
+		/// Gets data to fill a custom chart, based on the chart name, as defined in CustomChartNames
 		/// </summary>
-		/// <param name="currentCalculations"></param>
-		/// <returns></returns>
-		public abstract ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations);
+		/// <param name="character">The character to build the chart for.</param>
+		/// <param name="chartName">The name of the custom chart to get data for.</param>
+		/// <returns>The data for the custom chart.</returns>
+		public abstract ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName);
 		
 		/// <summary>
 		/// Filters a Stats object to just the stats relevant to the model.

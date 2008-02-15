@@ -171,11 +171,11 @@ namespace Rawr
 			this.currentBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
 			this.currentGearEnchantsBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.combatTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
 			this.toolStripDropDownButtonSort = new System.Windows.Forms.ToolStripDropDownButton();
 			this.overallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.alphabeticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
 			this.menuStripMain.SuspendLayout();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1297,7 +1297,7 @@ namespace Rawr
             this.currentBuffsToolStripMenuItem,
             this.toolStripSeparator7,
             this.currentGearEnchantsBuffsToolStripMenuItem,
-            this.combatTableToolStripMenuItem});
+            this.toolStripSeparator9});
 			this.toolStripDropDownButtonSlot.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonSlot.Image")));
 			this.toolStripDropDownButtonSlot.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripDropDownButtonSlot.Name = "toolStripDropDownButtonSlot";
@@ -1656,14 +1656,6 @@ namespace Rawr
 			this.currentGearEnchantsBuffsToolStripMenuItem.Text = "Current Gear/Enchants/Buffs";
 			this.currentGearEnchantsBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
-			// combatTableToolStripMenuItem
-			// 
-			this.combatTableToolStripMenuItem.Name = "combatTableToolStripMenuItem";
-			this.combatTableToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-			this.combatTableToolStripMenuItem.Tag = "Combat Table";
-			this.combatTableToolStripMenuItem.Text = "Combat Table";
-			this.combatTableToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-			// 
 			// toolStripLabel2
 			// 
 			this.toolStripLabel2.Name = "toolStripLabel2";
@@ -1697,6 +1689,11 @@ namespace Rawr
 			this.alphabeticalToolStripMenuItem.Tag = -2;
 			this.alphabeticalToolStripMenuItem.Text = "Alphabetical";
 			this.alphabeticalToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator9
+			// 
+			this.toolStripSeparator9.Name = "toolStripSeparator9";
+			this.toolStripSeparator9.Size = new System.Drawing.Size(248, 6);
 			// 
 			// FormMain
 			// 
@@ -1856,7 +1853,6 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripMenuItem loadPossibleUpgradesFromArmoryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem alphabeticalToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem currentGearEnchantsBuffsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem combatTableToolStripMenuItem;
 		private BuffSelector buffSelector1;
 		private System.Windows.Forms.ToolStripMenuItem allBuffsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem allLongDurationBuffsNoDWToolStripMenuItem;
@@ -1884,6 +1880,7 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
     }
 }
 

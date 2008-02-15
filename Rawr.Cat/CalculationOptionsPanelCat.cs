@@ -46,10 +46,19 @@ namespace Rawr
 				Character.CalculationOptions["Finisher"] = "Rip";
 			if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
 				Character.CalculationOptions["EnforceMetagemRequirements"] = "Yes";
+			if (!Character.CalculationOptions.ContainsKey("BloodlustUptime"))
+				Character.CalculationOptions["BloodlustUptime"] = "15";
+			if (!Character.CalculationOptions.ContainsKey("DrumsOfBattleUptime"))
+				Character.CalculationOptions["DrumsOfBattleUptime"] = "25";
+			if (!Character.CalculationOptions.ContainsKey("DrumsOfWarUptime"))
+				Character.CalculationOptions["DrumsOfWarUptime"] = "25";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
 			trackBarTargetArmor.Value = int.Parse(Character.CalculationOptions["TargetArmor"]);
 			trackBarExposeWeakness.Value = int.Parse(Character.CalculationOptions["ExposeWeaknessAPValue"]);
+			trackBarBloodlustUptime.Value = int.Parse(Character.CalculationOptions["BloodlustUptime"]);
+			trackBarDrumsOfBattleUptime.Value = int.Parse(Character.CalculationOptions["DrumsOfBattleUptime"]);
+			trackBarDrumsOfWarUptime.Value = int.Parse(Character.CalculationOptions["DrumsOfWarUptime"]);
 			comboBoxPowershift.SelectedIndex = int.Parse(Character.CalculationOptions["Powershift"]);
 			radioButtonMangle.Checked = Character.CalculationOptions["PrimaryAttack"] == "Mangle";
 			radioButtonShred.Checked = Character.CalculationOptions["PrimaryAttack"] == "Shred";
@@ -58,7 +67,12 @@ namespace Rawr
 			radioButtonFerociousBite.Checked = Character.CalculationOptions["Finisher"] == "Ferocious Bite";
 			radioButtonNone.Checked = Character.CalculationOptions["Finisher"] == "None";
 			checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
-		
+
+			labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
+			labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
+			labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
+			labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
+
 			_loadingCalculationOptions = false;
 		}
 
@@ -69,9 +83,15 @@ namespace Rawr
 			{
 				trackBarTargetArmor.Value = 100 * (trackBarTargetArmor.Value / 100);
 				labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
+				labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
+				labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
+				labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
 
 				Character.CalculationOptions["TargetLevel"] = comboBoxTargetLevel.SelectedItem.ToString();
 				Character.CalculationOptions["TargetArmor"] = trackBarTargetArmor.Value.ToString();
+				Character.CalculationOptions["BloodlustUptime"] = trackBarBloodlustUptime.Value.ToString();
+				Character.CalculationOptions["DrumsOfBattleUptime"] = trackBarDrumsOfBattleUptime.Value.ToString();
+				Character.CalculationOptions["DrumsOfWarUptime"] = trackBarDrumsOfWarUptime.Value.ToString();
 				Character.CalculationOptions["ExposeWeaknessAPValue"] = trackBarExposeWeakness.Value.ToString();
 				Character.CalculationOptions["Powershift"] = comboBoxPowershift.SelectedIndex.ToString();
 				foreach (RadioButton radioButtonPrimaryAttack in groupBoxPrimaryAttack.Controls)

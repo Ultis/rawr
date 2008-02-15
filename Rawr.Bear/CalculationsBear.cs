@@ -77,6 +77,20 @@ you are being killed by burst damage, focus on Survival Points.",
 			}
 		}
 
+		private string[] _customChartNames = null;
+		public override string[] CustomChartNames
+		{
+			get
+			{
+				if (_customChartNames == null)
+					_customChartNames = new string[] {
+					"Combat Table",
+					"Relative Stat Values"
+					};
+				return _customChartNames;
+			}
+		}
+
 		private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
 		public override Dictionary<string, System.Drawing.Color> SubPointNameColors
 		{
@@ -188,7 +202,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			statsTotal.Resilience = statsRace.Resilience + statsBaseGear.Resilience + statsBuffs.Resilience;
 			statsTotal.Health = (float)Math.Round(((statsRace.Health + statsBaseGear.Health + statsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
 			statsTotal.Armor = (float)Math.Round(((statsBaseGear.Armor * 5.5f) + statsRace.Armor + statsBuffs.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
-			statsTotal.Miss = statsBuffs.Miss;
+			statsTotal.Miss = statsRace.Miss + statsBaseGear.Miss + statsBuffs.Miss;
             statsTotal.NatureResistance = statsRace.NatureResistance + statsBaseGear.NatureResistance + statsBuffs.NatureResistance;
             statsTotal.FireResistance = statsRace.FireResistance + statsBaseGear.FireResistance + statsBuffs.FireResistance;
             statsTotal.FrostResistance = statsRace.FrostResistance + statsBaseGear.FrostResistance + statsBuffs.FrostResistance;
@@ -198,35 +212,70 @@ you are being killed by burst damage, focus on Survival Points.",
             return statsTotal;
 		}
 
-		public override ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations)
+		public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
 		{
-			CharacterCalculationsBear currentCalculationsBear = currentCalculations as CharacterCalculationsBear;
-			ComparisonCalculationBear calcMiss = new ComparisonCalculationBear();
-			ComparisonCalculationBear calcDodge = new ComparisonCalculationBear();
-			ComparisonCalculationBear calcCrit = new ComparisonCalculationBear();
-			ComparisonCalculationBear calcCrush = new ComparisonCalculationBear();
-			ComparisonCalculationBear calcHit = new ComparisonCalculationBear();
-			if (currentCalculationsBear != null)
+			switch (chartName)
 			{
-				calcMiss.Name = "    Miss    ";
-				calcDodge.Name = "   Dodge   ";
-				calcCrit.Name = "  Crit  ";
-				calcCrush.Name = " Crush ";
-				calcHit.Name = "Hit";
+				case "Combat Table":
+					CharacterCalculationsBear currentCalculationsBear = GetCharacterCalculations(character) as CharacterCalculationsBear;
+					ComparisonCalculationBear calcMiss = new ComparisonCalculationBear();
+					ComparisonCalculationBear calcDodge = new ComparisonCalculationBear();
+					ComparisonCalculationBear calcCrit = new ComparisonCalculationBear();
+					ComparisonCalculationBear calcCrush = new ComparisonCalculationBear();
+					ComparisonCalculationBear calcHit = new ComparisonCalculationBear();
+					if (currentCalculationsBear != null)
+					{
+						calcMiss.Name = "    Miss    ";
+						calcDodge.Name = "   Dodge   ";
+						calcCrit.Name = "  Crit  ";
+						calcCrush.Name = " Crush ";
+						calcHit.Name = "Hit";
 
+						float crits = 2f + (0.2f * (currentCalculationsBear.TargetLevel - 70)) - currentCalculationsBear.CappedCritReduction;
+						float crushes = currentCalculationsBear.TargetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (currentCalculationsBear.DodgePlusMiss)), 15f), 0f) : 0f;
+						float hits = Math.Max(100f - (crits + crushes + (currentCalculationsBear.DodgePlusMiss)), 0f);
 
+						calcMiss.OverallPoints = calcMiss.MitigationPoints = currentCalculationsBear.Miss;
+						calcDodge.OverallPoints = calcDodge.MitigationPoints = currentCalculationsBear.Dodge;
+						calcCrit.OverallPoints = calcCrit.SurvivalPoints = crits;
+						calcCrush.OverallPoints = calcCrush.SurvivalPoints = crushes;
+						calcHit.OverallPoints = calcHit.SurvivalPoints = hits;
+					}
+					return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcCrit, calcCrush, calcHit };
+				
+				case "Relative Stat Values":
+					CharacterCalculationsBear calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsBear;
+					CharacterCalculationsBear calcAgiValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 1 } }) as CharacterCalculationsBear;
+					CharacterCalculationsBear calcACValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Armor = 1 } }) as CharacterCalculationsBear;
+					CharacterCalculationsBear calcDefValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = 1 } }) as CharacterCalculationsBear;
+					CharacterCalculationsBear calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 1 } }) as CharacterCalculationsBear;
+					CharacterCalculationsBear calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = 1 } }) as CharacterCalculationsBear;
+					CharacterCalculationsBear calcMissValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Miss = 1 } }) as CharacterCalculationsBear;
+					CharacterCalculationsBear calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 1 } }) as CharacterCalculationsBear;
+					CharacterCalculationsBear calcStaValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 1 } }) as CharacterCalculationsBear;
+					
+					return new ComparisonCalculationBase[] { 
+						new ComparisonCalculationBear() { Name = "Agility", OverallPoints = calcAgiValue.OverallPoints - calcBaseValue.OverallPoints, 
+							MitigationPoints = calcAgiValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcAgiValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
+						new ComparisonCalculationBear() { Name = "Armor", OverallPoints = calcACValue.OverallPoints - calcBaseValue.OverallPoints, 
+							MitigationPoints = calcACValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcACValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
+						new ComparisonCalculationBear() { Name = "Defense Rating", OverallPoints = calcDefValue.OverallPoints - calcBaseValue.OverallPoints, 
+							MitigationPoints = calcDefValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcDefValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
+						new ComparisonCalculationBear() { Name = "Dodge Rating", OverallPoints = calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints, 
+							MitigationPoints = calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
+						new ComparisonCalculationBear() { Name = "Health", OverallPoints = calcHealthValue.OverallPoints - calcBaseValue.OverallPoints, 
+							MitigationPoints = calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcHealthValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
+						new ComparisonCalculationBear() { Name = "Miss", OverallPoints = calcMissValue.OverallPoints - calcBaseValue.OverallPoints, 
+							MitigationPoints = calcMissValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcMissValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
+						new ComparisonCalculationBear() { Name = "Resilience", OverallPoints = calcResilValue.OverallPoints - calcBaseValue.OverallPoints, 
+							MitigationPoints = calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
+						new ComparisonCalculationBear() { Name = "Stamina", OverallPoints = calcStaValue.OverallPoints - calcBaseValue.OverallPoints, 
+							MitigationPoints = calcStaValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcStaValue.SurvivalPoints - calcBaseValue.SurvivalPoints}
+					};
 
-				float crits = 2f + (0.2f * (currentCalculationsBear.TargetLevel - 70)) - currentCalculationsBear.CappedCritReduction;
-				float crushes = currentCalculationsBear.TargetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (currentCalculationsBear.DodgePlusMiss)), 15f), 0f) : 0f;
-				float hits = Math.Max(100f - (crits + crushes + (currentCalculationsBear.DodgePlusMiss)), 0f);
-
-				calcMiss.OverallPoints = calcMiss.MitigationPoints = currentCalculationsBear.Miss;
-				calcDodge.OverallPoints = calcDodge.MitigationPoints = currentCalculationsBear.Dodge;
-				calcCrit.OverallPoints = calcCrit.SurvivalPoints = crits;
-				calcCrush.OverallPoints = calcCrush.SurvivalPoints = crushes;
-				calcHit.OverallPoints = calcHit.SurvivalPoints = hits;
+				default:
+					return new ComparisonCalculationBase[0];
 			}
-			return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcCrit, calcCrush, calcHit };
 		}
 
 		public override Stats GetRelevantStats(Stats stats)

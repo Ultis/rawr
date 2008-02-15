@@ -127,6 +127,12 @@ namespace Rawr
 
 		public float ExposeWeakness { get; set; }
 
+		public float Bloodlust { get; set; }
+
+		public float DrumsOfWar { get; set; }
+
+		public float DrumsOfBattle { get; set; }
+
 		[Multiplicative]
 		[DisplayName("% Agility")]
         public float BonusAgilityMultiplier { get; set; }
@@ -200,6 +206,9 @@ namespace Rawr
 				BonusMangleDamage = a.BonusMangleDamage + b.BonusMangleDamage,
 				MangleCostReduction = a.MangleCostReduction + b.MangleCostReduction,
 				ExposeWeakness = a.ExposeWeakness + b.ExposeWeakness,
+				Bloodlust = a.Bloodlust + b.Bloodlust,
+				DrumsOfBattle = a.DrumsOfBattle + b.DrumsOfBattle,
+				DrumsOfWar = a.DrumsOfWar + b.DrumsOfWar,
 				BonusAgilityMultiplier = (1f + a.BonusAgilityMultiplier) * (1f + b.BonusAgilityMultiplier) - 1f,
 				BonusStrengthMultiplier = (1f + a.BonusStrengthMultiplier) * (1f + b.BonusStrengthMultiplier) - 1f,
 				BonusStaminaMultiplier = (1f + a.BonusStaminaMultiplier) * (1f + b.BonusStaminaMultiplier) - 1f,

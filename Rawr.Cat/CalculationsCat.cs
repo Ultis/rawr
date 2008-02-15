@@ -61,6 +61,21 @@ namespace Rawr
 			}
 		}
 
+		private string[] _customChartNames = null;
+		public override string[] CustomChartNames
+		{
+			get
+			{
+				if (_customChartNames == null)
+					_customChartNames = new string[] {
+					"Combat Table (White)",
+					"Combat Table (Yellow)",
+					"Relative Stat Values"
+					};
+				return _customChartNames;
+			}
+		}
+
 		private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
 		public override Dictionary<string, System.Drawing.Color> SubPointNameColors
 		{
@@ -107,6 +122,7 @@ namespace Rawr
 			int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
 			float targetArmor = int.Parse(character.CalculationOptions["TargetArmor"]);
 			float exposeWeaknessAPValue = int.Parse(character.CalculationOptions["ExposeWeaknessAPValue"]);
+			float bloodlustUptime = float.Parse(character.CalculationOptions["BloodlustUptime"]) / 100f;
 			int powershift = int.Parse(character.CalculationOptions["Powershift"]);
 			string primaryAttack = character.CalculationOptions["PrimaryAttack"];
 			string finisher = character.CalculationOptions["Finisher"];
@@ -122,7 +138,6 @@ namespace Rawr
 
 			float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
 			float modArmor = (baseArmor / (baseArmor + 10557.5f )) * 100f;
-
 
 			float critMultiplier = 2 * (1 + stats.BonusCritMultiplier);
 			float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
@@ -151,7 +166,7 @@ namespace Rawr
 			float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceMiss);
 
 			float hasteBonus = stats.HasteRating / 15.76f / 100f;
-			float attackSpeed = 1f / (1f + hasteBonus);
+			float attackSpeed = (1f - (stats.Bloodlust * bloodlustUptime)) / (1f + hasteBonus);
 			float meleeTicker = attackSpeed;
 
 			#endregion
@@ -353,6 +368,8 @@ namespace Rawr
 
 			Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
+			statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * (float.Parse(character.CalculationOptions["DrumsOfWarUptime"]) / 100f);
+			statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * (float.Parse(character.CalculationOptions["DrumsOfBattleUptime"]) / 100f);
 
 			float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
 			float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
@@ -390,38 +407,78 @@ namespace Rawr
 			statsTotal.TerrorProc = statsRace.TerrorProc + statsGearEnchantsBuffs.TerrorProc;
 			statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
+			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
 
 			return statsTotal;
 		}
 
-		//TODO
-		public override ComparisonCalculationBase[] GetCombatTable(CharacterCalculationsBase currentCalculations)
+		public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
 		{
-			CharacterCalculationsCat currentCalculationsCat = currentCalculations as CharacterCalculationsCat;
-			ComparisonCalculationCat calcMiss = new ComparisonCalculationCat();
-			ComparisonCalculationCat calcDodge = new ComparisonCalculationCat();
-			ComparisonCalculationCat calcCrit = new ComparisonCalculationCat();
-			ComparisonCalculationCat calcCrush = new ComparisonCalculationCat();
-			ComparisonCalculationCat calcHit = new ComparisonCalculationCat();
-			//if (currentCalculationsCat != null)
-			//{
-			//    calcMiss.Name = "    Miss    ";
-			//    calcDodge.Name = "   Dodge   ";
-			//    calcCrit.Name = "  Crit  ";
-			//    calcCrush.Name = " Crush ";
-			//    calcHit.Name = "Hit";
+			switch (chartName)
+			{
+				case "Combat Table (White)":
+					CharacterCalculationsCat currentCalculationsCatWhite = GetCharacterCalculations(character) as CharacterCalculationsCat;
+					ComparisonCalculationCat calcMissWhite = new ComparisonCalculationCat()		{ Name = "    Miss    " };
+					ComparisonCalculationCat calcDodgeWhite = new ComparisonCalculationCat()	{ Name = "   Dodge   " };
+					ComparisonCalculationCat calcCritWhite = new ComparisonCalculationCat()		{ Name = "  Crit  " };
+					ComparisonCalculationCat calcGlanceWhite = new ComparisonCalculationCat()	{ Name = " Glance " };
+					ComparisonCalculationCat calcHitWhite = new ComparisonCalculationCat()		{ Name = "Hit" };
+					if (currentCalculationsCatWhite != null)
+					{
+						calcMissWhite.OverallPoints = calcMissWhite.DPSPoints = currentCalculationsCatWhite.MissedAttacks;
+						calcDodgeWhite.OverallPoints = calcDodgeWhite.DPSPoints = currentCalculationsCatWhite.DodgedAttacks;
+						calcCritWhite.OverallPoints = calcCritWhite.DPSPoints = currentCalculationsCatWhite.WhiteCrit;
+						calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = 23.35774f;
+						calcHitWhite.OverallPoints = calcHitWhite.DPSPoints = (100f - calcMissWhite.OverallPoints - 
+							calcDodgeWhite.OverallPoints - calcCritWhite.OverallPoints - calcGlanceWhite.OverallPoints);
+					}
+					return new ComparisonCalculationBase[] { calcMissWhite, calcDodgeWhite, calcCritWhite, calcGlanceWhite, calcHitWhite };
 
-			//    float crits = 2f + (0.2f * (_targetLevel - 70)) - currentCalculationsCat.CappedCritReduction;
-			//    float crushes = _targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (currentCalculationsCat.DodgePlusMiss)), 15f), 0f) : 0f;
-			//    float hits = Math.Max(100f - (crits + crushes + (currentCalculationsCat.DodgePlusMiss)), 0f);
+				case "Combat Table (Yellow)":
+					CharacterCalculationsCat currentCalculationsCatYellow = GetCharacterCalculations(character) as CharacterCalculationsCat;
+					ComparisonCalculationCat calcMissYellow = new ComparisonCalculationCat()	{ Name = "    Miss    " };
+					ComparisonCalculationCat calcDodgeYellow = new ComparisonCalculationCat()	{ Name = "   Dodge   " };
+					ComparisonCalculationCat calcCritYellow = new ComparisonCalculationCat()	{ Name = "  Crit  " };
+					ComparisonCalculationCat calcGlanceYellow = new ComparisonCalculationCat()	{ Name = " Glance " };
+					ComparisonCalculationCat calcHitYellow = new ComparisonCalculationCat()		{ Name = "Hit" };
+					if (currentCalculationsCatYellow != null)
+					{
+						calcMissYellow.OverallPoints = calcMissYellow.DPSPoints = currentCalculationsCatYellow.MissedAttacks;
+						calcDodgeYellow.OverallPoints = calcDodgeYellow.DPSPoints = currentCalculationsCatYellow.DodgedAttacks;
+						calcCritYellow.OverallPoints = calcCritYellow.DPSPoints = currentCalculationsCatYellow.YellowCrit;
+						calcGlanceYellow.OverallPoints = calcGlanceYellow.DPSPoints = 0f;
+						calcHitYellow.OverallPoints = calcHitYellow.DPSPoints = (100f - calcMissYellow.OverallPoints -
+							calcDodgeYellow.OverallPoints - calcCritYellow.OverallPoints - calcGlanceYellow.OverallPoints);
+					}
+					return new ComparisonCalculationBase[] { calcMissYellow, calcDodgeYellow, calcCritYellow, calcGlanceYellow, calcHitYellow };
 
-			//    calcMiss.OverallPoints = calcMiss.MitigationPoints = currentCalculationsCat.Miss;
-			//    calcDodge.OverallPoints = calcDodge.MitigationPoints = currentCalculationsCat.Dodge;
-			//    calcCrit.OverallPoints = calcCrit.SurvivalPoints = crits;
-			//    calcCrush.OverallPoints = calcCrush.SurvivalPoints = crushes;
-			//    calcHit.OverallPoints = calcHit.SurvivalPoints = hits;
-			//}
-			return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcCrit, calcCrush, calcHit };
+				case "Relative Stat Values":
+					float dpsBase =		GetCharacterCalculations(character).OverallPoints;
+					float dpsStr =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 1 } }).OverallPoints - dpsBase;
+					float dpsAgi =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 1 } }).OverallPoints - dpsBase;
+					float dpsAP  =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 1 } }).OverallPoints - dpsBase;
+					float dpsCrit =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 1 } }).OverallPoints - dpsBase;
+					float dpsExp =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 1 } }).OverallPoints - dpsBase;
+					float dpsHaste =	GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 1 } }).OverallPoints - dpsBase;
+					float dpsHit =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }).OverallPoints - dpsBase;
+					float dpsDmg =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { WeaponDamage = 1 } }).OverallPoints - dpsBase;
+					float dpsPen =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetration = 1 } }).OverallPoints - dpsBase;
+					
+					return new ComparisonCalculationBase[] { 
+						new ComparisonCalculationCat() { Name = "Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
+						new ComparisonCalculationCat() { Name = "Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
+						new ComparisonCalculationCat() { Name = "Attack Power", OverallPoints = dpsAP, DPSPoints = dpsAP },
+						new ComparisonCalculationCat() { Name = "Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
+						new ComparisonCalculationCat() { Name = "Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
+						new ComparisonCalculationCat() { Name = "Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
+						new ComparisonCalculationCat() { Name = "Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
+						new ComparisonCalculationCat() { Name = "Weapon Damage", OverallPoints = dpsDmg, DPSPoints = dpsDmg },
+						new ComparisonCalculationCat() { Name = "Armor Penetration", OverallPoints = dpsPen, DPSPoints = dpsPen }
+					};
+
+				default:
+					return new ComparisonCalculationBase[0];
+			}
 		}
 
 		public override Stats GetRelevantStats(Stats stats)
@@ -450,7 +507,10 @@ namespace Rawr
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
 					Health = stats.Health,
 					MangleCostReduction = stats.MangleCostReduction,
-					ExposeWeakness = stats.ExposeWeakness
+					ExposeWeakness = stats.ExposeWeakness,
+					Bloodlust = stats.Bloodlust,
+					DrumsOfBattle = stats.DrumsOfBattle,
+					DrumsOfWar = stats.DrumsOfWar
 				};
 		}
 
@@ -461,7 +521,8 @@ namespace Rawr
 				stats.BonusMangleDamage + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCostReduction + stats.Stamina +
-				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness) > 0;
+				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
+				stats.DrumsOfBattle + stats.DrumsOfWar) > 0;
 		}
 	}
 
