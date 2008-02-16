@@ -646,7 +646,7 @@ namespace Rawr
         {
 			foreach (Item item in ItemCache.AllItems)
 			{
-				if (item.Id < 90000 && item.Slot == Item.ItemSlot.None)
+				if (item.Id < 90000)
 				{
 					Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing");
 					if (newItem == null)
@@ -664,74 +664,105 @@ namespace Rawr
 		{
 			Item[] ptrItems = new Item[]
 			{
-				new Item() { Name = "Hard Khorium Choker", Id = 90001, Slot = Item.ItemSlot.Neck, IconPath = "temp", Stats = new Stats()
-				{ Stamina = 42, HasteRating = 29, AttackPower = 58, ArmorPenetration = 150 }},
-				new Item() { Name = "Hard Khorium Band", Id = 90002, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
-				{ Agility = 30, Stamina = 42, HasteRating = 28, AttackPower = 58 }},
-				new Item() { Name = "Bladed Chaos Tunic", Id = 90003, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
-				{ Armor = 474, Agility = 42, Stamina = 45, CritRating = 38, AttackPower = 120, ArmorPenetration = 210 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Blue, Color2 = Item.ItemSlot.Yellow, Color3 = Item.ItemSlot.Red,
-				    Stats = new Stats() { AttackPower = 8 }}},
-				new Item() { Name = "Gloves of the Forest Drifter", Id = 90004, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
-				{ Armor = 539, Strength = 34, Agility = 34, Stamina = 45, ArmorPenetration = 140 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
-				    Stats = new Stats() { Agility = 3 }}},
-				new Item() { Name = "Harness of Carnal Instinct", Id = 90005, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
-				{ Armor = 727, Strength = 52, Agility = 44, Stamina = 64, ArmorPenetration = 196 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Yellow, Color3 = Item.ItemSlot.Blue,
-				    Stats = new Stats() { Agility = 4 }}},
-				new Item() { Name = "Shadowed Gauntlets of Paroxysm", Id = 90006, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
-				{ Armor = 252, Agility = 41, Stamina = 33, HasteRating = 30, AttackPower = 82 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
-				    Stats = new Stats() { Agility = 3 }}},
-				new Item() { Name = "Demontooth Shoulderpads", Id = 90007, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
-				{ Armor = 484, Strength = 38, Agility = 38, Stamina = 38, CritRating = 20, ArmorPenetration = 105 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
-				    Stats = new Stats() { Agility = 3 }}},
-				new Item() { Name = "Shoulderpads of Vehemence", Id = 90008, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
-				{ Armor = 333, Agility = 33, Stamina = 45, HitRating = 26, HasteRating = 30, AttackPower = 90 }},
-				new Item() { Name = "Leggings of the Immortal Beast", Id = 90009, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
-				{ Armor = 765, Strength = 44, Agility = 46, Stamina = 66, ArmorPenetration = 169 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Blue,
-				    Stats = new Stats() { Agility = 4 }}},
-				new Item() { Name = "Leggings of the Immortal Night", Id = 90010, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
-				{ Armor = 380, Agility = 41, Stamina = 48, HitRating = 32, AttackPower = 124, ArmorPenetration = 224 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Red,
-				    Stats = new Stats() { Agility = 4 }}},
-				new Item() { Name = "Mask of the Furry Hunter", Id = 90011, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
-				{ Armor = 611, Strength = 50, Agility = 50, Stamina = 58, CritRating = 30 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Meta,
-				    Stats = new Stats() { Stamina = 6 }}},
-				new Item() { Name = "Duplicitous Guise", Id = 90012, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
-				{ Armor = 373, Agility = 43, Stamina = 57, HitRating = 30, HasteRating = 34, AttackPower = 126 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Meta, Color2 = Item.ItemSlot.Red,
-				    Stats = new Stats() { HitRating = 4 }}},
-				new Item() { Name = "Gloves of Immortal Dusk", Id = 90013, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
-				{ Armor = 252, Agility = 30, Stamina = 33, CritRating = 30, AttackPower = 90, ArmorPenetration = 154 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red,
-				    Stats = new Stats() { CritRating = 3 }}},
-				new Item() { Name = "Carapace of Sun and Shadow", Id = 90014, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
-				{ Armor = 474, Agility = 42, Stamina = 45, HasteRating = 38, HitRating = 30, AttackPower = 120 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Red,
-				    Stats = new Stats() { AttackPower = 8 }}},
-				new Item() { Name = "Quad Deathblow X44 Goggles", Id = 90015, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
-				{ Armor = 326, Agility = 61, Stamina = 47, HitRating = 24, AttackPower = 104 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Meta, Color2 = Item.ItemSlot.Blue,
-				    Stats = new Stats() { Agility = 4 }}},
-				new Item() { Name = "Thunderheart Treads", Id = 90016, Slot = Item.ItemSlot.Feet, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
-				{ Armor = 515, Strength = 35, Agility = 35, Stamina = 54, ExpertiseRating = 20 },
+				//new Item() { Name = "Hard Khorium Choker", Id = 90001, Slot = Item.ItemSlot.Neck, IconPath = "temp", Stats = new Stats()
+				//{ Stamina = 42, HasteRating = 29, AttackPower = 58, ArmorPenetration = 150 }},
+				//new Item() { Name = "Hard Khorium Band", Id = 90002, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
+				//{ Agility = 30, Stamina = 42, HasteRating = 28, AttackPower = 58 }},
+				//new Item() { Name = "Bladed Chaos Tunic", Id = 90003, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 474, Agility = 42, Stamina = 45, CritRating = 38, AttackPower = 120, ArmorPenetration = 210 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Blue, Color2 = Item.ItemSlot.Yellow, Color3 = Item.ItemSlot.Red,
+				//    Stats = new Stats() { AttackPower = 8 }}},
+				//new Item() { Name = "Gloves of the Forest Drifter", Id = 90004, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 539, Strength = 34, Agility = 34, Stamina = 45, ArmorPenetration = 140 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
+				//    Stats = new Stats() { Agility = 3 }}},
+				//new Item() { Name = "Harness of Carnal Instinct", Id = 90005, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 727, Strength = 52, Agility = 44, Stamina = 64, ArmorPenetration = 196 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Yellow, Color3 = Item.ItemSlot.Blue,
+				//    Stats = new Stats() { Agility = 4 }}},
+				//new Item() { Name = "Shadowed Gauntlets of Paroxysm", Id = 90006, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 252, Agility = 41, Stamina = 33, HasteRating = 30, AttackPower = 82 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
+				//    Stats = new Stats() { Agility = 3 }}},
+				//new Item() { Name = "Demontooth Shoulderpads", Id = 90007, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 484, Strength = 38, Agility = 38, Stamina = 38, CritRating = 20, ArmorPenetration = 105 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
+				//    Stats = new Stats() { Agility = 3 }}},
+				//new Item() { Name = "Shoulderpads of Vehemence", Id = 90008, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 333, Agility = 33, Stamina = 45, HitRating = 26, HasteRating = 30, AttackPower = 90 }},
+				//new Item() { Name = "Leggings of the Immortal Beast", Id = 90009, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 765, Strength = 44, Agility = 46, Stamina = 66, ArmorPenetration = 169 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Blue,
+				//    Stats = new Stats() { Agility = 4 }}},
+				//new Item() { Name = "Leggings of the Immortal Night", Id = 90010, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 380, Agility = 41, Stamina = 48, HitRating = 32, AttackPower = 124, ArmorPenetration = 224 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Red,
+				//    Stats = new Stats() { Agility = 4 }}},
+				//new Item() { Name = "Mask of the Furry Hunter", Id = 90011, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 611, Strength = 50, Agility = 50, Stamina = 58, CritRating = 30 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Meta,
+				//    Stats = new Stats() { Stamina = 6 }}},
+				//new Item() { Name = "Duplicitous Guise", Id = 90012, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 373, Agility = 43, Stamina = 57, HitRating = 30, HasteRating = 34, AttackPower = 126 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Meta, Color2 = Item.ItemSlot.Red,
+				//    Stats = new Stats() { HitRating = 4 }}},
+				//new Item() { Name = "Gloves of Immortal Dusk", Id = 90013, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 252, Agility = 30, Stamina = 33, CritRating = 30, AttackPower = 90, ArmorPenetration = 154 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red,
+				//    Stats = new Stats() { CritRating = 3 }}},
+				//new Item() { Name = "Carapace of Sun and Shadow", Id = 90014, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 474, Agility = 42, Stamina = 45, HasteRating = 38, HitRating = 30, AttackPower = 120 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Red,
+				//    Stats = new Stats() { AttackPower = 8 }}},
+				//new Item() { Name = "Quad Deathblow X44 Goggles", Id = 90015, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 326, Agility = 61, Stamina = 47, HitRating = 24, AttackPower = 104 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Meta, Color2 = Item.ItemSlot.Blue,
+				//    Stats = new Stats() { Agility = 4 }}},
+				//new Item() { Name = "Thunderheart Treads", Id = 90016, Slot = Item.ItemSlot.Feet, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
+				//{ Armor = 515, Strength = 35, Agility = 35, Stamina = 54, ExpertiseRating = 20 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
+				//    Stats = new Stats() { Stamina = 3 }}},
+				//new Item() { Name = "Thunderheart Waistguard", Id = 90017, Slot = Item.ItemSlot.Waist, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
+				//{ Armor = 319, Strength = 38, Agility = 40, Stamina = 34, HitRating = 22 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
+				//    Stats = new Stats() { Stamina = 3 }}},
+				//new Item() { Name = "Thunderheart Wristguards", Id = 90018, Slot = Item.ItemSlot.Wrist, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
+				//{ Armor = 264, Strength = 28, Agility = 28, Stamina = 39, ArmorPenetration = 91 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
+				//    Stats = new Stats() { Stamina = 3 }}},
+				//new Item() { Name = "Stanchion of Primal Instinct", Id = 90019, Slot = Item.ItemSlot.TwoHand, IconPath = "temp", Stats = new Stats()
+				//{ Stamina = 50, Strength = 75, AttackPower = 1197, Agility = 47, ArmorPenetration = 350 }},
+				//new Item() { Name = "Staff of the Forest Lord", Id = 90020, Slot = Item.ItemSlot.TwoHand, IconPath = "temp", Stats = new Stats()
+				//{ Stamina = 78, Strength = 50, AttackPower = 1110, Agility = 52 }}
+				
+				new Item() { Name = "Sunwell Badge Loot - Melee Ring", Id = 90020, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
+				{ Agility = 29, Stamina = 28, AttackPower = 58, ArmorPenetration = 126 }},
+				new Item() { Name = "Sunwell Badge Loot - Tank Ring", Id = 90021, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
+				{ Armor = 392, Stamina = 45, DodgeRating = 28 }},
+				new Item() { Name = "Embrace of Everlasting Prowess", Id = 90022, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
+				{ Armor = 711, Strength = 40, Agility = 49, Stamina = 52, HasteRating = 20 },
 				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
 				    Stats = new Stats() { Stamina = 3 }}},
-				new Item() { Name = "Thunderheart Waistguard", Id = 90017, Slot = Item.ItemSlot.Waist, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
-				{ Armor = 319, Strength = 38, Agility = 40, Stamina = 34, HitRating = 22 },
+				new Item() { Name = "Tameless Breeches", Id = 90023, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
+				{ Armor = 667, Strength = 39, Agility = 45, Stamina = 52, HasteRating = 17 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Yellow,
+				    Stats = new Stats() { Stamina = 4 }}},
+				new Item() { Name = "Belt of the Silent Path", Id = 90024, Slot = Item.ItemSlot.Waist, IconPath = "temp", Stats = new Stats()
+				{ Armor = 205, AttackPower = 78, Agility = 34, Stamina = 33, HitRating = 23 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow,
+				    Stats = new Stats() { Agility = 2 }}},
+				new Item() { Name = "Tunic of the Dark Hour", Id = 90025, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
+				{ Armor = 474, AttackPower = 102, Agility = 44, Stamina = 51, HitRating = 34 },
 				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
 				    Stats = new Stats() { Stamina = 3 }}},
-				new Item() { Name = "Thunderheart Wristguards", Id = 90018, Slot = Item.ItemSlot.Wrist, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
-				{ Armor = 264, Strength = 28, Agility = 28, Stamina = 39, ArmorPenetration = 91 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
-				    Stats = new Stats() { Stamina = 3 }}},
-				new Item() { Name = "Stanchion of Primal Instinct", Id = 90019, Slot = Item.ItemSlot.TwoHand, IconPath = "temp", Stats = new Stats()
-				{ Stamina = 50, Strength = 75, AttackPower = 1197, Agility = 47, ArmorPenetration = 350 }}
+				new Item() { Name = "Trousers of the Scryers' Retainer", Id = 90026, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
+				{ Armor = 380, AttackPower = 104, Agility = 43, Stamina = 45, HitRating = 30 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow, Color2 = Item.ItemSlot.Blue,
+				    Stats = new Stats() { HitRating = 3 }}},
+				new Item() { Name = "Handwraps of the Aggressor", Id = 90027, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
+				{ Armor = 448, Strength = 30, Agility = 35, Stamina = 36, HasteRating = 13 },
+				Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow,
+				    Stats = new Stats() { Agility = 2 }}}
 			};
 
 			foreach (Item ptrItem in ptrItems)

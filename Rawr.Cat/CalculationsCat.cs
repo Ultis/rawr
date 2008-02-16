@@ -455,20 +455,99 @@ namespace Rawr
 
 				case "Relative Stat Values":
 					float dpsBase =		GetCharacterCalculations(character).OverallPoints;
-					float dpsStr =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 1 } }).OverallPoints - dpsBase;
-					float dpsAgi =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 1 } }).OverallPoints - dpsBase;
-					float dpsAP  =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 1 } }).OverallPoints - dpsBase;
-					float dpsCrit =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 1 } }).OverallPoints - dpsBase;
-					float dpsExp =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 1 } }).OverallPoints - dpsBase;
-					float dpsHaste =	GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 1 } }).OverallPoints - dpsBase;
-					float dpsHit =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }).OverallPoints - dpsBase;
-					float dpsDmg =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { WeaponDamage = 1 } }).OverallPoints - dpsBase;
-					float dpsPen =		GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetration = 1 } }).OverallPoints - dpsBase;
-					
+					//float dpsStr =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 10 } }).OverallPoints - dpsBase) / 10f;
+					//float dpsAgi =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 10 } }).OverallPoints - dpsBase) / 10f;
+					//float dpsAP  =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 1 } }).OverallPoints - dpsBase) / 10f;
+					float dpsCrit =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 1 } }).OverallPoints - dpsBase);
+					float dpsExp =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 1 } }).OverallPoints - dpsBase);
+					float dpsHaste =	(GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 1 } }).OverallPoints - dpsBase);
+					float dpsHit =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }).OverallPoints - dpsBase);
+					float dpsDmg =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { WeaponDamage = 1 } }).OverallPoints - dpsBase);
+					float dpsPen =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetration = 1 } }).OverallPoints - dpsBase);
+
+					//Differential Calculations for Agi
+					float dpsAtAdd = dpsBase;
+					float agiToAdd = 0f;
+					while (dpsBase == dpsAtAdd && agiToAdd < 2)
+					{
+						agiToAdd += 0.01f;
+						dpsAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = agiToAdd } }).OverallPoints;
+					}
+
+					float dpsAtSubtract = dpsBase;
+					float agiToSubtract = 0f;
+					while (dpsBase == dpsAtSubtract && agiToSubtract > -2)
+					{
+						agiToSubtract -= 0.01f;
+						dpsAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = agiToSubtract } }).OverallPoints;
+					}
+					agiToSubtract += 0.01f;
+
+					ComparisonCalculationCat comparisonAgi = new ComparisonCalculationCat()
+					{
+						Name = "Agility",
+						OverallPoints = (dpsAtAdd - dpsBase) / (agiToAdd - agiToSubtract),
+						DPSPoints = (dpsAtAdd - dpsBase) / (agiToAdd - agiToSubtract),
+					};
+
+
+					//Differential Calculations for Str
+					dpsAtAdd = dpsBase;
+					float strToAdd = 0f;
+					while (dpsBase == dpsAtAdd && strToAdd < 2)
+					{
+						strToAdd += 0.01f;
+						dpsAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = strToAdd } }).OverallPoints;
+					}
+
+					dpsAtSubtract = dpsBase;
+					float strToSubtract = 0f;
+					while (dpsBase == dpsAtSubtract && strToSubtract > -2)
+					{
+						strToSubtract -= 0.01f;
+						dpsAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = strToSubtract } }).OverallPoints;
+					}
+					strToSubtract += 0.01f;
+
+					ComparisonCalculationCat comparisonStr = new ComparisonCalculationCat()
+					{
+						Name = "Strength",
+						OverallPoints = (dpsAtAdd - dpsBase) / (strToAdd - strToSubtract),
+						DPSPoints = (dpsAtAdd - dpsBase) / (strToAdd - strToSubtract),
+					};
+
+
+					//Differential Calculations for AP
+					dpsAtAdd = dpsBase;
+					float apToAdd = 0f;
+					while (dpsBase == dpsAtAdd && apToAdd < 2)
+					{
+						apToAdd += 0.01f;
+						dpsAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = apToAdd } }).OverallPoints;
+					}
+
+					dpsAtSubtract = dpsBase;
+					float apToSubtract = 0f;
+					while (dpsBase == dpsAtSubtract && apToSubtract > -2)
+					{
+						apToSubtract -= 0.01f;
+						dpsAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = apToSubtract } }).OverallPoints;
+					}
+					apToSubtract += 0.01f;
+
+					ComparisonCalculationCat comparisonAP = new ComparisonCalculationCat()
+					{
+						Name = "Attack Power",
+						OverallPoints = (dpsAtAdd - dpsBase) / (apToAdd - apToSubtract),
+						DPSPoints = (dpsAtAdd - dpsBase) / (apToAdd - apToSubtract),
+					};
+
+
+
 					return new ComparisonCalculationBase[] { 
-						new ComparisonCalculationCat() { Name = "Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
-						new ComparisonCalculationCat() { Name = "Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
-						new ComparisonCalculationCat() { Name = "Attack Power", OverallPoints = dpsAP, DPSPoints = dpsAP },
+						comparisonAgi,
+						comparisonStr,
+						comparisonAP,
 						new ComparisonCalculationCat() { Name = "Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
 						new ComparisonCalculationCat() { Name = "Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
 						new ComparisonCalculationCat() { Name = "Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },

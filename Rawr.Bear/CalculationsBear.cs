@@ -85,7 +85,8 @@ you are being killed by burst damage, focus on Survival Points.",
 				if (_customChartNames == null)
 					_customChartNames = new string[] {
 					"Combat Table",
-					"Relative Stat Values"
+					"Relative Stat Values",
+					//"Agi Test"
 					};
 				return _customChartNames;
 			}
@@ -173,7 +174,9 @@ you are being killed by burst damage, focus on Survival Points.",
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-			Stats statsRace = character.Race == Character.CharacterRace.NightElf ? new Stats() { Health = 3434, Agility = 75, Stamina = 82, DodgeRating = 59 } : new Stats() { Health = 3434, Agility = 64, Stamina = 85, DodgeRating = 40, NatureResistance=10 };
+			Stats statsRace = character.Race == Character.CharacterRace.NightElf ?
+				new Stats() { Health = 3434, Agility = 75, Stamina = 82, DodgeRating = 59, NatureResistance = 10 } :
+				new Stats() { Health = 3434, Agility = 64, Stamina = 85, DodgeRating = 40, NatureResistance = 10 };
 			Stats statsBaseGear = GetItemStats(character, additionalItem);
 			Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -209,7 +212,7 @@ you are being killed by burst damage, focus on Survival Points.",
             statsTotal.ShadowResistance = statsRace.ShadowResistance + statsBaseGear.ShadowResistance + statsBuffs.ShadowResistance;
             statsTotal.ArcaneResistance = statsRace.ArcaneResistance + statsBaseGear.ArcaneResistance + statsBuffs.ArcaneResistance;
             statsTotal.AllResist = statsRace.AllResist + statsBaseGear.AllResist + statsBuffs.AllResist;
-            return statsTotal;
+			return statsTotal;
 		}
 
 		public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
@@ -245,34 +248,122 @@ you are being killed by burst damage, focus on Survival Points.",
 				
 				case "Relative Stat Values":
 					CharacterCalculationsBear calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsBear;
-					CharacterCalculationsBear calcAgiValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 1 } }) as CharacterCalculationsBear;
-					CharacterCalculationsBear calcACValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Armor = 1 } }) as CharacterCalculationsBear;
+					//CharacterCalculationsBear calcAgiValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 10 } }) as CharacterCalculationsBear;
+					//CharacterCalculationsBear calcACValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Armor = 10 } }) as CharacterCalculationsBear;
+					//CharacterCalculationsBear calcStaValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 10 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcDefValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = 1 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 1 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = 1 } }) as CharacterCalculationsBear;
-					CharacterCalculationsBear calcMissValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Miss = 1 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 1 } }) as CharacterCalculationsBear;
-					CharacterCalculationsBear calcStaValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 1 } }) as CharacterCalculationsBear;
 					
+					//Differential Calculations for Agi
+					CharacterCalculationsBear calcAtAdd = calcBaseValue;
+					float agiToAdd = 0f;
+					while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && agiToAdd < 2)
+					{
+						agiToAdd += 0.01f;
+						calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = agiToAdd } }) as CharacterCalculationsBear;
+					}
+
+					CharacterCalculationsBear calcAtSubtract = calcBaseValue;
+					float agiToSubtract = 0f;
+					while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && agiToSubtract > -2)
+					{
+						agiToSubtract -= 0.01f;
+						calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = agiToSubtract } }) as CharacterCalculationsBear;
+					}
+					agiToSubtract += 0.01f;
+
+					ComparisonCalculationBear comparisonAgi = new ComparisonCalculationBear() { Name = "Agility", OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (agiToAdd - agiToSubtract),
+						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (agiToAdd - agiToSubtract), SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (agiToAdd - agiToSubtract)};
+
+
+					//Differential Calculations for AC
+					calcAtAdd = calcBaseValue;
+					float acToAdd = 0f;
+					while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && acToAdd < 2)
+					{
+						acToAdd += 0.01f;
+						calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Armor = acToAdd } }) as CharacterCalculationsBear;
+					}
+
+					calcAtSubtract = calcBaseValue;
+					float acToSubtract = 0f;
+					while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && acToSubtract > -2)
+					{
+						acToSubtract -= 0.01f;
+						calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Armor = acToSubtract } }) as CharacterCalculationsBear;
+					}
+					acToSubtract += 0.01f;
+
+					ComparisonCalculationBear comparisonAC = new ComparisonCalculationBear() { Name = "Armor", OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (acToAdd - acToSubtract),
+						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (acToAdd - acToSubtract), SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (acToAdd - acToSubtract)};
+
+
+					//Differential Calculations for Sta
+					calcAtAdd = calcBaseValue;
+					float staToAdd = 0f;
+					while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && staToAdd < 2)
+					{
+						staToAdd += 0.01f;
+						calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = staToAdd } }) as CharacterCalculationsBear;
+					}
+
+					calcAtSubtract = calcBaseValue;
+					float staToSubtract = 0f;
+					while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && staToSubtract > -2)
+					{
+						staToSubtract -= 0.01f;
+						calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = staToSubtract } }) as CharacterCalculationsBear;
+					}
+					staToSubtract += 0.01f;
+
+					ComparisonCalculationBear comparisonSta = new ComparisonCalculationBear() { Name = "Stamina", OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (staToAdd - staToSubtract),
+						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (staToAdd - staToSubtract), SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (staToAdd - staToSubtract)};
+
 					return new ComparisonCalculationBase[] { 
-						new ComparisonCalculationBear() { Name = "Agility", OverallPoints = calcAgiValue.OverallPoints - calcBaseValue.OverallPoints, 
-							MitigationPoints = calcAgiValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcAgiValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
-						new ComparisonCalculationBear() { Name = "Armor", OverallPoints = calcACValue.OverallPoints - calcBaseValue.OverallPoints, 
-							MitigationPoints = calcACValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcACValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
-						new ComparisonCalculationBear() { Name = "Defense Rating", OverallPoints = calcDefValue.OverallPoints - calcBaseValue.OverallPoints, 
-							MitigationPoints = calcDefValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcDefValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
-						new ComparisonCalculationBear() { Name = "Dodge Rating", OverallPoints = calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints, 
-							MitigationPoints = calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
-						new ComparisonCalculationBear() { Name = "Health", OverallPoints = calcHealthValue.OverallPoints - calcBaseValue.OverallPoints, 
-							MitigationPoints = calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcHealthValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
-						new ComparisonCalculationBear() { Name = "Miss", OverallPoints = calcMissValue.OverallPoints - calcBaseValue.OverallPoints, 
-							MitigationPoints = calcMissValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcMissValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
-						new ComparisonCalculationBear() { Name = "Resilience", OverallPoints = calcResilValue.OverallPoints - calcBaseValue.OverallPoints, 
-							MitigationPoints = calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints},
-						new ComparisonCalculationBear() { Name = "Stamina", OverallPoints = calcStaValue.OverallPoints - calcBaseValue.OverallPoints, 
-							MitigationPoints = calcStaValue.MitigationPoints - calcBaseValue.MitigationPoints, SurvivalPoints = calcStaValue.SurvivalPoints - calcBaseValue.SurvivalPoints}
+						comparisonAgi,
+						comparisonAC,
+						comparisonSta,
+						new ComparisonCalculationBear() { Name = "Defense Rating", OverallPoints = (calcDefValue.OverallPoints - calcBaseValue.OverallPoints), 
+							MitigationPoints = (calcDefValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcDefValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
+						new ComparisonCalculationBear() { Name = "Dodge Rating", OverallPoints = (calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints), 
+							MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
+						new ComparisonCalculationBear() { Name = "Health", OverallPoints = (calcHealthValue.OverallPoints - calcBaseValue.OverallPoints), 
+							MitigationPoints = (calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcHealthValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
+						new ComparisonCalculationBear() { Name = "Resilience", OverallPoints = (calcResilValue.OverallPoints - calcBaseValue.OverallPoints), 
+							MitigationPoints = (calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
 					};
 
+				//case "Agi Test":
+				//    CharacterCalculationsBear calcBaseAgiValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 0 } }) as CharacterCalculationsBear;
+				//    List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
+
+				//    float overallCurrent = calcBaseAgiValue.OverallPoints;
+				//    float overallAtAdd = calcBaseAgiValue.OverallPoints;
+				//    float agiToAdd = 0f;
+				//    while (overallCurrent == overallAtAdd)
+				//    {
+				//        agiToAdd += 0.01f;
+				//        overallAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = agiToAdd } }).OverallPoints;
+				//    }
+
+				//    float overallAtSubtract = calcBaseAgiValue.OverallPoints;
+				//    float agiToSubtract = 0f;
+				//    while (overallCurrent == overallAtSubtract)
+				//    {
+				//        agiToSubtract -= 0.01f;
+				//        overallAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = agiToSubtract } }).OverallPoints;
+				//    }
+				//    agiToSubtract += 0.01f;
+
+				//    float agiDifference = agiToAdd - agiToSubtract;
+				//    float overallDifference = overallAtAdd - overallCurrent;
+				//    float overallPerAgi = overallDifference / agiDifference;
+
+					
+				//    return comparisons.ToArray();
+				
 				default:
 					return new ComparisonCalculationBase[0];
 			}
