@@ -45,7 +45,7 @@ namespace Rawr
 			if (!Character.CalculationOptions.ContainsKey("Finisher"))
 				Character.CalculationOptions["Finisher"] = "Rip";
 			if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-				Character.CalculationOptions["EnforceMetagemRequirements"] = "Yes";
+				Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
 			if (!Character.CalculationOptions.ContainsKey("BloodlustUptime"))
 				Character.CalculationOptions["BloodlustUptime"] = "15";
 			if (!Character.CalculationOptions.ContainsKey("DrumsOfBattleUptime"))

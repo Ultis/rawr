@@ -20,7 +20,7 @@ namespace Rawr
 			if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
 				Character.CalculationOptions["TargetLevel"] = "73";
 			if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-				Character.CalculationOptions["EnforceMetagemRequirements"] = "Yes";
+				Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
 			checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
