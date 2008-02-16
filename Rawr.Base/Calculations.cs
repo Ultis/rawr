@@ -204,7 +204,7 @@ namespace Rawr
 		public abstract string[] CharacterDisplayCalculationLabels { get; }
 
 		/// <summary>
-		/// The names of all custom charts provided by the model
+		/// The names of all custom charts provided by the model, if any.
 		/// </summary>
 		public abstract string[] CustomChartNames { get; }
 
@@ -284,7 +284,7 @@ namespace Rawr
 		public abstract Stats GetCharacterStats(Character character, Item additionalItem);
 		
 		/// <summary>
-		/// Gets data to fill a custom chart, based on the chart name, as defined in CustomChartNames
+		/// Gets data to fill a custom chart, based on the chart name, as defined in CustomChartNames.
 		/// </summary>
 		/// <param name="character">The character to build the chart for.</param>
 		/// <param name="chartName">The name of the custom chart to get data for.</param>
