@@ -735,34 +735,54 @@ namespace Rawr
 				//new Item() { Name = "Staff of the Forest Lord", Id = 90020, Slot = Item.ItemSlot.TwoHand, IconPath = "temp", Stats = new Stats()
 				//{ Stamina = 78, Strength = 50, AttackPower = 1110, Agility = 52 }}
 				
-				new Item() { Name = "Sunwell Badge Loot - Melee Ring", Id = 90020, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
-				{ Agility = 29, Stamina = 28, AttackPower = 58, ArmorPenetration = 126 }},
-				new Item() { Name = "Sunwell Badge Loot - Tank Ring", Id = 90021, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
-				{ Armor = 392, Stamina = 45, DodgeRating = 28 }},
-				new Item() { Name = "Embrace of Everlasting Prowess", Id = 90022, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
-				{ Armor = 711, Strength = 40, Agility = 49, Stamina = 52, HasteRating = 20 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
-				    Stats = new Stats() { Stamina = 3 }}},
-				new Item() { Name = "Tameless Breeches", Id = 90023, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
-				{ Armor = 667, Strength = 39, Agility = 45, Stamina = 52, HasteRating = 17 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Yellow,
-				    Stats = new Stats() { Stamina = 4 }}},
-				new Item() { Name = "Belt of the Silent Path", Id = 90024, Slot = Item.ItemSlot.Waist, IconPath = "temp", Stats = new Stats()
-				{ Armor = 205, AttackPower = 78, Agility = 34, Stamina = 33, HitRating = 23 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow,
-				    Stats = new Stats() { Agility = 2 }}},
-				new Item() { Name = "Tunic of the Dark Hour", Id = 90025, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
-				{ Armor = 474, AttackPower = 102, Agility = 44, Stamina = 51, HitRating = 34 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
-				    Stats = new Stats() { Stamina = 3 }}},
-				new Item() { Name = "Trousers of the Scryers' Retainer", Id = 90026, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
-				{ Armor = 380, AttackPower = 104, Agility = 43, Stamina = 45, HitRating = 30 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow, Color2 = Item.ItemSlot.Blue,
-				    Stats = new Stats() { HitRating = 3 }}},
-				new Item() { Name = "Handwraps of the Aggressor", Id = 90027, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
-				{ Armor = 448, Strength = 30, Agility = 35, Stamina = 36, HasteRating = 13 },
-				Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow,
-				    Stats = new Stats() { Agility = 2 }}}
+				//new Item() { Name = "Embrace of Everlasting Prowess", Id = 90022, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 711, Strength = 40, Agility = 49, Stamina = 52, HasteRating = 20 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
+				//    Stats = new Stats() { Stamina = 3 }}},
+				//new Item() { Name = "Tameless Breeches", Id = 90023, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 667, Strength = 39, Agility = 45, Stamina = 52, HasteRating = 17 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Yellow,
+				//    Stats = new Stats() { Stamina = 4 }}},
+				//new Item() { Name = "Belt of the Silent Path", Id = 90024, Slot = Item.ItemSlot.Waist, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 205, AttackPower = 78, Agility = 34, Stamina = 33, HitRating = 23 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow,
+				//    Stats = new Stats() { Agility = 2 }}},
+				//new Item() { Name = "Tunic of the Dark Hour", Id = 90025, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 474, AttackPower = 102, Agility = 44, Stamina = 51, HitRating = 34 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
+				//    Stats = new Stats() { Stamina = 3 }}},
+				//new Item() { Name = "Trousers of the Scryers' Retainer", Id = 90026, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 380, AttackPower = 104, Agility = 43, Stamina = 45, HitRating = 30 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow, Color2 = Item.ItemSlot.Blue,
+				//    Stats = new Stats() { HitRating = 3 }}},
+				//new Item() { Name = "Handwraps of the Aggressor", Id = 90027, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 448, Strength = 30, Agility = 35, Stamina = 36, HasteRating = 13 },
+				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow,
+				//    Stats = new Stats() { Agility = 2 }}}
+				//new Item() { Name = "Sunwell Badge Loot - Melee Ring", Id = 90028, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
+				//{ Agility = 29, Stamina = 28, AttackPower = 58, ArmorPenetration = 126 }},
+				//new Item() { Name = "Sunwell Badge Loot - Tank Ring", Id = 90029, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
+				//{ Armor = 392, Stamina = 45, DodgeRating = 28 }},
+				
+				//new Item() { Name = "Clutch of Demise", Id = 90030, Slot = Item.ItemSlot.Neck, IconPath = "temp", Stats = new Stats()
+				//{ Stamina = 33, Agility = 25, AttackPower = 64, HasteRating = 30 }},
+				//new Item() { Name = "Collar of the Pit Lord", Id = 90031, Slot = Item.ItemSlot.Neck, IconPath = "temp", Stats = new Stats()
+				//{ Stamina = 63, DefenseRating = 25, ExpertiseRating = 29 }},
+				//new Item() { Name = "Shattered Sun Pendant of Might", Id = 90032, Slot = Item.ItemSlot.Neck, IconPath = "temp", Stats = new Stats()
+				//{ Stamina = 19, Agility = 18, AttackPower = 98 }},
+				//new Item() { Name = "Cloak of Blade Turning", Id = 90033, Slot = Item.ItemSlot.Back, IconPath = "temp", Stats = new Stats()
+				//{ Stamina = 31, Armor = 402, Resilience = 22 }},
+				//new Item() { Name = "Band of Determination", Id = 90034, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
+				//{ Stamina = 35, Armor = 252, ExpertiseRating = 17 }},
+				//new Item() { Name = "Commendation of Kael'thas", Id = 90035, Slot = Item.ItemSlot.Trinket, IconPath = "temp", Stats = new Stats()
+				//{ Stamina = 57 }},
+				//new Item() { Name = "Figurine - Empyrean Tortoise", Id = 90036, Slot = Item.ItemSlot.Trinket, IconPath = "temp", Stats = new Stats()
+				//{ DefenseRating = 42 }},
+				//new Item() { Name = "Figurine - Shadowsong Panther", Id = 90037, Slot = Item.ItemSlot.Trinket, IconPath = "temp", Stats = new Stats()
+				//{ AttackPower = 133.333f }},
+				//new Item() { Name = "Shard of Contempt", Id = 90038, Slot = Item.ItemSlot.Trinket, IconPath = "temp", Stats = new Stats()
+				//{ ExpertiseRating = 44, AttackPower = 80 }},
+				
 			};
 
 			foreach (Item ptrItem in ptrItems)

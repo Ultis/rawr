@@ -1711,7 +1711,7 @@ namespace Rawr
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(867, 717);
 			this.Name = "FormMain";
-			this.Text = "Rawr (Beta 10)";
+			this.Text = "Rawr (Beta 11)";
 			this.Load += new System.EventHandler(this.FormMain_Load);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
 			this.toolStripContainer1.ContentPanel.ResumeLayout(false);

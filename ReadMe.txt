@@ -1,18 +1,15 @@
-Rawr Beta 10
+Rawr Beta 11
 ------------
-*Cat support*! It's finally here! Cat support has been a long time coming. b10 is a huge upgrade for Rawr. I've added quite a few things for Bears as well. Since there's so much new stuff in b10, I honestly expect there to be a few bugs. I'll be releasing a new version to fix whatever bugs are found, probably within a week. So I ask for your patience in whatever goes wrong with b10. :) It's very important to note that the Cat side of things is only like 80% complete. There are several features that aren't done for b10. Please see the "Missing Features" section below, for details. I know some of these are important features, and will be getting them in b11, as soon as I can. Also, because it can't be said enough, huge thanks to Toskk for all of his Cat theorycrafting. Rawr.Cat would not be possible without Toskk.
+Welcome to another new version of Rawr. b11 has quite a few new features that you'll notice, and quite a few that you probably won't notice. I've added alot of polish to the new Cat model, (though those disabled calculation options are still disabled, sorry :( ), and there are several new things for Bear too. There have been alot of changes under the hood, to allow for Rawr to support models for a wide variety of class/specs, not just Cats and Bears. While Feral is still my passion, and will be the main focus of my future development, I also want to open Rawr up so that other people who are passionate about different classes/specs can build models for Rawr, and hopefully all theorycrafters can be united with one common platform. Thanks for work on this release go out to Bashui and MerickOWA!
+
+This release is dedicated to all those who have dissatisfied clouds hanging over them. Sorry I'm a couple days late.
 
 Anyway, as usual, thanks very much for testing Rawr. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
 FAQ
 ---
  Q: Why are some features disabled on the Options tab for Cat?
- Q: How do I change the stats of an item for Cat? It still shows the bear stats!
- Q: Can I switch between Cat & Bear without restarting Rawr?
- Q: Why is the Combat Table blank for Cat?
- Q: Why are the values for most of the idols all wrong?
- Q: Can I see the values of each stat, like on Toskk's Calculator?
- A: See the "Missing Features" section below. All of these will be solved in the next major version, b11.
+ A: See the "Missing Features" section below. All of these will be solved in the next major version, b12.
 
  Q: The calculations don't match my character screen. Are they wrong?
  A: Most likely, no. First, the calculations in Rawr are for combat against raid boss mobs, which changes the chances to be missed, to dodge, to be crushed, and to be crit, so you'll see values off by 0.6% from what the character sheet says. Additionall, WoW sometimes rounds stats oddly, when many buffs are involved. I've gone to great lengths to make Rawr as accurate as possible, but it'll still calculate Stamina and Agility off by 1 in about 5 to 10% of cases. That in turn may make your health, dodge, and armor off by a tiny amount as well. Anyway, that's rare, and even when it does happen, the difference is *extremely* negligable, so don't worry about it. If you do find a situation where other calculations are off, or any of those are off significantly, please let me know. I want to ensure Rawr is as accurate as possible.
@@ -28,17 +25,32 @@ FAQ
  
 Missing Features
 ----------------
- In order to release Rawr b10 sooner, I chose to cut out several significant features. I plan to implement these all in b11, but until then, you'll just have to do without. Here's a list of what's on my list:
+ I plan to implement these in b12. Here's what's on my list:
  
  * More Calculation Options - You'll notice on the Options tab in Cat mode, that there are a number of items that are disabled (grey'd out), including Target Level, Primary Attack, and Finisher. These will be the biggest new feature in b11, most likely.
- * Combat Table - It's blank... Need to implement multiple combat tables, since it's different for white and yellow attacks.
- * Temporary Buffs - There's a ton of buffs for Bear that are short buffs like potions and other consumables... I plan to add things like this for cat.
- * Values of Idols - Everbloom and Terror are correct. Others, not so much. 
- * Relative Stat Values - Toskk's calculator displays the values of each stat, compared to AP. I may do something like this, except compared to DPS. Not sure.
 
 
 Version History
 ---------------
+Beta 11:
+ - You can now change between Bear and Cat mode, and any other models, on the fly, using the new Model menu.
+ - All stats are now editable in the Item Editor, not just bear stats.
+ - Rawr has been updated for the 2.4 PTR, as of 2/15. Most of the new items have been added, and the idols have been changed to their new stats. Note that you shouldn't try to Refresh Item Data on a new item, as it'll just fail to find the item and timeout.
+ - Added accurate calculations for all the decent cat idols.
+ - There's now a checkbox on the Options tab to enable Metagem requirement detection. If you run into a situation where one item is ranked higher than another, and you think it should be the other way around, see if the first one helps you meet the metagem requirements, and the second one doesn't. Turn that option off if you like handling metagem requirements yourself, and it'll always count the metagem.
+ - Buffs now have tooltips in the charts.
+ - The most recently used model will be selected at startup. No more dialog asking what model you want to startup in.
+ - There's now a list of recently opened files in the File menu, so you can open your different gear sets and characters faster.
+ - The model system has been changed so that each model is its own DLL, meaning that models can be updated/added/removed seperately of Rawr itself.
+ - Fixed a few bugs on dual-monitor setups.
+ - Items can now have weapon properties (min/max damage, speed)
+ - In order to prepare Rawr for a wider variety of models, the item type/slot system has been revamped. You'll now notice that there are 2 more buttons on the main form, for Projectile and Projectile Bag, though nothing will fit in them for ferals. Same with the offhand.
+ - Added support for all races, though Rawr.Cat and Rawr.Bear only have stats for NE/Tauren, of course. This is in preparation for Rawr being used by other classes.
+ - Items with no stats relevant to the current model will be hidden from charts/dropdowns
+ - There are now several new buffs for cats: ExposeWeakness (which has a slider on the Options tab to control its AP value), and Bloodlust, Drums of Battle, and Drums of War (which have sliders on the Options tab to control their uptime %).
+ - Models can now define their own custom charts, which are now used by Cat to include Combat Table (White), Combat Table (Yellow) and Relative Stat Values, and by Bear to include Combat Table and Relative Stat Values. Note that due to rounding abormalities when working with small values of certain stats that get multiplies, the two Relative Stat Values charts aren't as informative as I'd like, yet; take their values with a large grain of salt, consider them alpha quality for now.
+ - You can resize the main form to give you more chart space, and more space for the tab control with calculation display, buffs, options, enchants.
+
 Beta 10:
  - Cat Support! When Rawr opens, you'll be given a choice of loading the Bear of Cat calculation model. Choose Cat to start using Rawr for optimizing your dps! Most of the Cat calculations are based on Toskk's cat calculator. Huge thanks to Toskk for this!
  - Rawr automatically will detect and activate set bonuses as appropriate.

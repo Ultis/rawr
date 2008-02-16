@@ -259,7 +259,11 @@ namespace Rawr
 						_allBuffs.Add(new Buff() { Name = "Drums of War", Category = BuffCategory.TemporaryBuffs,
 							Stats = new Stats() { DrumsOfWar = 60 }}); 
 						_allBuffs.Add(new Buff() { Name = "Badge of Tenacity", Category = BuffCategory.TemporaryBuffs,
-							Stats = new Stats() { Agility = 150f }, Type = BuffType.ShortDurationDW});
+							Stats = new Stats() { Agility = 150 }, Type = BuffType.ShortDurationDW});
+						_allBuffs.Add(new Buff() { Name = "Commendation of Kael'thas", Category = BuffCategory.TemporaryBuffs,
+							Stats = new Stats() { DodgeRating = 152 }, Type = BuffType.ShortDurationDW});
+						_allBuffs.Add(new Buff() { Name = "Figurine - Empyrean Tortoise", Category = BuffCategory.TemporaryBuffs,
+							Stats = new Stats() { DodgeRating = 165 }, Type = BuffType.ShortDurationDW});
 						_allBuffs.Add(new Buff() { Name = "Moroes' Lucky Pocket Watch", Category = BuffCategory.TemporaryBuffs,
 							Stats = new Stats() { DodgeRating = 300 }, Type = BuffType.ShortDurationDW});
 						_allBuffs.Add(new Buff() { Name = "Idol of Terror", Category = BuffCategory.TemporaryBuffs,
