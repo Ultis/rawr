@@ -301,8 +301,8 @@ namespace Rawr
 				numberShreds += extraShred;
 			}
 
-			float dmgRips = (rip5 * (attackPower * 0.24f + 1553f) + rip4 * (attackPower * 0.24f + 1272f))
-				* 1.3f * (1f + stats.BonusRipDamageMultiplier);
+			float dmgRips = (rip5 * (attackPower * 0.24f + 1553f + (stats.BonusRipDamagePerCPPerTick * 6f * 5f)) + rip4 * 
+				(attackPower * 0.24f + 1272f + (stats.BonusRipDamagePerCPPerTick * 6f * 4f))) * 1.3f * (1f + stats.BonusRipDamageMultiplier);
 
 			#endregion
 
@@ -399,6 +399,7 @@ namespace Rawr
 			statsTotal.BonusMangleDamage = statsRace.BonusMangleDamage + statsGearEnchantsBuffs.BonusMangleDamage;
 			statsTotal.BonusRipDamageMultiplier = ((1 + statsRace.BonusRipDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusRipDamageMultiplier)) - 1;
 			statsTotal.BonusShredDamage = statsRace.BonusShredDamage + statsGearEnchantsBuffs.BonusShredDamage;
+			statsTotal.BonusRipDamagePerCPPerTick = statsRace.BonusRipDamagePerCPPerTick + statsGearEnchantsBuffs.BonusRipDamagePerCPPerTick;
 			statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
 			statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
 			statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
@@ -498,6 +499,7 @@ namespace Rawr
 					TerrorProc = stats.TerrorProc,
 					BonusMangleDamage = stats.BonusMangleDamage,
 					BonusShredDamage = stats.BonusShredDamage,
+					BonusRipDamagePerCPPerTick = stats.BonusRipDamagePerCPPerTick,
 					WeaponDamage = stats.WeaponDamage,
 					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
@@ -522,7 +524,7 @@ namespace Rawr
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCostReduction + stats.Stamina +
 				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
-				stats.DrumsOfBattle + stats.DrumsOfWar) > 0;
+				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick) > 0;
 		}
 	}
 

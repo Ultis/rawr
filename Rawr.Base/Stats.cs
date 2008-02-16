@@ -121,7 +121,10 @@ namespace Rawr
 
         public float BonusShredDamage{get;set;}
 
-        public float BonusMangleDamage{get;set;}
+		public float BonusMangleDamage { get; set; }
+
+		[DisplayName("Bonus Rip Damage Per Combo Point Per Tick")]
+		public float BonusRipDamagePerCPPerTick { get; set; }
 
 		public float MangleCostReduction { get; set; }
 
@@ -204,6 +207,7 @@ namespace Rawr
 				Miss = a.Miss + b.Miss,
 				BonusShredDamage = a.BonusShredDamage + b.BonusShredDamage,
 				BonusMangleDamage = a.BonusMangleDamage + b.BonusMangleDamage,
+				BonusRipDamagePerCPPerTick = a .BonusRipDamagePerCPPerTick + b.BonusRipDamagePerCPPerTick,
 				MangleCostReduction = a.MangleCostReduction + b.MangleCostReduction,
 				ExposeWeakness = a.ExposeWeakness + b.ExposeWeakness,
 				Bloodlust = a.Bloodlust + b.Bloodlust,

@@ -121,7 +121,7 @@ namespace Rawr
 			{
 				if (_prerenderedGraph == null)
 				{
-					_prerenderedGraph = new Bitmap(this.Width, 20 + (ItemCalculations.Length * 36), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+					_prerenderedGraph = new Bitmap(Math.Max(1, this.Width), 20 + (ItemCalculations.Length * 36), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 					Graphics g = Graphics.FromImage(_prerenderedGraph);
 					g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 					g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;

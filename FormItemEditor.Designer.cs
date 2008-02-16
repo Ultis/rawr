@@ -43,12 +43,14 @@ namespace Rawr
 			System.Windows.Forms.ListViewGroup listViewGroup12 = new System.Windows.Forms.ListViewGroup("Feet", System.Windows.Forms.HorizontalAlignment.Left);
 			System.Windows.Forms.ListViewGroup listViewGroup13 = new System.Windows.Forms.ListViewGroup("Finger", System.Windows.Forms.HorizontalAlignment.Left);
 			System.Windows.Forms.ListViewGroup listViewGroup14 = new System.Windows.Forms.ListViewGroup("Trinket", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup15 = new System.Windows.Forms.ListViewGroup("Weapon", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup16 = new System.Windows.Forms.ListViewGroup("Robe", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup17 = new System.Windows.Forms.ListViewGroup("One Hand", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup18 = new System.Windows.Forms.ListViewGroup("Wand", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup19 = new System.Windows.Forms.ListViewGroup("Idol", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup20 = new System.Windows.Forms.ListViewGroup("Gems", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup15 = new System.Windows.Forms.ListViewGroup("One Hand", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup16 = new System.Windows.Forms.ListViewGroup("Two Hand", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup17 = new System.Windows.Forms.ListViewGroup("Main Hand", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup18 = new System.Windows.Forms.ListViewGroup("Off Hand", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup19 = new System.Windows.Forms.ListViewGroup("Ranged", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup20 = new System.Windows.Forms.ListViewGroup("Projectile", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup21 = new System.Windows.Forms.ListViewGroup("Projectile Bag", System.Windows.Forms.HorizontalAlignment.Left);
+			System.Windows.Forms.ListViewGroup listViewGroup22 = new System.Windows.Forms.ListViewGroup("Gems", System.Windows.Forms.HorizontalAlignment.Left);
 			this.label1 = new System.Windows.Forms.Label();
 			this.numericUpDownId = new System.Windows.Forms.NumericUpDown();
 			this.textBoxName = new System.Windows.Forms.TextBox();
@@ -71,6 +73,9 @@ namespace Rawr
 			this.label10 = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
+			this.itemButtonGem1 = new Rawr.ItemButton();
+			this.itemButtonGem2 = new Rawr.ItemButton();
+			this.itemButtonGem3 = new Rawr.ItemButton();
 			this.buttonOK = new System.Windows.Forms.Button();
 			this.buttonAdd = new System.Windows.Forms.Button();
 			this.buttonDelete = new System.Windows.Forms.Button();
@@ -91,9 +96,6 @@ namespace Rawr
 			this.label11 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
-			this.itemButtonGem1 = new Rawr.ItemButton();
-			this.itemButtonGem2 = new Rawr.ItemButton();
-			this.itemButtonGem3 = new Rawr.ItemButton();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).BeginInit();
 			this.groupBox3.SuspendLayout();
 			this.groupBox6.SuspendLayout();
@@ -374,6 +376,45 @@ namespace Rawr
 			this.label6.TabIndex = 1;
 			this.label6.Text = "Gem #1:";
 			// 
+			// itemButtonGem1
+			// 
+			this.itemButtonGem1.Character = null;
+			this.itemButtonGem1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+			this.itemButtonGem1.Location = new System.Drawing.Point(6, 32);
+			this.itemButtonGem1.Name = "itemButtonGem1";
+			this.itemButtonGem1.SelectedItem = null;
+			this.itemButtonGem1.SelectedItemId = 0;
+			this.itemButtonGem1.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonGem1.TabIndex = 0;
+			this.itemButtonGem1.Text = "Gem #1";
+			this.itemButtonGem1.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonGem2
+			// 
+			this.itemButtonGem2.Character = null;
+			this.itemButtonGem2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+			this.itemButtonGem2.Location = new System.Drawing.Point(82, 32);
+			this.itemButtonGem2.Name = "itemButtonGem2";
+			this.itemButtonGem2.SelectedItem = null;
+			this.itemButtonGem2.SelectedItemId = 0;
+			this.itemButtonGem2.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonGem2.TabIndex = 1;
+			this.itemButtonGem2.Text = "Gem #2";
+			this.itemButtonGem2.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonGem3
+			// 
+			this.itemButtonGem3.Character = null;
+			this.itemButtonGem3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+			this.itemButtonGem3.Location = new System.Drawing.Point(158, 32);
+			this.itemButtonGem3.Name = "itemButtonGem3";
+			this.itemButtonGem3.SelectedItem = null;
+			this.itemButtonGem3.SelectedItemId = 0;
+			this.itemButtonGem3.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonGem3.TabIndex = 2;
+			this.itemButtonGem3.Text = "Gem #3";
+			this.itemButtonGem3.UseVisualStyleBackColor = true;
+			// 
 			// buttonOK
 			// 
 			this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -447,18 +488,22 @@ namespace Rawr
 			listViewGroup13.Name = "listViewGroupFinger";
 			listViewGroup14.Header = "Trinket";
 			listViewGroup14.Name = "listViewGroupTrinket";
-			listViewGroup15.Header = "Weapon";
-			listViewGroup15.Name = "listViewGroupWeapon";
-			listViewGroup16.Header = "Robe";
-			listViewGroup16.Name = "listViewGroupRobe";
-			listViewGroup17.Header = "One Hand";
-			listViewGroup17.Name = "listViewGroupOneHand";
-			listViewGroup18.Header = "Wand";
-			listViewGroup18.Name = "listViewGroupWand";
-			listViewGroup19.Header = "Idol";
-			listViewGroup19.Name = "listViewGroupIdol";
-			listViewGroup20.Header = "Gems";
-			listViewGroup20.Name = "listViewGroupGems";
+			listViewGroup15.Header = "One Hand";
+			listViewGroup15.Name = "listViewGroupOneHand";
+			listViewGroup16.Header = "Two Hand";
+			listViewGroup16.Name = "listViewGroupTwoHand";
+			listViewGroup17.Header = "Main Hand";
+			listViewGroup17.Name = "listViewGroupMainHand";
+			listViewGroup18.Header = "Off Hand";
+			listViewGroup18.Name = "listViewGroupOffHand";
+			listViewGroup19.Header = "Ranged";
+			listViewGroup19.Name = "listViewGroupRanged";
+			listViewGroup20.Header = "Projectile";
+			listViewGroup20.Name = "listViewGroupProjectile";
+			listViewGroup21.Header = "Projectile Bag";
+			listViewGroup21.Name = "listViewGroupProjectileBag";
+			listViewGroup22.Header = "Gems";
+			listViewGroup22.Name = "listViewGroupGems";
 			this.listViewItems.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
             listViewGroup1,
             listViewGroup2,
@@ -479,7 +524,9 @@ namespace Rawr
             listViewGroup17,
             listViewGroup18,
             listViewGroup19,
-            listViewGroup20});
+            listViewGroup20,
+            listViewGroup21,
+            listViewGroup22});
 			this.listViewItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
 			this.listViewItems.Location = new System.Drawing.Point(12, 38);
 			this.listViewItems.MultiSelect = false;
@@ -667,45 +714,6 @@ namespace Rawr
 			this.label7.Size = new System.Drawing.Size(70, 13);
 			this.label7.TabIndex = 1;
 			this.label7.Text = "Min Damage:";
-			// 
-			// itemButtonGem1
-			// 
-			this.itemButtonGem1.Character = null;
-			this.itemButtonGem1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.itemButtonGem1.Location = new System.Drawing.Point(6, 32);
-			this.itemButtonGem1.Name = "itemButtonGem1";
-			this.itemButtonGem1.SelectedItem = null;
-			this.itemButtonGem1.SelectedItemId = 0;
-			this.itemButtonGem1.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonGem1.TabIndex = 0;
-			this.itemButtonGem1.Text = "Gem #1";
-			this.itemButtonGem1.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonGem2
-			// 
-			this.itemButtonGem2.Character = null;
-			this.itemButtonGem2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.itemButtonGem2.Location = new System.Drawing.Point(82, 32);
-			this.itemButtonGem2.Name = "itemButtonGem2";
-			this.itemButtonGem2.SelectedItem = null;
-			this.itemButtonGem2.SelectedItemId = 0;
-			this.itemButtonGem2.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonGem2.TabIndex = 1;
-			this.itemButtonGem2.Text = "Gem #2";
-			this.itemButtonGem2.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonGem3
-			// 
-			this.itemButtonGem3.Character = null;
-			this.itemButtonGem3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-			this.itemButtonGem3.Location = new System.Drawing.Point(158, 32);
-			this.itemButtonGem3.Name = "itemButtonGem3";
-			this.itemButtonGem3.SelectedItem = null;
-			this.itemButtonGem3.SelectedItemId = 0;
-			this.itemButtonGem3.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonGem3.TabIndex = 2;
-			this.itemButtonGem3.Text = "Gem #3";
-			this.itemButtonGem3.UseVisualStyleBackColor = true;
 			// 
 			// FormItemEditor
 			// 

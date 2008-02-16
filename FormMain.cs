@@ -646,7 +646,7 @@ namespace Rawr
         {
 			foreach (Item item in ItemCache.AllItems)
 			{
-				if (item.Id < 90000)
+				if (item.Id < 90000 && item.Slot == Item.ItemSlot.None)
 				{
 					Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing");
 					if (newItem == null)

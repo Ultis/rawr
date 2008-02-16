@@ -284,6 +284,28 @@ namespace Rawr
 									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
 									stats.AttackPower += ((float)int.Parse(spellDesc)) / 6f;
 								}
+								else if (spellDesc.Contains(" critical strike rating to the Leader of the Pack aura"))
+								{
+									spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" critical strike rating to the Leader of the Pack aura"));
+									spellDesc = spellDesc.Substring(spellDesc.LastIndexOf(' ') + 1);
+									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+									stats.CritRating += (float)int.Parse(spellDesc);
+								}
+								else if (spellDesc.StartsWith("Your Mangle ability also increases your attack power by "))
+								{
+									spellDesc = spellDesc.Substring("Your Mangle ability also increases your attack power by ".Length);
+									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+									stats.AttackPower += (float)int.Parse(spellDesc);
+								}
+								else if (spellDesc.StartsWith("Increases periodic damage done by Rip by "))
+								{
+									spellDesc = spellDesc.Substring("Increases periodic damage done by Rip by ".Length);
+									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+									stats.BonusRipDamagePerCPPerTick += (float)int.Parse(spellDesc);
+								}
 								else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance to increase your haste rating by "))
 								{
 									spellDesc = spellDesc.Substring("Your melee and ranged attacks have a chance to increase your haste rating by ".Length);
@@ -700,10 +722,14 @@ namespace Rawr
 				case 15:
 				case 25:
 				case 26:
+				case 28:
 					return Item.ItemSlot.Ranged;
 
 				case 24:
-					return Item.ItemSlot.Projectile;			
+					return Item.ItemSlot.Projectile;
+
+				case 27:
+					return Item.ItemSlot.ProjectileBag;
 				
 				default:
 					return Item.ItemSlot.None;
