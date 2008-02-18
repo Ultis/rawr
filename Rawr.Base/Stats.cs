@@ -222,21 +222,67 @@ namespace Rawr
 		/// <returns>The combined Stats object.</returns>
 		public static Stats operator +(Stats a, Stats b)
 		{
-                Stats newStats = new Stats();
-                foreach (PropertyInfo pi in typeof(Stats).GetProperties())
-                {
-                    if (IsMultiplicative(pi))
-                    {
-                        if (pi.PropertyType == typeof(float))
-                            pi.SetValue(newStats, (1f + (float)pi.GetValue(a, new object[0])) * (1f + (float)pi.GetValue(b, new object[0])) - 1f, new object[0]);
-                    }
-                    else
-                    {
-                        if (pi.PropertyType == typeof(float))
-                            pi.SetValue(newStats, (float)pi.GetValue(a, new object[0]) + (float)pi.GetValue(b, new object[0]), new object[0]);
-                    }
-                }
-                return newStats;
+			return new Stats()
+			{
+				//NOTE: This is hard-coded, not using reflection, due to speed and maintainability.
+				//GetValue and SetValue via reflection are *extremely* slow, and cause noticable lag in the app.
+				//We also tried at one point to dynamically generate this code at runtime, which worked, but was
+				//very complex and not maintainable by anyone who didn't already know wtf it was doing. So,
+				//we're back to just hard-coding it, which isn't that big of a deal.
+				Armor = a.Armor + b.Armor,
+				Health = a.Health + b.Health,
+				Agility = a.Agility + b.Agility,
+				Stamina = a.Stamina + b.Stamina,
+				AttackPower = a.AttackPower + b.AttackPower,
+				Strength = a.Strength + b.Strength,
+				Intellect = a.Intellect + b.Intellect,
+				Spirit = a.Spirit + b.Spirit,
+				WeaponDamage = a.WeaponDamage + b.WeaponDamage,
+				ArmorPenetration = a.ArmorPenetration + b.ArmorPenetration,
+				FrostResistance = a.FrostResistance + b.FrostResistance,
+				NatureResistance = a.NatureResistance + b.NatureResistance,
+				FireResistance = a.FireResistance + b.FireResistance,
+				ShadowResistance = a.ShadowResistance + b.ShadowResistance,
+				ArcaneResistance = a.ArcaneResistance + b.ArcaneResistance,
+				AllResist = a.AllResist + b.AllResist,
+				CritRating = a.CritRating + b.CritRating,
+				HitRating = a.HitRating + b.HitRating,
+				DodgeRating = a.DodgeRating + b.DodgeRating,
+				ParryRating = a.ParryRating + b.ParryRating,
+				BlockRating = a.BlockRating + b.BlockRating,
+				DefenseRating = a.DefenseRating + b.DefenseRating,
+				Resilience = a.Resilience + b.Resilience,
+				ExpertiseRating = a.ExpertiseRating + b.ExpertiseRating,
+				HasteRating = a.HasteRating + b.HasteRating,
+				Mp5 = a.Mp5 + b.Mp5,
+				BloodlustProc = a.BloodlustProc + b.BloodlustProc,
+				TerrorProc = a.TerrorProc + b.TerrorProc,
+				Miss = a.Miss + b.Miss,
+				BonusShredDamage = a.BonusShredDamage + b.BonusShredDamage,
+				BonusMangleDamage = a.BonusMangleDamage + b.BonusMangleDamage,
+				BonusRipDamagePerCPPerTick = a.BonusRipDamagePerCPPerTick + b.BonusRipDamagePerCPPerTick,
+				MangleCostReduction = a.MangleCostReduction + b.MangleCostReduction,
+				ExposeWeakness = a.ExposeWeakness + b.ExposeWeakness,
+				Bloodlust = a.Bloodlust + b.Bloodlust,
+				DrumsOfBattle = a.DrumsOfBattle + b.DrumsOfBattle,
+				DrumsOfWar = a.DrumsOfWar + b.DrumsOfWar,
+				BonusAgilityMultiplier = (1f + a.BonusAgilityMultiplier) * (1f + b.BonusAgilityMultiplier) - 1f,
+				BonusStrengthMultiplier = (1f + a.BonusStrengthMultiplier) * (1f + b.BonusStrengthMultiplier) - 1f,
+				BonusStaminaMultiplier = (1f + a.BonusStaminaMultiplier) * (1f + b.BonusStaminaMultiplier) - 1f,
+				BonusArmorMultiplier = (1f + a.BonusArmorMultiplier) * (1f + b.BonusArmorMultiplier) - 1f,
+				BonusAttackPowerMultiplier = (1f + a.BonusAttackPowerMultiplier) * (1f + b.BonusAttackPowerMultiplier) - 1f,
+				BonusCritMultiplier = (1f + a.BonusCritMultiplier) * (1f + b.BonusCritMultiplier) - 1f,
+				BonusRipDamageMultiplier = (1f + a.BonusRipDamageMultiplier) * (1f + b.BonusRipDamageMultiplier) - 1f,
+				BonusIntellectMultiplier = (1f + a.BonusIntellectMultiplier) * (1f + b.BonusIntellectMultiplier) - 1f,
+				BonusSpellCritMultiplier = (1f + a.BonusSpellCritMultiplier) * (1f + b.BonusSpellCritMultiplier) - 1f,
+				BonusSpellPowerMultiplier = (1f + a.BonusSpellPowerMultiplier) * (1f + b.BonusSpellPowerMultiplier) - 1f,
+				SpellCritRating = a.SpellCritRating + b.SpellCritRating,
+				SpellDamageRating = a.SpellDamageRating + b.SpellDamageRating,
+				SpellFireDamageRating = a.SpellFireDamageRating + b.SpellFireDamageRating,
+				SpellHasteRating = a.SpellHasteRating + b.SpellHasteRating,
+				SpellHitRating = a.SpellHitRating + b.SpellHitRating,
+				SpellShadowDamageRating = a.SpellShadowDamageRating + b.SpellShadowDamageRating
+			};
 		}
 
         
