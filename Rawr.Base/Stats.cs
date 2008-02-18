@@ -79,6 +79,32 @@ namespace Rawr
         public float AllResist { get; set; }
 
 
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Crit")]
+        public float SpellCritRating { get; set; }
+
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Damage")]
+        public float SpellDamageRating { get; set; }
+
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Shadow Damage")]
+        public float SpellShadowDamageRating { get; set; }
+
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Fire Damage")]
+        public float SpellFireDamageRating { get; set; }
+
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Hit")]
+        public float SpellHitRating { get; set; }
+
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Haste")]
+        public float SpellHasteRating { get; set; }
+        
+
+
         [Category("Combat Ratings")]
         [DisplayName("Crit")]
         public float CritRating { get; set; }
@@ -156,6 +182,10 @@ namespace Rawr
 		[DisplayName("% Stamina")]
         public float BonusStaminaMultiplier { get; set; }
 
+        [Multiplicative]
+        [DisplayName("% Int")]
+        public float BonusIntellectMultiplier { get; set; }
+
 		[Multiplicative]
 		[DisplayName("% Armor")]
         public float BonusArmorMultiplier { get; set; }
@@ -165,8 +195,16 @@ namespace Rawr
         public float BonusAttackPowerMultiplier { get; set; }
 
         [Multiplicative]
+        [DisplayName("% SP")]
+        public float BonusSpellPowerMultiplier { get; set; }
+
+        [Multiplicative]
         [DisplayName("% Crit Dmg")]
         public float BonusCritMultiplier { get; set; }
+
+        [Multiplicative]
+        [DisplayName("% Spell Crit Dmg")]
+        public float BonusSpellCritMultiplier { get; set; }
 
 		[Multiplicative]
 		[DisplayName("% Rip Dmg")]
@@ -184,53 +222,21 @@ namespace Rawr
 		/// <returns>The combined Stats object.</returns>
 		public static Stats operator +(Stats a, Stats b)
 		{
-			return new Stats()
-			{
-				Armor = a.Armor + b.Armor,
-				Health = a.Health + b.Health,
-				Agility = a.Agility + b.Agility,
-				Stamina = a.Stamina + b.Stamina,
-				AttackPower = a.AttackPower + b.AttackPower,
-				Strength = a.Strength + b.Strength,
-				Intellect = a.Intellect + b.Intellect,
-				Spirit = a.Spirit + b.Spirit,
-				WeaponDamage = a.WeaponDamage + b.WeaponDamage,
-				ArmorPenetration = a.ArmorPenetration + b.ArmorPenetration,
-				FrostResistance = a.FrostResistance + b.FrostResistance,
-				NatureResistance = a.NatureResistance + b.NatureResistance,
-				FireResistance = a.FireResistance + b.FireResistance,
-				ShadowResistance = a.ShadowResistance + b.ShadowResistance,
-				ArcaneResistance = a.ArcaneResistance + b.ArcaneResistance,
-				AllResist = a.AllResist + b.AllResist,
-				CritRating = a.CritRating + b.CritRating,
-				HitRating = a.HitRating + b.HitRating,
-				DodgeRating = a.DodgeRating + b.DodgeRating,
-                ParryRating = a.ParryRating + b.ParryRating,
-                BlockRating = a.BlockRating + b.BlockRating,
-				DefenseRating = a.DefenseRating + b.DefenseRating,
-				Resilience = a.Resilience + b.Resilience,
-				ExpertiseRating = a.ExpertiseRating + b.ExpertiseRating,
-				HasteRating = a.HasteRating + b.HasteRating,
-				Mp5 = a.Mp5 + b.Mp5,
-				BloodlustProc = a.BloodlustProc + b.BloodlustProc,
-				TerrorProc = a.TerrorProc + b.TerrorProc,
-				Miss = a.Miss + b.Miss,
-				BonusShredDamage = a.BonusShredDamage + b.BonusShredDamage,
-				BonusMangleDamage = a.BonusMangleDamage + b.BonusMangleDamage,
-				BonusRipDamagePerCPPerTick = a .BonusRipDamagePerCPPerTick + b.BonusRipDamagePerCPPerTick,
-				MangleCostReduction = a.MangleCostReduction + b.MangleCostReduction,
-				ExposeWeakness = a.ExposeWeakness + b.ExposeWeakness,
-				Bloodlust = a.Bloodlust + b.Bloodlust,
-				DrumsOfBattle = a.DrumsOfBattle + b.DrumsOfBattle,
-				DrumsOfWar = a.DrumsOfWar + b.DrumsOfWar,
-				BonusAgilityMultiplier = (1f + a.BonusAgilityMultiplier) * (1f + b.BonusAgilityMultiplier) - 1f,
-				BonusStrengthMultiplier = (1f + a.BonusStrengthMultiplier) * (1f + b.BonusStrengthMultiplier) - 1f,
-				BonusStaminaMultiplier = (1f + a.BonusStaminaMultiplier) * (1f + b.BonusStaminaMultiplier) - 1f,
-				BonusArmorMultiplier = (1f + a.BonusArmorMultiplier) * (1f + b.BonusArmorMultiplier) - 1f,
-				BonusAttackPowerMultiplier = (1f + a.BonusAttackPowerMultiplier) * (1f + b.BonusAttackPowerMultiplier) - 1f,
-				BonusCritMultiplier = (1f + a.BonusCritMultiplier) * (1f + b.BonusCritMultiplier) - 1f,
-				BonusRipDamageMultiplier = (1f + a.BonusRipDamageMultiplier) * (1f + b.BonusRipDamageMultiplier) - 1f
-			};
+                Stats newStats = new Stats();
+                foreach (PropertyInfo pi in typeof(Stats).GetProperties())
+                {
+                    if (IsMultiplicative(pi))
+                    {
+                        if (pi.PropertyType == typeof(float))
+                            pi.SetValue(newStats, (1f + (float)pi.GetValue(a, new object[0])) * (1f + (float)pi.GetValue(b, new object[0])) - 1f, new object[0]);
+                    }
+                    else
+                    {
+                        if (pi.PropertyType == typeof(float))
+                            pi.SetValue(newStats, (float)pi.GetValue(a, new object[0]) + (float)pi.GetValue(b, new object[0]), new object[0]);
+                    }
+                }
+                return newStats;
 		}
 
         
