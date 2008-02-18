@@ -197,6 +197,8 @@ namespace Rawr
 				CritRating = a.CritRating + b.CritRating,
 				HitRating = a.HitRating + b.HitRating,
 				DodgeRating = a.DodgeRating + b.DodgeRating,
+                ParryRating = a.ParryRating + b.ParryRating,
+                BlockRating = a.BlockRating + b.BlockRating,
 				DefenseRating = a.DefenseRating + b.DefenseRating,
 				Resilience = a.Resilience + b.Resilience,
 				ExpertiseRating = a.ExpertiseRating + b.ExpertiseRating,
