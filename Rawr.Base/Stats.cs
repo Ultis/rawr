@@ -91,11 +91,11 @@ namespace Rawr
         [DisplayName("Dodge")]
         public float DodgeRating { get; set; }
 
-        Category("Combat Ratings")]
+        [Category("Combat Ratings")]
         [DisplayName("Parry")]
         public float ParryRating { get; set; }
         
-        Category("Combat Ratings")]
+        [Category("Combat Ratings")]
         [DisplayName("Block")]
         public float BlockRating { get; set; }
         
