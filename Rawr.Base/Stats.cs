@@ -54,6 +54,9 @@ namespace Rawr
         [Category("Base Stats")]
         public float Spirit { get; set; }
 
+        [Category("Base Stats")]
+        public float Mana { get; set; }
+
         [Category("Resistances")]
         [DisplayName("Frost Res")]
         public float FrostResistance { get; set; }
@@ -281,7 +284,8 @@ namespace Rawr
 				SpellFireDamageRating = a.SpellFireDamageRating + b.SpellFireDamageRating,
 				SpellHasteRating = a.SpellHasteRating + b.SpellHasteRating,
 				SpellHitRating = a.SpellHitRating + b.SpellHitRating,
-				SpellShadowDamageRating = a.SpellShadowDamageRating + b.SpellShadowDamageRating
+				SpellShadowDamageRating = a.SpellShadowDamageRating + b.SpellShadowDamageRating,
+                Mana = a.Mana + b.Mana
 			};
 		}
 
