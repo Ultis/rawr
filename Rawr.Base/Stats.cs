@@ -30,6 +30,9 @@ namespace Rawr
         public float Health{get;set;}
 
         [Category("Base Stats")]
+        public float Mana { get; set; }
+
+        [Category("Base Stats")]
         public float Agility{get;set;}
 
         [Category("Base Stats")]
@@ -53,9 +56,6 @@ namespace Rawr
 
         [Category("Base Stats")]
         public float Spirit { get; set; }
-
-        [Category("Base Stats")]
-        public float Mana { get; set; }
 
         [Category("Resistances")]
         [DisplayName("Frost Res")]
@@ -97,6 +97,18 @@ namespace Rawr
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Fire Damage")]
         public float SpellFireDamageRating { get; set; }
+
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Frost Damage")]
+        public float SpellFrostDamageRating { get; set; }
+
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Arcane Damage")]
+        public float SpellArcaneDamageRating { get; set; }
+
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Penetration")]
+        public float SpellPenetration { get; set; }
 
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Hit")]
@@ -201,7 +213,6 @@ namespace Rawr
         [DisplayName("% SP")]
         public float BonusSpellPowerMultiplier { get; set; }
 
-
         [Multiplicative]
         [DisplayName("% Spirit")]
         public float BonusSpiritMultiplier { get; set; }
@@ -275,7 +286,7 @@ namespace Rawr
 				DrumsOfBattle = a.DrumsOfBattle + b.DrumsOfBattle,
 				DrumsOfWar = a.DrumsOfWar + b.DrumsOfWar,
 				BonusAgilityMultiplier = (1f + a.BonusAgilityMultiplier) * (1f + b.BonusAgilityMultiplier) - 1f,
-				BonusStrengthMultiplier = (1f + a.BonusStrengthMultiplier) * (1f + b.BonusStrengthMultiplier) - 1f,
+                BonusStrengthMultiplier = (1f + a.BonusStrengthMultiplier) * (1f + b.BonusStrengthMultiplier) - 1f,
 				BonusStaminaMultiplier = (1f + a.BonusStaminaMultiplier) * (1f + b.BonusStaminaMultiplier) - 1f,
 				BonusArmorMultiplier = (1f + a.BonusArmorMultiplier) * (1f + b.BonusArmorMultiplier) - 1f,
 				BonusAttackPowerMultiplier = (1f + a.BonusAttackPowerMultiplier) * (1f + b.BonusAttackPowerMultiplier) - 1f,
@@ -291,6 +302,9 @@ namespace Rawr
 				SpellHasteRating = a.SpellHasteRating + b.SpellHasteRating,
 				SpellHitRating = a.SpellHitRating + b.SpellHitRating,
 				SpellShadowDamageRating = a.SpellShadowDamageRating + b.SpellShadowDamageRating,
+				SpellFrostDamageRating = a.SpellFrostDamageRating + b.SpellFrostDamageRating,
+				SpellArcaneDamageRating = a.SpellArcaneDamageRating + b.SpellArcaneDamageRating,
+                SpellPenetration = a.SpellPenetration + b.SpellPenetration,
                 Mana = a.Mana + b.Mana
 			};
 		}
