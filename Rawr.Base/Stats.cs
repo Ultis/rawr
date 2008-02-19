@@ -163,6 +163,10 @@ namespace Rawr
         [DisplayName("Mana per 5 sec")]
         public float Mp5 { get; set; }
 
+        [Category("Combat Ratings")]
+        [DisplayName("Health per 5 sec")]
+        public float Hp5 { get; set; }
+
         [Category("Equipment Procs")]
         public float BloodlustProc { get; set; }
 
@@ -278,6 +282,7 @@ namespace Rawr
 				ExpertiseRating = a.ExpertiseRating + b.ExpertiseRating,
 				HasteRating = a.HasteRating + b.HasteRating,
 				Mp5 = a.Mp5 + b.Mp5,
+                Hp5 = a.Hp5 + b.Hp5,
 				BloodlustProc = a.BloodlustProc + b.BloodlustProc,
 				TerrorProc = a.TerrorProc + b.TerrorProc,
 				Miss = a.Miss + b.Miss,
