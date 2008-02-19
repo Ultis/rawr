@@ -155,11 +155,20 @@ namespace Rawr
 						_allBuffs.Add(new Buff() { Name = "Improved Blessing of Might", Category = BuffCategory.ClassBuffs,
 							Stats = new Stats() { AttackPower = (float)Math.Floor(220f * 0.2f) }, RequiredBuff = "Blessing of Might"});
 						_allBuffs.Add(new Buff() { Name = "Blessing of Kings", Category = BuffCategory.ClassBuffs,
-							Stats = new Stats() { BonusStrengthMultiplier = 0.1f, BonusAgilityMultiplier = 0.1f, BonusStaminaMultiplier = 0.1f }});
+							Stats = new Stats() { BonusStrengthMultiplier = 0.1f, BonusAgilityMultiplier = 0.1f, BonusStaminaMultiplier = 0.1f,  BonusIntellectMultiplier = 0.1f, BonusSpiritMultiplier = 0.1f}});
 						_allBuffs.Add(new Buff() { Name = "Unleashed Rage", Category = BuffCategory.ClassBuffs,
 							Stats = new Stats() { BonusAttackPowerMultiplier = 0.1f }}); 
 						_allBuffs.Add(new Buff() { Name = "Heroic Presence", Category = BuffCategory.ClassBuffs,
-							Stats = new Stats() { HitRating = 15.769f }}); 
+							Stats = new Stats() { HitRating = 15.769f, SpellHitRating = 12.62f }});
+                        _allBuffs.Add(new Buff() { Name = "Arcane Intellect", Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { Intellect = 40 }});
+                        _allBuffs.Add(new Buff() { Name = "Wrath of Air Totem", Category = BuffCategory.ClassBuffs, 
+                            Stats = new Stats() {SpellDamageRating = 101}});
+                        _allBuffs.Add(new Buff() { Name = "Totem of Wrath", Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() {SpellCritRating = 22.08f * 3f, SpellHitRating = 12.62f * 3f}});
+                        _allBuffs.Add(new Buff() { Name = "Moonkin Aura", Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { SpellCritRating = 22.08f * 5f }});
+
 
 						//what can i say... you're crazy
 						_allBuffs.Add(new Buff() { Name = "Elixir of Ironskin", Category = BuffCategory.ElixirsAndFlasks,
@@ -294,6 +303,8 @@ namespace Rawr
 							Stats = new Stats() { Armor = 1280 }, Type = BuffType.ShortDurationDW});
 						_allBuffs.Add(new Buff() { Name = "Brooch of the Immortal King", Category = BuffCategory.TemporaryBuffs,
 							Stats = new Stats() { Health = 1250 }, Type = BuffType.ShortDurationDW});
+
+                        
 
 						//american coca-cola
 						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Buff>));
