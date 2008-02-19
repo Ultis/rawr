@@ -201,6 +201,11 @@ namespace Rawr
         [DisplayName("% SP")]
         public float BonusSpellPowerMultiplier { get; set; }
 
+
+        [Multiplicative]
+        [DisplayName("% Spirit")]
+        public float BonusSpiritMultiplier { get; set; }
+
         [Multiplicative]
         [DisplayName("% Crit Dmg")]
         public float BonusCritMultiplier { get; set; }
@@ -279,6 +284,7 @@ namespace Rawr
 				BonusIntellectMultiplier = (1f + a.BonusIntellectMultiplier) * (1f + b.BonusIntellectMultiplier) - 1f,
 				BonusSpellCritMultiplier = (1f + a.BonusSpellCritMultiplier) * (1f + b.BonusSpellCritMultiplier) - 1f,
 				BonusSpellPowerMultiplier = (1f + a.BonusSpellPowerMultiplier) * (1f + b.BonusSpellPowerMultiplier) - 1f,
+                BonusSpiritMultiplier = (1f + a.BonusSpiritMultiplier) * (1f + b.BonusSpiritMultiplier) - 1f,
 				SpellCritRating = a.SpellCritRating + b.SpellCritRating,
 				SpellDamageRating = a.SpellDamageRating + b.SpellDamageRating,
 				SpellFireDamageRating = a.SpellFireDamageRating + b.SpellFireDamageRating,
