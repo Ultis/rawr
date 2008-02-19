@@ -159,6 +159,22 @@ namespace Rawr
                         _allEnchants.Add(new Enchant(1593, "Assault", Item.ItemSlot.Wrist, new Stats() { AttackPower = 24 }));
                         _allEnchants.Add(new Enchant(1594, "Assault", Item.ItemSlot.Hands, new Stats() { AttackPower = 26 }));
                         _allEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.MainHand, new Stats() { Agility = 20 }));
+
+                        //spell stufff
+                        _allEnchants.Add(new Enchant(2650, "Spellpower", Item.ItemSlot.Wrist, new Stats() {SpellDamageRating = 15}));
+                        _allEnchants.Add(new Enchant(2937, "Major Spellpower", Item.ItemSlot.Hands, new Stats() { SpellDamageRating = 20 }));
+                        _allEnchants.Add(new Enchant(2935, "Spell Strike", Item.ItemSlot.Hands, new Stats() { SpellHitRating = 15}));
+                        _allEnchants.Add(new Enchant(2928, "Spellpower", Item.ItemSlot.Finger, new Stats() { SpellDamageRating = 12 }));
+                        _allEnchants.Add(new Enchant(2669, "Major Spellpower", Item.ItemSlot.MainHand, new Stats() { SpellDamageRating = 40 }));
+                        _allEnchants.Add(new Enchant(2660, "Exceptional Mana", Item.ItemSlot.Chest, new Stats() { Mana = 150 }));
+                        _allEnchants.Add(new Enchant(2666, "Major Intellect", Item.ItemSlot.MainHand, new Stats() { Intellect = 30}));
+                        _allEnchants.Add(new Enchant(2666, "Restore Mana Prime", Item.ItemSlot.Wrist, new Stats() { Mp5 = 6 }));
+
+
+
+
+
+
 						
 
 						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
