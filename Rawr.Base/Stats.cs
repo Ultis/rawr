@@ -117,7 +117,11 @@ namespace Rawr
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Haste")]
         public float SpellHasteRating { get; set; }
-        
+
+        // percentage mana generation while casting
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Combat Mana Regeneration")]
+        public float SpellCombatManaRegeneration { get; set; }
 
 
         [Category("Combat Ratings")]
@@ -305,7 +309,8 @@ namespace Rawr
 				SpellFrostDamageRating = a.SpellFrostDamageRating + b.SpellFrostDamageRating,
 				SpellArcaneDamageRating = a.SpellArcaneDamageRating + b.SpellArcaneDamageRating,
                 SpellPenetration = a.SpellPenetration + b.SpellPenetration,
-                Mana = a.Mana + b.Mana
+                Mana = a.Mana + b.Mana,
+                SpellCombatManaRegeneration = a.SpellCombatManaRegeneration + b.SpellCombatManaRegeneration
 			};
 		}
 
