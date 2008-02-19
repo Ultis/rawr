@@ -120,6 +120,10 @@ namespace Rawr
 							Stats = new Stats() { Stamina = 79 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Power Word: Fortitude", Category = BuffCategory.ClassBuffs,
 							Stats = new Stats() { Stamina = (float)Math.Floor(79f * 0.3f) }, RequiredBuff = "Power Word: Fortitude"});
+                        _allBuffs.Add(new Buff() { Name = "Divine Spirit", Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { Spirit = 50 }});
+                        _allBuffs.Add(new Buff() { Name = "Improved Divine Spirit", Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { }, RequiredBuff = "Divine Spirit"});
 						_allBuffs.Add(new Buff() { Name = "Mark of the Wild", Category = BuffCategory.ClassBuffs,
 							Stats = new Stats() { Armor = 340, Strength = 14, Agility = 14, Stamina = 14, AllResist=25 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Mark of the Wild", Category = BuffCategory.ClassBuffs,
