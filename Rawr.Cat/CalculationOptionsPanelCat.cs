@@ -83,6 +83,7 @@ namespace Rawr
 			{
 				trackBarTargetArmor.Value = 100 * (trackBarTargetArmor.Value / 100);
 				labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
+				labelExposeWeakness.Text = trackBarExposeWeakness.Value.ToString() + "%";
 				labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
 				labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
 				labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";

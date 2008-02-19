@@ -18,7 +18,7 @@ namespace Rawr
 				{
 					_models = new SortedList<string, Type>();
 
-					DirectoryInfo info = new DirectoryInfo(".");
+					DirectoryInfo info = new DirectoryInfo(System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath));
 					foreach (FileInfo file in info.GetFiles("*.dll"))
 					{
 						try

@@ -102,9 +102,6 @@ namespace Rawr
 						Item.ItemType.None,
 						Item.ItemType.Leather,
 						Item.ItemType.Idol,
-						Item.ItemType.OneHandSword,
-						Item.ItemType.Dagger,
-						Item.ItemType.OneHandMace,
 						Item.ItemType.Staff,
 						Item.ItemType.TwoHandMace
 					});
@@ -151,7 +148,7 @@ namespace Rawr
 			float chanceDodge = Math.Max(0f, 0.05f - expertiseBonus);
 			float chanceMiss = Math.Max(0f, 0.09f - hitBonus) + chanceDodge;
 						
-			float meleeDamage = stats.WeaponDamage + (768f + stats.AttackPower) / 14f;
+			float meleeDamage = stats.WeaponDamage + (768f + attackPower) / 14f;
 			float mangleCost = 40f - stats.MangleCostReduction;
 			float totalMangleCost = 1f / (1f - chanceMiss) * (mangleCost * (1f - chanceMiss) + mangleCost / 5f * chanceMiss);
 			float mangleDamage = 1.2f * (meleeDamage * 1.6f + 264f + stats.BonusMangleDamage);
