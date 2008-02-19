@@ -168,7 +168,7 @@ namespace Rawr
                         _allEnchants.Add(new Enchant(2669, "Major Spellpower", Item.ItemSlot.MainHand, new Stats() { SpellDamageRating = 40 }));
                         _allEnchants.Add(new Enchant(2660, "Exceptional Mana", Item.ItemSlot.Chest, new Stats() { Mana = 150 }));
                         _allEnchants.Add(new Enchant(2666, "Major Intellect", Item.ItemSlot.MainHand, new Stats() { Intellect = 30}));
-                        _allEnchants.Add(new Enchant(2666, "Restore Mana Prime", Item.ItemSlot.Wrist, new Stats() { Mp5 = 6 }));
+                        _allEnchants.Add(new Enchant(2679, "Restore Mana Prime", Item.ItemSlot.Wrist, new Stats() { Mp5 = 6 }));
 
 
 
