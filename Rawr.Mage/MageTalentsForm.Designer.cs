@@ -1899,6 +1899,7 @@ namespace Rawr.Mage
             this.Name = "MageTalentsForm";
             this.Text = "Mage Talents";
             this.Load += new System.EventHandler(this.MageTalentsForm_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MageTalentsForm_FormClosing);
             this.groupBoxArcane.ResumeLayout(false);
             this.groupBoxArcane.PerformLayout();
             this.groupBoxFire.ResumeLayout(false);

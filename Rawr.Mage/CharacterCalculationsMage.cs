@@ -63,24 +63,18 @@ namespace Rawr.Mage
             dictValues.Add("Fire Damage", FireDamage.ToString());
             dictValues.Add("Frost Damage", FrostDamage.ToString());
             dictValues.Add("MP5", BasicStats.Mp5.ToString());
-            dictValues.Add("Mana Regen in 5SR", ManaRegen5SR.ToString());
-            dictValues.Add("Mana Regen", ManaRegen.ToString());
-            dictValues.Add("Mana Regen Drinking", ManaRegenDrinking.ToString());
-            dictValues.Add("Health Regen in Combat", HealthRegenCombat.ToString());
-            dictValues.Add("Health Regen", HealthRegen.ToString());
-            dictValues.Add("Health Regen Eating", HealthRegenEating.ToString());
-            dictValues.Add("Arcane Resistance", BasicStats.ArcaneResistance.ToString());
-            dictValues.Add("Fire Resistance", BasicStats.FireResistance.ToString());
-            dictValues.Add("Nature Resistance", BasicStats.NatureResistance.ToString());
-            dictValues.Add("Frost Resistance", BasicStats.FrostResistance.ToString());
-            dictValues.Add("Shadow Resistance", BasicStats.ShadowResistance.ToString());
-            dictValues.Add("Physical Mitigation", MeleeMitigation.ToString());
+            dictValues.Add("Mana Regen", Math.Floor(ManaRegen * 5).ToString() + String.Format("*Mana Regen in 5SR: {0}\nMana Regen Drinking: {1}", Math.Floor(ManaRegen5SR * 5), Math.Floor(ManaRegenDrinking * 5)));
+            dictValues.Add("Health Regen", Math.Floor(HealthRegenCombat * 5).ToString() + String.Format("*Health Regen Eating: {0}", Math.Floor(HealthRegenEating * 5)));
+            dictValues.Add("Arcane Resist", BasicStats.ArcaneResistance.ToString());
+            dictValues.Add("Fire Resist", BasicStats.FireResistance.ToString());
+            dictValues.Add("Nature Resist", BasicStats.NatureResistance.ToString());
+            dictValues.Add("Frost Resist", BasicStats.FrostResistance.ToString());
+            dictValues.Add("Shadow Resist", BasicStats.ShadowResistance.ToString());
+            dictValues.Add("Physical Mitigation", String.Format("{0:F}%", 100 * MeleeMitigation));
             dictValues.Add("Resilience", BasicStats.Resilience.ToString());
             dictValues.Add("Defense", Defense.ToString());
-            dictValues.Add("Physical Crit Reduction", PhysicalCritReduction.ToString());
-            dictValues.Add("Spell Crit Reduction", SpellCritReduction.ToString());
-            dictValues.Add("Crit Damage Reduction", CritDamageReduction.ToString());
-            dictValues.Add("Dodge", Dodge.ToString());
+            dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
+            dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
 
             return dictValues;
         }

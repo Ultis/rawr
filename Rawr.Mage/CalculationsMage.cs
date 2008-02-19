@@ -43,23 +43,17 @@ namespace Rawr.Mage
                     "Spell Stats:Fire Damage",
                     "Spell Stats:Frost Damage",
                     "Regeneration:MP5",
-                    "Regeneration:Mana Regen in 5SR",
                     "Regeneration:Mana Regen",
-                    "Regeneration:Mana Regen Drinking",
-                    "Regeneration:Health Regen in Combat",
                     "Regeneration:Health Regen",
-                    "Regeneration:Health Regen Eating",
-                    "Survivability:Arcane Resistance",
-                    "Survivability:Fire Resistance",
-                    "Survivability:Nature Resistance",
-                    "Survivability:Frost Resistance",
-                    "Survivability:Shadow Resistance",
+                    "Survivability:Arcane Resist",
+                    "Survivability:Fire Resist",
+                    "Survivability:Nature Resist",
+                    "Survivability:Frost Resist",
+                    "Survivability:Shadow Resist",
                     "Survivability:Physical Mitigation",
                     "Survivability:Resilience",
                     "Survivability:Defense",
-                    "Survivability:Physical Crit Reduction",
-                    "Survivability:Spell Crit Reduction",
-                    "Survivability:Crit Damage Reduction",
+                    "Survivability:Crit Reduction",
                     "Survivability:Dodge",
 				};
                 return _characterDisplayCalculationLabels;
@@ -211,6 +205,16 @@ namespace Rawr.Mage
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect);
             statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f + 0.5 * statsTotal.Intellect * int.Parse(character.CalculationOptions["ArcaneFortitude"]));
 
+            int magicAbsorption = 2 * int.Parse(character.CalculationOptions["ArcaneFortitude"]);
+            statsTotal.ArcaneResistance += magicAbsorption;
+            statsTotal.FireResistance += magicAbsorption;
+            statsTotal.FrostResistance += magicAbsorption;
+            statsTotal.ShadowResistance += magicAbsorption;
+            statsTotal.NatureResistance += magicAbsorption;
+
+            if (character.CalculationOptions["MageArmor"].Equals("Mage")) statsTotal.SpellCombatManaRegeneration += 0.3f;
+            statsTotal.SpellCombatManaRegeneration += 0.1f * int.Parse(character.CalculationOptions["ArcaneMeditation"]);
+
             return statsTotal;
         }
 
@@ -259,7 +263,7 @@ namespace Rawr.Mage
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.Stamina + stats.Intellect + stats.Spirit + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.Mp5 + stats.Resilience + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.Armor + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.Mp5 + stats.SpellCombatManaRegeneration) > 0;
+            return stats.ToString().Equals("") || (stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.Stamina + stats.Intellect + stats.Spirit + stats.Health + stats.Mp5 + stats.Resilience + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration) > 0;
         }
     }
 }

@@ -61,5 +61,14 @@ namespace Rawr.Mage
             Character.CalculationOptions[talent] = cb.SelectedItem.ToString();
             Character.OnItemsChanged();
         }
+
+        private void MageTalentsForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                Visible = false;
+            }
+        }
     }
 }
