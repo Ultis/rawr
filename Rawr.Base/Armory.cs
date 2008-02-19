@@ -217,6 +217,7 @@ namespace Rawr
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDodgeRating")) { stats.DodgeRating = int.Parse(node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusResilienceRating")) { stats.Resilience = int.Parse(node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusStamina")) { stats.Stamina = int.Parse(node.InnerText); }
+                        foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusIntellect")) { stats.Intellect = int.Parse(node.InnerText); }
 
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusStrength")) { stats.Strength = int.Parse(node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHitRating")) { stats.HitRating = int.Parse(node.InnerText); }
@@ -230,6 +231,13 @@ namespace Rawr
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/frostResist")) { stats.FrostResistance = int.Parse(node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/natureResist")) { stats.NatureResistance = int.Parse(node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/shadowResist")) { stats.ShadowResistance = int.Parse(node.InnerText); }
+
+                        foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusCritSpellRating")) { stats.SpellCritRating = int.Parse(node.InnerText); }
+                        foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHitSpellRating")) { stats.SpellHitRating = int.Parse(node.InnerText); }
+                        foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHasteSpellRating")) { stats.SpellHasteRating = int.Parse(node.InnerText); }
+                        
+
+                        
 						
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/spellData/spell"))
 						{
@@ -406,6 +414,36 @@ namespace Rawr
 									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
 									stats.TerrorProc += int.Parse(spellDesc);
 								}
+                                else if (spellDesc.StartsWith("Increases damage and healing done by magical spells and effects by up to"))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases damage and healing done by magical spells and effects by up to".Length);
+                                    spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
+                                    stats.SpellDamageRating += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Increases damage done by Shadow spells and effects by up to"))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases damage done by Shadow spells and effects by up to".Length);
+                                    spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
+                                    stats.SpellShadowDamageRating += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Increases damage done by Fire spells and effects by up to"))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases damage done by Fire spells and effects by up to".Length);
+                                    spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
+                                    stats.SpellFireDamageRating += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Improves spell haste rating by"))
+                                {
+                                    spellDesc = spellDesc.Substring("Improves spell haste rating by".Length);
+                                    spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
+                                    stats.SpellHasteRating += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Improves spell critical strike rating by"))
+                                {
+                                    spellDesc = spellDesc.Substring("Improves spell critical strike rating by".Length);
+                                    spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
+                                    stats.SpellCritRating += int.Parse(spellDesc);
+                                }
 							}
 						}
 
@@ -465,6 +503,21 @@ namespace Rawr
 									case "Resilience Rating":
 										sockets.Stats.Resilience = socketBonusValue;
 										break;
+                                    case "Spell Damage":
+                                        sockets.Stats.SpellDamageRating = socketBonusValue;
+                                        break;
+                                    case "Spell Hit Rating":
+                                        sockets.Stats.SpellHitRating = socketBonusValue;
+                                        break;
+                                    case "Intellect":
+                                        sockets.Stats.Intellect = socketBonusValue;
+                                        break;
+                                    case "Spell Crit Rating":
+                                        sockets.Stats.SpellCritRating = socketBonusValue;
+                                        break;
+                                    case "Spell Haste Rating":
+                                        sockets.Stats.SpellHasteRating = socketBonusValue;
+                                        break;
 								}
 							}
 							catch { }
@@ -528,7 +581,28 @@ namespace Rawr
 										case "Resilience Rating":
 											stats.Resilience = gemBonusValue;
 											break;
-									}
+                                        case "Spell Hit Rating":
+                                            stats.SpellHitRating = gemBonusValue;
+                                            break;
+                                        case "Spell Damage":
+                                            stats.SpellDamageRating = gemBonusValue;
+                                            break;
+                                        case "Spell Critical Rating":
+                                            stats.SpellCritRating = gemBonusValue;
+                                            break;
+                                        case "Mana every 5 seconds" :
+                                        case "Mana ever 5 Sec" :
+                                        case "mana per 5 sec" :
+                                        case "Mana per 5 Seconds" :
+                                            stats.Mp5 = gemBonusValue;
+                                            break;
+                                        case "Intellect" :
+                                            stats.Intellect = gemBonusValue;
+                                            break; 
+                                        case "Spirit" :
+                                            stats.Spirit = gemBonusValue;
+                                            break;
+                                    }
 								}
 								catch { }
 							}
