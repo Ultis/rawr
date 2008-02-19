@@ -235,6 +235,9 @@ namespace Rawr
                         foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusCritSpellRating")) { stats.SpellCritRating = int.Parse(node.InnerText); }
                         foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHitSpellRating")) { stats.SpellHitRating = int.Parse(node.InnerText); }
                         foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHasteSpellRating")) { stats.SpellHasteRating = int.Parse(node.InnerText); }
+
+                        foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusMana")) { stats.Mana = int.Parse(node.InnerText); }
+                        foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpirit")) { stats.Spirit = int.Parse(node.InnerText); }
                         
 
                         
@@ -516,6 +519,9 @@ namespace Rawr
                                         sockets.Stats.SpellCritRating = socketBonusValue;
                                         break;
                                     case "Spell Haste Rating":
+                                        sockets.Stats.SpellHasteRating = socketBonusValue;
+                                        break;
+                                    case "Spirit":
                                         sockets.Stats.SpellHasteRating = socketBonusValue;
                                         break;
 								}
