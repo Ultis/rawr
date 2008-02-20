@@ -87,6 +87,10 @@ namespace Rawr
         public float SpellCritRating { get; set; }
 
         [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Frost Crit")]
+        public float SpellFrostCritRating { get; set; }
+
+        [Category("Spell Combat Ratings")]
         [DisplayName("Spell Damage")]
         public float SpellDamageRating { get; set; }
 
@@ -222,6 +226,22 @@ namespace Rawr
         public float BonusSpellPowerMultiplier { get; set; }
 
         [Multiplicative]
+        [DisplayName("% Fire Damage")]
+        public float BonusFireSpellPowerMultiplier { get; set; }
+
+        [Multiplicative]
+        [DisplayName("% Shadow Damage")]
+        public float BonusShadowSpellPowerMultiplier { get; set; }
+
+        [Multiplicative]
+        [DisplayName("% Arcane Damage")]
+        public float BonusArcaneSpellPowerMultiplier { get; set; }
+
+        [Multiplicative]
+        [DisplayName("% Frost Damage")]
+        public float BonusFrostSpellPowerMultiplier { get; set; }
+
+        [Multiplicative]
         [DisplayName("% Spirit")]
         public float BonusSpiritMultiplier { get; set; }
 
@@ -304,9 +324,14 @@ namespace Rawr
 				BonusIntellectMultiplier = (1f + a.BonusIntellectMultiplier) * (1f + b.BonusIntellectMultiplier) - 1f,
 				BonusSpellCritMultiplier = (1f + a.BonusSpellCritMultiplier) * (1f + b.BonusSpellCritMultiplier) - 1f,
 				BonusSpellPowerMultiplier = (1f + a.BonusSpellPowerMultiplier) * (1f + b.BonusSpellPowerMultiplier) - 1f,
+                BonusFireSpellPowerMultiplier = (1f + a.BonusFireSpellPowerMultiplier) * (1f + b.BonusFireSpellPowerMultiplier) - 1f,
+                BonusFrostSpellPowerMultiplier = (1f + a.BonusFrostSpellPowerMultiplier) * (1f + b.BonusFrostSpellPowerMultiplier) - 1f,
+                BonusArcaneSpellPowerMultiplier = (1f + a.BonusArcaneSpellPowerMultiplier) * (1f + b.BonusArcaneSpellPowerMultiplier) - 1f,
+                BonusShadowSpellPowerMultiplier = (1f + a.BonusShadowSpellPowerMultiplier) * (1f + b.BonusShadowSpellPowerMultiplier) - 1f,
                 BonusSpiritMultiplier = (1f + a.BonusSpiritMultiplier) * (1f + b.BonusSpiritMultiplier) - 1f,
 				SpellCritRating = a.SpellCritRating + b.SpellCritRating,
-				SpellDamageRating = a.SpellDamageRating + b.SpellDamageRating,
+                SpellFrostCritRating = a.SpellFrostCritRating + b.SpellFrostCritRating,
+                SpellDamageRating = a.SpellDamageRating + b.SpellDamageRating,
 				SpellFireDamageRating = a.SpellFireDamageRating + b.SpellFireDamageRating,
 				SpellHasteRating = a.SpellHasteRating + b.SpellHasteRating,
 				SpellHitRating = a.SpellHitRating + b.SpellHitRating,

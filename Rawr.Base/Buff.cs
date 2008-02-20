@@ -125,10 +125,10 @@ namespace Rawr
                         _allBuffs.Add(new Buff() { Name = "Improved Divine Spirit", Category = BuffCategory.ClassBuffs,
                             Stats = new Stats() { }, RequiredBuff = "Divine Spirit"});
 						_allBuffs.Add(new Buff() { Name = "Mark of the Wild", Category = BuffCategory.ClassBuffs,
-							Stats = new Stats() { Armor = 340, Strength = 14, Agility = 14, Stamina = 14, AllResist=25 }});
+							Stats = new Stats() { Armor = 340, Strength = 14, Agility = 14, Stamina = 14, Intellect = 14, Spirit = 14, AllResist=25 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Mark of the Wild", Category = BuffCategory.ClassBuffs,
-							Stats = new Stats() { Armor = (float)Math.Floor(340f * 0.35f), Strength = (float)Math.Floor(14f * 0.35f), 
-								Agility = (float)Math.Floor(14f * 0.35f), Stamina = (float)Math.Floor(14f * 0.35f),
+							Stats = new Stats() { Armor = (float)Math.Floor(340f * 0.35f), Strength = (float)Math.Floor(14f * 0.35f),
+                                Agility = (float)Math.Floor(14f * 0.35f), Stamina = (float)Math.Floor(14f * 0.35f), Intellect = (float)Math.Floor(14f * 0.35f), Spirit = (float)Math.Floor(14f * 0.35f),
                                 AllResist=(float)Math.Floor(25f * 0.35f)}, RequiredBuff = "Mark of the Wild"});
 						_allBuffs.Add(new Buff() { Name = "Blood Pact", Category = BuffCategory.ClassBuffs,
 							Stats = new Stats() { Stamina = 66 }});
@@ -188,20 +188,98 @@ namespace Rawr
 							Stats = new Stats() { Agility = 35, CritRating = 20 },
 							ConflictingBuffs = new string[] { "Elixir of Mastery", "Flask of Fortification", "Flask of Chromatic Wonder", "Flask of Relentless Assault" }});
 						_allBuffs.Add(new Buff() { Name = "Elixir of Mastery", Category = BuffCategory.ElixirsAndFlasks,
-							Stats = new Stats() { Agility = 15, Stamina = 15, Strength = 15 },
+							Stats = new Stats() { Agility = 15, Stamina = 15, Strength = 15, Intellect = 15, Spirit = 15 },
 							ConflictingBuffs = new string[] { "Elixir of Major Agility", "Flask of Fortification", "Flask of Chromatic Wonder", "Flask of Relentless Assault" }});
 						_allBuffs.Add(new Buff() { Name = "Flask of Fortification", Category = BuffCategory.ElixirsAndFlasks,
 							Stats = new Stats() { Health = 500, DefenseRating = 10 },
 							ConflictingBuffs = new string[] { "Elixir of Ironskin", "Elixir of Major Defense", "Elixir of Major Fortitude", "Elixir of Major Agility", "Elixir of Mastery", "Flask of Chromatic Wonder", "Flask of Relentless Assault" }});
 						_allBuffs.Add(new Buff() { Name = "Flask of Chromatic Wonder", Category = BuffCategory.ElixirsAndFlasks,
-							Stats = new Stats() { Agility = 18, Strength = 18, Stamina = 18, AllResist=35},
+							Stats = new Stats() { Agility = 18, Strength = 18, Stamina = 18, Intellect = 18, Spirit = 18, AllResist=35},
 							ConflictingBuffs = new string[] { "Elixir of Ironskin", "Elixir of Major Defense", "Elixir of Major Fortitude", "Elixir of Major Agility", "Elixir of Mastery", "Flask of Fortification", "Flask of Relentless Assault" }});
 						_allBuffs.Add(new Buff() { Name = "Flask of Relentless Assault", Category = BuffCategory.ElixirsAndFlasks,
 							Stats = new Stats() { AttackPower = 120 }, 
 							ConflictingBuffs = new string[] { "Elixir of Ironskin", "Elixir of Major Defense", "Elixir of Major Fortitude", "Elixir of Major Agility", "Elixir of Mastery", "Flask of Chromatic Wonder", "Flask of Fortification" }
 						});
-						
-						//all the constant
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Adept's Elixir",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { SpellDamageRating = 24, SpellCritRating = 24 },
+                            ConflictingBuffs = new string[] { }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Elixir of Major Firepower",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { SpellFireDamageRating = 55 },
+                            ConflictingBuffs = new string[] { }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Elixir of Major Frost Power",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { SpellFrostDamageRating = 55 },
+                            ConflictingBuffs = new string[] { }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Elixir of Major Shadow Power",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { SpellShadowDamageRating = 55 },
+                            ConflictingBuffs = new string[] { }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Elixir of Draenic Wisdom",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { Intellect = 30, Spirit = 30 },
+                            ConflictingBuffs = new string[] { }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Elixir of Major Mageblood",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { Mp5 = 16 },
+                            ConflictingBuffs = new string[] { }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Flask of Blinding Light",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { SpellArcaneDamageRating = 80 },
+                            ConflictingBuffs = new string[] { }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Flask of Distilled Wisdom",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { Intellect = 65 },
+                            ConflictingBuffs = new string[] { }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Flask of Mighty Restoration",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { Mp5 = 25 },
+                            ConflictingBuffs = new string[] { }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Flask of Pure Death",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { SpellFireDamageRating = 80, SpellFrostDamageRating = 80, SpellShadowDamageRating = 80 },
+                            ConflictingBuffs = new string[] { }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Flask of Supremen Power",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { SpellDamageRating = 70 },
+                            ConflictingBuffs = new string[] { }
+                        });
+                        
+                        
+                        //all the constant
 						_allBuffs.Add(new Buff() { Name = "30 Stamina Food", Category = BuffCategory.OtherConsumables,
 							Stats = new Stats() { Stamina = 30 }, ConflictingBuffs = new string[] { "20 Agility Food", "20 Hit Rating Food", "20 Strength Food", "40 Attack Power Food"}});
 						_allBuffs.Add(new Buff() { Name = "20 Agility Food", Category = BuffCategory.OtherConsumables,
@@ -222,6 +300,35 @@ namespace Rawr
 							Stats = new Stats() { WeaponDamage = 12, CritRating = 14 }, ConflictingBuffs = new string[] { "Elemental Sharpening Stone" }});
 						_allBuffs.Add(new Buff() { Name = "Elemental Sharpening Stone", Category = BuffCategory.OtherConsumables,
 							Stats = new Stats() { CritRating = 28 }, ConflictingBuffs = new string[] { "Adamantite Weightstone" }});
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Superior Wizard Oil",
+                            Category = BuffCategory.OtherConsumables,
+                            Stats = new Stats() { SpellDamageRating = 42 },
+                            ConflictingBuffs = new string[] { "Brilliant Wizard Oil" }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Brilliant Wizard Oil",
+                            Category = BuffCategory.OtherConsumables,
+                            Stats = new Stats() { SpellDamageRating = 36, SpellCritRating = 14 },
+                            ConflictingBuffs = new string[] { "Superior Wizard Oil" }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "20 Spell Crit Food",
+                            Category = BuffCategory.OtherConsumables,
+                            Stats = new Stats() { SpellCritRating = 20, Spirit = 20 },
+                            ConflictingBuffs = new string[] { "23 Spell Damage Food" }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "23 Spell Damage Food",
+                            Category = BuffCategory.OtherConsumables,
+                            Stats = new Stats() { SpellDamageRating = 23, Spirit = 20 },
+                            ConflictingBuffs = new string[] { "20 Spell Crit Food" }
+                        });
+
 						
 						//super color motion
 						_allBuffs.Add(new Buff() { Name = "Scorpid Sting", Category = BuffCategory.Debuffs,
@@ -249,6 +356,52 @@ namespace Rawr
 							Stats = new Stats() { ExposeWeakness = 1 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Judgement of the Crusade", Category = BuffCategory.Debuffs,
 							Stats = new Stats() { CritRating = 66.24f }});
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Improved Scorch",
+                            Category = BuffCategory.Debuffs,
+                            Stats = new Stats() { BonusFireSpellPowerMultiplier = 0.15f }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Winter's Chill",
+                            Category = BuffCategory.Debuffs,
+                            Stats = new Stats() { SpellFrostCritRating = 22.08f * 10f }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Curse of Shadow",
+                            Category = BuffCategory.Debuffs,
+                            Stats = new Stats() { BonusShadowSpellPowerMultiplier = 0.1f, BonusArcaneSpellPowerMultiplier = 0.1f },
+                            ConflictingBuffs = new string[] {"Curse of Shadow (Malediction)"}
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Curse of the Elements",
+                            Category = BuffCategory.Debuffs,
+                            Stats = new Stats() { BonusFireSpellPowerMultiplier = 0.1f, BonusFrostSpellPowerMultiplier = 0.1f },
+                            ConflictingBuffs = new string[] {"Curse of the Elements (Malediction)"}
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Curse of Shadow (Malediction)",
+                            Category = BuffCategory.Debuffs,
+                            Stats = new Stats() { BonusShadowSpellPowerMultiplier = 0.13f, BonusArcaneSpellPowerMultiplier = 0.13f },
+                            ConflictingBuffs = new string[] {"Curse of Shadow"}
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Curse of the Elements (Malediction)",
+                            Category = BuffCategory.Debuffs,
+                            Stats = new Stats() { BonusFireSpellPowerMultiplier = 0.13f, BonusFrostSpellPowerMultiplier = 0.13f },
+                            ConflictingBuffs = new string[] {"Curse of the Elements"}
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Judgement of Wisdom",
+                            Category = BuffCategory.Debuffs,
+                            Stats = new Stats() { },
+                        });
 
 						//burning senses
 						_allBuffs.Add(new Buff() { Name = "Malorne 2 Piece Bonus", Category = BuffCategory.SetBonuses,
