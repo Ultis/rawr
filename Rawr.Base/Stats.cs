@@ -197,6 +197,16 @@ namespace Rawr
 
 		public float DrumsOfBattle { get; set; }
 
+        public float ArcaneBlastBonus { get; set; }
+
+        [DisplayName("Spell Damage Increase for 6 sec on Crit")]
+        public float SpellDamageOnCritProc { get; set; }
+
+        public float EvocationExtension { get; set; }
+
+        [Multiplicative]
+        public float BonusMageNukeMultiplier { get; set; }
+
 		[Multiplicative]
 		[DisplayName("% Agility")]
         public float BonusAgilityMultiplier { get; set; }
@@ -340,6 +350,10 @@ namespace Rawr
 				SpellArcaneDamageRating = a.SpellArcaneDamageRating + b.SpellArcaneDamageRating,
                 SpellPenetration = a.SpellPenetration + b.SpellPenetration,
                 Mana = a.Mana + b.Mana,
+                ArcaneBlastBonus = a.ArcaneBlastBonus + b.ArcaneBlastBonus,
+                SpellDamageOnCritProc = a.SpellDamageOnCritProc + b.SpellDamageOnCritProc,
+                EvocationExtension = a.EvocationExtension + b.EvocationExtension,
+                BonusMageNukeMultiplier = (1f + a.BonusMageNukeMultiplier) * (1f + b.BonusMageNukeMultiplier) - 1f,
                 SpellCombatManaRegeneration = a.SpellCombatManaRegeneration + b.SpellCombatManaRegeneration
 			};
 		}

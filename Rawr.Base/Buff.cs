@@ -429,6 +429,38 @@ namespace Rawr
 							Stats = new Stats() { BonusRipDamageMultiplier = .15f }, SetName = "Thunderheart Harness", SetThreshold = 4});
 						_allBuffs.Add(new Buff() { Name = "Gladiator 2 Piece Bonus", Category = BuffCategory.SetBonuses,
 							Stats = new Stats() { Resilience = 35 }, SetName = "Gladiator's Sanctuary", SetThreshold = 2});
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Tirisfal 2 Piece Bonus",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { ArcaneBlastBonus = .2f },
+                            SetName = "Tirisfal Regalia",
+                            SetThreshold = 2
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Tirisfal 4 Piece Bonus",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { SpellDamageOnCritProc = 70f },
+                            SetName = "Tirisfal Regalia",
+                            SetThreshold = 4
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Tempest 2 Piece Bonus",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { EvocationExtension = 2f },
+                            SetName = "Tempest Regalia",
+                            SetThreshold = 2
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Tempest 4 Piece Bonus",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { BonusMageNukeMultiplier = 0.05f },
+                            SetName = "Tempest Regalia",
+                            SetThreshold = 4
+                        });
 
 						//i think you're slipping
 						_allBuffs.Add(new Buff() { Name = "Bloodlust", Category = BuffCategory.TemporaryBuffs,
