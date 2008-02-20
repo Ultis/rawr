@@ -116,7 +116,7 @@ namespace Rawr.Moonkin
             CharacterCalculationsMoonkin calcs = new CharacterCalculationsMoonkin();
             Stats stats = GetCharacterStats(character, additionalItem);
             calcs.BasicStats = stats;
-            calcs.C
+            //calcs.C
             calcs.SubPoints[0] = 0.0f;
             calcs.SubPoints[1] = 0.0f;
             calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
