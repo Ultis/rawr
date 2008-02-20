@@ -204,6 +204,9 @@ namespace Rawr
 
         public float EvocationExtension { get; set; }
 
+        [Category("Equipment Procs")]
+        public int LightningCapacitorProc { get; set; }
+
         [Multiplicative]
         public float BonusMageNukeMultiplier { get; set; }
 
@@ -350,6 +353,7 @@ namespace Rawr
 				SpellArcaneDamageRating = a.SpellArcaneDamageRating + b.SpellArcaneDamageRating,
                 SpellPenetration = a.SpellPenetration + b.SpellPenetration,
                 Mana = a.Mana + b.Mana,
+                LightningCapacitorProc = a.LightningCapacitorProc + b.LightningCapacitorProc,
                 ArcaneBlastBonus = a.ArcaneBlastBonus + b.ArcaneBlastBonus,
                 SpellDamageOnCritProc = a.SpellDamageOnCritProc + b.SpellDamageOnCritProc,
                 EvocationExtension = a.EvocationExtension + b.EvocationExtension,

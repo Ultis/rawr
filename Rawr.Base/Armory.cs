@@ -581,7 +581,11 @@ namespace Rawr
                                     spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                                     stats.SpellCritRating += int.Parse(spellDesc);
                                 }
-							}
+                                else if (spellDesc.StartsWith("You gain an Electrical Charge each time you cause a damaging spell critical strike.  When you reach 3 Electrical Charges, they will release, firing a Lightning Bolt for 694 to 806 damage.  Electrical Charge cannot be gained more often than once every 2.5 sec."))
+                                {
+                                    stats.LightningCapacitorProc = 1;
+                                }
+                            }
 						}
 
 						XmlNodeList socketNodes = docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socket");
