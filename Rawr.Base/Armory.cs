@@ -667,9 +667,17 @@ namespace Rawr
 						}
 						foreach (XmlNode nodeGemProperties in docItem.SelectNodes("page/itemTooltips/itemTooltip/gemProperties"))
 						{
-							string[] gemBonuses = nodeGemProperties.InnerText.Split(new string[] { " and ", " & " }, StringSplitOptions.None);
+							string[] gemBonuses = nodeGemProperties.InnerText.Split(new string[] { " and ", " & ", ", " }, StringSplitOptions.None);
 							foreach (string gemBonus in gemBonuses)
 							{
+                                if (gemBonus == "Spell Damage +6")
+                                {
+                                    stats.SpellDamageRating = 6.0f;
+                                }
+                                else if (gemBonus == "Stamina +6")
+                                {
+                                    stats.Stamina = 6.0f;
+                                }
 								try
 								{
 									int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));

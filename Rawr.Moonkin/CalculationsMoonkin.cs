@@ -93,7 +93,6 @@ namespace Rawr.Moonkin
                             Item.ItemType.Staff,
                             Item.ItemType.OneHandMace,
                             Item.ItemType.TwoHandMace,
-                            Item.ItemType.FistWeapon,
                             Item.ItemType.Idol,
                         });
                 }
@@ -117,12 +116,20 @@ namespace Rawr.Moonkin
             Stats stats = GetCharacterStats(character, additionalItem);
             calcs.BasicStats = stats;
 
-            float levelScalingFactor = (1 - (70 - 60) / 82f * 3);
+            float hitRatingDivisor = 1260.5f;
 
-            calcs.SpellCrit = 0.01f * (stats.Intellect * 0.0125f + 0.9075f) + stats.SpellCritRating / 1400f * levelScalingFactor;
-            calcs.SpellHit = stats.SpellHitRating * levelScalingFactor / 800f;
+            float critBase = 0.0185f;
+            float critIntDivisor = 7997f;
+            float critRatingDivisor = 2206.6f;
+
+            calcs.SpellCrit = critBase + stats.SpellCritRating / critRatingDivisor;
+            calcs.SpellHit = stats.SpellHitRating / hitRatingDivisor;
+
             calcs.ArcaneDamage = stats.SpellDamageRating + stats.SpellArcaneDamageRating;
             calcs.NatureDamage = stats.SpellDamageRating;
+
+            calcs.ManaRegen = stats.Mp5;
+            calcs.ManaRegen5SR = stats.SpellCombatManaRegeneration;
 
             // Base stats: Intellect% +(0.04 * Heart of the Wild)
             stats.Intellect *= 1 + 0.04f * int.Parse(character.CalculationOptions["HotW"]);
@@ -136,14 +143,24 @@ namespace Rawr.Moonkin
             // Base stats: Hit% +(0.02 * Balance of Power)
             calcs.SpellHit += 0.02f * int.Parse(character.CalculationOptions["BalanceofPower"]);
             // Regen mechanic: mp5 +((0.04 * Dreamstate) * Int)
-            // All spells: Damage +((0.08 * Vengeance) * Int)
-            calcs.ArcaneDamage += ((1 + 0.08f * int.Parse(character.CalculationOptions["Vengeance"])) * stats.Intellect);
-            calcs.NatureDamage += ((1 + 0.08f * int.Parse(character.CalculationOptions["Vengeance"])) * stats.Intellect);
-            // All spells: Crit% +(0.05 * Moonkin Form)
-            calcs.SpellCrit += 0.05f * int.Parse(character.CalculationOptions["MoonkinForm"]);
+            // All spells: Damage +((0.08 * Lunar Guidance) * Int)
+            calcs.ArcaneDamage += 0.08f * int.Parse(character.CalculationOptions["LunarGuidance"]) * stats.Intellect;
+            calcs.NatureDamage += 0.08f * int.Parse(character.CalculationOptions["LunarGuidance"]) * stats.Intellect;
             // All spells: Crit% + (0.01 * Natural Perfection)
             calcs.SpellCrit += 0.01f * int.Parse(character.CalculationOptions["NaturalPerfection"]);
             // Regen mechanic: mp5 +((0.1 * Intensity) * Spiritmp5())
+
+            // Finally, add the int portion of spell crit into the equation
+            calcs.SpellCrit += stats.Intellect / critIntDivisor;
+
+            // Create the offensive spell group class
+            MoonkinSpells spellList = new MoonkinSpells();
+            // Add talented +spelldmg
+            spellList["Wrath"].damagePerHit += (0.571f + 0.02f * int.Parse(character.CalculationOptions["WrathofCenarius"])) * calcs.NatureDamage;
+            spellList["Starfire"].damagePerHit += (1.0f + 0.04f * int.Parse(character.CalculationOptions["WrathofCenarius"])) * calcs.ArcaneDamage;
+            spellList["Moonfire"].damagePerHit += 0.15f * calcs.ArcaneDamage;
+            spellList["Moonfire"].dotEffect.damagePerTick += (0.52f / spellList["Moonfire"].dotEffect.numTicks) * calcs.ArcaneDamage;
+            spellList["Insect Swarm"].dotEffect.damagePerTick += (0.52f / spellList["Insect Swarm"].dotEffect.numTicks) * calcs.NatureDamage;
 
             calcs.SubPoints[0] = 0.0f;
             calcs.SubPoints[1] = 0.0f;
@@ -159,22 +176,20 @@ namespace Rawr.Moonkin
                 new Stats()
                 {
                     Health = 3434f,
-                    Mana = 2368f,
+                    Mana = 2470f,
                     Stamina = 82f,
                     Agility = 75f,
                     Intellect = 120f,
-                    Spirit = 133f,
-                    BonusStaminaMultiplier = 0.03f
+                    Spirit = 133f
                 } :
                 new Stats()
                 {
                     Health = 3434f,
-                    Mana = 2368f,
+                    Mana = 2470f,
                     Stamina = 85f,
                     Agility = 64.5f,
                     Intellect = 115f,
-                    Spirit = 135f,
-                    BonusStaminaMultiplier = 0.03f
+                    Spirit = 135f
                 };
 
             // Get the gear/enchants/buffs stats loaded in
@@ -199,9 +214,9 @@ namespace Rawr.Moonkin
             statsTotal.BonusIntellectMultiplier = ((1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
             statsTotal.BonusSpiritMultiplier = ((1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
 
-            // Base stats: Health, mana pool, armor
+            // Derived stats: Health, mana pool, armor
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
-            statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect);
+            statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 380;
             statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f);
 
             return statsTotal;
