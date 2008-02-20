@@ -115,6 +115,8 @@ namespace Rawr.Mage
 			calculatedStats.BasicStats = stats;
 
             float levelScalingFactor = (1 - (70 - 60) / 82f * 3);
+            int molten = 0;
+            if (character.CalculationOptions["MageArmor"].Equals("Molten")) molten = 1;
 
             float mindMasteryDamage = (0.05f * int.Parse(character.CalculationOptions["MindMastery"]) * stats.Intellect);
             float improvedSpiritDamage = 0;
@@ -125,6 +127,9 @@ namespace Rawr.Mage
             calculatedStats.FireDamage = stats.SpellFireDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
             calculatedStats.FrostDamage = stats.SpellFrostDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
 
+            calculatedStats.SpellCrit = 0.01f * (stats.Intellect * 0.0125f + 0.9075f) + 0.01f * int.Parse(character.CalculationOptions["ArcaneInstability"]) + 0.01f * int.Parse(character.CalculationOptions["ArcanePotency"]) + stats.CritRating / 1400f * levelScalingFactor + 0.03f * molten;
+            calculatedStats.SpellHit = stats.SpellHitRating * levelScalingFactor / 800f;
+
             calculatedStats.SpiritRegen = 0.001f + stats.Spirit * 0.009327f * (float)Math.Sqrt(stats.Intellect);
             calculatedStats.ManaRegen = calculatedStats.SpiritRegen + stats.Mp5 / 5f;
             calculatedStats.ManaRegen5SR = calculatedStats.SpiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
@@ -134,8 +139,6 @@ namespace Rawr.Mage
             calculatedStats.HealthRegenEating = calculatedStats.ManaRegen + 250f;
             calculatedStats.MeleeMitigation = (1-1/(1+0.1f*stats.Armor/(8.5f*(70+4.5f*(70-59))+40)));
             calculatedStats.Defense = 350 + stats.DefenseRating / 2.37f;
-            int molten = 0;
-            if (character.CalculationOptions["MageArmor"].Equals("Molten")) molten = 1;
             calculatedStats.PhysicalCritReduction = (0.04f*(calculatedStats.Defense-5*70)/100+stats.Resilience/2500f*levelScalingFactor+0.05f*molten);
             calculatedStats.SpellCritReduction = (stats.Resilience/2500f*levelScalingFactor+0.05f*molten);
             calculatedStats.CritDamageReduction = (stats.Resilience/2500f*2f*levelScalingFactor);
@@ -214,6 +217,8 @@ namespace Rawr.Mage
 
             if (character.CalculationOptions["MageArmor"].Equals("Mage")) statsTotal.SpellCombatManaRegeneration += 0.3f;
             statsTotal.SpellCombatManaRegeneration += 0.1f * int.Parse(character.CalculationOptions["ArcaneMeditation"]);
+
+            statsTotal.SpellPenetration += 5 * int.Parse(character.CalculationOptions["ArcaneSubtlety"]);
 
             return statsTotal;
         }

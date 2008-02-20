@@ -28,6 +28,8 @@ namespace Rawr.Mage
             set { _basicStats = value; }
         }
 
+        public float SpellCrit { get; set; }
+        public float SpellHit { get; set; }
         public float CastingSpeed { get; set; }
         public float ArcaneDamage { get; set; }
         public float FireDamage { get; set; }
@@ -55,8 +57,8 @@ namespace Rawr.Mage
             dictValues.Add("Armor", BasicStats.Armor.ToString());
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Mana", BasicStats.Mana.ToString());
-            dictValues.Add("Spell Crit Rate", BasicStats.SpellCritRating.ToString());
-            dictValues.Add("Spell Hit Rate", BasicStats.SpellHitRating.ToString());
+            dictValues.Add("Spell Crit Rate", String.Format("{0:F}%", 100 * SpellCrit));
+            dictValues.Add("Spell Hit Rate", String.Format("{0:F}%", 100 * SpellHit));
             dictValues.Add("Spell Penetration", BasicStats.SpellPenetration.ToString());
             dictValues.Add("Casting Speed", CastingSpeed.ToString());
             dictValues.Add("Arcane Damage", ArcaneDamage.ToString());

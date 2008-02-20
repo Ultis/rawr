@@ -45,7 +45,8 @@ namespace Rawr
 		public static Character GetCharacter(Character.CharacterRegion region, string realm, string name)
 		{
 			XmlDocument docCharacter = null;
-			try
+            XmlDocument docTalents = null;
+            try
 			{
 				Log.Write("Getting Character from Armory: " + name + "@" + region.ToString() + "-" + realm);
 				//Tell me how he died.
@@ -136,7 +137,88 @@ namespace Rawr
 					enchants.ContainsKey(Character.CharacterSlot.Ranged) ? enchants[Character.CharacterSlot.Ranged] : 0
 					);
 
-				//I will tell you how he lived.
+                #region Mage Talents Import
+                if (docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["class"].Value == "Mage")
+                {
+                    string talentSheetPath = string.Format("http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}",
+                        armoryDomain, realm, name);
+                    docTalents = DownloadXml(talentSheetPath);
+
+                    //<talentTab>
+                    //  <talentTree value="2550050300230151333125100000000000000000000002030302010000000000000"/>
+                    //</talentTab>
+                    string talentCode = docTalents.SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
+                    character.CalculationOptions["ArcaneSubtlety"] = talentCode.Substring(0, 1);
+                    character.CalculationOptions["ArcaneFocus"] = talentCode.Substring(1, 1);
+                    character.CalculationOptions["ImprovedArcaneMissiles"] = talentCode.Substring(2, 1);
+                    character.CalculationOptions["WandSpecialization"] = talentCode.Substring(3, 1);
+                    character.CalculationOptions["MagicAbsorption"] = talentCode.Substring(4, 1);
+                    character.CalculationOptions["ArcaneConcentration"] = talentCode.Substring(5, 1);
+                    character.CalculationOptions["MagicAttunement"] = talentCode.Substring(6, 1);
+                    character.CalculationOptions["ArcaneImpact"] = talentCode.Substring(7, 1);
+                    character.CalculationOptions["ArcaneFortitude"] = talentCode.Substring(8, 1);
+                    character.CalculationOptions["ImprovedManaShield"] = talentCode.Substring(9, 1);
+                    character.CalculationOptions["ImprovedCounterspell"] = talentCode.Substring(10, 1);
+                    character.CalculationOptions["ArcaneMeditation"] = talentCode.Substring(11, 1);
+                    character.CalculationOptions["ImprovedBlink"] = talentCode.Substring(12, 1);
+                    character.CalculationOptions["PresenceOfMind"] = talentCode.Substring(13, 1);
+                    character.CalculationOptions["ArcaneMind"] = talentCode.Substring(14, 1);
+                    character.CalculationOptions["PrismaticCloak"] = talentCode.Substring(15, 1);
+                    character.CalculationOptions["ArcaneInstability"] = talentCode.Substring(16, 1);
+                    character.CalculationOptions["ArcanePotency"] = talentCode.Substring(17, 1);
+                    character.CalculationOptions["EmpoweredArcaneMissiles"] = talentCode.Substring(18, 1);
+                    character.CalculationOptions["ArcanePower"] = talentCode.Substring(19, 1);
+                    character.CalculationOptions["SpellPower"] = talentCode.Substring(20, 1);
+                    character.CalculationOptions["MindMastery"] = talentCode.Substring(21, 1);
+                    character.CalculationOptions["Slow"] = talentCode.Substring(22, 1);
+                    character.CalculationOptions["ImprovedFireball"] = talentCode.Substring(23, 1);
+                    character.CalculationOptions["Impact"] = talentCode.Substring(24, 1);
+                    character.CalculationOptions["Ignite"] = talentCode.Substring(25, 1);
+                    character.CalculationOptions["FlameThrowing"] = talentCode.Substring(26, 1);
+                    character.CalculationOptions["ImprovedFireBlast"] = talentCode.Substring(27, 1);
+                    character.CalculationOptions["Incinerate"] = talentCode.Substring(28, 1);
+                    character.CalculationOptions["ImprovedFlamestrike"] = talentCode.Substring(29, 1);
+                    character.CalculationOptions["Pyroblast"] = talentCode.Substring(30, 1);
+                    character.CalculationOptions["BurningSoul"] = talentCode.Substring(31, 1);
+                    character.CalculationOptions["ImprovedScorch"] = talentCode.Substring(32, 1);
+                    character.CalculationOptions["ImprovedFireWard"] = talentCode.Substring(33, 1);
+                    character.CalculationOptions["MasterOfElements"] = talentCode.Substring(34, 1);
+                    character.CalculationOptions["PlayingWithFire"] = talentCode.Substring(35, 1);
+                    character.CalculationOptions["CriticalMass"] = talentCode.Substring(36, 1);
+                    character.CalculationOptions["BlastWave"] = talentCode.Substring(37, 1);
+                    character.CalculationOptions["BlazingSpeed"] = talentCode.Substring(38, 1);
+                    character.CalculationOptions["FirePower"] = talentCode.Substring(39, 1);
+                    character.CalculationOptions["Pyromaniac"] = talentCode.Substring(40, 1);
+                    character.CalculationOptions["Combustion"] = talentCode.Substring(41, 1);
+                    character.CalculationOptions["MoltenFury"] = talentCode.Substring(42, 1);
+                    character.CalculationOptions["EmpoweredFireball"] = talentCode.Substring(43, 1);
+                    character.CalculationOptions["DragonsBreath"] = talentCode.Substring(44, 1);
+                    character.CalculationOptions["FrostWarding"] = talentCode.Substring(45, 1);
+                    character.CalculationOptions["ImprovedFrostbolt"] = talentCode.Substring(46, 1);
+                    character.CalculationOptions["ElementalPrecision"] = talentCode.Substring(47, 1);
+                    character.CalculationOptions["IceShards"] = talentCode.Substring(48, 1);
+                    character.CalculationOptions["Frostbite"] = talentCode.Substring(49, 1);
+                    character.CalculationOptions["ImprovedFrostNova"] = talentCode.Substring(50, 1);
+                    character.CalculationOptions["Permafrost"] = talentCode.Substring(51, 1);
+                    character.CalculationOptions["PiercingIce"] = talentCode.Substring(52, 1);
+                    character.CalculationOptions["IcyVeins"] = talentCode.Substring(53, 1);
+                    character.CalculationOptions["ImprovedBlizzard"] = talentCode.Substring(54, 1);
+                    character.CalculationOptions["ArcticReach"] = talentCode.Substring(55, 1);
+                    character.CalculationOptions["FrostChanneling"] = talentCode.Substring(56, 1);
+                    character.CalculationOptions["Shatter"] = talentCode.Substring(57, 1);
+                    character.CalculationOptions["FrozenCore"] = talentCode.Substring(58, 1);
+                    character.CalculationOptions["ColdSnap"] = talentCode.Substring(59, 1);
+                    character.CalculationOptions["ImprovedConeOfCold"] = talentCode.Substring(60, 1);
+                    character.CalculationOptions["IceFloes"] = talentCode.Substring(61, 1);
+                    character.CalculationOptions["WintersChill"] = talentCode.Substring(62, 1);
+                    character.CalculationOptions["IceBarrier"] = talentCode.Substring(63, 1);
+                    character.CalculationOptions["ArcticWinds"] = talentCode.Substring(64, 1);
+                    character.CalculationOptions["EmpoweredFrostbolt"] = talentCode.Substring(65, 1);
+                    character.CalculationOptions["SummonWaterElemental"] = talentCode.Substring(66, 1);
+                }
+                #endregion
+
+                //I will tell you how he lived.
 				return character;
 			}
 			catch (Exception ex)

@@ -68,7 +68,7 @@
             // checkBoxEnforceMetagemRequirements
             // 
             this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 306);
+            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 141);
             this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
             this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
             this.checkBoxEnforceMetagemRequirements.TabIndex = 2;
