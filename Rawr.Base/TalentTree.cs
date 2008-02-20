@@ -97,6 +97,17 @@ namespace Rawr
             buildTreeFramework();
         }
 
+        public TalentItem GetTalent(string TalentName)
+        {
+            TalentItem ti = null;
+            foreach (string tree in _trees.Keys)
+            {
+                ti = _trees[tree].Find(delegate(TalentItem talent) { return talent.Name.ToUpper() == TalentName.ToUpper(); });
+                if (ti != null) return ti;
+            }
+            return null;
+        }
+
         public override string ToString()
         {
             string talentString = "(";
