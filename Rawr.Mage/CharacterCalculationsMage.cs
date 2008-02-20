@@ -47,6 +47,19 @@ namespace Rawr.Mage
         public float SpellCritReduction { get; set; }
         public float CritDamageReduction { get; set; }
         public float Dodge { get; set; }
+        public float ArcaneSpellModifier { get; set; }
+        public float FireSpellModifier { get; set; }
+        public float FrostSpellModifier { get; set; }
+        public float ArcaneCritBonus { get; set; }
+        public float FireCritBonus { get; set; }
+        public float FrostCritBonus { get; set; }
+        public float ArcaneCritRate { get; set; }
+        public float FireCritRate { get; set; }
+        public float FrostCritRate { get; set; }
+        public float ResilienceCritDamageReduction { get; set; }
+        public float ResilienceCritRateReduction { get; set; }
+
+        public List<Spell> Spells;
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {

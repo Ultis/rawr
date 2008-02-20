@@ -285,7 +285,7 @@ namespace Rawr
                         });
                         _allBuffs.Add(new Buff()
                         {
-                            Name = "Flask of Supremen Power",
+                            Name = "Flask of Supreme Power",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { SpellDamageRating = 70 },
                             ConflictingBuffs = new string[] { }
