@@ -218,6 +218,83 @@ namespace Rawr
                 }
                 #endregion
 
+                #region Druid Talents Import
+                if (docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["class"].Value == "Druid")
+                {
+                    string talentSheetPath = string.Format("http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}",
+                        armoryDomain, realm, name);
+                    docTalents = DownloadXml(talentSheetPath);
+
+                    //<talentTab>
+                    //  <talentTree value="50002201050313523105100000000000000530000000000300001000030300"/>
+                    //</talentTab>
+                    string talentCode = docTalents.SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
+                    character.CalculationOptions["StarlightWrath"] = talentCode.Substring(0, 1);
+                    character.CalculationOptions["NaturesGrasp"] = talentCode.Substring(1, 1);
+                    character.CalculationOptions["ImpNaturesGrasp"] = talentCode.Substring(2, 1);
+                    character.CalculationOptions["ControlofNature"] = talentCode.Substring(3, 1);
+                    character.CalculationOptions["FocusedStarlight"] = talentCode.Substring(4, 1);
+                    character.CalculationOptions["ImpMoonfire"] = talentCode.Substring(5, 1);
+                    character.CalculationOptions["Brambles"] = talentCode.Substring(6, 1);
+                    character.CalculationOptions["InsectSwarm"] = talentCode.Substring(7, 1);
+                    character.CalculationOptions["NaturesReach"] = talentCode.Substring(8, 1);
+                    character.CalculationOptions["Vengeance"] = talentCode.Substring(9, 1);
+                    character.CalculationOptions["CelestialFocus"] = talentCode.Substring(10, 1);
+                    character.CalculationOptions["LunarGuidance"] = talentCode.Substring(11, 1);
+                    character.CalculationOptions["NaturesGrace"] = talentCode.Substring(12, 1);
+                    character.CalculationOptions["Moonglow"] = talentCode.Substring(13, 1);
+                    character.CalculationOptions["Moonfury"] = talentCode.Substring(14, 1);
+                    character.CalculationOptions["BalanceofPower"] = talentCode.Substring(15, 1);
+                    character.CalculationOptions["Dreamstate"] = talentCode.Substring(16, 1);
+                    character.CalculationOptions["MoonkinForm"] = talentCode.Substring(17, 1);
+                    character.CalculationOptions["ImprovedFF"] = talentCode.Substring(18, 1);
+                    character.CalculationOptions["WrathofCenarius"] = talentCode.Substring(19, 1);
+                    character.CalculationOptions["ForceofNature"] = talentCode.Substring(20, 1);
+                    character.CalculationOptions["Ferocity"] = talentCode.Substring(21, 1);
+                    character.CalculationOptions["FeralAggression"] = talentCode.Substring(22, 1);
+                    character.CalculationOptions["FeralInstinct"] = talentCode.Substring(23, 1);
+                    character.CalculationOptions["Brutal Impact"] = talentCode.Substring(24, 1);
+                    character.CalculationOptions["ThickHide"] = talentCode.Substring(25, 1);
+                    character.CalculationOptions["FeralSwiftness"] = talentCode.Substring(26, 1);
+                    character.CalculationOptions["FeralCharge"] = talentCode.Substring(27, 1);
+                    character.CalculationOptions["SharpenedClaws"] = talentCode.Substring(28, 1);
+                    character.CalculationOptions["ShreddingAttacks"] = talentCode.Substring(29, 1);
+                    character.CalculationOptions["PredatoryStrikes"] = talentCode.Substring(30, 1);
+                    character.CalculationOptions["PrimalFury"] = talentCode.Substring(31, 1);
+                    character.CalculationOptions["SavageFury"] = talentCode.Substring(32, 1);
+                    character.CalculationOptions["FeralFaerieFire"] = talentCode.Substring(33, 1);
+                    character.CalculationOptions["NurturingInstinct"] = talentCode.Substring(34, 1);
+                    character.CalculationOptions["HotW"] = talentCode.Substring(35, 1);
+                    character.CalculationOptions["SotF"] = talentCode.Substring(36, 1);
+                    character.CalculationOptions["PrimalTenacity"] = talentCode.Substring(37, 1);
+                    character.CalculationOptions["LotP"] = talentCode.Substring(38, 1);
+                    character.CalculationOptions["ImprovedLotP"] = talentCode.Substring(39, 1);
+                    character.CalculationOptions["PredatoryInstincts"] = talentCode.Substring(40, 1);
+                    character.CalculationOptions["Mangle"] = talentCode.Substring(41, 1);
+                    character.CalculationOptions["ImprovedMotW"] = talentCode.Substring(42, 1);
+                    character.CalculationOptions["Furor"] = talentCode.Substring(43, 1);
+                    character.CalculationOptions["Naturalist"] = talentCode.Substring(44, 1);
+                    character.CalculationOptions["NaturesFocus"] = talentCode.Substring(45, 1);
+                    character.CalculationOptions["NaturalShapeshifter"] = talentCode.Substring(46, 1);
+                    character.CalculationOptions["Intensity"] = talentCode.Substring(47, 1);
+                    character.CalculationOptions["Subtlety"] = talentCode.Substring(48, 1);
+                    character.CalculationOptions["OmenofClarity"] = talentCode.Substring(49, 1);
+                    character.CalculationOptions["TranquilSpirit"] = talentCode.Substring(50, 1);
+                    character.CalculationOptions["ImprovedRejuv"] = talentCode.Substring(51, 1);
+                    character.CalculationOptions["NaturesSwiftness"] = talentCode.Substring(52, 1);
+                    character.CalculationOptions["GiftofNature"] = talentCode.Substring(53, 1);
+                    character.CalculationOptions["ImpTranquility"] = talentCode.Substring(54, 1);
+                    character.CalculationOptions["EmpoweredTouch"] = talentCode.Substring(55, 1);
+                    character.CalculationOptions["ImprovedRegrowth"] = talentCode.Substring(56, 1);
+                    character.CalculationOptions["LivingSpirit"] = talentCode.Substring(57, 1);
+                    character.CalculationOptions["Swiftmend"] = talentCode.Substring(58, 1);
+                    character.CalculationOptions["NaturalPerfection"] = talentCode.Substring(59, 1);
+                    character.CalculationOptions["EmpoweredRejuv"] = talentCode.Substring(60, 1);
+                    character.CalculationOptions["TreeofLife"] = talentCode.Substring(61, 1);;
+                }
+                #endregion
+
+
                 //I will tell you how he lived.
 				return character;
 			}
