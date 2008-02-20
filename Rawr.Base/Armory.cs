@@ -625,6 +625,7 @@ namespace Rawr
                                             break;
 										case "Increased Critical Damage":
 											stats.BonusCritMultiplier = (float)gemBonusValue / 100f;
+                                            stats.BonusSpellCritMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on other stats
 											break;
 										case "Agility":
 											stats.Agility = gemBonusValue;
@@ -675,6 +676,7 @@ namespace Rawr
                                         case "Spell Damage":
                                             stats.SpellDamageRating = gemBonusValue;
                                             break;
+                                        case "Spell Critical":
                                         case "Spell Critical Rating":
                                             stats.SpellCritRating = gemBonusValue;
                                             break;
