@@ -67,11 +67,11 @@ namespace Rawr.Mage
             dictValues.Add("MP5", BasicStats.Mp5.ToString());
             dictValues.Add("Mana Regen", Math.Floor(ManaRegen * 5).ToString() + String.Format("*Mana Regen in 5SR: {0}\nMana Regen Drinking: {1}", Math.Floor(ManaRegen5SR * 5), Math.Floor(ManaRegenDrinking * 5)));
             dictValues.Add("Health Regen", Math.Floor(HealthRegenCombat * 5).ToString() + String.Format("*Health Regen Eating: {0}", Math.Floor(HealthRegenEating * 5)));
-            dictValues.Add("Arcane Resist", BasicStats.ArcaneResistance.ToString());
-            dictValues.Add("Fire Resist", BasicStats.FireResistance.ToString());
-            dictValues.Add("Nature Resist", BasicStats.NatureResistance.ToString());
-            dictValues.Add("Frost Resist", BasicStats.FrostResistance.ToString());
-            dictValues.Add("Shadow Resist", BasicStats.ShadowResistance.ToString());
+            dictValues.Add("Arcane Resist", (BasicStats.AllResist + BasicStats.ArcaneResistance).ToString());
+            dictValues.Add("Fire Resist", (BasicStats.AllResist + BasicStats.FireResistance).ToString());
+            dictValues.Add("Nature Resist", (BasicStats.AllResist + BasicStats.NatureResistance).ToString());
+            dictValues.Add("Frost Resist", (BasicStats.AllResist + BasicStats.FrostResistance).ToString());
+            dictValues.Add("Shadow Resist", (BasicStats.AllResist + BasicStats.ShadowResistance).ToString());
             dictValues.Add("Physical Mitigation", String.Format("{0:F}%", 100 * MeleeMitigation));
             dictValues.Add("Resilience", BasicStats.Resilience.ToString());
             dictValues.Add("Defense", Defense.ToString());

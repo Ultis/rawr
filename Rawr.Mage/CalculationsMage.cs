@@ -127,7 +127,7 @@ namespace Rawr.Mage
             calculatedStats.FireDamage = stats.SpellFireDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
             calculatedStats.FrostDamage = stats.SpellFrostDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
 
-            calculatedStats.SpellCrit = 0.01f * (stats.Intellect * 0.0125f + 0.9075f) + 0.01f * int.Parse(character.CalculationOptions["ArcaneInstability"]) + 0.01f * int.Parse(character.CalculationOptions["ArcanePotency"]) + stats.CritRating / 1400f * levelScalingFactor + 0.03f * molten;
+            calculatedStats.SpellCrit = 0.01f * (stats.Intellect * 0.0125f + 0.9075f) + 0.01f * int.Parse(character.CalculationOptions["ArcaneInstability"]) + 0.01f * int.Parse(character.CalculationOptions["ArcanePotency"]) + stats.SpellCritRating / 1400f * levelScalingFactor + 0.03f * molten;
             calculatedStats.SpellHit = stats.SpellHitRating * levelScalingFactor / 800f;
 
             calculatedStats.SpiritRegen = 0.001f + stats.Spirit * 0.009327f * (float)Math.Sqrt(stats.Intellect);
@@ -169,6 +169,7 @@ namespace Rawr.Mage
                         Stamina = 50f,
                         Intellect = 154f,
                         Spirit = 145,
+                        ArcaneResistance = 10,
                         BonusIntellectMultiplier = 1.05f * (1 + 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"])) - 1
                     };
                     break;
@@ -191,7 +192,7 @@ namespace Rawr.Mage
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
-            Stats statsTotal = statsGearEnchantsBuffs;
+            Stats statsTotal = statsGearEnchantsBuffs + statsRace;
             statsTotal.Strength = (float)Math.Floor((Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier)) + statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
             statsTotal.Agility = (float)Math.Floor((Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier)) + statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier)) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
             statsTotal.Intellect = (float)Math.Floor((Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier)) + statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier)) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
@@ -209,13 +210,20 @@ namespace Rawr.Mage
             statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f + 0.5 * statsTotal.Intellect * int.Parse(character.CalculationOptions["ArcaneFortitude"]));
 
             int magicAbsorption = 2 * int.Parse(character.CalculationOptions["ArcaneFortitude"]);
-            statsTotal.ArcaneResistance += magicAbsorption;
-            statsTotal.FireResistance += magicAbsorption;
-            statsTotal.FrostResistance += magicAbsorption;
-            statsTotal.ShadowResistance += magicAbsorption;
-            statsTotal.NatureResistance += magicAbsorption;
+            int frostWarding = int.Parse(character.CalculationOptions["FrostWarding"]);
+            statsTotal.AllResist += magicAbsorption;
 
-            if (character.CalculationOptions["MageArmor"].Equals("Mage")) statsTotal.SpellCombatManaRegeneration += 0.3f;
+            if (character.CalculationOptions["MageArmor"].Equals("Mage"))
+            {
+                statsTotal.SpellCombatManaRegeneration += 0.3f;
+                statsTotal.AllResist += 18;
+            }
+            if (character.CalculationOptions["MageArmor"].Equals("Ice"))
+            {
+                statsTotal.Armor += (float)Math.Floor(645 * (1 + 0.15f * frostWarding));
+                statsTotal.FrostResistance += (float)Math.Floor(18 * (1 + 0.15f * frostWarding));
+            }
+
             statsTotal.SpellCombatManaRegeneration += 0.1f * int.Parse(character.CalculationOptions["ArcaneMeditation"]);
 
             statsTotal.SpellPenetration += 5 * int.Parse(character.CalculationOptions["ArcaneSubtlety"]);
@@ -262,13 +270,17 @@ namespace Rawr.Mage
                 SpellFrostDamageRating = stats.SpellFrostDamageRating,
                 Armor = stats.Armor,
                 Hp5 = stats.Hp5,
-                SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration
+                SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
+                BonusArcaneSpellPowerMultiplier = stats.BonusArcaneSpellPowerMultiplier,
+                BonusFireSpellPowerMultiplier = stats.BonusFireSpellPowerMultiplier,
+                BonusFrostSpellPowerMultiplier = stats.BonusFrostSpellPowerMultiplier,
+                SpellFrostCritRating = stats.SpellFrostCritRating
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return stats.ToString().Equals("") || (stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.Stamina + stats.Intellect + stats.Spirit + stats.Health + stats.Mp5 + stats.Resilience + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration) > 0;
+            return stats.ToString().Equals("") || (stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.Stamina + stats.Intellect + stats.Spirit + stats.Health + stats.Mp5 + stats.Resilience + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating) > 0;
         }
     }
 }
