@@ -18,6 +18,8 @@ namespace Rawr //O O . .
 		public Character.CharacterRegion _region = CharacterRegion.US;
         [System.Xml.Serialization.XmlElement("Race")]
         public CharacterRace _race = CharacterRace.NightElf;
+        [System.Xml.Serialization.XmlElement("Class")]
+        public CharacterClass _class = CharacterClass.Druid;
         [System.Xml.Serialization.XmlElement("ActiveBuffs")]
 		public List<string> _activeBuffs = new List<string>();
         [System.Xml.Serialization.XmlElement("Head")]
@@ -90,7 +92,12 @@ namespace Rawr //O O . .
 		public int _rangedEnchant = 0;
 		[System.Xml.Serialization.XmlElement("CalculationOptions")]
 		public string[] _calculationOptionsStrings = new string[0];
+        [System.Xml.Serialization.XmlElement("Talents")]
+        public TalentTree _talents = new TalentTree();
 
+
+
+        
 
         [System.Xml.Serialization.XmlIgnore]
         public string Name
@@ -123,6 +130,15 @@ namespace Rawr //O O . .
                 }
             }
         }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public Character.CharacterClass Class
+        {
+            get { return _class; }
+            set { _class = value; }
+        }
+
+
         [System.Xml.Serialization.XmlIgnore]
         public List<string> ActiveBuffs
         {
@@ -511,6 +527,13 @@ namespace Rawr //O O . .
 			}
 			set { _calculationOptions = value; }
 		}
+
+        [System.Xml.Serialization.XmlIgnore]
+        public TalentTree Talents
+        {
+            get { return _talents; }
+            set { _talents = value; }
+        }
 		private void SerializeCalculationOptions()
 		{
 			List<string> listCalcOpts = new List<string>();
@@ -808,18 +831,18 @@ namespace Rawr //O O . .
 
 		public enum CharacterRegion { US, EU }
 		public enum CharacterRace
-		{ 
-			NightElf, 
-			Tauren,
-			Human,
-			Orc,
-			Gnome,
-			Troll,
-			Dwarf,
-			Undead,
-			Draenei,
-			BloodElf
-		}
+        {
+            Human = 1,
+            Orc = 2,
+            Dwarf = 3,
+            NightElf = 4,
+            Undead = 5,
+            Tauren = 6,
+            Gnome = 7,
+            Troll = 8,
+            BloodElf = 10,
+            Draenei = 11
+        }
         public enum CharacterSlot
         {
 			None = -1,
@@ -847,6 +870,19 @@ namespace Rawr //O O . .
 			Gems = 100,
 			Metas = 101,
 			ProjectileBag = 102
+        }
+
+        public enum CharacterClass
+        {
+            Warrior = 1,
+            Paladin = 2,
+            Hunter = 3,
+            Rogue = 4,
+            Priest = 5,
+            Shaman = 7,
+            Mage = 8,
+            Warlock = 9,
+            Druid = 11
         }
 
         public Character() { }
@@ -941,6 +977,8 @@ namespace Rawr //O O . .
 			foreach (string buff in this.ActiveBuffs) clone.ActiveBuffs.Add(buff);
 			SerializeCalculationOptions();
 			clone.CalculationOptionsStrings = CalculationOptionsStrings;
+            clone.Class = this.Class;
+            clone.Talents = this.Talents;
 			return clone;
 		}
     
