@@ -649,8 +649,11 @@ namespace Rawr
                                     case "Intellect":
                                         sockets.Stats.Intellect = socketBonusValue;
                                         break;
-                                    case "Spell Crit Rating":
-                                        sockets.Stats.SpellCritRating = socketBonusValue;
+									case "Spell Crit":
+									case "Spell Crit Rating":
+									case "Spell Critical":
+									case "Spell Critical Rating":
+										sockets.Stats.SpellCritRating = socketBonusValue;
                                         break;
                                     case "Spell Haste Rating":
                                         sockets.Stats.SpellHasteRating = socketBonusValue;
@@ -728,7 +731,9 @@ namespace Rawr
                                         case "Spell Damage":
                                             stats.SpellDamageRating = gemBonusValue;
                                             break;
-                                        case "Spell Critical":
+										case "Spell Crit":
+										case "Spell Crit Rating":
+										case "Spell Critical":
                                         case "Spell Critical Rating":
                                             stats.SpellCritRating = gemBonusValue;
                                             break;
