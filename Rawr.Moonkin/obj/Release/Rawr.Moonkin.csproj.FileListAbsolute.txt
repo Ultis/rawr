@@ -1,0 +1,8 @@
+D:\users\mccalment\Code\Rawr_dev\bin\Release\Rawr.Moonkin.dll
+D:\users\mccalment\Code\Rawr_dev\bin\Release\Rawr.Moonkin.pdb
+D:\users\mccalment\Code\Rawr_dev\Rawr.Moonkin\obj\Release\ResolveAssemblyReference.cache
+D:\users\mccalment\Code\Rawr_dev\Rawr.Moonkin\obj\Release\Rawr.Moonkin.CalculationOptionsPanelMoonkin.resources
+D:\users\mccalment\Code\Rawr_dev\Rawr.Moonkin\obj\Release\Rawr.Moonkin.MoonkinTalentsForm.resources
+D:\users\mccalment\Code\Rawr_dev\Rawr.Moonkin\obj\Release\Rawr.Moonkin.csproj.GenerateResource.Cache
+D:\users\mccalment\Code\Rawr_dev\Rawr.Moonkin\obj\Release\Rawr.Moonkin.dll
+D:\users\mccalment\Code\Rawr_dev\Rawr.Moonkin\obj\Release\Rawr.Moonkin.pdb
