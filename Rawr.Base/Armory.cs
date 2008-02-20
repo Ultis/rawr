@@ -55,40 +55,9 @@ namespace Rawr
 					armoryDomain, realm, name);
 				docCharacter = DownloadXml(characterSheetPath);
 
-                Character.CharacterRace race = Character.CharacterRace.Orc;
-                switch (docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["race"].Value)
-                {
-                    case "Night Elf":
-                        race = Character.CharacterRace.NightElf;
-                        break;
-                    case "Tauren":
-                        race = Character.CharacterRace.Tauren;
-                        break;
-                    case "Human":
-                        race = Character.CharacterRace.Human;
-                        break;
-                    case "Orc":
-                        race = Character.CharacterRace.Orc;
-                        break;
-                    case "Gnome":
-                        race = Character.CharacterRace.Gnome;
-                        break;
-                    case "Troll":
-                        race = Character.CharacterRace.Troll;
-                        break;
-                    case "Dwarf":
-                        race = Character.CharacterRace.Dwarf;
-                        break;
-                    case "Undead":
-                        race = Character.CharacterRace.Undead;
-                        break;
-                    case "Dranei":
-                        race = Character.CharacterRace.Draenei;
-                        break;
-                    case "Blood Elf":
-                        race = Character.CharacterRace.BloodElf;
-                        break;
-                }
+                Character.CharacterRace race = (Character.CharacterRace)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["raceId"].Value);
+                Character.CharacterClass charClass = (Character.CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
+
 				Dictionary<Character.CharacterSlot, string> items = new Dictionary<Character.CharacterSlot, string>();
 				Dictionary<Character.CharacterSlot, int> enchants = new Dictionary<Character.CharacterSlot, int>();
 
@@ -294,6 +263,12 @@ namespace Rawr
                 }
                 #endregion
 
+
+                
+                character.Class = charClass;
+                
+                //build the talent tree 
+                character.Talents.SetCharacter(character);
 
                 //I will tell you how he lived.
 				return character;
