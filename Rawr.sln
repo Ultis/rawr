@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr", "Rawr.csproj", "{A0F124AB-2A3C-488C-A8AB-38FC5444CB37}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BF91EA62-997E-4094-BD99-9F8917FF66AA} = {BF91EA62-997E-4094-BD99-9F8917FF66AA}
@@ -17,7 +17,35 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Mage", "Rawr.Mage\Rawr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Moonkin", "Rawr.Moonkin\Rawr.Moonkin.csproj", "{1AC9D213-B355-4CA4-880C-6561D18FB285}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Rogue", "Rawr.Rogue\Rawr.Rogue.csproj", "{45C4E515-FDF5-4829-9C48-236ED0C83215}"
+EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs03.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Rawr.csproj
+		SccLocalPath1 = .
+		SccProjectUniqueName2 = Rawr.Base\\Rawr.Base.csproj
+		SccProjectName2 = Rawr.Base
+		SccLocalPath2 = Rawr.Base
+		SccProjectUniqueName3 = Rawr.Cat\\Rawr.Cat.csproj
+		SccProjectName3 = Rawr.Cat
+		SccLocalPath3 = Rawr.Cat
+		SccProjectUniqueName4 = Rawr.Bear\\Rawr.Bear.csproj
+		SccProjectName4 = Rawr.Bear
+		SccLocalPath4 = Rawr.Bear
+		SccProjectUniqueName5 = Rawr.Mage\\Rawr.Mage.csproj
+		SccProjectName5 = Rawr.Mage
+		SccLocalPath5 = Rawr.Mage
+		SccProjectUniqueName6 = Rawr.Moonkin\\Rawr.Moonkin.csproj
+		SccProjectName6 = Rawr.Moonkin
+		SccLocalPath6 = Rawr.Moonkin
+		SccProjectUniqueName7 = Rawr.Rogue\\Rawr.Rogue.csproj
+		SccProjectName7 = Rawr.Rogue
+		SccLocalPath7 = Rawr.Rogue
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
@@ -63,28 +91,14 @@ Global
 		{1AC9D213-B355-4CA4-880C-6561D18FB285}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AC9D213-B355-4CA4-880C-6561D18FB285}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1AC9D213-B355-4CA4-880C-6561D18FB285}.Release|x86.ActiveCfg = Release|Any CPU
+		{45C4E515-FDF5-4829-9C48-236ED0C83215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45C4E515-FDF5-4829-9C48-236ED0C83215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45C4E515-FDF5-4829-9C48-236ED0C83215}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{45C4E515-FDF5-4829-9C48-236ED0C83215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45C4E515-FDF5-4829-9C48-236ED0C83215}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45C4E515-FDF5-4829-9C48-236ED0C83215}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs03.codeplex.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Rawr.csproj
-		SccLocalPath1 = .
-		SccProjectUniqueName2 = Rawr.Base\\Rawr.Base.csproj
-		SccProjectName2 = Rawr.Base
-		SccLocalPath2 = Rawr.Base
-		SccProjectUniqueName3 = Rawr.Cat\\Rawr.Cat.csproj
-		SccProjectName3 = Rawr.Cat
-		SccLocalPath3 = Rawr.Cat
-		SccProjectUniqueName4 = Rawr.Bear\\Rawr.Bear.csproj
-		SccProjectName4 = Rawr.Bear
-		SccLocalPath4 = Rawr.Bear
-		SccProjectUniqueName5 = Rawr.Mage\\Rawr.Mage.csproj
-		SccProjectName5 = Rawr.Mage
-		SccLocalPath5 = Rawr.Mage
 	EndGlobalSection
 EndGlobal
