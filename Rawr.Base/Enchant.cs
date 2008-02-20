@@ -138,6 +138,7 @@ namespace Rawr
 						_allEnchants.Add(new Enchant(2841, "Heavy Knothide Armor Kit", Item.ItemSlot.Hands, new Stats() { Stamina = 10 }));
 						_allEnchants.Add(new Enchant(2841, "Heavy Knothide Armor Kit", Item.ItemSlot.Feet, new Stats() { Stamina = 10 }));
 						_allEnchants.Add(new Enchant(3260, "Glove Reinforcements", Item.ItemSlot.Hands, new Stats() { Armor = 240 }));
+                        _allEnchants.Add(new Enchant(1441, "Greater Shadow Resistance", Item.ItemSlot.Back, new Stats() { ShadowResistance = 15 }));
 						
 						_allEnchants.Add(new Enchant(2543, "Arcanum of Rapidity", Item.ItemSlot.Head, new Stats() { HasteRating = 10 }));
 						_allEnchants.Add(new Enchant(3003, "Glyph of Ferocity", Item.ItemSlot.Head, new Stats() { AttackPower = 34, HitRating = 16 }));
@@ -169,13 +170,21 @@ namespace Rawr
                         _allEnchants.Add(new Enchant(2660, "Exceptional Mana", Item.ItemSlot.Chest, new Stats() { Mana = 150 }));
                         _allEnchants.Add(new Enchant(2666, "Major Intellect", Item.ItemSlot.MainHand, new Stats() { Intellect = 30}));
                         _allEnchants.Add(new Enchant(2679, "Restore Mana Prime", Item.ItemSlot.Wrist, new Stats() { Mp5 = 6 }));
+                        _allEnchants.Add(new Enchant(2748, "Runic Spellthread", Item.ItemSlot.Legs, new Stats() { SpellDamageRating = 35, Stamina = 20 }));
+                        _allEnchants.Add(new Enchant(2747, "Mystic Spellthread", Item.ItemSlot.Legs, new Stats() { SpellDamageRating = 25, Stamina = 15 }));
+                        _allEnchants.Add(new Enchant(2982, "Greater Inscription of Discipline", Item.ItemSlot.Shoulders, new Stats() { SpellDamageRating = 18, SpellCritRating = 10 }));
+                        _allEnchants.Add(new Enchant(2995, "Greater Inscription of the Orb", Item.ItemSlot.Shoulders, new Stats() { SpellDamageRating = 12, SpellCritRating = 15 }));
+                        _allEnchants.Add(new Enchant(2981, "Inscription of Discipline", Item.ItemSlot.Shoulders, new Stats() { SpellDamageRating = 15 }));
+                        _allEnchants.Add(new Enchant(2994, "Inscription of the Orb", Item.ItemSlot.Shoulders, new Stats() { SpellCritRating = 13 }));
+                        _allEnchants.Add(new Enchant(3002, "Glyph of Power", Item.ItemSlot.Head, new Stats() { SpellDamageRating = 22, SpellHitRating = 14 }));
+                        _allEnchants.Add(new Enchant(2671, "Sunfire", Item.ItemSlot.MainHand, new Stats() { SpellFireDamageRating = 50, SpellArcaneDamageRating = 50 }));
+                        _allEnchants.Add(new Enchant(2672, "Soulfrost", Item.ItemSlot.MainHand, new Stats() { SpellFrostDamageRating = 54, SpellShadowDamageRating = 54 }));
+                        _allEnchants.Add(new Enchant(2938, "Spell Penetration", Item.ItemSlot.Back, new Stats() { SpellPenetration = 20 }));
+                        _allEnchants.Add(new Enchant(2656, "Vitality", Item.ItemSlot.Feet, new Stats() { Mp5 = 4, Hp5 = 4 }));
+                        _allEnchants.Add(new Enchant(369, "Major Intellect", Item.ItemSlot.Wrist, new Stats() { Intellect = 12 }));
+                        _allEnchants.Add(new Enchant(1144, "Major Spirit", Item.ItemSlot.Chest, new Stats() { Spirit = 15 }));
+                        _allEnchants.Add(new Enchant(851, "Spirit", Item.ItemSlot.Feet, new Stats() { Spirit = 5 }));
 
-
-
-
-
-
-						
 
 						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
 						StringBuilder sb = new StringBuilder();
