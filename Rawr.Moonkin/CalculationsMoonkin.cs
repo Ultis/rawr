@@ -116,10 +116,39 @@ namespace Rawr.Moonkin
             CharacterCalculationsMoonkin calcs = new CharacterCalculationsMoonkin();
             Stats stats = GetCharacterStats(character, additionalItem);
             calcs.BasicStats = stats;
-            //calcs.C
+
+            float levelScalingFactor = (1 - (70 - 60) / 82f * 3);
+
+            calcs.SpellCrit = 0.01f * (stats.Intellect * 0.0125f + 0.9075f) + stats.SpellCritRating / 1400f * levelScalingFactor;
+            calcs.SpellHit = stats.SpellHitRating * levelScalingFactor / 800f;
+            calcs.ArcaneDamage = stats.SpellDamageRating + stats.SpellArcaneDamageRating;
+            calcs.NatureDamage = stats.SpellDamageRating;
+
+            // Base stats: Intellect% +(0.04 * Heart of the Wild)
+            stats.Intellect *= 1 + 0.04f * int.Parse(character.CalculationOptions["HotW"]);
+            // Base stats: Stam%, Int%, Spi%, Agi% +(0.01 * Survival of the Fittest)
+            stats.Intellect *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
+            stats.Stamina *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
+            stats.Agility *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
+            stats.Spirit *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
+            // Base stats: Spirit% +(0.05 * Living Spirit)
+            stats.Spirit *= 1 + 0.05f * int.Parse(character.CalculationOptions["LivingSpirit"]);
+            // Base stats: Hit% +(0.02 * Balance of Power)
+            calcs.SpellHit += 0.02f * int.Parse(character.CalculationOptions["BalanceofPower"]);
+            // Regen mechanic: mp5 +((0.04 * Dreamstate) * Int)
+            // All spells: Damage +((0.08 * Vengeance) * Int)
+            calcs.ArcaneDamage += ((1 + 0.08f * int.Parse(character.CalculationOptions["Vengeance"])) * stats.Intellect);
+            calcs.NatureDamage += ((1 + 0.08f * int.Parse(character.CalculationOptions["Vengeance"])) * stats.Intellect);
+            // All spells: Crit% +(0.05 * Moonkin Form)
+            calcs.SpellCrit += 0.05f * int.Parse(character.CalculationOptions["MoonkinForm"]);
+            // All spells: Crit% + (0.01 * Natural Perfection)
+            calcs.SpellCrit += 0.01f * int.Parse(character.CalculationOptions["NaturalPerfection"]);
+            // Regen mechanic: mp5 +((0.1 * Intensity) * Spiritmp5())
+
             calcs.SubPoints[0] = 0.0f;
             calcs.SubPoints[1] = 0.0f;
             calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
+
             return calcs;
         }
 
@@ -133,8 +162,8 @@ namespace Rawr.Moonkin
                     Mana = 2368f,
                     Stamina = 82f,
                     Agility = 75f,
-                    Intellect = 148f,
-                    Spirit = 136f,
+                    Intellect = 120f,
+                    Spirit = 133f,
                     BonusStaminaMultiplier = 0.03f
                 } :
                 new Stats()
@@ -144,7 +173,7 @@ namespace Rawr.Moonkin
                     Stamina = 85f,
                     Agility = 64.5f,
                     Intellect = 115f,
-                    Spirit = 155f,
+                    Spirit = 135f,
                     BonusStaminaMultiplier = 0.03f
                 };
 
@@ -188,6 +217,7 @@ namespace Rawr.Moonkin
             return new Stats()
             {
                 Stamina = stats.Stamina,
+                Agility = stats.Agility,
                 Intellect = stats.Intellect,
                 Spirit = stats.Spirit,
                 Health = stats.Health,
@@ -201,6 +231,7 @@ namespace Rawr.Moonkin
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 Mana = stats.Mana,
                 SpellArcaneDamageRating = stats.SpellArcaneDamageRating,
                 Armor = stats.Armor,
@@ -210,7 +241,7 @@ namespace Rawr.Moonkin
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Health + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellArcaneDamageRating + stats.Mana + stats.SpellCombatManaRegeneration) > 0;
+            return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellHasteRating + stats.SpellHitRating + + stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellArcaneDamageRating + stats.Mana + stats.SpellCombatManaRegeneration) > 0;
         }
     }
 }
