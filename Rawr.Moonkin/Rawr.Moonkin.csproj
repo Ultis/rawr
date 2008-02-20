@@ -23,7 +23,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -84,10 +84,6 @@
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
       <Project>{842B74C7-EE94-44D9-A02F-4074166EF506}</Project>
       <Name>Rawr.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Mage\Rawr.Mage.csproj">
-      <Project>{3CBA225F-E45A-48D3-B039-980473FD8774}</Project>
-      <Name>Rawr.Mage</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
