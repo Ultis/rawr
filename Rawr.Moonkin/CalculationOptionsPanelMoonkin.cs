@@ -32,11 +32,14 @@ namespace Rawr.Moonkin
             if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
                 Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
             if (!Character.CalculationOptions.ContainsKey("Latency"))
-                Character.CalculationOptions["Latency"] = "0.05";
+                Character.CalculationOptions["Latency"] = "0.04";
+            if (!Character.CalculationOptions.ContainsKey("FightLength"))
+                Character.CalculationOptions["FightLength"] = "5";
 
             cmbTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             chkMetagem.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
             txtLatency.Text = Character.CalculationOptions["Latency"];
+            txtFightLength.Text = Character.CalculationOptions["FightLength"];
 
             if (talents != null) talents.LoadCalculationOptions();
         }

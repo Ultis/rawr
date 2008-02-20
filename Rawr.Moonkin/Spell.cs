@@ -6,14 +6,7 @@ namespace Rawr.Moonkin
 {
 
     // TODO:
-    // Implement Wrath, Starfire, Moonfire, Insect Swarm
-    // Wrath, Starfire: Cast time -(0.1 * Starlight Wrath)
-    // Wrath, Starfire: Crit chance +(0.02 * Focused Starlight)
-    // Moonfire: Damage, Crit chance +(0.05 * Imp Moonfire)
-    // Starfire, Moonfire, Wrath: Crit damage +(0.2 * Vengeance)
     // All spells: If Nature's Grace, cast time -(0.5 * average crit chance of spell rotation)
-    // Starfire, Moonfire, Wrath: Mana cost -(0.03 * Moonglow)
-    // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)
     // All spells: If Nature's Swiftness, instant cast every 3 min.
     // Spell rotation calculator
 
@@ -33,7 +26,7 @@ namespace Rawr.Moonkin
     class Spell
     {
         public SpellSchool school = SpellSchool.Nature;
-        public int manaCost = 0;
+        public float manaCost = 0.0f;
         public float castTime = 0.0f;
         public float damagePerHit = 0.0f;
         public DotSpell dotEffect = null;
@@ -53,7 +46,7 @@ namespace Rawr.Moonkin
                     spellList = new Dictionary<string, Spell>();
                     spellList.Add("Wrath", new Spell()
                     {
-                        manaCost = 255,
+                        manaCost = 255.0f,
                         school = SpellSchool.Nature,
                         castTime = 2.0f,
                         damagePerHit = (381.0f + 429.0f) / 2.0f,
@@ -63,7 +56,7 @@ namespace Rawr.Moonkin
                     });
                     spellList.Add("Starfire", new Spell()
                     {
-                        manaCost = 370,
+                        manaCost = 370.0f,
                         school = SpellSchool.Arcane,
                         castTime = 3.5f,
                         damagePerHit = (540.0f + 636.0f) / 2.0f,
@@ -73,9 +66,11 @@ namespace Rawr.Moonkin
                     });
                     spellList.Add("Moonfire", new Spell()
                     {
-                        manaCost = 495,
+                        manaCost = 495.0f,
                         school = SpellSchool.Arcane,
-                        castTime = 0.0f,
+                        // Instant cast, but GCD is limiting factor
+                        // This will change in 2.4 when haste affects GCD
+                        castTime = 1.5f,
                         damagePerHit = (305.0f + 357.0f) / 2.0f,
                         dotEffect = new DotSpell()
                         {
@@ -88,9 +83,11 @@ namespace Rawr.Moonkin
                     });
                     spellList.Add("Insect Swarm", new Spell()
                     {
-                        manaCost = 175,
+                        manaCost = 175.0f,
                         school = SpellSchool.Nature,
-                        castTime = 0.0f,
+                        // Instant cast, but GCD is limiting factor
+                        // This will change in 2.4 when haste affects GCD
+                        castTime = 1.5f,
                         // Using a 0% damage per hit should ensure that a "critical" insect swarm doesn't do any extra damage
                         damagePerHit = 0.0f,
                         dotEffect = new DotSpell()
@@ -110,11 +107,116 @@ namespace Rawr.Moonkin
                 spellList[spellName] = value;
             }
         }
-    }
 
-    class SpellRotation
-    {
-        private int damagePerMana = 0;
-        private int damagePerSecond = 0;
+        public float[] GetDPSAndDPMRotations()
+        {
+            // Build each spell rotation
+            List<Spell> MFSFx3W = new List<Spell>(new Spell[] {
+                spellList["Moonfire"],
+                spellList["Starfire"],
+                spellList["Starfire"],
+                spellList["Starfire"],
+                spellList["Wrath"]
+            });
+            List<Spell> ISMFSFx3 = new List<Spell>(new Spell[] {
+                spellList["Insect Swarm"],
+                spellList["Moonfire"],
+                spellList["Starfire"],
+                spellList["Starfire"],
+                spellList["Starfire"]
+            });
+            List<Spell> SFSpam = new List<Spell>(new Spell[] {
+                spellList["Starfire"]
+            });
+            List<Spell> MFWx8 = new List<Spell>(new Spell[] {
+                spellList["Moonfire"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"]
+            });
+            List<Spell> ISSFx4 = new List<Spell>(new Spell[] {
+                spellList["Insect Swarm"],
+                spellList["Starfire"],
+                spellList["Starfire"],
+                spellList["Starfire"],
+                spellList["Starfire"]
+            });
+            List<Spell> ISMFWx7 = new List<Spell>(new Spell[] {
+                spellList["Insect Swarm"],
+                spellList["Moonfire"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"]
+            });
+            List<Spell> ISSFx3W = new List<Spell>(new Spell[] {
+                spellList["Insect Swarm"],
+                spellList["Starfire"],
+                spellList["Starfire"],
+                spellList["Starfire"],
+                spellList["Wrath"]
+            });
+            List<Spell> WrathSpam = new List<Spell>(new Spell[] {
+                spellList["Wrath"]
+            });
+            List<Spell> ISWx8 = new List<Spell>(new Spell[] {
+                spellList["Insect Swarm"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"],
+                spellList["Wrath"]
+            });
+
+            // Create a "master list" of each spell rotation
+            List<List<Spell>> spellRotations = new List<List<Spell>>();
+            spellRotations.Add(MFSFx3W);
+            spellRotations.Add(MFWx8);
+            spellRotations.Add(ISMFSFx3);
+            spellRotations.Add(ISMFWx7);
+            spellRotations.Add(ISSFx3W);
+            spellRotations.Add(ISSFx4);
+            spellRotations.Add(ISWx8);
+            spellRotations.Add(SFSpam);
+            spellRotations.Add(WrathSpam);
+
+            float[] results = new float[] { 0.0f, 0.0f };
+            // Iterate through the spell rotation lists, finding the DPS and DPM of each rotation
+            foreach (List<Spell> rotation in spellRotations)
+            {
+                float damagePerSecond = 0.0f;
+                float damagePerMana = 0.0f;
+                foreach (Spell sp in rotation)
+                {
+                    // Direct damage
+                    damagePerSecond += sp.damagePerHit / sp.castTime;
+                    damagePerMana += sp.damagePerHit / sp.manaCost;
+                    // DoT damage
+                    if (sp.dotEffect != null)
+                    {
+                        damagePerSecond += sp.dotEffect.damagePerTick / sp.dotEffect.tickLength;
+                        damagePerMana += sp.dotEffect.damagePerTick * sp.dotEffect.numTicks / sp.manaCost;
+                    }
+                }
+                if (damagePerSecond > results[0])
+                {
+                    results[0] = damagePerSecond;
+                    results[1] = damagePerMana;
+                }
+            }
+
+            return results;
+        }
     }
 }

@@ -155,15 +155,55 @@ namespace Rawr.Moonkin
 
             // Create the offensive spell group class
             MoonkinSpells spellList = new MoonkinSpells();
-            // Add talented +spelldmg
+            // Add (possibly talented) +spelldmg
+            // Starfire: Damage +(0.04 * Wrath of Cenarius)
+            // Wrath: Damage +(0.02 * Wrath of Cenarius)
+            // Wrath: Base spell coefficient 0.571
             spellList["Wrath"].damagePerHit += (0.571f + 0.02f * int.Parse(character.CalculationOptions["WrathofCenarius"])) * calcs.NatureDamage;
+            // Starfire: Base spell coefficient 1.0
             spellList["Starfire"].damagePerHit += (1.0f + 0.04f * int.Parse(character.CalculationOptions["WrathofCenarius"])) * calcs.ArcaneDamage;
+            // Moonfire Direct Damage: Base spell coefficient 0.15
             spellList["Moonfire"].damagePerHit += 0.15f * calcs.ArcaneDamage;
+            // Moonfire DoT: Base spell coefficient 0.52 spread over all ticks
             spellList["Moonfire"].dotEffect.damagePerTick += (0.52f / spellList["Moonfire"].dotEffect.numTicks) * calcs.ArcaneDamage;
-            spellList["Insect Swarm"].dotEffect.damagePerTick += (0.52f / spellList["Insect Swarm"].dotEffect.numTicks) * calcs.NatureDamage;
+            // Insect Swarm DoT: Base spell coefficient 0.76 spread over all ticks
+            spellList["Insect Swarm"].dotEffect.damagePerTick += (0.76f / spellList["Insect Swarm"].dotEffect.numTicks) * calcs.NatureDamage;
 
-            calcs.SubPoints[0] = 0.0f;
-            calcs.SubPoints[1] = 0.0f;
+            // Add spell-specific damage
+            // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)
+            spellList["Wrath"].damagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
+            spellList["Moonfire"].damagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
+            spellList["Moonfire"].dotEffect.damagePerTick *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
+            spellList["Starfire"].damagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
+
+            // Add spell-specific crit chance
+            // Wrath, Starfire: Crit chance +(0.02 * Focused Starlight)
+            spellList["Wrath"].extraCritChance += 0.02f * int.Parse(character.CalculationOptions["FocusedStarlight"]);
+            spellList["Starfire"].extraCritChance += 0.02f * int.Parse(character.CalculationOptions["FocusedStarlight"]);
+            // Moonfire: Damage, Crit chance +(0.05 * Imp Moonfire)
+            spellList["Moonfire"].damagePerHit *= 1.0f + (0.05f * int.Parse(character.CalculationOptions["ImpMoonfire"]));
+            spellList["Moonfire"].dotEffect.damagePerTick *= 1.0f + (0.05f * int.Parse(character.CalculationOptions["ImpMoonfire"]));
+            spellList["Moonfire"].extraCritChance += 0.05f * int.Parse(character.CalculationOptions["ImpMoonfire"]);
+
+            // Add spell-specific critical strike damage
+            // Starfire, Moonfire, Wrath: Crit damage +(0.2 * Vengeance)
+            spellList["Starfire"].critBonus += 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
+            spellList["Moonfire"].critBonus += 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
+            spellList["Wrath"].critBonus += 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
+
+            // Reduce spell-specific mana costs
+            // Starfire, Moonfire, Wrath: Mana cost -(0.03 * Moonglow)
+            spellList["Starfire"].manaCost *= 1.0f - (0.03f * int.Parse(character.CalculationOptions["Moonglow"]));
+            spellList["Moonfire"].manaCost *= 1.0f - (0.03f * int.Parse(character.CalculationOptions["Moonglow"]));
+            spellList["Wrath"].manaCost *= 1.0f - (0.03f * int.Parse(character.CalculationOptions["Moonglow"]));
+
+            // Reduce spell-specific cast times
+            // Wrath, Starfire: Cast time -(0.1 * Starlight Wrath)
+            spellList["Wrath"].castTime -= 0.1f * int.Parse(character.CalculationOptions["StarlightWrath"]);
+            spellList["Starfire"].castTime -= 0.1f * int.Parse(character.CalculationOptions["StarlightWrath"]);
+
+            calcs.SubPoints = spellList.GetDPSAndDPMRotations();
+
             calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
 
             return calcs;

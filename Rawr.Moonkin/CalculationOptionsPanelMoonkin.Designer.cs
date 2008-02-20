@@ -34,6 +34,8 @@
             this.lblLatency = new System.Windows.Forms.Label();
             this.chkMetagem = new System.Windows.Forms.CheckBox();
             this.btnTalents = new System.Windows.Forms.Button();
+            this.txtFightLength = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -89,7 +91,7 @@
             // 
             // btnTalents
             // 
-            this.btnTalents.Location = new System.Drawing.Point(6, 57);
+            this.btnTalents.Location = new System.Drawing.Point(6, 84);
             this.btnTalents.Name = "btnTalents";
             this.btnTalents.Size = new System.Drawing.Size(195, 23);
             this.btnTalents.TabIndex = 8;
@@ -97,10 +99,28 @@
             this.btnTalents.UseVisualStyleBackColor = true;
             this.btnTalents.Click += new System.EventHandler(this.btnTalents_Click);
             // 
+            // txtFightLength
+            // 
+            this.txtFightLength.Location = new System.Drawing.Point(108, 58);
+            this.txtFightLength.Name = "txtFightLength";
+            this.txtFightLength.Size = new System.Drawing.Size(93, 20);
+            this.txtFightLength.TabIndex = 10;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 61);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(105, 13);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Est. Fight Time (min):";
+            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.txtFightLength);
             this.Controls.Add(this.chkMetagem);
             this.Controls.Add(this.btnTalents);
             this.Controls.Add(this.lblLatency);
@@ -122,6 +142,8 @@
         private System.Windows.Forms.Label lblLatency;
         private System.Windows.Forms.CheckBox chkMetagem;
         private System.Windows.Forms.Button btnTalents;
+        private System.Windows.Forms.TextBox txtFightLength;
+        private System.Windows.Forms.Label label1;
 
     }
 }
