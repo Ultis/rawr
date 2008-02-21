@@ -53,6 +53,9 @@
             this.label10 = new System.Windows.Forms.Label();
             this.textBoxShadowPriest = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.checkBoxHeroism = new System.Windows.Forms.CheckBox();
+            this.textBoxMoltenFuryPercentage = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -82,7 +85,7 @@
             // checkBoxEnforceMetagemRequirements
             // 
             this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 373);
+            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 403);
             this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
             this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
             this.checkBoxEnforceMetagemRequirements.TabIndex = 2;
@@ -116,7 +119,7 @@
             // 
             // buttonTalents
             // 
-            this.buttonTalents.Location = new System.Drawing.Point(6, 344);
+            this.buttonTalents.Location = new System.Drawing.Point(6, 374);
             this.buttonTalents.Name = "buttonTalents";
             this.buttonTalents.Size = new System.Drawing.Size(191, 23);
             this.buttonTalents.TabIndex = 5;
@@ -127,7 +130,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 292);
+            this.label3.Location = new System.Drawing.Point(3, 322);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(48, 13);
             this.label3.TabIndex = 6;
@@ -135,7 +138,7 @@
             // 
             // textBoxLatency
             // 
-            this.textBoxLatency.Location = new System.Drawing.Point(104, 289);
+            this.textBoxLatency.Location = new System.Drawing.Point(104, 319);
             this.textBoxLatency.Name = "textBoxLatency";
             this.textBoxLatency.Size = new System.Drawing.Size(93, 20);
             this.textBoxLatency.TabIndex = 7;
@@ -149,7 +152,7 @@
             "Mage",
             "Molten",
             "Ice"});
-            this.comboBoxArmor.Location = new System.Drawing.Point(104, 315);
+            this.comboBoxArmor.Location = new System.Drawing.Point(104, 345);
             this.comboBoxArmor.Name = "comboBoxArmor";
             this.comboBoxArmor.Size = new System.Drawing.Size(93, 21);
             this.comboBoxArmor.TabIndex = 9;
@@ -158,7 +161,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 318);
+            this.label4.Location = new System.Drawing.Point(3, 348);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(37, 13);
             this.label4.TabIndex = 8;
@@ -268,7 +271,7 @@
             // 
             // textBoxShadowPriest
             // 
-            this.textBoxShadowPriest.Location = new System.Drawing.Point(104, 250);
+            this.textBoxShadowPriest.Location = new System.Drawing.Point(104, 265);
             this.textBoxShadowPriest.Name = "textBoxShadowPriest";
             this.textBoxShadowPriest.Size = new System.Drawing.Size(93, 20);
             this.textBoxShadowPriest.TabIndex = 23;
@@ -277,16 +280,48 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 253);
+            this.label11.Location = new System.Drawing.Point(3, 268);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(82, 13);
+            this.label11.Size = new System.Drawing.Size(85, 13);
             this.label11.TabIndex = 22;
-            this.label11.Text = "Sh. Priest (Mp5)";
+            this.label11.Text = "Sh. Priest (Mp5):";
+            // 
+            // checkBoxHeroism
+            // 
+            this.checkBoxHeroism.AutoSize = true;
+            this.checkBoxHeroism.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.checkBoxHeroism.Location = new System.Drawing.Point(3, 291);
+            this.checkBoxHeroism.Name = "checkBoxHeroism";
+            this.checkBoxHeroism.Size = new System.Drawing.Size(115, 17);
+            this.checkBoxHeroism.TabIndex = 24;
+            this.checkBoxHeroism.Text = "Heroism/Bloodlust:";
+            this.checkBoxHeroism.UseVisualStyleBackColor = true;
+            this.checkBoxHeroism.CheckedChanged += new System.EventHandler(this.checkBoxHeroism_CheckedChanged);
+            // 
+            // textBoxMoltenFuryPercentage
+            // 
+            this.textBoxMoltenFuryPercentage.Location = new System.Drawing.Point(104, 236);
+            this.textBoxMoltenFuryPercentage.Name = "textBoxMoltenFuryPercentage";
+            this.textBoxMoltenFuryPercentage.Size = new System.Drawing.Size(93, 20);
+            this.textBoxMoltenFuryPercentage.TabIndex = 26;
+            this.textBoxMoltenFuryPercentage.TextChanged += new System.EventHandler(this.textBoxMoltenFuryPercentage_TextChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(3, 239);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(76, 13);
+            this.label12.TabIndex = 25;
+            this.label12.Text = "Molten Fury %:";
             // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.textBoxMoltenFuryPercentage);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.checkBoxHeroism);
             this.Controls.Add(this.textBoxShadowPriest);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.textBoxFightDuration);
@@ -313,7 +348,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CalculationOptionsPanelMage";
-            this.Size = new System.Drawing.Size(204, 397);
+            this.Size = new System.Drawing.Size(204, 443);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -345,5 +380,8 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox textBoxShadowPriest;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckBox checkBoxHeroism;
+        private System.Windows.Forms.TextBox textBoxMoltenFuryPercentage;
+        private System.Windows.Forms.Label label12;
 	}
 }

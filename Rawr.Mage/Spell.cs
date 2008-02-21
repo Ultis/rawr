@@ -258,6 +258,7 @@ namespace Rawr.Mage
             SpellDamageCoefficient += 0.02f * int.Parse(character.CalculationOptions["EmpoweredFrostbolt"]);
             int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
             HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit + 0.02f * int.Parse(character.CalculationOptions["ElementalPrecision"])); // bugged Elemental Precision
+            SpellModifier *= (1 + calculations.BasicStats.BonusMageNukeMultiplier);
             CalculateDerivedStats(character, calculations);
         }
     }
@@ -276,6 +277,7 @@ namespace Rawr.Mage
             base.Calculate(character, calculations);
             CastTime = (BaseCastTime - 0.1f * int.Parse(character.CalculationOptions["ImprovedFireball"])) / calculations.CastingSpeed + calculations.Latency;
             SpellDamageCoefficient += 0.03f * int.Parse(character.CalculationOptions["EmpoweredFireball"]);
+            SpellModifier *= (1 + calculations.BasicStats.BonusMageNukeMultiplier);
             CalculateDerivedStats(character, calculations);
         }
     }
@@ -335,6 +337,7 @@ namespace Rawr.Mage
             CostModifier += 0.02f * int.Parse(character.CalculationOptions["EmpoweredArcaneMissiles"]);
             CritRate += 0.01f * int.Parse(character.CalculationOptions["ArcanePotency"]); // CC double dipping
             SpellDamageCoefficient += 0.15f * int.Parse(character.CalculationOptions["EmpoweredArcaneMissiles"]);
+            SpellModifier *= (1 + calculations.BasicStats.BonusMageNukeMultiplier);
             CalculateDerivedStats(character, calculations);
         }
     }

@@ -76,6 +76,10 @@ namespace Rawr.Mage
         public bool ArcanePower { get; set; }
         public bool IcyVeins { get; set; }
         public bool MoltenFury { get; set; }
+        public bool Heroism { get; set; }
+        public bool DestructionPotion { get; set; }
+
+        public string BuffLabel { get; set; }
 
         private Dictionary<string, Spell> Spells = new Dictionary<string, Spell> ();
         public double EvocationDuration;

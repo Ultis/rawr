@@ -117,30 +117,68 @@ namespace Rawr.Mage
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
+            bool heroismAvailable = int.Parse(character.CalculationOptions["HeroismAvailable"]) == 1;
+            bool apAvailable = int.Parse(character.CalculationOptions["ArcanePower"]) == 1;
+            bool ivAvailable = int.Parse(character.CalculationOptions["IcyVeins"]) == 1;
+            bool mfAvailable = int.Parse(character.CalculationOptions["MoltenFury"]) > 0;
+
             // base stats
-            CharacterCalculationsMage calculatedStats = GetTemporaryCharacterCalculations(character, additionalItem, false, false, false, false);
-            // temporary buffs: Arcane Power, Icy Veins, Molten Fury, Combustion?, Trinket1, Trinket2, Heroism
+            CharacterCalculationsMage calculatedStats = GetTemporaryCharacterCalculations(character, additionalItem, false, false, false, false, false);
+            // temporary buffs: Arcane Power, Icy Veins, Molten Fury, Combustion?, Trinket1, Trinket2, Heroism, Destro Pot, Flame Cap, Drums?
             // compute stats for temporary bonuses, each gives a list of spells used for final LP, solutions of LP stored in calculatedStats
+            List<CharacterCalculationsMage> statsList = new List<CharacterCalculationsMage>();
+            if (mfAvailable && heroismAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, false, true, false, true, true));
+            if (mfAvailable && heroismAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, false, true, false, true, false));
+            if (mfAvailable && ivAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, false, true, true, false, true));
+            if (mfAvailable && ivAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, false, true, true, false, false));
+            if (mfAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, false, true, false, false, true));
+            if (mfAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, false, true, false, false, false));
+            if (heroismAvailable && apAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, true, false, false, true, true));
+            if (heroismAvailable && apAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, true, false, false, true, false));
+            if (heroismAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, false, false, false, true, true));
+            if (heroismAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, false, false, false, true, false));
+            if (ivAvailable && apAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, true, false, true, false, true));
+            if (ivAvailable && apAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, true, false, true, false, false));
+            if (apAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, true, false, false, false, true));
+            if (apAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, true, false, false, false, false));
+            if (ivAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, false, false, true, false, true));
+            if (ivAvailable) statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, false, false, true, false, false));
+            statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, false, false, false, false, true));
+            statsList.Add(calculatedStats);
 
             List<string> spellList = new List<string>() { "Arcane Missiles", "Fireball", "Frostbolt", "Arcane Blast (spam)" };
 
-            // for now just a simple model with mana and time
-            int lpRows = 5;
+            int lpRows = 11;
             int colOffset = 6;
-            int lpCols = colOffset - 1 + spellList.Count;
+            int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
             double[,] lp = new double[lpRows + 2, lpCols + 2];
 
-            // fill model [mana regen, time limit, evocation limit, mana pot limit]
+            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown]
+            double aplength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
+            double ivlength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
+            double mflength = float.Parse(character.CalculationOptions["MoltenFuryPercentage"]) * calculatedStats.FightDuration;
 
             // idle regen
             calculatedStats.SolutionLabel.Add("Idle Regen");
             lp[1, 1] = -calculatedStats.ManaRegen;
             lp[2, 1] = 1;
+            lp[6, 1] = -40 / calculatedStats.FightDuration;
+            lp[7, 1] = -aplength / calculatedStats.FightDuration;
+            lp[8, 1] = -15 / calculatedStats.FightDuration;
+            lp[9, 1] = -ivlength / calculatedStats.FightDuration;
+            lp[10, 1] = -mflength / calculatedStats.FightDuration;
+            lp[11, 1] = -15 / calculatedStats.FightDuration;
             lp[lpRows + 1, 1] = 0;
             // wand
             calculatedStats.SolutionLabel.Add("Wand");
             lp[1, 2] = -calculatedStats.ManaRegen; // TODO add JoW
             lp[2, 2] = 1;
+            lp[6, 2] = -40 / calculatedStats.FightDuration;
+            lp[7, 2] = -aplength / calculatedStats.FightDuration;
+            lp[8, 2] = -15 / calculatedStats.FightDuration;
+            lp[9, 2] = -ivlength / calculatedStats.FightDuration;
+            lp[10, 2] = -mflength / calculatedStats.FightDuration;
+            lp[11, 2] = -15 / calculatedStats.FightDuration;
             lp[lpRows + 1, 2] = 0; // TODO add wand dps
             // evocation
             double evocationDuration = (8f + calculatedStats.BasicStats.EvocationExtension) / calculatedStats.CastingSpeed;
@@ -149,6 +187,12 @@ namespace Rawr.Mage
             lp[1, 3] = -calculatedStats.ManaRegen5SR - 0.15f * calculatedStats.BasicStats.Mana / 2f; // TODO add evocation weapons
             lp[2, 3] = 1;
             lp[3, 3] = 1;
+            lp[6, 3] = -40 / calculatedStats.FightDuration;
+            lp[7, 3] = -aplength / calculatedStats.FightDuration;
+            lp[8, 3] = -15 / calculatedStats.FightDuration;
+            lp[9, 3] = -ivlength / calculatedStats.FightDuration;
+            lp[10, 3] = -mflength / calculatedStats.FightDuration;
+            lp[11, 3] = -15 / calculatedStats.FightDuration;
             lp[lpRows + 1, 3] = 0;
             // mana pot
             calculatedStats.SolutionLabel.Add("Mana Potion");
@@ -156,6 +200,12 @@ namespace Rawr.Mage
             lp[1, 4] = -calculatedStats.ManaRegen5SR - 2400f / calculatedStats.ManaPotionTime;
             lp[2, 4] = 1;
             lp[4, 4] = 1;
+            lp[6, 4] = -40 / calculatedStats.FightDuration;
+            lp[7, 4] = -aplength / calculatedStats.FightDuration;
+            lp[8, 4] = -15 / calculatedStats.FightDuration;
+            lp[9, 4] = -ivlength / calculatedStats.FightDuration;
+            lp[10, 4] = -mflength / calculatedStats.FightDuration;
+            lp[11, 4] = -15 / calculatedStats.FightDuration;
             lp[lpRows + 1, 4] = 0;
             // mana gem
             calculatedStats.SolutionLabel.Add("Mana Gem");
@@ -163,15 +213,32 @@ namespace Rawr.Mage
             lp[1, 5] = -calculatedStats.ManaRegen5SR + (-Math.Min(3, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f)) * 2400f - ((calculatedStats.FightDuration >= 390) ? 1100f : 0f) - ((calculatedStats.FightDuration >= 510) ? 850 : 0)) / (calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime);
             lp[2, 5] = 1;
             lp[5, 5] = 1;
+            lp[6, 5] = -40 / calculatedStats.FightDuration;
+            lp[7, 5] = -aplength / calculatedStats.FightDuration;
+            lp[8, 5] = -15 / calculatedStats.FightDuration;
+            lp[9, 5] = -ivlength / calculatedStats.FightDuration;
+            lp[10, 5] = -mflength / calculatedStats.FightDuration;
+            lp[11, 5] = -15 / calculatedStats.FightDuration;
             lp[lpRows + 1, 5] = 0;
             // spells
-            for (int spell = 0; spell < spellList.Count; spell++)
+            for (int buffset = 0; buffset < statsList.Count; buffset++)
             {
-                Spell s = calculatedStats.GetSpell(spellList[spell]);
-                calculatedStats.SolutionLabel.Add(s.Name);
-                lp[1, spell + colOffset] = s.CostPerSecond - s.ManaRegenPerSecond;
-                lp[2, spell + colOffset] = 1;
-                lp[lpRows + 1, spell + colOffset] = s.DamagePerSecond;
+                for (int spell = 0; spell < spellList.Count; spell++)
+                {
+                    Spell s = statsList[buffset].GetSpell(spellList[spell]);
+                    calculatedStats.SolutionLabel.Add(((statsList[buffset].BuffLabel.Length > 0) ? (statsList[buffset].BuffLabel + "+") : "") + s.Name);
+                    int index = buffset * spellList.Count + spell + colOffset;
+                    lp[1, index] = s.CostPerSecond - s.ManaRegenPerSecond;
+                    lp[2, index] = 1;
+                    if (statsList[buffset].DestructionPotion) lp[4, index] = calculatedStats.ManaPotionTime / 15f;
+                    lp[6, index] = -40 / calculatedStats.FightDuration + (statsList[buffset].Heroism ? 1 : 0);
+                    lp[7, index] = -aplength / calculatedStats.FightDuration + (statsList[buffset].ArcanePower ? 1 : 0);
+                    lp[8, index] = -15 / calculatedStats.FightDuration + ((statsList[buffset].Heroism && statsList[buffset].ArcanePower) ? 1 : 0);
+                    lp[9, index] = -ivlength / calculatedStats.FightDuration + (statsList[buffset].IcyVeins ? 1 : 0);
+                    lp[10, index] = -mflength / calculatedStats.FightDuration + (statsList[buffset].MoltenFury ? 1 : 0);
+                    lp[11, index] = -15 / calculatedStats.FightDuration + ((statsList[buffset].MoltenFury && statsList[buffset].DestructionPotion) ? 1 : 0);
+                    lp[lpRows + 1, index] = s.DamagePerSecond;
+                }
             }
             lp[1, lpCols + 1] = calculatedStats.BasicStats.Mana;
             lp[2, lpCols + 1] = calculatedStats.FightDuration;
@@ -295,7 +362,7 @@ namespace Rawr.Mage
             return ret;
         }
 
-        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism)
+        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion)
         {
             CharacterCalculationsMage calculatedStats = new CharacterCalculationsMage();
             Stats stats = GetCharacterStats(character, additionalItem);
@@ -309,6 +376,7 @@ namespace Rawr.Mage
             float mindMasteryDamage = (0.05f * int.Parse(character.CalculationOptions["MindMastery"]) * stats.Intellect);
             float improvedSpiritDamage = 0;
             if (character.ActiveBuffs.Contains("Improved Divine Spirit")) improvedSpiritDamage = 0.1f * stats.Spirit;
+            if (destructionPotion) stats.SpellDamageRating += 120;
 
             calculatedStats.CastingSpeed = 1 + stats.SpellHasteRating / 995f * levelScalingFactor;
             calculatedStats.ArcaneDamage = stats.SpellArcaneDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
@@ -317,6 +385,7 @@ namespace Rawr.Mage
             calculatedStats.NatureDamage = /* stats.SpellNatureDamageRating + */ stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
 
             calculatedStats.SpellCrit = 0.01f * (stats.Intellect * 0.0125f + 0.9075f) + 0.01f * int.Parse(character.CalculationOptions["ArcaneInstability"]) + 0.01f * int.Parse(character.CalculationOptions["ArcanePotency"]) + stats.SpellCritRating / 1400f * levelScalingFactor + 0.03f * molten;
+            if (destructionPotion) calculatedStats.SpellCrit += 0.02f;
             calculatedStats.SpellHit = stats.SpellHitRating * levelScalingFactor / 800f;
 
             int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
@@ -344,6 +413,17 @@ namespace Rawr.Mage
             calculatedStats.ArcanePower = arcanePower;
             calculatedStats.MoltenFury = moltenFury;
             calculatedStats.IcyVeins = icyVeins;
+            calculatedStats.Heroism = heroism;
+            calculatedStats.DestructionPotion = destructionPotion;
+
+            List<String> buffList = new List<string> ();
+            if (moltenFury) buffList.Add("Molten Fury");
+            if (heroism) buffList.Add("Heroism");
+            if (icyVeins) buffList.Add("Icy Veins");
+            if (arcanePower) buffList.Add("Arcane Power");
+            if (destructionPotion) buffList.Add("Destruction Potion");
+
+            calculatedStats.BuffLabel = string.Join("+", buffList.ToArray());
 
             if (icyVeins)
             {

@@ -44,6 +44,10 @@ namespace Rawr.Mage
                 Character.CalculationOptions["FightDuration"] = "300";
             if (!Character.CalculationOptions.ContainsKey("ShadowPriest"))
                 Character.CalculationOptions["ShadowPriest"] = "175";
+            if (!Character.CalculationOptions.ContainsKey("HeroismAvailable"))
+                Character.CalculationOptions["HeroismAvailable"] = "1";
+            if (!Character.CalculationOptions.ContainsKey("MoltenFuryPercentage"))
+                Character.CalculationOptions["MoltenFuryPercentage"] = "0.15";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             comboBoxAoeTargetLevel.SelectedItem = Character.CalculationOptions["AoeTargetLevel"];
@@ -57,6 +61,8 @@ namespace Rawr.Mage
             textBoxNatureResist.Text = Character.CalculationOptions["NatureResist"];
             textBoxFightDuration.Text = Character.CalculationOptions["FightDuration"];
             textBoxShadowPriest.Text = Character.CalculationOptions["ShadowPriest"];
+            checkBoxHeroism.Checked = Character.CalculationOptions["HeroismAvailable"] == "1";
+            textBoxMoltenFuryPercentage.Text = Character.CalculationOptions["MoltenFuryPercentage"];
 
             if (talents != null) talents.LoadCalculationOptions();
         }
@@ -135,6 +141,18 @@ namespace Rawr.Mage
         private void textBoxShadowPriest_TextChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["ShadowPriest"] = textBoxShadowPriest.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void checkBoxHeroism_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["HeroismAvailable"] = checkBoxHeroism.Checked ? "1" : "0";
+            Character.OnItemsChanged();
+        }
+
+        private void textBoxMoltenFuryPercentage_TextChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["MoltenFuryPercentage"] = textBoxMoltenFuryPercentage.Text;
             Character.OnItemsChanged();
         }
 	}
