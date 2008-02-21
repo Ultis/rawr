@@ -148,37 +148,36 @@ namespace Rawr.Mage
 
             List<string> spellList = new List<string>() { "Arcane Missiles", "Fireball", "Frostbolt", "Arcane Blast (spam)" };
 
-            int lpRows = 11;
+            int lpRows = 14;
             int colOffset = 6;
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
             double[,] lp = new double[lpRows + 2, lpCols + 2];
 
-            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown]
+            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown]
             double aplength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
             double ivlength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
             double mflength = float.Parse(character.CalculationOptions["MoltenFuryPercentage"]) * calculatedStats.FightDuration;
+            double dpivstackArea = calculatedStats.FightDuration;
+            if (mfAvailable && heroismAvailable) dpivstackArea -= 120;
+            double dpivlength = 15 * (int)(dpivstackArea / 360f);
+            if (dpivstackArea % 360f < 195)
+            {
+                dpivlength += 15;
+            }
+            else
+            {
+                dpivlength += 30;
+            }
 
             // idle regen
             calculatedStats.SolutionLabel.Add("Idle Regen");
             lp[1, 1] = -calculatedStats.ManaRegen;
             lp[2, 1] = 1;
-            lp[6, 1] = -40 / calculatedStats.FightDuration;
-            lp[7, 1] = -aplength / calculatedStats.FightDuration;
-            lp[8, 1] = -15 / calculatedStats.FightDuration;
-            lp[9, 1] = -ivlength / calculatedStats.FightDuration;
-            lp[10, 1] = -mflength / calculatedStats.FightDuration;
-            lp[11, 1] = -15 / calculatedStats.FightDuration;
             lp[lpRows + 1, 1] = 0;
             // wand
             calculatedStats.SolutionLabel.Add("Wand");
             lp[1, 2] = -calculatedStats.ManaRegen; // TODO add JoW
             lp[2, 2] = 1;
-            lp[6, 2] = -40 / calculatedStats.FightDuration;
-            lp[7, 2] = -aplength / calculatedStats.FightDuration;
-            lp[8, 2] = -15 / calculatedStats.FightDuration;
-            lp[9, 2] = -ivlength / calculatedStats.FightDuration;
-            lp[10, 2] = -mflength / calculatedStats.FightDuration;
-            lp[11, 2] = -15 / calculatedStats.FightDuration;
             lp[lpRows + 1, 2] = 0; // TODO add wand dps
             // evocation
             double evocationDuration = (8f + calculatedStats.BasicStats.EvocationExtension) / calculatedStats.CastingSpeed;
@@ -187,12 +186,6 @@ namespace Rawr.Mage
             lp[1, 3] = -calculatedStats.ManaRegen5SR - 0.15f * calculatedStats.BasicStats.Mana / 2f; // TODO add evocation weapons
             lp[2, 3] = 1;
             lp[3, 3] = 1;
-            lp[6, 3] = -40 / calculatedStats.FightDuration;
-            lp[7, 3] = -aplength / calculatedStats.FightDuration;
-            lp[8, 3] = -15 / calculatedStats.FightDuration;
-            lp[9, 3] = -ivlength / calculatedStats.FightDuration;
-            lp[10, 3] = -mflength / calculatedStats.FightDuration;
-            lp[11, 3] = -15 / calculatedStats.FightDuration;
             lp[lpRows + 1, 3] = 0;
             // mana pot
             calculatedStats.SolutionLabel.Add("Mana Potion");
@@ -200,12 +193,6 @@ namespace Rawr.Mage
             lp[1, 4] = -calculatedStats.ManaRegen5SR - 2400f / calculatedStats.ManaPotionTime;
             lp[2, 4] = 1;
             lp[4, 4] = 1;
-            lp[6, 4] = -40 / calculatedStats.FightDuration;
-            lp[7, 4] = -aplength / calculatedStats.FightDuration;
-            lp[8, 4] = -15 / calculatedStats.FightDuration;
-            lp[9, 4] = -ivlength / calculatedStats.FightDuration;
-            lp[10, 4] = -mflength / calculatedStats.FightDuration;
-            lp[11, 4] = -15 / calculatedStats.FightDuration;
             lp[lpRows + 1, 4] = 0;
             // mana gem
             calculatedStats.SolutionLabel.Add("Mana Gem");
@@ -213,12 +200,6 @@ namespace Rawr.Mage
             lp[1, 5] = -calculatedStats.ManaRegen5SR + (-Math.Min(3, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f)) * 2400f - ((calculatedStats.FightDuration >= 390) ? 1100f : 0f) - ((calculatedStats.FightDuration >= 510) ? 850 : 0)) / (calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime);
             lp[2, 5] = 1;
             lp[5, 5] = 1;
-            lp[6, 5] = -40 / calculatedStats.FightDuration;
-            lp[7, 5] = -aplength / calculatedStats.FightDuration;
-            lp[8, 5] = -15 / calculatedStats.FightDuration;
-            lp[9, 5] = -ivlength / calculatedStats.FightDuration;
-            lp[10, 5] = -mflength / calculatedStats.FightDuration;
-            lp[11, 5] = -15 / calculatedStats.FightDuration;
             lp[lpRows + 1, 5] = 0;
             // spells
             for (int buffset = 0; buffset < statsList.Count; buffset++)
@@ -231,12 +212,15 @@ namespace Rawr.Mage
                     lp[1, index] = s.CostPerSecond - s.ManaRegenPerSecond;
                     lp[2, index] = 1;
                     if (statsList[buffset].DestructionPotion) lp[4, index] = calculatedStats.ManaPotionTime / 15f;
-                    lp[6, index] = -40 / calculatedStats.FightDuration + (statsList[buffset].Heroism ? 1 : 0);
-                    lp[7, index] = -aplength / calculatedStats.FightDuration + (statsList[buffset].ArcanePower ? 1 : 0);
-                    lp[8, index] = -15 / calculatedStats.FightDuration + ((statsList[buffset].Heroism && statsList[buffset].ArcanePower) ? 1 : 0);
-                    lp[9, index] = -ivlength / calculatedStats.FightDuration + (statsList[buffset].IcyVeins ? 1 : 0);
-                    lp[10, index] = -mflength / calculatedStats.FightDuration + (statsList[buffset].MoltenFury ? 1 : 0);
-                    lp[11, index] = -15 / calculatedStats.FightDuration + ((statsList[buffset].MoltenFury && statsList[buffset].DestructionPotion) ? 1 : 0);
+                    lp[6, index] = (statsList[buffset].Heroism ? 1 : 0);
+                    lp[7, index] = (statsList[buffset].ArcanePower ? 1 : 0);
+                    lp[8, index] = ((statsList[buffset].Heroism && statsList[buffset].ArcanePower) ? 1 : 0);
+                    lp[9, index] = (statsList[buffset].IcyVeins ? 1 : 0);
+                    lp[10, index] = (statsList[buffset].MoltenFury ? 1 : 0);
+                    lp[11, index] = ((statsList[buffset].MoltenFury && statsList[buffset].DestructionPotion) ? 1 : 0);
+                    lp[12, index] = ((statsList[buffset].MoltenFury && statsList[buffset].IcyVeins) ? 1 : 0);
+                    lp[13, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].Heroism) ? 1 : 0);
+                    lp[14, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].IcyVeins) ? 1 : 0);
                     lp[lpRows + 1, index] = s.DamagePerSecond;
                 }
             }
@@ -245,6 +229,15 @@ namespace Rawr.Mage
             lp[3, lpCols + 1] = evocationDuration * Math.Max(1, (1 + Math.Floor((calculatedStats.FightDuration - 200f) / 480f)));
             lp[4, lpCols + 1] = calculatedStats.MaxManaPotion * calculatedStats.ManaPotionTime;
             lp[5, lpCols + 1] = calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime;
+            lp[6, lpCols + 1] = 40;
+            lp[7, lpCols + 1] = aplength;
+            lp[8, lpCols + 1] = 15;
+            lp[9, lpCols + 1] = ivlength;
+            lp[10, lpCols + 1] = mflength;
+            lp[11, lpCols + 1] = 15;
+            lp[12, lpCols + 1] = 20;
+            lp[13, lpCols + 1] = 15;
+            lp[14, lpCols + 1] = dpivlength;
 
             calculatedStats.Solution = LPSolve(lp, lpRows, lpCols);
 
