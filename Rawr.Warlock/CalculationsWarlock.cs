@@ -23,7 +23,13 @@ namespace Rawr.Warlock
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
             get {
-                return _subPointNameColors ?? new Dictionary<string, System.Drawing.Color>();
+                
+                if (_subPointNameColors == null)
+                {
+                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+                    _subPointNameColors.Add("DPS", System.Drawing.Color.Blue);
+                }
+                return _subPointNameColors;
                 }
         }
 
@@ -49,8 +55,8 @@ namespace Rawr.Warlock
         public override string[] CharacterDisplayCalculationLabels
         {
             get 
-            { 
-                return _characterDisplayCalculationLabels ??  new string[]
+            {
+                return _characterDisplayCalculationLabels ?? (_characterDisplayCalculationLabels = new string[]
                     {
                         "Basic Stats:Health",
                         "Basic Stats:Mana",
@@ -61,29 +67,29 @@ namespace Rawr.Warlock
                         "Spell Stats:Casting Speed",
                         "Spell Stats:Shadow Damage",
                         "Spell Stats:Fire Damage",
-                    };
+                    });
             }
         }
 
         private string[] _customChartNames = null;
         public override string[] CustomChartNames
         {
-            get { return _customChartNames ?? new string[] { }; }
+            get { return _customChartNames ?? ( _customChartNames = new string[] { }); }
         }
 
 
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
         {
-            get { return _calculationOptionsPanel ?? new CalculationOptionsPanelWarlock(); }
+            get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelWarlock()); }
         }
 
-        private List<Item.ItemType> _relevateItemTypes = null;
+        private List<Item.ItemType> _relevantItemTypes = null;
         public override List<Item.ItemType> RelevantItemTypes
         {
             get
             {
-                return _relevateItemTypes ?? new List<Item.ItemType>(new Item.ItemType[]
+                return _relevantItemTypes ?? (_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
 					{
 						Item.ItemType.None,
 						Item.ItemType.Cloth,
@@ -91,7 +97,7 @@ namespace Rawr.Warlock
 						Item.ItemType.OneHandSword,
 						Item.ItemType.Staff,
 						Item.ItemType.Wand,
-					});
+					}));
             }
         }
 
@@ -124,25 +130,18 @@ namespace Rawr.Warlock
         {
             Stats charStats = GetCharacterStats(character);
             int duration = Int32.Parse(character.CalculationOptions["Duration"]);
-            float latency = Int32.Parse(character.CalculationOptions["Latency"]);
+            float latency = float.Parse(character.CalculationOptions["Latency"]);
             float gcd = 1.5f;
-            List<Spell> spells = new List<Spell>();
 
             Spell sbolt = new ShadowBolt(character, charStats);
-            //if (character.CalculationOptions["FillerSpell"].ToUpper() == "SHADOWBOLT")
-              //  spells.Add(new ShadowBolt(character, charStats));
+            WarlockSpellRotation wsr = new WarlockSpellRotation(charStats, character, duration);
+            wsr.AddSpell(sbolt, 1);
 
-            //testing stuff for shadowbolt spam now
-
-            int numSpells = (int)Math.Floor(duration / (sbolt.CastTime + latency));
-
-            float dps = numSpells * sbolt.AverageDamage / duration;
-            
+            float[] dps = wsr.GetDPS;
             CharacterCalculationsWarlock ccw = new CharacterCalculationsWarlock();
-            ccw.OverallPoints = dps;
-
-
-
+            ccw.SubPoints = dps;
+            ccw.OverallPoints = dps[0];
+            ccw.TotalStats = charStats;
             return ccw;
 
         }
@@ -296,12 +295,54 @@ namespace Rawr.Warlock
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            throw new NotImplementedException();
+            return new Stats()
+            {
+                Health = stats.Health,
+                Mana = stats.Mana,
+                Stamina = stats.Stamina,
+                Intellect = stats.Intellect,
+                Spirit = stats.Spirit,
+                Mp5 = stats.Mp5,
+                SpellCritRating = stats.SpellCritRating,
+                SpellDamageRating = stats.SpellDamageRating,
+                SpellFireDamageRating = stats.SpellFireDamageRating,
+                SpellShadowDamageRating = stats.SpellShadowDamageRating,
+                SpellHasteRating = stats.SpellHasteRating,
+                SpellHitRating = stats.SpellHitRating,
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BonusFireSpellPowerMultiplier = stats.BonusFireSpellPowerMultiplier,
+                BonusShadowSpellPowerMultiplier = stats.BonusShadowSpellPowerMultiplier,
+            };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            throw new NotImplementedException();
-        }
+            return (
+                stats.Health +
+                stats.Mana +
+                stats.Stamina +
+                stats.Intellect +
+                stats.Spirit +
+                stats.Mp5 +
+                stats.SpellCritRating +
+                stats.SpellDamageRating +
+                stats.SpellFireDamageRating +
+                stats.SpellShadowDamageRating +
+                stats.SpellHasteRating +
+                stats.SpellHitRating +
+                stats.BonusIntellectMultiplier +
+                stats.BonusSpellCritMultiplier +
+                stats.BonusSpellPowerMultiplier +
+                stats.BonusStaminaMultiplier +
+                stats.BonusSpiritMultiplier +
+                stats.SpellFireDamageRating +
+                stats.SpellShadowDamageRating +
+                stats.BonusFireSpellPowerMultiplier +
+                stats.BonusShadowSpellPowerMultiplier) > 0;
+                  }
     }
 }

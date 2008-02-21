@@ -60,7 +60,7 @@ namespace Rawr.Warlock
     {
         public ShadowBolt(Character character, Stats stats)
         {
-
+            Name = "Shadowbolt";
             BaseCost = 420;
             BaseCastTime = 3.0f;
             BaseMinDamage = 541;
@@ -109,7 +109,7 @@ namespace Rawr.Warlock
                 DamageModifier *= 1.05f;
             if (character.CalculationOptions["ShadowWeaving"] == "T")
                 DamageModifier *= 1.1f;
-            DamageModifier *= float.Parse(character.CalculationOptions["CurseOfShadows"]);
+            DamageModifier *= float.Parse(character.CalculationOptions["ShadowsBonus"]);
 
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             MaxDamage = (MaxDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;

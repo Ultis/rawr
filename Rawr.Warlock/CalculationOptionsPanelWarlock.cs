@@ -16,22 +16,35 @@ namespace Rawr.Warlock
             		}
 
 
+        private void setDefaultOption(string option, string value)
+        {
+            if (!Character.CalculationOptions.ContainsKey(option))
+                Character.CalculationOptions.Add(option, value);
+        }
+
 		protected override void LoadCalculationOptions()
 		{
-			if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
-				Character.CalculationOptions["TargetLevel"] = "73";
-            if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-				Character.CalculationOptions["EnforceMetagemRequirements"] = "T";
-            if (!Character.CalculationOptions.ContainsKey("Latency"))
-                Character.CalculationOptions["Latency"] = "0.05";
-            if (!Character.CalculationOptions.ContainsKey("Duration"))
-                Character.CalculationOptions["Latency"] = "600";
+            setDefaultOption("TargetLevel", "73");
+            setDefaultOption("EnforceMetagemRequirements", "T");
+            setDefaultOption("Latency", "0.05");
+            setDefaultOption("Duration", "600");
+            setDefaultOption("Misery", "T");
+            setDefaultOption("ShadowWeaving", "T");
+            setDefaultOption("ShadowsBonus", "1.10");
+            setDefaultOption("ElementsBonus", "1.10");
+            setDefaultOption("SacraficedPet", "Succubus");
+            
+
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "T";
             textBoxLatency.Text = Character.CalculationOptions["Latency"];
             textBoxDuration.Text = Character.CalculationOptions["Duration"];
-           
+            checkMisery.Checked = Character.CalculationOptions["Misery"] == "T";
+            checkShadowWeaving.Checked = Character.CalculationOptions["ShadowWeaving"] == "T";
+            comboBoxShadows.SelectedItem = Character.CalculationOptions["ShadowsBonus"];
+            comboBoxPetSelection.SelectedItem = Character.CalculationOptions["SacraficedPet"];
+            checkSacraficed.Checked = true;
         }
 	
 		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)

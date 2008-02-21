@@ -6,64 +6,40 @@ namespace Rawr.Warlock
 {
     class ComparisonCalculationWarlock : ComparisonCalculationBase
     {
+        private string _name = string.Empty;
         public override string Name
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get { return _name; }
+            set { _name = value; }
         }
 
+
+        private float _overallPoints = 0f;
         public override float OverallPoints
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get { return _overallPoints; }
+            set { _overallPoints = value; }
         }
 
+        private float[] _subPoints = new float[] { 0f };
         public override float[] SubPoints
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get { return _subPoints; }
+            set { _subPoints = value; }
         }
 
+        private Item _item = null;
         public override Item Item
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get { return _item; }
+            set { _item = value; }
         }
 
+        private bool _equipped = false;
         public override bool Equipped
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get { return _equipped; }
+            set { _equipped = value; }
         }
     }
 }
