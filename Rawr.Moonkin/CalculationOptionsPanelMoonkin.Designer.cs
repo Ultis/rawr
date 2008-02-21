@@ -36,6 +36,7 @@
             this.btnTalents = new System.Windows.Forms.Button();
             this.txtFightLength = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.chkInnervate = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -91,7 +92,7 @@
             // 
             // btnTalents
             // 
-            this.btnTalents.Location = new System.Drawing.Point(6, 84);
+            this.btnTalents.Location = new System.Drawing.Point(6, 161);
             this.btnTalents.Name = "btnTalents";
             this.btnTalents.Size = new System.Drawing.Size(195, 23);
             this.btnTalents.TabIndex = 8;
@@ -105,6 +106,7 @@
             this.txtFightLength.Name = "txtFightLength";
             this.txtFightLength.Size = new System.Drawing.Size(93, 20);
             this.txtFightLength.TabIndex = 10;
+            this.txtFightLength.TextChanged += new System.EventHandler(this.txtFightLength_TextChanged);
             // 
             // label1
             // 
@@ -115,10 +117,22 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "Est. Fight Time (min):";
             // 
+            // chkInnervate
+            // 
+            this.chkInnervate.AutoSize = true;
+            this.chkInnervate.Location = new System.Drawing.Point(6, 86);
+            this.chkInnervate.Name = "chkInnervate";
+            this.chkInnervate.Size = new System.Drawing.Size(135, 17);
+            this.chkInnervate.TabIndex = 12;
+            this.chkInnervate.Text = "Cast Innervate on self?";
+            this.chkInnervate.UseVisualStyleBackColor = true;
+            this.chkInnervate.CheckedChanged += new System.EventHandler(this.chkInnervate_CheckedChanged);
+            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkInnervate);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtFightLength);
             this.Controls.Add(this.chkMetagem);
@@ -144,6 +158,7 @@
         private System.Windows.Forms.Button btnTalents;
         private System.Windows.Forms.TextBox txtFightLength;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox chkInnervate;
 
     }
 }

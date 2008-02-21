@@ -32,14 +32,17 @@ namespace Rawr.Moonkin
             if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
                 Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
             if (!Character.CalculationOptions.ContainsKey("Latency"))
-                Character.CalculationOptions["Latency"] = "0.04";
+                Character.CalculationOptions["Latency"] = "0.4";
             if (!Character.CalculationOptions.ContainsKey("FightLength"))
                 Character.CalculationOptions["FightLength"] = "5";
+            if (!Character.CalculationOptions.ContainsKey("Innervate"))
+                Character.CalculationOptions["Innervate"] = "No";
 
             cmbTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             chkMetagem.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
             txtLatency.Text = Character.CalculationOptions["Latency"];
             txtFightLength.Text = Character.CalculationOptions["FightLength"];
+            chkInnervate.Checked = Character.CalculationOptions["Innervate"] == "Yes";
 
             if (talents != null) talents.LoadCalculationOptions();
         }
@@ -59,6 +62,18 @@ namespace Rawr.Moonkin
         private void chkMetagem_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["EnforceMetagemRequirements"] = chkMetagem.Checked ? "Yes" : "No";
+            Character.OnItemsChanged();
+        }
+
+        private void txtFightLength_TextChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["FightLength"] = txtFightLength.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void chkInnervate_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["Innervate"] = chkInnervate.Checked ? "Yes" : "No";
             Character.OnItemsChanged();
         }
     }

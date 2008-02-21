@@ -43,8 +43,12 @@ namespace Rawr.Moonkin
                     "Spell Stats:Spell Haste",
                     "Spell Stats:Arcane Damage",
                     "Spell Stats:Nature Damage",
-                    "Regeneration:OO5SR MP5",
-                    "Regeneration:I5SR MP5",
+                    "Mana Regeneration:OO5SR",
+                    "Mana Regeneration:I5SR",
+                    "Spell Rotation:Rotation Name",
+                    "Spell Rotation:DPS",
+                    "Spell Rotation:MPS",
+                    "Spell Rotation:Time To OOM"
                     };
                 }
                 return characterDisplayCalculationLabels;
@@ -118,6 +122,8 @@ namespace Rawr.Moonkin
 
             float hitRatingDivisor = 1260.5f;
 
+            float hasteDivisor = 1560.0f;
+
             float critBase = 0.0185f;
             float critIntDivisor = 7997f;
             float critRatingDivisor = 2206.6f;
@@ -125,30 +131,23 @@ namespace Rawr.Moonkin
             calcs.SpellCrit = critBase + stats.SpellCritRating / critRatingDivisor;
             calcs.SpellHit = stats.SpellHitRating / hitRatingDivisor;
 
-            calcs.ArcaneDamage = stats.SpellDamageRating + stats.SpellArcaneDamageRating;
-            calcs.NatureDamage = stats.SpellDamageRating;
+            // All spells: Damage +((0.08 * LunarGuidance) * Int)
+            calcs.ArcaneDamage = stats.SpellDamageRating + stats.SpellArcaneDamageRating + 0.08f * int.Parse(character.CalculationOptions["LunarGuidance"]) * stats.Intellect;
+            calcs.NatureDamage = stats.SpellDamageRating + 0.08f * int.Parse(character.CalculationOptions["LunarGuidance"]) * stats.Intellect;
 
-            calcs.ManaRegen = stats.Mp5;
-            calcs.ManaRegen5SR = stats.SpellCombatManaRegeneration;
+            calcs.Latency = float.Parse(character.CalculationOptions["Latency"]);
+            calcs.FightLength = float.Parse(character.CalculationOptions["FightLength"]);
 
-            // Base stats: Intellect% +(0.04 * Heart of the Wild)
-            stats.Intellect *= 1 + 0.04f * int.Parse(character.CalculationOptions["HotW"]);
-            // Base stats: Stam%, Int%, Spi%, Agi% +(0.01 * Survival of the Fittest)
-            stats.Intellect *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
-            stats.Stamina *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
-            stats.Agility *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
-            stats.Spirit *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
-            // Base stats: Spirit% +(0.05 * Living Spirit)
-            stats.Spirit *= 1 + 0.05f * int.Parse(character.CalculationOptions["LivingSpirit"]);
-            // Base stats: Hit% +(0.02 * Balance of Power)
+            // 2.3 spirit regen calculation for druids
+            // The /2 is to convert from mana per tick (2s) to mana per second
+            float spiritRegen = (stats.Spirit / 4.5f + 15f) / 2;
+            calcs.ManaRegen = spiritRegen + stats.Mp5 / 5f;
+            calcs.ManaRegen5SR = spiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
+
+            // All spells: Hit% +(0.02 * Balance of Power)
             calcs.SpellHit += 0.02f * int.Parse(character.CalculationOptions["BalanceofPower"]);
-            // Regen mechanic: mp5 +((0.04 * Dreamstate) * Int)
-            // All spells: Damage +((0.08 * Lunar Guidance) * Int)
-            calcs.ArcaneDamage += 0.08f * int.Parse(character.CalculationOptions["LunarGuidance"]) * stats.Intellect;
-            calcs.NatureDamage += 0.08f * int.Parse(character.CalculationOptions["LunarGuidance"]) * stats.Intellect;
             // All spells: Crit% + (0.01 * Natural Perfection)
             calcs.SpellCrit += 0.01f * int.Parse(character.CalculationOptions["NaturalPerfection"]);
-            // Regen mechanic: mp5 +((0.1 * Intensity) * Spiritmp5())
 
             // Finally, add the int portion of spell crit into the equation
             calcs.SpellCrit += stats.Intellect / critIntDivisor;
@@ -176,6 +175,8 @@ namespace Rawr.Moonkin
             spellList["Moonfire"].dotEffect.damagePerTick *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
             spellList["Starfire"].damagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
 
+            // TODO: Add spell damage from idols
+
             // Add spell-specific crit chance
             // Wrath, Starfire: Crit chance +(0.02 * Focused Starlight)
             spellList["Wrath"].extraCritChance += 0.02f * int.Parse(character.CalculationOptions["FocusedStarlight"]);
@@ -202,9 +203,15 @@ namespace Rawr.Moonkin
             spellList["Wrath"].castTime -= 0.1f * int.Parse(character.CalculationOptions["StarlightWrath"]);
             spellList["Starfire"].castTime -= 0.1f * int.Parse(character.CalculationOptions["StarlightWrath"]);
 
-            calcs.SubPoints = spellList.GetDPSAndDPMRotations();
+            // Haste and latency calculations
+            foreach (KeyValuePair<string, Spell> pair in spellList)
+            {
+                pair.Value.castTime /= 1 + stats.SpellHasteRating / hasteDivisor;
+                pair.Value.castTime += calcs.Latency;
+            }
 
-            calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
+            // Get the optimal DPS rotation
+            spellList.GetRotation(character, ref calcs);
 
             return calcs;
         }
@@ -248,6 +255,16 @@ namespace Rawr.Moonkin
             statsTotal.Agility = (float)Math.Floor((Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier)) + statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier)) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
             statsTotal.Spirit = (float)Math.Floor((Math.Floor(statsRace.Spirit * (1 + statsRace.BonusSpiritMultiplier)) + statsGearEnchantsBuffs.Spirit * (1 + statsRace.BonusSpiritMultiplier)) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
+            // Base stats: Intellect% +(0.04 * Heart of the Wild)
+            statsTotal.Intellect *= 1 + 0.04f * int.Parse(character.CalculationOptions["HotW"]);
+            // Base stats: Stam%, Int%, Spi%, Agi% +(0.01 * Survival of the Fittest)
+            statsTotal.Intellect *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
+            statsTotal.Stamina *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
+            statsTotal.Agility *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
+            statsTotal.Spirit *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
+            // Base stats: Spirit% +(0.05 * Living Spirit)
+            statsTotal.Spirit *= 1 + 0.05f * int.Parse(character.CalculationOptions["LivingSpirit"]);
+
             // Bonus multipliers
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
             statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
@@ -258,6 +275,11 @@ namespace Rawr.Moonkin
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 380;
             statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f);
+
+            // Regen mechanic: mp5 +((0.1 * Intensity) * Spiritmp5())
+            statsTotal.SpellCombatManaRegeneration += 0.1f * int.Parse(character.CalculationOptions["Intensity"]);
+            // Regen mechanic: mp5 +((0.04 * Dreamstate) * Int)
+            statsTotal.Mp5 += (0.04f * int.Parse(character.CalculationOptions["Dreamstate"])) * statsTotal.Intellect;
 
             return statsTotal;
         }
