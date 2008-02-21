@@ -105,7 +105,7 @@ namespace Rawr
                 ti = _trees[tree].Find(delegate(TalentItem talent) { return talent.Name.ToUpper() == TalentName.ToUpper(); });
                 if (ti != null) return ti;
             }
-            return null;
+            return new TalentItem();
         }
 
         public override string ToString()
