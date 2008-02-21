@@ -294,7 +294,7 @@ namespace Rawr.Moonkin
                 // Reduce damage by number of spells that missed
                 damageDone *= 1 - missRate;
                 // Calculate how long we will burn through all our mana
-                float secsToOom = (totalMana / manaUsed) / duration;
+                float secsToOom = totalMana / (manaUsed / duration);
                 // This dps calc takes into account time spent not doing dps due to OOM issues
                 float dps = damageDone / duration * (secsToOom >= dpsTime ? dpsTime : secsToOom) / dpsTime;
                 float mps = manaUsed / duration;
