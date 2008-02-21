@@ -60,6 +60,7 @@
     <Compile Include="CalculationsMage.cs" />
     <Compile Include="CharacterCalculationsMage.cs" />
     <Compile Include="ComparisonCalculationMage.cs" />
+    <Compile Include="FSRCalc.cs" />
     <Compile Include="MageTalentsForm.cs">
       <SubType>Form</SubType>
     </Compile>

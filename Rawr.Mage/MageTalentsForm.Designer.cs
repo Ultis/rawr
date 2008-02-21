@@ -837,6 +837,7 @@ namespace Rawr.Mage
             this.comboBoxDragonsBreath.Name = "comboBoxDragonsBreath";
             this.comboBoxDragonsBreath.Size = new System.Drawing.Size(50, 21);
             this.comboBoxDragonsBreath.TabIndex = 51;
+            this.comboBoxDragonsBreath.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label25
             // 
@@ -862,6 +863,7 @@ namespace Rawr.Mage
             this.comboBoxEmpoweredFireball.Name = "comboBoxEmpoweredFireball";
             this.comboBoxEmpoweredFireball.Size = new System.Drawing.Size(50, 21);
             this.comboBoxEmpoweredFireball.TabIndex = 49;
+            this.comboBoxEmpoweredFireball.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label26
             // 
@@ -884,6 +886,7 @@ namespace Rawr.Mage
             this.comboBoxMoltenFury.Name = "comboBoxMoltenFury";
             this.comboBoxMoltenFury.Size = new System.Drawing.Size(50, 21);
             this.comboBoxMoltenFury.TabIndex = 47;
+            this.comboBoxMoltenFury.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label27
             // 
@@ -905,6 +908,7 @@ namespace Rawr.Mage
             this.comboBoxCombustion.Name = "comboBoxCombustion";
             this.comboBoxCombustion.Size = new System.Drawing.Size(50, 21);
             this.comboBoxCombustion.TabIndex = 45;
+            this.comboBoxCombustion.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label28
             // 
@@ -928,6 +932,7 @@ namespace Rawr.Mage
             this.comboBoxPyromaniac.Name = "comboBoxPyromaniac";
             this.comboBoxPyromaniac.Size = new System.Drawing.Size(50, 21);
             this.comboBoxPyromaniac.TabIndex = 43;
+            this.comboBoxPyromaniac.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label29
             // 
@@ -953,6 +958,7 @@ namespace Rawr.Mage
             this.comboBoxFirePower.Name = "comboBoxFirePower";
             this.comboBoxFirePower.Size = new System.Drawing.Size(50, 21);
             this.comboBoxFirePower.TabIndex = 41;
+            this.comboBoxFirePower.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label30
             // 
@@ -975,6 +981,7 @@ namespace Rawr.Mage
             this.comboBoxBlazingSpeed.Name = "comboBoxBlazingSpeed";
             this.comboBoxBlazingSpeed.Size = new System.Drawing.Size(50, 21);
             this.comboBoxBlazingSpeed.TabIndex = 39;
+            this.comboBoxBlazingSpeed.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label31
             // 
@@ -996,6 +1003,7 @@ namespace Rawr.Mage
             this.comboBoxBlastWave.Name = "comboBoxBlastWave";
             this.comboBoxBlastWave.Size = new System.Drawing.Size(50, 21);
             this.comboBoxBlastWave.TabIndex = 37;
+            this.comboBoxBlastWave.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label32
             // 
@@ -1019,6 +1027,7 @@ namespace Rawr.Mage
             this.comboBoxCriticalMass.Name = "comboBoxCriticalMass";
             this.comboBoxCriticalMass.Size = new System.Drawing.Size(50, 21);
             this.comboBoxCriticalMass.TabIndex = 35;
+            this.comboBoxCriticalMass.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label33
             // 
@@ -1042,6 +1051,7 @@ namespace Rawr.Mage
             this.comboBoxPlayingWithFire.Name = "comboBoxPlayingWithFire";
             this.comboBoxPlayingWithFire.Size = new System.Drawing.Size(50, 21);
             this.comboBoxPlayingWithFire.TabIndex = 33;
+            this.comboBoxPlayingWithFire.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label34
             // 
@@ -1065,6 +1075,7 @@ namespace Rawr.Mage
             this.comboBoxMasterOfElements.Name = "comboBoxMasterOfElements";
             this.comboBoxMasterOfElements.Size = new System.Drawing.Size(50, 21);
             this.comboBoxMasterOfElements.TabIndex = 31;
+            this.comboBoxMasterOfElements.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label35
             // 
@@ -1087,6 +1098,7 @@ namespace Rawr.Mage
             this.comboBoxImprovedFireWard.Name = "comboBoxImprovedFireWard";
             this.comboBoxImprovedFireWard.Size = new System.Drawing.Size(50, 21);
             this.comboBoxImprovedFireWard.TabIndex = 29;
+            this.comboBoxImprovedFireWard.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label36
             // 
@@ -1110,6 +1122,7 @@ namespace Rawr.Mage
             this.comboBoxImprovedScorch.Name = "comboBoxImprovedScorch";
             this.comboBoxImprovedScorch.Size = new System.Drawing.Size(50, 21);
             this.comboBoxImprovedScorch.TabIndex = 27;
+            this.comboBoxImprovedScorch.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label37
             // 
@@ -1132,6 +1145,7 @@ namespace Rawr.Mage
             this.comboBoxBurningSoul.Name = "comboBoxBurningSoul";
             this.comboBoxBurningSoul.Size = new System.Drawing.Size(50, 21);
             this.comboBoxBurningSoul.TabIndex = 25;
+            this.comboBoxBurningSoul.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label38
             // 
@@ -1153,6 +1167,7 @@ namespace Rawr.Mage
             this.comboBoxPyroblast.Name = "comboBoxPyroblast";
             this.comboBoxPyroblast.Size = new System.Drawing.Size(50, 21);
             this.comboBoxPyroblast.TabIndex = 23;
+            this.comboBoxPyroblast.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label39
             // 
@@ -1176,6 +1191,7 @@ namespace Rawr.Mage
             this.comboBoxImprovedFlamestrike.Name = "comboBoxImprovedFlamestrike";
             this.comboBoxImprovedFlamestrike.Size = new System.Drawing.Size(50, 21);
             this.comboBoxImprovedFlamestrike.TabIndex = 21;
+            this.comboBoxImprovedFlamestrike.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label40
             // 
@@ -1198,6 +1214,7 @@ namespace Rawr.Mage
             this.comboBoxIncineration.Name = "comboBoxIncineration";
             this.comboBoxIncineration.Size = new System.Drawing.Size(50, 21);
             this.comboBoxIncineration.TabIndex = 19;
+            this.comboBoxIncineration.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label41
             // 
@@ -1221,6 +1238,7 @@ namespace Rawr.Mage
             this.comboBoxImprovedFireBlast.Name = "comboBoxImprovedFireBlast";
             this.comboBoxImprovedFireBlast.Size = new System.Drawing.Size(50, 21);
             this.comboBoxImprovedFireBlast.TabIndex = 17;
+            this.comboBoxImprovedFireBlast.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label42
             // 
@@ -1243,6 +1261,7 @@ namespace Rawr.Mage
             this.comboBoxFlameThrowing.Name = "comboBoxFlameThrowing";
             this.comboBoxFlameThrowing.Size = new System.Drawing.Size(50, 21);
             this.comboBoxFlameThrowing.TabIndex = 15;
+            this.comboBoxFlameThrowing.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label43
             // 
@@ -1268,6 +1287,7 @@ namespace Rawr.Mage
             this.comboBoxIgnite.Name = "comboBoxIgnite";
             this.comboBoxIgnite.Size = new System.Drawing.Size(50, 21);
             this.comboBoxIgnite.TabIndex = 13;
+            this.comboBoxIgnite.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label44
             // 
@@ -1293,6 +1313,7 @@ namespace Rawr.Mage
             this.comboBoxImpact.Name = "comboBoxImpact";
             this.comboBoxImpact.Size = new System.Drawing.Size(50, 21);
             this.comboBoxImpact.TabIndex = 11;
+            this.comboBoxImpact.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label45
             // 
@@ -1318,6 +1339,7 @@ namespace Rawr.Mage
             this.comboBoxImprovedFireball.Name = "comboBoxImprovedFireball";
             this.comboBoxImprovedFireball.Size = new System.Drawing.Size(50, 21);
             this.comboBoxImprovedFireball.TabIndex = 9;
+            this.comboBoxImprovedFireball.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label46
             // 
@@ -1392,6 +1414,7 @@ namespace Rawr.Mage
             this.comboBoxSummonWaterElemental.Name = "comboBoxSummonWaterElemental";
             this.comboBoxSummonWaterElemental.Size = new System.Drawing.Size(50, 21);
             this.comboBoxSummonWaterElemental.TabIndex = 51;
+            this.comboBoxSummonWaterElemental.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label48
             // 
@@ -1417,6 +1440,7 @@ namespace Rawr.Mage
             this.comboBoxEmpoweredFrostbolt.Name = "comboBoxEmpoweredFrostbolt";
             this.comboBoxEmpoweredFrostbolt.Size = new System.Drawing.Size(50, 21);
             this.comboBoxEmpoweredFrostbolt.TabIndex = 49;
+            this.comboBoxEmpoweredFrostbolt.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label49
             // 
@@ -1442,6 +1466,7 @@ namespace Rawr.Mage
             this.comboBoxArcticWinds.Name = "comboBoxArcticWinds";
             this.comboBoxArcticWinds.Size = new System.Drawing.Size(50, 21);
             this.comboBoxArcticWinds.TabIndex = 47;
+            this.comboBoxArcticWinds.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label50
             // 
@@ -1463,6 +1488,7 @@ namespace Rawr.Mage
             this.comboBoxIceBarrier.Name = "comboBoxIceBarrier";
             this.comboBoxIceBarrier.Size = new System.Drawing.Size(50, 21);
             this.comboBoxIceBarrier.TabIndex = 45;
+            this.comboBoxIceBarrier.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label51
             // 
@@ -1488,6 +1514,7 @@ namespace Rawr.Mage
             this.comboBoxWintersChill.Name = "comboBoxWintersChill";
             this.comboBoxWintersChill.Size = new System.Drawing.Size(50, 21);
             this.comboBoxWintersChill.TabIndex = 43;
+            this.comboBoxWintersChill.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label52
             // 
@@ -1510,6 +1537,7 @@ namespace Rawr.Mage
             this.comboBoxIceFloes.Name = "comboBoxIceFloes";
             this.comboBoxIceFloes.Size = new System.Drawing.Size(50, 21);
             this.comboBoxIceFloes.TabIndex = 41;
+            this.comboBoxIceFloes.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label53
             // 
@@ -1533,6 +1561,7 @@ namespace Rawr.Mage
             this.comboBoxImprovedConeOfCold.Name = "comboBoxImprovedConeOfCold";
             this.comboBoxImprovedConeOfCold.Size = new System.Drawing.Size(50, 21);
             this.comboBoxImprovedConeOfCold.TabIndex = 39;
+            this.comboBoxImprovedConeOfCold.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label54
             // 
@@ -1554,6 +1583,7 @@ namespace Rawr.Mage
             this.comboBoxColdSnap.Name = "comboBoxColdSnap";
             this.comboBoxColdSnap.Size = new System.Drawing.Size(50, 21);
             this.comboBoxColdSnap.TabIndex = 37;
+            this.comboBoxColdSnap.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label55
             // 
@@ -1577,6 +1607,7 @@ namespace Rawr.Mage
             this.comboBoxFrozenCore.Name = "comboBoxFrozenCore";
             this.comboBoxFrozenCore.Size = new System.Drawing.Size(50, 21);
             this.comboBoxFrozenCore.TabIndex = 35;
+            this.comboBoxFrozenCore.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label56
             // 
@@ -1602,6 +1633,7 @@ namespace Rawr.Mage
             this.comboBoxShatter.Name = "comboBoxShatter";
             this.comboBoxShatter.Size = new System.Drawing.Size(50, 21);
             this.comboBoxShatter.TabIndex = 33;
+            this.comboBoxShatter.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label57
             // 
@@ -1625,6 +1657,7 @@ namespace Rawr.Mage
             this.comboBoxFrostChanneling.Name = "comboBoxFrostChanneling";
             this.comboBoxFrostChanneling.Size = new System.Drawing.Size(50, 21);
             this.comboBoxFrostChanneling.TabIndex = 31;
+            this.comboBoxFrostChanneling.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label58
             // 
@@ -1647,6 +1680,7 @@ namespace Rawr.Mage
             this.comboBoxArcticReach.Name = "comboBoxArcticReach";
             this.comboBoxArcticReach.Size = new System.Drawing.Size(50, 21);
             this.comboBoxArcticReach.TabIndex = 29;
+            this.comboBoxArcticReach.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label59
             // 
@@ -1670,6 +1704,7 @@ namespace Rawr.Mage
             this.comboBoxImprovedBlizzard.Name = "comboBoxImprovedBlizzard";
             this.comboBoxImprovedBlizzard.Size = new System.Drawing.Size(50, 21);
             this.comboBoxImprovedBlizzard.TabIndex = 27;
+            this.comboBoxImprovedBlizzard.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label60
             // 
@@ -1691,6 +1726,7 @@ namespace Rawr.Mage
             this.comboBoxIcyVeins.Name = "comboBoxIcyVeins";
             this.comboBoxIcyVeins.Size = new System.Drawing.Size(50, 21);
             this.comboBoxIcyVeins.TabIndex = 25;
+            this.comboBoxIcyVeins.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label61
             // 
@@ -1714,6 +1750,7 @@ namespace Rawr.Mage
             this.comboBoxPiercingIce.Name = "comboBoxPiercingIce";
             this.comboBoxPiercingIce.Size = new System.Drawing.Size(50, 21);
             this.comboBoxPiercingIce.TabIndex = 23;
+            this.comboBoxPiercingIce.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label62
             // 
@@ -1737,6 +1774,7 @@ namespace Rawr.Mage
             this.comboBoxPermafrost.Name = "comboBoxPermafrost";
             this.comboBoxPermafrost.Size = new System.Drawing.Size(50, 21);
             this.comboBoxPermafrost.TabIndex = 21;
+            this.comboBoxPermafrost.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label63
             // 
@@ -1759,6 +1797,7 @@ namespace Rawr.Mage
             this.comboBoxImprovedFrostNova.Name = "comboBoxImprovedFrostNova";
             this.comboBoxImprovedFrostNova.Size = new System.Drawing.Size(50, 21);
             this.comboBoxImprovedFrostNova.TabIndex = 19;
+            this.comboBoxImprovedFrostNova.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label64
             // 
@@ -1782,6 +1821,7 @@ namespace Rawr.Mage
             this.comboBoxFrostbite.Name = "comboBoxFrostbite";
             this.comboBoxFrostbite.Size = new System.Drawing.Size(50, 21);
             this.comboBoxFrostbite.TabIndex = 17;
+            this.comboBoxFrostbite.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label65
             // 
@@ -1807,6 +1847,7 @@ namespace Rawr.Mage
             this.comboBoxIceShards.Name = "comboBoxIceShards";
             this.comboBoxIceShards.Size = new System.Drawing.Size(50, 21);
             this.comboBoxIceShards.TabIndex = 15;
+            this.comboBoxIceShards.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label66
             // 
@@ -1830,6 +1871,7 @@ namespace Rawr.Mage
             this.comboBoxElementalPrecision.Name = "comboBoxElementalPrecision";
             this.comboBoxElementalPrecision.Size = new System.Drawing.Size(50, 21);
             this.comboBoxElementalPrecision.TabIndex = 13;
+            this.comboBoxElementalPrecision.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label67
             // 
@@ -1855,6 +1897,7 @@ namespace Rawr.Mage
             this.comboBoxImprovedFrostbolt.Name = "comboBoxImprovedFrostbolt";
             this.comboBoxImprovedFrostbolt.Size = new System.Drawing.Size(50, 21);
             this.comboBoxImprovedFrostbolt.TabIndex = 11;
+            this.comboBoxImprovedFrostbolt.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label68
             // 
@@ -1877,6 +1920,7 @@ namespace Rawr.Mage
             this.comboBoxFrostWarding.Name = "comboBoxFrostWarding";
             this.comboBoxFrostWarding.Size = new System.Drawing.Size(50, 21);
             this.comboBoxFrostWarding.TabIndex = 9;
+            this.comboBoxFrostWarding.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label69
             // 

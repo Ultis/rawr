@@ -45,6 +45,10 @@ namespace Rawr.Mage
                     "Regeneration:MP5",
                     "Regeneration:Mana Regen",
                     "Regeneration:Health Regen",
+                    "Spell Info:Arcane Missiles",
+                    "Spell Info:Arcane Blast*spammed",
+                    "Spell Info:Fireball",
+                    "Spell Info:Frostbolt",
                     "Survivability:Arcane Resist",
                     "Survivability:Fire Resist",
                     "Survivability:Nature Resist",
@@ -111,23 +115,150 @@ namespace Rawr.Mage
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             // base stats
-            character.CalculationOptions["ArcanePowerActive"] = "0";
-            character.CalculationOptions["MoltenFuryActive"] = "0";
-            CharacterCalculationsMage calculatedStats = GetTemporaryCharacterCalculations(character, additionalItem);
+            CharacterCalculationsMage calculatedStats = GetTemporaryCharacterCalculations(character, additionalItem, false, false, false, false);
             // temporary buffs: Arcane Power, Icy Veins, Molten Fury, Combustion?, Trinket1, Trinket2, Heroism
             // compute stats for temporary bonuses, each gives a list of spells used for final LP, solutions of LP stored in calculatedStats
 
-            calculatedStats.SubPoints[0] = calculatedStats.Spells[0].DamagePerSecond;
+            List<string> spellList = new List<string>() { "Arcane Missiles", "Fireball", "Frostbolt", "Arcane Blast (spam)" };
+
+            // for now just a simple model with mana and time
+            int lpRows = 2;
+            int lpCols = spellList.Count;
+            double[,] lp = new double[lpRows + 2, lpCols + 2];
+
+            // fill model
+            for (int spell = 0; spell < spellList.Count; spell++)
+            {
+                Spell s = calculatedStats.GetSpell(spellList[spell]);
+                lp[1, spell + 1] = s.CostPerSecond - s.ManaRegenPerSecond;
+                lp[2, spell + 1] = 1;
+                lp[lpRows + 1, spell + 1] = s.DamagePerSecond;
+            }
+            lp[1, lpCols + 1] = calculatedStats.BasicStats.Mana;
+            lp[2, lpCols + 1] = double.Parse(character.CalculationOptions["FightDuration"]);
+
+            double[] solution = LPSolve(lp, lpRows, lpCols);
+
+            calculatedStats.SubPoints[0] = (float)solution[lpCols + 1];
             calculatedStats.OverallPoints = calculatedStats.SubPoints[0];
 
             return calculatedStats;
         }
 
-        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Character character, Item additionalItem)
+        public double[] LPSolve(double[,] data, int rows, int cols)
+        {
+            double[,] a = data;
+            int[] XN;
+            int[] XB;
+            
+            bool feasible;
+            int i, j, r, c, t;
+            double v, bestv;
+
+            bestv = 0;
+            c = 0;
+            r = 0;
+            
+            XN = new int[cols + 1];
+            XB = new int[rows + 1];
+            
+            for (i = 1; i <= rows; i++)
+                XB[i] = cols + i;
+            for (j = 1; j <= cols; j++)
+                XN[j] = j;
+            
+            do
+            {
+                feasible = true;
+                // check feasibility
+                for (i = 1; i <= rows; i++)
+                {
+                    if (a[i, cols + 1] < 0)
+                    {
+                        feasible = false;
+                        bestv = 0;
+                        for (j = 1; j <= cols; j++)
+                        {
+                            if (a[i, j] < bestv)
+                            {
+                                bestv = a[i, j];
+                                c = j;
+                            }
+                        }
+                        break;
+                    }
+                }
+                if (feasible)
+                {
+                    // standard problem
+                    bestv = 0;
+                    for (j = 1; j <= cols; j++)
+                    {
+                        if (a[rows + 1, j] > bestv)
+                        {
+                            bestv = a[rows + 1, j];
+                            c = j;
+                        }
+                    }
+                }
+                if (bestv == 0) break;
+                bestv = -1;
+                for (i = 1; i <= rows; i++)
+                {
+                    if (a[i, c] > 0)
+                    {
+                        v = a[i, cols + 1] / a[i, c];
+                        if (bestv == -1 || v < bestv)
+                        {
+                            bestv = v;
+                            r = i;
+                        }
+                    }
+                }
+                if (bestv == -1) break;
+                v = a[r, c];
+                a[r, c] = 1;
+                for (j = 1; j <= cols + 1; j++)
+                {
+                    a[r, j] = a[r, j] / v;
+                }
+                for (i = 1; i <= rows + 1; i++)
+                {
+                    if (i != r)
+                    {
+                        v = a[i, c];
+                        a[i, c] = 0;
+                        for (j = 1; j <= cols + 1; j++)
+                        {
+                            a[i, j] = a[i, j] - a[r, j] * v;
+                            if (Math.Abs(a[i, j]) < 0.00000000000001)
+                            {
+                                a[i, j] = 0; // compensate for floating point errors
+                            }
+                        }
+                    }
+                }
+                t = XN[c];
+                XN[c] = XB[r];
+                XB[r] = t;
+            } while (true);
+            
+            double[] ret = new double[cols + 2];
+            for (i = 1; i <= rows; i++)
+            {
+                if (XB[i] <= cols) ret[XB[i]] = a[i, cols + 1];
+            }
+            ret[cols + 1] = -a[rows + 1, cols + 1];
+
+            return ret;
+        }
+
+        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism)
         {
             CharacterCalculationsMage calculatedStats = new CharacterCalculationsMage();
             Stats stats = GetCharacterStats(character, additionalItem);
             calculatedStats.BasicStats = stats;
+            calculatedStats.Character = character;
 
             float levelScalingFactor = (1 - (70 - 60) / 82f * 3);
             int molten = 0;
@@ -141,9 +272,16 @@ namespace Rawr.Mage
             calculatedStats.ArcaneDamage = stats.SpellArcaneDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
             calculatedStats.FireDamage = stats.SpellFireDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
             calculatedStats.FrostDamage = stats.SpellFrostDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
+            calculatedStats.NatureDamage = /* stats.SpellNatureDamageRating + */ stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
 
             calculatedStats.SpellCrit = 0.01f * (stats.Intellect * 0.0125f + 0.9075f) + 0.01f * int.Parse(character.CalculationOptions["ArcaneInstability"]) + 0.01f * int.Parse(character.CalculationOptions["ArcanePotency"]) + stats.SpellCritRating / 1400f * levelScalingFactor + 0.03f * molten;
             calculatedStats.SpellHit = stats.SpellHitRating * levelScalingFactor / 800f;
+
+            int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
+            calculatedStats.ArcaneHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculatedStats.SpellHit + 0.02f * int.Parse(character.CalculationOptions["ArcaneFocus"]));
+            calculatedStats.FireHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculatedStats.SpellHit + 0.01f * int.Parse(character.CalculationOptions["ElementalPrecision"]));
+            calculatedStats.FrostHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculatedStats.SpellHit + 0.01f * int.Parse(character.CalculationOptions["ElementalPrecision"]));
+            calculatedStats.NatureHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculatedStats.SpellHit);
 
             calculatedStats.SpiritRegen = 0.001f + stats.Spirit * 0.009327f * (float)Math.Sqrt(stats.Intellect);
             calculatedStats.ManaRegen = calculatedStats.SpiritRegen + stats.Mp5 / 5f;
@@ -161,17 +299,36 @@ namespace Rawr.Mage
 
             // spell calculations
 
+            calculatedStats.ArcanePower = arcanePower;
+            calculatedStats.MoltenFury = moltenFury;
+            calculatedStats.IcyVeins = icyVeins;
+
+            if (icyVeins)
+            {
+                calculatedStats.CastingSpeed *= 1.2f;
+            }
+            if (heroism)
+            {
+                calculatedStats.CastingSpeed *= 1.3f;
+            }
+
+            calculatedStats.Latency = float.Parse(character.CalculationOptions["Latency"]);
+            calculatedStats.ClearcastingChance = 0.02f * float.Parse(character.CalculationOptions["ArcaneConcentration"]);
+
+            calculatedStats.GlobalCooldown = Math.Max(1f, 1.5f / calculatedStats.CastingSpeed);
+
             calculatedStats.ArcaneSpellModifier = (1 + 0.01f * int.Parse(character.CalculationOptions["ArcaneInstability"])) * (1 + 0.01f * int.Parse(character.CalculationOptions["PlayingWithFire"])) * (1 + stats.BonusSpellPowerMultiplier);
-            if (int.Parse(character.CalculationOptions["ArcanePowerActive"]) == 1)
+            if (arcanePower)
             {
                 calculatedStats.ArcaneSpellModifier *= 1.3f;
             }
-            if (int.Parse(character.CalculationOptions["MoltenFuryActive"]) == 1)
+            if (moltenFury)
             {
                 calculatedStats.ArcaneSpellModifier *= (1 + 0.1f * int.Parse(character.CalculationOptions["MoltenFury"]));
             }
             calculatedStats.FireSpellModifier = calculatedStats.ArcaneSpellModifier * (1 + 0.02f * int.Parse(character.CalculationOptions["FirePower"]));
             calculatedStats.FrostSpellModifier = calculatedStats.ArcaneSpellModifier * (1 + 0.02f * int.Parse(character.CalculationOptions["PiercingIce"]));
+            calculatedStats.NatureSpellModifier = calculatedStats.ArcaneSpellModifier;
             calculatedStats.ArcaneSpellModifier *= (1 + stats.BonusArcaneSpellPowerMultiplier);
             calculatedStats.FireSpellModifier *= (1 + stats.BonusFireSpellPowerMultiplier);
             calculatedStats.FrostSpellModifier *= (1 + stats.BonusFrostSpellPowerMultiplier);
@@ -182,15 +339,13 @@ namespace Rawr.Mage
             calculatedStats.ArcaneCritBonus = (1 + (1.5f * (1 + stats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * int.Parse(character.CalculationOptions["SpellPower"]))) * calculatedStats.ResilienceCritDamageReduction;
             calculatedStats.FireCritBonus = (1 + (1.5f * (1 + stats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * int.Parse(character.CalculationOptions["SpellPower"]))) * (1 + 0.08f * int.Parse(character.CalculationOptions["Ignite"])) * calculatedStats.ResilienceCritDamageReduction;
             calculatedStats.FrostCritBonus = (1 + (1.5f * (1 + stats.BonusSpellCritMultiplier) - 1) * (1 + 0.2f * int.Parse(character.CalculationOptions["IceShards"]) + 0.25f * int.Parse(character.CalculationOptions["SpellPower"]))) * calculatedStats.ResilienceCritDamageReduction;
+            calculatedStats.NatureCritBonus = (1 + (1.5f * (1 + stats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * int.Parse(character.CalculationOptions["SpellPower"]))) * calculatedStats.ResilienceCritDamageReduction;
 
             calculatedStats.ArcaneCritRate = calculatedStats.SpellCrit;
-            calculatedStats.FireCritRate = calculatedStats.SpellCrit + 0.02f * int.Parse(character.CalculationOptions["CriticalMass"]) + int.Parse(character.CalculationOptions["Pyromaniac"]);
+            calculatedStats.FireCritRate = calculatedStats.SpellCrit + 0.02f * int.Parse(character.CalculationOptions["CriticalMass"]) + 0.01f * int.Parse(character.CalculationOptions["Pyromaniac"]);
             if (int.Parse(character.CalculationOptions["Combustion"]) == 1) calculatedStats.FireCritRate += (float)(-0.04f * Math.Pow(calculatedStats.FireCritRate, 3) + 0.09f * Math.Pow(calculatedStats.FireCritRate, 2) - 0.08f * calculatedStats.FireCritRate + 0.03f);
             calculatedStats.FrostCritRate = calculatedStats.SpellCrit + stats.SpellFrostCritRating / 22.08f / 100f;
-
-            calculatedStats.Spells = new List<Spell>();
-            calculatedStats.Spells.Add(new ArcaneMissiles(character, calculatedStats));
-            // ...
+            calculatedStats.NatureCritRate = calculatedStats.SpellCrit;
 
             return calculatedStats;
         }
@@ -255,10 +410,10 @@ namespace Rawr.Mage
             statsTotal.BonusSpiritMultiplier = ((1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
 
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
-            statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect);
-            statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f + 0.5 * statsTotal.Intellect * int.Parse(character.CalculationOptions["ArcaneFortitude"]));
+            statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect + statsGearEnchantsBuffs.Mana);
+            statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f + statsTotal.Intellect * int.Parse(character.CalculationOptions["ArcaneFortitude"]));
 
-            int magicAbsorption = 2 * int.Parse(character.CalculationOptions["ArcaneFortitude"]);
+            int magicAbsorption = 2 * int.Parse(character.CalculationOptions["MagicAbsorption"]);
             int frostWarding = int.Parse(character.CalculationOptions["FrostWarding"]);
             statsTotal.AllResist += magicAbsorption;
 
@@ -327,13 +482,14 @@ namespace Rawr.Mage
                 ArcaneBlastBonus = stats.ArcaneBlastBonus,
                 SpellDamageOnCritProc = stats.SpellDamageOnCritProc,
                 EvocationExtension = stats.EvocationExtension,
-                BonusMageNukeMultiplier = stats.BonusMageNukeMultiplier
+                BonusMageNukeMultiplier = stats.BonusMageNukeMultiplier,
+                LightningCapacitorProc = stats.LightningCapacitorProc
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return stats.ToString().Equals("") || (stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.Stamina + stats.Intellect + stats.Spirit + stats.Health + stats.Mp5 + stats.Resilience + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageOnCritProc + stats.EvocationExtension + stats.BonusMageNukeMultiplier) > 0;
+            return stats.ToString().Equals("") || (stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.Stamina + stats.Intellect + stats.Spirit + stats.Health + stats.Mp5 + stats.Resilience + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageOnCritProc + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc) > 0;
         }
     }
 }

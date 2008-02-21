@@ -28,14 +28,32 @@ namespace Rawr.Mage
 				Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
             if (!Character.CalculationOptions.ContainsKey("Latency"))
                 Character.CalculationOptions["Latency"] = "0.05";
+            if (!Character.CalculationOptions.ContainsKey("AoeTargets"))
+                Character.CalculationOptions["AoeTargets"] = "9";
             if (!Character.CalculationOptions.ContainsKey("MageArmor"))
                 Character.CalculationOptions["MageArmor"] = "Mage";
+            if (!Character.CalculationOptions.ContainsKey("ArcaneResist"))
+                Character.CalculationOptions["ArcaneResist"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("FireResist"))
+                Character.CalculationOptions["FireResist"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("FrostResist"))
+                Character.CalculationOptions["FrostResist"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("NatureResist"))
+                Character.CalculationOptions["NatureResist"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("FightDuration"))
+                Character.CalculationOptions["FightDuration"] = "300";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             comboBoxAoeTargetLevel.SelectedItem = Character.CalculationOptions["AoeTargetLevel"];
             checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
             textBoxLatency.Text = Character.CalculationOptions["Latency"];
             comboBoxArmor.SelectedItem = Character.CalculationOptions["MageArmor"];
+            textBoxAoeTargets.Text = Character.CalculationOptions["AoeTargets"];
+            textBoxArcaneResist.Text = Character.CalculationOptions["ArcaneResist"];
+            textBoxFireResist.Text = Character.CalculationOptions["FireResist"];
+            textBoxFrostResist.Text = Character.CalculationOptions["FrostResist"];
+            textBoxNatureResist.Text = Character.CalculationOptions["NatureResist"];
+            textBoxFightDuration.Text = Character.CalculationOptions["FightDuration"];
 
             if (talents != null) talents.LoadCalculationOptions();
         }
@@ -72,6 +90,42 @@ namespace Rawr.Mage
         private void comboBoxArmor_SelectedIndexChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["MageArmor"] = comboBoxArmor.SelectedItem.ToString();
+            Character.OnItemsChanged();
+        }
+
+        private void textBoxAoeTargets_TextChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["AoeTargets"] = textBoxAoeTargets.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void textBoxArcaneResist_TextChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ArcaneResist"] = textBoxArcaneResist.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void textBoxFireResist_TextChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["FireResist"] = textBoxFireResist.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void textBoxFrostResist_TextChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["FrostResist"] = textBoxFrostResist.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void textBoxNatureResist_TextChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["NatureResist"] = textBoxNatureResist.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void textBoxFightDuration_TextChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["FightDuration"] = textBoxFightDuration.Text;
             Character.OnItemsChanged();
         }
 	}

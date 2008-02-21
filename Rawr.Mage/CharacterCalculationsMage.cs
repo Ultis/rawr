@@ -28,12 +28,16 @@ namespace Rawr.Mage
             set { _basicStats = value; }
         }
 
+        public Character Character { get; set; }
+
         public float SpellCrit { get; set; }
         public float SpellHit { get; set; }
         public float CastingSpeed { get; set; }
+        public float GlobalCooldown { get; set; }
         public float ArcaneDamage { get; set; }
         public float FireDamage { get; set; }
         public float FrostDamage { get; set; }
+        public float NatureDamage { get; set; }
         public float SpiritRegen { get; set; }
         public float ManaRegen { get; set; }
         public float ManaRegen5SR { get; set; }
@@ -50,16 +54,57 @@ namespace Rawr.Mage
         public float ArcaneSpellModifier { get; set; }
         public float FireSpellModifier { get; set; }
         public float FrostSpellModifier { get; set; }
+        public float NatureSpellModifier { get; set; }
         public float ArcaneCritBonus { get; set; }
+        public float NatureCritBonus { get; set; }
         public float FireCritBonus { get; set; }
         public float FrostCritBonus { get; set; }
         public float ArcaneCritRate { get; set; }
+        public float NatureCritRate { get; set; }
         public float FireCritRate { get; set; }
         public float FrostCritRate { get; set; }
+        public float ArcaneHitRate { get; set; }
+        public float FireHitRate { get; set; }
+        public float FrostHitRate { get; set; }
+        public float NatureHitRate { get; set; }
         public float ResilienceCritDamageReduction { get; set; }
         public float ResilienceCritRateReduction { get; set; }
+        public float Latency { get; set; }
+        public float ClearcastingChance { get; set; }
 
-        public List<Spell> Spells;
+        public bool ArcanePower { get; set; }
+        public bool IcyVeins { get; set; }
+        public bool MoltenFury { get; set; }
+
+        private Dictionary<string, Spell> Spells = new Dictionary<string, Spell> ();
+
+        public Spell GetSpell(string spellName)
+        {
+            if (Spells.ContainsKey(spellName)) return Spells[spellName];
+            Spell s = null;
+
+            switch (spellName)
+            {
+                case "Lightning Bolt":
+                    s = new LightningBolt(Character, this);
+                    break;
+                case "Arcane Missiles":
+                    s = new ArcaneMissiles(Character, this);
+                    break;
+                case "Frostbolt":
+                    s = new Frostbolt(Character, this);
+                    break;
+                case "Fireball":
+                    s = new Fireball(Character, this);
+                    break;
+                case "Arcane Blast (spam)":
+                    s = new ArcaneBlast(Character, this, 3, 3);
+                    break;
+            }
+            if (s != null) Spells[spellName] = s;
+
+            return s;
+        }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -90,7 +135,14 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-
+            Spell s = GetSpell("Arcane Missiles");
+            dictValues.Add("Arcane Missiles", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
+            s = GetSpell("Arcane Blast (spam)");
+            dictValues.Add("Arcane Blast", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
+            s = GetSpell("Fireball");
+            dictValues.Add("Fireball", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
+            s = GetSpell("Frostbolt");
+            dictValues.Add("Frostbolt", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
             return dictValues;
         }
     }
