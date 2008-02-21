@@ -187,6 +187,10 @@ namespace Rawr
 		[DisplayName("Bonus Rip Damage Per Combo Point Per Tick")]
 		public float BonusRipDamagePerCPPerTick { get; set; }
 
+        public float ManaRestorePerHit { get; set; }
+
+        public float ManaRestorePerCast { get; set; }
+
 		public float MangleCostReduction { get; set; }
 
 		public float ExposeWeakness { get; set; }
@@ -358,6 +362,8 @@ namespace Rawr
                 SpellDamageOnCritProc = a.SpellDamageOnCritProc + b.SpellDamageOnCritProc,
                 EvocationExtension = a.EvocationExtension + b.EvocationExtension,
                 BonusMageNukeMultiplier = (1f + a.BonusMageNukeMultiplier) * (1f + b.BonusMageNukeMultiplier) - 1f,
+                ManaRestorePerHit = a.ManaRestorePerHit + b.ManaRestorePerHit,
+                ManaRestorePerCast = a.ManaRestorePerCast + b.ManaRestorePerCast,
                 SpellCombatManaRegeneration = a.SpellCombatManaRegeneration + b.SpellCombatManaRegeneration
 			};
 		}
