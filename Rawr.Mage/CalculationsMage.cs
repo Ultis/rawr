@@ -49,6 +49,9 @@ namespace Rawr.Mage
                     "Spell Info:Arcane Blast*spammed",
                     "Spell Info:Fireball",
                     "Spell Info:Frostbolt",
+                    "Solution:Total Damage",
+                    "Solution:Dps",
+                    "Solution:Spell Cycles",
                     "Survivability:Arcane Resist",
                     "Survivability:Fire Resist",
                     "Survivability:Nature Resist",
@@ -122,24 +125,63 @@ namespace Rawr.Mage
             List<string> spellList = new List<string>() { "Arcane Missiles", "Fireball", "Frostbolt", "Arcane Blast (spam)" };
 
             // for now just a simple model with mana and time
-            int lpRows = 2;
-            int lpCols = spellList.Count;
+            int lpRows = 5;
+            int colOffset = 6;
+            int lpCols = colOffset - 1 + spellList.Count;
             double[,] lp = new double[lpRows + 2, lpCols + 2];
 
-            // fill model
+            // fill model [mana regen, time limit, evocation limit, mana pot limit]
+
+            // idle regen
+            calculatedStats.SolutionLabel.Add("Idle Regen");
+            lp[1, 1] = -calculatedStats.ManaRegen;
+            lp[2, 1] = 1;
+            lp[lpRows + 1, 1] = 0;
+            // wand
+            calculatedStats.SolutionLabel.Add("Wand");
+            lp[1, 2] = -calculatedStats.ManaRegen; // TODO add JoW
+            lp[2, 2] = 1;
+            lp[lpRows + 1, 2] = 0; // TODO add wand dps
+            // evocation
+            double evocationDuration = (8f + calculatedStats.BasicStats.EvocationExtension) / calculatedStats.CastingSpeed;
+            calculatedStats.EvocationDuration = evocationDuration;
+            calculatedStats.SolutionLabel.Add("Evocation");
+            lp[1, 3] = -calculatedStats.ManaRegen5SR - 0.15f * calculatedStats.BasicStats.Mana / 2f; // TODO add evocation weapons
+            lp[2, 3] = 1;
+            lp[3, 3] = 1;
+            lp[lpRows + 1, 3] = 0;
+            // mana pot
+            calculatedStats.SolutionLabel.Add("Mana Potion");
+            calculatedStats.MaxManaPotion = 1 + (int)((calculatedStats.FightDuration - 30f) / 120f);
+            lp[1, 4] = -calculatedStats.ManaRegen5SR - 2400f / calculatedStats.ManaPotionTime;
+            lp[2, 4] = 1;
+            lp[4, 4] = 1;
+            lp[lpRows + 1, 4] = 0;
+            // mana gem
+            calculatedStats.SolutionLabel.Add("Mana Gem");
+            calculatedStats.MaxManaGem = Math.Min(5, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f));
+            lp[1, 5] = -calculatedStats.ManaRegen5SR + (-Math.Min(3, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f)) * 2400f - ((calculatedStats.FightDuration >= 390) ? 1100f : 0f) - ((calculatedStats.FightDuration >= 510) ? 850 : 0)) / (calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime);
+            lp[2, 5] = 1;
+            lp[5, 5] = 1;
+            lp[lpRows + 1, 5] = 0;
+            // spells
             for (int spell = 0; spell < spellList.Count; spell++)
             {
                 Spell s = calculatedStats.GetSpell(spellList[spell]);
-                lp[1, spell + 1] = s.CostPerSecond - s.ManaRegenPerSecond;
-                lp[2, spell + 1] = 1;
-                lp[lpRows + 1, spell + 1] = s.DamagePerSecond;
+                calculatedStats.SolutionLabel.Add(s.Name);
+                lp[1, spell + colOffset] = s.CostPerSecond - s.ManaRegenPerSecond;
+                lp[2, spell + colOffset] = 1;
+                lp[lpRows + 1, spell + colOffset] = s.DamagePerSecond;
             }
             lp[1, lpCols + 1] = calculatedStats.BasicStats.Mana;
-            lp[2, lpCols + 1] = double.Parse(character.CalculationOptions["FightDuration"]);
+            lp[2, lpCols + 1] = calculatedStats.FightDuration;
+            lp[3, lpCols + 1] = evocationDuration * Math.Max(1, (1 + Math.Floor((calculatedStats.FightDuration - 200f) / 480f)));
+            lp[4, lpCols + 1] = calculatedStats.MaxManaPotion * calculatedStats.ManaPotionTime;
+            lp[5, lpCols + 1] = calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime;
 
-            double[] solution = LPSolve(lp, lpRows, lpCols);
+            calculatedStats.Solution = LPSolve(lp, lpRows, lpCols);
 
-            calculatedStats.SubPoints[0] = (float)solution[lpCols + 1];
+            calculatedStats.SubPoints[0] = (float)calculatedStats.Solution[lpCols + 1];
             calculatedStats.OverallPoints = calculatedStats.SubPoints[0];
 
             return calculatedStats;
@@ -313,6 +355,7 @@ namespace Rawr.Mage
             }
 
             calculatedStats.Latency = float.Parse(character.CalculationOptions["Latency"]);
+            calculatedStats.FightDuration = float.Parse(character.CalculationOptions["FightDuration"]);
             calculatedStats.ClearcastingChance = 0.02f * float.Parse(character.CalculationOptions["ArcaneConcentration"]);
 
             calculatedStats.GlobalCooldown = Math.Max(1f, 1.5f / calculatedStats.CastingSpeed);
@@ -358,10 +401,30 @@ namespace Rawr.Mage
             switch (character.Race)
             {
                 case Character.CharacterRace.BloodElf:
-                    statsRace = new Stats();
+                    statsRace = new Stats()
+                    {
+                        Health = 3213f,
+                        Mana = 1961f,
+                        Strength = 28f,
+                        Agility = 42f,
+                        Stamina = 49f,
+                        Intellect = 149f,
+                        Spirit = 144,
+                        BonusIntellectMultiplier = 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"]),
+                    };
                     break;
                 case Character.CharacterRace.Draenei:
-                    statsRace = new Stats();
+                    statsRace = new Stats()
+                    {
+                        Health = 3213f,
+                        Mana = 1961f,
+                        Strength = 28f,
+                        Agility = 42f,
+                        Stamina = 50f,
+                        Intellect = 152f,
+                        Spirit = 147,
+                        BonusIntellectMultiplier = 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"]),
+                    };
                     break;
                 case Character.CharacterRace.Gnome:
                     statsRace = new Stats()
@@ -378,13 +441,44 @@ namespace Rawr.Mage
                     };
                     break;
                 case Character.CharacterRace.Human:
-                    statsRace = new Stats();
+                    statsRace = new Stats()
+                    {
+                        Health = 3213f,
+                        Mana = 1961f,
+                        Strength = 28f,
+                        Agility = 42f,
+                        Stamina = 51f,
+                        Intellect = 151f,
+                        Spirit = 145,
+                        BonusIntellectMultiplier = 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"]),
+                        BonusSpiritMultiplier = 0.1f
+                    };
                     break;
                 case Character.CharacterRace.Troll:
-                    statsRace = new Stats();
+                    statsRace = new Stats()
+                    {
+                        Health = 3213f,
+                        Mana = 1961f,
+                        Strength = 28f,
+                        Agility = 42f,
+                        Stamina = 52f,
+                        Intellect = 147f,
+                        Spirit = 146,
+                        BonusIntellectMultiplier = 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"]),
+                    };
                     break;
                 case Character.CharacterRace.Undead:
-                    statsRace = new Stats();
+                    statsRace = new Stats()
+                    {
+                        Health = 3213f,
+                        Mana = 1961f,
+                        Strength = 28f,
+                        Agility = 42f,
+                        Stamina = 52f,
+                        Intellect = 149f,
+                        Spirit = 150,
+                        BonusIntellectMultiplier = 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"]),
+                    };
                     break;
                 default:
                     statsRace = new Stats();
@@ -431,6 +525,8 @@ namespace Rawr.Mage
             statsTotal.SpellCombatManaRegeneration += 0.1f * int.Parse(character.CalculationOptions["ArcaneMeditation"]);
 
             statsTotal.SpellPenetration += 5 * int.Parse(character.CalculationOptions["ArcaneSubtlety"]);
+
+            statsTotal.Mp5 += float.Parse(character.CalculationOptions["ShadowPriest"]);
 
             return statsTotal;
         }

@@ -313,6 +313,7 @@ namespace Rawr.Mage
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             base.Calculate(character, calculations);
+            CastTime = (BaseCastTime - timeDebuff / 3f) / calculations.CastingSpeed + calculations.Latency;
             CostModifier += 0.75f * costDebuff + calculations.BasicStats.ArcaneBlastBonus;
             SpellModifier *= (1 + calculations.BasicStats.ArcaneBlastBonus);
             CritRate += 0.02f * int.Parse(character.CalculationOptions["ArcaneImpact"]);

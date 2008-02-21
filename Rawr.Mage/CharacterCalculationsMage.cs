@@ -70,6 +70,7 @@ namespace Rawr.Mage
         public float ResilienceCritDamageReduction { get; set; }
         public float ResilienceCritRateReduction { get; set; }
         public float Latency { get; set; }
+        public float FightDuration { get; set; }
         public float ClearcastingChance { get; set; }
 
         public bool ArcanePower { get; set; }
@@ -77,6 +78,12 @@ namespace Rawr.Mage
         public bool MoltenFury { get; set; }
 
         private Dictionary<string, Spell> Spells = new Dictionary<string, Spell> ();
+        public double EvocationDuration;
+        public double ManaPotionTime = 0.1f;
+        public int MaxManaPotion;
+        public int MaxManaGem;
+        public List<string> SolutionLabel = new List<string>();
+        public double[] Solution;
 
         public Spell GetSpell(string spellName)
         {
@@ -143,6 +150,29 @@ namespace Rawr.Mage
             dictValues.Add("Fireball", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
             s = GetSpell("Frostbolt");
             dictValues.Add("Frostbolt", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
+            dictValues.Add("Total Damage", String.Format("{0:F}", Solution[SolutionLabel.Count + 1]));
+            dictValues.Add("Dps", String.Format("{0:F}", Solution[SolutionLabel.Count + 1] / FightDuration));
+            StringBuilder sb = new StringBuilder("*");
+            for (int i = 0; i < SolutionLabel.Count; i++)
+            {
+                if (Solution[i + 1] > 0)
+                {
+                    switch (i)
+                    {
+                        case 2:
+                            sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i + 1] / EvocationDuration));
+                            break;
+                        case 3:
+                        case 4:
+                            sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i + 1] / ManaPotionTime));
+                            break;
+                        default:
+                            sb.AppendLine(String.Format("{0}: {1:F} sec", SolutionLabel[i], Solution[i + 1]));
+                            break;
+                    }
+                }
+            }
+            dictValues.Add("Spell Cycles", sb.ToString());
             return dictValues;
         }
     }

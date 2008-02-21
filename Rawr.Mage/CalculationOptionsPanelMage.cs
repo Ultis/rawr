@@ -42,6 +42,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["NatureResist"] = "0";
             if (!Character.CalculationOptions.ContainsKey("FightDuration"))
                 Character.CalculationOptions["FightDuration"] = "300";
+            if (!Character.CalculationOptions.ContainsKey("ShadowPriest"))
+                Character.CalculationOptions["ShadowPriest"] = "175";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             comboBoxAoeTargetLevel.SelectedItem = Character.CalculationOptions["AoeTargetLevel"];
@@ -54,6 +56,7 @@ namespace Rawr.Mage
             textBoxFrostResist.Text = Character.CalculationOptions["FrostResist"];
             textBoxNatureResist.Text = Character.CalculationOptions["NatureResist"];
             textBoxFightDuration.Text = Character.CalculationOptions["FightDuration"];
+            textBoxShadowPriest.Text = Character.CalculationOptions["ShadowPriest"];
 
             if (talents != null) talents.LoadCalculationOptions();
         }
@@ -126,6 +129,12 @@ namespace Rawr.Mage
         private void textBoxFightDuration_TextChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["FightDuration"] = textBoxFightDuration.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void textBoxShadowPriest_TextChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ShadowPriest"] = textBoxShadowPriest.Text;
             Character.OnItemsChanged();
         }
 	}

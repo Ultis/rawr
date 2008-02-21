@@ -51,6 +51,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.textBoxFightDuration = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.textBoxShadowPriest = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -80,7 +82,7 @@
             // checkBoxEnforceMetagemRequirements
             // 
             this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 329);
+            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 373);
             this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
             this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
             this.checkBoxEnforceMetagemRequirements.TabIndex = 2;
@@ -114,7 +116,7 @@
             // 
             // buttonTalents
             // 
-            this.buttonTalents.Location = new System.Drawing.Point(6, 300);
+            this.buttonTalents.Location = new System.Drawing.Point(6, 344);
             this.buttonTalents.Name = "buttonTalents";
             this.buttonTalents.Size = new System.Drawing.Size(191, 23);
             this.buttonTalents.TabIndex = 5;
@@ -125,7 +127,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 248);
+            this.label3.Location = new System.Drawing.Point(3, 292);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(48, 13);
             this.label3.TabIndex = 6;
@@ -133,7 +135,7 @@
             // 
             // textBoxLatency
             // 
-            this.textBoxLatency.Location = new System.Drawing.Point(104, 245);
+            this.textBoxLatency.Location = new System.Drawing.Point(104, 289);
             this.textBoxLatency.Name = "textBoxLatency";
             this.textBoxLatency.Size = new System.Drawing.Size(93, 20);
             this.textBoxLatency.TabIndex = 7;
@@ -147,7 +149,7 @@
             "Mage",
             "Molten",
             "Ice"});
-            this.comboBoxArmor.Location = new System.Drawing.Point(104, 271);
+            this.comboBoxArmor.Location = new System.Drawing.Point(104, 315);
             this.comboBoxArmor.Name = "comboBoxArmor";
             this.comboBoxArmor.Size = new System.Drawing.Size(93, 21);
             this.comboBoxArmor.TabIndex = 9;
@@ -156,7 +158,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 274);
+            this.label4.Location = new System.Drawing.Point(3, 318);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(37, 13);
             this.label4.TabIndex = 8;
@@ -264,10 +266,29 @@
             this.label10.TabIndex = 20;
             this.label10.Text = "Fight Duration (sec):";
             // 
+            // textBoxShadowPriest
+            // 
+            this.textBoxShadowPriest.Location = new System.Drawing.Point(104, 250);
+            this.textBoxShadowPriest.Name = "textBoxShadowPriest";
+            this.textBoxShadowPriest.Size = new System.Drawing.Size(93, 20);
+            this.textBoxShadowPriest.TabIndex = 23;
+            this.textBoxShadowPriest.TextChanged += new System.EventHandler(this.textBoxShadowPriest_TextChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 253);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(82, 13);
+            this.label11.TabIndex = 22;
+            this.label11.Text = "Sh. Priest (Mp5)";
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.textBoxShadowPriest);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.textBoxFightDuration);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.textBoxNatureResist);
@@ -322,5 +343,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox textBoxFightDuration;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox textBoxShadowPriest;
+        private System.Windows.Forms.Label label11;
 	}
 }
