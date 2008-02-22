@@ -97,19 +97,16 @@ namespace Rawr.Warlock
             CastTime -= (tal.GetTalent("Bane").PointsInvested / 10f);
             CritPercent +=  tal.GetTalent("Devastation").PointsInvested;
             HealthReturnFactor = tal.GetTalent("Soul Leech").PointsInvested / 10f;
-            SpellDamageCoefficient += tal.GetTalent("Shadow and Flame").PointsInvested * 0.04f;
-            if (tal.GetTalent("Demonic Sacrifice").PointsInvested == 1 && character.CalculationOptions["SacraficedPet"] == "Succubus")
+            SpellDamageCoefficient += tal.GetTalent("ShadowandFlame").PointsInvested * 0.04f;
+            if (tal.GetTalent("DemonicSacrifice").PointsInvested == 1 && character.CalculationOptions["SacraficedPet"] == "Succubus")
                 DamageModifier += 0.15f;
             if (tal.GetTalent("Ruin").PointsInvested == 1) CritModifier = 2f;
         }
 
         private void Calculate(Character character, Stats stats)
         {
-            if (character.CalculationOptions["Misery"] =="T")
-                DamageModifier *= 1.05f;
-            if (character.CalculationOptions["ShadowWeaving"] == "T")
-                DamageModifier *= 1.1f;
-            DamageModifier *= float.Parse(character.CalculationOptions["ShadowsBonus"]);
+            
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
 
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             MaxDamage = (MaxDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;

@@ -199,7 +199,7 @@ namespace Rawr.Warlock
                         Intellect = 154f,
                         Spirit = 145,
                         ArcaneResistance = 10,
-                        BonusIntellectMultiplier = 1.05f 
+                        BonusIntellectMultiplier = .05f 
                     };
                     break;
                 case Character.CharacterRace.Human:
@@ -251,34 +251,33 @@ namespace Rawr.Warlock
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
-            Stats statsTotal = statsGearEnchantsBuffs + statsRace;
             //base
-            statsTotal.Intellect = (float)Math.Floor((Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier)) + statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier)) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
-            statsTotal.Stamina = (float)Math.Floor((Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier)) + statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
-            statsTotal.Spirit = (float)Math.Floor((Math.Floor(statsRace.Spirit * (1 + statsRace.BonusSpiritMultiplier)) + statsGearEnchantsBuffs.Spirit * (1 + statsRace.BonusSpiritMultiplier)) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
-            
+            Stats statsMinusBuffs = statsRace + statsBaseGear + statsEnchants;
+
+            statsMinusBuffs.Intellect = statsMinusBuffs.Intellect * (1 + statsMinusBuffs.BonusIntellectMultiplier);
+            statsMinusBuffs.Stamina = statsMinusBuffs.Stamina * (1 + statsMinusBuffs.BonusStaminaMultiplier);
+
             //parse talents
             TalentTree tree = character.Talents;
-       
             //Backlash
-            statsTotal.SpellCritRating += tree.GetTalent("Backlash").PointsInvested * 22.08f;
-
+            statsMinusBuffs.SpellCritRating += tree.GetTalent("Backlash").PointsInvested * 22.08f;
             //Ruin
-            statsTotal.BonusSpellCritMultiplier += tree.GetTalent("Ruin").PointsInvested == 1 ? 0.5f : 0.0f;
-
+            statsMinusBuffs.BonusSpellCritMultiplier += tree.GetTalent("Ruin").PointsInvested == 1 ? 0.5f : 0.0f;
             //Demonic Embrace
-            statsTotal.Stamina *= (1f + 0.03f * tree.GetTalent("Demonic Embrace").PointsInvested);
-
+            statsMinusBuffs.Stamina *= (1f + 0.03f * tree.GetTalent("DemonicEmbrace").PointsInvested);
             //Fel Intellect
-            statsTotal.Intellect *= (1f + 0.01f * tree.GetTalent("Fel Intellect").PointsInvested);
-
+            statsMinusBuffs.Intellect *= (1f + 0.01f * tree.GetTalent("FelIntellect").PointsInvested);
             //Fel Stamina
-            statsTotal.Stamina *= (1f + 0.01f * tree.GetTalent("Fel Stamina").PointsInvested);
-
+            statsMinusBuffs.Stamina *= (1f + 0.01f * tree.GetTalent("FelStamina").PointsInvested);
             //Fel Armor
-            statsTotal.SpellDamageRating += 100f + (tree.GetTalent("Demonic Aegis").PointsInvested * 10f);
+            statsMinusBuffs.SpellDamageRating += 100f + (tree.GetTalent("DemonicAegis").PointsInvested * 10f);
+            //buffs
+            Stats statsTotal = statsMinusBuffs + statsBuffs;
+
+            statsTotal.Intellect = statsTotal.Intellect * (1 + statsBuffs.BonusIntellectMultiplier);
+            statsTotal.Stamina = statsTotal.Stamina * (1 + statsBuffs.BonusStaminaMultiplier);
+
             
             //Calc final derived stats
             statsTotal.SpellCritRating += 22.08f * statsTotal.Intellect / 81.92f;
