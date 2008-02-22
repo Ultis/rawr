@@ -78,6 +78,7 @@ namespace Rawr.Mage
         public bool MoltenFury { get; set; }
         public bool Heroism { get; set; }
         public bool DestructionPotion { get; set; }
+        public bool FlameCap { get; set; }
 
         public string BuffLabel { get; set; }
 
@@ -159,7 +160,7 @@ namespace Rawr.Mage
             StringBuilder sb = new StringBuilder("*");
             for (int i = 0; i < SolutionLabel.Count; i++)
             {
-                if (Solution[i + 1] > 0)
+                if (Solution[i + 1] > 0.01)
                 {
                     switch (i)
                     {

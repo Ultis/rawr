@@ -87,8 +87,12 @@ namespace Rawr.Mage
 
         private void textBoxLatency_TextChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["Latency"] = textBoxLatency.Text;
-            Character.OnItemsChanged();
+            float value;
+            if (float.TryParse(textBoxLatency.Text, out value))
+            {
+                Character.CalculationOptions["Latency"] = textBoxLatency.Text;
+                Character.OnItemsChanged();
+            }
         }
 
         private void buttonTalents_Click(object sender, EventArgs e)
@@ -104,44 +108,72 @@ namespace Rawr.Mage
 
         private void textBoxAoeTargets_TextChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["AoeTargets"] = textBoxAoeTargets.Text;
-            Character.OnItemsChanged();
+            int value;
+            if (int.TryParse(textBoxAoeTargets.Text, out value))
+            {
+                Character.CalculationOptions["AoeTargets"] = textBoxAoeTargets.Text;
+                Character.OnItemsChanged();
+            }
         }
 
         private void textBoxArcaneResist_TextChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["ArcaneResist"] = textBoxArcaneResist.Text;
-            Character.OnItemsChanged();
+            float value;
+            if (float.TryParse(textBoxArcaneResist.Text, out value))
+            {
+                Character.CalculationOptions["ArcaneResist"] = textBoxArcaneResist.Text;
+                Character.OnItemsChanged();
+            }
         }
 
         private void textBoxFireResist_TextChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["FireResist"] = textBoxFireResist.Text;
-            Character.OnItemsChanged();
+            float value;
+            if (float.TryParse(textBoxFireResist.Text, out value))
+            {
+                Character.CalculationOptions["FireResist"] = textBoxFireResist.Text;
+                Character.OnItemsChanged();
+            }
         }
 
         private void textBoxFrostResist_TextChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["FrostResist"] = textBoxFrostResist.Text;
-            Character.OnItemsChanged();
+            float value;
+            if (float.TryParse(textBoxFrostResist.Text, out value))
+            {
+                Character.CalculationOptions["FrostResist"] = textBoxFrostResist.Text;
+                Character.OnItemsChanged();
+            }
         }
 
         private void textBoxNatureResist_TextChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["NatureResist"] = textBoxNatureResist.Text;
-            Character.OnItemsChanged();
+            float value;
+            if (float.TryParse(textBoxNatureResist.Text, out value))
+            {
+                Character.CalculationOptions["NatureResist"] = textBoxNatureResist.Text;
+                Character.OnItemsChanged();
+            }
         }
 
         private void textBoxFightDuration_TextChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["FightDuration"] = textBoxFightDuration.Text;
-            Character.OnItemsChanged();
+            float value;
+            if (float.TryParse(textBoxFightDuration.Text, out value))
+            {
+                Character.CalculationOptions["FightDuration"] = textBoxFightDuration.Text;
+                Character.OnItemsChanged();
+            }
         }
 
         private void textBoxShadowPriest_TextChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["ShadowPriest"] = textBoxShadowPriest.Text;
-            Character.OnItemsChanged();
+            float value;
+            if (float.TryParse(textBoxShadowPriest.Text, out value))
+            {
+                Character.CalculationOptions["ShadowPriest"] = textBoxShadowPriest.Text;
+                Character.OnItemsChanged();
+            }
         }
 
         private void checkBoxHeroism_CheckedChanged(object sender, EventArgs e)
@@ -152,8 +184,12 @@ namespace Rawr.Mage
 
         private void textBoxMoltenFuryPercentage_TextChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["MoltenFuryPercentage"] = textBoxMoltenFuryPercentage.Text;
-            Character.OnItemsChanged();
+            float value;
+            if (float.TryParse(textBoxMoltenFuryPercentage.Text, out value))
+            {
+                Character.CalculationOptions["MoltenFuryPercentage"] = textBoxMoltenFuryPercentage.Text;
+                Character.OnItemsChanged();
+            }
         }
 	}
 }
