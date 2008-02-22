@@ -56,6 +56,8 @@ namespace Rawr.Warlock
         {
             get
             {
+                List<int> daSpells = new List<int>(_spellPriority.Keys);
+                daSpells.Sort();
                 float gcdDuration = 1.5f;
                 Dictionary<Spell, float> currCasting = new Dictionary<Spell, float>();
                 Dictionary<Spell, float> currDuration = new Dictionary<Spell, float>();
@@ -98,7 +100,7 @@ namespace Rawr.Warlock
 
                     if (!gcd)
                     {
-                        foreach (int priority in _spellPriority.Keys)
+                        foreach (int priority in daSpells)
                         {
                             Spell currSpell = _spellPriority[priority];
                             if (!currCasting.ContainsKey(currSpell) && !currDuration.ContainsKey(currSpell))
@@ -123,7 +125,10 @@ namespace Rawr.Warlock
                     }
                     if (gcd & gcdstart == 0) gcdstart = currTime;
                 }
-                return new float[] { totalDamage / Duration };
+                float spellHit = _stats.SpellHitRating / 12.625f;
+                float missRate = 0.16f  - (spellHit / 100f);
+                float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
+                return new float[] { ( totalDamage * spellHitFactor) / Duration };
               }
 
             }

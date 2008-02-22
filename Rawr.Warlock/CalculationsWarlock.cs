@@ -67,6 +67,7 @@ namespace Rawr.Warlock
                         "Spell Stats:Casting Speed",
                         "Spell Stats:Shadow Damage",
                         "Spell Stats:Fire Damage",
+                        "Overall Stats:DPS",
                     });
             }
         }
@@ -128,14 +129,16 @@ namespace Rawr.Warlock
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
-            Stats charStats = GetCharacterStats(character);
+            Stats charStats = GetCharacterStats(character, additionalItem);
             int duration = Int32.Parse(character.CalculationOptions["Duration"]);
             float latency = float.Parse(character.CalculationOptions["Latency"]);
             float gcd = 1.5f;
 
             Spell sbolt = new ShadowBolt(character, charStats);
+            Spell coa = new CurseOfAgony(character, charStats);
             WarlockSpellRotation wsr = new WarlockSpellRotation(charStats, character, duration);
-            wsr.AddSpell(sbolt, 1);
+            wsr.AddSpell(sbolt, 2);
+            wsr.AddSpell(coa, 1);
 
             float[] dps = wsr.GetDPS;
             CharacterCalculationsWarlock ccw = new CharacterCalculationsWarlock();

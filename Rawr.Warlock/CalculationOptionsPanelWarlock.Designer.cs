@@ -44,13 +44,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
             this.textBoxISBUptime = new System.Windows.Forms.TextBox();
-            this.comboBoxShadows = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.comboBoxElements = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.checkMisery = new System.Windows.Forms.CheckBox();
-            this.checkShadowWeaving = new System.Windows.Forms.CheckBox();
-            this.checkScorch = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkUnstable = new System.Windows.Forms.CheckBox();
             this.checkSiphonLife = new System.Windows.Forms.CheckBox();
@@ -199,24 +192,17 @@
             // 
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.textBoxISBUptime);
-            this.groupBox1.Controls.Add(this.comboBoxShadows);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.comboBoxElements);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.checkMisery);
-            this.groupBox1.Controls.Add(this.checkShadowWeaving);
-            this.groupBox1.Controls.Add(this.checkScorch);
-            this.groupBox1.Location = new System.Drawing.Point(6, 365);
+            this.groupBox1.Location = new System.Drawing.Point(6, 320);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(191, 183);
+            this.groupBox1.Size = new System.Drawing.Size(191, 67);
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Debuffs";
+            this.groupBox1.Text = "Misc";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(22, 145);
+            this.label8.Location = new System.Drawing.Point(17, 19);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(52, 26);
             this.label8.TabIndex = 19;
@@ -224,94 +210,11 @@
             // 
             // textBoxISBUptime
             // 
-            this.textBoxISBUptime.Location = new System.Drawing.Point(85, 145);
+            this.textBoxISBUptime.Location = new System.Drawing.Point(80, 19);
             this.textBoxISBUptime.Name = "textBoxISBUptime";
             this.textBoxISBUptime.Size = new System.Drawing.Size(93, 20);
             this.textBoxISBUptime.TabIndex = 18;
             this.textBoxISBUptime.TextChanged += new System.EventHandler(this.textBoxISBUptime_TextChanged);
-            // 
-            // comboBoxShadows
-            // 
-            this.comboBoxShadows.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxShadows.FormattingEnabled = true;
-            this.comboBoxShadows.Items.AddRange(new object[] {
-            "1.0",
-            "1.1",
-            "1.11",
-            "1.12",
-            "1.13"});
-            this.comboBoxShadows.Location = new System.Drawing.Point(85, 114);
-            this.comboBoxShadows.Name = "comboBoxShadows";
-            this.comboBoxShadows.Size = new System.Drawing.Size(93, 21);
-            this.comboBoxShadows.TabIndex = 17;
-            this.comboBoxShadows.SelectedIndexChanged += new System.EventHandler(this.comboBoxShadows_SelectedIndexChanged);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(22, 117);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(27, 13);
-            this.label7.TabIndex = 16;
-            this.label7.Text = "CoS";
-            // 
-            // comboBoxElements
-            // 
-            this.comboBoxElements.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxElements.FormattingEnabled = true;
-            this.comboBoxElements.Items.AddRange(new object[] {
-            "1.0",
-            "1.1",
-            "1.11",
-            "1.12",
-            "1.13"});
-            this.comboBoxElements.Location = new System.Drawing.Point(85, 87);
-            this.comboBoxElements.Name = "comboBoxElements";
-            this.comboBoxElements.Size = new System.Drawing.Size(93, 21);
-            this.comboBoxElements.TabIndex = 15;
-            this.comboBoxElements.SelectedIndexChanged += new System.EventHandler(this.comboBoxElements_SelectedIndexChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(22, 90);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(27, 13);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "CoE";
-            // 
-            // checkMisery
-            // 
-            this.checkMisery.AutoSize = true;
-            this.checkMisery.Location = new System.Drawing.Point(6, 65);
-            this.checkMisery.Name = "checkMisery";
-            this.checkMisery.Size = new System.Drawing.Size(56, 17);
-            this.checkMisery.TabIndex = 5;
-            this.checkMisery.Text = "Misery";
-            this.checkMisery.UseVisualStyleBackColor = true;
-            this.checkMisery.CheckedChanged += new System.EventHandler(this.checkMisery_CheckedChanged);
-            // 
-            // checkShadowWeaving
-            // 
-            this.checkShadowWeaving.AutoSize = true;
-            this.checkShadowWeaving.Location = new System.Drawing.Point(6, 42);
-            this.checkShadowWeaving.Name = "checkShadowWeaving";
-            this.checkShadowWeaving.Size = new System.Drawing.Size(111, 17);
-            this.checkShadowWeaving.TabIndex = 4;
-            this.checkShadowWeaving.Text = "Shadow Weaving";
-            this.checkShadowWeaving.UseVisualStyleBackColor = true;
-            this.checkShadowWeaving.CheckedChanged += new System.EventHandler(this.checkShadowWeaving_CheckedChanged);
-            // 
-            // checkScorch
-            // 
-            this.checkScorch.AutoSize = true;
-            this.checkScorch.Location = new System.Drawing.Point(6, 19);
-            this.checkScorch.Name = "checkScorch";
-            this.checkScorch.Size = new System.Drawing.Size(101, 17);
-            this.checkScorch.TabIndex = 3;
-            this.checkScorch.Text = "Improved Sorch";
-            this.checkScorch.UseVisualStyleBackColor = true;
-            this.checkScorch.CheckedChanged += new System.EventHandler(this.checkScorch_CheckedChanged);
             // 
             // groupBox2
             // 
@@ -323,7 +226,7 @@
             this.groupBox2.Controls.Add(this.comboBoxFilterSpell);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.comboBoxCastCurse);
-            this.groupBox2.Location = new System.Drawing.Point(6, 130);
+            this.groupBox2.Location = new System.Drawing.Point(6, 85);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(191, 146);
             this.groupBox2.TabIndex = 16;
@@ -379,7 +282,7 @@
             this.groupBox3.Controls.Add(this.comboBoxPetSelection);
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.checkSacraficed);
-            this.groupBox3.Location = new System.Drawing.Point(6, 283);
+            this.groupBox3.Location = new System.Drawing.Point(6, 238);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(191, 76);
             this.groupBox3.TabIndex = 17;
@@ -446,13 +349,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkSacraficed;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ComboBox comboBoxShadows;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ComboBox comboBoxElements;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.CheckBox checkMisery;
-        private System.Windows.Forms.CheckBox checkShadowWeaving;
-        private System.Windows.Forms.CheckBox checkScorch;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox checkUnstable;
         private System.Windows.Forms.CheckBox checkSiphonLife;

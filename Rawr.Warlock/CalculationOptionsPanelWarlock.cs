@@ -40,9 +40,6 @@ namespace Rawr.Warlock
             checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "T";
             textBoxLatency.Text = Character.CalculationOptions["Latency"];
             textBoxDuration.Text = Character.CalculationOptions["Duration"];
-            checkMisery.Checked = Character.CalculationOptions["Misery"] == "T";
-            checkShadowWeaving.Checked = Character.CalculationOptions["ShadowWeaving"] == "T";
-            comboBoxShadows.SelectedItem = Character.CalculationOptions["ShadowsBonus"];
             comboBoxPetSelection.SelectedItem = Character.CalculationOptions["SacraficedPet"];
             checkSacraficed.Checked = true;
         }

@@ -34,6 +34,10 @@ namespace Rawr.Warlock
             set { _totalStats = value; }
         }
 
+        public float DPS { get; set; }
+        
+
+
       
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -44,9 +48,10 @@ namespace Rawr.Warlock
             vals.Add("Intellect", TotalStats.Intellect.ToString());
             vals.Add("Spell Crit Rate", (TotalStats.SpellCritRating / 22.08f).ToString());
             vals.Add("Spell Hit Rate", (TotalStats.SpellHitRating / 12.625f).ToString());
-            vals.Add("Casting Speed", TotalStats.SpellHasteRating.ToString());
+            vals.Add("Casting Speed", (TotalStats.SpellHasteRating / 1570f + 1f).ToString());
             vals.Add("Shadow Damage", (TotalStats.SpellShadowDamageRating + TotalStats.SpellDamageRating).ToString());
             vals.Add("Fire Damage", (TotalStats.SpellFireDamageRating + TotalStats.SpellDamageRating).ToString());
+            vals.Add("DPS", DPS.ToString());
             return vals;
         }
     }
