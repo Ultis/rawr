@@ -81,6 +81,10 @@ namespace Rawr.Mage
         public bool FlameCap { get; set; }
         public bool Trinket1 { get; set; }
         public bool Trinket2 { get; set; }
+        public bool WaterElemental { get; set; }
+        public float WaterElementalDps { get; set; }
+        public float WaterElementalDuration { get; set; }
+        public float WaterElementalDamage { get; set; }
 
         public string BuffLabel { get; set; }
 
@@ -157,8 +161,8 @@ namespace Rawr.Mage
             dictValues.Add("Fireball", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
             s = GetSpell("Frostbolt");
             dictValues.Add("Frostbolt", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
-            dictValues.Add("Total Damage", String.Format("{0:F}", Solution[SolutionLabel.Count + 1]));
-            dictValues.Add("Dps", String.Format("{0:F}", Solution[SolutionLabel.Count + 1] / FightDuration));
+            dictValues.Add("Total Damage", String.Format("{0:F}", OverallPoints));
+            dictValues.Add("Dps", String.Format("{0:F}", OverallPoints / FightDuration));
             StringBuilder sb = new StringBuilder("*");
             for (int i = 0; i < SolutionLabel.Count; i++)
             {
@@ -179,18 +183,9 @@ namespace Rawr.Mage
                     }
                 }
             }
+            if (WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", WaterElementalDuration / 45f));
             dictValues.Add("Spell Cycles", sb.ToString());
             return dictValues;
-        }
-
-        public CharacterCalculationsMage Clone()
-        {
-            CharacterCalculationsMage calculations = (CharacterCalculationsMage)this.MemberwiseClone();
-            calculations._subPoints = new float[] { 0f };
-            calculations._basicStats = _basicStats.Clone();
-            calculations.Spells = new Dictionary<string, Spell>();
-            calculations.SolutionLabel = new List<string>();
-            return calculations;
         }
     }
 }

@@ -411,6 +411,12 @@ namespace Rawr
                         });
                         _allBuffs.Add(new Buff()
                         {
+                            Name = "Misery",
+                            Category = BuffCategory.Debuffs,
+                            Stats = new Stats() { BonusSpellPowerMultiplier = 0.05f },
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
                             Name = "Judgement of Wisdom",
                             Category = BuffCategory.Debuffs,
                             Stats = new Stats() { },

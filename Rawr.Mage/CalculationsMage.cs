@@ -319,7 +319,37 @@ namespace Rawr.Mage
 
             calculatedStats.Solution = LPSolve(lp, lpRows, lpCols);
 
-            calculatedStats.SubPoints[0] = (float)calculatedStats.Solution[lpCols + 1];
+            // water elemental
+            if (int.Parse(character.CalculationOptions["SummonWaterElemental"]) == 1)
+            {
+                int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
+                calculatedStats.WaterElemental = true;
+                // 45 sec, 3 min cooldown + cold snap
+                // 2.5 sec Waterbolt, affected by heroism, totems, 0.4x frost damage from character
+                // TODO consider adding water elemental as part of optimization for stacking with cooldowns
+                // TODO cold snap
+                float spellHit = 0;
+                if (character.ActiveBuffs.Contains("Totem of Wrath")) spellHit += 0.03f;
+                if (character.ActiveBuffs.Contains("Heroic Presence")) spellHit += 0.01f;
+                float hitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + spellHit);
+                float spellCrit = 0.05f;
+                if (character.ActiveBuffs.Contains("Winter's Chill")) spellHit += 0.1f;
+                float multiplier = hitRate;
+                if (character.ActiveBuffs.Contains("Curse of the Elements")) multiplier *= 1.1f;
+                if (character.ActiveBuffs.Contains("Curse of the Elements (Malediction)")) multiplier *= 1.13f;
+                if (character.ActiveBuffs.Contains("Misery")) multiplier *= 1.05f;
+                float realResistance = float.Parse(character.CalculationOptions["FrostResist"]);
+                float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > 70) ? ((targetLevel - 70) * 0.02f) : 0f));
+                multiplier *= partialResistFactor;
+                calculatedStats.WaterElementalDps = (521.5f + (0.4f * calculatedStats.FrostDamage + (character.ActiveBuffs.Contains("Wrath of Air") ? 101 : 0)) * 2f / 3f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f;
+                calculatedStats.WaterElementalDuration = (1 + (int)((calculatedStats.FightDuration - 45f) / 180f)) * 45;
+                if (heroismAvailable)
+                    calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDps * ((calculatedStats.WaterElementalDuration - 40) + 40 * 1.3f);
+                else
+                    calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDuration * calculatedStats.WaterElementalDps;
+            }
+
+            calculatedStats.SubPoints[0] = (float)calculatedStats.Solution[lpCols + 1] + calculatedStats.WaterElementalDamage;
             calculatedStats.OverallPoints = calculatedStats.SubPoints[0];
 
             return calculatedStats;

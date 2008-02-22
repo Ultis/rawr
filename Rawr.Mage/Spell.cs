@@ -133,7 +133,7 @@ namespace Rawr.Mage
             }
 
             int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
-            PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - calculations.BasicStats.SpellPenetration / 350f * 0.75f) + ((targetLevel > 70 && !Binary) ? ((targetLevel - 70) * 0.02f) : 0f));
+            PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - calculations.BasicStats.SpellPenetration / 350f * 0.75f) - ((targetLevel > 70 && !Binary) ? ((targetLevel - 70) * 0.02f) : 0f));
         }
 
         private float ProcBuffUp(float procChance, float buffDuration, float triggerInterval)
