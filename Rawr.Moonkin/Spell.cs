@@ -284,7 +284,12 @@ namespace Rawr.Moonkin
                     // Calculate hits/crits/misses
                     // Use a 2-roll system; crits only count if the spell hits, it's either a hit or a crit (not both)
                     float normalHitDamage = sp.damagePerHit * (1 - missRate - sp.extraCritChance - calcs.SpellCrit);
-                    float critHitDamage = sp.damagePerHit * (1 - missRate) * sp.critBonus * (sp.extraCritChance + calcs.SpellCrit);
+                    // Only calculate crit hits if the spell can crit
+                    float critHitDamage = 0.0f;
+                    if (sp.damagePerHit > 0)
+                    {
+                        critHitDamage = sp.damagePerHit * (1 - missRate) * sp.critBonus * (sp.extraCritChance + calcs.SpellCrit);
+                    }
                     damageDone += normalHitDamage + critHitDamage;
                     manaUsed += sp.manaCost;
                     if (sp.dotEffect != null)
