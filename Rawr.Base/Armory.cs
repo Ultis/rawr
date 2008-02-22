@@ -575,6 +575,14 @@ namespace Rawr
                                     spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                                     stats.SpellDamageRating += int.Parse(spellDesc);
                                 }
+                                // Increases healing done by up to 375 and damage done by up to 125 for all magical spells and effects.
+                                else if (spellDesc.StartsWith("Increases healing done by up to "))
+                                {
+                                    spellDesc = spellDesc.Substring(spellDesc.IndexOf("damage done by up to "));
+                                    spellDesc = spellDesc.Substring("damage done by up to ".Length);
+                                    spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" for all magical spells and effects."));
+                                    stats.SpellDamageRating += int.Parse(spellDesc);
+                                }
                                 else if (spellDesc.StartsWith("Increases damage done by Shadow spells and effects by up to"))
                                 {
                                     spellDesc = spellDesc.Substring("Increases damage done by Shadow spells and effects by up to".Length);
@@ -598,6 +606,13 @@ namespace Rawr
                                     spellDesc = spellDesc.Substring("Improves spell critical strike rating by".Length);
                                     spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                                     stats.SpellCritRating += int.Parse(spellDesc);
+                                }
+                                    // Restores 7 mana per 5 sec.
+                                else if (spellDesc.StartsWith("Restores "))
+                                {
+                                    spellDesc = spellDesc.Substring("Restores ".Length);
+                                    spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" mana"));
+                                    stats.Mp5 += int.Parse(spellDesc);
                                 }
                                 else if (spellDesc.StartsWith("You gain an Electrical Charge each time you cause a damaging spell critical strike.  When you reach 3 Electrical Charges, they will release, firing a Lightning Bolt for 694 to 806 damage.  Electrical Charge cannot be gained more often than once every 2.5 sec."))
                                 {

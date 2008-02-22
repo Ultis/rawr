@@ -185,6 +185,11 @@ namespace Rawr
                         _allEnchants.Add(new Enchant(1144, "Major Spirit", Item.ItemSlot.Chest, new Stats() { Spirit = 15 }));
                         _allEnchants.Add(new Enchant(851, "Spirit", Item.ItemSlot.Feet, new Stats() { Spirit = 5 }));
 
+                        // Healing enchants (add spell damage too)
+                        _allEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { SpellDamageRating = 10 }));
+                        _allEnchants.Add(new Enchant(2322, "Major Healing", Item.ItemSlot.Hands, new Stats() { SpellDamageRating = 12 }));
+                        _allEnchants.Add(new Enchant(2930, "Healing Power", Item.ItemSlot.Finger, new Stats() { SpellDamageRating = 7 }));
+                        _allEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.MainHand, new Stats() { SpellDamageRating = 27 }));
 
 						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
 						StringBuilder sb = new StringBuilder();

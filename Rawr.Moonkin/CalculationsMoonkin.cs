@@ -47,7 +47,7 @@ namespace Rawr.Moonkin
                     "Mana Regeneration:I5SR",
                     "Spell Rotation:Rotation Name",
                     "Spell Rotation:DPS",
-                    "Spell Rotation:MPS",
+                    "Spell Rotation:DPM",
                     "Spell Rotation:Time To OOM"
                     };
                 }
@@ -131,9 +131,25 @@ namespace Rawr.Moonkin
             calcs.SpellCrit = critBase + stats.SpellCritRating / critRatingDivisor;
             calcs.SpellHit = stats.SpellHitRating / hitRatingDivisor;
 
-            // All spells: Damage +((0.08 * LunarGuidance) * Int)
-            calcs.ArcaneDamage = stats.SpellDamageRating + stats.SpellArcaneDamageRating + 0.08f * int.Parse(character.CalculationOptions["LunarGuidance"]) * stats.Intellect;
-            calcs.NatureDamage = stats.SpellDamageRating + 0.08f * int.Parse(character.CalculationOptions["LunarGuidance"]) * stats.Intellect;
+            // All spells: Damage +((0.08/0.16/0.25) * Int)
+            float lunarGuidancePercent = 0.0f;
+            switch (int.Parse(character.CalculationOptions["LunarGuidance"]))
+            {
+                case 1:
+                    lunarGuidancePercent = 0.08f;
+                    break;
+                case 2:
+                    lunarGuidancePercent = 0.16f;
+                    break;
+                case 3:
+                    lunarGuidancePercent = 0.25f;
+                    break;
+                default:
+                    lunarGuidancePercent = 0.0f;
+                    break;
+            }
+            calcs.ArcaneDamage = stats.SpellDamageRating + stats.SpellArcaneDamageRating + lunarGuidancePercent * stats.Intellect;
+            calcs.NatureDamage = stats.SpellDamageRating + lunarGuidancePercent * stats.Intellect;
 
             calcs.Latency = float.Parse(character.CalculationOptions["Latency"]);
             calcs.FightLength = float.Parse(character.CalculationOptions["FightLength"]);
@@ -278,8 +294,24 @@ namespace Rawr.Moonkin
 
             // Regen mechanic: mp5 +((0.1 * Intensity) * Spiritmp5())
             statsTotal.SpellCombatManaRegeneration += 0.1f * int.Parse(character.CalculationOptions["Intensity"]);
-            // Regen mechanic: mp5 +((0.04 * Dreamstate) * Int)
-            statsTotal.Mp5 += (0.04f * int.Parse(character.CalculationOptions["Dreamstate"])) * statsTotal.Intellect;
+            // Regen mechanic: mp5 +(0.04/0.07/0.10) * Int)
+            float dreamstatePercent = 0.0f;
+            switch (int.Parse(character.CalculationOptions["Dreamstate"]))
+            {
+                case 1:
+                    dreamstatePercent = 0.04f;
+                    break;
+                case 2:
+                    dreamstatePercent = 0.07f;
+                    break;
+                case 3:
+                    dreamstatePercent = 0.1f;
+                    break;
+                default:
+                    dreamstatePercent = 0.0f;
+                    break;
+            }
+            statsTotal.Mp5 += dreamstatePercent * statsTotal.Intellect;
 
             return statsTotal;
         }

@@ -210,7 +210,7 @@ namespace Rawr.Moonkin
             float totalManaRegen = calcs.ManaRegen5SR * fightLength;
 
             // Innervate calculations
-            float innervateManaRate = calcs.ManaRegen * 5;
+            float innervateManaRate = calcs.ManaRegen * 4;
             float innervateTime = character.CalculationOptions["Innervate"] == "Yes" ? ((int)calcs.FightLength / 6 + 1) * 20.0f : 0.0f;
             float totalInnervateMana = innervateManaRate * innervateTime;
 
@@ -247,13 +247,14 @@ namespace Rawr.Moonkin
             
             // Get total effective mana pool and total effective dps time
             float innervateTime = character.CalculationOptions["Innervate"] == "Yes" ? ((int)calcs.FightLength / 6 + 1) * 20.0f : 0.0f;
+            float fightLength = calcs.FightLength * 60;
             float dpsTime = calcs.FightLength * 60 - innervateTime;
 
             float totalMana = GetEffectiveManaPool(character, calcs);
 
             Dictionary<string, List<Spell>> spellRotations = BuildSpellRotations();
 
-            int instantCasts = naturesSwiftness ? (int)Math.Floor(dpsTime) % 3 : 0;
+            int instantCasts = naturesSwiftness ? (int)Math.Floor(dpsTime) % 3*60 : 0;
 
             foreach (KeyValuePair<string, List<Spell>> rotation in spellRotations)
             {
@@ -267,41 +268,51 @@ namespace Rawr.Moonkin
                     ++spellCount;
                 }
                 averageCritChance /= spellCount;
-                if (naturesGrace)
-                {
-                    foreach (Spell sp in rotation.Value)
-                    {
-                        // Should properly reduce the average cast time of a cycle based on average
-                        // expected Nature's Grace uptime
-                        sp.castTime -= 0.5f * averageCritChance;
-                    }
-                }
 
                 float damageDone = 0.0f;
                 float manaUsed = 0.0f;
                 float duration = 0.0f;
+                float dotDuration = 0.0f;
                 foreach (Spell sp in rotation.Value)
                 {
-                    // Calculate hits/crits
-                    damageDone += sp.damagePerHit + sp.damagePerHit * sp.critBonus * (sp.extraCritChance + calcs.SpellCrit);
+                    // Save/restore casting time because we only want to apply the effect once
+                    float oldCastTime = sp.castTime;
+                    if (naturesGrace)
+                    {
+                        sp.castTime -= 0.5f * averageCritChance;
+                    }
+                    // Calculate hits/crits/misses
+                    // Use a 2-roll system; crits only count if the spell hits, it's either a hit or a crit (not both)
+                    float normalHitDamage = sp.damagePerHit * (1 - missRate - sp.extraCritChance - calcs.SpellCrit);
+                    float critHitDamage = sp.damagePerHit * (1 - missRate) * sp.critBonus * (sp.extraCritChance + calcs.SpellCrit);
+                    damageDone += normalHitDamage + critHitDamage;
                     manaUsed += sp.manaCost;
                     if (sp.dotEffect != null)
                     {
                         damageDone += sp.dotEffect.damagePerTick * sp.dotEffect.numTicks;
+                        dotDuration = sp.dotEffect.numTicks * sp.dotEffect.tickLength;
                     }
+                    if (dotDuration > 0)
+                        dotDuration -= sp.castTime;
                     duration += sp.castTime;
+
+                    if (naturesGrace)
+                    {
+                        sp.castTime = oldCastTime;
+                    }
                 }
-                // Reduce damage by number of spells that missed
-                damageDone *= 1 - missRate;
+                // Handle the case where DoTs overflow the cast times
+                if (dotDuration > 0)
+                    duration += dotDuration;
                 // Calculate how long we will burn through all our mana
                 float secsToOom = totalMana / (manaUsed / duration);
                 // This dps calc takes into account time spent not doing dps due to OOM issues
-                float dps = damageDone / duration * (secsToOom >= dpsTime ? dpsTime : secsToOom) / dpsTime;
-                float mps = manaUsed / duration;
+                float dps = damageDone / duration * (secsToOom >= dpsTime ? dpsTime : secsToOom) / fightLength;
+                float dpm = damageDone / manaUsed;
                 if (dps > calcs.DPS)
                 {
                     calcs.DPS = dps;
-                    calcs.MPS = mps;
+                    calcs.DPM = dpm;
                     calcs.RotationName = rotation.Key;
                     if (secsToOom >= dpsTime)
                         calcs.TimeToOOM = new TimeSpan(0, 0, 0);
@@ -310,7 +321,7 @@ namespace Rawr.Moonkin
                 }
             }
 
-            calcs.SubPoints = new float[] { calcs.DPS, calcs.MPS };
+            calcs.SubPoints = new float[] { calcs.DPS, calcs.DPM };
             calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
         }
 

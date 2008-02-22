@@ -43,7 +43,7 @@ namespace Rawr.Moonkin
         public float Latency { get; set; }
         public float FightLength { get; set; }
         public float DPS { get; set; }
-        public float MPS { get; set; }
+        public float DPM { get; set; }
         public TimeSpan TimeToOOM { get; set; }
         public string RotationName { get; set; }
 
@@ -79,7 +79,7 @@ namespace Rawr.Moonkin
             retVal.Add("I5SR", ManaRegen5SR.ToString());
             retVal.Add("Rotation Name", RotationName);
             retVal.Add("DPS", DPS.ToString());
-            retVal.Add("MPS", MPS.ToString());
+            retVal.Add("DPM", DPM.ToString());
             retVal.Add("Time To OOM", String.Format(TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", TimeToOOM.Minutes, TimeToOOM.Seconds));
 
             return retVal;
