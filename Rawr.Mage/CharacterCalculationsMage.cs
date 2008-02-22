@@ -82,6 +82,8 @@ namespace Rawr.Mage
         public bool Trinket1 { get; set; }
         public bool Trinket2 { get; set; }
         public bool WaterElemental { get; set; }
+        public float Mp5OnCastFor20Sec { get; set; }
+
         public float WaterElementalDps { get; set; }
         public float WaterElementalDuration { get; set; }
         public float WaterElementalDamage { get; set; }

@@ -182,6 +182,12 @@ namespace Rawr.Mage
             fsr.AddSpell(CastTime - calculations.Latency, calculations.Latency, Channeled);
 
             ManaRegenPerSecond = calculations.ManaRegen5SR + fsr.CalculateOO5SR(calculations.ClearcastingChance) * (calculations.ManaRegen - calculations.ManaRegen5SR) + calculations.BasicStats.ManaRestorePerHit * HitProcs / CastTime + calculations.BasicStats.ManaRestorePerCast * CastProcs / CastTime;
+
+            if (calculations.Mp5OnCastFor20Sec > 0)
+            {
+                float totalMana = calculations.Mp5OnCastFor20Sec / 5f / CastTime * HitProcs * 0.5f * (20 - CastTime / HitProcs / 2f) * (20 - CastTime / HitProcs / 2f);
+                ManaRegenPerSecond += totalMana / 20f;
+            }
         }
     }
 
@@ -379,6 +385,7 @@ namespace Rawr.Mage
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             base.Calculate(character, calculations);
+            CritBonus = 1.5f;
             CalculateDerivedStats(character, calculations);
         }
     }

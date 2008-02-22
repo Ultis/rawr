@@ -215,6 +215,10 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float SpellHasteFor20SecOnUse2Min { get; set; }
 
+        [DisplayName("Mp5 on Cast (20 sec/2 min)")]
+        [Category("Equipment Procs")]
+        public float Mp5OnCastFor20SecOnUse2Min { get; set; }
+
         public float EvocationExtension { get; set; }
 
         [Category("Equipment Procs")]

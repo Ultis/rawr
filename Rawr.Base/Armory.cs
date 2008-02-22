@@ -453,6 +453,10 @@ namespace Rawr
                                 {
                                     stats.SpellHasteFor20SecOnUse2Min += 175;
                                 }
+                                else if (spellDesc.StartsWith("Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket."))
+                                {
+                                    stats.Mp5OnCastFor20SecOnUse2Min += 21;
+                                }
                             }
 
 							if (isEquip)
