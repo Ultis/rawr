@@ -115,7 +115,7 @@ namespace Rawr.Mage
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMage(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsMage(); }
 
-        private void CombineTemporaryBuffs(List<CharacterCalculationsMage> statsList, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism)
+        private void CombineTemporaryBuffs(List<CharacterCalculationsMage> statsList, Stats characterStats, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism)
         {
             bool trinket1Available = IsItemActivatable(character.Trinket1);
             bool trinket2Available = IsItemActivatable(character.Trinket2);
@@ -132,7 +132,7 @@ namespace Rawr.Mage
                             {
                                 if (!(trinket1 == 0 && trinket2 == 0)) // only leave through trinkets that can stack
                                 {
-                                    statsList.Add(GetTemporaryCharacterCalculations(character, additionalItem, arcanePower, moltenFury, icyVeins, heroism, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0));
+                                    statsList.Add(GetTemporaryCharacterCalculations(characterStats, character, additionalItem, arcanePower, moltenFury, icyVeins, heroism, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0));
                                 }
                             }
                         }
@@ -158,18 +158,20 @@ namespace Rawr.Mage
 
             double trinket1cooldown = 0, trinket1duration = 0, trinket2cooldown = 0, trinket2duration = 0, t1length = 0, t2length = 0;
 
+            Stats characterStats = GetCharacterStats(character, additionalItem);
+
             // temporary buffs: Arcane Power, Icy Veins, Molten Fury, Combustion?, Trinket1, Trinket2, Heroism, Destro Pot, Flame Cap, Drums?
             // compute stats for temporary bonuses, each gives a list of spells used for final LP, solutions of LP stored in calculatedStats
             List<CharacterCalculationsMage> statsList = new List<CharacterCalculationsMage>();
-            if (mfAvailable && heroismAvailable) CombineTemporaryBuffs(statsList, character, additionalItem, false, true, false, true);
-            if (mfAvailable && ivAvailable) CombineTemporaryBuffs(statsList, character, additionalItem, false, true, true, false);
-            if (mfAvailable) CombineTemporaryBuffs(statsList, character, additionalItem, false, true, false, false);
-            if (heroismAvailable && apAvailable) CombineTemporaryBuffs(statsList, character, additionalItem, true, false, false, true);
-            if (heroismAvailable) CombineTemporaryBuffs(statsList, character, additionalItem, false, false, false, true);
-            if (ivAvailable && apAvailable) CombineTemporaryBuffs(statsList, character, additionalItem, true, false, true, false);
-            if (apAvailable) CombineTemporaryBuffs(statsList, character, additionalItem, true, false, false, false);
-            if (ivAvailable) CombineTemporaryBuffs(statsList, character, additionalItem, false, false, true, false);
-            CombineTemporaryBuffs(statsList, character, additionalItem, false, false, false, false);
+            if (mfAvailable && heroismAvailable) CombineTemporaryBuffs(statsList, characterStats, character, additionalItem, false, true, false, true);
+            if (mfAvailable && ivAvailable) CombineTemporaryBuffs(statsList, characterStats, character, additionalItem, false, true, true, false);
+            if (mfAvailable) CombineTemporaryBuffs(statsList, characterStats, character, additionalItem, false, true, false, false);
+            if (heroismAvailable && apAvailable) CombineTemporaryBuffs(statsList, characterStats, character, additionalItem, true, false, false, true);
+            if (heroismAvailable) CombineTemporaryBuffs(statsList, characterStats, character, additionalItem, false, false, false, true);
+            if (ivAvailable && apAvailable) CombineTemporaryBuffs(statsList, characterStats, character, additionalItem, true, false, true, false);
+            if (apAvailable) CombineTemporaryBuffs(statsList, characterStats, character, additionalItem, true, false, false, false);
+            if (ivAvailable) CombineTemporaryBuffs(statsList, characterStats, character, additionalItem, false, false, true, false);
+            CombineTemporaryBuffs(statsList, characterStats, character, additionalItem, false, false, false, false);
 
             CharacterCalculationsMage calculatedStats = statsList[statsList.Count - 1];
 
@@ -434,10 +436,10 @@ namespace Rawr.Mage
             return ret;
         }
 
-        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2)
+        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Stats characterStats, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2)
         {
             CharacterCalculationsMage calculatedStats = new CharacterCalculationsMage();
-            Stats stats = GetCharacterStats(character, additionalItem);
+            Stats stats = characterStats.Clone();
             calculatedStats.BasicStats = stats;
             calculatedStats.Character = character;
 
@@ -468,7 +470,7 @@ namespace Rawr.Mage
             calculatedStats.ArcaneDamage = stats.SpellArcaneDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
             calculatedStats.FireDamage = stats.SpellFireDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
             calculatedStats.FrostDamage = stats.SpellFrostDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
-            calculatedStats.NatureDamage = /* stats.SpellNatureDamageRating + */ stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
+            calculatedStats.NatureDamage = stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
 
             calculatedStats.SpellCrit = 0.01f * (stats.Intellect * 0.0125f + 0.9075f) + 0.01f * int.Parse(character.CalculationOptions["ArcaneInstability"]) + 0.01f * int.Parse(character.CalculationOptions["ArcanePotency"]) + stats.SpellCritRating / 1400f * levelScalingFactor + 0.03f * molten;
             if (destructionPotion) calculatedStats.SpellCrit += 0.02f;

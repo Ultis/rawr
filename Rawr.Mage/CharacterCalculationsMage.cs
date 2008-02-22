@@ -182,5 +182,15 @@ namespace Rawr.Mage
             dictValues.Add("Spell Cycles", sb.ToString());
             return dictValues;
         }
+
+        public CharacterCalculationsMage Clone()
+        {
+            CharacterCalculationsMage calculations = (CharacterCalculationsMage)this.MemberwiseClone();
+            calculations._subPoints = new float[] { 0f };
+            calculations._basicStats = _basicStats.Clone();
+            calculations.Spells = new Dictionary<string, Spell>();
+            calculations.SolutionLabel = new List<string>();
+            return calculations;
+        }
     }
 }
