@@ -136,6 +136,14 @@ namespace Rawr.Mage
             PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - calculations.BasicStats.SpellPenetration / 350f * 0.75f) + ((targetLevel > 70 && !Binary) ? ((targetLevel - 70) * 0.02f) : 0f));
         }
 
+        private float ProcBuffUp(float procChance, float buffDuration, float triggerInterval)
+        {
+            if (triggerInterval <= 0)
+                return 0;
+            else
+                return 1 - (float)Math.Pow(1 - procChance, buffDuration / triggerInterval);
+        }
+
         protected void CalculateDerivedStats(Character character, CharacterCalculationsMage calculations)
         {
             if (CastTime < calculations.GlobalCooldown + calculations.Latency) CastTime = calculations.GlobalCooldown + calculations.Latency;
@@ -153,6 +161,8 @@ namespace Rawr.Mage
             {
                 CostPerSecond = 0;
             }
+
+            RawSpellDamage += calculations.BasicStats.SpellDamageOnCritProc * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
 
             SpellDamage = RawSpellDamage * SpellDamageCoefficient;
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f + SpellDamage;

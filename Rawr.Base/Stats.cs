@@ -206,6 +206,15 @@ namespace Rawr
         [DisplayName("Spell Damage Increase for 6 sec on Crit")]
         public float SpellDamageOnCritProc { get; set; }
 
+        // trinket effect, does not sum up over gear, 2 trinkets with this effect is not equivalent to 1 trinket with double effect
+        [DisplayName("Spell Damage (20 sec/2 min)")]
+        [Category("Equipment Procs")]
+        public float SpellDamageFor20SecOnUse2Min { get; set; }
+
+        [DisplayName("Spell Haste (20 sec/2 min)")]
+        [Category("Equipment Procs")]
+        public float SpellHasteFor20SecOnUse2Min { get; set; }
+
         public float EvocationExtension { get; set; }
 
         [Category("Equipment Procs")]

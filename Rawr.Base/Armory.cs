@@ -435,7 +435,25 @@ namespace Rawr
 									stats.CritRating += ((((float)int.Parse(spellDesc)) / 6f) / 25f) * 22.08f;
 									stats.AttackPower += (((float)int.Parse(spellDesc)) / 6f) * 1.03f;
 								}
-							}
+                                // Increases damage and healing done by magical spells and effects by up to 211 for 20 sec.
+                                else if (spellDesc.StartsWith("Increases damage and healing done by magical spells and effects by up to "))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases damage and healing done by magical spells and effects by up to ".Length);
+                                    string[] tokens = spellDesc.Split(' ');
+                                    int damageIncrease = int.Parse(tokens[0]);
+                                    int duration = int.Parse(tokens[2]);
+                                    switch (duration)
+                                    {
+                                        case 20:
+                                            stats.SpellDamageFor20SecOnUse2Min += damageIncrease;
+                                            break;
+                                    }
+                                }
+                                else if (spellDesc.StartsWith("Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec."))
+                                {
+                                    stats.SpellHasteFor20SecOnUse2Min += 175;
+                                }
+                            }
 
 							if (isEquip)
 							{

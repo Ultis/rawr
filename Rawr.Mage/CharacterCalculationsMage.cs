@@ -79,6 +79,8 @@ namespace Rawr.Mage
         public bool Heroism { get; set; }
         public bool DestructionPotion { get; set; }
         public bool FlameCap { get; set; }
+        public bool Trinket1 { get; set; }
+        public bool Trinket2 { get; set; }
 
         public string BuffLabel { get; set; }
 
