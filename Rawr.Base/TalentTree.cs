@@ -29,7 +29,7 @@ namespace Rawr
         public string _name;
 
         [System.Xml.Serialization.XmlElement("Class")]
-        public Character.CharacterClass _class;
+        public Character.CharacterClass _class = Character.CharacterClass.Druid;
 
 
         
