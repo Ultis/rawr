@@ -59,6 +59,7 @@ namespace Rawr.Mage
                     "Spell Info:ABFrB3FrB*Prefer pause over longer filler",
                     "Spell Info:ABFrB3FrB2*Fill until debuff almost out",
                     "Spell Info:ABFB3FBSc*Typically FB-FB-Sc filler",
+                    "Spell Info:FireballScorch*Must enable Maintain Scorch and have points in Improved Scorch talent to enable",
                     "Solution:Total Damage",
                     "Solution:Dps",
                     "Solution:Spell Cycles",
@@ -159,8 +160,8 @@ namespace Rawr.Mage
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
-            Stats characterStats = GetCharacterStats(character, additionalItem);
             CompiledCalculationOptions calculationOptions = new CompiledCalculationOptions(character);
+            Stats characterStats = GetCharacterStats(character, additionalItem);
 
             bool heroismAvailable = calculationOptions.HeroismAvailable;
             bool apAvailable = int.Parse(character.CalculationOptions["ArcanePower"]) == 1;
@@ -189,9 +190,9 @@ namespace Rawr.Mage
 
             CharacterCalculationsMage calculatedStats = statsList[statsList.Count - 1];
 
-            List<string> spellList = new List<string>() { "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc" };
+            List<string> spellList = new List<string>() { "Arcane Missiles", "Scorch", calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc" };
 
-            int lpRows = 24;
+            int lpRows = 25;
             int colOffset = 6;
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
             double[,] lp = new double[lpRows + 1, lpCols + 1];
@@ -237,7 +238,7 @@ namespace Rawr.Mage
             if (int.Parse(character.CalculationOptions["SummonWaterElemental"]) == 1)
             {
                 coldsnapDelay = 45;
-                int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
+                int targetLevel = calculationOptions.TargetLevel;
                 calculatedStats.WaterElemental = true;
                 // 45 sec, 3 min cooldown + cold snap
                 // 2.5 sec Waterbolt, affected by heroism, totems, 0.4x frost damage from character
@@ -264,7 +265,7 @@ namespace Rawr.Mage
                     calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDuration * calculatedStats.WaterElementalDps;
             }
 
-            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb]
+            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time]
             double aplength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
             double ivlength = (1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 30f) / 180f)) * 20;
             double mflength = calculationOptions.MoltenFuryPercentage * calculatedStats.FightDuration;
@@ -293,6 +294,7 @@ namespace Rawr.Mage
             calculatedStats.SolutionLabel.Add("Idle Regen");
             lp[0, 0] = -calculatedStats.ManaRegen;
             lp[1, 0] = 1;
+            lp[24, 0] = -1;
             lp[lpRows, 0] = 0;
             // wand
             calculatedStats.SolutionLabel.Add("Wand");
@@ -386,6 +388,7 @@ namespace Rawr.Mage
             if (mfAvailable && trinket2Available) lp[20, lpCols] = trinket2duration;
             if (heroismAvailable && trinket1Available) lp[21, lpCols] = trinket1duration;
             if (heroismAvailable && trinket2Available) lp[22, lpCols] = trinket2duration;
+            lp[24, lpCols] = - (1 - float.Parse(character.CalculationOptions["DpsTime"])) * calculationOptions.FightDuration;
 
             calculatedStats.Solution = LPSolveUnsafe(lp, lpRows, lpCols);
 
@@ -756,7 +759,6 @@ namespace Rawr.Mage
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            // TODO: add racial base stats for other races
             Stats statsRace;
             switch (character.Race)
             {
@@ -847,6 +849,18 @@ namespace Rawr.Mage
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+            if (character.CalculationOptions["MaintainScorch"] == "1")
+            {
+                if (int.Parse(character.CalculationOptions["ImprovedScorch"]) > 0)
+                {
+                    if (!character.ActiveBuffs.Contains("Improved Scorch")) statsBuffs += Buff.GetBuffByName("Improved Scorch").Stats;
+                }
+            }
+            if (int.Parse(character.CalculationOptions["WintersChill"]) > 0)
+            {
+                if (!character.ActiveBuffs.Contains("Winter's Chill")) statsBuffs += Buff.GetBuffByName("Winter's Chill").Stats;
+            }
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 

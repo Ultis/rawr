@@ -744,4 +744,42 @@ namespace Rawr.Mage
         }
     }
 
+    class FireballScorch : SpellCycle
+    {
+        public FireballScorch(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "FireballScorch";
+
+            BaseSpell FB = (BaseSpell)calculations.GetSpell("Fireball");
+            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+
+            if (calculations.CalculationOptions.ImprovedScorch == 0)
+            {
+                // in this case just Fireball, scorch debuff won't be applied
+                AddSpell(FB, calculations);
+                Calculate(character, calculations);
+            }
+            else
+            {
+                int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)calculations.CalculationOptions.ImprovedScorch);
+                double timeOnScorch = 30;
+                int fbCount = 0;
+
+                while (timeOnScorch > FB.CastTime + (averageScorchesNeeded + 1) * Sc.CastTime) // one extra scorch gap to account for possible resist
+                {
+                    AddSpell(FB, calculations);
+                    fbCount++;
+                    timeOnScorch -= FB.CastTime;
+                }
+                for (int i = 0; i < averageScorchesNeeded; i++)
+                {
+                    AddSpell(Sc, calculations);
+                }
+
+                Calculate(character, calculations);
+
+                Sequence = string.Format("{0}x Fireball : {1}x Scorch", fbCount, averageScorchesNeeded);
+            }
+        }
+    }
 }

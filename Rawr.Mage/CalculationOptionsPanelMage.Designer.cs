@@ -63,6 +63,10 @@
             this.checkBoxFlameCap = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
             this.checkBoxABCycles = new System.Windows.Forms.CheckBox();
+            this.textBoxDpsTime = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.checkBoxMaintainScorch = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -92,7 +96,7 @@
             // checkBoxEnforceMetagemRequirements
             // 
             this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 481);
+            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 512);
             this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
             this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
             this.checkBoxEnforceMetagemRequirements.TabIndex = 2;
@@ -126,7 +130,7 @@
             // 
             // buttonTalents
             // 
-            this.buttonTalents.Location = new System.Drawing.Point(6, 452);
+            this.buttonTalents.Location = new System.Drawing.Point(6, 483);
             this.buttonTalents.Name = "buttonTalents";
             this.buttonTalents.Size = new System.Drawing.Size(191, 23);
             this.buttonTalents.TabIndex = 5;
@@ -137,7 +141,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 400);
+            this.label3.Location = new System.Drawing.Point(3, 431);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(48, 13);
             this.label3.TabIndex = 6;
@@ -145,7 +149,7 @@
             // 
             // textBoxLatency
             // 
-            this.textBoxLatency.Location = new System.Drawing.Point(104, 397);
+            this.textBoxLatency.Location = new System.Drawing.Point(104, 428);
             this.textBoxLatency.Name = "textBoxLatency";
             this.textBoxLatency.Size = new System.Drawing.Size(93, 20);
             this.textBoxLatency.TabIndex = 7;
@@ -160,7 +164,7 @@
             "Molten",
             "Ice",
             "None"});
-            this.comboBoxArmor.Location = new System.Drawing.Point(104, 423);
+            this.comboBoxArmor.Location = new System.Drawing.Point(104, 454);
             this.comboBoxArmor.Name = "comboBoxArmor";
             this.comboBoxArmor.Size = new System.Drawing.Size(93, 21);
             this.comboBoxArmor.TabIndex = 9;
@@ -169,7 +173,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 426);
+            this.label4.Location = new System.Drawing.Point(3, 457);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(37, 13);
             this.label4.TabIndex = 8;
@@ -279,7 +283,7 @@
             // 
             // textBoxShadowPriest
             // 
-            this.textBoxShadowPriest.Location = new System.Drawing.Point(104, 265);
+            this.textBoxShadowPriest.Location = new System.Drawing.Point(104, 291);
             this.textBoxShadowPriest.Name = "textBoxShadowPriest";
             this.textBoxShadowPriest.Size = new System.Drawing.Size(93, 20);
             this.textBoxShadowPriest.TabIndex = 23;
@@ -288,7 +292,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 268);
+            this.label11.Location = new System.Drawing.Point(3, 294);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(85, 13);
             this.label11.TabIndex = 22;
@@ -297,7 +301,7 @@
             // checkBoxHeroism
             // 
             this.checkBoxHeroism.AutoSize = true;
-            this.checkBoxHeroism.Location = new System.Drawing.Point(104, 291);
+            this.checkBoxHeroism.Location = new System.Drawing.Point(104, 317);
             this.checkBoxHeroism.Name = "checkBoxHeroism";
             this.checkBoxHeroism.Size = new System.Drawing.Size(15, 14);
             this.checkBoxHeroism.TabIndex = 24;
@@ -306,7 +310,7 @@
             // 
             // textBoxMoltenFuryPercentage
             // 
-            this.textBoxMoltenFuryPercentage.Location = new System.Drawing.Point(104, 236);
+            this.textBoxMoltenFuryPercentage.Location = new System.Drawing.Point(104, 262);
             this.textBoxMoltenFuryPercentage.Name = "textBoxMoltenFuryPercentage";
             this.textBoxMoltenFuryPercentage.Size = new System.Drawing.Size(93, 20);
             this.textBoxMoltenFuryPercentage.TabIndex = 26;
@@ -315,16 +319,16 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(3, 239);
+            this.label12.Location = new System.Drawing.Point(3, 265);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(76, 13);
+            this.label12.Size = new System.Drawing.Size(89, 13);
             this.label12.TabIndex = 25;
-            this.label12.Text = "Molten Fury %:";
+            this.label12.Text = "Molten Fury (0-1):";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(3, 292);
+            this.label13.Location = new System.Drawing.Point(3, 318);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(96, 13);
             this.label13.TabIndex = 27;
@@ -333,7 +337,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(3, 312);
+            this.label14.Location = new System.Drawing.Point(3, 338);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(97, 13);
             this.label14.TabIndex = 29;
@@ -342,7 +346,7 @@
             // checkBoxDestructionPotion
             // 
             this.checkBoxDestructionPotion.AutoSize = true;
-            this.checkBoxDestructionPotion.Location = new System.Drawing.Point(104, 311);
+            this.checkBoxDestructionPotion.Location = new System.Drawing.Point(104, 337);
             this.checkBoxDestructionPotion.Name = "checkBoxDestructionPotion";
             this.checkBoxDestructionPotion.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDestructionPotion.TabIndex = 28;
@@ -352,7 +356,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(3, 332);
+            this.label15.Location = new System.Drawing.Point(3, 358);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(60, 13);
             this.label15.TabIndex = 31;
@@ -361,7 +365,7 @@
             // checkBoxFlameCap
             // 
             this.checkBoxFlameCap.AutoSize = true;
-            this.checkBoxFlameCap.Location = new System.Drawing.Point(104, 331);
+            this.checkBoxFlameCap.Location = new System.Drawing.Point(104, 357);
             this.checkBoxFlameCap.Name = "checkBoxFlameCap";
             this.checkBoxFlameCap.Size = new System.Drawing.Size(15, 14);
             this.checkBoxFlameCap.TabIndex = 30;
@@ -371,7 +375,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(3, 352);
+            this.label16.Location = new System.Drawing.Point(3, 378);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(58, 13);
             this.label16.TabIndex = 33;
@@ -380,17 +384,57 @@
             // checkBoxABCycles
             // 
             this.checkBoxABCycles.AutoSize = true;
-            this.checkBoxABCycles.Location = new System.Drawing.Point(104, 351);
+            this.checkBoxABCycles.Location = new System.Drawing.Point(104, 377);
             this.checkBoxABCycles.Name = "checkBoxABCycles";
             this.checkBoxABCycles.Size = new System.Drawing.Size(15, 14);
             this.checkBoxABCycles.TabIndex = 32;
             this.checkBoxABCycles.UseVisualStyleBackColor = true;
             this.checkBoxABCycles.CheckedChanged += new System.EventHandler(this.checkBoxABCycles_CheckedChanged);
             // 
+            // textBoxDpsTime
+            // 
+            this.textBoxDpsTime.Location = new System.Drawing.Point(104, 236);
+            this.textBoxDpsTime.Name = "textBoxDpsTime";
+            this.textBoxDpsTime.Size = new System.Drawing.Size(93, 20);
+            this.textBoxDpsTime.TabIndex = 35;
+            this.textBoxDpsTime.TextChanged += new System.EventHandler(this.textBoxDpsTime_TextChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(3, 239);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(75, 13);
+            this.label17.TabIndex = 34;
+            this.label17.Text = "Dps time (0-1):";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(3, 398);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(87, 13);
+            this.label18.TabIndex = 37;
+            this.label18.Text = "Maintain Scorch:";
+            // 
+            // checkBoxMaintainScorch
+            // 
+            this.checkBoxMaintainScorch.AutoSize = true;
+            this.checkBoxMaintainScorch.Location = new System.Drawing.Point(104, 397);
+            this.checkBoxMaintainScorch.Name = "checkBoxMaintainScorch";
+            this.checkBoxMaintainScorch.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxMaintainScorch.TabIndex = 36;
+            this.checkBoxMaintainScorch.UseVisualStyleBackColor = true;
+            this.checkBoxMaintainScorch.CheckedChanged += new System.EventHandler(this.checkBoxMaintainScorch_CheckedChanged);
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label18);
+            this.Controls.Add(this.checkBoxMaintainScorch);
+            this.Controls.Add(this.textBoxDpsTime);
+            this.Controls.Add(this.label17);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.checkBoxABCycles);
             this.Controls.Add(this.label15);
@@ -427,7 +471,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CalculationOptionsPanelMage";
-            this.Size = new System.Drawing.Size(204, 507);
+            this.Size = new System.Drawing.Size(204, 540);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -469,5 +513,9 @@
         private System.Windows.Forms.CheckBox checkBoxFlameCap;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.CheckBox checkBoxABCycles;
+        private System.Windows.Forms.TextBox textBoxDpsTime;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.CheckBox checkBoxMaintainScorch;
 	}
 }
