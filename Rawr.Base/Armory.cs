@@ -622,6 +622,11 @@ namespace Rawr
                                 {
                                     stats.LightningCapacitorProc = 1;
                                 }
+                                else if (spellDesc.StartsWith("You gain 25% more mana when you use a mana gem.  In addition, using a mana gem grants you 225 spell damage for 15 sec."))
+                                {
+                                    stats.BonusManaGem += 0.25f;
+                                    stats.SpellDamageFor15SecOnManaGem += 225;
+                                }
                             }
 						}
 
@@ -718,6 +723,10 @@ namespace Rawr
                                 else if (gemBonus == "Stamina +6")
                                 {
                                     stats.Stamina = 6.0f;
+                                }
+                                else if (gemBonus == "Chance to restore mana on spellcast")
+                                {
+                                    stats.ManaRestorePerCast = 15; // IED
                                 }
 								try
 								{

@@ -165,6 +165,10 @@ namespace Rawr.Mage
             this.label68 = new System.Windows.Forms.Label();
             this.comboBoxFrostWarding = new System.Windows.Forms.ComboBox();
             this.label69 = new System.Windows.Forms.Label();
+            this.textBoxBlizzardCode = new System.Windows.Forms.TextBox();
+            this.buttonImportBlizzardCode = new System.Windows.Forms.Button();
+            this.comboBoxTalentPreset = new System.Windows.Forms.ComboBox();
+            this.buttonImportTalentPreset = new System.Windows.Forms.Button();
             this.groupBoxArcane.SuspendLayout();
             this.groupBoxFire.SuspendLayout();
             this.groupBoxFrost.SuspendLayout();
@@ -218,7 +222,7 @@ namespace Rawr.Mage
             this.groupBoxArcane.Controls.Add(this.label4);
             this.groupBoxArcane.Controls.Add(this.comboBoxArcaneSubtlety);
             this.groupBoxArcane.Controls.Add(this.label3);
-            this.groupBoxArcane.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxArcane.Location = new System.Drawing.Point(12, 40);
             this.groupBoxArcane.Name = "groupBoxArcane";
             this.groupBoxArcane.Size = new System.Drawing.Size(211, 673);
             this.groupBoxArcane.TabIndex = 0;
@@ -819,7 +823,7 @@ namespace Rawr.Mage
             this.groupBoxFire.Controls.Add(this.label45);
             this.groupBoxFire.Controls.Add(this.comboBoxImprovedFireball);
             this.groupBoxFire.Controls.Add(this.label46);
-            this.groupBoxFire.Location = new System.Drawing.Point(229, 12);
+            this.groupBoxFire.Location = new System.Drawing.Point(229, 40);
             this.groupBoxFire.Name = "groupBoxFire";
             this.groupBoxFire.Size = new System.Drawing.Size(211, 673);
             this.groupBoxFire.TabIndex = 1;
@@ -1396,7 +1400,7 @@ namespace Rawr.Mage
             this.groupBoxFrost.Controls.Add(this.label68);
             this.groupBoxFrost.Controls.Add(this.comboBoxFrostWarding);
             this.groupBoxFrost.Controls.Add(this.label69);
-            this.groupBoxFrost.Location = new System.Drawing.Point(446, 12);
+            this.groupBoxFrost.Location = new System.Drawing.Point(446, 40);
             this.groupBoxFrost.Name = "groupBoxFrost";
             this.groupBoxFrost.Size = new System.Drawing.Size(211, 673);
             this.groupBoxFrost.TabIndex = 2;
@@ -1931,11 +1935,58 @@ namespace Rawr.Mage
             this.label69.TabIndex = 8;
             this.label69.Text = "Frost Warding:";
             // 
+            // textBoxBlizzardCode
+            // 
+            this.textBoxBlizzardCode.Location = new System.Drawing.Point(12, 13);
+            this.textBoxBlizzardCode.Name = "textBoxBlizzardCode";
+            this.textBoxBlizzardCode.Size = new System.Drawing.Size(301, 20);
+            this.textBoxBlizzardCode.TabIndex = 3;
+            // 
+            // buttonImportBlizzardCode
+            // 
+            this.buttonImportBlizzardCode.Location = new System.Drawing.Point(319, 10);
+            this.buttonImportBlizzardCode.Name = "buttonImportBlizzardCode";
+            this.buttonImportBlizzardCode.Size = new System.Drawing.Size(121, 23);
+            this.buttonImportBlizzardCode.TabIndex = 4;
+            this.buttonImportBlizzardCode.Text = "Import Blizzard Code";
+            this.buttonImportBlizzardCode.UseVisualStyleBackColor = true;
+            this.buttonImportBlizzardCode.Click += new System.EventHandler(this.buttonImportBlizzardCode_Click);
+            // 
+            // comboBoxTalentPreset
+            // 
+            this.comboBoxTalentPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTalentPreset.FormattingEnabled = true;
+            this.comboBoxTalentPreset.Items.AddRange(new object[] {
+            "Fire (2/48/11)",
+            "Fire/Cold Snap (0/40/21)",
+            "Frost (10/0/51)",
+            "Arcane (48/0/13)",
+            "Arcane/Fire (40/18/3)",
+            "Arcane/Frost (40/0/21)"});
+            this.comboBoxTalentPreset.Location = new System.Drawing.Point(446, 10);
+            this.comboBoxTalentPreset.Name = "comboBoxTalentPreset";
+            this.comboBoxTalentPreset.Size = new System.Drawing.Size(149, 21);
+            this.comboBoxTalentPreset.TabIndex = 5;
+            // 
+            // buttonImportTalentPreset
+            // 
+            this.buttonImportTalentPreset.Location = new System.Drawing.Point(601, 10);
+            this.buttonImportTalentPreset.Name = "buttonImportTalentPreset";
+            this.buttonImportTalentPreset.Size = new System.Drawing.Size(56, 23);
+            this.buttonImportTalentPreset.TabIndex = 6;
+            this.buttonImportTalentPreset.Text = "Import";
+            this.buttonImportTalentPreset.UseVisualStyleBackColor = true;
+            this.buttonImportTalentPreset.Click += new System.EventHandler(this.buttonImportTalentPreset_Click);
+            // 
             // MageTalentsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(669, 691);
+            this.ClientSize = new System.Drawing.Size(669, 723);
+            this.Controls.Add(this.buttonImportTalentPreset);
+            this.Controls.Add(this.comboBoxTalentPreset);
+            this.Controls.Add(this.buttonImportBlizzardCode);
+            this.Controls.Add(this.textBoxBlizzardCode);
             this.Controls.Add(this.groupBoxFrost);
             this.Controls.Add(this.groupBoxFire);
             this.Controls.Add(this.groupBoxArcane);
@@ -1951,6 +2002,7 @@ namespace Rawr.Mage
             this.groupBoxFrost.ResumeLayout(false);
             this.groupBoxFrost.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -2093,5 +2145,9 @@ namespace Rawr.Mage
         private System.Windows.Forms.Label label68;
         private System.Windows.Forms.ComboBox comboBoxFrostWarding;
         private System.Windows.Forms.Label label69;
+        private System.Windows.Forms.TextBox textBoxBlizzardCode;
+        private System.Windows.Forms.Button buttonImportBlizzardCode;
+        private System.Windows.Forms.ComboBox comboBoxTalentPreset;
+        private System.Windows.Forms.Button buttonImportTalentPreset;
     }
 }

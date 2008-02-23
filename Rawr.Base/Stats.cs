@@ -219,6 +219,13 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float Mp5OnCastFor20SecOnUse2Min { get; set; }
 
+        [Category("Equipment Procs")]
+        public float BonusManaGem { get; set; }
+
+        [DisplayName("Spell Damage (15 sec/Gem)")]
+        [Category("Equipment Procs")]
+        public float SpellDamageFor15SecOnManaGem { get; set; }
+
         public float EvocationExtension { get; set; }
 
         [Category("Equipment Procs")]
@@ -377,6 +384,7 @@ namespace Rawr
                 BonusMageNukeMultiplier = (1f + a.BonusMageNukeMultiplier) * (1f + b.BonusMageNukeMultiplier) - 1f,
                 ManaRestorePerHit = a.ManaRestorePerHit + b.ManaRestorePerHit,
                 ManaRestorePerCast = a.ManaRestorePerCast + b.ManaRestorePerCast,
+                BonusManaGem = a.BonusManaGem + b.BonusManaGem,
                 SpellCombatManaRegeneration = a.SpellCombatManaRegeneration + b.SpellCombatManaRegeneration
 			};
 		}

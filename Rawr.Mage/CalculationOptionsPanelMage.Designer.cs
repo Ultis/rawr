@@ -56,6 +56,13 @@
             this.checkBoxHeroism = new System.Windows.Forms.CheckBox();
             this.textBoxMoltenFuryPercentage = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.checkBoxDestructionPotion = new System.Windows.Forms.CheckBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.checkBoxFlameCap = new System.Windows.Forms.CheckBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.checkBoxABCycles = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -85,7 +92,7 @@
             // checkBoxEnforceMetagemRequirements
             // 
             this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 403);
+            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 481);
             this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
             this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
             this.checkBoxEnforceMetagemRequirements.TabIndex = 2;
@@ -119,7 +126,7 @@
             // 
             // buttonTalents
             // 
-            this.buttonTalents.Location = new System.Drawing.Point(6, 374);
+            this.buttonTalents.Location = new System.Drawing.Point(6, 452);
             this.buttonTalents.Name = "buttonTalents";
             this.buttonTalents.Size = new System.Drawing.Size(191, 23);
             this.buttonTalents.TabIndex = 5;
@@ -130,7 +137,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 322);
+            this.label3.Location = new System.Drawing.Point(3, 400);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(48, 13);
             this.label3.TabIndex = 6;
@@ -138,7 +145,7 @@
             // 
             // textBoxLatency
             // 
-            this.textBoxLatency.Location = new System.Drawing.Point(104, 319);
+            this.textBoxLatency.Location = new System.Drawing.Point(104, 397);
             this.textBoxLatency.Name = "textBoxLatency";
             this.textBoxLatency.Size = new System.Drawing.Size(93, 20);
             this.textBoxLatency.TabIndex = 7;
@@ -152,7 +159,7 @@
             "Mage",
             "Molten",
             "Ice"});
-            this.comboBoxArmor.Location = new System.Drawing.Point(104, 345);
+            this.comboBoxArmor.Location = new System.Drawing.Point(104, 423);
             this.comboBoxArmor.Name = "comboBoxArmor";
             this.comboBoxArmor.Size = new System.Drawing.Size(93, 21);
             this.comboBoxArmor.TabIndex = 9;
@@ -161,7 +168,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 348);
+            this.label4.Location = new System.Drawing.Point(3, 426);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(37, 13);
             this.label4.TabIndex = 8;
@@ -289,12 +296,10 @@
             // checkBoxHeroism
             // 
             this.checkBoxHeroism.AutoSize = true;
-            this.checkBoxHeroism.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkBoxHeroism.Location = new System.Drawing.Point(3, 291);
+            this.checkBoxHeroism.Location = new System.Drawing.Point(104, 291);
             this.checkBoxHeroism.Name = "checkBoxHeroism";
-            this.checkBoxHeroism.Size = new System.Drawing.Size(115, 17);
+            this.checkBoxHeroism.Size = new System.Drawing.Size(15, 14);
             this.checkBoxHeroism.TabIndex = 24;
-            this.checkBoxHeroism.Text = "Heroism/Bloodlust:";
             this.checkBoxHeroism.UseVisualStyleBackColor = true;
             this.checkBoxHeroism.CheckedChanged += new System.EventHandler(this.checkBoxHeroism_CheckedChanged);
             // 
@@ -315,10 +320,83 @@
             this.label12.TabIndex = 25;
             this.label12.Text = "Molten Fury %:";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(3, 292);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(96, 13);
+            this.label13.TabIndex = 27;
+            this.label13.Text = "Heroism/Bloodlust:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(3, 312);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(97, 13);
+            this.label14.TabIndex = 29;
+            this.label14.Text = "Destruction Potion:";
+            // 
+            // checkBoxDestructionPotion
+            // 
+            this.checkBoxDestructionPotion.AutoSize = true;
+            this.checkBoxDestructionPotion.Location = new System.Drawing.Point(104, 311);
+            this.checkBoxDestructionPotion.Name = "checkBoxDestructionPotion";
+            this.checkBoxDestructionPotion.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxDestructionPotion.TabIndex = 28;
+            this.checkBoxDestructionPotion.UseVisualStyleBackColor = true;
+            this.checkBoxDestructionPotion.CheckedChanged += new System.EventHandler(this.checkBoxDestructionPotion_CheckedChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(3, 332);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(60, 13);
+            this.label15.TabIndex = 31;
+            this.label15.Text = "Flame Cap:";
+            // 
+            // checkBoxFlameCap
+            // 
+            this.checkBoxFlameCap.AutoSize = true;
+            this.checkBoxFlameCap.Location = new System.Drawing.Point(104, 331);
+            this.checkBoxFlameCap.Name = "checkBoxFlameCap";
+            this.checkBoxFlameCap.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxFlameCap.TabIndex = 30;
+            this.checkBoxFlameCap.UseVisualStyleBackColor = true;
+            this.checkBoxFlameCap.CheckedChanged += new System.EventHandler(this.checkBoxFlameCap_CheckedChanged);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(3, 352);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(58, 13);
+            this.label16.TabIndex = 33;
+            this.label16.Text = "AB Cycles:";
+            // 
+            // checkBoxABCycles
+            // 
+            this.checkBoxABCycles.AutoSize = true;
+            this.checkBoxABCycles.Location = new System.Drawing.Point(104, 351);
+            this.checkBoxABCycles.Name = "checkBoxABCycles";
+            this.checkBoxABCycles.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxABCycles.TabIndex = 32;
+            this.checkBoxABCycles.UseVisualStyleBackColor = true;
+            this.checkBoxABCycles.CheckedChanged += new System.EventHandler(this.checkBoxABCycles_CheckedChanged);
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label16);
+            this.Controls.Add(this.checkBoxABCycles);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.checkBoxFlameCap);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.checkBoxDestructionPotion);
+            this.Controls.Add(this.label13);
             this.Controls.Add(this.textBoxMoltenFuryPercentage);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.checkBoxHeroism);
@@ -348,7 +426,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CalculationOptionsPanelMage";
-            this.Size = new System.Drawing.Size(204, 443);
+            this.Size = new System.Drawing.Size(204, 507);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -383,5 +461,12 @@
         private System.Windows.Forms.CheckBox checkBoxHeroism;
         private System.Windows.Forms.TextBox textBoxMoltenFuryPercentage;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.CheckBox checkBoxDestructionPotion;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.CheckBox checkBoxFlameCap;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.CheckBox checkBoxABCycles;
 	}
 }

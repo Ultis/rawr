@@ -7,7 +7,7 @@ namespace Rawr.Mage
 {
     class FSRCalc
     {
-        private static Dictionary<string, Dictionary<float, float>> Cache = new Dictionary<string, Dictionary<float, float>> ();
+        /*private static Dictionary<string, Dictionary<float, float>> Cache = new Dictionary<string, Dictionary<float, float>> ();
 
         public static bool TryGetCachedOO5SR(string spell, float casttimeHash, out float oo5sr)
         {
@@ -18,7 +18,7 @@ namespace Rawr.Mage
                 return valueCache.TryGetValue(casttimeHash, out oo5sr);
             }
             return false;
-        }
+        }*/
 
         public List<float> ManaSpentTimestamp = new List<float> ();
         public List<float> ChannelDuration = new List<float> ();
@@ -57,7 +57,7 @@ namespace Rawr.Mage
             return ret;
         }
 
-        public float CalculateOO5SR(float clearcastingChance, string spell, float casttimeHash)
+        public float CalculateOO5SR(float clearcastingChance/*, string spell, float casttimeHash*/)
         {
             int N = ManaSpentTimestamp.Count;
             float c;
@@ -83,13 +83,13 @@ namespace Rawr.Mage
             ret = (Duration - ret) / Duration;
 
             // cache result
-            Dictionary<float, float> valueCache;
+            /*Dictionary<float, float> valueCache;
             if (!Cache.TryGetValue(spell, out valueCache))
             {
                 valueCache = new Dictionary<float, float>();
                 Cache[spell] = valueCache;
             }
-            valueCache[casttimeHash] = ret;
+            valueCache[casttimeHash] = ret;*/
 
             return ret;
         }

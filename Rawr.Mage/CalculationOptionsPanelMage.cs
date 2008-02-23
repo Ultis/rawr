@@ -48,6 +48,12 @@ namespace Rawr.Mage
                 Character.CalculationOptions["HeroismAvailable"] = "1";
             if (!Character.CalculationOptions.ContainsKey("MoltenFuryPercentage"))
                 Character.CalculationOptions["MoltenFuryPercentage"] = "0.15";
+            if (!Character.CalculationOptions.ContainsKey("DestructionPotion"))
+                Character.CalculationOptions["DestructionPotion"] = "1";
+            if (!Character.CalculationOptions.ContainsKey("FlameCap"))
+                Character.CalculationOptions["FlameCap"] = "1";
+            if (!Character.CalculationOptions.ContainsKey("ABCycles"))
+                Character.CalculationOptions["ABCycles"] = "1";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             comboBoxAoeTargetLevel.SelectedItem = Character.CalculationOptions["AoeTargetLevel"];
@@ -63,6 +69,9 @@ namespace Rawr.Mage
             textBoxShadowPriest.Text = Character.CalculationOptions["ShadowPriest"];
             checkBoxHeroism.Checked = Character.CalculationOptions["HeroismAvailable"] == "1";
             textBoxMoltenFuryPercentage.Text = Character.CalculationOptions["MoltenFuryPercentage"];
+            checkBoxDestructionPotion.Checked = Character.CalculationOptions["DestructionPotion"] == "1";
+            checkBoxFlameCap.Checked = Character.CalculationOptions["FlameCap"] == "1";
+            checkBoxABCycles.Checked = Character.CalculationOptions["ABCycles"] == "1";
 
             if (talents != null) talents.LoadCalculationOptions();
         }
@@ -190,6 +199,24 @@ namespace Rawr.Mage
                 Character.CalculationOptions["MoltenFuryPercentage"] = textBoxMoltenFuryPercentage.Text;
                 Character.OnItemsChanged();
             }
+        }
+
+        private void checkBoxDestructionPotion_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["DestructionPotion"] = checkBoxDestructionPotion.Checked ? "1" : "0";
+            Character.OnItemsChanged();
+        }
+
+        private void checkBoxFlameCap_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["FlameCap"] = checkBoxFlameCap.Checked ? "1" : "0";
+            Character.OnItemsChanged();
+        }
+
+        private void checkBoxABCycles_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ABCycles"] = checkBoxABCycles.Checked ? "1" : "0";
+            Character.OnItemsChanged();
         }
 	}
 }

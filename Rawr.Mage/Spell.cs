@@ -19,7 +19,8 @@ namespace Rawr.Mage
         public float CostPerSecond;
         public float ManaRegenPerSecond;
 
-        public abstract void Calculate(Character character, CharacterCalculationsMage calculations);
+        public bool AffectedByFlameCap;
+        public bool ABCycle;
     }
 
     abstract class BaseSpell : Spell
@@ -83,7 +84,7 @@ namespace Rawr.Mage
         public float Cooldown;
         public float Cost;
 
-        public override void Calculate(Character character, CharacterCalculationsMage calculations)
+        public virtual void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             if (AreaEffect) TargetProcs *= calculations.CalculationOptions.AoeTargets;
             Cooldown = BaseCooldown;
@@ -93,6 +94,7 @@ namespace Rawr.Mage
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost) CostModifier -= 0.01f * calculations.CalculationOptions.ElementalPrecision;
             if (MagicSchool == MagicSchool.Frost) CostModifier -= 0.05f * calculations.CalculationOptions.FrostChanneling;
             if (calculations.ArcanePower) CostModifier += 0.3f;
+            if (MagicSchool == MagicSchool.Fire) AffectedByFlameCap = true;
 
             CastTime = BaseCastTime / calculations.CastingSpeed + calculations.Latency;
 
@@ -178,14 +180,18 @@ namespace Rawr.Mage
                 DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
             }
 
-            float casttimeHash = calculations.ClearcastingChance * 100 + CastTime;
+            /*float casttimeHash = calculations.ClearcastingChance * 100 + CastTime;
             float OO5SR = 0;
             if (!FSRCalc.TryGetCachedOO5SR(Name, casttimeHash, out OO5SR))
             {
                 FSRCalc fsr = new FSRCalc();
                 fsr.AddSpell(CastTime - calculations.Latency, calculations.Latency, Channeled);
                 OO5SR = fsr.CalculateOO5SR(calculations.ClearcastingChance, Name, casttimeHash);
-            }
+            }*/
+
+            FSRCalc fsr = new FSRCalc();
+            fsr.AddSpell(CastTime - calculations.Latency, calculations.Latency, Channeled);
+            float OO5SR = fsr.CalculateOO5SR(calculations.ClearcastingChance);
 
             ManaRegenPerSecond = calculations.ManaRegen5SR + OO5SR * (calculations.ManaRegen - calculations.ManaRegen5SR) + calculations.BasicStats.ManaRestorePerHit * HitProcs / CastTime + calculations.BasicStats.ManaRestorePerCast * CastProcs / CastTime;
 
@@ -396,11 +402,346 @@ namespace Rawr.Mage
         }
     }
 
-    class SpellCycle : Spell
+    abstract class SpellCycle : Spell
     {
-        public override void Calculate(Character character, CharacterCalculationsMage calculations)
+        public float HitProcs;
+        public float CastProcs;
+        public float AverageDamage;
+        public float Cost;
+
+        public string Sequence;
+        private List<string> spellList = new List<string>();
+
+        private FSRCalc fsr = new FSRCalc();
+
+        protected void AddSpell(BaseSpell spell, CharacterCalculationsMage calculations)
         {
-            throw new NotImplementedException();
+            fsr.AddSpell(spell.CastTime - calculations.Latency, calculations.Latency, spell.Channeled);
+            HitProcs += spell.HitProcs;
+            CastProcs += spell.CastProcs;
+            AverageDamage += spell.DamagePerSecond * spell.CastTime;
+            Cost += spell.CostPerSecond * spell.CastTime;
+            AffectedByFlameCap = AffectedByFlameCap || spell.AffectedByFlameCap;
+            spellList.Add(spell.Name);
+        }
+
+        protected void AddPause(float duration)
+        {
+            fsr.AddPause(duration);
+            spellList.Add("Pause");
+        }
+
+        public void Calculate(Character character, CharacterCalculationsMage calculations)
+        {
+            Sequence = string.Join("-", spellList.ToArray());
+
+            float CastTime = fsr.Duration;
+
+            CostPerSecond = Cost / CastTime;
+            DamagePerSecond = AverageDamage / CastTime;
+
+            float OO5SR = fsr.CalculateOO5SR(calculations.ClearcastingChance);
+
+            ManaRegenPerSecond = calculations.ManaRegen5SR + OO5SR * (calculations.ManaRegen - calculations.ManaRegen5SR) + calculations.BasicStats.ManaRestorePerHit * HitProcs / CastTime + calculations.BasicStats.ManaRestorePerCast * CastProcs / CastTime;
+
+            if (calculations.Mp5OnCastFor20Sec > 0)
+            {
+                float averageCastTime = fsr.Duration / CastProcs;
+                float totalMana = calculations.Mp5OnCastFor20Sec / 5f / averageCastTime * 0.5f * (20 - averageCastTime / HitProcs / 2f) * (20 - averageCastTime / HitProcs / 2f);
+                ManaRegenPerSecond += totalMana / 20f;
+            }
         }
     }
+
+    class ABAM : SpellCycle
+    {
+        public ABAM(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABAM";
+            ABCycle = true;
+
+            BaseSpell AB = (BaseSpell)calculations.GetSpell("Arcane Blast 1,0");
+            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
+
+            AddSpell(AB, calculations);
+            AddPause(8 - AM.CastTime + calculations.Latency);
+            AddSpell(AM, calculations);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class AB3AMSc : SpellCycle
+    {
+        public AB3AMSc(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "AB3AMSc";
+            ABCycle = true;
+
+            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell AB01 = (BaseSpell)calculations.GetSpell("Arcane Blast 0,1");
+            BaseSpell AB12 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,2");
+            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
+            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+
+            AddSpell(AB30, calculations);
+            AddSpell(AB01, calculations);
+            AddSpell(AB12, calculations);
+            AddSpell(AM, calculations);
+            float gap = 8 - AM.CastTime;
+            while (gap - AB30.CastTime >= Sc.CastTime)
+            {
+                AddSpell(Sc, calculations);
+                gap -= Sc.CastTime;
+            }
+            if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class ABAM3Sc : SpellCycle
+    {
+        public ABAM3Sc(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABAM3Sc";
+            ABCycle = true;
+
+            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
+            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
+            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
+            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+
+            AddSpell(AB30, calculations);
+            AddSpell(AM, calculations);
+            AddSpell(AB11, calculations);
+            AddSpell(AM, calculations);
+            AddSpell(AB22, calculations);
+            AddSpell(AM, calculations);
+            float gap = 8 - AM.CastTime;
+            while (gap - AB30.CastTime >= Sc.CastTime)
+            {
+                AddSpell(Sc, calculations);
+                gap -= Sc.CastTime;
+            }
+            if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class ABAM3Sc2 : SpellCycle
+    {
+        public ABAM3Sc2(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABAM3Sc2";
+            ABCycle = true;
+
+            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
+            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
+            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
+            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+
+            AddSpell(AB30, calculations);
+            AddSpell(AM, calculations);
+            AddSpell(AB11, calculations);
+            AddSpell(AM, calculations);
+            AddSpell(AB22, calculations);
+            AddSpell(AM, calculations);
+            float gap = 8 - AM.CastTime;
+            while (gap >= AB30.CastTime + calculations.Latency)
+            {
+                AddSpell(Sc, calculations);
+                gap -= Sc.CastTime;
+            }
+            if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class ABAM3FrB : SpellCycle
+    {
+        public ABAM3FrB(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABAM3FrB";
+            ABCycle = true;
+
+            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
+            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
+            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
+            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+
+            AddSpell(AB30, calculations);
+            AddSpell(AM, calculations);
+            AddSpell(AB11, calculations);
+            AddSpell(AM, calculations);
+            AddSpell(AB22, calculations);
+            AddSpell(AM, calculations);
+            float gap = 8 - AM.CastTime;
+            while (gap - AB30.CastTime >= FrB.CastTime)
+            {
+                AddSpell(FrB, calculations);
+                gap -= FrB.CastTime;
+            }
+            if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class ABAM3FrB2 : SpellCycle
+    {
+        public ABAM3FrB2(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABAM3FrB2";
+            ABCycle = true;
+
+            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
+            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
+            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
+            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+
+            AddSpell(AB30, calculations);
+            AddSpell(AM, calculations);
+            AddSpell(AB11, calculations);
+            AddSpell(AM, calculations);
+            AddSpell(AB22, calculations);
+            AddSpell(AM, calculations);
+            float gap = 8 - AM.CastTime;
+            while (gap >= FrB.CastTime)
+            {
+                AddSpell(FrB, calculations);
+                gap -= FrB.CastTime;
+            }
+            if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class AB3FrB : SpellCycle
+    {
+        public AB3FrB(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "AB3FrB";
+            ABCycle = true;
+
+            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell AB01 = (BaseSpell)calculations.GetSpell("Arcane Blast 0,1");
+            BaseSpell AB12 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,2");
+            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+
+            AddSpell(AB30, calculations);
+            AddSpell(AB01, calculations);
+            AddSpell(AB12, calculations);
+            float gap = 8;
+            while (gap - AB30.CastTime >= FrB.CastTime)
+            {
+                AddSpell(FrB, calculations);
+                gap -= FrB.CastTime;
+            }
+            if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class ABFrB3FrB : SpellCycle
+    {
+        public ABFrB3FrB(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABFrB3FrB";
+            ABCycle = true;
+
+            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
+            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
+            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+
+            AddSpell(AB30, calculations);
+            AddSpell(FrB, calculations);
+            AddSpell(AB11, calculations);
+            AddSpell(FrB, calculations);
+            AddSpell(AB22, calculations);
+            float gap = 8;
+            while (gap - AB30.CastTime >= FrB.CastTime)
+            {
+                AddSpell(FrB, calculations);
+                gap -= FrB.CastTime;
+            }
+            if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class ABFrB3FrB2 : SpellCycle
+    {
+        public ABFrB3FrB2(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABFrB3FrB2";
+            ABCycle = true;
+
+            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
+            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
+            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+
+            AddSpell(AB30, calculations);
+            AddSpell(FrB, calculations);
+            AddSpell(AB11, calculations);
+            AddSpell(FrB, calculations);
+            AddSpell(AB22, calculations);
+            float gap = 8;
+            while (gap >= FrB.CastTime)
+            {
+                AddSpell(FrB, calculations);
+                gap -= FrB.CastTime;
+            }
+            if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class ABFB3FBSc : SpellCycle
+    {
+        public ABFB3FBSc(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABFB3FBSc";
+            ABCycle = true;
+
+            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
+            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
+            BaseSpell FB = (BaseSpell)calculations.GetSpell("Fireball");
+            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+
+            AddSpell(AB30, calculations);
+            AddSpell(FB, calculations);
+            AddSpell(AB11, calculations);
+            AddSpell(FB, calculations);
+            AddSpell(AB22, calculations);
+            float gap = 8;
+            while (gap >= AB30.CastTime + calculations.Latency)
+            {
+                AddSpell(FB, calculations);
+                gap -= FB.CastTime;
+            }
+            while (gap >= AB30.CastTime + calculations.Latency)
+            {
+                AddSpell(Sc, calculations);
+                gap -= Sc.CastTime;
+            }
+            if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
 }

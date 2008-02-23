@@ -19,6 +19,9 @@ namespace Rawr.Mage
         public float FightDuration { get; set; }
         public float ShadowPriest { get; set; }
         public bool HeroismAvailable { get; set; }
+        public bool DestructionPotion { get; set; }
+        public bool FlameCap { get; set; }
+        public bool ABCycles { get; set; }
         public float MoltenFuryPercentage { get; set; }
 
         public int Pyromaniac { get; set; }
@@ -61,6 +64,9 @@ namespace Rawr.Mage
             ShadowPriest = float.Parse(character.CalculationOptions["ShadowPriest"]);
             HeroismAvailable = character.CalculationOptions["HeroismAvailable"] == "1";
             MoltenFuryPercentage = float.Parse(character.CalculationOptions["MoltenFuryPercentage"]);
+            DestructionPotion = character.CalculationOptions["DestructionPotion"] == "1";
+            FlameCap = character.CalculationOptions["FlameCap"] == "1";
+            ABCycles = character.CalculationOptions["ABCycles"] == "1";
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"]);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"]);
@@ -203,8 +209,60 @@ namespace Rawr.Mage
                 case "Fireball":
                     s = new Fireball(Character, this);
                     break;
-                case "Arcane Blast (spam)":
+                case "Scorch":
+                    s = new Scorch(Character, this);
+                    break;
+                case "Arcane Blast 3,3":
+                case "Arcane Blast":
                     s = new ArcaneBlast(Character, this, 3, 3);
+                    break;
+                case "Arcane Blast 1,0":
+                    s = new ArcaneBlast(Character, this, 1, 0);
+                    break;
+                case "Arcane Blast 0,1":
+                    s = new ArcaneBlast(Character, this, 0, 1);
+                    break;
+                case "Arcane Blast 1,1":
+                    s = new ArcaneBlast(Character, this, 1, 1);
+                    break;
+                case "Arcane Blast 2,2":
+                    s = new ArcaneBlast(Character, this, 2, 2);
+                    break;
+                case "Arcane Blast 1,2":
+                    s = new ArcaneBlast(Character, this, 1, 2);
+                    break;
+                case "Arcane Blast 3,0":
+                    s = new ArcaneBlast(Character, this, 3, 0);
+                    break;
+                case "ABAM":
+                    s = new ABAM(Character, this);
+                    break;
+                case "AB3AMSc":
+                    s = new AB3AMSc(Character, this);
+                    break;
+                case "ABAM3Sc":
+                    s = new ABAM3Sc(Character, this);
+                    break;
+                case "ABAM3Sc2":
+                    s = new ABAM3Sc2(Character, this);
+                    break;
+                case "ABAM3FrB":
+                    s = new ABAM3FrB(Character, this);
+                    break;
+                case "ABAM3FrB2":
+                    s = new ABAM3FrB2(Character, this);
+                    break;
+                case "AB3FrB":
+                    s = new AB3FrB(Character, this);
+                    break;
+                case "ABFrB3FrB":
+                    s = new ABFrB3FrB(Character, this);
+                    break;
+                case "ABFrB3FrB2":
+                    s = new ABFrB3FrB2(Character, this);
+                    break;
+                case "ABFB3FBSc":
+                    s = new ABFB3FBSc(Character, this);
                     break;
             }
             if (s != null) Spells[spellName] = s;
@@ -241,14 +299,19 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-            Spell s = GetSpell("Arcane Missiles");
-            dictValues.Add("Arcane Missiles", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
-            s = GetSpell("Arcane Blast (spam)");
-            dictValues.Add("Arcane Blast", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
-            s = GetSpell("Fireball");
-            dictValues.Add("Fireball", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
-            s = GetSpell("Frostbolt");
-            dictValues.Add("Frostbolt", String.Format("{0:F} Dps*{1:F} Mps", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond));
+            List<string> spellList = new List<string>() { "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc" };
+            foreach (string spell in spellList)
+            {
+                Spell s = GetSpell(spell);
+                if (s is BaseSpell)
+                {
+                    dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} sec", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, ((BaseSpell)s).CastTime - Latency));
+                }
+                else if (s is SpellCycle)
+                {
+                    dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, ((SpellCycle)s).Sequence));
+                }
+            }
             dictValues.Add("Total Damage", String.Format("{0:F}", OverallPoints));
             dictValues.Add("Dps", String.Format("{0:F}", OverallPoints / FightDuration));
             StringBuilder sb = new StringBuilder("*");
