@@ -52,12 +52,45 @@ namespace Rawr.Warlock
         public float ShadowDamage;
         public float FireDamage;
 
+        internal Character _character;
+
+
+        internal float ChanceToMiss
+        {
+            get
+            {
+                if (_character != null)
+                {
+                    switch (_character.CalculationOptions["TargetLevel"])
+                    {
+                        case "73":
+                            return 0.16f;
+                            break;
+                        case "72":
+                            return 0.05f;
+                            break;
+                        case "71":
+                            return 0.04f;
+                            break;
+                        case "70":
+                            return 0.03f;
+                            break;
+
+                    }
+                    return 0.16f;
+                }
+                return 0.16f;
+
+            }
+        }
+
     }
 
 
     
     internal class ShadowBolt : Spell
     {
+        public float ISBuptime { get; set; }
         public ShadowBolt(Character character, Stats stats)
         {
             Name = "Shadowbolt";
@@ -73,6 +106,7 @@ namespace Rawr.Warlock
             BaseRange = 30;
             
             
+            
             CritPercent = BaseCritPercent;
             CastTime = BaseCastTime;
             SpellDamageCoefficient = BaseSpellDamageCoefficient;
@@ -83,6 +117,7 @@ namespace Rawr.Warlock
             PeriodicDamage = BasePeriodicDamage;
             MinDamage = BaseMinDamage;
             MaxDamage = BaseMaxDamage;
+            _character = character;
 
             ParseTalents(character, stats);
             Calculate(character, stats);
@@ -98,8 +133,38 @@ namespace Rawr.Warlock
             CritPercent +=  tal.GetTalent("Devastation").PointsInvested;
             HealthReturnFactor = tal.GetTalent("SoulLeech").PointsInvested / 10f;
             SpellDamageCoefficient += tal.GetTalent("ShadowandFlame").PointsInvested * 0.04f;
-            if (tal.GetTalent("DemonicSacrifice").PointsInvested == 1 && character.CalculationOptions["SacraficedPet"] == "Succubus")
-                DamageModifier += 0.15f;
+            if (tal.GetTalent("DemonicSacrifice").PointsInvested == 1)
+            {
+                switch (character.CalculationOptions["SacraficedPet"].ToUpper())
+                {
+                    case "SUCCUBUS":
+                        DamageModifier *= 1f + 0.15f;
+                        break;
+                    case "FELGUARD":
+                        DamageModifier *= 1f + 0.10f;
+                        break;
+                }
+            }
+            
+            DamageModifier *= 1f + (0.05f * tal.GetTalent("SoulLink").PointsInvested);
+
+
+            if (character.CalculationOptions["SacraficedPet"] == "")
+            {
+                int MDTalents = tal.GetTalent("MasterDemonologist").PointsInvested;
+                switch (character.CalculationOptions["Pet"].ToUpper())
+                {
+                    case "SUCCUBUS":
+                        DamageModifier *= 1f + (0.02f * MDTalents);
+                        break;
+                    case "FELGUARD":
+                        DamageModifier *= 1f + (0.01f * MDTalents);
+                        break;
+
+                }
+            }
+
+
             if (tal.GetTalent("Ruin").PointsInvested == 1) CritModifier = 2f;
         }
 
@@ -112,6 +177,12 @@ namespace Rawr.Warlock
             float minCrit = MinDamage * CritModifier;
             float maxCrit = MaxDamage * CritModifier;
             AverageDamage = ((MinDamage + minCrit * (CritPercent / 100f)) + (MaxDamage + maxCrit * (CritPercent / 100f))) / 2f;
+            float missRate = ChanceToMiss  - (stats.SpellHitRating / 1262.5f);
+            float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
+            AverageDamage *= spellHitFactor;
+            float impSB = character.Talents.GetTalent("ImprovedShadowBolt").PointsInvested * 0.04f;
+            ISBuptime = (float)(1f - (Math.Pow(1f - (CritPercent / 100f), 4f)));
+            AverageDamage *= (1 + impSB * ISBuptime);
         }
 
     }
@@ -177,6 +248,11 @@ namespace Rawr.Warlock
             DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
+
+            float supressionbonus = (stats.SpellHitRating + character.Talents.GetTalent("Supression").PointsInvested * 2f); 
+            float missRate = ChanceToMiss - (stats.SpellHitRating  / 1262.5f) - (supressionbonus / 100f);
+            float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
+            AverageDamage *= spellHitFactor;
         }
 
     }
@@ -232,6 +308,11 @@ namespace Rawr.Warlock
             DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
+
+            float supressionbonus = (stats.SpellHitRating + character.Talents.GetTalent("Supression").PointsInvested * 2f);
+            float missRate = ChanceToMiss - (stats.SpellHitRating / 1262.5f) - (supressionbonus / 100f);
+            float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
+            AverageDamage *= spellHitFactor;
         }
 
     }
@@ -298,6 +379,10 @@ namespace Rawr.Warlock
             float minCrit = MinDamage * CritModifier;
             float maxCrit = MaxDamage * CritModifier;
             AverageDamage = ((MinDamage + minCrit * (CritPercent / 100f)) + (MaxDamage + maxCrit * (CritPercent / 100f))) / 2f;
+
+            float missRate = ChanceToMiss - (stats.SpellHitRating / 1262.5f);
+            float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
+            AverageDamage *= spellHitFactor;
         }
 
     }
@@ -372,6 +457,10 @@ namespace Rawr.Warlock
             AverageDamage = ((MinDamage + minCrit * (CritPercent / 100f)) + (MaxDamage + maxCrit * (CritPercent / 100f))) / 2f;
             //dot portion
             AverageDamage += PeriodicDamage * (PeriodicDuration / PeriodicTickInterval) + (SpellDamage + FireDamage) * PeriodicSpellDamageCoefficient;
+            float missRate = ChanceToMiss - (stats.SpellHitRating / 1262.5f);
+            float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
+            AverageDamage *= spellHitFactor;
+
         }
 
     }
@@ -436,6 +525,10 @@ namespace Rawr.Warlock
             DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
+            float supressionbonus = (stats.SpellHitRating + character.Talents.GetTalent("Supression").PointsInvested * 2f);
+            float missRate = ChanceToMiss - (stats.SpellHitRating / 1262.5f) - (supressionbonus / 100f);
+            float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
+            AverageDamage *= spellHitFactor;
         }
 
     }
@@ -494,6 +587,10 @@ namespace Rawr.Warlock
             DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
+            float supressionbonus = (stats.SpellHitRating + character.Talents.GetTalent("Supression").PointsInvested * 2f);
+            float missRate = ChanceToMiss - (stats.SpellHitRating / 1262.5f) - (supressionbonus / 100f);
+            float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
+            AverageDamage *= spellHitFactor;
         }
 
     }
@@ -551,6 +648,10 @@ namespace Rawr.Warlock
             DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
+            float supressionbonus = (stats.SpellHitRating + character.Talents.GetTalent("Supression").PointsInvested * 2f);
+            float missRate = ChanceToMiss - (stats.SpellHitRating / 1262.5f) - (supressionbonus / 100f);
+            float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
+            AverageDamage *= spellHitFactor;
         }
 
     }

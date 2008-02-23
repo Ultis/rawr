@@ -29,29 +29,7 @@ namespace Rawr.Warlock
             calcLifeTap();
         }
 
-        private float ChanceToMiss
-        {
-            get {
-                switch (_character.CalculationOptions["TargetLevel"])
-                {
-                    case "73":
-                        return 0.16f;
-                        break;
-                    case "72":
-                        return 0.05f;
-                        break;
-                    case "71":
-                        return 0.04f;
-                        break;
-                    case "70":
-                        return 0.03f;
-                        break;
-
-                }
-                return 0.03f;
-            
-                }
-        }
+     
 
         private void calcLifeTap()
         {
@@ -157,10 +135,8 @@ namespace Rawr.Warlock
                     }
                     if (gcd & gcdstart == 0) gcdstart = currTime;
                 }
-                float spellHit = _stats.SpellHitRating / 12.625f;
-                float missRate = ChanceToMiss  - (spellHit / 100f);
-                float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
-                return new float[] { ( totalDamage * spellHitFactor) / Duration };
+            
+                return new float[] { ( totalDamage) / Duration };
               }
 
             }

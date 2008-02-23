@@ -76,7 +76,27 @@ namespace Rawr.Warlock
                         "Shadowbolt Stats:SB Min Crit",
                         "Shadowbolt Stats:SB Max Crit",
                         "Shadowbolt Stats:SB Average Hit",
-                        "Shadowbolt Stats:SB Crit Rate"
+                        "Shadowbolt Stats:SB Crit Rate",
+                        "Shadowbolt Stats:ISB Uptime",
+                        "Incinerate Stats:Incinerate Min Hit",
+                        "Incinerate Stats:Incinerate Max Hit",
+                        "Incinerate Stats:Incinerate Min Crit",
+                        "Incinerate Stats:Incinerate Max Crit",
+                        "Incinerate Stats:Incinerate Average Hit",
+                        "Incinerate Stats:Incinerate Crit Rate",
+                        "Immolate Stats:ImmolateMin Hit",
+                        "Immolate Stats:ImmolateMax Hit",
+                        "Immolate Stats:ImmolateMin Crit",
+                        "Immolate Stats:ImmolateMax Crit",
+                        "Immolate Stats:ImmolateAverage Hit",
+                        "Immolate Stats:ImmolateCrit Rate",
+                        "Curse of Agony Stats:CoA Tick",
+                        "Curse of Agony Stats:CoA Total Damage",
+                        "Curse of Doom Stats:CoD Total Damage",
+                        "Unstable Affliction Stats:UA Tick",
+                        "Unstable Affliction Stats:UA Total Damage",
+                        "SiphonLife Stats:SL Tick",
+                        "SiphonLife Stats:SL Total Damage"
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();   
                 }
@@ -198,8 +218,6 @@ namespace Rawr.Warlock
 
             wsr.Spells = priorityList;
             float[] dps = wsr.GetDPS;
-            if (additionalItem != null)
-                Console.WriteLine("yo");
             CharacterCalculationsWarlock ccw = new CharacterCalculationsWarlock();
             ccw.Spells = new List<Spell>(priorityList.Values);
             ccw.SubPoints = dps;
@@ -208,7 +226,6 @@ namespace Rawr.Warlock
             ccw.TotalStats = GetCharacterStats(character);
             ccw.character = character;
             return ccw;
-
         }
 
 

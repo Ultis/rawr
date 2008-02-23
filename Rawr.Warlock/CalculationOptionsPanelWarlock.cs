@@ -39,6 +39,8 @@ namespace Rawr.Warlock
             setDefaultOption("SiphonLife", "F");
             setDefaultOption("Immolate", "F");
             setDefaultOption("FillerSpell", "Shadowbolt");
+            setDefaultOption("ISBUptime", "50");
+            setDefaultOption("Pet", "Succubus");
             
 
 
@@ -54,6 +56,7 @@ namespace Rawr.Warlock
             checkSacraficed.Checked = true;
             checkImmolate.Checked = false;
             comboBoxFilterSpell.SelectedItem = "Shadowbolt";
+            textBoxISBUptime.Text = Character.CalculationOptions["ISBUptime"];
         }
 	
 		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
