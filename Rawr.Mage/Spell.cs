@@ -215,7 +215,7 @@ namespace Rawr.Mage
         {
             base.Calculate(character, calculations);
             Cooldown -= 0.5f * int.Parse(character.CalculationOptions["ImprovedFireBlast"]);
-            CritRate += 0.02f * int.Parse(character.CalculationOptions["Incineration"]);
+            CritRate += 0.02f * calculations.CalculationOptions.Incinerate;
             CalculateDerivedStats(character, calculations);
         }
     }
@@ -231,7 +231,7 @@ namespace Rawr.Mage
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             base.Calculate(character, calculations);
-            CritRate += 0.02f * int.Parse(character.CalculationOptions["Incineration"]);
+            CritRate += 0.02f * calculations.CalculationOptions.Incinerate;
             CalculateDerivedStats(character, calculations);
         }
     }
@@ -464,8 +464,8 @@ namespace Rawr.Mage
             BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
 
             AddSpell(AB, calculations);
-            AddPause(8 - AM.CastTime + calculations.Latency);
             AddSpell(AM, calculations);
+            AddPause(8 - AM.CastTime - AB.CastTime + calculations.Latency);
 
             Calculate(character, calculations);
         }

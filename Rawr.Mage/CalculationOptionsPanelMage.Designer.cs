@@ -158,7 +158,8 @@
             this.comboBoxArmor.Items.AddRange(new object[] {
             "Mage",
             "Molten",
-            "Ice"});
+            "Ice",
+            "None"});
             this.comboBoxArmor.Location = new System.Drawing.Point(104, 423);
             this.comboBoxArmor.Name = "comboBoxArmor";
             this.comboBoxArmor.Size = new System.Drawing.Size(93, 21);

@@ -108,7 +108,7 @@ namespace Rawr.Mage
             this.label39 = new System.Windows.Forms.Label();
             this.comboBoxImprovedFlamestrike = new System.Windows.Forms.ComboBox();
             this.label40 = new System.Windows.Forms.Label();
-            this.comboBoxIncineration = new System.Windows.Forms.ComboBox();
+            this.comboBoxIncinerate = new System.Windows.Forms.ComboBox();
             this.label41 = new System.Windows.Forms.Label();
             this.comboBoxImprovedFireBlast = new System.Windows.Forms.ComboBox();
             this.label42 = new System.Windows.Forms.Label();
@@ -811,7 +811,7 @@ namespace Rawr.Mage
             this.groupBoxFire.Controls.Add(this.label39);
             this.groupBoxFire.Controls.Add(this.comboBoxImprovedFlamestrike);
             this.groupBoxFire.Controls.Add(this.label40);
-            this.groupBoxFire.Controls.Add(this.comboBoxIncineration);
+            this.groupBoxFire.Controls.Add(this.comboBoxIncinerate);
             this.groupBoxFire.Controls.Add(this.label41);
             this.groupBoxFire.Controls.Add(this.comboBoxImprovedFireBlast);
             this.groupBoxFire.Controls.Add(this.label42);
@@ -1206,28 +1206,28 @@ namespace Rawr.Mage
             this.label40.TabIndex = 20;
             this.label40.Text = "Improved Flamestrike:";
             // 
-            // comboBoxIncineration
+            // comboBoxIncinerate
             // 
-            this.comboBoxIncineration.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxIncineration.FormattingEnabled = true;
-            this.comboBoxIncineration.Items.AddRange(new object[] {
+            this.comboBoxIncinerate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxIncinerate.FormattingEnabled = true;
+            this.comboBoxIncinerate.Items.AddRange(new object[] {
             "0",
             "1",
             "2"});
-            this.comboBoxIncineration.Location = new System.Drawing.Point(155, 155);
-            this.comboBoxIncineration.Name = "comboBoxIncineration";
-            this.comboBoxIncineration.Size = new System.Drawing.Size(50, 21);
-            this.comboBoxIncineration.TabIndex = 19;
-            this.comboBoxIncineration.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
+            this.comboBoxIncinerate.Location = new System.Drawing.Point(155, 155);
+            this.comboBoxIncinerate.Name = "comboBoxIncinerate";
+            this.comboBoxIncinerate.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxIncinerate.TabIndex = 19;
+            this.comboBoxIncinerate.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // label41
             // 
             this.label41.AutoSize = true;
             this.label41.Location = new System.Drawing.Point(6, 158);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(65, 13);
+            this.label41.Size = new System.Drawing.Size(57, 13);
             this.label41.TabIndex = 18;
-            this.label41.Text = "Incineration:";
+            this.label41.Text = "Incinerate:";
             // 
             // comboBoxImprovedFireBlast
             // 
@@ -2088,7 +2088,7 @@ namespace Rawr.Mage
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.ComboBox comboBoxImprovedFlamestrike;
         private System.Windows.Forms.Label label40;
-        private System.Windows.Forms.ComboBox comboBoxIncineration;
+        private System.Windows.Forms.ComboBox comboBoxIncinerate;
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.ComboBox comboBoxImprovedFireBlast;
         private System.Windows.Forms.Label label42;

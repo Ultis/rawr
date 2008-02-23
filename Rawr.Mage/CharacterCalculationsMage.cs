@@ -48,6 +48,7 @@ namespace Rawr.Mage
         public int EmpoweredFireball { get; set; }
         public int ArcaneImpact { get; set; }
         public int EmpoweredArcaneMissiles { get; set; }
+        public int Incinerate { get; set; }
 
         public CompiledCalculationOptions(Character character)
         {
@@ -92,6 +93,7 @@ namespace Rawr.Mage
             EmpoweredFireball = int.Parse(character.CalculationOptions["EmpoweredFireball"]);
             ArcaneImpact = int.Parse(character.CalculationOptions["ArcaneImpact"]);
             EmpoweredArcaneMissiles = int.Parse(character.CalculationOptions["EmpoweredArcaneMissiles"]);
+            Incinerate = int.Parse(character.CalculationOptions["Incinerate"]);
         }
     }
 

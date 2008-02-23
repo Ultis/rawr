@@ -83,7 +83,7 @@ namespace Rawr.Mage
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] {};
+                    _customChartNames = new string[] { "Mage Armor", "Talents (per talent point)" };
                 return _customChartNames;
             }
         }
@@ -891,9 +891,99 @@ namespace Rawr.Mage
             return statsTotal;
         }
 
+        private static string[] ArmorList = new string[] { "Mage", "Molten", "Ice" };
+        private static string[] TalentList = { "ArcaneSubtlety", "ArcaneFocus", "ImprovedArcaneMissiles", "WandSpecialization", "MagicAbsorption", "ArcaneConcentration", "MagicAttunement", "ArcaneImpact", "ArcaneFortitude", "ImprovedManaShield", "ImprovedCounterspell", "ArcaneMeditation", "ImprovedBlink", "PresenceOfMind", "ArcaneMind", "PrismaticCloak", "ArcaneInstability", "ArcanePotency", "EmpoweredArcaneMissiles", "ArcanePower", "SpellPower", "MindMastery", "Slow", "ImprovedFireball", "Impact", "Ignite", "FlameThrowing", "ImprovedFireBlast", "Incinerate", "ImprovedFlamestrike", "Pyroblast", "BurningSoul", "ImprovedScorch", "ImprovedFireWard", "MasterOfElements", "PlayingWithFire", "CriticalMass", "BlastWave", "BlazingSpeed", "FirePower", "Pyromaniac", "Combustion", "MoltenFury", "EmpoweredFireball", "DragonsBreath", "FrostWarding", "ImprovedFrostbolt", "ElementalPrecision", "IceShards", "Frostbite", "ImprovedFrostNova", "Permafrost", "PiercingIce", "IcyVeins", "ImprovedBlizzard", "ArcticReach", "FrostChanneling", "Shatter", "FrozenCore", "ColdSnap", "ImprovedConeOfCold", "IceFloes", "WintersChill", "IceBarrier", "ArcticWinds", "EmpoweredFrostbolt", "SummonWaterElemental" };
+        private static string[] TalentListFriendly = { "Arcane Subtlety", "Arcane Focus", "Improved Arcane Missiles", "Wand Specialization", "Magic Absorption", "Arcane Concentration", "Magic Attunement", "Arcane Impact", "Arcane Fortitude", "Improved Mana Shield", "Improved Counterspell", "Arcane Meditation", "Improved Blink", "Presence of Mind", "Arcane Mind", "Prismatic Cloak", "Arcane Instability", "Arcane Potency", "Empowered Arcane Missiles", "Arcane Power", "Spell Power", "Mind Mastery", "Slow", "Improved Fireball", "Impact", "Ignite", "Flame Throwing", "Improved Fire Blast", "Incinerate", "Improved Flamestrike", "Pyroblast", "Burning Soul", "Improved Scorch", "Improved Fire Ward", "Master of Elements", "Playing with Fire", "Critical Mass", "Blast Wave", "Blazing Speed", "Fire Power", "Pyromaniac", "Combustion", "Molten Fury", "Empowered Fireball", "Dragon's Breath", "Frost Warding", "Improved Frostbolt", "Elemental Precision", "Ice Shards", "Frostbite", "Improved Frost Nova", "Permafrost", "Piercing Ice", "Icy Veins", "Improved Blizzard", "Arctic Reach", "Frost Channeling", "Shatter", "Frozen Core", "Cold Snap", "Improved Cone of Cold", "Ice Floes", "Winter's Chill", "Ice Barrier", "Arctic Winds", "Empowered Frostbolt", "Summon Water Elemental" };
+        private static int[] MaxTalentPoints = { 2, 5, 5, 2, 5, 5, 2, 3, 1, 2, 2, 3, 2, 1, 5, 2, 3, 3, 3, 1, 2, 5, 1, 5, 5, 5, 2, 3, 2, 3, 1, 2, 3, 2, 3, 3, 3, 1, 2, 5, 3, 1, 2, 5, 1, 2, 5, 3, 5, 3, 2, 3, 3, 1, 3, 2, 3, 5, 3, 1, 3, 2, 5, 1, 5, 5, 1 };
+
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            throw new NotImplementedException();
+            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+
+            switch (chartName)
+            {
+                case "Mage Armor":
+                    string currentArmor = character.CalculationOptions["MageArmor"];
+                    character.CalculationOptions["MageArmor"] = "None";
+                    CharacterCalculationsMage baseCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+
+
+                    foreach (string armor in ArmorList)
+                    {
+                        character.CalculationOptions["MageArmor"] = armor;
+                        CharacterCalculationsMage calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+
+                        ComparisonCalculationBase comparison = CreateNewComparisonCalculation();
+                        comparison.Name = armor;
+                        comparison.Equipped = armor == currentArmor;
+                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        float[] subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+
+                        comparisonList.Add(comparison);
+                    }
+
+                    character.CalculationOptions["MageArmor"] = currentArmor;
+
+                    return comparisonList.ToArray();
+                case "Talents (per talent point)":
+                    CharacterCalculationsMage currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+
+                    for (int index = 0; index < TalentList.Length; index++ )
+                    {
+                        string talent = TalentList[index];
+                        int maxPoints = MaxTalentPoints[index];
+                        int currentPoints = int.Parse(character.CalculationOptions[talent]);
+
+                        if (currentPoints > 0)
+                        {
+                            character.CalculationOptions[talent] = "0";
+                            CharacterCalculationsMage calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+
+                            ComparisonCalculationBase comparison = CreateNewComparisonCalculation();
+                            comparison.Name = string.Format("{0} ({1})", TalentListFriendly[index], currentPoints);
+                            comparison.Equipped = true;
+                            comparison.OverallPoints = (currentCalc.OverallPoints - calc.OverallPoints) / (float)currentPoints;
+                            float[] subPoints = new float[calc.SubPoints.Length];
+                            for (int i = 0; i < calc.SubPoints.Length; i++)
+                            {
+                                subPoints[i] = (currentCalc.SubPoints[i] - calc.SubPoints[i]) / (float)currentPoints;
+                            }
+                            comparison.SubPoints = subPoints;
+
+                            comparisonList.Add(comparison);
+                        }
+
+                        if (currentPoints < MaxTalentPoints[index])
+                        {
+                            character.CalculationOptions[talent] = MaxTalentPoints[index].ToString();
+                            CharacterCalculationsMage calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+
+                            ComparisonCalculationBase comparison = CreateNewComparisonCalculation();
+                            comparison.Name = string.Format("{0} ({1})", TalentListFriendly[index], MaxTalentPoints[index]);
+                            comparison.Equipped = false;
+                            comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints) / (float)(MaxTalentPoints[index] - currentPoints);
+                            float[] subPoints = new float[calc.SubPoints.Length];
+                            for (int i = 0; i < calc.SubPoints.Length; i++)
+                            {
+                                subPoints[i] = (calc.SubPoints[i] - currentCalc.SubPoints[i]) / (float)(MaxTalentPoints[index] - currentPoints);
+                            }
+                            comparison.SubPoints = subPoints;
+
+                            comparisonList.Add(comparison);
+                        }
+
+                        character.CalculationOptions[talent] = currentPoints.ToString();
+                    }
+
+                    return comparisonList.ToArray();
+                default:
+                    return new ComparisonCalculationBase[0];
+            }
         }
 
         public override Stats GetRelevantStats(Stats stats)
