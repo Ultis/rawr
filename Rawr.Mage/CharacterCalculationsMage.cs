@@ -5,6 +5,90 @@ using System.Text;
 
 namespace Rawr.Mage
 {
+    class CompiledCalculationOptions
+    {
+        public int TargetLevel { get; set; }
+        public int AoeTargetLevel { get; set; }
+        public float Latency { get; set; }
+        public string MageArmor { get; set; }
+        public int AoeTargets { get; set; }
+        public float ArcaneResist { get; set; }
+        public float FireResist { get; set; }
+        public float FrostResist { get; set; }
+        public float NatureResist { get; set; }
+        public float FightDuration { get; set; }
+        public float ShadowPriest { get; set; }
+        public bool HeroismAvailable { get; set; }
+        public float MoltenFuryPercentage { get; set; }
+
+        public int Pyromaniac { get; set; }
+        public int ElementalPrecision { get; set; }
+        public int FrostChanneling { get; set; }
+        public int MasterOfElements { get; set; }
+        public int ArcaneConcentration { get; set; }
+        public int MindMastery { get; set; }
+        public int ArcaneInstability { get; set; }
+        public int ArcanePotency { get; set; }
+        public int ArcaneFocus { get; set; }
+        public int PlayingWithFire { get; set; }
+        public int MoltenFury { get; set; }
+        public int FirePower { get; set; }
+        public int PiercingIce { get; set; }
+        public int SpellPower { get; set; }
+        public int Ignite { get; set; }
+        public int IceShards { get; set; }
+        public int CriticalMass { get; set; }
+        public int Combustion { get; set; }
+        public int ImprovedFrostbolt { get; set; }
+        public int EmpoweredFrostbolt { get; set; }
+        public int ImprovedFireball { get; set; }
+        public int EmpoweredFireball { get; set; }
+        public int ArcaneImpact { get; set; }
+        public int EmpoweredArcaneMissiles { get; set; }
+
+        public CompiledCalculationOptions(Character character)
+        {
+            TargetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
+            AoeTargetLevel = int.Parse(character.CalculationOptions["AoeTargetLevel"]);
+            Latency = float.Parse(character.CalculationOptions["Latency"]);
+            MageArmor = character.CalculationOptions["MageArmor"];
+            AoeTargets = int.Parse(character.CalculationOptions["AoeTargets"]);
+            ArcaneResist = float.Parse(character.CalculationOptions["ArcaneResist"]);
+            FireResist = float.Parse(character.CalculationOptions["FireResist"]);
+            FrostResist = float.Parse(character.CalculationOptions["FrostResist"]);
+            NatureResist = float.Parse(character.CalculationOptions["NatureResist"]);
+            FightDuration = float.Parse(character.CalculationOptions["FightDuration"]);
+            ShadowPriest = float.Parse(character.CalculationOptions["ShadowPriest"]);
+            HeroismAvailable = character.CalculationOptions["HeroismAvailable"] == "1";
+            MoltenFuryPercentage = float.Parse(character.CalculationOptions["MoltenFuryPercentage"]);
+
+            Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"]);
+            ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"]);
+            FrostChanneling = int.Parse(character.CalculationOptions["FrostChanneling"]);
+            MasterOfElements = int.Parse(character.CalculationOptions["MasterOfElements"]);
+            ArcaneConcentration = int.Parse(character.CalculationOptions["ArcaneConcentration"]);
+            MindMastery = int.Parse(character.CalculationOptions["MindMastery"]);
+            ArcaneInstability = int.Parse(character.CalculationOptions["ArcaneInstability"]);
+            ArcanePotency = int.Parse(character.CalculationOptions["ArcanePotency"]);
+            ArcaneFocus = int.Parse(character.CalculationOptions["ArcaneFocus"]);
+            PlayingWithFire = int.Parse(character.CalculationOptions["PlayingWithFire"]);
+            MoltenFury = int.Parse(character.CalculationOptions["MoltenFury"]);
+            FirePower = int.Parse(character.CalculationOptions["FirePower"]);
+            PiercingIce = int.Parse(character.CalculationOptions["PiercingIce"]);
+            SpellPower = int.Parse(character.CalculationOptions["SpellPower"]);
+            Ignite = int.Parse(character.CalculationOptions["Ignite"]);
+            IceShards = int.Parse(character.CalculationOptions["IceShards"]);
+            CriticalMass = int.Parse(character.CalculationOptions["CriticalMass"]);
+            Combustion = int.Parse(character.CalculationOptions["Combustion"]);
+            ImprovedFrostbolt = int.Parse(character.CalculationOptions["ImprovedFrostbolt"]);
+            EmpoweredFrostbolt = int.Parse(character.CalculationOptions["EmpoweredFrostbolt"]);
+            ImprovedFireball = int.Parse(character.CalculationOptions["ImprovedFireball"]);
+            EmpoweredFireball = int.Parse(character.CalculationOptions["EmpoweredFireball"]);
+            ArcaneImpact = int.Parse(character.CalculationOptions["ArcaneImpact"]);
+            EmpoweredArcaneMissiles = int.Parse(character.CalculationOptions["EmpoweredArcaneMissiles"]);
+        }
+    }
+
     class CharacterCalculationsMage : CharacterCalculationsBase
     {
         private float _overallPoints = 0f;
@@ -27,6 +111,8 @@ namespace Rawr.Mage
             get { return _basicStats; }
             set { _basicStats = value; }
         }
+
+        public CompiledCalculationOptions CalculationOptions { get; set; }
 
         public Character Character { get; set; }
 
@@ -168,19 +254,19 @@ namespace Rawr.Mage
             StringBuilder sb = new StringBuilder("*");
             for (int i = 0; i < SolutionLabel.Count; i++)
             {
-                if (Solution[i + 1] > 0.01)
+                if (Solution[i] > 0.01)
                 {
                     switch (i)
                     {
                         case 2:
-                            sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i + 1] / EvocationDuration));
+                            sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i] / EvocationDuration));
                             break;
                         case 3:
                         case 4:
-                            sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i + 1] / ManaPotionTime));
+                            sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i] / ManaPotionTime));
                             break;
                         default:
-                            sb.AppendLine(String.Format("{0}: {1:F} sec", SolutionLabel[i], Solution[i + 1]));
+                            sb.AppendLine(String.Format("{0}: {1:F} sec", SolutionLabel[i], Solution[i]));
                             break;
                     }
                 }

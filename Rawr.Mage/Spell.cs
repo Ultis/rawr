@@ -85,13 +85,13 @@ namespace Rawr.Mage
 
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
-            if (AreaEffect) TargetProcs *= int.Parse(character.CalculationOptions["AoeTargets"]);
+            if (AreaEffect) TargetProcs *= calculations.CalculationOptions.AoeTargets;
             Cooldown = BaseCooldown;
 
             CostModifier = 1;
-            if (MagicSchool == MagicSchool.Fire) CostModifier -= 0.01f * int.Parse(character.CalculationOptions["Pyromaniac"]);
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost) CostModifier -= 0.01f * int.Parse(character.CalculationOptions["ElementalPrecision"]);
-            if (MagicSchool == MagicSchool.Frost) CostModifier -= 0.05f * int.Parse(character.CalculationOptions["FrostChanneling"]);
+            if (MagicSchool == MagicSchool.Fire) CostModifier -= 0.01f * calculations.CalculationOptions.Pyromaniac;
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost) CostModifier -= 0.01f * calculations.CalculationOptions.ElementalPrecision;
+            if (MagicSchool == MagicSchool.Frost) CostModifier -= 0.05f * calculations.CalculationOptions.FrostChanneling;
             if (calculations.ArcanePower) CostModifier += 0.3f;
 
             CastTime = BaseCastTime / calculations.CastingSpeed + calculations.Latency;
@@ -104,7 +104,7 @@ namespace Rawr.Mage
                     CritBonus = calculations.ArcaneCritBonus;
                     RawSpellDamage = calculations.ArcaneDamage;
                     HitRate = calculations.ArcaneHitRate;
-                    RealResistance = float.Parse(character.CalculationOptions["ArcaneResist"]);
+                    RealResistance = calculations.CalculationOptions.ArcaneResist;
                     break;
                 case MagicSchool.Fire:
                     SpellModifier = calculations.FireSpellModifier;
@@ -112,7 +112,7 @@ namespace Rawr.Mage
                     CritBonus = calculations.FireCritBonus;
                     RawSpellDamage = calculations.FireDamage;
                     HitRate = calculations.FireHitRate;
-                    RealResistance = float.Parse(character.CalculationOptions["FireResist"]);
+                    RealResistance = calculations.CalculationOptions.FireResist;
                     break;
                 case MagicSchool.Frost:
                     SpellModifier = calculations.FrostSpellModifier;
@@ -120,7 +120,7 @@ namespace Rawr.Mage
                     CritBonus = calculations.FrostCritBonus;
                     RawSpellDamage = calculations.FrostDamage;
                     HitRate = calculations.FrostHitRate;
-                    RealResistance = float.Parse(character.CalculationOptions["FrostResist"]);
+                    RealResistance = calculations.CalculationOptions.FrostResist;
                     break;
                 case MagicSchool.Nature:
                     SpellModifier = calculations.NatureSpellModifier;
@@ -128,11 +128,11 @@ namespace Rawr.Mage
                     CritBonus = calculations.NatureCritBonus;
                     RawSpellDamage = calculations.NatureDamage;
                     HitRate = calculations.NatureHitRate;
-                    RealResistance = float.Parse(character.CalculationOptions["NatureResist"]);
+                    RealResistance = calculations.CalculationOptions.NatureResist;
                     break;
             }
 
-            int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
+            int targetLevel = calculations.CalculationOptions.TargetLevel;
             PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - calculations.BasicStats.SpellPenetration / 350f * 0.75f) - ((targetLevel > 70 && !Binary) ? ((targetLevel - 70) * 0.02f) : 0f));
         }
 
@@ -149,13 +149,13 @@ namespace Rawr.Mage
             if (CastTime < calculations.GlobalCooldown + calculations.Latency) CastTime = calculations.GlobalCooldown + calculations.Latency;
             Cost = BaseCost * CostModifier;
 
-            Cost *= (1f - CritRate + CritRate * (1f - 0.1f * int.Parse(character.CalculationOptions["MasterOfElements"])));
+            Cost *= (1f - CritRate + CritRate * (1f - 0.1f * calculations.CalculationOptions.MasterOfElements));
 
             CostPerSecond = Cost / CastTime;
 
             if (AveragedClearcasting)
             {
-                CostPerSecond *= (1 - 0.02f * int.Parse(character.CalculationOptions["ArcaneConcentration"]));
+                CostPerSecond *= (1 - 0.02f * calculations.CalculationOptions.ArcaneConcentration);
             }
             else if (ClearcastingActive)
             {
@@ -178,14 +178,20 @@ namespace Rawr.Mage
                 DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
             }
 
-            FSRCalc fsr = new FSRCalc();
-            fsr.AddSpell(CastTime - calculations.Latency, calculations.Latency, Channeled);
+            float casttimeHash = calculations.ClearcastingChance * 100 + CastTime;
+            float OO5SR = 0;
+            if (!FSRCalc.TryGetCachedOO5SR(Name, casttimeHash, out OO5SR))
+            {
+                FSRCalc fsr = new FSRCalc();
+                fsr.AddSpell(CastTime - calculations.Latency, calculations.Latency, Channeled);
+                OO5SR = fsr.CalculateOO5SR(calculations.ClearcastingChance, Name, casttimeHash);
+            }
 
-            ManaRegenPerSecond = calculations.ManaRegen5SR + fsr.CalculateOO5SR(calculations.ClearcastingChance) * (calculations.ManaRegen - calculations.ManaRegen5SR) + calculations.BasicStats.ManaRestorePerHit * HitProcs / CastTime + calculations.BasicStats.ManaRestorePerCast * CastProcs / CastTime;
+            ManaRegenPerSecond = calculations.ManaRegen5SR + OO5SR * (calculations.ManaRegen - calculations.ManaRegen5SR) + calculations.BasicStats.ManaRestorePerHit * HitProcs / CastTime + calculations.BasicStats.ManaRestorePerCast * CastProcs / CastTime;
 
             if (calculations.Mp5OnCastFor20Sec > 0)
             {
-                float totalMana = calculations.Mp5OnCastFor20Sec / 5f / CastTime * HitProcs * 0.5f * (20 - CastTime / HitProcs / 2f) * (20 - CastTime / HitProcs / 2f);
+                float totalMana = calculations.Mp5OnCastFor20Sec / 5f / CastTime * 0.5f * (20 - CastTime / HitProcs / 2f) * (20 - CastTime / HitProcs / 2f);
                 ManaRegenPerSecond += totalMana / 20f;
             }
         }
@@ -269,11 +275,11 @@ namespace Rawr.Mage
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             base.Calculate(character, calculations);
-            CastTime = (BaseCastTime - 0.1f * int.Parse(character.CalculationOptions["ImprovedFrostbolt"])) / calculations.CastingSpeed + calculations.Latency;
-            CritRate += 0.01f * int.Parse(character.CalculationOptions["EmpoweredFrostbolt"]);
-            SpellDamageCoefficient += 0.02f * int.Parse(character.CalculationOptions["EmpoweredFrostbolt"]);
-            int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
-            HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit + 0.02f * int.Parse(character.CalculationOptions["ElementalPrecision"])); // bugged Elemental Precision
+            CastTime = (BaseCastTime - 0.1f * calculations.CalculationOptions.ImprovedFrostbolt) / calculations.CastingSpeed + calculations.Latency;
+            CritRate += 0.01f * calculations.CalculationOptions.EmpoweredFrostbolt;
+            SpellDamageCoefficient += 0.02f * calculations.CalculationOptions.EmpoweredFrostbolt;
+            int targetLevel = calculations.CalculationOptions.TargetLevel;
+            HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit + 0.02f * calculations.CalculationOptions.ElementalPrecision); // bugged Elemental Precision
             SpellModifier *= (1 + calculations.BasicStats.BonusMageNukeMultiplier);
             CalculateDerivedStats(character, calculations);
         }
@@ -291,8 +297,8 @@ namespace Rawr.Mage
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             base.Calculate(character, calculations);
-            CastTime = (BaseCastTime - 0.1f * int.Parse(character.CalculationOptions["ImprovedFireball"])) / calculations.CastingSpeed + calculations.Latency;
-            SpellDamageCoefficient += 0.03f * int.Parse(character.CalculationOptions["EmpoweredFireball"]);
+            CastTime = (BaseCastTime - 0.1f * calculations.CalculationOptions.ImprovedFireball) / calculations.CastingSpeed + calculations.Latency;
+            SpellDamageCoefficient += 0.03f * calculations.CalculationOptions.EmpoweredFireball;
             SpellModifier *= (1 + calculations.BasicStats.BonusMageNukeMultiplier);
             CalculateDerivedStats(character, calculations);
         }
@@ -334,7 +340,7 @@ namespace Rawr.Mage
             CastTime = (BaseCastTime - timeDebuff / 3f) / calculations.CastingSpeed + calculations.Latency;
             CostModifier += 0.75f * costDebuff + calculations.BasicStats.ArcaneBlastBonus;
             SpellModifier *= (1 + calculations.BasicStats.ArcaneBlastBonus);
-            CritRate += 0.02f * int.Parse(character.CalculationOptions["ArcaneImpact"]);
+            CritRate += 0.02f * calculations.CalculationOptions.ArcaneImpact;
             CalculateDerivedStats(character, calculations);
         }
     }
@@ -350,9 +356,9 @@ namespace Rawr.Mage
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             base.Calculate(character, calculations);
-            CostModifier += 0.02f * int.Parse(character.CalculationOptions["EmpoweredArcaneMissiles"]);
-            CritRate += 0.01f * int.Parse(character.CalculationOptions["ArcanePotency"]); // CC double dipping
-            SpellDamageCoefficient += 0.15f * int.Parse(character.CalculationOptions["EmpoweredArcaneMissiles"]);
+            CostModifier += 0.02f * calculations.CalculationOptions.EmpoweredArcaneMissiles;
+            CritRate += 0.01f * calculations.CalculationOptions.ArcanePotency; // CC double dipping
+            SpellDamageCoefficient += 0.15f * calculations.CalculationOptions.EmpoweredArcaneMissiles;
             SpellModifier *= (1 + calculations.BasicStats.BonusMageNukeMultiplier);
             CalculateDerivedStats(character, calculations);
         }
