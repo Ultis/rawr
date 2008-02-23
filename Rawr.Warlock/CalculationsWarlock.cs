@@ -10,6 +10,7 @@ namespace Rawr.Warlock
     {
 
 
+
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
@@ -56,7 +57,9 @@ namespace Rawr.Warlock
         {
             get 
             {
-                return _characterDisplayCalculationLabels ?? (_characterDisplayCalculationLabels = new string[]
+                if (_characterDisplayCalculationLabels == null)
+                {
+                    List<string> labels = new List<string>(new string[]
                     {
                         "Basic Stats:Health",
                         "Basic Stats:Mana",
@@ -68,7 +71,16 @@ namespace Rawr.Warlock
                         "Spell Stats:Shadow Damage",
                         "Spell Stats:Fire Damage",
                         "Overall Stats:DPS",
+                        "Shadowbolt Stats:SB Min Hit",
+                        "Shadowbolt Stats:SB Max Hit",
+                        "Shadowbolt Stats:SB Min Crit",
+                        "Shadowbolt Stats:SB Max Crit",
+                        "Shadowbolt Stats:SB Average Hit",
+                        "Shadowbolt Stats:SB Crit Rate"
                     });
+                    _characterDisplayCalculationLabels = labels.ToArray();   
+                }
+                return _characterDisplayCalculationLabels;
             }
         }
 
@@ -112,6 +124,8 @@ namespace Rawr.Warlock
             return new CharacterCalculationsWarlock();
         }
 
+
+        
         /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
         /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
@@ -132,19 +146,67 @@ namespace Rawr.Warlock
             Stats charStats = GetCharacterStats(character, additionalItem);
             int duration = Int32.Parse(character.CalculationOptions["Duration"]);
             float latency = float.Parse(character.CalculationOptions["Latency"]);
-            float gcd = 1.5f;
-
-            Spell sbolt = new ShadowBolt(character, charStats);
-            Spell coa = new CurseOfAgony(character, charStats);
+            Dictionary<int, Spell> priorityList = new Dictionary<int, Spell>();
+            
             WarlockSpellRotation wsr = new WarlockSpellRotation(charStats, character, duration);
-            wsr.AddSpell(sbolt, 2);
-            wsr.AddSpell(coa, 1);
+            int priority = 1;
+            
+            if (character.CalculationOptions["Curse"] == "CurseOfAgony")
+            {
+                priorityList.Add(priority, new CurseOfAgony(character, charStats));
+                priority++;
+            }
 
+            if (character.CalculationOptions["Curse"] == "CurseOfDoom")
+            {
+                priorityList.Add(priority, new CurseOfDoom(character, charStats));
+                priority++;
+            }
+
+            if (character.CalculationOptions["Corruption"] == "T")
+            {
+                priorityList.Add(priority, new Corruption(character, charStats));
+                priority++;
+            }
+
+            if (character.CalculationOptions["UnstableAffliction"] == "T")
+            {
+                priorityList.Add(priority, new UnstableAffliction(character, charStats));
+                priority++;
+            }
+
+            if (character.CalculationOptions["Immolate"] == "T")
+            {
+                priorityList.Add(priority, new Immolate(character, charStats));
+                priority++;
+            }
+
+            if (character.CalculationOptions["SiphonLife"] == "T")
+            {
+                priorityList.Add(priority, new SiphonLife(character, charStats));
+                priority++;
+            }
+
+            Spell filler = null;
+
+            if (character.CalculationOptions["FillerSpell"].ToUpper() == "SHADOWBOLT")
+                filler = new ShadowBolt(character, charStats);
+            else
+                filler = new Incinerate(character, charStats);
+
+            priorityList.Add(priority, filler);
+
+            wsr.Spells = priorityList;
             float[] dps = wsr.GetDPS;
+            if (additionalItem != null)
+                Console.WriteLine("yo");
             CharacterCalculationsWarlock ccw = new CharacterCalculationsWarlock();
+            ccw.Spells = new List<Spell>(priorityList.Values);
             ccw.SubPoints = dps;
             ccw.OverallPoints = dps[0];
-            ccw.TotalStats = charStats;
+            ccw.DPS = dps[0];
+            ccw.TotalStats = GetCharacterStats(character);
+            ccw.character = character;
             return ccw;
 
         }
@@ -167,23 +229,35 @@ namespace Rawr.Warlock
             Stats statsRace;
             switch (character.Race)
             {
+                case Character.CharacterRace.Orc:
+                    statsRace = new Stats()
+                    {
+                        Health = 3310f,
+                        Mana = 2335f,
+                        Strength = 28f,
+                        Agility = 42f,
+                        Stamina = 100f,
+                        Intellect = 100f,
+                        Spirit = 144,
+                    };
+                    break;
                 case Character.CharacterRace.BloodElf:
                     statsRace = new Stats()
                     {
-                        Health = 3213f,
-                        Mana = 1961f,
+                        Health = 3310f,
+                        Mana = 2335f,
                         Strength = 28f,
                         Agility = 42f,
-                        Stamina = 49f,
-                        Intellect = 149f,
+                        Stamina = 100f,
+                        Intellect = 100f,
                         Spirit = 144,
                     };
                     break;
                 case Character.CharacterRace.Draenei:
                     statsRace = new Stats()
                     {
-                        Health = 3213f,
-                        Mana = 1961f,
+                        Health = 3310f,
+                        Mana = 2335f,
                         Strength = 28f,
                         Agility = 42f,
                         Stamina = 50f,
@@ -194,12 +268,12 @@ namespace Rawr.Warlock
                 case Character.CharacterRace.Gnome:
                     statsRace = new Stats()
                     {
-                        Health = 3213f,
-                        Mana = 1961f,
+                        Health = 3310f,
+                        Mana = 2335f,
                         Strength = 28f,
                         Agility = 42f,
-                        Stamina = 50f,
-                        Intellect = 154f,
+                        Stamina = 75f,
+                        Intellect = 135f,
                         Spirit = 145,
                         ArcaneResistance = 10,
                         BonusIntellectMultiplier = .05f 
@@ -208,12 +282,12 @@ namespace Rawr.Warlock
                 case Character.CharacterRace.Human:
                     statsRace = new Stats()
                     {
-                        Health = 3213f,
-                        Mana = 1961f,
+                        Health = 3310f,
+                        Mana = 2335f,
                         Strength = 28f,
                         Agility = 42f,
-                        Stamina = 51f,
-                        Intellect = 151f,
+                        Stamina = 76f,
+                        Intellect = 129f,
                         Spirit = 145,
                         BonusIntellectMultiplier = 0.03f,
                         BonusSpiritMultiplier = 0.1f
@@ -222,8 +296,8 @@ namespace Rawr.Warlock
                 case Character.CharacterRace.Troll:
                     statsRace = new Stats()
                     {
-                        Health = 3213f,
-                        Mana = 1961f,
+                        Health = 3310f,
+                        Mana = 2335f,
                         Strength = 28f,
                         Agility = 42f,
                         Stamina = 52f,
@@ -235,12 +309,12 @@ namespace Rawr.Warlock
                 case Character.CharacterRace.Undead:
                     statsRace = new Stats()
                     {
-                        Health = 3213f,
-                        Mana = 1961f,
+                        Health = 3310f,
+                        Mana = 2335f,
                         Strength = 28f,
                         Agility = 42f,
-                        Stamina = 52f,
-                        Intellect = 149f,
+                        Stamina = 77f,
+                        Intellect = 131f,
                         Spirit = 150,
                         BonusIntellectMultiplier = 0.03f
                     };

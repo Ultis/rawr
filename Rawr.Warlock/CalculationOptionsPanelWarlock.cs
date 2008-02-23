@@ -33,6 +33,12 @@ namespace Rawr.Warlock
             setDefaultOption("ShadowsBonus", "1.10");
             setDefaultOption("ElementsBonus", "1.10");
             setDefaultOption("SacraficedPet", "Succubus");
+            setDefaultOption("Curse", "CurseOfAgony");
+            setDefaultOption("Corruption", "F");
+            setDefaultOption("UnstableAffliction", "F");
+            setDefaultOption("SiphonLife", "F");
+            setDefaultOption("Immolate", "F");
+            setDefaultOption("FillerSpell", "Shadowbolt");
             
 
 
@@ -41,7 +47,13 @@ namespace Rawr.Warlock
             textBoxLatency.Text = Character.CalculationOptions["Latency"];
             textBoxDuration.Text = Character.CalculationOptions["Duration"];
             comboBoxPetSelection.SelectedItem = Character.CalculationOptions["SacraficedPet"];
+            comboBoxCastCurse.SelectedItem = "CurseOfAgony";
+            checkCorruption.Checked = false;
+            checkUnstable.Checked = false;
+            checkSiphonLife.Checked = false;
             checkSacraficed.Checked = true;
+            checkImmolate.Checked = false;
+            comboBoxFilterSpell.SelectedItem = "Shadowbolt";
         }
 	
 		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -67,6 +79,8 @@ namespace Rawr.Warlock
         private void comboBoxFilterSpell_SelectedIndexChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["FillerSpell"] = (sender as ComboBox).SelectedItem.ToString();
+            if (Character.CalculationOptions["FillerSpell"].ToUpper() == "INCINERATE")
+                checkImmolate.Checked = true;
             Character.OnItemsChanged();
         }
 

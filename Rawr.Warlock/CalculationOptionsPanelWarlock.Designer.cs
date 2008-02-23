@@ -114,7 +114,8 @@
             this.comboBoxFilterSpell.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFilterSpell.FormattingEnabled = true;
             this.comboBoxFilterSpell.Items.AddRange(new object[] {
-            "Shadowbolt"});
+            "Shadowbolt",
+            "Incinerate"});
             this.comboBoxFilterSpell.Location = new System.Drawing.Point(91, 14);
             this.comboBoxFilterSpell.Name = "comboBoxFilterSpell";
             this.comboBoxFilterSpell.Size = new System.Drawing.Size(93, 21);
@@ -135,8 +136,9 @@
             this.comboBoxCastCurse.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCastCurse.FormattingEnabled = true;
             this.comboBoxCastCurse.Items.AddRange(new object[] {
-            "CoD",
-            "CoA"});
+            "CurseOfAgony",
+            "CurseOfDoom",
+            "NoDamageCurse"});
             this.comboBoxCastCurse.Location = new System.Drawing.Point(91, 40);
             this.comboBoxCastCurse.Name = "comboBoxCastCurse";
             this.comboBoxCastCurse.Size = new System.Drawing.Size(93, 21);

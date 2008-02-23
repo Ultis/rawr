@@ -102,7 +102,7 @@ namespace Rawr
             TalentItem ti = null;
             foreach (string tree in _trees.Keys)
             {
-                ti = _trees[tree].Find(delegate(TalentItem talent) { return talent.Name.ToUpper() == TalentName.ToUpper(); });
+                ti = _trees[tree].Find(delegate(TalentItem talent) { return talent.Name.Replace(" ", "").ToUpper() == TalentName.Replace(" ","").ToUpper(); });
                 if (ti != null) return ti;
             }
             return new TalentItem();

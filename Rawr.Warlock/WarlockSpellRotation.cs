@@ -7,7 +7,6 @@ namespace Rawr.Warlock
 {
     internal class WarlockSpellRotation
     {
-        private Dictionary<string, Spell> _spellList = new Dictionary<string, Spell>();
         private Dictionary<int, Spell> _spellPriority = new Dictionary<int, Spell>();
         private int _duration;
         private Stats _stats;
@@ -18,12 +17,40 @@ namespace Rawr.Warlock
         private float _lifetapCoeffecient = 0.8f;
 
 
+
+
+
+
         public WarlockSpellRotation(Stats totalStats, Character character, int duration)
         {
             stats = totalStats;
             _character = character;
             _duration = duration;
             calcLifeTap();
+        }
+
+        private float ChanceToMiss
+        {
+            get {
+                switch (_character.CalculationOptions["TargetLevel"])
+                {
+                    case "73":
+                        return 0.16f;
+                        break;
+                    case "72":
+                        return 0.05f;
+                        break;
+                    case "71":
+                        return 0.04f;
+                        break;
+                    case "70":
+                        return 0.03f;
+                        break;
+
+                }
+                return 0.03f;
+            
+                }
         }
 
         private void calcLifeTap()
@@ -41,6 +68,12 @@ namespace Rawr.Warlock
             }
         }
 
+        public Dictionary<int, Spell> Spells
+        {
+            get { return _spellPriority; }
+            set { _spellPriority = value; }
+        }
+
         public int Duration
         {
             get { return _duration; }
@@ -48,7 +81,6 @@ namespace Rawr.Warlock
         }
         public void AddSpell(Spell spell, int priority)
         {
-            _spellList.Add(spell.Name, spell);
             _spellPriority.Add(priority, spell);
         }
 
@@ -65,7 +97,7 @@ namespace Rawr.Warlock
                 float currMana = _stats.Mana;
                 bool gcd = false;
                 float gcdstart = 0;
-                for (float currTime = 0;currTime <= _duration;currTime += 0.1f)
+                for (float currTime = 0;currTime <= _duration;currTime += 0.05f)
                 {
                     //check gcd over
                     if (gcd && (currTime - gcdstart) >= gcdDuration)
@@ -126,7 +158,7 @@ namespace Rawr.Warlock
                     if (gcd & gcdstart == 0) gcdstart = currTime;
                 }
                 float spellHit = _stats.SpellHitRating / 12.625f;
-                float missRate = 0.16f  - (spellHit / 100f);
+                float missRate = ChanceToMiss  - (spellHit / 100f);
                 float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
                 return new float[] { ( totalDamage * spellHitFactor) / Duration };
               }

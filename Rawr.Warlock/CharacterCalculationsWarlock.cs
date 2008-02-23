@@ -35,12 +35,14 @@ namespace Rawr.Warlock
         }
 
         public float DPS { get; set; }
-        
 
+        public List<Spell> Spells { get; set; }
+        public Character character { get; set; }
 
-      
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
+            CalculationsWarlock cw = new CalculationsWarlock();
+            Spell sb = new ShadowBolt(character, TotalStats);
             Dictionary<string, string> vals = new Dictionary<string, string>();
             vals.Add("Health", TotalStats.Health.ToString());
             vals.Add("Mana", TotalStats.Mana.ToString());
@@ -52,6 +54,13 @@ namespace Rawr.Warlock
             vals.Add("Shadow Damage", (TotalStats.SpellShadowDamageRating + TotalStats.SpellDamageRating).ToString());
             vals.Add("Fire Damage", (TotalStats.SpellFireDamageRating + TotalStats.SpellDamageRating).ToString());
             vals.Add("DPS", DPS.ToString());
+            vals.Add("SB Min Hit", sb.MinDamage.ToString());
+            vals.Add("SB Max Hit", sb.MaxDamage.ToString());
+            vals.Add("SB Min Crit", (sb.MinDamage * sb.CritModifier).ToString());
+            vals.Add("SB Max Crit", (sb.MaxDamage * sb.CritModifier).ToString());
+            vals.Add("SB Average Hit", sb.AverageDamage.ToString());
+            vals.Add("SB Crit Rate", sb.CritPercent.ToString());
+            
             return vals;
         }
     }
