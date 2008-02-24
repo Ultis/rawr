@@ -58,6 +58,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["DpsTime"] = "1";
             if (!Character.CalculationOptions.ContainsKey("MaintainScorch"))
                 Character.CalculationOptions["MaintainScorch"] = "1";
+            if (!Character.CalculationOptions.ContainsKey("InterruptFrequency"))
+                Character.CalculationOptions["InterruptFrequency"] = "0";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             comboBoxAoeTargetLevel.SelectedItem = Character.CalculationOptions["AoeTargetLevel"];
@@ -78,6 +80,7 @@ namespace Rawr.Mage
             checkBoxABCycles.Checked = Character.CalculationOptions["ABCycles"] == "1";
             textBoxDpsTime.Text = Character.CalculationOptions["DpsTime"];
             checkBoxMaintainScorch.Checked = Character.CalculationOptions["MaintainScorch"] == "1";
+            textBoxInterruptFrequency.Text = Character.CalculationOptions["InterruptFrequency"];
 
             if (talents != null) talents.LoadCalculationOptions();
         }
@@ -239,6 +242,16 @@ namespace Rawr.Mage
         {
             Character.CalculationOptions["MaintainScorch"] = checkBoxMaintainScorch.Checked ? "1" : "0";
             Character.OnItemsChanged();
+        }
+
+        private void textBoxInterruptFrequency_TextChanged(object sender, EventArgs e)
+        {
+            float value;
+            if (float.TryParse(textBoxInterruptFrequency.Text, out value))
+            {
+                Character.CalculationOptions["InterruptFrequency"] = textBoxInterruptFrequency.Text;
+                Character.OnItemsChanged();
+            }
         }
 	}
 }

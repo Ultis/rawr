@@ -21,11 +21,16 @@ namespace Rawr.Mage
 
         public bool AffectedByFlameCap;
         public bool ABCycle;
+
+        public string Sequence;
+        public bool Channeled;
+        public float HitProcs;
+        public float CastProcs;
+        public float CastTime;
     }
 
     abstract class BaseSpell : Spell
     {
-        public bool Channeled;
         public bool Instant;
         public bool Binary;
         public bool AreaEffect;
@@ -38,9 +43,7 @@ namespace Rawr.Mage
         public float BaseMaxDamage;
         public float BasePeriodicDamage;
         public float SpellDamageCoefficient;
-        public float HitProcs;
         public float TargetProcs;
-        public float CastProcs;
 
         public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float spellDamageCoefficient) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, spellDamageCoefficient) { }
         public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, instant ? (1.5f / 3.5f) : (castTime / 3.5f)) { }
@@ -76,11 +79,12 @@ namespace Rawr.Mage
         public float RawSpellDamage;
         public float SpellDamage;
         public float AverageDamage;
-        public bool AveragedClearcasting = true;
+        public bool ManualClearcasting = false;
+        public bool ClearcastingAveraged;
         public bool ClearcastingActive;
         public bool ClearcastingProccing;
+        public float InterruptProtection;
 
-        public float CastTime;
         public float Cooldown;
         public float Cost;
 
@@ -95,6 +99,7 @@ namespace Rawr.Mage
             if (MagicSchool == MagicSchool.Frost) CostModifier -= 0.05f * calculations.CalculationOptions.FrostChanneling;
             if (calculations.ArcanePower) CostModifier += 0.3f;
             if (MagicSchool == MagicSchool.Fire) AffectedByFlameCap = true;
+            if (MagicSchool == MagicSchool.Fire) InterruptProtection += 0.35f * calculations.CalculationOptions.BurningSoul;
 
             CastTime = BaseCastTime / calculations.CastingSpeed + calculations.Latency;
 
@@ -134,6 +139,12 @@ namespace Rawr.Mage
                     break;
             }
 
+            if (!ManualClearcasting && !ClearcastingAveraged)
+            {
+                CritRate -= 0.01f * calculations.CalculationOptions.ArcanePotency; // replace averaged arcane potency with actual % chance
+                if (ClearcastingActive) CritRate += 0.1f * calculations.CalculationOptions.ArcanePotency;
+            }
+
             int targetLevel = calculations.CalculationOptions.TargetLevel;
             PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - calculations.BasicStats.SpellPenetration / 350f * 0.75f) - ((targetLevel > 70 && !Binary) ? ((targetLevel - 70) * 0.02f) : 0f));
         }
@@ -148,14 +159,17 @@ namespace Rawr.Mage
 
         protected void CalculateDerivedStats(Character character, CharacterCalculationsMage calculations)
         {
+            float InterruptFactor = calculations.CalculationOptions.InterruptFrequency * Math.Max(0, 1 - InterruptProtection);
+            CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
             if (CastTime < calculations.GlobalCooldown + calculations.Latency) CastTime = calculations.GlobalCooldown + calculations.Latency;
             Cost = BaseCost * CostModifier;
 
+            CritRate = Math.Min(1, CritRate);
             Cost *= (1f - CritRate + CritRate * (1f - 0.1f * calculations.CalculationOptions.MasterOfElements));
 
             CostPerSecond = Cost / CastTime;
 
-            if (AveragedClearcasting)
+            if (!ManualClearcasting || ClearcastingAveraged)
             {
                 CostPerSecond *= (1 - 0.02f * calculations.CalculationOptions.ArcaneConcentration);
             }
@@ -222,6 +236,16 @@ namespace Rawr.Mage
 
     class Scorch : BaseSpell
     {
+
+        public Scorch(Character character, CharacterCalculationsMage calculations, bool clearcastingActive)
+            : base("Scorch", false, false, false, false, 180, 30, 1.5f, 0, MagicSchool.Fire, 305, 361, 0)
+        {
+            ManualClearcasting = true;
+            ClearcastingActive = clearcastingActive;
+            ClearcastingAveraged = false;
+            Calculate(character, calculations);
+        }
+
         public Scorch(Character character, CharacterCalculationsMage calculations)
             : base("Scorch", false, false, false, false, 180, 30, 1.5f, 0, MagicSchool.Fire, 305, 361, 0)
         {
@@ -330,6 +354,17 @@ namespace Rawr.Mage
 
     class ArcaneBlast : BaseSpell
     {
+        public ArcaneBlast(Character character, CharacterCalculationsMage calculations, int timeDebuff, int costDebuff, bool clearcastingActive)
+            : base("Arcane Blast", false, false, false, false, 195, 30, 2.5f, 0, MagicSchool.Arcane, 668, 772, 0)
+        {
+            ManualClearcasting = true;
+            ClearcastingActive = clearcastingActive;
+            ClearcastingAveraged = false;
+            this.timeDebuff = timeDebuff;
+            this.costDebuff = costDebuff;
+            Calculate(character, calculations);
+        }
+
         public ArcaneBlast(Character character, CharacterCalculationsMage calculations, int timeDebuff, int costDebuff) : base("Arcane Blast", false, false, false, false, 195, 30, 2.5f, 0, MagicSchool.Arcane, 668, 772, 0)
         {
             this.timeDebuff = timeDebuff;
@@ -353,6 +388,16 @@ namespace Rawr.Mage
 
     class ArcaneMissiles : BaseSpell
     {
+        public ArcaneMissiles(Character character, CharacterCalculationsMage calculations, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing)
+            : base("Arcane Missiles", true, false, false, false, 740, 30, 5, 0, MagicSchool.Arcane, 264 * 5, 265 * 5, 0, 5, 1)
+        {
+            ManualClearcasting = true;
+            ClearcastingActive = clearcastingActive;
+            ClearcastingAveraged = clearcastingAveraged;
+            ClearcastingProccing = clearcastingProccing;
+            Calculate(character, calculations);
+        }
+
         public ArcaneMissiles(Character character, CharacterCalculationsMage calculations)
             : base("Arcane Missiles", true, false, false, false, 740, 30, 5, 0, MagicSchool.Arcane, 264 * 5, 265 * 5, 0, 5, 1)
         {
@@ -363,10 +408,44 @@ namespace Rawr.Mage
         {
             base.Calculate(character, calculations);
             CostModifier += 0.02f * calculations.CalculationOptions.EmpoweredArcaneMissiles;
-            CritRate += 0.01f * calculations.CalculationOptions.ArcanePotency; // CC double dipping
+
+            // CC double dipping
+            if (!ManualClearcasting) CritRate += 0.01f * calculations.CalculationOptions.ArcanePotency;
+            else if (ClearcastingProccing) CritRate += 0.1f * calculations.CalculationOptions.ArcanePotency;
+
             SpellDamageCoefficient += 0.15f * calculations.CalculationOptions.EmpoweredArcaneMissiles;
             SpellModifier *= (1 + calculations.BasicStats.BonusMageNukeMultiplier);
+            InterruptProtection += 0.2f * calculations.CalculationOptions.ImprovedArcaneMissiles;
             CalculateDerivedStats(character, calculations);
+        }
+    }
+
+    class ArcaneMissilesCC : Spell
+    {
+        public ArcaneMissilesCC(Character character, CharacterCalculationsMage calculations)
+        {
+            Name= "Arcane Missiles CC";
+
+            //AM?1-AM11-AM11-...=0.9*0.1*...
+            //...
+            //AM?1-AM10=0.9
+
+            //TIME = T * [1 + 1/0.9]
+            //DAMAGE = AM?1 + AM10 + 0.1/0.9*AM11
+
+            float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
+
+            BaseSpell AMc1 = new ArcaneMissiles(character, calculations, true, false, true);
+            BaseSpell AM10 = new ArcaneMissiles(character, calculations, false, true, false);
+            BaseSpell AM11 = new ArcaneMissiles(character, calculations, false, true, true);
+
+            CastProcs = AMc1.CastProcs * (1 + 1 / (1 - CC));
+            CastTime = AMc1.CastTime * (1 + 1 / (1 - CC));
+            HitProcs = AMc1.HitProcs * (1 + 1 / (1 - CC));
+            Channeled = true;
+            CostPerSecond = (AMc1.CostPerSecond + AM10.CostPerSecond + CC / (1 - CC) * AM11.CostPerSecond) / (1 + 1 / (1 - CC));
+            DamagePerSecond = (AMc1.DamagePerSecond + AM10.DamagePerSecond + CC / (1 - CC) * AM11.DamagePerSecond) / (1 + 1 / (1 - CC));
+            ManaRegenPerSecond = 0;
         }
     }
 
@@ -402,19 +481,16 @@ namespace Rawr.Mage
         }
     }
 
-    abstract class SpellCycle : Spell
+    class SpellCycle : Spell
     {
-        public float HitProcs;
-        public float CastProcs;
         public float AverageDamage;
         public float Cost;
 
-        public string Sequence;
         private List<string> spellList = new List<string>();
 
         private FSRCalc fsr = new FSRCalc();
 
-        protected void AddSpell(BaseSpell spell, CharacterCalculationsMage calculations)
+        public void AddSpell(Spell spell, CharacterCalculationsMage calculations)
         {
             fsr.AddSpell(spell.CastTime - calculations.Latency, calculations.Latency, spell.Channeled);
             HitProcs += spell.HitProcs;
@@ -425,7 +501,7 @@ namespace Rawr.Mage
             spellList.Add(spell.Name);
         }
 
-        protected void AddPause(float duration)
+        public void AddPause(float duration)
         {
             fsr.AddPause(duration);
             spellList.Add("Pause");
@@ -435,7 +511,7 @@ namespace Rawr.Mage
         {
             Sequence = string.Join("-", spellList.ToArray());
 
-            float CastTime = fsr.Duration;
+            CastTime = fsr.Duration;
 
             CostPerSecond = Cost / CastTime;
             DamagePerSecond = AverageDamage / CastTime;
@@ -780,6 +856,86 @@ namespace Rawr.Mage
 
                 Sequence = string.Format("{0}x Fireball : {1}x Scorch", fbCount, averageScorchesNeeded);
             }
+        }
+    }
+
+    class ABAM3ScCCAM : Spell
+    {
+        public ABAM3ScCCAM(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABAM3ScCCAM";
+            ABCycle = true;
+
+            //AMCC-AB0                       0.1
+            //AM?0-AB1-AMCC-AB0              0.9*0.1
+            //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
+            //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
+
+            //TIME = 0.1*[AMCC+AB0] + 0.9*0.1*[AM+AMCC+AB0+AB1] + 0.9*0.9*0.1*[2*AM+AMCC+AB0+AB1+AB2] + 0.9*0.9*0.9*[3*AM+AB1+AB2+AB3?]
+            //     = [0.1 + 0.9*0.1 + 0.9*0.9*0.1]*[AMCC+AB0] + [0.9*0.1 + 2*0.9*0.9*0.1 + 3*0.9*0.9*0.9]*AM + 0.9*AB1 + 0.9*0.9*AB2 + 0.9*0.9*0.9*[S+AB3?]
+            //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
+            //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
+
+            Spell AMc0 = new ArcaneMissiles(character, calculations, true, false, false);
+            Spell AMCC = new ArcaneMissilesCC(character, calculations);
+            Spell AB0 = new ArcaneBlast(character, calculations, 0, 0, false);
+            Spell AB1 = new ArcaneBlast(character, calculations, 1, 1, false);
+            Spell AB2 = new ArcaneBlast(character, calculations, 2, 2, false);
+            Spell Sc0 = new Scorch(character, calculations, false);
+
+            BaseSpell AB3 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+
+            float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
+
+            //AMCC-AB0                       0.1
+            SpellCycle chain1 = new SpellCycle();
+            chain1.AddSpell(AMCC, calculations);
+            chain1.AddSpell(AB0, calculations);
+            chain1.Calculate(character, calculations);
+
+            //AM?0-AB1-AMCC-AB0              0.9*0.1
+            SpellCycle chain2 = new SpellCycle();
+            chain2.AddSpell(AMc0, calculations);
+            chain2.AddSpell(AB1, calculations);
+            chain2.AddSpell(AMCC, calculations);
+            chain2.AddSpell(AB0, calculations);
+            chain2.Calculate(character, calculations);
+
+            //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
+            SpellCycle chain3 = new SpellCycle();
+            chain3.AddSpell(AMc0, calculations);
+            chain3.AddSpell(AB1, calculations);
+            chain3.AddSpell(AMc0, calculations);
+            chain3.AddSpell(AB2, calculations);
+            chain3.AddSpell(AMCC, calculations);
+            chain3.AddSpell(AB0, calculations);
+            chain3.Calculate(character, calculations);
+
+            //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
+            SpellCycle chain4 = new SpellCycle();
+            chain4.AddSpell(AMc0, calculations);
+            chain4.AddSpell(AB1, calculations);
+            chain4.AddSpell(AMc0, calculations);
+            chain4.AddSpell(AB2, calculations);
+            chain4.AddSpell(AMc0, calculations);
+            chain4.AddSpell(Sc0, calculations);
+            float gap = 8 - AMc0.CastTime - Sc0.CastTime;
+            while (gap - AB3.CastTime >= Sc.CastTime)
+            {
+                chain4.AddSpell(Sc, calculations);
+                gap -= Sc.CastTime;
+            }
+            if (AB3.CastTime < gap) chain4.AddPause(gap - AB3.CastTime + calculations.Latency);
+            chain4.AddSpell(AB3, calculations);
+            chain4.Calculate(character, calculations);
+
+            CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
+            CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
+            DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
+            ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+
+            Sequence = chain4.Sequence;
         }
     }
 }

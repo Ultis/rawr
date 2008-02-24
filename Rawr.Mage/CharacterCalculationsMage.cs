@@ -24,6 +24,7 @@ namespace Rawr.Mage
         public bool ABCycles { get; set; }
         public float MoltenFuryPercentage { get; set; }
         public bool MaintainScorch { get; set; }
+        public float InterruptFrequency { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -52,6 +53,8 @@ namespace Rawr.Mage
         public int Incinerate { get; set; }
         public int ImprovedScorch { get; set; }
         public int WintersChill { get; set; }
+        public int BurningSoul { get; set; }
+        public int ImprovedArcaneMissiles { get; set; }
 
         public CompiledCalculationOptions(Character character)
         {
@@ -72,6 +75,7 @@ namespace Rawr.Mage
             FlameCap = character.CalculationOptions["FlameCap"] == "1";
             ABCycles = character.CalculationOptions["ABCycles"] == "1";
             MaintainScorch = character.CalculationOptions["MaintainScorch"] == "1";
+            InterruptFrequency = float.Parse(character.CalculationOptions["InterruptFrequency"]);
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"]);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"]);
@@ -100,6 +104,8 @@ namespace Rawr.Mage
             Incinerate = int.Parse(character.CalculationOptions["Incinerate"]);
             ImprovedScorch = int.Parse(character.CalculationOptions["ImprovedScorch"]);
             WintersChill = int.Parse(character.CalculationOptions["WintersChill"]);
+            BurningSoul = int.Parse(character.CalculationOptions["BurningSoul"]);
+            ImprovedArcaneMissiles = int.Parse(character.CalculationOptions["ImprovedArcaneMissiles"]);
         }
     }
 
@@ -275,6 +281,9 @@ namespace Rawr.Mage
                 case "FireballScorch":
                     s = new FireballScorch(Character, this);
                     break;
+                case "ABAM3ScCCAM":
+                    s = new ABAM3ScCCAM(Character, this);
+                    break;
             }
             if (s != null) Spells[spellName] = s;
 
@@ -310,7 +319,7 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-            List<string> spellList = new List<string>() { "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc", "FireballScorch" };
+            List<string> spellList = new List<string>() { "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM" };
             foreach (string spell in spellList)
             {
                 Spell s = GetSpell(spell);
@@ -318,9 +327,9 @@ namespace Rawr.Mage
                 {
                     dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} sec", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, ((BaseSpell)s).CastTime - Latency));
                 }
-                else if (s is SpellCycle)
+                else
                 {
-                    dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, ((SpellCycle)s).Sequence));
+                    dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.Sequence));
                 }
             }
             dictValues.Add("Total Damage", String.Format("{0:F}", OverallPoints));

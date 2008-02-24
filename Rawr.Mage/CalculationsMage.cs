@@ -53,6 +53,7 @@ namespace Rawr.Mage
                     "Spell Info:ABAM",
                     "Spell Info:AB3AMSc*Prefer pause over longer filler",
                     "Spell Info:ABAM3Sc*Prefer pause over longer filler",
+                    "Spell Info:ABAM3ScCCAM*Arcane Missiles on clearcast",
                     "Spell Info:ABAM3Sc2*Fill until debuff almost out",
                     "Spell Info:ABAM3FrB*Prefer pause over longer filler",
                     "Spell Info:ABAM3FrB2*Fill until debuff almost out",
@@ -190,7 +191,7 @@ namespace Rawr.Mage
 
             CharacterCalculationsMage calculatedStats = statsList[statsList.Count - 1];
 
-            List<string> spellList = new List<string>() { "Arcane Missiles", "Scorch", calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc" };
+            List<string> spellList = new List<string>() { "Arcane Missiles", "Scorch", calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc", "ABAM3ScCCAM" };
 
             int lpRows = 25;
             int colOffset = 6;
