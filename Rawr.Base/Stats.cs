@@ -48,6 +48,9 @@ namespace Rawr
         public float WeaponDamage { get; set; }
 
         [Category("Base Stats")]
+        public float ScopeDamage { get; set; }
+
+        [Category("Base Stats")]
         [DisplayName("Penetration")]
         public float ArmorPenetration { get; set; }
 
