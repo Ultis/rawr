@@ -159,13 +159,14 @@ namespace Rawr.Mage
 
         protected void CalculateDerivedStats(Character character, CharacterCalculationsMage calculations)
         {
+            if (calculations.IcyVeins) InterruptProtection = 1;
             float InterruptFactor = calculations.CalculationOptions.InterruptFrequency * Math.Max(0, 1 - InterruptProtection);
             CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
             if (CastTime < calculations.GlobalCooldown + calculations.Latency) CastTime = calculations.GlobalCooldown + calculations.Latency;
             Cost = BaseCost * CostModifier;
 
             CritRate = Math.Min(1, CritRate);
-            Cost *= (1f - CritRate + CritRate * (1f - 0.1f * calculations.CalculationOptions.MasterOfElements));
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost) Cost *= (1f - CritRate * 0.1f * calculations.CalculationOptions.MasterOfElements);
 
             CostPerSecond = Cost / CastTime;
 
