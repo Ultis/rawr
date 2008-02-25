@@ -37,7 +37,9 @@ namespace Rawr
 		public int _minDamage = 0;
 		[System.Xml.Serialization.XmlElement("MaxDamage")]
 		public int _maxDamage = 0;
-		[System.Xml.Serialization.XmlElement("Speed")]
+        [System.Xml.Serialization.XmlElement("DamageType")]
+        public ItemDamageType _damageType = ItemDamageType.Physical;
+        [System.Xml.Serialization.XmlElement("Speed")]
 		public float _speed = 0f;
 
 
@@ -260,7 +262,19 @@ namespace Rawr
 				_maxDamage = value;
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+        [System.Xml.Serialization.XmlIgnore]
+        public ItemDamageType DamageType
+        {
+            get
+            {
+                return _damageType;
+            }
+            set
+            {
+                _damageType = value;
+            }
+        }
+        [System.Xml.Serialization.XmlIgnore]
 		public float Speed
 		{
 			get
@@ -295,6 +309,17 @@ namespace Rawr
 			ItemCache.AddItem(this, false, false);
 			if (IdsChanged != null) IdsChanged(this, null);
 		}
+
+        public enum ItemDamageType
+        {
+            Physical = 0,
+            Holy,
+            Fire,
+            Nature,
+            Frost,
+            Shadow,
+            Arcane
+        }
 
 		public enum ItemQuality
 		{
@@ -420,7 +445,7 @@ namespace Rawr
 		}
 
 		public Item() { }
-		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id, int minDamage, int maxDamage, float speed)
+		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id, int minDamage, int maxDamage, ItemDamageType damageType, float speed)
 		{
 			_name = name;
 			_id = id;
@@ -436,6 +461,7 @@ namespace Rawr
 			_type = type;
 			_minDamage = minDamage;
 			_maxDamage = maxDamage;
+            _damageType = damageType;
 			_speed = speed;
 		}
 
@@ -457,6 +483,7 @@ namespace Rawr
 				Type = this.Type,
 				MinDamage = this.MinDamage,
 				MaxDamage = this.MaxDamage,
+                DamageType = this.DamageType,
 				Speed = this.Speed
 			};
 		}

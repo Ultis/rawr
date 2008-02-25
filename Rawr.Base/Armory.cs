@@ -327,6 +327,7 @@ namespace Rawr
 						string subclassName = string.Empty;
 						int minDamage = 0;
 						int maxDamage = 0;
+                        Item.ItemDamageType damageType = Item.ItemDamageType.Physical;
 						float speed = 0f;
 
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
@@ -337,7 +338,8 @@ namespace Rawr
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/subclassName")) { subclassName = node.InnerText; }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/min")) { minDamage = int.Parse(node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/max")) { maxDamage = int.Parse(node.InnerText); }
-						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/speed")) { speed = float.Parse(node.InnerText); }
+                        foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/type")) { damageType = (Item.ItemDamageType)Enum.Parse(typeof(Item.ItemDamageType), node.InnerText); }
+                        foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/speed")) { speed = float.Parse(node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/setData/name")) { setName = node.InnerText; }
 
 						if (inventoryType >= 0)
@@ -835,7 +837,7 @@ namespace Rawr
 						int gem1Id = ids.Length == 4 ? int.Parse(ids[1]) : 0;
 						int gem2Id = ids.Length == 4 ? int.Parse(ids[2]) : 0;
 						int gem3Id = ids.Length == 4 ? int.Parse(ids[3]) : 0;
-						Item item = new Item(name, quality, type, int.Parse(id), iconPath, slot, setName, stats, sockets, gem1Id, gem2Id, gem3Id, minDamage, maxDamage, speed);
+						Item item = new Item(name, quality, type, int.Parse(id), iconPath, slot, setName, stats, sockets, gem1Id, gem2Id, gem3Id, minDamage, maxDamage, damageType, speed);
 						retry = 3;
 						return item;
 					}
