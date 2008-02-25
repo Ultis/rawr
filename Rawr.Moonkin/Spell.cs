@@ -210,9 +210,10 @@ namespace Rawr.Moonkin
             float totalManaRegen = calcs.ManaRegen5SR * fightLength;
 
             // Innervate calculations
-            float innervateManaRate = calcs.ManaRegen * 4;
-            float innervateTime = character.CalculationOptions["Innervate"] == "Yes" ? ((int)calcs.FightLength / 6 + 1) * 20.0f : 0.0f;
-            float totalInnervateMana = innervateManaRate * innervateTime;
+            int numInnervates = character.CalculationOptions["Innervate"] == "Yes" ? ((int)calcs.FightLength / 6 + 1) : 0;
+            float innervateManaRate = calcs.ManaRegen * 3;
+            float innervateTime = numInnervates * 20.0f;
+            float totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * calcs.BasicStats.Mana * 0.04f);
 
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen;
         }
@@ -248,13 +249,12 @@ namespace Rawr.Moonkin
             // Get total effective mana pool and total effective dps time
             float innervateTime = character.CalculationOptions["Innervate"] == "Yes" ? ((int)calcs.FightLength / 6 + 1) * 20.0f : 0.0f;
             float fightLength = calcs.FightLength * 60;
-            float dpsTime = calcs.FightLength * 60 - innervateTime;
 
             float totalMana = GetEffectiveManaPool(character, calcs);
 
             Dictionary<string, List<Spell>> spellRotations = BuildSpellRotations();
 
-            int instantCasts = naturesSwiftness ? (int)Math.Floor(dpsTime) % 3*60 : 0;
+            int instantCasts = naturesSwiftness ? (int)Math.Floor(fightLength) % 3*60 : 0;
 
             foreach (KeyValuePair<string, List<Spell>> rotation in spellRotations)
             {
@@ -309,14 +309,14 @@ namespace Rawr.Moonkin
                 // Calculate how long we will burn through all our mana
                 float secsToOom = totalMana / (manaUsed / duration);
                 // This dps calc takes into account time spent not doing dps due to OOM issues
-                float dps = damageDone / duration * (secsToOom >= dpsTime ? dpsTime : secsToOom) / fightLength;
+                float dps = damageDone / duration * (secsToOom >= fightLength ? fightLength : secsToOom) / fightLength;
                 float dpm = damageDone / manaUsed;
                 if (dps > calcs.DPS)
                 {
                     calcs.DPS = dps;
                     calcs.DPM = dpm;
                     calcs.RotationName = rotation.Key;
-                    if (secsToOom >= dpsTime)
+                    if (secsToOom >= fightLength)
                         calcs.TimeToOOM = new TimeSpan(0, 0, 0);
                     else
                         calcs.TimeToOOM = new TimeSpan(0, (int)Math.Floor(secsToOom) / 60, (int)Math.Floor(secsToOom) % 60);
