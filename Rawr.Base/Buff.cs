@@ -163,8 +163,17 @@ namespace Rawr
 						_allBuffs.Add(new Buff() { Name = "Unleashed Rage", Category = BuffCategory.ClassBuffs,
 							Stats = new Stats() { BonusAttackPowerMultiplier = 0.1f }}); 
 						_allBuffs.Add(new Buff() { Name = "Heroic Presence", Category = BuffCategory.ClassBuffs,
-							Stats = new Stats() { HitRating = 15.769f, SpellHitRating = 12.62f }});
-                        _allBuffs.Add(new Buff() { Name = "Arcane Intellect", Category = BuffCategory.ClassBuffs,
+							Stats = new Stats() { HitRating = 15.769f }});
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Inspiring Presence",
+                            Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { SpellHitRating = 12.62f }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Arcane Intellect",
+                            Category = BuffCategory.ClassBuffs,
                             Stats = new Stats() { Intellect = 40 }});
                         _allBuffs.Add(new Buff() { Name = "Wrath of Air Totem", Category = BuffCategory.ClassBuffs, 
                             Stats = new Stats() {SpellDamageRating = 101}});
