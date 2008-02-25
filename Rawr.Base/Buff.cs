@@ -419,7 +419,7 @@ namespace Rawr
                         {
                             Name = "Judgement of Wisdom",
                             Category = BuffCategory.Debuffs,
-                            Stats = new Stats() { },
+                            Stats = new Stats() { ManaRestorePerHit = 74f / 2f },
                         });
 
 						//burning senses
