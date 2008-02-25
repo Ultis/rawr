@@ -168,6 +168,15 @@ namespace Rawr
 		private void UpdateEnabledStates()
 		{
 			//If I was in World War II, they'd call me Spitfire!
+			List<string> currentConflictNames = new List<string>();
+			foreach (CheckBox checkBox in CheckBoxes.Values)
+			{
+				if (checkBox.Checked)
+				{
+					Buff buff = checkBox.Tag as Buff;
+					currentConflictNames.AddRange(buff.ConflictingBuffs);
+				}
+			}
 
 			foreach (CheckBox checkBox in CheckBoxes.Values)
 			{
@@ -183,13 +192,15 @@ namespace Rawr
 					checkBox.Enabled = CheckBoxes[Buff.GetBuffByName(buff.RequiredBuff)].Checked;
 					if (!checkBox.Enabled) continue;
 				}
-				foreach (string buffName in buff.ConflictingBuffs)
+				if (!checkBox.Checked)
 				{
-					Buff conflictingBuff = Buff.GetBuffByName(buffName);
-					if (CheckBoxes.ContainsKey(conflictingBuff))
+					foreach (string buffName in buff.ConflictingBuffs)
 					{
-						checkBox.Enabled = !CheckBoxes[conflictingBuff].Checked;
-						if (!checkBox.Enabled) break;
+						if (currentConflictNames.Contains(buffName))
+						{
+							checkBox.Enabled = false;
+							break;
+						}
 					}
 				}
 			}

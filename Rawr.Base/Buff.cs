@@ -109,6 +109,7 @@ namespace Rawr
                     }
                     catch (System.Exception)
                     {
+						MessageBox.Show("The current BuffCache.xml file was made with a previous version of Rawr, which is incompatible with the current version. It will be replaced with buff data included in the current version.", "Incompatible BuffCache.xml", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     	//The designer really doesn't like loading the stuff from a file
                     }
 
@@ -199,119 +200,118 @@ namespace Rawr
 						//what can i say... you're crazy
 						_allBuffs.Add(new Buff() { Name = "Elixir of Ironskin", Category = BuffCategory.ElixirsAndFlasks,
 							Stats = new Stats() { Resilience = 30 },
-							ConflictingBuffs = new string[] { "Elixir of Major Defense", "Elixir of Major Fortitude", "Flask of Fortification", "Flask of Chromatic Wonder", "Flask of Relentless Assault" }});
+							ConflictingBuffs = new string[] { "Guardian Elixir" }});
 						_allBuffs.Add(new Buff() { Name = "Elixir of Major Defense", Category = BuffCategory.ElixirsAndFlasks,
 							Stats = new Stats() { Armor = 550 },
-							ConflictingBuffs = new string[] { "Elixir of Ironskin", "Elixir of Major Fortitude", "Flask of Fortification", "Flask of Chromatic Wonder", "Flask of Relentless Assault" }});
+							ConflictingBuffs = new string[] { "Guardian Elixir" }});
 						_allBuffs.Add(new Buff() { Name = "Elixir of Major Fortitude", Category = BuffCategory.ElixirsAndFlasks,
 							Stats = new Stats() { Health = 250 },
-							ConflictingBuffs = new string[] { "Elixir of Major Defense", "Elixir of Ironskin", "Flask of Fortification", "Flask of Chromatic Wonder", "Flask of Relentless Assault" }});
+							ConflictingBuffs = new string[] { "Guardian Elixir" }});
 						_allBuffs.Add(new Buff() { Name = "Elixir of Major Agility", Category = BuffCategory.ElixirsAndFlasks,
 							Stats = new Stats() { Agility = 35, CritRating = 20 },
-							ConflictingBuffs = new string[] { "Elixir of Mastery", "Flask of Fortification", "Flask of Chromatic Wonder", "Flask of Relentless Assault" }});
+							ConflictingBuffs = new string[] { "Battle Elixir" }});
 						_allBuffs.Add(new Buff() { Name = "Elixir of Mastery", Category = BuffCategory.ElixirsAndFlasks,
 							Stats = new Stats() { Agility = 15, Stamina = 15, Strength = 15, Intellect = 15, Spirit = 15 },
-							ConflictingBuffs = new string[] { "Elixir of Major Agility", "Flask of Fortification", "Flask of Chromatic Wonder", "Flask of Relentless Assault" }});
+							ConflictingBuffs = new string[] { "Battle Elixir" }});
 						_allBuffs.Add(new Buff() { Name = "Flask of Fortification", Category = BuffCategory.ElixirsAndFlasks,
 							Stats = new Stats() { Health = 500, DefenseRating = 10 },
-							ConflictingBuffs = new string[] { "Elixir of Ironskin", "Elixir of Major Defense", "Elixir of Major Fortitude", "Elixir of Major Agility", "Elixir of Mastery", "Flask of Chromatic Wonder", "Flask of Relentless Assault" }});
+							ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }});
 						_allBuffs.Add(new Buff() { Name = "Flask of Chromatic Wonder", Category = BuffCategory.ElixirsAndFlasks,
 							Stats = new Stats() { Agility = 18, Strength = 18, Stamina = 18, Intellect = 18, Spirit = 18, AllResist=35},
-							ConflictingBuffs = new string[] { "Elixir of Ironskin", "Elixir of Major Defense", "Elixir of Major Fortitude", "Elixir of Major Agility", "Elixir of Mastery", "Flask of Fortification", "Flask of Relentless Assault" }});
+							ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }});
 						_allBuffs.Add(new Buff() { Name = "Flask of Relentless Assault", Category = BuffCategory.ElixirsAndFlasks,
 							Stats = new Stats() { AttackPower = 120 }, 
-							ConflictingBuffs = new string[] { "Elixir of Ironskin", "Elixir of Major Defense", "Elixir of Major Fortitude", "Elixir of Major Agility", "Elixir of Mastery", "Flask of Chromatic Wonder", "Flask of Fortification" }
-						});
-                        _allBuffs.Add(new Buff()
+							ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }});
+						_allBuffs.Add(new Buff()
                         {
                             Name = "Adept's Elixir",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { SpellDamageRating = 24, SpellCritRating = 24 },
-                            ConflictingBuffs = new string[] { }
-                        });
-                        _allBuffs.Add(new Buff()
+							ConflictingBuffs = new string[] { "Battle Elixir" }
+						});
+						_allBuffs.Add(new Buff()
                         {
                             Name = "Elixir of Major Firepower",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { SpellFireDamageRating = 55 },
-                            ConflictingBuffs = new string[] { }
-                        });
-                        _allBuffs.Add(new Buff()
+							ConflictingBuffs = new string[] { "Battle Elixir" }
+						});
+						_allBuffs.Add(new Buff()
                         {
                             Name = "Elixir of Major Frost Power",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { SpellFrostDamageRating = 55 },
-                            ConflictingBuffs = new string[] { }
-                        });
-                        _allBuffs.Add(new Buff()
+							ConflictingBuffs = new string[] { "Battle Elixir" }
+						});
+						_allBuffs.Add(new Buff()
                         {
                             Name = "Elixir of Major Shadow Power",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { SpellShadowDamageRating = 55 },
-                            ConflictingBuffs = new string[] { }
-                        });
+							ConflictingBuffs = new string[] { "Battle Elixir" }
+						});
                         _allBuffs.Add(new Buff()
                         {
                             Name = "Elixir of Draenic Wisdom",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { Intellect = 30, Spirit = 30 },
-                            ConflictingBuffs = new string[] { }
-                        });
+							ConflictingBuffs = new string[] { "Guardian Elixir" }
+						});
                         _allBuffs.Add(new Buff()
                         {
                             Name = "Elixir of Major Mageblood",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { Mp5 = 16 },
-                            ConflictingBuffs = new string[] { }
-                        });
+							ConflictingBuffs = new string[] { "Guardian Elixir" }
+						});
                         _allBuffs.Add(new Buff()
                         {
                             Name = "Flask of Blinding Light",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { SpellArcaneDamageRating = 80 },
-                            ConflictingBuffs = new string[] { }
-                        });
+							ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }
+						});
                         _allBuffs.Add(new Buff()
                         {
                             Name = "Flask of Distilled Wisdom",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { Intellect = 65 },
-                            ConflictingBuffs = new string[] { }
-                        });
+							ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }
+						});
                         _allBuffs.Add(new Buff()
                         {
                             Name = "Flask of Mighty Restoration",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { Mp5 = 25 },
-                            ConflictingBuffs = new string[] { }
-                        });
+							ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }
+						});
                         _allBuffs.Add(new Buff()
                         {
                             Name = "Flask of Pure Death",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { SpellFireDamageRating = 80, SpellFrostDamageRating = 80, SpellShadowDamageRating = 80 },
-                            ConflictingBuffs = new string[] { }
-                        });
+							ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }
+						});
                         _allBuffs.Add(new Buff()
                         {
                             Name = "Flask of Supreme Power",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { SpellDamageRating = 70 },
-                            ConflictingBuffs = new string[] { }
-                        });
+							ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }
+						});
                         
                         
                         //all the constant
 						_allBuffs.Add(new Buff() { Name = "30 Stamina Food", Category = BuffCategory.OtherConsumables,
-							Stats = new Stats() { Stamina = 30 }, ConflictingBuffs = new string[] { "20 Agility Food", "20 Hit Rating Food", "20 Strength Food", "40 Attack Power Food"}});
+							Stats = new Stats() { Stamina = 30 }, ConflictingBuffs = new string[] { "Food"}});
 						_allBuffs.Add(new Buff() { Name = "20 Agility Food", Category = BuffCategory.OtherConsumables,
-							Stats = new Stats() { Agility = 20 }, ConflictingBuffs = new string[] { "30 Stamina Food", "20 Hit Rating Food", "20 Strength Food", "40 Attack Power Food" }});
+							Stats = new Stats() { Agility = 20 }, ConflictingBuffs = new string[] { "Food"}});
 						_allBuffs.Add(new Buff() { Name = "20 Strength Food", Category = BuffCategory.OtherConsumables,
-							Stats = new Stats() { Strength = 20 }, ConflictingBuffs = new string[] { "30 Stamina Food", "20 Hit Rating Food", "20 Agility Food", "40 Attack Power Food" }});
+							Stats = new Stats() { Strength = 20 }, ConflictingBuffs = new string[] { "Food"}});
 						_allBuffs.Add(new Buff() { Name = "40 Attack Power Food", Category = BuffCategory.OtherConsumables,
-							Stats = new Stats() { AttackPower = 40 }, ConflictingBuffs = new string[] { "30 Stamina Food", "20 Hit Rating Food", "20 Strength Food", "20 Agility Food" }});
+							Stats = new Stats() { AttackPower = 40 }, ConflictingBuffs = new string[] { "Food"}});
 						_allBuffs.Add(new Buff() { Name = "20 Hit Rating Food", Category = BuffCategory.OtherConsumables,
-							Stats = new Stats() { HitRating = 20 }, ConflictingBuffs = new string[] { "20 Agility Food", "30 Stamina Food", "20 Strength Food", "40 Attack Power Food" }});
+							Stats = new Stats() { HitRating = 20 }, ConflictingBuffs = new string[] { "Food"}});
 						_allBuffs.Add(new Buff() { Name = "Scroll of Protection", Category = BuffCategory.OtherConsumables,
 							Stats = new Stats() { Armor = 300 }});
 						_allBuffs.Add(new Buff() { Name = "Scroll of Agility", Category = BuffCategory.OtherConsumables,
@@ -319,36 +319,36 @@ namespace Rawr
 						_allBuffs.Add(new Buff() { Name = "Scroll of Strength", Category = BuffCategory.OtherConsumables,
 							Stats = new Stats() { Strength = 20 }});
 						_allBuffs.Add(new Buff() { Name = "Adamantite Weightstone", Category = BuffCategory.OtherConsumables,
-							Stats = new Stats() { WeaponDamage = 12, CritRating = 14 }, ConflictingBuffs = new string[] { "Elemental Sharpening Stone" }});
+							Stats = new Stats() { WeaponDamage = 12, CritRating = 14 }, ConflictingBuffs = new string[] { "Temporary Weapon Enchantment"}});
 						_allBuffs.Add(new Buff() { Name = "Elemental Sharpening Stone", Category = BuffCategory.OtherConsumables,
-							Stats = new Stats() { CritRating = 28 }, ConflictingBuffs = new string[] { "Adamantite Weightstone" }});
+							Stats = new Stats() { CritRating = 28 }, ConflictingBuffs = new string[] { "Temporary Weapon Enchantment"}});
                         _allBuffs.Add(new Buff()
                         {
                             Name = "Superior Wizard Oil",
                             Category = BuffCategory.OtherConsumables,
                             Stats = new Stats() { SpellDamageRating = 42 },
-                            ConflictingBuffs = new string[] { "Brilliant Wizard Oil" }
-                        });
-                        _allBuffs.Add(new Buff()
+							ConflictingBuffs = new string[] { "Temporary Weapon Enchantment" }
+						}); 
+						_allBuffs.Add(new Buff()
                         {
                             Name = "Brilliant Wizard Oil",
                             Category = BuffCategory.OtherConsumables,
                             Stats = new Stats() { SpellDamageRating = 36, SpellCritRating = 14 },
-                            ConflictingBuffs = new string[] { "Superior Wizard Oil" }
-                        });
+							ConflictingBuffs = new string[] { "Temporary Weapon Enchantment" }
+						});
                         _allBuffs.Add(new Buff()
                         {
                             Name = "20 Spell Crit Food",
                             Category = BuffCategory.OtherConsumables,
                             Stats = new Stats() { SpellCritRating = 20, Spirit = 20 },
-                            ConflictingBuffs = new string[] { "23 Spell Damage Food" }
-                        });
+							ConflictingBuffs = new string[] { "Food" }
+						});
                         _allBuffs.Add(new Buff()
                         {
                             Name = "23 Spell Damage Food",
                             Category = BuffCategory.OtherConsumables,
                             Stats = new Stats() { SpellDamageRating = 23, Spirit = 20 },
-                            ConflictingBuffs = new string[] { "20 Spell Crit Food" }
+                            ConflictingBuffs = new string[] { "Food" }
                         });
 
 						
@@ -364,12 +364,12 @@ namespace Rawr
 						_allBuffs.Add(new Buff() { Name = "Improved Faerie Fire", Category = BuffCategory.Debuffs,
 							Stats = new Stats() { HitRating = 47.3077f }, RequiredBuff = "Faerie Fire"});
 						_allBuffs.Add(new Buff() { Name = "Expose Armor (5cp)", Category = BuffCategory.Debuffs,
-							Stats = new Stats() { ArmorPenetration = 2000 }, ConflictingBuffs = new string[] { "Sunder Armor (x5)" }});
+							Stats = new Stats() { ArmorPenetration = 2000 }, ConflictingBuffs = new string[] { "Sunder Armor" }});
 						_allBuffs.Add(new Buff() { Name = "Improved Expose Armor (5cp)", Category = BuffCategory.Debuffs,
-							Stats = new Stats() { ArmorPenetration = 1000 }, ConflictingBuffs = new string[] { "Sunder Armor (x5)" },
+							Stats = new Stats() { ArmorPenetration = 1000 },
 							RequiredBuff = "Expose Armor (5cp)"});
 						_allBuffs.Add(new Buff() { Name = "Sunder Armor (x5)", Category = BuffCategory.Debuffs,
-							Stats = new Stats() { ArmorPenetration = 2600 }, ConflictingBuffs = new string[] { "Expose Armor (5cp)" }});
+							Stats = new Stats() { ArmorPenetration = 2600 }, ConflictingBuffs = new string[] { "Sunder Armor" }});
 						_allBuffs.Add(new Buff() { Name = "Curse of Recklessness", Category = BuffCategory.Debuffs,
 							Stats = new Stats() { ArmorPenetration = 800 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Hunters Mark", Category = BuffCategory.Debuffs,
@@ -394,30 +394,28 @@ namespace Rawr
                         {
                             Name = "Curse of Shadow",
                             Category = BuffCategory.Debuffs,
-                            Stats = new Stats() { BonusShadowSpellPowerMultiplier = 0.1f, BonusArcaneSpellPowerMultiplier = 0.1f },
-                            ConflictingBuffs = new string[] {"Curse of Shadow (Malediction)"}
+                            Stats = new Stats() { BonusShadowSpellPowerMultiplier = 0.1f, BonusArcaneSpellPowerMultiplier = 0.1f }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Improved Curse of Shadow",
+                            Category = BuffCategory.Debuffs,
+                            Stats = new Stats() { BonusShadowSpellPowerMultiplier = ((1.13f / 1.1f) - 1f), BonusArcaneSpellPowerMultiplier = ((1.13f / 1.1f) - 1f) },
+                            RequiredBuff = "Curse of Shadow"
                         });
                         _allBuffs.Add(new Buff()
                         {
                             Name = "Curse of the Elements",
                             Category = BuffCategory.Debuffs,
-                            Stats = new Stats() { BonusFireSpellPowerMultiplier = 0.1f, BonusFrostSpellPowerMultiplier = 0.1f },
-                            ConflictingBuffs = new string[] {"Curse of the Elements (Malediction)"}
+                            Stats = new Stats() { BonusFireSpellPowerMultiplier = 0.1f, BonusFrostSpellPowerMultiplier = 0.1f }
                         });
                         _allBuffs.Add(new Buff()
                         {
-                            Name = "Curse of Shadow (Malediction)",
+                            Name = "Improved Curse of the Elements",
                             Category = BuffCategory.Debuffs,
-                            Stats = new Stats() { BonusShadowSpellPowerMultiplier = 0.13f, BonusArcaneSpellPowerMultiplier = 0.13f },
-                            ConflictingBuffs = new string[] {"Curse of Shadow"}
-                        });
-                        _allBuffs.Add(new Buff()
-                        {
-                            Name = "Curse of the Elements (Malediction)",
-                            Category = BuffCategory.Debuffs,
-                            Stats = new Stats() { BonusFireSpellPowerMultiplier = 0.13f, BonusFrostSpellPowerMultiplier = 0.13f },
-                            ConflictingBuffs = new string[] {"Curse of the Elements"}
-                        });
+							Stats = new Stats() { BonusFireSpellPowerMultiplier = ((1.13f / 1.1f) - 1f), BonusFrostSpellPowerMultiplier = ((1.13f / 1.1f) - 1f) },
+							RequiredBuff = "Curse of the Elements"
+						});
                         _allBuffs.Add(new Buff()
                         {
                             Name = "Misery",
