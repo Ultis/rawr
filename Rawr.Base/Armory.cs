@@ -463,118 +463,121 @@ namespace Rawr
 
 							if (isEquip)
 							{
-								if (spellDesc.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power"))
-									stats.AttackPower += 120; //Crusade = 120ap
-								else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance to inject poison"))
-									stats.WeaponDamage += 2f; //Romulo's = 4dmg
-								else if (spellDesc.StartsWith("Mangle has a 40% chance to grant 140 Strength for 8sec"))
-									stats.Strength += 37f; //Ashtongue = 37str
-								else if (spellDesc.StartsWith("Your spells and attacks in each form have a chance to grant you a blessing for 15 sec."))
-									stats.Strength += 32f; //LivingRoot = 32str
-								else if (spellDesc.StartsWith("Chance on critical hit to increase your attack power by "))
-								{
-									spellDesc = spellDesc.Substring("Chance on critical hit to increase your attack power by ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.AttackPower += ((float)int.Parse(spellDesc)) / 6f;
-								}
-								else if (spellDesc.StartsWith("Chance on hit to increase your attack power by "))
-								{
-									spellDesc = spellDesc.Substring("Chance on hit to increase your attack power by ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.AttackPower += ((float)int.Parse(spellDesc)) / 6f;
-								}
-								else if (spellDesc.Contains(" critical strike rating to the Leader of the Pack aura"))
-								{
-									spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" critical strike rating to the Leader of the Pack aura"));
-									spellDesc = spellDesc.Substring(spellDesc.LastIndexOf(' ') + 1);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.CritRating += (float)int.Parse(spellDesc);
-								}
-								else if (spellDesc.StartsWith("Your Mangle ability also increases your attack power by "))
-								{
-									spellDesc = spellDesc.Substring("Your Mangle ability also increases your attack power by ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.AttackPower += (float)int.Parse(spellDesc);
-								}
-								else if (spellDesc.StartsWith("Increases periodic damage done by Rip by "))
-								{
-									spellDesc = spellDesc.Substring("Increases periodic damage done by Rip by ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.BonusRipDamagePerCPPerTick += (float)int.Parse(spellDesc);
-								}
-								else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance to increase your haste rating by "))
-								{
-									spellDesc = spellDesc.Substring("Your melee and ranged attacks have a chance to increase your haste rating by ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.HasteRating += ((float)int.Parse(spellDesc)) / 4f;
-								}
-								else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance allow you to ignore "))
-								{
-									spellDesc = spellDesc.Substring("Your melee and ranged attacks have a chance allow you to ignore ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.ArmorPenetration += ((float)int.Parse(spellDesc)) / 3f;
-								}
-								else if (spellDesc.StartsWith("Increases attack power by "))
-								{
-									spellDesc = spellDesc.Substring("Increases attack power by ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.AttackPower += int.Parse(spellDesc);
-								}
-								else if (spellDesc.StartsWith("Increases your dodge rating by "))
-								{
-									spellDesc = spellDesc.Substring("Increases your dodge rating by ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.DodgeRating += int.Parse(spellDesc);
-								}
-								else if (spellDesc.StartsWith("Increases your hit rating by "))
-								{
-									spellDesc = spellDesc.Substring("Increases your hit rating by ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.HitRating += int.Parse(spellDesc);
-								}
-								else if (spellDesc.StartsWith("Your attacks ignore "))
-								{
-									spellDesc = spellDesc.Substring("Your attacks ignore ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.ArmorPenetration += int.Parse(spellDesc);
-								}
-								else if (spellDesc.StartsWith("Increases the damage dealt by Shred by "))
-								{
-									spellDesc = spellDesc.Substring("Increases the damage dealt by Shred by ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.BonusShredDamage += int.Parse(spellDesc);
-								}
-								else if (spellDesc.StartsWith("Increases the damage dealt by Mangle (Cat) by "))
-								{
-									spellDesc = spellDesc.Substring("Increases the damage dealt by Mangle (Cat) by ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.BonusMangleDamage += int.Parse(spellDesc);
-								}
-								else if (spellDesc.EndsWith(" Weapon Damage."))
-								{
-									spellDesc = spellDesc.Trim('+').Substring(0, spellDesc.IndexOf(" "));
-									stats.WeaponDamage += int.Parse(spellDesc);
-								}
-								else if (spellDesc.StartsWith("Your Mangle ability has a chance to grant "))
-								{
-									spellDesc = spellDesc.Substring("Your Mangle ability has a chance to grant ".Length);
-									if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
-									if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-									stats.TerrorProc += int.Parse(spellDesc);
-								}
+                                if (spellDesc.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell damage for the next 10 sec., stacking up to 10 times."))
+                                {
+                                    stats.AttackPower += 120; //Crusade = 120ap
+                                    stats.SpellDamageRating += 80;
+                                }
+                                else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance to inject poison"))
+                                    stats.WeaponDamage += 2f; //Romulo's = 4dmg
+                                else if (spellDesc.StartsWith("Mangle has a 40% chance to grant 140 Strength for 8sec"))
+                                    stats.Strength += 37f; //Ashtongue = 37str
+                                else if (spellDesc.StartsWith("Your spells and attacks in each form have a chance to grant you a blessing for 15 sec."))
+                                    stats.Strength += 32f; //LivingRoot = 32str
+                                else if (spellDesc.StartsWith("Chance on critical hit to increase your attack power by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Chance on critical hit to increase your attack power by ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.AttackPower += ((float)int.Parse(spellDesc)) / 6f;
+                                }
+                                else if (spellDesc.StartsWith("Chance on hit to increase your attack power by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Chance on hit to increase your attack power by ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.AttackPower += ((float)int.Parse(spellDesc)) / 6f;
+                                }
+                                else if (spellDesc.Contains(" critical strike rating to the Leader of the Pack aura"))
+                                {
+                                    spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" critical strike rating to the Leader of the Pack aura"));
+                                    spellDesc = spellDesc.Substring(spellDesc.LastIndexOf(' ') + 1);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.CritRating += (float)int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Your Mangle ability also increases your attack power by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Your Mangle ability also increases your attack power by ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.AttackPower += (float)int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Increases periodic damage done by Rip by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases periodic damage done by Rip by ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.BonusRipDamagePerCPPerTick += (float)int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance to increase your haste rating by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Your melee and ranged attacks have a chance to increase your haste rating by ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.HasteRating += ((float)int.Parse(spellDesc)) / 4f;
+                                }
+                                else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance allow you to ignore "))
+                                {
+                                    spellDesc = spellDesc.Substring("Your melee and ranged attacks have a chance allow you to ignore ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.ArmorPenetration += ((float)int.Parse(spellDesc)) / 3f;
+                                }
+                                else if (spellDesc.StartsWith("Increases attack power by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases attack power by ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.AttackPower += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Increases your dodge rating by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases your dodge rating by ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.DodgeRating += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Increases your hit rating by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases your hit rating by ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.HitRating += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Your attacks ignore "))
+                                {
+                                    spellDesc = spellDesc.Substring("Your attacks ignore ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.ArmorPenetration += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Increases the damage dealt by Shred by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases the damage dealt by Shred by ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.BonusShredDamage += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Increases the damage dealt by Mangle (Cat) by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases the damage dealt by Mangle (Cat) by ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.BonusMangleDamage += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.EndsWith(" Weapon Damage."))
+                                {
+                                    spellDesc = spellDesc.Trim('+').Substring(0, spellDesc.IndexOf(" "));
+                                    stats.WeaponDamage += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Your Mangle ability has a chance to grant "))
+                                {
+                                    spellDesc = spellDesc.Substring("Your Mangle ability has a chance to grant ".Length);
+                                    if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                                    if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                                    stats.TerrorProc += int.Parse(spellDesc);
+                                }
                                 else if (spellDesc.StartsWith("Increases damage and healing done by magical spells and effects by up to"))
                                 {
                                     spellDesc = spellDesc.Substring("Increases damage and healing done by magical spells and effects by up to".Length);
@@ -613,7 +616,7 @@ namespace Rawr
                                     spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                                     stats.SpellCritRating += int.Parse(spellDesc);
                                 }
-                                    // Restores 7 mana per 5 sec.
+                                // Restores 7 mana per 5 sec.
                                 else if (spellDesc.StartsWith("Restores "))
                                 {
                                     spellDesc = spellDesc.Substring("Restores ".Length);
