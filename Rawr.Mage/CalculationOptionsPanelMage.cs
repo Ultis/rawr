@@ -40,6 +40,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["FrostResist"] = "0";
             if (!Character.CalculationOptions.ContainsKey("NatureResist"))
                 Character.CalculationOptions["NatureResist"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("ShadowResist"))
+                Character.CalculationOptions["ShadowResist"] = "0";
             if (!Character.CalculationOptions.ContainsKey("FightDuration"))
                 Character.CalculationOptions["FightDuration"] = "300";
             if (!Character.CalculationOptions.ContainsKey("ShadowPriest"))
@@ -60,6 +62,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["MaintainScorch"] = "1";
             if (!Character.CalculationOptions.ContainsKey("InterruptFrequency"))
                 Character.CalculationOptions["InterruptFrequency"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("EvocationWeapon"))
+                Character.CalculationOptions["EvocationWeapon"] = "0";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             comboBoxAoeTargetLevel.SelectedItem = Character.CalculationOptions["AoeTargetLevel"];
@@ -71,6 +75,7 @@ namespace Rawr.Mage
             textBoxFireResist.Text = Character.CalculationOptions["FireResist"];
             textBoxFrostResist.Text = Character.CalculationOptions["FrostResist"];
             textBoxNatureResist.Text = Character.CalculationOptions["NatureResist"];
+            textBoxShadowResist.Text = Character.CalculationOptions["ShadowResist"];
             textBoxFightDuration.Text = Character.CalculationOptions["FightDuration"];
             textBoxShadowPriest.Text = Character.CalculationOptions["ShadowPriest"];
             checkBoxHeroism.Checked = Character.CalculationOptions["HeroismAvailable"] == "1";
@@ -81,6 +86,7 @@ namespace Rawr.Mage
             textBoxDpsTime.Text = Character.CalculationOptions["DpsTime"];
             checkBoxMaintainScorch.Checked = Character.CalculationOptions["MaintainScorch"] == "1";
             textBoxInterruptFrequency.Text = Character.CalculationOptions["InterruptFrequency"];
+            textBoxEvocationWeapon.Text = Character.CalculationOptions["EvocationWeapon"];
 
             if (talents != null) talents.LoadCalculationOptions();
         }
@@ -250,6 +256,26 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxInterruptFrequency.Text, out value))
             {
                 Character.CalculationOptions["InterruptFrequency"] = textBoxInterruptFrequency.Text;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void textBoxShadowResist_TextChanged(object sender, EventArgs e)
+        {
+            float value;
+            if (float.TryParse(textBoxShadowResist.Text, out value))
+            {
+                Character.CalculationOptions["ShadowResist"] = textBoxShadowResist.Text;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void textBoxEvocationWeapon_TextChanged(object sender, EventArgs e)
+        {
+            int value;
+            if (int.TryParse(textBoxEvocationWeapon.Text, out value))
+            {
+                Character.CalculationOptions["EvocationWeapon"] = textBoxEvocationWeapon.Text;
                 Character.OnItemsChanged();
             }
         }

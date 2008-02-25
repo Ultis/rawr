@@ -6,10 +6,11 @@ namespace Rawr.Mage
 {
     enum MagicSchool
     {
-        Arcane,
-        Fire,
+        Fire = 2,
+        Nature,
         Frost,
-        Nature
+        Shadow,
+        Arcane
     }
 
     abstract class Spell
@@ -137,6 +138,14 @@ namespace Rawr.Mage
                     HitRate = calculations.NatureHitRate;
                     RealResistance = calculations.CalculationOptions.NatureResist;
                     break;
+                case MagicSchool.Shadow:
+                    SpellModifier = calculations.ShadowSpellModifier;
+                    CritRate = calculations.ShadowCritRate;
+                    CritBonus = calculations.ShadowCritBonus;
+                    RawSpellDamage = calculations.ShadowDamage;
+                    HitRate = calculations.ShadowHitRate;
+                    RealResistance = calculations.CalculationOptions.ShadowResist;
+                    break;
             }
 
             if (!ManualClearcasting && !ClearcastingAveraged)
@@ -179,7 +188,8 @@ namespace Rawr.Mage
                 CostPerSecond = 0;
             }
 
-            RawSpellDamage += calculations.BasicStats.SpellDamageOnCritProc * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
+            if (calculations.BasicStats.SpellDamageOnCritProc > 0) RawSpellDamage += calculations.BasicStats.SpellDamageOnCritProc * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
+            if (calculations.BasicStats.SpellDamageFor15SecOnHit_10_60 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor15SecOnHit_10_60 * 15f / (60f + CastTime / HitProcs / 0.1f);
 
             SpellDamage = RawSpellDamage * SpellDamageCoefficient;
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f + SpellDamage;
@@ -204,17 +214,62 @@ namespace Rawr.Mage
                 OO5SR = fsr.CalculateOO5SR(calculations.ClearcastingChance, Name, casttimeHash);
             }*/
 
-            FSRCalc fsr = new FSRCalc();
-            fsr.AddSpell(CastTime - calculations.Latency, calculations.Latency, Channeled);
-            float OO5SR = fsr.CalculateOO5SR(calculations.ClearcastingChance);
+            float OO5SR;
+
+            if (Cost > 0)
+            {
+                FSRCalc fsr = new FSRCalc();
+                fsr.AddSpell(CastTime - calculations.Latency, calculations.Latency, Channeled);
+                OO5SR = fsr.CalculateOO5SR(calculations.ClearcastingChance);
+            }
+            else
+            {
+                OO5SR = 1;
+            }
 
             ManaRegenPerSecond = calculations.ManaRegen5SR + OO5SR * (calculations.ManaRegen - calculations.ManaRegen5SR) + calculations.BasicStats.ManaRestorePerHit * HitProcs / CastTime + calculations.BasicStats.ManaRestorePerCast * CastProcs / CastTime;
 
-            if (calculations.Mp5OnCastFor20Sec > 0)
+            if (calculations.Mp5OnCastFor20Sec > 0 && CastProcs > 0)
             {
-                float totalMana = calculations.Mp5OnCastFor20Sec / 5f / CastTime * 0.5f * (20 - CastTime / HitProcs / 2f) * (20 - CastTime / HitProcs / 2f);
+                float totalMana = calculations.Mp5OnCastFor20Sec / 5f / CastTime * 0.5f * (20 - CastTime / CastProcs / 2f) * (20 - CastTime / CastProcs / 2f);
                 ManaRegenPerSecond += totalMana / 20f;
             }
+        }
+    }
+
+    class Wand : BaseSpell
+    {
+        public Wand(Character character, CharacterCalculationsMage calculations, MagicSchool school, int minDamage, int maxDamage, float speed)
+            : base("Wand", false, false, false, false, 0, 30, 0, 0, school, minDamage, maxDamage, 0, 1, 0, 0)
+        {
+            Calculate(character, calculations);
+            CastTime = speed;
+            CritRate = calculations.SpellCrit;
+            CritBonus = 1.5f;
+            SpellModifier = 1 + calculations.BasicStats.BonusSpellPowerMultiplier;
+            switch (school)
+            {
+                case MagicSchool.Arcane:
+                    SpellModifier *= (1 + calculations.BasicStats.BonusArcaneSpellPowerMultiplier);
+                    break;
+                case MagicSchool.Fire:
+                    SpellModifier *= (1 + calculations.BasicStats.BonusArcaneSpellPowerMultiplier);
+                    break;
+                case MagicSchool.Frost:
+                    SpellModifier *= (1 + calculations.BasicStats.BonusArcaneSpellPowerMultiplier);
+                    break;
+                case MagicSchool.Nature:
+                    SpellModifier *= (1 + calculations.BasicStats.BonusArcaneSpellPowerMultiplier);
+                    break;
+                case MagicSchool.Shadow:
+                    SpellModifier *= (1 + calculations.BasicStats.BonusArcaneSpellPowerMultiplier);
+                    break;
+            }
+            if (calculations.CalculationOptions.WandSpecialization > 0)
+            {
+                SpellModifier *= 1 + 0.01f + 0.12f * calculations.CalculationOptions.WandSpecialization;
+            }
+            CalculateDerivedStats(character, calculations);
         }
     }
 

@@ -16,6 +16,7 @@ namespace Rawr.Mage
         public float FireResist { get; set; }
         public float FrostResist { get; set; }
         public float NatureResist { get; set; }
+        public float ShadowResist { get; set; }
         public float FightDuration { get; set; }
         public float ShadowPriest { get; set; }
         public bool HeroismAvailable { get; set; }
@@ -25,6 +26,8 @@ namespace Rawr.Mage
         public float MoltenFuryPercentage { get; set; }
         public bool MaintainScorch { get; set; }
         public float InterruptFrequency { get; set; }
+        public bool JudgementOfWisdom { get; set; }
+        public float EvocationWeapon { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -55,6 +58,7 @@ namespace Rawr.Mage
         public int WintersChill { get; set; }
         public int BurningSoul { get; set; }
         public int ImprovedArcaneMissiles { get; set; }
+        public int WandSpecialization { get; set; }
 
         public CompiledCalculationOptions(Character character)
         {
@@ -67,6 +71,7 @@ namespace Rawr.Mage
             FireResist = float.Parse(character.CalculationOptions["FireResist"]);
             FrostResist = float.Parse(character.CalculationOptions["FrostResist"]);
             NatureResist = float.Parse(character.CalculationOptions["NatureResist"]);
+            ShadowResist = float.Parse(character.CalculationOptions["ShadowResist"]);
             FightDuration = float.Parse(character.CalculationOptions["FightDuration"]);
             ShadowPriest = float.Parse(character.CalculationOptions["ShadowPriest"]);
             HeroismAvailable = character.CalculationOptions["HeroismAvailable"] == "1";
@@ -76,6 +81,8 @@ namespace Rawr.Mage
             ABCycles = character.CalculationOptions["ABCycles"] == "1";
             MaintainScorch = character.CalculationOptions["MaintainScorch"] == "1";
             InterruptFrequency = float.Parse(character.CalculationOptions["InterruptFrequency"]);
+            JudgementOfWisdom = character.ActiveBuffs.Contains("Judgement of Wisdom");
+            EvocationWeapon = float.Parse(character.CalculationOptions["EvocationWeapon"]);
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"]);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"]);
@@ -106,6 +113,7 @@ namespace Rawr.Mage
             WintersChill = int.Parse(character.CalculationOptions["WintersChill"]);
             BurningSoul = int.Parse(character.CalculationOptions["BurningSoul"]);
             ImprovedArcaneMissiles = int.Parse(character.CalculationOptions["ImprovedArcaneMissiles"]);
+            WandSpecialization = int.Parse(character.CalculationOptions["WandSpecialization"]);
         }
     }
 
@@ -140,10 +148,13 @@ namespace Rawr.Mage
         public float SpellHit { get; set; }
         public float CastingSpeed { get; set; }
         public float GlobalCooldown { get; set; }
+
         public float ArcaneDamage { get; set; }
         public float FireDamage { get; set; }
         public float FrostDamage { get; set; }
         public float NatureDamage { get; set; }
+        public float ShadowDamage { get; set; }
+
         public float SpiritRegen { get; set; }
         public float ManaRegen { get; set; }
         public float ManaRegen5SR { get; set; }
@@ -157,22 +168,31 @@ namespace Rawr.Mage
         public float SpellCritReduction { get; set; }
         public float CritDamageReduction { get; set; }
         public float Dodge { get; set; }
+
         public float ArcaneSpellModifier { get; set; }
         public float FireSpellModifier { get; set; }
         public float FrostSpellModifier { get; set; }
         public float NatureSpellModifier { get; set; }
+        public float ShadowSpellModifier { get; set; }
+
         public float ArcaneCritBonus { get; set; }
-        public float NatureCritBonus { get; set; }
         public float FireCritBonus { get; set; }
         public float FrostCritBonus { get; set; }
+        public float NatureCritBonus { get; set; }
+        public float ShadowCritBonus { get; set; }
+
         public float ArcaneCritRate { get; set; }
-        public float NatureCritRate { get; set; }
         public float FireCritRate { get; set; }
         public float FrostCritRate { get; set; }
+        public float NatureCritRate { get; set; }
+        public float ShadowCritRate { get; set; }
+
         public float ArcaneHitRate { get; set; }
         public float FireHitRate { get; set; }
         public float FrostHitRate { get; set; }
         public float NatureHitRate { get; set; }
+        public float ShadowHitRate { get; set; }
+
         public float ResilienceCritDamageReduction { get; set; }
         public float ResilienceCritRateReduction { get; set; }
         public float Latency { get; set; }
@@ -203,6 +223,11 @@ namespace Rawr.Mage
         public int MaxManaGem;
         public List<string> SolutionLabel = new List<string>();
         public double[] Solution;
+
+        public void SetSpell(string spellName, Spell spell)
+        {
+            Spells[spellName] = spell;
+        }
 
         public Spell GetSpell(string spellName)
         {
@@ -319,17 +344,21 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-            List<string> spellList = new List<string>() { "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM" };
+            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM" };
             foreach (string spell in spellList)
             {
                 Spell s = GetSpell(spell);
-                if (s is BaseSpell)
+                if (s != null)
                 {
-                    dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} sec", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, ((BaseSpell)s).CastTime - Latency));
-                }
-                else
-                {
-                    dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.Sequence));
+                    if (s is BaseSpell)
+                    {
+                        BaseSpell bs = s as BaseSpell;
+                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} sec\n{3:F}x Amplify\n{4:F}% Crit Rate\n{5:F}% Hit Rate\n{6:F} Crit Multiplier", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus));
+                    }
+                    else
+                    {
+                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.Sequence));
+                    }
                 }
             }
             dictValues.Add("Total Damage", String.Format("{0:F}", OverallPoints));
