@@ -229,6 +229,11 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float SpellDamageFor15SecOnManaGem { get; set; }
 
+        // 10% change, 60 sec internal cooldown
+        [DisplayName("Spell Damage (15 sec)")]
+        [Category("Equipment Procs")]
+        public float SpellDamageFor15SecOnHit_10_60 { get; set; }
+
         public float EvocationExtension { get; set; }
 
         [Category("Equipment Procs")]
@@ -388,6 +393,7 @@ namespace Rawr
                 ManaRestorePerHit = a.ManaRestorePerHit + b.ManaRestorePerHit,
                 ManaRestorePerCast = a.ManaRestorePerCast + b.ManaRestorePerCast,
                 BonusManaGem = a.BonusManaGem + b.BonusManaGem,
+                SpellDamageFor15SecOnHit_10_60 = a.SpellDamageFor15SecOnHit_10_60 + b.SpellDamageFor15SecOnHit_10_60,
                 SpellCombatManaRegeneration = a.SpellCombatManaRegeneration + b.SpellCombatManaRegeneration
 			};
 		}

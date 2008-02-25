@@ -629,6 +629,25 @@ namespace Rawr
                                     stats.BonusManaGem += 0.25f;
                                     stats.SpellDamageFor15SecOnManaGem += 225;
                                 }
+                                else if (spellDesc.StartsWith("Your offensive spells have a chance on hit to increase your spell damage by "))
+                                {
+                                    // Your offensive spells have a chance on hit to increase your spell damage by 95 for 10 secs.
+                                    spellDesc = spellDesc.Substring("Your offensive spells have a chance on hit to increase your spell damage by ".Length);
+                                    float value = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" for")));
+                                    spellDesc = spellDesc.Substring(spellDesc.IndexOf(" for") + " for ".Length);
+                                    int duration = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" ")));
+
+                                    switch (duration)
+                                    {
+                                        case 10:
+                                            if (name == "Band of the Eternal Sage")
+                                            {
+                                                // wrong tooltip, it is 15 sec
+                                                stats.SpellDamageFor15SecOnHit_10_60 += value;
+                                            }
+                                            break;
+                                    }
+                                }
                             }
 						}
 
