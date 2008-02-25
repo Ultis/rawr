@@ -91,7 +91,6 @@ namespace Rawr.Moonkin
                     relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
                         {
                             Item.ItemType.None,
-                            Item.ItemType.Cloth,
                             Item.ItemType.Leather,
                             Item.ItemType.Dagger,
                             Item.ItemType.Staff,

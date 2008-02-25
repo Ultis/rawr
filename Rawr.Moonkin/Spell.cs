@@ -322,8 +322,12 @@ namespace Rawr.Moonkin
                         calcs.TimeToOOM = new TimeSpan(0, (int)Math.Floor(secsToOom) / 60, (int)Math.Floor(secsToOom) % 60);
                 }
             }
-
-            calcs.SubPoints = new float[] { calcs.DPS, calcs.DPM };
+            float efficiencyStat = fightLength;
+            if (calcs.TimeToOOM > new TimeSpan(0, 0, 0))
+            {
+                efficiencyStat = (float)(calcs.TimeToOOM.Minutes * 60 + calcs.TimeToOOM.Seconds);
+            }
+            calcs.SubPoints = new float[] { calcs.DPS, efficiencyStat };
             calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
         }
 
