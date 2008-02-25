@@ -183,14 +183,22 @@ namespace Rawr.Moonkin
             // Insect Swarm DoT: Base spell coefficient 0.76 spread over all ticks
             spellList["Insect Swarm"].dotEffect.damagePerTick += (0.76f / spellList["Insect Swarm"].dotEffect.numTicks) * calcs.NatureDamage;
 
+            // Add spell damage from idols
+            if (character.Ranged.Name == "Ivory Idol of the Moongoddess")   // Starfire idol
+                spellList["Starfire"].damagePerHit += 55.0f;
+            else if (character.Ranged.Name == "Idol of the Moon")   // Moonfire idol
+                spellList["Moonfire"].damagePerHit += 33.0f;
+            else if (character.Ranged.Name == "Idol of the Avenger")    // Wrath idol
+                spellList["Wrath"].damagePerHit += 25.0f;
+            // TODO: Add +20 crit rating to moonkin aura (Ivory Idol of the Raven Goddess), chance on hit +140 spelldmg for 10 sec
+            // (Idol of the Unseen Moon)
+
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)
             spellList["Wrath"].damagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
             spellList["Moonfire"].damagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
             spellList["Moonfire"].dotEffect.damagePerTick *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
             spellList["Starfire"].damagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
-
-            // TODO: Add spell damage from idols
 
             // Add spell-specific crit chance
             // Wrath, Starfire: Crit chance +(0.02 * Focused Starlight)

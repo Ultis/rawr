@@ -211,7 +211,8 @@ namespace Rawr.Moonkin
 
             // Innervate calculations
             int numInnervates = character.CalculationOptions["Innervate"] == "Yes" ? ((int)calcs.FightLength / 6 + 1) : 0;
-            float innervateManaRate = calcs.ManaRegen * 3;
+            // Innervate mana rate increases only spirit-based regen
+            float innervateManaRate = (calcs.ManaRegen - calcs.BasicStats.Mp5 / 5f) * 4 + calcs.BasicStats.Mp5 / 5f;
             float innervateTime = numInnervates * 20.0f;
             float totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * calcs.BasicStats.Mana * 0.04f);
 
