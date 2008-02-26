@@ -730,7 +730,7 @@ namespace Rawr
                                         sockets.Stats.SpellHasteRating = socketBonusValue;
                                         break;
                                     case "Spirit":
-                                        sockets.Stats.SpellHasteRating = socketBonusValue;
+                                        sockets.Stats.Spirit = socketBonusValue;
                                         break;
 								}
 							}
