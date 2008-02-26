@@ -64,6 +64,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["InterruptFrequency"] = "0";
             if (!Character.CalculationOptions.ContainsKey("EvocationWeapon"))
                 Character.CalculationOptions["EvocationWeapon"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("AoeDuration"))
+                Character.CalculationOptions["AoeDuration"] = "0";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             comboBoxAoeTargetLevel.SelectedItem = Character.CalculationOptions["AoeTargetLevel"];
@@ -87,6 +89,7 @@ namespace Rawr.Mage
             checkBoxMaintainScorch.Checked = Character.CalculationOptions["MaintainScorch"] == "1";
             textBoxInterruptFrequency.Text = Character.CalculationOptions["InterruptFrequency"];
             textBoxEvocationWeapon.Text = Character.CalculationOptions["EvocationWeapon"];
+            textBoxAoeDuration.Text = Character.CalculationOptions["AoeDuration"];
 
             if (talents != null) talents.LoadCalculationOptions();
         }
@@ -276,6 +279,16 @@ namespace Rawr.Mage
             if (int.TryParse(textBoxEvocationWeapon.Text, out value))
             {
                 Character.CalculationOptions["EvocationWeapon"] = textBoxEvocationWeapon.Text;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void textBoxAoeDuration_TextChanged(object sender, EventArgs e)
+        {
+            float value;
+            if (float.TryParse(textBoxAoeDuration.Text, out value))
+            {
+                Character.CalculationOptions["AoeDuration"] = textBoxAoeDuration.Text;
                 Character.OnItemsChanged();
             }
         }

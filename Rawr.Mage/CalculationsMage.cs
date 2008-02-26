@@ -42,14 +42,15 @@ namespace Rawr.Mage
                     "Spell Stats:Arcane Damage",
                     "Spell Stats:Fire Damage",
                     "Spell Stats:Frost Damage",
-                    "Regeneration:MP5",
-                    "Regeneration:Mana Regen",
-                    "Regeneration:Health Regen",
+                    "Solution:Total Damage",
+                    "Solution:Dps",
+                    "Solution:Spell Cycles",
                     "Spell Info:Wand",
                     "Spell Info:Arcane Missiles",
-                    "Spell Info:Arcane Blast*spammed",
+                    "Spell Info:Arcane Blast*Spammed",
                     "Spell Info:Scorch",
                     "Spell Info:Fireball",
+                    "Spell Info:FireballScorch*Must enable Maintain Scorch and have points in Improved Scorch talent to enable",
                     "Spell Info:Frostbolt",
                     "Spell Info:ABAM",
                     "Spell Info:AB3AMSc*Prefer pause over longer filler",
@@ -61,10 +62,15 @@ namespace Rawr.Mage
                     "Spell Info:ABFrB3FrB*Prefer pause over longer filler",
                     "Spell Info:ABFrB3FrB2*Fill until debuff almost out",
                     "Spell Info:ABFB3FBSc*Typically FB-FB-Sc filler",
-                    "Spell Info:FireballScorch*Must enable Maintain Scorch and have points in Improved Scorch talent to enable",
-                    "Solution:Total Damage",
-                    "Solution:Dps",
-                    "Solution:Spell Cycles",
+                    "Spell Info:Arcane Explosion",
+                    "Spell Info:Blizzard",
+                    "Spell Info:Cone of Cold",
+                    "Spell Info:Flamestrike*Spammed",
+                    "Spell Info:Blast Wave*Requires talent points",
+                    "Spell Info:Dragon's Breath*Requires talent points",
+                    "Regeneration:MP5",
+                    "Regeneration:Mana Regen",
+                    "Regeneration:Health Regen",
                     "Survivability:Arcane Resist",
                     "Survivability:Fire Resist",
                     "Survivability:Nature Resist",
@@ -194,8 +200,18 @@ namespace Rawr.Mage
             CharacterCalculationsMage calculatedStats = statsList[statsList.Count - 1];
 
             List<string> spellList = new List<string>() { "Arcane Missiles", "Scorch", calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc", "ABAM3ScCCAM" };
+            if (calculationOptions.AoeDuration > 0)
+            {
+                spellList.Add("Arcane Explosion");
+                spellList.Add("Flamestrike (spammed)");
+                spellList.Add("Flamestrike (single)");
+                spellList.Add("Blizzard");
+                spellList.Add("Cone of Cold");
+                if (calculationOptions.BlastWave == 1) spellList.Add("Blast Wave");
+                if (calculationOptions.DragonsBreath == 1) spellList.Add("Dragon's Breath");
+            }
 
-            int lpRows = 25;
+            int lpRows = 30;
             int colOffset = 6;
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
             double[,] lp = new double[lpRows + 1, lpCols + 1];
@@ -268,7 +284,7 @@ namespace Rawr.Mage
                     calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDuration * calculatedStats.WaterElementalDps;
             }
 
-            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time]
+            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time, aoe duration, flamestrike, cone of cold, blast wave, dragon's breath]
             double aplength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
             double ivlength = (1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 30f) / 180f)) * 20;
             double mflength = calculationOptions.MoltenFuryPercentage * calculatedStats.FightDuration;
@@ -376,6 +392,47 @@ namespace Rawr.Mage
                         lp[21, index] = ((statsList[buffset].Heroism && statsList[buffset].Trinket1) ? 1 : 0);
                         lp[22, index] = ((statsList[buffset].Heroism && statsList[buffset].Trinket2) ? 1 : 0);
                         lp[23, index] = ((statsList[buffset].Trinket1 && t1ismg) ? 1 / trinket1duration : 0) + ((statsList[buffset].Trinket2 && t2ismg) ? 1 / trinket2duration : 0);
+                        //aoe duration, flamestrike, cone of cold, blast wave, dragon's breath
+                        lp[25, index] = (s.AreaEffect ? 1 : 0);
+                        if (s.AreaEffect)
+                        {
+                            Flamestrike fs = s as Flamestrike;
+                            if (fs != null)
+                            {
+                                if (!fs.SpammedDot) lp[26, index] = fs.DotDuration / fs.CastTime;
+                            }
+                            else
+                            {
+                                lp[26, index] = -1;
+                            }
+                            ConeOfCold coc = s as ConeOfCold;
+                            if (coc != null)
+                            {
+                                lp[27, index] = (coc.Cooldown / coc.CastTime - 1);
+                            }
+                            else
+                            {
+                                lp[27, index] = -1;
+                            }
+                            BlastWave bw = s as BlastWave;
+                            if (bw != null)
+                            {
+                                lp[28, index] = (bw.Cooldown / bw.CastTime - 1);
+                            }
+                            else
+                            {
+                                lp[28, index] = -1;
+                            }
+                            DragonsBreath db = s as DragonsBreath;
+                            if (db != null)
+                            {
+                                lp[29, index] = (db.Cooldown / db.CastTime - 1);
+                            }
+                            else
+                            {
+                                lp[29, index] = -1;
+                            }
+                        }
                         lp[lpRows, index] = s.DamagePerSecond;
                     }
                     else
@@ -408,6 +465,7 @@ namespace Rawr.Mage
             if (heroismAvailable && trinket1Available) lp[21, lpCols] = trinket1duration;
             if (heroismAvailable && trinket2Available) lp[22, lpCols] = trinket2duration;
             lp[24, lpCols] = - (1 - float.Parse(character.CalculationOptions["DpsTime"])) * calculationOptions.FightDuration;
+            lp[25, lpCols] = calculationOptions.AoeDuration * calculationOptions.FightDuration;
 
             calculatedStats.Solution = LPSolveUnsafe(lp, lpRows, lpCols);
 

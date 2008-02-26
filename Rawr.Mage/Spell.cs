@@ -23,6 +23,8 @@ namespace Rawr.Mage
         public bool AffectedByFlameCap;
         public bool ABCycle;
 
+        public bool AreaEffect;
+
         public string Sequence;
         public bool Channeled;
         public float HitProcs;
@@ -34,7 +36,6 @@ namespace Rawr.Mage
     {
         public bool Instant;
         public bool Binary;
-        public bool AreaEffect;
         public int BaseCost;
         public int BaseRange;
         public float BaseCastTime;
@@ -44,12 +45,16 @@ namespace Rawr.Mage
         public float BaseMaxDamage;
         public float BasePeriodicDamage;
         public float SpellDamageCoefficient;
+        public float DotDamageCoefficient;
+        public float DotDuration;
+        public bool SpammedDot;
         public float TargetProcs;
+        public float AoeDamageCap;
 
-        public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float spellDamageCoefficient) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, spellDamageCoefficient) { }
-        public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, instant ? (1.5f / 3.5f) : (castTime / 3.5f)) { }
-        public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float hitProcs, float castProcs) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, hitProcs, castProcs, instant ? (1.5f / 3.5f) : (castTime / 3.5f)) { }
-        public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float hitProcs, float castProcs, float spellDamageCoefficient)
+        public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float spellDamageCoefficient) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, spellDamageCoefficient, 0, 0, false) { }
+        public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, instant ? (1.5f / 3.5f) : (castTime / 3.5f), 0, 0, false) { }
+        public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float hitProcs, float castProcs) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, hitProcs, castProcs, instant ? (1.5f / 3.5f) : (castTime / 3.5f), 0, 0, false) { }
+        public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float hitProcs, float castProcs, float spellDamageCoefficient, float dotDamageCoefficient, float dotDuration, bool spammedDot)
         {
             Name = name;
             Channeled = channeled;
@@ -68,6 +73,9 @@ namespace Rawr.Mage
             HitProcs = hitProcs;
             CastProcs = castProcs;
             TargetProcs = hitProcs;
+            DotDamageCoefficient = dotDamageCoefficient;
+            DotDuration = dotDuration;
+            SpammedDot = spammedDot;
         }
 
         public float CostModifier;
@@ -148,6 +156,23 @@ namespace Rawr.Mage
                     break;
             }
 
+            // do not count debuffs for aoe effects, can't assume it will be up on all
+            // do not include molten fury (molten fury relates to boss), instead amplify all by average
+            if (AreaEffect)
+            {
+                SpellModifier = (1 + 0.01f * calculations.CalculationOptions.ArcaneInstability) * (1 + 0.01f * calculations.CalculationOptions.PlayingWithFire);
+                if (calculations.ArcanePower)
+                {
+                    SpellModifier *= 1.3f;
+                }
+                if (calculations.CalculationOptions.MoltenFury > 0)
+                {
+                    SpellModifier *= (1 + 0.1f * calculations.CalculationOptions.MoltenFury * calculations.CalculationOptions.MoltenFuryPercentage);
+                }
+                if (MagicSchool == MagicSchool.Fire) SpellModifier *= (1 + 0.02f * calculations.CalculationOptions.FirePower);
+                if (MagicSchool == MagicSchool.Frost) SpellModifier *= (1 + 0.02f * calculations.CalculationOptions.PiercingIce);
+            }
+
             if (!ManualClearcasting && !ClearcastingAveraged)
             {
                 CritRate -= 0.01f * calculations.CalculationOptions.ArcanePotency; // replace averaged arcane potency with actual % chance
@@ -168,6 +193,7 @@ namespace Rawr.Mage
 
         protected void CalculateDerivedStats(Character character, CharacterCalculationsMage calculations)
         {
+            if (Instant) InterruptProtection = 1;
             if (calculations.IcyVeins) InterruptProtection = 1;
             float InterruptFactor = calculations.CalculationOptions.InterruptFrequency * Math.Max(0, 1 - InterruptProtection);
             CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
@@ -195,8 +221,19 @@ namespace Rawr.Mage
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f + SpellDamage;
             float critMultiplier = 1 + (CritBonus - 1) * Math.Max(0, CritRate - calculations.ResilienceCritRateReduction);
             float resistMultiplier = HitRate * PartialResistFactor;
-            // TODO dot scaling by spell damage
-            AverageDamage = (baseAverage * critMultiplier + BasePeriodicDamage) * SpellModifier * resistMultiplier;
+            int targets = 1;
+            if (AreaEffect) targets = calculations.CalculationOptions.AoeTargets;
+            AverageDamage = baseAverage * SpellModifier * targets * HitRate;
+            if (AreaEffect && AverageDamage > AoeDamageCap) AverageDamage = AoeDamageCap;
+            AverageDamage = AverageDamage * critMultiplier * PartialResistFactor;
+            if (SpammedDot)
+            {
+                AverageDamage += targets * (BasePeriodicDamage + DotDamageCoefficient * RawSpellDamage) * SpellModifier * resistMultiplier * CastTime / DotDuration;
+            }
+            else
+            {
+                AverageDamage += targets * (BasePeriodicDamage + DotDamageCoefficient * RawSpellDamage) * SpellModifier * resistMultiplier;
+            }
             DamagePerSecond = AverageDamage / CastTime;
 
             if (Name != "Lightning Bolt" && calculations.BasicStats.LightningCapacitorProc > 0)
@@ -240,7 +277,7 @@ namespace Rawr.Mage
     class Wand : BaseSpell
     {
         public Wand(Character character, CharacterCalculationsMage calculations, MagicSchool school, int minDamage, int maxDamage, float speed)
-            : base("Wand", false, false, false, false, 0, 30, 0, 0, school, minDamage, maxDamage, 0, 1, 0, 0)
+            : base("Wand", false, false, false, false, 0, 30, 0, 0, school, minDamage, maxDamage, 0, 1, 0, 0, 0, 0, false)
         {
             Calculate(character, calculations);
             CastTime = speed;
@@ -318,15 +355,11 @@ namespace Rawr.Mage
 
     class Flamestrike : BaseSpell
     {
-        public Flamestrike(Character character, CharacterCalculationsMage calculations)
-            : base("Flamestrike", false, false, false, true, 1175, 30, 3, 0, MagicSchool.Fire, 480, 585, 340, 0.83f)
-        {
-            Calculate(character, calculations);
-        }
-
-        public override void Calculate(Character character, CharacterCalculationsMage calculations)
+        public Flamestrike(Character character, CharacterCalculationsMage calculations, bool spammedDot)
+            : base("Flamestrike", false, false, false, true, 1175, 30, 3, 0, MagicSchool.Fire, 480, 585, 424, 1, 1, 0.2363f, 0.12f, 8f, spammedDot)
         {
             base.Calculate(character, calculations);
+            AoeDamageCap = 7830;
             CritRate += 0.05f * int.Parse(character.CalculationOptions["ImprovedFlamestrike"]);
             CalculateDerivedStats(character, calculations);
         }
@@ -377,12 +410,8 @@ namespace Rawr.Mage
             : base("Fireball", false, false, false, false, 425, 35, 3.5f, 0, MagicSchool.Fire, 649, 821, 84)
         {
             Calculate(character, calculations);
-        }
-
-
-        public override void Calculate(Character character, CharacterCalculationsMage calculations)
-        {
-            base.Calculate(character, calculations);
+            SpammedDot = true;
+            DotDuration = 8;
             CastTime = (BaseCastTime - 0.1f * calculations.CalculationOptions.ImprovedFireball) / calculations.CastingSpeed + calculations.Latency;
             SpellDamageCoefficient += 0.03f * calculations.CalculationOptions.EmpoweredFireball;
             SpellModifier *= (1 + calculations.BasicStats.BonusMageNukeMultiplier);
@@ -393,15 +422,10 @@ namespace Rawr.Mage
     class ConeOfCold : BaseSpell
     {
         public ConeOfCold(Character character, CharacterCalculationsMage calculations)
-            : base("Cone of Cold", false, true, true, true, 645, 0, 0, 10, MagicSchool.Frost, 418, 457, 0, 1.5f / 3.5f * 0.5f * 0.95f)
-        {
-            Calculate(character, calculations);
-        }
-
-
-        public override void Calculate(Character character, CharacterCalculationsMage calculations)
+            : base("Cone of Cold", false, true, true, true, 645, 0, 0, 10, MagicSchool.Frost, 418, 457, 0, 0.1357f)
         {
             base.Calculate(character, calculations);
+            AoeDamageCap = 6500;
             int ImprovedConeOfCold = int.Parse(character.CalculationOptions["ImprovedConeOfCold"]);
             SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0));
             CalculateDerivedStats(character, calculations);
@@ -510,13 +534,45 @@ namespace Rawr.Mage
         public ArcaneExplosion(Character character, CharacterCalculationsMage calculations)
             : base("Arcane Explosion", false, false, true, true, 545, 0, 0, 0, MagicSchool.Arcane, 377, 407, 0, 1.5f / 3.5f * 0.5f)
         {
-            Calculate(character, calculations);
-        }
-
-        public override void Calculate(Character character, CharacterCalculationsMage calculations)
-        {
             base.Calculate(character, calculations);
             CritRate += 0.02f * int.Parse(character.CalculationOptions["ArcaneImpact"]);
+            AoeDamageCap = 10180;
+            CalculateDerivedStats(character, calculations);
+        }
+    }
+
+    class BlastWave : BaseSpell
+    {
+        public BlastWave(Character character, CharacterCalculationsMage calculations)
+            : base("Blast Wave", false, false, true, true, 645, 0, 0, 30, MagicSchool.Fire, 616, 724, 0, 0.1357f)
+        {
+            base.Calculate(character, calculations);
+            AoeDamageCap = 9440;
+            CalculateDerivedStats(character, calculations);
+        }
+    }
+
+    class DragonsBreath : BaseSpell
+    {
+        public DragonsBreath(Character character, CharacterCalculationsMage calculations)
+            : base("Dragon's Breath", false, false, true, true, 700, 0, 0, 20, MagicSchool.Fire, 680, 790, 0, 0.1357f)
+        {
+            base.Calculate(character, calculations);
+            AoeDamageCap = 10100;
+            CalculateDerivedStats(character, calculations);
+        }
+    }
+
+    class Blizzard : BaseSpell
+    {
+        public Blizzard(Character character, CharacterCalculationsMage calculations)
+            : base("Blizzard", true, false, false, true, 1645, 0, 8, 0, MagicSchool.Frost, 1476, 1476, 0, 1.1429f)
+        {
+            base.Calculate(character, calculations);
+            CritBonus = 1;
+            CritRate = 0;
+            HitRate = 1;
+            AoeDamageCap = 28950;
             CalculateDerivedStats(character, calculations);
         }
     }
@@ -524,7 +580,7 @@ namespace Rawr.Mage
     class LightningBolt : BaseSpell
     {
         public LightningBolt(Character character, CharacterCalculationsMage calculations)
-            : base("Lightning Bolt", false, false, true, false, 0, 30, 0, 0, MagicSchool.Nature, 694, 806, 0, 0, 0, 0)
+            : base("Lightning Bolt", false, false, true, false, 0, 30, 0, 0, MagicSchool.Nature, 694, 806, 0, 0, 0, 0, 0, 0, false)
         {
             Calculate(character, calculations);
         }

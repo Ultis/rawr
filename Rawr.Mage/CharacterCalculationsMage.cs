@@ -28,6 +28,7 @@ namespace Rawr.Mage
         public float InterruptFrequency { get; set; }
         public bool JudgementOfWisdom { get; set; }
         public float EvocationWeapon { get; set; }
+        public float AoeDuration { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -59,6 +60,8 @@ namespace Rawr.Mage
         public int BurningSoul { get; set; }
         public int ImprovedArcaneMissiles { get; set; }
         public int WandSpecialization { get; set; }
+        public int BlastWave { get; set; }
+        public int DragonsBreath { get; set; }
 
         public CompiledCalculationOptions(Character character)
         {
@@ -83,6 +86,7 @@ namespace Rawr.Mage
             InterruptFrequency = float.Parse(character.CalculationOptions["InterruptFrequency"]);
             JudgementOfWisdom = character.ActiveBuffs.Contains("Judgement of Wisdom");
             EvocationWeapon = float.Parse(character.CalculationOptions["EvocationWeapon"]);
+            AoeDuration = float.Parse(character.CalculationOptions["AoeDuration"]);
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"]);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"]);
@@ -114,6 +118,8 @@ namespace Rawr.Mage
             BurningSoul = int.Parse(character.CalculationOptions["BurningSoul"]);
             ImprovedArcaneMissiles = int.Parse(character.CalculationOptions["ImprovedArcaneMissiles"]);
             WandSpecialization = int.Parse(character.CalculationOptions["WandSpecialization"]);
+            BlastWave = int.Parse(character.CalculationOptions["BlastWave"]);
+            DragonsBreath = int.Parse(character.CalculationOptions["DragonsBreath"]);
         }
     }
 
@@ -309,6 +315,27 @@ namespace Rawr.Mage
                 case "ABAM3ScCCAM":
                     s = new ABAM3ScCCAM(Character, this);
                     break;
+                case "Arcane Explosion":
+                    s = new ArcaneExplosion(Character, this);
+                    break;
+                case "Flamestrike (spammed)":
+                    s = new Flamestrike(Character, this, true);
+                    break;
+                case "Flamestrike (single)":
+                    s = new Flamestrike(Character, this, false);
+                    break;
+                case "Blizzard":
+                    s = new Blizzard(Character, this);
+                    break;
+                case "Blast Wave":
+                    s = new BlastWave(Character, this);
+                    break;
+                case "Dragon's Breath":
+                    s = new DragonsBreath(Character, this);
+                    break;
+                case "Cone of Cold":
+                    s = new ConeOfCold(Character, this);
+                    break;
             }
             if (s != null) Spells[spellName] = s;
 
@@ -344,7 +371,7 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM" };
+            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold" };
             foreach (string spell in spellList)
             {
                 Spell s = GetSpell(spell);
