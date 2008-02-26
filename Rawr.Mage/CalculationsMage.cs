@@ -8,6 +8,15 @@ namespace Rawr.Mage
     [System.ComponentModel.DisplayName("Mage")]
     class CalculationsMage : CalculationsBase
     {
+        public static void LoadRelevantItems()
+        {
+            int[] idlist = { 30735, 30725, 28515, 29240, 29255, 24267, 24263, 29241, 28799, 24257, 29242, 29258, 28517, 28670, 30050, 30531, 28797, 28804, 29076, 29986, 30064, 30206, 30020, 21870, 21869, 28404, 28405, 28402, 28409, 28411, 28410, 24256, 25854, 25855, 25857, 25856, 25858, 30680, 30205, 29080, 30668, 28507, 28477, 30079, 30673, 30763, 30764, 30761, 30762, 30532, 30207, 30734, 29078, 30675, 28654, 24260, 30210, 30024, 28726, 28980, 28981, 28982, 29001, 29002, 29003, 29918, 29122, 28565, 29079, 30684, 24258, 30056, 28602, 30196, 28766, 28585, 29257, 28379, 28378, 28570, 28653, 29369, 28780, 21863, 21864, 21865, 21846, 21847, 21848, 24266, 24262, 28594, 28744, 24255, 30067, 29077, 28586, 31340, 29177, 29349, 28762, 30061, 29172, 29922, 31319, 29997, 28516, 29383, 28530, 31338, 30059, 31321, 29381, 29352, 28830, 28789, 30049, 30619, 29270, 30099, 28649, 28346, 29387, 29119, 29370, 28734, 28781, 29273, 31339, 29368, 32649, 29123, 28730, 28745, 28528, 29386, 29272, 28245, 28244, 30008, 30022, 28727, 31746, 29379, 29367, 30109, 30052, 30738, 28753, 30083, 30667, 29384, 28757, 30666, 28579, 28674, 29269, 30629, 29126, 30720, 30028, 30626, 30834, 28675, 28510, 30620, 29271, 28603, 29347, 30007, 28785, 29181, 31326, 30627, 31113, 29277, 29278, 29281, 29285, 29286, 29282, 29287, 29279, 29283, 28509, 29359, 24557, 28633, 31334, 28658, 29355, 29988, 30021, 28783, 29350, 28673, 28320, 29982, 32089, 29972, 32239, 32343, 30894, 30872, 28792, 32587, 32586, 32270, 32247, 30913, 32256, 31056, 31055, 31058, 31059, 31057, 28793, 30037, 32655, 30038, 32541, 30107, 32757, 30884, 29992, 30015, 32374, 29303, 30870, 29987, 32349, 30888, 32338, 30916, 32327, 32047, 32048, 32049, 32050, 32051, 32962, 32055, 33056, 32799, 32811, 32787, 33067, 33065, 32807, 32820, 32795, 32525, 32483, 33054, 32331, 34073, 32488, 33494, 34049, 33192, 33304, 34162, 33357, 33285, 33453, 33497, 33489, 33584, 33588, 33591, 33293, 33500, 33586, 33766, 33291, 33829, 33466, 33317, 34066, 33757, 33758, 33759, 33760, 33761, 33764, 33853, 33920, 33921, 34577, 34579, 34540, 34182, 35326, 34557, 34574, 34447, 35321, 34810, 34607, 34808, 34406, 34405, 34386, 34399, 34610, 34678, 34393, 34366, 34364, 34470, 35320, 35319, 34347, 34837, 35700, 35703, 34889, 34919, 34937, 34938, 34918, 34917, 34936, 35290, 33140, 32204, 32225, 33133, 32207, 32215, 32210, 32202, 32218, 32224, 32196, 32201, 32203, 32221, 24047, 34220, 24065, 25890, 35503, 35318, 24050, 24056, 31861, 25901, 24037, 25893, 24059, 35315, 24066, 35316, 24030, 24035, 24039, 31867 };
+            foreach (int id in idlist)
+            {
+                Item.LoadFromId(id, true, "Batch Load");
+            }
+        }
+
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
@@ -271,7 +280,7 @@ namespace Rawr.Mage
                 if (character.ActiveBuffs.Contains("Winter's Chill")) spellHit += 0.1f;
                 float multiplier = hitRate;
                 if (character.ActiveBuffs.Contains("Curse of the Elements")) multiplier *= 1.1f;
-                if (character.ActiveBuffs.Contains("Curse of the Elements (Malediction)")) multiplier *= 1.13f;
+                if (character.ActiveBuffs.Contains("Improved Curse of the Elements")) multiplier *= 1.13f / 1.1f;
                 if (character.ActiveBuffs.Contains("Misery")) multiplier *= 1.05f;
                 float realResistance = float.Parse(character.CalculationOptions["FrostResist"]);
                 float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > 70) ? ((targetLevel - 70) * 0.02f) : 0f));
@@ -711,9 +720,9 @@ namespace Rawr.Mage
             int molten = 0;
             if (calculationOptions.MageArmor.Equals("Molten")) molten = 1;
 
-            float mindMasteryDamage = (0.05f * calculationOptions.MindMastery * stats.Intellect);
-            float improvedSpiritDamage = 0;
-            if (character.ActiveBuffs.Contains("Improved Divine Spirit")) improvedSpiritDamage = 0.1f * stats.Spirit;
+            stats.SpellDamageRating += stats.SpellDamageFromIntellectPercentage * stats.Intellect;
+            stats.SpellDamageRating += stats.SpellDamageFromSpiritPercentage * stats.Spirit;
+
             if (destructionPotion) stats.SpellDamageRating += 120;
             if (flameCap) stats.SpellFireDamageRating += 80;
 
@@ -733,11 +742,11 @@ namespace Rawr.Mage
             }
 
             calculatedStats.CastingSpeed = 1 + stats.SpellHasteRating / 995f * levelScalingFactor;
-            calculatedStats.ArcaneDamage = stats.SpellArcaneDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
-            calculatedStats.FireDamage = stats.SpellFireDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
-            calculatedStats.FrostDamage = stats.SpellFrostDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
-            calculatedStats.NatureDamage = /* stats.SpellNatureDamageRating + */ stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
-            calculatedStats.ShadowDamage = stats.SpellShadowDamageRating + stats.SpellDamageRating + mindMasteryDamage + improvedSpiritDamage;
+            calculatedStats.ArcaneDamage = stats.SpellArcaneDamageRating + stats.SpellDamageRating;
+            calculatedStats.FireDamage = stats.SpellFireDamageRating + stats.SpellDamageRating;
+            calculatedStats.FrostDamage = stats.SpellFrostDamageRating + stats.SpellDamageRating;
+            calculatedStats.NatureDamage = /* stats.SpellNatureDamageRating + */ stats.SpellDamageRating;
+            calculatedStats.ShadowDamage = stats.SpellShadowDamageRating + stats.SpellDamageRating;
 
             calculatedStats.SpellCrit = 0.01f * (stats.Intellect * 0.0125f + 0.9075f) + 0.01f * calculationOptions.ArcaneInstability + 0.01f * calculationOptions.ArcanePotency + stats.SpellCritRating / 1400f * levelScalingFactor + 0.03f * molten;
             if (destructionPotion) calculatedStats.SpellCrit += 0.02f;
@@ -998,6 +1007,8 @@ namespace Rawr.Mage
 
             statsTotal.Mp5 += float.Parse(character.CalculationOptions["ShadowPriest"]);
 
+            statsTotal.SpellDamageFromIntellectPercentage += 0.05f * int.Parse(character.CalculationOptions["MindMastery"]);
+
             return statsTotal;
         }
 
@@ -1136,7 +1147,7 @@ namespace Rawr.Mage
                 BonusFrostSpellPowerMultiplier = stats.BonusFrostSpellPowerMultiplier,
                 SpellFrostCritRating = stats.SpellFrostCritRating,
                 ArcaneBlastBonus = stats.ArcaneBlastBonus,
-                SpellDamageOnCritProc = stats.SpellDamageOnCritProc,
+                SpellDamageFor6SecOnCrit = stats.SpellDamageFor6SecOnCrit,
                 EvocationExtension = stats.EvocationExtension,
                 BonusMageNukeMultiplier = stats.BonusMageNukeMultiplier,
                 LightningCapacitorProc = stats.LightningCapacitorProc,
@@ -1147,19 +1158,16 @@ namespace Rawr.Mage
                 ManaRestorePerHit = stats.ManaRestorePerHit,
                 BonusManaGem = stats.BonusManaGem,
                 SpellDamageFor15SecOnManaGem = stats.SpellDamageFor15SecOnManaGem,
-                SpellDamageFor15SecOnHit_10_60 = stats.SpellDamageFor15SecOnHit_10_60
+                SpellDamageFor10SecOnHit_10_45 = stats.SpellDamageFor10SecOnHit_10_45,
+                SpellDamageFromIntellectPercentage = stats.SpellDamageFromIntellectPercentage,
+                SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
+                SpellDamageFor10SecOnResist = stats.SpellDamageFor10SecOnResist
             };
-        }
-
-        private float SumAllStats(Stats stats)
-        {
-            return stats.Agility + stats.AllResist + stats.ArcaneBlastBonus + stats.ArcaneResistance + stats.Armor + stats.ArmorPenetration + stats.AttackPower + stats.BlockRating + stats.Bloodlust + stats.BloodlustProc + stats.BonusAgilityMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.BonusArmorMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.BonusIntellectMultiplier + stats.BonusMageNukeMultiplier + stats.BonusMangleDamage + stats.BonusRipDamageMultiplier + stats.BonusRipDamagePerCPPerTick + stats.BonusShadowSpellPowerMultiplier + stats.BonusShredDamage + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.DefenseRating + stats.DodgeRating + stats.DrumsOfBattle + stats.DrumsOfWar + stats.EvocationExtension + stats.ExpertiseRating + stats.ExposeWeakness + stats.FireResistance + stats.FrostResistance + stats.HasteRating + stats.Health + stats.HitRating + stats.Hp5 + stats.Intellect + stats.LightningCapacitorProc + stats.Mana + stats.ManaRestorePerCast + stats.ManaRestorePerHit + stats.MangleCostReduction + stats.Miss + stats.Mp5 + stats.Mp5OnCastFor20SecOnUse2Min + stats.NatureResistance + stats.ParryRating + stats.Resilience + stats.ShadowResistance + stats.SpellArcaneDamageRating + stats.SpellCombatManaRegeneration + stats.SpellCritRating + stats.SpellDamageFor20SecOnUse2Min + stats.SpellDamageOnCritProc + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellFrostCritRating + stats.SpellFrostDamageRating + stats.SpellHasteFor20SecOnUse2Min + stats.SpellHasteRating + stats.SpellHitRating + stats.SpellPenetration + stats.SpellShadowDamageRating + stats.Spirit + stats.Stamina + stats.Stamina + stats.Strength + stats.TerrorProc + stats.WeaponDamage;
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            //return (SumAllStats(stats) == 0) || (stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.Stamina + stats.Intellect + stats.Spirit + stats.Health + stats.Mp5 + stats.Resilience + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageOnCritProc + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor15SecOnHit_10_60) > 0;
-            return (SumAllStats(stats) == 0) || (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageOnCritProc + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor15SecOnHit_10_60) > 0;
+            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist) > 0;
         }
     }
 }

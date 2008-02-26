@@ -604,6 +604,18 @@ namespace Rawr
                                     spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                                     stats.SpellFireDamageRating += int.Parse(spellDesc);
                                 }
+                                else if (spellDesc.StartsWith("Increases damage done by Frost spells and effects by up to"))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases damage done by Frost spells and effects by up to".Length);
+                                    spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
+                                    stats.SpellFrostDamageRating += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Increases damage done by Arcane spells and effects by up to"))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases damage done by Arcane spells and effects by up to".Length);
+                                    spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
+                                    stats.SpellArcaneDamageRating += int.Parse(spellDesc);
+                                }
                                 else if (spellDesc.StartsWith("Improves spell haste rating by"))
                                 {
                                     spellDesc = spellDesc.Substring("Improves spell haste rating by".Length);
@@ -615,6 +627,12 @@ namespace Rawr
                                     spellDesc = spellDesc.Substring("Improves spell critical strike rating by".Length);
                                     spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                                     stats.SpellCritRating += int.Parse(spellDesc);
+                                }
+                                else if (spellDesc.StartsWith("Increases your spell penetration by"))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases your spell penetration by".Length);
+                                    spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
+                                    stats.SpellPenetration += int.Parse(spellDesc);
                                 }
                                 // Restores 7 mana per 5 sec.
                                 else if (spellDesc.StartsWith("Restores "))
@@ -632,6 +650,28 @@ namespace Rawr
                                     stats.BonusManaGem += 0.25f;
                                     stats.SpellDamageFor15SecOnManaGem += 225;
                                 }
+                                else if (spellDesc.StartsWith("Grants 170 increased spell damage for 10 sec when one of your spells is resisted."))
+                                {
+                                    stats.SpellDamageFor10SecOnResist += 170;
+                                }
+                                else if (spellDesc.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to "))
+                                {
+                                    // Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to 130 for 10 sec.
+                                    spellDesc = spellDesc.Substring("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to ".Length);
+                                    float value = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" for")));
+                                    spellDesc = spellDesc.Substring(spellDesc.IndexOf(" for") + " for ".Length);
+                                    int duration = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" ")));
+
+                                    switch (duration)
+                                    {
+                                        case 10:
+                                            if (name == "Robe of the Elder Scribes")
+                                            {
+                                                stats.SpellDamageFor10SecOnHit_10_45 += value;
+                                            }
+                                            break;
+                                    }
+                                }
                                 else if (spellDesc.StartsWith("Your offensive spells have a chance on hit to increase your spell damage by "))
                                 {
                                     // Your offensive spells have a chance on hit to increase your spell damage by 95 for 10 secs.
@@ -645,8 +685,8 @@ namespace Rawr
                                         case 10:
                                             if (name == "Band of the Eternal Sage")
                                             {
-                                                // wrong tooltip, it is 15 sec
-                                                stats.SpellDamageFor15SecOnHit_10_60 += value;
+                                                // Fixed in 2.4 to be 10 sec instead of 15
+                                                stats.SpellDamageFor10SecOnHit_10_45 += value;
                                             }
                                             break;
                                     }

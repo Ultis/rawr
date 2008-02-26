@@ -124,7 +124,7 @@ namespace Rawr
                         _allBuffs.Add(new Buff() { Name = "Divine Spirit", Category = BuffCategory.ClassBuffs,
                             Stats = new Stats() { Spirit = 50 }});
                         _allBuffs.Add(new Buff() { Name = "Improved Divine Spirit", Category = BuffCategory.ClassBuffs,
-                            Stats = new Stats() { }, RequiredBuff = "Divine Spirit"});
+                            Stats = new Stats() { SpellDamageFromSpiritPercentage = 0.1f }, RequiredBuff = "Divine Spirit"});
 						_allBuffs.Add(new Buff() { Name = "Mark of the Wild", Category = BuffCategory.ClassBuffs,
 							Stats = new Stats() { Armor = 340, Strength = 14, Agility = 14, Stamina = 14, Intellect = 14, Spirit = 14, AllResist=25 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Mark of the Wild", Category = BuffCategory.ClassBuffs,
@@ -454,7 +454,7 @@ namespace Rawr
                         {
                             Name = "Tirisfal 4 Piece Bonus",
                             Category = BuffCategory.SetBonuses,
-                            Stats = new Stats() { SpellDamageOnCritProc = 70f },
+                            Stats = new Stats() { SpellDamageFor6SecOnCrit = 70f },
                             SetName = "Tirisfal Regalia",
                             SetThreshold = 4
                         });
@@ -472,6 +472,14 @@ namespace Rawr
                             Category = BuffCategory.SetBonuses,
                             Stats = new Stats() { BonusMageNukeMultiplier = 0.05f },
                             SetName = "Tempest Regalia",
+                            SetThreshold = 4
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Spellfire 3 Piece Bonus",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { SpellDamageFromIntellectPercentage = 0.07f },
+                            SetName = "Wrath of Spellfire",
                             SetThreshold = 4
                         });
 

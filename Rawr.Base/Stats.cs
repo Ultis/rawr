@@ -206,8 +206,16 @@ namespace Rawr
 
         public float ArcaneBlastBonus { get; set; }
 
+        public float SpellDamageFromIntellectPercentage { get; set; }
+
+        public float SpellDamageFromSpiritPercentage { get; set; }
+
         [DisplayName("Spell Damage Increase for 6 sec on Crit")]
-        public float SpellDamageOnCritProc { get; set; }
+        public float SpellDamageFor6SecOnCrit { get; set; }
+
+        [DisplayName("Spell Damage (10 sec/Resist)")]
+        [Category("Equipment Procs")]
+        public float SpellDamageFor10SecOnResist { get; set; }
 
         // trinket effect, does not sum up over gear, 2 trinkets with this effect is not equivalent to 1 trinket with double effect
         [DisplayName("Spell Damage (20 sec/2 min)")]
@@ -230,9 +238,9 @@ namespace Rawr
         public float SpellDamageFor15SecOnManaGem { get; set; }
 
         // 10% change, 60 sec internal cooldown
-        [DisplayName("Spell Damage (15 sec)")]
+        [DisplayName("Spell Damage (10 sec)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor15SecOnHit_10_60 { get; set; }
+        public float SpellDamageFor10SecOnHit_10_45 { get; set; }
 
         public float EvocationExtension { get; set; }
 
@@ -387,13 +395,16 @@ namespace Rawr
                 Mana = a.Mana + b.Mana,
                 LightningCapacitorProc = a.LightningCapacitorProc + b.LightningCapacitorProc,
                 ArcaneBlastBonus = a.ArcaneBlastBonus + b.ArcaneBlastBonus,
-                SpellDamageOnCritProc = a.SpellDamageOnCritProc + b.SpellDamageOnCritProc,
+                SpellDamageFor6SecOnCrit = a.SpellDamageFor6SecOnCrit + b.SpellDamageFor6SecOnCrit,
                 EvocationExtension = a.EvocationExtension + b.EvocationExtension,
                 BonusMageNukeMultiplier = (1f + a.BonusMageNukeMultiplier) * (1f + b.BonusMageNukeMultiplier) - 1f,
                 ManaRestorePerHit = a.ManaRestorePerHit + b.ManaRestorePerHit,
                 ManaRestorePerCast = a.ManaRestorePerCast + b.ManaRestorePerCast,
                 BonusManaGem = a.BonusManaGem + b.BonusManaGem,
-                SpellDamageFor15SecOnHit_10_60 = a.SpellDamageFor15SecOnHit_10_60 + b.SpellDamageFor15SecOnHit_10_60,
+                SpellDamageFor10SecOnHit_10_45 = a.SpellDamageFor10SecOnHit_10_45 + b.SpellDamageFor10SecOnHit_10_45,
+                SpellDamageFromIntellectPercentage = a.SpellDamageFromIntellectPercentage + b.SpellDamageFromIntellectPercentage,
+                SpellDamageFromSpiritPercentage = a.SpellDamageFromSpiritPercentage + b.SpellDamageFromSpiritPercentage,
+                SpellDamageFor10SecOnResist = a.SpellDamageFor10SecOnResist + b.SpellDamageFor10SecOnResist,
                 SpellCombatManaRegeneration = a.SpellCombatManaRegeneration + b.SpellCombatManaRegeneration
 			};
 		}
