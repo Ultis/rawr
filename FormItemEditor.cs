@@ -261,9 +261,12 @@ namespace Rawr
 		private void buttonDelete_Click(object sender, EventArgs e)
 		{
 			_changingItemCache = true;
-			ItemCache.DeleteItem(listViewItems.SelectedItems[0].Tag as Item);
-			listViewItems.Items.Remove(listViewItems.SelectedItems[0]);
-			listViewItems.SelectedIndices.Add(0);
+            if (listViewItems.SelectedItems.Count > 0)
+            {
+                ItemCache.DeleteItem(listViewItems.SelectedItems[0].Tag as Item);
+                listViewItems.Items.Remove(listViewItems.SelectedItems[0]);
+                if (listViewItems.Items.Count > 0) listViewItems.SelectedIndices.Add(0);
+            }
 			_changingItemCache = false;
 		}
 
