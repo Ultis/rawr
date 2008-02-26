@@ -19,6 +19,7 @@ namespace Rawr
 			{
 				if (_selectedItem != null)
 				{
+
 					Item oldItem = _selectedItem.Tag as Item;
 					_selectedItem.Text = oldItem.Name;
 					oldItem.IdsChanged -= new EventHandler(Item_IdsChanged);
@@ -82,9 +83,14 @@ namespace Rawr
                     }
                     else
                     {
-
                         comboBoxBonus1.SelectedIndex = comboBoxBonus1.Items.IndexOf(Extensions.DisplayName(socketBonuses.Current.Key));
                         numericUpDownBonus1.Value = (decimal)socketBonuses.Current.Value;
+
+                        for (int i = 0; i < numericUpDownBonus1.DataBindings.Count; i++)
+                        {
+                            numericUpDownBonus1.DataBindings[i].WriteValue();
+                        }
+
 /*
  // if there is ever more than one socket
                         if (!socketBonuses.MoveNext())
@@ -144,7 +150,7 @@ namespace Rawr
 		private bool _changingItemCache = false;
 		private void ItemCache_ItemsChanged(object sender, EventArgs e)
 		{
-			if (!_changingItemCache)
+			if (!_changingItemCache && SelectedItem != null)
 			{
 				Item selectedItem = SelectedItem.Tag as Item;
 				LoadItems();
@@ -240,6 +246,7 @@ namespace Rawr
                         SelectItem(newItem, true);
 					}
 				}
+                if(newItem != null)
 				{
 					ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
 					newLvi.Tag = newItem;
