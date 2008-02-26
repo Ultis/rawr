@@ -723,6 +723,7 @@ namespace Rawr
 									case "Spell Crit Rating":
 									case "Spell Critical":
 									case "Spell Critical Rating":
+                                    case "Spell Critical Strike Rating":
 										sockets.Stats.SpellCritRating = socketBonusValue;
                                         break;
                                     case "Spell Haste Rating":
