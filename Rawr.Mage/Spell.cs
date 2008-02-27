@@ -201,21 +201,31 @@ namespace Rawr.Mage
         protected void CalculateDerivedStats(Character character, CharacterCalculationsMage calculations)
         {
             CastingSpeed = calculations.CastingSpeed;
-            CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
 
             if (Instant) InterruptProtection = 1;
             if (calculations.IcyVeins) InterruptProtection = 1;
             float InterruptFactor = calculations.CalculationOptions.InterruptFrequency * Math.Max(0, 1 - InterruptProtection);
 
-            GlobalCooldown = calculations.GlobalCooldown;
+            float Haste = calculations.BasicStats.SpellHasteRating;
+            float levelScalingFactor = (1 - (70 - 60) / 82f * 3);
+
+            // TODO consider converting to discrete model for procs
+
+            if (calculations.BasicStats.SpellHasteFor6SecOnCast_15_45 > 0 && CastProcs > 0)
+            {
+                CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
+                Haste += calculations.BasicStats.SpellHasteFor6SecOnCast_15_45 * 6f / (45f + CastTime / CastProcs / 0.15f);
+                CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
+            }
+
+            GlobalCooldown = Math.Max(1f, 1.5f / CastingSpeed);
+            CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
             CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
             if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
 
             if (calculations.BasicStats.SpellHasteFor5SecOnCrit_50 > 0)
             {
-                float rawHaste = calculations.BasicStats.SpellHasteRating;
-                float Haste = rawHaste;
-                float levelScalingFactor = (1 - (70 - 60) / 82f * 3);
+                float rawHaste = Haste;
 
                 // 1st order approximation
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
@@ -308,7 +318,7 @@ namespace Rawr.Mage
 
             if (calculations.Mp5OnCastFor20Sec > 0 && CastProcs > 0)
             {
-                float totalMana = calculations.Mp5OnCastFor20Sec / 5f / CastTime * 0.5f * (20 - CastTime / CastProcs / 2f) * (20 - CastTime / CastProcs / 2f);
+                float totalMana = calculations.Mp5OnCastFor20Sec / 5f / CastTime * 0.5f * (20 - CastTime / HitProcs / 2f) * (20 - CastTime / HitProcs / 2f);
                 ManaRegenPerSecond += totalMana / 20f;
             }
         }
@@ -509,7 +519,7 @@ namespace Rawr.Mage
     class ArcaneMissiles : BaseSpell
     {
         public ArcaneMissiles(Character character, CharacterCalculationsMage calculations, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing)
-            : base("Arcane Missiles", true, false, false, false, 740, 30, 5, 0, MagicSchool.Arcane, 264 * 5, 265 * 5, 0, 5, 1)
+            : base("Arcane Missiles", true, false, false, false, 740, 30, 5, 0, MagicSchool.Arcane, 264 * 5, 265 * 5, 0, 5, 6)
         {
             ManualClearcasting = true;
             ClearcastingActive = clearcastingActive;

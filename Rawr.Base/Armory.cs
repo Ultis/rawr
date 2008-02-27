@@ -825,7 +825,11 @@ namespace Rawr
                                 {
                                     stats.ManaRestorePerCast = 15; // IED
                                 }
-								try
+                                else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
+                                {
+                                    stats.SpellHasteFor6SecOnCast_15_45 = 320; // MSD changed in 2.4
+                                }
+                                try
 								{
 									int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
 									switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1))
