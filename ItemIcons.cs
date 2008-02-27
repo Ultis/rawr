@@ -166,7 +166,7 @@ namespace Rawr
                     client.Proxy = HttpWebRequest.DefaultWebProxy;
                     client.Proxy.Credentials = CredentialCache.DefaultCredentials;
                 }
-                client.DownloadFile("http://armory.worldofwarcraft.com/images/icons/64x64/" + iconPath + ".jpg",
+                client.DownloadFile("http://www.wowarmory.com/images/icons/64x64/" + iconPath + ".jpg",
                                     localPath);
             }
             catch (Exception ex)
@@ -176,7 +176,7 @@ namespace Rawr
                     _proxyRequiresAuthentication = true;
                     client.Proxy = HttpWebRequest.DefaultWebProxy;
                     client.Proxy.Credentials = CredentialCache.DefaultCredentials;
-                    client.DownloadFile("http://armory.worldofwarcraft.com/images/icons/64x64/" + iconPath + ".jpg",
+					client.DownloadFile("http://www.wowarmory.com/images/icons/64x64/" + iconPath + ".jpg",
                                         localPath);
                 }
                 else
@@ -184,7 +184,7 @@ namespace Rawr
                     MessageBox.Show("Rawr encountered an error getting Image from Armory: " + localPath +
                                     ". Please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" +
                                     ex.Message + "\r\n\r\n" + ex.StackTrace);
-                    client.DownloadFile("http://armory.worldofwarcraft.com/images/icons/64x64/temp.jpg", localPath);
+					client.DownloadFile("http://www.wowarmory.com/images/icons/64x64/temp.jpg", localPath);
                 }
             }
         }
