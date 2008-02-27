@@ -213,6 +213,10 @@ namespace Rawr
         [DisplayName("Spell Damage Increase for 6 sec on Crit")]
         public float SpellDamageFor6SecOnCrit { get; set; }
 
+        [DisplayName("Spell Haste (50% 5 sec/Crit)")]
+        [Category("Equipment Procs")]
+        public float SpellHasteFor5SecOnCrit_50 { get; set; }
+
         [DisplayName("Spell Damage (10 sec/Resist)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor10SecOnResist { get; set; }
@@ -221,6 +225,10 @@ namespace Rawr
         [DisplayName("Spell Damage (20 sec/2 min)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor20SecOnUse2Min { get; set; }
+
+        [DisplayName("Spell Damage (15 sec/1.5 min)")]
+        [Category("Equipment Procs")]
+        public float SpellDamageFor15SecOnUse90Sec { get; set; }
 
         [DisplayName("Spell Haste (20 sec/2 min)")]
         [Category("Equipment Procs")]
@@ -237,10 +245,15 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float SpellDamageFor15SecOnManaGem { get; set; }
 
-        // 10% change, 60 sec internal cooldown
+        // 10% change, 45 sec internal cooldown
         [DisplayName("Spell Damage (10 sec)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor10SecOnHit_10_45 { get; set; }
+
+        // 20% change, 45 sec internal cooldown
+        [DisplayName("Spell Damage (15 sec)")]
+        [Category("Equipment Procs")]
+        public float SpellDamageFor15SecOnCrit_20_45 { get; set; }
 
         public float EvocationExtension { get; set; }
 
@@ -405,7 +418,9 @@ namespace Rawr
                 SpellDamageFromIntellectPercentage = a.SpellDamageFromIntellectPercentage + b.SpellDamageFromIntellectPercentage,
                 SpellDamageFromSpiritPercentage = a.SpellDamageFromSpiritPercentage + b.SpellDamageFromSpiritPercentage,
                 SpellDamageFor10SecOnResist = a.SpellDamageFor10SecOnResist + b.SpellDamageFor10SecOnResist,
-                SpellCombatManaRegeneration = a.SpellCombatManaRegeneration + b.SpellCombatManaRegeneration
+                SpellDamageFor15SecOnCrit_20_45 = a.SpellDamageFor15SecOnCrit_20_45 + b.SpellDamageFor15SecOnCrit_20_45,
+                SpellCombatManaRegeneration = a.SpellCombatManaRegeneration + b.SpellCombatManaRegeneration,
+                SpellHasteFor5SecOnCrit_50 = a.SpellHasteFor5SecOnCrit_50 + b.SpellHasteFor5SecOnCrit_50
 			};
 		}
 

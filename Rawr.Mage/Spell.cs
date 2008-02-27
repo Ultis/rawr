@@ -84,6 +84,8 @@ namespace Rawr.Mage
         public float CritRate;
         public float CritBonus;
         public float HitRate;
+        public float CastingSpeed;
+        public float GlobalCooldown;
         public float PartialResistFactor;
         public float RawSpellDamage;
         public float SpellDamage;
@@ -109,8 +111,6 @@ namespace Rawr.Mage
             if (calculations.ArcanePower) CostModifier += 0.3f;
             if (MagicSchool == MagicSchool.Fire) AffectedByFlameCap = true;
             if (MagicSchool == MagicSchool.Fire) InterruptProtection += 0.35f * calculations.CalculationOptions.BurningSoul;
-
-            CastTime = BaseCastTime / calculations.CastingSpeed + calculations.Latency;
 
             switch (MagicSchool)
             {
@@ -156,6 +156,8 @@ namespace Rawr.Mage
                     break;
             }
 
+            int targetLevel = AreaEffect ? calculations.CalculationOptions.AoeTargetLevel : calculations.CalculationOptions.TargetLevel;
+
             // do not count debuffs for aoe effects, can't assume it will be up on all
             // do not include molten fury (molten fury relates to boss), instead amplify all by average
             if (AreaEffect)
@@ -171,6 +173,12 @@ namespace Rawr.Mage
                 }
                 if (MagicSchool == MagicSchool.Fire) SpellModifier *= (1 + 0.02f * calculations.CalculationOptions.FirePower);
                 if (MagicSchool == MagicSchool.Frost) SpellModifier *= (1 + 0.02f * calculations.CalculationOptions.PiercingIce);
+
+                if (MagicSchool == MagicSchool.Arcane) HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit + 0.02f * calculations.CalculationOptions.ArcaneFocus);
+                if (MagicSchool == MagicSchool.Fire) HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit + 0.01f * calculations.CalculationOptions.ElementalPrecision);
+                if (MagicSchool == MagicSchool.Frost) HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit + 0.01f * calculations.CalculationOptions.ElementalPrecision);
+                if (MagicSchool == MagicSchool.Nature) HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit);
+                if (MagicSchool == MagicSchool.Shadow) HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit);
             }
 
             if (!ManualClearcasting && !ClearcastingAveraged)
@@ -179,7 +187,6 @@ namespace Rawr.Mage
                 if (ClearcastingActive) CritRate += 0.1f * calculations.CalculationOptions.ArcanePotency;
             }
 
-            int targetLevel = calculations.CalculationOptions.TargetLevel;
             PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - calculations.BasicStats.SpellPenetration / 350f * 0.75f) - ((targetLevel > 70 && !Binary) ? ((targetLevel - 70) * 0.02f) : 0f));
         }
 
@@ -193,11 +200,42 @@ namespace Rawr.Mage
 
         protected void CalculateDerivedStats(Character character, CharacterCalculationsMage calculations)
         {
+            CastingSpeed = calculations.CastingSpeed;
+            CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
+
             if (Instant) InterruptProtection = 1;
             if (calculations.IcyVeins) InterruptProtection = 1;
             float InterruptFactor = calculations.CalculationOptions.InterruptFrequency * Math.Max(0, 1 - InterruptProtection);
+
+            GlobalCooldown = calculations.GlobalCooldown;
             CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
-            if (CastTime < calculations.GlobalCooldown + calculations.Latency) CastTime = calculations.GlobalCooldown + calculations.Latency;
+            if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
+
+            if (calculations.BasicStats.SpellHasteFor5SecOnCrit_50 > 0)
+            {
+                float rawHaste = calculations.BasicStats.SpellHasteRating;
+                float Haste = rawHaste;
+                float levelScalingFactor = (1 - (70 - 60) / 82f * 3);
+
+                // 1st order approximation
+                CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
+                Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
+                CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
+                GlobalCooldown = Math.Max(1f, 1.5f / CastingSpeed);
+                CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
+                CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
+                if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
+
+                // 2nd order approximation
+                CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
+                Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
+                CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
+                GlobalCooldown = Math.Max(1f, 1.5f / CastingSpeed);
+                CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
+                CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
+                if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
+            }
+
             Cost = BaseCost * CostModifier;
 
             CritRate = Math.Min(1, CritRate);
@@ -217,6 +255,7 @@ namespace Rawr.Mage
             if (calculations.BasicStats.SpellDamageFor6SecOnCrit > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor6SecOnCrit * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
             if (calculations.BasicStats.SpellDamageFor10SecOnHit_10_45 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
             if (calculations.BasicStats.SpellDamageFor10SecOnResist > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnResist * ProcBuffUp(1 - (float)Math.Pow(HitRate, HitProcs), 10, CastTime);
+            if (calculations.BasicStats.SpellDamageFor15SecOnCrit_20_45 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor15SecOnCrit_20_45 * 15f / (45f + CastTime / HitProcs / 0.2f / CritRate);
 
             SpellDamage = RawSpellDamage * SpellDamageCoefficient;
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f + SpellDamage;
@@ -395,7 +434,7 @@ namespace Rawr.Mage
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             base.Calculate(character, calculations);
-            CastTime = (BaseCastTime - 0.1f * calculations.CalculationOptions.ImprovedFrostbolt) / calculations.CastingSpeed + calculations.Latency;
+            BaseCastTime -= 0.1f * calculations.CalculationOptions.ImprovedFrostbolt;
             CritRate += 0.01f * calculations.CalculationOptions.EmpoweredFrostbolt;
             SpellDamageCoefficient += 0.02f * calculations.CalculationOptions.EmpoweredFrostbolt;
             int targetLevel = calculations.CalculationOptions.TargetLevel;
@@ -413,7 +452,7 @@ namespace Rawr.Mage
             Calculate(character, calculations);
             SpammedDot = true;
             DotDuration = 8;
-            CastTime = (BaseCastTime - 0.1f * calculations.CalculationOptions.ImprovedFireball) / calculations.CastingSpeed + calculations.Latency;
+            BaseCastTime -= 0.1f * calculations.CalculationOptions.ImprovedFireball;
             SpellDamageCoefficient += 0.03f * calculations.CalculationOptions.EmpoweredFireball;
             SpellModifier *= (1 + calculations.BasicStats.BonusMageNukeMultiplier);
             CalculateDerivedStats(character, calculations);
@@ -459,7 +498,7 @@ namespace Rawr.Mage
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             base.Calculate(character, calculations);
-            CastTime = (BaseCastTime - timeDebuff / 3f) / calculations.CastingSpeed + calculations.Latency;
+            BaseCastTime -= timeDebuff / 3f;
             CostModifier += 0.75f * costDebuff + calculations.BasicStats.ArcaneBlastBonus;
             SpellModifier *= (1 + calculations.BasicStats.ArcaneBlastBonus);
             CritRate += 0.02f * calculations.CalculationOptions.ArcaneImpact;

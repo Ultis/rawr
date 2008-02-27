@@ -101,7 +101,7 @@ namespace Rawr.Mage
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Mage Armor", "Talents (per talent point)" };
+                    _customChartNames = new string[] { "Mage Armor", "Talents (per talent point)", "Talent Specs" };
                 return _customChartNames;
             }
         }
@@ -158,7 +158,7 @@ namespace Rawr.Mage
                         {
                             if ((calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1))
                             {
-                                if (!(trinket1 == 0 && trinket2 == 0)) // only leave through trinkets that can stack
+                                if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
                                 {
                                     statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, character, additionalItem, arcanePower, moltenFury, icyVeins, heroism, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0));
                                 }
@@ -172,7 +172,7 @@ namespace Rawr.Mage
         private bool IsItemActivatable(Item item)
         {
             if (item == null) return false;
-            return (item.Stats.SpellDamageFor20SecOnUse2Min + item.Stats.SpellHasteFor20SecOnUse2Min + item.Stats.Mp5OnCastFor20SecOnUse2Min + item.Stats.SpellDamageFor15SecOnManaGem > 0);
+            return (item.Stats.SpellDamageFor20SecOnUse2Min + item.Stats.SpellHasteFor20SecOnUse2Min + item.Stats.Mp5OnCastFor20SecOnUse2Min + item.Stats.SpellDamageFor15SecOnManaGem + item.Stats.SpellDamageFor15SecOnUse90Sec > 0);
         }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
@@ -239,6 +239,11 @@ namespace Rawr.Mage
                     trinket1cooldown = 120;
                     t1ismg = true;
                 }
+                if (s.SpellDamageFor15SecOnUse90Sec > 0)
+                {
+                    trinket1duration = 15;
+                    trinket1cooldown = 90;
+                }
                 t1length = (1 + (int)((calculatedStats.FightDuration - trinket1duration) / trinket1cooldown)) * trinket1duration;
             }
             if (trinket2Available)
@@ -254,6 +259,11 @@ namespace Rawr.Mage
                     trinket2duration = 15;
                     trinket2cooldown = 120;
                     t2ismg = true;
+                }
+                if (s.SpellDamageFor15SecOnUse90Sec > 0)
+                {
+                    trinket2duration = 15;
+                    trinket2cooldown = 90;
                 }
                 t2length = (1 + (int)((calculatedStats.FightDuration - trinket2duration) / trinket2cooldown)) * trinket2duration;
             }
@@ -367,7 +377,7 @@ namespace Rawr.Mage
             lp[1, 4] = 1;
             lp[4, 4] = 1;
             lp[14, 4] = 1;
-            lp[23, 4] = -1;
+            lp[23, 4] = - 1 / calculatedStats.ManaPotionTime;
             lp[lpRows, 4] = 0;
             // spells
             for (int buffset = 0; buffset < statsList.Count; buffset++)
@@ -729,14 +739,14 @@ namespace Rawr.Mage
             if (trinket1)
             {
                 Stats t = character.Trinket1.Stats;
-                stats.SpellDamageRating += t.SpellDamageFor20SecOnUse2Min + t.SpellDamageFor15SecOnManaGem;
+                stats.SpellDamageRating += t.SpellDamageFor20SecOnUse2Min + t.SpellDamageFor15SecOnManaGem + t.SpellDamageFor15SecOnUse90Sec;
                 stats.SpellHasteRating += t.SpellHasteFor20SecOnUse2Min;
                 calculatedStats.Mp5OnCastFor20Sec = t.Mp5OnCastFor20SecOnUse2Min;
             }
             if (trinket2)
             {
                 Stats t = character.Trinket2.Stats;
-                stats.SpellDamageRating += t.SpellDamageFor20SecOnUse2Min + t.SpellDamageFor15SecOnManaGem;
+                stats.SpellDamageRating += t.SpellDamageFor20SecOnUse2Min + t.SpellDamageFor15SecOnManaGem + t.SpellDamageFor15SecOnUse90Sec;
                 stats.SpellHasteRating += t.SpellHasteFor20SecOnUse2Min;
                 calculatedStats.Mp5OnCastFor20Sec = t.Mp5OnCastFor20SecOnUse2Min;
             }
@@ -1020,25 +1030,28 @@ namespace Rawr.Mage
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+            CharacterCalculationsMage baseCalc, currentCalc, calc;
+            ComparisonCalculationBase comparison;
+            float[] subPoints;
 
             switch (chartName)
             {
                 case "Mage Armor":
                     string currentArmor = character.CalculationOptions["MageArmor"];
                     character.CalculationOptions["MageArmor"] = "None";
-                    CharacterCalculationsMage baseCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
 
                     foreach (string armor in ArmorList)
                     {
                         character.CalculationOptions["MageArmor"] = armor;
-                        CharacterCalculationsMage calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                        calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
-                        ComparisonCalculationBase comparison = CreateNewComparisonCalculation();
+                        comparison = CreateNewComparisonCalculation();
                         comparison.Name = armor;
                         comparison.Equipped = armor == currentArmor;
                         comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                        float[] subPoints = new float[calc.SubPoints.Length];
+                        subPoints = new float[calc.SubPoints.Length];
                         for (int i = 0; i < calc.SubPoints.Length; i++)
                         {
                             subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
@@ -1052,7 +1065,7 @@ namespace Rawr.Mage
 
                     return comparisonList.ToArray();
                 case "Talents (per talent point)":
-                    CharacterCalculationsMage currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                    currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
                     for (int index = 0; index < TalentList.Length; index++ )
                     {
@@ -1063,13 +1076,13 @@ namespace Rawr.Mage
                         if (currentPoints > 0)
                         {
                             character.CalculationOptions[talent] = "0";
-                            CharacterCalculationsMage calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                            calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
-                            ComparisonCalculationBase comparison = CreateNewComparisonCalculation();
+                            comparison = CreateNewComparisonCalculation();
                             comparison.Name = string.Format("{0} ({1})", TalentListFriendly[index], currentPoints);
                             comparison.Equipped = true;
                             comparison.OverallPoints = (currentCalc.OverallPoints - calc.OverallPoints) / (float)currentPoints;
-                            float[] subPoints = new float[calc.SubPoints.Length];
+                            subPoints = new float[calc.SubPoints.Length];
                             for (int i = 0; i < calc.SubPoints.Length; i++)
                             {
                                 subPoints[i] = (currentCalc.SubPoints[i] - calc.SubPoints[i]) / (float)currentPoints;
@@ -1082,13 +1095,13 @@ namespace Rawr.Mage
                         if (currentPoints < MaxTalentPoints[index])
                         {
                             character.CalculationOptions[talent] = MaxTalentPoints[index].ToString();
-                            CharacterCalculationsMage calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                            calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
-                            ComparisonCalculationBase comparison = CreateNewComparisonCalculation();
+                            comparison = CreateNewComparisonCalculation();
                             comparison.Name = string.Format("{0} ({1})", TalentListFriendly[index], MaxTalentPoints[index]);
                             comparison.Equipped = false;
                             comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints) / (float)(MaxTalentPoints[index] - currentPoints);
-                            float[] subPoints = new float[calc.SubPoints.Length];
+                            subPoints = new float[calc.SubPoints.Length];
                             for (int i = 0; i < calc.SubPoints.Length; i++)
                             {
                                 subPoints[i] = (calc.SubPoints[i] - currentCalc.SubPoints[i]) / (float)(MaxTalentPoints[index] - currentPoints);
@@ -1102,9 +1115,149 @@ namespace Rawr.Mage
                     }
 
                     return comparisonList.ToArray();
+                case "Talent Specs":
+                    currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                    comparison = CreateNewComparisonCalculation();
+                    comparison.Name = "Current";
+                    comparison.Equipped = true;
+                    comparison.OverallPoints = currentCalc.OverallPoints;
+                    subPoints = new float[currentCalc.SubPoints.Length];
+                    for (int i = 0; i < currentCalc.SubPoints.Length; i++)
+                    {
+                        subPoints[i] = currentCalc.SubPoints[i];
+                    }
+                    comparison.SubPoints = subPoints;
+
+                    comparisonList.Add(comparison);
+
+                    string[] talentSpecList = new string[] { "Fire (2/48/11)", "Fire/Cold Snap (0/40/21)", "Frost (10/0/51)", "Arcane (48/0/13)", "Arcane/Fire (40/18/3)", "Arcane/Frost (40/0/21)" };
+                    Character charClone = character.Clone();
+
+                    for (int index = 0; index < talentSpecList.Length; index++)
+                    {
+                        LoadTalentSpec(charClone, talentSpecList[index]);
+
+                        calc = GetCharacterCalculations(charClone) as CharacterCalculationsMage;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = talentSpecList[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+
+                        comparisonList.Add(comparison);
+                    }
+
+                    return comparisonList.ToArray();
                 default:
                     return new ComparisonCalculationBase[0];
             }
+        }
+
+        public static void LoadTalentSpec(Character character, string talentSpec)
+        {
+            string talentCode = null;
+            switch (talentSpec)
+            {
+                case "Fire (2/48/11)":
+                    talentCode = "2000000000000000000000050520201230333115312510532000010000000000000";
+                    break;
+                case "Fire/Cold Snap (0/40/21)":
+                    talentCode = "0000000000000000000000050510200230233005112500535000310030010000000";
+                    break;
+                case "Frost (10/0/51)":
+                    talentCode = "2300050000000000000000000000000000000000000000535020313235010051551";
+                    break;
+                case "Arcane (48/0/13)":
+                    talentCode = "2550050300230150333125000000000000000000000000534000010000000000000";
+                    break;
+                case "Arcane/Fire (40/18/3)":
+                    talentCode = "2500050300230150330125050520001230000000000000030000000000000000000";
+                    break;
+                case "Arcane/Frost (40/0/21)":
+                    talentCode = "2520050300030150330125000000000000000000000000535020310010010000000";
+                    break;
+            }
+
+            LoadTalentCode(character, talentCode);
+        }
+
+        public static void LoadTalentCode(Character character, string talentCode)
+        {
+            if (talentCode == null || talentCode.Length < 66) return;
+
+            character.CalculationOptions["ArcaneSubtlety"] = talentCode.Substring(0, 1);
+            character.CalculationOptions["ArcaneFocus"] = talentCode.Substring(1, 1);
+            character.CalculationOptions["ImprovedArcaneMissiles"] = talentCode.Substring(2, 1);
+            character.CalculationOptions["WandSpecialization"] = talentCode.Substring(3, 1);
+            character.CalculationOptions["MagicAbsorption"] = talentCode.Substring(4, 1);
+            character.CalculationOptions["ArcaneConcentration"] = talentCode.Substring(5, 1);
+            character.CalculationOptions["MagicAttunement"] = talentCode.Substring(6, 1);
+            character.CalculationOptions["ArcaneImpact"] = talentCode.Substring(7, 1);
+            character.CalculationOptions["ArcaneFortitude"] = talentCode.Substring(8, 1);
+            character.CalculationOptions["ImprovedManaShield"] = talentCode.Substring(9, 1);
+            character.CalculationOptions["ImprovedCounterspell"] = talentCode.Substring(10, 1);
+            character.CalculationOptions["ArcaneMeditation"] = talentCode.Substring(11, 1);
+            character.CalculationOptions["ImprovedBlink"] = talentCode.Substring(12, 1);
+            character.CalculationOptions["PresenceOfMind"] = talentCode.Substring(13, 1);
+            character.CalculationOptions["ArcaneMind"] = talentCode.Substring(14, 1);
+            character.CalculationOptions["PrismaticCloak"] = talentCode.Substring(15, 1);
+            character.CalculationOptions["ArcaneInstability"] = talentCode.Substring(16, 1);
+            character.CalculationOptions["ArcanePotency"] = talentCode.Substring(17, 1);
+            character.CalculationOptions["EmpoweredArcaneMissiles"] = talentCode.Substring(18, 1);
+            character.CalculationOptions["ArcanePower"] = talentCode.Substring(19, 1);
+            character.CalculationOptions["SpellPower"] = talentCode.Substring(20, 1);
+            character.CalculationOptions["MindMastery"] = talentCode.Substring(21, 1);
+            character.CalculationOptions["Slow"] = talentCode.Substring(22, 1);
+            character.CalculationOptions["ImprovedFireball"] = talentCode.Substring(23, 1);
+            character.CalculationOptions["Impact"] = talentCode.Substring(24, 1);
+            character.CalculationOptions["Ignite"] = talentCode.Substring(25, 1);
+            character.CalculationOptions["FlameThrowing"] = talentCode.Substring(26, 1);
+            character.CalculationOptions["ImprovedFireBlast"] = talentCode.Substring(27, 1);
+            character.CalculationOptions["Incinerate"] = talentCode.Substring(28, 1);
+            character.CalculationOptions["ImprovedFlamestrike"] = talentCode.Substring(29, 1);
+            character.CalculationOptions["Pyroblast"] = talentCode.Substring(30, 1);
+            character.CalculationOptions["BurningSoul"] = talentCode.Substring(31, 1);
+            character.CalculationOptions["ImprovedScorch"] = talentCode.Substring(32, 1);
+            character.CalculationOptions["ImprovedFireWard"] = talentCode.Substring(33, 1);
+            character.CalculationOptions["MasterOfElements"] = talentCode.Substring(34, 1);
+            character.CalculationOptions["PlayingWithFire"] = talentCode.Substring(35, 1);
+            character.CalculationOptions["CriticalMass"] = talentCode.Substring(36, 1);
+            character.CalculationOptions["BlastWave"] = talentCode.Substring(37, 1);
+            character.CalculationOptions["BlazingSpeed"] = talentCode.Substring(38, 1);
+            character.CalculationOptions["FirePower"] = talentCode.Substring(39, 1);
+            character.CalculationOptions["Pyromaniac"] = talentCode.Substring(40, 1);
+            character.CalculationOptions["Combustion"] = talentCode.Substring(41, 1);
+            character.CalculationOptions["MoltenFury"] = talentCode.Substring(42, 1);
+            character.CalculationOptions["EmpoweredFireball"] = talentCode.Substring(43, 1);
+            character.CalculationOptions["DragonsBreath"] = talentCode.Substring(44, 1);
+            character.CalculationOptions["FrostWarding"] = talentCode.Substring(45, 1);
+            character.CalculationOptions["ImprovedFrostbolt"] = talentCode.Substring(46, 1);
+            character.CalculationOptions["ElementalPrecision"] = talentCode.Substring(47, 1);
+            character.CalculationOptions["IceShards"] = talentCode.Substring(48, 1);
+            character.CalculationOptions["Frostbite"] = talentCode.Substring(49, 1);
+            character.CalculationOptions["ImprovedFrostNova"] = talentCode.Substring(50, 1);
+            character.CalculationOptions["Permafrost"] = talentCode.Substring(51, 1);
+            character.CalculationOptions["PiercingIce"] = talentCode.Substring(52, 1);
+            character.CalculationOptions["IcyVeins"] = talentCode.Substring(53, 1);
+            character.CalculationOptions["ImprovedBlizzard"] = talentCode.Substring(54, 1);
+            character.CalculationOptions["ArcticReach"] = talentCode.Substring(55, 1);
+            character.CalculationOptions["FrostChanneling"] = talentCode.Substring(56, 1);
+            character.CalculationOptions["Shatter"] = talentCode.Substring(57, 1);
+            character.CalculationOptions["FrozenCore"] = talentCode.Substring(58, 1);
+            character.CalculationOptions["ColdSnap"] = talentCode.Substring(59, 1);
+            character.CalculationOptions["ImprovedConeOfCold"] = talentCode.Substring(60, 1);
+            character.CalculationOptions["IceFloes"] = talentCode.Substring(61, 1);
+            character.CalculationOptions["WintersChill"] = talentCode.Substring(62, 1);
+            character.CalculationOptions["IceBarrier"] = talentCode.Substring(63, 1);
+            character.CalculationOptions["ArcticWinds"] = talentCode.Substring(64, 1);
+            character.CalculationOptions["EmpoweredFrostbolt"] = talentCode.Substring(65, 1);
+            character.CalculationOptions["SummonWaterElemental"] = talentCode.Substring(66, 1);
         }
 
         public override Stats GetRelevantStats(Stats stats)
@@ -1161,13 +1314,16 @@ namespace Rawr.Mage
                 SpellDamageFor10SecOnHit_10_45 = stats.SpellDamageFor10SecOnHit_10_45,
                 SpellDamageFromIntellectPercentage = stats.SpellDamageFromIntellectPercentage,
                 SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
-                SpellDamageFor10SecOnResist = stats.SpellDamageFor10SecOnResist
+                SpellDamageFor10SecOnResist = stats.SpellDamageFor10SecOnResist,
+                SpellDamageFor15SecOnCrit_20_45 = stats.SpellDamageFor15SecOnCrit_20_45,
+                SpellDamageFor15SecOnUse90Sec = stats.SpellDamageFor15SecOnUse90Sec,
+                SpellHasteFor5SecOnCrit_50 = stats.SpellHasteFor5SecOnCrit_50
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist) > 0;
+            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50) > 0;
         }
     }
 }

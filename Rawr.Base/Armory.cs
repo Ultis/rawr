@@ -451,6 +451,11 @@ namespace Rawr
                                             break;
                                     }
                                 }
+                                else if (spellDesc.StartsWith("Increases spell damage by up to 150 and healing by up to 280 for 15 sec."))
+                                {
+                                    stats.SpellDamageFor15SecOnUse90Sec += 150;
+                                    // TODO healing effect
+                                }
                                 else if (spellDesc.StartsWith("Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec."))
                                 {
                                     stats.SpellHasteFor20SecOnUse2Min += 175;
@@ -458,6 +463,11 @@ namespace Rawr
                                 else if (spellDesc.StartsWith("Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket."))
                                 {
                                     stats.Mp5OnCastFor20SecOnUse2Min += 21;
+                                }
+                                // Figurine - Talasite Owl, 5 min cooldown
+                                else if (spellDesc.StartsWith("Restores 900 mana over 12 sec."))
+                                {
+                                    stats.Mp5 += 5f * 900f / 300f;
                                 }
                             }
 
@@ -653,6 +663,28 @@ namespace Rawr
                                 else if (spellDesc.StartsWith("Grants 170 increased spell damage for 10 sec when one of your spells is resisted."))
                                 {
                                     stats.SpellDamageFor10SecOnResist += 170;
+                                }
+                                else if (spellDesc.StartsWith("Your spell critical strikes have a 50% chance to grant you 145 spell haste rating for 5 sec."))
+                                {
+                                    stats.SpellHasteFor5SecOnCrit_50 += 145;
+                                }
+                                //Your spell critical strikes have a chance to increase your spell damage and healing by 190 for 15 sec.
+                                else if (spellDesc.StartsWith("Your spell critical strikes have a chance to increase your spell damage and healing by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Your spell critical strikes have a chance to increase your spell damage and healing by ".Length);
+                                    float value = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" for")));
+                                    spellDesc = spellDesc.Substring(spellDesc.IndexOf(" for") + " for ".Length);
+                                    int duration = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" ")));
+
+                                    switch (duration)
+                                    {
+                                        case 15:
+                                            if (name == "Sextant of Unstable Currents")
+                                            {
+                                                stats.SpellDamageFor15SecOnCrit_20_45 += value;
+                                            }
+                                            break;
+                                    }
                                 }
                                 else if (spellDesc.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to "))
                                 {
