@@ -175,6 +175,101 @@ namespace Rawr.Mage
             return (item.Stats.SpellDamageFor20SecOnUse2Min + item.Stats.SpellHasteFor20SecOnUse2Min + item.Stats.Mp5OnCastFor20SecOnUse2Min + item.Stats.SpellDamageFor15SecOnManaGem + item.Stats.SpellDamageFor15SecOnUse90Sec > 0);
         }
 
+        private class CompactLP
+        {
+            private int lpRows, cRows;
+            private int lpCols, cCols;
+            double[,] lp;
+            bool[] rowEnabled, colEnabled;
+            int[] CRow, CCol;
+
+            public CompactLP(int rows, int cols)
+            {
+                lpRows = rows;
+                lpCols = cols;
+
+                rowEnabled = new bool[rows];
+                colEnabled = new bool[cols];
+
+                for (int i = 0; i < rows; i++) rowEnabled[i] = true;
+                for (int j = 0; j < cols; j++) colEnabled[j] = true;
+
+                CRow = new int[lpRows + 1];
+                CCol = new int[lpCols + 1];
+            }
+
+            public void Compact()
+            {
+                cRows = 0;
+                cCols = 0;
+
+                for (int i = 0; i < lpRows; i++)
+                {
+                    if (rowEnabled[i])
+                    {
+                        CRow[i] = cRows;
+                        cRows++;
+                    }
+                    else
+                    {
+                        CRow[i] = -1;
+                    }
+                }
+                for (int j = 0; j < lpCols; j++)
+                {
+                    if (colEnabled[j])
+                    {
+                        CCol[j] = cCols;
+                        cCols++;
+                    }
+                    else
+                    {
+                        CCol[j] = -1;
+                    }
+                }
+                CRow[lpRows] = cRows;
+                CCol[lpCols] = cCols;
+
+                lp = new double[cRows + 1, cCols + 1];
+            }
+
+            public void DisableRow(int row)
+            {
+                rowEnabled[row] = false;
+            }
+
+            public void DisableColumn(int col)
+            {
+                colEnabled[col] = false;
+            }
+
+            public double this[int row, int col]
+            {
+                get
+                {
+                    if (CRow[row] == -1 || CCol[col] == -1) return 0;
+                    return lp[CRow[row], CCol[col]];
+                }
+                set
+                {
+                    if (CRow[row] == -1 || CCol[col] == -1) return;
+                    lp[CRow[row], CCol[col]] = value;
+                }
+            }
+
+            public double[] Solve()
+            {
+                double[] compact = LPSolveUnsafe(lp, cRows, cCols);
+                double[] expanded = new double[lpCols + 1];
+
+                for (int j = 0; j <= lpCols; j++)
+                {
+                    if (CCol[j] >= 0) expanded[j] = compact[CCol[j]];
+                }
+                return expanded;
+            }
+        }
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CompiledCalculationOptions calculationOptions = new CompiledCalculationOptions(character);
@@ -223,7 +318,7 @@ namespace Rawr.Mage
             int lpRows = 30;
             int colOffset = 6;
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
-            double[,] lp = new double[lpRows + 1, lpCols + 1];
+            CompactLP lp = new CompactLP(lpRows, lpCols);
 
             if (trinket1Available)
             {
@@ -327,6 +422,56 @@ namespace Rawr.Mage
             {
                 dpflamelength += 30;
             }
+
+            if (character.Ranged == null || character.Ranged.Type != Item.ItemType.Wand) lp.DisableColumn(1);
+            for (int buffset = 0; buffset < statsList.Count; buffset++)
+            {
+                for (int spell = 0; spell < spellList.Count; spell++)
+                {
+                    Spell s = statsList[buffset].GetSpell(spellList[spell]);
+                    if ((s.AffectedByFlameCap || !statsList[buffset].FlameCap) && (!s.ABCycle || calculationOptions.ABCycles))
+                    {
+                    }
+                    else
+                    {
+                        int index = buffset * spellList.Count + spell + colOffset - 1;
+                        lp.DisableColumn(index);
+                    }
+                }
+            }
+            if (!heroismAvailable) lp.DisableRow(5);
+            if (!apAvailable) lp.DisableRow(6);
+            if (!heroismAvailable || !apAvailable) lp.DisableRow(7);
+            if (!ivAvailable) lp.DisableRow(8);
+            if (!mfAvailable) lp.DisableRow(9);
+            if (!mfAvailable || !calculationOptions.DestructionPotion) lp.DisableRow(10);
+            if (!mfAvailable || !ivAvailable) lp.DisableRow(11);
+            if (!heroismAvailable || !calculationOptions.DestructionPotion) lp.DisableRow(12);
+            if (!ivAvailable || !calculationOptions.DestructionPotion) lp.DisableRow(13);
+            if (!mfAvailable || !calculationOptions.FlameCap) lp.DisableRow(15);
+            if (!calculationOptions.FlameCap || !calculationOptions.DestructionPotion) lp.DisableRow(16);
+            if (!trinket1Available) lp.DisableRow(17);
+            if (!trinket2Available) lp.DisableRow(18);
+            if (!(mfAvailable && trinket1Available)) lp.DisableRow(19);
+            if (!(mfAvailable && trinket2Available)) lp.DisableRow(20);
+            if (!(heroismAvailable && trinket1Available)) lp.DisableRow(21);
+            if (!(heroismAvailable && trinket2Available)) lp.DisableRow(22);
+            if (calculationOptions.AoeDuration > 0)
+            {
+                if (calculationOptions.BlastWave == 0) lp.DisableRow(28);
+                if (calculationOptions.DragonsBreath == 0) lp.DisableRow(29);
+            }
+            else
+            {
+                lp.DisableRow(25);
+                lp.DisableRow(26);
+                lp.DisableRow(27);
+                lp.DisableRow(28);
+                lp.DisableRow(29);
+            }
+
+            
+            lp.Compact();
 
             // idle regen
             calculatedStats.SolutionLabel.Add("Idle Regen");
@@ -486,7 +631,7 @@ namespace Rawr.Mage
             lp[24, lpCols] = - (1 - float.Parse(character.CalculationOptions["DpsTime"])) * calculationOptions.FightDuration;
             lp[25, lpCols] = calculationOptions.AoeDuration * calculationOptions.FightDuration;
 
-            calculatedStats.Solution = LPSolveUnsafe(lp, lpRows, lpCols);
+            calculatedStats.Solution = lp.Solve();
 
             calculatedStats.SubPoints[0] = (float)calculatedStats.Solution[lpCols] + calculatedStats.WaterElementalDamage;
             calculatedStats.OverallPoints = calculatedStats.SubPoints[0];
@@ -602,9 +747,9 @@ namespace Rawr.Mage
             return ret;
         }
 
-        unsafe double[] LPSolveUnsafe(double[,] data, int rows, int cols)
+        static unsafe double[] LPSolveUnsafe(double[,] data, int rows, int cols)
         {
-            double[] ret = new double[cols + 2];
+            double[] ret = new double[cols + 1];
             int[] xn = new int[cols + 1];
             int[] xb = new int[rows + 1];
 
