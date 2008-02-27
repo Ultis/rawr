@@ -101,7 +101,7 @@ namespace Rawr.Mage
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Mage Armor", "Talents (per talent point)", "Talent Specs" };
+                    _customChartNames = new string[] { "Mage Armor", "Talents (per talent point)", "Talent Specs", "Item Budget" };
                 return _customChartNames;
             }
         }
@@ -1292,6 +1292,48 @@ namespace Rawr.Mage
                         for (int i = 0; i < calc.SubPoints.Length; i++)
                         {
                             subPoints[i] = calc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+
+                        comparisonList.Add(comparison);
+                    }
+
+                    return comparisonList.ToArray();
+                case "Item Budget":
+                    Item[] itemList = new Item[] {
+                        new Item() { Stats = new Stats() { Intellect = 10 } },
+                        new Item() { Stats = new Stats() { Spirit = 10 } },
+                        new Item() { Stats = new Stats() { SpellDamageRating = 11.7f } },
+                        new Item() { Stats = new Stats() { Mp5 = 4 } },
+                        new Item() { Stats = new Stats() { SpellCritRating = 10 } },
+                        new Item() { Stats = new Stats() { SpellHasteRating = 10 } },
+                        new Item() { Stats = new Stats() { SpellHitRating = 10 } },
+                    };
+                    string[] statList = new string[] {
+                        "Intellect",
+                        "Spirit",
+                        "Spell Damage",
+                        "Mana per 5 sec",
+                        "Spell Crit Rating",
+                        "Spell Haste Rating",
+                        "Spell Hit Rating",
+                    };
+
+                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+
+
+                    for (int index = 0; index < statList.Length; index++)
+                    {
+                        calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsMage;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = statList[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
                         }
                         comparison.SubPoints = subPoints;
 
