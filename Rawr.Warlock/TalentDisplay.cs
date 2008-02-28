@@ -42,21 +42,21 @@ namespace Rawr.Warlock
 
         public TalentDisplay(TalentTree trees) : this()
         {
-            Trees = trees;
+            _tree = trees;
         }
 
         private void buildTrees()
         {
-            if (Trees != null)
+            if (_tree != null)
             {
                 //TalentTree trees, List<TalentPanel> panels, List<Label> labels, Character.CharacterClass charclass
                 TalentPanel[] panels = new TalentPanel[] { talentPanel1, talentPanel2, talentPanel3 };
                 Label[] labels = new Label[] { label1, label2, label3 };
                 int index = 0;
-                foreach (string treeName in trees.Trees.Keys)
+                foreach (string treeName in _tree.Trees.Keys)
                 {
                     labels[index].Text = treeName;
-                    panels[index] = new TalentPanel(trees.Trees[treeName], charclass);
+                    panels[index] = new TalentPanel(_tree.Trees[treeName], CharClass);
                 }
             }
         }

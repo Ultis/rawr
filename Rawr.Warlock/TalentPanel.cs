@@ -12,7 +12,7 @@ namespace Rawr.Warlock
     public partial class TalentPanel : UserControl 
     {
 
-        private SerializableDictionary<TalentItem, TalentIcon> _icons = new Dictionary<TalentItem, TalentIcon>();
+        private SerializableDictionary<TalentItem, TalentIcon> _icons = new SerializableDictionary<TalentItem, TalentIcon>();
         private int _vertbuffer = 15;
         private int _horizbuffer = 25;
         private List<TalentItem> _talents = new List<TalentItem>();
