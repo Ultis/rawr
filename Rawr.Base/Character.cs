@@ -1017,5 +1017,12 @@ namespace Rawr //O O . .
 
             return character;
         }
-    }
+
+		public void EnsureItemsLoaded()
+		{
+			Item item;
+			foreach (CharacterSlot slot in Enum.GetValues(typeof(CharacterSlot)))
+				item = this[slot];
+		}
+	}
 }

@@ -41,6 +41,7 @@ namespace Rawr
 				if (_character != null)
 				{
 					this.Cursor = Cursors.WaitCursor;
+					_character.EnsureItemsLoaded();
 					Calculations.CalculationOptionsPanel.Character = _character;
 					ItemToolTip.Instance.Character = FormItemSelection.Instance.Character = 
 						ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
@@ -76,9 +77,9 @@ namespace Rawr
 					radioButtonRegionUS.Checked = Character.Region == Character.CharacterRegion.US;
 					radioButtonRegionEU.Checked = Character.Region == Character.CharacterRegion.EU;
 					comboBoxRace.Text = Character.Race.ToString();
-					
+
 					_loadingCharacter = false;
-					Character.OnItemsChanged();
+					_character.OnItemsChanged();
 				}
 			}
 		}
