@@ -34,6 +34,18 @@ namespace Rawr.Warlock
             set { _totalStats = value; }
         }
 
+        public Dictionary<Spell, int> NumCasts
+        {
+            get;
+            set;
+        }
+
+        public int NumLifetaps
+        {
+            get;
+            set;
+        }
+
         public float DPS { get; set; }
 
         public List<Spell> Spells { get; set; }
@@ -42,6 +54,7 @@ namespace Rawr.Warlock
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             CalculationsWarlock cw = new CalculationsWarlock();
+            List<Spell> castSpell = new List<Spell>(NumCasts.Keys);
             
             Dictionary<string, string> vals = new Dictionary<string, string>();
             vals.Add("Health", TotalStats.Health.ToString());
@@ -64,6 +77,8 @@ namespace Rawr.Warlock
                 vals.Add("SB Average Hit", sb.AverageDamage.ToString());
                 vals.Add("SB Crit Rate", sb.CritPercent.ToString());
                 vals.Add("ISB Uptime", (sb.ISBuptime * 100f).ToString());
+                vals.Add("#SB Casts", NumCasts[sb].ToString());
+                
             }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "INCINERATE"; }))
             {
@@ -74,6 +89,7 @@ namespace Rawr.Warlock
                 vals.Add("Incinerate Max Crit", (sb.MaxDamage * sb.CritModifier).ToString());
                 vals.Add("Incinerate Average Hit", sb.AverageDamage.ToString());
                 vals.Add("Incinerate Crit Rate", sb.CritPercent.ToString());
+                vals.Add("#Incinerate Casts", NumCasts[sb].ToString());
             }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "IMMOLATE"; }))
             {
@@ -84,30 +100,43 @@ namespace Rawr.Warlock
                 vals.Add("ImmolateMax Crit", (sb.MaxDamage * sb.CritModifier).ToString());
                 vals.Add("ImmolateAverage Hit", sb.AverageDamage.ToString());
                 vals.Add("ImmolateCrit Rate", sb.CritPercent.ToString());
+                vals.Add("#Immolate Casts", NumCasts[sb].ToString());
             }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "CURSEOFAGONY"; }))
             {
                 CurseOfAgony sb = new CurseOfAgony(character, TotalStats);
                 vals.Add("CoA Tick", (sb.AverageDamage / (sb.PeriodicDuration / sb.PeriodicTickInterval)).ToString());
                 vals.Add("CoA Total Damage", sb.AverageDamage.ToString());
+                vals.Add("#CoA Casts", NumCasts[sb].ToString());
             }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "CURSEOFDOOM"; }))
             {
                 CurseOfDoom sb = new CurseOfDoom(character, TotalStats);
-                vals.Add("CoA Total Damage", sb.AverageDamage.ToString());
+                vals.Add("CoD Total Damage", sb.AverageDamage.ToString());
+                vals.Add("#CoD Casts", NumCasts[sb].ToString());
+            }
+            if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "CORRUPTION"; }))
+            {
+                Corruption sb = new Corruption(character, TotalStats);
+                vals.Add("Corr Tick", (sb.AverageDamage / (sb.PeriodicDuration / sb.PeriodicTickInterval)).ToString());
+                vals.Add("Corr Total Damage", sb.AverageDamage.ToString());
+                vals.Add("#Corr Casts", NumCasts[sb].ToString());
             }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "UNSTABLEAFFLICTION"; }))
             {
                 UnstableAffliction sb = new UnstableAffliction(character, TotalStats);
                 vals.Add("UA Tick", (sb.AverageDamage / (sb.PeriodicDuration / sb.PeriodicTickInterval)).ToString());
                 vals.Add("UA Total Damage", sb.AverageDamage.ToString());
+                vals.Add("#UA Casts", NumCasts[sb].ToString());
             }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "SIPHONLIFE"; }))
             {
                 SiphonLife sb = new SiphonLife(character, TotalStats);
-                vals.Add("Siphon Life Tick", (sb.AverageDamage / (sb.PeriodicDuration / sb.PeriodicTickInterval)).ToString());
-                vals.Add("SiphonLife Total Damage", sb.AverageDamage.ToString());
+                vals.Add("SL Tick", (sb.AverageDamage / (sb.PeriodicDuration / sb.PeriodicTickInterval)).ToString());
+                vals.Add("SL Total Damage", sb.AverageDamage.ToString());
+                vals.Add("#SL Casts", NumCasts[sb].ToString());
             }
+            vals.Add("#Lifetaps", NumLifetaps.ToString());
             
             return vals;
         }

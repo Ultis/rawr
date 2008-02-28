@@ -18,9 +18,6 @@ namespace Rawr.Warlock
 
 
 
-
-
-
         public WarlockSpellRotation(Stats totalStats, Character character, int duration)
         {
             stats = totalStats;
@@ -62,10 +59,80 @@ namespace Rawr.Warlock
             _spellPriority.Add(priority, spell);
         }
 
+
+        public Dictionary<Spell, int> NumCasts
+        {
+            get;
+            set;
+        }
+
+        public int NumLifetaps
+        {
+            get;
+            set;
+        }
+
         public float[] GetDPS
         {
             get
             {
+                NumCasts = new Dictionary<Spell, int>();
+                NumLifetaps = 0;
+                float gcd = 1.5f;
+                float gainedMana = _stats.Mana;
+                float lifetap = _lifetap;
+                float durationLeft = Duration;
+                Spell filler = null;
+
+
+                //calc all dots
+                foreach (Spell currSpell in _spellPriority.Values) 
+                {
+                    //Spell currSpell = _spellPriority[x];
+                    if (!NumCasts.ContainsKey(currSpell))
+                        NumCasts.Add(currSpell, 0);
+                    if (currSpell.PeriodicDuration > 0)
+                    {
+                        NumCasts[currSpell] = Convert.ToInt32(Math.Floor(Duration / currSpell.PeriodicDuration));
+                        durationLeft -= NumCasts[currSpell] * (currSpell.CastTime < gcd ? gcd : currSpell.CastTime);
+                    }
+                    else
+                    {
+                        if (filler != null)
+                            throw new Exception("Error, multiple filler spells");
+                        filler = currSpell;
+                    }
+                }
+
+
+                //calc filler
+                NumCasts[filler] = Convert.ToInt32(Math.Floor(durationLeft / (filler.CastTime < gcd ? gcd : filler.CastTime) ));
+
+                List<Spell> daSpells = new List<Spell>(NumCasts.Keys);
+
+                //calc Lifetaps
+                float manaSpent = 0;
+                daSpells.ForEach(delegate(Spell s) { manaSpent += NumCasts[s] * s.Cost; });
+
+                while (gainedMana < manaSpent)
+                {
+                    durationLeft -= gcd;
+                    gainedMana += lifetap;
+                    NumLifetaps++;
+                    NumCasts[filler] = Convert.ToInt32(Math.Floor(durationLeft / (filler.CastTime < gcd ? gcd : filler.CastTime)));
+                    manaSpent = 0;
+                    daSpells.ForEach(delegate(Spell s) { manaSpent += NumCasts[s] * s.Cost; });
+                }
+
+                //calcTotalDamage
+                float totalDamage = 0;
+                daSpells.ForEach(delegate(Spell s) { totalDamage += NumCasts[s] * s.AverageDamage; });
+                return new float[] { totalDamage / Duration };
+
+                //wierd bug with this model (on trinkets would sometimes report battlemasters audacity > hex shrunken head (47sd > 53sd) - wierd
+                /*
+                NumCasts = new Dictionary<Spell, int>();
+                NumLifetaps = 0;
                 List<int> daSpells = new List<int>(_spellPriority.Keys);
                 daSpells.Sort();
                 float gcdDuration = 1.5f;
@@ -117,6 +184,9 @@ namespace Rawr.Warlock
                             {
                                 if (currMana >= currSpell.Cost)
                                 {
+                                    if (!NumCasts.ContainsKey(currSpell))
+                                        NumCasts.Add(currSpell, 0);
+                                    NumCasts[currSpell]++;
                                     totalDamage += currSpell.AverageDamage;
                                     currMana -= currSpell.Cost;
                                     currCasting.Add(currSpell, currTime);
@@ -127,6 +197,7 @@ namespace Rawr.Warlock
                                 else
                                 {
                                     currMana += _lifetap;
+                                    NumLifetaps++;
                                     gcd = true;
                                     break;
                                 }
@@ -135,8 +206,8 @@ namespace Rawr.Warlock
                     }
                     if (gcd & gcdstart == 0) gcdstart = currTime;
                 }
-            
-                return new float[] { ( totalDamage) / Duration };
+                return new float[] { (totalDamage) / Duration };
+                 */
               }
 
             }

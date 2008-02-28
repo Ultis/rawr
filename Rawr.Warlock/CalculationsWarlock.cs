@@ -78,25 +78,36 @@ namespace Rawr.Warlock
                         "Shadowbolt Stats:SB Average Hit",
                         "Shadowbolt Stats:SB Crit Rate",
                         "Shadowbolt Stats:ISB Uptime",
+                        "Shadowbolt Stats:#SB Casts",
                         "Incinerate Stats:Incinerate Min Hit",
                         "Incinerate Stats:Incinerate Max Hit",
                         "Incinerate Stats:Incinerate Min Crit",
                         "Incinerate Stats:Incinerate Max Crit",
                         "Incinerate Stats:Incinerate Average Hit",
                         "Incinerate Stats:Incinerate Crit Rate",
+                        "Incinerate Stats:#Incinerate Casts",
                         "Immolate Stats:ImmolateMin Hit",
                         "Immolate Stats:ImmolateMax Hit",
                         "Immolate Stats:ImmolateMin Crit",
                         "Immolate Stats:ImmolateMax Crit",
                         "Immolate Stats:ImmolateAverage Hit",
                         "Immolate Stats:ImmolateCrit Rate",
+                        "Immolate Stats:#Immolate Casts",
                         "Curse of Agony Stats:CoA Tick",
                         "Curse of Agony Stats:CoA Total Damage",
+                        "Curse of Agony Stats:#CoA Casts",
                         "Curse of Doom Stats:CoD Total Damage",
+                        "Curse of Doom Stats:#CoD Casts",
+                        "Corruption Stats:Corr Tick",
+                        "Corruption Stats:Corr Total Damage",
+                        "Corruption Stats:#Corr Casts",
                         "Unstable Affliction Stats:UA Tick",
                         "Unstable Affliction Stats:UA Total Damage",
+                        "Unstable Affliction Stats:#UA Casts",
                         "SiphonLife Stats:SL Tick",
-                        "SiphonLife Stats:SL Total Damage"
+                        "SiphonLife Stats:SL Total Damage",
+                        "SiphonLife Stats:#SL Casts",
+                        "Lifetap Stats:#Lifetaps"
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();   
                 }
@@ -219,6 +230,8 @@ namespace Rawr.Warlock
             wsr.Spells = priorityList;
             float[] dps = wsr.GetDPS;
             CharacterCalculationsWarlock ccw = new CharacterCalculationsWarlock();
+            ccw.NumCasts = wsr.NumCasts;
+            ccw.NumLifetaps = wsr.NumLifetaps;
             ccw.Spells = new List<Spell>(priorityList.Values);
             ccw.SubPoints = dps;
             ccw.OverallPoints = dps[0];
@@ -372,7 +385,70 @@ namespace Rawr.Warlock
             statsTotal.Intellect = statsTotal.Intellect * (1 + statsBuffs.BonusIntellectMultiplier);
             statsTotal.Stamina = statsTotal.Stamina * (1 + statsBuffs.BonusStaminaMultiplier);
 
+
+
+            //Master Demonologist
+            if (character.CalculationOptions["SacraficedPet"] == "")
+            {
+                int MDTalents = character.Talents.GetTalent("MasterDemonologist").PointsInvested;
+                switch (character.CalculationOptions["Pet"].ToUpper())
+                {
+                    case "SUCCUBUS":
+                        statsTotal.BonusShadowSpellPowerMultiplier *= 1f + (0.02f * MDTalents);
+                        statsTotal.BonusFireSpellPowerMultiplier *= 1f + (0.02f * MDTalents);
+                        break;
+                    case "FELGUARD":
+                        statsTotal.BonusShadowSpellPowerMultiplier *= 1f + (0.01f * MDTalents);
+                        statsTotal.BonusFireSpellPowerMultiplier *= 1f + (0.01f * MDTalents);
+                        break;
+
+                }
+            }
+
+            //Emberstorm
+            statsTotal.BonusFireSpellPowerMultiplier += (character.Talents.GetTalent("Emberstorm").PointsInvested * 0.02f);
+
+            //Shadow Mastery
+            statsTotal.BonusShadowSpellPowerMultiplier *= (1f + character.Talents.GetTalent("ShadowMastery").PointsInvested * 0.2f);
+
+
+            //demonic sacrafice
+            if (tree.GetTalent("DemonicSacrifice").PointsInvested == 1)
+            {
+                switch (character.CalculationOptions["SacraficedPet"].ToUpper())
+                {
+                    case "SUCCUBUS":
+                        statsTotal.BonusShadowSpellPowerMultiplier *= 1f + 0.15f;
+                        break;
+                    case "FELGUARD":
+                        statsTotal.BonusShadowSpellPowerMultiplier *= 1f + 0.10f;
+                        break;
+                    case "IMP":
+                        statsTotal.BonusFireSpellPowerMultiplier *= 1f + 0.15f;
+                        break;
+                }
+            }
+
+            //SoulLink
+            if (tree.GetTalent("SoulLink").PointsInvested > 0)
+            {
+                statsTotal.BonusShadowSpellPowerMultiplier *= 1f + 0.05f;
+                statsTotal.BonusFireSpellPowerMultiplier *= 1f + 0.05f;
+            }
             
+
+            //Demonic Knowledge
+           int pointsInDemonicKnowledge = tree.GetTalent("DemonicKnowledge").PointsInvested;
+
+           statsTotal.SpellDamageRating *= 1f + 0.05f * pointsInDemonicKnowledge;
+           statsTotal.SpellShadowDamageRating *= 1f + 0.05f * pointsInDemonicKnowledge;
+           statsTotal.SpellFireDamageRating *= 1f + 0.05f * pointsInDemonicKnowledge;
+
+
+            //Demonic Tactics
+           statsTotal.SpellCritRating += 22.08f * (tree.GetTalent("DemonicTactics").PointsInvested * 1f);
+
+
             //Calc final derived stats
             statsTotal.SpellCritRating += 22.08f * statsTotal.Intellect / 81.92f;
             statsTotal.Health = (float)Math.Round(((statsTotal.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));

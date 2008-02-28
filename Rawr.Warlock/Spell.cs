@@ -55,6 +55,20 @@ namespace Rawr.Warlock
         internal Character _character;
 
 
+        public override bool Equals(object obj)
+        {
+            if (obj is Spell)
+            {
+                return (obj as Spell).Name == Name;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
         internal float ChanceToMiss
         {
             get
@@ -133,45 +147,13 @@ namespace Rawr.Warlock
             CritPercent +=  tal.GetTalent("Devastation").PointsInvested;
             HealthReturnFactor = tal.GetTalent("SoulLeech").PointsInvested / 10f;
             SpellDamageCoefficient += tal.GetTalent("ShadowandFlame").PointsInvested * 0.04f;
-            if (tal.GetTalent("DemonicSacrifice").PointsInvested == 1)
-            {
-                switch (character.CalculationOptions["SacraficedPet"].ToUpper())
-                {
-                    case "SUCCUBUS":
-                        DamageModifier *= 1f + 0.15f;
-                        break;
-                    case "FELGUARD":
-                        DamageModifier *= 1f + 0.10f;
-                        break;
-                }
-            }
-            
-            DamageModifier *= 1f + (0.05f * tal.GetTalent("SoulLink").PointsInvested);
-
-
-            if (character.CalculationOptions["SacraficedPet"] == "")
-            {
-                int MDTalents = tal.GetTalent("MasterDemonologist").PointsInvested;
-                switch (character.CalculationOptions["Pet"].ToUpper())
-                {
-                    case "SUCCUBUS":
-                        DamageModifier *= 1f + (0.02f * MDTalents);
-                        break;
-                    case "FELGUARD":
-                        DamageModifier *= 1f + (0.01f * MDTalents);
-                        break;
-
-                }
-            }
-
-
             if (tal.GetTalent("Ruin").PointsInvested == 1) CritModifier = 2f;
         }
 
         private void Calculate(Character character, Stats stats)
         {
             CastTime /= (1 + (stats.SpellHasteRating / 1570f));
-            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             MaxDamage = (MaxDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             float minCrit = MinDamage * CritModifier;
@@ -232,20 +214,14 @@ namespace Rawr.Warlock
                 MinDamage = MaxDamage = BaseMinDamage * (1f + (tal.GetTalent("ImprovedCurseOfAgony").PointsInvested) * 0.1f);
             }
 
-            //Shadow Mastery
-            MinDamage = MaxDamage *= (1f + tal.GetTalent("ShadowMastery").PointsInvested * 0.2f);
-
             //Contagion
             MinDamage = MaxDamage *= (1f + tal.GetTalent("Contagion").PointsInvested * 0.1f);
 
-
-            if (tal.GetTalent("DemonicSacrifice").PointsInvested == 1 && character.CalculationOptions["SacraficedPet"] == "Succubus")
-                DamageModifier += 0.15f;
         }
 
         private void Calculate(Character character, Stats stats)
         {
-            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
 
@@ -296,19 +272,17 @@ namespace Rawr.Warlock
         {
             TalentTree tal = character.Talents;
 
-            //Shadow Mastery - should apply but apparently doesn't
-           // MinDamage = MaxDamage *= (1f + tal.GetTalent("Contagion").PointsInvested * 0.2f);
-
-            if (tal.GetTalent("DemonicSacrifice").PointsInvested == 1 && character.CalculationOptions["SacraficedPet"] == "Succubus")
-                DamageModifier += 0.15f;
         }
 
         private void Calculate(Character character, Stats stats)
         {
-            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
+            //shadow mastery removed here even though it should apply (but doesn't)
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f) / (1f + character.Talents.GetTalent("ShadowMastery").PointsInvested * 0.2f) * (stats.BonusSpellPowerMultiplier + 1f);
+            
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
 
+            //extra hit rating from supression
             float supressionbonus = (stats.SpellHitRating + character.Talents.GetTalent("Supression").PointsInvested * 2f);
             float missRate = ChanceToMiss - (stats.SpellHitRating / 1262.5f) - (supressionbonus / 100f);
             float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
@@ -318,9 +292,12 @@ namespace Rawr.Warlock
     }
 
 
-    //assumes immolate is up
+    
     internal class Incinerate : Spell
     {
+        private List<Spell> currentSpellsOnTarget;
+
+        //this constructor assumes immolate is up
         public Incinerate(Character character, Stats stats)
         {
             Name = "Incinerate";
@@ -357,23 +334,16 @@ namespace Rawr.Warlock
 
             //destruction talents
             Cost = Convert.ToInt32((100f - tal.GetTalent("Cataclysm").PointsInvested) / 100f * BaseCost);
-            
-            //CastTime -= (tal.GetTalent("Bane").PointsInvested / 10f);
-            
             CritPercent += tal.GetTalent("Devastation").PointsInvested;
-            
             HealthReturnFactor = tal.GetTalent("SoulLeech").PointsInvested / 10f;
             SpellDamageCoefficient += tal.GetTalent("ShadowandFlame").PointsInvested * 0.04f;
-            if (tal.GetTalent("DemonicSacrifice").PointsInvested == 1 && character.CalculationOptions["SacraficedPet"] == "Imp")
-                DamageModifier += 0.15f;
             if (tal.GetTalent("Ruin").PointsInvested == 1) CritModifier = 2f;
-            DamageModifier += (tal.GetTalent("Emberstorm").PointsInvested * 0.02f);
         }
 
         private void Calculate(Character character, Stats stats)
         {
             CastTime /= (1 + (stats.SpellHasteRating / 1570f));
-            DamageModifier *= (stats.BonusFireSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusFireSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + FireDamage))) * DamageModifier;
             MaxDamage = (MaxDamage + (SpellDamageCoefficient * (SpellDamage + FireDamage))) * DamageModifier;
             float minCrit = MinDamage * CritModifier;
@@ -431,25 +401,16 @@ namespace Rawr.Warlock
 
             //destruction talents
             Cost = Convert.ToInt32((100f - tal.GetTalent("Cataclysm").PointsInvested) / 100f * BaseCost);
-
             CastTime -= (tal.GetTalent("Bane").PointsInvested / 10f);
-
             CritPercent += tal.GetTalent("Devastation").PointsInvested;
-
             MinDamage = MaxDamage *= tal.GetTalent("ImprovedImmolate").PointsInvested * 0.05f + 1f;
-
-            HealthReturnFactor = tal.GetTalent("SoulLeech").PointsInvested / 10f;
-            //SpellDamageCoefficient += tal.GetTalent("ShadowandFlame").PointsInvested * 0.04f;
-            if (tal.GetTalent("DemonicSacrifice").PointsInvested == 1 && character.CalculationOptions["SacraficedPet"] == "Imp")
-                DamageModifier += 0.15f;
             if (tal.GetTalent("Ruin").PointsInvested == 1) CritModifier = 2f;
-            DamageModifier += (tal.GetTalent("Emberstorm").PointsInvested * 0.02f);
         }
 
         private void Calculate(Character character, Stats stats)
         {
             CastTime /= (1 + (stats.SpellHasteRating / 1570f));
-            DamageModifier *= (stats.BonusFireSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusFireSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + FireDamage))) * DamageModifier;
             MaxDamage = (MaxDamage + (SpellDamageCoefficient * (SpellDamage + FireDamage))) * DamageModifier;
             float minCrit = MinDamage * CritModifier;
@@ -460,7 +421,6 @@ namespace Rawr.Warlock
             float missRate = ChanceToMiss - (stats.SpellHitRating / 1262.5f);
             float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
             AverageDamage *= spellHitFactor;
-
         }
 
     }
@@ -506,23 +466,15 @@ namespace Rawr.Warlock
 
             //Empowered corruption
             SpellDamageCoefficient += tal.GetTalent("EmpoweredCorruption").PointsInvested * 0.12f;
-
-            //Shadow Mastery
-            MinDamage = MaxDamage *= (1f + tal.GetTalent("ShadowMastery").PointsInvested * 0.2f);
-
             //Contagion
             MinDamage = MaxDamage *= (1f + tal.GetTalent("Contagion").PointsInvested * 0.1f);
-
             //Improved Corruption
             CastTime -= tal.GetTalent("ImprovedCorruption").PointsInvested * 0.4f;
-
-            if (tal.GetTalent("DemonicSacrifice").PointsInvested == 1 && character.CalculationOptions["SacraficedPet"] == "Succubus")
-                DamageModifier += 0.15f;
         }
 
         private void Calculate(Character character, Stats stats)
         {
-            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
             float supressionbonus = (stats.SpellHitRating + character.Talents.GetTalent("Supression").PointsInvested * 2f);
@@ -530,7 +482,6 @@ namespace Rawr.Warlock
             float spellHitFactor = missRate < 0 ? 0.99f : 0.99f - missRate;
             AverageDamage *= spellHitFactor;
         }
-
     }
 
 
@@ -571,20 +522,11 @@ namespace Rawr.Warlock
 
         private void ParseTalents(Character character, Stats stats)
         {
-            TalentTree tal = character.Talents;
-
-
-            //Shadow Mastery
-            MinDamage = MaxDamage *= (1f + tal.GetTalent("ShadowMastery").PointsInvested * 0.2f);
-
-       
-            if (tal.GetTalent("DemonicSacrifice").PointsInvested == 1 && character.CalculationOptions["SacraficedPet"] == "Succubus")
-                DamageModifier += 0.15f;
         }
 
         private void Calculate(Character character, Stats stats)
         {
-            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
             float supressionbonus = (stats.SpellHitRating + character.Talents.GetTalent("Supression").PointsInvested * 2f);
@@ -633,14 +575,6 @@ namespace Rawr.Warlock
         private void ParseTalents(Character character, Stats stats)
         {
             TalentTree tal = character.Talents;
-
-
-            //Shadow Mastery
-            MinDamage = MaxDamage *= (1f + tal.GetTalent("ShadowMastery").PointsInvested * 0.2f);
-
-       
-            if (tal.GetTalent("DemonicSacrifice").PointsInvested == 1 && character.CalculationOptions["SacraficedPet"] == "Succubus")
-                DamageModifier += 0.15f;
         }
 
         private void Calculate(Character character, Stats stats)
