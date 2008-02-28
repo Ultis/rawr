@@ -43,6 +43,11 @@ namespace Rawr.Warlock
             }
         }
 
+        public int ManaPerLifetap
+        {
+            get { return _lifetap; }
+        }
+
         public Dictionary<int, Spell> Spells
         {
             get { return _spellPriority; }

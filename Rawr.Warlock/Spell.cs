@@ -153,7 +153,7 @@ namespace Rawr.Warlock
         private void Calculate(Character character, Stats stats)
         {
             CastTime /= (1 + (stats.SpellHasteRating / 1570f));
-            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier) * (stats.BonusSpellPowerMultiplier);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             MaxDamage = (MaxDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             float minCrit = MinDamage * CritModifier;
@@ -221,7 +221,7 @@ namespace Rawr.Warlock
 
         private void Calculate(Character character, Stats stats)
         {
-            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier) * (stats.BonusSpellPowerMultiplier);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
 
@@ -277,7 +277,7 @@ namespace Rawr.Warlock
         private void Calculate(Character character, Stats stats)
         {
             //shadow mastery removed here even though it should apply (but doesn't)
-            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f) / (1f + character.Talents.GetTalent("ShadowMastery").PointsInvested * 0.2f) * (stats.BonusSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier) / (1f + character.Talents.GetTalent("ShadowMastery").PointsInvested * 0.02f) * (stats.BonusSpellPowerMultiplier);
             
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
@@ -343,7 +343,7 @@ namespace Rawr.Warlock
         private void Calculate(Character character, Stats stats)
         {
             CastTime /= (1 + (stats.SpellHasteRating / 1570f));
-            DamageModifier *= (stats.BonusFireSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusFireSpellPowerMultiplier) * (stats.BonusSpellPowerMultiplier);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + FireDamage))) * DamageModifier;
             MaxDamage = (MaxDamage + (SpellDamageCoefficient * (SpellDamage + FireDamage))) * DamageModifier;
             float minCrit = MinDamage * CritModifier;
@@ -410,7 +410,7 @@ namespace Rawr.Warlock
         private void Calculate(Character character, Stats stats)
         {
             CastTime /= (1 + (stats.SpellHasteRating / 1570f));
-            DamageModifier *= (stats.BonusFireSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusFireSpellPowerMultiplier) * (stats.BonusSpellPowerMultiplier);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + FireDamage))) * DamageModifier;
             MaxDamage = (MaxDamage + (SpellDamageCoefficient * (SpellDamage + FireDamage))) * DamageModifier;
             float minCrit = MinDamage * CritModifier;
@@ -474,7 +474,7 @@ namespace Rawr.Warlock
 
         private void Calculate(Character character, Stats stats)
         {
-            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier) * (stats.BonusSpellPowerMultiplier);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
             float supressionbonus = (stats.SpellHitRating + character.Talents.GetTalent("Supression").PointsInvested * 2f);
@@ -526,7 +526,7 @@ namespace Rawr.Warlock
 
         private void Calculate(Character character, Stats stats)
         {
-            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f) * (stats.BonusSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier) * (stats.BonusSpellPowerMultiplier);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
             float supressionbonus = (stats.SpellHitRating + character.Talents.GetTalent("Supression").PointsInvested * 2f);
@@ -579,7 +579,7 @@ namespace Rawr.Warlock
 
         private void Calculate(Character character, Stats stats)
         {
-            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier + 1f);
+            DamageModifier *= (stats.BonusShadowSpellPowerMultiplier) * (stats.BonusSpellPowerMultiplier);
             MinDamage = (MinDamage + (SpellDamageCoefficient * (SpellDamage + ShadowDamage))) * DamageModifier;
             AverageDamage = MinDamage;
             float supressionbonus = (stats.SpellHitRating + character.Talents.GetTalent("Supression").PointsInvested * 2f);

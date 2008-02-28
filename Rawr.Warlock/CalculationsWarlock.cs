@@ -107,7 +107,9 @@ namespace Rawr.Warlock
                         "SiphonLife Stats:SL Tick",
                         "SiphonLife Stats:SL Total Damage",
                         "SiphonLife Stats:#SL Casts",
-                        "Lifetap Stats:#Lifetaps"
+                        "Lifetap Stats:#Lifetaps",
+                        "Lifetap Stats:Mana Per LT"
+
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();   
                 }
@@ -230,6 +232,7 @@ namespace Rawr.Warlock
             wsr.Spells = priorityList;
             float[] dps = wsr.GetDPS;
             CharacterCalculationsWarlock ccw = new CharacterCalculationsWarlock();
+            ccw.LifetapManaReturn = wsr.ManaPerLifetap;
             ccw.NumCasts = wsr.NumCasts;
             ccw.NumLifetaps = wsr.NumLifetaps;
             ccw.Spells = new List<Spell>(priorityList.Values);
@@ -353,7 +356,9 @@ namespace Rawr.Warlock
                     statsRace = new Stats();
                     break;
             }
-
+            statsRace.BonusSpellPowerMultiplier = 1;
+            statsRace.BonusShadowSpellPowerMultiplier = 1;
+            statsRace.BonusFireSpellPowerMultiplier = 1;
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -378,7 +383,8 @@ namespace Rawr.Warlock
             //Fel Stamina
             statsMinusBuffs.Stamina *= (1f + 0.01f * tree.GetTalent("FelStamina").PointsInvested);
             //Fel Armor
-            statsMinusBuffs.SpellDamageRating += 100f + (tree.GetTalent("DemonicAegis").PointsInvested * 10f);
+            if (character.Class == Character.CharacterClass.Warlock)
+                statsMinusBuffs.SpellDamageRating += 100f + (tree.GetTalent("DemonicAegis").PointsInvested * 10f);
             //buffs
             Stats statsTotal = statsMinusBuffs + statsBuffs;
 
@@ -406,10 +412,10 @@ namespace Rawr.Warlock
             }
 
             //Emberstorm
-            statsTotal.BonusFireSpellPowerMultiplier += (character.Talents.GetTalent("Emberstorm").PointsInvested * 0.02f);
+            statsTotal.BonusFireSpellPowerMultiplier *= (character.Talents.GetTalent("Emberstorm").PointsInvested * 0.02f);
 
             //Shadow Mastery
-            statsTotal.BonusShadowSpellPowerMultiplier *= (1f + character.Talents.GetTalent("ShadowMastery").PointsInvested * 0.2f);
+            statsTotal.BonusShadowSpellPowerMultiplier *= (1f + character.Talents.GetTalent("ShadowMastery").PointsInvested * 0.02f);
 
 
             //demonic sacrafice
@@ -450,7 +456,7 @@ namespace Rawr.Warlock
 
 
             //Calc final derived stats
-            statsTotal.SpellCritRating += 22.08f * statsTotal.Intellect / 81.92f;
+            statsTotal.SpellCritRating += 22.08f * statsTotal.Intellect / 80.92f;
             statsTotal.Health = (float)Math.Round(((statsTotal.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
             statsTotal.Mana = (float)Math.Round(statsTotal.Mana + 15f * statsTotal.Intellect);
 

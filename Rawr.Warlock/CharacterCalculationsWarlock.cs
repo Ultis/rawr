@@ -46,6 +46,12 @@ namespace Rawr.Warlock
             set;
         }
 
+        public int LifetapManaReturn
+        {
+            get;
+            set;
+        }
+
         public float DPS { get; set; }
 
         public List<Spell> Spells { get; set; }
@@ -63,7 +69,7 @@ namespace Rawr.Warlock
             vals.Add("Intellect", TotalStats.Intellect.ToString());
             vals.Add("Spell Crit Rate", (TotalStats.SpellCritRating / 22.08f).ToString());
             vals.Add("Spell Hit Rate", (TotalStats.SpellHitRating / 12.625f).ToString());
-            vals.Add("Casting Speed", (TotalStats.SpellHasteRating / 1570f + 1f).ToString());
+            vals.Add("Casting Speed", (1f / (TotalStats.SpellHasteRating / 1570f + 1f)).ToString());
             vals.Add("Shadow Damage", (TotalStats.SpellShadowDamageRating + TotalStats.SpellDamageRating).ToString());
             vals.Add("Fire Damage", (TotalStats.SpellFireDamageRating + TotalStats.SpellDamageRating).ToString());
             vals.Add("DPS", DPS.ToString());
@@ -78,7 +84,19 @@ namespace Rawr.Warlock
                 vals.Add("SB Crit Rate", sb.CritPercent.ToString());
                 vals.Add("ISB Uptime", (sb.ISBuptime * 100f).ToString());
                 vals.Add("#SB Casts", NumCasts[sb].ToString());
-                
+
+            }
+            else
+            {
+                vals.Add("SB Min Hit", "");
+                vals.Add("SB Max Hit", "");
+                vals.Add("SB Min Crit", "");
+                vals.Add("SB Max Crit", "");
+                vals.Add("SB Average Hit", "");
+                vals.Add("SB Crit Rate", "");
+                vals.Add("ISB Uptime", "");
+                vals.Add("#SB Casts", "0");
+
             }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "INCINERATE"; }))
             {
@@ -91,6 +109,16 @@ namespace Rawr.Warlock
                 vals.Add("Incinerate Crit Rate", sb.CritPercent.ToString());
                 vals.Add("#Incinerate Casts", NumCasts[sb].ToString());
             }
+            else
+            {
+                vals.Add("Incinerate Min Hit","");
+                vals.Add("Incinerate Max Hit","");
+                vals.Add("Incinerate Min Crit","");
+                vals.Add("Incinerate Max Crit","");
+                vals.Add("Incinerate Average Hit", "");
+                vals.Add("Incinerate Crit Rate","");
+                vals.Add("#Incinerate Casts","0");
+            }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "IMMOLATE"; }))
             {
                 Immolate sb = new Immolate(character, TotalStats);
@@ -102,6 +130,15 @@ namespace Rawr.Warlock
                 vals.Add("ImmolateCrit Rate", sb.CritPercent.ToString());
                 vals.Add("#Immolate Casts", NumCasts[sb].ToString());
             }
+            {
+                vals.Add("ImmolateMin Hit","");
+                vals.Add("ImmolateMax Hit","");
+                vals.Add("ImmolateMin Crit","");
+                vals.Add("ImmolateMax Crit","");
+                vals.Add("ImmolateAverage Hit","");
+                vals.Add("ImmolateCrit Rate","");
+                vals.Add("#Immolate Casts","0");
+            }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "CURSEOFAGONY"; }))
             {
                 CurseOfAgony sb = new CurseOfAgony(character, TotalStats);
@@ -109,11 +146,22 @@ namespace Rawr.Warlock
                 vals.Add("CoA Total Damage", sb.AverageDamage.ToString());
                 vals.Add("#CoA Casts", NumCasts[sb].ToString());
             }
+            else
+            {
+                vals.Add("CoA Tick","");
+                vals.Add("CoA Total Damage","");
+                vals.Add("#CoA Casts","0");
+            }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "CURSEOFDOOM"; }))
             {
                 CurseOfDoom sb = new CurseOfDoom(character, TotalStats);
                 vals.Add("CoD Total Damage", sb.AverageDamage.ToString());
                 vals.Add("#CoD Casts", NumCasts[sb].ToString());
+            }
+            else
+            {
+                vals.Add("CoD Total Damage","");
+                vals.Add("#CoD Casts","");
             }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "CORRUPTION"; }))
             {
@@ -122,12 +170,24 @@ namespace Rawr.Warlock
                 vals.Add("Corr Total Damage", sb.AverageDamage.ToString());
                 vals.Add("#Corr Casts", NumCasts[sb].ToString());
             }
+            else
+            {
+                vals.Add("Corr Tick", "");
+                vals.Add("Corr Total Damage","");
+                vals.Add("#Corr Casts","");
+            }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "UNSTABLEAFFLICTION"; }))
             {
                 UnstableAffliction sb = new UnstableAffliction(character, TotalStats);
                 vals.Add("UA Tick", (sb.AverageDamage / (sb.PeriodicDuration / sb.PeriodicTickInterval)).ToString());
                 vals.Add("UA Total Damage", sb.AverageDamage.ToString());
                 vals.Add("#UA Casts", NumCasts[sb].ToString());
+            }
+            else
+            {
+                vals.Add("UA Tick", "");
+                vals.Add("UA Total Damage","");
+                vals.Add("#UA Casts", "0");
             }
             if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "SIPHONLIFE"; }))
             {
@@ -136,7 +196,14 @@ namespace Rawr.Warlock
                 vals.Add("SL Total Damage", sb.AverageDamage.ToString());
                 vals.Add("#SL Casts", NumCasts[sb].ToString());
             }
+            else
+            {
+                vals.Add("SL Tick","");
+                vals.Add("SL Total Damage","");
+                vals.Add("#SL Casts","0");
+            }
             vals.Add("#Lifetaps", NumLifetaps.ToString());
+            vals.Add("Mana Per LT", LifetapManaReturn.ToString());
             
             return vals;
         }
