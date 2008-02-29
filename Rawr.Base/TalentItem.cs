@@ -35,16 +35,20 @@ namespace Rawr
         {
         }
 
-        public TalentItem(string talentLine)
+        public TalentItem(string talentLine, string tree)
         {
             talentLine = talentLine.Split('=')[1];
             talentLine = talentLine.Split(';')[0];
             talentLine = talentLine.Replace("[","").Replace("]","");
+            talentLine = talentLine.Replace(@"\", "");
+            talentLine = talentLine.Replace(@"/", "");
+            talentLine = talentLine.Replace("\"", "");
             string[] tal = talentLine.Split(',');
             this.Name = tal[1];
             this.Rank = Int32.Parse(tal[2]);
             this.HorizontalPosition = Int32.Parse(tal[3]);
             this.VerticalPosition = Int32.Parse(tal[4]);
+            Tree = tree;
         }
 
 
@@ -116,3 +120,4 @@ namespace Rawr
         }
     }
 }
+

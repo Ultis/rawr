@@ -52,6 +52,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBoxDuration = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -308,10 +309,21 @@
             this.label9.TabIndex = 18;
             this.label9.Text = "Duration (s):";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(9, 405);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(86, 23);
+            this.button1.TabIndex = 20;
+            this.button1.Text = "Show Talents";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // CalculationOptionsPanelWarlock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.textBoxDuration);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.groupBox3);
@@ -361,5 +373,6 @@
         private System.Windows.Forms.TextBox textBoxISBUptime;
         private System.Windows.Forms.TextBox textBoxDuration;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button button1;
 	}
 }

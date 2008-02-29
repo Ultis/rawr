@@ -171,7 +171,7 @@ namespace Rawr
                 string currRow = treeDesc[row];
                 if (currRow.StartsWith("talent["))
                 {
-                    _trees[treeNames[treeNum]].Add(new TalentItem(currRow));
+                    _trees[treeNames[treeNum]].Add(new TalentItem(currRow, treeNames[treeNum]));
                     if (!treeDesc[row + 1].StartsWith("talent[")) treeNum++;
                 }
                 if (treeNum == 3) break ;

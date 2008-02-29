@@ -17,16 +17,44 @@ namespace Rawr.Warlock
         private string _baseAddress = @"http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
 
         private string _basePath = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + @"\talentIcons\";
-
+        private Bitmap _icon;
+        private ToolTip _tt;
+        private string _name;
         public TalentIcon()
         {
             InitializeComponent();
+            panel1.Resize += new EventHandler(panel1_Resize);
+            panel1.MouseHover += new EventHandler(panel1_MouseHover);
+     
+        }
+
+        void panel1_MouseHover(object sender, EventArgs e)
+        {
+            if (_tt == null)
+            {
+                _tt = new ToolTip();
+            }
+            _tt.Show(_name, panel1);
         }
 
         public TalentIcon(TalentItem ti, Character.CharacterClass charClass) : this()
         {
+            
             Talent = ti;
+            _name = ti.Name;
             CharClass = charClass;
+            if (!Directory.Exists(_basePath))
+                Directory.CreateDirectory(_basePath);
+            getIcon(ti, charClass);
+            panel1.Width = _icon.Width;
+            panel1.Height = _icon.Height;
+            
+        }
+
+        void panel1_Resize(object sender, EventArgs e)
+        {
+            this.Width = panel1.Width + 2;
+            this.Height = panel1.Height + 20;
         }
 
         public Character.CharacterClass CharClass
@@ -46,32 +74,37 @@ namespace Rawr.Warlock
             base.OnPaint(e);
             if (Talent != null && CharClass != null)
             {
-                panel1.BackgroundImage = new Bitmap(getIcon(Talent, CharClass));
-                label1.Text = Talent.Name + "(" + Talent.PointsInvested + "/" + Talent.Rank + ")";
+                panel1.BackgroundImage = _icon;
+                label2.Text = "(" + Talent.PointsInvested + "/" + Talent.Rank + ")";
             }
         }
 
         private string getRemoteFilename(TalentItem ti, Character.CharacterClass charclass)
         {
-            return string.Format(_baseAddress, charclass.ToString(), ti.Tree, ti.Name).ToLower();
+            return string.Format(_baseAddress, charclass.ToString(), ti.Tree, ti.Name).ToLower().Replace(" ", "");
         }
 
         private string getFilename(TalentItem ti, Character.CharacterClass charclass)
         {
-            return charclass.ToString().ToLower() + ti.Tree.ToLower() + ti.Name.ToLower() + ".jpg";
+            return (charclass.ToString().ToLower() + ti.Tree.ToLower() + ti.Name.ToLower() + ".jpg").Replace(" ", "");
             
         }
 
-        private string getIcon(TalentItem ti, Character.CharacterClass charclass)
+        private void getIcon(TalentItem ti, Character.CharacterClass charclass)
         {
-            string fullfile = _basePath + getFilename(ti, charclass);
-            if (!File.Exists(fullfile))
+            if (_icon == null)
             {
-                string remoteFile = getRemoteFilename(ti, charclass);
-                WebClient Client = new WebClient();
-                Client.DownloadFile(remoteFile, fullfile);
+                string fullfile = _basePath + getFilename(ti, charclass);
+                if (!File.Exists(fullfile))
+                {
+                    string remoteFile = getRemoteFilename(ti, charclass);
+                    WebClient Client = new WebClient();
+                    Client.DownloadFile(remoteFile, fullfile);
+                }
+                _icon = new Bitmap(fullfile);
             }
-            return fullfile;
+
+            
         }
     }
 }

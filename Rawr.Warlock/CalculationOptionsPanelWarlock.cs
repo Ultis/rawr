@@ -171,6 +171,20 @@ namespace Rawr.Warlock
             Character.OnItemsChanged();
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (Character.Talents != null)
+            {
+                TalentForm tf = new TalentForm();
+                tf.SetParameters(Character.Talents, Character.Class);
+                tf.Show();
+            }
+            else
+            {
+                MessageBox.Show("No talents found");
+            }
+        }
+
        
 
         
