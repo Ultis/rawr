@@ -727,7 +727,7 @@ namespace Rawr.Mage
                         for (j = 0; j <= cols; j++)
                         {
                             a[i, j] = a[i, j] - a[r, j] * v;
-                            if (a[i, j] < 0.0000000000001 && a[i, j] > -0.0000000000001) a[i, j] = 0; // compensate for floating point errors
+                            if (a[i, j] < 0.000000000001 && a[i, j] > -0.000000000001) a[i, j] = 0; // compensate for floating point errors
                         }
                     }
                 }
@@ -842,7 +842,7 @@ namespace Rawr.Mage
                                 for (j = 0, aij = ai; j <= cols; j++, aij++)
                                 {
                                     *aij -= a[r * (cols + 1) + j] * v;
-                                    if (*aij < 0.0000000000001 && *aij > -0.0000000000001) *aij = 0; // compensate for floating point errors
+                                    if (*aij < 0.000000000001 && *aij > -0.000000000001) *aij = 0; // compensate for floating point errors
                                 }
                             }
                         }
