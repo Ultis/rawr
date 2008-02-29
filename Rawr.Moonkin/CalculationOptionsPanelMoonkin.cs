@@ -37,11 +37,14 @@ namespace Rawr.Moonkin
                 Character.CalculationOptions["FightLength"] = "5";
             if (!Character.CalculationOptions.ContainsKey("Innervate"))
                 Character.CalculationOptions["Innervate"] = "No";
+            if (!Character.CalculationOptions.ContainsKey("ShadowPriest"))
+                Character.CalculationOptions["ShadowPriest"] = "0";
 
             cmbTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             chkMetagem.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
             txtLatency.Text = Character.CalculationOptions["Latency"];
             txtFightLength.Text = Character.CalculationOptions["FightLength"];
+            txtShadowPriest.Text = Character.CalculationOptions["ShadowPriest"];
             chkInnervate.Checked = Character.CalculationOptions["Innervate"] == "Yes";
 
             if (talents != null) talents.LoadCalculationOptions();
@@ -59,13 +62,13 @@ namespace Rawr.Moonkin
             Character.OnItemsChanged();
         }
 
-        private void chkMetagem_CheckedChanged(object sender, EventArgs e)
+        private void chkMetagem_Leave(object sender, EventArgs e)
         {
             Character.CalculationOptions["EnforceMetagemRequirements"] = chkMetagem.Checked ? "Yes" : "No";
             Character.OnItemsChanged();
         }
 
-        private void txtFightLength_TextChanged(object sender, EventArgs e)
+        private void txtFightLength_Leave(object sender, EventArgs e)
         {
             Character.CalculationOptions["FightLength"] = txtFightLength.Text;
             Character.OnItemsChanged();
@@ -74,6 +77,12 @@ namespace Rawr.Moonkin
         private void chkInnervate_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["Innervate"] = chkInnervate.Checked ? "Yes" : "No";
+            Character.OnItemsChanged();
+        }
+
+        private void txtShadowPriest_Leave(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ShadowPriest"] = txtShadowPriest.Text;
             Character.OnItemsChanged();
         }
     }

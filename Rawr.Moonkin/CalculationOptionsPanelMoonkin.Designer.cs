@@ -37,6 +37,8 @@
             this.txtFightLength = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.chkInnervate = new System.Windows.Forms.CheckBox();
+            this.txtShadowPriest = new System.Windows.Forms.TextBox();
+            this.lblShadowPriest = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -68,7 +70,7 @@
             this.txtLatency.Name = "txtLatency";
             this.txtLatency.Size = new System.Drawing.Size(93, 20);
             this.txtLatency.TabIndex = 2;
-            this.txtLatency.TextChanged += new System.EventHandler(this.txtLatency_TextChanged);
+            this.txtLatency.Leave += new System.EventHandler(this.txtLatency_TextChanged);
             // 
             // lblLatency
             // 
@@ -88,11 +90,11 @@
             this.chkMetagem.TabIndex = 9;
             this.chkMetagem.Text = "Enforce Metagem Requirements";
             this.chkMetagem.UseVisualStyleBackColor = true;
-            this.chkMetagem.CheckedChanged += new System.EventHandler(this.chkMetagem_CheckedChanged);
+            this.chkMetagem.CheckedChanged += new System.EventHandler(this.chkMetagem_Leave);
             // 
             // btnTalents
             // 
-            this.btnTalents.Location = new System.Drawing.Point(6, 161);
+            this.btnTalents.Location = new System.Drawing.Point(6, 134);
             this.btnTalents.Name = "btnTalents";
             this.btnTalents.Size = new System.Drawing.Size(195, 23);
             this.btnTalents.TabIndex = 8;
@@ -106,7 +108,7 @@
             this.txtFightLength.Name = "txtFightLength";
             this.txtFightLength.Size = new System.Drawing.Size(93, 20);
             this.txtFightLength.TabIndex = 10;
-            this.txtFightLength.TextChanged += new System.EventHandler(this.txtFightLength_TextChanged);
+            this.txtFightLength.Leave += new System.EventHandler(this.txtFightLength_Leave);
             // 
             // label1
             // 
@@ -120,7 +122,7 @@
             // chkInnervate
             // 
             this.chkInnervate.AutoSize = true;
-            this.chkInnervate.Location = new System.Drawing.Point(6, 86);
+            this.chkInnervate.Location = new System.Drawing.Point(6, 111);
             this.chkInnervate.Name = "chkInnervate";
             this.chkInnervate.Size = new System.Drawing.Size(135, 17);
             this.chkInnervate.TabIndex = 12;
@@ -128,10 +130,29 @@
             this.chkInnervate.UseVisualStyleBackColor = true;
             this.chkInnervate.CheckedChanged += new System.EventHandler(this.chkInnervate_CheckedChanged);
             // 
+            // txtShadowPriest
+            // 
+            this.txtShadowPriest.Location = new System.Drawing.Point(108, 85);
+            this.txtShadowPriest.Name = "txtShadowPriest";
+            this.txtShadowPriest.Size = new System.Drawing.Size(93, 20);
+            this.txtShadowPriest.TabIndex = 13;
+            this.txtShadowPriest.Leave += new System.EventHandler(this.txtShadowPriest_Leave);
+            // 
+            // lblShadowPriest
+            // 
+            this.lblShadowPriest.AutoSize = true;
+            this.lblShadowPriest.Location = new System.Drawing.Point(3, 88);
+            this.lblShadowPriest.Name = "lblShadowPriest";
+            this.lblShadowPriest.Size = new System.Drawing.Size(103, 13);
+            this.lblShadowPriest.TabIndex = 14;
+            this.lblShadowPriest.Text = "Shadow Priest MP5:";
+            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblShadowPriest);
+            this.Controls.Add(this.txtShadowPriest);
             this.Controls.Add(this.chkInnervate);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtFightLength);
@@ -159,6 +180,8 @@
         private System.Windows.Forms.TextBox txtFightLength;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkInnervate;
+        private System.Windows.Forms.TextBox txtShadowPriest;
+        private System.Windows.Forms.Label lblShadowPriest;
 
     }
 }

@@ -626,6 +626,12 @@ namespace Rawr
                                     spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                                     stats.SpellArcaneDamageRating += int.Parse(spellDesc);
                                 }
+                                else if (spellDesc.StartsWith("Increases damage done by Nature spells and effects by up to"))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases damage done by Nature spells and effects by up to".Length);
+                                    spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
+                                    stats.SpellNatureDamageRating += int.Parse(spellDesc);
+                                }
                                 else if (spellDesc.StartsWith("Improves spell haste rating by"))
                                 {
                                     spellDesc = spellDesc.Substring("Improves spell haste rating by".Length);

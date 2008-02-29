@@ -112,6 +112,9 @@ namespace Rawr
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Arcane Damage")]
         public float SpellArcaneDamageRating { get; set; }
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Nature Damage")]
+        public float SpellNatureDamageRating { get; set; }
 
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Penetration")]
@@ -309,6 +312,10 @@ namespace Rawr
         public float BonusArcaneSpellPowerMultiplier { get; set; }
 
         [Multiplicative]
+        [DisplayName("% Nature Damage")]
+        public float BonusNatureSpellPowerMultiplier { get; set; }
+
+        [Multiplicative]
         [DisplayName("% Frost Damage")]
         public float BonusFrostSpellPowerMultiplier { get; set; }
 
@@ -399,6 +406,7 @@ namespace Rawr
                 BonusFrostSpellPowerMultiplier = (1f + a.BonusFrostSpellPowerMultiplier) * (1f + b.BonusFrostSpellPowerMultiplier) - 1f,
                 BonusArcaneSpellPowerMultiplier = (1f + a.BonusArcaneSpellPowerMultiplier) * (1f + b.BonusArcaneSpellPowerMultiplier) - 1f,
                 BonusShadowSpellPowerMultiplier = (1f + a.BonusShadowSpellPowerMultiplier) * (1f + b.BonusShadowSpellPowerMultiplier) - 1f,
+                BonusNatureSpellPowerMultiplier = (1f + a.BonusNatureSpellPowerMultiplier) * (1f + b.BonusNatureSpellPowerMultiplier) - 1f,
                 BonusSpiritMultiplier = (1f + a.BonusSpiritMultiplier) * (1f + b.BonusSpiritMultiplier) - 1f,
 				SpellCritRating = a.SpellCritRating + b.SpellCritRating,
                 SpellFrostCritRating = a.SpellFrostCritRating + b.SpellFrostCritRating,
@@ -408,7 +416,8 @@ namespace Rawr
 				SpellHitRating = a.SpellHitRating + b.SpellHitRating,
 				SpellShadowDamageRating = a.SpellShadowDamageRating + b.SpellShadowDamageRating,
 				SpellFrostDamageRating = a.SpellFrostDamageRating + b.SpellFrostDamageRating,
-				SpellArcaneDamageRating = a.SpellArcaneDamageRating + b.SpellArcaneDamageRating,
+                SpellArcaneDamageRating = a.SpellArcaneDamageRating + b.SpellArcaneDamageRating,
+                SpellNatureDamageRating = a.SpellNatureDamageRating + b.SpellNatureDamageRating,
                 SpellPenetration = a.SpellPenetration + b.SpellPenetration,
                 Mana = a.Mana + b.Mana,
                 LightningCapacitorProc = a.LightningCapacitorProc + b.LightningCapacitorProc,

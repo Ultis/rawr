@@ -248,7 +248,6 @@ namespace Rawr.Moonkin
             if (missRate < 0.01f) missRate = 0.01f;
             
             // Get total effective mana pool and total effective dps time
-            float innervateTime = character.CalculationOptions["Innervate"] == "Yes" ? ((int)calcs.FightLength / 6 + 1) * 20.0f : 0.0f;
             float fightLength = calcs.FightLength * 60;
 
             float totalMana = GetEffectiveManaPool(character, calcs);
