@@ -42,8 +42,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.checkSacraficed = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.textBoxISBUptime = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkUnstable = new System.Windows.Forms.CheckBox();
             this.checkSiphonLife = new System.Windows.Forms.CheckBox();
@@ -193,31 +191,13 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Controls.Add(this.textBoxISBUptime);
+            this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Location = new System.Drawing.Point(6, 320);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(191, 67);
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Misc";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(17, 19);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(52, 26);
-            this.label8.TabIndex = 19;
-            this.label8.Text = "Raid ISB \r\nUptime";
-            // 
-            // textBoxISBUptime
-            // 
-            this.textBoxISBUptime.Location = new System.Drawing.Point(80, 19);
-            this.textBoxISBUptime.Name = "textBoxISBUptime";
-            this.textBoxISBUptime.Size = new System.Drawing.Size(93, 20);
-            this.textBoxISBUptime.TabIndex = 18;
-            this.textBoxISBUptime.TextChanged += new System.EventHandler(this.textBoxISBUptime_TextChanged);
             // 
             // groupBox2
             // 
@@ -311,7 +291,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(9, 405);
+            this.button1.Location = new System.Drawing.Point(98, 19);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(86, 23);
             this.button1.TabIndex = 20;
@@ -323,7 +303,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.textBoxDuration);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.groupBox3);
@@ -338,7 +317,6 @@
             this.Name = "CalculationOptionsPanelWarlock";
             this.Size = new System.Drawing.Size(208, 597);
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -369,8 +347,6 @@
         private System.Windows.Forms.CheckBox checkCorruption;
         private System.Windows.Forms.CheckBox checkImmolate;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox textBoxISBUptime;
         private System.Windows.Forms.TextBox textBoxDuration;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button1;
