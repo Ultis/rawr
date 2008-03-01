@@ -145,35 +145,6 @@ namespace Rawr.Mage
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMage(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsMage(); }
 
-        private void CombineTemporaryBuffs(List<CharacterCalculationsMage> statsList, Stats characterStats, CompiledCalculationOptions calculationOptions, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism)
-        {
-            bool trinket1Available = IsItemActivatable(character.Trinket1);
-            bool trinket2Available = IsItemActivatable(character.Trinket2);
-
-            for (int combustion = 0; combustion < 2; combustion++)
-            {
-                for (int flameCap = 0; flameCap < 2; flameCap++)
-                {
-                    for (int trinket1 = 0; trinket1 < 2; trinket1++)
-                    {
-                        for (int trinket2 = 0; trinket2 < 2; trinket2++)
-                        {
-                            for (int destructionPotion = 0; destructionPotion < 2; destructionPotion++)
-                            {
-                                if ((calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1) && (combustion == 1 || calculationOptions.Combustion == 1))
-                                {
-                                    if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
-                                    {
-                                        statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, character, additionalItem, arcanePower, moltenFury, icyVeins, heroism, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         private bool IsItemActivatable(Item item)
         {
             if (item == null) return false;
@@ -311,15 +282,23 @@ namespace Rawr.Mage
             // temporary buffs: Arcane Power, Icy Veins, Molten Fury, Combustion?, Trinket1, Trinket2, Heroism, Destro Pot, Flame Cap, Drums?
             // compute stats for temporary bonuses, each gives a list of spells used for final LP, solutions of LP stored in calculatedStats
             List<CharacterCalculationsMage> statsList = new List<CharacterCalculationsMage>();
-            if (mfAvailable && heroismAvailable) CombineTemporaryBuffs(statsList, characterStats, calculationOptions, character, additionalItem, false, true, false, true);
-            if (mfAvailable && ivAvailable) CombineTemporaryBuffs(statsList, characterStats, calculationOptions, character, additionalItem, false, true, true, false);
-            if (mfAvailable) CombineTemporaryBuffs(statsList, characterStats, calculationOptions, character, additionalItem, false, true, false, false);
-            if (heroismAvailable && apAvailable) CombineTemporaryBuffs(statsList, characterStats, calculationOptions, character, additionalItem, true, false, false, true);
-            if (heroismAvailable) CombineTemporaryBuffs(statsList, characterStats, calculationOptions, character, additionalItem, false, false, false, true);
-            if (ivAvailable && apAvailable) CombineTemporaryBuffs(statsList, characterStats, calculationOptions, character, additionalItem, true, false, true, false);
-            if (apAvailable) CombineTemporaryBuffs(statsList, characterStats, calculationOptions, character, additionalItem, true, false, false, false);
-            if (ivAvailable) CombineTemporaryBuffs(statsList, characterStats, calculationOptions, character, additionalItem, false, false, true, false);
-            CombineTemporaryBuffs(statsList, characterStats, calculationOptions, character, additionalItem, false, false, false, false);
+
+            for (int mf = 0; mf < 2; mf++)
+            for (int heroism = 0; heroism < 2; heroism++)
+            for (int ap = 0; ap < 2; ap++)
+            for (int iv = 0; iv < 2; iv++)
+            for (int combustion = 0; combustion < 2; combustion++)
+            for (int flameCap = 0; flameCap < 2; flameCap++)
+            for (int trinket1 = 0; trinket1 < 2; trinket1++)
+            for (int trinket2 = 0; trinket2 < 2; trinket2++)
+            for (int destructionPotion = 0; destructionPotion < 2; destructionPotion++)
+                if ((mfAvailable || mf == 1) && (heroismAvailable || heroism == 1) && (apAvailable || ap == 1) && (ivAvailable || iv == 1) && (calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1) && (combustion == 1 || calculationOptions.Combustion == 1))
+                {
+                    if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
+                    {
+                        statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, character, additionalItem, ap == 0, mf == 0, iv == 0, heroism == 0, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0));
+                    }
+                }
 
             CharacterCalculationsMage calculatedStats = statsList[statsList.Count - 1];
 
@@ -811,7 +790,7 @@ namespace Rawr.Mage
                         for (j = 0; j <= cols; j++)
                         {
                             a[i, j] = a[i, j] - a[r, j] * v;
-                            if (a[i, j] < 0.000000000001 && a[i, j] > -0.000000000001) a[i, j] = 0; // compensate for floating point errors
+                            if (a[i, j] < 0.00000000001 && a[i, j] > -0.00000000001) a[i, j] = 0; // compensate for floating point errors
                         }
                     }
                 }
@@ -926,7 +905,7 @@ namespace Rawr.Mage
                                 for (j = 0, aij = ai; j <= cols; j++, aij++)
                                 {
                                     *aij -= a[r * (cols + 1) + j] * v;
-                                    if (*aij < 0.000000000001 && *aij > -0.000000000001) *aij = 0; // compensate for floating point errors
+                                    if (*aij < 0.00000000001 && *aij > -0.00000000001) *aij = 0; // compensate for floating point errors
                                 }
                             }
                         }
