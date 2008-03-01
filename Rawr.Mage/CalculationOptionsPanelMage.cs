@@ -17,6 +17,7 @@ namespace Rawr.Mage
 		}
 
         private MageTalentsForm talents;
+        private bool loading = false;
 
 		protected override void LoadCalculationOptions()
 		{
@@ -66,6 +67,10 @@ namespace Rawr.Mage
                 Character.CalculationOptions["EvocationWeapon"] = "0";
             if (!Character.CalculationOptions.ContainsKey("AoeDuration"))
                 Character.CalculationOptions["AoeDuration"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("SmartOptimization"))
+                Character.CalculationOptions["SmartOptimization"] = "1";
+
+            loading = true;
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             comboBoxAoeTargetLevel.SelectedItem = Character.CalculationOptions["AoeTargetLevel"];
@@ -90,26 +95,30 @@ namespace Rawr.Mage
             textBoxInterruptFrequency.Text = Character.CalculationOptions["InterruptFrequency"];
             textBoxEvocationWeapon.Text = Character.CalculationOptions["EvocationWeapon"];
             textBoxAoeDuration.Text = Character.CalculationOptions["AoeDuration"];
+            checkBoxSmartOptimization.Checked = Character.CalculationOptions["SmartOptimization"] == "1";
 
             if (talents != null) talents.LoadCalculationOptions();
+
+            loading = false;
+            Character.OnItemsChanged();
         }
 	
 		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			Character.CalculationOptions["TargetLevel"] = comboBoxTargetLevel.SelectedItem.ToString();
-			Character.OnItemsChanged();
+			if (!loading) Character.OnItemsChanged();
 		}
 
 		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
 		{
 			Character.CalculationOptions["EnforceMetagemRequirements"] = checkBoxEnforceMetagemRequirements.Checked ? "Yes" : "No";
-			Character.OnItemsChanged();
-		}
+            if (!loading) Character.OnItemsChanged();
+        }
 
         private void comboBoxAoeTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["AoeTargetLevel"] = comboBoxAoeTargetLevel.SelectedItem.ToString();
-            Character.OnItemsChanged();
+            if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxLatency_TextChanged(object sender, EventArgs e)
@@ -118,7 +127,7 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxLatency.Text, out value))
             {
                 Character.CalculationOptions["Latency"] = textBoxLatency.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
@@ -130,7 +139,7 @@ namespace Rawr.Mage
         private void comboBoxArmor_SelectedIndexChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["MageArmor"] = comboBoxArmor.SelectedItem.ToString();
-            Character.OnItemsChanged();
+            if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxAoeTargets_TextChanged(object sender, EventArgs e)
@@ -139,7 +148,7 @@ namespace Rawr.Mage
             if (int.TryParse(textBoxAoeTargets.Text, out value))
             {
                 Character.CalculationOptions["AoeTargets"] = textBoxAoeTargets.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
@@ -149,7 +158,7 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxArcaneResist.Text, out value))
             {
                 Character.CalculationOptions["ArcaneResist"] = textBoxArcaneResist.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
@@ -159,7 +168,7 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxFireResist.Text, out value))
             {
                 Character.CalculationOptions["FireResist"] = textBoxFireResist.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
@@ -169,7 +178,7 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxFrostResist.Text, out value))
             {
                 Character.CalculationOptions["FrostResist"] = textBoxFrostResist.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
@@ -179,7 +188,7 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxNatureResist.Text, out value))
             {
                 Character.CalculationOptions["NatureResist"] = textBoxNatureResist.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
@@ -189,7 +198,7 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxFightDuration.Text, out value))
             {
                 Character.CalculationOptions["FightDuration"] = textBoxFightDuration.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
@@ -199,14 +208,14 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxShadowPriest.Text, out value))
             {
                 Character.CalculationOptions["ShadowPriest"] = textBoxShadowPriest.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
         private void checkBoxHeroism_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["HeroismAvailable"] = checkBoxHeroism.Checked ? "1" : "0";
-            Character.OnItemsChanged();
+            if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxMoltenFuryPercentage_TextChanged(object sender, EventArgs e)
@@ -215,26 +224,26 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxMoltenFuryPercentage.Text, out value))
             {
                 Character.CalculationOptions["MoltenFuryPercentage"] = textBoxMoltenFuryPercentage.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
         private void checkBoxDestructionPotion_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["DestructionPotion"] = checkBoxDestructionPotion.Checked ? "1" : "0";
-            Character.OnItemsChanged();
+            if (!loading) Character.OnItemsChanged();
         }
 
         private void checkBoxFlameCap_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["FlameCap"] = checkBoxFlameCap.Checked ? "1" : "0";
-            Character.OnItemsChanged();
+            if (!loading) Character.OnItemsChanged();
         }
 
         private void checkBoxABCycles_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["ABCycles"] = checkBoxABCycles.Checked ? "1" : "0";
-            Character.OnItemsChanged();
+            if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxDpsTime_TextChanged(object sender, EventArgs e)
@@ -243,14 +252,14 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxDpsTime.Text, out value))
             {
                 Character.CalculationOptions["DpsTime"] = textBoxDpsTime.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
         private void checkBoxMaintainScorch_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["MaintainScorch"] = checkBoxMaintainScorch.Checked ? "1" : "0";
-            Character.OnItemsChanged();
+            if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxInterruptFrequency_TextChanged(object sender, EventArgs e)
@@ -259,7 +268,7 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxInterruptFrequency.Text, out value))
             {
                 Character.CalculationOptions["InterruptFrequency"] = textBoxInterruptFrequency.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
@@ -269,7 +278,7 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxShadowResist.Text, out value))
             {
                 Character.CalculationOptions["ShadowResist"] = textBoxShadowResist.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
@@ -279,7 +288,7 @@ namespace Rawr.Mage
             if (int.TryParse(textBoxEvocationWeapon.Text, out value))
             {
                 Character.CalculationOptions["EvocationWeapon"] = textBoxEvocationWeapon.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
         }
 
@@ -289,8 +298,14 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxAoeDuration.Text, out value))
             {
                 Character.CalculationOptions["AoeDuration"] = textBoxAoeDuration.Text;
-                Character.OnItemsChanged();
+                if (!loading) Character.OnItemsChanged();
             }
+        }
+
+        private void checkBoxSmartOptimization_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["SmartOptimization"] = checkBoxSmartOptimization.Checked ? "1" : "0";
+            if (!loading) Character.OnItemsChanged();
         }
 	}
 }

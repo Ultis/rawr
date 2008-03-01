@@ -64,10 +64,12 @@ namespace Rawr.Mage
                     "Spell Info:ABAM",
                     "Spell Info:AB3AMSc*Prefer pause over longer filler",
                     "Spell Info:ABAM3Sc*Prefer pause over longer filler",
-                    "Spell Info:ABAM3ScCCAM*Arcane Missiles on clearcast",
                     "Spell Info:ABAM3Sc2*Fill until debuff almost out",
                     "Spell Info:ABAM3FrB*Prefer pause over longer filler",
                     "Spell Info:ABAM3FrB2*Fill until debuff almost out",
+                    "Spell Info:ABAM3ScCCAM*Arcane Missiles on clearcast",
+                    "Spell Info:ABAM3Sc2CCAM*Arcane Missiles on clearcast",
+                    "Spell Info:ABAM3FrB2CCAM*Arcane Missiles on clearcast",
                     "Spell Info:ABFrB3FrB*Prefer pause over longer filler",
                     "Spell Info:ABFrB3FrB2*Fill until debuff almost out",
                     "Spell Info:ABFB3FBSc*Typically FB-FB-Sc filler",
@@ -148,19 +150,22 @@ namespace Rawr.Mage
             bool trinket1Available = IsItemActivatable(character.Trinket1);
             bool trinket2Available = IsItemActivatable(character.Trinket2);
 
-            for (int flameCap = 0; flameCap < 2; flameCap++)
+            for (int combustion = 0; combustion < 2; combustion++)
             {
-                for (int trinket1 = 0; trinket1 < 2; trinket1++)
+                for (int flameCap = 0; flameCap < 2; flameCap++)
                 {
-                    for (int trinket2 = 0; trinket2 < 2; trinket2++)
+                    for (int trinket1 = 0; trinket1 < 2; trinket1++)
                     {
-                        for (int destructionPotion = 0; destructionPotion < 2; destructionPotion++)
+                        for (int trinket2 = 0; trinket2 < 2; trinket2++)
                         {
-                            if ((calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1))
+                            for (int destructionPotion = 0; destructionPotion < 2; destructionPotion++)
                             {
-                                if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
+                                if ((calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1) && (combustion == 1 || calculationOptions.Combustion == 1))
                                 {
-                                    statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, character, additionalItem, arcanePower, moltenFury, icyVeins, heroism, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0));
+                                    if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
+                                    {
+                                        statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, character, additionalItem, arcanePower, moltenFury, icyVeins, heroism, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0));
+                                    }
                                 }
                             }
                         }
@@ -279,14 +284,29 @@ namespace Rawr.Mage
             bool heroismAvailable = calculationOptions.HeroismAvailable;
             bool apAvailable = int.Parse(character.CalculationOptions["ArcanePower"]) == 1;
             bool ivAvailable = int.Parse(character.CalculationOptions["IcyVeins"]) == 1;
+            bool combustionAvailable = int.Parse(character.CalculationOptions["Combustion"]) == 1;
             bool mfAvailable = int.Parse(character.CalculationOptions["MoltenFury"]) > 0;
             bool trinket1Available = IsItemActivatable(character.Trinket1);
             bool trinket2Available = IsItemActivatable(character.Trinket2);
             bool coldsnap = int.Parse(character.CalculationOptions["ColdSnap"]) == 1;
             float coldsnapCooldown = 8 * 60 * (1 - 0.1f * int.Parse(character.CalculationOptions["IceFloes"]));
+            float combustionDuration = 0, combustionCooldown = 0, combustionCount = 0;
 
             double trinket1cooldown = 0, trinket1duration = 0, trinket2cooldown = 0, trinket2duration = 0, t1length = 0, t2length = 0;
             bool t1ismg = false, t2ismg = false;
+
+            if (calculationOptions.SmartOptimization)
+            {
+                if (calculationOptions.SpellPower == 0)
+                {
+                    calculationOptions.ABCycles = false;
+                }
+                else
+                {
+                    calculationOptions.DestructionPotion = false;
+                    calculationOptions.FlameCap = false;
+                }
+            }
 
             // temporary buffs: Arcane Power, Icy Veins, Molten Fury, Combustion?, Trinket1, Trinket2, Heroism, Destro Pot, Flame Cap, Drums?
             // compute stats for temporary bonuses, each gives a list of spells used for final LP, solutions of LP stored in calculatedStats
@@ -303,7 +323,54 @@ namespace Rawr.Mage
 
             CharacterCalculationsMage calculatedStats = statsList[statsList.Count - 1];
 
-            List<string> spellList = new List<string>() { "Arcane Missiles", "Scorch", calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc", "ABAM3ScCCAM" };
+            List<string> spellList = new List<string>();
+
+            if (calculationOptions.SmartOptimization)
+            {
+                if (calculationOptions.EmpoweredFireball > 0)
+                {
+                    spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
+                }
+                else if (calculationOptions.EmpoweredFrostbolt > 0)
+                {
+                    spellList.Add("Frostbolt");
+                }
+                else if (calculationOptions.SpellPower > 0)
+                {
+                    spellList.Add("Arcane Blast");
+                }
+                else
+                {
+                    spellList.Add("Arcane Missiles");
+                    spellList.Add("Scorch");
+                    spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
+                    spellList.Add("Frostbolt");
+                    spellList.Add("Arcane Blast");
+                }
+            }
+            else
+            {
+                spellList.Add("Arcane Missiles");
+                spellList.Add("Scorch");
+                spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
+                spellList.Add("Frostbolt");
+                spellList.Add("Arcane Blast");
+            }
+            if (calculationOptions.ABCycles)
+            {
+                spellList.Add("ABAM");
+                spellList.Add("AB3AMSc");
+                spellList.Add("ABAM3Sc");
+                spellList.Add("ABAM3Sc2");
+                spellList.Add("ABAM3FrB");
+                spellList.Add("ABAM3FrB2");
+                spellList.Add("ABFrB3FrB");
+                spellList.Add("ABFrB3FrB2");
+                spellList.Add("ABFB3FBSc");
+                spellList.Add("ABAM3ScCCAM");
+                spellList.Add("ABAM3Sc2CCAM");
+                spellList.Add("ABAM3FrB2CCAM");
+            }
             if (calculationOptions.AoeDuration > 0)
             {
                 spellList.Add("Arcane Explosion");
@@ -315,7 +382,7 @@ namespace Rawr.Mage
                 if (calculationOptions.DragonsBreath == 1) spellList.Add("Dragon's Breath");
             }
 
-            int lpRows = 30;
+            int lpRows = 33;
             int colOffset = 6;
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
             CompactLP lp = new CompactLP(lpRows, lpCols);
@@ -363,6 +430,8 @@ namespace Rawr.Mage
                 t2length = (1 + (int)((calculatedStats.FightDuration - trinket2duration) / trinket2cooldown)) * trinket2duration;
             }
 
+            combustionCount = combustionAvailable ? (1 + (int)((calculatedStats.FightDuration - 15f) / 195f)) : 0;
+
             int coldsnapCount = coldsnap ? (1 + (int)((calculatedStats.FightDuration - 45f) / coldsnapCooldown)) : 0;
             double coldsnapDelay = 0;
             if (ivAvailable) coldsnapDelay = 20;
@@ -376,7 +445,6 @@ namespace Rawr.Mage
                 // 45 sec, 3 min cooldown + cold snap
                 // 2.5 sec Waterbolt, affected by heroism, totems, 0.4x frost damage from character
                 // TODO consider adding water elemental as part of optimization for stacking with cooldowns
-                // TODO cold snap
                 float spellHit = 0;
                 if (character.ActiveBuffs.Contains("Totem of Wrath")) spellHit += 0.03f;
                 if (character.ActiveBuffs.Contains("Inspiring Presence")) spellHit += 0.01f;
@@ -398,7 +466,7 @@ namespace Rawr.Mage
                     calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDuration * calculatedStats.WaterElementalDps;
             }
 
-            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time, aoe duration, flamestrike, cone of cold, blast wave, dragon's breath]
+            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time, aoe duration, flamestrike, cone of cold, blast wave, dragon's breath, combustion, combustion+mf]
             double aplength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
             double ivlength = (1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 30f) / 180f)) * 20;
             double mflength = calculationOptions.MoltenFuryPercentage * calculatedStats.FightDuration;
@@ -429,10 +497,17 @@ namespace Rawr.Mage
                 for (int spell = 0; spell < spellList.Count; spell++)
                 {
                     Spell s = statsList[buffset].GetSpell(spellList[spell]);
-                    if ((s.AffectedByFlameCap || !statsList[buffset].FlameCap) && (!s.ABCycle || calculationOptions.ABCycles))
+                    bool spellRelevant = true;
+                    if (!s.AffectedByFlameCap && statsList[buffset].FlameCap) spellRelevant = false;
+                    if (s.ABCycle && !calculationOptions.ABCycles) spellRelevant = false;
+                    if (calculationOptions.SmartOptimization)
                     {
+                        if (calculationOptions.EmpoweredFireball > 0)
+                        {
+                            if (!s.AreaEffect && !(s is Fireball || s is FireballScorch)) spellRelevant = false;
+                        }
                     }
-                    else
+                    if (!spellRelevant)
                     {
                         int index = buffset * spellList.Count + spell + colOffset - 1;
                         lp.DisableColumn(index);
@@ -469,6 +544,9 @@ namespace Rawr.Mage
                 lp.DisableRow(28);
                 lp.DisableRow(29);
             }
+            if (!combustionAvailable) lp.DisableRow(30);
+            if (!(combustionAvailable && mfAvailable)) lp.DisableRow(31);
+            if (!(combustionAvailable && heroismAvailable)) lp.DisableRow(32);
 
             
             lp.Compact();
@@ -502,7 +580,7 @@ namespace Rawr.Mage
                 if (character.Ranged != null) evocationRawStats.Intellect -= character.Ranged.GetTotalStats().Intellect;
                 evocationRawStats.Intellect += calculationOptions.EvocationWeapon;
                 Stats evocationStats = GetCharacterStats(character, additionalItem, evocationRawStats);
-                evocationMana = evocationStats.Mana;
+                if (evocationStats.Mana > evocationMana) evocationMana = evocationStats.Mana;
             }
             lp[0, 2] = -calculatedStats.ManaRegen5SR - 0.15f * evocationMana / 2f;
             lp[1, 2] = 1;
@@ -597,6 +675,9 @@ namespace Rawr.Mage
                                 lp[29, index] = -1;
                             }
                         }
+                        lp[30, index] = (statsList[buffset].Combustion) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
+                        lp[31, index] = (statsList[buffset].Combustion && statsList[buffset].MoltenFury) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
+                        lp[32, index] = (statsList[buffset].Combustion && statsList[buffset].Heroism) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
                         lp[lpRows, index] = s.DamagePerSecond;
                     }
                     else
@@ -630,6 +711,9 @@ namespace Rawr.Mage
             if (heroismAvailable && trinket2Available) lp[22, lpCols] = trinket2duration;
             lp[24, lpCols] = - (1 - float.Parse(character.CalculationOptions["DpsTime"])) * calculationOptions.FightDuration;
             lp[25, lpCols] = calculationOptions.AoeDuration * calculationOptions.FightDuration;
+            lp[30, lpCols] = combustionCount;
+            lp[31, lpCols] = 1;
+            lp[32, lpCols] = 1;
 
             calculatedStats.Solution = lp.Solve();
 
@@ -863,7 +947,24 @@ namespace Rawr.Mage
             return ret;
         }
 
-        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Stats characterStats, CompiledCalculationOptions calculationOptions, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2)
+        private float Combustion(float critRate)
+        {
+            float c0 = 1, c1 = 0, c2 = 0, c3 = 0;
+            float duration = 0;
+
+            for (int cast = 1; cast <= 13; cast++)
+            {
+                c3 = critRate * c2;
+                c2 = c2 * (1 - critRate) + c1 * critRate;
+                c1 = c1 * (1 - critRate) + c0 * critRate;
+                c0 = c0 * (1 - critRate);
+                critRate = Math.Min(critRate + 0.1f, 1f);
+                duration += c3 * cast;
+            }
+            return duration;
+        }
+
+        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Stats characterStats, CompiledCalculationOptions calculationOptions, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion)
         {
             CharacterCalculationsMage calculatedStats = new CharacterCalculationsMage();
             Stats stats = characterStats.Clone();
@@ -938,12 +1039,14 @@ namespace Rawr.Mage
             calculatedStats.FlameCap = flameCap;
             calculatedStats.Trinket1 = trinket1;
             calculatedStats.Trinket2 = trinket2;
+            calculatedStats.Combustion = combustion;
 
             List<String> buffList = new List<string> ();
             if (moltenFury) buffList.Add("Molten Fury");
             if (heroism) buffList.Add("Heroism");
             if (icyVeins) buffList.Add("Icy Veins");
             if (arcanePower) buffList.Add("Arcane Power");
+            if (combustion) buffList.Add("Combustion");
             if (flameCap) buffList.Add("Flame Cap");
             if (trinket1) buffList.Add(character.Trinket1.Name);
             if (trinket2) buffList.Add(character.Trinket2.Name);
@@ -996,7 +1099,11 @@ namespace Rawr.Mage
 
             calculatedStats.ArcaneCritRate = calculatedStats.SpellCrit;
             calculatedStats.FireCritRate = calculatedStats.SpellCrit + 0.02f * calculationOptions.CriticalMass + 0.01f * calculationOptions.Pyromaniac;
-            if (calculationOptions.Combustion == 1) calculatedStats.FireCritRate += (float)(-0.04f * Math.Pow(calculatedStats.FireCritRate, 3) + 0.09f * Math.Pow(calculatedStats.FireCritRate, 2) - 0.08f * calculatedStats.FireCritRate + 0.03f);
+            if (combustion)
+            {
+                calculatedStats.CombustionDuration = Combustion(calculatedStats.FireCritRate);
+                calculatedStats.FireCritRate = 3 / calculatedStats.CombustionDuration;
+            }
             calculatedStats.FrostCritRate = calculatedStats.SpellCrit + stats.SpellFrostCritRating / 22.08f / 100f;
             calculatedStats.NatureCritRate = calculatedStats.SpellCrit;
             calculatedStats.ShadowCritRate = calculatedStats.SpellCrit;

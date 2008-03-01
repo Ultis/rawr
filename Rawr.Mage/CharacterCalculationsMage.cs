@@ -29,6 +29,7 @@ namespace Rawr.Mage
         public bool JudgementOfWisdom { get; set; }
         public float EvocationWeapon { get; set; }
         public float AoeDuration { get; set; }
+        public bool SmartOptimization { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -87,6 +88,7 @@ namespace Rawr.Mage
             JudgementOfWisdom = character.ActiveBuffs.Contains("Judgement of Wisdom");
             EvocationWeapon = float.Parse(character.CalculationOptions["EvocationWeapon"]);
             AoeDuration = float.Parse(character.CalculationOptions["AoeDuration"]);
+            SmartOptimization = character.CalculationOptions["SmartOptimization"] == "1";
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"]);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"]);
@@ -214,6 +216,8 @@ namespace Rawr.Mage
         public bool Trinket1 { get; set; }
         public bool Trinket2 { get; set; }
         public bool WaterElemental { get; set; }
+        public bool Combustion { get; set; }
+        public float CombustionDuration { get; set; }
         public float Mp5OnCastFor20Sec { get; set; }
 
         public float WaterElementalDps { get; set; }
@@ -315,6 +319,12 @@ namespace Rawr.Mage
                 case "ABAM3ScCCAM":
                     s = new ABAM3ScCCAM(Character, this);
                     break;
+                case "ABAM3Sc2CCAM":
+                    s = new ABAM3Sc2CCAM(Character, this);
+                    break;
+                case "ABAM3FrB2CCAM":
+                    s = new ABAM3FrB2CCAM(Character, this);
+                    break;
                 case "Arcane Explosion":
                     s = new ArcaneExplosion(Character, this);
                     break;
@@ -354,7 +364,7 @@ namespace Rawr.Mage
             dictValues.Add("Spell Crit Rate", String.Format("{0:F}%", 100 * SpellCrit));
             dictValues.Add("Spell Hit Rate", String.Format("{0:F}%", 100 * SpellHit));
             dictValues.Add("Spell Penetration", BasicStats.SpellPenetration.ToString());
-            dictValues.Add("Casting Speed", CastingSpeed.ToString());
+            dictValues.Add("Casting Speed", String.Format("{0}*{1} Spell Haste Rating", CastingSpeed, BasicStats.SpellHasteRating));
             dictValues.Add("Arcane Damage", ArcaneDamage.ToString());
             dictValues.Add("Fire Damage", FireDamage.ToString());
             dictValues.Add("Frost Damage", FrostDamage.ToString());
@@ -371,7 +381,7 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold" };
+            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrB2", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM", "ABAM3Sc2CCAM", "ABAM3FrB2CCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold" };
             foreach (string spell in spellList)
             {
                 Spell s = GetSpell(spell);
