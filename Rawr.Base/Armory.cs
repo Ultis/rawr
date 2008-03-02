@@ -678,6 +678,10 @@ namespace Rawr
                                 {
                                     stats.SpellHasteFor6SecOnHit_10_45 += 320;
                                 }
+                                else if (spellDesc.StartsWith("Chance on spell critical hit to increase your spell damage and healing by 225 for 10 secs."))
+                                {
+                                    stats.SpellDamageFor10SecOnCrit_20_45 += 225;
+                                }
                                 //Your spell critical strikes have a chance to increase your spell damage and healing by 190 for 15 sec.
                                 else if (spellDesc.StartsWith("Your spell critical strikes have a chance to increase your spell damage and healing by "))
                                 {

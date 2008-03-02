@@ -284,6 +284,7 @@ namespace Rawr.Mage
             if (calculations.BasicStats.SpellDamageFor10SecOnHit_10_45 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
             if (calculations.BasicStats.SpellDamageFor10SecOnResist > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnResist * ProcBuffUp(1 - (float)Math.Pow(HitRate, HitProcs), 10, CastTime);
             if (calculations.BasicStats.SpellDamageFor15SecOnCrit_20_45 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor15SecOnCrit_20_45 * 15f / (45f + CastTime / HitProcs / 0.2f / CritRate);
+            if (calculations.BasicStats.SpellDamageFor10SecOnCrit_20_45 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnCrit_20_45 * 10f / (45f + CastTime / HitProcs / 0.2f / CritRate);
 
             SpellDamage = RawSpellDamage * SpellDamageCoefficient;
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f + SpellDamage;

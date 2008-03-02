@@ -273,6 +273,11 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float SpellDamageFor15SecOnCrit_20_45 { get; set; }
 
+        // 20% chance, 45 sec internal cooldown
+        [DisplayName("Spell Damage (10 sec)")]
+        [Category("Equipment Procs")]
+        public float SpellDamageFor10SecOnCrit_20_45 { get; set; }
+
         public float EvocationExtension { get; set; }
 
         [Category("Equipment Procs")]
@@ -447,7 +452,8 @@ namespace Rawr
                 SpellHasteFor5SecOnCrit_50 = a.SpellHasteFor5SecOnCrit_50 + b.SpellHasteFor5SecOnCrit_50,
                 SpellHasteFor6SecOnCast_15_45 = a.SpellHasteFor6SecOnCast_15_45 + b.SpellHasteFor6SecOnCast_15_45,
                 SpellDamageFor10SecOnHit_5 = a.SpellDamageFor10SecOnHit_5 + b.SpellDamageFor10SecOnHit_5,
-                SpellHasteFor6SecOnHit_10_45 = a.SpellHasteFor6SecOnHit_10_45 + b.SpellHasteFor6SecOnHit_10_45
+                SpellHasteFor6SecOnHit_10_45 = a.SpellHasteFor6SecOnHit_10_45 + b.SpellHasteFor6SecOnHit_10_45,
+                SpellDamageFor10SecOnCrit_20_45 = a.SpellDamageFor10SecOnCrit_20_45 + b.SpellDamageFor10SecOnCrit_20_45
 			};
 		}
 
