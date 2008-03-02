@@ -675,6 +675,7 @@ namespace Rawr.Mage
     {
         public float AverageDamage;
         public float Cost;
+        public float SpellCount = 0;
 
         private List<string> spellList = new List<string>();
 
@@ -689,6 +690,7 @@ namespace Rawr.Mage
             Cost += spell.CostPerSecond * spell.CastTime;
             AffectedByFlameCap = AffectedByFlameCap || spell.AffectedByFlameCap;
             spellList.Add(spell.Name);
+            SpellCount++;
         }
 
         public void AddPause(float duration)
@@ -712,7 +714,7 @@ namespace Rawr.Mage
 
             if (calculations.Mp5OnCastFor20Sec > 0)
             {
-                float averageCastTime = fsr.Duration / CastProcs;
+                float averageCastTime = fsr.Duration / SpellCount;
                 float totalMana = calculations.Mp5OnCastFor20Sec / 5f / averageCastTime * 0.5f * (20 - averageCastTime / HitProcs / 2f) * (20 - averageCastTime / HitProcs / 2f);
                 ManaRegenPerSecond += totalMana / 20f;
             }

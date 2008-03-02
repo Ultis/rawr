@@ -361,7 +361,7 @@ namespace Rawr.Mage
                 if (calculationOptions.DragonsBreath == 1) spellList.Add("Dragon's Breath");
             }
 
-            int lpRows = 33;
+            int lpRows = 34;
             int colOffset = 6;
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
             CompactLP lp = new CompactLP(lpRows, lpCols);
@@ -445,7 +445,7 @@ namespace Rawr.Mage
                     calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDuration * calculatedStats.WaterElementalDps;
             }
 
-            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time, aoe duration, flamestrike, cone of cold, blast wave, dragon's breath, combustion, combustion+mf]
+            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time, aoe duration, flamestrike, cone of cold, blast wave, dragon's breath, combustion, combustion+mf, heroism+iv]
             double aplength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
             double ivlength = (1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 30f) / 180f)) * 20;
             double mflength = calculationOptions.MoltenFuryPercentage * calculatedStats.FightDuration;
@@ -526,6 +526,7 @@ namespace Rawr.Mage
             if (!combustionAvailable) lp.DisableRow(30);
             if (!(combustionAvailable && mfAvailable)) lp.DisableRow(31);
             if (!(combustionAvailable && heroismAvailable)) lp.DisableRow(32);
+            if (!(ivAvailable && heroismAvailable)) lp.DisableRow(33);
 
             
             lp.Compact();
@@ -657,6 +658,7 @@ namespace Rawr.Mage
                         lp[30, index] = (statsList[buffset].Combustion) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
                         lp[31, index] = (statsList[buffset].Combustion && statsList[buffset].MoltenFury) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
                         lp[32, index] = (statsList[buffset].Combustion && statsList[buffset].Heroism) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
+                        lp[33, index] = (statsList[buffset].IcyVeins && statsList[buffset].Heroism) ? 1 : 0;
                         lp[lpRows, index] = s.DamagePerSecond;
                     }
                     else
@@ -676,7 +678,7 @@ namespace Rawr.Mage
             if (ivAvailable) lp[8, lpCols] = ivlength;
             if (mfAvailable) lp[9, lpCols] = mflength;
             if (mfAvailable) lp[10, lpCols] = 15;
-            if (mfAvailable && ivAvailable) lp[11, lpCols] = 20;
+            if (mfAvailable && ivAvailable) lp[11, lpCols] = coldsnap ? 40 : 20;
             if (heroismAvailable) lp[12, lpCols] = 15;
             if (ivAvailable) lp[13, lpCols] = dpivlength;
             lp[14, lpCols] = ((int)(calculatedStats.FightDuration / 120f + 1)) * calculatedStats.ManaPotionTime;
@@ -693,6 +695,7 @@ namespace Rawr.Mage
             lp[30, lpCols] = combustionCount;
             lp[31, lpCols] = 1;
             lp[32, lpCols] = 1;
+            lp[33, lpCols] = coldsnap ? 40 : 20;
 
             calculatedStats.Solution = lp.Solve();
 
