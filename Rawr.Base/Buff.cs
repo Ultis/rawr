@@ -480,7 +480,15 @@ namespace Rawr
                             Category = BuffCategory.SetBonuses,
                             Stats = new Stats() { SpellDamageFromIntellectPercentage = 0.07f },
                             SetName = "Wrath of Spellfire",
-                            SetThreshold = 4
+                            SetThreshold = 3
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Spellstrike 2 Piece Bonus",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { SpellDamageFor10SecOnHit_5 = 92 },
+                            SetName = "Spellstrike Infusion",
+                            SetThreshold = 2
                         });
 
 						//i think you're slipping

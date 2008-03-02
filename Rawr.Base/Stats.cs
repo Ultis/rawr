@@ -225,6 +225,11 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float SpellHasteFor6SecOnCast_15_45 { get; set; }
 
+        // 10% change, 45 sec internal cooldown
+        [DisplayName("Spell Haste (10% 6 sec/Hit)")]
+        [Category("Equipment Procs")]
+        public float SpellHasteFor6SecOnHit_10_45 { get; set; }
+
         [DisplayName("Spell Damage (10 sec/Resist)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor10SecOnResist { get; set; }
@@ -246,6 +251,11 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float Mp5OnCastFor20SecOnUse2Min { get; set; }
 
+        // 5% chance, no cooldown
+        [DisplayName("Spell Damage (10 sec)")]
+        [Category("Equipment Procs")]
+        public float SpellDamageFor10SecOnHit_5 { get; set; }
+
         [Category("Equipment Procs")]
         public float BonusManaGem { get; set; }
 
@@ -253,12 +263,12 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float SpellDamageFor15SecOnManaGem { get; set; }
 
-        // 10% change, 45 sec internal cooldown
+        // 10% chance, 45 sec internal cooldown
         [DisplayName("Spell Damage (10 sec)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor10SecOnHit_10_45 { get; set; }
 
-        // 20% change, 45 sec internal cooldown
+        // 20% chance, 45 sec internal cooldown
         [DisplayName("Spell Damage (15 sec)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor15SecOnCrit_20_45 { get; set; }
@@ -435,7 +445,9 @@ namespace Rawr
                 SpellDamageFor15SecOnCrit_20_45 = a.SpellDamageFor15SecOnCrit_20_45 + b.SpellDamageFor15SecOnCrit_20_45,
                 SpellCombatManaRegeneration = a.SpellCombatManaRegeneration + b.SpellCombatManaRegeneration,
                 SpellHasteFor5SecOnCrit_50 = a.SpellHasteFor5SecOnCrit_50 + b.SpellHasteFor5SecOnCrit_50,
-                SpellHasteFor6SecOnCast_15_45 = a.SpellHasteFor6SecOnCast_15_45 + b.SpellHasteFor6SecOnCast_15_45
+                SpellHasteFor6SecOnCast_15_45 = a.SpellHasteFor6SecOnCast_15_45 + b.SpellHasteFor6SecOnCast_15_45,
+                SpellDamageFor10SecOnHit_5 = a.SpellDamageFor10SecOnHit_5 + b.SpellDamageFor10SecOnHit_5,
+                SpellHasteFor6SecOnHit_10_45 = a.SpellHasteFor6SecOnHit_10_45 + b.SpellHasteFor6SecOnHit_10_45
 			};
 		}
 

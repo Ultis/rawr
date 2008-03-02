@@ -674,6 +674,10 @@ namespace Rawr
                                 {
                                     stats.SpellHasteFor5SecOnCrit_50 += 145;
                                 }
+                                else if (spellDesc.StartsWith("Your harmful spells have a chance to increase your spell haste rating by 320 for 6 secs."))
+                                {
+                                    stats.SpellHasteFor6SecOnHit_10_45 += 320;
+                                }
                                 //Your spell critical strikes have a chance to increase your spell damage and healing by 190 for 15 sec.
                                 else if (spellDesc.StartsWith("Your spell critical strikes have a chance to increase your spell damage and healing by "))
                                 {
