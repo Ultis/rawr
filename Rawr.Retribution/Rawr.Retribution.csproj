@@ -58,10 +58,8 @@
     </Compile>
     <Compile Include="CalculationsRetribution.cs" />
     <Compile Include="CharacterCalculationsRetribution.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="ComparisonCalculationRetribution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Skills.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CalculationOptionsPanelRetribution.resx">

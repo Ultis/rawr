@@ -140,8 +140,7 @@ namespace Rawr.Retribution
             get { return _meleeDamage; }
             set { _meleeDamage = value; }
         }
-
-        public List<Skill> Spells { get; set; }
+        
         public Character character { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
