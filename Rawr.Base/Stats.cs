@@ -259,6 +259,9 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float BonusManaGem { get; set; }
 
+        [Category("Equipment Procs")]
+        public float BonusManaPotion { get; set; }
+
         [DisplayName("Spell Damage (15 sec/Gem)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor15SecOnManaGem { get; set; }
@@ -443,6 +446,7 @@ namespace Rawr
                 ManaRestorePerHit = a.ManaRestorePerHit + b.ManaRestorePerHit,
                 ManaRestorePerCast = a.ManaRestorePerCast + b.ManaRestorePerCast,
                 BonusManaGem = a.BonusManaGem + b.BonusManaGem,
+                BonusManaPotion = Math.Max(a.BonusManaPotion, b.BonusManaPotion), // does not stack
                 SpellDamageFor10SecOnHit_10_45 = a.SpellDamageFor10SecOnHit_10_45 + b.SpellDamageFor10SecOnHit_10_45,
                 SpellDamageFromIntellectPercentage = a.SpellDamageFromIntellectPercentage + b.SpellDamageFromIntellectPercentage,
                 SpellDamageFromSpiritPercentage = a.SpellDamageFromSpiritPercentage + b.SpellDamageFromSpiritPercentage,

@@ -682,6 +682,13 @@ namespace Rawr
                                 {
                                     stats.SpellDamageFor10SecOnCrit_20_45 += 225;
                                 }
+                                else if (spellDesc.StartsWith("Increases the effect that healing and mana potions have on the wearer by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases the effect that healing and mana potions have on the wearer by ".Length);
+                                    spellDesc = spellDesc.Replace(".", "").Replace(" ", "").Replace("%", "");
+                                    stats.BonusManaPotion += int.Parse(spellDesc) / 100f;
+                                    // TODO health potion effect
+                                }
                                 //Your spell critical strikes have a chance to increase your spell damage and healing by 190 for 15 sec.
                                 else if (spellDesc.StartsWith("Your spell critical strikes have a chance to increase your spell damage and healing by "))
                                 {
