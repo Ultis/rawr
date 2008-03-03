@@ -54,6 +54,10 @@
     <Compile Include="CharacterCalculationsHealadin.cs" />
     <Compile Include="ComparisonCalculationHealadin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CalculationOptionsPanelHealadin.resx">
+      <DependentUpon>CalculationOptionsPanelHealadin.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

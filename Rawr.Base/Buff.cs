@@ -226,9 +226,16 @@ namespace Rawr
                         {
                             Name = "Adept's Elixir",
                             Category = BuffCategory.ElixirsAndFlasks,
-                            Stats = new Stats() { SpellDamageRating = 24, SpellCritRating = 24 },
+                            Stats = new Stats() { SpellDamageRating = 24, Healing = 24, SpellCritRating = 24 },
 							ConflictingBuffs = new string[] { "Battle Elixir" }
 						});
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Elixir of Healing Power",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { Healing = 50 },
+                            ConflictingBuffs = new string[] { "Battle Elixir" }
+                        });
 						_allBuffs.Add(new Buff()
                         {
                             Name = "Elixir of Major Firepower",
@@ -348,6 +355,34 @@ namespace Rawr
                             Name = "23 Spell Damage Food",
                             Category = BuffCategory.OtherConsumables,
                             Stats = new Stats() { SpellDamageRating = 23, Spirit = 20 },
+                            ConflictingBuffs = new string[] { "Food" }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Superior Mana Oil",
+                            Category = BuffCategory.OtherConsumables,
+                            Stats = new Stats() { Mp5 = 14 },
+                            ConflictingBuffs = new string[] { "Temporary Weapon Enchantment" }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Brilliant Mana Oil",
+                            Category = BuffCategory.OtherConsumables,
+                            Stats = new Stats() { Mp5 = 12, Healing = 22 },
+                            ConflictingBuffs = new string[] { "Temporary Weapon Enchantment" }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "8 mp5 Food",
+                            Category = BuffCategory.OtherConsumables,
+                            Stats = new Stats() { Mp5 = 8, Stamina = 20 },
+                            ConflictingBuffs = new string[] { "Food" }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "44 Healing Food",
+                            Category = BuffCategory.OtherConsumables,
+                            Stats = new Stats() { Healing = 44, Spirit = 20 },
                             ConflictingBuffs = new string[] { "Food" }
                         });
 

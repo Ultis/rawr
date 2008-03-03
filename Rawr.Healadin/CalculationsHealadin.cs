@@ -38,9 +38,8 @@ namespace Rawr.Healadin
 					"Basic Stats:Mp5",
 					"Basic Stats:Spell Crit Rating",
 					"Basic Stats:Spell Haste Rating",
-					"Complex Stats:FoL Hps",
-					"Complex Stats:FoL Crit",
-					"Complex Stats:Time to OOM",
+					"Complex Stats:Holy Crit",
+					"Complex Stats:Cycle Uptime",
 					"Complex Stats:Cycle Hps",
 				};
                 return _characterDisplayCalculationLabels;
@@ -54,9 +53,10 @@ namespace Rawr.Healadin
             {
                 if (_customChartNames == null)
                     _customChartNames = new string[] {
-					//"Combat Table",
-					//"Relative Stat Values",
-					//"Agi Test"
+					"Healing per second",
+					"Healing per mana",
+					"Mana per second",
+                    "Average heal"
 					};
                 return _customChartNames;
             }
@@ -105,45 +105,41 @@ namespace Rawr.Healadin
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealadin(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHealadin(); }
 
-
-        public void TimeToOom(Character character, CharacterCalculationsHealadin stats)
-        {
-      /*      float mana = stats.BasicStats.Mana;
-            float[] cycle = {int.Parse(character.CalculationOptions["NumberFoL"]) * stats.CastTime[0],
-                int.Parse(character.CalculationOptions["NumberHL11"]) * stats.CastTime[1],
-                int.Parse(character.CalculationOptions["NumberHL9"]) * stats.CastTime[2],
-                int.Parse(character.CalculationOptions["NumberHL5"]) * stats.CastTime[3]};
-            float cycleTime = cycle[0] + cycle[1] + cycle[2] + cycle[3];
-            cycle[0] /= cycleTime;
-            cycle[1] /= cycleTime;
-            cycle[2] /= cycleTime;
-            cycle[3] /= cycleTime;
-
-            float[] mps = { (stats.ManaCost[0] * (1 - (.6f*stats.Crit[0]))) / stats.CastTime[0],
-                          (stats.ManaCost[1] * (1 - (.6f*stats.Crit[1]))) / stats.CastTime[1],
-                          (stats.ManaCost[2] * (1 - (.6f*stats.Crit[2]))) / stats.CastTime[2],
-                          (stats.ManaCost[3] * (1 - (.6f*stats.Crit[3]))) / stats.CastTime[3],};
-            float mpslost = (mps[0] * cycle[0]) + (mps[1] * cycle[1]) + (mps[2] * cycle[2]) + (mps[3] * cycle[3]);
-            float mpsgain = stats.BasicStats.Mp5 / 5;
-            stats.LongevityPoints = mana / (mpslost - mpsgain);
-            stats.ThroughputPoints = ((stats.Hps[0] * cycle[0]) + (stats.Hps[1] * cycle[1]) + (stats.Hps[2] * cycle[2]) + (stats.Hps[3] * cycle[3]));
-            stats.LongevityPoints *= 5;*/
-        }
-
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             _cachedCharacter = character;
-            //int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsHealadin calculatedStats = new CharacterCalculationsHealadin();
             calculatedStats.BasicStats = stats;
 
+            float length = float.Parse(character.CalculationOptions["Length"]) * 60;
+            float totalMana = stats.Mana + (length * stats.Mp5 / 5);
+
             calculatedStats[0] = new Spell("Flash of Light", 7);
+            calculatedStats[1] = new Spell("Holy Light", int.Parse(character.CalculationOptions["Rank1"]));
+            calculatedStats[2] = new Spell("Holy Light", int.Parse(character.CalculationOptions["Rank2"]));
+            calculatedStats[3] = new Spell("Holy Light", int.Parse(character.CalculationOptions["Rank3"]));
+            calculatedStats[4] = new Spell("Holy Light", int.Parse(character.CalculationOptions["Rank4"]));
+            calculatedStats[5] = new Spell("Holy Light", int.Parse(character.CalculationOptions["Rank5"]));
 
-            //TimeToOom(character, calculatedStats);
+            float[] cycle = {int.Parse(character.CalculationOptions["CycleFoL"]) * calculatedStats[0].CastTime,
+                int.Parse(character.CalculationOptions["CycleHL1"]) * calculatedStats[1].CastTime,
+                int.Parse(character.CalculationOptions["CycleHL2"]) * calculatedStats[2].CastTime,
+                int.Parse(character.CalculationOptions["CycleHL3"]) * calculatedStats[3].CastTime,
+                int.Parse(character.CalculationOptions["CycleHL4"]) * calculatedStats[4].CastTime,
+                int.Parse(character.CalculationOptions["CycleHL5"]) * calculatedStats[5].CastTime};
+            float mpc = 0, cycleTime = 0;
+            foreach (float f in cycle) cycleTime += f;
+            for (int i = 0; i < 6; i++) mpc += calculatedStats[i].Mps * cycle[i];
 
-            calculatedStats.ThroughputPoints = calculatedStats[0].Hps;
-            calculatedStats.LongevityPoints = stats.Mp5;
+            float cycles = Math.Min(totalMana / mpc, length / cycleTime);
+
+            calculatedStats.Hps = 0;
+            for (int i = 0; i < 6; i++) calculatedStats.Hps += calculatedStats[i].Hps * cycle[i];
+
+            calculatedStats.ThroughputPoints = calculatedStats.Hps * cycles;
+            calculatedStats.Hps /= cycleTime;
+            calculatedStats.LongevityPoints = cycles * cycleTime / length * 10000 ;
             calculatedStats.OverallPoints = calculatedStats.LongevityPoints + calculatedStats.ThroughputPoints;
 
             return calculatedStats;
@@ -171,7 +167,76 @@ namespace Rawr.Healadin
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            return new ComparisonCalculationBase[0];
+            CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
+            ComparisonCalculationHealadin FoL = new ComparisonCalculationHealadin("Flash of Light");
+            ComparisonCalculationHealadin HL11 = new ComparisonCalculationHealadin("Holy Light 11");
+            ComparisonCalculationHealadin HL10 = new ComparisonCalculationHealadin("Holy Light 10");
+            ComparisonCalculationHealadin HL9 = new ComparisonCalculationHealadin("Holy Light 9");
+            ComparisonCalculationHealadin HL8 = new ComparisonCalculationHealadin("Holy Light 8");
+            ComparisonCalculationHealadin HL7 = new ComparisonCalculationHealadin("Holy Light 7");
+            ComparisonCalculationHealadin HL6 = new ComparisonCalculationHealadin("Holy Light 6");
+            ComparisonCalculationHealadin HL5 = new ComparisonCalculationHealadin("Holy Light 5");
+            ComparisonCalculationHealadin HL4 = new ComparisonCalculationHealadin("Holy Light 4");
+
+            calc[0] = new Spell("Flash of Light", 7);
+            calc[1] = new Spell("Holy Light", 11);
+            calc[2] = new Spell("Holy Light", 10);
+            calc[3] = new Spell("Holy Light", 9);
+            calc[4] = new Spell("Holy Light", 8);
+            calc[5] = new Spell("Holy Light", 7);
+            calc[6] = new Spell("Holy Light", 6);
+            calc[7] = new Spell("Holy Light", 5);
+            calc[8] = new Spell("Holy Light", 4);
+
+            switch (chartName)
+            {
+                case "Healing per second":
+                    FoL.OverallPoints = FoL.ThroughputPoints = calc[0].Hps;
+                    HL11.OverallPoints = HL11.ThroughputPoints = calc[1].Hps;
+                    HL10.OverallPoints = HL10.ThroughputPoints = calc[2].Hps;
+                    HL9.OverallPoints = HL9.ThroughputPoints = calc[3].Hps;
+                    HL8.OverallPoints = HL8.ThroughputPoints = calc[4].Hps;
+                    HL7.OverallPoints = HL7.ThroughputPoints = calc[5].Hps;
+                    HL6.OverallPoints = HL6.ThroughputPoints = calc[6].Hps;
+                    HL5.OverallPoints = HL5.ThroughputPoints = calc[7].Hps;
+                    HL4.OverallPoints = HL4.ThroughputPoints = calc[8].Hps;
+                    break;
+                case "Average heal":
+                    FoL.OverallPoints = FoL.ThroughputPoints = calc[0].AverageHeal;
+                    HL11.OverallPoints = HL11.ThroughputPoints = calc[1].AverageHeal;
+                    HL10.OverallPoints = HL10.ThroughputPoints = calc[2].AverageHeal;
+                    HL9.OverallPoints = HL9.ThroughputPoints = calc[3].AverageHeal;
+                    HL8.OverallPoints = HL8.ThroughputPoints = calc[4].AverageHeal;
+                    HL7.OverallPoints = HL7.ThroughputPoints = calc[5].AverageHeal;
+                    HL6.OverallPoints = HL6.ThroughputPoints = calc[6].AverageHeal;
+                    HL5.OverallPoints = HL5.ThroughputPoints = calc[7].AverageHeal;
+                    HL4.OverallPoints = HL4.ThroughputPoints = calc[8].AverageHeal;
+                    break;
+                case "Healing per mana":
+                    FoL.OverallPoints = FoL.LongevityPoints = calc[0].Hpm;
+                    HL11.OverallPoints = HL11.LongevityPoints = calc[1].Hpm;
+                    HL10.OverallPoints = HL10.LongevityPoints = calc[2].Hpm;
+                    HL9.OverallPoints = HL9.LongevityPoints = calc[3].Hpm;
+                    HL8.OverallPoints = HL8.LongevityPoints = calc[4].Hpm;
+                    HL7.OverallPoints = HL7.LongevityPoints = calc[5].Hpm;
+                    HL6.OverallPoints = HL6.LongevityPoints = calc[6].Hpm;
+                    HL5.OverallPoints = HL5.LongevityPoints = calc[7].Hpm;
+                    HL4.OverallPoints = HL4.LongevityPoints = calc[8].Hpm;
+                    break;
+                case "Mana per second":
+                    FoL.OverallPoints = FoL.LongevityPoints = calc[0].Mps;
+                    HL11.OverallPoints = HL11.LongevityPoints = calc[1].Mps;
+                    HL10.OverallPoints = HL10.LongevityPoints = calc[2].Mps;
+                    HL9.OverallPoints = HL9.LongevityPoints = calc[3].Mps;
+                    HL8.OverallPoints = HL8.LongevityPoints = calc[4].Mps;
+                    HL7.OverallPoints = HL7.LongevityPoints = calc[5].Mps;
+                    HL6.OverallPoints = HL6.LongevityPoints = calc[6].Mps;
+                    HL5.OverallPoints = HL5.LongevityPoints = calc[7].Mps;
+                    HL4.OverallPoints = HL4.LongevityPoints = calc[8].Mps;
+                    break;
+            }
+
+            return new ComparisonCalculationBase[] { FoL, HL11, HL10, HL9, HL8, HL7, HL6, HL5, HL4 };
         }
 
         public override Stats GetRelevantStats(Stats stats)

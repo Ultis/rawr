@@ -84,7 +84,7 @@ namespace Rawr.Healadin
         public int Rank { get { return rank; } }
 
         public float Hps { get { return hps; } }
-        public float Mps { get { return Mps; } }
+        public float Mps { get { return mps; } }
         public float Hpm { get { return hpm; } }
         public float SpellCrit { get { return spellCrit; } }
         public float CastTime { get { return castTime; } }

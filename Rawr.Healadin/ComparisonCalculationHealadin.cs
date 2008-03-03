@@ -6,6 +6,16 @@ namespace Rawr.Healadin
 {
     public class ComparisonCalculationHealadin : ComparisonCalculationBase
     {
+
+        public ComparisonCalculationHealadin()
+            : base()
+        { }
+
+        public ComparisonCalculationHealadin(string name)
+            : base()
+        {
+            _name = name;
+        }
         private string _name = string.Empty;
         public override string Name
         {

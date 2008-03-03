@@ -189,10 +189,35 @@ namespace Rawr
                         _allEnchants.Add(new Enchant(851, "Spirit", Item.ItemSlot.Feet, new Stats() { Spirit = 5 }));
 
                         // Healing enchants (add spell damage too)
-                        _allEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { SpellDamageRating = 10 }));
-                        _allEnchants.Add(new Enchant(2322, "Major Healing", Item.ItemSlot.Hands, new Stats() { SpellDamageRating = 12 }));
-                        _allEnchants.Add(new Enchant(2930, "Healing Power", Item.ItemSlot.Finger, new Stats() { SpellDamageRating = 7 }));
-                        _allEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.MainHand, new Stats() { SpellDamageRating = 27 }));
+                        _allEnchants.Add(new Enchant(3001, "Glyph of Renewal", Item.ItemSlot.Head, new Stats() { Healing = 35, Mp5 = 7 }));
+
+                        _allEnchants.Add(new Enchant(3150, "Restore Mana Prime", Item.ItemSlot.Chest, new Stats() { Mp5 = 6 }));
+
+                        _allEnchants.Add(new Enchant(2980, "Greater Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { Healing = 33, Mp5 = 4 }));
+                        _allEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { Healing = 22, Mp5 = 6 }));
+                        _allEnchants.Add(new Enchant(2979, "Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { Healing = 29 }));
+                        _allEnchants.Add(new Enchant(2992, "Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { Mp5 = 5 }));
+                        _allEnchants.Add(new Enchant(2715, "Resilience of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Healing = 31, Mp5 = 5 }));
+                        _allEnchants.Add(new Enchant(2604, "Zandalar Signet of Serenity", Item.ItemSlot.Shoulders, new Stats() { Healing = 33 }));
+
+                        _allEnchants.Add(new Enchant(2322, "Major Healing", Item.ItemSlot.Hands, new Stats() { Healing = 35, SpellDamageRating = 12 }));
+                        _allEnchants.Add(new Enchant(2934, "Blasting", Item.ItemSlot.Hands, new Stats() { SpellCritRating = 10 }));
+
+                        _allEnchants.Add(new Enchant(2746, "Golden Spellthread", Item.ItemSlot.Legs, new Stats() { Healing = 66 }));
+                        _allEnchants.Add(new Enchant(2745, "Mystic Spellthread", Item.ItemSlot.Legs, new Stats() { Healing = 46 }));
+
+                        _allEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Chest, new Stats() { Mp5 = 3 }));
+                        _allEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Feet, new Stats() { Mp5 = 3 }));
+                        _allEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Legs, new Stats() { Mp5 = 3 }));
+                        _allEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Hands, new Stats() { Mp5 = 3 }));
+
+                        _allEnchants.Add(new Enchant(2930, "Healing Power", Item.ItemSlot.Finger, new Stats() { Healing = 20, SpellDamageRating = 7 }));
+
+                        _allEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.MainHand, new Stats() { Healing = 81, SpellDamageRating = 27 }));
+
+                        _allEnchants.Add(new Enchant(2654, "Intellect", Item.ItemSlot.MainHand, new Stats() { Intellect = 12 }));
+
+                        _allEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { Healing = 30, SpellDamageRating = 10 }));
 
 						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
 						StringBuilder sb = new StringBuilder();

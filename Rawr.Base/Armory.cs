@@ -597,6 +597,7 @@ namespace Rawr
                                 // Increases healing done by up to 375 and damage done by up to 125 for all magical spells and effects.
                                 else if (spellDesc.StartsWith("Increases healing done by up to "))
                                 {
+                                    stats.Healing += int.Parse(spellDesc.Split(' ')[6]);
                                     spellDesc = spellDesc.Substring(spellDesc.IndexOf("damage done by up to "));
                                     spellDesc = spellDesc.Substring("damage done by up to ".Length);
                                     spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" for all magical spells and effects."));
@@ -787,6 +788,9 @@ namespace Rawr
 									case "Strength":
 										sockets.Stats.Strength = socketBonusValue;
 										break;
+                                    case "Healing":
+                                        sockets.Stats.Healing = socketBonusValue;
+                                        break;
 									case "Crit Rating":
 									case "Crit Strike Rating":
 									case "Critical Rating":
@@ -873,7 +877,13 @@ namespace Rawr
 											break;
 										case "Defense Rating":
 											stats.DefenseRating = gemBonusValue;
-											break;
+                                            break;
+                                        case "Healing":
+                                        case "Healing +4 Spell Damage":
+                                        case "Healing +3 Spell Damage":
+                                        case "Healing +2 Spell Damage":
+                                            stats.Healing = gemBonusValue;
+                                            break;
 										case "Hit Rating":
 											stats.HitRating = gemBonusValue;
 											break;
@@ -919,7 +929,8 @@ namespace Rawr
                                             break;
                                         case "Mana every 5 seconds" :
                                         case "Mana ever 5 Sec" :
-                                        case "mana per 5 sec" :
+                                        case "mana per 5 sec":
+                                        case "mana per 5 sec.":
                                         case "Mana per 5 Seconds" :
                                             stats.Mp5 = gemBonusValue;
                                             break;
