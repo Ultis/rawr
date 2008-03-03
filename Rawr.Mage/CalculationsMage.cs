@@ -1067,7 +1067,7 @@ namespace Rawr.Mage
             calculatedStats.ArcaneSpellModifier *= (1 + stats.BonusArcaneSpellPowerMultiplier);
             calculatedStats.FireSpellModifier *= (1 + stats.BonusFireSpellPowerMultiplier);
             calculatedStats.FrostSpellModifier *= (1 + stats.BonusFrostSpellPowerMultiplier);
-            //calculatedStats.NatureSpellModifier *= (1 + stats.BonusNatureSpellPowerMultiplier);
+            calculatedStats.NatureSpellModifier *= (1 + stats.BonusNatureSpellPowerMultiplier);
             calculatedStats.ShadowSpellModifier *= (1 + stats.BonusShadowSpellPowerMultiplier);
 
             calculatedStats.ResilienceCritDamageReduction = 1;

@@ -181,7 +181,7 @@ namespace Rawr.Mage
                 if (MagicSchool == MagicSchool.Shadow) HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit);
             }
 
-            if (!ManualClearcasting && !ClearcastingAveraged)
+            if (ManualClearcasting && !ClearcastingAveraged)
             {
                 CritRate -= 0.01f * calculations.CalculationOptions.ArcanePotency; // replace averaged arcane potency with actual % chance
                 if (ClearcastingActive) CritRate += 0.1f * calculations.CalculationOptions.ArcanePotency;
@@ -348,27 +348,28 @@ namespace Rawr.Mage
         public Wand(Character character, CharacterCalculationsMage calculations, MagicSchool school, int minDamage, int maxDamage, float speed)
             : base("Wand", false, false, false, false, 0, 30, 0, 0, school, minDamage, maxDamage, 0, 1, 0, 0, 0, 0, false)
         {
+            // Tested: affected by Arcane Instability, affected by Chaotic meta, not affected by Arcane Power
             Calculate(character, calculations);
             CastTime = speed;
             CritRate = calculations.SpellCrit;
-            CritBonus = 1.5f;
-            SpellModifier = 1 + calculations.BasicStats.BonusSpellPowerMultiplier;
+            CritBonus = (1 + (1.5f * (1 + calculations.BasicStats.BonusSpellCritMultiplier) - 1)) * calculations.ResilienceCritDamageReduction;
+            SpellModifier = (1 + 0.01f * calculations.CalculationOptions.ArcaneInstability) * (1 + 0.01f * calculations.CalculationOptions.PlayingWithFire) * (1 + calculations.BasicStats.BonusSpellPowerMultiplier);
             switch (school)
             {
                 case MagicSchool.Arcane:
                     SpellModifier *= (1 + calculations.BasicStats.BonusArcaneSpellPowerMultiplier);
                     break;
                 case MagicSchool.Fire:
-                    SpellModifier *= (1 + calculations.BasicStats.BonusArcaneSpellPowerMultiplier);
+                    SpellModifier *= (1 + calculations.BasicStats.BonusFireSpellPowerMultiplier);
                     break;
                 case MagicSchool.Frost:
-                    SpellModifier *= (1 + calculations.BasicStats.BonusArcaneSpellPowerMultiplier);
+                    SpellModifier *= (1 + calculations.BasicStats.BonusFrostSpellPowerMultiplier);
                     break;
                 case MagicSchool.Nature:
-                    SpellModifier *= (1 + calculations.BasicStats.BonusArcaneSpellPowerMultiplier);
+                    SpellModifier *= (1 + calculations.BasicStats.BonusNatureSpellPowerMultiplier);
                     break;
                 case MagicSchool.Shadow:
-                    SpellModifier *= (1 + calculations.BasicStats.BonusArcaneSpellPowerMultiplier);
+                    SpellModifier *= (1 + calculations.BasicStats.BonusShadowSpellPowerMultiplier);
                     break;
             }
             if (calculations.CalculationOptions.WandSpecialization > 0)
@@ -613,7 +614,7 @@ namespace Rawr.Mage
             : base("Arcane Explosion", false, false, true, true, 545, 0, 0, 0, MagicSchool.Arcane, 377, 407, 0, 1.5f / 3.5f * 0.5f)
         {
             base.Calculate(character, calculations);
-            CritRate += 0.02f * int.Parse(character.CalculationOptions["ArcaneImpact"]);
+            CritRate += 0.02f * calculations.CalculationOptions.ArcaneImpact;
             AoeDamageCap = 10180;
             CalculateDerivedStats(character, calculations);
         }
@@ -666,7 +667,7 @@ namespace Rawr.Mage
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             base.Calculate(character, calculations);
-            CritBonus = 1.5f;
+            CritBonus = (1 + (1.5f * (1 + calculations.BasicStats.BonusSpellCritMultiplier) - 1)) * calculations.ResilienceCritDamageReduction;
             CalculateDerivedStats(character, calculations);
         }
     }
