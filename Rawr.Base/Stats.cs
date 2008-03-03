@@ -125,6 +125,9 @@ namespace Rawr
         public float SpellHitRating { get; set; }
 
         [Category("Spell Combat Ratings")]
+        public float Healing { get; set; }
+
+        [Category("Spell Combat Ratings")]
         [DisplayName("Spell Haste")]
         public float SpellHasteRating { get; set; }
 
@@ -457,7 +460,8 @@ namespace Rawr
                 SpellHasteFor6SecOnCast_15_45 = a.SpellHasteFor6SecOnCast_15_45 + b.SpellHasteFor6SecOnCast_15_45,
                 SpellDamageFor10SecOnHit_5 = a.SpellDamageFor10SecOnHit_5 + b.SpellDamageFor10SecOnHit_5,
                 SpellHasteFor6SecOnHit_10_45 = a.SpellHasteFor6SecOnHit_10_45 + b.SpellHasteFor6SecOnHit_10_45,
-                SpellDamageFor10SecOnCrit_20_45 = a.SpellDamageFor10SecOnCrit_20_45 + b.SpellDamageFor10SecOnCrit_20_45
+                SpellDamageFor10SecOnCrit_20_45 = a.SpellDamageFor10SecOnCrit_20_45 + b.SpellDamageFor10SecOnCrit_20_45,
+                Healing = a.Healing + b.Healing
 			};
 		}
 
