@@ -284,6 +284,23 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float SpellDamageFor10SecOnCrit_20_45 { get; set; }
 
+        // Starfire idol
+        [DisplayName("Starfire idol")]
+        [Category("Equipment Procs")]
+        public int StarfireIdol { get; set; }
+        // Moonfire idol
+        [DisplayName("Moonfire idol")]
+        [Category("Equipment Procs")]
+        public int MoonfireIdol { get; set; }
+        // Wrath idol
+        [DisplayName("Wrath idol")]
+        [Category("Equipment Procs")]
+        public int WrathIdol { get; set; }
+        // Moonkin Aura idol
+        [DisplayName("Raven idol")]
+        [Category("Equipment Procs")]
+        public int RavenIdol { get; set; }
+
         public float EvocationExtension { get; set; }
 
         [Category("Equipment Procs")]

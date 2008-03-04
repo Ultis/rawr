@@ -745,6 +745,22 @@ namespace Rawr
                                             break;
                                     }
                                 }
+                                else if (spellDesc.StartsWith("Increases the damage of your Starfire ability"))
+                                {
+                                    stats.StarfireIdol = 1;
+                                }
+                                else if (spellDesc.StartsWith("Increases the damage of your Moonfire ability"))
+                                {
+                                    stats.MoonfireIdol = 1;
+                                }
+                                else if (spellDesc.StartsWith("Increases the damage dealt by Wrath"))
+                                {
+                                    stats.WrathIdol = 1;
+                                }
+                                else if (spellDesc.StartsWith("Increases the healing granted by the Tree of Life form"))
+                                {
+                                    stats.RavenIdol = 1;
+                                }
                             }
 						}
 

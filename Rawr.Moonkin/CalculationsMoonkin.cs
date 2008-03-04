@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rawr.Moonkin
 {
-	[System.ComponentModel.DisplayName("Moonkin|Spell_Nature_ForceOfNature")]
+    [System.ComponentModel.DisplayName("Moonkin")]
     class CalculationsMoonkin : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> subColors = null;
@@ -91,6 +91,7 @@ namespace Rawr.Moonkin
                     relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
                         {
                             Item.ItemType.None,
+                            Item.ItemType.Cloth,
                             Item.ItemType.Leather,
                             Item.ItemType.Dagger,
                             Item.ItemType.Staff,
@@ -184,17 +185,14 @@ namespace Rawr.Moonkin
             spellList["Insect Swarm"].dotEffect.damagePerTick += (0.76f / spellList["Insect Swarm"].dotEffect.numTicks) * calcs.NatureDamage;
 
             // Add spell damage from idols
-			if (character.Ranged != null)
-			{
-				if (character.Ranged.Name == "Ivory Idol of the Moongoddess")   // Starfire idol
-					spellList["Starfire"].damagePerHit += 55.0f;
-				else if (character.Ranged.Name == "Idol of the Moon")   // Moonfire idol
-					spellList["Moonfire"].damagePerHit += 33.0f;
-				else if (character.Ranged.Name == "Idol of the Avenger")    // Wrath idol
-					spellList["Wrath"].damagePerHit += 25.0f;
-				else if (character.Ranged.Name == "Ivory Idol of the Raven Goddess" && character.ActiveBuffs.Contains("Moonkin Aura"))
-					calcs.SpellCrit += 20 / critRatingDivisor;
-			}
+			if (stats.StarfireIdol == 1)
+				spellList["Starfire"].damagePerHit += 55.0f;
+            else if (stats.MoonfireIdol == 1)
+				spellList["Moonfire"].damagePerHit += 33.0f;
+            else if (stats.WrathIdol == 1)
+				spellList["Wrath"].damagePerHit += 25.0f;
+            else if (stats.RavenIdol == 1 && character.ActiveBuffs.Contains("Moonkin Aura"))
+				calcs.SpellCrit += 20 / critRatingDivisor;
 
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)

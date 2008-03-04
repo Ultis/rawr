@@ -149,8 +149,8 @@ namespace Rawr.Retribution
 
         private void btnTalents_Click(object sender, EventArgs e)
         {
-            Talents talents = new Talents(this);
-            talents.Show();
+            //Talents talents = new Talents(this);
+            //talents.Show();
         }
     }
 }
