@@ -14,13 +14,14 @@ namespace Rawr.Retribution
         public CalculationOptionsPanelRetribution()
         {
             InitializeComponent();
+           
         }
         protected override void LoadCalculationOptions()
         {
             if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
                 Character.CalculationOptions["TargetLevel"] = "73";
             if (!Character.CalculationOptions.ContainsKey("BossArmor"))
-                Character.CalculationOptions["BossArmor"] = "3700";
+                Character.CalculationOptions["BossArmor"] = "7700";
             if (!Character.CalculationOptions.ContainsKey("FightLength"))
                 Character.CalculationOptions["FightLength"] = "10";
             if (!Character.CalculationOptions.ContainsKey("Exorcism"))
@@ -60,8 +61,10 @@ namespace Rawr.Retribution
             {
                 rbSoC.Checked = true;
             }
+            
 
         }
+        
 
         private void rbSoC_CheckedChanged(object sender, EventArgs e)
         {
@@ -142,6 +145,12 @@ namespace Rawr.Retribution
                 Character.CalculationOptions["Exorcism"] = "0";
             }
             Character.OnItemsChanged();
+        }
+
+        private void btnTalents_Click(object sender, EventArgs e)
+        {
+            Talents talents = new Talents(this);
+            talents.Show();
         }
     }
 }

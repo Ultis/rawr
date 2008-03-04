@@ -149,8 +149,9 @@ namespace Rawr.Retribution
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             int sealChoice = Int32.Parse(character.CalculationOptions["Seal"]);
+            character = GetTalents(character);
             Stats stats = GetCharacterStats( character, additionalItem );
-           
+            
             CharacterCalculationsRetribution calcs = new CharacterCalculationsRetribution();
             calcs.BasicStats = stats;
             
@@ -177,17 +178,22 @@ namespace Rawr.Retribution
                 avgBaseWeaponHit = (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2.0f;
                 hastedSpeed = (stats.HasteRating == 0) ? character.MainHand.Speed : character.MainHand.Speed / (1 + stats.HasteRating /1576f);
             }
+
+            //2 Handed Spec
+            float twoHandedSpec = 1.0f + (0.02f * ((character.CalculationOptions.ContainsKey("TwoHandedSpec")) ?
+                float.Parse(character.CalculationOptions["TwoHandedSpec"]) : 0f));
+
             //Add Attack Power Bonus
-            avgBaseWeaponHit += (stats.AttackPower / 14.0f)*((character.MainHand==null) ? 1.0f: character.MainHand.Speed) ;
+            avgBaseWeaponHit += twoHandedSpec*(stats.AttackPower / 14.0f) * ((character.MainHand == null) ? 1.0f : character.MainHand.Speed);
 
             //Take Non-Stat Buffs into account
 
             physicalCritModifier = 1.0f + ((stats.CritRating / 22.08f) / 100.0f);
 
-            chanceToBeDodged -= stats.ExpertiseRating / 15.6f;
+            chanceToBeDodged -= stats.ExpertiseRating / 15.76f;
             if (chanceToBeDodged < 0.0f) chanceToBeDodged = 0.0f;
 
-            chanceToMiss -= stats.HitRating / 15.6f;
+            chanceToMiss -= stats.HitRating / 15.76f;
             if (chanceToMiss < 0.0f) chanceToMiss = 0.0f;
 
             float avgBaseWeaponHitPost = (avgBaseWeaponHit * physicalCritModifier - avgBaseWeaponHit * (chanceToMiss + chanceToBeDodged) / 100.0f
@@ -195,9 +201,9 @@ namespace Rawr.Retribution
             //Fight duration
             float fightDuration = int.Parse(character.CalculationOptions["FightLength"])*60;
             //Improved Sanctity Aura
-            float impSancAura = 1.02f;
+            float impSancAura = 1f + 0.01f * ((character.CalculationOptions.ContainsKey("ImprovedSanctityAura")) ? float.Parse(character.CalculationOptions["ImprovedSanctityAura"]) : 0f);
             //Crusade
-            float crusade = 1.03f;
+            float crusade = 1f + 0.01f*((character.CalculationOptions.ContainsKey("Crusade")) ? float.Parse(character.CalculationOptions["Crusade"]) : 0f);
             //Avenging Wrath -- Calculating uptime
             int remainder = 0, noOfFullAW = 0, noOfFullBL;
             int div = Math.DivRem(Convert.ToInt32(fightDuration), 180,out remainder);
@@ -237,15 +243,19 @@ namespace Rawr.Retribution
             #endregion
             
             //Vengeance
-            float vengeance = 1.15f;
+            float vengeance = 1f + 0.03f * ((character.CalculationOptions.ContainsKey("Vengeance")) ? float.Parse(character.CalculationOptions["Vengeance"]) : 0f);
             //Sanctity Aura
-            float sancAura = 1.10f;
+            float sancAura = 1f + 0.1f * ((character.CalculationOptions.ContainsKey("SanctityAura")) ? float.Parse(character.CalculationOptions["SanctityAura"]) : 0f);
             //Misery : TODO Take from Debuff List
             float misery = 1.05f;
             //SpellCrit Mod
-            float judgementCrit = 1.0f + (5 * 0.03f) + (stats.CritRating / 22.08f)/100f;
+            float judgementCrit = 1.0f + (0.03f * ((character.CalculationOptions.ContainsKey("Fanaticism")) ? 
+                float.Parse(character.CalculationOptions["Fanaticism"]) : 0f))
+                + (stats.CritRating / 22.08f) / 100f;
             //Blood Frenzy : TODO Take from Debuff List
             float bloodFrenzy = 1f;
+
+           
 
             //TODO: Add Mitigation
             avgBaseWeaponHitPost *= impSancAura * crusade * avWrath * vengeance * bloodFrenzy * mitigation;
@@ -286,7 +296,7 @@ namespace Rawr.Retribution
 
             #region Crusader Strike
             float csCooldown = 6.0f;
-            float avgCSHitPre = (character.MainHand != null)? (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2.0f : 0.0f;
+            float avgCSHitPre = twoHandedSpec*((character.MainHand != null) ? (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2.0f : 0.0f);
             avgCSHitPre += 3.30f * (stats.AttackPower / 14f) * 1.10f;
             float avgCSHitPost = avgCSHitPre* physicalCritModifier - avgCSHitPre*(chanceToBeDodged+chanceToMiss)/100f;
             
@@ -442,6 +452,18 @@ namespace Rawr.Retribution
             //Add Expose Weakness since it's not listed as an AP buff
             if(statsBuffs.ExposeWeakness > 0) statsBuffs.AttackPower += 200f;
 
+            //Mongoose
+            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
+            {
+                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+            }
+
+            //Executioner
+            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
+            {
+                statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));                
+            }
 
             //base
             
@@ -462,13 +484,12 @@ namespace Rawr.Retribution
 
 
             statsTotal.Agility = (agiBase + (float)Math.Floor((agiBase * statsBuffs.BonusAgilityMultiplier) + agiBonus * (1 + statsBuffs.BonusAgilityMultiplier)));
-           // statsTotal.Agility *= (1 + (0.01f * int.Parse(character.CalculationOptions["Vitality"])));
+          
 
             statsTotal.Strength = (strBase + (float)Math.Floor((strBase * statsBuffs.BonusStrengthMultiplier) + strBonus * (1 + statsBuffs.BonusStrengthMultiplier)));
 
-            statsTotal.Strength *= 1f + 0.10f;// tree.GetTalent("Divine Strength").PointsInvested * 0.02f;
-            statsTotal.Stamina = (staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier)));
-           // statsTotal.Stamina *= (1 + (0.02f * int.Parse(character.CalculationOptions["Vitality"])));
+            statsTotal.Strength *= 1f + 0.02f * ((character.CalculationOptions.ContainsKey("DivineStrength")) ? float.Parse(character.CalculationOptions["DivineStrength"]) : 0f);
+            statsTotal.Stamina = (staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier)));          
 
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f))));
 
@@ -477,23 +498,23 @@ namespace Rawr.Retribution
 
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.CritRating += (((statsTotal.Agility - agiBase)/ 25f) * 22.08f);
-            statsTotal.CritRating += (22.08f * 5);//tree.GetTalent("Conviction").PointsInvested);
-            statsTotal.CritRating += (22.08f * 3);//tree.GetTalent("Sanctified Seals").PointsInvested);
+            statsTotal.CritRating += (22.08f * ((character.CalculationOptions.ContainsKey("Conviction")) ? float.Parse(character.CalculationOptions["Conviction"]) : 0f));
+            statsTotal.CritRating += (22.08f * ((character.CalculationOptions.ContainsKey("SanctifiedSeals")) ? float.Parse(character.CalculationOptions["SanctifiedSeals"]) : 0f));
             statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
-            statsTotal.HitRating += (15.76f * 3);//tree.GetTalent("Precision").PointsInvested);
-            statsTotal.SpellHitRating += (15.76f * 3);//tree.GetTalent("Precision").PointsInvested);
-            statsTotal.SpellCritRating += (22.08f * 3);//tree.GetTalent("Sanctified Seals").PointsInvested);
+            statsTotal.HitRating += (15.76f * ((character.CalculationOptions.ContainsKey("Precision")) ? float.Parse(character.CalculationOptions["Precision"]) : 0f));
+            statsTotal.SpellHitRating += (15.76f * ((character.CalculationOptions.ContainsKey("Precision")) ? float.Parse(character.CalculationOptions["Precision"]) : 0f));
+            statsTotal.SpellCritRating += (22.08f * ((character.CalculationOptions.ContainsKey("SanctifiedSeals")) ? float.Parse(character.CalculationOptions["SanctifiedSeals"]) : 0f));
             statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
-            //statsTotal.ExpertiseRating += (5f * int.Parse(character.CalculationOptions["WeaponExpertise"]));
+            
 
             statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
 
             statsTotal.DodgeRating = statsRace.DodgeRating + statsGearEnchantsBuffs.DodgeRating;
             statsTotal.DodgeRating = ((statsTotal.Agility / 20f) * 18.92f);
-            //statsTotal.DodgeRating += (18.92f * int.Parse(character.CalculationOptions["LightningReflexes"]));
+            
 
             statsTotal.ParryRating = statsRace.ParryRating + statsGearEnchantsBuffs.ParryRating;
-            //statsTotal.ParryRating += (23.65f * int.Parse(character.CalculationOptions["Deflection"]));
+            
 
             statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.Bloodlust = statsGearEnchantsBuffs.Bloodlust;
@@ -558,6 +579,32 @@ namespace Rawr.Retribution
                 stats.SpellShadowDamageRating +
                 stats.BonusFireSpellPowerMultiplier +
                 stats.BonusShadowSpellPowerMultiplier) > 0; */
+        }
+
+        /// <summary>
+        /// Saves the talents for the character
+        /// </summary>
+        /// <param name="character">The character for whom the talents should be saved</param>
+        public Character GetTalents(Character character)
+        {
+            if (!character.CalculationOptions.ContainsKey("TalentsSaved") || character.CalculationOptions["TalentsSaved"] == "0")
+            {
+                if (character.Talents.Trees.Count > 0)
+                {
+                    character.CalculationOptions.Add("Precision", character.Talents.Trees["Protection"][2].PointsInvested.ToString());
+                    character.CalculationOptions.Add("Crusade", character.Talents.Trees["Retribution"][11].PointsInvested.ToString());
+                    character.CalculationOptions.Add("TwoHandedSpec", character.Talents.Trees["Retribution"][12].PointsInvested.ToString());
+                    character.CalculationOptions.Add("SanctityAura", character.Talents.Trees["Retribution"][13].PointsInvested.ToString());
+                    character.CalculationOptions.Add("ImprovedSanctityAura", character.Talents.Trees["Retribution"][14].PointsInvested.ToString());
+                    character.CalculationOptions.Add("SanctifiedSeals", character.Talents.Trees["Retribution"][17].PointsInvested.ToString());
+                    character.CalculationOptions.Add("Fanaticism", character.Talents.Trees["Retribution"][20].PointsInvested.ToString());
+                    character.CalculationOptions.Add("Vengeance", character.Talents.Trees["Retribution"][15].PointsInvested.ToString());
+                    character.CalculationOptions.Add("DivineStrength", character.Talents.Trees["Holy"][0].PointsInvested.ToString());
+                    character.CalculationOptions.Add("Conviction", character.Talents.Trees["Retribution"][6].PointsInvested.ToString());
+                    character.CalculationOptions["TalentsSaved"] = "1";
+                }
+            }
+            return character;
         }
     }
 }

@@ -38,10 +38,11 @@
             this.checkBoxConsecration = new System.Windows.Forms.CheckBox();
             this.comboBoxConsRank = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtArmor = new System.Windows.Forms.TextBox();
             this.trackBarFightLength = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.lblFightLength = new System.Windows.Forms.Label();
-            this.txtArmor = new System.Windows.Forms.TextBox();
+            this.btnTalents = new System.Windows.Forms.Button();
             this.groupBoxSealChoice.SuspendLayout();
             this.groupBoxSkillUsage.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -177,6 +178,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Skill Usage";
             // 
+            // txtArmor
+            // 
+            this.txtArmor.Location = new System.Drawing.Point(87, 87);
+            this.txtArmor.Name = "txtArmor";
+            this.txtArmor.Size = new System.Drawing.Size(72, 22);
+            this.txtArmor.TabIndex = 3;
+            this.txtArmor.Text = "7700";
+            this.txtArmor.TextChanged += new System.EventHandler(this.txtArmor_TextChanged);
+            // 
             // trackBarFightLength
             // 
             this.trackBarFightLength.Location = new System.Drawing.Point(87, 41);
@@ -206,19 +216,22 @@
             this.lblFightLength.TabIndex = 0;
             this.lblFightLength.Text = "Fight Length:";
             // 
-            // txtArmor
+            // btnTalents
             // 
-            this.txtArmor.Location = new System.Drawing.Point(87, 87);
-            this.txtArmor.Name = "txtArmor";
-            this.txtArmor.Size = new System.Drawing.Size(72, 22);
-            this.txtArmor.TabIndex = 3;
-            this.txtArmor.Text = "7700";
-            this.txtArmor.TextChanged += new System.EventHandler(this.txtArmor_TextChanged);
+            this.btnTalents.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTalents.Location = new System.Drawing.Point(47, 376);
+            this.btnTalents.Name = "btnTalents";
+            this.btnTalents.Size = new System.Drawing.Size(75, 23);
+            this.btnTalents.TabIndex = 5;
+            this.btnTalents.Text = "Talents";
+            this.btnTalents.UseVisualStyleBackColor = true;
+            this.btnTalents.Click += new System.EventHandler(this.btnTalents_Click);
             // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnTalents);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxSkillUsage);
             this.Controls.Add(this.groupBoxSealChoice);
@@ -251,5 +264,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblFightLength;
         private System.Windows.Forms.TextBox txtArmor;
+        private System.Windows.Forms.Button btnTalents;
     }
 }
