@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace Rawr.Mage
 {
@@ -30,6 +31,7 @@ namespace Rawr.Mage
         public float EvocationWeapon { get; set; }
         public float AoeDuration { get; set; }
         public bool SmartOptimization { get; set; }
+        public float DpsTime { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -63,65 +65,96 @@ namespace Rawr.Mage
         public int WandSpecialization { get; set; }
         public int BlastWave { get; set; }
         public int DragonsBreath { get; set; }
+        public int ArcanePower { get; set; }
+        public int IcyVeins { get; set; }
+        public int ColdSnap { get; set; }
+        public int IceFloes { get; set; }
+        public int SummonWaterElemental { get; set; }
+        public int ArcaneMind { get; set; }
+        public int ArcaneFortitude { get; set; }
+        public int MagicAbsorption { get; set; }
+        public int FrostWarding { get; set; }
+        public int ArcaneMeditation { get; set; }
+        public int ArcaneSubtlety { get; set; }
+        public int ImprovedFireBlast { get; set; }
+        public int ImprovedFlamestrike { get; set; }
+        public int ImprovedFrostNova { get; set; }
+        public int ImprovedConeOfCold { get; set; }
 
         public CompiledCalculationOptions(Character character)
         {
-            TargetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
-            AoeTargetLevel = int.Parse(character.CalculationOptions["AoeTargetLevel"]);
-            Latency = float.Parse(character.CalculationOptions["Latency"]);
+            TargetLevel = int.Parse(character.CalculationOptions["TargetLevel"], CultureInfo.InvariantCulture);
+            AoeTargetLevel = int.Parse(character.CalculationOptions["AoeTargetLevel"], CultureInfo.InvariantCulture);
+            Latency = float.Parse(character.CalculationOptions["Latency"], CultureInfo.InvariantCulture);
             MageArmor = character.CalculationOptions["MageArmor"];
-            AoeTargets = int.Parse(character.CalculationOptions["AoeTargets"]);
-            ArcaneResist = float.Parse(character.CalculationOptions["ArcaneResist"]);
-            FireResist = float.Parse(character.CalculationOptions["FireResist"]);
-            FrostResist = float.Parse(character.CalculationOptions["FrostResist"]);
-            NatureResist = float.Parse(character.CalculationOptions["NatureResist"]);
-            ShadowResist = float.Parse(character.CalculationOptions["ShadowResist"]);
-            FightDuration = float.Parse(character.CalculationOptions["FightDuration"]);
-            ShadowPriest = float.Parse(character.CalculationOptions["ShadowPriest"]);
-            HeroismAvailable = character.CalculationOptions["HeroismAvailable"] == "1";
-            MoltenFuryPercentage = float.Parse(character.CalculationOptions["MoltenFuryPercentage"]);
-            DestructionPotion = character.CalculationOptions["DestructionPotion"] == "1";
-            FlameCap = character.CalculationOptions["FlameCap"] == "1";
-            ABCycles = character.CalculationOptions["ABCycles"] == "1";
-            MaintainScorch = character.CalculationOptions["MaintainScorch"] == "1";
-            InterruptFrequency = float.Parse(character.CalculationOptions["InterruptFrequency"]);
+            AoeTargets = int.Parse(character.CalculationOptions["AoeTargets"], CultureInfo.InvariantCulture);
+            ArcaneResist = float.Parse(character.CalculationOptions["ArcaneResist"], CultureInfo.InvariantCulture);
+            FireResist = float.Parse(character.CalculationOptions["FireResist"], CultureInfo.InvariantCulture);
+            FrostResist = float.Parse(character.CalculationOptions["FrostResist"], CultureInfo.InvariantCulture);
+            NatureResist = float.Parse(character.CalculationOptions["NatureResist"], CultureInfo.InvariantCulture);
+            ShadowResist = float.Parse(character.CalculationOptions["ShadowResist"], CultureInfo.InvariantCulture);
+            FightDuration = float.Parse(character.CalculationOptions["FightDuration"], CultureInfo.InvariantCulture);
+            ShadowPriest = float.Parse(character.CalculationOptions["ShadowPriest"], CultureInfo.InvariantCulture);
+            HeroismAvailable = int.Parse(character.CalculationOptions["HeroismAvailable"], CultureInfo.InvariantCulture) == 1;
+            MoltenFuryPercentage = float.Parse(character.CalculationOptions["MoltenFuryPercentage"], CultureInfo.InvariantCulture);
+            DestructionPotion = int.Parse(character.CalculationOptions["DestructionPotion"], CultureInfo.InvariantCulture) == 1;
+            FlameCap = int.Parse(character.CalculationOptions["FlameCap"], CultureInfo.InvariantCulture) == 1;
+            ABCycles = int.Parse(character.CalculationOptions["ABCycles"], CultureInfo.InvariantCulture) == 1;
+            MaintainScorch = int.Parse(character.CalculationOptions["MaintainScorch"], CultureInfo.InvariantCulture) == 1;
+            InterruptFrequency = float.Parse(character.CalculationOptions["InterruptFrequency"], CultureInfo.InvariantCulture);
             JudgementOfWisdom = character.ActiveBuffs.Contains("Judgement of Wisdom");
-            EvocationWeapon = float.Parse(character.CalculationOptions["EvocationWeapon"]);
-            AoeDuration = float.Parse(character.CalculationOptions["AoeDuration"]);
-            SmartOptimization = character.CalculationOptions["SmartOptimization"] == "1";
+            EvocationWeapon = float.Parse(character.CalculationOptions["EvocationWeapon"], CultureInfo.InvariantCulture);
+            AoeDuration = float.Parse(character.CalculationOptions["AoeDuration"], CultureInfo.InvariantCulture);
+            SmartOptimization = int.Parse(character.CalculationOptions["SmartOptimization"], CultureInfo.InvariantCulture) == 1;
+            DpsTime = float.Parse(character.CalculationOptions["DpsTime"], CultureInfo.InvariantCulture);
 
-            Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"]);
-            ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"]);
-            FrostChanneling = int.Parse(character.CalculationOptions["FrostChanneling"]);
-            MasterOfElements = int.Parse(character.CalculationOptions["MasterOfElements"]);
-            ArcaneConcentration = int.Parse(character.CalculationOptions["ArcaneConcentration"]);
-            MindMastery = int.Parse(character.CalculationOptions["MindMastery"]);
-            ArcaneInstability = int.Parse(character.CalculationOptions["ArcaneInstability"]);
-            ArcanePotency = int.Parse(character.CalculationOptions["ArcanePotency"]);
-            ArcaneFocus = int.Parse(character.CalculationOptions["ArcaneFocus"]);
-            PlayingWithFire = int.Parse(character.CalculationOptions["PlayingWithFire"]);
-            MoltenFury = int.Parse(character.CalculationOptions["MoltenFury"]);
-            FirePower = int.Parse(character.CalculationOptions["FirePower"]);
-            PiercingIce = int.Parse(character.CalculationOptions["PiercingIce"]);
-            SpellPower = int.Parse(character.CalculationOptions["SpellPower"]);
-            Ignite = int.Parse(character.CalculationOptions["Ignite"]);
-            IceShards = int.Parse(character.CalculationOptions["IceShards"]);
-            CriticalMass = int.Parse(character.CalculationOptions["CriticalMass"]);
-            Combustion = int.Parse(character.CalculationOptions["Combustion"]);
-            ImprovedFrostbolt = int.Parse(character.CalculationOptions["ImprovedFrostbolt"]);
-            EmpoweredFrostbolt = int.Parse(character.CalculationOptions["EmpoweredFrostbolt"]);
-            ImprovedFireball = int.Parse(character.CalculationOptions["ImprovedFireball"]);
-            EmpoweredFireball = int.Parse(character.CalculationOptions["EmpoweredFireball"]);
-            ArcaneImpact = int.Parse(character.CalculationOptions["ArcaneImpact"]);
-            EmpoweredArcaneMissiles = int.Parse(character.CalculationOptions["EmpoweredArcaneMissiles"]);
-            Incinerate = int.Parse(character.CalculationOptions["Incinerate"]);
-            ImprovedScorch = int.Parse(character.CalculationOptions["ImprovedScorch"]);
-            WintersChill = int.Parse(character.CalculationOptions["WintersChill"]);
-            BurningSoul = int.Parse(character.CalculationOptions["BurningSoul"]);
-            ImprovedArcaneMissiles = int.Parse(character.CalculationOptions["ImprovedArcaneMissiles"]);
-            WandSpecialization = int.Parse(character.CalculationOptions["WandSpecialization"]);
-            BlastWave = int.Parse(character.CalculationOptions["BlastWave"]);
-            DragonsBreath = int.Parse(character.CalculationOptions["DragonsBreath"]);
+            Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"], CultureInfo.InvariantCulture);
+            ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"], CultureInfo.InvariantCulture);
+            FrostChanneling = int.Parse(character.CalculationOptions["FrostChanneling"], CultureInfo.InvariantCulture);
+            MasterOfElements = int.Parse(character.CalculationOptions["MasterOfElements"], CultureInfo.InvariantCulture);
+            ArcaneConcentration = int.Parse(character.CalculationOptions["ArcaneConcentration"], CultureInfo.InvariantCulture);
+            MindMastery = int.Parse(character.CalculationOptions["MindMastery"], CultureInfo.InvariantCulture);
+            ArcaneInstability = int.Parse(character.CalculationOptions["ArcaneInstability"], CultureInfo.InvariantCulture);
+            ArcanePotency = int.Parse(character.CalculationOptions["ArcanePotency"], CultureInfo.InvariantCulture);
+            ArcaneFocus = int.Parse(character.CalculationOptions["ArcaneFocus"], CultureInfo.InvariantCulture);
+            PlayingWithFire = int.Parse(character.CalculationOptions["PlayingWithFire"], CultureInfo.InvariantCulture);
+            MoltenFury = int.Parse(character.CalculationOptions["MoltenFury"], CultureInfo.InvariantCulture);
+            FirePower = int.Parse(character.CalculationOptions["FirePower"], CultureInfo.InvariantCulture);
+            PiercingIce = int.Parse(character.CalculationOptions["PiercingIce"], CultureInfo.InvariantCulture);
+            SpellPower = int.Parse(character.CalculationOptions["SpellPower"], CultureInfo.InvariantCulture);
+            Ignite = int.Parse(character.CalculationOptions["Ignite"], CultureInfo.InvariantCulture);
+            IceShards = int.Parse(character.CalculationOptions["IceShards"], CultureInfo.InvariantCulture);
+            CriticalMass = int.Parse(character.CalculationOptions["CriticalMass"], CultureInfo.InvariantCulture);
+            Combustion = int.Parse(character.CalculationOptions["Combustion"], CultureInfo.InvariantCulture);
+            ImprovedFrostbolt = int.Parse(character.CalculationOptions["ImprovedFrostbolt"], CultureInfo.InvariantCulture);
+            EmpoweredFrostbolt = int.Parse(character.CalculationOptions["EmpoweredFrostbolt"], CultureInfo.InvariantCulture);
+            ImprovedFireball = int.Parse(character.CalculationOptions["ImprovedFireball"], CultureInfo.InvariantCulture);
+            EmpoweredFireball = int.Parse(character.CalculationOptions["EmpoweredFireball"], CultureInfo.InvariantCulture);
+            ArcaneImpact = int.Parse(character.CalculationOptions["ArcaneImpact"], CultureInfo.InvariantCulture);
+            EmpoweredArcaneMissiles = int.Parse(character.CalculationOptions["EmpoweredArcaneMissiles"], CultureInfo.InvariantCulture);
+            Incinerate = int.Parse(character.CalculationOptions["Incinerate"], CultureInfo.InvariantCulture);
+            ImprovedScorch = int.Parse(character.CalculationOptions["ImprovedScorch"], CultureInfo.InvariantCulture);
+            WintersChill = int.Parse(character.CalculationOptions["WintersChill"], CultureInfo.InvariantCulture);
+            BurningSoul = int.Parse(character.CalculationOptions["BurningSoul"], CultureInfo.InvariantCulture);
+            ImprovedArcaneMissiles = int.Parse(character.CalculationOptions["ImprovedArcaneMissiles"], CultureInfo.InvariantCulture);
+            WandSpecialization = int.Parse(character.CalculationOptions["WandSpecialization"], CultureInfo.InvariantCulture);
+            BlastWave = int.Parse(character.CalculationOptions["BlastWave"], CultureInfo.InvariantCulture);
+            DragonsBreath = int.Parse(character.CalculationOptions["DragonsBreath"], CultureInfo.InvariantCulture);
+            ArcanePower = int.Parse(character.CalculationOptions["ArcanePower"], CultureInfo.InvariantCulture);
+            IcyVeins = int.Parse(character.CalculationOptions["IcyVeins"], CultureInfo.InvariantCulture);
+            ColdSnap = int.Parse(character.CalculationOptions["ColdSnap"], CultureInfo.InvariantCulture);
+            IceFloes = int.Parse(character.CalculationOptions["IceFloes"], CultureInfo.InvariantCulture);
+            SummonWaterElemental = int.Parse(character.CalculationOptions["SummonWaterElemental"], CultureInfo.InvariantCulture);
+            ArcaneMind = int.Parse(character.CalculationOptions["ArcaneMind"], CultureInfo.InvariantCulture);
+            ArcaneFortitude = int.Parse(character.CalculationOptions["ArcaneFortitude"], CultureInfo.InvariantCulture);
+            MagicAbsorption = int.Parse(character.CalculationOptions["MagicAbsorption"], CultureInfo.InvariantCulture);
+            FrostWarding = int.Parse(character.CalculationOptions["FrostWarding"], CultureInfo.InvariantCulture);
+            ArcaneMeditation = int.Parse(character.CalculationOptions["ArcaneMeditation"], CultureInfo.InvariantCulture);
+            ArcaneSubtlety = int.Parse(character.CalculationOptions["ArcaneSubtlety"], CultureInfo.InvariantCulture);
+            ImprovedFireBlast = int.Parse(character.CalculationOptions["ImprovedFireBlast"], CultureInfo.InvariantCulture);
+            ImprovedFlamestrike = int.Parse(character.CalculationOptions["ImprovedFlamestrike"], CultureInfo.InvariantCulture);
+            ImprovedFrostNova = int.Parse(character.CalculationOptions["ImprovedFrostNova"], CultureInfo.InvariantCulture);
+            ImprovedConeOfCold = int.Parse(character.CalculationOptions["ImprovedConeOfCold"], CultureInfo.InvariantCulture);
         }
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace Rawr.Mage
 {
@@ -249,18 +250,18 @@ namespace Rawr.Mage
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CompiledCalculationOptions calculationOptions = new CompiledCalculationOptions(character);
-            Stats rawStats = GetRawStats(character, additionalItem);
-            Stats characterStats = GetCharacterStats(character, additionalItem, rawStats);
+            Stats rawStats = GetRawStats(character, additionalItem, calculationOptions);
+            Stats characterStats = GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
 
             bool heroismAvailable = calculationOptions.HeroismAvailable;
-            bool apAvailable = int.Parse(character.CalculationOptions["ArcanePower"]) == 1;
-            bool ivAvailable = int.Parse(character.CalculationOptions["IcyVeins"]) == 1;
-            bool combustionAvailable = int.Parse(character.CalculationOptions["Combustion"]) == 1;
-            bool mfAvailable = int.Parse(character.CalculationOptions["MoltenFury"]) > 0;
+            bool apAvailable = calculationOptions.ArcanePower == 1;
+            bool ivAvailable = calculationOptions.IcyVeins == 1;
+            bool combustionAvailable = calculationOptions.Combustion == 1;
+            bool mfAvailable = calculationOptions.MoltenFury > 0;
             bool trinket1Available = IsItemActivatable(character.Trinket1);
             bool trinket2Available = IsItemActivatable(character.Trinket2);
-            bool coldsnap = int.Parse(character.CalculationOptions["ColdSnap"]) == 1;
-            float coldsnapCooldown = 8 * 60 * (1 - 0.1f * int.Parse(character.CalculationOptions["IceFloes"]));
+            bool coldsnap = calculationOptions.ColdSnap == 1;
+            float coldsnapCooldown = 8 * 60 * (1 - 0.1f * calculationOptions.IceFloes);
             float combustionDuration = 0, combustionCooldown = 0, combustionCount = 0;
 
             double trinket1cooldown = 0, trinket1duration = 0, trinket2cooldown = 0, trinket2duration = 0, t1length = 0, t2length = 0;
@@ -416,7 +417,7 @@ namespace Rawr.Mage
             if (ivAvailable) coldsnapDelay = 20;
 
             // water elemental
-            if (int.Parse(character.CalculationOptions["SummonWaterElemental"]) == 1)
+            if (calculationOptions.SummonWaterElemental == 1)
             {
                 coldsnapDelay = 45;
                 int targetLevel = calculationOptions.TargetLevel;
@@ -434,7 +435,7 @@ namespace Rawr.Mage
                 if (character.ActiveBuffs.Contains("Curse of the Elements")) multiplier *= 1.1f;
                 if (character.ActiveBuffs.Contains("Improved Curse of the Elements")) multiplier *= 1.13f / 1.1f;
                 if (character.ActiveBuffs.Contains("Misery")) multiplier *= 1.05f;
-                float realResistance = float.Parse(character.CalculationOptions["FrostResist"]);
+                float realResistance = calculationOptions.FrostResist;
                 float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > 70) ? ((targetLevel - 70) * 0.02f) : 0f));
                 multiplier *= partialResistFactor;
                 calculatedStats.WaterElementalDps = (521.5f + (0.4f * calculatedStats.FrostDamage + (character.ActiveBuffs.Contains("Wrath of Air") ? 101 : 0)) * 2f / 3f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f;
@@ -559,7 +560,7 @@ namespace Rawr.Mage
                 if (character.OffHand != null) evocationRawStats.Intellect -= character.OffHand.GetTotalStats().Intellect;
                 if (character.Ranged != null) evocationRawStats.Intellect -= character.Ranged.GetTotalStats().Intellect;
                 evocationRawStats.Intellect += calculationOptions.EvocationWeapon;
-                Stats evocationStats = GetCharacterStats(character, additionalItem, evocationRawStats);
+                Stats evocationStats = GetCharacterStats(character, additionalItem, evocationRawStats, calculationOptions);
                 if (evocationStats.Mana > evocationMana) evocationMana = evocationStats.Mana;
             }
             lp[0, 2] = -calculatedStats.ManaRegen5SR - 0.15f * evocationMana / 2f;
@@ -690,7 +691,7 @@ namespace Rawr.Mage
             if (mfAvailable && trinket2Available) lp[20, lpCols] = trinket2duration;
             if (heroismAvailable && trinket1Available) lp[21, lpCols] = trinket1duration;
             if (heroismAvailable && trinket2Available) lp[22, lpCols] = trinket2duration;
-            lp[24, lpCols] = - (1 - float.Parse(character.CalculationOptions["DpsTime"])) * calculationOptions.FightDuration;
+            lp[24, lpCols] = - (1 - calculationOptions.DpsTime) * calculationOptions.FightDuration;
             lp[25, lpCols] = calculationOptions.AoeDuration * calculationOptions.FightDuration;
             lp[30, lpCols] = combustionCount;
             lp[31, lpCols] = 1;
@@ -1093,20 +1094,20 @@ namespace Rawr.Mage
             return calculatedStats;
         }
 
-        private Stats GetRawStats(Character character, Item additionalItem)
+        private Stats GetRawStats(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions)
         {
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            if (character.CalculationOptions["MaintainScorch"] == "1")
+            if (calculationOptions.MaintainScorch)
             {
-                if (int.Parse(character.CalculationOptions["ImprovedScorch"]) > 0)
+                if (calculationOptions.ImprovedScorch > 0)
                 {
                     if (!character.ActiveBuffs.Contains("Improved Scorch")) statsBuffs += Buff.GetBuffByName("Improved Scorch").Stats;
                 }
             }
-            if (int.Parse(character.CalculationOptions["WintersChill"]) > 0)
+            if (calculationOptions.WintersChill > 0)
             {
                 if (!character.ActiveBuffs.Contains("Winter's Chill")) statsBuffs += Buff.GetBuffByName("Winter's Chill").Stats;
             }
@@ -1118,10 +1119,11 @@ namespace Rawr.Mage
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem));
+            CompiledCalculationOptions calculationOptions = new CompiledCalculationOptions(character);
+            return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions), calculationOptions);
         }
 
-        public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats)
+        public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats, CompiledCalculationOptions calculationOptions)
         {
             Stats statsRace;
             switch (character.Race)
@@ -1136,7 +1138,7 @@ namespace Rawr.Mage
                         Stamina = 49f,
                         Intellect = 149f,
                         Spirit = 144,
-                        BonusIntellectMultiplier = 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"]),
+                        BonusIntellectMultiplier = 0.03f * calculationOptions.ArcaneMind,
                     };
                     break;
                 case Character.CharacterRace.Draenei:
@@ -1149,7 +1151,7 @@ namespace Rawr.Mage
                         Stamina = 50f,
                         Intellect = 152f,
                         Spirit = 147,
-                        BonusIntellectMultiplier = 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"]),
+                        BonusIntellectMultiplier = 0.03f * calculationOptions.ArcaneMind,
                     };
                     break;
                 case Character.CharacterRace.Gnome:
@@ -1163,7 +1165,7 @@ namespace Rawr.Mage
                         Intellect = 154f,
                         Spirit = 145,
                         ArcaneResistance = 10,
-                        BonusIntellectMultiplier = 1.05f * (1 + 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"])) - 1
+                        BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
                     };
                     break;
                 case Character.CharacterRace.Human:
@@ -1176,7 +1178,7 @@ namespace Rawr.Mage
                         Stamina = 51f,
                         Intellect = 151f,
                         Spirit = 145,
-                        BonusIntellectMultiplier = 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"]),
+                        BonusIntellectMultiplier = 0.03f * calculationOptions.ArcaneMind,
                         BonusSpiritMultiplier = 0.1f
                     };
                     break;
@@ -1190,7 +1192,7 @@ namespace Rawr.Mage
                         Stamina = 52f,
                         Intellect = 147f,
                         Spirit = 146,
-                        BonusIntellectMultiplier = 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"]),
+                        BonusIntellectMultiplier = 0.03f * calculationOptions.ArcaneMind,
                     };
                     break;
                 case Character.CharacterRace.Undead:
@@ -1203,7 +1205,7 @@ namespace Rawr.Mage
                         Stamina = 52f,
                         Intellect = 149f,
                         Spirit = 150,
-                        BonusIntellectMultiplier = 0.03f * int.Parse(character.CalculationOptions["ArcaneMind"]),
+                        BonusIntellectMultiplier = 0.03f * calculationOptions.ArcaneMind,
                     };
                     break;
                 default:
@@ -1228,30 +1230,30 @@ namespace Rawr.Mage
 
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect + statsGearEnchantsBuffs.Mana);
-            statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f + statsTotal.Intellect * int.Parse(character.CalculationOptions["ArcaneFortitude"]));
+            statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f + statsTotal.Intellect * calculationOptions.ArcaneFortitude);
 
-            int magicAbsorption = 2 * int.Parse(character.CalculationOptions["MagicAbsorption"]);
-            int frostWarding = int.Parse(character.CalculationOptions["FrostWarding"]);
+            int magicAbsorption = 2 * calculationOptions.MagicAbsorption;
+            int frostWarding = calculationOptions.FrostWarding;
             statsTotal.AllResist += magicAbsorption;
 
-            if (character.CalculationOptions["MageArmor"].Equals("Mage"))
+            if (calculationOptions.MageArmor == "Mage")
             {
                 statsTotal.SpellCombatManaRegeneration += 0.3f;
                 statsTotal.AllResist += 18;
             }
-            if (character.CalculationOptions["MageArmor"].Equals("Ice"))
+            if (calculationOptions.MageArmor == "Ice")
             {
                 statsTotal.Armor += (float)Math.Floor(645 * (1 + 0.15f * frostWarding));
                 statsTotal.FrostResistance += (float)Math.Floor(18 * (1 + 0.15f * frostWarding));
             }
 
-            statsTotal.SpellCombatManaRegeneration += 0.1f * int.Parse(character.CalculationOptions["ArcaneMeditation"]);
+            statsTotal.SpellCombatManaRegeneration += 0.1f * calculationOptions.ArcaneMeditation;
 
-            statsTotal.SpellPenetration += 5 * int.Parse(character.CalculationOptions["ArcaneSubtlety"]);
+            statsTotal.SpellPenetration += 5 * calculationOptions.ArcaneSubtlety;
 
-            statsTotal.Mp5 += float.Parse(character.CalculationOptions["ShadowPriest"]);
+            statsTotal.Mp5 += calculationOptions.ShadowPriest;
 
-            statsTotal.SpellDamageFromIntellectPercentage += 0.05f * int.Parse(character.CalculationOptions["MindMastery"]);
+            statsTotal.SpellDamageFromIntellectPercentage += 0.05f * calculationOptions.MindMastery;
 
             return statsTotal;
         }
@@ -1305,7 +1307,7 @@ namespace Rawr.Mage
                     {
                         string talent = TalentList[index];
                         int maxPoints = MaxTalentPoints[index];
-                        int currentPoints = int.Parse(character.CalculationOptions[talent]);
+                        int currentPoints = int.Parse(character.CalculationOptions[talent], CultureInfo.InvariantCulture);
 
                         if (currentPoints > 0)
                         {

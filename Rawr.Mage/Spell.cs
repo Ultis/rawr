@@ -391,7 +391,7 @@ namespace Rawr.Mage
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             base.Calculate(character, calculations);
-            Cooldown -= 0.5f * int.Parse(character.CalculationOptions["ImprovedFireBlast"]);
+            Cooldown -= 0.5f * calculations.CalculationOptions.ImprovedFireBlast;
             CritRate += 0.02f * calculations.CalculationOptions.Incinerate;
             CalculateDerivedStats(character, calculations);
         }
@@ -430,7 +430,7 @@ namespace Rawr.Mage
         {
             base.Calculate(character, calculations);
             AoeDamageCap = 7830;
-            CritRate += 0.05f * int.Parse(character.CalculationOptions["ImprovedFlamestrike"]);
+            CritRate += 0.05f * calculations.CalculationOptions.ImprovedFlamestrike;
             CalculateDerivedStats(character, calculations);
         }
     }
@@ -447,7 +447,7 @@ namespace Rawr.Mage
         public override void Calculate(Character character, CharacterCalculationsMage calculations)
         {
             base.Calculate(character, calculations);
-            Cooldown -= 2 * int.Parse(character.CalculationOptions["ImprovedFrostNova"]);
+            Cooldown -= 2 * calculations.CalculationOptions.ImprovedFrostNova;
             CalculateDerivedStats(character, calculations);
         }
     }
@@ -505,7 +505,7 @@ namespace Rawr.Mage
         {
             base.Calculate(character, calculations);
             AoeDamageCap = 6500;
-            int ImprovedConeOfCold = int.Parse(character.CalculationOptions["ImprovedConeOfCold"]);
+            int ImprovedConeOfCold = calculations.CalculationOptions.ImprovedConeOfCold;
             SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0));
             CalculateDerivedStats(character, calculations);
         }
