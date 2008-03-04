@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rawr.Moonkin
 {
-    [System.ComponentModel.DisplayName("Moonkin")]
+	[System.ComponentModel.DisplayName("Moonkin|Spell_Nature_ForceOfNature")]
     class CalculationsMoonkin : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> subColors = null;

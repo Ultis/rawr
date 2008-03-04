@@ -210,7 +210,8 @@ namespace Rawr
 		public FormMain()
 		{
 			_spash.Show();
-
+			Application.DoEvents();
+			
 			Calculations.LoadModel(Config.AppSettings.Settings["Model"].Value);
 			Application.DoEvents();
 			InitializeComponent();
@@ -223,7 +224,7 @@ namespace Rawr
 				ToolStripMenuItem modelToolStripMenuItem = new ToolStripMenuItem(kvp.Key);
 				modelToolStripMenuItem.Click += new EventHandler(modelToolStripMenuItem_Click);
 				modelToolStripMenuItem.Checked = kvp.Value == Calculations.Instance.GetType();
-				modelToolStripMenuItem.Tag = kvp.Value;
+				modelToolStripMenuItem.Tag = kvp;
 				modelsToolStripMenuItem.DropDownItems.Add(modelToolStripMenuItem);					
 			}
 
@@ -247,7 +248,9 @@ namespace Rawr
 
 				foreach (ToolStripMenuItem item in (modelToolStripMenuItem.OwnerItem as ToolStripMenuItem).DropDownItems)
 					item.Checked = item == modelToolStripMenuItem;
-				Calculations.LoadModel(modelToolStripMenuItem.Tag as Type);
+				KeyValuePair<string, Type> kvpModel = (KeyValuePair<string, Type>)modelToolStripMenuItem.Tag;
+				this.Icon = Icon.FromHandle((ItemIcons.GetItemIcon(Calculations.ModelIcons[kvpModel.Key], true) as Bitmap).GetHicon());
+				Calculations.LoadModel(kvpModel.Value);
 				ConfigModel = modelToolStripMenuItem.Text;
 			}
 		}
@@ -255,10 +258,6 @@ namespace Rawr
 		private void Calculations_ModelChanged(object sender, EventArgs e)
 		{
 			bool unsavedChanges = _unsavedChanges;
-			if (Calculations.CalculationOptionsPanel.Icon != null)
-			{
-				Icon = Calculations.CalculationOptionsPanel.Icon;
-			}
 
 			UpdateCustomChartMenuItems();
 			toolStripDropDownButtonSort.DropDownItems.Clear();

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Healadin
 {
-    [System.ComponentModel.DisplayName("Healadin")]
+	[System.ComponentModel.DisplayName("Healadin|Spell_Holy_HolyBolt")]
     public class CalculationsHealadin : CalculationsBase
     {
         //my insides all turned to ash / so slow

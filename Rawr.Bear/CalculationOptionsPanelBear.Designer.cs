@@ -76,7 +76,6 @@
 			this.Controls.Add(this.checkBoxEnforceMetagemRequirements);
 			this.Controls.Add(this.comboBoxTargetLevel);
 			this.Controls.Add(this.label1);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "CalculationOptionsPanelBear";
 			this.Size = new System.Drawing.Size(332, 338);
 			this.ResumeLayout(false);

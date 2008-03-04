@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr
 {
-	[System.ComponentModel.DisplayName("Cat")]
+	[System.ComponentModel.DisplayName("Cat|Ability_Druid_CatForm")]
 	public class CalculationsCat : CalculationsBase
 	{
 		//my insides all turned to ash / so slow

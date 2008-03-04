@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace Rawr.Mage
 {
-    [System.ComponentModel.DisplayName("Mage")]
+	[System.ComponentModel.DisplayName("Mage|Spell_Holy_MagicalSentry")]
     class CalculationsMage : CalculationsBase
     {
         public static void LoadRelevantItems()

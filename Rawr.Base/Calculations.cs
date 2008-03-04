@@ -9,6 +9,19 @@ namespace Rawr
 {
 	public class Calculations
 	{
+		private static Dictionary<string, string> _modelIcons = null;
+		public static Dictionary<string, string> ModelIcons
+		{
+			get
+			{
+				if (_modelIcons == null)
+				{
+					Models.ToString();
+				}
+				return _modelIcons;
+			}
+		}
+
 		private static SortedList<string, Type> _models = null;
 		public static SortedList<string, Type> Models
 		{
@@ -17,6 +30,7 @@ namespace Rawr
 				if (_models == null)
 				{
 					_models = new SortedList<string, Type>();
+					_modelIcons = new Dictionary<string, string>();
 
 					DirectoryInfo info = new DirectoryInfo(System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath));
 					foreach (FileInfo file in info.GetFiles("*.dll"))
@@ -30,10 +44,11 @@ namespace Rawr
 								if (type.IsSubclassOf(typeof(CalculationsBase)))
 								{
 									DisplayNameAttribute[] displayNameAttributes = type.GetCustomAttributes(typeof(DisplayNameAttribute), false) as DisplayNameAttribute[];
-									string displayName = type.Name;
+									string[] displayName = type.Name.Split('|');
 									if (displayNameAttributes.Length > 0)
-										displayName = displayNameAttributes[0].DisplayName;
-									_models[displayName] = type;
+										displayName = displayNameAttributes[0].DisplayName.Split('|');
+									_models[displayName[0]] = type;
+									_modelIcons[displayName[0]] = displayName[1];
 								}
 							}
 						}
@@ -600,11 +615,6 @@ namespace Rawr
 	/// </summary>
 	public class CalculationOptionsPanelBase : System.Windows.Forms.UserControl
 	{
-		/// <summary>
-		/// An icon to be used for the main form when the model is active.
-		/// </summary>
-        public virtual System.Drawing.Icon Icon { get; set; }
-
 		private Character _character = null;
 		/// <summary>
 		/// The current character. Will be set whenever the model loads or a character is loaded.

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rawr.Warlock
 {
-    [System.ComponentModel.DisplayName("Warlock")]
+	[System.ComponentModel.DisplayName("Warlock|Spell_Nature_FaerieFire")]
     class CalculationsWarlock : CalculationsBase
     {
 

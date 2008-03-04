@@ -135,9 +135,9 @@ namespace Rawr
                 Image fullSizeImage = null;
                 try
                 {
-                    fullSizeImage = Image.FromFile(localPath);
-                    if (small) SmallIcons.Images.Add(iconPath, ScaleByPercent(Image.FromFile(localPath), 50));
-                    else LargeIcons.Images.Add(iconPath, Image.FromFile(localPath));
+                    fullSizeImage = Bitmap.FromFile(localPath);
+					if (small) SmallIcons.Images.Add(iconPath, ScaleByPercent(Bitmap.FromFile(localPath), 50));
+					else LargeIcons.Images.Add(iconPath, Bitmap.FromFile(localPath));
                 }
                 catch
                 {

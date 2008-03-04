@@ -313,7 +313,6 @@
             this.Controls.Add(this.checkBoxEnforceMetagemRequirements);
             this.Controls.Add(this.comboBoxTargetLevel);
             this.Controls.Add(this.label1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CalculationOptionsPanelWarlock";
             this.Size = new System.Drawing.Size(208, 597);
             this.groupBox1.ResumeLayout(false);

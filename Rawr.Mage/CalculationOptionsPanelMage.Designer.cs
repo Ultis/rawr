@@ -576,7 +576,6 @@
             this.Controls.Add(this.checkBoxEnforceMetagemRequirements);
             this.Controls.Add(this.comboBoxTargetLevel);
             this.Controls.Add(this.label1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CalculationOptionsPanelMage";
             this.Size = new System.Drawing.Size(204, 629);
             this.ResumeLayout(false);

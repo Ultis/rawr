@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Rogue
 {
-	[System.ComponentModel.DisplayName("Rogue")]
+	[System.ComponentModel.DisplayName("Rogue|INV_ThrowingKnife_04")]
 	class CalculationsRogue : CalculationsBase
 	{
 		private CalculationOptionsPanelBase _calculationOptionsPanel = null;

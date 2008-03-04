@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-    [System.ComponentModel.DisplayName("Retribution")]
+	[System.ComponentModel.DisplayName("Retribution|Spell_Holy_AuraOfLight")]
     class CalculationsRetribution : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
