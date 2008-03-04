@@ -184,14 +184,17 @@ namespace Rawr.Moonkin
             spellList["Insect Swarm"].dotEffect.damagePerTick += (0.76f / spellList["Insect Swarm"].dotEffect.numTicks) * calcs.NatureDamage;
 
             // Add spell damage from idols
-            if (character.Ranged.Name == "Ivory Idol of the Moongoddess")   // Starfire idol
-                spellList["Starfire"].damagePerHit += 55.0f;
-            else if (character.Ranged.Name == "Idol of the Moon")   // Moonfire idol
-                spellList["Moonfire"].damagePerHit += 33.0f;
-            else if (character.Ranged.Name == "Idol of the Avenger")    // Wrath idol
-                spellList["Wrath"].damagePerHit += 25.0f;
-            else if (character.Ranged.Name == "Ivory Idol of the Raven Goddess" && character.ActiveBuffs.Contains("Moonkin Aura"))
-                calcs.SpellCrit += 20 / critRatingDivisor;
+			if (character.Ranged != null)
+			{
+				if (character.Ranged.Name == "Ivory Idol of the Moongoddess")   // Starfire idol
+					spellList["Starfire"].damagePerHit += 55.0f;
+				else if (character.Ranged.Name == "Idol of the Moon")   // Moonfire idol
+					spellList["Moonfire"].damagePerHit += 33.0f;
+				else if (character.Ranged.Name == "Idol of the Avenger")    // Wrath idol
+					spellList["Wrath"].damagePerHit += 25.0f;
+				else if (character.Ranged.Name == "Ivory Idol of the Raven Goddess" && character.ActiveBuffs.Contains("Moonkin Aura"))
+					calcs.SpellCrit += 20 / critRatingDivisor;
+			}
 
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)

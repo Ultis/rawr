@@ -27,9 +27,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Warlock", "Rawr.Warloc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Healadin", "Rawr.Healadin\Rawr.Healadin.csproj", "{2C87A084-93E5-46C2-8ED7-8B863630D7AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution", "Rawr.Retribution\Rawr.Retribution.csproj", "{0192EACB-69A8-4F54-9E30-499844A78FF7}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 10
+		SccNumberOfProjects = 11
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -59,6 +61,9 @@ Global
 		SccProjectUniqueName9 = Rawr.Healadin\\Rawr.Healadin.csproj
 		SccProjectName9 = Rawr.Healadin
 		SccLocalPath9 = Rawr.Healadin
+		SccProjectUniqueName10 = Rawr.Retribution\\Rawr.Retribution.csproj
+		SccProjectName10 = Rawr.Retribution
+		SccLocalPath10 = Rawr.Retribution
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +128,12 @@ Global
 		{2C87A084-93E5-46C2-8ED7-8B863630D7AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C87A084-93E5-46C2-8ED7-8B863630D7AC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2C87A084-93E5-46C2-8ED7-8B863630D7AC}.Release|x86.ActiveCfg = Release|Any CPU
+		{0192EACB-69A8-4F54-9E30-499844A78FF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0192EACB-69A8-4F54-9E30-499844A78FF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0192EACB-69A8-4F54-9E30-499844A78FF7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0192EACB-69A8-4F54-9E30-499844A78FF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0192EACB-69A8-4F54-9E30-499844A78FF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0192EACB-69A8-4F54-9E30-499844A78FF7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
