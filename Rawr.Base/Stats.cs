@@ -285,21 +285,21 @@ namespace Rawr
         public float SpellDamageFor10SecOnCrit_20_45 { get; set; }
 
         // Starfire idol
-        [DisplayName("Starfire idol")]
+        [DisplayName("Starfire damage bonus")]
         [Category("Equipment Procs")]
-        public int StarfireIdol { get; set; }
+        public float StarfireDmg { get; set; }
         // Moonfire idol
-        [DisplayName("Moonfire idol")]
+        [DisplayName("Moonfire damage bonus")]
         [Category("Equipment Procs")]
-        public int MoonfireIdol { get; set; }
+        public float MoonfireDmg { get; set; }
         // Wrath idol
-        [DisplayName("Wrath idol")]
+        [DisplayName("Wrath damage bonus")]
         [Category("Equipment Procs")]
-        public int WrathIdol { get; set; }
+        public float WrathDmg { get; set; }
         // Moonkin Aura idol
-        [DisplayName("Raven idol")]
+        [DisplayName("Spell critical bonus")]
         [Category("Equipment Procs")]
-        public int RavenIdol { get; set; }
+        public float IdolCritRating { get; set; }
 
         public float EvocationExtension { get; set; }
 
@@ -478,7 +478,11 @@ namespace Rawr
                 SpellDamageFor10SecOnHit_5 = a.SpellDamageFor10SecOnHit_5 + b.SpellDamageFor10SecOnHit_5,
                 SpellHasteFor6SecOnHit_10_45 = a.SpellHasteFor6SecOnHit_10_45 + b.SpellHasteFor6SecOnHit_10_45,
                 SpellDamageFor10SecOnCrit_20_45 = a.SpellDamageFor10SecOnCrit_20_45 + b.SpellDamageFor10SecOnCrit_20_45,
-                Healing = a.Healing + b.Healing
+                Healing = a.Healing + b.Healing,
+                StarfireDmg = a.StarfireDmg + b.StarfireDmg,
+                WrathDmg = a.WrathDmg + b.WrathDmg,
+                MoonfireDmg = a.MoonfireDmg + b.MoonfireDmg,
+                IdolCritRating = a.IdolCritRating + b.IdolCritRating
 			};
 		}
 

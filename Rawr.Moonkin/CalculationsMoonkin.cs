@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rawr.Moonkin
 {
-    [System.ComponentModel.DisplayName("Moonkin")]
+    [System.ComponentModel.DisplayName("Moonkin|Spell_Nature_ForceOfNature")]
     class CalculationsMoonkin : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> subColors = null;
@@ -185,14 +185,11 @@ namespace Rawr.Moonkin
             spellList["Insect Swarm"].dotEffect.damagePerTick += (0.76f / spellList["Insect Swarm"].dotEffect.numTicks) * calcs.NatureDamage;
 
             // Add spell damage from idols
-			if (stats.StarfireIdol == 1)
-				spellList["Starfire"].damagePerHit += 55.0f;
-            else if (stats.MoonfireIdol == 1)
-				spellList["Moonfire"].damagePerHit += 33.0f;
-            else if (stats.WrathIdol == 1)
-				spellList["Wrath"].damagePerHit += 25.0f;
-            else if (stats.RavenIdol == 1 && character.ActiveBuffs.Contains("Moonkin Aura"))
-				calcs.SpellCrit += 20 / critRatingDivisor;
+            spellList["Starfire"].damagePerHit += stats.StarfireDmg;
+            spellList["Moonfire"].damagePerHit += stats.MoonfireDmg;
+            spellList["Wrath"].damagePerHit += stats.WrathDmg;
+            if (character.ActiveBuffs.Contains("Moonkin Aura"))
+                calcs.SpellCrit += stats.IdolCritRating / critRatingDivisor;
 
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)
@@ -369,13 +366,17 @@ namespace Rawr.Moonkin
                 SpellDamageFor15SecOnCrit_20_45 = stats.SpellDamageFor15SecOnCrit_20_45,
                 SpellDamageFor15SecOnUse90Sec = stats.SpellDamageFor15SecOnUse90Sec,
                 SpellHasteFor5SecOnCrit_50 = stats.SpellHasteFor5SecOnCrit_50,
-                SpellHasteFor6SecOnCast_15_45 = stats.SpellHasteFor6SecOnCast_15_45
+                SpellHasteFor6SecOnCast_15_45 = stats.SpellHasteFor6SecOnCast_15_45,
+                StarfireDmg = stats.StarfireDmg,
+                MoonfireDmg = stats.MoonfireDmg,
+                WrathDmg = stats.WrathDmg,
+                IdolCritRating = stats.IdolCritRating
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellNatureDamageRating + stats.SpellHasteRating + stats.SpellHitRating + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellArcaneDamageRating + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor6SecOnCrit + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45) > 0;
+            return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellNatureDamageRating + stats.SpellHasteRating + stats.SpellHitRating + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellArcaneDamageRating + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor6SecOnCrit + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating) > 0;
         }
     }
 }

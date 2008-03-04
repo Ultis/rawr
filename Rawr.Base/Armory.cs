@@ -745,21 +745,29 @@ namespace Rawr
                                             break;
                                     }
                                 }
-                                else if (spellDesc.StartsWith("Increases the damage of your Starfire ability"))
+                                else if (spellDesc.StartsWith("Increases the damage of your Starfire spell by up to "))
                                 {
-                                    stats.StarfireIdol = 1;
+                                    spellDesc = spellDesc.Substring("Increases the damage of your Starfire spell by up to ".Length);
+                                    spellDesc = spellDesc.Replace(".", "");
+                                    stats.StarfireDmg += float.Parse(spellDesc);
                                 }
-                                else if (spellDesc.StartsWith("Increases the damage of your Moonfire ability"))
+                                else if (spellDesc.StartsWith("Increases the damage of your Moonfire spell by up to "))
                                 {
-                                    stats.MoonfireIdol = 1;
+                                    spellDesc = spellDesc.Substring("Increases the damage of your Moonfire spell by up to ".Length);
+                                    spellDesc = spellDesc.Replace(".", "");
+                                    stats.MoonfireDmg += float.Parse(spellDesc);
                                 }
-                                else if (spellDesc.StartsWith("Increases the damage dealt by Wrath"))
+                                else if (spellDesc.StartsWith("Increases the damage dealt by Wrath by "))
                                 {
-                                    stats.WrathIdol = 1;
+                                    spellDesc = spellDesc.Substring("Increases the damage dealt by Wrath by ".Length);
+                                    spellDesc = spellDesc.Replace(".", "");
+                                    stats.WrathDmg += float.Parse(spellDesc);
                                 }
                                 else if (spellDesc.StartsWith("Increases the healing granted by the Tree of Life form"))
                                 {
-                                    stats.RavenIdol = 1;
+                                    spellDesc = spellDesc.Substring(spellDesc.IndexOf("and adds "));
+                                    spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" spell critical strike rating"));
+                                    stats.IdolCritRating += float.Parse(spellDesc);
                                 }
                             }
 						}
