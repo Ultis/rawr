@@ -1958,9 +1958,11 @@ namespace Rawr.Mage
             this.comboBoxTalentPreset.FormattingEnabled = true;
             this.comboBoxTalentPreset.Items.AddRange(new object[] {
             "Fire (2/48/11)",
+            "Fire (10/48/3)",
             "Fire/Cold Snap (0/40/21)",
             "Frost (10/0/51)",
             "Arcane (48/0/13)",
+            "Arcane (43/0/18)",
             "Arcane/Fire (40/18/3)",
             "Arcane/Frost (40/0/21)"});
             this.comboBoxTalentPreset.Location = new System.Drawing.Point(446, 10);

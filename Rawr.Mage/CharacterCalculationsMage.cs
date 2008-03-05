@@ -394,8 +394,8 @@ namespace Rawr.Mage
             dictValues.Add("Armor", BasicStats.Armor.ToString());
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Mana", BasicStats.Mana.ToString());
-            dictValues.Add("Spell Crit Rate", String.Format("{0:F}%", 100 * SpellCrit));
-            dictValues.Add("Spell Hit Rate", String.Format("{0:F}%", 100 * SpellHit));
+            dictValues.Add("Spell Crit Rate", String.Format("{0:F}%*{1} Spell Crit Rating", 100 * SpellCrit, BasicStats.SpellCritRating));
+            dictValues.Add("Spell Hit Rate", String.Format("{0:F}%*{1} Spell Hit Rating", 100 * SpellHit, BasicStats.SpellHitRating));
             dictValues.Add("Spell Penetration", BasicStats.SpellPenetration.ToString());
             dictValues.Add("Casting Speed", String.Format("{0}*{1} Spell Haste Rating", CastingSpeed, BasicStats.SpellHasteRating));
             dictValues.Add("Arcane Damage", ArcaneDamage.ToString());

@@ -430,7 +430,7 @@ namespace Rawr.Mage
                 if (character.ActiveBuffs.Contains("Inspiring Presence")) spellHit += 0.01f;
                 float hitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + spellHit);
                 float spellCrit = 0.05f;
-                if (character.ActiveBuffs.Contains("Winter's Chill")) spellHit += 0.1f;
+                if (character.ActiveBuffs.Contains("Winter's Chill") || calculationOptions.WintersChill == 1) spellHit += 0.1f;
                 float multiplier = hitRate;
                 if (character.ActiveBuffs.Contains("Curse of the Elements")) multiplier *= 1.1f;
                 if (character.ActiveBuffs.Contains("Improved Curse of the Elements")) multiplier *= 1.13f / 1.1f;
@@ -438,7 +438,7 @@ namespace Rawr.Mage
                 float realResistance = calculationOptions.FrostResist;
                 float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > 70) ? ((targetLevel - 70) * 0.02f) : 0f));
                 multiplier *= partialResistFactor;
-                calculatedStats.WaterElementalDps = (521.5f + (0.4f * calculatedStats.FrostDamage + (character.ActiveBuffs.Contains("Wrath of Air") ? 101 : 0)) * 2f / 3f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f;
+                calculatedStats.WaterElementalDps = (521.5f + (0.4f * calculatedStats.FrostDamage + (character.ActiveBuffs.Contains("Wrath of Air") ? 101 : 0)) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f;
                 calculatedStats.WaterElementalDuration = (float)(1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 45f) / 180f)) * 45;
                 if (heroismAvailable)
                     calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDps * ((calculatedStats.WaterElementalDuration - 40) + 40 * 1.3f);
@@ -1366,7 +1366,7 @@ namespace Rawr.Mage
 
                     comparisonList.Add(comparison);
 
-                    string[] talentSpecList = new string[] { "Fire (2/48/11)", "Fire/Cold Snap (0/40/21)", "Frost (10/0/51)", "Arcane (48/0/13)", "Arcane/Fire (40/18/3)", "Arcane/Frost (40/0/21)" };
+                    string[] talentSpecList = new string[] { "Fire (2/48/11)", "Fire (10/48/3)", "Fire/Cold Snap (0/40/21)", "Frost (10/0/51)", "Arcane (48/0/13)", "Arcane (43/0/18)", "Arcane/Fire (40/18/3)", "Arcane/Frost (40/0/21)" };
                     Character charClone = character.Clone();
 
                     for (int index = 0; index < talentSpecList.Length; index++)
@@ -1445,6 +1445,9 @@ namespace Rawr.Mage
                 case "Fire (2/48/11)":
                     talentCode = "2000000000000000000000050520201230333115312510532000010000000000000";
                     break;
+                case "Fire (10/48/3)":
+                    talentCode = "2300050000000000000000050520211230333105312510030000000000000000000";
+                    break;
                 case "Fire/Cold Snap (0/40/21)":
                     talentCode = "0000000000000000000000050510200230233005112500535000310030010000000";
                     break;
@@ -1454,11 +1457,14 @@ namespace Rawr.Mage
                 case "Arcane (48/0/13)":
                     talentCode = "2550050300230150333125000000000000000000000000534000010000000000000";
                     break;
+                case "Arcane (43/0/18)":
+                    talentCode = "2250050300030150333125000000000000000000000000515000310030000000000";
+                    break;
                 case "Arcane/Fire (40/18/3)":
                     talentCode = "2500050300230150330125050520001230000000000000030000000000000000000";
                     break;
                 case "Arcane/Frost (40/0/21)":
-                    talentCode = "2520050300030150330125000000000000000000000000535020310010010000000";
+                    talentCode = "2500052300030150330125000000000000000000000000535000310030010000000";
                     break;
             }
 
