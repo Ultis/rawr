@@ -219,6 +219,9 @@ namespace Rawr
 
                         _allEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { Healing = 30, SpellDamageRating = 10 }));
 
+                        //The stat value of mongoose and executioner is dependent on the weapon speed and is thus left to the individual models to take care of through the Id
+                        _allEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, new Stats() { }));
+                        _allEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.MainHand, new Stats() { }));
 						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
 						StringBuilder sb = new StringBuilder();
 						System.IO.StringWriter writer = new System.IO.StringWriter(sb);
