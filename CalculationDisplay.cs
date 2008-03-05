@@ -6,17 +6,15 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
+using Rawr.CustomControls;
+
 namespace Rawr
 {
 	public partial class CalculationDisplay : UserControl
 	{
-		private ToolTip ToolTip = new ToolTip();
 		public CalculationDisplay()
 		{
-			InitializeComponent();
-			ToolTip.AutomaticDelay = 100;
-			ToolTip.AutoPopDelay = 100000;
-			
+			InitializeComponent();		
 			BuildControls();
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 		}
@@ -27,15 +25,15 @@ namespace Rawr
 		}
 
 		Dictionary<string, GroupBox> GroupBoxes = new Dictionary<string, GroupBox>();
-		Dictionary<string, Label> LabelLabels = new Dictionary<string, Label>();
-		Dictionary<string, Label> ValueLabels = new Dictionary<string, Label>();
+        Dictionary<string, ExtendedToolTipLabel> LabelLabels = new Dictionary<string, ExtendedToolTipLabel>();
+        Dictionary<string, ExtendedToolTipLabel> ValueLabels = new Dictionary<string, ExtendedToolTipLabel>();
 		private void BuildControls()
 		{
 			this.Controls.Clear();
 			GroupBoxes.Clear();
 			LabelLabels.Clear();
 			ValueLabels.Clear();
-			ToolTip.RemoveAll();
+
             string[] displayLabelConfigurationStrings = null;
             if (Calculations.Instance != null)
             {
@@ -63,16 +61,19 @@ namespace Rawr
 				string name = displayLabelConfigurationSplit[1];
 				string[] nameSplit = name.Split('*');
 				name = nameSplit[0];
-				
-				Label labelLabel = new Label();
+
+                ExtendedToolTipLabel labelLabel = new ExtendedToolTipLabel();
 				labelLabel.Left = 4;
 				labelLabel.Text = name + (nameSplit.Length > 1 ? ": *" : ":");
 				labelLabel.AutoSize = true;
 				GroupBoxes[group].Controls.Add(labelLabel);
 				LabelLabels.Add(name, labelLabel);
-				if (nameSplit.Length > 1) ToolTip.SetToolTip(labelLabel, nameSplit[1]);
-				
-				Label labelValue = new Label();
+                if (nameSplit.Length > 1)
+                {
+                    labelLabel.ToolTipText = nameSplit[1];
+                }
+
+                ExtendedToolTipLabel labelValue = new ExtendedToolTipLabel();
 				labelValue.Left = 102;
 				labelValue.AutoSize = true;
 				GroupBoxes[group].Controls.Add(labelValue);
@@ -83,7 +84,7 @@ namespace Rawr
 			foreach (GroupBox groupBox in GroupBoxes.Values)
 			{
 				int labelY = 19;
-				foreach (Label label in groupBox.Controls)
+                foreach (ExtendedToolTipLabel label in groupBox.Controls)
 				{
 					label.Top = labelY;
 					if (ValueLabels.ContainsValue(label))
@@ -106,7 +107,7 @@ namespace Rawr
 				if (valueSplit.Length > 1)
 				{
 					ValueLabels[kvp.Key].Text = value + " *";
-					ToolTip.SetToolTip(ValueLabels[kvp.Key], valueSplit[1]);
+					ValueLabels[kvp.Key].ToolTipText = valueSplit[1];
 				}
 				else
 					ValueLabels[kvp.Key].Text = value;
