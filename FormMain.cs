@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Configuration;
+using Rawr.Forms;
 
 namespace Rawr
 {
@@ -249,7 +250,11 @@ namespace Rawr
 				foreach (ToolStripMenuItem item in (modelToolStripMenuItem.OwnerItem as ToolStripMenuItem).DropDownItems)
 					item.Checked = item == modelToolStripMenuItem;
 				KeyValuePair<string, Type> kvpModel = (KeyValuePair<string, Type>)modelToolStripMenuItem.Tag;
-				this.Icon = Icon.FromHandle((ItemIcons.GetItemIcon(Calculations.ModelIcons[kvpModel.Key], true) as Bitmap).GetHicon());
+				Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[kvpModel.Key], true);
+				if (icon != null)
+				{
+					this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
+				}
 				Calculations.LoadModel(kvpModel.Value);
 				ConfigModel = modelToolStripMenuItem.Text;
 			}
@@ -820,5 +825,10 @@ namespace Rawr
             }
             ItemCache.OnItemsChanged();
         }
+		private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Options options = new Options();
+			options.ShowDialog(this);
+		}
 	}
 }

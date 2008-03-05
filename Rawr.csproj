@@ -74,6 +74,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExternalReferences\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -149,6 +153,12 @@
     <Compile Include="FormSplash.Designer.cs">
       <DependentUpon>FormSplash.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Options.Designer.cs">
+      <DependentUpon>Options.cs</DependentUpon>
+    </Compile>
     <Compile Include="ItemButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -213,6 +223,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>FormSplash.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Options.resx">
+      <DependentUpon>Options.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="ItemComparison.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ItemComparison.cs</DependentUpon>
@@ -226,17 +240,22 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Options\NetworkSettings.resx">
+      <DependentUpon>NetworkSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <Compile Include="Properties\Resources1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
+    <Compile Include="UserControls\Options\IOptions.cs" />
+    <Compile Include="UserControls\Options\NetworkSettings.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Settings.cs" />
+    <Compile Include="UserControls\Options\NetworkSettings.Designer.cs">
+      <DependentUpon>NetworkSettings.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="RawrIcon.ico" />
@@ -244,10 +263,6 @@
     <None Include="Resources\Rawr.Splash.ModelBackground.png" />
     <None Include="Resources\Rawr.Splash.png" />
     <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <None Include="Resources\RawrIcon.ico" />
   </ItemGroup>
   <ItemGroup>

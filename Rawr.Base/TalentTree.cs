@@ -13,7 +13,7 @@ namespace Rawr
 
         private static string _talentTreeBase = @"http://www.worldofwarcraft.com/shared/global/talents/{0}/data.js";
         private static string _talentsBase = @"http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}";
-        private bool _proxyRequiresAuthentication = false;
+        
         private SerializableDictionary<int, string> _treeNames = new SerializableDictionary<int, string>();
 
         [System.Xml.Serialization.XmlElement("Trees")]
@@ -139,8 +139,9 @@ namespace Rawr
         {
             if (fullyQualified())
             {
-                string talentTree = DownloadText(String.Format(_talentTreeBase, _class.ToString().ToLower()));
-                string talentCode = DownloadXml(String.Format(_talentsBase, _region == Character.CharacterRegion.US ? "www" : "eu", _realm, _name)).SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
+				WebRequestWrapper wrw = new WebRequestWrapper();
+                string talentTree = wrw.DownloadText(String.Format(_talentTreeBase, _class.ToString().ToLower()));
+                string talentCode = wrw.DownloadXml(String.Format(_talentsBase, _region == Character.CharacterRegion.US ? "www" : "eu", _realm, _name)).SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
                 populateTrees(talentTree, talentCode);
                 
             }
@@ -192,50 +193,11 @@ namespace Rawr
 
         }
 
-        private void GetTalentString()
-        {
-            string talentUrl = String.Format(_talentsBase, _region ==  Character.CharacterRegion.US ? "www" : "eu", _realm, _name);
-            XmlDocument talents = DownloadXml(talentUrl);
-            
-        }
-
-        private string DownloadText(string url)
-        {
-            try
-            {
-                HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
-                if (_proxyRequiresAuthentication)
-                {
-                    request.Proxy = HttpWebRequest.DefaultWebProxy;
-                    request.Proxy.Credentials = CredentialCache.DefaultCredentials;
-                }
-                request.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.1.4) Gecko/20070515 Firefox/2.0.0.4";
-                return new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
-            }
-            catch (Exception ex)
-            {
-                if (!_proxyRequiresAuthentication && ex.Message.Contains("Proxy Authentication Required"))
-                {
-                    _proxyRequiresAuthentication = true;
-                    return DownloadText(url);
-                }
-            }
-            return null; 
-        }
-
-        private XmlDocument DownloadXml(string url)
-		{
-			try
-			{
-                string xml = DownloadText(url);
-				XmlDocument doc = new XmlDocument();
-				doc.LoadXml(xml);
-				return doc;
-			}
-			catch 
-			{
-			}
-			return null; 
-		}
+		//private void GetTalentString()
+		//{
+		//    string talentUrl = String.Format(_talentsBase, _region ==  Character.CharacterRegion.US ? "www" : "eu", _realm, _name);
+		//    WebRequestWrapper wrw = new WebRequestWrapper();
+		//    XmlDocument talents = wrw.DownloadXml(talentUrl);
+		//}
     }
 }

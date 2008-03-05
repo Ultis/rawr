@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using log4net;
+
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
 
 namespace Rawr
 {
-    static class Program
+	
+    public static class Program
     {
+		public static readonly ILog log = LogManager.GetLogger(typeof(Program));
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -15,9 +20,11 @@ namespace Rawr
             try
             {
                 bool bAppFirstInstance;
-                System.Threading.Mutex oMutex = new System.Threading.Mutex(true, "Global\\Rawr", out bAppFirstInstance);
-                if (bAppFirstInstance)
+				log.Debug("Grabbing Mutex");
+				System.Threading.Mutex oMutex = new System.Threading.Mutex(true, "Global\\Rawr", out bAppFirstInstance);
+				if (bAppFirstInstance)
                 {
+					log.Debug("Mutex Aquired, first instance");
                     //RawrCatIntro();
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
@@ -26,15 +33,14 @@ namespace Rawr
             }
             catch (TypeLoadException ex)
             {
+				log.Error("Type Load Exception", ex);
                 MessageBox.Show(ex.Message, "when cat durid is FITE do not ask for HEEL and NINIRVATE!"); //Heh
             }
-#if !DEBUG 
             catch (Exception ex)
             {
-                MessageBox.Show("Rawr encountered a serious error. Please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace);
+				log.Error("Top Level exception caught", ex);
+                //MessageBox.Show("Rawr encountered a serious error. Please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace);
             }
-#endif //DEBUG
-            Log.Close();
 		}
 
 		//private static void RawrCatIntro()

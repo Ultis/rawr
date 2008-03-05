@@ -98,8 +98,8 @@ namespace Rawr.Warlock
                 if (!File.Exists(fullfile))
                 {
                     string remoteFile = getRemoteFilename(ti, charclass);
-                    WebClient Client = new WebClient();
-                    Client.DownloadFile(remoteFile, fullfile);
+					WebRequestWrapper wrw = new WebRequestWrapper();
+                    wrw.DownloadIcon(remoteFile, fullfile);
                 }
                 _icon = new Bitmap(fullfile);
             }

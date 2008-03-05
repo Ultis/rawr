@@ -9,51 +9,19 @@ namespace Rawr
 {
 	public static class Armory
 	{
-		private static bool _proxyRequiresAuthentication = false;
-		private static XmlDocument DownloadXml(string url)
-		{
-			try
-			//can we get away...
-			{
-				//far away...
-				HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
-				if (_proxyRequiresAuthentication)
-				{
-					request.Proxy = HttpWebRequest.DefaultWebProxy;
-					request.Proxy.Credentials = CredentialCache.DefaultCredentials;
-				}
-				request.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.1.4) Gecko/20070515 Firefox/2.0.0.4";
-				string xml = new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
-				XmlDocument doc = new XmlDocument();
-				doc.LoadXml(xml);
-				System.Windows.Forms.Application.DoEvents();
-				return doc;
-			}
-			catch (Exception ex)
-			//say goodnight... to gravity...
-			{
-				//the passing stars light the way...
-				if (!_proxyRequiresAuthentication && ex.Message.Contains("Proxy Authentication Required"))
-				{
-					_proxyRequiresAuthentication = true;
-					return DownloadXml(url);
-				}
-			}
-			return null; //lets go for a ride...
-		}
-
 		public static Character GetCharacter(Character.CharacterRegion region, string realm, string name)
 		{
 			XmlDocument docCharacter = null;
             XmlDocument docTalents = null;
             try
 			{
-				Log.Write("Getting Character from Armory: " + name + "@" + region.ToString() + "-" + realm);
+				//Log.Write("Getting Character from Armory: " + name + "@" + region.ToString() + "-" + realm);
 				//Tell me how he died.
 				string armoryDomain = region == Character.CharacterRegion.US ? "www" : "eu";
 				string characterSheetPath = string.Format("http://{0}.wowarmory.com/character-sheet.xml?r={1}&n={2}",
 					armoryDomain, realm, name);
-				docCharacter = DownloadXml(characterSheetPath);
+				WebRequestWrapper wrw = new WebRequestWrapper();
+				docCharacter = wrw.DownloadXml(characterSheetPath);
 
                 Character.CharacterRace race = (Character.CharacterRace)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["raceId"].Value);
                 Character.CharacterClass charClass = (Character.CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
@@ -111,7 +79,7 @@ namespace Rawr
                 {
                     string talentSheetPath = string.Format("http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}",
                         armoryDomain, realm, name);
-                    docTalents = DownloadXml(talentSheetPath);
+                    docTalents = wrw.DownloadXml(talentSheetPath);
 
                     //<talentTab>
                     //  <talentTree value="2550050300230151333125100000000000000000000002030302010000000000000"/>
@@ -192,7 +160,7 @@ namespace Rawr
                 {
                     string talentSheetPath = string.Format("http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}",
                         armoryDomain, realm, name);
-                    docTalents = DownloadXml(talentSheetPath);
+                    docTalents = wrw.DownloadXml(talentSheetPath);
 
                     //<talentTab>
                     //  <talentTree value="50002201050313523105100000000000000530000000000300001000030300"/>
@@ -309,10 +277,11 @@ namespace Rawr
 					try
 					{
 						string id = gemmedId.Split('.')[0];
-						Log.Write("Getting Item from Armory: " + id + "   Reason: " + logReason);
+						//Log.Write("Getting Item from Armory: " + id + "   Reason: " + logReason);
 
 						string itemTooltipPath = string.Format("http://www.wowarmory.com/item-tooltip.xml?i={0}", id);
-						docItem = DownloadXml(itemTooltipPath);
+						WebRequestWrapper wrw = new WebRequestWrapper();
+						docItem = wrw.DownloadXml(itemTooltipPath);
 
 						Item.ItemQuality quality = Item.ItemQuality.Common;
 						Item.ItemType type = Item.ItemType.None;
@@ -1293,7 +1262,8 @@ namespace Rawr
 					string armoryDomain = character.Region == Character.CharacterRegion.US ? "www" : "eu";
 					string upgradeSearchPath = string.Format("http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}",
 						armoryDomain, character.Realm, character.Name, itemToUpgrade.Id);
-					docUpgradeSearch = DownloadXml(upgradeSearchPath);
+					WebRequestWrapper wrw = new WebRequestWrapper();
+					docUpgradeSearch = wrw.DownloadXml(upgradeSearchPath);
 
 					ComparisonCalculationBase currentCalculation = Calculations.GetItemCalculations(itemToUpgrade, character, slot);
 

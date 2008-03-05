@@ -49,7 +49,10 @@ namespace Rawr
 						version = "v" + modelKvp.Value.Assembly.GetName().Version.ToString();
 						while (version.EndsWith(".0")) version = version.Substring(0, version.Length - 2);
 						icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[modelKvp.Key], true);
-						g.DrawImage(icon, x, y);
+						if (icon != null)
+						{
+							g.DrawImage(icon, x, y);
+						}
 						g.DrawImage(Rawr.Properties.Resources.Rawr_Splash_ModelBackground, x + 30, y - 4);
 						g.DrawString(name, fontName, brushName, x + 34, y);
 						g.DrawString(version, fontVersion, brushVersion, x + 34, y + 16);

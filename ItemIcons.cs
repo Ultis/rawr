@@ -8,11 +8,14 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
+using log4net;
 
 namespace Rawr
 {
     public static class ItemIcons
     {
+		private static readonly ILog log = LogManager.GetLogger(typeof(ItemIcons));
+
         private static ImageList _largeIcons = null;
 
         private static ImageList LargeIcons
@@ -45,52 +48,46 @@ namespace Rawr
             }
         }
 
-        private static int _iconsCached = 0;
-        private static int _iconsToCache = 0;
-
         public static void CacheAllIcons(Item[] items)
         {
             string iconPath;
             string localPath;
-            _iconsCached = 0;
-            _iconsToCache = 0;
-            bool firstItem = true;
-            List<string> filesDownloading = new List<string>();
-            foreach (Item item in items)
+			WebRequestWrapper webRequests = new WebRequestWrapper();
+			string localImageCacheDir = AppDomain.CurrentDomain.BaseDirectory + "images\\";
+			if (!Directory.Exists(localImageCacheDir))
+			{
+				Directory.CreateDirectory(localImageCacheDir);
+			}
+			List<string> filesDownloading = new List<string>();
+            for(int i=0;i<items.Length && !WebRequestWrapper.LastWasFatalError;i++)
             {
-                iconPath = item.IconPath.Replace(".png", "").Replace(".jpg", "").ToLower();
-                localPath =
-                    Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "images\\" + iconPath + ".jpg");
-                if (firstItem && !Directory.Exists(Path.GetDirectoryName(localPath)))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(localPath));
-                }
-                firstItem = false;
-                if (!filesDownloading.Contains(localPath) && !File.Exists(localPath))
+				iconPath = items[i].IconPath.Replace(".png", "").Replace(".jpg", "").ToLower();
+				localPath = Path.Combine(localImageCacheDir,iconPath + ".jpg");
+                if (!File.Exists(localPath) && !filesDownloading.Contains(localPath))
                 {
                     filesDownloading.Add(localPath);
-                    _iconsToCache++;
                     BackgroundWorker worker = new BackgroundWorker();
-                    worker.DoWork += delegate(object sender, DoWorkEventArgs e)
-                                         {
-                                             string[] args = e.Argument.ToString().Split('#');
-                                             DownloadIcon(args[0], args[1]);
-                                             _iconsCached++;
-                                         };
-                    //worker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs e)
-                    //{
-                    //    if (!e.Cancelled && e.Error == null) _iconsCached++;
-                    //};
-                    worker.RunWorkerAsync(iconPath + "#" + localPath);
+					webRequests.DownloadIconAsync(iconPath, localPath);
                 }
             }
-            while (_iconsCached < _iconsToCache)
+            
+			//the main GUI thread should not be made to sleep as it will cause white outs, a good solution to prevent 
+			//other interaction with the app while performing long running processes is to create a status form that is forced
+			//in front of the other forms and updates periodically with information, say on item 400 of 500 or 100 images
+			//left to download.  It also has a cancel button if the user doesn't want to wait anymore.
+			while (webRequests.RequestQueueCount > 0 && !WebRequestWrapper.LastWasFatalError)
             {
                 Thread.Sleep(200);
             }
-        }
 
-        private static bool _proxyRequiresAuthentication = false;
+			//Display any error information appropriotly here,
+			//such as, proxy information incorrect or network connection down. Can get pretty detailed about exactly what went 
+			//wrong by analyzing the exception.
+			if (WebRequestWrapper.LastWasFatalError)
+			{
+				MessageBox.Show("There was an error trying to retrieve images from the armory.  Please check your proxy settings and network connection.");
+			}
+        }
 
         public static Image GetItemIcon(Item item)
         {
@@ -113,8 +110,9 @@ namespace Rawr
             if ((!small && !LargeIcons.Images.ContainsKey(iconPath)) ||
                 (small && !SmallIcons.Images.ContainsKey(iconPath)))
             {
+				string imgDir = AppDomain.CurrentDomain.BaseDirectory + "images\\";
                 string localPath =
-                    Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "images\\" + iconPath + ".jpg");
+                    Path.Combine(imgDir, iconPath + ".jpg");
                 if (!Directory.Exists(Path.GetDirectoryName(localPath)))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(localPath));
@@ -123,70 +121,52 @@ namespace Rawr
                 {
                     try
                     {
-                        Log.Write("Getting Image from Armory:" + iconPath);
-                        DownloadIcon(iconPath, localPath);
+						log.Debug("Getting icon from the armory");
+						if (!WebRequestWrapper.LastWasFatalError)
+						{
+							WebRequestWrapper wrapper = new WebRequestWrapper();
+							wrapper.DownloadIcon(iconPath, localPath);
+							//just in case the network code is in a disconnected mode. (e.g. no network traffic sent, so no network exception)
+							if (!File.Exists(localPath))
+							{
+								return null;
+							}
+						}
+						else
+						{
+							localPath = Path.Combine(imgDir, "temp.jpg");
+							if (!File.Exists(localPath))
+							{
+								return null;
+							}
+						}
+						
                     }
-                    catch
+                    catch(Exception ex)
                     {
-                        localPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "images\\temp.jpg");
-                        if (!File.Exists(localPath)) return null;
+						log.Error("Exception trying to retrieve an icon from the armory", ex);
+						localPath = Path.Combine(imgDir, "temp.jpg");
+						if (!File.Exists(localPath))
+						{
+							return null;
+						}
                     }
                 }
                 Image fullSizeImage = null;
                 try
                 {
-                    fullSizeImage = Bitmap.FromFile(localPath);
-					if (small) SmallIcons.Images.Add(iconPath, ScaleByPercent(Bitmap.FromFile(localPath), 50));
-					else LargeIcons.Images.Add(iconPath, Bitmap.FromFile(localPath));
+                    fullSizeImage = Image.FromFile(localPath);
+                    if (small) SmallIcons.Images.Add(iconPath, ScaleByPercent(Image.FromFile(localPath), 50));
+                    else LargeIcons.Images.Add(iconPath, Image.FromFile(localPath));
                 }
-                catch
+                catch(Exception ex)
                 {
+					log.Error("Exception trying to load an icon from local", ex);
                     MessageBox.Show(
-                        "Rawr encountered an error while attempting to load a saved image, so is retrying. If you encounter this error multiple times, please ensure that Rawr is unzipped in a location that you have full file read/write access, such as your Desktop, or My Documents.");
-                    try
-                    {
-                        File.Delete(localPath);
-                    }
-                    catch
-                    {
-                    }
-                    return GetItemIcon(iconPath, small);
+                        "Rawr encountered an error while attempting to load a saved image. If you encounter this error multiple times, please ensure that Rawr is unzipped in a location that you have full file read/write access, such as your Desktop, or My Documents.");
                 }
             }
             return small ? SmallIcons.Images[iconPath] : LargeIcons.Images[iconPath];
-        }
-
-        private static void DownloadIcon(string iconPath, string localPath)
-        {
-            WebClient client = new WebClient();
-            try
-            {
-                if (_proxyRequiresAuthentication)
-                {
-                    client.Proxy = HttpWebRequest.DefaultWebProxy;
-                    client.Proxy.Credentials = CredentialCache.DefaultCredentials;
-                }
-                client.DownloadFile("http://www.wowarmory.com/images/icons/64x64/" + iconPath + ".jpg",
-                                    localPath);
-            }
-            catch (Exception ex)
-            {
-                if (!_proxyRequiresAuthentication && ex.Message.Contains("Proxy Authentication Required"))
-                {
-                    _proxyRequiresAuthentication = true;
-                    client.Proxy = HttpWebRequest.DefaultWebProxy;
-                    client.Proxy.Credentials = CredentialCache.DefaultCredentials;
-					client.DownloadFile("http://www.wowarmory.com/images/icons/64x64/" + iconPath + ".jpg",
-                                        localPath);
-                }
-                else
-                {
-                    MessageBox.Show("Rawr encountered an error getting Image from Armory: " + localPath +
-                                    ". Please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" +
-                                    ex.Message + "\r\n\r\n" + ex.StackTrace);
-					client.DownloadFile("http://www.wowarmory.com/images/icons/64x64/temp.jpg", localPath);
-                }
-            }
         }
 
         private static Image ScaleByPercent(Image imgPhoto, int Percent)
