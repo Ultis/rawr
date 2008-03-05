@@ -570,7 +570,12 @@ namespace Rawr
 						_allBuffs.Add(new Buff() { Name = "Brooch of the Immortal King", Category = BuffCategory.TemporaryBuffs,
 							Stats = new Stats() { Health = 1250 }, Type = BuffType.ShortDurationDW});
 
-                        
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Blood Frenzy",
+                            Category = BuffCategory.Debuffs,
+                            Stats = new Stats() { BonusPhysicalDamageMultiplier = 0.04f }
+                        });
 
 						//american coca-cola
 						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Buff>));

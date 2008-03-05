@@ -88,7 +88,14 @@ namespace Rawr.Retribution
         private string[] _customChartNames = null;
         public override string[] CustomChartNames
         {
-            get { return _customChartNames ?? (_customChartNames = new string[] { }); }
+            get
+            {
+                if (_customChartNames == null)
+                {
+                    _customChartNames = new string[] { "Item Budget" };
+                }
+                return _customChartNames;
+            }
         }
 
 
@@ -188,7 +195,7 @@ namespace Rawr.Retribution
 
             //Take Non-Stat Buffs into account
 
-            physicalCritModifier = 1.0f + ((stats.CritRating / 22.08f) / 100.0f);
+            physicalCritModifier = 1.0f + ((stats.CritRating / 22.08f) / 100.0f) * (1f + stats.BonusCritMultiplier * 2f);
 
             chanceToBeDodged -= stats.ExpertiseRating / 15.76f;
             if (chanceToBeDodged < 0.0f) chanceToBeDodged = 0.0f;
@@ -253,7 +260,7 @@ namespace Rawr.Retribution
                 float.Parse(character.CalculationOptions["Fanaticism"]) : 0f))
                 + (stats.CritRating / 22.08f) / 100f;
             //Blood Frenzy : TODO Take from Debuff List
-            float bloodFrenzy = 1f;
+            float bloodFrenzy = 1.0f + stats.BonusPhysicalDamageMultiplier;
 
            
 
@@ -301,7 +308,7 @@ namespace Rawr.Retribution
             float avgCSHitPost = avgCSHitPre* physicalCritModifier - avgCSHitPre*(chanceToBeDodged+chanceToMiss)/100f;
             
             //TODO: Add Mitigation
-            avgCSHitPost *= impSancAura * crusade * avWrath * vengeance * mitigation;
+            avgCSHitPost *= impSancAura * crusade * avWrath * vengeance * mitigation*(1f+stats.BonusCrusaderStrikeDamageMultiplier)*bloodFrenzy;
             float dpsCS = avgCSHitPost/ csCooldown;
             calcs.CSDPSPoints = dpsCS;
             #endregion
@@ -395,36 +402,39 @@ namespace Rawr.Retribution
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            //TODO: Ensure correct values for all races. Only BloodElf is somewhat accurate
+           
             Stats statsRace;
             switch (character.Race)
             {
                 case Character.CharacterRace.BloodElf:
                     statsRace = new Stats()
                     {
-                        Health = 4310f,
+                        Health = 4377f,
                         Mana = 2335f,
                         Strength = 123f,
                         Agility = 79f,
                         Stamina = 118f,
                         Intellect = 87f,
                         Spirit = 88f,
-                        AttackPower = 446,
-                        CritRating = 3.57f*22.08f
+                        AttackPower = 436,
+                        CritRating = 3.81f * 22.08f
                     };
                     break;
                 case Character.CharacterRace.Draenei:
                     statsRace = new Stats()
                     {
-                        Health = 3310f,
+                        Health = 4387f,
                         Mana = 2335f,
-                        Strength = 28f,
-                        Agility = 42f,
-                        Stamina = 50f,
-                        Intellect = 152f,
+                        Strength = 127f,
+                        Agility = 74f,
+                        Stamina = 119f,
+                        Intellect = 84f,
                         Spirit = 147,
+                        AttackPower = 444,
+                        CritRating = 3.61f * 22.08f,
+                        HitRating = 1f * 15.76f
                     };
-                    break;               
+                    break;
                 case Character.CharacterRace.Human:
                     statsRace = new Stats()
                     {
@@ -436,10 +446,25 @@ namespace Rawr.Retribution
                         Intellect = 83f,
                         Spirit = 89,
                         BonusIntellectMultiplier = 0.03f,
-                        BonusSpiritMultiplier = 0.1f
+                        BonusSpiritMultiplier = 0.1f,
+                        AttackPower = 442,
+                        CritRating = 3.73f * 22.08f
                     };
                     break;
-                
+                case Character.CharacterRace.Dwarf:
+                    statsRace = new Stats()
+                    {
+                        Health = 4397f,
+                        Mana = 2335f,
+                        Strength = 128f,
+                        Agility = 73f,
+                        Stamina = 120f,
+                        Intellect = 83f,
+                        Spirit = 89,
+                        AttackPower = 446,
+                        CritRating = 3.57f * 22.08f
+                    };
+                    break;
                 default:
                     statsRace = new Stats();
                     break;
@@ -520,6 +545,9 @@ namespace Rawr.Retribution
             statsTotal.Bloodlust = statsGearEnchantsBuffs.Bloodlust;
             statsTotal.DrumsOfBattle = statsGearEnchantsBuffs.DrumsOfBattle;
             statsTotal.SpellDamageRating = statsGearEnchantsBuffs.SpellDamageRating;
+            statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
+            statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
+            statsTotal.BonusCrusaderStrikeDamageMultiplier = statsGearEnchantsBuffs.BonusCrusaderStrikeDamageMultiplier;
             return (statsTotal);
 
            
@@ -527,7 +555,62 @@ namespace Rawr.Retribution
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            throw new NotImplementedException();
+            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+            CharacterCalculationsRetribution baseCalc,  calc;
+            ComparisonCalculationBase comparison;
+            float[] subPoints;
+
+            switch (chartName)
+            {
+                case "Item Budget":
+                    Item[] itemList = new Item[] {
+                        new Item() { Stats = new Stats() { Strength = 10 } },
+                        new Item() { Stats = new Stats() { Agility = 10 } },
+                        new Item() { Stats = new Stats() { SpellDamageRating = 11.7f } },
+                        new Item() { Stats = new Stats() { HitRating = 10 } },
+                        new Item() { Stats = new Stats() { HasteRating = 10 } },
+                        new Item() { Stats = new Stats() { CritRating = 10 } },
+                        new Item() { Stats = new Stats() { ArmorPenetration = 66.67f } },
+                        new Item() { Stats = new Stats() { AttackPower = 20 } },
+                        new Item() { Stats = new Stats() { ExpertiseRating=10 } }
+                    };
+                    string[] statList = new string[] {
+                        "Strength",
+                        "Agility",
+                        "Spell Damage",
+                        "Hit Rating",
+                        "Haste Rating",
+                        "Crit Rating",
+                        "Armor Penetration",
+                        "Attack Power",
+                        "Expertise Rating"
+                    };
+
+                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsRetribution;
+
+
+                    for (int index = 0; index < statList.Length; index++)
+                    {
+                        calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsRetribution;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = statList[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
+                default:
+                    return new ComparisonCalculationBase[0];
+            }
+
         }
 
         public override Stats GetRelevantStats(Stats stats)
@@ -551,7 +634,10 @@ namespace Rawr.Retribution
                 WeaponDamage = stats.WeaponDamage,
                 Bloodlust = stats.Bloodlust,
                 DrumsOfBattle = stats.DrumsOfBattle,
-                SpellDamageRating = stats.SpellDamageRating
+                SpellDamageRating = stats.SpellDamageRating,
+                BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusCrusaderStrikeDamageMultiplier = stats.BonusCrusaderStrikeDamageMultiplier,
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier
             };
         }
 

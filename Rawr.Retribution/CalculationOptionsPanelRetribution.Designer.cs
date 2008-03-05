@@ -43,6 +43,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.btnTalents = new System.Windows.Forms.Button();
+            this.btnGraph = new System.Windows.Forms.Button();
             this.groupBoxSealChoice.SuspendLayout();
             this.groupBoxSkillUsage.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -191,7 +192,7 @@
             // 
             this.trackBarFightLength.Location = new System.Drawing.Point(87, 41);
             this.trackBarFightLength.Name = "trackBarFightLength";
-            this.trackBarFightLength.Size = new System.Drawing.Size(86, 45);
+            this.trackBarFightLength.Size = new System.Drawing.Size(86, 42);
             this.trackBarFightLength.TabIndex = 2;
             this.trackBarFightLength.Value = 10;
             this.trackBarFightLength.Scroll += new System.EventHandler(this.trackBarFightLength_Scroll);
@@ -219,7 +220,7 @@
             // btnTalents
             // 
             this.btnTalents.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTalents.Location = new System.Drawing.Point(47, 376);
+            this.btnTalents.Location = new System.Drawing.Point(8, 368);
             this.btnTalents.Name = "btnTalents";
             this.btnTalents.Size = new System.Drawing.Size(75, 23);
             this.btnTalents.TabIndex = 5;
@@ -227,10 +228,22 @@
             this.btnTalents.UseVisualStyleBackColor = true;
             this.btnTalents.Click += new System.EventHandler(this.btnTalents_Click);
             // 
+            // btnGraph
+            // 
+            this.btnGraph.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGraph.Location = new System.Drawing.Point(118, 368);
+            this.btnGraph.Name = "btnGraph";
+            this.btnGraph.Size = new System.Drawing.Size(75, 23);
+            this.btnGraph.TabIndex = 5;
+            this.btnGraph.Text = "Stat Graph";
+            this.btnGraph.UseVisualStyleBackColor = true;
+            this.btnGraph.Click += new System.EventHandler(this.btnGraph_Click);
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnGraph);
             this.Controls.Add(this.btnTalents);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxSkillUsage);
@@ -265,5 +278,6 @@
         private System.Windows.Forms.Label lblFightLength;
         private System.Windows.Forms.TextBox txtArmor;
         private System.Windows.Forms.Button btnTalents;
+        private System.Windows.Forms.Button btnGraph;
     }
 }

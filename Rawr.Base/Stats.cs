@@ -472,6 +472,18 @@ namespace Rawr
 		[DisplayName("% Rip Dmg")]
         public float BonusRipDamageMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Multiplicative]
+        [DisplayName("% Physical Dmg")]
+        public float BonusPhysicalDamageMultiplier { get; set; }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Multiplicative]
+        [DisplayName("% CStrike Dmg")]
+        public float BonusCrusaderStrikeDamageMultiplier { get; set; }
+
+
+
 		#endregion
 
 		/// <summary>
@@ -581,7 +593,9 @@ namespace Rawr
                 StarfireDmg = a.StarfireDmg + b.StarfireDmg,
                 WrathDmg = a.WrathDmg + b.WrathDmg,
                 MoonfireDmg = a.MoonfireDmg + b.MoonfireDmg,
-                IdolCritRating = a.IdolCritRating + b.IdolCritRating
+                IdolCritRating = a.IdolCritRating + b.IdolCritRating,
+                BonusPhysicalDamageMultiplier = (1f + a.BonusPhysicalDamageMultiplier)*(1f+b.BonusPhysicalDamageMultiplier) -1f,
+                BonusCrusaderStrikeDamageMultiplier = (1f + a.BonusCrusaderStrikeDamageMultiplier)*(1f+b.BonusCrusaderStrikeDamageMultiplier) -1f
 			};
 		}
 

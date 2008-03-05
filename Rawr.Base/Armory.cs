@@ -781,6 +781,14 @@ namespace Rawr
                                     spellDesc = spellDesc.Replace(".", "");
                                     stats.CritRating += float.Parse(spellDesc);
                                 }
+                                else if (spellDesc.StartsWith("Increases the damage dealt by your Crusader Strike ability by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases the damage dealt by your Cruasder Strike ability by ".Length);
+                                    spellDesc = spellDesc.Replace("%", "");
+                                    spellDesc = spellDesc.Replace(".", "");
+                                    stats.BonusCrusaderStrikeDamageMultiplier += float.Parse(spellDesc) / 100f;
+
+                                }
                             }
 						}
 
