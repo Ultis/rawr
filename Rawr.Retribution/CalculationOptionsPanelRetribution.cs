@@ -157,7 +157,7 @@ namespace Rawr.Retribution
         {
             //this.Font = new Font("Calibri", 9);
 
-            Bitmap _prerenderedGraph = new Bitmap(@"D:\GraphBase.jpg");
+            Bitmap _prerenderedGraph = global::Rawr.Retribution.Properties.Resources.GraphBase;
             Graphics g = Graphics.FromImage(_prerenderedGraph);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;

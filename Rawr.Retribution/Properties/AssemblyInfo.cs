@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Rawr.Retribution")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("infosys")]
+[assembly: AssemblyCompany("NA")]
 [assembly: AssemblyProduct("Rawr.Retribution")]
-[assembly: AssemblyCopyright("Copyright © infosys 2008")]
+[assembly: AssemblyCopyright("NA")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
