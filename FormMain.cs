@@ -301,6 +301,16 @@ namespace Rawr
 			Calculations.CalculationOptionsPanel.Dock = DockStyle.Fill;
 			tabPageOptions.Controls.Clear();
 			tabPageOptions.Controls.Add(Calculations.CalculationOptionsPanel);
+            if (Calculations.CanUseAmmo)
+            {
+                itemButtonProjectile.Visible = true;
+                itemButtonProjectileBag.Visible = true;
+            }
+            else
+            {
+                itemButtonProjectile.Visible = false;
+                itemButtonProjectileBag.Visible = false;
+            }
 			Character = Character;
 
 			ItemCache.OnItemsChanged();

@@ -91,6 +91,10 @@ namespace Rawr
 		{
 			get { return Instance.CachedCharacter; } 
 		}
+        public static bool CanUseAmmo
+        {
+            get { return Instance.CanUseAmmo; }
+        }
 		public static string[] CharacterDisplayCalculationLabels
 		{
 			get { return Instance.CharacterDisplayCalculationLabels; }
@@ -107,6 +111,7 @@ namespace Rawr
 		{
 			get { return Instance.CalculationOptionsPanel; }
 		}
+
 
 		public static ComparisonCalculationBase CreateNewComparisonCalculation()
 		{
@@ -172,6 +177,7 @@ namespace Rawr
 				return Instance.IsItemRelevant(item);
 			return false;
 		}
+      
 		public static string GetCharacterStatsString(Character character)
 		{
 			return Instance.GetCharacterStatsString(character);
@@ -535,6 +541,13 @@ namespace Rawr
 			return (item.Type == null || RelevantItemTypes.Contains(item.Type)) &&
 				HasRelevantStats(item.Stats);
 		}
+
+        public virtual bool CanUseAmmo
+        {
+            get { return false; }
+        }
+
+        
 	}
 
 	/// <summary>
