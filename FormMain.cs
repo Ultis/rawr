@@ -411,6 +411,25 @@ namespace Rawr
 			}
 		}
 
+
+        private void reloadCurrentCharacterFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Character.CharacterRegion region = radioButtonRegionUS.Checked ? Rawr.Character.CharacterRegion.US : Rawr.Character.CharacterRegion.EU;            
+            if (String.IsNullOrEmpty(textBoxName.Text))
+            {
+                MessageBox.Show("Cannot reload when character name is empty");
+            }
+            else if (String.IsNullOrEmpty(textBoxRealm.Text))
+            {
+                MessageBox.Show("Cannot reload when Realm is empty");
+            }
+            else if (MessageBox.Show("Confirm reloading " + textBoxName.Text + " from the " + textBoxRealm.Text + "@" + region + " realm ", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                LoadCharacter(Armory.GetCharacter(region, textBoxRealm.Text, textBoxName.Text), string.Empty);
+                _unsavedChanges = true;
+            }
+        }
+
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (!string.IsNullOrEmpty(_characterPath))
@@ -660,9 +679,9 @@ namespace Rawr
 			//AddPTRItems();
         }
 
-		private void AddPTRItems()
-		{
-			Item[] ptrItems = new Item[]
+        private void AddPTRItems()
+        {
+            Item[] ptrItems = new Item[]
 			{
 				//new Item() { Name = "Hard Khorium Choker", Id = 90001, Slot = Item.ItemSlot.Neck, IconPath = "temp", Stats = new Stats()
 				//{ Stamina = 42, HasteRating = 29, AttackPower = 58, ArmorPenetration = 150 }},
@@ -785,11 +804,11 @@ namespace Rawr
 				
 			};
 
-			foreach (Item ptrItem in ptrItems)
-			{
-				ItemCache.AddItem(ptrItem, true, false);
-			}
-			ItemCache.OnItemsChanged();
-		}
+            foreach (Item ptrItem in ptrItems)
+            {
+                ItemCache.AddItem(ptrItem, true, false);
+            }
+            ItemCache.OnItemsChanged();
+        }
 	}
 }
