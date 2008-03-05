@@ -1392,8 +1392,6 @@ namespace Rawr.Mage
                     return comparisonList.ToArray();
                 case "Item Budget":
                     Item[] itemList = new Item[] {
-                        new Item() { Stats = new Stats() { Intellect = 10 } },
-                        new Item() { Stats = new Stats() { Spirit = 10 } },
                         new Item() { Stats = new Stats() { SpellDamageRating = 11.7f } },
                         new Item() { Stats = new Stats() { Mp5 = 4 } },
                         new Item() { Stats = new Stats() { SpellCritRating = 10 } },
@@ -1401,8 +1399,6 @@ namespace Rawr.Mage
                         new Item() { Stats = new Stats() { SpellHitRating = 10 } },
                     };
                     string[] statList = new string[] {
-                        "Intellect",
-                        "Spirit",
                         "Spell Damage",
                         "Mana per 5 sec",
                         "Spell Crit Rating",
@@ -1411,7 +1407,6 @@ namespace Rawr.Mage
                     };
 
                     baseCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
-
 
                     for (int index = 0; index < statList.Length; index++)
                     {
@@ -1430,6 +1425,68 @@ namespace Rawr.Mage
 
                         comparisonList.Add(comparison);
                     }
+
+                    //Intellect
+                    CharacterCalculationsMage calcAtAdd = baseCalc;
+                    float intToAdd = 0f;
+                    while (baseCalc.OverallPoints == calcAtAdd.OverallPoints && intToAdd < 2)
+                    {
+                        intToAdd += 0.01f;
+                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToAdd } }) as CharacterCalculationsMage;
+                    }
+
+                    CharacterCalculationsMage calcAtSubtract = baseCalc;
+                    float intToSubtract = 0f;
+                    while (baseCalc.OverallPoints == calcAtSubtract.OverallPoints && intToSubtract > -2)
+                    {
+                        intToSubtract -= 0.01f;
+                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToSubtract } }) as CharacterCalculationsMage;
+                    }
+                    intToSubtract += 0.01f;
+
+                    comparison = CreateNewComparisonCalculation();
+                    comparison.Name = "Intellect";
+                    comparison.Equipped = false;
+                    comparison.OverallPoints = 10 * (calcAtAdd.OverallPoints - baseCalc.OverallPoints) / (intToAdd - intToSubtract);
+                    subPoints = new float[baseCalc.SubPoints.Length];
+                    for (int i = 0; i < baseCalc.SubPoints.Length; i++)
+                    {
+                        subPoints[i] = 10 * (calcAtAdd.SubPoints[i] - baseCalc.SubPoints[i]) / (intToAdd - intToSubtract);
+                    }
+                    comparison.SubPoints = subPoints;
+
+                    comparisonList.Add(comparison);
+
+                    //Spirit
+                    calcAtAdd = baseCalc;
+                    float spiToAdd = 0f;
+                    while (baseCalc.OverallPoints == calcAtAdd.OverallPoints && spiToAdd < 2)
+                    {
+                        spiToAdd += 0.01f;
+                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } }) as CharacterCalculationsMage;
+                    }
+
+                    calcAtSubtract = baseCalc;
+                    float spiToSubtract = 0f;
+                    while (baseCalc.OverallPoints == calcAtSubtract.OverallPoints && spiToSubtract > -2)
+                    {
+                        spiToSubtract -= 0.01f;
+                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToSubtract } }) as CharacterCalculationsMage;
+                    }
+                    spiToSubtract += 0.01f;
+
+                    comparison = CreateNewComparisonCalculation();
+                    comparison.Name = "Spirit";
+                    comparison.Equipped = false;
+                    comparison.OverallPoints = 10 * (calcAtAdd.OverallPoints - baseCalc.OverallPoints) / (spiToAdd - spiToSubtract);
+                    subPoints = new float[baseCalc.SubPoints.Length];
+                    for (int i = 0; i < baseCalc.SubPoints.Length; i++)
+                    {
+                        subPoints[i] = 10 * (calcAtAdd.SubPoints[i] - baseCalc.SubPoints[i]) / (spiToAdd - spiToSubtract);
+                    }
+                    comparison.SubPoints = subPoints;
+
+                    comparisonList.Add(comparison);
 
                     return comparisonList.ToArray();
                 default:
