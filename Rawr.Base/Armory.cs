@@ -769,6 +769,18 @@ namespace Rawr
                                     spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" spell critical strike rating"));
                                     stats.IdolCritRating += float.Parse(spellDesc);
                                 }
+                                else if (spellDesc.StartsWith("Your Judgement of Command ability has a chance to grant "))
+                                {
+                                    spellDesc = spellDesc.Substring("Your Judgement of Command ability has a chance to grant ".Length, 3);
+                                    stats.AttackPower += (10f / (9f / 0.4f)) * float.Parse(spellDesc);
+
+                                }
+                                else if (spellDesc.StartsWith("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by"))
+                                {
+                                    spellDesc = spellDesc.Substring("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by ".Length, 2);
+                                    spellDesc = spellDesc.Replace(".", "");
+                                    stats.CritRating += float.Parse(spellDesc);
+                                }
                             }
 						}
 
