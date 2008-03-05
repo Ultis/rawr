@@ -23,352 +23,451 @@ namespace Rawr
 		/// </summary>
 		#region Stat Properties
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Category("Base Stats")]
         public float Armor{get;set;}
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float Health{get;set;}
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float Mana { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float Agility{get;set;}
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float Stamina { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float AttackPower { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float Strength { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float WeaponDamage { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float ScopeDamage { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         [DisplayName("Penetration")]
         public float ArmorPenetration { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float Intellect { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float Spirit { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Frost Res")]
         public float FrostResistance { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Nature Res")]
         public float NatureResistance { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Fire Res")]
         public float FireResistance { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Shadow Res")]
         public float ShadowResistance { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Arcane Res")]
         public float ArcaneResistance { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Resist")]
         public float AllResist { get; set; }
 
-
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Crit")]
         public float SpellCritRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Frost Crit")]
         public float SpellFrostCritRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Damage")]
         public float SpellDamageRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Shadow Damage")]
         public float SpellShadowDamageRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Fire Damage")]
         public float SpellFireDamageRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Frost Damage")]
         public float SpellFrostDamageRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Arcane Damage")]
         public float SpellArcaneDamageRating { get; set; }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Nature Damage")]
         public float SpellNatureDamageRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Penetration")]
         public float SpellPenetration { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Hit")]
         public float SpellHitRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         public float Healing { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Haste")]
         public float SpellHasteRating { get; set; }
 
         // percentage mana generation while casting
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Combat Mana Regeneration")]
         public float SpellCombatManaRegeneration { get; set; }
 
-
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Crit")]
         public float CritRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Hit")]
         public float HitRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Dodge")]
         public float DodgeRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Parry")]
         public float ParryRating { get; set; }
-        
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Block")]
         public float BlockRating { get; set; }
-        
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Defense")]
         public float DefenseRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         public float Resilience{get;set;}
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Expertise")]
         public float ExpertiseRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Haste")]
         public float HasteRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Mana per 5 sec")]
         public float Mp5 { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Health per 5 sec")]
         public float Hp5 { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Equipment Procs")]
         public float BloodlustProc { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Equipment Procs")]
         public float TerrorProc { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		[DisplayName("% Miss")]
         public float Miss { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float BonusShredDamage{get;set;}
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		public float BonusMangleDamage { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		[DisplayName("Bonus Rip Damage Per Combo Point Per Tick")]
 		public float BonusRipDamagePerCPPerTick { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float ManaRestorePerHit { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float ManaRestorePerCast { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		public float MangleCostReduction { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		public float ExposeWeakness { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		public float Bloodlust { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		public float DrumsOfWar { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		public float DrumsOfBattle { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float ArcaneBlastBonus { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float SpellDamageFromIntellectPercentage { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float SpellDamageFromSpiritPercentage { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage Increase for 6 sec on Crit")]
         public float SpellDamageFor6SecOnCrit { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (50% 5 sec/Crit)")]
         [Category("Equipment Procs")]
         public float SpellHasteFor5SecOnCrit_50 { get; set; }
 
         // 15% change, 45 sec internal cooldown
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (15% 6 sec/Cast)")]
         [Category("Equipment Procs")]
         public float SpellHasteFor6SecOnCast_15_45 { get; set; }
 
         // 10% change, 45 sec internal cooldown
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (10% 6 sec/Hit)")]
         [Category("Equipment Procs")]
         public float SpellHasteFor6SecOnHit_10_45 { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (10 sec/Resist)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor10SecOnResist { get; set; }
 
         // trinket effect, does not sum up over gear, 2 trinkets with this effect is not equivalent to 1 trinket with double effect
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (20 sec/2 min)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor20SecOnUse2Min { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (15 sec/1.5 min)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor15SecOnUse90Sec { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (20 sec/2 min)")]
         [Category("Equipment Procs")]
         public float SpellHasteFor20SecOnUse2Min { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Mp5 on Cast (20 sec/2 min)")]
         [Category("Equipment Procs")]
         public float Mp5OnCastFor20SecOnUse2Min { get; set; }
 
         // 5% chance, no cooldown
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (10 sec)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor10SecOnHit_5 { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Equipment Procs")]
         public float BonusManaGem { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Equipment Procs")]
         public float BonusManaPotion { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (15 sec/Gem)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor15SecOnManaGem { get; set; }
 
         // 10% chance, 45 sec internal cooldown
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (10 sec)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor10SecOnHit_10_45 { get; set; }
 
         // 20% chance, 45 sec internal cooldown
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (15 sec)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor15SecOnCrit_20_45 { get; set; }
 
         // 20% chance, 45 sec internal cooldown
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (10 sec)")]
         [Category("Equipment Procs")]
         public float SpellDamageFor10SecOnCrit_20_45 { get; set; }
 
         // Starfire idol
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Starfire damage bonus")]
         [Category("Equipment Procs")]
         public float StarfireDmg { get; set; }
+
         // Moonfire idol
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Moonfire damage bonus")]
         [Category("Equipment Procs")]
         public float MoonfireDmg { get; set; }
+
         // Wrath idol
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Wrath damage bonus")]
         [Category("Equipment Procs")]
         public float WrathDmg { get; set; }
+
         // Moonkin Aura idol
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell critical bonus")]
         [Category("Equipment Procs")]
         public float IdolCritRating { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float EvocationExtension { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Equipment Procs")]
         public int LightningCapacitorProc { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         public float BonusMageNukeMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% Agility")]
         public float BonusAgilityMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% Strength")]
         public float BonusStrengthMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% Stamina")]
         public float BonusStaminaMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Int")]
         public float BonusIntellectMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% Armor")]
         public float BonusArmorMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% AP")]
         public float BonusAttackPowerMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% SP")]
         public float BonusSpellPowerMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Fire Damage")]
         public float BonusFireSpellPowerMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Shadow Damage")]
         public float BonusShadowSpellPowerMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Arcane Damage")]
         public float BonusArcaneSpellPowerMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Nature Damage")]
         public float BonusNatureSpellPowerMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Frost Damage")]
         public float BonusFrostSpellPowerMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Spirit")]
         public float BonusSpiritMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Crit Dmg")]
         public float BonusCritMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Spell Crit Dmg")]
         public float BonusSpellCritMultiplier { get; set; }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% Rip Dmg")]
         public float BonusRipDamageMultiplier { get; set; }
