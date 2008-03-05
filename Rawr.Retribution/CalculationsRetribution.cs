@@ -278,7 +278,7 @@ namespace Rawr.Retribution
                 float avgSoBHitPost = avgSoBHitPre * physicalCritModifier - avgSoBHitPre * (chanceToBeDodged + chanceToMiss) / 100.0f;
 
                 //TODO: Add Partial Resists
-                avgSoBHitPost *= impSancAura * crusade * avWrath * vengeance * sancAura * misery;
+                avgSoBHitPost *= impSancAura * crusade * avWrath * vengeance * sancAura * misery * 0.96f;
                 float dpsSoB = avgSoBHitPost * ppmSoB / 60f;
                 calcs.SealDPSPoints = dpsSoB;
             }
@@ -295,7 +295,7 @@ namespace Rawr.Retribution
                 float socTotal = socHitsOffWhite + socHitsOffWF;
                 float avgSoCPre = (0.7f * avgBaseWeaponHit + 0.2f * stats.SpellDamageRating + 0.29f * 219f);
                 float avgSoCPost = (avgSoCPre * physicalCritModifier - avgSoCPre * (chanceToBeDodged + chanceToMiss) / 100f);
-                avgSoCPost *= impSancAura * vengeance * crusade * avWrath * sancAura * misery * mitigation;
+                avgSoCPost *= impSancAura * vengeance * crusade * avWrath * sancAura * misery * 0.96f;
                 socDPS = avgSoCPost * socTotal / 60f;
                 calcs.SealDPSPoints = socDPS;
             }
