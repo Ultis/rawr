@@ -84,7 +84,10 @@ namespace Rawr
 		/// <param name="localPath">Local path to save the downloaded file</param>
 		public void DownloadIcon(string iconName, string localPath)
 		{
-			DownloadFile(Properties.NetworkSettings.Default.WoWIconURI + iconName + ".jpg", localPath);
+			if (iconName.StartsWith("http://"))
+				DownloadFile(iconName, localPath);
+			else
+				DownloadFile(Properties.NetworkSettings.Default.WoWIconURI + iconName + ".jpg", localPath);
 		}
 
 		/// <summary>
