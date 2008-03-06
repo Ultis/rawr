@@ -181,15 +181,16 @@ namespace Rawr.Retribution
             #endregion
 
             #region White Damage and Multipliers
-            if (character.MainHand != null)
-            {
-                avgBaseWeaponHit = (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2.0f;
-                hastedSpeed = (stats.HasteRating == 0) ? character.MainHand.Speed : character.MainHand.Speed / (1 + stats.HasteRating /1576f);
-            }
-
             //2 Handed Spec
             float twoHandedSpec = 1.0f + (0.02f * ((character.CalculationOptions.ContainsKey("TwoHandedSpec")) ?
                 float.Parse(character.CalculationOptions["TwoHandedSpec"]) : 0f));
+            if (character.MainHand != null)
+            {
+                avgBaseWeaponHit = twoHandedSpec*(character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2.0f;
+                hastedSpeed = (stats.HasteRating == 0) ? character.MainHand.Speed : character.MainHand.Speed / (1 + stats.HasteRating /1576f);
+            }
+
+            
 
             //Add Attack Power Bonus
             avgBaseWeaponHit += twoHandedSpec*(stats.AttackPower / 14.0f) * ((character.MainHand == null) ? 1.0f : character.MainHand.Speed);
@@ -304,8 +305,8 @@ namespace Rawr.Retribution
 
             #region Crusader Strike
             float csCooldown = 6.0f;
-            float avgCSHitPre = twoHandedSpec*((character.MainHand != null) ? (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2.0f : 0.0f);
-            avgCSHitPre += 3.30f * (stats.AttackPower / 14f) * 1.10f;
+            float avgCSHitPre = twoHandedSpec*(((character.MainHand != null) ? (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2.0f : 0.0f)+
+                3.30f * (stats.AttackPower / 14f)) * 1.10f;
             float avgCSHitPost = avgCSHitPre* physicalCritModifier - avgCSHitPre*(chanceToBeDodged+chanceToMiss)/100f;
             
             //TODO: Add Mitigation
