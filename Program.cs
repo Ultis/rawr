@@ -22,14 +22,21 @@ namespace Rawr
                 bool bAppFirstInstance;
 				log.Debug("Grabbing Mutex");
 				System.Threading.Mutex oMutex = new System.Threading.Mutex(true, "Global\\Rawr", out bAppFirstInstance);
-				if (bAppFirstInstance)
+                if (bAppFirstInstance)
                 {
-					log.Debug("Mutex Aquired, first instance");
+                    log.Debug("Mutex Aquired, first instance");
                     //RawrCatIntro();
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
                     Application.Run(new FormMain());
                 }
+                else
+                {
+                    MessageBox.Show("Rawr is already running and cannot be opened a second time.");
+                }
+                //In release mode, the GC will collect oMutex right after it is created since it is not referenced anywhere else.  This line prevents the GC from collecting 
+                //the object until the App closes.
+                GC.KeepAlive(oMutex);
             }
             catch (TypeLoadException ex)
             {
