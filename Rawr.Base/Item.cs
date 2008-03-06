@@ -21,25 +21,33 @@ namespace Rawr
 		public Stats _stats = new Stats();
 		[System.Xml.Serialization.XmlElement("Sockets")]
 		public Sockets _sockets = new Sockets();
+		[System.ComponentModel.DefaultValueAttribute(0)]
 		[System.Xml.Serialization.XmlElement("Gem1Id")]
 		public int _gem1Id;
+		[System.ComponentModel.DefaultValueAttribute(0)]
 		[System.Xml.Serialization.XmlElement("Gem2Id")]
 		public int _gem2Id;
+		[System.ComponentModel.DefaultValueAttribute(0)]
 		[System.Xml.Serialization.XmlElement("Gem3Id")]
 		public int _gem3Id;
 		[System.Xml.Serialization.XmlElement("Quality")]
 		public ItemQuality _quality;
+		[System.ComponentModel.DefaultValueAttribute("")]
 		[System.Xml.Serialization.XmlElement("SetName")]
 		public string _setName;
 		[System.Xml.Serialization.XmlElement("Type")]
 		public ItemType _type = ItemType.None;
+		[System.ComponentModel.DefaultValueAttribute(0)]
 		[System.Xml.Serialization.XmlElement("MinDamage")]
 		public int _minDamage = 0;
+		[System.ComponentModel.DefaultValueAttribute(0)]
 		[System.Xml.Serialization.XmlElement("MaxDamage")]
 		public int _maxDamage = 0;
-        [System.Xml.Serialization.XmlElement("DamageType")]
+		[System.ComponentModel.DefaultValueAttribute(0)]
+		[System.Xml.Serialization.XmlElement("DamageType")]
         public ItemDamageType _damageType = ItemDamageType.Physical;
-        [System.Xml.Serialization.XmlElement("Speed")]
+		[System.ComponentModel.DefaultValueAttribute(0)]
+		[System.Xml.Serialization.XmlElement("Speed")]
 		public float _speed = 0f;
 
 
@@ -674,10 +682,13 @@ namespace Rawr
 	[Serializable]
 	public class Sockets
 	{
+		[System.ComponentModel.DefaultValueAttribute(0)]
 		[System.Xml.Serialization.XmlElement("Color1")]
 		public Item.ItemSlot _color1;
+		[System.ComponentModel.DefaultValueAttribute(0)]
 		[System.Xml.Serialization.XmlElement("Color2")]
 		public Item.ItemSlot _color2;
+		[System.ComponentModel.DefaultValueAttribute(0)]
 		[System.Xml.Serialization.XmlElement("Color3")]
 		public Item.ItemSlot _color3;
 		[System.Xml.Serialization.XmlElement("Stats")]
