@@ -152,6 +152,7 @@ namespace Rawr
 
 		public static void Load()
 		{
+			_items = new Dictionary<string, Item[]>();
 			List<Item> listItems = new List<Item>();
 			if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml")))
 			{
@@ -169,10 +170,9 @@ namespace Rawr
 					MessageBox.Show("Rawr was unable to load the Item Cache. It appears to have been made with a previous incompatible version of Rawr. Please use the ItemCache included with this version of Rawr to start from.");
 				}
 			}
-			_items = new Dictionary<string, Item[]>();
 			foreach (Item item in listItems)
 			{
-				AddItem(item, false, false);
+				AddItem(item, true, false);
 			}
 
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);

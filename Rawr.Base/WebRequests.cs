@@ -170,6 +170,7 @@ namespace Rawr
 		public string DownloadText(string URI)
 		{
 			WebClient webClient = new WebClient();
+			webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.1.4) Gecko/20070515 Firefox/2.0.0.4");
 			SetProxyInformation(webClient);
 			string value = null;
 			try
