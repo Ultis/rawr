@@ -655,13 +655,11 @@ namespace Rawr.Retribution
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return true;/*(
+            return ((
                 stats.Health +
                 stats.Mana +
                 stats.Stamina +
                 stats.Intellect +
-                stats.Spirit +
-                stats.Mp5 +
                 stats.SpellCritRating +
                 stats.SpellDamageRating +
                 stats.Strength +
@@ -672,11 +670,15 @@ namespace Rawr.Retribution
                 stats.HasteRating +
                 stats.HitRating +
                 stats.CritRating +
-                stats. +
-                stats.SpellFireDamageRating +
-                stats.SpellShadowDamageRating +
-                stats.BonusFireSpellPowerMultiplier +
-                stats.BonusShadowSpellPowerMultiplier) > 0; */
+                stats.BonusStrengthMultiplier +
+                stats.BonusPhysicalDamageMultiplier +
+                stats.BonusCritMultiplier +
+                stats.BonusCrusaderStrikeDamageMultiplier +
+                stats.WindfuryAPBonus +
+                stats.Bloodlust +
+                stats.ExposeWeakness +
+                stats.DrumsOfBattle +
+                stats.WeaponDamage) > 0); 
         }
 
         /// <summary>

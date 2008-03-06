@@ -581,7 +581,8 @@ namespace Rawr
                         {
                             Name = "Windfury",
                             Category = BuffCategory.ClassBuffs,
-                            Stats = new Stats() { WindfuryAPBonus = 445f }
+                            Stats = new Stats() { WindfuryAPBonus = 445f },
+                            ConflictingBuffs = new string[] { "Temporary Weapon Enchantment"}
                         });
 
                         _allBuffs.Add(new Buff()
@@ -589,7 +590,8 @@ namespace Rawr
                             Name = "Improved Windfury",
                             Category = BuffCategory.ClassBuffs,
                             RequiredBuff = "Windfury",
-                            Stats = new Stats() { WindfuryAPBonus = 445f * 0.30f }
+                            Stats = new Stats() { WindfuryAPBonus = 445f * 0.30f },
+                            ConflictingBuffs = new string[] { "Temporary Weapon Enchantment"}
                         });
 
 						//american coca-cola
