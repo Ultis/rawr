@@ -154,10 +154,7 @@ namespace Rawr.Retribution
         }
 
         private void btnGraph_Click(object sender, EventArgs e)
-        {
-            //this.Font = new Font("Calibri", 9);
-            MessageBox.Show("This will be back up soon");
-            /*
+        {   
             Bitmap _prerenderedGraph = global::Rawr.Retribution.Properties.Resources.GraphBase;
             Graphics g = Graphics.FromImage(_prerenderedGraph);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -330,7 +327,7 @@ namespace Rawr.Retribution
             #endregion
             Graph graph = new Graph(_prerenderedGraph);
             graph.Show();
-               */      
+                     
         }
     }
 }

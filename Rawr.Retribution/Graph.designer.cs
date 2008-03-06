@@ -52,7 +52,6 @@
             this.Controls.Add(this.pictureBoxGraph);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Graph";
-            this.ShowInTaskbar = false;
             this.Text = "Graph";
             this.Load += new System.EventHandler(this.Graph_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGraph)).EndInit();
