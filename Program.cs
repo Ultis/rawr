@@ -21,7 +21,8 @@ namespace Rawr
             {
                 bool bAppFirstInstance;
 				log.Debug("Grabbing Mutex");
-				System.Threading.Mutex oMutex = new System.Threading.Mutex(true, "Global\\Rawr", out bAppFirstInstance);
+                //use the app domain base directory to allow a second copy running in a different folder.
+				System.Threading.Mutex oMutex = new System.Threading.Mutex(true, "Global\\Rawr"+AppDomain.CurrentDomain.BaseDirectory, out bAppFirstInstance);
                 if (bAppFirstInstance)
                 {
                     log.Debug("Mutex Aquired, first instance");
