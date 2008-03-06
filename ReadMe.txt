@@ -1,8 +1,8 @@
-Rawr Beta 11
+Rawr Beta 12
 ------------
-Welcome to another new version of Rawr. b11 has quite a few new features that you'll notice, and quite a few that you probably won't notice. I've added alot of polish to the new Cat model, (though those disabled calculation options are still disabled, sorry :( ), and there are several new things for Bear too. There have been alot of changes under the hood, to allow for Rawr to support models for a wide variety of class/specs, not just Cats and Bears. While Feral is still my passion, and will be the main focus of my future development, I also want to open Rawr up so that other people who are passionate about different classes/specs can build models for Rawr, and hopefully all theorycrafters can be united with one common platform. Thanks for work on this release go out to Bashui and MerickOWA!
+There's probably alot of people reading this who are new to Rawr. So, welcome! Two versions ago, Rawr supported only a single model, Bear. Last version, Cat was added. That was a pretty big addition, but still limited Rawr's users to one spec of one class. Well, lets octuple that, shall we? Rawr now supports 3 more models: *Moonkin*, *Mage*, and *Warlock*. Please keep in mind that these models are brand new, and in various stages of polish. There will be bugs, there will be missing features. I strongly urge you to come post an Issue on our development site, http://www.codeplex.com/Rawr/, with any feedback you have on Rawr, especially the 3 new models. Dopefish is developing the Moonkin model, Kavan is developing the Mage model, and CBennight is developing the Warlock model. And as usual, there's a number of additional enhancements to core Rawr functionality. Big thanks to Dwin, and Bashui for help on core Rawr functionality. Also, stay tuned, because there are more models in the works. Healadin and Retribution are coming along well, and Rogue, ProtWarr, Protadin, Hunter, ElemShammy, and DPSWarr are beginning development as well. If you'd like to help out with any of these models, a new model, or the project in general, let me know, we could always use a hand.
 
-This release is dedicated to all those who have dissatisfied clouds hanging over them. Sorry I'm a couple days late.
+This release is dedicated to Gary Gygax. Without him, Rawr probably wouldn't exist.
 
 Anyway, as usual, thanks very much for testing Rawr. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
@@ -22,16 +22,70 @@ FAQ
  
  Q: Can you make it, or does Rawr work for Cats, Moonkin, or Trees?
  A: Rawr finally has Cat support! After Cat is cleaned up and fully functional, I expect many other spinoffs to be made, such as for Moonkin, Trees, or even different classes.
- 
-Missing Features
-----------------
- I plan to implement these in b12. Here's what's on my list:
- 
- * More Calculation Options - You'll notice on the Options tab in Cat mode, that there are a number of items that are disabled (grey'd out), including Target Level, Primary Attack, and Finisher. These will be the biggest new feature in b11, most likely.
 
+ 
+Notes on Rawr.Cat
+-----------------
+ More calculation options are still coming. Toskk's been very busy lately, and is still working on these. As soon as we have a working version of these, we'll release them.
+
+ 
+Notes on Rawr.Warlock
+---------------------
+ Rawr.Warlock is looking pretty good, but is missing several bits of functionality (all items which will be fixed in later versions). With these caveats in mind, it works though:
+
+ - It does not take into account on use or on proc effects (trinkets, etc)
+ - It does not take into account any set bonus's
+ - It does not take into account any source of mana regen other than lifetap
+ - ISB model is simplistic - assumes all charges are used by the caster
+
+
+Notes on Rawr.Mage
+------------------
+Rawr.Mage is an optimizer. Given the stats, buffs, talents and fight information it will optimize spell selection and cooldown stacking to maximize total damage done.
+
+When you load your character from the armory it will collect all data about gear, enchants and talents. After you do that you should open the Buffs tab and enable all the buffs that are applicable. Last go to the Options tab and set the fight parameters. At the very least select whether you're using Mage Armor or Molten Armor. You can control many characteristics of the fight, involving external mana regen from shadow priest, rate of interrupts, dps uptime, fight duration, whether there is any aoe involved and any real resistances on the boss.
+
+At that point you are ready to check the Stats tab. At the top you have general stats information which should match your in-game paper doll. The most important part is Solution. Here you will see your expected dps and suggested use of spell cycles to achieve it. If you mouse over the * next to Spell Cycles you'll get a breakdown of all spells you should use and with which cooldowns to pair them.
+
+Finally you can use the comparison charts to decide what improvements you can make. Besides the usual gear comparisons you have several mage specific charts. First is the mage armor comparison which will tell you whether to use Mage Armor or Molten Armor. Then you have per talent points comparison which shows you which talents in your build are the most essential and which you could get to improve your performance. Talent spec comparison gives you a quick glance at which talent spec is best suited to your gear and fight characteristics. You can quickly try out a different talent spec by going to Options tab and selecting a talent spec preset from the talent form. Last comparison is item budget comparison which shows you which stats you should generally be seeking on items.
+
+Features:
+
+ - 5 second rule model
+ - AOE model
+ - Mana Potion vs Destruction Potion tradeoffs
+ - Mana Gem vs Flame Cap tradeoffs
+ - Evocation vs dps tradeoffs
+ - Cooldown stacking optimization 
+
+Known issues:
+
+ - Sometimes you might notice that the cooldowns are stacked in an impossible way. Most of the issues are either edge cases or effects of gradual tradeoffs. If you find something that looks strange let me know and I'll do my best to try to find a fix. 
+
+Notes on Rawr.Moonkin
+---------------------
+ You may notice some things that aren't quite right with Rawr.Moonkin, but it should be pretty close to the spreadsheets. We'll be making improvements in upcoming versions!
 
 Version History
 ---------------
+Beta 12:
+ - Rawr now includes models for Moonkins, Mages, and Warlocks!
+ - Many more stats are tracked about items, for use in new and upcoming models.
+ - Fixed a bug in the options for Cat, so that it updates the label for the value of expose weakness.
+ - Icons now pull from the more reliable wowarmory.com instead of the old flakey armory.worldofwarcraft.com.
+ - You can now safely run multiple copies of Rawr at the same time by duplicating Rawr's folder. Each running copy of Rawr must be in its own folder, with its own cache xml files.
+ - Fixed some bugs that would cause Rawr to crash.
+ - The Splash screen has finally been redone! It now has a background image, and an icon for each model that is loaded, along with the version #s of each model, Rawr's UI, and Base.
+ - Tooltips on the calculations should really last a long time now, for everyone, I hope.
+ - The ItemCache should save faster, load faster, and take up alot less space, per item.
+ - There's a menu item now, to reload the character data from the Armory for the current character.
+ - The Projectile and Projectile Bag slots will now be hidden if they don't apply to the current model.
+ - Improved how Rawr handles requests for data from the Armory.
+ - When unable to access the Armory will now handle it much more gracefully. If you see blank icons, anywhere, that's probably the case.
+ - There's now an options dialog. More will come in there, but for now, there's customizable proxy settings. If you were previously unable to use Rawr due to being behind a proxy that was different from your IE settings, or required different authentication, give this a try.
+ - Logging is now handled via the open source logging library, log4net (http://logging.apache.org/log4net/).
+ -
+
 Beta 11:
  - You can now change between Bear and Cat mode, and any other models, on the fly, using the new Model menu.
  - All stats are now editable in the Item Editor, not just bear stats.

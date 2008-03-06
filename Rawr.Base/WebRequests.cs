@@ -6,7 +6,7 @@ using System.Configuration;
 using System.Threading;
 using System.IO;
 using System.Xml;
-using log4net;
+//using log4net;
 
 /*TODO: Make user actions (not system actions trying to refresh itself) override last fatal error and try again.
  * and if worked, reset fatalerror.  Another option would be to add a status panel like outlook and
@@ -16,7 +16,7 @@ namespace Rawr
 {
 	public class WebRequestWrapper
 	{
-		private static readonly ILog log = LogManager.GetLogger(typeof(WebRequestWrapper));
+		//private static readonly ILog log = LogManager.GetLogger(typeof(WebRequestWrapper));
 
 		private class DownloadRequest
 		{
@@ -157,7 +157,7 @@ namespace Rawr
 		/// <param name="ex"></param>
 		private void CheckExecptionForFatalError(Exception ex)
 		{
-			log.Error("Exception trying to download", ex);
+			//log.Error("Exception trying to download", ex);
 			if (ex.Message.Contains("407") /*proxy auth required */
 				|| ex.Message.Contains("403") /*proxy info probably wrong, if we keep issuing requests, they will probably get locked out*/
 				|| ex.Message.Contains("timed out") /*either proxy required and firewall dropped the request, or armory is down*/

@@ -8,13 +8,13 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using log4net;
+//using log4net;
 
 namespace Rawr
 {
     public static class ItemIcons
     {
-		private static readonly ILog log = LogManager.GetLogger(typeof(ItemIcons));
+		//private static readonly ILog log = LogManager.GetLogger(typeof(ItemIcons));
 
         private static ImageList _largeIcons = null;
 
@@ -121,7 +121,7 @@ namespace Rawr
                 {
                     try
                     {
-						log.Debug("Getting icon from the armory");
+						//log.Debug("Getting icon from the armory");
 						if (!WebRequestWrapper.LastWasFatalError)
 						{
 							WebRequestWrapper wrapper = new WebRequestWrapper();
@@ -144,7 +144,7 @@ namespace Rawr
                     }
                     catch(Exception ex)
                     {
-						log.Error("Exception trying to retrieve an icon from the armory", ex);
+						//log.Error("Exception trying to retrieve an icon from the armory", ex);
 						localPath = Path.Combine(imgDir, "temp.jpg");
 						if (!File.Exists(localPath))
 						{
@@ -161,7 +161,7 @@ namespace Rawr
                 }
                 catch(Exception ex)
                 {
-					log.Error("Exception trying to load an icon from local", ex);
+					//log.Error("Exception trying to load an icon from local", ex);
                     MessageBox.Show(
                         "Rawr encountered an error while attempting to load a saved image. If you encounter this error multiple times, please ensure that Rawr is unzipped in a location that you have full file read/write access, such as your Desktop, or My Documents.");
                 }
