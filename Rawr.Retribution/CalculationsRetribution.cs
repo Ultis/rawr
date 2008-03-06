@@ -75,6 +75,7 @@ namespace Rawr.Retribution
                     "DPS Breakdown:Judgement",
                     "DPS Breakdown:Consecration",
                     "DPS Breakdown:Exorcism",
+                    "DPS Breakdown:Windfury",
                     "DPS Breakdown:Total DPS"
 
                         
@@ -349,12 +350,20 @@ namespace Rawr.Retribution
 
             #region Windfury
             float avgTimeBetnWF = (hastedSpeed / (1.0f - (chanceToBeDodged + chanceToMiss) / 100f)) * 5.0f;
-            float wfAPIncrease = 578.5f;
+            float wfAPIncrease = stats.WindfuryAPBonus;
             float wfHitPre = avgBaseWeaponHit + (wfAPIncrease / 14f) * ((character.MainHand == null) ? 0 : character.MainHand.Speed);
             float wfHitPost = (wfHitPre * physicalCritModifier) - (wfHitPre * (chanceToMiss + chanceToBeDodged) / 100f) -
                 (wfHitPre * glancingAmount * chanceToGlance);
-            wfHitPost *= impSancAura * crusade * vengeance * bloodFrenzy * avWrath * mitigation;
+            if (wfAPIncrease > 0)
+            {
+                wfHitPost *= impSancAura * crusade * vengeance * bloodFrenzy * avWrath * mitigation;
+            }
+            else
+            {
+                wfHitPost = 0f;
+            }
             wfDPS = wfHitPost / avgTimeBetnWF;
+            calcs.WFDPSPoints = wfDPS;
             #endregion 
 
             #region Judgement of Blood
@@ -548,6 +557,7 @@ namespace Rawr.Retribution
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
             statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
             statsTotal.BonusCrusaderStrikeDamageMultiplier = statsGearEnchantsBuffs.BonusCrusaderStrikeDamageMultiplier;
+            statsTotal.WindfuryAPBonus = statsGearEnchantsBuffs.WindfuryAPBonus;
             return (statsTotal);
 
            
@@ -637,7 +647,8 @@ namespace Rawr.Retribution
                 SpellDamageRating = stats.SpellDamageRating,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 BonusCrusaderStrikeDamageMultiplier = stats.BonusCrusaderStrikeDamageMultiplier,
-                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                WindfuryAPBonus = stats.WindfuryAPBonus
             };
         }
 

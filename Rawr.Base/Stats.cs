@@ -482,7 +482,9 @@ namespace Rawr
         [DisplayName("% CStrike Dmg")]
         public float BonusCrusaderStrikeDamageMultiplier { get; set; }
 
-
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Windfury")]
+        public float WindfuryAPBonus { get; set; }
 
 		#endregion
 
@@ -595,7 +597,8 @@ namespace Rawr
                 MoonfireDmg = a.MoonfireDmg + b.MoonfireDmg,
                 IdolCritRating = a.IdolCritRating + b.IdolCritRating,
                 BonusPhysicalDamageMultiplier = (1f + a.BonusPhysicalDamageMultiplier)*(1f+b.BonusPhysicalDamageMultiplier) -1f,
-                BonusCrusaderStrikeDamageMultiplier = (1f + a.BonusCrusaderStrikeDamageMultiplier)*(1f+b.BonusCrusaderStrikeDamageMultiplier) -1f
+                BonusCrusaderStrikeDamageMultiplier = (1f + a.BonusCrusaderStrikeDamageMultiplier)*(1f+b.BonusCrusaderStrikeDamageMultiplier) -1f,
+                WindfuryAPBonus = a.WindfuryAPBonus +b.WindfuryAPBonus
 			};
 		}
 

@@ -577,6 +577,21 @@ namespace Rawr
                             Stats = new Stats() { BonusPhysicalDamageMultiplier = 0.04f }
                         });
 
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Windfury",
+                            Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { WindfuryAPBonus = 445f }
+                        });
+
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Improved Windfury",
+                            Category = BuffCategory.ClassBuffs,
+                            RequiredBuff = "Windfury",
+                            Stats = new Stats() { WindfuryAPBonus = 445f * 0.30f }
+                        });
+
 						//american coca-cola
 						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Buff>));
 						StringBuilder sb = new StringBuilder();

@@ -64,6 +64,13 @@ namespace Rawr.Retribution
             set { _exoDPSPoints= value; }
         }
 
+        private float _wfDPSPoints;
+        public float WFDPSPoints
+        {
+            get { return _wfDPSPoints; }
+            set { _wfDPSPoints = value; }
+        }
+
         private Stats _basicStats;
         public Stats BasicStats
         {
@@ -167,6 +174,7 @@ namespace Rawr.Retribution
             dictValues.Add("Judgement", JudgementDPSPoints.ToString());
             dictValues.Add("Consecration", ConsDPSPoints.ToString());
             dictValues.Add("Exorcism", ExoDPSPoints.ToString());
+            dictValues.Add("Windfury", WFDPSPoints.ToString());
 
             return dictValues;
            
