@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Rawr
 {
@@ -103,7 +104,7 @@ namespace Rawr
                     var positiveStats = Calculations.GetRelevantStats(CurrentItem.Stats).Values(x => x > 0);
                     int statHeight = (positiveStats.Count + 2) / 3; // number of lines
                     statHeight *= 17;// * line height
-                    _cachedToolTipImage = new Bitmap(309, hasSockets ? 81 + statHeight : 23 + statHeight, PixelFormat.Format32bppArgb);
+                    _cachedToolTipImage = new Bitmap(309, hasSockets ? 96 + statHeight : 38 + statHeight, PixelFormat.Format32bppArgb);
 
                     Graphics g = Graphics.FromImage(_cachedToolTipImage);
                     g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -238,7 +239,36 @@ namespace Rawr
                                  : CurrentItem.Sockets.Stats.ToString()),
                             _fontStats, brushBonus, 2, 63 + statHeight);
                     }
+                    if (Properties.NetworkSettings.Default.DownloadItemInfo)
+                    {
+                        WebRequestWrapper wrw = new WebRequestWrapper();
+                        XmlDocument doc = wrw.DownloadItemInformation(_currentItem.Id);
+                        if (doc != null)
+                        {
+                            XmlNode node = doc.SelectSingleNode("//cost/token");
+                            if (node != null)
+                            {
+                                g.DrawString("Cost: "+node.Attributes["count"].Value + " Badges Of Justice", _fontStats, SystemBrushes.InfoText, 2, (hasSockets ? 78 : 18) + statHeight);
+                            }
+                            else
+                            {
+                                node = doc.SelectSingleNode("//dropCreatures/creature");
+                                if (node != null)
+                                {
+                                    g.DrawString("Dropped in " + node.Attributes["area"].Value + " by " + node.Attributes["name"].Value, _fontStats, SystemBrushes.InfoText, 2, (hasSockets ? 78 : 18) + statHeight);
+                                }
+                                else
+                                {
+                                    node = doc.SelectSingleNode("//createdBy");
+                                    if (node != null)
+                                    {
+                                        g.DrawString("Crafted", _fontStats, SystemBrushes.InfoText, 2, (hasSockets ? 78 : 18) + statHeight);
+                                    }
 
+                                }
+                            }
+                        }
+                    }
                     g.Dispose();
                 }
                 return _cachedToolTipImage;

@@ -94,6 +94,11 @@ namespace Rawr
 			return doc;
 		}
 
+        public XmlDocument DownloadItemInformation(int id)
+        {
+          return DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemInfoURI, id.ToString()));
+        }
+
 		public XmlDocument DownloadItemToolTipSheet(string id)
 		{
 			XmlDocument doc = null;

@@ -231,5 +231,17 @@ namespace Rawr.Properties {
                 return ((string)(this["ItemInfoURI"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DownloadItemInfo {
+            get {
+                return ((bool)(this["DownloadItemInfo"]));
+            }
+            set {
+                this["DownloadItemInfo"] = value;
+            }
+        }
     }
 }
