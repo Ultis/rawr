@@ -83,8 +83,6 @@ Beta 12:
  - Improved how Rawr handles requests for data from the Armory.
  - When unable to access the Armory will now handle it much more gracefully. If you see blank icons, anywhere, that's probably the case.
  - There's now an options dialog. More will come in there, but for now, there's customizable proxy settings. If you were previously unable to use Rawr due to being behind a proxy that was different from your IE settings, or required different authentication, give this a try.
- - Logging is now handled via the open source logging library, log4net (http://logging.apache.org/log4net/).
- -
 
 Beta 11:
  - You can now change between Bear and Cat mode, and any other models, on the fly, using the new Model menu.
