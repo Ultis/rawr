@@ -10,100 +10,54 @@ namespace Rawr.UserControls.Options
 {
 	public partial class NetworkSettings : UserControl, IOptions
 	{
+		private const string IE6 = "Internet Explorer 6";
+		private const string IE7 = "Internet Explorer 7";
+		private const string FIREFOX2 = "FireFox 2";
 		public NetworkSettings()
 		{
 			InitializeComponent();
-			ProxyType.SelectedItem = ProxyType.Items[0];
-		}
-
-		private void UseDefaultProxySettingsCheckBox_CheckedChanged(object sender, EventArgs e)
-		{
-			if (UseDefaultProxySettingsCheckBox.Checked)
+			//cannot be in load, because its possible this tab won't show, and the values will not be initialized.
+			//if this happens, then the users settings will be cleared.
+			string value = FIREFOX2;
+			if (Properties.NetworkSettings.Default.UserAgent_IE6 == Properties.NetworkSettings.Default.UserAgent)
 			{
-				ProxyHost.Enabled = false;
-				ProxyPort.Enabled = false;
-			}
-			else
+				value = IE6;
+			}else if (Properties.NetworkSettings.Default.UserAgent_IE7 == Properties.NetworkSettings.Default.UserAgent)
 			{
-				ProxyPort.Enabled = true;
-				ProxyHost.Enabled = true;
+				value = IE7;
 			}
-		}
-
-		private void ProxyType_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (ProxyType.SelectedItem != null && ProxyType.SelectedItem.ToString() == "None")
-			{
-				SettingsGroupBox.Enabled = false;
-			}
-			else
-			{
-				SettingsGroupBox.Enabled = true;
-			}
-		}
-
-		private void RequiresAuthCheckBox_CheckedChanged(object sender, EventArgs e)
-		{
-			if (RequiresAuthCheckBox.Checked)
-			{
-				UserName.Enabled = true;
-				Password.Enabled = true;
-			}
-			else
-			{
-				UserName.Enabled = false;
-				Password.Enabled = false;
-			}
-		}
-
-		private void NetworkSettings_Load(object sender, EventArgs e)
-		{
-			RequiresAuthCheckBox.Checked = Properties.NetworkSettings.Default.LoginToFirewall;
-			Password.Text = Properties.NetworkSettings.Default.ProxyPassword;
-			ProxyPort.Text = Properties.NetworkSettings.Default.ProxyPort.ToString();
-			ProxyHost.Text = Properties.NetworkSettings.Default.ProxyServer;
-			ProxyType.Text = Properties.NetworkSettings.Default.ProxyType;
-			UserName.Text = Properties.NetworkSettings.Default.ProxyUserName;
-			UseDefaultProxySettingsCheckBox.Checked = Properties.NetworkSettings.Default.UseDefaultProxySettings;
 			
-			RequiresAuthCheckBox_CheckedChanged(null, null);
-			ProxyType_SelectedIndexChanged(null, null);
-			UseDefaultProxySettingsCheckBox_CheckedChanged(null, null);
+			for (int i = 0; i < UserAgentDropDown.Items.Count; i++)
+			{
+				if (UserAgentDropDown.Items[i].ToString() == value)
+				{
+					UserAgentDropDown.SelectedItem = UserAgentDropDown.Items[i];
+					break;
+				}
+			}
+			MaxRequests.Value = Properties.NetworkSettings.Default.MaxHttpRequests;
 		}
 
-		private void ProxyPort_Validating(object sender, CancelEventArgs e)
-		{
-			int port;
-			if (UseDefaultProxySettingsCheckBox.Checked == false &&  (!int.TryParse(ProxyPort.Text, out port) || port < 0))
-			{
-				errorProvider1.SetError(ProxyPort, "Value must be an integer greater then 0");
-			}
-			else
-			{
-				errorProvider1.SetError(ProxyPort, "");
-			}
-		}
 
 		#region IOptions Members
 
-
 		public void Save()
 		{
-			if (HasValidationErrors())
+			Properties.NetworkSettings.Default.MaxHttpRequests = Convert.ToInt32(MaxRequests.Value);
+			
+			switch(UserAgentDropDown.SelectedItem.ToString())
 			{
-				throw new Exception("Settings are not in a valid state.  Cannot Save");
+				case IE6:
+					Properties.NetworkSettings.Default.UserAgent = Properties.NetworkSettings.Default.UserAgent_IE6;
+					break;
+				case IE7:
+					Properties.NetworkSettings.Default.UserAgent = Properties.NetworkSettings.Default.UserAgent_IE7;
+					break;
+				default:
+					Properties.NetworkSettings.Default.UserAgent = Properties.NetworkSettings.Default.UserAgent_FireFox2;
+					break;
 			}
-			else
-			{
-				Properties.NetworkSettings.Default.LoginToFirewall = RequiresAuthCheckBox.Checked;
-				Properties.NetworkSettings.Default.ProxyPassword = Password.Text;
-				Properties.NetworkSettings.Default.ProxyPort = int.Parse(ProxyPort.Text);
-				Properties.NetworkSettings.Default.ProxyServer = ProxyHost.Text;
-				Properties.NetworkSettings.Default.ProxyType = ProxyType.Text;
-				Properties.NetworkSettings.Default.ProxyUserName = UserName.Text;
-				Properties.NetworkSettings.Default.UseDefaultProxySettings = UseDefaultProxySettingsCheckBox.Checked;
-				Properties.NetworkSettings.Default.Save();
-			}
+			Properties.NetworkSettings.Default.Save();
 		}
 
 		public void Cancel()
@@ -142,7 +96,13 @@ namespace Rawr.UserControls.Options
 
 		public string DisplayName
 		{
-			get { return "Proxy Settings"; }
+			get { return "Http Settings"; }
+		}
+
+
+		public string TreePosition
+		{
+			get { return "Network Settings|Http Settings"; }
 		}
 
 		#endregion

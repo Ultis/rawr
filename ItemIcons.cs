@@ -8,13 +8,13 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-//using log4net;
+using log4net;
 
 namespace Rawr
 {
     public static class ItemIcons
     {
-		//private static readonly ILog log = LogManager.GetLogger(typeof(ItemIcons));
+		private static readonly ILog log = LogManager.GetLogger(typeof(ItemIcons));
 
         private static ImageList _largeIcons = null;
 
@@ -50,25 +50,13 @@ namespace Rawr
 
         public static void CacheAllIcons(Item[] items)
         {
-            string iconPath;
-            string localPath;
 			WebRequestWrapper webRequests = new WebRequestWrapper();
-			string localImageCacheDir = AppDomain.CurrentDomain.BaseDirectory + "images\\";
-			if (!Directory.Exists(localImageCacheDir))
-			{
-				Directory.CreateDirectory(localImageCacheDir);
-			}
 			List<string> filesDownloading = new List<string>();
             for(int i=0;i<items.Length && !WebRequestWrapper.LastWasFatalError;i++)
             {
-				iconPath = items[i].IconPath.Replace(".png", "").Replace(".jpg", "").ToLower();
-				localPath = Path.Combine(localImageCacheDir,iconPath + ".jpg");
-                if (!File.Exists(localPath) && !filesDownloading.Contains(localPath))
-                {
-                    filesDownloading.Add(localPath);
-                    BackgroundWorker worker = new BackgroundWorker();
-					webRequests.DownloadIconAsync(iconPath, localPath);
-                }
+				string iconName = items[i].IconPath.Replace(".png", "").Replace(".jpg", "").ToLower();
+			    BackgroundWorker worker = new BackgroundWorker();
+				webRequests.DownloadItemIconAsync(iconName);
             }
             
 			//the main GUI thread should not be made to sleep as it will cause white outs, a good solution to prevent 
@@ -104,69 +92,58 @@ namespace Rawr
             return GetItemIcon(iconPath, false);
         }
 
-        public static Image GetItemIcon(string iconPath, bool small)
+        public static Image GetItemIcon(string iconName, bool small)
         {
-            iconPath = iconPath.Replace(".png", "").Replace(".jpg", "").ToLower();
-            if ((!small && !LargeIcons.Images.ContainsKey(iconPath)) ||
-                (small && !SmallIcons.Images.ContainsKey(iconPath)))
+			iconName = iconName.Replace(".png", "").Replace(".jpg", "").ToLower();
+			if ((!small && !LargeIcons.Images.ContainsKey(iconName)) ||
+				(small && !SmallIcons.Images.ContainsKey(iconName)))
             {
-				string imgDir = AppDomain.CurrentDomain.BaseDirectory + "images\\";
-                string localPath =
-                    Path.Combine(imgDir, iconPath + ".jpg");
-                if (!Directory.Exists(Path.GetDirectoryName(localPath)))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(localPath));
-                }
-                if (!File.Exists(localPath))
-                {
-                    try
-                    {
-						//log.Debug("Getting icon from the armory");
-						if (!WebRequestWrapper.LastWasFatalError)
-						{
-							WebRequestWrapper wrapper = new WebRequestWrapper();
-							wrapper.DownloadIcon(iconPath, localPath);
-							//just in case the network code is in a disconnected mode. (e.g. no network traffic sent, so no network exception)
-							if (!File.Exists(localPath))
-							{
-								return null;
-							}
-						}
-						else
-						{
-							localPath = Path.Combine(imgDir, "temp.jpg");
-							if (!File.Exists(localPath))
-							{
-								return null;
-							}
-						}
-						
-                    }
-                    catch(Exception ex)
-                    {
-						//log.Error("Exception trying to retrieve an icon from the armory", ex);
-						localPath = Path.Combine(imgDir, "temp.jpg");
-						if (!File.Exists(localPath))
-						{
-							return null;
-						}
-                    }
-                }
-                Image fullSizeImage = null;
+				string pathToIcon = null;
                 try
                 {
-                    fullSizeImage = Image.FromFile(localPath);
-                    if (small) SmallIcons.Images.Add(iconPath, ScaleByPercent(Image.FromFile(localPath), 50));
-                    else LargeIcons.Images.Add(iconPath, Image.FromFile(localPath));
+					log.Debug("Getting icon from the armory");
+					WebRequestWrapper wrapper = new WebRequestWrapper();
+					if (!WebRequestWrapper.LastWasFatalError)
+					{
+						
+						pathToIcon = wrapper.DownloadItemIcon(iconName);
+						//just in case the network code is in a disconnected mode. (e.g. no network traffic sent, so no network exception)
+					}
+					else
+					{
+						pathToIcon = wrapper.DownloadTempImage();
+					}
                 }
                 catch(Exception ex)
                 {
-					//log.Error("Exception trying to load an icon from local", ex);
+					log.Error("Exception trying to retrieve an icon from the armory", ex);
+					
+                }
+				if (String.IsNullOrEmpty(pathToIcon))
+				{
+					//No image in web image cache, no temp image could be found.
+					return null; 
+				}
+                try
+                {
+					Image fullSizeImage = Image.FromFile(pathToIcon);
+					if (small)
+					{
+						SmallIcons.Images.Add(iconName, ScaleByPercent(fullSizeImage, 50));
+					}
+					else
+					{
+						LargeIcons.Images.Add(iconName, fullSizeImage);
+					}
+                }
+                catch(Exception ex)
+                {
+					log.Error("Exception trying to load an icon from local", ex);
                     MessageBox.Show(
                         "Rawr encountered an error while attempting to load a saved image. If you encounter this error multiple times, please ensure that Rawr is unzipped in a location that you have full file read/write access, such as your Desktop, or My Documents.");
                 }
             }
-            return small ? SmallIcons.Images[iconPath] : LargeIcons.Images[iconPath];
+			return small ? SmallIcons.Images[iconName] : LargeIcons.Images[iconName];
         }
 
         private static Image ScaleByPercent(Image imgPhoto, int Percent)

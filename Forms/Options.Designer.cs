@@ -28,15 +28,10 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Proxy Settings");
-			System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("NetworkSettings", new System.Windows.Forms.TreeNode[] {
-            treeNode1});
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.OK = new System.Windows.Forms.Button();
 			this.Cancel = new System.Windows.Forms.Button();
 			this.treeView1 = new System.Windows.Forms.TreeView();
-			this.networkSettings1 = new Rawr.UserControls.Options.NetworkSettings();
-			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// panel1
@@ -45,7 +40,6 @@
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.panel1.AutoScroll = true;
-			this.panel1.Controls.Add(this.networkSettings1);
 			this.panel1.Location = new System.Drawing.Point(154, 12);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(309, 342);
@@ -78,30 +72,12 @@
 			this.treeView1.HideSelection = false;
 			this.treeView1.Location = new System.Drawing.Point(12, 12);
 			this.treeView1.Name = "treeView1";
-			treeNode1.ForeColor = System.Drawing.Color.Black;
-			treeNode1.Name = "ProxySettings";
-			treeNode1.Text = "Proxy Settings";
-			treeNode2.ForeColor = System.Drawing.Color.Black;
-			treeNode2.Name = "NetworkSettings";
-			treeNode2.Text = "NetworkSettings";
-			treeNode2.ToolTipText = "Adjust the settings that Rawr uses to connect to the internet";
-			this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
 			this.treeView1.ShowNodeToolTips = true;
 			this.treeView1.ShowPlusMinus = false;
 			this.treeView1.ShowRootLines = false;
 			this.treeView1.Size = new System.Drawing.Size(136, 342);
 			this.treeView1.TabIndex = 4;
-			// 
-			// networkSettings1
-			// 
-			this.networkSettings1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.networkSettings1.Location = new System.Drawing.Point(3, 3);
-			this.networkSettings1.Name = "networkSettings1";
-			this.networkSettings1.Size = new System.Drawing.Size(297, 334);
-			this.networkSettings1.TabIndex = 0;
+			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
 			// 
 			// Options
 			// 
@@ -117,7 +93,6 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Options";
 			this.Load += new System.EventHandler(this.Options_Load);
-			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -125,7 +100,6 @@
 		#endregion
 
 		private System.Windows.Forms.Panel panel1;
-		private Rawr.UserControls.Options.NetworkSettings networkSettings1;
 		private System.Windows.Forms.Button OK;
 		private System.Windows.Forms.Button Cancel;
 		private System.Windows.Forms.TreeView treeView1;

@@ -15,13 +15,8 @@ namespace Rawr
             XmlDocument docTalents = null;
             try
 			{
-				//Log.Write("Getting Character from Armory: " + name + "@" + region.ToString() + "-" + realm);
-				//Tell me how he died.
-				string armoryDomain = region == Character.CharacterRegion.US ? "www" : "eu";
-				string characterSheetPath = string.Format("http://{0}.wowarmory.com/character-sheet.xml?r={1}&n={2}",
-					armoryDomain, realm, name);
 				WebRequestWrapper wrw = new WebRequestWrapper();
-				docCharacter = wrw.DownloadXml(characterSheetPath);
+				docCharacter = wrw.DownloadCharacterSheet(name, region, realm);
 
                 Character.CharacterRace race = (Character.CharacterRace)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["raceId"].Value);
                 Character.CharacterClass charClass = (Character.CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
@@ -77,9 +72,7 @@ namespace Rawr
                 #region Mage Talents Import
                 if (docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["class"].Value == "Mage")
                 {
-                    string talentSheetPath = string.Format("http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}",
-                        armoryDomain, realm, name);
-                    docTalents = wrw.DownloadXml(talentSheetPath);
+					docTalents = wrw.DownloadCharacterTalentTree(name, region, realm);
 
                     //<talentTab>
                     //  <talentTree value="2550050300230151333125100000000000000000000002030302010000000000000"/>
@@ -158,9 +151,7 @@ namespace Rawr
                 #region Druid Talents Import
                 if (docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["class"].Value == "Druid")
                 {
-                    string talentSheetPath = string.Format("http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}",
-                        armoryDomain, realm, name);
-                    docTalents = wrw.DownloadXml(talentSheetPath);
+					docTalents = wrw.DownloadCharacterTalentTree(name, region, realm);
 
                     //<talentTab>
                     //  <talentTree value="50002201050313523105100000000000000530000000000300001000030300"/>
@@ -277,11 +268,8 @@ namespace Rawr
 					try
 					{
 						string id = gemmedId.Split('.')[0];
-						//Log.Write("Getting Item from Armory: " + id + "   Reason: " + logReason);
-
-						string itemTooltipPath = string.Format("http://www.wowarmory.com/item-tooltip.xml?i={0}", id);
 						WebRequestWrapper wrw = new WebRequestWrapper();
-						docItem = wrw.DownloadXml(itemTooltipPath);
+						docItem = wrw.DownloadItemToolTipSheet(id);
 
 						Item.ItemQuality quality = Item.ItemQuality.Common;
 						Item.ItemType type = Item.ItemType.None;
@@ -1259,11 +1247,8 @@ namespace Rawr
 				Item itemToUpgrade = character[slot];
 				if (itemToUpgrade != null)
 				{
-					string armoryDomain = character.Region == Character.CharacterRegion.US ? "www" : "eu";
-					string upgradeSearchPath = string.Format("http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}",
-						armoryDomain, character.Realm, character.Name, itemToUpgrade.Id);
 					WebRequestWrapper wrw = new WebRequestWrapper();
-					docUpgradeSearch = wrw.DownloadXml(upgradeSearchPath);
+					docUpgradeSearch = wrw.DownloadUpgrades(character.Name, character.Region,character.Realm,itemToUpgrade.Id);
 
 					ComparisonCalculationBase currentCalculation = Calculations.GetItemCalculations(itemToUpgrade, character, slot);
 

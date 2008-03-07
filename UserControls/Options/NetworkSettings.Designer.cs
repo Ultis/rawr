@@ -28,153 +28,101 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NetworkSettings));
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.ProxyType = new System.Windows.Forms.ComboBox();
-			this.SettingsGroupBox = new System.Windows.Forms.GroupBox();
-			this.ProxyPort = new System.Windows.Forms.TextBox();
-			this.Password = new System.Windows.Forms.TextBox();
-			this.label4 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
-			this.UserName = new System.Windows.Forms.TextBox();
-			this.RequiresAuthCheckBox = new System.Windows.Forms.CheckBox();
-			this.label2 = new System.Windows.Forms.Label();
-			this.ProxyHost = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.UseDefaultProxySettingsCheckBox = new System.Windows.Forms.CheckBox();
-			this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-			this.groupBox1.SuspendLayout();
-			this.SettingsGroupBox.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-			this.SuspendLayout();
-			// 
-			// groupBox1
-			// 
-			resources.ApplyResources(this.groupBox1, "groupBox1");
-			this.groupBox1.Controls.Add(this.ProxyType);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.TabStop = false;
-			// 
-			// ProxyType
-			// 
-			this.ProxyType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.ProxyType.FormattingEnabled = true;
-			this.ProxyType.Items.AddRange(new object[] {
-            resources.GetString("ProxyType.Items"),
-            resources.GetString("ProxyType.Items1")});
-			resources.ApplyResources(this.ProxyType, "ProxyType");
-			this.ProxyType.Name = "ProxyType";
-			this.ProxyType.SelectedIndexChanged += new System.EventHandler(this.ProxyType_SelectedIndexChanged);
-			// 
-			// SettingsGroupBox
-			// 
-			resources.ApplyResources(this.SettingsGroupBox, "SettingsGroupBox");
-			this.SettingsGroupBox.Controls.Add(this.ProxyPort);
-			this.SettingsGroupBox.Controls.Add(this.Password);
-			this.SettingsGroupBox.Controls.Add(this.label4);
-			this.SettingsGroupBox.Controls.Add(this.label3);
-			this.SettingsGroupBox.Controls.Add(this.UserName);
-			this.SettingsGroupBox.Controls.Add(this.RequiresAuthCheckBox);
-			this.SettingsGroupBox.Controls.Add(this.label2);
-			this.SettingsGroupBox.Controls.Add(this.ProxyHost);
-			this.SettingsGroupBox.Controls.Add(this.label1);
-			this.SettingsGroupBox.Controls.Add(this.UseDefaultProxySettingsCheckBox);
-			this.SettingsGroupBox.Name = "SettingsGroupBox";
-			this.SettingsGroupBox.TabStop = false;
-			// 
-			// ProxyPort
-			// 
-			resources.ApplyResources(this.ProxyPort, "ProxyPort");
-			this.ProxyPort.Name = "ProxyPort";
-			this.ProxyPort.Validating += new System.ComponentModel.CancelEventHandler(this.ProxyPort_Validating);
-			// 
-			// Password
-			// 
-			resources.ApplyResources(this.Password, "Password");
-			this.Password.Name = "Password";
-			this.Password.UseSystemPasswordChar = true;
-			// 
-			// label4
-			// 
-			resources.ApplyResources(this.label4, "label4");
-			this.label4.Name = "label4";
-			// 
-			// label3
-			// 
-			resources.ApplyResources(this.label3, "label3");
-			this.label3.Name = "label3";
-			// 
-			// UserName
-			// 
-			resources.ApplyResources(this.UserName, "UserName");
-			this.UserName.Name = "UserName";
-			// 
-			// RequiresAuthCheckBox
-			// 
-			resources.ApplyResources(this.RequiresAuthCheckBox, "RequiresAuthCheckBox");
-			this.RequiresAuthCheckBox.Name = "RequiresAuthCheckBox";
-			this.RequiresAuthCheckBox.UseVisualStyleBackColor = true;
-			this.RequiresAuthCheckBox.CheckedChanged += new System.EventHandler(this.RequiresAuthCheckBox_CheckedChanged);
-			// 
-			// label2
-			// 
-			resources.ApplyResources(this.label2, "label2");
-			this.label2.Name = "label2";
-			// 
-			// ProxyHost
-			// 
-			resources.ApplyResources(this.ProxyHost, "ProxyHost");
-			this.ProxyHost.Name = "ProxyHost";
-			// 
-			// label1
-			// 
-			resources.ApplyResources(this.label1, "label1");
-			this.label1.Name = "label1";
-			// 
-			// UseDefaultProxySettingsCheckBox
-			// 
-			resources.ApplyResources(this.UseDefaultProxySettingsCheckBox, "UseDefaultProxySettingsCheckBox");
-			this.UseDefaultProxySettingsCheckBox.Name = "UseDefaultProxySettingsCheckBox";
-			this.UseDefaultProxySettingsCheckBox.UseVisualStyleBackColor = true;
-			this.UseDefaultProxySettingsCheckBox.CheckedChanged += new System.EventHandler(this.UseDefaultProxySettingsCheckBox_CheckedChanged);
-			// 
-			// errorProvider1
-			// 
-			this.errorProvider1.ContainerControl = this;
-			// 
-			// NetworkSettings
-			// 
-			resources.ApplyResources(this, "$this");
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.SettingsGroupBox);
-			this.Controls.Add(this.groupBox1);
-			this.Name = "NetworkSettings";
-			this.Load += new System.EventHandler(this.NetworkSettings_Load);
-			this.groupBox1.ResumeLayout(false);
-			this.SettingsGroupBox.ResumeLayout(false);
-			this.SettingsGroupBox.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-			this.ResumeLayout(false);
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NetworkSettings));
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.MaxRequests = new System.Windows.Forms.NumericUpDown();
+            this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.UserAgentDropDown = new System.Windows.Forms.ComboBox();
+            this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxRequests)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.MaxRequests);
+            this.groupBox1.Controls.Add(this.extendedToolTipLabel2);
+            this.groupBox1.Controls.Add(this.UserAgentDropDown);
+            this.groupBox1.Controls.Add(this.extendedToolTipLabel1);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.TabStop = false;
+            // 
+            // MaxRequests
+            // 
+            resources.ApplyResources(this.MaxRequests, "MaxRequests");
+            this.MaxRequests.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.MaxRequests.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MaxRequests.Name = "MaxRequests";
+            this.MaxRequests.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // extendedToolTipLabel2
+            // 
+            resources.ApplyResources(this.extendedToolTipLabel2, "extendedToolTipLabel2");
+            this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
+            this.extendedToolTipLabel2.ToolTipText = "The user agent string that Rawr will use when connecting to the Armory.  It is re" +
+                "commended to only change this if you are experiencing issue that you know are re" +
+                "lated to this setting.";
+            // 
+            // UserAgentDropDown
+            // 
+            this.UserAgentDropDown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.UserAgentDropDown.FormattingEnabled = true;
+            this.UserAgentDropDown.Items.AddRange(new object[] {
+            resources.GetString("UserAgentDropDown.Items"),
+            resources.GetString("UserAgentDropDown.Items1"),
+            resources.GetString("UserAgentDropDown.Items2")});
+            resources.ApplyResources(this.UserAgentDropDown, "UserAgentDropDown");
+            this.UserAgentDropDown.Name = "UserAgentDropDown";
+            // 
+            // extendedToolTipLabel1
+            // 
+            resources.ApplyResources(this.extendedToolTipLabel1, "extendedToolTipLabel1");
+            this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
+            this.extendedToolTipLabel1.ToolTipText = "Sets the maximum number of requests that Rawr will send at one time.";
+            // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
+            // NetworkSettings
+            // 
+            resources.ApplyResources(this, "$this");
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBox1);
+            this.Name = "NetworkSettings";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxRequests)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+            this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
+		private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel1;
 		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.ComboBox ProxyType;
-		private System.Windows.Forms.GroupBox SettingsGroupBox;
-		private System.Windows.Forms.CheckBox UseDefaultProxySettingsCheckBox;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.TextBox ProxyHost;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.CheckBox RequiresAuthCheckBox;
-		private System.Windows.Forms.TextBox Password;
-		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.TextBox UserName;
-		private System.Windows.Forms.TextBox ProxyPort;
+		private System.Windows.Forms.ComboBox UserAgentDropDown;
 		private System.Windows.Forms.ErrorProvider errorProvider1;
+		private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel2;
+		private System.Windows.Forms.NumericUpDown MaxRequests;
+
 
 	}
 }

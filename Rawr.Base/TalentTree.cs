@@ -10,10 +10,6 @@ namespace Rawr
     [Serializable]
     public class TalentTree
     {
-
-        private static string _talentTreeBase = @"http://www.worldofwarcraft.com/shared/global/talents/{0}/data.js";
-        private static string _talentsBase = @"http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}";
-        
         private SerializableDictionary<int, string> _treeNames = new SerializableDictionary<int, string>();
 
         [System.Xml.Serialization.XmlElement("Trees")]
@@ -140,8 +136,8 @@ namespace Rawr
             if (fullyQualified())
             {
 				WebRequestWrapper wrw = new WebRequestWrapper();
-                string talentTree = wrw.DownloadText(String.Format(_talentTreeBase, _class.ToString().ToLower()));
-                string talentCode = wrw.DownloadXml(String.Format(_talentsBase, _region == Character.CharacterRegion.US ? "www" : "eu", _realm, _name)).SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
+                string talentTree = wrw.DownloadClassTalentTree(_class);
+                string talentCode = wrw.DownloadCharacterTalentTree(_name,_region,_realm).SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
                 populateTrees(talentTree, talentCode);
                 
             }

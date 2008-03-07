@@ -6,7 +6,8 @@ using System.Configuration;
 using System.Threading;
 using System.IO;
 using System.Xml;
-//using log4net;
+using System.Drawing;
+using log4net;
 
 /*TODO: Make user actions (not system actions trying to refresh itself) override last fatal error and try again.
  * and if worked, reset fatalerror.  Another option would be to add a status panel like outlook and
@@ -16,7 +17,7 @@ namespace Rawr
 {
 	public class WebRequestWrapper
 	{
-		//private static readonly ILog log = LogManager.GetLogger(typeof(WebRequestWrapper));
+		private static readonly ILog log = LogManager.GetLogger(typeof(WebRequestWrapper));
 
 		private class DownloadRequest
 		{
@@ -24,7 +25,6 @@ namespace Rawr
 		    public string localPath;
 			public string error;
 		}
-
 		private Queue<DownloadRequest> _downloadRequests;
 		private List<DownloadRequest> _failedRequests;
 		private Thread[] _webRequestThreads;
@@ -48,6 +48,115 @@ namespace Rawr
 			_proxyPort = Rawr.Properties.NetworkSettings.Default.ProxyPort;
 			_proxyUserName = Rawr.Properties.NetworkSettings.Default.ProxyUserName;
 			_proxyPassword = Rawr.Properties.NetworkSettings.Default.ProxyPassword;
+		}
+
+
+		public string DownloadClassTalentTree(Character.CharacterClass characterClass)
+		{
+			//http://www.worldofwarcraft.com/shared/global/talents/{0}/data.js
+			return DownloadText(string.Format(Properties.NetworkSettings.Default.ClassTalentURI, characterClass.ToString().ToLower()));
+		}
+
+		public XmlDocument DownloadCharacterTalentTree(string characterName, Character.CharacterRegion region, string realm)
+		{
+			//http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}
+			string domain = region == Character.CharacterRegion.US ? "www" : "eu";
+			XmlDocument doc = null;
+			if (!String.IsNullOrEmpty(characterName))
+			{
+				doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.CharacterTalentURI,
+													domain, realm, characterName));
+			}
+			return doc;
+		}
+
+		public XmlDocument DownloadCharacterSheet(string characterName, Character.CharacterRegion region, string realm)
+		{
+			//http://{0}.wowarmory.com/character-sheet.xml?r={1}&n={2}
+			string domain = region == Character.CharacterRegion.US ? "www" : "eu";
+			XmlDocument doc = null;
+			if (!String.IsNullOrEmpty(characterName))
+			{
+				doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.CharacterSheetURI,
+													domain, realm, characterName));
+			}
+			return doc;
+		}
+
+		public XmlDocument DownloadUpgrades(string characterName, Character.CharacterRegion region, string realm, int itemId)
+		{
+			//http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}
+			string domain = region == Character.CharacterRegion.US ? "www" : "eu";
+			XmlDocument doc = null;
+			if (!String.IsNullOrEmpty(characterName))
+			{
+				doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemUpgradeURI,
+													domain, realm, characterName, itemId.ToString()));
+			}
+			return doc;
+		}
+
+		public XmlDocument DownloadItemToolTipSheet(string id)
+		{
+			XmlDocument doc = null;
+			if (!String.IsNullOrEmpty(id))
+			{
+				doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ToolTipSheetURI, id));
+			}
+			return doc;
+		}
+
+		/// <summary>
+		/// Downloads the Item icon
+		/// </summary>
+		/// <param name="iconName">the name of the item icon to download, no extension, no path</param>
+		/// <returns>The full path to the downloaded icon.  Null is returned if no icon  could be downloaded</returns>
+		public string DownloadItemIcon(string iconName)
+		{
+			string filePath = Path.Combine(ItemImageCachePath, iconName + ".jpg");
+			DownloadFile(Properties.NetworkSettings.Default.WoWItemIconURI + iconName + ".jpg",
+							filePath);
+			if (!File.Exists(filePath))
+			{
+				filePath = null;
+			}
+			return filePath;
+		}
+		
+		/// <summary>
+		/// Downloads the icon associated with the talent passed in
+		/// </summary>
+		/// <param name="charClass">CharacterClass of the given icon</param>
+		/// <param name="talentTree">name of the talent tree</param>
+		/// <param name="talentName">name of the talent</param>
+		/// <returns>The full path to the downloaded icon.  Null is returned if no icon could be downloaded</returns>
+		public string DownloadTalentIcon(Character.CharacterClass charClass, string talentTree, string talentName)
+		{
+			string imageName = talentTree + "_" + talentName + ".jpg";
+            string fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower()+"\\"+imageName);
+
+			if (!String.IsNullOrEmpty(talentTree) && !String.IsNullOrEmpty(talentName))
+			{
+				//0 = class, 1=tree, 2=talentname - all lowercase
+				//@"http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
+				string uri = string.Format(Properties.NetworkSettings.Default.WoWTalentIconURI, charClass.ToString().ToLower(),
+												talentTree.ToLower(),talentName.ToLower());
+				DownloadFile(uri, fullPathToSave);
+			}
+			if (!File.Exists(fullPathToSave))
+			{
+				fullPathToSave = null;
+			}
+			return fullPathToSave;
+		}
+
+		/// <summary>
+		/// Downloads the temp image for use as an icon.
+		/// </summary>
+		/// <returns>Full path to the temp image.</returns>
+		public string DownloadTempImage()
+		{
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -78,37 +187,44 @@ namespace Rawr
 		}
 
 		/// <summary>
-		/// Download an Icon
-		/// </summary>
-		/// <param name="iconName">Name of icon to download</param>
-		/// <param name="localPath">Local path to save the downloaded file</param>
-		public void DownloadIcon(string iconName, string localPath)
-		{
-			if (iconName.StartsWith("http://"))
-				DownloadFile(iconName, localPath);
-			else
-				DownloadFile(Properties.NetworkSettings.Default.WoWIconURI + iconName + ".jpg", localPath);
-		}
-
-		/// <summary>
 		/// Downloads an Icon Asyncronously
 		/// </summary>
-		/// <param name="iconPath"></param>
-		/// <param name="localPath"></param>
-		public void DownloadIconAsync(string iconName, string localPath)
+		/// <param name="iconPath">The name of the icon to download.  No extension, No Path.</param>
+		public void DownloadItemIconAsync(string iconName)
 		{
 			DownloadRequest dl = new DownloadRequest();
-			dl.serverPath = Properties.NetworkSettings.Default.WoWIconURI + iconName + ".jpg";
-			dl.localPath = localPath;
+			dl.serverPath = Properties.NetworkSettings.Default.WoWItemIconURI + iconName + ".jpg";
+			dl.localPath = Path.Combine(ItemImageCachePath, iconName + ".jpg");
 			InitiateRequest(dl);
 		}
 
-		/// <summary>
-		/// Used to set the proxy information on a WebClient Object
-		/// </summary>
-		/// <param name="client">The WebClient object to modify</param>
-		private void SetProxyInformation(WebClient client)
+
+		private string ItemImageCachePath
 		{
+			get
+			{
+				return (Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+									Properties.CacheSettings.Default.RelativeItemImageCache));
+			}
+		}
+
+		private string TalentImageCachePath
+		{
+			get
+			{
+				return (Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+								Properties.CacheSettings.Default.RelativeTalentImageCache));
+			}
+
+		}
+
+		/// <summary>
+		/// Used to create a web client with all of the appropriote proxy/useragent/etc settings
+		/// </summary>
+		private WebClient CreateWebClient()
+		{
+			WebClient client = new WebClient();
+			client.Headers.Add("user-agent", Properties.NetworkSettings.Default.UserAgent);
 			if (_useDefaultProxy)
 			{
 				client.Proxy = HttpWebRequest.DefaultWebProxy;
@@ -121,8 +237,8 @@ namespace Rawr
 			{
 				client.Proxy.Credentials = new NetworkCredential(_proxyUserName, _proxyPassword);
 			}
+			return client;
 		}
-
 
 		/// <summary>
 		/// Download a given file with the appropriote configuration information
@@ -131,26 +247,44 @@ namespace Rawr
 		/// <param name="localPath">local path, including file name,  where the downloaded file will be saved</param>
 		private void DownloadFile(string URI, string localPath)
 		{
-			if (!LastWasFatalError)
-			{
-				WebClient client = new WebClient();
-				SetProxyInformation(client);
-				try
-				{
-					client.DownloadFile(URI, localPath);
-				}
-				catch(Exception ex)
-				{
-					CheckExecptionForFatalError(ex);
-					//if on a client file download, there is an exception, 
-					//it will create a 0 byte file. We don't want that empty file.
-					if (File.Exists(localPath))
-					{
-						File.Delete(localPath);
-					}
-					throw;
-				}
-			}
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Downloading File from '" + URI + "' to '" + localPath + "'");
+            }
+            if (!LastWasFatalError && !File.Exists(localPath))
+            {
+                if (!Directory.Exists(Path.GetDirectoryName(localPath)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(localPath));
+                }
+                WebClient client = CreateWebClient();
+                try
+                {
+                    client.DownloadFile(URI, localPath);
+                }
+                catch (Exception ex)
+                {
+                    CheckExecptionForFatalError(ex);
+                    //if on a client file download, there is an exception, 
+                    //it will create a 0 byte file. We don't want that empty file.
+                    if (File.Exists(localPath))
+                    {
+                        File.Delete(localPath);
+                    }
+                    throw;
+                }
+            }
+            else if (log.IsDebugEnabled)
+            {
+                if (LastWasFatalError)
+                {
+                    log.Debug("FatalError: " + LastWasFatalError);
+                }
+                else if (File.Exists(localPath))
+                {
+                    log.Debug("File found in cache");
+                }
+            }
 		}
 
 		/// <summary>
@@ -170,15 +304,19 @@ namespace Rawr
 			}
 		}
 
-		public string DownloadText(string URI)
+		private string DownloadText(string URI)
 		{
-			WebClient webClient = new WebClient();
-			webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.1.4) Gecko/20070515 Firefox/2.0.0.4");
-			SetProxyInformation(webClient);
+			WebClient webClient = CreateWebClient();
 			string value = null;
 			try
 			{
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Downloading Text from '" + URI + "'");
+                }
 				value = webClient.DownloadString(URI);
+
+                log.Debug(value);
 			}
 			catch (Exception ex)
 			{
@@ -187,7 +325,7 @@ namespace Rawr
 			return value;
 		}
 
-		public XmlDocument DownloadXml(string URI)
+		private XmlDocument DownloadXml(string URI)
 		{
 			XmlDocument returnDocument = null;
 			string xml = DownloadText(URI);
@@ -252,6 +390,5 @@ namespace Rawr
 				}
 			}
 		}
-
 	}
 }

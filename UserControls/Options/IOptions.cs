@@ -10,5 +10,6 @@ namespace Rawr.UserControls.Options
 		void Cancel();
 		bool HasValidationErrors();
 		string DisplayName { get; }
+		string TreePosition { get; }
 	}
 }

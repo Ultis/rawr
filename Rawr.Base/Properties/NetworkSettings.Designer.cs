@@ -87,9 +87,9 @@ namespace Rawr.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
         [global::System.Configuration.DefaultSettingValueAttribute("http://www.wowarmory.com/images/icons/64x64/")]
-        public string WoWIconURI {
+        public string WoWItemIconURI {
             get {
-                return ((string)(this["WoWIconURI"]));
+                return ((string)(this["WoWItemIconURI"]));
             }
         }
         
@@ -126,6 +126,104 @@ namespace Rawr.Properties {
             }
             set {
                 this["LoginToFirewall"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; bgft) ")]
+        public string UserAgent_IE7 {
+            get {
+                return ((string)(this["UserAgent_IE7"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1) ")]
+        public string UserAgent_IE6 {
+            get {
+                return ((string)(this["UserAgent_IE6"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.1.4) Gecko/20070515 Firefo" +
+            "x/2.0.0.4")]
+        public string UserAgent_FireFox2 {
+            get {
+                return ((string)(this["UserAgent_FireFox2"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.1.4) Gecko/20070515 Firefo" +
+            "x/2.0.0.4")]
+        public string UserAgent {
+            get {
+                return ((string)(this["UserAgent"]));
+            }
+            set {
+                this["UserAgent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.worldofwarcraft.com/shared/global/talents/{0}/data.js")]
+        public string ClassTalentURI {
+            get {
+                return ((string)(this["ClassTalentURI"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}")]
+        public string CharacterTalentURI {
+            get {
+                return ((string)(this["CharacterTalentURI"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://{0}.wowarmory.com/character-sheet.xml?r={1}&n={2}")]
+        public string CharacterSheetURI {
+            get {
+                return ((string)(this["CharacterSheetURI"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.wowarmory.com/item-tooltip.xml?i={0}")]
+        public string ToolTipSheetURI {
+            get {
+                return ((string)(this["ToolTipSheetURI"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}")]
+        public string ItemUpgradeURI {
+            get {
+                return ((string)(this["ItemUpgradeURI"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg")]
+        public string WoWTalentIconURI {
+            get {
+                return ((string)(this["WoWTalentIconURI"]));
+            }
+            set {
+                this["WoWTalentIconURI"] = value;
             }
         }
     }

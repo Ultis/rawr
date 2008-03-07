@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Rawr.UserControls.Options;
+using System.Reflection;
 
 //TODO: Load option controls dynamically
 //TODO: Add ability for option controls to have an icon next to their display name in tree view
@@ -16,9 +17,75 @@ namespace Rawr.Forms
 	/// </summary>
 	public partial class Options : Form
 	{
+		private Dictionary<string, UserControl> _lookupTable;
 		public Options()
 		{
 			InitializeComponent();
+			_lookupTable = new Dictionary<string, UserControl>();
+		}
+
+		private void Options_Load(object sender, EventArgs e)
+		{
+			this.SuspendLayout();
+			Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+			for (int i = 0; i < types.Length; i++)
+			{
+				if (types[i].GetInterface(typeof(IOptions).FullName) != null && types[i].BaseType == typeof(UserControl)) 
+				{
+					UserControl userControl = Activator.CreateInstance(types[i]) as UserControl;
+					IOptions optionCast = userControl as IOptions;
+					if (userControl != null && optionCast != null)
+					{
+						userControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+									| System.Windows.Forms.AnchorStyles.Left)
+									| System.Windows.Forms.AnchorStyles.Right)));
+						userControl.Location = new System.Drawing.Point(3, 3);
+						userControl.Name = optionCast.TreePosition;
+						userControl.Size = new System.Drawing.Size(297, 334);
+						userControl.TabIndex = 0;
+						userControl.Visible = false;
+						panel1.Controls.Add(userControl);
+						AddNodesToTree(optionCast.TreePosition);
+						_lookupTable.Add(optionCast.TreePosition, userControl);
+					}
+				}
+			}
+			treeView1.ExpandAll();
+			if (treeView1.Nodes.Count > 0)
+			{
+				treeView1.SelectedNode = treeView1.Nodes[0];
+			}
+			this.ResumeLayout();
+		}
+
+		private void AddNodesToTree(string treeNodePosition)
+		{
+			string[] splitPosition = treeNodePosition.Split('|');
+			SearchAndAddToSubTree(splitPosition, 0, treeView1.Nodes, treeNodePosition);
+		}
+
+		private void SearchAndAddToSubTree(string[] splitPosition,int startPositon, TreeNodeCollection nodes, string key)
+		{
+			TreeNode tempNode = null;
+			if (splitPosition.Length > startPositon)
+			{
+				for (int i = 0; i < nodes.Count; i++)
+				{
+					if (nodes[i].Text == splitPosition[startPositon])
+					{
+						tempNode = nodes[i];
+						break;
+					}
+				}
+				if (tempNode == null)
+				{
+					tempNode = new TreeNode(splitPosition[startPositon]);
+					//this has the side effect of creating a default options panel for a root level node.
+					tempNode.Tag = key;
+					nodes.Add(tempNode);
+				}
+				SearchAndAddToSubTree(splitPosition, startPositon + 1, tempNode.Nodes, key);
+			}
 		}
 
 		private void OK_Click(object sender, EventArgs e)
@@ -74,11 +141,18 @@ namespace Rawr.Forms
 			DialogResult = DialogResult.Cancel;
 		}
 
-		private void Options_Load(object sender, EventArgs e)
+		private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			treeView1.ExpandAll();
-			//TODO: load option controls onto panel dynamically to make it easier for
-			// developers to add option menus
+			if (treeView1.SelectedNode != null)
+			{
+				this.SuspendLayout();
+				for (int i = 0; i < panel1.Controls.Count; i++)
+				{
+					panel1.Controls[i].Visible = false;
+				}
+				_lookupTable[treeView1.SelectedNode.Tag.ToString()].Visible = true;
+				this.ResumeLayout();
+			}
 		}
 	}
 }
