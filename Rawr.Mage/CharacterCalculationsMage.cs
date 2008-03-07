@@ -322,6 +322,9 @@ namespace Rawr.Mage
                 case "ABAM":
                     s = new ABAM(Character, this);
                     break;
+                case "ABAMP":
+                    s = new ABAMP(Character, this);
+                    break;
                 case "AB3AMSc":
                     s = new AB3AMSc(Character, this);
                     break;
@@ -426,7 +429,7 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrBSc", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM", "ABAM3Sc2CCAM", "ABAM3FrBCCAM", "ABAM3FrBScCCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold" };
+            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAMP", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrBSc", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM", "ABAM3Sc2CCAM", "ABAM3FrBCCAM", "ABAM3FrBScCCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold" };
             foreach (string spell in spellList)
             {
                 Spell s = GetSpell(spell);

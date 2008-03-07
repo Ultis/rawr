@@ -722,11 +722,11 @@ namespace Rawr.Mage
         }
     }
 
-    class ABAM : SpellCycle
+    class ABAMP : SpellCycle
     {
-        public ABAM(Character character, CharacterCalculationsMage calculations)
+        public ABAMP(Character character, CharacterCalculationsMage calculations)
         {
-            Name = "ABAM";
+            Name = "ABAMP";
             ABCycle = true;
 
             BaseSpell AB = (BaseSpell)calculations.GetSpell("Arcane Blast 1,0");
@@ -735,6 +735,23 @@ namespace Rawr.Mage
             AddSpell(AB, calculations);
             AddSpell(AM, calculations);
             AddPause(8 - AM.CastTime - AB.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class ABAM : SpellCycle
+    {
+        public ABAM(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABAM";
+            ABCycle = true;
+
+            BaseSpell AB = (BaseSpell)calculations.GetSpell("Arcane Blast");
+            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
+
+            AddSpell(AB, calculations);
+            AddSpell(AM, calculations);
 
             Calculate(character, calculations);
         }

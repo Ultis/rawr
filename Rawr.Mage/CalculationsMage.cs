@@ -62,7 +62,8 @@ namespace Rawr.Mage
                     "Spell Info:Fireball",
                     "Spell Info:FireballScorch*Must enable Maintain Scorch and have points in Improved Scorch talent to enable",
                     "Spell Info:Frostbolt",
-                    "Spell Info:ABAM",
+                    "Spell Info:ABAMP*Pause so that AB debuff runs out mid-cast",
+                    "Spell Info:ABAM*Spam with no pause",
                     "Spell Info:AB3AMSc*Prefer pause over longer filler",
                     "Spell Info:ABAM3Sc*Prefer pause over longer filler",
                     "Spell Info:ABAM3Sc2*Fill until debuff almost out",
@@ -341,6 +342,7 @@ namespace Rawr.Mage
             }
             if (calculationOptions.ABCycles)
             {
+                spellList.Add("ABAMP");
                 spellList.Add("ABAM");
                 spellList.Add("AB3AMSc");
                 spellList.Add("ABAM3Sc");
