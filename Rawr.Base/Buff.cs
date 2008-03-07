@@ -594,6 +594,13 @@ namespace Rawr
                         
                         });
 
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Leader of the Pack",
+                            Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { CritRating = 22.08f * 5f }
+                        });
+
 						//american coca-cola
 						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Buff>));
 						StringBuilder sb = new StringBuilder();

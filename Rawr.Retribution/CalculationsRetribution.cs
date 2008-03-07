@@ -458,8 +458,14 @@ namespace Rawr.Retribution
                         BonusIntellectMultiplier = 0.03f,
                         BonusSpiritMultiplier = 0.1f,
                         AttackPower = 442,
-                        CritRating = 3.73f * 22.08f
+                        CritRating = 3.73f * 22.08f                        
                     };
+                    //Expertise for Humans
+                    if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.TwoHandMace
+                        || character.MainHand.Type == Item.ItemType.TwoHandSword))
+                    {
+                        statsRace.ExpertiseRating = 5f * 3.9f;
+                    }
                     break;
                 case Character.CharacterRace.Dwarf:
                     statsRace = new Stats()
@@ -479,6 +485,8 @@ namespace Rawr.Retribution
                     statsRace = new Stats();
                     break;
             }
+
+            
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsEnchants = GetEnchantsStats(character);
@@ -526,7 +534,7 @@ namespace Rawr.Retribution
             statsTotal.Strength *= 1f + 0.02f * ((character.CalculationOptions.ContainsKey("DivineStrength")) ? float.Parse(character.CalculationOptions["DivineStrength"]) : 0f);
             statsTotal.Stamina = (staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier)));          
 
-            statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f))));
+            statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina-staBase) * 10f))));
 
             statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + (statsTotal.Strength - strBase )* 2.0f) * (1f + statsTotal.BonusAttackPowerMultiplier));
 
