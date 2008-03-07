@@ -68,11 +68,13 @@ namespace Rawr.Mage
                     "Spell Info:ABAM3Sc2*Fill until debuff almost out",
                     "Spell Info:ABAM3FrB*Prefer pause over longer filler",
                     "Spell Info:ABAM3FrB2*Fill until debuff almost out",
-                    "Spell Info:ABAM3ScCCAM*Arcane Missiles on clearcast",
-                    "Spell Info:ABAM3Sc2CCAM*Arcane Missiles on clearcast",
-                    "Spell Info:ABAM3FrB2CCAM*Arcane Missiles on clearcast",
+                    "Spell Info:ABAM3ScCC*AM when AM procs clearcast",
+                    "Spell Info:ABAM3Sc2CC*AM when AM procs clearcast",
+                    "Spell Info:ABAM3FrBCC*AM when AM procs clearcast",
+                    "Spell Info:ABAM3FrBScCC*AM when AM procs clearcast",
                     "Spell Info:ABFrB3FrB*Prefer pause over longer filler",
-                    "Spell Info:ABFrB3FrB2*Fill until debuff almost out",
+                    "Spell Info:ABFrB3FrBSc*Fill until debuff almost out, Scorch used at specific haste levels where adding another Frostbolt results in drop of AB debuff and alternative results in relatively large pause",
+                    //"Spell Info:AB3Sc*Fill until debuff almost out",
                     "Spell Info:ABFB3FBSc*Typically FB-FB-Sc filler",
                     "Spell Info:Arcane Explosion",
                     "Spell Info:Blizzard",
@@ -345,11 +347,13 @@ namespace Rawr.Mage
                 spellList.Add("ABAM3FrB");
                 spellList.Add("ABAM3FrB2");
                 spellList.Add("ABFrB3FrB");
-                spellList.Add("ABFrB3FrB2");
+                spellList.Add("ABFrB3FrBSc");
                 spellList.Add("ABFB3FBSc");
+                //spellList.Add("AB3Sc");
                 spellList.Add("ABAM3ScCCAM");
                 spellList.Add("ABAM3Sc2CCAM");
-                spellList.Add("ABAM3FrB2CCAM");
+                spellList.Add("ABAM3FrBCCAM");
+                spellList.Add("ABAM3FrBScCCAM");
             }
             if (calculationOptions.AoeDuration > 0)
             {
@@ -1427,20 +1431,23 @@ namespace Rawr.Mage
                     }
 
                     //Intellect
-                    CharacterCalculationsMage calcAtAdd = baseCalc;
+                    CharacterCalculationsMage calcAtAdd;
+                    Stats statsAtAdd = baseCalc.BasicStats;
+                    float baseInt = baseCalc.BasicStats.Intellect;
                     float intToAdd = 0f;
-                    while (baseCalc.OverallPoints == calcAtAdd.OverallPoints && intToAdd < 2)
+                    while (baseInt == statsAtAdd.Intellect && intToAdd < 2)
                     {
                         intToAdd += 0.01f;
-                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToAdd } }) as CharacterCalculationsMage;
+                        statsAtAdd = GetCharacterStats(character, new Item() { Stats = new Stats() { Intellect = intToAdd } });
                     }
+                    calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToAdd } }) as CharacterCalculationsMage;
 
-                    CharacterCalculationsMage calcAtSubtract = baseCalc;
+                    Stats statsAtSubtract = baseCalc.BasicStats;
                     float intToSubtract = 0f;
-                    while (baseCalc.OverallPoints == calcAtSubtract.OverallPoints && intToSubtract > -2)
+                    while (baseInt == statsAtSubtract.Intellect && intToSubtract > -2)
                     {
                         intToSubtract -= 0.01f;
-                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToSubtract } }) as CharacterCalculationsMage;
+                        statsAtSubtract = GetCharacterStats(character, new Item() { Stats = new Stats() { Intellect = intToSubtract } });
                     }
                     intToSubtract += 0.01f;
 
@@ -1458,20 +1465,22 @@ namespace Rawr.Mage
                     comparisonList.Add(comparison);
 
                     //Spirit
-                    calcAtAdd = baseCalc;
+                    statsAtAdd = baseCalc.BasicStats;
+                    float baseSpi = baseCalc.BasicStats.Spirit;
                     float spiToAdd = 0f;
-                    while (baseCalc.OverallPoints == calcAtAdd.OverallPoints && spiToAdd < 2)
+                    while (baseSpi == statsAtAdd.Spirit && spiToAdd < 2)
                     {
                         spiToAdd += 0.01f;
-                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } }) as CharacterCalculationsMage;
+                        statsAtAdd = GetCharacterStats(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } });
                     }
+                    calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } }) as CharacterCalculationsMage;
 
-                    calcAtSubtract = baseCalc;
+                    statsAtSubtract = baseCalc.BasicStats;
                     float spiToSubtract = 0f;
-                    while (baseCalc.OverallPoints == calcAtSubtract.OverallPoints && spiToSubtract > -2)
+                    while (baseSpi == statsAtSubtract.Spirit && spiToSubtract > -2)
                     {
                         spiToSubtract -= 0.01f;
-                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToSubtract } }) as CharacterCalculationsMage;
+                        statsAtSubtract = GetCharacterStats(character, new Item() { Stats = new Stats() { Spirit = spiToSubtract } });
                     }
                     spiToSubtract += 0.01f;
 

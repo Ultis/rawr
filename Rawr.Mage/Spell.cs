@@ -820,7 +820,7 @@ namespace Rawr.Mage
             AddSpell(AB22, calculations);
             AddSpell(AM, calculations);
             float gap = 8 - AM.CastTime;
-            while (gap >= AB30.CastTime + calculations.Latency)
+            while (gap >= AB30.CastTime)
             {
                 AddSpell(Sc, calculations);
                 gap -= Sc.CastTime;
@@ -978,6 +978,41 @@ namespace Rawr.Mage
         }
     }
 
+    class ABFrB3FrBSc : SpellCycle
+    {
+        public ABFrB3FrBSc(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABFrB3FrBSc";
+            ABCycle = true;
+
+            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
+            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
+            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+
+            AddSpell(AB30, calculations);
+            AddSpell(FrB, calculations);
+            AddSpell(AB11, calculations);
+            AddSpell(FrB, calculations);
+            AddSpell(AB22, calculations);
+            float gap = 8;
+            while (gap >= FrB.CastTime)
+            {
+                AddSpell(FrB, calculations);
+                gap -= FrB.CastTime;
+            }
+            while (gap >= Sc.CastTime)
+            {
+                AddSpell(Sc, calculations);
+                gap -= Sc.CastTime;
+            }
+            if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
     class ABFB3FBSc : SpellCycle
     {
         public ABFB3FBSc(Character character, CharacterCalculationsMage calculations)
@@ -997,12 +1032,39 @@ namespace Rawr.Mage
             AddSpell(FB, calculations);
             AddSpell(AB22, calculations);
             float gap = 8;
-            while (gap >= AB30.CastTime + calculations.Latency)
+            while (gap >= FB.CastTime)
             {
                 AddSpell(FB, calculations);
                 gap -= FB.CastTime;
             }
-            while (gap >= AB30.CastTime + calculations.Latency)
+            while (gap >= Sc.CastTime)
+            {
+                AddSpell(Sc, calculations);
+                gap -= Sc.CastTime;
+            }
+            if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class AB3Sc : SpellCycle
+    {
+        public AB3Sc(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "AB3Sc";
+            ABCycle = true;
+
+            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell AB01 = (BaseSpell)calculations.GetSpell("Arcane Blast 0,1");
+            BaseSpell AB12 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,2");
+            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+
+            AddSpell(AB30, calculations);
+            AddSpell(AB01, calculations);
+            AddSpell(AB12, calculations);
+            float gap = 8;
+            while (gap >= Sc.CastTime)
             {
                 AddSpell(Sc, calculations);
                 gap -= Sc.CastTime;
@@ -1056,7 +1118,7 @@ namespace Rawr.Mage
     {
         public ABAM3ScCCAM(Character character, CharacterCalculationsMage calculations)
         {
-            Name = "ABAM3ScCCAM";
+            Name = "ABAM3ScCC";
             ABCycle = true;
 
             //AMCC-AB0                       0.1
@@ -1136,7 +1198,7 @@ namespace Rawr.Mage
     {
         public ABAM3Sc2CCAM(Character character, CharacterCalculationsMage calculations)
         {
-            Name = "ABAM3Sc2CCAM";
+            Name = "ABAM3Sc2CC";
             ABCycle = true;
 
             //AMCC-AB0                       0.1
@@ -1194,7 +1256,7 @@ namespace Rawr.Mage
             chain4.AddSpell(AMc0, calculations);
             chain4.AddSpell(Sc0, calculations);
             float gap = 8 - AMc0.CastTime - Sc0.CastTime;
-            while (gap >= AB3.CastTime + calculations.Latency)
+            while (gap >= Sc.CastTime)
             {
                 chain4.AddSpell(Sc, calculations);
                 gap -= Sc.CastTime;
@@ -1212,11 +1274,11 @@ namespace Rawr.Mage
         }
     }
 
-    class ABAM3FrB2CCAM : Spell
+    class ABAM3FrBCCAM : Spell
     {
-        public ABAM3FrB2CCAM(Character character, CharacterCalculationsMage calculations)
+        public ABAM3FrBCCAM(Character character, CharacterCalculationsMage calculations)
         {
-            Name = "ABAM3FrB2CCAM";
+            Name = "ABAM3FrBCC";
             ABCycle = true;
 
             //AMCC-AB0                       0.1
@@ -1274,10 +1336,108 @@ namespace Rawr.Mage
             chain4.AddSpell(AMc0, calculations);
             chain4.AddSpell(FrB0, calculations);
             float gap = 8 - AMc0.CastTime - FrB0.CastTime;
+            while (gap - AB3.CastTime >= FrB.CastTime)
+            {
+                chain4.AddSpell(FrB, calculations);
+                gap -= FrB.CastTime;
+            }
+            if (AB3.CastTime < gap) chain4.AddPause(gap - AB3.CastTime + calculations.Latency);
+            chain4.AddSpell(AB3, calculations);
+            chain4.Calculate(character, calculations);
+
+            CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
+            CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
+            DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
+            ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+
+            Sequence = chain4.Sequence;
+        }
+    }
+
+    class ABAM3FrBScCCAM : Spell
+    {
+        public ABAM3FrBScCCAM(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABAM3FrBScCC";
+            ABCycle = true;
+
+            //AMCC-AB0                       0.1
+            //AM?0-AB1-AMCC-AB0              0.9*0.1
+            //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
+            //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
+
+            //TIME = 0.1*[AMCC+AB0] + 0.9*0.1*[AM+AMCC+AB0+AB1] + 0.9*0.9*0.1*[2*AM+AMCC+AB0+AB1+AB2] + 0.9*0.9*0.9*[3*AM+AB1+AB2+AB3?]
+            //     = [0.1 + 0.9*0.1 + 0.9*0.9*0.1]*[AMCC+AB0] + [0.9*0.1 + 2*0.9*0.9*0.1 + 3*0.9*0.9*0.9]*AM + 0.9*AB1 + 0.9*0.9*AB2 + 0.9*0.9*0.9*[S+AB3?]
+            //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
+            //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
+
+            Spell AMc0 = new ArcaneMissiles(character, calculations, true, false, false);
+            Spell AMCC = new ArcaneMissilesCC(character, calculations);
+            Spell AB0 = new ArcaneBlast(character, calculations, 0, 0, false);
+            Spell AB1 = new ArcaneBlast(character, calculations, 1, 1, false);
+            Spell AB2 = new ArcaneBlast(character, calculations, 2, 2, false);
+            Spell FrB0 = new Frostbolt(character, calculations, false);
+
+            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
+            BaseSpell AB3 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
+            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+
+            float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
+
+            //AMCC-AB0                       0.1
+            SpellCycle chain1 = new SpellCycle();
+            chain1.AddSpell(AMCC, calculations);
+            chain1.AddSpell(AB0, calculations);
+            chain1.Calculate(character, calculations);
+
+            //AM?0-AB1-AMCC-AB0              0.9*0.1
+            SpellCycle chain2 = new SpellCycle();
+            chain2.AddSpell(AMc0, calculations);
+            chain2.AddSpell(AB1, calculations);
+            chain2.AddSpell(AMCC, calculations);
+            chain2.AddSpell(AB0, calculations);
+            chain2.Calculate(character, calculations);
+
+            //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
+            SpellCycle chain3 = new SpellCycle();
+            chain3.AddSpell(AMc0, calculations);
+            chain3.AddSpell(AB1, calculations);
+            chain3.AddSpell(AMc0, calculations);
+            chain3.AddSpell(AB2, calculations);
+            chain3.AddSpell(AMCC, calculations);
+            chain3.AddSpell(AB0, calculations);
+            chain3.Calculate(character, calculations);
+
+            //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
+            SpellCycle chain4 = new SpellCycle();
+            chain4.AddSpell(AMc0, calculations);
+            chain4.AddSpell(AB1, calculations);
+            chain4.AddSpell(AMc0, calculations);
+            chain4.AddSpell(AB2, calculations);
+            chain4.AddSpell(AMc0, calculations);
+            float gap = 8 - AMc0.CastTime;
+            bool extraAM = false;
+            while (gap >= AM.CastTime)
+            {
+                chain4.AddSpell(AM, calculations);
+                gap -= AM.CastTime;
+                extraAM = true;
+            }
+            if (!extraAM)
+            {
+                chain4.AddSpell(FrB0, calculations);
+                gap -= FrB0.CastTime;
+            }
             while (gap >= FrB.CastTime)
             {
                 chain4.AddSpell(FrB, calculations);
                 gap -= FrB.CastTime;
+            }
+            while (gap >= Sc.CastTime)
+            {
+                chain4.AddSpell(Sc, calculations);
+                gap -= Sc.CastTime;
             }
             if (AB3.CastTime < gap) chain4.AddPause(gap - AB3.CastTime + calculations.Latency);
             chain4.AddSpell(AB3, calculations);
