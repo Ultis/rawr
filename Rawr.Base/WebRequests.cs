@@ -7,7 +7,6 @@ using System.Threading;
 using System.IO;
 using System.Xml;
 using System.Drawing;
-using log4net;
 
 /*TODO: Make user actions (not system actions trying to refresh itself) override last fatal error and try again.
  * and if worked, reset fatalerror.  Another option would be to add a status panel like outlook and
@@ -17,7 +16,6 @@ namespace Rawr
 {
 	public class WebRequestWrapper
 	{
-		private static readonly ILog log = LogManager.GetLogger(typeof(WebRequestWrapper));
 
 		private class DownloadRequest
 		{
@@ -247,10 +245,7 @@ namespace Rawr
 		/// <param name="localPath">local path, including file name,  where the downloaded file will be saved</param>
 		private void DownloadFile(string URI, string localPath)
 		{
-            if (log.IsDebugEnabled)
-            {
-                log.Debug("Downloading File from '" + URI + "' to '" + localPath + "'");
-            }
+            
             if (!LastWasFatalError && !File.Exists(localPath))
             {
                 if (!Directory.Exists(Path.GetDirectoryName(localPath)))
@@ -274,17 +269,7 @@ namespace Rawr
                     throw;
                 }
             }
-            else if (log.IsDebugEnabled)
-            {
-                if (LastWasFatalError)
-                {
-                    log.Debug("FatalError: " + LastWasFatalError);
-                }
-                else if (File.Exists(localPath))
-                {
-                    log.Debug("File found in cache");
-                }
-            }
+           
 		}
 
 		/// <summary>
@@ -310,13 +295,7 @@ namespace Rawr
 			string value = null;
 			try
 			{
-                if (log.IsDebugEnabled)
-                {
-                    log.Debug("Downloading Text from '" + URI + "'");
-                }
 				value = webClient.DownloadString(URI);
-
-                log.Debug(value);
 			}
 			catch (Exception ex)
 			{

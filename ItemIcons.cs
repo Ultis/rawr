@@ -8,13 +8,13 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using log4net;
+//using log4net;
 
 namespace Rawr
 {
     public static class ItemIcons
     {
-		private static readonly ILog log = LogManager.GetLogger(typeof(ItemIcons));
+		//private static readonly ILog log = LogManager.GetLogger(typeof(ItemIcons));
 
         private static ImageList _largeIcons = null;
 
@@ -59,16 +59,12 @@ namespace Rawr
 				webRequests.DownloadItemIconAsync(iconName);
             }
             
-			//the main GUI thread should not be made to sleep as it will cause white outs, a good solution to prevent 
-			//other interaction with the app while performing long running processes is to create a status form that is forced
-			//in front of the other forms and updates periodically with information, say on item 400 of 500 or 100 images
-			//left to download.  It also has a cancel button if the user doesn't want to wait anymore.
 			while (webRequests.RequestQueueCount > 0 && !WebRequestWrapper.LastWasFatalError)
             {
                 Thread.Sleep(200);
             }
 
-			//Display any error information appropriotly here,
+			//TODO: Display any error information appropriotly here,
 			//such as, proxy information incorrect or network connection down. Can get pretty detailed about exactly what went 
 			//wrong by analyzing the exception.
 			if (WebRequestWrapper.LastWasFatalError)
@@ -101,7 +97,6 @@ namespace Rawr
 				string pathToIcon = null;
                 try
                 {
-					log.Debug("Getting icon from the armory");
 					WebRequestWrapper wrapper = new WebRequestWrapper();
 					if (!WebRequestWrapper.LastWasFatalError)
 					{
@@ -116,7 +111,7 @@ namespace Rawr
                 }
                 catch(Exception ex)
                 {
-					log.Error("Exception trying to retrieve an icon from the armory", ex);
+					//log.Error("Exception trying to retrieve an icon from the armory", ex);
 					
                 }
 				if (String.IsNullOrEmpty(pathToIcon))
@@ -138,7 +133,7 @@ namespace Rawr
                 }
                 catch(Exception ex)
                 {
-					log.Error("Exception trying to load an icon from local", ex);
+					//log.Error("Exception trying to load an icon from local", ex);
                     MessageBox.Show(
                         "Rawr encountered an error while attempting to load a saved image. If you encounter this error multiple times, please ensure that Rawr is unzipped in a location that you have full file read/write access, such as your Desktop, or My Documents.");
                 }
