@@ -32,6 +32,7 @@ namespace Rawr.Mage
         public float AoeDuration { get; set; }
         public bool SmartOptimization { get; set; }
         public float DpsTime { get; set; }
+        public bool DrumsOfBattle { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -107,6 +108,7 @@ namespace Rawr.Mage
             AoeDuration = float.Parse(character.CalculationOptions["AoeDuration"], CultureInfo.InvariantCulture);
             SmartOptimization = int.Parse(character.CalculationOptions["SmartOptimization"], CultureInfo.InvariantCulture) == 1;
             DpsTime = float.Parse(character.CalculationOptions["DpsTime"], CultureInfo.InvariantCulture);
+            DrumsOfBattle = int.Parse(character.CalculationOptions["DrumsOfBattle"], CultureInfo.InvariantCulture) == 1;
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"], CultureInfo.InvariantCulture);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"], CultureInfo.InvariantCulture);
@@ -248,6 +250,7 @@ namespace Rawr.Mage
         public bool FlameCap { get; set; }
         public bool Trinket1 { get; set; }
         public bool Trinket2 { get; set; }
+        public bool DrumsOfBattle { get; set; }
         public bool WaterElemental { get; set; }
         public bool Combustion { get; set; }
         public float CombustionDuration { get; set; }
@@ -455,6 +458,9 @@ namespace Rawr.Mage
                         case 3:
                         case 4:
                             sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i] / ManaPotionTime));
+                            break;
+                        case 5:
+                            sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i] / GlobalCooldown));
                             break;
                         default:
                             sb.AppendLine(String.Format("{0}: {1:F} sec", SolutionLabel[i], Solution[i]));

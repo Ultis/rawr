@@ -76,6 +76,8 @@
             this.label22 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.checkBoxDrumsOfBattle = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -122,7 +124,7 @@
             "71",
             "72",
             "73"});
-            this.comboBoxAoeTargetLevel.Location = new System.Drawing.Point(104, 388);
+            this.comboBoxAoeTargetLevel.Location = new System.Drawing.Point(104, 408);
             this.comboBoxAoeTargetLevel.Name = "comboBoxAoeTargetLevel";
             this.comboBoxAoeTargetLevel.Size = new System.Drawing.Size(85, 21);
             this.comboBoxAoeTargetLevel.TabIndex = 4;
@@ -131,7 +133,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 391);
+            this.label2.Location = new System.Drawing.Point(3, 411);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(95, 13);
             this.label2.TabIndex = 3;
@@ -190,7 +192,7 @@
             // 
             // textBoxAoeTargets
             // 
-            this.textBoxAoeTargets.Location = new System.Drawing.Point(104, 415);
+            this.textBoxAoeTargets.Location = new System.Drawing.Point(104, 435);
             this.textBoxAoeTargets.Name = "textBoxAoeTargets";
             this.textBoxAoeTargets.Size = new System.Drawing.Size(85, 20);
             this.textBoxAoeTargets.TabIndex = 11;
@@ -199,7 +201,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 418);
+            this.label5.Location = new System.Drawing.Point(3, 438);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(68, 13);
             this.label5.TabIndex = 10;
@@ -207,7 +209,7 @@
             // 
             // textBoxArcaneResist
             // 
-            this.textBoxArcaneResist.Location = new System.Drawing.Point(104, 498);
+            this.textBoxArcaneResist.Location = new System.Drawing.Point(104, 518);
             this.textBoxArcaneResist.Name = "textBoxArcaneResist";
             this.textBoxArcaneResist.Size = new System.Drawing.Size(85, 20);
             this.textBoxArcaneResist.TabIndex = 13;
@@ -216,7 +218,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 501);
+            this.label6.Location = new System.Drawing.Point(3, 521);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(100, 13);
             this.label6.TabIndex = 12;
@@ -224,7 +226,7 @@
             // 
             // textBoxFireResist
             // 
-            this.textBoxFireResist.Location = new System.Drawing.Point(104, 524);
+            this.textBoxFireResist.Location = new System.Drawing.Point(104, 544);
             this.textBoxFireResist.Name = "textBoxFireResist";
             this.textBoxFireResist.Size = new System.Drawing.Size(85, 20);
             this.textBoxFireResist.TabIndex = 15;
@@ -233,7 +235,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 527);
+            this.label7.Location = new System.Drawing.Point(3, 547);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(83, 13);
             this.label7.TabIndex = 14;
@@ -241,7 +243,7 @@
             // 
             // textBoxFrostResist
             // 
-            this.textBoxFrostResist.Location = new System.Drawing.Point(104, 550);
+            this.textBoxFrostResist.Location = new System.Drawing.Point(104, 570);
             this.textBoxFrostResist.Name = "textBoxFrostResist";
             this.textBoxFrostResist.Size = new System.Drawing.Size(85, 20);
             this.textBoxFrostResist.TabIndex = 17;
@@ -250,7 +252,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(3, 553);
+            this.label8.Location = new System.Drawing.Point(3, 573);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(89, 13);
             this.label8.TabIndex = 16;
@@ -258,7 +260,7 @@
             // 
             // textBoxNatureResist
             // 
-            this.textBoxNatureResist.Location = new System.Drawing.Point(104, 576);
+            this.textBoxNatureResist.Location = new System.Drawing.Point(104, 596);
             this.textBoxNatureResist.Name = "textBoxNatureResist";
             this.textBoxNatureResist.Size = new System.Drawing.Size(85, 20);
             this.textBoxNatureResist.TabIndex = 19;
@@ -267,7 +269,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 579);
+            this.label9.Location = new System.Drawing.Point(3, 599);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(98, 13);
             this.label9.TabIndex = 18;
@@ -384,7 +386,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(3, 326);
+            this.label16.Location = new System.Drawing.Point(3, 346);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(58, 13);
             this.label16.TabIndex = 33;
@@ -393,7 +395,7 @@
             // checkBoxABCycles
             // 
             this.checkBoxABCycles.AutoSize = true;
-            this.checkBoxABCycles.Location = new System.Drawing.Point(104, 325);
+            this.checkBoxABCycles.Location = new System.Drawing.Point(104, 345);
             this.checkBoxABCycles.Name = "checkBoxABCycles";
             this.checkBoxABCycles.Size = new System.Drawing.Size(15, 14);
             this.checkBoxABCycles.TabIndex = 32;
@@ -420,7 +422,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(3, 346);
+            this.label18.Location = new System.Drawing.Point(3, 366);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(87, 13);
             this.label18.TabIndex = 37;
@@ -429,7 +431,7 @@
             // checkBoxMaintainScorch
             // 
             this.checkBoxMaintainScorch.AutoSize = true;
-            this.checkBoxMaintainScorch.Location = new System.Drawing.Point(104, 345);
+            this.checkBoxMaintainScorch.Location = new System.Drawing.Point(104, 365);
             this.checkBoxMaintainScorch.Name = "checkBoxMaintainScorch";
             this.checkBoxMaintainScorch.Size = new System.Drawing.Size(15, 14);
             this.checkBoxMaintainScorch.TabIndex = 36;
@@ -455,7 +457,7 @@
             // 
             // textBoxShadowResist
             // 
-            this.textBoxShadowResist.Location = new System.Drawing.Point(104, 602);
+            this.textBoxShadowResist.Location = new System.Drawing.Point(104, 622);
             this.textBoxShadowResist.Name = "textBoxShadowResist";
             this.textBoxShadowResist.Size = new System.Drawing.Size(85, 20);
             this.textBoxShadowResist.TabIndex = 41;
@@ -464,7 +466,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(3, 605);
+            this.label20.Location = new System.Drawing.Point(3, 625);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(105, 13);
             this.label20.TabIndex = 40;
@@ -472,7 +474,7 @@
             // 
             // textBoxEvocationWeapon
             // 
-            this.textBoxEvocationWeapon.Location = new System.Drawing.Point(104, 467);
+            this.textBoxEvocationWeapon.Location = new System.Drawing.Point(104, 487);
             this.textBoxEvocationWeapon.Name = "textBoxEvocationWeapon";
             this.textBoxEvocationWeapon.Size = new System.Drawing.Size(85, 20);
             this.textBoxEvocationWeapon.TabIndex = 43;
@@ -481,7 +483,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(3, 470);
+            this.label21.Location = new System.Drawing.Point(3, 490);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(96, 13);
             this.label21.TabIndex = 42;
@@ -489,7 +491,7 @@
             // 
             // textBoxAoeDuration
             // 
-            this.textBoxAoeDuration.Location = new System.Drawing.Point(104, 441);
+            this.textBoxAoeDuration.Location = new System.Drawing.Point(104, 461);
             this.textBoxAoeDuration.Name = "textBoxAoeDuration";
             this.textBoxAoeDuration.Size = new System.Drawing.Size(85, 20);
             this.textBoxAoeDuration.TabIndex = 45;
@@ -498,7 +500,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(3, 444);
+            this.label22.Location = new System.Drawing.Point(3, 464);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(96, 13);
             this.label22.TabIndex = 44;
@@ -507,7 +509,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(3, 366);
+            this.label23.Location = new System.Drawing.Point(3, 386);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(97, 13);
             this.label23.TabIndex = 47;
@@ -516,18 +518,39 @@
             // checkBoxSmartOptimization
             // 
             this.checkBoxSmartOptimization.AutoSize = true;
-            this.checkBoxSmartOptimization.Location = new System.Drawing.Point(104, 365);
+            this.checkBoxSmartOptimization.Location = new System.Drawing.Point(104, 385);
             this.checkBoxSmartOptimization.Name = "checkBoxSmartOptimization";
             this.checkBoxSmartOptimization.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSmartOptimization.TabIndex = 46;
             this.checkBoxSmartOptimization.UseVisualStyleBackColor = true;
             this.checkBoxSmartOptimization.CheckedChanged += new System.EventHandler(this.checkBoxSmartOptimization_CheckedChanged);
             // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(3, 326);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(82, 13);
+            this.label24.TabIndex = 49;
+            this.label24.Text = "Drums of Battle:";
+            // 
+            // checkBoxDrumsOfBattle
+            // 
+            this.checkBoxDrumsOfBattle.AutoSize = true;
+            this.checkBoxDrumsOfBattle.Location = new System.Drawing.Point(104, 325);
+            this.checkBoxDrumsOfBattle.Name = "checkBoxDrumsOfBattle";
+            this.checkBoxDrumsOfBattle.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxDrumsOfBattle.TabIndex = 48;
+            this.checkBoxDrumsOfBattle.UseVisualStyleBackColor = true;
+            this.checkBoxDrumsOfBattle.CheckedChanged += new System.EventHandler(this.checkBoxDrumsOfBattle_CheckedChanged);
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.label24);
+            this.Controls.Add(this.checkBoxDrumsOfBattle);
             this.Controls.Add(this.label23);
             this.Controls.Add(this.checkBoxSmartOptimization);
             this.Controls.Add(this.textBoxAoeDuration);
@@ -577,7 +600,7 @@
             this.Controls.Add(this.comboBoxTargetLevel);
             this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelMage";
-            this.Size = new System.Drawing.Size(204, 629);
+            this.Size = new System.Drawing.Size(204, 679);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -633,5 +656,7 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.CheckBox checkBoxSmartOptimization;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.CheckBox checkBoxDrumsOfBattle;
 	}
 }

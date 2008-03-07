@@ -264,7 +264,7 @@ namespace Rawr.Mage
             bool trinket2Available = IsItemActivatable(character.Trinket2);
             bool coldsnap = calculationOptions.ColdSnap == 1;
             float coldsnapCooldown = 8 * 60 * (1 - 0.1f * calculationOptions.IceFloes);
-            float combustionDuration = 0, combustionCooldown = 0, combustionCount = 0;
+            float combustionCount = 0;
 
             double trinket1cooldown = 0, trinket1duration = 0, trinket2cooldown = 0, trinket2duration = 0, t1length = 0, t2length = 0;
             bool t1ismg = false, t2ismg = false;
@@ -291,15 +291,16 @@ namespace Rawr.Mage
             for (int ap = 0; ap < 2; ap++)
             for (int iv = 0; iv < 2; iv++)
             for (int combustion = 0; combustion < 2; combustion++)
+            for (int drums = 0; drums < 2; drums++)
             for (int flameCap = 0; flameCap < 2; flameCap++)
             for (int trinket1 = 0; trinket1 < 2; trinket1++)
             for (int trinket2 = 0; trinket2 < 2; trinket2++)
             for (int destructionPotion = 0; destructionPotion < 2; destructionPotion++)
-                if ((mfAvailable || mf == 1) && (heroismAvailable || heroism == 1) && (apAvailable || ap == 1) && (ivAvailable || iv == 1) && (calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1) && (combustion == 1 || calculationOptions.Combustion == 1))
+                if ((mfAvailable || mf == 1) && (heroismAvailable || heroism == 1) && (apAvailable || ap == 1) && (ivAvailable || iv == 1) && (calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1) && (combustion == 1 || calculationOptions.Combustion == 1) && (drums == 1 || calculationOptions.DrumsOfBattle))
                 {
                     if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
                     {
-                        statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, character, additionalItem, ap == 0, mf == 0, iv == 0, heroism == 0, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0));
+                        statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, character, additionalItem, ap == 0, mf == 0, iv == 0, heroism == 0, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0, drums == 0));
                     }
                 }
 
@@ -366,8 +367,8 @@ namespace Rawr.Mage
                 if (calculationOptions.DragonsBreath == 1) spellList.Add("Dragon's Breath");
             }
 
-            int lpRows = 34;
-            int colOffset = 6;
+            int lpRows = 39;
+            int colOffset = 7;
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
             CompactLP lp = new CompactLP(lpRows, lpCols);
 
@@ -450,12 +451,12 @@ namespace Rawr.Mage
                     calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDuration * calculatedStats.WaterElementalDps;
             }
 
-            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time, aoe duration, flamestrike, cone of cold, blast wave, dragon's breath, combustion, combustion+mf, heroism+iv]
+            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time, aoe duration, flamestrike, cone of cold, blast wave, dragon's breath, combustion, combustion+mf, heroism+iv, drums, drums+mf, drums+heroism, drums+iv, drums+ap]
             double aplength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
             double ivlength = (1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 30f) / 180f)) * 20;
             double mflength = calculationOptions.MoltenFuryPercentage * calculatedStats.FightDuration;
             double dpivstackArea = calculatedStats.FightDuration;
-            if (mfAvailable && heroismAvailable) dpivstackArea -= 120;
+            //if (mfAvailable && heroismAvailable) dpivstackArea -= 120; // only applies if heroism and iv cannot stack
             double dpivlength = 15 * (int)(dpivstackArea / 360f);
             if (dpivstackArea % 360f < 195)
             {
@@ -474,7 +475,26 @@ namespace Rawr.Mage
             {
                 dpflamelength += 30;
             }
+            double drumsivlength = 20 * (int)(calculatedStats.FightDuration / 360f);
+            if (calculatedStats.FightDuration % 360f < 195)
+            {
+                drumsivlength += 20;
+            }
+            else
+            {
+                drumsivlength += 40;
+            }
+            double drumsaplength = 15 * (int)(calculatedStats.FightDuration / 360f);
+            if (calculatedStats.FightDuration % 360f < 195)
+            {
+                drumsaplength += 15;
+            }
+            else
+            {
+                drumsaplength += 30;
+            }
 
+            // disabled unused constraints and variables
             if (character.Ranged == null || character.Ranged.Type != Item.ItemType.Wand) lp.DisableColumn(1);
             for (int buffset = 0; buffset < statsList.Count; buffset++)
             {
@@ -532,8 +552,12 @@ namespace Rawr.Mage
             if (!(combustionAvailable && mfAvailable)) lp.DisableRow(31);
             if (!(combustionAvailable && heroismAvailable)) lp.DisableRow(32);
             if (!(ivAvailable && heroismAvailable)) lp.DisableRow(33);
+            if (!calculationOptions.DrumsOfBattle) lp.DisableRow(34);
+            if (!(calculationOptions.DrumsOfBattle && mfAvailable)) lp.DisableRow(35);
+            if (!(calculationOptions.DrumsOfBattle && heroismAvailable)) lp.DisableRow(36);
+            if (!(calculationOptions.DrumsOfBattle && ivAvailable)) lp.DisableRow(37);
+            if (!(calculationOptions.DrumsOfBattle && apAvailable)) lp.DisableRow(38);
 
-            
             lp.Compact();
 
             // idle regen
@@ -587,6 +611,12 @@ namespace Rawr.Mage
             lp[14, 4] = 1;
             lp[23, 4] = - 1 / calculatedStats.ManaPotionTime;
             lp[lpRows, 4] = 0;
+            // drums
+            calculatedStats.SolutionLabel.Add("Drums of Battle");
+            lp[0, 5] = -calculatedStats.ManaRegen5SR;
+            lp[1, 5] = 1;
+            lp[34, 5] = - 1 / calculatedStats.GlobalCooldown;
+            lp[lpRows, 5] = 0;
             // spells
             for (int buffset = 0; buffset < statsList.Count; buffset++)
             {
@@ -664,6 +694,12 @@ namespace Rawr.Mage
                         lp[31, index] = (statsList[buffset].Combustion && statsList[buffset].MoltenFury) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
                         lp[32, index] = (statsList[buffset].Combustion && statsList[buffset].Heroism) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
                         lp[33, index] = (statsList[buffset].IcyVeins && statsList[buffset].Heroism) ? 1 : 0;
+                        //drums, drums+mf, drums+heroism, drums+iv, drums+ap
+                        lp[34, index] = (statsList[buffset].DrumsOfBattle) ? 1 / (30 - calculatedStats.GlobalCooldown) : 0;
+                        lp[35, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].MoltenFury) ? 1 : 0;
+                        lp[36, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].Heroism) ? 1 : 0;
+                        lp[37, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].IcyVeins) ? 1 : 0;
+                        lp[38, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].ArcanePower) ? 1 : 0;
                         lp[lpRows, index] = s.DamagePerSecond;
                     }
                     else
@@ -701,6 +737,10 @@ namespace Rawr.Mage
             lp[31, lpCols] = 1;
             lp[32, lpCols] = 1;
             lp[33, lpCols] = coldsnap ? 40 : 20;
+            lp[35, lpCols] = 30;
+            lp[36, lpCols] = 30;
+            lp[37, lpCols] = drumsivlength;
+            lp[38, lpCols] = drumsaplength;
 
             calculatedStats.Solution = lp.Solve();
 
@@ -951,7 +991,7 @@ namespace Rawr.Mage
             return duration;
         }
 
-        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Stats characterStats, CompiledCalculationOptions calculationOptions, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion)
+        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Stats characterStats, CompiledCalculationOptions calculationOptions, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums)
         {
             CharacterCalculationsMage calculatedStats = new CharacterCalculationsMage();
             Stats stats = characterStats.Clone();
@@ -982,6 +1022,10 @@ namespace Rawr.Mage
                 stats.SpellDamageRating += t.SpellDamageFor20SecOnUse2Min + t.SpellDamageFor15SecOnManaGem + t.SpellDamageFor15SecOnUse90Sec;
                 stats.SpellHasteRating += t.SpellHasteFor20SecOnUse2Min;
                 calculatedStats.Mp5OnCastFor20Sec = t.Mp5OnCastFor20SecOnUse2Min;
+            }
+            if (drums)
+            {
+                stats.SpellHasteRating += 80;
             }
 
             calculatedStats.CastingSpeed = 1 + stats.SpellHasteRating / 995f * levelScalingFactor;
@@ -1027,6 +1071,7 @@ namespace Rawr.Mage
             calculatedStats.Trinket1 = trinket1;
             calculatedStats.Trinket2 = trinket2;
             calculatedStats.Combustion = combustion;
+            calculatedStats.DrumsOfBattle = drums;
 
             List<String> buffList = new List<string> ();
             if (moltenFury) buffList.Add("Molten Fury");
@@ -1034,6 +1079,7 @@ namespace Rawr.Mage
             if (icyVeins) buffList.Add("Icy Veins");
             if (arcanePower) buffList.Add("Arcane Power");
             if (combustion) buffList.Add("Combustion");
+            if (drums) buffList.Add("Drums of Battle");
             if (flameCap) buffList.Add("Flame Cap");
             if (trinket1) buffList.Add(character.Trinket1.Name);
             if (trinket2) buffList.Add(character.Trinket2.Name);

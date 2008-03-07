@@ -70,6 +70,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["AoeDuration"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("SmartOptimization"))
                 Character.CalculationOptions["SmartOptimization"] = (1).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("DrumsOfBattle"))
+                Character.CalculationOptions["DrumsOfBattle"] = (0).ToString(CultureInfo.InvariantCulture);
 
             loading = true;
 
@@ -97,11 +99,11 @@ namespace Rawr.Mage
             textBoxEvocationWeapon.Text = int.Parse(Character.CalculationOptions["EvocationWeapon"], CultureInfo.InvariantCulture).ToString();
             textBoxAoeDuration.Text = float.Parse(Character.CalculationOptions["AoeDuration"], CultureInfo.InvariantCulture).ToString();
             checkBoxSmartOptimization.Checked = int.Parse(Character.CalculationOptions["SmartOptimization"], CultureInfo.InvariantCulture) == 1;
+            checkBoxDrumsOfBattle.Checked = int.Parse(Character.CalculationOptions["DrumsOfBattle"], CultureInfo.InvariantCulture) == 1;
 
             if (talents != null) talents.LoadCalculationOptions();
 
             loading = false;
-            Character.OnItemsChanged();
         }
 	
 		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -306,6 +308,12 @@ namespace Rawr.Mage
         private void checkBoxSmartOptimization_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["SmartOptimization"] = (checkBoxSmartOptimization.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
+            if (!loading) Character.OnItemsChanged();
+        }
+
+        private void checkBoxDrumsOfBattle_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["DrumsOfBattle"] = (checkBoxDrumsOfBattle.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
             if (!loading) Character.OnItemsChanged();
         }
 	}
