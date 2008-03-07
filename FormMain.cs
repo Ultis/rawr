@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-using System.Configuration;
+
 using Rawr.Forms;
 
 namespace Rawr
@@ -114,40 +114,23 @@ namespace Rawr
 			//and the ground below grew colder / as they put you down inside
 		}
 
-		private Configuration _config = null;
-		public Configuration Config
-		{
-			get
-			{
-				if (_config == null)
-				{
-					_config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-					if (_config.AppSettings.Settings["Model"] == null)
-						_config.AppSettings.Settings.Add("Model", "Bear");
-					if (_config.AppSettings.Settings["RecentCharacters"] == null)
-						_config.AppSettings.Settings.Add("RecentCharacters", "");
-				}
-				return _config;
-			}
-		}
-
 		public string ConfigModel
 		{
-			get { return Config.AppSettings.Settings["Model"].Value; }
-			set { Config.AppSettings.Settings["Model"].Value = value; }
+			get { return Properties.Recent.Default.RecentModel; }
+			set { Properties.Recent.Default.RecentModel = value; }
 		}
 
 		public string[] ConfigRecentCharacters
 		{
 			get
 			{
-				string recentCharacters = Config.AppSettings.Settings["RecentCharacters"].Value;
+				string recentCharacters = Properties.Recent.Default.RecentFiles;
 				if (string.IsNullOrEmpty(recentCharacters))
 					return new string[0];
 				else
 					return recentCharacters.Split(';'); 
 			}
-			set { Config.AppSettings.Settings["RecentCharacters"].Value = string.Join(";", value); }
+			set { Properties.Recent.Default.RecentFiles = string.Join(";", value); }
 		}
 
 		public void AddRecentCharacter(string character)
@@ -213,9 +196,15 @@ namespace Rawr
 			_spash.Show();
 			Application.DoEvents();
 			
-			Calculations.LoadModel(Config.AppSettings.Settings["Model"].Value);
-			Application.DoEvents();
+			Calculations.LoadModel(this.ConfigModel);
 			InitializeComponent();
+			Application.DoEvents();
+			
+			Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[this.ConfigModel], true);
+			if (icon != null)
+			{
+				this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
+			}
 			UpdateRecentCharacterMenuItems();
 
 			ToolStripMenuItem modelsToolStripMenuItem = new ToolStripMenuItem("Models");
@@ -484,9 +473,10 @@ namespace Rawr
 
 		private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			Config.Save();
-			ItemCache.Save();
 			e.Cancel = !PromptToSaveBeforeClosing();
+			Properties.Recent.Default.Save();
+			ItemCache.Save();
+			
 		}
 
 		private bool PromptToSaveBeforeClosing()

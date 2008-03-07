@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
 
 namespace Rawr.UserControls.Options
 {
@@ -11,5 +10,6 @@ namespace Rawr.UserControls.Options
 		bool HasValidationErrors();
 		string DisplayName { get; }
 		string TreePosition { get; }
+		Image MenuIcon{get;}
 	}
 }

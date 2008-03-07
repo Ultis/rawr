@@ -151,13 +151,13 @@
     <value>9, 69</value>
   </data>
   <data name="extendedToolTipLabel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>60, 13</value>
+    <value>64, 13</value>
   </data>
   <data name="extendedToolTipLabel2.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
   <data name="extendedToolTipLabel2.Text" xml:space="preserve">
-    <value>User Agent</value>
+    <value>User Agent*</value>
   </data>
   <data name="&gt;&gt;extendedToolTipLabel2.Name" xml:space="preserve">
     <value>extendedToolTipLabel2</value>

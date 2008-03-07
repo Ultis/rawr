@@ -99,7 +99,7 @@ namespace Rawr
 			XmlDocument doc = null;
 			if (!String.IsNullOrEmpty(id))
 			{
-				doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ToolTipSheetURI, id));
+				doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id));
 			}
 			return doc;
 		}

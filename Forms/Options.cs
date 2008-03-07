@@ -17,6 +17,9 @@ namespace Rawr.Forms
 	/// </summary>
 	public partial class Options : Form
 	{
+		public const string NETWORK_SETTINGS = "Network Settings";
+		public const char MENU_DELIMETER = '|';
+
 		private Dictionary<string, UserControl> _lookupTable;
 		public Options()
 		{
@@ -45,6 +48,10 @@ namespace Rawr.Forms
 						userControl.TabIndex = 0;
 						userControl.Visible = false;
 						panel1.Controls.Add(userControl);
+						if (optionCast.MenuIcon != null)
+						{
+							OptionsMenuImageList.Images.Add(optionCast.TreePosition, optionCast.MenuIcon);
+						}
 						AddNodesToTree(optionCast.TreePosition);
 						_lookupTable.Add(optionCast.TreePosition, userControl);
 					}
@@ -60,7 +67,7 @@ namespace Rawr.Forms
 
 		private void AddNodesToTree(string treeNodePosition)
 		{
-			string[] splitPosition = treeNodePosition.Split('|');
+			string[] splitPosition = treeNodePosition.Split(MENU_DELIMETER);
 			SearchAndAddToSubTree(splitPosition, 0, treeView1.Nodes, treeNodePosition);
 		}
 
@@ -74,14 +81,20 @@ namespace Rawr.Forms
 					if (nodes[i].Text == splitPosition[startPositon])
 					{
 						tempNode = nodes[i];
+						//if a root node, set the tag to the first child node in the branch
+						if (tempNode.Tag == null || String.IsNullOrEmpty(tempNode.Tag.ToString()))
+						{
+							tempNode.Tag = key;
+						}
 						break;
 					}
 				}
 				if (tempNode == null)
 				{
 					tempNode = new TreeNode(splitPosition[startPositon]);
-					//this has the side effect of creating a default options panel for a root level node.
 					tempNode.Tag = key;
+					tempNode.ImageKey = key;
+					tempNode.SelectedImageKey = key;
 					nodes.Add(tempNode);
 				}
 				SearchAndAddToSubTree(splitPosition, startPositon + 1, tempNode.Nodes, key);

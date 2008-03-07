@@ -64,7 +64,6 @@
       <DependentUpon>NetworkSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="SerializableDictionary.cs" />
-    <Compile Include="Settings.cs" />
     <Compile Include="Stats.cs" />
     <Compile Include="TalentItem.cs" />
     <Compile Include="TalentTree.cs" />

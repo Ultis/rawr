@@ -44,6 +44,7 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.UseDefaultProxySettingsCheckBox = new System.Windows.Forms.CheckBox();
 			this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+			this.OptionImageList = new System.Windows.Forms.ImageList(this.components);
 			this.groupBox1.SuspendLayout();
 			this.SettingsGroupBox.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
@@ -143,6 +144,12 @@
 			// 
 			this.errorProvider1.ContainerControl = this;
 			// 
+			// OptionImageList
+			// 
+			this.OptionImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("OptionImageList.ImageStream")));
+			this.OptionImageList.TransparentColor = System.Drawing.Color.Transparent;
+			this.OptionImageList.Images.SetKeyName(0, "ei0021-32.ico");
+			// 
 			// ProxySettings
 			// 
 			resources.ApplyResources(this, "$this");
@@ -174,5 +181,6 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.CheckBox UseDefaultProxySettingsCheckBox;
 		private System.Windows.Forms.ErrorProvider errorProvider1;
+		private System.Windows.Forms.ImageList OptionImageList;
 	}
 }

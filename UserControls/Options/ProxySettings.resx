@@ -483,10 +483,58 @@
   <data name="&gt;&gt;errorProvider1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ErrorProvider, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;OptionImageList.Name" xml:space="preserve">
+    <value>OptionImageList</value>
+  </data>
+  <data name="&gt;&gt;OptionImageList.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ImageList, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>ProxySettings</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <metadata name="OptionImageList.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>140, 17</value>
+  </metadata>
+  <data name="OptionImageList.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj0yLjAuMC4w
+        LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
+        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABU
+        BwAAAk1TRnQBSQFMAwEBAAEFAQABBAEAARABAAEQAQAE/wEhAQAI/wFCAU0BNgcAATYDAAEoAwABQAMA
+        ARADAAEBAQABIAYAARASAAENAgEBEAE1AgEBfAE1AgEBeQEwAgEBWAEkAgEBNwEZAgEBIgENAgEBEAED
+        AgEBAuAAAW8BKQEBAYsB7QHLAY4B/wHwAdMBpAH/AeYBugFkAf8BvgGRATkB9wF2AT8BAQHYAUYBFgEL
+        AbEBNQIBAYsBNAIBAWoBKwIBAUgBIAIBAS0BLwIBAVEBMwIBAWABCwIBAQ3IAAFwASoBAQGNAegBvQFv
+        Af8B9AHdAbsB/wH0Ad0BuwH/AfQB3QG6Af8B9AHcAboB/wH0AdwBuQH/AfQB2wG4Af8B7AHKAYoB/wHW
+        AaYBQQH/AYIBaAEKAe4BuwHZAaAB/wFCAW0BCwHzATUCAQGNATICAQFcAQ0CAQEQwAABlQFKAQEBugHu
+        AcwBlAH/AeIBrwFJAf8B9gHkAckB/wH2AeQByAH/AfYB4wHHAf8B9QHjAccB/wH1AeIBxgH/AfEB3gHC
+        Af8BtQGnAZQB/wFsAa0BMgH/AYEBzgGVAf8BewHOAZcB/wGKAa4BVAH/AcsBjgENAfsBIQIBAS/AAAGh
+        AVgBAQHIAe8BzAGWAf8B8QHUAagB/wHcAaEBIwH/AfgB6gHWAf8B+AHqAdUB/wH4AeoB1QH/AfgB6gHU
+        Af8BtwGsAZ4B/wFYAaoBEQH/AYkBzwGRAf8BcwHGAYEB/wF2AckBiQH/AXoBzAGSAf8BkAGfASkB/wEx
+        AgEBWsAAAaEBWAEBAcgB7wHNAZcB/wHyAdUBqQH/AfQB3AG6Af8B3QGlASoB/wH6AfEB4gH/AfoB8QHi
+        Af8B+gHwAeEB/wF5AbsBOQH/AbwB4gG5Af8BaQG/AWoB/wFtAcIBcwH/AXEBxQF8Af8BdAHHAYQB/wF4
+        AcoBjAH/ATUCAQF0wAABpwFjAR0ByQHvAc4BmQH/AfIB1QGrAf8B9AHdAbsB/wH3AeYBzQH/AeQBuQFb
+        Af8B/QH4AfAB/wH9AfcB8AH/AfwB9wHvAf8B7AHmAd8B/wFMAaEBAgH/AWcBvgFkAf8BawHAAW0B/wFm
+        AaMBOQH/AeUBugFiAf8BIQIBATDAAAHOAZIBIwHyAe8BzgGbAf8B8gHWAa0B/wH0Ad4BvQH/AfcB5wHP
+        Af8B+gHwAeEB/wHqAckBgAL/Av4C/wH+Af0B/wHEAsMB/wFLAZ0BAgH/AWIBugFRAf8BZQG8AV0B/wGr
+        AcIBfgH/AeYBvgFpAf8BKQIBAULAAAHcAaIBJgH/AfABzwGcAf8B8gHXAa4B/wH1Ad8BvwH/Ae8B0wGc
+        Af8BvgHOAb0B/wGzAeAB/AH/AbAB3wH7Af8BoAG0AasB/wGAAZgBbAH/AWkBoQEzAf8BXQG2AT0B/wFb
+        AbABPAH/AfoB7wHeAf8B6AHBAXAB/wErAgEBSMAAAdwBogEmAf8B8AHQAZ4B/wHyAdgBsAH/AdkBqAE4
+        Af8BlwGtAbsB/wGVAawBuwH/AZMBqwG6Af8BkQGqAboB/wFmAakBRwH/AVMBlgETAf8BdwG/AUQB/wFY
+        AbABJQH/AdoB4gHDAf8B/AH3Ae4B/wHpAcUBeAH/ASsCAQFIwAAB4gGwAUsB/wHqAcEBeAH/Ad4B2wG/
+        Af8B3QHyAf4B/wHbAfEB/QH/AVoBmgEjAf8BdwGvAUIB/wF5AbcBQgH/AYYBxQFRAf8BTQGfAQIB/wFy
+        AaoBUgH/AckB6QH8Af8B1gGrAUAC/wH+Af0B/wHqAckBfwH/ASsCAQFIwAABoAFVAQEBwQF8AccB+AH/
+        AWEBsAH1Af8BYQGwAfUB/wFhAbAB9QH/AYUBxAH4Af8BgQHBAfcB/wF4AbkB9wH/AXgBuQH3Af8BdwG5
+        AfYB/wGXAcsB+QH/AZYBywH5Af8BlQHKAfkB/wGtAZ8BXQH/AesBygGBAf8BKwIBAUXEAAEPAQIBAQER
+        AbcBqgFeAf8BhAHOAfkB/wGEAc4B+QH/AYYBzgH5Af8BiAHPAfkB/wGLAdEB+QH/AY8B0gH6Af8BkwHU
+        AfoB/wGYAdUB+gH/AZwB1wH6Af8BoAHZAfsB/wGlAdsB+wH/AckBhAEBAfUBDgIBARHMAAFRARYBAQFi
+        Aa0BxwG8Af8BpgHbAfsB/wGqAd0B+wH/Aa8B3wH7Af8BtAHgAfwB/wG5AeIB/AH/Ab0B5AH8Af8BwgHn
+        AfwB/wHRAagBQAH/AS0BBQEBATsBAgMB2AABoQFZAQwBwwHTAe4B/QH/AdcB8AH9Af8B3AHyAf4B/wHh
+        AfMB/gH/AdoBuAFgAf8BOgEKAQEBTwEDAgEBAuQAAQ8BAgEBAREB5AG8AWEB/wHoAcMBcQH/AU8BFAEB
+        AWkBBAIBAQTUAAFCAU0BPgcAAT4DAAEoAwABQAMAARADAAEBAQABAQUAAYAXAAP/AgAB/wcAAQNWAAGA
+        BwAB4AEBBgAB+AEHBgAB/AEfBgAL
+</value>
   </data>
 </root>

@@ -147,7 +147,12 @@ namespace Rawr.UserControls.Options
 
 		public string TreePosition
 		{
-			get { return "Network Settings|ProxyHost Settings"; }
+			get { return Rawr.Forms.Options.NETWORK_SETTINGS + Rawr.Forms.Options.MENU_DELIMETER + DisplayName; }
+		}
+
+		public Image MenuIcon
+		{
+			get { return OptionImageList.Images[0]; }
 		}
 
 		#endregion

@@ -249,6 +249,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Recent.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Recent.settings</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\Options\IOptions.cs" />
     <Compile Include="UserControls\Options\NetworkSettings.cs">
       <SubType>UserControl</SubType>
@@ -266,6 +271,10 @@
   <ItemGroup>
     <Content Include="RawrIcon.ico" />
     <Content Include="ReadMe.txt" />
+    <None Include="Properties\Recent.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Recent.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\Rawr.Splash.ModelBackground.png" />
     <None Include="Resources\Rawr.Splash.png" />
     <None Include="app.config" />

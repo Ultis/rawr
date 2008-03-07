@@ -136,6 +136,9 @@ namespace Rawr
 					//log.Error("Exception trying to load an icon from local", ex);
                     MessageBox.Show(
                         "Rawr encountered an error while attempting to load a saved image. If you encounter this error multiple times, please ensure that Rawr is unzipped in a location that you have full file read/write access, such as your Desktop, or My Documents.");
+#if DEBUG
+					throw;
+#endif
                 }
             }
 			return small ? SmallIcons.Images[iconName] : LargeIcons.Images[iconName];

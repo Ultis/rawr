@@ -85,7 +85,6 @@ namespace Rawr.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
         [global::System.Configuration.DefaultSettingValueAttribute("http://www.wowarmory.com/images/icons/64x64/")]
         public string WoWItemIconURI {
             get {
@@ -200,9 +199,9 @@ namespace Rawr.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://www.wowarmory.com/item-tooltip.xml?i={0}")]
-        public string ToolTipSheetURI {
+        public string ItemToolTipSheetURI {
             get {
-                return ((string)(this["ToolTipSheetURI"]));
+                return ((string)(this["ItemToolTipSheetURI"]));
             }
         }
         
@@ -215,15 +214,21 @@ namespace Rawr.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg")]
         public string WoWTalentIconURI {
             get {
                 return ((string)(this["WoWTalentIconURI"]));
             }
-            set {
-                this["WoWTalentIconURI"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.wowarmory.com/item-info.xml?i={0}")]
+        public string ItemInfoURI {
+            get {
+                return ((string)(this["ItemInfoURI"]));
             }
         }
     }

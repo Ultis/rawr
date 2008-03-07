@@ -36,6 +36,8 @@ namespace Rawr.UserControls.Options
 				}
 			}
 			MaxRequests.Value = Properties.NetworkSettings.Default.MaxHttpRequests;
+			this.extendedToolTipLabel2.ToolTipText = "The user agent string that Rawr will use when connecting to the Armory."+Environment.NewLine+
+					"It is recommended to only change this if you are experiencing an issue"+Environment.NewLine+"that you know is related to this setting.";
 		}
 
 
@@ -102,7 +104,12 @@ namespace Rawr.UserControls.Options
 
 		public string TreePosition
 		{
-			get { return "Network Settings|Http Settings"; }
+			get { return Rawr.Forms.Options.NETWORK_SETTINGS +  Rawr.Forms.Options.MENU_DELIMETER + DisplayName; }
+		}
+
+		public Image MenuIcon
+		{
+			get { return null; }
 		}
 
 		#endregion

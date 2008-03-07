@@ -17,7 +17,7 @@
     <Setting Name="ProxyPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="WoWItemIconURI" Type="(Web Service URL)" Scope="Application">
+    <Setting Name="WoWItemIconURI" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://www.wowarmory.com/images/icons/64x64/</Value>
     </Setting>
     <Setting Name="MaxHttpRequests" Type="System.Int32" Scope="User">
@@ -50,14 +50,17 @@
     <Setting Name="CharacterSheetURI" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://{0}.wowarmory.com/character-sheet.xml?r={1}&amp;n={2}</Value>
     </Setting>
-    <Setting Name="ToolTipSheetURI" Type="System.String" Scope="Application">
+    <Setting Name="ItemToolTipSheetURI" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://www.wowarmory.com/item-tooltip.xml?i={0}</Value>
     </Setting>
     <Setting Name="ItemUpgradeURI" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://{0}.wowarmory.com/search.xml?searchType=items&amp;pr={1}&amp;pn={2}&amp;pi={3}</Value>
     </Setting>
-    <Setting Name="WoWTalentIconURI" Type="System.String" Scope="User">
+    <Setting Name="WoWTalentIconURI" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg</Value>
+    </Setting>
+    <Setting Name="ItemInfoURI" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://www.wowarmory.com/item-info.xml?i={0}</Value>
     </Setting>
   </Settings>
 </SettingsFile>
