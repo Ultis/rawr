@@ -28,7 +28,6 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelMage));
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
@@ -99,7 +98,7 @@
             "73"});
             this.comboBoxTargetLevel.Location = new System.Drawing.Point(104, 108);
             this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-            this.comboBoxTargetLevel.Size = new System.Drawing.Size(93, 21);
+            this.comboBoxTargetLevel.Size = new System.Drawing.Size(85, 21);
             this.comboBoxTargetLevel.TabIndex = 1;
             this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetLevel_SelectedIndexChanged);
             // 
@@ -125,7 +124,7 @@
             "73"});
             this.comboBoxAoeTargetLevel.Location = new System.Drawing.Point(104, 388);
             this.comboBoxAoeTargetLevel.Name = "comboBoxAoeTargetLevel";
-            this.comboBoxAoeTargetLevel.Size = new System.Drawing.Size(93, 21);
+            this.comboBoxAoeTargetLevel.Size = new System.Drawing.Size(85, 21);
             this.comboBoxAoeTargetLevel.TabIndex = 4;
             this.comboBoxAoeTargetLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxAoeTargetLevel_SelectedIndexChanged);
             // 
@@ -142,7 +141,7 @@
             // 
             this.buttonTalents.Location = new System.Drawing.Point(6, 3);
             this.buttonTalents.Name = "buttonTalents";
-            this.buttonTalents.Size = new System.Drawing.Size(191, 23);
+            this.buttonTalents.Size = new System.Drawing.Size(183, 23);
             this.buttonTalents.TabIndex = 5;
             this.buttonTalents.Text = "Talents";
             this.buttonTalents.UseVisualStyleBackColor = true;
@@ -161,7 +160,7 @@
             // 
             this.textBoxLatency.Location = new System.Drawing.Point(104, 55);
             this.textBoxLatency.Name = "textBoxLatency";
-            this.textBoxLatency.Size = new System.Drawing.Size(93, 20);
+            this.textBoxLatency.Size = new System.Drawing.Size(85, 20);
             this.textBoxLatency.TabIndex = 7;
             this.textBoxLatency.TextChanged += new System.EventHandler(this.textBoxLatency_TextChanged);
             // 
@@ -176,7 +175,7 @@
             "None"});
             this.comboBoxArmor.Location = new System.Drawing.Point(104, 81);
             this.comboBoxArmor.Name = "comboBoxArmor";
-            this.comboBoxArmor.Size = new System.Drawing.Size(93, 21);
+            this.comboBoxArmor.Size = new System.Drawing.Size(85, 21);
             this.comboBoxArmor.TabIndex = 9;
             this.comboBoxArmor.SelectedIndexChanged += new System.EventHandler(this.comboBoxArmor_SelectedIndexChanged);
             // 
@@ -193,7 +192,7 @@
             // 
             this.textBoxAoeTargets.Location = new System.Drawing.Point(104, 415);
             this.textBoxAoeTargets.Name = "textBoxAoeTargets";
-            this.textBoxAoeTargets.Size = new System.Drawing.Size(93, 20);
+            this.textBoxAoeTargets.Size = new System.Drawing.Size(85, 20);
             this.textBoxAoeTargets.TabIndex = 11;
             this.textBoxAoeTargets.TextChanged += new System.EventHandler(this.textBoxAoeTargets_TextChanged);
             // 
@@ -210,7 +209,7 @@
             // 
             this.textBoxArcaneResist.Location = new System.Drawing.Point(104, 498);
             this.textBoxArcaneResist.Name = "textBoxArcaneResist";
-            this.textBoxArcaneResist.Size = new System.Drawing.Size(93, 20);
+            this.textBoxArcaneResist.Size = new System.Drawing.Size(85, 20);
             this.textBoxArcaneResist.TabIndex = 13;
             this.textBoxArcaneResist.TextChanged += new System.EventHandler(this.textBoxArcaneResist_TextChanged);
             // 
@@ -227,7 +226,7 @@
             // 
             this.textBoxFireResist.Location = new System.Drawing.Point(104, 524);
             this.textBoxFireResist.Name = "textBoxFireResist";
-            this.textBoxFireResist.Size = new System.Drawing.Size(93, 20);
+            this.textBoxFireResist.Size = new System.Drawing.Size(85, 20);
             this.textBoxFireResist.TabIndex = 15;
             this.textBoxFireResist.TextChanged += new System.EventHandler(this.textBoxFireResist_TextChanged);
             // 
@@ -244,7 +243,7 @@
             // 
             this.textBoxFrostResist.Location = new System.Drawing.Point(104, 550);
             this.textBoxFrostResist.Name = "textBoxFrostResist";
-            this.textBoxFrostResist.Size = new System.Drawing.Size(93, 20);
+            this.textBoxFrostResist.Size = new System.Drawing.Size(85, 20);
             this.textBoxFrostResist.TabIndex = 17;
             this.textBoxFrostResist.TextChanged += new System.EventHandler(this.textBoxFrostResist_TextChanged);
             // 
@@ -261,7 +260,7 @@
             // 
             this.textBoxNatureResist.Location = new System.Drawing.Point(104, 576);
             this.textBoxNatureResist.Name = "textBoxNatureResist";
-            this.textBoxNatureResist.Size = new System.Drawing.Size(93, 20);
+            this.textBoxNatureResist.Size = new System.Drawing.Size(85, 20);
             this.textBoxNatureResist.TabIndex = 19;
             this.textBoxNatureResist.TextChanged += new System.EventHandler(this.textBoxNatureResist_TextChanged);
             // 
@@ -278,7 +277,7 @@
             // 
             this.textBoxFightDuration.Location = new System.Drawing.Point(104, 135);
             this.textBoxFightDuration.Name = "textBoxFightDuration";
-            this.textBoxFightDuration.Size = new System.Drawing.Size(93, 20);
+            this.textBoxFightDuration.Size = new System.Drawing.Size(85, 20);
             this.textBoxFightDuration.TabIndex = 21;
             this.textBoxFightDuration.TextChanged += new System.EventHandler(this.textBoxFightDuration_TextChanged);
             // 
@@ -295,7 +294,7 @@
             // 
             this.textBoxShadowPriest.Location = new System.Drawing.Point(104, 239);
             this.textBoxShadowPriest.Name = "textBoxShadowPriest";
-            this.textBoxShadowPriest.Size = new System.Drawing.Size(93, 20);
+            this.textBoxShadowPriest.Size = new System.Drawing.Size(85, 20);
             this.textBoxShadowPriest.TabIndex = 23;
             this.textBoxShadowPriest.TextChanged += new System.EventHandler(this.textBoxShadowPriest_TextChanged);
             // 
@@ -322,7 +321,7 @@
             // 
             this.textBoxMoltenFuryPercentage.Location = new System.Drawing.Point(104, 213);
             this.textBoxMoltenFuryPercentage.Name = "textBoxMoltenFuryPercentage";
-            this.textBoxMoltenFuryPercentage.Size = new System.Drawing.Size(93, 20);
+            this.textBoxMoltenFuryPercentage.Size = new System.Drawing.Size(85, 20);
             this.textBoxMoltenFuryPercentage.TabIndex = 26;
             this.textBoxMoltenFuryPercentage.TextChanged += new System.EventHandler(this.textBoxMoltenFuryPercentage_TextChanged);
             // 
@@ -405,7 +404,7 @@
             // 
             this.textBoxDpsTime.Location = new System.Drawing.Point(104, 161);
             this.textBoxDpsTime.Name = "textBoxDpsTime";
-            this.textBoxDpsTime.Size = new System.Drawing.Size(93, 20);
+            this.textBoxDpsTime.Size = new System.Drawing.Size(85, 20);
             this.textBoxDpsTime.TabIndex = 35;
             this.textBoxDpsTime.TextChanged += new System.EventHandler(this.textBoxDpsTime_TextChanged);
             // 
@@ -441,7 +440,7 @@
             // 
             this.textBoxInterruptFrequency.Location = new System.Drawing.Point(104, 187);
             this.textBoxInterruptFrequency.Name = "textBoxInterruptFrequency";
-            this.textBoxInterruptFrequency.Size = new System.Drawing.Size(93, 20);
+            this.textBoxInterruptFrequency.Size = new System.Drawing.Size(85, 20);
             this.textBoxInterruptFrequency.TabIndex = 39;
             this.textBoxInterruptFrequency.TextChanged += new System.EventHandler(this.textBoxInterruptFrequency_TextChanged);
             // 
@@ -458,7 +457,7 @@
             // 
             this.textBoxShadowResist.Location = new System.Drawing.Point(104, 602);
             this.textBoxShadowResist.Name = "textBoxShadowResist";
-            this.textBoxShadowResist.Size = new System.Drawing.Size(93, 20);
+            this.textBoxShadowResist.Size = new System.Drawing.Size(85, 20);
             this.textBoxShadowResist.TabIndex = 41;
             this.textBoxShadowResist.TextChanged += new System.EventHandler(this.textBoxShadowResist_TextChanged);
             // 
@@ -475,7 +474,7 @@
             // 
             this.textBoxEvocationWeapon.Location = new System.Drawing.Point(104, 467);
             this.textBoxEvocationWeapon.Name = "textBoxEvocationWeapon";
-            this.textBoxEvocationWeapon.Size = new System.Drawing.Size(93, 20);
+            this.textBoxEvocationWeapon.Size = new System.Drawing.Size(85, 20);
             this.textBoxEvocationWeapon.TabIndex = 43;
             this.textBoxEvocationWeapon.TextChanged += new System.EventHandler(this.textBoxEvocationWeapon_TextChanged);
             // 
@@ -492,7 +491,7 @@
             // 
             this.textBoxAoeDuration.Location = new System.Drawing.Point(104, 441);
             this.textBoxAoeDuration.Name = "textBoxAoeDuration";
-            this.textBoxAoeDuration.Size = new System.Drawing.Size(93, 20);
+            this.textBoxAoeDuration.Size = new System.Drawing.Size(85, 20);
             this.textBoxAoeDuration.TabIndex = 45;
             this.textBoxAoeDuration.TextChanged += new System.EventHandler(this.textBoxAoeDuration_TextChanged);
             // 
@@ -528,6 +527,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.Controls.Add(this.label23);
             this.Controls.Add(this.checkBoxSmartOptimization);
             this.Controls.Add(this.textBoxAoeDuration);
