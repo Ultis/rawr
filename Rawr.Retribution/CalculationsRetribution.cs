@@ -186,7 +186,7 @@ namespace Rawr.Retribution
                 float.Parse(character.CalculationOptions["TwoHandedSpec"]) : 0f));
             if (character.MainHand != null)
             {
-                avgBaseWeaponHit = twoHandedSpec*(character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2.0f;
+                avgBaseWeaponHit = twoHandedSpec*(character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage*2f) / 2.0f;
                 hastedSpeed = (stats.HasteRating == 0) ? character.MainHand.Speed : character.MainHand.Speed / (1 + stats.HasteRating /1576f);
             }
 
@@ -305,7 +305,7 @@ namespace Rawr.Retribution
 
             #region Crusader Strike
             float csCooldown = 6.0f;
-            float avgCSHitPre = twoHandedSpec*(((character.MainHand != null) ? (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2.0f : 0.0f)+
+            float avgCSHitPre = twoHandedSpec*(((character.MainHand != null) ? (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage*2f) / 2.0f : 0.0f)+
                 3.30f * (stats.AttackPower / 14f)) * 1.10f;
             float avgCSHitPost = avgCSHitPre* physicalCritModifier - avgCSHitPre*(chanceToBeDodged+chanceToMiss)/100f;
             
@@ -559,6 +559,7 @@ namespace Rawr.Retribution
             statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
             statsTotal.BonusCrusaderStrikeDamageMultiplier = statsGearEnchantsBuffs.BonusCrusaderStrikeDamageMultiplier;
             statsTotal.WindfuryAPBonus = statsGearEnchantsBuffs.WindfuryAPBonus;
+            statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
             return (statsTotal);
 
            
@@ -655,7 +656,7 @@ namespace Rawr.Retribution
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return ((
+            return true;/*((
                 stats.Health +
                 stats.Mana +
                 stats.Stamina +
@@ -678,7 +679,8 @@ namespace Rawr.Retribution
                 stats.Bloodlust +
                 stats.ExposeWeakness +
                 stats.DrumsOfBattle +
-                stats.WeaponDamage) > 0); 
+                stats.WeaponDamage) > 0)*/
+            ; 
         }
 
         /// <summary>
