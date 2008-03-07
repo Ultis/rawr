@@ -257,24 +257,25 @@ namespace Rawr
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(localPath));
                 }
-                WebClient client = CreateWebClient();
-                try
+                using (WebClient client = CreateWebClient())
                 {
-                    client.DownloadFile(URI, localPath);
-                }
-                catch (Exception ex)
-                {
-                    CheckExecptionForFatalError(ex);
-                    //if on a client file download, there is an exception, 
-                    //it will create a 0 byte file. We don't want that empty file.
-                    if (File.Exists(localPath))
+                    try
                     {
-                        File.Delete(localPath);
+                        client.DownloadFile(URI, localPath);
                     }
-                    throw;
+                    catch (Exception ex)
+                    {
+                        CheckExecptionForFatalError(ex);
+                        //if on a client file download, there is an exception, 
+                        //it will create a 0 byte file. We don't want that empty file.
+                        if (File.Exists(localPath))
+                        {
+                            File.Delete(localPath);
+                        }
+                        throw;
+                    }
                 }
             }
-           
 		}
 
 		/// <summary>
