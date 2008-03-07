@@ -654,6 +654,7 @@ namespace Rawr
             0,
             0,
             65536});
+            this.numericUpDownSpeed.DecimalPlaces = 2;
 			this.numericUpDownSpeed.Location = new System.Drawing.Point(85, 79);
 			this.numericUpDownSpeed.Maximum = new decimal(new int[] {
             99,
