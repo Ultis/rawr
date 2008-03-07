@@ -204,9 +204,12 @@ namespace Rawr
                                 Item gem = (i == 0 ? CurrentItem.Gem1 : (i == 1 ? CurrentItem.Gem2 : CurrentItem.Gem3));
                                 if (gem != null)
                                 {
-                                    g.DrawImageUnscaled(ItemIcons.GetItemIcon(gem, true), rectGemBorder.X + 2,
-                                                        rectGemBorder.Y + 2);
-
+                                    Image icon = ItemIcons.GetItemIcon(gem, true);
+                                    if (icon != null)
+                                    {
+                                        g.DrawImageUnscaled(icon, rectGemBorder.X + 2, rectGemBorder.Y + 2);
+                                    }
+                                   
 									Character characterWithItemEquipped = Character.Clone();
 									characterWithItemEquipped[Character.CharacterSlot.Head] = CurrentItem;
 									bool active = gem.MeetsRequirements(characterWithItemEquipped);

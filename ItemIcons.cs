@@ -111,8 +111,9 @@ namespace Rawr
                 }
                 catch(Exception ex)
                 {
+                    Log.Write(ex.Message);
+                    Log.Write(ex.StackTrace);
 					//log.Error("Exception trying to retrieve an icon from the armory", ex);
-					
                 }
 				if (String.IsNullOrEmpty(pathToIcon))
 				{
@@ -137,7 +138,9 @@ namespace Rawr
                     MessageBox.Show(
                         "Rawr encountered an error while attempting to load a saved image. If you encounter this error multiple times, please ensure that Rawr is unzipped in a location that you have full file read/write access, such as your Desktop, or My Documents.");
 #if DEBUG
-					throw;
+                    Log.Write(ex.Message);
+                    Log.Write(ex.StackTrace);
+                    throw;
 #endif
                 }
             }
