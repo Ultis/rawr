@@ -324,6 +324,8 @@ namespace Rawr.Mage
                 else if (calculationOptions.SpellPower > 0)
                 {
                     spellList.Add("Arcane Blast");
+                    if (calculationOptions.ImprovedFrostbolt > 0) spellList.Add("Frostbolt");
+                    if (calculationOptions.ImprovedFireball > 0) spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
                 }
                 else
                 {
