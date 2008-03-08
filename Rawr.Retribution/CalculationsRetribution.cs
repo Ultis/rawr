@@ -63,8 +63,8 @@ namespace Rawr.Retribution
 					"Basic Stats:Attack Power",
 					"Basic Stats:Agility",
 					"Basic Stats:Strength",
-					"Basic Stats:Crit Rating",
-					"Basic Stats:Hit Rating",
+					"Basic Stats:Crit %",
+					"Basic Stats:Hit %",
 					"Basic Stats:Expertise Rating",
 					"Basic Stats:Haste Rating",
 					"Basic Stats:Armor Penetration",
@@ -195,6 +195,7 @@ namespace Rawr.Retribution
             //Add Attack Power Bonus
             avgBaseWeaponHit += twoHandedSpec*(stats.AttackPower / 14.0f) * ((character.MainHand == null) ? 1.0f : character.MainHand.Speed);
 
+            
             //Take Non-Stat Buffs into account
 
             physicalCritModifier = 1.0f + ((stats.CritRating / 22.08f) / 100.0f) * (1f + stats.BonusCritMultiplier * 2f);
@@ -224,6 +225,8 @@ namespace Rawr.Retribution
             if (partialUptime < 0) partialUptime = 0;
             float totalUptime = partialUptime + noOfFullAW * 20f;
             float avWrath = 1f + 0.30f * totalUptime / fightDuration;
+
+            
 
             #region Bloodlust
             if (stats.Bloodlust > 0)
@@ -393,7 +396,8 @@ namespace Rawr.Retribution
 
             calcs.DPSPoints = dpsCS + dpsWhite + calcs.SealDPSPoints + consDPS + exoDPS + wfDPS + calcs.JudgementDPSPoints;
             calcs.SubPoints = new float[] { calcs.DPSPoints };
-            calcs.OverallPoints = calcs.DPSPoints;            
+            calcs.OverallPoints = calcs.DPSPoints;
+            calcs.BasicStats.WeaponDamage = avgBaseWeaponHit * impSancAura;
             return calcs;
         }
 

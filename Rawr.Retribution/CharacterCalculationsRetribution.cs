@@ -162,8 +162,8 @@ namespace Rawr.Retribution
 
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
 
-            dictValues.Add("Hit Rating", (BasicStats.HitRating/15.76f).ToString());
-            dictValues.Add("Crit Rating", (BasicStats.CritRating/22.08f).ToString());
+            dictValues.Add("Hit %", (BasicStats.HitRating/15.76f).ToString());
+            dictValues.Add("Crit %", (BasicStats.CritRating/22.08f).ToString());
             dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString());
             dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
             dictValues.Add("Armor Penetration", BasicStats.ArmorPenetration.ToString());
@@ -175,6 +175,7 @@ namespace Rawr.Retribution
             dictValues.Add("Consecration", ConsDPSPoints.ToString());
             dictValues.Add("Exorcism", ExoDPSPoints.ToString());
             dictValues.Add("Windfury", WFDPSPoints.ToString());
+            dictValues.Add("Weapon Damage", BasicStats.WeaponDamage.ToString());
 
             return dictValues;
            
