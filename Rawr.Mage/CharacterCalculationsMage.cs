@@ -33,6 +33,7 @@ namespace Rawr.Mage
         public bool SmartOptimization { get; set; }
         public float DpsTime { get; set; }
         public bool DrumsOfBattle { get; set; }
+        public bool Enable2_3Mode { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -109,6 +110,7 @@ namespace Rawr.Mage
             SmartOptimization = int.Parse(character.CalculationOptions["SmartOptimization"], CultureInfo.InvariantCulture) == 1;
             DpsTime = float.Parse(character.CalculationOptions["DpsTime"], CultureInfo.InvariantCulture);
             DrumsOfBattle = int.Parse(character.CalculationOptions["DrumsOfBattle"], CultureInfo.InvariantCulture) == 1;
+            Enable2_3Mode = int.Parse(character.CalculationOptions["2_3Mode"], CultureInfo.InvariantCulture) == 1;
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"], CultureInfo.InvariantCulture);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"], CultureInfo.InvariantCulture);
@@ -191,6 +193,7 @@ namespace Rawr.Mage
         public float SpellHit { get; set; }
         public float CastingSpeed { get; set; }
         public float GlobalCooldown { get; set; }
+        public float GlobalCooldownLimit { get; set; }
 
         public float ArcaneDamage { get; set; }
         public float FireDamage { get; set; }

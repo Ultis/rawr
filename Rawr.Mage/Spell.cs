@@ -211,7 +211,7 @@ namespace Rawr.Mage
 
             // TODO consider converting to discrete model for procs
 
-            GlobalCooldown = Math.Max(1f, 1.5f / CastingSpeed);
+            GlobalCooldown = Math.Max(calculations.GlobalCooldownLimit, 1.5f / CastingSpeed);
             CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
             CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
             if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
@@ -222,7 +222,7 @@ namespace Rawr.Mage
                 Haste += calculations.BasicStats.SpellHasteFor6SecOnHit_10_45 * 6f / (45f + CastTime / HitProcs / 0.1f);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
 
-                GlobalCooldown = Math.Max(1f, 1.5f / CastingSpeed);
+                GlobalCooldown = Math.Max(calculations.GlobalCooldownLimit, 1.5f / CastingSpeed);
                 CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
                 CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
                 if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
@@ -234,7 +234,7 @@ namespace Rawr.Mage
                 Haste += calculations.BasicStats.SpellHasteFor6SecOnCast_15_45 * 6f / (45f + CastTime / CastProcs / 0.15f);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
 
-                GlobalCooldown = Math.Max(1f, 1.5f / CastingSpeed);
+                GlobalCooldown = Math.Max(calculations.GlobalCooldownLimit, 1.5f / CastingSpeed);
                 CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
                 CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
                 if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
@@ -248,7 +248,7 @@ namespace Rawr.Mage
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
                 Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
-                GlobalCooldown = Math.Max(1f, 1.5f / CastingSpeed);
+                GlobalCooldown = Math.Max(calculations.GlobalCooldownLimit, 1.5f / CastingSpeed);
                 CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
                 CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
                 if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
@@ -257,7 +257,7 @@ namespace Rawr.Mage
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
                 Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
-                GlobalCooldown = Math.Max(1f, 1.5f / CastingSpeed);
+                GlobalCooldown = Math.Max(calculations.GlobalCooldownLimit, 1.5f / CastingSpeed);
                 CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
                 CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
                 if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;

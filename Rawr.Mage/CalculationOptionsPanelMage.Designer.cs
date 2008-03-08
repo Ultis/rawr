@@ -78,6 +78,8 @@
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
             this.checkBoxDrumsOfBattle = new System.Windows.Forms.CheckBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.checkBox2_3Mode = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -544,11 +546,32 @@
             this.checkBoxDrumsOfBattle.UseVisualStyleBackColor = true;
             this.checkBoxDrumsOfBattle.CheckedChanged += new System.EventHandler(this.checkBoxDrumsOfBattle_CheckedChanged);
             // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(3, 649);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(55, 13);
+            this.label25.TabIndex = 51;
+            this.label25.Text = "2.3 Mode:";
+            // 
+            // checkBox2_3Mode
+            // 
+            this.checkBox2_3Mode.AutoSize = true;
+            this.checkBox2_3Mode.Location = new System.Drawing.Point(104, 648);
+            this.checkBox2_3Mode.Name = "checkBox2_3Mode";
+            this.checkBox2_3Mode.Size = new System.Drawing.Size(15, 14);
+            this.checkBox2_3Mode.TabIndex = 50;
+            this.checkBox2_3Mode.UseVisualStyleBackColor = true;
+            this.checkBox2_3Mode.CheckedChanged += new System.EventHandler(this.checkBox2_3Mode_CheckedChanged);
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.label25);
+            this.Controls.Add(this.checkBox2_3Mode);
             this.Controls.Add(this.label24);
             this.Controls.Add(this.checkBoxDrumsOfBattle);
             this.Controls.Add(this.label23);
@@ -658,5 +681,7 @@
         private System.Windows.Forms.CheckBox checkBoxSmartOptimization;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.CheckBox checkBoxDrumsOfBattle;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.CheckBox checkBox2_3Mode;
 	}
 }

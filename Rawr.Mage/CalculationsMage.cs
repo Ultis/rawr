@@ -1054,7 +1054,14 @@ namespace Rawr.Mage
             calculatedStats.NatureHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculatedStats.SpellHit);
             calculatedStats.ShadowHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculatedStats.SpellHit);
 
-            calculatedStats.SpiritRegen = 0.001f + stats.Spirit * 0.009327f * (float)Math.Sqrt(stats.Intellect);
+            if (calculationOptions.Enable2_3Mode)
+            {
+                calculatedStats.SpiritRegen = 6.25f + stats.Spirit / 8f;
+            }
+            else
+            {
+                calculatedStats.SpiritRegen = 0.001f + stats.Spirit * 0.009327f * (float)Math.Sqrt(stats.Intellect);
+            }
             calculatedStats.ManaRegen = calculatedStats.SpiritRegen + stats.Mp5 / 5f;
             calculatedStats.ManaRegen5SR = calculatedStats.SpiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
             calculatedStats.ManaRegenDrinking = calculatedStats.ManaRegen + 240f;
@@ -1108,7 +1115,8 @@ namespace Rawr.Mage
             calculatedStats.FightDuration = calculationOptions.FightDuration;
             calculatedStats.ClearcastingChance = 0.02f * calculationOptions.ArcaneConcentration;
 
-            calculatedStats.GlobalCooldown = Math.Max(1f, 1.5f / calculatedStats.CastingSpeed);
+            calculatedStats.GlobalCooldownLimit = calculationOptions.Enable2_3Mode ? 1.5f : 1f;
+            calculatedStats.GlobalCooldown = Math.Max(calculatedStats.GlobalCooldownLimit, 1.5f / calculatedStats.CastingSpeed);
 
             calculatedStats.ArcaneSpellModifier = (1 + 0.01f * calculationOptions.ArcaneInstability) * (1 + 0.01f * calculationOptions.PlayingWithFire) * (1 + stats.BonusSpellPowerMultiplier);
             if (arcanePower)
