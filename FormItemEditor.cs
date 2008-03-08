@@ -267,14 +267,23 @@ namespace Rawr
 
 		private void buttonDelete_Click(object sender, EventArgs e)
 		{
-			_changingItemCache = true;
+			
             if (listViewItems.SelectedItems.Count > 0)
             {
-                ItemCache.DeleteItem(listViewItems.SelectedItems[0].Tag as Item);
-                listViewItems.Items.Remove(listViewItems.SelectedItems[0]);
-                if (listViewItems.Items.Count > 0) listViewItems.SelectedIndices.Add(0);
+                Item item = listViewItems.SelectedItems[0].Tag as Item;
+                if (MessageBox.Show("Are you sure you want to delete this instance of the " + item.Name, "Confirm Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    _changingItemCache = true;
+                    ItemCache.DeleteItem(item);
+                    _changingItemCache = false;
+                    listViewItems.Items.Remove(listViewItems.SelectedItems[0]);
+                    if (listViewItems.Items.Count > 0)
+                    {
+                        listViewItems.SelectedIndices.Add(0);
+                    }
+                }
             }
-			_changingItemCache = false;
+			
 		}
 
 		private void buttonFillSockets_Click(object sender, EventArgs e)
@@ -458,6 +467,11 @@ namespace Rawr
                     }
                 }
             }
+        }
+
+        private void buttonOK_Click(object sender, EventArgs e)
+        {
+
         }
 	}
 }
