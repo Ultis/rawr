@@ -64,6 +64,8 @@ namespace Rawr.Mage
                     "Spell Info:Frostbolt",
                     "Spell Info:ABAMP*Pause so that AB debuff runs out mid-cast",
                     "Spell Info:ABAM*Spam with no pause",
+                    "Spell Info:ABAMCC*AM when AM procs clearcast, ramp up AB before returning to AB-AM",
+                    "Spell Info:ABAM3CC*AM when AM procs clearcast, ramp up with AB-AM",
                     "Spell Info:AB3AMSc*Prefer pause over longer filler",
                     "Spell Info:ABAM3Sc*Prefer pause over longer filler",
                     "Spell Info:ABAM3Sc2*Fill until debuff almost out",
@@ -357,6 +359,8 @@ namespace Rawr.Mage
                 spellList.Add("ABAM3Sc2CCAM");
                 spellList.Add("ABAM3FrBCCAM");
                 spellList.Add("ABAM3FrBScCCAM");
+                spellList.Add("ABAMCCAM");
+                spellList.Add("ABAM3CCAM");
             }
             if (calculationOptions.AoeDuration > 0)
             {

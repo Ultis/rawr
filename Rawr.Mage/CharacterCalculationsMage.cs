@@ -301,6 +301,9 @@ namespace Rawr.Mage
                 case "Arcane Blast":
                     s = new ArcaneBlast(Character, this, 3, 3);
                     break;
+                case "Arcane Blast 0,0":
+                    s = new ArcaneBlast(Character, this, 0, 0);
+                    break;
                 case "Arcane Blast 1,0":
                     s = new ArcaneBlast(Character, this, 1, 0);
                     break;
@@ -315,6 +318,9 @@ namespace Rawr.Mage
                     break;
                 case "Arcane Blast 1,2":
                     s = new ArcaneBlast(Character, this, 1, 2);
+                    break;
+                case "Arcane Blast 2,3":
+                    s = new ArcaneBlast(Character, this, 2, 3);
                     break;
                 case "Arcane Blast 3,0":
                     s = new ArcaneBlast(Character, this, 3, 0);
@@ -373,6 +379,12 @@ namespace Rawr.Mage
                 case "ABAM3FrBScCCAM":
                     s = new ABAM3FrBScCCAM(Character, this);
                     break;
+                case "ABAMCCAM":
+                    s = new ABAMCCAM(Character, this);
+                    break;
+                case "ABAM3CCAM":
+                    s = new ABAM3CCAM(Character, this);
+                    break;
                 case "Arcane Explosion":
                     s = new ArcaneExplosion(Character, this);
                     break;
@@ -429,7 +441,7 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAMP", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrBSc", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM", "ABAM3Sc2CCAM", "ABAM3FrBCCAM", "ABAM3FrBScCCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold" };
+            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAMP", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrBSc", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM", "ABAM3Sc2CCAM", "ABAM3FrBCCAM", "ABAM3FrBScCCAM", "ABAMCCAM", "ABAM3CCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold" };
             foreach (string spell in spellList)
             {
                 Spell s = GetSpell(spell);

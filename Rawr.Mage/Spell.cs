@@ -1468,4 +1468,161 @@ namespace Rawr.Mage
             Sequence = chain4.Sequence;
         }
     }
+
+    class ABAMCCAM : Spell
+    {
+        public ABAMCCAM(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABAMCC";
+            ABCycle = true;
+
+            //AMCC-AB00-AB01-AB12-AB23       0.1
+            //AM?0-AB33                      0.9
+
+            Spell AMc0 = new ArcaneMissiles(character, calculations, true, false, false);
+            Spell AMCC = new ArcaneMissilesCC(character, calculations);
+            Spell AB00 = new ArcaneBlast(character, calculations, 0, 0, false);
+            Spell AB01 = calculations.GetSpell("Arcane Blast 0,1");
+            Spell AB12 = calculations.GetSpell("Arcane Blast 1,2");
+            Spell AB23 = calculations.GetSpell("Arcane Blast 2,3");
+            Spell AB33 = new ArcaneBlast(character, calculations, 3, 3, false);
+
+            float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
+
+            if (CC == 0)
+            {
+                // if we don't have clearcasting then this degenerates to AMc0-AB33
+                SpellCycle chain1 = new SpellCycle();
+                chain1.AddSpell(AMc0, calculations);
+                chain1.AddSpell(AB33, calculations);
+                chain1.Calculate(character, calculations);
+
+                CastTime = chain1.CastTime;
+                CostPerSecond = chain1.CostPerSecond;
+                DamagePerSecond = chain1.DamagePerSecond;
+                ManaRegenPerSecond = chain1.ManaRegenPerSecond;
+
+                Sequence = chain1.Sequence;
+            }
+            else
+            {
+
+                //AMCC-AB00-AB01-AB12-AB23       0.1
+                SpellCycle chain1 = new SpellCycle();
+                chain1.AddSpell(AMCC, calculations);
+                chain1.AddSpell(AB00, calculations);
+                chain1.AddSpell(AB01, calculations);
+                chain1.AddSpell(AB12, calculations);
+                chain1.AddSpell(AB23, calculations);
+                chain1.Calculate(character, calculations);
+
+                //AM?0-AB33                      0.9
+                SpellCycle chain2 = new SpellCycle();
+                chain2.AddSpell(AMc0, calculations);
+                chain2.AddSpell(AB33, calculations);
+                chain2.Calculate(character, calculations);
+
+                CastTime = CC * chain1.CastTime + (1 - CC) * chain2.CastTime;
+                CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + (1 - CC) * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + (1 - CC) * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+
+                Sequence = chain2.Sequence;
+            }
+        }
+    }
+
+    class ABAM3CCAM : Spell
+    {
+        public ABAM3CCAM(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABAM3CC";
+            ABCycle = true;
+
+            //AM?0-AB33-AMCC subcycle
+            //starts with 3 AB debuffs, alternate AM-AB until AM procs CC, then AM chain and stop
+
+            //AM?0-AB33-AM?0-AB33-...=0.1*0.9*...
+            //...
+            //AM?0-AB33-AM?0-AB33-AMCC=0.1*0.9*0.9
+            //AM?0-AB33-AMCC=0.1*0.9
+            //AMCC=0.1
+
+            //V = AMCC + 0.1*0.9*AM?0AB33 + 0.1*0.9*0.9*2*AM?0AB33 + ... + 0.1*0.9^n*n*AM?0AB33 + ...
+            //  = AMCC + 0.1*AM?0AB33 * sum_1_inf n*0.9^n
+            //  = AMCC + 9*AM?0AB33
+
+            // it is on average equivalent to (AM?0-AB33)x9+AMCC cycle
+
+
+            //AB00-AM?0-AB11-AM?0-AB22-[(AM?0-AB33)x9+AMCC]       0.9*0.9
+            //AB00-AM?0-AB11-AMCC                                 0.9*0.1
+            //AB00-AMCC                                           0.1
+
+            Spell AMc0 = new ArcaneMissiles(character, calculations, true, false, false);
+            Spell AMCC = new ArcaneMissilesCC(character, calculations);
+            Spell AB0 = new ArcaneBlast(character, calculations, 0, 0, false);
+            Spell AB1 = new ArcaneBlast(character, calculations, 1, 1, false);
+            Spell AB2 = new ArcaneBlast(character, calculations, 2, 2, false);
+            Spell AB3 = new ArcaneBlast(character, calculations, 3, 3, false);
+            Spell FrB0 = new Frostbolt(character, calculations, false);
+
+            float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
+
+            if (CC == 0)
+            {
+                // if we don't have clearcasting then this degenerates to AMc0-AB33
+                SpellCycle chain1 = new SpellCycle();
+                chain1.AddSpell(AMc0, calculations);
+                chain1.AddSpell(AB3, calculations);
+                chain1.Calculate(character, calculations);
+
+                CastTime = chain1.CastTime;
+                CostPerSecond = chain1.CostPerSecond;
+                DamagePerSecond = chain1.DamagePerSecond;
+                ManaRegenPerSecond = chain1.ManaRegenPerSecond;
+
+                Sequence = chain1.Sequence;
+            }
+            else
+            {
+                //AB00-AM?0-AB11-AM?0-AB22-[(AM?0-AB33)x9+AMCC]       0.9*0.9
+                SpellCycle chain1 = new SpellCycle();
+                chain1.AddSpell(AB0, calculations);
+                chain1.AddSpell(AMc0, calculations);
+                chain1.AddSpell(AB1, calculations);
+                chain1.AddSpell(AMc0, calculations);
+                chain1.AddSpell(AB2, calculations);
+                for (int i = 0; i < (int)((1 - CC) / CC); i++)
+                {
+                    chain1.AddSpell(AMc0, calculations);
+                    chain1.AddSpell(AB3, calculations);
+                }
+                chain1.AddSpell(AMCC, calculations);
+                chain1.Calculate(character, calculations);
+
+                //AB00-AM?0-AB11-AMCC                                 0.9*0.1
+                SpellCycle chain2 = new SpellCycle();
+                chain2.AddSpell(AB0, calculations);
+                chain2.AddSpell(AMc0, calculations);
+                chain2.AddSpell(AB1, calculations);
+                chain2.AddSpell(AMCC, calculations);
+                chain2.Calculate(character, calculations);
+
+                //AB00-AMCC                                           0.1
+                SpellCycle chain3 = new SpellCycle();
+                chain3.AddSpell(AB0, calculations);
+                chain3.AddSpell(AMCC, calculations);
+                chain3.Calculate(character, calculations);
+
+
+                CastTime = (1 - CC) * (1 - CC) * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * chain3.CastTime;
+                CostPerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * chain3.CastTime * chain3.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * chain3.CastTime * chain3.DamagePerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * chain3.CastTime * chain3.ManaRegenPerSecond) / CastTime;
+
+                Sequence = chain3.Sequence;
+            }
+        }
+    }
 }
