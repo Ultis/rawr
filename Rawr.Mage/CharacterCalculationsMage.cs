@@ -442,6 +442,7 @@ namespace Rawr.Mage
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
             List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAMP", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrBSc", "ABFB3FBSc", "FireballScorch", "ABAM3ScCCAM", "ABAM3Sc2CCAM", "ABAM3FrBCCAM", "ABAM3FrBScCCAM", "ABAMCCAM", "ABAM3CCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold" };
+            Spell AB = GetSpell("Arcane Blast");
             foreach (string spell in spellList)
             {
                 Spell s = GetSpell(spell);
@@ -451,6 +452,10 @@ namespace Rawr.Mage
                     {
                         BaseSpell bs = s as BaseSpell;
                         dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} sec\n{3:F}x Amplify\n{4:F}% Crit Rate\n{5:F}% Hit Rate\n{6:F} Crit Multiplier", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus));
+                    }
+                    else if (s.ABCycle)
+                    {
+                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\nAB Spam Tradeoff: {2} Dpm\n{3}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), s.Sequence));
                     }
                     else
                     {
