@@ -243,10 +243,10 @@ namespace Rawr
 					{
 						newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemType.None, id, "temp", Item.ItemSlot.Head, string.Empty, new Stats(), new Sockets(), 0, 0, 0, 0, 0, Item.ItemDamageType.Physical, 0f);
 						ItemCache.AddItem(newItem);
-                        SelectItem(newItem, true);
 					}
 				}
-                else
+                //Not an else, because we might have just created new Item manually.
+                if (newItem != null)
 				{
 					ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
 					newLvi.Tag = newItem;
@@ -257,11 +257,15 @@ namespace Rawr
 						 || newItem.Slot == Item.ItemSlot.Prismatic || newItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
 					newLvi.Group = listViewItems.Groups["listViewGroup" + slot];
 
-					listViewItems.Items.Add(newLvi);
-					newLvi.Selected = true;
-					listViewItems.Sort();
+                    listViewItems.Items.Add(newLvi);
+                    listViewItems.Sort();
+                    listViewItems.SelectedIndices.Clear();
+                    //won't select the item graphically (box it) without selecting the control...*shrug
+                    listViewItems.Select();
+                    newLvi.Selected = true;
 					newLvi.EnsureVisible();
-				}
+                
+                }
 			}
 		}
 
