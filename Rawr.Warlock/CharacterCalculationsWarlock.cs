@@ -130,6 +130,7 @@ namespace Rawr.Warlock
                 vals.Add("ImmolateCrit Rate", sb.CritPercent.ToString());
                 vals.Add("#Immolate Casts", NumCasts[sb].ToString());
             }
+            else 
             {
                 vals.Add("ImmolateMin Hit","");
                 vals.Add("ImmolateMax Hit","");
