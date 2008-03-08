@@ -296,7 +296,7 @@ namespace Rawr
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/min")) { minDamage = int.Parse(node.InnerText); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/max")) { maxDamage = int.Parse(node.InnerText); }
                         foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/type")) { damageType = (Item.ItemDamageType)Enum.Parse(typeof(Item.ItemDamageType), node.InnerText); }
-                        foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/speed")) { speed = float.Parse(node.InnerText); }
+                        foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/speed")) { speed = float.Parse(node.InnerText, System.Globalization.CultureInfo.InvariantCulture); }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/setData/name")) { setName = node.InnerText; }
 
 						if (inventoryType >= 0)
@@ -706,44 +706,44 @@ namespace Rawr
                                 {
                                     spellDesc = spellDesc.Substring("Increases the damage of your Starfire spell by up to ".Length);
                                     spellDesc = spellDesc.Replace(".", "");
-                                    stats.StarfireDmg += float.Parse(spellDesc);
+									stats.StarfireDmg += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                                 else if (spellDesc.StartsWith("Increases the damage of your Moonfire spell by up to "))
                                 {
                                     spellDesc = spellDesc.Substring("Increases the damage of your Moonfire spell by up to ".Length);
                                     spellDesc = spellDesc.Replace(".", "");
-                                    stats.MoonfireDmg += float.Parse(spellDesc);
+									stats.MoonfireDmg += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                                 else if (spellDesc.StartsWith("Increases the damage dealt by Wrath by "))
                                 {
                                     spellDesc = spellDesc.Substring("Increases the damage dealt by Wrath by ".Length);
                                     spellDesc = spellDesc.Replace(".", "");
-                                    stats.WrathDmg += float.Parse(spellDesc);
+									stats.WrathDmg += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                                 else if (spellDesc.StartsWith("Increases the healing granted by the Tree of Life form"))
                                 {
                                     spellDesc = spellDesc.Substring(spellDesc.IndexOf("and adds "));
                                     spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" spell critical strike rating"));
-                                    stats.IdolCritRating += float.Parse(spellDesc);
+									stats.IdolCritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                                 else if (spellDesc.StartsWith("Your Judgement of Command ability has a chance to grant "))
                                 {
                                     spellDesc = spellDesc.Substring("Your Judgement of Command ability has a chance to grant ".Length, 3);
-                                    stats.AttackPower += (10f / (9f / 0.4f)) * float.Parse(spellDesc);
+									stats.AttackPower += (10f / (9f / 0.4f)) * float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
 
                                 }
                                 else if (spellDesc.StartsWith("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by"))
                                 {
                                     spellDesc = spellDesc.Substring("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by ".Length, 2);
                                     spellDesc = spellDesc.Replace(".", "");
-                                    stats.CritRating += float.Parse(spellDesc);
+									stats.CritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                                 else if (spellDesc.StartsWith("Increases the damage dealt by your Crusader Strike ability by "))
                                 {
                                     spellDesc = spellDesc.Substring("Increases the damage dealt by your Cruasder Strike ability by ".Length);
                                     spellDesc = spellDesc.Replace("%", "");
                                     spellDesc = spellDesc.Replace(".", "");
-                                    stats.BonusCrusaderStrikeDamageMultiplier += float.Parse(spellDesc) / 100f;
+									stats.BonusCrusaderStrikeDamageMultiplier += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture) / 100f;
 
                                 }
                             }

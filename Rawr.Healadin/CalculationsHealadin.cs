@@ -112,7 +112,7 @@ namespace Rawr.Healadin
             CharacterCalculationsHealadin calculatedStats = new CharacterCalculationsHealadin();
             calculatedStats.BasicStats = stats;
 
-            float length = float.Parse(character.CalculationOptions["Length"]) * 60;
+			float length = float.Parse(character.CalculationOptions["Length"], System.Globalization.CultureInfo.InvariantCulture) * 60;
             float totalMana = stats.Mana + (length * stats.Mp5 / 5);
 
             calculatedStats[0] = new Spell("Flash of Light", 7);

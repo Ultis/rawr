@@ -178,7 +178,7 @@ namespace Rawr.Warlock
         {
             Stats charStats = GetCharacterStats(character, additionalItem);
             int duration = Int32.Parse(character.CalculationOptions["Duration"]);
-            float latency = float.Parse(character.CalculationOptions["Latency"]);
+			float latency = float.Parse(character.CalculationOptions["Latency"], System.Globalization.CultureInfo.InvariantCulture);
             Dictionary<int, Spell> priorityList = new Dictionary<int, Spell>();
             
             WarlockSpellRotation wsr = new WarlockSpellRotation(charStats, character, duration);

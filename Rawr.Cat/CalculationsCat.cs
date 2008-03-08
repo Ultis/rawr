@@ -119,7 +119,7 @@ namespace Rawr
 			int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
 			float targetArmor = int.Parse(character.CalculationOptions["TargetArmor"]);
 			float exposeWeaknessAPValue = int.Parse(character.CalculationOptions["ExposeWeaknessAPValue"]);
-			float bloodlustUptime = float.Parse(character.CalculationOptions["BloodlustUptime"]) / 100f;
+			float bloodlustUptime = float.Parse(character.CalculationOptions["BloodlustUptime"], System.Globalization.CultureInfo.InvariantCulture) / 100f;
 			int powershift = int.Parse(character.CalculationOptions["Powershift"]);
 			string primaryAttack = character.CalculationOptions["PrimaryAttack"];
 			string finisher = character.CalculationOptions["Finisher"];
@@ -365,8 +365,8 @@ namespace Rawr
 
 			Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
-			statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * (float.Parse(character.CalculationOptions["DrumsOfWarUptime"]) / 100f);
-			statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * (float.Parse(character.CalculationOptions["DrumsOfBattleUptime"]) / 100f);
+			statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * (float.Parse(character.CalculationOptions["DrumsOfWarUptime"], System.Globalization.CultureInfo.InvariantCulture) / 100f);
+			statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * (float.Parse(character.CalculationOptions["DrumsOfBattleUptime"], System.Globalization.CultureInfo.InvariantCulture) / 100f);
 
 			float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
 			float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));

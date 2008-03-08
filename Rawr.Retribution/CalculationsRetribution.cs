@@ -173,7 +173,7 @@ namespace Rawr.Retribution
 
             if (character.CalculationOptions.ContainsKey("BossArmor") && character.CalculationOptions["BossArmor"].Trim().Length>0)
             {
-                bossArmor = float.Parse(character.CalculationOptions["BossArmor"]);
+				bossArmor = float.Parse(character.CalculationOptions["BossArmor"], System.Globalization.CultureInfo.InvariantCulture);
             }
             float totalArP = stats.ArmorPenetration;
             float modifiedTargetArmor = bossArmor - totalArP;
@@ -210,9 +210,9 @@ namespace Rawr.Retribution
             //Fight duration
             float fightDuration = int.Parse(character.CalculationOptions["FightLength"])*60;
             //Improved Sanctity Aura
-            float impSancAura = 1f + 0.01f * ((character.CalculationOptions.ContainsKey("ImprovedSanctityAura")) ? float.Parse(character.CalculationOptions["ImprovedSanctityAura"]) : 0f);
+			float impSancAura = 1f + 0.01f * ((character.CalculationOptions.ContainsKey("ImprovedSanctityAura")) ? float.Parse(character.CalculationOptions["ImprovedSanctityAura"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
             //Crusade
-            float crusade = 1f + 0.01f*((character.CalculationOptions.ContainsKey("Crusade")) ? float.Parse(character.CalculationOptions["Crusade"]) : 0f);
+			float crusade = 1f + 0.01f * ((character.CalculationOptions.ContainsKey("Crusade")) ? float.Parse(character.CalculationOptions["Crusade"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
             //Avenging Wrath -- Calculating uptime
             int remainder = 0, noOfFullAW = 0, noOfFullBL;
             int div = Math.DivRem(Convert.ToInt32(fightDuration), 180,out remainder);
@@ -252,14 +252,14 @@ namespace Rawr.Retribution
             #endregion
             
             //Vengeance
-            float vengeance = 1f + 0.03f * ((character.CalculationOptions.ContainsKey("Vengeance")) ? float.Parse(character.CalculationOptions["Vengeance"]) : 0f);
+			float vengeance = 1f + 0.03f * ((character.CalculationOptions.ContainsKey("Vengeance")) ? float.Parse(character.CalculationOptions["Vengeance"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
             //Sanctity Aura
-            float sancAura = 1f + 0.1f * ((character.CalculationOptions.ContainsKey("SanctityAura")) ? float.Parse(character.CalculationOptions["SanctityAura"]) : 0f);
+			float sancAura = 1f + 0.1f * ((character.CalculationOptions.ContainsKey("SanctityAura")) ? float.Parse(character.CalculationOptions["SanctityAura"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
             //Misery : TODO Take from Debuff List
             float misery = 1.05f;
             //SpellCrit Mod
-            float judgementCrit = 1.0f + (0.03f * ((character.CalculationOptions.ContainsKey("Fanaticism")) ? 
-                float.Parse(character.CalculationOptions["Fanaticism"]) : 0f))
+            float judgementCrit = 1.0f + (0.03f * ((character.CalculationOptions.ContainsKey("Fanaticism")) ?
+				float.Parse(character.CalculationOptions["Fanaticism"], System.Globalization.CultureInfo.InvariantCulture) : 0f))
                 + (stats.CritRating / 22.08f) / 100f;
             //Blood Frenzy : TODO Take from Debuff List
             float bloodFrenzy = 1.0f + stats.BonusPhysicalDamageMultiplier;
@@ -531,7 +531,7 @@ namespace Rawr.Retribution
 
             statsTotal.Strength = (strBase + (float)Math.Floor((strBase * statsBuffs.BonusStrengthMultiplier) + strBonus * (1 + statsBuffs.BonusStrengthMultiplier)));
 
-            statsTotal.Strength *= 1f + 0.02f * ((character.CalculationOptions.ContainsKey("DivineStrength")) ? float.Parse(character.CalculationOptions["DivineStrength"]) : 0f);
+			statsTotal.Strength *= 1f + 0.02f * ((character.CalculationOptions.ContainsKey("DivineStrength")) ? float.Parse(character.CalculationOptions["DivineStrength"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
             statsTotal.Stamina = (staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier)));          
 
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina-staBase) * 10f))));
@@ -541,12 +541,12 @@ namespace Rawr.Retribution
 
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.CritRating += (((statsTotal.Agility - agiBase)/ 25f) * 22.08f);
-            statsTotal.CritRating += (22.08f * ((character.CalculationOptions.ContainsKey("Conviction")) ? float.Parse(character.CalculationOptions["Conviction"]) : 0f));
-            statsTotal.CritRating += (22.08f * ((character.CalculationOptions.ContainsKey("SanctifiedSeals")) ? float.Parse(character.CalculationOptions["SanctifiedSeals"]) : 0f));
+			statsTotal.CritRating += (22.08f * ((character.CalculationOptions.ContainsKey("Conviction")) ? float.Parse(character.CalculationOptions["Conviction"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
+			statsTotal.CritRating += (22.08f * ((character.CalculationOptions.ContainsKey("SanctifiedSeals")) ? float.Parse(character.CalculationOptions["SanctifiedSeals"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
             statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
-            statsTotal.HitRating += (15.76f * ((character.CalculationOptions.ContainsKey("Precision")) ? float.Parse(character.CalculationOptions["Precision"]) : 0f));
-            statsTotal.SpellHitRating += (15.76f * ((character.CalculationOptions.ContainsKey("Precision")) ? float.Parse(character.CalculationOptions["Precision"]) : 0f));
-            statsTotal.SpellCritRating += (22.08f * ((character.CalculationOptions.ContainsKey("SanctifiedSeals")) ? float.Parse(character.CalculationOptions["SanctifiedSeals"]) : 0f));
+			statsTotal.HitRating += (15.76f * ((character.CalculationOptions.ContainsKey("Precision")) ? float.Parse(character.CalculationOptions["Precision"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
+			statsTotal.SpellHitRating += (15.76f * ((character.CalculationOptions.ContainsKey("Precision")) ? float.Parse(character.CalculationOptions["Precision"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
+			statsTotal.SpellCritRating += (22.08f * ((character.CalculationOptions.ContainsKey("SanctifiedSeals")) ? float.Parse(character.CalculationOptions["SanctifiedSeals"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
             statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
             
 

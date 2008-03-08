@@ -151,8 +151,8 @@ namespace Rawr.Moonkin
             calcs.ArcaneDamage = stats.SpellDamageRating + stats.SpellArcaneDamageRating + lunarGuidancePercent * stats.Intellect;
             calcs.NatureDamage = stats.SpellDamageRating + stats.SpellNatureDamageRating + lunarGuidancePercent * stats.Intellect;
 
-            calcs.Latency = float.Parse(character.CalculationOptions["Latency"]);
-            calcs.FightLength = float.Parse(character.CalculationOptions["FightLength"]);
+			calcs.Latency = float.Parse(character.CalculationOptions["Latency"], System.Globalization.CultureInfo.InvariantCulture);
+			calcs.FightLength = float.Parse(character.CalculationOptions["FightLength"], System.Globalization.CultureInfo.InvariantCulture);
 
             // 2.3 spirit regen calculation for druids
             // The /2 is to convert from mana per tick (2s) to mana per second
@@ -319,7 +319,7 @@ namespace Rawr.Moonkin
             statsTotal.Mp5 += dreamstatePercent * statsTotal.Intellect;
 
             // Add mp5 from shadow priest
-            statsTotal.Mp5 += float.Parse(character.CalculationOptions["ShadowPriest"]);
+			statsTotal.Mp5 += float.Parse(character.CalculationOptions["ShadowPriest"], System.Globalization.CultureInfo.InvariantCulture);
 
             return statsTotal;
         }
