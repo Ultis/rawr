@@ -270,7 +270,12 @@ namespace Rawr
 						string id = gemmedId.Split('.')[0];
 						WebRequestWrapper wrw = new WebRequestWrapper();
 						docItem = wrw.DownloadItemToolTipSheet(id);
-
+                        if (docItem == null || docItem.DocumentElement == null
+                            || !docItem.DocumentElement.HasChildNodes || !docItem.DocumentElement.ChildNodes[0].HasChildNodes)
+                        {
+                            //No such item exists.
+                            return null;
+                        }
 						Item.ItemQuality quality = Item.ItemQuality.Common;
 						Item.ItemType type = Item.ItemType.None;
 						string name = string.Empty;

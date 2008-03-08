@@ -246,7 +246,7 @@ namespace Rawr
                         SelectItem(newItem, true);
 					}
 				}
-                if(newItem != null)
+                else
 				{
 					ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
 					newLvi.Tag = newItem;

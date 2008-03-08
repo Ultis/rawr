@@ -159,7 +159,7 @@ namespace Rawr
 		/// <returns>Full path to the temp image.</returns>
 		public string DownloadTempImage()
 		{
-			throw new NotImplementedException();
+            return DownloadItemIcon("temp");
 		}
 
 		/// <summary>
@@ -335,7 +335,7 @@ namespace Rawr
 
 			for (int i = 0; i < _webRequestThreads.Length; i++)
 			{
-				if (_webRequestThreads[i] == null || _webRequestThreads[i].ThreadState == ThreadState.Stopped)
+				if (_webRequestThreads[i] == null || _webRequestThreads[i].ThreadState == ThreadState.Stopped || _webRequestThreads[i].ThreadState == ThreadState.Aborted)
 				{
 					//Thread is either null or terminated, start a new one
 					_webRequestThreads[i] = new Thread(new ThreadStart(ThreadDoWork));
