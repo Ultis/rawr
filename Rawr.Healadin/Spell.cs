@@ -52,6 +52,7 @@ namespace Rawr.Healadin
                 coef = 1.5f / 3.5f;
                 downrank = 1;
                 bolBonus = 185;
+                healMultiple *= 1.05f;
             }
         }
 
@@ -71,12 +72,11 @@ namespace Rawr.Healadin
             }
             else
             {
-                healMultiple *= 1.05f;
             }
 
             avgHeal = healMultiple * (baseHeal + (((stats.Healing * coef) + bolBonus) * downrank));
             hps = avgHeal * (1 + (.5f * spellCrit)) / castTime;
-            mps = ((baseMana * (di ? .5f : 1f)) - (.6f * baseMana * spellCrit)) / castTime;
+            mps = ((baseMana * (di ? .5f : 1f)) - (.6f * baseMana * spellCrit) - (stats.ManaRestorePerCast)) / castTime;
             hpm = hps / mps;
         }
 

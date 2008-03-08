@@ -43,14 +43,38 @@ namespace Rawr.Healadin
             if (!Character.CalculationOptions.ContainsKey("CycleHL5"))
                 Character.CalculationOptions["CycleHL5"] = "0";
 
+            if (!Character.CalculationOptions.ContainsKey("DIFoL"))
+                Character.CalculationOptions["DIFoL"] = "3";
+            if (!Character.CalculationOptions.ContainsKey("DIHL1"))
+                Character.CalculationOptions["DIHL1"] = "4";
+            if (!Character.CalculationOptions.ContainsKey("DIHL2"))
+                Character.CalculationOptions["DIHL2"] = "1";
+            if (!Character.CalculationOptions.ContainsKey("DIHL3"))
+                Character.CalculationOptions["DIHL3"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("DIHL4"))
+                Character.CalculationOptions["DIHL4"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("DIHL5"))
+                Character.CalculationOptions["DIHL5"] = "0";
+
             if (!Character.CalculationOptions.ContainsKey("Length"))
                 Character.CalculationOptions["Length"] = "5";
+            if (!Character.CalculationOptions.ContainsKey("ManaAmt"))
+                Character.CalculationOptions["ManaAmt"] = "2400";
+            if (!Character.CalculationOptions.ContainsKey("ManaTime"))
+                Character.CalculationOptions["ManaTime"] = "2.5";
 
             cmbRank1.Value = decimal.Parse(Character.CalculationOptions["Rank1"]);
             cmbRank2.Value = decimal.Parse(Character.CalculationOptions["Rank2"]);
             cmbRank3.Value = decimal.Parse(Character.CalculationOptions["Rank3"]);
             cmbRank4.Value = decimal.Parse(Character.CalculationOptions["Rank4"]);
             cmbRank5.Value = decimal.Parse(Character.CalculationOptions["Rank5"]);
+
+            cmbDIFoL.Value = decimal.Parse(Character.CalculationOptions["DIFoL"]);
+            cmbDIHL1.Value = decimal.Parse(Character.CalculationOptions["DIHL1"]);
+            cmbDIHL2.Value = decimal.Parse(Character.CalculationOptions["DIHL2"]);
+            cmbDIHL3.Value = decimal.Parse(Character.CalculationOptions["DIHL3"]);
+            cmbDIHL4.Value = decimal.Parse(Character.CalculationOptions["DIHL4"]);
+            cmbDIHL5.Value = decimal.Parse(Character.CalculationOptions["DIHL5"]);
 
             cmbFoL.Value = decimal.Parse(Character.CalculationOptions["CycleFoL"]);
             cmbHL1.Value = decimal.Parse(Character.CalculationOptions["CycleHL1"]);
@@ -60,6 +84,8 @@ namespace Rawr.Healadin
             cmbHL5.Value = decimal.Parse(Character.CalculationOptions["CycleHL5"]);
 
             cmbLength.Value = decimal.Parse(Character.CalculationOptions["Length"]);
+            cmbManaAmt.Text = Character.CalculationOptions["ManaAmt"];
+            cmbManaTime.Value = decimal.Parse(Character.CalculationOptions["ManaTime"]);
         }
 
         private void cmbRank1_ValueChanged(object sender, EventArgs e)
@@ -136,6 +162,60 @@ namespace Rawr.Healadin
         private void cmbLength_ValueChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["Length"] = cmbLength.Value.ToString();
+            Character.OnItemsChanged();
+        }
+
+        private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ManaAmt"] = cmbManaAmt.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void cmbManaTime_ValueChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ManaTime"] = cmbManaTime.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void cmbManaAmt_TextUpdate(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ManaAmt"] = cmbManaAmt.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void cmbDIFoL_ValueChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["DIFoL"] = cmbDIFoL.Value.ToString();
+            Character.OnItemsChanged();
+        }
+
+        private void cmbDIHL1_ValueChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["DIHL1"] = cmbDIHL1.Value.ToString();
+            Character.OnItemsChanged();
+        }
+
+        private void cmbDIHL2_ValueChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["DIHL2"] = cmbDIHL2.Value.ToString();
+            Character.OnItemsChanged();
+        }
+
+        private void cmbDIHL3_ValueChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["DIHL3"] = cmbDIHL3.Value.ToString();
+            Character.OnItemsChanged();
+        }
+
+        private void cmbDIHL4_ValueChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["DIHL4"] = cmbDIHL4.Value.ToString();
+            Character.OnItemsChanged();
+        }
+
+        private void cmbDIHL5_ValueChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["DIHL5"] = cmbDIHL5.Value.ToString();
             Character.OnItemsChanged();
         }
     }

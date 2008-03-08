@@ -830,6 +830,13 @@ namespace Rawr
                                     case "Spirit":
                                         sockets.Stats.Spirit = socketBonusValue;
                                         break;
+                                    case "Mana every 5 seconds":
+                                    case "Mana ever 5 Sec":
+                                    case "mana per 5 sec":
+                                    case "mana per 5 sec.":
+                                    case "Mana per 5 Seconds":
+                                        sockets.Stats.Mp5 = socketBonusValue;
+                                        break;
 								}
 							}
 							catch { }

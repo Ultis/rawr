@@ -50,6 +50,18 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cmbManaTime = new System.Windows.Forms.NumericUpDown();
+            this.cmbManaAmt = new System.Windows.Forms.ComboBox();
+            this.cmbDIHL1 = new System.Windows.Forms.NumericUpDown();
+            this.cmbDIFoL = new System.Windows.Forms.NumericUpDown();
+            this.cmbDIHL2 = new System.Windows.Forms.NumericUpDown();
+            this.cmbDIHL3 = new System.Windows.Forms.NumericUpDown();
+            this.cmbDIHL4 = new System.Windows.Forms.NumericUpDown();
+            this.cmbDIHL5 = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cmbRank1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbRank2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbRank3)).BeginInit();
@@ -63,6 +75,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbHL5)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIFoL)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL5)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -352,22 +372,29 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.cmbDIHL5);
             this.groupBox1.Controls.Add(this.cmbHL5);
             this.groupBox1.Controls.Add(this.cmbRank1);
             this.groupBox1.Controls.Add(this.lblHL5);
             this.groupBox1.Controls.Add(this.cmbRank2);
+            this.groupBox1.Controls.Add(this.cmbDIHL4);
             this.groupBox1.Controls.Add(this.cmbHL4);
             this.groupBox1.Controls.Add(this.cmbRank3);
             this.groupBox1.Controls.Add(this.lblHL4);
             this.groupBox1.Controls.Add(this.cmbRank4);
+            this.groupBox1.Controls.Add(this.cmbDIHL3);
             this.groupBox1.Controls.Add(this.cmbHL3);
             this.groupBox1.Controls.Add(this.cmbRank5);
             this.groupBox1.Controls.Add(this.lblHL3);
             this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.cmbDIHL2);
             this.groupBox1.Controls.Add(this.cmbHL2);
             this.groupBox1.Controls.Add(this.lblFoL);
             this.groupBox1.Controls.Add(this.lblHL2);
+            this.groupBox1.Controls.Add(this.cmbDIFoL);
+            this.groupBox1.Controls.Add(this.cmbDIHL1);
             this.groupBox1.Controls.Add(this.cmbFoL);
             this.groupBox1.Controls.Add(this.cmbHL1);
             this.groupBox1.Controls.Add(this.lblHL1);
@@ -415,10 +442,194 @@
             this.label3.TabIndex = 21;
             this.label3.Text = "Fight Length:";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.cmbManaTime);
+            this.groupBox2.Controls.Add(this.cmbManaAmt);
+            this.groupBox2.Location = new System.Drawing.Point(4, 266);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(205, 67);
+            this.groupBox2.TabIndex = 22;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Mana Buffs";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 46);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(78, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Shadow Priest:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(73, 21);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(80, 13);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "mana pot every";
+            // 
+            // cmbManaTime
+            // 
+            this.cmbManaTime.DecimalPlaces = 1;
+            this.cmbManaTime.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.cmbManaTime.Location = new System.Drawing.Point(158, 19);
+            this.cmbManaTime.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.cmbManaTime.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.cmbManaTime.Name = "cmbManaTime";
+            this.cmbManaTime.Size = new System.Drawing.Size(40, 20);
+            this.cmbManaTime.TabIndex = 1;
+            this.cmbManaTime.Value = new decimal(new int[] {
+            25,
+            0,
+            0,
+            65536});
+            this.cmbManaTime.ValueChanged += new System.EventHandler(this.cmbManaTime_ValueChanged);
+            // 
+            // cmbManaAmt
+            // 
+            this.cmbManaAmt.DisplayMember = "2400";
+            this.cmbManaAmt.Items.AddRange(new object[] {
+            "1800",
+            "2200",
+            "2400"});
+            this.cmbManaAmt.Location = new System.Drawing.Point(6, 18);
+            this.cmbManaAmt.Name = "cmbManaAmt";
+            this.cmbManaAmt.Size = new System.Drawing.Size(61, 21);
+            this.cmbManaAmt.TabIndex = 0;
+            this.cmbManaAmt.Text = "2400";
+            this.cmbManaAmt.ValueMember = "2400";
+            this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
+            this.cmbManaAmt.TextUpdate += new System.EventHandler(this.cmbManaAmt_TextUpdate);
+            // 
+            // cmbDIHL1
+            // 
+            this.cmbDIHL1.Location = new System.Drawing.Point(146, 101);
+            this.cmbDIHL1.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIHL1.Name = "cmbDIHL1";
+            this.cmbDIHL1.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIHL1.TabIndex = 10;
+            this.cmbDIHL1.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.cmbDIHL1.ValueChanged += new System.EventHandler(this.cmbDIHL1_ValueChanged);
+            // 
+            // cmbDIFoL
+            // 
+            this.cmbDIFoL.Location = new System.Drawing.Point(146, 75);
+            this.cmbDIFoL.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIFoL.Name = "cmbDIFoL";
+            this.cmbDIFoL.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIFoL.TabIndex = 8;
+            this.cmbDIFoL.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.cmbDIFoL.ValueChanged += new System.EventHandler(this.cmbDIFoL_ValueChanged);
+            // 
+            // cmbDIHL2
+            // 
+            this.cmbDIHL2.Location = new System.Drawing.Point(146, 127);
+            this.cmbDIHL2.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIHL2.Name = "cmbDIHL2";
+            this.cmbDIHL2.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIHL2.TabIndex = 12;
+            this.cmbDIHL2.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.cmbDIHL2.ValueChanged += new System.EventHandler(this.cmbDIHL2_ValueChanged);
+            // 
+            // cmbDIHL3
+            // 
+            this.cmbDIHL3.Location = new System.Drawing.Point(146, 153);
+            this.cmbDIHL3.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIHL3.Name = "cmbDIHL3";
+            this.cmbDIHL3.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIHL3.TabIndex = 14;
+            this.cmbDIHL3.ValueChanged += new System.EventHandler(this.cmbDIHL3_ValueChanged);
+            // 
+            // cmbDIHL4
+            // 
+            this.cmbDIHL4.Location = new System.Drawing.Point(146, 179);
+            this.cmbDIHL4.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIHL4.Name = "cmbDIHL4";
+            this.cmbDIHL4.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIHL4.TabIndex = 16;
+            this.cmbDIHL4.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.cmbDIHL4.ValueChanged += new System.EventHandler(this.cmbDIHL4_ValueChanged);
+            // 
+            // cmbDIHL5
+            // 
+            this.cmbDIHL5.Location = new System.Drawing.Point(146, 205);
+            this.cmbDIHL5.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIHL5.Name = "cmbDIHL5";
+            this.cmbDIHL5.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIHL5.TabIndex = 18;
+            this.cmbDIHL5.ValueChanged += new System.EventHandler(this.cmbDIHL5_ValueChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(137, 59);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(62, 13);
+            this.label6.TabIndex = 19;
+            this.label6.Text = "Divine Ilum.";
+            // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbLength);
             this.Controls.Add(this.groupBox1);
@@ -438,6 +649,15 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIFoL)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL5)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -467,5 +687,17 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.NumericUpDown cmbLength;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.NumericUpDown cmbManaTime;
+        private System.Windows.Forms.ComboBox cmbManaAmt;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown cmbDIHL5;
+        private System.Windows.Forms.NumericUpDown cmbDIHL4;
+        private System.Windows.Forms.NumericUpDown cmbDIHL3;
+        private System.Windows.Forms.NumericUpDown cmbDIHL2;
+        private System.Windows.Forms.NumericUpDown cmbDIFoL;
+        private System.Windows.Forms.NumericUpDown cmbDIHL1;
     }
 }

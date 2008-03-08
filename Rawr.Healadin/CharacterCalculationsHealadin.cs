@@ -40,18 +40,17 @@ namespace Rawr.Healadin
             set { _subPoints[1] = value; }
         }
 
-        private float _hps;
-        public float Hps
-        {
-            get { return _hps; }
-            set { _hps = value; }
-        }
+        public float Hps { get; set; }
+        public float Uptime { get; set; }
+        public float AvgHps { get; set; }
+        public float AvgHpm { get; set; }
+        public float Healed { get; set; }
 
         private Stats _basicStats;
         public Stats BasicStats
         {
             get { return _basicStats; }
-            set { _basicStats = value; }
+            set { _basicStats = value; Calculate(false); }
         }
 
         private Dictionary<int, Spell> _spells;
@@ -81,8 +80,11 @@ namespace Rawr.Healadin
             dictValues.Add("Spell Crit Rating", BasicStats.SpellCritRating.ToString());
             dictValues.Add("Spell Haste Rating", BasicStats.SpellHasteRating.ToString());
             dictValues.Add("Holy Crit", (Math.Round(_spells[0].SpellCrit * 100, 2)).ToString() + "%");
-            dictValues.Add("Cycle Uptime", Math.Round(LongevityPoints/100,2).ToString()+"%");
+            dictValues.Add("Cycle Uptime", Math.Round(Uptime*100,2).ToString()+"%");
             dictValues.Add("Cycle Hps", Hps.ToString());
+            dictValues.Add("Total Healed", Healed.ToString());
+            dictValues.Add("Average Hps", AvgHps.ToString());
+            dictValues.Add("Average Hpm", AvgHpm.ToString());
 
             return dictValues;
         }
