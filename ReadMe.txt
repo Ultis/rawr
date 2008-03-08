@@ -1,4 +1,4 @@
-Rawr Beta 12
+Rawr Beta 12.1
 ------------
 There's probably alot of people reading this who are new to Rawr. So, welcome! Two versions ago, Rawr supported only a single model, Bear. Last version, Cat was added. That was a pretty big addition, but still limited Rawr's users to one spec of one class. Well, lets octuple that, shall we? Rawr now supports 3 more models: *Moonkin*, *Mage*, and *Warlock*. Please keep in mind that these models are brand new, and in various stages of polish. There will be bugs, there will be missing features. I strongly urge you to come post an Issue on our development site, http://www.codeplex.com/Rawr/, with any feedback you have on Rawr, especially the 3 new models. Dopefish is developing the Moonkin model, Kavan is developing the Mage model, and CBennight is developing the Warlock model. And as usual, there's a number of additional enhancements to core Rawr functionality. Big thanks to Dwin, and Bashui for help on core Rawr functionality. Also, stay tuned, because there are more models in the works. Healadin and Retribution are coming along well, and Rogue, ProtWarr, Protadin, Hunter, ElemShammy, and DPSWarr are beginning development as well. If you'd like to help out with any of these models, a new model, or the project in general, let me know, we could always use a hand.
 
@@ -68,6 +68,14 @@ Notes on Rawr.Moonkin
 
 Version History
 ---------------
+Beta 12.1:
+ - Fixed a bug that would cause "Input string not in correct format" errors when Rawr was run on copies of Windows for a region where a period is not the decimal separator (ie european countries where it would be "1,23" instead of "1.23").
+ - For proxies that filter by user-agent, the user-agent used by Rawr is now customizable in the proxy options.
+ - Config settings (like recent files) are now user specific.
+ - Fix for occasionally not loading icons immediately even though a network connection is available. Also fixed an error when there was no network connection.
+ - Rawr.Mage: Added new AB-AM cycle and new AB cycles with Frostbolt/Scorch filler, added a fix for the item budget comparison, added scrolling on the options screen, added Drums of Battle stacking, 
+ - Rawr.Warlock: Fixed issue when altering spell cycle
+ 
 Beta 12:
  - Rawr now includes models for Moonkins, Mages, and Warlocks!
  - Many more stats are tracked about items, for use in new and upcoming models.
