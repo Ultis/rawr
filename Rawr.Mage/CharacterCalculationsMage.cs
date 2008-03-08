@@ -451,15 +451,11 @@ namespace Rawr.Mage
                     if (s is BaseSpell)
                     {
                         BaseSpell bs = s as BaseSpell;
-                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} sec\n{3:F}x Amplify\n{4:F}% Crit Rate\n{5:F}% Hit Rate\n{6:F} Crit Multiplier", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus));
-                    }
-                    else if (s.ABCycle)
-                    {
-                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\nAB Spam Tradeoff: {2} Dpm\n{3}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), s.Sequence));
+                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} sec\n{3:F}x Amplify\n{4:F}% Crit Rate\n{5:F}% Hit Rate\n{6:F} Crit Multiplier\nAB Spam Tradeoff: {7:F} Dpm", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond)));
                     }
                     else
                     {
-                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.Sequence));
+                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\nAB Spam Tradeoff: {2:F} Dpm\n{3}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), s.Sequence));
                     }
                 }
             }
