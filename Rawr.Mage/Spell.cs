@@ -316,7 +316,14 @@ namespace Rawr.Mage
             if (Name != "Lightning Bolt" && calculations.BasicStats.LightningCapacitorProc > 0)
             {
                 BaseSpell LightningBolt = (BaseSpell)calculations.GetSpell("Lightning Bolt");
-                DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
+                //discrete model
+                int hitsInsideCooldown = (int)(2.5f / (CastTime / HitProcs));
+                float avgCritsPerHit = CritRate * TargetProcs / HitProcs;
+                float avgHitsToDischarge = 3f / avgCritsPerHit;
+                if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
+                DamagePerSecond += LightningBolt.AverageDamage / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
+                //continuous model
+                //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
             }
 
             /*float casttimeHash = calculations.ClearcastingChance * 100 + CastTime;
