@@ -160,7 +160,6 @@ namespace Rawr.Mage
 
         public static float CalculateSimpleOO5SR(float clearcastingChance, float duration, float lag, bool channel)
         {
-            int N = 1;
             float timestamp;
             float channelDuration = 0;
             if (channel)

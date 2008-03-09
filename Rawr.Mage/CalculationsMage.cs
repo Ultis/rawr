@@ -59,8 +59,10 @@ namespace Rawr.Mage
                     "Spell Info:Arcane Missiles",
                     "Spell Info:Arcane Blast*Spammed",
                     "Spell Info:Scorch",
+                    "Spell Info:Fire Blast",
                     "Spell Info:Fireball",
                     "Spell Info:FireballScorch*Must enable Maintain Scorch and have points in Improved Scorch talent to enable",
+                    "Spell Info:FireballFireBlast",
                     "Spell Info:Frostbolt",
                     "Spell Info:ABAMP*Pause so that AB debuff runs out mid-cast",
                     "Spell Info:ABAM*Spam with no pause",
@@ -341,6 +343,7 @@ namespace Rawr.Mage
                 spellList.Add("Arcane Missiles");
                 spellList.Add("Scorch");
                 spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
+                spellList.Add("FireballFireBlast");
                 spellList.Add("Frostbolt");
                 spellList.Add("Arcane Blast");
             }

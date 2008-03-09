@@ -1155,6 +1155,69 @@ namespace Rawr.Mage
         }
     }
 
+    class FireballFireBlast : SpellCycle
+    {
+        public FireballFireBlast(Character character, CharacterCalculationsMage calculations)
+            : base(33)
+        {
+            Name = "FireballFireBlast";
+
+            Spell FB = calculations.GetSpell("Fireball");
+            BaseSpell Blast = (BaseSpell)calculations.GetSpell("Fire Blast");
+            Spell Sc = calculations.GetSpell("Scorch");
+
+            if (calculations.CalculationOptions.ImprovedScorch == 0)
+            {
+                // in this case just Fireball/Fire Blast, scorch debuff won't be applied
+                float blastCooldown = Blast.Cooldown - Blast.CastTime;
+                AddSpell(Blast, calculations);
+                while (blastCooldown > 0)
+                {
+                    AddSpell(FB, calculations);
+                    blastCooldown -= FB.CastTime;
+                }
+                Calculate(character, calculations);
+            }
+            else
+            {
+                int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)calculations.CalculationOptions.ImprovedScorch);
+                double timeOnScorch = 30;
+                int fbCount = 0;
+                float blastCooldown = 0;
+
+                do
+                {
+                    if (timeOnScorch - Sc.CastTime > Blast.Cooldown && blastCooldown <= 0)
+                    {
+                        AddSpell(Blast, calculations);
+                        fbCount++;
+                        timeOnScorch -= Blast.CastTime;
+                        blastCooldown = Blast.Cooldown - Blast.CastTime;
+                    }
+                    else if (timeOnScorch > FB.CastTime + (averageScorchesNeeded + 1) * Sc.CastTime) // one extra scorch gap to account for possible resist
+                    {
+                        AddSpell(FB, calculations);
+                        fbCount++;
+                        timeOnScorch -= FB.CastTime;
+                        blastCooldown -= FB.CastTime;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (true);
+                for (int i = 0; i < averageScorchesNeeded; i++)
+                {
+                    AddSpell(Sc, calculations);
+                    blastCooldown -= Sc.CastTime;
+                }
+                if (blastCooldown > 0) AddPause(blastCooldown);
+
+                Calculate(character, calculations);
+            }
+        }
+    }
+
     class ABAM3ScCCAM : Spell
     {
         public ABAM3ScCCAM(Character character, CharacterCalculationsMage calculations)
