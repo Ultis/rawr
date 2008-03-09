@@ -280,8 +280,8 @@ namespace Rawr.Mage
 
         public Spell GetSpell(string spellName)
         {
-            if (Spells.ContainsKey(spellName)) return Spells[spellName];
             Spell s = null;
+            if (Spells.TryGetValue(spellName, out s)) return s;
 
             switch (spellName)
             {
@@ -291,8 +291,23 @@ namespace Rawr.Mage
                 case "Arcane Missiles":
                     s = new ArcaneMissiles(Character, this);
                     break;
+                case "Arcane Missiles CC":
+                    s = new ArcaneMissilesCC(Character, this);
+                    break;
+                case "Arcane Missiles no proc":
+                    s = new ArcaneMissiles(Character, this, true, false, false);
+                    break;
+                case "Arcane Missiles FTF":
+                    s = new ArcaneMissiles(Character, this);
+                    break;
+                case "Arcane Missiles FTT":
+                    s = new ArcaneMissiles(Character, this);
+                    break;
                 case "Frostbolt":
                     s = new Frostbolt(Character, this);
+                    break;
+                case "Frostbolt no CC":
+                    s = new Frostbolt(Character, this, false);
                     break;
                 case "Fireball":
                     s = new Fireball(Character, this);
@@ -300,12 +315,21 @@ namespace Rawr.Mage
                 case "Scorch":
                     s = new Scorch(Character, this);
                     break;
+                case "Scorch no CC":
+                    s = new Scorch(Character, this, false);
+                    break;
                 case "Arcane Blast 3,3":
                 case "Arcane Blast":
                     s = new ArcaneBlast(Character, this, 3, 3);
                     break;
+                case "Arcane Blast 3,3 no CC":
+                    s = new ArcaneBlast(Character, this, 3, 3, false);
+                    break;
                 case "Arcane Blast 0,0":
                     s = new ArcaneBlast(Character, this, 0, 0);
+                    break;
+                case "Arcane Blast 0,0 no CC":
+                    s = new ArcaneBlast(Character, this, 0, 0, false);
                     break;
                 case "Arcane Blast 1,0":
                     s = new ArcaneBlast(Character, this, 1, 0);
@@ -316,8 +340,14 @@ namespace Rawr.Mage
                 case "Arcane Blast 1,1":
                     s = new ArcaneBlast(Character, this, 1, 1);
                     break;
+                case "Arcane Blast 1,1 no CC":
+                    s = new ArcaneBlast(Character, this, 1, 1, false);
+                    break;
                 case "Arcane Blast 2,2":
                     s = new ArcaneBlast(Character, this, 2, 2);
+                    break;
+                case "Arcane Blast 2,2 no CC":
+                    s = new ArcaneBlast(Character, this, 2, 2, false);
                     break;
                 case "Arcane Blast 1,2":
                     s = new ArcaneBlast(Character, this, 1, 2);

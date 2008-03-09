@@ -25,7 +25,15 @@ namespace Rawr.Mage
 
         public bool AreaEffect;
 
-        public string Sequence;
+        protected string sequence = null;
+        public virtual string Sequence
+        {
+            get
+            {
+                return sequence;
+            }
+        }
+
         public bool Channeled;
         public float HitProcs;
         public float CastProcs;
@@ -324,9 +332,7 @@ namespace Rawr.Mage
 
             if (Cost > 0)
             {
-                FSRCalc fsr = new FSRCalc();
-                fsr.AddSpell(CastTime - calculations.Latency, calculations.Latency, Channeled);
-                OO5SR = fsr.CalculateOO5SR(calculations.ClearcastingChance);
+                OO5SR = FSRCalc.CalculateSimpleOO5SR(calculations.ClearcastingChance, CastTime - calculations.Latency, calculations.Latency, Channeled);
             }
             else
             {
@@ -594,9 +600,9 @@ namespace Rawr.Mage
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
-            BaseSpell AMc1 = new ArcaneMissiles(character, calculations, true, false, true);
-            BaseSpell AM10 = new ArcaneMissiles(character, calculations, false, true, false);
-            BaseSpell AM11 = new ArcaneMissiles(character, calculations, false, true, true);
+            Spell AMc1 = new ArcaneMissiles(character, calculations, true, false, true);
+            Spell AM10 = new ArcaneMissiles(character, calculations, false, true, false);
+            Spell AM11 = new ArcaneMissiles(character, calculations, false, true, true);
 
             CastProcs = AMc1.CastProcs * (1 + 1 / (1 - CC));
             CastTime = AMc1.CastTime * (1 + 1 / (1 - CC));
@@ -674,13 +680,33 @@ namespace Rawr.Mage
 
     class SpellCycle : Spell
     {
+        public override string Sequence
+        {
+            get
+            {
+                if (sequence == null) sequence = string.Join("-", spellList.ToArray());
+                return sequence;
+            }
+        }
+
         public float AverageDamage;
         public float Cost;
         public float SpellCount = 0;
 
         private List<string> spellList = new List<string>();
-
         private FSRCalc fsr = new FSRCalc();
+
+        public SpellCycle()
+        {
+            spellList = new List<string>();
+            fsr = new FSRCalc();
+        }
+
+        public SpellCycle(int capacity)
+        {
+            spellList = new List<string>(capacity);
+            fsr = new FSRCalc(capacity);
+        }
 
         public void AddSpell(Spell spell, CharacterCalculationsMage calculations)
         {
@@ -702,8 +728,6 @@ namespace Rawr.Mage
 
         public void Calculate(Character character, CharacterCalculationsMage calculations)
         {
-            Sequence = string.Join("-", spellList.ToArray());
-
             CastTime = fsr.Duration;
 
             CostPerSecond = Cost / CastTime;
@@ -724,13 +748,13 @@ namespace Rawr.Mage
 
     class ABAMP : SpellCycle
     {
-        public ABAMP(Character character, CharacterCalculationsMage calculations)
+        public ABAMP(Character character, CharacterCalculationsMage calculations) : base(3)
         {
             Name = "ABAMP";
             ABCycle = true;
 
-            BaseSpell AB = (BaseSpell)calculations.GetSpell("Arcane Blast 1,0");
-            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
+            Spell AB = calculations.GetSpell("Arcane Blast 1,0");
+            Spell AM = calculations.GetSpell("Arcane Missiles");
 
             AddSpell(AB, calculations);
             AddSpell(AM, calculations);
@@ -742,13 +766,13 @@ namespace Rawr.Mage
 
     class ABAM : SpellCycle
     {
-        public ABAM(Character character, CharacterCalculationsMage calculations)
+        public ABAM(Character character, CharacterCalculationsMage calculations) : base(2)
         {
             Name = "ABAM";
             ABCycle = true;
 
-            BaseSpell AB = (BaseSpell)calculations.GetSpell("Arcane Blast");
-            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
+            Spell AB = calculations.GetSpell("Arcane Blast");
+            Spell AM = calculations.GetSpell("Arcane Missiles");
 
             AddSpell(AB, calculations);
             AddSpell(AM, calculations);
@@ -759,16 +783,16 @@ namespace Rawr.Mage
 
     class AB3AMSc : SpellCycle
     {
-        public AB3AMSc(Character character, CharacterCalculationsMage calculations)
+        public AB3AMSc(Character character, CharacterCalculationsMage calculations) : base(12)
         {
             Name = "AB3AMSc";
             ABCycle = true;
 
-            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell AB01 = (BaseSpell)calculations.GetSpell("Arcane Blast 0,1");
-            BaseSpell AB12 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,2");
-            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
-            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell AB01 = calculations.GetSpell("Arcane Blast 0,1");
+            Spell AB12 = calculations.GetSpell("Arcane Blast 1,2");
+            Spell AM = calculations.GetSpell("Arcane Missiles");
+            Spell Sc = calculations.GetSpell("Scorch");
 
             AddSpell(AB30, calculations);
             AddSpell(AB01, calculations);
@@ -788,16 +812,16 @@ namespace Rawr.Mage
 
     class ABAM3Sc : SpellCycle
     {
-        public ABAM3Sc(Character character, CharacterCalculationsMage calculations)
+        public ABAM3Sc(Character character, CharacterCalculationsMage calculations) : base(14)
         {
             Name = "ABAM3Sc";
             ABCycle = true;
 
-            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
-            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
-            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
-            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
+            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
+            Spell AM = calculations.GetSpell("Arcane Missiles");
+            Spell Sc = calculations.GetSpell("Scorch");
 
             AddSpell(AB30, calculations);
             AddSpell(AM, calculations);
@@ -819,16 +843,16 @@ namespace Rawr.Mage
 
     class ABAM3Sc2 : SpellCycle
     {
-        public ABAM3Sc2(Character character, CharacterCalculationsMage calculations)
+        public ABAM3Sc2(Character character, CharacterCalculationsMage calculations) : base(14)
         {
             Name = "ABAM3Sc2";
             ABCycle = true;
 
-            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
-            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
-            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
-            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
+            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
+            Spell AM = calculations.GetSpell("Arcane Missiles");
+            Spell Sc = calculations.GetSpell("Scorch");
 
             AddSpell(AB30, calculations);
             AddSpell(AM, calculations);
@@ -850,16 +874,16 @@ namespace Rawr.Mage
 
     class ABAM3FrB : SpellCycle
     {
-        public ABAM3FrB(Character character, CharacterCalculationsMage calculations)
+        public ABAM3FrB(Character character, CharacterCalculationsMage calculations) : base(14)
         {
             Name = "ABAM3FrB";
             ABCycle = true;
 
-            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
-            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
-            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
-            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
+            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
+            Spell AM = calculations.GetSpell("Arcane Missiles");
+            Spell FrB = calculations.GetSpell("Frostbolt");
 
             AddSpell(AB30, calculations);
             AddSpell(AM, calculations);
@@ -881,16 +905,16 @@ namespace Rawr.Mage
 
     class ABAM3FrB2 : SpellCycle
     {
-        public ABAM3FrB2(Character character, CharacterCalculationsMage calculations)
+        public ABAM3FrB2(Character character, CharacterCalculationsMage calculations) : base(14)
         {
             Name = "ABAM3FrB2";
             ABCycle = true;
 
-            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
-            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
-            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
-            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
+            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
+            Spell AM = calculations.GetSpell("Arcane Missiles");
+            Spell FrB = calculations.GetSpell("Frostbolt");
 
             AddSpell(AB30, calculations);
             AddSpell(AM, calculations);
@@ -912,15 +936,15 @@ namespace Rawr.Mage
 
     class AB3FrB : SpellCycle
     {
-        public AB3FrB(Character character, CharacterCalculationsMage calculations)
+        public AB3FrB(Character character, CharacterCalculationsMage calculations) : base(11)
         {
             Name = "AB3FrB";
             ABCycle = true;
 
-            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell AB01 = (BaseSpell)calculations.GetSpell("Arcane Blast 0,1");
-            BaseSpell AB12 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,2");
-            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell AB01 = calculations.GetSpell("Arcane Blast 0,1");
+            Spell AB12 = calculations.GetSpell("Arcane Blast 1,2");
+            Spell FrB = calculations.GetSpell("Frostbolt");
 
             AddSpell(AB30, calculations);
             AddSpell(AB01, calculations);
@@ -939,15 +963,15 @@ namespace Rawr.Mage
 
     class ABFrB3FrB : SpellCycle
     {
-        public ABFrB3FrB(Character character, CharacterCalculationsMage calculations)
+        public ABFrB3FrB(Character character, CharacterCalculationsMage calculations) : base(13)
         {
             Name = "ABFrB3FrB";
             ABCycle = true;
 
-            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
-            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
-            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
+            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
+            Spell FrB = calculations.GetSpell("Frostbolt");
 
             AddSpell(AB30, calculations);
             AddSpell(FrB, calculations);
@@ -968,15 +992,15 @@ namespace Rawr.Mage
 
     class ABFrB3FrB2 : SpellCycle
     {
-        public ABFrB3FrB2(Character character, CharacterCalculationsMage calculations)
+        public ABFrB3FrB2(Character character, CharacterCalculationsMage calculations) : base(13)
         {
             Name = "ABFrB3FrB2";
             ABCycle = true;
 
-            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
-            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
-            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
+            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
+            Spell FrB = calculations.GetSpell("Frostbolt");
 
             AddSpell(AB30, calculations);
             AddSpell(FrB, calculations);
@@ -997,16 +1021,16 @@ namespace Rawr.Mage
 
     class ABFrB3FrBSc : SpellCycle
     {
-        public ABFrB3FrBSc(Character character, CharacterCalculationsMage calculations)
+        public ABFrB3FrBSc(Character character, CharacterCalculationsMage calculations) : base(13)
         {
             Name = "ABFrB3FrBSc";
             ABCycle = true;
 
-            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
-            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
-            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
-            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
+            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
+            Spell FrB = calculations.GetSpell("Frostbolt");
+            Spell Sc = calculations.GetSpell("Scorch");
 
             AddSpell(AB30, calculations);
             AddSpell(FrB, calculations);
@@ -1032,16 +1056,16 @@ namespace Rawr.Mage
 
     class ABFB3FBSc : SpellCycle
     {
-        public ABFB3FBSc(Character character, CharacterCalculationsMage calculations)
+        public ABFB3FBSc(Character character, CharacterCalculationsMage calculations) : base(13)
         {
             Name = "ABFB3FBSc";
             ABCycle = true;
 
-            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell AB11 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,1");
-            BaseSpell AB22 = (BaseSpell)calculations.GetSpell("Arcane Blast 2,2");
-            BaseSpell FB = (BaseSpell)calculations.GetSpell("Fireball");
-            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
+            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
+            Spell FB = calculations.GetSpell("Fireball");
+            Spell Sc = calculations.GetSpell("Scorch");
 
             AddSpell(AB30, calculations);
             AddSpell(FB, calculations);
@@ -1067,15 +1091,15 @@ namespace Rawr.Mage
 
     class AB3Sc : SpellCycle
     {
-        public AB3Sc(Character character, CharacterCalculationsMage calculations)
+        public AB3Sc(Character character, CharacterCalculationsMage calculations) : base(11)
         {
             Name = "AB3Sc";
             ABCycle = true;
 
-            BaseSpell AB30 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell AB01 = (BaseSpell)calculations.GetSpell("Arcane Blast 0,1");
-            BaseSpell AB12 = (BaseSpell)calculations.GetSpell("Arcane Blast 1,2");
-            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell AB01 = calculations.GetSpell("Arcane Blast 0,1");
+            Spell AB12 = calculations.GetSpell("Arcane Blast 1,2");
+            Spell Sc = calculations.GetSpell("Scorch");
 
             AddSpell(AB30, calculations);
             AddSpell(AB01, calculations);
@@ -1094,12 +1118,12 @@ namespace Rawr.Mage
 
     class FireballScorch : SpellCycle
     {
-        public FireballScorch(Character character, CharacterCalculationsMage calculations)
+        public FireballScorch(Character character, CharacterCalculationsMage calculations) : base(33)
         {
             Name = "FireballScorch";
 
-            BaseSpell FB = (BaseSpell)calculations.GetSpell("Fireball");
-            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+            Spell FB = calculations.GetSpell("Fireball");
+            Spell Sc = calculations.GetSpell("Scorch");
 
             if (calculations.CalculationOptions.ImprovedScorch == 0)
             {
@@ -1126,7 +1150,7 @@ namespace Rawr.Mage
 
                 Calculate(character, calculations);
 
-                Sequence = string.Format("{0}x Fireball : {1}x Scorch", fbCount, averageScorchesNeeded);
+                sequence = string.Format("{0}x Fireball : {1}x Scorch", fbCount, averageScorchesNeeded);
             }
         }
     }
@@ -1148,26 +1172,26 @@ namespace Rawr.Mage
             //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
             //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
 
-            Spell AMc0 = new ArcaneMissiles(character, calculations, true, false, false);
-            Spell AMCC = new ArcaneMissilesCC(character, calculations);
-            Spell AB0 = new ArcaneBlast(character, calculations, 0, 0, false);
-            Spell AB1 = new ArcaneBlast(character, calculations, 1, 1, false);
-            Spell AB2 = new ArcaneBlast(character, calculations, 2, 2, false);
-            Spell Sc0 = new Scorch(character, calculations, false);
+            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
+            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
+            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
+            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
+            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
+            Spell Sc0 = calculations.GetSpell("Scorch no CC");
 
-            BaseSpell AB3 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+            Spell AB3 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell Sc = calculations.GetSpell("Scorch");
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
-            SpellCycle chain1 = new SpellCycle();
+            SpellCycle chain1 = new SpellCycle(2);
             chain1.AddSpell(AMCC, calculations);
             chain1.AddSpell(AB0, calculations);
             chain1.Calculate(character, calculations);
 
             //AM?0-AB1-AMCC-AB0              0.9*0.1
-            SpellCycle chain2 = new SpellCycle();
+            SpellCycle chain2 = new SpellCycle(4);
             chain2.AddSpell(AMc0, calculations);
             chain2.AddSpell(AB1, calculations);
             chain2.AddSpell(AMCC, calculations);
@@ -1175,7 +1199,7 @@ namespace Rawr.Mage
             chain2.Calculate(character, calculations);
 
             //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
-            SpellCycle chain3 = new SpellCycle();
+            SpellCycle chain3 = new SpellCycle(6);
             chain3.AddSpell(AMc0, calculations);
             chain3.AddSpell(AB1, calculations);
             chain3.AddSpell(AMc0, calculations);
@@ -1185,7 +1209,7 @@ namespace Rawr.Mage
             chain3.Calculate(character, calculations);
 
             //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
-            SpellCycle chain4 = new SpellCycle();
+            SpellCycle chain4 = new SpellCycle(13);
             chain4.AddSpell(AMc0, calculations);
             chain4.AddSpell(AB1, calculations);
             chain4.AddSpell(AMc0, calculations);
@@ -1207,7 +1231,17 @@ namespace Rawr.Mage
             DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
             ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
 
-            Sequence = chain4.Sequence;
+            commonChain = chain4;
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
         }
     }
 
@@ -1228,26 +1262,26 @@ namespace Rawr.Mage
             //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
             //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
 
-            Spell AMc0 = new ArcaneMissiles(character, calculations, true, false, false);
-            Spell AMCC = new ArcaneMissilesCC(character, calculations);
-            Spell AB0 = new ArcaneBlast(character, calculations, 0, 0, false);
-            Spell AB1 = new ArcaneBlast(character, calculations, 1, 1, false);
-            Spell AB2 = new ArcaneBlast(character, calculations, 2, 2, false);
-            Spell Sc0 = new Scorch(character, calculations, false);
+            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
+            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
+            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
+            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
+            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
+            Spell Sc0 = calculations.GetSpell("Scorch no CC");
 
-            BaseSpell AB3 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+            Spell AB3 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell Sc = calculations.GetSpell("Scorch");
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
-            SpellCycle chain1 = new SpellCycle();
+            SpellCycle chain1 = new SpellCycle(2);
             chain1.AddSpell(AMCC, calculations);
             chain1.AddSpell(AB0, calculations);
             chain1.Calculate(character, calculations);
 
             //AM?0-AB1-AMCC-AB0              0.9*0.1
-            SpellCycle chain2 = new SpellCycle();
+            SpellCycle chain2 = new SpellCycle(4);
             chain2.AddSpell(AMc0, calculations);
             chain2.AddSpell(AB1, calculations);
             chain2.AddSpell(AMCC, calculations);
@@ -1255,7 +1289,7 @@ namespace Rawr.Mage
             chain2.Calculate(character, calculations);
 
             //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
-            SpellCycle chain3 = new SpellCycle();
+            SpellCycle chain3 = new SpellCycle(13);
             chain3.AddSpell(AMc0, calculations);
             chain3.AddSpell(AB1, calculations);
             chain3.AddSpell(AMc0, calculations);
@@ -1287,7 +1321,17 @@ namespace Rawr.Mage
             DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
             ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
 
-            Sequence = chain4.Sequence;
+            commonChain = chain4;
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
         }
     }
 
@@ -1308,26 +1352,26 @@ namespace Rawr.Mage
             //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
             //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
 
-            Spell AMc0 = new ArcaneMissiles(character, calculations, true, false, false);
-            Spell AMCC = new ArcaneMissilesCC(character, calculations);
-            Spell AB0 = new ArcaneBlast(character, calculations, 0, 0, false);
-            Spell AB1 = new ArcaneBlast(character, calculations, 1, 1, false);
-            Spell AB2 = new ArcaneBlast(character, calculations, 2, 2, false);
-            Spell FrB0 = new Frostbolt(character, calculations, false);
+            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
+            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
+            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
+            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
+            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
+            Spell FrB0 = calculations.GetSpell("Frostbolt no CC");
 
-            BaseSpell AB3 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
+            Spell AB3 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell FrB = calculations.GetSpell("Frostbolt");
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
-            SpellCycle chain1 = new SpellCycle();
+            SpellCycle chain1 = new SpellCycle(2);
             chain1.AddSpell(AMCC, calculations);
             chain1.AddSpell(AB0, calculations);
             chain1.Calculate(character, calculations);
 
             //AM?0-AB1-AMCC-AB0              0.9*0.1
-            SpellCycle chain2 = new SpellCycle();
+            SpellCycle chain2 = new SpellCycle(4);
             chain2.AddSpell(AMc0, calculations);
             chain2.AddSpell(AB1, calculations);
             chain2.AddSpell(AMCC, calculations);
@@ -1335,7 +1379,7 @@ namespace Rawr.Mage
             chain2.Calculate(character, calculations);
 
             //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
-            SpellCycle chain3 = new SpellCycle();
+            SpellCycle chain3 = new SpellCycle(6);
             chain3.AddSpell(AMc0, calculations);
             chain3.AddSpell(AB1, calculations);
             chain3.AddSpell(AMc0, calculations);
@@ -1345,7 +1389,7 @@ namespace Rawr.Mage
             chain3.Calculate(character, calculations);
 
             //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
-            SpellCycle chain4 = new SpellCycle();
+            SpellCycle chain4 = new SpellCycle(13);
             chain4.AddSpell(AMc0, calculations);
             chain4.AddSpell(AB1, calculations);
             chain4.AddSpell(AMc0, calculations);
@@ -1367,7 +1411,17 @@ namespace Rawr.Mage
             DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
             ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
 
-            Sequence = chain4.Sequence;
+            commonChain = chain4;
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
         }
     }
 
@@ -1388,28 +1442,28 @@ namespace Rawr.Mage
             //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
             //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
 
-            Spell AMc0 = new ArcaneMissiles(character, calculations, true, false, false);
-            Spell AMCC = new ArcaneMissilesCC(character, calculations);
-            Spell AB0 = new ArcaneBlast(character, calculations, 0, 0, false);
-            Spell AB1 = new ArcaneBlast(character, calculations, 1, 1, false);
-            Spell AB2 = new ArcaneBlast(character, calculations, 2, 2, false);
-            Spell FrB0 = new Frostbolt(character, calculations, false);
+            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
+            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
+            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
+            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
+            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
+            Spell FrB0 = calculations.GetSpell("Frostbolt no CC");
 
-            BaseSpell AM = (BaseSpell)calculations.GetSpell("Arcane Missiles");
-            BaseSpell AB3 = (BaseSpell)calculations.GetSpell("Arcane Blast 3,0");
-            BaseSpell FrB = (BaseSpell)calculations.GetSpell("Frostbolt");
-            BaseSpell Sc = (BaseSpell)calculations.GetSpell("Scorch");
+            Spell AM = calculations.GetSpell("Arcane Missiles");
+            Spell AB3 = calculations.GetSpell("Arcane Blast 3,0");
+            Spell FrB = calculations.GetSpell("Frostbolt");
+            Spell Sc = calculations.GetSpell("Scorch");
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
-            SpellCycle chain1 = new SpellCycle();
+            SpellCycle chain1 = new SpellCycle(2);
             chain1.AddSpell(AMCC, calculations);
             chain1.AddSpell(AB0, calculations);
             chain1.Calculate(character, calculations);
 
             //AM?0-AB1-AMCC-AB0              0.9*0.1
-            SpellCycle chain2 = new SpellCycle();
+            SpellCycle chain2 = new SpellCycle(4);
             chain2.AddSpell(AMc0, calculations);
             chain2.AddSpell(AB1, calculations);
             chain2.AddSpell(AMCC, calculations);
@@ -1417,7 +1471,7 @@ namespace Rawr.Mage
             chain2.Calculate(character, calculations);
 
             //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
-            SpellCycle chain3 = new SpellCycle();
+            SpellCycle chain3 = new SpellCycle(6);
             chain3.AddSpell(AMc0, calculations);
             chain3.AddSpell(AB1, calculations);
             chain3.AddSpell(AMc0, calculations);
@@ -1427,7 +1481,7 @@ namespace Rawr.Mage
             chain3.Calculate(character, calculations);
 
             //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
-            SpellCycle chain4 = new SpellCycle();
+            SpellCycle chain4 = new SpellCycle(13);
             chain4.AddSpell(AMc0, calculations);
             chain4.AddSpell(AB1, calculations);
             chain4.AddSpell(AMc0, calculations);
@@ -1465,7 +1519,17 @@ namespace Rawr.Mage
             DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
             ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
 
-            Sequence = chain4.Sequence;
+            commonChain = chain4;
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
         }
     }
 
@@ -1479,20 +1543,20 @@ namespace Rawr.Mage
             //AMCC-AB00-AB01-AB12-AB23       0.1
             //AM?0-AB33                      0.9
 
-            Spell AMc0 = new ArcaneMissiles(character, calculations, true, false, false);
-            Spell AMCC = new ArcaneMissilesCC(character, calculations);
-            Spell AB00 = new ArcaneBlast(character, calculations, 0, 0, false);
+            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
+            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
+            Spell AB00 = calculations.GetSpell("Arcane Blast 0,0 no CC");
             Spell AB01 = calculations.GetSpell("Arcane Blast 0,1");
             Spell AB12 = calculations.GetSpell("Arcane Blast 1,2");
             Spell AB23 = calculations.GetSpell("Arcane Blast 2,3");
-            Spell AB33 = new ArcaneBlast(character, calculations, 3, 3, false);
+            Spell AB33 = calculations.GetSpell("Arcane Blast 3,3 no CC");
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
             if (CC == 0)
             {
                 // if we don't have clearcasting then this degenerates to AMc0-AB33
-                SpellCycle chain1 = new SpellCycle();
+                SpellCycle chain1 = new SpellCycle(2);
                 chain1.AddSpell(AMc0, calculations);
                 chain1.AddSpell(AB33, calculations);
                 chain1.Calculate(character, calculations);
@@ -1502,13 +1566,13 @@ namespace Rawr.Mage
                 DamagePerSecond = chain1.DamagePerSecond;
                 ManaRegenPerSecond = chain1.ManaRegenPerSecond;
 
-                Sequence = chain1.Sequence;
+                commonChain = chain1;
             }
             else
             {
 
                 //AMCC-AB00-AB01-AB12-AB23       0.1
-                SpellCycle chain1 = new SpellCycle();
+                SpellCycle chain1 = new SpellCycle(5);
                 chain1.AddSpell(AMCC, calculations);
                 chain1.AddSpell(AB00, calculations);
                 chain1.AddSpell(AB01, calculations);
@@ -1517,7 +1581,7 @@ namespace Rawr.Mage
                 chain1.Calculate(character, calculations);
 
                 //AM?0-AB33                      0.9
-                SpellCycle chain2 = new SpellCycle();
+                SpellCycle chain2 = new SpellCycle(2);
                 chain2.AddSpell(AMc0, calculations);
                 chain2.AddSpell(AB33, calculations);
                 chain2.Calculate(character, calculations);
@@ -1527,7 +1591,17 @@ namespace Rawr.Mage
                 DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + (1 - CC) * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
                 ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
 
-                Sequence = chain2.Sequence;
+                commonChain = chain2;
+            }
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
             }
         }
     }
@@ -1559,20 +1633,19 @@ namespace Rawr.Mage
             //AB00-AM?0-AB11-AMCC                                 0.9*0.1
             //AB00-AMCC                                           0.1
 
-            Spell AMc0 = new ArcaneMissiles(character, calculations, true, false, false);
-            Spell AMCC = new ArcaneMissilesCC(character, calculations);
-            Spell AB0 = new ArcaneBlast(character, calculations, 0, 0, false);
-            Spell AB1 = new ArcaneBlast(character, calculations, 1, 1, false);
-            Spell AB2 = new ArcaneBlast(character, calculations, 2, 2, false);
-            Spell AB3 = new ArcaneBlast(character, calculations, 3, 3, false);
-            Spell FrB0 = new Frostbolt(character, calculations, false);
+            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
+            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
+            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
+            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
+            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
+            Spell AB3 = calculations.GetSpell("Arcane Blast 3,3 no CC");
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
             if (CC == 0)
             {
                 // if we don't have clearcasting then this degenerates to AMc0-AB33
-                SpellCycle chain1 = new SpellCycle();
+                SpellCycle chain1 = new SpellCycle(2);
                 chain1.AddSpell(AMc0, calculations);
                 chain1.AddSpell(AB3, calculations);
                 chain1.Calculate(character, calculations);
@@ -1582,12 +1655,12 @@ namespace Rawr.Mage
                 DamagePerSecond = chain1.DamagePerSecond;
                 ManaRegenPerSecond = chain1.ManaRegenPerSecond;
 
-                Sequence = chain1.Sequence;
+                commonChain = chain1;
             }
             else
             {
                 //AB00-AM?0-AB11-AM?0-AB22-[(AM?0-AB33)x9+AMCC]       0.9*0.9
-                SpellCycle chain1 = new SpellCycle();
+                SpellCycle chain1 = new SpellCycle(24);
                 chain1.AddSpell(AB0, calculations);
                 chain1.AddSpell(AMc0, calculations);
                 chain1.AddSpell(AB1, calculations);
@@ -1602,7 +1675,7 @@ namespace Rawr.Mage
                 chain1.Calculate(character, calculations);
 
                 //AB00-AM?0-AB11-AMCC                                 0.9*0.1
-                SpellCycle chain2 = new SpellCycle();
+                SpellCycle chain2 = new SpellCycle(4);
                 chain2.AddSpell(AB0, calculations);
                 chain2.AddSpell(AMc0, calculations);
                 chain2.AddSpell(AB1, calculations);
@@ -1610,7 +1683,7 @@ namespace Rawr.Mage
                 chain2.Calculate(character, calculations);
 
                 //AB00-AMCC                                           0.1
-                SpellCycle chain3 = new SpellCycle();
+                SpellCycle chain3 = new SpellCycle(2);
                 chain3.AddSpell(AB0, calculations);
                 chain3.AddSpell(AMCC, calculations);
                 chain3.Calculate(character, calculations);
@@ -1621,7 +1694,17 @@ namespace Rawr.Mage
                 DamagePerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * chain3.CastTime * chain3.DamagePerSecond) / CastTime;
                 ManaRegenPerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * chain3.CastTime * chain3.ManaRegenPerSecond) / CastTime;
 
-                Sequence = chain3.Sequence;
+                commonChain = chain3;
+            }
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
             }
         }
     }
