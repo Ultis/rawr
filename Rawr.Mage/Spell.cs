@@ -224,10 +224,23 @@ namespace Rawr.Mage
             CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
             if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
 
+            // Quagmirran
             if (calculations.BasicStats.SpellHasteFor6SecOnHit_10_45 > 0 && HitProcs > 0)
             {
+                // hasted casttime
+                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + calculations.BasicStats.SpellHasteFor6SecOnHit_10_45) / 995f * levelScalingFactor);
+                float gcd = Math.Max(calculations.GlobalCooldownLimit, 1.5f / speed);
+                float cast = BaseCastTime / speed + calculations.Latency;
+                cast = cast * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
+                if (cast < gcd + calculations.Latency) cast = gcd + calculations.Latency;
+
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
-                Haste += calculations.BasicStats.SpellHasteFor6SecOnHit_10_45 * 6f / (45f + CastTime / HitProcs / 0.1f);
+                //discrete model
+                float castsAffected = 0;
+                for (int c = 0; c < HitProcs; c++) castsAffected += (float)Math.Ceiling((6f - c * CastTime / HitProcs) / cast) / HitProcs;
+                Haste += calculations.BasicStats.SpellHasteFor6SecOnHit_10_45 * castsAffected * cast / (45f + CastTime / HitProcs / 0.1f);
+                //continuous model
+                //Haste += calculations.BasicStats.SpellHasteFor6SecOnHit_10_45 * 6f / (45f + CastTime / HitProcs / 0.1f);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
 
                 GlobalCooldown = Math.Max(calculations.GlobalCooldownLimit, 1.5f / CastingSpeed);
@@ -236,10 +249,21 @@ namespace Rawr.Mage
                 if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
             }
 
+            // MSD
             if (calculations.BasicStats.SpellHasteFor6SecOnCast_15_45 > 0 && CastProcs > 0)
             {
+                // hasted casttime
+                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + calculations.BasicStats.SpellHasteFor6SecOnCast_15_45) / 995f * levelScalingFactor);
+                float gcd = Math.Max(calculations.GlobalCooldownLimit, 1.5f / speed);
+                float cast = BaseCastTime / speed + calculations.Latency;
+                cast = cast * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
+                if (cast < gcd + calculations.Latency) cast = gcd + calculations.Latency;
+
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
-                Haste += calculations.BasicStats.SpellHasteFor6SecOnCast_15_45 * 6f / (45f + CastTime / CastProcs / 0.15f);
+                float castsAffected = 0;
+                for (int c = 0; c < CastProcs; c++) castsAffected += (float)Math.Ceiling((6f - c * CastTime / CastProcs) / cast) / CastProcs;
+                Haste += calculations.BasicStats.SpellHasteFor6SecOnCast_15_45 * castsAffected * cast / (45f + CastTime / CastProcs / 0.15f);
+                //Haste += calculations.BasicStats.SpellHasteFor6SecOnCast_15_45 * 6f / (45f + CastTime / CastProcs / 0.15f);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
 
                 GlobalCooldown = Math.Max(calculations.GlobalCooldownLimit, 1.5f / CastingSpeed);
@@ -248,13 +272,19 @@ namespace Rawr.Mage
                 if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
             }
 
+
+            // AToI, first cast after proc is not affected for non-instant
             if (calculations.BasicStats.SpellHasteFor5SecOnCrit_50 > 0)
             {
                 float rawHaste = Haste;
 
                 // 1st order approximation
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
-                Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
+                int chancesToProc = (int)Math.Floor(5f / (CastTime / HitProcs));
+                if (!Instant) chancesToProc -= 1;
+                chancesToProc *= (int)(TargetProcs / HitProcs);
+                Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * (1 - (float)Math.Pow(1 - 0.5f * CritRate, chancesToProc));
+                //Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
                 GlobalCooldown = Math.Max(calculations.GlobalCooldownLimit, 1.5f / CastingSpeed);
                 CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
@@ -263,7 +293,11 @@ namespace Rawr.Mage
 
                 // 2nd order approximation
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
-                Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
+                chancesToProc = (int)Math.Floor(5f / (CastTime / HitProcs));
+                if (!Instant) chancesToProc -= 1;
+                chancesToProc *= (int)(TargetProcs / HitProcs);
+                Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * (1 - (float)Math.Pow(1 - 0.5f * CritRate, chancesToProc));
+                //Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
                 GlobalCooldown = Math.Max(calculations.GlobalCooldownLimit, 1.5f / CastingSpeed);
                 CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
