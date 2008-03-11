@@ -203,8 +203,8 @@ namespace Rawr
                         _allEnchants.Add(new Enchant(2322, "Major Healing", Item.ItemSlot.Hands, new Stats() { Healing = 35, SpellDamageRating = 12 }));
                         _allEnchants.Add(new Enchant(2934, "Blasting", Item.ItemSlot.Hands, new Stats() { SpellCritRating = 10 }));
 
-                        _allEnchants.Add(new Enchant(2746, "Golden Spellthread", Item.ItemSlot.Legs, new Stats() { Healing = 66 }));
-                        _allEnchants.Add(new Enchant(2745, "Mystic Spellthread", Item.ItemSlot.Legs, new Stats() { Healing = 46 }));
+                        _allEnchants.Add(new Enchant(2746, "Golden Spellthread", Item.ItemSlot.Legs, new Stats() { Healing = 66, Stamina = 20, SpellDamageRating = 22 }));
+                        _allEnchants.Add(new Enchant(2745, "Silver Spellthread", Item.ItemSlot.Legs, new Stats() { Healing = 46, Stamina = 15, SpellDamageRating = 16 }));
 
                         _allEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Chest, new Stats() { Mp5 = 3 }));
                         _allEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Feet, new Stats() { Mp5 = 3 }));

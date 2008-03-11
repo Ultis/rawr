@@ -713,45 +713,66 @@ namespace Rawr
                                 {
                                     spellDesc = spellDesc.Substring("Increases the damage of your Starfire spell by up to ".Length);
                                     spellDesc = spellDesc.Replace(".", "");
-									stats.StarfireDmg += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+                                    stats.StarfireDmg += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                                 else if (spellDesc.StartsWith("Increases the damage of your Moonfire spell by up to "))
                                 {
                                     spellDesc = spellDesc.Substring("Increases the damage of your Moonfire spell by up to ".Length);
                                     spellDesc = spellDesc.Replace(".", "");
-									stats.MoonfireDmg += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+                                    stats.MoonfireDmg += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                                 else if (spellDesc.StartsWith("Increases the damage dealt by Wrath by "))
                                 {
                                     spellDesc = spellDesc.Substring("Increases the damage dealt by Wrath by ".Length);
                                     spellDesc = spellDesc.Replace(".", "");
-									stats.WrathDmg += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+                                    stats.WrathDmg += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                                 else if (spellDesc.StartsWith("Increases the healing granted by the Tree of Life form"))
                                 {
                                     spellDesc = spellDesc.Substring(spellDesc.IndexOf("and adds "));
                                     spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" spell critical strike rating"));
-									stats.IdolCritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+                                    stats.IdolCritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                                 else if (spellDesc.StartsWith("Your Judgement of Command ability has a chance to grant "))
                                 {
                                     spellDesc = spellDesc.Substring("Your Judgement of Command ability has a chance to grant ".Length, 3);
-									stats.AttackPower += (10f / (9f / 0.4f)) * float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+                                    stats.AttackPower += (10f / (9f / 0.4f)) * float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
 
                                 }
                                 else if (spellDesc.StartsWith("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by"))
                                 {
                                     spellDesc = spellDesc.Substring("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by ".Length, 2);
                                     spellDesc = spellDesc.Replace(".", "");
-									stats.CritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+                                    stats.CritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                                 else if (spellDesc.StartsWith("Increases the damage dealt by your Crusader Strike ability by "))
                                 {
                                     spellDesc = spellDesc.Substring("Increases the damage dealt by your Cruasder Strike ability by ".Length);
                                     spellDesc = spellDesc.Replace("%", "");
                                     spellDesc = spellDesc.Replace(".", "");
-									stats.BonusCrusaderStrikeDamageMultiplier += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture) / 100f;
+                                    stats.BonusCrusaderStrikeDamageMultiplier += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture) / 100f;
 
+                                }
+                                else if (spellDesc.StartsWith("Increases the benefit your Flash of Light"))
+                                {
+                                    stats.HLBoL = 120;
+                                    stats.FoLBoL = 60;
+                                }
+                                else if (spellDesc.StartsWith("Reduces the mana cost of Holy Light by"))
+                                {
+                                    stats.HLCost = 34;
+                                }
+                                else if (spellDesc.StartsWith("Increases healing done by Flash of Light by up to"))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases healing done by Flash of Light by up to ".Length);
+                                    spellDesc = spellDesc.Replace(".", "");
+                                    stats.FoLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+                                }
+                                else if (spellDesc.StartsWith("Increases healing done by Holy Light by up to"))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases healing done by Holy Light by up to ".Length);
+                                    spellDesc = spellDesc.Replace(".", "");
+                                    stats.HLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                                 }
                             }
 						}

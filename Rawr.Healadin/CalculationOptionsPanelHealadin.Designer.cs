@@ -48,20 +48,24 @@
             this.cmbHL5 = new System.Windows.Forms.NumericUpDown();
             this.lblHL5 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.cmbDIHL5 = new System.Windows.Forms.NumericUpDown();
+            this.cmbDIHL4 = new System.Windows.Forms.NumericUpDown();
+            this.cmbDIHL3 = new System.Windows.Forms.NumericUpDown();
+            this.cmbDIHL2 = new System.Windows.Forms.NumericUpDown();
+            this.cmbDIFoL = new System.Windows.Forms.NumericUpDown();
+            this.cmbDIHL1 = new System.Windows.Forms.NumericUpDown();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbManaTime = new System.Windows.Forms.NumericUpDown();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
-            this.cmbDIHL1 = new System.Windows.Forms.NumericUpDown();
-            this.cmbDIFoL = new System.Windows.Forms.NumericUpDown();
-            this.cmbDIHL2 = new System.Windows.Forms.NumericUpDown();
-            this.cmbDIHL3 = new System.Windows.Forms.NumericUpDown();
-            this.cmbDIHL4 = new System.Windows.Forms.NumericUpDown();
-            this.cmbDIHL5 = new System.Windows.Forms.NumericUpDown();
-            this.label6 = new System.Windows.Forms.Label();
+            this.trkActivity = new System.Windows.Forms.TrackBar();
+            this.lblActivity = new System.Windows.Forms.Label();
+            this.cmbSpriest = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.cmbRank1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbRank2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbRank3)).BeginInit();
@@ -74,15 +78,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbHL4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbHL5)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIFoL)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIFoL)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbSpriest)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -404,6 +410,113 @@
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(137, 59);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(62, 13);
+            this.label6.TabIndex = 19;
+            this.label6.Text = "Divine Ilum.";
+            // 
+            // cmbDIHL5
+            // 
+            this.cmbDIHL5.Location = new System.Drawing.Point(146, 205);
+            this.cmbDIHL5.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIHL5.Name = "cmbDIHL5";
+            this.cmbDIHL5.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIHL5.TabIndex = 18;
+            this.cmbDIHL5.ValueChanged += new System.EventHandler(this.cmbDIHL5_ValueChanged);
+            // 
+            // cmbDIHL4
+            // 
+            this.cmbDIHL4.Location = new System.Drawing.Point(146, 179);
+            this.cmbDIHL4.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIHL4.Name = "cmbDIHL4";
+            this.cmbDIHL4.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIHL4.TabIndex = 16;
+            this.cmbDIHL4.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.cmbDIHL4.ValueChanged += new System.EventHandler(this.cmbDIHL4_ValueChanged);
+            // 
+            // cmbDIHL3
+            // 
+            this.cmbDIHL3.Location = new System.Drawing.Point(146, 153);
+            this.cmbDIHL3.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIHL3.Name = "cmbDIHL3";
+            this.cmbDIHL3.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIHL3.TabIndex = 14;
+            this.cmbDIHL3.ValueChanged += new System.EventHandler(this.cmbDIHL3_ValueChanged);
+            // 
+            // cmbDIHL2
+            // 
+            this.cmbDIHL2.Location = new System.Drawing.Point(146, 127);
+            this.cmbDIHL2.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIHL2.Name = "cmbDIHL2";
+            this.cmbDIHL2.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIHL2.TabIndex = 12;
+            this.cmbDIHL2.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.cmbDIHL2.ValueChanged += new System.EventHandler(this.cmbDIHL2_ValueChanged);
+            // 
+            // cmbDIFoL
+            // 
+            this.cmbDIFoL.Location = new System.Drawing.Point(146, 75);
+            this.cmbDIFoL.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIFoL.Name = "cmbDIFoL";
+            this.cmbDIFoL.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIFoL.TabIndex = 8;
+            this.cmbDIFoL.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.cmbDIFoL.ValueChanged += new System.EventHandler(this.cmbDIFoL_ValueChanged);
+            // 
+            // cmbDIHL1
+            // 
+            this.cmbDIHL1.Location = new System.Drawing.Point(146, 101);
+            this.cmbDIHL1.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.cmbDIHL1.Name = "cmbDIHL1";
+            this.cmbDIHL1.Size = new System.Drawing.Size(44, 20);
+            this.cmbDIHL1.TabIndex = 10;
+            this.cmbDIHL1.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.cmbDIHL1.ValueChanged += new System.EventHandler(this.cmbDIHL1_ValueChanged);
+            // 
             // cmbLength
             // 
             this.cmbLength.DecimalPlaces = 1;
@@ -444,21 +557,32 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cmbSpriest);
+            this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmbManaTime);
             this.groupBox2.Controls.Add(this.cmbManaAmt);
-            this.groupBox2.Location = new System.Drawing.Point(4, 266);
+            this.groupBox2.Location = new System.Drawing.Point(4, 317);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(205, 67);
+            this.groupBox2.Size = new System.Drawing.Size(205, 73);
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Mana Buffs";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(172, 48);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(27, 13);
+            this.label7.TabIndex = 5;
+            this.label7.Text = "mp5";
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 46);
+            this.label5.Location = new System.Drawing.Point(6, 48);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(78, 13);
             this.label5.TabIndex = 3;
@@ -506,6 +630,7 @@
             // 
             this.cmbManaAmt.DisplayMember = "2400";
             this.cmbManaAmt.Items.AddRange(new object[] {
+            "0",
             "1800",
             "2200",
             "2400"});
@@ -518,117 +643,52 @@
             this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
             this.cmbManaAmt.TextUpdate += new System.EventHandler(this.cmbManaAmt_TextUpdate);
             // 
-            // cmbDIHL1
+            // trkActivity
             // 
-            this.cmbDIHL1.Location = new System.Drawing.Point(146, 101);
-            this.cmbDIHL1.Maximum = new decimal(new int[] {
-            20,
+            this.trkActivity.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trkActivity.Location = new System.Drawing.Point(90, 266);
+            this.trkActivity.Maximum = 100;
+            this.trkActivity.Minimum = 10;
+            this.trkActivity.Name = "trkActivity";
+            this.trkActivity.Size = new System.Drawing.Size(112, 45);
+            this.trkActivity.TabIndex = 23;
+            this.trkActivity.TickFrequency = 10;
+            this.trkActivity.Value = 90;
+            this.trkActivity.Scroll += new System.EventHandler(this.trkActivity_Scroll);
+            // 
+            // lblActivity
+            // 
+            this.lblActivity.AutoSize = true;
+            this.lblActivity.Location = new System.Drawing.Point(11, 275);
+            this.lblActivity.Name = "lblActivity";
+            this.lblActivity.Size = new System.Drawing.Size(73, 13);
+            this.lblActivity.TabIndex = 24;
+            this.lblActivity.Text = "Activity (90%):";
+            // 
+            // cmbSpriest
+            // 
+            this.cmbSpriest.Increment = new decimal(new int[] {
+            50,
             0,
             0,
             0});
-            this.cmbDIHL1.Name = "cmbDIHL1";
-            this.cmbDIHL1.Size = new System.Drawing.Size(44, 20);
-            this.cmbDIHL1.TabIndex = 10;
-            this.cmbDIHL1.Value = new decimal(new int[] {
-            3,
+            this.cmbSpriest.Location = new System.Drawing.Point(90, 46);
+            this.cmbSpriest.Maximum = new decimal(new int[] {
+            500,
             0,
             0,
             0});
-            this.cmbDIHL1.ValueChanged += new System.EventHandler(this.cmbDIHL1_ValueChanged);
-            // 
-            // cmbDIFoL
-            // 
-            this.cmbDIFoL.Location = new System.Drawing.Point(146, 75);
-            this.cmbDIFoL.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.cmbDIFoL.Name = "cmbDIFoL";
-            this.cmbDIFoL.Size = new System.Drawing.Size(44, 20);
-            this.cmbDIFoL.TabIndex = 8;
-            this.cmbDIFoL.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.cmbDIFoL.ValueChanged += new System.EventHandler(this.cmbDIFoL_ValueChanged);
-            // 
-            // cmbDIHL2
-            // 
-            this.cmbDIHL2.Location = new System.Drawing.Point(146, 127);
-            this.cmbDIHL2.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.cmbDIHL2.Name = "cmbDIHL2";
-            this.cmbDIHL2.Size = new System.Drawing.Size(44, 20);
-            this.cmbDIHL2.TabIndex = 12;
-            this.cmbDIHL2.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.cmbDIHL2.ValueChanged += new System.EventHandler(this.cmbDIHL2_ValueChanged);
-            // 
-            // cmbDIHL3
-            // 
-            this.cmbDIHL3.Location = new System.Drawing.Point(146, 153);
-            this.cmbDIHL3.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.cmbDIHL3.Name = "cmbDIHL3";
-            this.cmbDIHL3.Size = new System.Drawing.Size(44, 20);
-            this.cmbDIHL3.TabIndex = 14;
-            this.cmbDIHL3.ValueChanged += new System.EventHandler(this.cmbDIHL3_ValueChanged);
-            // 
-            // cmbDIHL4
-            // 
-            this.cmbDIHL4.Location = new System.Drawing.Point(146, 179);
-            this.cmbDIHL4.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.cmbDIHL4.Name = "cmbDIHL4";
-            this.cmbDIHL4.Size = new System.Drawing.Size(44, 20);
-            this.cmbDIHL4.TabIndex = 16;
-            this.cmbDIHL4.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.cmbDIHL4.ValueChanged += new System.EventHandler(this.cmbDIHL4_ValueChanged);
-            // 
-            // cmbDIHL5
-            // 
-            this.cmbDIHL5.Location = new System.Drawing.Point(146, 205);
-            this.cmbDIHL5.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.cmbDIHL5.Name = "cmbDIHL5";
-            this.cmbDIHL5.Size = new System.Drawing.Size(44, 20);
-            this.cmbDIHL5.TabIndex = 18;
-            this.cmbDIHL5.ValueChanged += new System.EventHandler(this.cmbDIHL5_ValueChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(137, 59);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(62, 13);
-            this.label6.TabIndex = 19;
-            this.label6.Text = "Divine Ilum.";
+            this.cmbSpriest.Name = "cmbSpriest";
+            this.cmbSpriest.Size = new System.Drawing.Size(76, 20);
+            this.cmbSpriest.TabIndex = 6;
+            this.cmbSpriest.ValueChanged += new System.EventHandler(this.cmbSpriest_ValueChanged);
             // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblActivity);
+            this.Controls.Add(this.trkActivity);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbLength);
@@ -648,16 +708,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbHL5)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIFoL)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIFoL)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDIHL5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbSpriest)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -699,5 +761,9 @@
         private System.Windows.Forms.NumericUpDown cmbDIHL2;
         private System.Windows.Forms.NumericUpDown cmbDIFoL;
         private System.Windows.Forms.NumericUpDown cmbDIHL1;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TrackBar trkActivity;
+        private System.Windows.Forms.Label lblActivity;
+        private System.Windows.Forms.NumericUpDown cmbSpriest;
     }
 }

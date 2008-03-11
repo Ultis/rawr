@@ -46,13 +46,13 @@ namespace Rawr.Healadin
             }
             else
             {
+                rank = 7;
                 baseMana = 180;
                 baseHeal = 485.5f;
                 baseCastTime = 1.5f;
                 coef = 1.5f / 3.5f;
                 downrank = 1;
                 bolBonus = 185;
-                healMultiple *= 1.05f;
             }
         }
 
@@ -63,21 +63,35 @@ namespace Rawr.Healadin
 
         public void Calculate(Stats stats, bool di)
         {
+            float bonus, multi, bol, cost;
             spellCrit = .08336f + (stats.Intellect / 8000) + (stats.SpellCritRating / 2208);
             castTime = baseCastTime / (1 + (stats.SpellHasteRating / 1570));
             
             if (name.Equals("Holy Light"))
             {
-                spellCrit += .11f;
+                spellCrit += .05f + stats.HLCrit;
+                bonus = stats.HLHeal;
+                multi = healMultiple;
+                bol = bolBonus + stats.HLBoL;
+                cost = stats.HLCost;
             }
             else
             {
+                bonus = stats.FoLHeal;
+                multi = healMultiple * (1 + stats.FoLMultiple);
+                bol = bolBonus + stats.FoLBoL;
+                cost = 0;
             }
 
-            avgHeal = healMultiple * (baseHeal + (((stats.Healing * coef) + bolBonus) * downrank));
+            avgHeal = multi * (baseHeal + ((((stats.Healing + bonus) * coef) + bol) * downrank));
             hps = avgHeal * (1 + (.5f * spellCrit)) / castTime;
-            mps = ((baseMana * (di ? .5f : 1f)) - (.6f * baseMana * spellCrit) - (stats.ManaRestorePerCast)) / castTime;
+            mps = ((baseMana * (di ? .5f : 1f)) - cost - (.6f * baseMana * spellCrit) - (stats.ManaRestorePerCast)) / castTime;
             hpm = hps / mps;
+        }
+
+        public override string ToString()
+        {
+            return name + " " + rank;
         }
 
         public string Name { get { return name; } }

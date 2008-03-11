@@ -62,6 +62,10 @@ namespace Rawr.Healadin
                 Character.CalculationOptions["ManaAmt"] = "2400";
             if (!Character.CalculationOptions.ContainsKey("ManaTime"))
                 Character.CalculationOptions["ManaTime"] = "2.5";
+            if (!Character.CalculationOptions.ContainsKey("Activity"))
+                Character.CalculationOptions["Activity"] = "80";
+            if (!Character.CalculationOptions.ContainsKey("Spriest"))
+                Character.CalculationOptions["Spriest"] = "0";
 
             cmbRank1.Value = decimal.Parse(Character.CalculationOptions["Rank1"]);
             cmbRank2.Value = decimal.Parse(Character.CalculationOptions["Rank2"]);
@@ -86,6 +90,8 @@ namespace Rawr.Healadin
             cmbLength.Value = decimal.Parse(Character.CalculationOptions["Length"]);
             cmbManaAmt.Text = Character.CalculationOptions["ManaAmt"];
             cmbManaTime.Value = decimal.Parse(Character.CalculationOptions["ManaTime"]);
+            cmbSpriest.Value = decimal.Parse(Character.CalculationOptions["Spriest"]);
+            trkActivity.Value = int.Parse(Character.CalculationOptions["Activity"]);
         }
 
         private void cmbRank1_ValueChanged(object sender, EventArgs e)
@@ -173,7 +179,7 @@ namespace Rawr.Healadin
 
         private void cmbManaTime_ValueChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["ManaTime"] = cmbManaTime.Text;
+            Character.CalculationOptions["ManaTime"] = cmbManaTime.Value.ToString();
             Character.OnItemsChanged();
         }
 
@@ -218,5 +224,19 @@ namespace Rawr.Healadin
             Character.CalculationOptions["DIHL5"] = cmbDIHL5.Value.ToString();
             Character.OnItemsChanged();
         }
+
+        private void trkActivity_Scroll(object sender, EventArgs e)
+        {
+            lblActivity.Text = "Activity (" + trkActivity.Value + "%):";
+            Character.CalculationOptions["Activity"] = trkActivity.Value.ToString();
+            Character.OnItemsChanged();
+        }
+
+        private void cmbSpriest_ValueChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["Spriest"] = cmbSpriest.Value.ToString();
+            Character.OnItemsChanged();
+        }
+
     }
 }

@@ -77,15 +77,32 @@ namespace Rawr.Healadin
             dictValues.Add("Spirit", BasicStats.Spirit.ToString());
             dictValues.Add("Healing", BasicStats.Healing.ToString());
             dictValues.Add("Mp5", BasicStats.Mp5.ToString());
-            dictValues.Add("Spell Crit Rating", BasicStats.SpellCritRating.ToString());
-            dictValues.Add("Spell Haste Rating", BasicStats.SpellHasteRating.ToString());
-            dictValues.Add("Holy Crit", (Math.Round(_spells[0].SpellCrit * 100, 2)).ToString() + "%");
+            dictValues.Add("Spell Crit", Math.Round(_spells[0].SpellCrit*100-5,2).ToString()+"%*"+BasicStats.SpellCritRating.ToString() + " Spell Crit rating");
+            dictValues.Add("Spell Haste", Math.Round(BasicStats.SpellHasteRating/15.7,2).ToString()+"%*"
+                +BasicStats.SpellHasteRating.ToString()+ " Spell Haste rating");
             dictValues.Add("Cycle Uptime", Math.Round(Uptime*100,2).ToString()+"%");
-            dictValues.Add("Cycle Hps", Hps.ToString());
-            dictValues.Add("Total Healed", Healed.ToString());
-            dictValues.Add("Average Hps", AvgHps.ToString());
-            dictValues.Add("Average Hpm", AvgHpm.ToString());
-
+            dictValues.Add("Cycle Hps", Math.Round(Hps).ToString());
+            dictValues.Add("Total Healed", Math.Round(Healed).ToString());
+            dictValues.Add("Average Hps", Math.Round(AvgHps).ToString());
+            dictValues.Add("Average Hpm", Math.Round(AvgHpm,2).ToString());
+            dictValues.Add("Flash of Light", Math.Round(_spells[0].Hps).ToString() + " hps*"+Math.Round(_spells[0].Hpm,2).ToString()+
+                " hpm\n" + Math.Round(_spells[0].AverageHeal).ToString() + " average heal");
+            dictValues.Add("Holy Light 11", Math.Round(_spells[1].Hps).ToString() + " hps*" + Math.Round(_spells[1].Hpm, 2).ToString() +
+                " hpm\n" + Math.Round(_spells[1].AverageHeal).ToString() + " average heal");
+            dictValues.Add("Holy Light 10", Math.Round(_spells[2].Hps).ToString() + " hps*" + Math.Round(_spells[2].Hpm, 2).ToString() +
+                " hpm\n" + Math.Round(_spells[2].AverageHeal).ToString() + " average heal");
+            dictValues.Add("Holy Light 9", Math.Round(_spells[3].Hps).ToString() + " hps*" + Math.Round(_spells[3].Hpm, 2).ToString() +
+                " hpm\n" + Math.Round(_spells[3].AverageHeal).ToString() + " average heal");
+            dictValues.Add("Holy Light 8", Math.Round(_spells[4].Hps).ToString() + " hps*" + Math.Round(_spells[4].Hpm, 2).ToString() +
+                " hpm\n" + Math.Round(_spells[4].AverageHeal).ToString() + " average heal");
+            dictValues.Add("Holy Light 7", Math.Round(_spells[5].Hps).ToString() + " hps*" + Math.Round(_spells[5].Hpm, 2).ToString() +
+                " hpm\n" + Math.Round(_spells[5].AverageHeal).ToString() + " average heal");
+            dictValues.Add("Holy Light 6", Math.Round(_spells[6].Hps).ToString() + " hps*" + Math.Round(_spells[6].Hpm, 2).ToString() +
+                " hpm\n" + Math.Round(_spells[6].AverageHeal).ToString() + " average heal");
+            dictValues.Add("Holy Light 5", Math.Round(_spells[7].Hps).ToString() + " hps*" + Math.Round(_spells[7].Hpm, 2).ToString() +
+                " hpm\n" + Math.Round(_spells[7].AverageHeal).ToString() + " average heal");
+            dictValues.Add("Holy Light 4", Math.Round(_spells[8].Hps).ToString() + " hps*" + Math.Round(_spells[8].Hpm, 2).ToString() +
+                " hpm\n" + Math.Round(_spells[8].AverageHeal).ToString() + " average heal");
             return dictValues;
         }
     }

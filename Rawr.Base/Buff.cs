@@ -177,7 +177,13 @@ namespace Rawr
                             Category = BuffCategory.ClassBuffs,
                             Stats = new Stats() { Intellect = 40 }});
                         _allBuffs.Add(new Buff() { Name = "Wrath of Air Totem", Category = BuffCategory.ClassBuffs, 
-                            Stats = new Stats() {SpellDamageRating = 101}});
+                            Stats = new Stats() {SpellDamageRating = 101, Healing = 101}});
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Mana Spring Totem",
+                            Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { Mp5 = 50 }
+                        });
                         _allBuffs.Add(new Buff() { Name = "Totem of Wrath", Category = BuffCategory.ClassBuffs,
                             Stats = new Stats() {SpellCritRating = 22.08f * 3f, SpellHitRating = 12.62f * 3f}});
                         _allBuffs.Add(new Buff() { Name = "Moonkin Aura", Category = BuffCategory.ClassBuffs,
@@ -524,6 +530,22 @@ namespace Rawr
                             Stats = new Stats() { SpellDamageFor10SecOnHit_5 = 92 },
                             SetName = "Spellstrike Infusion",
                             SetThreshold = 2
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "2 Piece T6",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { HLCrit = .05f },
+                            SetName = "Lightbringer Raiment",
+                            SetThreshold = 2
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "4 Piece T6",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { FoLMultiple = .05f },
+                            SetName = "Lightbringer Raiment",
+                            SetThreshold = 4
                         });
 
 						//i think you're slipping
