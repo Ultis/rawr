@@ -313,6 +313,7 @@ namespace Rawr.Moonkin
                 float dpm = damageDone / manaUsed;
                 if (dps > calcs.DPS)
                 {
+                    calcs.DamageDone = damageDone;
                     calcs.DPS = dps;
                     calcs.DPM = dpm;
                     calcs.RotationName = rotation.Key;
@@ -322,13 +323,8 @@ namespace Rawr.Moonkin
                         calcs.TimeToOOM = new TimeSpan(0, (int)Math.Floor(secsToOom) / 60, (int)Math.Floor(secsToOom) % 60);
                 }
             }
-            float efficiencyStat = fightLength;
-            if (calcs.TimeToOOM > new TimeSpan(0, 0, 0))
-            {
-                efficiencyStat = (float)(calcs.TimeToOOM.Minutes * 60 + calcs.TimeToOOM.Seconds);
-            }
-            calcs.SubPoints = new float[] { calcs.DPS, efficiencyStat };
-            calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
+            calcs.SubPoints = new float[] { calcs.DamageDone };
+            calcs.OverallPoints = calcs.SubPoints[0];
         }
 
         #region IEnumerable Members

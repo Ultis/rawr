@@ -17,7 +17,6 @@ namespace Rawr.Moonkin
                 {
                     subColors = new Dictionary<string, System.Drawing.Color>();
                     subColors.Add("Damage", System.Drawing.Color.Red);
-                    subColors.Add("Efficiency", System.Drawing.Color.Blue);
                 }
                 return subColors;
             }

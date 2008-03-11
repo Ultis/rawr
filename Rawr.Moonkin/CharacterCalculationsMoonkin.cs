@@ -20,7 +20,7 @@ namespace Rawr.Moonkin
             }
         }
 
-        private float[] subPoints = new float[] { 0f, 0f };
+        private float[] subPoints = new float[] { 0f };
 
         public override float[] SubPoints
         {
@@ -44,6 +44,7 @@ namespace Rawr.Moonkin
         public float FightLength { get; set; }
         public float DPS { get; set; }
         public float DPM { get; set; }
+        public float DamageDone { get; set; }
         public TimeSpan TimeToOOM { get; set; }
         public string RotationName { get; set; }
 
