@@ -111,6 +111,10 @@ namespace Rawr
 		{
 			get { return Instance.CalculationOptionsPanel; }
 		}
+		public static Character.CharacterClass TargetClass
+		{
+			get { return Instance.TargetClass; }
+		}
 
 
 		public static ComparisonCalculationBase CreateNewComparisonCalculation()
@@ -254,7 +258,11 @@ namespace Rawr
 		/// });
 		/// </summary>
 		public abstract List<Item.ItemType> RelevantItemTypes { get; }
-		
+
+		/// <summary>
+		/// Character class that this model is for.
+		/// </summary>
+		public abstract Character.CharacterClass TargetClass { get; }
 		
 		/// <summary>
 		/// Method to get a new instance of the model's custom ComparisonCalculation class.
@@ -538,7 +546,8 @@ namespace Rawr
 
 		public virtual bool IsItemRelevant(Item item)
 		{
-			return (item.Type == null || RelevantItemTypes.Contains(item.Type)) &&
+			return (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Contains(TargetClass.ToString())) &&
+				(item.Type == null || RelevantItemTypes.Contains(item.Type)) &&
 				HasRelevantStats(item.Stats);
 		}
 

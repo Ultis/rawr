@@ -147,7 +147,8 @@ namespace Rawr.Warlock
             }
         }
 
-        public override ComparisonCalculationBase CreateNewComparisonCalculation()
+		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Warlock; } }
+		public override ComparisonCalculationBase CreateNewComparisonCalculation()
         {
             return new ComparisonCalculationWarlock();
         }

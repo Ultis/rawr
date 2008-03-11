@@ -97,6 +97,7 @@ namespace Rawr.Rogue
 			}
 		}
 
+		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Rogue; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationRogue(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsRogue(); }
 

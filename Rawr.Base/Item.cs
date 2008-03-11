@@ -49,7 +49,10 @@ namespace Rawr
 		[System.ComponentModel.DefaultValueAttribute(0)]
 		[System.Xml.Serialization.XmlElement("Speed")]
 		public float _speed = 0f;
-
+		[System.ComponentModel.DefaultValueAttribute("")]
+		[System.Xml.Serialization.XmlElement("RequiredClasses")]
+		public string _requiredClasses;
+		
 
 		[System.Xml.Serialization.XmlIgnore]
 		public string Name
@@ -282,7 +285,7 @@ namespace Rawr
                 _damageType = value;
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
 		public float Speed
 		{
 			get
@@ -303,7 +306,19 @@ namespace Rawr
 				else return ((float)(MinDamage + MaxDamage) * 0.5f) / Speed;
 			}
 		}
-
+		[System.Xml.Serialization.XmlIgnore]
+		public string RequiredClasses
+		{
+			get
+			{
+				return _requiredClasses;
+			}
+			set
+			{
+				_requiredClasses = value;
+			}
+		}
+		
 
 		private void OnIdsChanging()
 		{
@@ -453,7 +468,7 @@ namespace Rawr
 		}
 
 		public Item() { }
-		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id, int minDamage, int maxDamage, ItemDamageType damageType, float speed)
+		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id, int minDamage, int maxDamage, ItemDamageType damageType, float speed, string requiredClasses)
 		{
 			_name = name;
 			_id = id;
@@ -471,6 +486,7 @@ namespace Rawr
 			_maxDamage = maxDamage;
             _damageType = damageType;
 			_speed = speed;
+			_requiredClasses = requiredClasses;
 		}
 
 		public Item Clone()
@@ -492,7 +508,8 @@ namespace Rawr
 				MinDamage = this.MinDamage,
 				MaxDamage = this.MaxDamage,
                 DamageType = this.DamageType,
-				Speed = this.Speed
+				Speed = this.Speed,
+				RequiredClasses = this.RequiredClasses
 			};
 		}
 

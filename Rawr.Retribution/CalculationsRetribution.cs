@@ -127,7 +127,8 @@ namespace Rawr.Retribution
             }
         }
 
-        public override ComparisonCalculationBase CreateNewComparisonCalculation()
+		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Paladin; } }
+		public override ComparisonCalculationBase CreateNewComparisonCalculation()
         {
             return  new ComparisonCalculationRetribution();
         }

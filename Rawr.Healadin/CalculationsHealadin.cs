@@ -104,7 +104,8 @@ namespace Rawr.Healadin
             }
         }
 
-        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealadin(); }
+		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Paladin; } }
+		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealadin(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHealadin(); }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)

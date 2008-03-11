@@ -127,6 +127,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			}
 		}
 
+		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Druid; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationBear(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsBear(); }
 

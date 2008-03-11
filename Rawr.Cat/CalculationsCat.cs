@@ -110,6 +110,7 @@ namespace Rawr
 			}
 		}
 
+		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Druid; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationCat(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsCat(); }
 

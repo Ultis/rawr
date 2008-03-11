@@ -150,7 +150,8 @@ namespace Rawr.Mage
             }
         }
 
-        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMage(); }
+		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Mage; } }
+		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMage(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsMage(); }
 
         private bool IsItemActivatable(Item item)

@@ -104,7 +104,8 @@ namespace Rawr.Moonkin
             }
         }
 
-        public override ComparisonCalculationBase CreateNewComparisonCalculation()
+		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Druid; } }
+		public override ComparisonCalculationBase CreateNewComparisonCalculation()
         {
             return new ComparisonCalculationMoonkin();
         }
