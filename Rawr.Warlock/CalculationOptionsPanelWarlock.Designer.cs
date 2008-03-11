@@ -28,7 +28,6 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelWarlock));
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
@@ -42,6 +41,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.checkSacraficed = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkUnstable = new System.Windows.Forms.CheckBox();
             this.checkSiphonLife = new System.Windows.Forms.CheckBox();
@@ -50,7 +50,6 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBoxDuration = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -83,6 +82,7 @@
             // checkBoxEnforceMetagemRequirements
             // 
             this.checkBoxEnforceMetagemRequirements.AutoSize = true;
+            this.checkBoxEnforceMetagemRequirements.Enabled = false;
             this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(12, 564);
             this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
             this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
@@ -102,6 +102,7 @@
             // 
             // textBoxLatency
             // 
+            this.textBoxLatency.Enabled = false;
             this.textBoxLatency.Location = new System.Drawing.Point(97, 29);
             this.textBoxLatency.Name = "textBoxLatency";
             this.textBoxLatency.Size = new System.Drawing.Size(93, 20);
@@ -183,9 +184,9 @@
             this.checkSacraficed.AutoSize = true;
             this.checkSacraficed.Location = new System.Drawing.Point(107, 47);
             this.checkSacraficed.Name = "checkSacraficed";
-            this.checkSacraficed.Size = new System.Drawing.Size(77, 17);
+            this.checkSacraficed.Size = new System.Drawing.Size(73, 17);
             this.checkSacraficed.TabIndex = 14;
-            this.checkSacraficed.Text = "Sacraficed";
+            this.checkSacraficed.Text = "Sacrificed";
             this.checkSacraficed.UseVisualStyleBackColor = true;
             this.checkSacraficed.CheckedChanged += new System.EventHandler(this.checkSacraficed_CheckedChanged);
             // 
@@ -198,6 +199,16 @@
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Misc";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(98, 19);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(86, 23);
+            this.button1.TabIndex = 20;
+            this.button1.Text = "Show Talents";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // groupBox2
             // 
@@ -288,16 +299,6 @@
             this.label9.Size = new System.Drawing.Size(64, 13);
             this.label9.TabIndex = 18;
             this.label9.Text = "Duration (s):";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(98, 19);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(86, 23);
-            this.button1.TabIndex = 20;
-            this.button1.Text = "Show Talents";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // CalculationOptionsPanelWarlock
             // 
