@@ -615,6 +615,12 @@ namespace Rawr
                                     spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                                     stats.SpellPenetration += int.Parse(spellDesc);
                                 }
+                                else if (spellDesc.StartsWith("Increases your spell hit rating by "))
+                                {
+                                    spellDesc = spellDesc.Substring("Increases your spell hit rating by ".Length);
+                                    spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
+                                    stats.SpellHitRating += int.Parse(spellDesc);
+                                }
                                 // Restores 7 mana per 5 sec.
                                 else if (spellDesc.StartsWith("Restores "))
                                 {
