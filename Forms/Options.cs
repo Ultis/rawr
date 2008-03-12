@@ -44,7 +44,7 @@ namespace Rawr.Forms
 									| System.Windows.Forms.AnchorStyles.Right)));
 						userControl.Location = new System.Drawing.Point(3, 3);
 						userControl.Name = optionCast.TreePosition;
-						userControl.Size = new System.Drawing.Size(297, 334);
+						userControl.Size = new System.Drawing.Size(243, 356);
 						userControl.TabIndex = 0;
 						userControl.Visible = false;
 						panel1.Controls.Add(userControl);

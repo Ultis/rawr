@@ -16,14 +16,17 @@ namespace Rawr.UserControls.Options
 			//cannot be in load, because its possible this tab won't show, and the values will not be initialized.
 			//if this happens, then the users settings will be cleared.
 			ProxyType.SelectedItem = ProxyType.Items[0];
-			RequiresAuthCheckBox.Checked = Properties.NetworkSettings.Default.LoginToFirewall;
+			RequiresAuthCheckBox.Checked = Properties.NetworkSettings.Default.ProxyRequiresAuthentication;
 			Password.Text = Properties.NetworkSettings.Default.ProxyPassword;
-			ProxyPort.Text = Properties.NetworkSettings.Default.ProxyPort.ToString();
+            DomainTextBox.Text = Properties.NetworkSettings.Default.ProxyDomain;
+            ProxyPort.Text = Properties.NetworkSettings.Default.ProxyPort.ToString();
 			ProxyHost.Text = Properties.NetworkSettings.Default.ProxyServer;
 			ProxyType.Text = Properties.NetworkSettings.Default.ProxyType;
 			UserName.Text = Properties.NetworkSettings.Default.ProxyUserName;
 			UseDefaultProxySettingsCheckBox.Checked = Properties.NetworkSettings.Default.UseDefaultProxySettings;
+            UseDefaultCredentials.Checked = Properties.NetworkSettings.Default.UseDefaultAuthenticationForProxy;
 
+            checkBox1_CheckedChanged(null, null);
 			RequiresAuthCheckBox_CheckedChanged(null, null);
 			ProxyType_SelectedIndexChanged(null, null);
 			UseDefaultProxySettingsCheckBox_CheckedChanged(null, null);
@@ -57,16 +60,14 @@ namespace Rawr.UserControls.Options
 
 		private void RequiresAuthCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			if (RequiresAuthCheckBox.Checked)
-			{
-				UserName.Enabled = true;
-				Password.Enabled = true;
-			}
-			else
-			{
-				UserName.Enabled = false;
-				Password.Enabled = false;
-			}
+            if (RequiresAuthCheckBox.Checked)
+            {
+                AuthGroupBox.Enabled = true;
+            }
+            else
+            {
+                AuthGroupBox.Enabled = false;
+            }
 		}
 
 		private void ProxyPort_Validating(object sender, CancelEventArgs e)
@@ -82,6 +83,23 @@ namespace Rawr.UserControls.Options
 			}
 		}
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!UseDefaultCredentials.Checked)
+            {
+                UserName.Enabled = true;
+                Password.Enabled = true;
+                DomainTextBox.Enabled = true;
+            }
+            else
+            {
+                UserName.Enabled = false;
+                Password.Enabled = false;
+                DomainTextBox.Enabled = false;
+            }
+        }
+
+
 		#region IOptions Members
 
 
@@ -93,13 +111,15 @@ namespace Rawr.UserControls.Options
 			}
 			else
 			{
-				Properties.NetworkSettings.Default.LoginToFirewall = RequiresAuthCheckBox.Checked;
+				Properties.NetworkSettings.Default.ProxyRequiresAuthentication = RequiresAuthCheckBox.Checked;
 				Properties.NetworkSettings.Default.ProxyPassword = Password.Text;
 				Properties.NetworkSettings.Default.ProxyPort = int.Parse(ProxyPort.Text);
 				Properties.NetworkSettings.Default.ProxyServer = ProxyHost.Text;
 				Properties.NetworkSettings.Default.ProxyType = ProxyType.Text;
 				Properties.NetworkSettings.Default.ProxyUserName = UserName.Text;
 				Properties.NetworkSettings.Default.UseDefaultProxySettings = UseDefaultProxySettingsCheckBox.Checked;
+                Properties.NetworkSettings.Default.UseDefaultAuthenticationForProxy = UseDefaultCredentials.Checked;
+                Properties.NetworkSettings.Default.ProxyDomain = DomainTextBox.Text;
 				Properties.NetworkSettings.Default.Save();
 			}
 		}

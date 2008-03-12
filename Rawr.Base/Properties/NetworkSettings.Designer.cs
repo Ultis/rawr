@@ -116,18 +116,6 @@ namespace Rawr.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool LoginToFirewall {
-            get {
-                return ((bool)(this["LoginToFirewall"]));
-            }
-            set {
-                this["LoginToFirewall"] = value;
-            }
-        }
-        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; bgft) ")]
@@ -241,6 +229,42 @@ namespace Rawr.Properties {
             }
             set {
                 this["DownloadItemInfo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ProxyRequiresAuthentication {
+            get {
+                return ((bool)(this["ProxyRequiresAuthentication"]));
+            }
+            set {
+                this["ProxyRequiresAuthentication"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseDefaultAuthenticationForProxy {
+            get {
+                return ((bool)(this["UseDefaultAuthenticationForProxy"]));
+            }
+            set {
+                this["UseDefaultAuthenticationForProxy"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ProxyDomain {
+            get {
+                return ((string)(this["ProxyDomain"]));
+            }
+            set {
+                this["ProxyDomain"] = value;
             }
         }
     }

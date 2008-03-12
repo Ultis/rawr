@@ -31,7 +31,9 @@ namespace Rawr
 		private bool _useDefaultProxy;
 		private string _proxyUserName;
 		private string _proxyPassword;
-		private int _proxyPort;
+        private string _proxyDomain;
+        private int _proxyPort;
+        
 		
 		private static bool _fatalError = false;
 
@@ -42,11 +44,12 @@ namespace Rawr
 			_webRequestThreads = new Thread[maxConnections];
 			_downloadRequests = new Queue<DownloadRequest>();
 			_useDefaultProxy = Rawr.Properties.NetworkSettings.Default.UseDefaultProxySettings;
-
+            
 			_proxyServer = Rawr.Properties.NetworkSettings.Default.ProxyServer;
 			_proxyPort = Rawr.Properties.NetworkSettings.Default.ProxyPort;
 			_proxyUserName = Rawr.Properties.NetworkSettings.Default.ProxyUserName;
 			_proxyPassword = Rawr.Properties.NetworkSettings.Default.ProxyPassword;
+            _proxyDomain = Rawr.Properties.NetworkSettings.Default.ProxyDomain;
 		}
 
 
@@ -252,9 +255,16 @@ namespace Rawr
 			{
 				client.Proxy = new WebProxy(_proxyServer, _proxyPort);
 			}
-			if (client.Proxy != null && !String.IsNullOrEmpty(_proxyUserName) && !String.IsNullOrEmpty(_proxyPassword))
+			if (client.Proxy != null && Rawr.Properties.NetworkSettings.Default.ProxyRequiresAuthentication)
 			{
-				client.Proxy.Credentials = new NetworkCredential(_proxyUserName, _proxyPassword);
+                if (Rawr.Properties.NetworkSettings.Default.UseDefaultAuthenticationForProxy)
+                {
+                    client.Proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+                }
+                else
+                {
+                    client.Proxy.Credentials = new NetworkCredential(_proxyUserName, _proxyPassword, _proxyDomain);
+                }
 			}
 			return client;
 		}
