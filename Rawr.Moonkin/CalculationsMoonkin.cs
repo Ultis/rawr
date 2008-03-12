@@ -122,8 +122,6 @@ namespace Rawr.Moonkin
 
             float hitRatingDivisor = 1260.5f;
 
-            float hasteDivisor = 1560.0f;
-
             float critBase = 0.0185f;
             float critIntDivisor = 7997f;
             float critRatingDivisor = 2206.6f;
@@ -167,7 +165,22 @@ namespace Rawr.Moonkin
 
             // Finally, add the int portion of spell crit into the equation
             calcs.SpellCrit += stats.Intellect / critIntDivisor;
+            // Add the crit bonus from the idol, if present
+            if (character.ActiveBuffs.Contains("Moonkin Aura"))
+                calcs.SpellCrit += stats.IdolCritRating / critRatingDivisor;
 
+            MoonkinSpells spellList = GetFinalSpellList(character, ref calcs);
+
+            // Get the optimal DPS rotation
+            spellList.GetRotation(character, ref calcs);
+
+            return calcs;
+        }
+
+        private MoonkinSpells GetFinalSpellList(Character character, ref CharacterCalculationsMoonkin calcs)
+        {
+            float hasteDivisor = 1560.0f;
+            Stats stats = calcs.BasicStats;
             // Create the offensive spell group class
             MoonkinSpells spellList = new MoonkinSpells();
             // Add (possibly talented) +spelldmg
@@ -188,8 +201,6 @@ namespace Rawr.Moonkin
             spellList["Starfire"].damagePerHit += stats.StarfireDmg;
             spellList["Moonfire"].damagePerHit += stats.MoonfireDmg;
             spellList["Wrath"].damagePerHit += stats.WrathDmg;
-            if (character.ActiveBuffs.Contains("Moonkin Aura"))
-                calcs.SpellCrit += stats.IdolCritRating / critRatingDivisor;
 
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)
@@ -223,6 +234,10 @@ namespace Rawr.Moonkin
             // Wrath, Starfire: Cast time -(0.1 * Starlight Wrath)
             spellList["Wrath"].castTime -= 0.1f * int.Parse(character.CalculationOptions["StarlightWrath"]);
             spellList["Starfire"].castTime -= 0.1f * int.Parse(character.CalculationOptions["StarlightWrath"]);
+            
+            // Add set bonuses
+            spellList["Moonfire"].dotEffect.numTicks += (int)(stats.MoonfireExtension / spellList["Moonfire"].dotEffect.tickLength);
+            spellList["Starfire"].extraCritChance += stats.StarfireCritChance;
 
             // Haste and latency calculations
             foreach (KeyValuePair<string, Spell> pair in spellList)
@@ -230,11 +245,7 @@ namespace Rawr.Moonkin
                 pair.Value.castTime /= 1 + stats.SpellHasteRating / hasteDivisor;
                 pair.Value.castTime += calcs.Latency;
             }
-
-            // Get the optimal DPS rotation
-            spellList.GetRotation(character, ref calcs);
-
-            return calcs;
+            return spellList;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)

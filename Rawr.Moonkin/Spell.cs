@@ -206,11 +206,13 @@ namespace Rawr.Moonkin
         {
             float fightLength = calcs.FightLength * 60.0f;
 
+            float innervateCooldown = 360 - calcs.BasicStats.InnervateCooldownReduction;
+
             // Mana/5 calculations
             float totalManaRegen = calcs.ManaRegen5SR * fightLength;
 
             // Innervate calculations
-            int numInnervates = character.CalculationOptions["Innervate"] == "Yes" ? ((int)calcs.FightLength / 6 + 1) : 0;
+            int numInnervates = character.CalculationOptions["Innervate"] == "Yes" ? ((int)fightLength / (int)innervateCooldown + 1) : 0;
             // Innervate mana rate increases only spirit-based regen
             float innervateManaRate = (calcs.ManaRegen - calcs.BasicStats.Mp5 / 5f) * 4 + calcs.BasicStats.Mp5 / 5f;
             float innervateTime = numInnervates * 20.0f;
@@ -221,8 +223,6 @@ namespace Rawr.Moonkin
 
         public void GetRotation(Character character, ref CharacterCalculationsMoonkin calcs)
         {
-            // Nature's Swiftness procs
-            bool naturesSwiftness = int.Parse(character.CalculationOptions["NaturesSwiftness"]) > 0 ? true : false;
             // Nature's Grace haste time
             bool naturesGrace = int.Parse(character.CalculationOptions["NaturesGrace"]) > 0 ? true : false;
 
@@ -246,15 +246,12 @@ namespace Rawr.Moonkin
             }
             missRate -= calcs.SpellHit;
             if (missRate < 0.01f) missRate = 0.01f;
-            
+
             // Get total effective mana pool and total effective dps time
+            float totalMana = GetEffectiveManaPool(character, calcs);
             float fightLength = calcs.FightLength * 60;
 
-            float totalMana = GetEffectiveManaPool(character, calcs);
-
             Dictionary<string, List<Spell>> spellRotations = BuildSpellRotations();
-
-            int instantCasts = naturesSwiftness ? (int)Math.Floor(fightLength) % 3*60 : 0;
 
             foreach (KeyValuePair<string, List<Spell>> rotation in spellRotations)
             {
@@ -275,33 +272,13 @@ namespace Rawr.Moonkin
                 float dotDuration = 0.0f;
                 foreach (Spell sp in rotation.Value)
                 {
-                    // Save/restore casting time because we only want to apply the effect once
-                    float oldCastTime = sp.castTime;
-                    if (naturesGrace)
-                    {
-                        sp.castTime -= 0.5f * averageCritChance;
-                    }
-                    // Calculate hits/crits/misses
-                    // Use a 2-roll system; crits only count if the spell hits, it's either a hit or a crit (not both)
-                    // Note: sp.DamagePerHit makes allowance for a DoT not being able to crit.
-                    float normalHitDamage = sp.damagePerHit * (1 - missRate - sp.extraCritChance - calcs.SpellCrit);
-                    float critHitDamage = sp.damagePerHit * (1 - missRate) * sp.critBonus * (sp.extraCritChance + calcs.SpellCrit);
-
-                    damageDone += normalHitDamage + critHitDamage;
-                    manaUsed += sp.manaCost;
-                    if (sp.dotEffect != null)
-                    {
-                        damageDone += sp.dotEffect.damagePerTick * sp.dotEffect.numTicks;
-                        dotDuration = sp.dotEffect.numTicks * sp.dotEffect.tickLength;
-                    }
-                    if (dotDuration > 0)
-                        dotDuration -= sp.castTime;
-                    duration += sp.castTime;
-
-                    if (naturesGrace)
-                    {
-                        sp.castTime = oldCastTime;
-                    }
+                    DoSpellCalculations(sp, naturesGrace, averageCritChance, missRate, calcs, ref damageDone, ref manaUsed, ref duration, ref dotDuration);
+                }
+                // Handle the case where there is sufficient haste to add another spell cast in the DoT time
+                // Right now, just automagically casts the last spell in the rotation
+                while (dotDuration > rotation.Value[rotation.Value.Count - 1].castTime)
+                {
+                    DoSpellCalculations(rotation.Value[rotation.Value.Count - 1], naturesGrace, averageCritChance, missRate, calcs, ref damageDone, ref manaUsed, ref duration, ref dotDuration);
                 }
                 // Handle the case where DoTs overflow the cast times
                 if (dotDuration > 0)
@@ -325,6 +302,51 @@ namespace Rawr.Moonkin
             }
             calcs.SubPoints = new float[] { calcs.DamageDone };
             calcs.OverallPoints = calcs.SubPoints[0];
+        }
+
+        private void DoSpellCalculations(Spell sp, bool naturesGrace, float averageCritChance, float missRate, CharacterCalculationsMoonkin calcs, ref float damageDone, ref float manaUsed, ref float duration, ref float dotDuration)
+        {
+            // Save/restore casting time because we only want to apply the effect once
+            float oldCastTime = sp.castTime;
+            if (naturesGrace)
+            {
+                sp.castTime -= 0.5f * averageCritChance;
+            }
+            float oldSpellDamage = 0.0f;
+            if (dotDuration > 0 && sp.school == SpellSchool.Arcane && sp.dotEffect == null)
+            {
+                oldSpellDamage = sp.damagePerHit;
+                // Add 4pc T5 bonus to Starfire spell
+                sp.damagePerHit *= 1.1f;
+            }
+            // Calculate hits/crits/misses
+            // Use a 2-roll system; crits only count if the spell hits, it's either a hit or a crit (not both)
+            // Note: sp.DamagePerHit makes allowance for a DoT not being able to crit.
+            float normalHitDamage = sp.damagePerHit * (1 - missRate - sp.extraCritChance - calcs.SpellCrit);
+            float critHitDamage = sp.damagePerHit * sp.critBonus * ((1 - missRate) * (sp.extraCritChance + calcs.SpellCrit));
+
+            damageDone += normalHitDamage + critHitDamage;
+            manaUsed += sp.manaCost;
+            if (sp.dotEffect != null)
+            {
+                damageDone += sp.dotEffect.damagePerTick * sp.dotEffect.numTicks;
+                dotDuration = sp.dotEffect.numTicks * sp.dotEffect.tickLength;
+            }
+            if (dotDuration > 0)
+            {
+                dotDuration -= sp.castTime;
+            }
+            duration += sp.castTime;
+
+            if (naturesGrace)
+            {
+                sp.castTime = oldCastTime;
+            }
+            if (oldSpellDamage > 0)
+            {
+                sp.damagePerHit = oldSpellDamage;
+                oldSpellDamage = 0.0f;
+            }
         }
 
         #region IEnumerable Members
