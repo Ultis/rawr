@@ -547,6 +547,48 @@ namespace Rawr
                             SetName = "Lightbringer Raiment",
                             SetThreshold = 4
                         });
+                        // Moonkin tier 4/5/6 sets
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Malorne 2 Piece Bonus",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { ManaRestorePerCast = .05f * 120 },
+                            SetName = "Malorne Regalia",
+                            SetThreshold = 2
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Malorne 4 Piece Bonus",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { InnervateCooldownReduction = 48.0f },
+                            SetName = "Malorne Regalia",
+                            SetThreshold = 4
+                        });
+                        // Nordrassil 2-piece skipped because it has nothing to do with dps
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Nordrassil 4 Piece Bonus",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { StarfireBonusWithDot = 0.1f },
+                            SetName = "Nordrassil Regalia",
+                            SetThreshold = 4
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Thunderheart 2 Piece Bonus",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { MoonfireExtension = 3.0f },
+                            SetName = "Thunderheart Regalia",
+                            SetThreshold = 2
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Thunderheart 4 Piece Bonus",
+                            Category = BuffCategory.SetBonuses,
+                            Stats = new Stats() { StarfireCritChance = 0.05f },
+                            SetName = "Thunderheart Regalia",
+                            SetThreshold = 4
+                        });
 
 						//i think you're slipping
 						_allBuffs.Add(new Buff() { Name = "Bloodlust", Category = BuffCategory.TemporaryBuffs,

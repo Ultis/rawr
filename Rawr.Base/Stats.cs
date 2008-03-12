@@ -194,6 +194,11 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
+        [DisplayName("Block Value")]
+        public float BlockValue { get; set; }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Ratings")]
         [DisplayName("Defense")]
         public float DefenseRating { get; set; }
 
@@ -381,6 +386,21 @@ namespace Rawr
         [Category("Equipment Procs")]
         public float IdolCritRating { get; set; }
 
+        // Moonkin 4-piece T4 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float InnervateCooldownReduction { get; set; }
+
+        // Moonkin 4-piece T5 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float StarfireBonusWithDot { get; set; }
+
+        // Moonkin 2-piece T6 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MoonfireExtension { get; set; }
+        // Moonkin 4-piece T6 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float StarfireCritChance { get; set; }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float EvocationExtension { get; set; }
 
@@ -486,42 +506,6 @@ namespace Rawr
         [DisplayName("Windfury")]
         public float WindfuryAPBonus { get; set; }
 
-        //Paladin Librams and Set bonuses
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Equipment Procs")]
-        [DisplayName("HL Reduced Cost")]
-        public float HLCost { get; set; }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Equipment Procs")]
-        [DisplayName("HL Bonus Heal")]
-        public float HLHeal { get; set; }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Equipment Procs")]
-        [DisplayName("HL Bonus BoL Heal")]
-        public float HLBoL { get; set; }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Equipment Procs")]
-        [DisplayName("HL Bonus Crit")]
-        public float HLCrit { get; set; }
-        
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Equipment Procs")]
-        [DisplayName("FoL Bonus Heal")]
-        public float FoLHeal { get; set; }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Equipment Procs")]
-        [DisplayName("FoL Bonus BoL Heal")]
-        public float FoLBoL { get; set; }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
-        [Category("Equipment Procs")]
-        public float FoLMultiple { get; set; }
-
 		#endregion
 
 		/// <summary>
@@ -562,6 +546,7 @@ namespace Rawr
 				DodgeRating = a.DodgeRating + b.DodgeRating,
 				ParryRating = a.ParryRating + b.ParryRating,
 				BlockRating = a.BlockRating + b.BlockRating,
+                BlockValue = a.BlockValue + b.BlockValue,
 				DefenseRating = a.DefenseRating + b.DefenseRating,
 				Resilience = a.Resilience + b.Resilience,
 				ExpertiseRating = a.ExpertiseRating + b.ExpertiseRating,
@@ -634,14 +619,7 @@ namespace Rawr
                 IdolCritRating = a.IdolCritRating + b.IdolCritRating,
                 BonusPhysicalDamageMultiplier = (1f + a.BonusPhysicalDamageMultiplier)*(1f+b.BonusPhysicalDamageMultiplier) -1f,
                 BonusCrusaderStrikeDamageMultiplier = (1f + a.BonusCrusaderStrikeDamageMultiplier)*(1f+b.BonusCrusaderStrikeDamageMultiplier) -1f,
-                WindfuryAPBonus = a.WindfuryAPBonus +b.WindfuryAPBonus,
-                FoLBoL = a.FoLBoL + b.FoLBoL,
-                FoLMultiple = (1f + a.FoLMultiple) * (1f + b.FoLMultiple) - 1f,
-                FoLHeal = a.FoLHeal + b.FoLHeal,
-                HLBoL = a.HLBoL + b.HLBoL,
-                HLCost = a.HLCost + b.HLCost,
-                HLCrit = a.HLCrit + b.HLCrit,
-                HLHeal = a.HLHeal + b.HLHeal
+                WindfuryAPBonus = a.WindfuryAPBonus +b.WindfuryAPBonus
 			};
 		}
 
