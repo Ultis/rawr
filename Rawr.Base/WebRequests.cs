@@ -16,6 +16,7 @@ namespace Rawr
 {
 	public class WebRequestWrapper
 	{
+        private const int RETRY_MAX = 3;
 
 		private class DownloadRequest
 		{
@@ -104,8 +105,23 @@ namespace Rawr
 			XmlDocument doc = null;
 			if (!String.IsNullOrEmpty(id))
 			{
-				doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id));
-			}
+                int retry = 0;
+                bool found = false;
+                while (retry < RETRY_MAX && !found)
+                {
+                    doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id));
+                    if (doc != null && doc.DocumentElement != null
+                                    && doc.DocumentElement.HasChildNodes && doc.DocumentElement.ChildNodes[0].HasChildNodes)
+                    {
+                        found = true;
+                    }
+                    else
+                    {
+                        //No such item exists or armory fail, try a couple times just to be sure
+                        retry++;
+                    }
+                }
+            }
 			return doc;
 		}
 
@@ -285,7 +301,8 @@ namespace Rawr
 		/// <param name="ex"></param>
 		private void CheckExecptionForFatalError(Exception ex)
 		{
-			//log.Error("Exception trying to download", ex);
+			Log.Write("Exception trying to download: "+ ex);
+            Log.Write(ex.StackTrace);
 			if (ex.Message.Contains("407") /*proxy auth required */
 				|| ex.Message.Contains("403") /*proxy info probably wrong, if we keep issuing requests, they will probably get locked out*/
 				|| ex.Message.Contains("timed out") /*either proxy required and firewall dropped the request, or armory is down*/
@@ -350,30 +367,38 @@ namespace Rawr
 		/// </summary>
 		private void ThreadDoWork()
 		{
-			DownloadRequest dl = null;
-			while (_downloadRequests.Count > 0 && !_fatalError)
-			{
-				lock (_downloadRequests)
-				{
-					if (_downloadRequests.Count > 0)
-					{
-						dl = _downloadRequests.Dequeue();
-					}
-				}
-				if (dl != null)
-				{
-					try
-					{
-						DownloadFile(dl.serverPath, dl.localPath);
-					}
-					catch (Exception ex)
-					{
-						CheckExecptionForFatalError(ex);
-						dl.error = ex.Message;
-						_failedRequests.Add(dl);
-					}
-				}
-			}
+            try
+            {
+                DownloadRequest dl = null;
+                while (_downloadRequests.Count > 0 && !_fatalError)
+                {
+                    lock (_downloadRequests)
+                    {
+                        if (_downloadRequests.Count > 0)
+                        {
+                            dl = _downloadRequests.Dequeue();
+                        }
+                    }
+                    if (dl != null)
+                    {
+                        try
+                        {
+                            DownloadFile(dl.serverPath, dl.localPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            CheckExecptionForFatalError(ex);
+                            dl.error = ex.Message;
+                            _failedRequests.Add(dl);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex.Message);
+                Log.Write(ex.StackTrace);
+            }
 		}
 	}
 }
