@@ -128,13 +128,17 @@ namespace Rawr
 
 					if (ItemCalculations.Length > 0)
 					{
-						float maxOverallPoints = 100f;
+						float maxOverallPoints = 2f;
 						foreach (ComparisonCalculationBase calc in ItemCalculations)
 							if (!float.IsPositiveInfinity(calc.OverallPoints))
 								maxOverallPoints = Math.Max(maxOverallPoints, calc.OverallPoints);
 						maxOverallPoints = (float)Math.Ceiling(maxOverallPoints);
-						float maxScale = 100f;//(float)(Math.Ceiling(ItemCalculations[0].OverallPoints / 400) * 400f);
-						if (maxOverallPoints < 800)
+						float maxScale = 10f;//(float)(Math.Ceiling(ItemCalculations[0].OverallPoints / 400) * 400f);
+                        if (maxOverallPoints < 10)
+                            maxScale = 2f * (float)Math.Ceiling(maxOverallPoints / 2f);
+                        else if (maxOverallPoints < 100)
+                            maxScale = 10f * (float)Math.Ceiling(maxOverallPoints / 10f);
+                        else if (maxOverallPoints < 800)
 							maxScale = 100f * (float)Math.Ceiling(maxOverallPoints / 100f);
 						else
 						{
@@ -343,7 +347,7 @@ namespace Rawr
 									g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
 									g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
 
-									if (RoundValues && subPoint > 0) g.DrawString(Math.Round(subPoint).ToString(),
+									if (RoundValues && subPoint > 0) g.DrawString(subPoint.ToString("F"),
 										this.Font, brushSubPoints[j], rectSubPoint, formatSubPoint);
 								
 								}
@@ -383,7 +387,7 @@ namespace Rawr
 								//	this.Font, brushMitigation, rectMitigation, formatSubPoint);
 								//if (RoundValues && item.SurvivalPoints > 0) g.DrawString(Math.Round(item.SurvivalPoints).ToString(),
 								//	this.Font, brushSurvival, rectSurvival, formatSubPoint);
-								if (item.OverallPoints > 0) g.DrawString(RoundValues ? Math.Round(item.OverallPoints).ToString() :
+								if (item.OverallPoints > 0) g.DrawString(RoundValues ? item.OverallPoints.ToString("F") :
 									item.OverallPoints.ToString(), this.Font, brushOverall, new Rectangle((int)graphStart + barStart + 2, 30 + i * 36, 50, 24), formatOverall);
 							}
 						}

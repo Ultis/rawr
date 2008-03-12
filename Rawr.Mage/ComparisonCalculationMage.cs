@@ -28,7 +28,7 @@ namespace Rawr.Mage
             set { _subPoints = value; }
         }
 
-        public float DamagePoints
+        public float DpsPoints
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
@@ -50,7 +50,7 @@ namespace Rawr.Mage
 
         public override string ToString()
         {
-            return string.Format("{0}: ({1} Damage)", Name, Math.Round(DamagePoints));
+            return string.Format("{0:F}: ({1:F} Dps)", Name, Math.Round(DpsPoints));
         }
     }
 }

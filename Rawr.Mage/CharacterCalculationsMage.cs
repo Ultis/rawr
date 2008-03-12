@@ -498,8 +498,8 @@ namespace Rawr.Mage
                     }
                 }
             }
-            dictValues.Add("Total Damage", String.Format("{0:F}", OverallPoints));
-            dictValues.Add("Dps", String.Format("{0:F}", OverallPoints / FightDuration));
+            dictValues.Add("Total Damage", String.Format("{0:F}", OverallPoints * FightDuration));
+            dictValues.Add("Dps", String.Format("{0:F}", OverallPoints));
             StringBuilder sb = new StringBuilder("*");
             for (int i = 0; i < SolutionLabel.Count; i++)
             {

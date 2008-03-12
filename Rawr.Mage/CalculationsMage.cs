@@ -26,7 +26,7 @@ namespace Rawr.Mage
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Damage", System.Drawing.Color.FromArgb(160, 0, 224));
+                    _subPointNameColors.Add("Dps", System.Drawing.Color.FromArgb(0, 128, 255));
                 }
                 return _subPointNameColors;
             }
@@ -756,7 +756,7 @@ namespace Rawr.Mage
 
             calculatedStats.Solution = lp.Solve();
 
-            calculatedStats.SubPoints[0] = (float)calculatedStats.Solution[lpCols] + calculatedStats.WaterElementalDamage;
+            calculatedStats.SubPoints[0] = ((float)calculatedStats.Solution[lpCols] + calculatedStats.WaterElementalDamage) / calculationOptions.FightDuration;
             calculatedStats.OverallPoints = calculatedStats.SubPoints[0];
 
             return calculatedStats;

@@ -97,7 +97,7 @@ namespace Rawr
 
 		public void LoadCustomChart(string chartName)
 		{
-			comparisonGraph1.RoundValues = false;
+			comparisonGraph1.RoundValues = true;
 			comparisonGraph1.ItemCalculations = Calculations.GetCustomChartData(Character, chartName);
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
 		}
