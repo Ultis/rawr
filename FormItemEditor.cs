@@ -222,6 +222,7 @@ namespace Rawr
 				_changingItemCache = true;
 				try
 				{
+					WebRequestWrapper.ResetFatalErrorIndicator();
 					AddItemById(form.Value);
 				}
 				finally

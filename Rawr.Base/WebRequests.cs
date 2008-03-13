@@ -208,6 +208,10 @@ namespace Rawr
 			get { return _fatalError; }
 		}
 
+		public static void ResetFatalErrorIndicator()
+		{
+			_fatalError = false;
+		}
 		/// <summary>
 		/// Downloads an Icon Asyncronously
 		/// </summary>
@@ -237,7 +241,6 @@ namespace Rawr
 				return (Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
 								Properties.CacheSettings.Default.RelativeTalentImageCache));
 			}
-
 		}
 
 		/// <summary>
@@ -276,32 +279,44 @@ namespace Rawr
 		/// <param name="localPath">local path, including file name,  where the downloaded file will be saved</param>
 		private void DownloadFile(string URI, string localPath)
 		{
-            
-            if (!LastWasFatalError && !File.Exists(localPath))
-            {
-                if (!Directory.Exists(Path.GetDirectoryName(localPath)))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(localPath));
-                }
-                using (WebClient client = CreateWebClient())
-                {
-                    try
-                    {
-                        client.DownloadFile(URI, localPath);
-                    }
-                    catch (Exception ex)
-                    {
-                        CheckExecptionForFatalError(ex);
-                        //if on a client file download, there is an exception, 
-                        //it will create a 0 byte file. We don't want that empty file.
-                        if (File.Exists(localPath))
-                        {
-                            File.Delete(localPath);
-                        }
-                        throw;
-                    }
-                }
-            }
+			int retry = 0;
+			bool success = false;
+			if (!File.Exists(localPath))
+			{
+				do
+				{
+					if (!LastWasFatalError)
+					{
+						if (!Directory.Exists(Path.GetDirectoryName(localPath)))
+						{
+							Directory.CreateDirectory(Path.GetDirectoryName(localPath));
+						}
+						using (WebClient client = CreateWebClient())
+						{
+							try
+							{
+								client.DownloadFile(URI, localPath);
+								success = true;
+							}
+							catch (Exception ex)
+							{
+								CheckExecptionForFatalError(ex);
+								//if on a client file download, there is an exception, 
+								//it will create a 0 byte file. We don't want that empty file.
+								if (File.Exists(localPath))
+								{
+									File.Delete(localPath);
+								}
+								retry++;
+								if (retry == RETRY_MAX || LastWasFatalError)
+								{
+									throw;
+								}
+							}
+						}
+					}
+				} while (retry <= RETRY_MAX && !success);
+			}
 		}
 
 		/// <summary>
@@ -326,14 +341,27 @@ namespace Rawr
 		{
 			WebClient webClient = CreateWebClient();
 			string value = null;
-			try
+			int retry = 0;
+			bool success = false;
+			do
 			{
-				value = webClient.DownloadString(URI);
-			}
-			catch (Exception ex)
-			{
-				CheckExecptionForFatalError(ex);
-			}
+				if (!LastWasFatalError)
+				{
+					try
+					{
+						value = webClient.DownloadString(URI);
+						if (!String.IsNullOrEmpty(value))
+						{
+							success = true;
+						}
+					}
+					catch (Exception ex)
+					{
+						CheckExecptionForFatalError(ex);
+					}
+				}
+				retry++;
+			} while (retry <= RETRY_MAX && !success);
 			return value;
 		}
 

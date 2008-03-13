@@ -1212,6 +1212,7 @@ namespace Rawr
 		{
 			if (!string.IsNullOrEmpty(character.Realm) && !string.IsNullOrEmpty(character.Name))
 			{
+				WebRequestWrapper.ResetFatalErrorIndicator();
 				List<ComparisonCalculationBase> gemCalculations = new List<ComparisonCalculationBase>();
 				foreach (Item item in ItemCache.AllItems)
 				{

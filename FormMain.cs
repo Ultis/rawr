@@ -375,6 +375,7 @@ namespace Rawr
 		private void LoadCharacter(string characterPath) { LoadCharacter(Character.Load(characterPath), characterPath); }
 		private void LoadCharacter(Character character, string characterPath)
 		{
+			WebRequestWrapper.ResetFatalErrorIndicator();
 			this.Cursor = Cursors.WaitCursor;
 			Character = character;
 			_characterPath = characterPath;
@@ -668,6 +669,7 @@ namespace Rawr
 
         private void updateAllItemsToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
+			WebRequestWrapper.ResetFatalErrorIndicator();
 			foreach (Item item in ItemCache.AllItems)
 			{
 				if (item.Id < 90000)
