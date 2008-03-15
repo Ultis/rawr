@@ -201,6 +201,20 @@ namespace Rawr
                             Stats = new Stats() { Mp5 = (float)Math.Floor(41f * 0.2f) },
                             RequiredBuff = "Blessing of Wisdom"
                         });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Mage Armor",
+                            Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { SpellCombatManaRegeneration = 0.3f, AllResist = 18 },
+                            ConflictingBuffs = new string[] { "Armor" }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Molten Armor",
+                            Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { MageSpellCrit = 0.03f },
+                            ConflictingBuffs = new string[] { "Armor" }
+                        });
 
 
 						//what can i say... you're crazy

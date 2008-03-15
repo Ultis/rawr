@@ -36,8 +36,6 @@
             this.buttonTalents = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxLatency = new System.Windows.Forms.TextBox();
-            this.comboBoxArmor = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.textBoxAoeTargets = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.textBoxArcaneResist = new System.Windows.Forms.TextBox();
@@ -80,6 +78,8 @@
             this.checkBoxDrumsOfBattle = new System.Windows.Forms.CheckBox();
             this.label25 = new System.Windows.Forms.Label();
             this.checkBox2_3Mode = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.checkBoxAutomaticArmor = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -167,30 +167,6 @@
             this.textBoxLatency.Size = new System.Drawing.Size(85, 20);
             this.textBoxLatency.TabIndex = 7;
             this.textBoxLatency.TextChanged += new System.EventHandler(this.textBoxLatency_TextChanged);
-            // 
-            // comboBoxArmor
-            // 
-            this.comboBoxArmor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxArmor.FormattingEnabled = true;
-            this.comboBoxArmor.Items.AddRange(new object[] {
-            "Mage",
-            "Molten",
-            "Ice",
-            "None"});
-            this.comboBoxArmor.Location = new System.Drawing.Point(104, 81);
-            this.comboBoxArmor.Name = "comboBoxArmor";
-            this.comboBoxArmor.Size = new System.Drawing.Size(85, 21);
-            this.comboBoxArmor.TabIndex = 9;
-            this.comboBoxArmor.SelectedIndexChanged += new System.EventHandler(this.comboBoxArmor_SelectedIndexChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 84);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(37, 13);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Armor:";
             // 
             // textBoxAoeTargets
             // 
@@ -565,11 +541,32 @@
             this.checkBox2_3Mode.UseVisualStyleBackColor = true;
             this.checkBox2_3Mode.CheckedChanged += new System.EventHandler(this.checkBox2_3Mode_CheckedChanged);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 89);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(87, 13);
+            this.label4.TabIndex = 53;
+            this.label4.Text = "Automatic Armor:";
+            // 
+            // checkBoxAutomaticArmor
+            // 
+            this.checkBoxAutomaticArmor.AutoSize = true;
+            this.checkBoxAutomaticArmor.Location = new System.Drawing.Point(104, 88);
+            this.checkBoxAutomaticArmor.Name = "checkBoxAutomaticArmor";
+            this.checkBoxAutomaticArmor.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxAutomaticArmor.TabIndex = 52;
+            this.checkBoxAutomaticArmor.UseVisualStyleBackColor = true;
+            this.checkBoxAutomaticArmor.CheckedChanged += new System.EventHandler(this.checkBoxAutomaticArmor_CheckedChanged);
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.checkBoxAutomaticArmor);
             this.Controls.Add(this.label25);
             this.Controls.Add(this.checkBox2_3Mode);
             this.Controls.Add(this.label24);
@@ -612,8 +609,6 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.textBoxAoeTargets);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.comboBoxArmor);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxLatency);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.buttonTalents);
@@ -639,8 +634,6 @@
         private System.Windows.Forms.Button buttonTalents;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxLatency;
-        private System.Windows.Forms.ComboBox comboBoxArmor;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxAoeTargets;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBoxArcaneResist;
@@ -683,5 +676,7 @@
         private System.Windows.Forms.CheckBox checkBoxDrumsOfBattle;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.CheckBox checkBox2_3Mode;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox checkBoxAutomaticArmor;
 	}
 }

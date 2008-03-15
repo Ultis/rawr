@@ -108,6 +108,9 @@ namespace Rawr
         public float SpellCritRating { get; set; }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MageSpellCrit { get; set; }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Frost Crit")]
         public float SpellFrostCritRating { get; set; }
@@ -619,7 +622,8 @@ namespace Rawr
                 IdolCritRating = a.IdolCritRating + b.IdolCritRating,
                 BonusPhysicalDamageMultiplier = (1f + a.BonusPhysicalDamageMultiplier)*(1f+b.BonusPhysicalDamageMultiplier) -1f,
                 BonusCrusaderStrikeDamageMultiplier = (1f + a.BonusCrusaderStrikeDamageMultiplier)*(1f+b.BonusCrusaderStrikeDamageMultiplier) -1f,
-                WindfuryAPBonus = a.WindfuryAPBonus +b.WindfuryAPBonus
+                MageSpellCrit = a.MageSpellCrit + b.MageSpellCrit,
+                WindfuryAPBonus = a.WindfuryAPBonus + b.WindfuryAPBonus
 			};
 		}
 

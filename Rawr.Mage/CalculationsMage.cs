@@ -111,7 +111,7 @@ namespace Rawr.Mage
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Mage Armor", "Talents (per talent point)", "Talent Specs", "Item Budget" };
+                    _customChartNames = new string[] { "Talents (per talent point)", "Talent Specs", "Item Budget" };
                 return _customChartNames;
             }
         }
@@ -258,7 +258,22 @@ namespace Rawr.Mage
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CompiledCalculationOptions calculationOptions = new CompiledCalculationOptions(character);
-            Stats rawStats = GetRawStats(character, additionalItem, calculationOptions);
+            if (calculationOptions.AutomaticArmor && !calculationOptions.DisableBuffAutoActivation)
+            {
+                CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calculationOptions, "Mage Armor");
+                CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calculationOptions, "Molten Armor");
+                return (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
+            }
+            else
+            {
+                return GetCharacterCalculations(character, additionalItem, calculationOptions, null);
+            }
+        }
+
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions, string armor)
+        {
+            List<string> autoActivatedBuffs = new List<string>();
+            Stats rawStats = GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
             Stats characterStats = GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
 
             bool heroismAvailable = calculationOptions.HeroismAvailable;
@@ -311,6 +326,16 @@ namespace Rawr.Mage
                 }
 
             CharacterCalculationsMage calculatedStats = statsList[statsList.Count - 1];
+            calculatedStats.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
+            if (armor != null)
+            {
+                calculatedStats.MageArmor = armor;
+            }
+            else
+            {
+                if (character.ActiveBuffs.Contains("Mage Armor")) calculatedStats.MageArmor = "Mage Armor";
+                if (character.ActiveBuffs.Contains("Molten Armor")) calculatedStats.MageArmor = "Molten Armor";
+            }
 
             List<string> spellList = new List<string>();
 
@@ -1013,8 +1038,6 @@ namespace Rawr.Mage
             calculatedStats.CalculationOptions = calculationOptions;
 
             float levelScalingFactor = (1 - (70 - 60) / 82f * 3);
-            int molten = 0;
-            if (calculationOptions.MageArmor.Equals("Molten")) molten = 1;
 
             stats.SpellDamageRating += stats.SpellDamageFromIntellectPercentage * stats.Intellect;
             stats.SpellDamageRating += stats.SpellDamageFromSpiritPercentage * stats.Spirit;
@@ -1048,7 +1071,7 @@ namespace Rawr.Mage
             calculatedStats.NatureDamage = /* stats.SpellNatureDamageRating + */ stats.SpellDamageRating;
             calculatedStats.ShadowDamage = stats.SpellShadowDamageRating + stats.SpellDamageRating;
 
-            calculatedStats.SpellCrit = 0.01f * (stats.Intellect * 0.0125f + 0.9075f) + 0.01f * calculationOptions.ArcaneInstability + 0.01f * calculationOptions.ArcanePotency + stats.SpellCritRating / 1400f * levelScalingFactor + 0.03f * molten;
+            calculatedStats.SpellCrit = 0.01f * (stats.Intellect * 0.0125f + 0.9075f) + 0.01f * calculationOptions.ArcaneInstability + 0.01f * calculationOptions.ArcanePotency + stats.SpellCritRating / 1400f * levelScalingFactor + stats.MageSpellCrit;
             if (destructionPotion) calculatedStats.SpellCrit += 0.02f;
             calculatedStats.SpellHit = stats.SpellHitRating * levelScalingFactor / 800f;
 
@@ -1075,8 +1098,8 @@ namespace Rawr.Mage
             calculatedStats.HealthRegenEating = calculatedStats.ManaRegen + 250f;
             calculatedStats.MeleeMitigation = (1 - 1 / (1 + 0.1f * stats.Armor / (8.5f * (70 + 4.5f * (70 - 59)) + 40)));
             calculatedStats.Defense = 350 + stats.DefenseRating / 2.37f;
-            calculatedStats.PhysicalCritReduction = (0.04f * (calculatedStats.Defense - 5 * 70) / 100 + stats.Resilience / 2500f * levelScalingFactor + 0.05f * molten);
-            calculatedStats.SpellCritReduction = (stats.Resilience / 2500f * levelScalingFactor + 0.05f * molten);
+            calculatedStats.PhysicalCritReduction = (0.04f * (calculatedStats.Defense - 5 * 70) / 100 + stats.Resilience / 2500f * levelScalingFactor + (character.ActiveBuffs.Contains("Molten Armor") ? 0.05f : 0f));
+            calculatedStats.SpellCritReduction = (stats.Resilience / 2500f * levelScalingFactor + (character.ActiveBuffs.Contains("Molten Armor") ? 0.05f : 0f));
             calculatedStats.CritDamageReduction = (stats.Resilience / 2500f * 2f * levelScalingFactor);
             calculatedStats.Dodge = ((0.0443f * stats.Agility + 3.28f + 0.04f * (calculatedStats.Defense - 5 * 70)) / 100f + stats.DodgeRating / 1200 * levelScalingFactor);
 
@@ -1165,33 +1188,57 @@ namespace Rawr.Mage
             return calculatedStats;
         }
 
-        private Stats GetRawStats(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions)
+        private Stats GetRawStats(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions, List<string> autoActivatedBuffs, string armor)
         {
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsEnchants = GetEnchantsStats(character);
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            List<string> activeBuffs = new List<string>();
+            activeBuffs.AddRange(character.ActiveBuffs);
 
-            if (calculationOptions.MaintainScorch)
+            if (!calculationOptions.DisableBuffAutoActivation)
             {
-                if (calculationOptions.ImprovedScorch > 0)
+                if (calculationOptions.MaintainScorch)
                 {
-                    if (!character.ActiveBuffs.Contains("Improved Scorch")) statsBuffs += Buff.GetBuffByName("Improved Scorch").Stats;
+                    if (calculationOptions.ImprovedScorch > 0)
+                    {
+                        if (!character.ActiveBuffs.Contains("Improved Scorch"))
+                        {
+                            activeBuffs.Add("Improved Scorch");
+                            autoActivatedBuffs.Add("Improved Scorch");
+                        }
+                    }
+                }
+                if (calculationOptions.WintersChill > 0)
+                {
+                    if (!character.ActiveBuffs.Contains("Winter's Chill"))
+                    {
+                        activeBuffs.Add("Winter's Chill");
+                        autoActivatedBuffs.Add("Winter's Chill");
+                    }
+                }
+                if (armor != null)
+                {
+                    if (!character.ActiveBuffs.Contains(armor))
+                    {
+                        activeBuffs.Add(armor);
+                        autoActivatedBuffs.Add(armor);
+                        RemoveConflictingBuffs(activeBuffs, armor);
+                    }
                 }
             }
-            if (calculationOptions.WintersChill > 0)
-            {
-                if (!character.ActiveBuffs.Contains("Winter's Chill")) statsBuffs += Buff.GetBuffByName("Winter's Chill").Stats;
-            }
+
+            Stats statsBuffs = GetBuffsStats(activeBuffs);
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
             return statsGearEnchantsBuffs;
         }
 
+        // required by base class, but never used
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             CompiledCalculationOptions calculationOptions = new CompiledCalculationOptions(character);
-            return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions), calculationOptions);
+            return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions, new List<string>(), null), calculationOptions);
         }
 
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats, CompiledCalculationOptions calculationOptions)
@@ -1307,16 +1354,11 @@ namespace Rawr.Mage
             int frostWarding = calculationOptions.FrostWarding;
             statsTotal.AllResist += magicAbsorption;
 
-            if (calculationOptions.MageArmor == "Mage")
-            {
-                statsTotal.SpellCombatManaRegeneration += 0.3f;
-                statsTotal.AllResist += 18;
-            }
-            if (calculationOptions.MageArmor == "Ice")
+            /*if (calculationOptions.MageArmor == "Ice")
             {
                 statsTotal.Armor += (float)Math.Floor(645 * (1 + 0.15f * frostWarding));
                 statsTotal.FrostResistance += (float)Math.Floor(18 * (1 + 0.15f * frostWarding));
-            }
+            }*/
 
             statsTotal.SpellCombatManaRegeneration += 0.1f * calculationOptions.ArcaneMeditation;
 
@@ -1343,34 +1385,6 @@ namespace Rawr.Mage
 
             switch (chartName)
             {
-                case "Mage Armor":
-                    string currentArmor = character.CalculationOptions["MageArmor"];
-                    character.CalculationOptions["MageArmor"] = "None";
-                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
-
-
-                    foreach (string armor in ArmorList)
-                    {
-                        character.CalculationOptions["MageArmor"] = armor;
-                        calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
-
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = armor;
-                        comparison.Equipped = armor == currentArmor;
-                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
-                        {
-                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-                        }
-                        comparison.SubPoints = subPoints;
-
-                        comparisonList.Add(comparison);
-                    }
-
-                    character.CalculationOptions["MageArmor"] = currentArmor;
-
-                    return comparisonList.ToArray();
                 case "Talents (per talent point)":
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
@@ -1739,13 +1753,14 @@ namespace Rawr.Mage
                 SpellDamageFor10SecOnHit_5 = stats.SpellDamageFor10SecOnHit_5,
                 SpellHasteFor6SecOnHit_10_45 = stats.SpellHasteFor6SecOnHit_10_45,
                 SpellDamageFor10SecOnCrit_20_45 = stats.SpellDamageFor10SecOnCrit_20_45,
-                BonusManaPotion = stats.BonusManaPotion
+                BonusManaPotion = stats.BonusManaPotion,
+                MageSpellCrit = stats.MageSpellCrit
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion) > 0;
+            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.MageSpellCrit) > 0;
         }
     }
 }

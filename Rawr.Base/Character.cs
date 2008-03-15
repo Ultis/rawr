@@ -537,7 +537,7 @@ namespace Rawr //O O . .
 		private void SerializeCalculationOptions()
 		{
 			List<string> listCalcOpts = new List<string>();
-			foreach (KeyValuePair<string, string> kvp in _calculationOptions)
+			foreach (KeyValuePair<string, string> kvp in CalculationOptions)
 				listCalcOpts.Add(string.Format("{0}={1}", kvp.Key, kvp.Value));
 			_calculationOptionsStrings = listCalcOpts.ToArray();
 		}

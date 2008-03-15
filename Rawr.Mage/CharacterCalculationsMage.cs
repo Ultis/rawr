@@ -11,7 +11,6 @@ namespace Rawr.Mage
         public int TargetLevel { get; set; }
         public int AoeTargetLevel { get; set; }
         public float Latency { get; set; }
-        public string MageArmor { get; set; }
         public int AoeTargets { get; set; }
         public float ArcaneResist { get; set; }
         public float FireResist { get; set; }
@@ -34,6 +33,8 @@ namespace Rawr.Mage
         public float DpsTime { get; set; }
         public bool DrumsOfBattle { get; set; }
         public bool Enable2_3Mode { get; set; }
+        public bool DisableBuffAutoActivation { get; set; }
+        public bool AutomaticArmor { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -88,7 +89,6 @@ namespace Rawr.Mage
             TargetLevel = int.Parse(character.CalculationOptions["TargetLevel"], CultureInfo.InvariantCulture);
             AoeTargetLevel = int.Parse(character.CalculationOptions["AoeTargetLevel"], CultureInfo.InvariantCulture);
             Latency = float.Parse(character.CalculationOptions["Latency"], CultureInfo.InvariantCulture);
-            MageArmor = character.CalculationOptions["MageArmor"];
             AoeTargets = int.Parse(character.CalculationOptions["AoeTargets"], CultureInfo.InvariantCulture);
             ArcaneResist = float.Parse(character.CalculationOptions["ArcaneResist"], CultureInfo.InvariantCulture);
             FireResist = float.Parse(character.CalculationOptions["FireResist"], CultureInfo.InvariantCulture);
@@ -111,6 +111,8 @@ namespace Rawr.Mage
             DpsTime = float.Parse(character.CalculationOptions["DpsTime"], CultureInfo.InvariantCulture);
             DrumsOfBattle = int.Parse(character.CalculationOptions["DrumsOfBattle"], CultureInfo.InvariantCulture) == 1;
             Enable2_3Mode = int.Parse(character.CalculationOptions["2_3Mode"], CultureInfo.InvariantCulture) == 1;
+            DisableBuffAutoActivation = character.CalculationOptions.ContainsKey("DisableBuffAutoActivation") && character.CalculationOptions["DisableBuffAutoActivation"] == "Yes";
+            AutomaticArmor = int.Parse(character.CalculationOptions["AutomaticArmor"], CultureInfo.InvariantCulture) == 1;
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"], CultureInfo.InvariantCulture);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"], CultureInfo.InvariantCulture);
@@ -264,6 +266,7 @@ namespace Rawr.Mage
         public float WaterElementalDamage { get; set; }
 
         public string BuffLabel { get; set; }
+        public string MageArmor { get; set; }
 
         private Dictionary<string, Spell> Spells = new Dictionary<string, Spell> ();
         public double EvocationDuration;
@@ -501,6 +504,7 @@ namespace Rawr.Mage
             dictValues.Add("Total Damage", String.Format("{0:F}", OverallPoints * FightDuration));
             dictValues.Add("Dps", String.Format("{0:F}", OverallPoints));
             StringBuilder sb = new StringBuilder("*");
+            if (MageArmor != null) sb.AppendLine(MageArmor);
             for (int i = 0; i < SolutionLabel.Count; i++)
             {
                 if (Solution[i] > 0.01)

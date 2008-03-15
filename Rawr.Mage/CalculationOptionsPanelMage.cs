@@ -74,6 +74,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["DrumsOfBattle"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("2_3Mode"))
                 Character.CalculationOptions["2_3Mode"] = (0).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("AutomaticArmor"))
+                Character.CalculationOptions["AutomaticArmor"] = (1).ToString(CultureInfo.InvariantCulture);
 
             loading = true;
 
@@ -81,7 +83,6 @@ namespace Rawr.Mage
             comboBoxAoeTargetLevel.SelectedItem = Character.CalculationOptions["AoeTargetLevel"];
             checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
             textBoxLatency.Text = float.Parse(Character.CalculationOptions["Latency"], CultureInfo.InvariantCulture).ToString();
-            comboBoxArmor.SelectedItem = Character.CalculationOptions["MageArmor"];
             textBoxAoeTargets.Text = int.Parse(Character.CalculationOptions["AoeTargets"], CultureInfo.InvariantCulture).ToString();
             textBoxArcaneResist.Text = float.Parse(Character.CalculationOptions["ArcaneResist"], CultureInfo.InvariantCulture).ToString();
             textBoxFireResist.Text = float.Parse(Character.CalculationOptions["FireResist"], CultureInfo.InvariantCulture).ToString();
@@ -103,6 +104,7 @@ namespace Rawr.Mage
             checkBoxSmartOptimization.Checked = int.Parse(Character.CalculationOptions["SmartOptimization"], CultureInfo.InvariantCulture) == 1;
             checkBoxDrumsOfBattle.Checked = int.Parse(Character.CalculationOptions["DrumsOfBattle"], CultureInfo.InvariantCulture) == 1;
             checkBox2_3Mode.Checked = int.Parse(Character.CalculationOptions["2_3Mode"], CultureInfo.InvariantCulture) == 1;
+            checkBoxAutomaticArmor.Checked = int.Parse(Character.CalculationOptions["AutomaticArmor"], CultureInfo.InvariantCulture) == 1;
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -140,12 +142,6 @@ namespace Rawr.Mage
         private void buttonTalents_Click(object sender, EventArgs e)
         {
             talents.Show();
-        }
-
-        private void comboBoxArmor_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Character.CalculationOptions["MageArmor"] = comboBoxArmor.SelectedItem.ToString();
-            if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxAoeTargets_TextChanged(object sender, EventArgs e)
@@ -323,6 +319,12 @@ namespace Rawr.Mage
         private void checkBox2_3Mode_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["2_3Mode"] = (checkBox2_3Mode.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
+            if (!loading) Character.OnItemsChanged();
+        }
+
+        private void checkBoxAutomaticArmor_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["AutomaticArmor"] = (checkBoxAutomaticArmor.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
             if (!loading) Character.OnItemsChanged();
         }
 	}

@@ -433,17 +433,49 @@ namespace Rawr
 			return enchantCalcs;
 		}
 
+        public static void RemoveConflictingBuffs(List<string> activeBuffs, string buff)
+        {
+            Buff b = Buff.GetBuffByName(buff);
+
+            for (int i = 0; i < activeBuffs.Count; i++)
+            {
+                if (activeBuffs[i] != buff)
+                {
+                    Buff b2 = Buff.GetBuffByName(activeBuffs[i]);
+                    foreach (string buffName in b2.ConflictingBuffs)
+                    {
+                        if (Array.IndexOf<string>(b.ConflictingBuffs, buffName) >= 0)
+                        {
+                            activeBuffs.RemoveAt(i);
+                            i--;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
 		public virtual List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, Buff.BuffType buffType, bool activeOnly)
 		{
 			List<ComparisonCalculationBase> buffCalcs = new List<ComparisonCalculationBase>();
 			CharacterCalculationsBase calcsEquipped = null;
 			CharacterCalculationsBase calcsUnequipped = null;
-			foreach (Buff buff in Buff.GetBuffsByType(buffType))
+            Character charAutoActivated = character.Clone();
+            foreach (string autoBuff in currentCalcs.AutoActivatedBuffs)
+            {
+                if (!charAutoActivated.ActiveBuffs.Contains(autoBuff))
+                {
+                    charAutoActivated.ActiveBuffs.Add(autoBuff);
+                    RemoveConflictingBuffs(charAutoActivated.ActiveBuffs, autoBuff);
+                }
+            }
+            charAutoActivated.CalculationOptions["DisableBuffAutoActivation"] = "Yes";
+            foreach (Buff buff in Buff.GetBuffsByType(buffType))
 			{
-				if (!activeOnly || character.ActiveBuffs.Contains(buff.Name))
+                if (!activeOnly || charAutoActivated.ActiveBuffs.Contains(buff.Name))
 				{
-					Character charUnequipped = character.Clone();
-					Character charEquipped = character.Clone();
+                    Character charUnequipped = charAutoActivated.Clone();
+                    Character charEquipped = charAutoActivated.Clone();
 					if (charUnequipped.ActiveBuffs.Contains(buff.Name))
 						charUnequipped.ActiveBuffs.Remove(buff.Name);
 					if (string.IsNullOrEmpty(buff.RequiredBuff))
@@ -466,13 +498,8 @@ namespace Rawr
 						if (!charEquipped.ActiveBuffs.Contains(buff.RequiredBuff))
 							charEquipped.ActiveBuffs.Add(buff.RequiredBuff);
 
-					foreach (string conflictingBuff in buff.ConflictingBuffs)
-					{
-						if (charEquipped.ActiveBuffs.Contains(conflictingBuff))
-							charEquipped.ActiveBuffs.Remove(conflictingBuff);
-						if (charUnequipped.ActiveBuffs.Contains(conflictingBuff))
-							charUnequipped.ActiveBuffs.Remove(conflictingBuff);
-					}
+                    RemoveConflictingBuffs(charEquipped.ActiveBuffs, buff.Name);
+                    RemoveConflictingBuffs(charUnequipped.ActiveBuffs, buff.Name);
 
 					calcsUnequipped = GetCharacterCalculations(charUnequipped);
 					calcsEquipped = GetCharacterCalculations(charEquipped);
@@ -480,7 +507,7 @@ namespace Rawr
 					ComparisonCalculationBase buffCalc = CreateNewComparisonCalculation();
 					buffCalc.Name = buff.Name;
 					buffCalc.Item = new Item() { Name = buff.Name, Stats = buff.Stats };
-					buffCalc.Equipped = character.ActiveBuffs.Contains(buff.Name);
+                    buffCalc.Equipped = charAutoActivated.ActiveBuffs.Contains(buff.Name);
 					buffCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
 					float[] subPoints = new float[calcsEquipped.SubPoints.Length];
 					for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
@@ -547,7 +574,7 @@ namespace Rawr
 		public virtual bool IsItemRelevant(Item item)
 		{
 			return (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Contains(TargetClass.ToString())) &&
-				(item.Type == null || RelevantItemTypes.Contains(item.Type)) &&
+				(RelevantItemTypes.Contains(item.Type)) &&
 				HasRelevantStats(item.Stats);
 		}
 
@@ -589,6 +616,18 @@ namespace Rawr
 		/// <returns>A Dictionary<string, string> containing the values to display for each of the 
 		/// calculations defined in CharacterDisplayCalculationLabels.</returns>
 		public abstract Dictionary<string, string> GetCharacterDisplayCalculationValues();
+
+        /// <summary>
+        /// List of buffs that were automatically activated by the model during GetCharacterCalculations().
+        /// </summary>
+        private List<string> _autoActivatedBuffs = new List<string>();
+        public List<string> AutoActivatedBuffs
+        {
+            get
+            {
+                return _autoActivatedBuffs;
+            }
+        }
 	}
 
 	/// <summary>
