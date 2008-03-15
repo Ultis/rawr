@@ -19,6 +19,17 @@ namespace Rawr
 			}
 		}
 
+        public static void InvalidateCachedStats()
+        {
+            foreach (Item[] items in Items.Values)
+            {
+                foreach (Item item in items)
+                {
+                    item.InvalidateCachedData();
+                }
+            }
+        }
+
 		public static Item FindItemById(int id) { return FindItemById(id.ToString() + ".0.0.0"); }
 		public static Item FindItemById(string gemmedId) { return FindItemById(gemmedId, true); }
 		public static Item FindItemById(int id, bool createIfCorrectGemmingNotFound) { return FindItemById(id.ToString() + ".0.0.0", createIfCorrectGemmingNotFound); }

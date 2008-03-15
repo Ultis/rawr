@@ -35,6 +35,8 @@ namespace Rawr
 				_selectedItem = value;
 
 				Item selectedItem = _selectedItem.Tag as Item;
+                selectedItem.InvalidateCachedData();
+                if (selectedItem.IsGem) ItemCache.InvalidateCachedStats();
 				selectedItem.IdsChanged += new EventHandler(Item_IdsChanged);
 				_equippedSlots = _character.GetEquippedSlots(selectedItem);
 					

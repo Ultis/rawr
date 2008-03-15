@@ -304,6 +304,12 @@ namespace Rawr.Mage
                 }
             }
 
+            if (armor == null)
+            {
+                if (character.ActiveBuffs.Contains("Mage Armor")) armor = "Mage Armor";
+                if (character.ActiveBuffs.Contains("Molten Armor")) armor = "Molten Armor";
+            }
+
             // temporary buffs: Arcane Power, Icy Veins, Molten Fury, Combustion?, Trinket1, Trinket2, Heroism, Destro Pot, Flame Cap, Drums?
             // compute stats for temporary bonuses, each gives a list of spells used for final LP, solutions of LP stored in calculatedStats
             List<CharacterCalculationsMage> statsList = new List<CharacterCalculationsMage>();
@@ -322,21 +328,13 @@ namespace Rawr.Mage
                 {
                     if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
                     {
-                        statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, character, additionalItem, ap == 0, mf == 0, iv == 0, heroism == 0, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0, drums == 0));
+                        statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, armor, character, additionalItem, ap == 0, mf == 0, iv == 0, heroism == 0, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0, drums == 0));
                     }
                 }
 
             CharacterCalculationsMage calculatedStats = statsList[statsList.Count - 1];
             calculatedStats.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
-            if (armor != null)
-            {
-                calculatedStats.MageArmor = armor;
-            }
-            else
-            {
-                if (character.ActiveBuffs.Contains("Mage Armor")) calculatedStats.MageArmor = "Mage Armor";
-                if (character.ActiveBuffs.Contains("Molten Armor")) calculatedStats.MageArmor = "Molten Armor";
-            }
+            calculatedStats.MageArmor = armor;
 
             List<string> spellList = new List<string>();
 
@@ -1046,7 +1044,7 @@ namespace Rawr.Mage
             return duration;
         }
 
-        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Stats characterStats, CompiledCalculationOptions calculationOptions, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums)
+        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Stats characterStats, CompiledCalculationOptions calculationOptions, string armor, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums)
         {
             CharacterCalculationsMage calculatedStats = new CharacterCalculationsMage();
             Stats stats = characterStats.Clone();
@@ -1115,8 +1113,9 @@ namespace Rawr.Mage
             calculatedStats.HealthRegenEating = calculatedStats.ManaRegen + 250f;
             calculatedStats.MeleeMitigation = (1 - 1 / (1 + 0.1f * stats.Armor / (8.5f * (70 + 4.5f * (70 - 59)) + 40)));
             calculatedStats.Defense = 350 + stats.DefenseRating / 2.37f;
-            calculatedStats.PhysicalCritReduction = (0.04f * (calculatedStats.Defense - 5 * 70) / 100 + stats.Resilience / 2500f * levelScalingFactor + (character.ActiveBuffs.Contains("Molten Armor") ? 0.05f : 0f));
-            calculatedStats.SpellCritReduction = (stats.Resilience / 2500f * levelScalingFactor + (character.ActiveBuffs.Contains("Molten Armor") ? 0.05f : 0f));
+            int molten = (armor == "Molten Armor") ? 1 : 0;
+            calculatedStats.PhysicalCritReduction = (0.04f * (calculatedStats.Defense - 5 * 70) / 100 + stats.Resilience / 2500f * levelScalingFactor + molten * 0.05f);
+            calculatedStats.SpellCritReduction = (stats.Resilience / 2500f * levelScalingFactor + molten * 0.05f);
             calculatedStats.CritDamageReduction = (stats.Resilience / 2500f * 2f * levelScalingFactor);
             calculatedStats.Dodge = ((0.0443f * stats.Agility + 3.28f + 0.04f * (calculatedStats.Defense - 5 * 70)) / 100f + stats.DodgeRating / 1200 * levelScalingFactor);
 

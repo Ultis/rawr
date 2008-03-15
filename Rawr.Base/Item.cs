@@ -330,6 +330,7 @@ namespace Rawr
 		{
 			_gemmedId = string.Empty;
 			ItemCache.AddItem(this, false, false);
+            InvalidateCachedData();
 			if (IdsChanged != null) IdsChanged(this, null);
 		}
 
@@ -467,6 +468,14 @@ namespace Rawr
 			//Blue = 108
 		}
 
+        public bool IsGem
+        {
+            get
+            {
+                return Slot == ItemSlot.Meta || Slot == ItemSlot.Blue || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Prismatic || Slot == ItemSlot.Purple || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow;
+            }
+        }
+
 		public Item() { }
 		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id, int minDamage, int maxDamage, ItemDamageType damageType, float speed, string requiredClasses)
 		{
@@ -529,18 +538,36 @@ namespace Rawr
 			return summary;
 		}
 
+        // caching policy: cache total stats only for items that don't have global requirements
+        // value should not change if it relies on data other than from this item
+        // assume there is no stat editing happening in code other than in item editor
+        // invalidate on id changes, invalidate when item is opened for editing
+        // invalidate all items when any gem is opened for editing
+        // invalidate 
+        private Stats cachedTotalStats = null;
+        public void InvalidateCachedData()
+        {
+            cachedTotalStats = null;
+        }
+
 		public Stats GetTotalStats() { return GetTotalStats(null); }
 		public Stats GetTotalStats(Character character)
 		{
+            if (cachedTotalStats != null) return cachedTotalStats;
+            bool volatileGem = false, volatileItem = false;
 			Stats totalItemStats = new Stats();
 			totalItemStats += this.Stats;
 			bool eligibleForSocketBonus = GemMatchesSlot(Gem1, Sockets.Color1) &&
 				GemMatchesSlot(Gem2, Sockets.Color2) &&
 				GemMatchesSlot(Gem3, Sockets.Color3);
-			if (Gem1 != null && Gem1.MeetsRequirements(character)) totalItemStats += Gem1.Stats;
-			if (Gem2 != null && Gem2.MeetsRequirements(character)) totalItemStats += Gem2.Stats;
-			if (Gem3 != null && Gem3.MeetsRequirements(character)) totalItemStats += Gem3.Stats;
-			if (eligibleForSocketBonus) totalItemStats += Sockets.Stats;
+			if (Gem1 != null && Gem1.MeetsRequirements(character, out volatileGem)) totalItemStats += Gem1.Stats;
+            volatileItem = volatileItem || volatileGem;
+            if (Gem2 != null && Gem2.MeetsRequirements(character, out volatileGem)) totalItemStats += Gem2.Stats;
+            volatileItem = volatileItem || volatileGem;
+            if (Gem3 != null && Gem3.MeetsRequirements(character, out volatileGem)) totalItemStats += Gem3.Stats;
+            volatileItem = volatileItem || volatileGem;
+            if (eligibleForSocketBonus) totalItemStats += Sockets.Stats;
+            if (!volatileItem) cachedTotalStats = totalItemStats;
 			return totalItemStats;
 		}
 
@@ -618,8 +645,21 @@ namespace Rawr
 			//I wouldn't be out here... alone tonight
 		}
 
-		public bool MeetsRequirements(Character character)
+        public bool MeetsRequirements(Character character)
+        {
+            bool temp;
+            return MeetsRequirements(character, out temp);
+        }
+
+        /// <summary>
+        /// Checks whether item meets the requirements to activate its stats.
+        /// </summary>
+        /// <param name="character">Character for which we are checking the requirements.</param>
+        /// <param name="volatileRequirements">This is set to true for items that depend on requirements not local to the item itself.</param>
+        /// <returns>True if the item meets the requirements.</returns>
+		public bool MeetsRequirements(Character character, out bool volatileRequirements)
 		{
+            volatileRequirements = false;
 			if (character == null || character.CalculationOptions["EnforceMetagemRequirements"] != "Yes") return true;
 			int redGems = character.GetGemColorCount(ItemSlot.Red);
 			int yellowGems = character.GetGemColorCount(ItemSlot.Yellow);
@@ -633,33 +673,42 @@ namespace Rawr
 				case 25901:
 				case 32409:
 				case 32410:
+                    volatileRequirements = true;
 					return redGems >= 2 && yellowGems >= 2 && blueGems >= 2;
 
 				case 25897:
+                    volatileRequirements = true;
 					return redGems > blueGems;
 
 				case 25895:
+                    volatileRequirements = true;
 					return redGems > yellowGems;
 
 				case 25893:
 				case 32640:
+                    volatileRequirements = true;
 					return blueGems > yellowGems;
 
 				case 34220:
+                    volatileRequirements = true;
 					return blueGems >= 2;
 
 				case 25896:
+                    volatileRequirements = true;
 					return blueGems >= 3;
 
 				case 25898:
+                    volatileRequirements = true;
 					return blueGems >= 5;
 
 				case 32641:
+                    volatileRequirements = true;
 					return yellowGems == 3;
 
 				case 25894:
 				case 28557:
 				case 28556:
+                    volatileRequirements = true;
 					return yellowGems >= 2 && redGems >= 1;
 			}
 			return true;
