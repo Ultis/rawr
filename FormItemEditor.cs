@@ -21,6 +21,7 @@ namespace Rawr
 				{
 
 					Item oldItem = _selectedItem.Tag as Item;
+                    oldItem.InvalidateCachedData();
 					_selectedItem.Text = oldItem.Name;
 					oldItem.IdsChanged -= new EventHandler(Item_IdsChanged);
 					string slot = oldItem.Slot.ToString();

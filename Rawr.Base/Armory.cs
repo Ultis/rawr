@@ -396,17 +396,25 @@ namespace Rawr
 							stats.AttackPower += (((float)int.Parse(spellDesc)) / 6f) * 1.03f;
 						}
                         // Increases damage and healing done by magical spells and effects by up to 211 for 20 sec.
+                        // some pre-tbc have passive spell damage as on use
                         else if (spellDesc.StartsWith("Increases damage and healing done by magical spells and effects by up to "))
                         {
                             spellDesc = spellDesc.Substring("Increases damage and healing done by magical spells and effects by up to ".Length);
-                            string[] tokens = spellDesc.Split(' ');
+                            string[] tokens = spellDesc.Split(' ','.');
                             int damageIncrease = int.Parse(tokens[0]);
-                            int duration = int.Parse(tokens[2]);
-                            switch (duration)
+                            if (tokens.Length > 2)
                             {
-                                case 20:
-                                    stats.SpellDamageFor20SecOnUse2Min += damageIncrease;
-                                    break;
+                                int duration = int.Parse(tokens[2]);
+                                switch (duration)
+                                {
+                                    case 20:
+                                        stats.SpellDamageFor20SecOnUse2Min += damageIncrease;
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                stats.SpellDamageRating += damageIncrease;
                             }
                         }
                         else if (spellDesc.StartsWith("Increases spell damage by up to 150 and healing by up to 280 for 15 sec."))
