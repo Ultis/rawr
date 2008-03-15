@@ -478,7 +478,11 @@ namespace Rawr
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-
+            if (SelectedItem != null)
+            {
+                Item selectedItem = SelectedItem.Tag as Item;
+                selectedItem.InvalidateCachedData();
+            }
         }
 	}
 }
