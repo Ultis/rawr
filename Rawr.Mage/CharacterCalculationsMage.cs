@@ -18,6 +18,7 @@ namespace Rawr.Mage
         public float NatureResist { get; set; }
         public float ShadowResist { get; set; }
         public float FightDuration { get; set; }
+        public float TpsLimit { get; set; }
         public float ShadowPriest { get; set; }
         public bool HeroismAvailable { get; set; }
         public bool DestructionPotion { get; set; }
@@ -96,6 +97,7 @@ namespace Rawr.Mage
             NatureResist = float.Parse(character.CalculationOptions["NatureResist"], CultureInfo.InvariantCulture);
             ShadowResist = float.Parse(character.CalculationOptions["ShadowResist"], CultureInfo.InvariantCulture);
             FightDuration = float.Parse(character.CalculationOptions["FightDuration"], CultureInfo.InvariantCulture);
+            TpsLimit = float.Parse(character.CalculationOptions["TpsLimit"], CultureInfo.InvariantCulture);
             ShadowPriest = float.Parse(character.CalculationOptions["ShadowPriest"], CultureInfo.InvariantCulture);
             HeroismAvailable = int.Parse(character.CalculationOptions["HeroismAvailable"], CultureInfo.InvariantCulture) == 1;
             MoltenFuryPercentage = float.Parse(character.CalculationOptions["MoltenFuryPercentage"], CultureInfo.InvariantCulture);
@@ -241,6 +243,12 @@ namespace Rawr.Mage
         public float NatureHitRate { get; set; }
         public float ShadowHitRate { get; set; }
 
+        public float ArcaneThreatMultiplier { get; set; }
+        public float FireThreatMultiplier { get; set; }
+        public float FrostThreatMultiplier { get; set; }
+        public float NatureThreatMultiplier { get; set; }
+        public float ShadowThreatMultiplier { get; set; }
+
         public float ResilienceCritDamageReduction { get; set; }
         public float ResilienceCritRateReduction { get; set; }
         public float Latency { get; set; }
@@ -275,6 +283,7 @@ namespace Rawr.Mage
         public int MaxManaGem;
         public List<string> SolutionLabel = new List<string>();
         public double[] Solution;
+        public float Tps;
 
         public void SetSpell(string spellName, Spell spell)
         {
@@ -493,16 +502,17 @@ namespace Rawr.Mage
                     if (s is BaseSpell)
                     {
                         BaseSpell bs = s as BaseSpell;
-                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} sec\n{3:F}x Amplify\n{4:F}% Crit Rate\n{5:F}% Hit Rate\n{6:F} Crit Multiplier\nAB Spam Tradeoff: {7:F} Dpm", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond)));
+                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} Tps\n{3:F} sec\n{4:F}x Amplify\n{5:F}% Crit Rate\n{6:F}% Hit Rate\n{7:F} Crit Multiplier\nAB Spam Tradeoff: {8:F} Dpm", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond)));
                     }
                     else
                     {
-                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\nAB Spam Tradeoff: {2:F} Dpm\nAverage Cast Time: {3:F} sec\n{4}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), s.CastTime, s.Sequence));
+                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} Tps\nAB Spam Tradeoff: {3:F} Dpm\nAverage Cast Time: {4:F} sec\n{5}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), s.CastTime, s.Sequence));
                     }
                 }
             }
             dictValues.Add("Total Damage", String.Format("{0:F}", OverallPoints * FightDuration));
             dictValues.Add("Dps", String.Format("{0:F}", OverallPoints));
+            dictValues.Add("Tps", String.Format("{0:F}", Tps));
             StringBuilder sb = new StringBuilder("*");
             if (MageArmor != null) sb.AppendLine(MageArmor);
             for (int i = 0; i < SolutionLabel.Count; i++)

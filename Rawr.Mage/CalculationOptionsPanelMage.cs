@@ -76,6 +76,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["2_3Mode"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("AutomaticArmor"))
                 Character.CalculationOptions["AutomaticArmor"] = (1).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("TpsLimit"))
+                Character.CalculationOptions["TpsLimit"] = (5000).ToString(CultureInfo.InvariantCulture);
 
             loading = true;
 
@@ -105,6 +107,7 @@ namespace Rawr.Mage
             checkBoxDrumsOfBattle.Checked = int.Parse(Character.CalculationOptions["DrumsOfBattle"], CultureInfo.InvariantCulture) == 1;
             checkBox2_3Mode.Checked = int.Parse(Character.CalculationOptions["2_3Mode"], CultureInfo.InvariantCulture) == 1;
             checkBoxAutomaticArmor.Checked = int.Parse(Character.CalculationOptions["AutomaticArmor"], CultureInfo.InvariantCulture) == 1;
+            textBoxTpsLimit.Text = float.Parse(Character.CalculationOptions["TpsLimit"], CultureInfo.InvariantCulture).ToString();
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -326,6 +329,16 @@ namespace Rawr.Mage
         {
             Character.CalculationOptions["AutomaticArmor"] = (checkBoxAutomaticArmor.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
             if (!loading) Character.OnItemsChanged();
+        }
+
+        private void textBoxTpsLimit_TextChanged(object sender, EventArgs e)
+        {
+            float value;
+            if (float.TryParse(textBoxTpsLimit.Text, out value))
+            {
+                Character.CalculationOptions["TpsLimit"] = value.ToString(CultureInfo.InvariantCulture);
+                if (!loading) Character.OnItemsChanged();
+            }
         }
 	}
 }

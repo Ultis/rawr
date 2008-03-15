@@ -269,6 +269,10 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
 		public float DrumsOfWar { get; set; }
 
+        // threat dealt is damage * (1 + ThreatMultiplier)
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ThreatMultiplier { get; set; }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
 		public float DrumsOfBattle { get; set; }
 
@@ -583,7 +587,8 @@ namespace Rawr
                 BonusShadowSpellPowerMultiplier = (1f + a.BonusShadowSpellPowerMultiplier) * (1f + b.BonusShadowSpellPowerMultiplier) - 1f,
                 BonusNatureSpellPowerMultiplier = (1f + a.BonusNatureSpellPowerMultiplier) * (1f + b.BonusNatureSpellPowerMultiplier) - 1f,
                 BonusSpiritMultiplier = (1f + a.BonusSpiritMultiplier) * (1f + b.BonusSpiritMultiplier) - 1f,
-				SpellCritRating = a.SpellCritRating + b.SpellCritRating,
+                ThreatMultiplier = (1f + a.ThreatMultiplier) * (1f + b.ThreatMultiplier) - 1f,
+                SpellCritRating = a.SpellCritRating + b.SpellCritRating,
                 SpellFrostCritRating = a.SpellFrostCritRating + b.SpellFrostCritRating,
                 SpellDamageRating = a.SpellDamageRating + b.SpellDamageRating,
 				SpellFireDamageRating = a.SpellFireDamageRating + b.SpellFireDamageRating,

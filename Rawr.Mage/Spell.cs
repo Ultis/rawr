@@ -17,6 +17,7 @@ namespace Rawr.Mage
     {
         public string Name;
         public float DamagePerSecond;
+        public float ThreatPerSecond;
         public float CostPerSecond;
         public float ManaRegenPerSecond;
 
@@ -90,6 +91,7 @@ namespace Rawr.Mage
         public float SpellModifier;
         public float RealResistance;
         public float CritRate;
+        public float ThreatMultiplier;
         public float CritBonus;
         public float HitRate;
         public float CastingSpeed;
@@ -129,6 +131,7 @@ namespace Rawr.Mage
                     RawSpellDamage = calculations.ArcaneDamage;
                     HitRate = calculations.ArcaneHitRate;
                     RealResistance = calculations.CalculationOptions.ArcaneResist;
+                    ThreatMultiplier = calculations.ArcaneThreatMultiplier;
                     break;
                 case MagicSchool.Fire:
                     SpellModifier = calculations.FireSpellModifier;
@@ -137,6 +140,7 @@ namespace Rawr.Mage
                     RawSpellDamage = calculations.FireDamage;
                     HitRate = calculations.FireHitRate;
                     RealResistance = calculations.CalculationOptions.FireResist;
+                    ThreatMultiplier = calculations.FireThreatMultiplier;
                     break;
                 case MagicSchool.Frost:
                     SpellModifier = calculations.FrostSpellModifier;
@@ -145,6 +149,7 @@ namespace Rawr.Mage
                     RawSpellDamage = calculations.FrostDamage;
                     HitRate = calculations.FrostHitRate;
                     RealResistance = calculations.CalculationOptions.FrostResist;
+                    ThreatMultiplier = calculations.FrostThreatMultiplier;
                     break;
                 case MagicSchool.Nature:
                     SpellModifier = calculations.NatureSpellModifier;
@@ -153,6 +158,7 @@ namespace Rawr.Mage
                     RawSpellDamage = calculations.NatureDamage;
                     HitRate = calculations.NatureHitRate;
                     RealResistance = calculations.CalculationOptions.NatureResist;
+                    ThreatMultiplier = calculations.NatureThreatMultiplier;
                     break;
                 case MagicSchool.Shadow:
                     SpellModifier = calculations.ShadowSpellModifier;
@@ -161,6 +167,7 @@ namespace Rawr.Mage
                     RawSpellDamage = calculations.ShadowDamage;
                     HitRate = calculations.ShadowHitRate;
                     RealResistance = calculations.CalculationOptions.ShadowResist;
+                    ThreatMultiplier = calculations.ShadowThreatMultiplier;
                     break;
             }
 
@@ -346,6 +353,7 @@ namespace Rawr.Mage
                 AverageDamage += targets * (BasePeriodicDamage + DotDamageCoefficient * RawSpellDamage) * SpellModifier * resistMultiplier;
             }
             DamagePerSecond = AverageDamage / CastTime;
+            ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
 
             if (Name != "Lightning Bolt" && calculations.BasicStats.LightningCapacitorProc > 0)
             {
@@ -355,7 +363,9 @@ namespace Rawr.Mage
                 float avgCritsPerHit = CritRate * TargetProcs / HitProcs;
                 float avgHitsToDischarge = 3f / avgCritsPerHit;
                 if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
-                DamagePerSecond += LightningBolt.AverageDamage / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
+                float boltDps = LightningBolt.AverageDamage / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
+                DamagePerSecond += boltDps;
+                ThreatPerSecond += boltDps * calculations.NatureThreatMultiplier;
                 //continuous model
                 //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
             }
@@ -381,11 +391,13 @@ namespace Rawr.Mage
             }
 
             ManaRegenPerSecond = calculations.ManaRegen5SR + OO5SR * (calculations.ManaRegen - calculations.ManaRegen5SR) + calculations.BasicStats.ManaRestorePerHit * HitProcs / CastTime + calculations.BasicStats.ManaRestorePerCast * CastProcs / CastTime;
+            ThreatPerSecond += (calculations.BasicStats.ManaRestorePerHit * HitProcs / CastTime + calculations.BasicStats.ManaRestorePerCast * CastProcs / CastTime) * 0.5f * (1 + calculations.BasicStats.ThreatMultiplier);
 
             if (calculations.Mp5OnCastFor20Sec > 0 && CastProcs > 0)
             {
                 float totalMana = calculations.Mp5OnCastFor20Sec / 5f / CastTime * 0.5f * (20 - CastTime / HitProcs / 2f) * (20 - CastTime / HitProcs / 2f);
                 ManaRegenPerSecond += totalMana / 20f;
+                ThreatPerSecond += totalMana / 20f * 0.5f * (1 + calculations.BasicStats.ThreatMultiplier);
             }
         }
     }
@@ -651,6 +663,7 @@ namespace Rawr.Mage
             Channeled = true;
             CostPerSecond = (AMc1.CostPerSecond + AM10.CostPerSecond + CC / (1 - CC) * AM11.CostPerSecond) / (1 + 1 / (1 - CC));
             DamagePerSecond = (AMc1.DamagePerSecond + AM10.DamagePerSecond + CC / (1 - CC) * AM11.DamagePerSecond) / (1 + 1 / (1 - CC));
+            ThreatPerSecond = (AMc1.ThreatPerSecond + AM10.ThreatPerSecond + CC / (1 - CC) * AM11.ThreatPerSecond) / (1 + 1 / (1 - CC));
             ManaRegenPerSecond = 0;
         }
     }
@@ -731,6 +744,7 @@ namespace Rawr.Mage
         }
 
         public float AverageDamage;
+        public float AverageThreat;
         public float Cost;
         public float SpellCount = 0;
 
@@ -755,6 +769,7 @@ namespace Rawr.Mage
             HitProcs += spell.HitProcs;
             CastProcs += spell.CastProcs;
             AverageDamage += spell.DamagePerSecond * spell.CastTime;
+            AverageThreat += spell.ThreatPerSecond * spell.CastTime;
             Cost += spell.CostPerSecond * spell.CastTime;
             AffectedByFlameCap = AffectedByFlameCap || spell.AffectedByFlameCap;
             spellList.Add(spell.Name);
@@ -773,6 +788,7 @@ namespace Rawr.Mage
 
             CostPerSecond = Cost / CastTime;
             DamagePerSecond = AverageDamage / CastTime;
+            ThreatPerSecond = AverageThreat / CastTime;
 
             float OO5SR = fsr.CalculateOO5SR(calculations.ClearcastingChance);
 
@@ -1333,6 +1349,7 @@ namespace Rawr.Mage
             CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
             CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
             DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ThreatPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
             ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
 
             commonChain = chain4;
@@ -1423,6 +1440,7 @@ namespace Rawr.Mage
             CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
             CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
             DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ThreatPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
             ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
 
             commonChain = chain4;
@@ -1513,6 +1531,7 @@ namespace Rawr.Mage
             CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
             CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
             DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ThreatPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
             ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
 
             commonChain = chain4;
@@ -1621,6 +1640,7 @@ namespace Rawr.Mage
             CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
             CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
             DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ThreatPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
             ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
 
             commonChain = chain4;
@@ -1668,6 +1688,7 @@ namespace Rawr.Mage
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
                 DamagePerSecond = chain1.DamagePerSecond;
+                ThreatPerSecond = chain1.ThreatPerSecond;
                 ManaRegenPerSecond = chain1.ManaRegenPerSecond;
 
                 commonChain = chain1;
@@ -1693,6 +1714,7 @@ namespace Rawr.Mage
                 CastTime = CC * chain1.CastTime + (1 - CC) * chain2.CastTime;
                 CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + (1 - CC) * chain2.CastTime * chain2.CostPerSecond) / CastTime;
                 DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + (1 - CC) * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
                 ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
 
                 commonChain = chain2;
@@ -1757,6 +1779,7 @@ namespace Rawr.Mage
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
                 DamagePerSecond = chain1.DamagePerSecond;
+                ThreatPerSecond = chain1.ThreatPerSecond;
                 ManaRegenPerSecond = chain1.ManaRegenPerSecond;
 
                 commonChain = chain1;
@@ -1796,6 +1819,7 @@ namespace Rawr.Mage
                 CastTime = (1 - CC) * (1 - CC) * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * chain3.CastTime;
                 CostPerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * chain3.CastTime * chain3.CostPerSecond) / CastTime;
                 DamagePerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * chain3.CastTime * chain3.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * chain3.CastTime * chain3.ThreatPerSecond) / CastTime;
                 ManaRegenPerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * chain3.CastTime * chain3.ManaRegenPerSecond) / CastTime;
 
                 commonChain = chain3;

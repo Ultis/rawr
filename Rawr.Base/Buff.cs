@@ -186,7 +186,16 @@ namespace Rawr
                         });
                         _allBuffs.Add(new Buff() { Name = "Totem of Wrath", Category = BuffCategory.ClassBuffs,
                             Stats = new Stats() {SpellCritRating = 22.08f * 3f, SpellHitRating = 12.62f * 3f}});
-                        _allBuffs.Add(new Buff() { Name = "Moonkin Aura", Category = BuffCategory.ClassBuffs,
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Tranquil Air Totem",
+                            Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { ThreatMultiplier = -0.2f }
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Moonkin Aura",
+                            Category = BuffCategory.ClassBuffs,
                             Stats = new Stats() { SpellCritRating = 22.08f * 5f }});
                         _allBuffs.Add(new Buff()
                         {
@@ -200,6 +209,12 @@ namespace Rawr
                             Category = BuffCategory.ClassBuffs,
                             Stats = new Stats() { Mp5 = (float)Math.Floor(41f * 0.2f) },
                             RequiredBuff = "Blessing of Wisdom"
+                        });
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Blessing of Salvation",
+                            Category = BuffCategory.ClassBuffs,
+                            Stats = new Stats() { ThreatMultiplier = -0.3f }
                         });
                         _allBuffs.Add(new Buff()
                         {
