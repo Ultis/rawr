@@ -67,10 +67,13 @@ namespace Rawr
 		//you can understand
 		public static Buff GetBuffByName(string name)
 		{
-			foreach (Buff buff in AllBuffs)
+			/*foreach (Buff buff in AllBuffs)
 				if (buff.Name == name)
 					return buff;
-			return null;
+			return null;*/
+            Buff buff;
+            AllBuffsByName.TryGetValue(name, out buff);
+            return buff;
 		}
 
 		//enter static
@@ -84,6 +87,23 @@ namespace Rawr
 				}
 			));
 		}
+
+        private static Dictionary<string, Buff> _allBuffsByName = null;
+        private static Dictionary<string, Buff> AllBuffsByName
+        {
+            get
+            {
+                if (_allBuffsByName == null)
+                {
+                    _allBuffsByName = new Dictionary<string, Buff>();
+                    foreach (Buff buff in AllBuffs)
+                    {
+                        if (!_allBuffsByName.ContainsKey(buff.Name)) _allBuffsByName.Add(buff.Name, buff);
+                    }
+                }
+                return _allBuffsByName;
+            }
+        }
 
 		//a grey mistake
 		private static List<Buff> _allBuffs = null;
