@@ -85,6 +85,8 @@
             this.textBoxTpsLimit = new System.Windows.Forms.TextBox();
             this.label26 = new System.Windows.Forms.Label();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.label27 = new System.Windows.Forms.Label();
+            this.checkBoxIncrementalOptimizations = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -519,9 +521,9 @@
             this.label23.AutoSize = true;
             this.label23.Location = new System.Drawing.Point(3, 645);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(137, 13);
+            this.label23.Size = new System.Drawing.Size(112, 13);
             this.label23.TabIndex = 47;
-            this.label23.Text = "Performance Optimization: *";
+            this.label23.Text = "Global Optimizations: *";
             this.toolTipMage.SetToolTip(this.label23, "Disables uncommon cooldown and spell combination based on current talent spec to " +
                     "increase performance. In case of uncommon fight conditions this might have to be" +
                     " disabled to achieve accurate results.");
@@ -559,7 +561,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(3, 664);
+            this.label25.Location = new System.Drawing.Point(3, 684);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(62, 13);
             this.label25.TabIndex = 51;
@@ -569,7 +571,7 @@
             // checkBox2_3Mode
             // 
             this.checkBox2_3Mode.AutoSize = true;
-            this.checkBox2_3Mode.Location = new System.Drawing.Point(174, 664);
+            this.checkBox2_3Mode.Location = new System.Drawing.Point(174, 684);
             this.checkBox2_3Mode.Name = "checkBox2_3Mode";
             this.checkBox2_3Mode.Size = new System.Drawing.Size(15, 14);
             this.checkBox2_3Mode.TabIndex = 50;
@@ -620,11 +622,34 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(3, 664);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(137, 13);
+            this.label27.TabIndex = 57;
+            this.label27.Text = "Incremental Optimizations: *";
+            this.toolTipMage.SetToolTip(this.label27, "Heavily restricts cooldown stacking and spell combinations when computing solutio" +
+                    "ns of incremental changes.");
+            // 
+            // checkBoxIncrementalOptimizations
+            // 
+            this.checkBoxIncrementalOptimizations.AutoSize = true;
+            this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(174, 664);
+            this.checkBoxIncrementalOptimizations.Name = "checkBoxIncrementalOptimizations";
+            this.checkBoxIncrementalOptimizations.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxIncrementalOptimizations.TabIndex = 56;
+            this.checkBoxIncrementalOptimizations.UseVisualStyleBackColor = true;
+            this.checkBoxIncrementalOptimizations.CheckedChanged += new System.EventHandler(this.checkBoxIncrementalOptimizations_CheckedChanged);
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.label27);
+            this.Controls.Add(this.checkBoxIncrementalOptimizations);
             this.Controls.Add(this.textBoxTpsLimit);
             this.Controls.Add(this.label26);
             this.Controls.Add(this.label4);
@@ -680,7 +705,7 @@
             this.Controls.Add(this.comboBoxTargetLevel);
             this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelMage";
-            this.Size = new System.Drawing.Size(204, 695);
+            this.Size = new System.Drawing.Size(204, 719);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -743,5 +768,7 @@
         private System.Windows.Forms.TextBox textBoxTpsLimit;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.ToolTip toolTipMage;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.CheckBox checkBoxIncrementalOptimizations;
 	}
 }

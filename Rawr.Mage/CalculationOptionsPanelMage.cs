@@ -20,8 +20,14 @@ namespace Rawr.Mage
         private MageTalentsForm talents;
         private bool loading = false;
 
+        private Character character;
+
 		protected override void LoadCalculationOptions()
 		{
+            if (character != null) character.ItemsChanged -= new EventHandler(character_ItemsChanged);
+            character = Character;
+            if (character != null) character.ItemsChanged += new EventHandler(character_ItemsChanged);
+
 			if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
 				Character.CalculationOptions["TargetLevel"] = (73).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("AoeTargetLevel"))
@@ -69,7 +75,7 @@ namespace Rawr.Mage
             if (!Character.CalculationOptions.ContainsKey("AoeDuration"))
                 Character.CalculationOptions["AoeDuration"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("SmartOptimization"))
-                Character.CalculationOptions["SmartOptimization"] = (1).ToString(CultureInfo.InvariantCulture);
+                Character.CalculationOptions["SmartOptimization"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("DrumsOfBattle"))
                 Character.CalculationOptions["DrumsOfBattle"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("2_3Mode"))
@@ -78,6 +84,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["AutomaticArmor"] = (1).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("TpsLimit"))
                 Character.CalculationOptions["TpsLimit"] = (5000).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("IncrementalOptimizations"))
+                Character.CalculationOptions["IncrementalOptimizations"] = (1).ToString(CultureInfo.InvariantCulture);
 
             loading = true;
 
@@ -108,10 +116,20 @@ namespace Rawr.Mage
             checkBox2_3Mode.Checked = int.Parse(Character.CalculationOptions["2_3Mode"], CultureInfo.InvariantCulture) == 1;
             checkBoxAutomaticArmor.Checked = int.Parse(Character.CalculationOptions["AutomaticArmor"], CultureInfo.InvariantCulture) == 1;
             textBoxTpsLimit.Text = float.Parse(Character.CalculationOptions["TpsLimit"], CultureInfo.InvariantCulture).ToString();
+            checkBoxIncrementalOptimizations.Checked = int.Parse(Character.CalculationOptions["IncrementalOptimizations"], CultureInfo.InvariantCulture) == 1;
 
             if (talents != null) talents.LoadCalculationOptions();
 
             loading = false;
+        }
+
+        void character_ItemsChanged(object sender, EventArgs e)
+        {
+            if (int.Parse(Character.CalculationOptions["IncrementalOptimizations"], CultureInfo.InvariantCulture) == 1)
+            {
+                // compute restricted stacking & spell combinations for incremental optimizations
+                ((CalculationsMage)Calculations.Instance).GetCharacterCalculations(Character, null, true);
+            }
         }
 	
 		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -339,6 +357,12 @@ namespace Rawr.Mage
                 Character.CalculationOptions["TpsLimit"] = value.ToString(CultureInfo.InvariantCulture);
                 if (!loading) Character.OnItemsChanged();
             }
+        }
+
+        private void checkBoxIncrementalOptimizations_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["IncrementalOptimizations"] = (checkBoxIncrementalOptimizations.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
+            if (!loading) Character.OnItemsChanged();
         }
 	}
 }

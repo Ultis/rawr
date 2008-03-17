@@ -229,6 +229,11 @@ namespace Rawr.Mage
                 colEnabled[col] = false;
             }
 
+            public bool IsColumnEnabled(int col)
+            {
+                return colEnabled[col];
+            }
+
             public double this[int row, int col]
             {
                 get
@@ -258,20 +263,51 @@ namespace Rawr.Mage
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
+            return GetCharacterCalculations(character, additionalItem, false);
+        }
+
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool computeIncrementalSet)
+        {
             CompiledCalculationOptions calculationOptions = new CompiledCalculationOptions(character);
-            if (calculationOptions.AutomaticArmor && !calculationOptions.DisableBuffAutoActivation)
+            if (computeIncrementalSet) calculationOptions.IncrementalOptimizations = false;
+            if (calculationOptions.IncrementalOptimizations && !calculationOptions.DisableBuffAutoActivation)
             {
-                CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calculationOptions, "Mage Armor");
-                CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calculationOptions, "Molten Armor");
-                return (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
+                return GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, computeIncrementalSet);
+            }
+            else if (calculationOptions.AutomaticArmor && !calculationOptions.DisableBuffAutoActivation)
+            {
+                CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calculationOptions, "Mage Armor", computeIncrementalSet);
+                CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calculationOptions, "Molten Armor", computeIncrementalSet);
+                CharacterCalculationsBase calc = (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
+                if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
+                return calc;
             }
             else
             {
-                return GetCharacterCalculations(character, additionalItem, calculationOptions, null);
+                CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calculationOptions, null, computeIncrementalSet);
+                if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
+                return calc;
             }
         }
 
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions, string armor)
+        private void StoreIncrementalSet(Character character, CharacterCalculationsMage calculations)
+        {
+            List<string> cooldownList = new List<string>();
+            List<string> spellList = new List<string>();
+            for (int i = 0; i < calculations.SolutionLabel.Count; i++)
+            {
+                if (calculations.Solution[i] > 0 && calculations.IncrementalSetSpell[i] != null)
+                {
+                    cooldownList.Add(calculations.IncrementalSetCooldown[i].ToString(CultureInfo.InvariantCulture));
+                    spellList.Add(calculations.IncrementalSetSpell[i]);
+                }
+            }
+            character.CalculationOptions["IncrementalSetCooldowns"] = string.Join(":", cooldownList.ToArray());
+            character.CalculationOptions["IncrementalSetSpells"] = string.Join(":", spellList.ToArray());
+            character.CalculationOptions["IncrementalSetArmor"] = calculations.MageArmor;
+        }
+
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions, string armor, bool computeIncrementalSet)
         {
             List<string> autoActivatedBuffs = new List<string>();
             Stats rawStats = GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
@@ -314,6 +350,7 @@ namespace Rawr.Mage
             // compute stats for temporary bonuses, each gives a list of spells used for final LP, solutions of LP stored in calculatedStats
             List<CharacterCalculationsMage> statsList = new List<CharacterCalculationsMage>();
 
+            int incrementalSetIndex = 0;
             for (int mf = 0; mf < 2; mf++)
             for (int heroism = 0; heroism < 2; heroism++)
             for (int ap = 0; ap < 2; ap++)
@@ -321,17 +358,22 @@ namespace Rawr.Mage
             for (int combustion = 0; combustion < 2; combustion++)
             for (int drums = 0; drums < 2; drums++)
             for (int flameCap = 0; flameCap < 2; flameCap++)
-            for (int trinket1 = 0; trinket1 < 2; trinket1++)
-            for (int trinket2 = 0; trinket2 < 2; trinket2++)
             for (int destructionPotion = 0; destructionPotion < 2; destructionPotion++)
-                if ((mfAvailable || mf == 1) && (heroismAvailable || heroism == 1) && (apAvailable || ap == 1) && (ivAvailable || iv == 1) && (calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1) && (combustion == 1 || calculationOptions.Combustion == 1) && (drums == 1 || calculationOptions.DrumsOfBattle))
+            {
+                if (!calculationOptions.IncrementalOptimizations || calculationOptions.IncrementalSetCooldowns.Contains(incrementalSetIndex))
                 {
-                    if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
-                    {
-                        statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, armor, character, additionalItem, ap == 0, mf == 0, iv == 0, heroism == 0, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0, drums == 0));
-                    }
+                    for (int trinket1 = 0; trinket1 < 2; trinket1++)
+                        for (int trinket2 = 0; trinket2 < 2; trinket2++)
+                            if ((mfAvailable || mf == 1) && (heroismAvailable || heroism == 1) && (apAvailable || ap == 1) && (ivAvailable || iv == 1) && (calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1) && (combustion == 1 || calculationOptions.Combustion == 1) && (drums == 1 || calculationOptions.DrumsOfBattle))
+                            {
+                                if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
+                                {
+                                    statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, armor, character, additionalItem, ap == 0, mf == 0, iv == 0, heroism == 0, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0, drums == 0, incrementalSetIndex));
+                                }
+                            }
                 }
-
+                incrementalSetIndex++;
+            }
             CharacterCalculationsMage calculatedStats = statsList[statsList.Count - 1];
             calculatedStats.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
             calculatedStats.MageArmor = armor;
@@ -409,6 +451,14 @@ namespace Rawr.Mage
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
             CompactLP lp = new CompactLP(lpRows, lpCols);
             double[] tps = new double[lpCols];
+
+            int[] incrementalSetCooldown = null;
+            string[] incrementalSetSpell = null;
+            if (computeIncrementalSet)
+            {
+                incrementalSetCooldown = new int[lpCols];
+                incrementalSetSpell = new string[lpCols];
+            }
 
             if (trinket1Available)
             {
@@ -538,21 +588,37 @@ namespace Rawr.Mage
             {
                 for (int spell = 0; spell < spellList.Count; spell++)
                 {
-                    Spell s = statsList[buffset].GetSpell(spellList[spell]);
-                    bool spellRelevant = true;
-                    if (!s.AffectedByFlameCap && statsList[buffset].FlameCap) spellRelevant = false;
-                    if (s.ABCycle && !calculationOptions.ABCycles) spellRelevant = false;
-                    if (calculationOptions.SmartOptimization)
+                    bool viable = true;
+                    if (calculationOptions.IncrementalOptimizations)
                     {
-                        if (calculationOptions.EmpoweredFireball > 0)
+                        viable = false;
+                        for (int i = 0; i < calculationOptions.IncrementalSetCooldowns.Length; i++)
                         {
-                            if (!s.AreaEffect && !(s is Fireball || s is FireballScorch)) spellRelevant = false;
+                            if (statsList[buffset].IncrementalSetIndex == calculationOptions.IncrementalSetCooldowns[i] && spellList[spell] == calculationOptions.IncrementalSetSpells[i])
+                            {
+                                viable = true;
+                                break;
+                            }
                         }
                     }
-                    if (!spellRelevant)
+                    if (viable)
                     {
-                        int index = buffset * spellList.Count + spell + colOffset - 1;
-                        lp.DisableColumn(index);
+                        Spell s = statsList[buffset].GetSpell(spellList[spell]);
+                        bool spellRelevant = true;
+                        if (!s.AffectedByFlameCap && statsList[buffset].FlameCap) spellRelevant = false;
+                        if (s.ABCycle && !calculationOptions.ABCycles) spellRelevant = false;
+                        if (calculationOptions.SmartOptimization)
+                        {
+                            if (calculationOptions.EmpoweredFireball > 0)
+                            {
+                                if (!s.AreaEffect && !(s is Fireball || s is FireballScorch)) spellRelevant = false;
+                            }
+                        }
+                        if (!spellRelevant)
+                        {
+                            int index = buffset * spellList.Count + spell + colOffset - 1;
+                            lp.DisableColumn(index);
+                        }
                     }
                 }
             }
@@ -665,86 +731,98 @@ namespace Rawr.Mage
             {
                 for (int spell = 0; spell < spellList.Count; spell++)
                 {
-                    Spell s = statsList[buffset].GetSpell(spellList[spell]);
-                    if ((s.AffectedByFlameCap || !statsList[buffset].FlameCap) && (!s.ABCycle || calculationOptions.ABCycles))
+                    int index = buffset * spellList.Count + spell + colOffset - 1;
+                    if (lp.IsColumnEnabled(index))
                     {
-                        calculatedStats.SolutionLabel.Add(((statsList[buffset].BuffLabel.Length > 0) ? (statsList[buffset].BuffLabel + "+") : "") + s.Name);
-                        int index = buffset * spellList.Count + spell + colOffset - 1;
-                        lp[0, index] = s.CostPerSecond - s.ManaRegenPerSecond;
-                        lp[1, index] = 1;
-                        if (statsList[buffset].DestructionPotion) lp[3, index] = calculatedStats.ManaPotionTime / 15f;
-                        lp[5, index] = (statsList[buffset].Heroism ? 1 : 0);
-                        lp[6, index] = (statsList[buffset].ArcanePower ? 1 : 0);
-                        lp[7, index] = ((statsList[buffset].Heroism && statsList[buffset].ArcanePower) ? 1 : 0);
-                        lp[8, index] = (statsList[buffset].IcyVeins ? 1 : 0);
-                        lp[9, index] = (statsList[buffset].MoltenFury ? 1 : 0);
-                        lp[10, index] = ((statsList[buffset].MoltenFury && statsList[buffset].DestructionPotion) ? 1 : 0);
-                        lp[11, index] = ((statsList[buffset].MoltenFury && statsList[buffset].IcyVeins) ? 1 : 0);
-                        lp[12, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].Heroism) ? 1 : 0);
-                        lp[13, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].IcyVeins) ? 1 : 0);
-                        lp[14, index] = (statsList[buffset].FlameCap ? (calculatedStats.ManaPotionTime / 40f) : 0); ;
-                        lp[15, index] = ((statsList[buffset].MoltenFury && statsList[buffset].FlameCap) ? 1 : 0); ;
-                        lp[16, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].FlameCap) ? 1 : 0);
-                        lp[17, index] = (statsList[buffset].Trinket1 ? 1 : 0);
-                        lp[18, index] = (statsList[buffset].Trinket2 ? 1 : 0);
-                        lp[19, index] = ((statsList[buffset].MoltenFury && statsList[buffset].Trinket1) ? 1 : 0);
-                        lp[20, index] = ((statsList[buffset].MoltenFury && statsList[buffset].Trinket2) ? 1 : 0);
-                        lp[21, index] = ((statsList[buffset].Heroism && statsList[buffset].Trinket1) ? 1 : 0);
-                        lp[22, index] = ((statsList[buffset].Heroism && statsList[buffset].Trinket2) ? 1 : 0);
-                        lp[23, index] = ((statsList[buffset].Trinket1 && t1ismg) ? 1 / trinket1duration : 0) + ((statsList[buffset].Trinket2 && t2ismg) ? 1 / trinket2duration : 0);
-                        //aoe duration, flamestrike, cone of cold, blast wave, dragon's breath
-                        lp[25, index] = (s.AreaEffect ? 1 : 0);
-                        if (s.AreaEffect)
+                        Spell s = statsList[buffset].GetSpell(spellList[spell]);
+                        if ((s.AffectedByFlameCap || !statsList[buffset].FlameCap) && (!s.ABCycle || calculationOptions.ABCycles))
                         {
-                            Flamestrike fs = s as Flamestrike;
-                            if (fs != null)
+                            calculatedStats.SolutionLabel.Add(((statsList[buffset].BuffLabel.Length > 0) ? (statsList[buffset].BuffLabel + "+") : "") + s.Name);
+                            if (computeIncrementalSet)
                             {
-                                if (!fs.SpammedDot) lp[26, index] = fs.DotDuration / fs.CastTime;
+                                incrementalSetCooldown[index] = statsList[buffset].IncrementalSetIndex;
+                                incrementalSetSpell[index] = spellList[spell];
                             }
-                            else
+                            lp[0, index] = s.CostPerSecond - s.ManaRegenPerSecond;
+                            lp[1, index] = 1;
+                            if (statsList[buffset].DestructionPotion) lp[3, index] = calculatedStats.ManaPotionTime / 15f;
+                            lp[5, index] = (statsList[buffset].Heroism ? 1 : 0);
+                            lp[6, index] = (statsList[buffset].ArcanePower ? 1 : 0);
+                            lp[7, index] = ((statsList[buffset].Heroism && statsList[buffset].ArcanePower) ? 1 : 0);
+                            lp[8, index] = (statsList[buffset].IcyVeins ? 1 : 0);
+                            lp[9, index] = (statsList[buffset].MoltenFury ? 1 : 0);
+                            lp[10, index] = ((statsList[buffset].MoltenFury && statsList[buffset].DestructionPotion) ? 1 : 0);
+                            lp[11, index] = ((statsList[buffset].MoltenFury && statsList[buffset].IcyVeins) ? 1 : 0);
+                            lp[12, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].Heroism) ? 1 : 0);
+                            lp[13, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].IcyVeins) ? 1 : 0);
+                            lp[14, index] = (statsList[buffset].FlameCap ? (calculatedStats.ManaPotionTime / 40f) : 0); ;
+                            lp[15, index] = ((statsList[buffset].MoltenFury && statsList[buffset].FlameCap) ? 1 : 0); ;
+                            lp[16, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].FlameCap) ? 1 : 0);
+                            lp[17, index] = (statsList[buffset].Trinket1 ? 1 : 0);
+                            lp[18, index] = (statsList[buffset].Trinket2 ? 1 : 0);
+                            lp[19, index] = ((statsList[buffset].MoltenFury && statsList[buffset].Trinket1) ? 1 : 0);
+                            lp[20, index] = ((statsList[buffset].MoltenFury && statsList[buffset].Trinket2) ? 1 : 0);
+                            lp[21, index] = ((statsList[buffset].Heroism && statsList[buffset].Trinket1) ? 1 : 0);
+                            lp[22, index] = ((statsList[buffset].Heroism && statsList[buffset].Trinket2) ? 1 : 0);
+                            lp[23, index] = ((statsList[buffset].Trinket1 && t1ismg) ? 1 / trinket1duration : 0) + ((statsList[buffset].Trinket2 && t2ismg) ? 1 / trinket2duration : 0);
+                            //aoe duration, flamestrike, cone of cold, blast wave, dragon's breath
+                            lp[25, index] = (s.AreaEffect ? 1 : 0);
+                            if (s.AreaEffect)
                             {
-                                lp[26, index] = -1;
+                                Flamestrike fs = s as Flamestrike;
+                                if (fs != null)
+                                {
+                                    if (!fs.SpammedDot) lp[26, index] = fs.DotDuration / fs.CastTime;
+                                }
+                                else
+                                {
+                                    lp[26, index] = -1;
+                                }
+                                ConeOfCold coc = s as ConeOfCold;
+                                if (coc != null)
+                                {
+                                    lp[27, index] = (coc.Cooldown / coc.CastTime - 1);
+                                }
+                                else
+                                {
+                                    lp[27, index] = -1;
+                                }
+                                BlastWave bw = s as BlastWave;
+                                if (bw != null)
+                                {
+                                    lp[28, index] = (bw.Cooldown / bw.CastTime - 1);
+                                }
+                                else
+                                {
+                                    lp[28, index] = -1;
+                                }
+                                DragonsBreath db = s as DragonsBreath;
+                                if (db != null)
+                                {
+                                    lp[29, index] = (db.Cooldown / db.CastTime - 1);
+                                }
+                                else
+                                {
+                                    lp[29, index] = -1;
+                                }
                             }
-                            ConeOfCold coc = s as ConeOfCold;
-                            if (coc != null)
-                            {
-                                lp[27, index] = (coc.Cooldown / coc.CastTime - 1);
-                            }
-                            else
-                            {
-                                lp[27, index] = -1;
-                            }
-                            BlastWave bw = s as BlastWave;
-                            if (bw != null)
-                            {
-                                lp[28, index] = (bw.Cooldown / bw.CastTime - 1);
-                            }
-                            else
-                            {
-                                lp[28, index] = -1;
-                            }
-                            DragonsBreath db = s as DragonsBreath;
-                            if (db != null)
-                            {
-                                lp[29, index] = (db.Cooldown / db.CastTime - 1);
-                            }
-                            else
-                            {
-                                lp[29, index] = -1;
-                            }
+                            lp[30, index] = (statsList[buffset].Combustion) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
+                            lp[31, index] = (statsList[buffset].Combustion && statsList[buffset].MoltenFury) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
+                            lp[32, index] = (statsList[buffset].Combustion && statsList[buffset].Heroism) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
+                            lp[33, index] = (statsList[buffset].IcyVeins && statsList[buffset].Heroism) ? 1 : 0;
+                            //drums, drums+mf, drums+heroism, drums+iv, drums+ap
+                            lp[34, index] = (statsList[buffset].DrumsOfBattle) ? 1 / (30 - calculatedStats.GlobalCooldown) : 0;
+                            lp[35, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].MoltenFury) ? 1 : 0;
+                            lp[36, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].Heroism) ? 1 : 0;
+                            lp[37, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].IcyVeins) ? 1 : 0;
+                            lp[38, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].ArcanePower) ? 1 : 0;
+                            lp[39, index] = s.ThreatPerSecond;
+                            lp[lpRows, index] = s.DamagePerSecond;
                         }
-                        lp[30, index] = (statsList[buffset].Combustion) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
-                        lp[31, index] = (statsList[buffset].Combustion && statsList[buffset].MoltenFury) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
-                        lp[32, index] = (statsList[buffset].Combustion && statsList[buffset].Heroism) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
-                        lp[33, index] = (statsList[buffset].IcyVeins && statsList[buffset].Heroism) ? 1 : 0;
-                        //drums, drums+mf, drums+heroism, drums+iv, drums+ap
-                        lp[34, index] = (statsList[buffset].DrumsOfBattle) ? 1 / (30 - calculatedStats.GlobalCooldown) : 0;
-                        lp[35, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].MoltenFury) ? 1 : 0;
-                        lp[36, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].Heroism) ? 1 : 0;
-                        lp[37, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].IcyVeins) ? 1 : 0;
-                        lp[38, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].ArcanePower) ? 1 : 0;
-                        lp[39, index] = s.ThreatPerSecond;
-                        lp[lpRows, index] = s.DamagePerSecond;
+                        else
+                        {
+                            calculatedStats.SolutionLabel.Add("dummy");
+                        }
                     }
                     else
                     {
@@ -797,6 +875,11 @@ namespace Rawr.Mage
             for (int col = 0; col < lpCols; col++) tps[col] = lp[39, col];
 
             calculatedStats.Solution = lp.Solve();
+            if (computeIncrementalSet)
+            {
+                calculatedStats.IncrementalSetCooldown = incrementalSetCooldown;
+                calculatedStats.IncrementalSetSpell = incrementalSetSpell;
+            }
 
             calculatedStats.SubPoints[0] = ((float)calculatedStats.Solution[lpCols] + calculatedStats.WaterElementalDamage) / calculationOptions.FightDuration;
             calculatedStats.OverallPoints = calculatedStats.SubPoints[0];
@@ -1051,10 +1134,11 @@ namespace Rawr.Mage
             return duration;
         }
 
-        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Stats characterStats, CompiledCalculationOptions calculationOptions, string armor, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums)
+        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Stats characterStats, CompiledCalculationOptions calculationOptions, string armor, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, int incrementalSetIndex)
         {
             CharacterCalculationsMage calculatedStats = new CharacterCalculationsMage();
             Stats stats = characterStats.Clone();
+            calculatedStats.IncrementalSetIndex = incrementalSetIndex;
             calculatedStats.BasicStats = stats;
             calculatedStats.Character = character;
             calculatedStats.CalculationOptions = calculationOptions;
@@ -1482,6 +1566,8 @@ namespace Rawr.Mage
 
                     string[] talentSpecList = new string[] { "Fire (2/48/11)", "Fire (10/48/3)", "Fire/Cold Snap (0/40/21)", "Frost (10/0/51)", "Arcane (48/0/13)", "Arcane (43/0/18)", "Arcane/Fire (40/18/3)", "Arcane/Frost (40/0/21)" };
                     Character charClone = character.Clone();
+                    charClone.CalculationOptions["IncrementalOptimizations"] = "0";
+                    charClone.CalculationOptions["SmartOptimization"] = "1";
 
                     for (int index = 0; index < talentSpecList.Length; index++)
                     {

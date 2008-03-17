@@ -36,6 +36,10 @@ namespace Rawr.Mage
         public bool Enable2_3Mode { get; set; }
         public bool DisableBuffAutoActivation { get; set; }
         public bool AutomaticArmor { get; set; }
+        public bool IncrementalOptimizations { get; set; }
+        public int[] IncrementalSetCooldowns;
+        public string[] IncrementalSetSpells;
+        public string IncrementalSetArmor;
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -115,6 +119,24 @@ namespace Rawr.Mage
             Enable2_3Mode = int.Parse(character.CalculationOptions["2_3Mode"], CultureInfo.InvariantCulture) == 1;
             DisableBuffAutoActivation = character.CalculationOptions.ContainsKey("DisableBuffAutoActivation") && character.CalculationOptions["DisableBuffAutoActivation"] == "Yes";
             AutomaticArmor = int.Parse(character.CalculationOptions["AutomaticArmor"], CultureInfo.InvariantCulture) == 1;
+            IncrementalOptimizations = int.Parse(character.CalculationOptions["IncrementalOptimizations"], CultureInfo.InvariantCulture) == 1;
+            if (character.CalculationOptions.ContainsKey("IncrementalSetCooldowns"))
+            {
+                string[] cooldowns = character.CalculationOptions["IncrementalSetCooldowns"].Split(':');
+                IncrementalSetCooldowns = new int[cooldowns.Length];
+                for (int i = 0; i < cooldowns.Length; i++)
+                {
+                    IncrementalSetCooldowns[i] = int.Parse(cooldowns[i], CultureInfo.InvariantCulture);
+                }
+            }
+            if (character.CalculationOptions.ContainsKey("IncrementalSetSpells"))
+            {
+                IncrementalSetSpells = character.CalculationOptions["IncrementalSetSpells"].Split(':');
+            }
+            if (character.CalculationOptions.ContainsKey("IncrementalSetArmor"))
+            {
+                IncrementalSetArmor = character.CalculationOptions["IncrementalSetArmor"];
+            }
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"], CultureInfo.InvariantCulture);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"], CultureInfo.InvariantCulture);
@@ -192,6 +214,10 @@ namespace Rawr.Mage
         public CompiledCalculationOptions CalculationOptions { get; set; }
 
         public Character Character { get; set; }
+
+        public int IncrementalSetIndex { get; set; }
+        public int[] IncrementalSetCooldown { get; set; }
+        public string[] IncrementalSetSpell { get; set; }
 
         public float SpellCrit { get; set; }
         public float SpellHit { get; set; }
