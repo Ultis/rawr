@@ -95,8 +95,9 @@ namespace Rawr //O O . .
         [System.Xml.Serialization.XmlElement("Talents")]
         public TalentTree _talents = new TalentTree();
 
-
-
+        // set to true to suppress ItemsChanged event
+        [System.Xml.Serialization.XmlIgnore]
+        public bool IsLoading { get; set; }
         
 
         [System.Xml.Serialization.XmlIgnore]
@@ -671,7 +672,7 @@ namespace Rawr //O O . .
 				}
 			}
 
-			if (ItemsChanged != null) 
+			if (!IsLoading && ItemsChanged != null) // alternatively enclose the whole function inside !IsLoading
 				ItemsChanged(this, EventArgs.Empty);
 		}
 

@@ -42,6 +42,7 @@ namespace Rawr
 				if (_character != null)
 				{
 					this.Cursor = Cursors.WaitCursor;
+                    _character.IsLoading = true; // we do not need ItemsChanged event triggering until we call OnItemsChanged at the end
 					_character.EnsureItemsLoaded();
 					Calculations.CalculationOptionsPanel.Character = _character;
 					ItemToolTip.Instance.Character = FormItemSelection.Instance.Character = 
@@ -80,6 +81,7 @@ namespace Rawr
 					comboBoxRace.Text = Character.Race.ToString();
 
 					_loadingCharacter = false;
+                    _character.IsLoading = false;
 					_character.OnItemsChanged();
 				}
 			}
