@@ -844,7 +844,7 @@ namespace Rawr.Mage
             if (mfAvailable && ivAvailable) lp[11, lpCols] = coldsnap ? 40 : 20;
             if (heroismAvailable) lp[12, lpCols] = 15;
             if (ivAvailable) lp[13, lpCols] = dpivlength;
-            if (calculationOptions.FlameCap)
+            if (calculationOptions.FlameCap && !(!calculationOptions.SmartOptimization && calculationOptions.SpellPower > 0))
             {
                 lp[14, lpCols] = ((int)(calculatedStats.FightDuration / 180f + 2f / 3f)) * calculatedStats.ManaPotionTime * 3f / 2f;
             }
