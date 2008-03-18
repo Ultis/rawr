@@ -257,14 +257,23 @@ namespace Rawr.Moonkin
             {
                 float averageCritChance = 0.0f;
                 int spellCount = 0;
+                float cycleLength = 0.0f;
                 foreach (Spell sp in rotation.Value)
                 {
                     // Spells that do 0 damage are considered uncrittable in this simulation
                     if (sp.damagePerHit > 0.0f)
                         averageCritChance += calcs.SpellCrit + sp.extraCritChance;
+                    cycleLength += sp.castTime; // Rough approximation for modeling JoW procs
                     ++spellCount;
                 }
                 averageCritChance /= spellCount;
+
+                // Add in JoW mana restore
+                int numCasts = (int)((fightLength / cycleLength) * spellCount);
+                float numHits = numCasts * (1 - missRate);
+                float manaFromOther = numCasts * calcs.BasicStats.ManaRestorePerCast;
+                float manaFromJoW = numHits * calcs.BasicStats.ManaRestorePerHit;
+                totalMana += manaFromJoW + manaFromOther;
 
                 float damageDone = 0.0f;
                 float manaUsed = 0.0f;
@@ -299,8 +308,10 @@ namespace Rawr.Moonkin
                     else
                         calcs.TimeToOOM = new TimeSpan(0, (int)Math.Floor(secsToOom) / 60, (int)Math.Floor(secsToOom) % 60);
                 }
+                // Remove the mana added from JoW, it will change at the next cycle
+                totalMana -= manaFromJoW + manaFromOther;
             }
-            calcs.SubPoints = new float[] { calcs.DamageDone };
+            calcs.SubPoints = new float[] { calcs.DPS * fightLength };
             calcs.OverallPoints = calcs.SubPoints[0];
         }
 
