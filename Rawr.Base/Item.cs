@@ -660,10 +660,14 @@ namespace Rawr
 		public bool MeetsRequirements(Character character, out bool volatileRequirements)
 		{
             volatileRequirements = false;
-			if (character == null || character.CalculationOptions["EnforceMetagemRequirements"] != "Yes") return true;
-			int redGems = character.GetGemColorCount(ItemSlot.Red);
-			int yellowGems = character.GetGemColorCount(ItemSlot.Yellow);
-			int blueGems = character.GetGemColorCount(ItemSlot.Blue);
+            int redGems = 0, yellowGems = 0, blueGems = 0;
+            if (character != null)
+            {
+                redGems = character.GetGemColorCount(ItemSlot.Red);
+                yellowGems = character.GetGemColorCount(ItemSlot.Yellow);
+                blueGems = character.GetGemColorCount(ItemSlot.Blue);
+            }
+            bool meetsRequirements = false;
 
 			//TODO: Make this dynamic, by loading the gem requirements from the armory
 			switch (this.Id)
@@ -674,44 +678,50 @@ namespace Rawr
 				case 32409:
 				case 32410:
                     volatileRequirements = true;
-					return redGems >= 2 && yellowGems >= 2 && blueGems >= 2;
-
+					meetsRequirements = redGems >= 2 && yellowGems >= 2 && blueGems >= 2;
+                    break;
 				case 25897:
                     volatileRequirements = true;
-					return redGems > blueGems;
-
-				case 25895:
+                    meetsRequirements = redGems > blueGems;
+                    break;
+                case 25895:
                     volatileRequirements = true;
-					return redGems > yellowGems;
-
-				case 25893:
+                    meetsRequirements = redGems > yellowGems;
+                    break;
+                case 25893:
 				case 32640:
                     volatileRequirements = true;
-					return blueGems > yellowGems;
-
-				case 34220:
+                    meetsRequirements = blueGems > yellowGems;
+                    break;
+                case 34220:
                     volatileRequirements = true;
-					return blueGems >= 2;
-
-				case 25896:
+                    meetsRequirements = blueGems >= 2;
+                    break;
+                case 25896:
                     volatileRequirements = true;
-					return blueGems >= 3;
-
-				case 25898:
+                    meetsRequirements = blueGems >= 3;
+                    break;
+                case 25898:
                     volatileRequirements = true;
-					return blueGems >= 5;
-
-				case 32641:
+                    meetsRequirements = blueGems >= 5;
+                    break;
+                case 32641:
                     volatileRequirements = true;
-					return yellowGems == 3;
-
-				case 25894:
+                    meetsRequirements = yellowGems == 3;
+                    break;
+                case 25894:
 				case 28557:
 				case 28556:
                     volatileRequirements = true;
-					return yellowGems >= 2 && redGems >= 1;
+                    meetsRequirements = yellowGems >= 2 && redGems >= 1;
+                    break;
+                default:
+                    meetsRequirements = true;
+                    break;
 			}
-			return true;
+            if (character == null || character.CalculationOptions["EnforceMetagemRequirements"] != "Yes") meetsRequirements = true;
+
+            return meetsRequirements;
 		}
 
 
