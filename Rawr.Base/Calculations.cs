@@ -72,7 +72,6 @@ namespace Rawr
 				ModelChanged(null, EventArgs.Empty);
 		}
 
-		public static void LoadModel(string displayName) { LoadModel(Models[displayName]); }
 		public static void LoadModel(Type type) { LoadModel((CalculationsBase)Activator.CreateInstance(type)); }
 		public static void LoadModel(CalculationsBase model)
 		{
@@ -186,7 +185,20 @@ namespace Rawr
 		{
 			return Instance.GetCharacterStatsString(character);
 		}
-	}
+
+        public static string ValidModel(string model)
+        {
+            if (Models.Keys.Contains(model))
+            {
+                return model;
+            }
+            if(Models.Keys.Count > 0)
+            {
+                return Models.Keys[0];
+            }
+            return null;
+        }
+    }
 
 	/// <summary>
 	/// CalculationsBase is the base class which each model's main Calculations class will inherit from.

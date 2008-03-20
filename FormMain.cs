@@ -116,9 +116,25 @@ namespace Rawr
 			//and the ground below grew colder / as they put you down inside
 		}
 
+
+        public void LoadModel(string displayName)
+        {
+            try
+            {
+                Calculations.LoadModel(Calculations.Models[displayName]);
+            }
+            finally
+            {
+                ConfigModel = displayName;
+            }
+        }
+
+
 		public string ConfigModel
 		{
-			get { return Properties.Recent.Default.RecentModel; }
+			get {
+                return Calculations.ValidModel(Properties.Recent.Default.RecentModel);
+            }
 			set { Properties.Recent.Default.RecentModel = value; }
 		}
 
@@ -198,7 +214,7 @@ namespace Rawr
 			_spash.Show();
 			Application.DoEvents();
 			
-			Calculations.LoadModel(this.ConfigModel);
+			LoadModel(this.ConfigModel);
 			InitializeComponent();
 			Application.DoEvents();
 			
@@ -247,7 +263,6 @@ namespace Rawr
 					this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
 				}
 				Calculations.LoadModel(kvpModel.Value);
-				ConfigModel = modelToolStripMenuItem.Text;
 			}
 		}
 
