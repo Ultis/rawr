@@ -123,6 +123,7 @@ namespace Rawr.Mage
             if (character.CalculationOptions.ContainsKey("IncrementalSetCooldowns"))
             {
                 string[] cooldowns = character.CalculationOptions["IncrementalSetCooldowns"].Split(':');
+                if (character.CalculationOptions["IncrementalSetCooldowns"] == "") cooldowns = new string[] { };
                 IncrementalSetCooldowns = new int[cooldowns.Length];
                 for (int i = 0; i < cooldowns.Length; i++)
                 {
@@ -304,11 +305,18 @@ namespace Rawr.Mage
 
         private Dictionary<string, Spell> Spells = new Dictionary<string, Spell> ();
         public double EvocationDuration;
+        public double EvocationRegen;
         public double ManaPotionTime = 0.1f;
+        public double Trinket1Duration;
+        public double Trinket1Cooldown;
+        public double Trinket2Duration;
+        public double Trinket2Cooldown;
         public int MaxManaPotion;
         public int MaxManaGem;
         public List<string> SolutionLabel = new List<string>();
         public double[] Solution;
+        public CharacterCalculationsMage[] SolutionStats;
+        public Spell[] SolutionSpells;
         public float Tps;
 
         public void SetSpell(string spellName, Spell spell)
@@ -489,6 +497,528 @@ namespace Rawr.Mage
             return s;
         }
 
+        private string TimeFormat(double time)
+        {
+            TimeSpan span = new TimeSpan((long)(Math.Round(time, 2) / 0.0000001));
+            return span.ToString();
+        }
+
+        public string ReconstructSequence()
+        {
+            if (FightDuration > 900) return "*Unavailable";
+            int N = 0;
+            List<CharacterCalculationsMage> stats = new List<CharacterCalculationsMage>();
+            List<Spell> spells = new List<Spell>();
+            List<double> remainingTime = new List<double>();
+            for (int i = 0; i < SolutionLabel.Count; i++)
+            {
+                if (Solution[i] > 0.01)
+                {
+                    if (SolutionStats[i] != null)
+                    {
+                        stats.Add(SolutionStats[i]);
+                        spells.Add(SolutionSpells[i]);
+                        remainingTime.Add(Solution[i]);
+                        N++;
+                    }
+                }
+            }
+
+            List<int> sequence = new List<int>();
+            string bestTiming = "*Invalid";
+            double bestUnderused = FightDuration;
+            string[] effectList = new string[] { "Mana Potion", "Mana Gem", "Evocation", "Drums of Battle", "Flame Cap", "Destruction Potion", (Character.Trinket1 != null) ? Character.Trinket1.Name : "", (Character.Trinket2 != null) ? Character.Trinket2.Name : "", "Heroism", "Molten Fury", "Combustion", "Arcane Power", "Icy Veins"};
+            float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
+            int E = effectList.Length;
+            bool lastSequenceValid = true;
+            StringBuilder timing = new StringBuilder();
+
+            do
+            {
+                // move to next sequence
+                if (lastSequenceValid)
+                {
+                    //sequence.Add(0);
+                    sequence.Add(3);
+                }
+                else
+                {
+                    // pop last effect and move on
+                    sequence[sequence.Count - 1]++;
+                    while (sequence.Count > 0 && sequence[sequence.Count - 1] >= E)
+                    {
+                        sequence.RemoveAt(sequence.Count - 1);
+                        if (sequence.Count > 0) sequence[sequence.Count - 1]++;
+                    }
+                    if (sequence.Count == 0) break;
+                }
+                // evaluate sequence
+                lastSequenceValid = true;
+                double time = 0;
+                double mana = BasicStats.Mana;
+                int gemCount = 0;
+                double potionCooldown = 0;
+                double gemCooldown = 0;
+                double trinket1Cooldown = 0;
+                double trinket2Cooldown = 0;
+                bool heroismUsed = false;
+                bool moltenFuryUsed = false;
+                double evocationCooldown = 0;
+                double drumsCooldown = 0;
+                double apCooldown = 0;
+                double ivCooldown = 0;
+                double combustionCooldown = 0;
+                double trinket1time = -1;
+                double trinket2time = -1;
+                double flameCapTime = -1;
+                double drumsTime = -1;
+                double destructionTime = -1;
+                double combustionTime = -1;
+                double moltenFuryTime = -1;
+                double heroismTime = -1;
+                double apTime = -1;
+                double ivTime = -1;
+                double[] remaining = remainingTime.ToArray();
+                double[] remainingBase = new double[] { Solution[0], Solution[1], Solution[2], Solution[3], Solution[4], Solution[5] };
+                timing.Length = 0;
+                timing.Append("*");
+                string lastSpell = null;
+                double fight = FightDuration;
+                bool timeLimitReached = false;
+                for (int e = 0; e <= sequence.Count; e++)
+                {
+                    int effect = -1;
+                    if (e < sequence.Count)
+                    {
+                        effect = sequence[e];
+                    }
+                    else
+                    {
+                        if (remainingBase[0] < 0 && -remainingBase[0] > bestUnderused) lastSequenceValid = false;
+                        if (time >= fight) timeLimitReached = true;
+                    }
+                    bool effectApplied = false;
+                    do
+                    {
+                        double minTimeNeeded = 0;
+                        switch (effect)
+                        {
+                            case -1: // No effect, run remaining time
+                                if (time >= fight) effectApplied = true;
+                                minTimeNeeded = fight - time;
+                                break;
+                            case 0: // Mana Potion
+                                if (remainingBase[3] <= 0)
+                                {
+                                    lastSequenceValid = false;
+                                }
+                                else if (potionCooldown > 0)
+                                {
+                                    minTimeNeeded = potionCooldown;
+                                }
+                                else if (mana <= BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 2400f)
+                                {
+                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
+                                    mana += (1 + BasicStats.BonusManaPotion) * 2400f;
+                                    potionCooldown = 120;
+                                    remainingBase[3] -= ManaPotionTime;
+                                    fight -= ManaPotionTime;
+                                    effectApplied = true;
+                                    lastSpell = null;
+                                }
+                                else
+                                {
+                                    float highestMps = 0;
+                                    for (int i = 0; i < N; i++)
+                                    {
+                                        if ((stats[i].ArcanePower != apTime < 0) && (stats[i].MoltenFury != moltenFuryTime < 0) && (stats[i].IcyVeins != ivTime < 0) && (stats[i].Heroism != heroismTime < 0) && (stats[i].DestructionPotion != destructionTime < 0) && (stats[i].FlameCap != flameCapTime < 0) && (stats[i].Trinket1 != trinket1time < 0) && (stats[i].Trinket2 != trinket2time < 0) && (stats[i].Combustion != combustionTime < 0) && (stats[i].DrumsOfBattle != drumsTime < 0))
+                                        {
+                                            if (remaining[i] > 0 && spells[i].CostPerSecond - spells[i].ManaRegenPerSecond > highestMps)
+                                            {
+                                                highestMps = spells[i].CostPerSecond - spells[i].ManaRegenPerSecond;
+                                            }
+                                        }
+                                    }
+                                    if (highestMps > 0)
+                                    {
+                                        minTimeNeeded = (mana - (BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 2400f)) / highestMps;
+                                    }
+                                    else
+                                    {
+                                        lastSequenceValid = false;
+                                    }
+                                }
+                                break;
+                            case 1: // Mana Gem
+                                if (remainingBase[4] <= 0)
+                                {
+                                    lastSequenceValid = false;
+                                }
+                                if (gemCooldown > 0)
+                                {
+                                    minTimeNeeded = gemCooldown;
+                                }
+                                else if (mana <= BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemValue[gemCount])
+                                {
+                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
+                                    mana += (1 + BasicStats.BonusManaGem) * gemValue[gemCount];
+                                    gemCooldown = 120;
+                                    fight -= ManaPotionTime;
+                                    remainingBase[4] -= ManaPotionTime;
+                                    effectApplied = true;
+                                    lastSpell = null;
+                                }
+                                else
+                                {
+                                    float highestMps = 0;
+                                    for (int i = 0; i < N; i++)
+                                    {
+                                        if ((stats[i].ArcanePower != apTime < 0) && (stats[i].MoltenFury != moltenFuryTime < 0) && (stats[i].IcyVeins != ivTime < 0) && (stats[i].Heroism != heroismTime < 0) && (stats[i].DestructionPotion != destructionTime < 0) && (stats[i].FlameCap != flameCapTime < 0) && (stats[i].Trinket1 != trinket1time < 0) && (stats[i].Trinket2 != trinket2time < 0) && (stats[i].Combustion != combustionTime < 0) && (stats[i].DrumsOfBattle != drumsTime < 0))
+                                        {
+                                            if (remaining[i] > 0 && spells[i].CostPerSecond - spells[i].ManaRegenPerSecond > highestMps)
+                                            {
+                                                highestMps = spells[i].CostPerSecond - spells[i].ManaRegenPerSecond;
+                                            }
+                                        }
+                                    }
+                                    if (highestMps > 0)
+                                    {
+                                        minTimeNeeded = (mana - (BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemValue[gemCount])) / highestMps;
+                                    }
+                                    else
+                                    {
+                                        lastSequenceValid = false;
+                                    }
+                                }
+                                break;
+                            case 2: // Evocation
+                                if (evocationCooldown > 0)
+                                {
+                                    minTimeNeeded = evocationCooldown;
+                                }
+                                else if (mana <= BasicStats.Mana - Math.Min(EvocationDuration, remainingBase[2]) * EvocationRegen)
+                                {
+                                    double move = Math.Min(EvocationDuration, remainingBase[2]);
+                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
+                                    mana += move * EvocationRegen;
+                                    evocationCooldown = 60 * 8;
+                                    remainingBase[2] -= move;
+                                    effectApplied = true;
+
+
+                                    lastSpell = null;
+
+                                    if (apTime >= 0 && 15 - (time - apTime) <= move) apTime = -1;
+                                    if (ivTime >= 0 && 20 - (time - ivTime) <= move) ivTime = -1;
+                                    if (heroismTime >= 0 && 40 - (time - heroismTime) <= move) heroismTime = -1;
+                                    if (destructionTime >= 0 && 15 - (time - destructionTime) <= move) destructionTime = -1;
+                                    if (flameCapTime >= 0 && 60 - (time - flameCapTime) <= move) flameCapTime = -1;
+                                    if (trinket1time >= 0 && Trinket1Duration - (time - trinket1time) <= move) trinket1time = -1;
+                                    if (trinket2time >= 0 && Trinket2Duration - (time - trinket2time) <= move) trinket2time = -1;
+                                    if (drumsTime >= 0 && 30 - (time - drumsTime) <= move) drumsTime = -1;
+
+                                    time += move;
+
+                                    apCooldown -= move;
+                                    ivCooldown -= move;
+                                    potionCooldown -= move;
+                                    gemCooldown -= move;
+                                    trinket1Cooldown -= move;
+                                    trinket2Cooldown -= move;
+                                    combustionCooldown -= move;
+                                    drumsCooldown -= move;
+                                }
+                                else
+                                {
+                                    float highestMps = 0;
+                                    for (int i = 0; i < N; i++)
+                                    {
+                                        if ((stats[i].ArcanePower != apTime < 0) && (stats[i].MoltenFury != moltenFuryTime < 0) && (stats[i].IcyVeins != ivTime < 0) && (stats[i].Heroism != heroismTime < 0) && (stats[i].DestructionPotion != destructionTime < 0) && (stats[i].FlameCap != flameCapTime < 0) && (stats[i].Trinket1 != trinket1time < 0) && (stats[i].Trinket2 != trinket2time < 0) && (stats[i].Combustion != combustionTime < 0) && (stats[i].DrumsOfBattle != drumsTime < 0))
+                                        {
+                                            if (remaining[i] > 0 && spells[i].CostPerSecond - spells[i].ManaRegenPerSecond > highestMps)
+                                            {
+                                                highestMps = spells[i].CostPerSecond - spells[i].ManaRegenPerSecond;
+                                            }
+                                        }
+                                    }
+                                    if (highestMps > 0)
+                                    {
+                                        minTimeNeeded = (mana - (BasicStats.Mana - Math.Min(EvocationDuration, remainingBase[2]) * EvocationRegen)) / highestMps;
+                                    }
+                                    else
+                                    {
+                                        lastSequenceValid = false;
+                                    }
+                                }
+                                break;
+                            case 3: // Drums of Battle
+                                lastSequenceValid = false;
+                                break;
+                            case 4: // Flame Cap
+                                lastSequenceValid = false;
+                                break;
+                            case 5: // Destruction Potion
+                                lastSequenceValid = false;
+                                break;
+                            case 6: // Trinket1
+                                if (Trinket1Duration == 0)
+                                {
+                                    lastSequenceValid = false;
+                                }
+                                else if (trinket1Cooldown > 0)
+                                {
+                                    minTimeNeeded = trinket1Cooldown;
+                                }
+                                else
+                                {
+                                    trinket1Cooldown = Trinket1Cooldown;
+                                    trinket1time = time;
+                                    effectApplied = true;
+                                    lastSpell = null;
+                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
+                                }
+                                break;
+                            case 7: // Trinket2
+                                if (Trinket2Duration == 0)
+                                {
+                                    lastSequenceValid = false;
+                                }
+                                if (trinket2Cooldown > 0)
+                                {
+                                    minTimeNeeded = trinket2Cooldown;
+                                }
+                                else
+                                {
+                                    trinket2Cooldown = Trinket2Cooldown;
+                                    trinket2time = time;
+                                    effectApplied = true;
+                                    lastSpell = null;
+                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
+                                }
+                                break;
+                            case 8: // Heroism
+                                if (heroismUsed)
+                                {
+                                    lastSequenceValid = false;
+                                }
+                                else
+                                {
+                                    heroismUsed = true;
+                                    heroismTime = time;
+                                    effectApplied = true;
+                                    lastSpell = null;
+                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
+                                }
+                                break;
+                            case 9: // Molten Fury
+                                lastSequenceValid = false;
+                                break;
+                            case 10: // Combustion
+                                lastSequenceValid = false;
+                                break;
+                            case 11: // Arcane Power
+                                if (CalculationOptions.ArcanePower == 0)
+                                {
+                                    lastSequenceValid = false;
+                                }
+                                else if (apCooldown > 0)
+                                {
+                                    minTimeNeeded = apCooldown;
+                                }
+                                else
+                                {
+                                    apCooldown = 180;
+                                    apTime = time;
+                                    effectApplied = true;
+                                    lastSpell = null;
+                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
+                                }
+                                break;
+                            case 12: // Icy Veins
+                                if (CalculationOptions.IcyVeins == 0)
+                                {
+                                    lastSequenceValid = false;
+                                }
+                                if (ivCooldown > 0)
+                                {
+                                    minTimeNeeded = ivCooldown;
+                                }
+                                else
+                                {
+                                    ivCooldown = 180;
+                                    ivTime = time;
+                                    effectApplied = true;
+                                    lastSpell = null;
+                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
+                                }
+                                break;
+                        }
+                        if (minTimeNeeded > 0)
+                        {
+                            // progress time
+                            if (fight - time < minTimeNeeded) minTimeNeeded = fight - time;
+                            float highestMps = float.NegativeInfinity;
+                            float lowestMps = float.PositiveInfinity;
+                            Spell spell = null;
+                            CharacterCalculationsMage stat = null;
+                            int selectedIndex = -1;
+                            double selectedRemaining = 0;
+                            for (int i = 0; i < N; i++)
+                            {
+                                if ((stats[i].ArcanePower != apTime < 0) && (stats[i].MoltenFury != moltenFuryTime < 0) && (stats[i].IcyVeins != ivTime < 0) && (stats[i].Heroism != heroismTime < 0) && (stats[i].DestructionPotion != destructionTime < 0) && (stats[i].FlameCap != flameCapTime < 0) && (stats[i].Trinket1 != trinket1time < 0) && (stats[i].Trinket2 != trinket2time < 0) && (stats[i].Combustion != combustionTime < 0) && (stats[i].DrumsOfBattle != drumsTime < 0))
+                                {
+                                    if (remaining[i] > 0 && (mana > 0 || spells[i].CostPerSecond - spells[i].ManaRegenPerSecond < 0) && spells[i].CostPerSecond - spells[i].ManaRegenPerSecond > highestMps)
+                                    {
+                                        highestMps = spells[i].CostPerSecond - spells[i].ManaRegenPerSecond;
+                                        stat = stats[i];
+                                        spell = spells[i];
+                                        selectedRemaining = remaining[i];
+                                        selectedIndex = i;
+                                    }
+                                    if (remaining[i] > 0 && spells[i].CostPerSecond - spells[i].ManaRegenPerSecond < lowestMps)
+                                    {
+                                        lowestMps = spells[i].CostPerSecond - spells[i].ManaRegenPerSecond;
+                                    }
+                                }
+                            }
+                            if (float.IsNegativeInfinity(highestMps))
+                            {
+                                // this cooldown combo is either overused or does not appear in solution
+                                // try using up idle/wand time
+                                if (remainingBase[0] > 0)
+                                {
+                                    stat = this;
+                                    spell = null;
+                                    selectedRemaining = remainingBase[0];
+                                    highestMps = -ManaRegen;
+                                }
+                                else if (remainingBase[1] > 0)
+                                {
+                                    stat = this;
+                                    spell = GetSpell("Wand");
+                                    selectedRemaining = remainingBase[1];
+                                    highestMps = spell.CostPerSecond - spell.ManaRegenPerSecond;
+                                }
+                                else
+                                {
+                                    stat = null;
+                                    spell = null;
+                                    selectedRemaining = double.PositiveInfinity;
+                                    highestMps = -ManaRegen;
+                                }
+                            }
+                            double apLeft = (apTime < 0) ? 0 : 15 - (time - apTime);
+                            double ivLeft = (ivTime < 0) ? 0 : 20 - (time - ivTime);
+                            double heroismLeft = (heroismTime < 0) ? 0 : 40 - (time - heroismTime);
+                            double dpLeft = (destructionTime < 0) ? 0 : 15 - (time - destructionTime);
+                            double fcLeft = (flameCapTime < 0) ? 0 : 60 - (time - flameCapTime);
+                            double t1Left = (trinket1time < 0) ? 0 : Trinket1Duration - (time - trinket1time);
+                            double t2Left = (trinket2time < 0) ? 0 : Trinket2Duration - (time - trinket2time);
+                            double combustionLeft = (combustionTime < 0 || stat == null) ? 0 : stat.CombustionDuration - (time - combustionTime);
+                            double drumsLeft = (drumsTime < 0) ? 0 : 30 - (time - drumsTime);
+
+                            double shortestLeft = double.PositiveInfinity;
+                            if (apLeft > 0) shortestLeft = Math.Min(shortestLeft, apLeft);
+                            if (ivLeft > 0) shortestLeft = Math.Min(shortestLeft, ivLeft);
+                            if (heroismLeft > 0) shortestLeft = Math.Min(shortestLeft, heroismLeft);
+                            if (dpLeft > 0) shortestLeft = Math.Min(shortestLeft, dpLeft);
+                            if (fcLeft > 0) shortestLeft = Math.Min(shortestLeft, fcLeft);
+                            if (t1Left > 0) shortestLeft = Math.Min(shortestLeft, t1Left);
+                            if (t2Left > 0) shortestLeft = Math.Min(shortestLeft, t2Left);
+                            if (combustionLeft > 0) shortestLeft = Math.Min(shortestLeft, combustionLeft);
+                            if (drumsLeft > 0) shortestLeft = Math.Min(shortestLeft, drumsLeft);
+
+                            // move forward and drop cooldowns that fell off
+                            double move = Math.Min(Math.Min(minTimeNeeded, selectedRemaining), shortestLeft);
+                            //if (move * highestMps > mana) move = mana / highestMps;
+                            if (selectedIndex >= 0)
+                            {
+                                remaining[selectedIndex] -= move;
+                                if (spell.Name != lastSpell)
+                                {
+                                    lastSpell = spell.Name;
+                                    timing.AppendLine(TimeFormat(time) + ": " + lastSpell + " (" + Math.Round(mana).ToString() + " mana, " + highestMps.ToString("F") + " mps)");
+                                }
+                            }
+                            else if (remainingBase[0] > 0)
+                            {
+                                remainingBase[0] -= move;
+                                if ("Idle Regen" != lastSpell)
+                                {
+                                    lastSpell = "Idle Regen";
+                                    timing.AppendLine(TimeFormat(time) + ": " + lastSpell + " (" + Math.Round(mana).ToString() + " mana, " + highestMps.ToString("F") + " mps)");
+                                }
+                            }
+                            else if (remainingBase[1] > 0)
+                            {
+                                remainingBase[1] -= move;
+                                if ("Wand" != lastSpell)
+                                {
+                                    lastSpell = "Wand";
+                                    timing.AppendLine(TimeFormat(time) + ": " + lastSpell + " (" + Math.Round(mana).ToString() + " mana, " + highestMps.ToString("F") + " mps)");
+                                }
+                            }
+                            else
+                            {
+                                // emergency regen, only enough to be able to continue casting
+                                /*if (BasicStats.Mana > 0 && mana <= 0 && !float.IsPositiveInfinity(lowestMps))
+                                {
+                                    move = lowestMps * move / (lowestMps + ManaRegen) + 0.001;
+                                }
+                                else*/ if (effect >= 0)
+                                {
+                                    lastSequenceValid = false;
+                                }
+                                remainingBase[0] -= move;
+                                if ("Idle Regen" != lastSpell)
+                                {
+                                    lastSpell = "Idle Regen";
+                                    timing.AppendLine(TimeFormat(time) + ": " + lastSpell + " (" + Math.Round(mana).ToString() + " mana, " + highestMps.ToString("F") + " mps)");
+                                }
+                            }
+                            apCooldown -= move;
+                            ivCooldown -= move;
+                            potionCooldown -= move;
+                            gemCooldown -= move;
+                            trinket1Cooldown -= move;
+                            trinket2Cooldown -= move;
+                            combustionCooldown -= move;
+                            drumsCooldown -= move;
+                            time += move;
+                            //mana -= move * highestMps;
+                            //if (mana > BasicStats.Mana) mana = BasicStats.Mana;
+                            if (apLeft <= move) apTime = -1;
+                            if (ivLeft <= move) ivTime = -1;
+                            if (heroismLeft <= move) heroismTime = -1;
+                            if (dpLeft <= move) destructionTime = -1;
+                            if (fcLeft <= move) flameCapTime = -1;
+                            if (t1Left <= move) trinket1time = -1;
+                            if (t2Left <= move) trinket2time = -1;
+                            if (combustionLeft <= move) combustionTime = -1;
+                            if (drumsLeft <= move) drumsTime = -1;
+                        }
+                    } while (!effectApplied && lastSequenceValid && time < fight);
+                }
+                double rem = 0;
+                for (int i = 0; i <= 5; i++) rem += Math.Max(0, remainingBase[i]);
+                for (int i = 0; i < N; i++) rem += Math.Max(0, remaining[i]);
+                if (rem > 0)
+                {
+                    timing.AppendLine();
+                    timing.AppendLine(string.Format("Divergence: {0:F} sec", rem));
+                }
+                if (rem < bestUnderused)
+                {
+                    bestUnderused = rem;
+                    bestTiming = timing.ToString();
+                }
+                if (bestUnderused == 0) break;
+                if (timeLimitReached) lastSequenceValid = false;
+            } while (true);
+            
+            return bestTiming;
+        }
+
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -539,6 +1069,7 @@ namespace Rawr.Mage
             dictValues.Add("Total Damage", String.Format("{0:F}", OverallPoints * FightDuration));
             dictValues.Add("Dps", String.Format("{0:F}", OverallPoints));
             dictValues.Add("Tps", String.Format("{0:F}", Tps));
+            //dictValues.Add("Sequence", ReconstructSequence());
             StringBuilder sb = new StringBuilder("*");
             if (MageArmor != null) sb.AppendLine(MageArmor);
             for (int i = 0; i < SolutionLabel.Count; i++)

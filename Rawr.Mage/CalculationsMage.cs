@@ -56,6 +56,7 @@ namespace Rawr.Mage
                     "Solution:Dps",
                     "Solution:Tps*Threat per second",
                     "Solution:Spell Cycles",
+                    //"Solution:Sequence*Cycle sequence that best matches optimum spell cycles",
                     "Spell Info:Wand",
                     "Spell Info:Arcane Missiles",
                     "Spell Info:Arcane Blast*Spammed",
@@ -350,6 +351,8 @@ namespace Rawr.Mage
             // compute stats for temporary bonuses, each gives a list of spells used for final LP, solutions of LP stored in calculatedStats
             List<CharacterCalculationsMage> statsList = new List<CharacterCalculationsMage>();
 
+            CharacterCalculationsMage calculatedStats = null;
+
             int incrementalSetIndex = 0;
             for (int mf = 0; mf < 2; mf++)
             for (int heroism = 0; heroism < 2; heroism++)
@@ -369,12 +372,17 @@ namespace Rawr.Mage
                                 if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
                                 {
                                     statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, armor, character, additionalItem, ap == 0, mf == 0, iv == 0, heroism == 0, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0, drums == 0, incrementalSetIndex));
+                                    if (ap != 0 && mf != 0 && iv != 0 && heroism != 0 && destructionPotion != 0 && flameCap != 0 && trinket1 != 0 && trinket2 != 0 && combustion != 0 && drums != 0)
+                                    {
+                                        calculatedStats = statsList[statsList.Count - 1];
+                                    }
                                 }
                             }
                 }
                 incrementalSetIndex++;
             }
-            CharacterCalculationsMage calculatedStats = statsList[statsList.Count - 1];
+            if (calculatedStats == null) calculatedStats = GetTemporaryCharacterCalculations(characterStats, calculationOptions, armor, character, additionalItem, false, false, false, false, false, false, false, false, false, false, incrementalSetIndex - 1);
+
             calculatedStats.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
             calculatedStats.MageArmor = armor;
 
@@ -451,6 +459,8 @@ namespace Rawr.Mage
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
             CompactLP lp = new CompactLP(lpRows, lpCols);
             double[] tps = new double[lpCols];
+            //calculatedStats.SolutionStats = new CharacterCalculationsMage[lpCols];
+            //calculatedStats.SolutionSpells = new Spell[lpCols];
 
             int[] incrementalSetCooldown = null;
             string[] incrementalSetSpell = null;
@@ -502,6 +512,11 @@ namespace Rawr.Mage
                 }
                 t2length = (1 + (int)((calculatedStats.FightDuration - trinket2duration) / trinket2cooldown)) * trinket2duration;
             }
+
+            calculatedStats.Trinket1Duration = trinket1duration;
+            calculatedStats.Trinket1Cooldown = trinket1cooldown;
+            calculatedStats.Trinket2Duration = trinket2duration;
+            calculatedStats.Trinket2Cooldown = trinket2cooldown;
 
             combustionCount = combustionAvailable ? (1 + (int)((calculatedStats.FightDuration - 15f) / 195f)) : 0;
 
@@ -696,6 +711,7 @@ namespace Rawr.Mage
                 Stats evocationStats = GetCharacterStats(character, additionalItem, evocationRawStats, calculationOptions);
                 if (evocationStats.Mana > evocationMana) evocationMana = evocationStats.Mana;
             }
+            calculatedStats.EvocationRegen = calculatedStats.ManaRegen5SR + 0.15f * evocationMana / 2f;
             lp[0, 2] = -calculatedStats.ManaRegen5SR - 0.15f * evocationMana / 2f;
             lp[1, 2] = 1;
             lp[2, 2] = 1;
@@ -737,6 +753,8 @@ namespace Rawr.Mage
                         Spell s = statsList[buffset].GetSpell(spellList[spell]);
                         if ((s.AffectedByFlameCap || !statsList[buffset].FlameCap) && (!s.ABCycle || calculationOptions.ABCycles))
                         {
+                            //calculatedStats.SolutionStats[index] = statsList[buffset];
+                            //calculatedStats.SolutionSpells[index] = s;
                             calculatedStats.SolutionLabel.Add(((statsList[buffset].BuffLabel.Length > 0) ? (statsList[buffset].BuffLabel + "+") : "") + s.Name);
                             if (computeIncrementalSet)
                             {
