@@ -98,6 +98,10 @@ namespace Rawr
 		{
 			get { return Instance.CharacterDisplayCalculationLabels; }
 		}
+		public static string[] OptimizableCalculationLabels 
+		{
+			get { return Instance.OptimizableCalculationLabels; } 
+		}
 		public static string[] CustomChartNames
 		{
 			get { return Instance.CustomChartNames; }
@@ -290,6 +294,11 @@ namespace Rawr
 		/// which inherits from CharacterCalculationsBase</returns>
 		public abstract CharacterCalculationsBase CreateNewCharacterCalculations();
 
+		/// <summary>
+		/// An array of strings which define what calculations (in addition to the subpoint ratings)
+		/// will be available to the optimizer
+		/// </summary>
+		public virtual string[] OptimizableCalculationLabels { get { return new string[0]; } }
 
 		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character) { return GetCharacterCalculations(character, null); }
 		/// <summary>
@@ -429,7 +438,9 @@ namespace Rawr
 				}
 				ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
 				enchantCalc.Name = enchant.Name;
-				enchantCalc.Item = new Item();
+				enchantCalc.Item = new Item(enchant.Name, Item.ItemQuality.Common, Item.ItemType.None, 
+					-1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, Item.ItemSlot.None, null, false, enchant.Stats, new Sockets(), 0, 0, 0, 0, 0,
+					Item.ItemDamageType.Physical, 0, null);
 				enchantCalc.Item.Name = enchant.Name;
 				enchantCalc.Item.Stats = enchant.Stats;
 				enchantCalc.Equipped = isEquipped;
@@ -640,6 +651,8 @@ namespace Rawr
                 return _autoActivatedBuffs;
             }
         }
+
+		public virtual float GetOptimizableCalculationValue(string calculation) { return 0f; }
 	}
 
 	/// <summary>

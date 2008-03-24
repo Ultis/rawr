@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace Rawr
 {
@@ -29,6 +30,22 @@ namespace Rawr
 					calcs.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
 					_itemCalculations = calcs.ToArray();
 				}
+				if (_prerenderedGraph != null) _prerenderedGraph.Dispose();
+				_prerenderedGraph = null;
+				this.Invalidate();
+			}
+		}
+
+		private Character _character;
+		public Character Character
+		{
+			get
+			{
+				return _character;
+			}
+			set
+			{
+				_character = value;
 				if (_prerenderedGraph != null) _prerenderedGraph.Dispose();
 				_prerenderedGraph = null;
 				this.Invalidate();
@@ -121,7 +138,7 @@ namespace Rawr
 			{
 				if (_prerenderedGraph == null)
 				{
-					_prerenderedGraph = new Bitmap(Math.Max(1, this.Width), 20 + (ItemCalculations.Length * 36), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+					_prerenderedGraph = new Bitmap(Math.Max(1, this.Width), 40 + (ItemCalculations.Length * 36), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 					Graphics g = Graphics.FromImage(_prerenderedGraph);
 					g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 					g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
@@ -175,52 +192,45 @@ namespace Rawr
 							colorSubPointsB[i] = Color.FromArgb(baseColor.A / 2, baseColor);
 						}
 
-						//Brush brushMitigation = new SolidBrush(Color.FromArgb(128, 0, 0));
-						//Brush brushSurvival = new SolidBrush(Color.FromArgb(0, 0, 128));
-						//Color colorMitigationA = Color.FromArgb(128, 128, 0, 0);
-						//Color colorMitigationB = Color.FromArgb(128, 255, 0, 0);
-						//Color colorSurvivalA = Color.FromArgb(128, 0, 0, 128);
-						//Color colorSurvivalB = Color.FromArgb(128, 0, 0, 255);
-
-						#region TODO: Legend
+						#region Legend
 						Rectangle rectSubPoint;
 						System.Drawing.Drawing2D.LinearGradientBrush brushSubPointFill;
 						System.Drawing.Drawing2D.ColorBlend blendSubPoint;
-						//Rectangle rectMitigation = new Rectangle(2, 2, 44, 16);
-						//Rectangle rectSurvival = new Rectangle(46, 2, 44, 16);
 
-						//System.Drawing.Drawing2D.LinearGradientBrush brushMitigationFill = new System.Drawing.Drawing2D.LinearGradientBrush(
-						//    new Rectangle(rectMitigation.X, rectMitigation.Y, 88, 24), colorMitigationA, colorMitigationB,
-						//    67f + (20f * (1)));
-						//System.Drawing.Drawing2D.ColorBlend blendMitigation = new System.Drawing.Drawing2D.ColorBlend(3);
-						//blendMitigation.Colors = new Color[] { colorMitigationA, colorMitigationB, colorMitigationA };
-						//blendMitigation.Positions = new float[] { 0f, 0.5f, 1f };
-						//brushMitigationFill.InterpolationColors = blendMitigation;
-						//System.Drawing.Drawing2D.LinearGradientBrush brushSurvivalFill = new System.Drawing.Drawing2D.LinearGradientBrush(
-						//    new Rectangle(rectMitigation.X, rectMitigation.Y, 88, 24), colorSurvivalA, colorSurvivalB,
-						//    67f + (20f * (1)));
-						//System.Drawing.Drawing2D.ColorBlend blendSurvival = new System.Drawing.Drawing2D.ColorBlend(3);
-						//blendSurvival.Colors = new Color[] { colorSurvivalA, colorSurvivalB, colorSurvivalA };
-						//blendSurvival.Positions = new float[] { 0f, 0.5f, 1f };
-						//brushSurvivalFill.InterpolationColors = blendSurvival;
+						Font fontLegend = new Font(this.Font.FontFamily, 10f, GraphicsUnit.Pixel);
+						int legendX = 2;
+						for (int i = 0; i < subPointNames.Length; i++)
+						{
+							string subPointName = subPointNames[i];
+							int widthSubPoint = (int)Math.Ceiling(g.MeasureString(subPointName, fontLegend).Width + 2f);
+							rectSubPoint = new Rectangle(legendX, 2, widthSubPoint, 16);
+							blendSubPoint = new ColorBlend(3);
+							blendSubPoint.Colors = new Color[] { colorSubPointsA[i], colorSubPointsB[i], colorSubPointsA[i] };
+							blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
+							brushSubPointFill = new LinearGradientBrush(rectSubPoint, colorSubPointsA[i], colorSubPointsB[i], 67f);
+							brushSubPointFill.InterpolationColors = blendSubPoint;
 
-						//g.FillRectangle(brushMitigationFill, rectMitigation);
-						//g.FillRectangle(brushSurvivalFill, rectSurvival);
+							g.FillRectangle(brushSubPointFill, rectSubPoint);
+							g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+							g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+							g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
 
-						//g.DrawRectangle(new Pen(brushMitigationFill), rectMitigation);
-						//g.DrawRectangle(new Pen(brushSurvivalFill), rectSurvival);
-						//g.DrawRectangle(new Pen(brushMitigationFill), rectMitigation);
-						//g.DrawRectangle(new Pen(brushSurvivalFill), rectSurvival);
-						//g.DrawRectangle(new Pen(brushMitigationFill), rectMitigation);
-						//g.DrawRectangle(new Pen(brushSurvivalFill), rectSurvival);
+							g.DrawString(subPointName, fontLegend, brushSubPoints[i], rectSubPoint, formatSubPoint);
+							legendX += widthSubPoint;
+						}
 
-						//g.DrawString("Mitigation", new Font(this.Font.FontFamily, 6.0f), brushMitigation, rectMitigation, formatMitigationSurvival);
-						//g.DrawString("Survival", new Font(this.Font.FontFamily, 6.0f), brushSurvival, rectSurvival, formatMitigationSurvival);
+						legendX += 16;
+						Bitmap bmpDiamond = Rawr.Properties.Resources.Diamond;
+						Bitmap bmpDiamondOutline = Rawr.Properties.Resources.DiamondOutline;
+
+						g.DrawImageUnscaled(bmpDiamond, legendX, 2);
+						g.DrawString("=", this.Font, new SolidBrush(this.ForeColor), legendX + 12, 3);
+						g.DrawString("Available for Optimizer", this.Font, new SolidBrush(this.ForeColor), legendX + 24, 4);
 						#endregion
 
 						#region Graph Ticks
-						float graphStart = 110f;
-						float graphWidth = this.Width - 150f;
+						float graphStart = 120f;
+						float graphWidth = this.Width - 160f;
 						float graphEnd = graphStart + graphWidth;
 						float[] ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
 							(float)Math.Round(graphStart + graphWidth * 0.75f),
@@ -243,40 +253,40 @@ namespace Rawr
 						Brush black50brush = new SolidBrush(Color.FromArgb(50, 0, 0, 0));
 						Brush black25brush = new SolidBrush(Color.FromArgb(25, 0, 0, 0));
 
-						g.DrawLine(black200, graphStart - 4, 20, graphEnd + 4, 20);
-						g.DrawLine(black200, graphStart, 16, graphStart, _prerenderedGraph.Height - 4);
-						g.DrawLine(black200, graphEnd, 16, graphEnd, 19);
-						g.DrawLine(black200, ticks[0], 16, ticks[0], 19);
-						g.DrawLine(black150, ticks[1], 16, ticks[1], 19);
-						g.DrawLine(black150, ticks[2], 16, ticks[2], 19);
-						g.DrawLine(black75, ticks[3], 16, ticks[3], 19);
-						g.DrawLine(black75, ticks[4], 16, ticks[4], 19);
-						g.DrawLine(black75, ticks[5], 16, ticks[5], 19);
-						g.DrawLine(black75, ticks[6], 16, ticks[6], 19);
-						g.DrawLine(black75, graphEnd, 21, graphEnd, _prerenderedGraph.Height - 4);
-						g.DrawLine(black75, ticks[0], 21, ticks[0], _prerenderedGraph.Height - 4);
-						g.DrawLine(black50, ticks[1], 21, ticks[1], _prerenderedGraph.Height - 4);
-						g.DrawLine(black50, ticks[2], 21, ticks[2], _prerenderedGraph.Height - 4);
-						g.DrawLine(black25, ticks[3], 21, ticks[3], _prerenderedGraph.Height - 4);
-						g.DrawLine(black25, ticks[4], 21, ticks[4], _prerenderedGraph.Height - 4);
-						g.DrawLine(black25, ticks[5], 21, ticks[5], _prerenderedGraph.Height - 4);
-						g.DrawLine(black25, ticks[6], 21, ticks[6], _prerenderedGraph.Height - 4);
+						g.DrawLine(black200, graphStart - 4, 40, graphEnd + 4, 40);
+						g.DrawLine(black200, graphStart, 36, graphStart, _prerenderedGraph.Height - 4);
+						g.DrawLine(black200, graphEnd, 36, graphEnd, 39);
+						g.DrawLine(black200, ticks[0], 36, ticks[0], 39);
+						g.DrawLine(black150, ticks[1], 36, ticks[1], 39);
+						g.DrawLine(black150, ticks[2], 36, ticks[2], 39);
+						g.DrawLine(black75, ticks[3], 36, ticks[3], 39);
+						g.DrawLine(black75, ticks[4], 36, ticks[4], 39);
+						g.DrawLine(black75, ticks[5], 36, ticks[5], 39);
+						g.DrawLine(black75, ticks[6], 36, ticks[6], 39);
+						g.DrawLine(black75, graphEnd, 41, graphEnd, _prerenderedGraph.Height - 4);
+						g.DrawLine(black75, ticks[0], 41, ticks[0], _prerenderedGraph.Height - 4);
+						g.DrawLine(black50, ticks[1], 41, ticks[1], _prerenderedGraph.Height - 4);
+						g.DrawLine(black50, ticks[2], 41, ticks[2], _prerenderedGraph.Height - 4);
+						g.DrawLine(black25, ticks[3], 41, ticks[3], _prerenderedGraph.Height - 4);
+						g.DrawLine(black25, ticks[4], 41, ticks[4], _prerenderedGraph.Height - 4);
+						g.DrawLine(black25, ticks[5], 41, ticks[5], _prerenderedGraph.Height - 4);
+						g.DrawLine(black25, ticks[6], 41, ticks[6], _prerenderedGraph.Height - 4);
 
-						g.DrawString((0f).ToString(), this.Font, black200brush, graphStart, 16, formatTick);
-						g.DrawString((maxScale).ToString(), this.Font, black200brush, graphEnd, 16, formatTick);
-						g.DrawString((maxScale * 0.5f).ToString(), this.Font, black200brush, ticks[0], 16, formatTick);
-						g.DrawString((maxScale * 0.75f).ToString(), this.Font, black150brush, ticks[1], 16, formatTick);
-						g.DrawString((maxScale * 0.25f).ToString(), this.Font, black150brush, ticks[2], 16, formatTick);
-						g.DrawString((maxScale * 0.125f).ToString(), this.Font, black75brush, ticks[3], 16, formatTick);
-						g.DrawString((maxScale * 0.375f).ToString(), this.Font, black75brush, ticks[4], 16, formatTick);
-						g.DrawString((maxScale * 0.625f).ToString(), this.Font, black75brush, ticks[5], 16, formatTick);
-						g.DrawString((maxScale * 0.875f).ToString(), this.Font, black75brush, ticks[6], 16, formatTick);
+						g.DrawString((0f).ToString(), this.Font, black200brush, graphStart, 36, formatTick);
+						g.DrawString((maxScale).ToString(), this.Font, black200brush, graphEnd, 36, formatTick);
+						g.DrawString((maxScale * 0.5f).ToString(), this.Font, black200brush, ticks[0], 36, formatTick);
+						g.DrawString((maxScale * 0.75f).ToString(), this.Font, black150brush, ticks[1], 36, formatTick);
+						g.DrawString((maxScale * 0.25f).ToString(), this.Font, black150brush, ticks[2], 36, formatTick);
+						g.DrawString((maxScale * 0.125f).ToString(), this.Font, black75brush, ticks[3], 36, formatTick);
+						g.DrawString((maxScale * 0.375f).ToString(), this.Font, black75brush, ticks[4], 36, formatTick);
+						g.DrawString((maxScale * 0.625f).ToString(), this.Font, black75brush, ticks[5], 36, formatTick);
+						g.DrawString((maxScale * 0.875f).ToString(), this.Font, black75brush, ticks[6], 36, formatTick);
 						#endregion
 
 						for (int i = 0; i < ItemCalculations.Length; i++)
 						{
 							ComparisonCalculationBase item = ItemCalculations[i];
-							Rectangle rectItemName = new Rectangle(0, 24 + i * 36, (int)(graphStart - 4), 36);
+							Rectangle rectItemName = new Rectangle(10, 44 + i * 36, (int)(graphStart - 14), 36);
 							Color bgColor = Color.Empty;
 							if (item.Equipped)
 							{
@@ -316,6 +326,13 @@ namespace Rawr
 								g.FillRectangle(new SolidBrush(bgColor), rectBackground);
 								g.DrawRectangle(new Pen(bgColor), rectBackground);
 							}
+							if (item.Item != null && item.Item.Id != 0)
+							{
+								if (Character.AvailableItems.Contains(item.Item.Id))
+									g.DrawImageUnscaled(bmpDiamond, 0, 55 + (i * 36));
+								else
+									g.DrawImageUnscaled(bmpDiamondOutline, 0, 55 + (i * 36));
+							}
 
 							g.DrawString(item.Name, this.Font, brushItemNames, rectItemName, formatItemNames);
 
@@ -331,7 +348,7 @@ namespace Rawr
 									int barWidth = (int)Math.Round((subPoint / item.OverallPoints) * overallWidth);
 									if (float.IsPositiveInfinity(subPoint)) barWidth = overallWidth;
 
-									rectSubPoint = new Rectangle((int)graphStart + 1 + barStart, 30 + i * 36, barWidth, 24);
+									rectSubPoint = new Rectangle((int)graphStart + 1 + barStart, 50 + i * 36, barWidth, 24);
 									barStart += barWidth;
 
 									brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(
@@ -352,43 +369,8 @@ namespace Rawr
 								
 								}
 
-								//int mitsurvWidth = (int)Math.Round((item.MitigationPoints / (item.MitigationPoints + item.SurvivalPoints)) * overallWidth);
-								//if (float.IsPositiveInfinity(item.MitigationPoints)) mitsurvWidth = overallWidth;							
-
-								//rectMitigation = new Rectangle((int)graphStart + 1, 30 + i * 36, mitsurvWidth, 24);
-								//rectSurvival = new Rectangle((int)graphStart + mitsurvWidth + 1, 30 + i * 36, overallWidth - mitsurvWidth, 24);
-
-								//brushMitigationFill = new System.Drawing.Drawing2D.LinearGradientBrush(
-								//    new Rectangle(rectMitigation.X, rectMitigation.Y, overallWidth, 24), colorMitigationA, colorMitigationB,
-								//    67f + (20f * (float.IsPositiveInfinity(item.OverallPoints) ? 1f : (item.OverallPoints / maxScale))));
-								//blendMitigation = new System.Drawing.Drawing2D.ColorBlend(3);
-								//blendMitigation.Colors = new Color[] { colorMitigationA, colorMitigationB, colorMitigationA };
-								//blendMitigation.Positions = new float[] { 0f, 0.5f, 1f };
-								//brushMitigationFill.InterpolationColors = blendMitigation;
-								//brushSurvivalFill = new System.Drawing.Drawing2D.LinearGradientBrush(
-								//    new Rectangle(rectMitigation.X, rectMitigation.Y, overallWidth, 24), colorSurvivalA, colorSurvivalB,
-								//    67f + (20f * (item.OverallPoints / maxScale)));
-								//blendSurvival = new System.Drawing.Drawing2D.ColorBlend(3);
-								//blendSurvival.Colors = new Color[] { colorSurvivalA, colorSurvivalB, colorSurvivalA };
-								//blendSurvival.Positions = new float[] { 0f, 0.5f, 1f };
-								//brushSurvivalFill.InterpolationColors = blendSurvival;
-
-								//g.FillRectangle(brushMitigationFill, rectMitigation);
-								//g.FillRectangle(brushSurvivalFill, rectSurvival);
-
-								//g.DrawRectangle(new Pen(brushMitigationFill), rectMitigation);
-								//g.DrawRectangle(new Pen(brushSurvivalFill), rectSurvival);
-								//g.DrawRectangle(new Pen(brushMitigationFill), rectMitigation);
-								//g.DrawRectangle(new Pen(brushSurvivalFill), rectSurvival);
-								//g.DrawRectangle(new Pen(brushMitigationFill), rectMitigation);
-								//g.DrawRectangle(new Pen(brushSurvivalFill), rectSurvival);
-
-								//if (RoundValues && item.MitigationPoints > 0) g.DrawString(Math.Round(item.MitigationPoints).ToString(), 
-								//	this.Font, brushMitigation, rectMitigation, formatSubPoint);
-								//if (RoundValues && item.SurvivalPoints > 0) g.DrawString(Math.Round(item.SurvivalPoints).ToString(),
-								//	this.Font, brushSurvival, rectSurvival, formatSubPoint);
 								if (item.OverallPoints > 0) g.DrawString(RoundValues ? item.OverallPoints.ToString("F") :
-									item.OverallPoints.ToString(), this.Font, brushOverall, new Rectangle((int)graphStart + barStart + 2, 30 + i * 36, 50, 24), formatOverall);
+									item.OverallPoints.ToString(), this.Font, brushOverall, new Rectangle((int)graphStart + barStart + 2, 50 + i * 36, 50, 24), formatOverall);
 							}
 						}
 					}
@@ -416,6 +398,7 @@ namespace Rawr
 		{
 			int scrollValue = -1;
 			if (_scrollBar != null) scrollValue = _scrollBar.Value;
+			if (_prerenderedGraph != null) _prerenderedGraph.Dispose();
 			_prerenderedGraph = null;
 			this.Invalidate();
 			PrerenderedGraph.ToString(); //render it, so we can scroll back to the previous spot
@@ -440,12 +423,33 @@ namespace Rawr
 		{
 			//if (e.Button == MouseButtons.Right)
 			//{
-				if (e.X <= 96)
+				if (e.X <= 106)
 				{
-					int itemIndex = (int)Math.Floor(((float)(e.Y - 24f + _scrollBar.Value)) / 36f);
+					int itemIndex = (int)Math.Floor(((float)(e.Y - 44f + _scrollBar.Value)) / 36f);
 					if (itemIndex >= 0 && itemIndex < ItemCalculations.Length && ItemCalculations[itemIndex].Item != null && ItemCalculations[itemIndex].Item.Id != 0)
 					{
-						ItemContextualMenu.Instance.Show(ItemCalculations[itemIndex].Item, EquipSlot, true);
+						Item item = ItemCalculations[itemIndex].Item;
+						if (e.X < 10)
+						{
+							if (item != null && item.Id != 0)
+							{
+								if (Character.AvailableItems.Contains(item.Id))
+									Character.AvailableItems.Remove(item.Id);
+								else
+									Character.AvailableItems.Add(item.Id);
+								Character.OnAvailableItemsChanged();
+
+								int scrollValue = -1;
+								if (_scrollBar != null) scrollValue = _scrollBar.Value;
+								if (_prerenderedGraph != null) _prerenderedGraph.Dispose();
+								_prerenderedGraph = null;
+								this.Invalidate();
+								PrerenderedGraph.ToString(); //render it, so we can scroll back to the previous spot
+								if (scrollValue > 0) _scrollBar.Value = scrollValue;
+							}
+						}
+						else if (item.Id > 0)
+							ItemContextualMenu.Instance.Show(ItemCalculations[itemIndex].Item, EquipSlot, true);
 					}
 				}
 			//}
@@ -453,36 +457,37 @@ namespace Rawr
 
 		private void ComparisonGraph_MouseLeave(object sender, EventArgs e)
 		{
-			//ItemTooltip.Instance.HideTooltip();
 			HideTooltip();
 		}
 
 		private Point _lastPoint = Point.Empty;
-		//private Item _lastTooltipItem = null;
 		private void ComparisonGraph_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (e.Location != _lastPoint)
 			{
 				_lastPoint = e.Location;
-				if (e.X <= 108)
+				Cursor cursor = Cursors.Default;
+				if (e.X <= 118)
 				{
-					int itemIndex = (int)Math.Floor(((float)(e.Y - 24f + _scrollBar.Value)) / 36f);
+					int itemIndex = (int)Math.Floor(((float)(e.Y - 44f + _scrollBar.Value)) / 36f);
 					if (itemIndex >= 0 && itemIndex < ItemCalculations.Length)
 					{
-						if (ItemCalculations[itemIndex].Item != _tooltipItem)
+						Item item = ItemCalculations[itemIndex].Item;
+						if (e.X < 10 && item != null && item.Id != 0)
+							cursor = Cursors.Hand;
+
+						if (item != _tooltipItem)
 						{
-							int tipX = 108;
+							int tipX = 118;
 							if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 								tipX = -249;
 
-							ShowTooltip(ItemCalculations[itemIndex].Item, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
-							//ItemTooltip.Instance.SetItem(ItemCalculations[itemIndex].Item, GetTooltipLocation(new Point(96, 24 + (itemIndex * 36) - _scrollBar.Value)));
+							ShowTooltip(item, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
 						}
 					}
 					else
 					{
 						HideTooltip();
-						//ItemTooltip.Instance.HideTooltip();
 					}
 				}
 				else
@@ -490,6 +495,8 @@ namespace Rawr
 					HideTooltip();
 					//ItemTooltip.Instance.HideTooltip();
 				}
+				if (Cursor != cursor)
+					Cursor = cursor;
 			}
 		}
 

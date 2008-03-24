@@ -651,8 +651,9 @@ namespace Rawr.Retribution
                 Strength = stats.Strength,
                 Agility = stats.Agility,
                 AttackPower = stats.AttackPower,
-                HitRating = stats.HitRating,
-                CritRating = stats.CritRating,
+				HitRating = stats.HitRating,
+				CritRating = stats.CritRating,
+				LotPCritRating = stats.LotPCritRating,
                 HasteRating = stats.HasteRating,
                 ArmorPenetration = stats.ArmorPenetration,
                 ExpertiseRating = stats.ExpertiseRating,
@@ -684,6 +685,7 @@ namespace Rawr.Retribution
                 stats.HasteRating +
                 stats.HitRating +
                 stats.CritRating +
+                stats.LotPCritRating +
                 stats.BonusStrengthMultiplier +
                 stats.BonusPhysicalDamageMultiplier +
                 stats.BonusCritMultiplier +
@@ -693,7 +695,7 @@ namespace Rawr.Retribution
                 stats.ExposeWeakness +
                 stats.DrumsOfBattle +
                 stats.WeaponDamage) > 0)*/
-            ; 
+			; 
         }
 
         /// <summary>

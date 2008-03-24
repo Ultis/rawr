@@ -52,6 +52,9 @@ namespace Rawr
 		[System.ComponentModel.DefaultValueAttribute("")]
 		[System.Xml.Serialization.XmlElement("RequiredClasses")]
 		public string _requiredClasses;
+		[System.ComponentModel.DefaultValueAttribute(false)]
+		[System.Xml.Serialization.XmlElement("Unique")]
+		public bool _unique;
 		
 
 		[System.Xml.Serialization.XmlIgnore]
@@ -318,6 +321,18 @@ namespace Rawr
 				_requiredClasses = value;
 			}
 		}
+		[System.Xml.Serialization.XmlIgnore]
+		public bool Unique
+		{
+			get
+			{
+				return _unique;
+			}
+			set
+			{
+				_unique = value;
+			}
+		}
 		
 
 		private void OnIdsChanging()
@@ -477,7 +492,7 @@ namespace Rawr
         }
 
 		public Item() { }
-		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id, int minDamage, int maxDamage, ItemDamageType damageType, float speed, string requiredClasses)
+		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, bool unique, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id, int minDamage, int maxDamage, ItemDamageType damageType, float speed, string requiredClasses)
 		{
 			_name = name;
 			_id = id;
@@ -496,6 +511,7 @@ namespace Rawr
             _damageType = damageType;
 			_speed = speed;
 			_requiredClasses = requiredClasses;
+			_unique = unique;
 		}
 
 		public Item Clone()
@@ -733,7 +749,7 @@ namespace Rawr
 		{
 			if (string.IsNullOrEmpty(gemmedId))
 				return null;
-			Item cachedItem = ItemCache.FindItemById(gemmedId, false);
+			Item cachedItem = ItemCache.FindItemById(gemmedId, true);
 			if (cachedItem != null && !forceRefresh)
 				return cachedItem;
 			else

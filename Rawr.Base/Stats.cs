@@ -11,8 +11,9 @@ namespace Rawr
 	/// A Stats object represents a collection of stats on an object, such as an Item, Enchant, or Buff.
 	/// </summary>
     [Serializable]
-    public class Stats
+	public class Stats
 	{
+		private float[] _rawData = new float[107];
 		/// <summary>
 		/// The properties for each stat. In order to add additional stats for Rawr to track,
 		/// first add properties here, for each stat. Apply a Category attribute to assign it to
@@ -25,493 +26,499 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Category("Base Stats")]
-        public float Armor{get;set;}
+		public float Armor { get { return _rawData[0]; } set { _rawData[0] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        public float Health{get;set;}
+		public float Health { get { return _rawData[1]; } set { _rawData[1] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        public float Mana { get; set; }
+		public float Mana { get { return _rawData[2]; } set { _rawData[2] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        public float Agility{get;set;}
+        public float Agility { get { return _rawData[3]; } set { _rawData[3] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        public float Stamina { get; set; }
+        public float Stamina { get { return _rawData[4]; } set { _rawData[4] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        public float AttackPower { get; set; }
+        public float AttackPower { get { return _rawData[5]; } set { _rawData[5] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        public float Strength { get; set; }
+        public float Strength { get { return _rawData[6]; } set { _rawData[6] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        public float WeaponDamage { get; set; }
+        public float WeaponDamage { get { return _rawData[7]; } set { _rawData[7] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        public float ScopeDamage { get; set; }
+        public float ScopeDamage { get { return _rawData[8]; } set { _rawData[8] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         [DisplayName("Penetration")]
-        public float ArmorPenetration { get; set; }
+        public float ArmorPenetration { get { return _rawData[9]; } set { _rawData[9] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        public float Intellect { get; set; }
+        public float Intellect { get { return _rawData[10]; } set { _rawData[10] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        public float Spirit { get; set; }
+        public float Spirit { get { return _rawData[11]; } set { _rawData[11] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Frost Res")]
-        public float FrostResistance { get; set; }
+        public float FrostResistance { get { return _rawData[12]; } set { _rawData[12] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Nature Res")]
-        public float NatureResistance { get; set; }
+        public float NatureResistance { get { return _rawData[13]; } set { _rawData[13] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Fire Res")]
-        public float FireResistance { get; set; }
+        public float FireResistance { get { return _rawData[14]; } set { _rawData[14] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Shadow Res")]
-        public float ShadowResistance { get; set; }
+        public float ShadowResistance { get { return _rawData[15]; } set { _rawData[15] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Arcane Res")]
-        public float ArcaneResistance { get; set; }
+        public float ArcaneResistance { get { return _rawData[16]; } set { _rawData[16] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Resist")]
-        public float AllResist { get; set; }
+        public float AllResist { get { return _rawData[17]; } set { _rawData[17] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Crit")]
-        public float SpellCritRating { get; set; }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float MageSpellCrit { get; set; }
+        public float SpellCritRating { get { return _rawData[18]; } set { _rawData[18] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Frost Crit")]
-        public float SpellFrostCritRating { get; set; }
+        public float SpellFrostCritRating { get { return _rawData[19]; } set { _rawData[19] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Damage")]
-        public float SpellDamageRating { get; set; }
+        public float SpellDamageRating { get { return _rawData[20]; } set { _rawData[20] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Shadow Damage")]
-        public float SpellShadowDamageRating { get; set; }
+        public float SpellShadowDamageRating { get { return _rawData[21]; } set { _rawData[21] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Fire Damage")]
-        public float SpellFireDamageRating { get; set; }
+        public float SpellFireDamageRating { get { return _rawData[22]; } set { _rawData[22] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Frost Damage")]
-        public float SpellFrostDamageRating { get; set; }
+        public float SpellFrostDamageRating { get { return _rawData[23]; } set { _rawData[23] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Arcane Damage")]
-        public float SpellArcaneDamageRating { get; set; }
+        public float SpellArcaneDamageRating { get { return _rawData[24]; } set { _rawData[24] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Nature Damage")]
-        public float SpellNatureDamageRating { get; set; }
+        public float SpellNatureDamageRating { get { return _rawData[25]; } set { _rawData[25] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Penetration")]
-        public float SpellPenetration { get; set; }
+        public float SpellPenetration { get { return _rawData[26]; } set { _rawData[26] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Hit")]
-        public float SpellHitRating { get; set; }
+        public float SpellHitRating { get { return _rawData[27]; } set { _rawData[27] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
-        public float Healing { get; set; }
+        public float Healing { get { return _rawData[28]; } set { _rawData[28] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Haste")]
-        public float SpellHasteRating { get; set; }
+        public float SpellHasteRating { get { return _rawData[29]; } set { _rawData[29] = value; } }
 
         // percentage mana generation while casting
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Combat Mana Regeneration")]
-        public float SpellCombatManaRegeneration { get; set; }
+        public float SpellCombatManaRegeneration { get { return _rawData[30]; } set { _rawData[30] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Crit")]
-        public float CritRating { get; set; }
+        public float CritRating { get { return _rawData[31]; } set { _rawData[31] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Hit")]
-        public float HitRating { get; set; }
+        public float HitRating { get { return _rawData[32]; } set { _rawData[32] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Dodge")]
-        public float DodgeRating { get; set; }
+        public float DodgeRating { get { return _rawData[33]; } set { _rawData[33] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Parry")]
-        public float ParryRating { get; set; }
+        public float ParryRating { get { return _rawData[34]; } set { _rawData[34] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Block")]
-        public float BlockRating { get; set; }
+        public float BlockRating { get { return _rawData[35]; } set { _rawData[35] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Block Value")]
-        public float BlockValue { get; set; }
+        public float BlockValue { get { return _rawData[36]; } set { _rawData[36] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Defense")]
-        public float DefenseRating { get; set; }
+        public float DefenseRating { get { return _rawData[37]; } set { _rawData[37] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        public float Resilience{get;set;}
+        public float Resilience { get { return _rawData[38]; } set { _rawData[38] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Expertise")]
-        public float ExpertiseRating { get; set; }
+        public float ExpertiseRating { get { return _rawData[39]; } set { _rawData[39] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Haste")]
-        public float HasteRating { get; set; }
+        public float HasteRating { get { return _rawData[40]; } set { _rawData[40] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Mana per 5 sec")]
-        public float Mp5 { get; set; }
+        public float Mp5 { get { return _rawData[41]; } set { _rawData[41] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Health per 5 sec")]
-        public float Hp5 { get; set; }
+        public float Hp5 { get { return _rawData[42]; } set { _rawData[42] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Equipment Procs")]
-        public float BloodlustProc { get; set; }
+        public float BloodlustProc { get { return _rawData[43]; } set { _rawData[43] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Equipment Procs")]
-        public float TerrorProc { get; set; }
+        public float TerrorProc { get { return _rawData[44]; } set { _rawData[44] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
 		[DisplayName("% Miss")]
-        public float Miss { get; set; }
+        public float Miss { get { return _rawData[45]; } set { _rawData[45] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float BonusShredDamage{get;set;}
+        public float BonusShredDamage { get { return _rawData[46]; } set { _rawData[46] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-		public float BonusMangleDamage { get; set; }
+		public float BonusMangleDamage { get { return _rawData[47]; } set { _rawData[47] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
 		[DisplayName("Bonus Rip Damage Per Combo Point Per Tick")]
-		public float BonusRipDamagePerCPPerTick { get; set; }
+		public float BonusRipDamagePerCPPerTick { get { return _rawData[48]; } set { _rawData[48] = value; } }
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Multiplicative]
+		[DisplayName("% CStrike Dmg")]
+		public float BonusCrusaderStrikeDamageMultiplier { get { return _rawData[49]; } set { _rawData[49] = value; } }
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[DisplayName("Windfury")]
+		public float WindfuryAPBonus { get { return _rawData[50]; } set { _rawData[50] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ManaRestorePerHit { get; set; }
+        public float ManaRestorePerHit { get { return _rawData[51]; } set { _rawData[51] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ManaRestorePerCast { get; set; }
+        public float ManaRestorePerCast { get { return _rawData[52]; } set { _rawData[52] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-		public float MangleCostReduction { get; set; }
+		public float MangleCostReduction { get { return _rawData[53]; } set { _rawData[53] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-		public float ExposeWeakness { get; set; }
+		public float ExposeWeakness { get { return _rawData[54]; } set { _rawData[54] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-		public float Bloodlust { get; set; }
+		public float Bloodlust { get { return _rawData[55]; } set { _rawData[55] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-		public float DrumsOfWar { get; set; }
+		public float DrumsOfWar { get { return _rawData[56]; } set { _rawData[56] = value; } }
 
         // threat dealt is damage * (1 + ThreatMultiplier)
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float ThreatMultiplier { get; set; }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-		public float DrumsOfBattle { get; set; }
+		public float DrumsOfBattle { get { return _rawData[57]; } set { _rawData[57] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ArcaneBlastBonus { get; set; }
+        public float ArcaneBlastBonus { get { return _rawData[58]; } set { _rawData[58] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float SpellDamageFromIntellectPercentage { get; set; }
+        public float SpellDamageFromIntellectPercentage { get { return _rawData[59]; } set { _rawData[59] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float SpellDamageFromSpiritPercentage { get; set; }
+        public float SpellDamageFromSpiritPercentage { get { return _rawData[60]; } set { _rawData[60] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage Increase for 6 sec on Crit")]
-        public float SpellDamageFor6SecOnCrit { get; set; }
+        public float SpellDamageFor6SecOnCrit { get { return _rawData[61]; } set { _rawData[61] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (50% 5 sec/Crit)")]
         [Category("Equipment Procs")]
-        public float SpellHasteFor5SecOnCrit_50 { get; set; }
+        public float SpellHasteFor5SecOnCrit_50 { get { return _rawData[62]; } set { _rawData[62] = value; } }
 
         // 15% change, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (15% 6 sec/Cast)")]
         [Category("Equipment Procs")]
-        public float SpellHasteFor6SecOnCast_15_45 { get; set; }
+        public float SpellHasteFor6SecOnCast_15_45 { get { return _rawData[63]; } set { _rawData[63] = value; } }
 
         // 10% change, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (10% 6 sec/Hit)")]
         [Category("Equipment Procs")]
-        public float SpellHasteFor6SecOnHit_10_45 { get; set; }
+        public float SpellHasteFor6SecOnHit_10_45 { get { return _rawData[64]; } set { _rawData[64] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (10 sec/Resist)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor10SecOnResist { get; set; }
+        public float SpellDamageFor10SecOnResist { get { return _rawData[65]; } set { _rawData[65] = value; } }
 
         // trinket effect, does not sum up over gear, 2 trinkets with this effect is not equivalent to 1 trinket with double effect
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (20 sec/2 min)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor20SecOnUse2Min { get; set; }
+        public float SpellDamageFor20SecOnUse2Min { get { return _rawData[66]; } set { _rawData[66] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (15 sec/1.5 min)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor15SecOnUse90Sec { get; set; }
+        public float SpellDamageFor15SecOnUse90Sec { get { return _rawData[67]; } set { _rawData[67] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (20 sec/2 min)")]
         [Category("Equipment Procs")]
-        public float SpellHasteFor20SecOnUse2Min { get; set; }
+        public float SpellHasteFor20SecOnUse2Min { get { return _rawData[68]; } set { _rawData[68] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Mp5 on Cast (20 sec/2 min)")]
         [Category("Equipment Procs")]
-        public float Mp5OnCastFor20SecOnUse2Min { get; set; }
+        public float Mp5OnCastFor20SecOnUse2Min { get { return _rawData[69]; } set { _rawData[69] = value; } }
 
         // 5% chance, no cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (10 sec)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor10SecOnHit_5 { get; set; }
+        public float SpellDamageFor10SecOnHit_5 { get { return _rawData[70]; } set { _rawData[70] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Equipment Procs")]
-        public float BonusManaGem { get; set; }
+        public float BonusManaGem { get { return _rawData[71]; } set { _rawData[71] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Equipment Procs")]
-        public float BonusManaPotion { get; set; }
+        public float BonusManaPotion { get { return _rawData[72]; } set { _rawData[72] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (15 sec/Gem)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor15SecOnManaGem { get; set; }
+        public float SpellDamageFor15SecOnManaGem { get { return _rawData[73]; } set { _rawData[73] = value; } }
 
         // 10% chance, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (10 sec)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor10SecOnHit_10_45 { get; set; }
+        public float SpellDamageFor10SecOnHit_10_45 { get { return _rawData[74]; } set { _rawData[74] = value; } }
 
         // 20% chance, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (15 sec)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor15SecOnCrit_20_45 { get; set; }
+        public float SpellDamageFor15SecOnCrit_20_45 { get { return _rawData[75]; } set { _rawData[75] = value; } }
 
         // 20% chance, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (10 sec)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor10SecOnCrit_20_45 { get; set; }
+        public float SpellDamageFor10SecOnCrit_20_45 { get { return _rawData[76]; } set { _rawData[76] = value; } }
 
         // Starfire idol
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Starfire damage bonus")]
         [Category("Equipment Procs")]
-        public float StarfireDmg { get; set; }
+        public float StarfireDmg { get { return _rawData[77]; } set { _rawData[77] = value; } }
 
         // Moonfire idol
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Moonfire damage bonus")]
         [Category("Equipment Procs")]
-        public float MoonfireDmg { get; set; }
+        public float MoonfireDmg { get { return _rawData[78]; } set { _rawData[78] = value; } }
 
         // Wrath idol
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Wrath damage bonus")]
         [Category("Equipment Procs")]
-        public float WrathDmg { get; set; }
+        public float WrathDmg { get { return _rawData[79]; } set { _rawData[79] = value; } }
 
         // Moonkin Aura idol
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell critical bonus")]
         [Category("Equipment Procs")]
-        public float IdolCritRating { get; set; }
+        public float IdolCritRating { get { return _rawData[80]; } set { _rawData[80] = value; } }
 
         // Moonkin 4-piece T4 bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float InnervateCooldownReduction { get; set; }
+        public float InnervateCooldownReduction { get { return _rawData[81]; } set { _rawData[81] = value; } }
 
         // Moonkin 4-piece T5 bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float StarfireBonusWithDot { get; set; }
+        public float StarfireBonusWithDot { get { return _rawData[82]; } set { _rawData[82] = value; } }
 
         // Moonkin 2-piece T6 bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float MoonfireExtension { get; set; }
+        public float MoonfireExtension { get { return _rawData[83]; } set { _rawData[83] = value; } }
         // Moonkin 4-piece T6 bonus
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float StarfireCritChance { get; set; }
+        public float StarfireCritChance { get { return _rawData[84]; } set { _rawData[84] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float EvocationExtension { get; set; }
+        public float EvocationExtension { get { return _rawData[85]; } set { _rawData[85] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Equipment Procs")]
-        public int LightningCapacitorProc { get; set; }
+        public float LightningCapacitorProc { get { return _rawData[86]; } set { _rawData[86] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
-        public float BonusMageNukeMultiplier { get; set; }
+        public float BonusMageNukeMultiplier { get { return _rawData[87]; } set { _rawData[87] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% Agility")]
-        public float BonusAgilityMultiplier { get; set; }
+        public float BonusAgilityMultiplier { get { return _rawData[88]; } set { _rawData[88] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% Strength")]
-        public float BonusStrengthMultiplier { get; set; }
+        public float BonusStrengthMultiplier { get { return _rawData[89]; } set { _rawData[89] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% Stamina")]
-        public float BonusStaminaMultiplier { get; set; }
+        public float BonusStaminaMultiplier { get { return _rawData[90]; } set { _rawData[90] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Int")]
-        public float BonusIntellectMultiplier { get; set; }
+        public float BonusIntellectMultiplier { get { return _rawData[91]; } set { _rawData[91] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% Armor")]
-        public float BonusArmorMultiplier { get; set; }
+        public float BonusArmorMultiplier { get { return _rawData[92]; } set { _rawData[92] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% AP")]
-        public float BonusAttackPowerMultiplier { get; set; }
+        public float BonusAttackPowerMultiplier { get { return _rawData[93]; } set { _rawData[93] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% SP")]
-        public float BonusSpellPowerMultiplier { get; set; }
+        public float BonusSpellPowerMultiplier { get { return _rawData[94]; } set { _rawData[94] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Fire Damage")]
-        public float BonusFireSpellPowerMultiplier { get; set; }
+        public float BonusFireSpellPowerMultiplier { get { return _rawData[95]; } set { _rawData[95] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Shadow Damage")]
-        public float BonusShadowSpellPowerMultiplier { get; set; }
+        public float BonusShadowSpellPowerMultiplier { get { return _rawData[96]; } set { _rawData[96] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Arcane Damage")]
-        public float BonusArcaneSpellPowerMultiplier { get; set; }
+        public float BonusArcaneSpellPowerMultiplier { get { return _rawData[97]; } set { _rawData[97] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Nature Damage")]
-        public float BonusNatureSpellPowerMultiplier { get; set; }
+        public float BonusNatureSpellPowerMultiplier { get { return _rawData[98]; } set { _rawData[98] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Frost Damage")]
-        public float BonusFrostSpellPowerMultiplier { get; set; }
+        public float BonusFrostSpellPowerMultiplier { get { return _rawData[99]; } set { _rawData[99] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Spirit")]
-        public float BonusSpiritMultiplier { get; set; }
+        public float BonusSpiritMultiplier { get { return _rawData[100]; } set { _rawData[100] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Crit Dmg")]
-        public float BonusCritMultiplier { get; set; }
+        public float BonusCritMultiplier { get { return _rawData[101]; } set { _rawData[101] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Spell Crit Dmg")]
-        public float BonusSpellCritMultiplier { get; set; }
+        public float BonusSpellCritMultiplier { get { return _rawData[102]; } set { _rawData[102] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% Rip Dmg")]
-        public float BonusRipDamageMultiplier { get; set; }
+        public float BonusRipDamageMultiplier { get { return _rawData[103]; } set { _rawData[103] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Physical Dmg")]
-        public float BonusPhysicalDamageMultiplier { get; set; }
+        public float BonusPhysicalDamageMultiplier { get { return _rawData[104]; } set { _rawData[104] = value; } }
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Category("Combat Ratings")]
+		[DisplayName("LotP Crit")]
+		public float LotPCritRating { get { return _rawData[105]; } set { _rawData[105] = value; } }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
-        [DisplayName("% CStrike Dmg")]
-        public float BonusCrusaderStrikeDamageMultiplier { get; set; }
+        public float MageSpellCrit { get { return _rawData[106]; } set { _rawData[106] = value; } }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Windfury")]
-        public float WindfuryAPBonus { get; set; }
 
 		#endregion
 
@@ -549,6 +556,7 @@ namespace Rawr
 				ArcaneResistance = a.ArcaneResistance + b.ArcaneResistance,
 				AllResist = a.AllResist + b.AllResist,
 				CritRating = a.CritRating + b.CritRating,
+				LotPCritRating = a.LotPCritRating + b.LotPCritRating,
 				HitRating = a.HitRating + b.HitRating,
 				DodgeRating = a.DodgeRating + b.DodgeRating,
 				ParryRating = a.ParryRating + b.ParryRating,
@@ -632,7 +640,54 @@ namespace Rawr
 			};
 		}
 
-        
+		public bool Equals(Stats other)
+		{
+			return this == other;
+		}
+		public ArrayUtils.CompareResult CompareTo(Stats other)
+		{
+			if (ReferenceEquals(other, null)) return 0;
+			return ArrayUtils.AllCompare(this._rawData, other._rawData);
+		}
+		//int IComparable.CompareTo(object other)
+		//{
+		//    return CompareTo(other as Stats);
+		//}
+		public override bool Equals(object obj)
+		{
+			return this == (obj as Stats);
+		}
+		public static bool operator ==(Stats x, Stats y)
+		{
+			if (ReferenceEquals(x, y) || (ReferenceEquals(x, null) && ReferenceEquals(y, null))) return true;
+			if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
+			return ArrayUtils.AllEqual(x._rawData, y._rawData);
+		}
+		public static bool operator !=(Stats x, Stats y)
+		{
+			return !(x == y);
+		}
+		public static bool operator >(Stats x, Stats y)
+		{
+			return AllCompare(x, y, ArrayUtils.CompareOption.GreaterThan);
+		}
+		public static bool operator >=(Stats x, Stats y)
+		{
+			return AllCompare(x, y, ArrayUtils.CompareOption.GreaterThan | ArrayUtils.CompareOption.Equal);
+		}
+		public static bool operator <(Stats x, Stats y)
+		{
+			return AllCompare(x, y, ArrayUtils.CompareOption.LessThan);
+		}
+		public static bool operator <=(Stats x, Stats y)
+		{
+			return AllCompare(x, y, ArrayUtils.CompareOption.LessThan | ArrayUtils.CompareOption.Equal);
+		}
+		private static bool AllCompare(Stats x, Stats y, ArrayUtils.CompareOption comparison)
+		{
+			if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) throw new ArgumentNullException();
+			return ArrayUtils.AllCompare(x._rawData, y._rawData, comparison);
+		}
 		
 		//with hands held high into the sky so blue
         public Stats() { }
@@ -740,7 +795,7 @@ namespace Rawr
             }
             return dict;
         }
-    }
+	}
 
 	public delegate bool StatFilter(float value);
 

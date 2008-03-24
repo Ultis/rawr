@@ -140,7 +140,7 @@ namespace Rawr
             comboBoxBonus2.Items.AddRange(Stats.StatNames);
 */
 
-			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 			this.FormClosing += new FormClosingEventHandler(FormItemEditor_FormClosing);
 		}
 
@@ -245,7 +245,7 @@ namespace Rawr
 				{
 					if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 					{
-						newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemType.None, id, "temp", Item.ItemSlot.Head, string.Empty, new Stats(), new Sockets(), 0, 0, 0, 0, 0, Item.ItemDamageType.Physical, 0f, string.Empty);
+						newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemType.None, id, "temp", Item.ItemSlot.Head, string.Empty, false, new Stats(), new Sockets(), 0, 0, 0, 0, 0, Item.ItemDamageType.Physical, 0f, string.Empty);
 						ItemCache.AddItem(newItem);
 					}
 				}
@@ -371,7 +371,7 @@ namespace Rawr
 		private void buttonDuplicate_Click(object sender, EventArgs e)
 		{
 			Item item = listViewItems.SelectedItems[0].Tag as Item;
-			Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot, item.SetName, item.Stats.Clone(),
+			Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot, item.SetName, item.Unique, item.Stats.Clone(),
 				item.Sockets.Clone(), 0, 0, 0, item.MinDamage, item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
 			_changingItemCache = true;
 			ItemCache.AddItem(copy);

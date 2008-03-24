@@ -711,7 +711,7 @@ namespace Rawr
                         {
                             Name = "Leader of the Pack",
                             Category = BuffCategory.ClassBuffs,
-                            Stats = new Stats() { CritRating = 22.08f * 5f }
+                            Stats = new Stats() { LotPCritRating = 22.08f * 5f }
                         });
 
 						//american coca-cola

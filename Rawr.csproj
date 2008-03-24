@@ -143,6 +143,12 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormOptimize.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormOptimize.Designer.cs">
+      <DependentUpon>FormOptimize.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormSplash.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -215,6 +221,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormOptimize.resx">
+      <DependentUpon>FormOptimize.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormSplash.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormSplash.cs</DependentUpon>
@@ -271,6 +281,8 @@
   <ItemGroup>
     <Content Include="RawrIcon.ico" />
     <Content Include="ReadMe.txt" />
+    <None Include="Resources\DiamondOutline.png" />
+    <None Include="Resources\Diamond.png" />
     <None Include="Properties\Recent.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Recent.Designer.cs</LastGenOutput>

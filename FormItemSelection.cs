@@ -97,7 +97,7 @@ namespace Rawr
 
 			this.Activated += new EventHandler(FormItemSelection_Activated);
 
-			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 		}
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)

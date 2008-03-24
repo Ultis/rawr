@@ -255,5 +255,20 @@ namespace Rawr
 				}
 			));
 		}
+
+
+		public static List<Enchant> FindEnchants(Item.ItemSlot slot, List<int> availableIds)
+		{
+			if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.TwoHand || slot == Item.ItemSlot.OneHand)
+				slot = Item.ItemSlot.MainHand; //All enchants are defined for mainhand, currently
+			return AllEnchants.FindAll(new Predicate<Enchant>(
+				delegate(Enchant enchant)
+				{
+					return  enchant.Slot == Item.ItemSlot.None || (Calculations.HasRelevantStats(enchant.Stats) &&
+						(enchant.Slot == slot || slot == Item.ItemSlot.None) && 
+						availableIds.Contains(-1 * (enchant.Id + (10000 * (int)enchant.Slot))));
+				}
+			));
+		}
 	}
 }

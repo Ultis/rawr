@@ -25,6 +25,7 @@ namespace Rawr
 			set
 			{
 				_character = value;
+				comparisonGraph1.Character = _character;
 			}
 		}
 

@@ -72,8 +72,29 @@ you are being killed by burst damage, focus on Survival Points.",
                     "Complex Stats:Frost Survival",
                     "Complex Stats:Shadow Survival",
                     "Complex Stats:Arcane Survival",
-				};
+					};
 				return _characterDisplayCalculationLabels;
+			}
+		}
+
+		private string[] _optimizableCalculationLabels = null;
+		public override string[]  OptimizableCalculationLabels
+		{
+			get
+			{
+				if (_optimizableCalculationLabels == null)
+					_optimizableCalculationLabels = new string[] {
+					"Health",
+					"Mitigation % from Armor",
+					"Avoidance %",
+					"% Chance to be Crit",
+                    "Nature Survival",
+                    "Fire Survival",
+                    "Frost Survival",
+                    "Shadow Survival",
+                    "Arcane Survival",
+					};
+				return _optimizableCalculationLabels;
 			}
 		}
 
@@ -385,7 +406,13 @@ you are being killed by burst damage, focus on Survival Points.",
 				BonusArmorMultiplier = stats.BonusArmorMultiplier,
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 				Health = stats.Health,
-				Miss = stats.Miss
+				Miss = stats.Miss,
+				AllResist = stats.AllResist,
+				ArcaneResistance = stats.ArcaneResistance,
+				NatureResistance = stats.NatureResistance,
+				FireResistance = stats.FireResistance,
+				FrostResistance = stats.FrostResistance,
+				ShadowResistance = stats.ShadowResistance
 			};
 		}
 
@@ -393,7 +420,9 @@ you are being killed by burst damage, focus on Survival Points.",
 		{
 			return (stats.Agility + stats.Armor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health +
-				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc) > 0;
+				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc + stats.AllResist +
+				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
+				stats.FrostResistance + stats.ShadowResistance) > 0;
 		}
     }
 
@@ -564,6 +593,23 @@ you are being killed by burst damage, focus on Survival Points.",
             dictValues["Shadow Survival"] = ShadowSurvivalPoints.ToString();
             dictValues["Arcane Survival"] = ArcaneSurvivalPoints.ToString(); 
 			return dictValues;
+		}
+
+		public override float GetOptimizableCalculationValue(string calculation)
+		{
+			switch (calculation)
+			{
+				case "Health": return BasicStats.Health;
+				case "Mitigation % from Armor": return Mitigation;
+				case "Avoidance %": return DodgePlusMiss;
+				case "% Chance to be Crit": return ((2f + (0.2f * (TargetLevel - 70))) - CritReduction);
+				case "Nature Survival": return NatureSurvivalPoints;
+				case "Fire Survival": return FireSurvivalPoints;
+				case "Frost Survival": return FrostSurvivalPoints;
+				case "Shadow Survival": return ShadowSurvivalPoints;
+				case "Arcane Survival": return ArcaneSurvivalPoints;
+			}
+			return 0f;
 		}
     }
 

@@ -60,6 +60,20 @@ namespace Rawr.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Diamond {
+            get {
+                object obj = ResourceManager.GetObject("Diamond", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap DiamondOutline {
+            get {
+                object obj = ResourceManager.GetObject("DiamondOutline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Rawr_Splash {
             get {
                 object obj = ResourceManager.GetObject("Rawr_Splash", resourceCulture);

@@ -54,10 +54,24 @@ namespace Rawr
 					"Complex Stats:Melee Damage",
 					"Complex Stats:Rip Damage",
 					"Complex Stats:Bite Damage",
-					"Complex Stats:DPS Points*DPS Points is your theoretical DPS, multiplied by 100, so that values are the correct scale for Rawr's graphs.",
+					"Complex Stats:DPS Points*DPS Points is your theoretical DPS.",
 					"Complex Stats:Overall Points*Rawr is designed to support an Overall point value, comprised of one or more sub point values. Cats only have DPS, so Overall Points will always be identical to DPS Points."
 				};
 				return _characterDisplayCalculationLabels;
+			}
+		}
+
+		private string[] _optimizableCalculationLabels = null;
+		public override string[] OptimizableCalculationLabels
+		{
+			get
+			{
+				if (_optimizableCalculationLabels == null)
+					_optimizableCalculationLabels = new string[] {
+					"Health",
+					"Avoided Attacks %"
+					};
+				return _optimizableCalculationLabels;
 			}
 		}
 
@@ -146,7 +160,7 @@ namespace Rawr
 			float glancingRate = 0.2335774f; // Glancing rate data from Toskk
 
 			float chanceCrit = Math.Min(0.75f, (stats.CritRating / 22.08f + (stats.Agility / 25f)) / 100f) - 0.042f; // Crit Reduction data from Toskk
-			float chanceDodge = Math.Max(0f, 0.05f - expertiseBonus);
+			float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
 			float chanceMiss = Math.Max(0f, 0.09f - hitBonus) + chanceDodge;
 						
 			float meleeDamage = stats.WeaponDamage + (768f + attackPower) / 14f;
@@ -306,8 +320,8 @@ namespace Rawr
 
 			float dps = 1.1f * (((dmgMangles + dmgShreds + dmgMelee) * (1f - modArmor / 100f) + dmgRips) / cycleTime);
 
-			calculatedStats.DPSPoints = dps * 100f;
-			calculatedStats.OverallPoints = dps * 100f;
+			calculatedStats.DPSPoints = dps;// *100f;
+			calculatedStats.OverallPoints = dps;// *100f;
 			calculatedStats.AvoidedAttacks = chanceMiss * 100f;
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
 			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks - calculatedStats.DodgedAttacks;
@@ -599,7 +613,7 @@ namespace Rawr
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
 				stats.BonusMangleDamage + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
-				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCostReduction + stats.Stamina +
+				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
 				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick) > 0;
 		}
@@ -811,6 +825,16 @@ namespace Rawr
 			dictValues.Add("Overall Points", OverallPoints.ToString());
 			
 			return dictValues;
+		}
+
+		public override float GetOptimizableCalculationValue(string calculation)
+		{
+			switch (calculation)
+			{
+				case "Health": return BasicStats.Health;
+				case "Avoided Attacks %": return AvoidedAttacks;
+			}
+			return 0f;
 		}
     }
 

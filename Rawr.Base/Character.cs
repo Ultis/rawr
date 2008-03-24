@@ -94,6 +94,10 @@ namespace Rawr //O O . .
 		public string[] _calculationOptionsStrings = new string[0];
         [System.Xml.Serialization.XmlElement("Talents")]
         public TalentTree _talents = new TalentTree();
+		[System.Xml.Serialization.XmlElement("AvailableItems")]
+		public List<int> _availableItems = new List<int>();
+
+
 
         // set to true to suppress ItemsChanged event
         [System.Xml.Serialization.XmlIgnore]
@@ -502,7 +506,11 @@ namespace Rawr //O O . .
 		[System.Xml.Serialization.XmlIgnore]
 		public string[] CalculationOptionsStrings
 		{
-			get { return _calculationOptionsStrings; }
+			get
+			{
+				SerializeCalculationOptions();
+				return _calculationOptionsStrings; 
+			}
 			set { _calculationOptionsStrings = value; }
 		}
 		[System.Xml.Serialization.XmlIgnore]
@@ -535,6 +543,15 @@ namespace Rawr //O O . .
             get { return _talents; }
             set { _talents = value; }
         }
+		[System.Xml.Serialization.XmlIgnore]
+		public List<int> AvailableItems
+		{
+			get { return _availableItems; }
+			set { _availableItems = value; }
+		}
+
+
+
 		private void SerializeCalculationOptions()
 		{
 			List<string> listCalcOpts = new List<string>();
@@ -638,8 +655,23 @@ namespace Rawr //O O . .
             return count;
         }
 		
+		public event EventHandler AvailableItemsChanged;
+		public void OnAvailableItemsChanged()
+		{
+			if (AvailableItemsChanged != null)
+				AvailableItemsChanged(this, EventArgs.Empty);
+		}
+		
 		public event EventHandler ItemsChanged;
 		public void OnItemsChanged()
+		{
+			RecalculateSetBonuses();
+
+			if (!IsLoading && ItemsChanged != null) // alternatively enclose the whole function inside !IsLoading
+				ItemsChanged(this, EventArgs.Empty);
+		}
+
+		public void RecalculateSetBonuses()
 		{
 			//Compute Set Bonuses
 			Dictionary<string, int> setCounts = new Dictionary<string, int>();
@@ -671,9 +703,6 @@ namespace Rawr //O O . .
 					}
 				}
 			}
-
-			if (!IsLoading && ItemsChanged != null) // alternatively enclose the whole function inside !IsLoading
-				ItemsChanged(this, EventArgs.Empty);
 		}
 
         [System.Xml.Serialization.XmlIgnore]
@@ -976,8 +1005,7 @@ namespace Rawr //O O . .
 						this.OffHandEnchant.Id,
 						this.RangedEnchant.Id);
 			foreach (string buff in this.ActiveBuffs) clone.ActiveBuffs.Add(buff);
-			SerializeCalculationOptions();
-			clone.CalculationOptionsStrings = CalculationOptionsStrings;
+			clone.CalculationOptionsStrings = this.CalculationOptionsStrings;
             clone.Class = this.Class;
             clone.Talents = this.Talents;
 			return clone;

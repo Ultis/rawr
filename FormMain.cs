@@ -37,6 +37,7 @@ namespace Rawr
 				if (_character != null)
 				{
 					_character.ItemsChanged -= new EventHandler(_character_ItemsChanged);
+					_character.AvailableItemsChanged -= new EventHandler(_character_AvailableItemsChanged);
 				}
 				_character = value; 
 				if (_character != null)
@@ -58,6 +59,7 @@ namespace Rawr
 					//Ahhh ahhh ahhh ahhh ahhh ahhh ahhh ahhh...
 
 					_character.ItemsChanged += new EventHandler(_character_ItemsChanged);
+					_character.AvailableItemsChanged += new EventHandler(_character_AvailableItemsChanged);
 					_loadingCharacter = true;
 
 					comboBoxEnchantBack.SelectedItem = Character.BackEnchant;
@@ -85,6 +87,11 @@ namespace Rawr
 					_character.OnItemsChanged();
 				}
 			}
+		}
+
+		void _character_AvailableItemsChanged(object sender, EventArgs e)
+		{
+			_unsavedChanges = true;
 		}
 
 		void _character_ItemsChanged(object sender, EventArgs e)
@@ -237,7 +244,7 @@ namespace Rawr
 			}
 
 			this.Shown += new EventHandler(FormMain_Shown);
-			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 			Calculations_ModelChanged(null, null);
 			
@@ -355,13 +362,6 @@ namespace Rawr
 		{
 			FormItemEditor itemEditor = new FormItemEditor(Character);
 			itemEditor.ShowDialog();
-			ItemCache.OnItemsChanged();
-		}
-
-		private void editGemsToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			//FormGemEditor gemEditor = new FormGemEditor();
-			//gemEditor.ShowDialog();
 			ItemCache.OnItemsChanged();
 		}
 
@@ -838,6 +838,12 @@ namespace Rawr
 		{
 			Options options = new Options();
 			options.ShowDialog(this);
+		}
+
+		private void optimizeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			FormOptimize optimize = new FormOptimize(Character);
+			optimize.ShowDialog(this);
 		}
 	}
 }

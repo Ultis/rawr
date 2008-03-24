@@ -218,10 +218,14 @@ namespace Rawr
 		/// <param name="iconPath">The name of the icon to download.  No extension, No Path.</param>
 		public void DownloadItemIconAsync(string iconName)
 		{
-			DownloadRequest dl = new DownloadRequest();
-			dl.serverPath = Properties.NetworkSettings.Default.WoWItemIconURI + iconName + ".jpg";
-			dl.localPath = Path.Combine(ItemImageCachePath, iconName + ".jpg");
-			InitiateRequest(dl);
+			string localPath = Path.Combine(ItemImageCachePath, iconName + ".jpg");
+			if (!File.Exists(localPath))
+			{
+				DownloadRequest dl = new DownloadRequest();
+				dl.serverPath = Properties.NetworkSettings.Default.WoWItemIconURI + iconName + ".jpg";
+				dl.localPath = localPath;
+				InitiateRequest(dl);
+			}
 		}
 
 

@@ -54,7 +54,7 @@ namespace Rawr
             UseFading = true;
             LoadGraphicsObjects();
 
-			ItemCache.ItemsChanged += new EventHandler(CharacterItemCache_ItemsChanged);
+			ItemCache.Instance.ItemsChanged += new EventHandler(CharacterItemCache_ItemsChanged);
         }
 
         private void CharacterItemCache_ItemsChanged(object sender, EventArgs e)

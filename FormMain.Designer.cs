@@ -178,6 +178,9 @@ namespace Rawr
 			this.updateItemCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.reloadCurrentCharacterFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+			this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainer1.SuspendLayout();
@@ -1045,7 +1048,7 @@ namespace Rawr
 			// toolStripLabel1
 			// 
 			this.toolStripLabel1.Name = "toolStripLabel1";
-			this.toolStripLabel1.Size = new System.Drawing.Size(29, 22);
+			this.toolStripLabel1.Size = new System.Drawing.Size(30, 22);
 			this.toolStripLabel1.Text = "Slot:";
 			// 
 			// toolStripDropDownButtonSlot
@@ -1101,7 +1104,7 @@ namespace Rawr
 			this.toolStripDropDownButtonSlot.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonSlot.Image")));
 			this.toolStripDropDownButtonSlot.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripDropDownButtonSlot.Name = "toolStripDropDownButtonSlot";
-			this.toolStripDropDownButtonSlot.Size = new System.Drawing.Size(45, 22);
+			this.toolStripDropDownButtonSlot.Size = new System.Drawing.Size(48, 22);
 			this.toolStripDropDownButtonSlot.Text = "Head";
 			this.toolStripDropDownButtonSlot.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
@@ -1109,13 +1112,13 @@ namespace Rawr
 			// 
 			this.gearToolStripMenuItem.Enabled = false;
 			this.gearToolStripMenuItem.Name = "gearToolStripMenuItem";
-			this.gearToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.gearToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.gearToolStripMenuItem.Text = "Gear";
 			// 
 			// headToolStripMenuItem
 			// 
 			this.headToolStripMenuItem.Name = "headToolStripMenuItem";
-			this.headToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.headToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.headToolStripMenuItem.Tag = "Gear.Head";
 			this.headToolStripMenuItem.Text = " Head";
 			this.headToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1123,7 +1126,7 @@ namespace Rawr
 			// neckToolStripMenuItem
 			// 
 			this.neckToolStripMenuItem.Name = "neckToolStripMenuItem";
-			this.neckToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.neckToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.neckToolStripMenuItem.Tag = "Gear.Neck";
 			this.neckToolStripMenuItem.Text = " Neck";
 			this.neckToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1131,7 +1134,7 @@ namespace Rawr
 			// shouldersToolStripMenuItem
 			// 
 			this.shouldersToolStripMenuItem.Name = "shouldersToolStripMenuItem";
-			this.shouldersToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.shouldersToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.shouldersToolStripMenuItem.Tag = "Gear.Shoulders";
 			this.shouldersToolStripMenuItem.Text = " Shoulders";
 			this.shouldersToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1139,7 +1142,7 @@ namespace Rawr
 			// backToolStripMenuItem
 			// 
 			this.backToolStripMenuItem.Name = "backToolStripMenuItem";
-			this.backToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.backToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.backToolStripMenuItem.Tag = "Gear.Back";
 			this.backToolStripMenuItem.Text = " Back";
 			this.backToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1147,7 +1150,7 @@ namespace Rawr
 			// chestToolStripMenuItem
 			// 
 			this.chestToolStripMenuItem.Name = "chestToolStripMenuItem";
-			this.chestToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.chestToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.chestToolStripMenuItem.Tag = "Gear.Chest";
 			this.chestToolStripMenuItem.Text = " Chest";
 			this.chestToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1155,7 +1158,7 @@ namespace Rawr
 			// wristsToolStripMenuItem
 			// 
 			this.wristsToolStripMenuItem.Name = "wristsToolStripMenuItem";
-			this.wristsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.wristsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.wristsToolStripMenuItem.Tag = "Gear.Wrist";
 			this.wristsToolStripMenuItem.Text = " Wrists";
 			this.wristsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1163,7 +1166,7 @@ namespace Rawr
 			// handsToolStripMenuItem
 			// 
 			this.handsToolStripMenuItem.Name = "handsToolStripMenuItem";
-			this.handsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.handsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.handsToolStripMenuItem.Tag = "Gear.Hands";
 			this.handsToolStripMenuItem.Text = " Hands";
 			this.handsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1171,7 +1174,7 @@ namespace Rawr
 			// waistToolStripMenuItem
 			// 
 			this.waistToolStripMenuItem.Name = "waistToolStripMenuItem";
-			this.waistToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.waistToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.waistToolStripMenuItem.Tag = "Gear.Waist";
 			this.waistToolStripMenuItem.Text = " Waist";
 			this.waistToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1179,7 +1182,7 @@ namespace Rawr
 			// legsToolStripMenuItem
 			// 
 			this.legsToolStripMenuItem.Name = "legsToolStripMenuItem";
-			this.legsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.legsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.legsToolStripMenuItem.Tag = "Gear.Legs";
 			this.legsToolStripMenuItem.Text = " Legs";
 			this.legsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1187,7 +1190,7 @@ namespace Rawr
 			// feetToolStripMenuItem
 			// 
 			this.feetToolStripMenuItem.Name = "feetToolStripMenuItem";
-			this.feetToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.feetToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.feetToolStripMenuItem.Tag = "Gear.Feet";
 			this.feetToolStripMenuItem.Text = " Feet";
 			this.feetToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1195,7 +1198,7 @@ namespace Rawr
 			// finger1ToolStripMenuItem
 			// 
 			this.finger1ToolStripMenuItem.Name = "finger1ToolStripMenuItem";
-			this.finger1ToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.finger1ToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.finger1ToolStripMenuItem.Tag = "Gear.Finger1";
 			this.finger1ToolStripMenuItem.Text = " Finger 1";
 			this.finger1ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1203,7 +1206,7 @@ namespace Rawr
 			// finger2ToolStripMenuItem
 			// 
 			this.finger2ToolStripMenuItem.Name = "finger2ToolStripMenuItem";
-			this.finger2ToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.finger2ToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.finger2ToolStripMenuItem.Tag = "Gear.Finger2";
 			this.finger2ToolStripMenuItem.Text = " Finger 2";
 			this.finger2ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1211,7 +1214,7 @@ namespace Rawr
 			// trinket1ToolStripMenuItem
 			// 
 			this.trinket1ToolStripMenuItem.Name = "trinket1ToolStripMenuItem";
-			this.trinket1ToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.trinket1ToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.trinket1ToolStripMenuItem.Tag = "Gear.Trinket1";
 			this.trinket1ToolStripMenuItem.Text = " Trinket 1";
 			this.trinket1ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1219,7 +1222,7 @@ namespace Rawr
 			// trinket2ToolStripMenuItem
 			// 
 			this.trinket2ToolStripMenuItem.Name = "trinket2ToolStripMenuItem";
-			this.trinket2ToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.trinket2ToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.trinket2ToolStripMenuItem.Tag = "Gear.Trinket2";
 			this.trinket2ToolStripMenuItem.Text = " Trinket 2";
 			this.trinket2ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1227,7 +1230,7 @@ namespace Rawr
 			// weaponToolStripMenuItem
 			// 
 			this.weaponToolStripMenuItem.Name = "weaponToolStripMenuItem";
-			this.weaponToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.weaponToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.weaponToolStripMenuItem.Tag = "Gear.MainHand";
 			this.weaponToolStripMenuItem.Text = " Main Hand";
 			this.weaponToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1235,7 +1238,7 @@ namespace Rawr
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(242, 22);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.toolStripMenuItem1.Tag = "Gear.OffHand";
 			this.toolStripMenuItem1.Text = " Off Hand";
 			this.toolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1243,7 +1246,7 @@ namespace Rawr
 			// idolToolStripMenuItem
 			// 
 			this.idolToolStripMenuItem.Name = "idolToolStripMenuItem";
-			this.idolToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.idolToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.idolToolStripMenuItem.Tag = "Gear.Ranged";
 			this.idolToolStripMenuItem.Text = " Ranged";
 			this.idolToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1251,7 +1254,7 @@ namespace Rawr
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(242, 22);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(251, 22);
 			this.toolStripMenuItem2.Tag = "Gear.Projectile";
 			this.toolStripMenuItem2.Text = " Projectile";
 			this.toolStripMenuItem2.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1259,7 +1262,7 @@ namespace Rawr
 			// toolStripMenuItem3
 			// 
 			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-			this.toolStripMenuItem3.Size = new System.Drawing.Size(242, 22);
+			this.toolStripMenuItem3.Size = new System.Drawing.Size(251, 22);
 			this.toolStripMenuItem3.Tag = "Gear.ProjectileBag";
 			this.toolStripMenuItem3.Text = " Projectile Bag";
 			this.toolStripMenuItem3.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1267,21 +1270,21 @@ namespace Rawr
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(239, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(248, 6);
 			this.toolStripSeparator1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// gemsToolStripMenuItem
 			// 
 			this.gemsToolStripMenuItem.Enabled = false;
 			this.gemsToolStripMenuItem.Name = "gemsToolStripMenuItem";
-			this.gemsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.gemsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.gemsToolStripMenuItem.Text = "Gems";
 			this.gemsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// normalToolStripMenuItem
 			// 
 			this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-			this.normalToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.normalToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.normalToolStripMenuItem.Tag = "Gems.Gems";
 			this.normalToolStripMenuItem.Text = " Normal";
 			this.normalToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1289,7 +1292,7 @@ namespace Rawr
 			// metaToolStripMenuItem
 			// 
 			this.metaToolStripMenuItem.Name = "metaToolStripMenuItem";
-			this.metaToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.metaToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.metaToolStripMenuItem.Tag = "Gems.Metas";
 			this.metaToolStripMenuItem.Text = " Meta";
 			this.metaToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1297,21 +1300,21 @@ namespace Rawr
 			// toolStripSeparator5
 			// 
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
-			this.toolStripSeparator5.Size = new System.Drawing.Size(239, 6);
+			this.toolStripSeparator5.Size = new System.Drawing.Size(248, 6);
 			this.toolStripSeparator5.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// enchantsToolStripMenuItem
 			// 
 			this.enchantsToolStripMenuItem.Enabled = false;
 			this.enchantsToolStripMenuItem.Name = "enchantsToolStripMenuItem";
-			this.enchantsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.enchantsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.enchantsToolStripMenuItem.Text = "Enchants";
 			this.enchantsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// headToolStripMenuItem1
 			// 
 			this.headToolStripMenuItem1.Name = "headToolStripMenuItem1";
-			this.headToolStripMenuItem1.Size = new System.Drawing.Size(242, 22);
+			this.headToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.headToolStripMenuItem1.Tag = "Enchants.Head";
 			this.headToolStripMenuItem1.Text = " Head";
 			this.headToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1319,7 +1322,7 @@ namespace Rawr
 			// shouldersToolStripMenuItem1
 			// 
 			this.shouldersToolStripMenuItem1.Name = "shouldersToolStripMenuItem1";
-			this.shouldersToolStripMenuItem1.Size = new System.Drawing.Size(242, 22);
+			this.shouldersToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.shouldersToolStripMenuItem1.Tag = "Enchants.Shoulders";
 			this.shouldersToolStripMenuItem1.Text = " Shoulders";
 			this.shouldersToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1327,7 +1330,7 @@ namespace Rawr
 			// backToolStripMenuItem1
 			// 
 			this.backToolStripMenuItem1.Name = "backToolStripMenuItem1";
-			this.backToolStripMenuItem1.Size = new System.Drawing.Size(242, 22);
+			this.backToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.backToolStripMenuItem1.Tag = "Enchants.Back";
 			this.backToolStripMenuItem1.Text = " Back";
 			this.backToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1335,7 +1338,7 @@ namespace Rawr
 			// chestToolStripMenuItem1
 			// 
 			this.chestToolStripMenuItem1.Name = "chestToolStripMenuItem1";
-			this.chestToolStripMenuItem1.Size = new System.Drawing.Size(242, 22);
+			this.chestToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.chestToolStripMenuItem1.Tag = "Enchants.Chest";
 			this.chestToolStripMenuItem1.Text = " Chest";
 			this.chestToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1343,7 +1346,7 @@ namespace Rawr
 			// wristsToolStripMenuItem1
 			// 
 			this.wristsToolStripMenuItem1.Name = "wristsToolStripMenuItem1";
-			this.wristsToolStripMenuItem1.Size = new System.Drawing.Size(242, 22);
+			this.wristsToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.wristsToolStripMenuItem1.Tag = "Enchants.Wrist";
 			this.wristsToolStripMenuItem1.Text = " Wrists";
 			this.wristsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1351,7 +1354,7 @@ namespace Rawr
 			// handsToolStripMenuItem1
 			// 
 			this.handsToolStripMenuItem1.Name = "handsToolStripMenuItem1";
-			this.handsToolStripMenuItem1.Size = new System.Drawing.Size(242, 22);
+			this.handsToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.handsToolStripMenuItem1.Tag = "Enchants.Hands";
 			this.handsToolStripMenuItem1.Text = " Hands";
 			this.handsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1359,7 +1362,7 @@ namespace Rawr
 			// legsToolStripMenuItem1
 			// 
 			this.legsToolStripMenuItem1.Name = "legsToolStripMenuItem1";
-			this.legsToolStripMenuItem1.Size = new System.Drawing.Size(242, 22);
+			this.legsToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.legsToolStripMenuItem1.Tag = "Enchants.Legs";
 			this.legsToolStripMenuItem1.Text = " Legs";
 			this.legsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1367,7 +1370,7 @@ namespace Rawr
 			// feetToolStripMenuItem1
 			// 
 			this.feetToolStripMenuItem1.Name = "feetToolStripMenuItem1";
-			this.feetToolStripMenuItem1.Size = new System.Drawing.Size(242, 22);
+			this.feetToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.feetToolStripMenuItem1.Tag = "Enchants.Feet";
 			this.feetToolStripMenuItem1.Text = " Feet";
 			this.feetToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1375,7 +1378,7 @@ namespace Rawr
 			// fingerToolStripMenuItem1
 			// 
 			this.fingerToolStripMenuItem1.Name = "fingerToolStripMenuItem1";
-			this.fingerToolStripMenuItem1.Size = new System.Drawing.Size(242, 22);
+			this.fingerToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.fingerToolStripMenuItem1.Tag = "Enchants.Finger";
 			this.fingerToolStripMenuItem1.Text = " Fingers";
 			this.fingerToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1383,7 +1386,7 @@ namespace Rawr
 			// toolStripMenuItem4
 			// 
 			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-			this.toolStripMenuItem4.Size = new System.Drawing.Size(242, 22);
+			this.toolStripMenuItem4.Size = new System.Drawing.Size(251, 22);
 			this.toolStripMenuItem4.Tag = "Enchants.MainHand";
 			this.toolStripMenuItem4.Text = " Main Hand";
 			this.toolStripMenuItem4.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1391,7 +1394,7 @@ namespace Rawr
 			// toolStripMenuItem5
 			// 
 			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-			this.toolStripMenuItem5.Size = new System.Drawing.Size(242, 22);
+			this.toolStripMenuItem5.Size = new System.Drawing.Size(251, 22);
 			this.toolStripMenuItem5.Tag = "Enchants.OffHand";
 			this.toolStripMenuItem5.Text = " Off Hand";
 			this.toolStripMenuItem5.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1399,7 +1402,7 @@ namespace Rawr
 			// weaponToolStripMenuItem1
 			// 
 			this.weaponToolStripMenuItem1.Name = "weaponToolStripMenuItem1";
-			this.weaponToolStripMenuItem1.Size = new System.Drawing.Size(242, 22);
+			this.weaponToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
 			this.weaponToolStripMenuItem1.Tag = "Enchants.Ranged";
 			this.weaponToolStripMenuItem1.Text = " Ranged";
 			this.weaponToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1407,14 +1410,14 @@ namespace Rawr
 			// toolStripSeparator6
 			// 
 			this.toolStripSeparator6.Name = "toolStripSeparator6";
-			this.toolStripSeparator6.Size = new System.Drawing.Size(239, 6);
+			this.toolStripSeparator6.Size = new System.Drawing.Size(248, 6);
 			this.toolStripSeparator6.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// buffsToolStripMenuItem
 			// 
 			this.buffsToolStripMenuItem.Enabled = false;
 			this.buffsToolStripMenuItem.Name = "buffsToolStripMenuItem";
-			this.buffsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.buffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.buffsToolStripMenuItem.Tag = "Buffs";
 			this.buffsToolStripMenuItem.Text = "Buffs";
 			this.buffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1422,7 +1425,7 @@ namespace Rawr
 			// allBuffsToolStripMenuItem
 			// 
 			this.allBuffsToolStripMenuItem.Name = "allBuffsToolStripMenuItem";
-			this.allBuffsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.allBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.allBuffsToolStripMenuItem.Tag = "Buffs.All";
 			this.allBuffsToolStripMenuItem.Text = " All Buffs";
 			this.allBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1430,7 +1433,7 @@ namespace Rawr
 			// allLongDurationBuffsNoDWToolStripMenuItem
 			// 
 			this.allLongDurationBuffsNoDWToolStripMenuItem.Name = "allLongDurationBuffsNoDWToolStripMenuItem";
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.allLongDurationBuffsNoDWToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.allLongDurationBuffsNoDWToolStripMenuItem.Tag = "Buffs.LongDurationNoDW";
 			this.allLongDurationBuffsNoDWToolStripMenuItem.Text = " All Long-Duration Buffs (No DW)";
 			this.allLongDurationBuffsNoDWToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1438,7 +1441,7 @@ namespace Rawr
 			// currentBuffsToolStripMenuItem
 			// 
 			this.currentBuffsToolStripMenuItem.Name = "currentBuffsToolStripMenuItem";
-			this.currentBuffsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.currentBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.currentBuffsToolStripMenuItem.Tag = "Buffs.All+";
 			this.currentBuffsToolStripMenuItem.Text = " Current Buffs";
 			this.currentBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1446,12 +1449,12 @@ namespace Rawr
 			// toolStripSeparator7
 			// 
 			this.toolStripSeparator7.Name = "toolStripSeparator7";
-			this.toolStripSeparator7.Size = new System.Drawing.Size(239, 6);
+			this.toolStripSeparator7.Size = new System.Drawing.Size(248, 6);
 			// 
 			// currentGearEnchantsBuffsToolStripMenuItem
 			// 
 			this.currentGearEnchantsBuffsToolStripMenuItem.Name = "currentGearEnchantsBuffsToolStripMenuItem";
-			this.currentGearEnchantsBuffsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+			this.currentGearEnchantsBuffsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
 			this.currentGearEnchantsBuffsToolStripMenuItem.Tag = "Current Gear/Enchants/Buffs";
 			this.currentGearEnchantsBuffsToolStripMenuItem.Text = "Current Gear/Enchants/Buffs";
 			this.currentGearEnchantsBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
@@ -1459,7 +1462,7 @@ namespace Rawr
 			// toolStripSeparator9
 			// 
 			this.toolStripSeparator9.Name = "toolStripSeparator9";
-			this.toolStripSeparator9.Size = new System.Drawing.Size(239, 6);
+			this.toolStripSeparator9.Size = new System.Drawing.Size(248, 6);
 			// 
 			// toolStripLabel2
 			// 
@@ -1476,13 +1479,13 @@ namespace Rawr
 			this.toolStripDropDownButtonSort.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonSort.Image")));
 			this.toolStripDropDownButtonSort.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripDropDownButtonSort.Name = "toolStripDropDownButtonSort";
-			this.toolStripDropDownButtonSort.Size = new System.Drawing.Size(54, 22);
+			this.toolStripDropDownButtonSort.Size = new System.Drawing.Size(57, 22);
 			this.toolStripDropDownButtonSort.Text = "Overall";
 			// 
 			// overallToolStripMenuItem
 			// 
 			this.overallToolStripMenuItem.Name = "overallToolStripMenuItem";
-			this.overallToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+			this.overallToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
 			this.overallToolStripMenuItem.Tag = -1;
 			this.overallToolStripMenuItem.Text = "Overall";
 			this.overallToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
@@ -1490,7 +1493,7 @@ namespace Rawr
 			// alphabeticalToolStripMenuItem
 			// 
 			this.alphabeticalToolStripMenuItem.Name = "alphabeticalToolStripMenuItem";
-			this.alphabeticalToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+			this.alphabeticalToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
 			this.alphabeticalToolStripMenuItem.Tag = -2;
 			this.alphabeticalToolStripMenuItem.Text = "Alphabetical";
 			this.alphabeticalToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
@@ -1521,7 +1524,7 @@ namespace Rawr
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
 			this.fileToolStripMenuItem.Text = "&File";
 			// 
 			// newToolStripMenuItem
@@ -1530,7 +1533,7 @@ namespace Rawr
 			this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
 			this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.newToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+			this.newToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
 			this.newToolStripMenuItem.Text = "&New";
 			this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
 			// 
@@ -1540,7 +1543,7 @@ namespace Rawr
 			this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
 			this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
 			this.openToolStripMenuItem.Text = "&Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
@@ -1550,19 +1553,19 @@ namespace Rawr
 			this.loadFromArmoryToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.loadFromArmoryToolStripMenuItem.Name = "loadFromArmoryToolStripMenuItem";
 			this.loadFromArmoryToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.loadFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+			this.loadFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
 			this.loadFromArmoryToolStripMenuItem.Text = "&Load from Armory...";
 			this.loadFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.loadFromArmoryToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator
 			// 
 			this.toolStripSeparator.Name = "toolStripSeparator";
-			this.toolStripSeparator.Size = new System.Drawing.Size(220, 6);
+			this.toolStripSeparator.Size = new System.Drawing.Size(221, 6);
 			// 
 			// toolStripSeparator8
 			// 
 			this.toolStripSeparator8.Name = "toolStripSeparator8";
-			this.toolStripSeparator8.Size = new System.Drawing.Size(220, 6);
+			this.toolStripSeparator8.Size = new System.Drawing.Size(221, 6);
 			// 
 			// saveToolStripMenuItem
 			// 
@@ -1570,26 +1573,26 @@ namespace Rawr
 			this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
 			this.saveToolStripMenuItem.Text = "&Save";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
 			// saveAsToolStripMenuItem
 			// 
 			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
 			this.saveAsToolStripMenuItem.Text = "Save &As...";
 			this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(220, 6);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(221, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
 			this.exitToolStripMenuItem.Text = "E&xit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -1605,27 +1608,27 @@ namespace Rawr
             this.toolStripSeparator4,
             this.selectAllToolStripMenuItem});
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-			this.editToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+			this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
 			this.editToolStripMenuItem.Text = "&Edit";
 			// 
 			// undoToolStripMenuItem
 			// 
 			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
 			this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.undoToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.undoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.undoToolStripMenuItem.Text = "&Undo";
 			// 
 			// redoToolStripMenuItem
 			// 
 			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
 			this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.redoToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.redoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.redoToolStripMenuItem.Text = "&Redo";
 			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(147, 6);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
 			// 
 			// cutToolStripMenuItem
 			// 
@@ -1633,7 +1636,7 @@ namespace Rawr
 			this.cutToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
 			this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.cutToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.cutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.cutToolStripMenuItem.Text = "Cu&t";
 			// 
 			// copyToolStripMenuItem
@@ -1642,7 +1645,7 @@ namespace Rawr
 			this.copyToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
 			this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.copyToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.copyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.copyToolStripMenuItem.Text = "&Copy";
 			// 
 			// pasteToolStripMenuItem
@@ -1651,74 +1654,94 @@ namespace Rawr
 			this.pasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
 			this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.pasteToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.pasteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.pasteToolStripMenuItem.Text = "&Paste";
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(147, 6);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(149, 6);
 			// 
 			// selectAllToolStripMenuItem
 			// 
 			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.selectAllToolStripMenuItem.Text = "Select &All";
 			// 
 			// toolsToolStripMenuItem
 			// 
 			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editItemsToolStripMenuItem,
+            this.optimizeToolStripMenuItem,
             this.copyCharacterStatsToClipboardToolStripMenuItem,
+            this.toolStripSeparator11,
+            this.reloadCurrentCharacterFromArmoryToolStripMenuItem,
             this.loadPossibleUpgradesFromArmoryToolStripMenuItem,
             this.updateItemCacheToolStripMenuItem,
-            this.reloadCurrentCharacterFromArmoryToolStripMenuItem,
+            this.toolStripSeparator10,
             this.optionsToolStripMenuItem});
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
 			this.toolsToolStripMenuItem.Text = "&Tools";
 			// 
 			// editItemsToolStripMenuItem
 			// 
 			this.editItemsToolStripMenuItem.Name = "editItemsToolStripMenuItem";
-			this.editItemsToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+			this.editItemsToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
 			this.editItemsToolStripMenuItem.Text = "Edit Items...";
 			this.editItemsToolStripMenuItem.Click += new System.EventHandler(this.editItemsToolStripMenuItem_Click);
 			// 
 			// copyCharacterStatsToClipboardToolStripMenuItem
 			// 
 			this.copyCharacterStatsToClipboardToolStripMenuItem.Name = "copyCharacterStatsToClipboardToolStripMenuItem";
-			this.copyCharacterStatsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+			this.copyCharacterStatsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
 			this.copyCharacterStatsToClipboardToolStripMenuItem.Text = "Copy Character Stats to Clipboard";
 			this.copyCharacterStatsToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyCharacterStatsToClipboardToolStripMenuItem_Click);
 			// 
 			// loadPossibleUpgradesFromArmoryToolStripMenuItem
 			// 
 			this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Name = "loadPossibleUpgradesFromArmoryToolStripMenuItem";
-			this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+			this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
 			this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Text = "Load Possible Upgrades From Armory";
 			this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.loadPossibleUpgradesFromArmoryToolStripMenuItem_Click);
 			// 
 			// updateItemCacheToolStripMenuItem
 			// 
 			this.updateItemCacheToolStripMenuItem.Name = "updateItemCacheToolStripMenuItem";
-			this.updateItemCacheToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+			this.updateItemCacheToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
 			this.updateItemCacheToolStripMenuItem.Text = "Update Item Cache";
 			this.updateItemCacheToolStripMenuItem.Click += new System.EventHandler(this.updateAllItemsToolStripMenuItem_Click_1);
 			// 
 			// reloadCurrentCharacterFromArmoryToolStripMenuItem
 			// 
 			this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Name = "reloadCurrentCharacterFromArmoryToolStripMenuItem";
-			this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+			this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
 			this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Text = "Reload Current Character from Armory";
 			this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.reloadCurrentCharacterFromArmoryToolStripMenuItem_Click);
 			// 
 			// optionsToolStripMenuItem
 			// 
 			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-			this.optionsToolStripMenuItem.Text = "Options";
+			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
+			this.optionsToolStripMenuItem.Text = "Options...";
 			this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator10
+			// 
+			this.toolStripSeparator10.Name = "toolStripSeparator10";
+			this.toolStripSeparator10.Size = new System.Drawing.Size(276, 6);
+			// 
+			// toolStripSeparator11
+			// 
+			this.toolStripSeparator11.Name = "toolStripSeparator11";
+			this.toolStripSeparator11.Size = new System.Drawing.Size(276, 6);
+			// 
+			// optimizeToolStripMenuItem
+			// 
+			this.optimizeToolStripMenuItem.Name = "optimizeToolStripMenuItem";
+			this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
+			this.optimizeToolStripMenuItem.Text = "Optimize...";
+			this.optimizeToolStripMenuItem.Click += new System.EventHandler(this.optimizeToolStripMenuItem_Click);
 			// 
 			// FormMain
 			// 
@@ -1908,6 +1931,9 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem reloadCurrentCharacterFromArmoryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem optimizeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
     }
 }
 

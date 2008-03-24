@@ -47,7 +47,7 @@ namespace Rawr
 
 			ItemToolTip.Instance.SetToolTip(this, "");
 
-			ItemCache.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 		}
 
 		private bool _itemsChanging = false;
