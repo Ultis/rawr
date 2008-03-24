@@ -628,7 +628,7 @@ namespace Rawr
                         // Restores 7 mana per 5 sec.
                         // Check to see if the desc contains the token 'mana'.  Items like Frostwolf Insignia
                         // and Essense Infused Shroom Restore health.
-                        else if (spellDesc.StartsWith("Restores ") && spellDesc.Contains(" mana"))
+                        else if (spellDesc.StartsWith("Restores ") && spellDesc.Contains("mana"))
                         {
                                 spellDesc = spellDesc.Substring("Restores ".Length);
                                 spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" mana"));
