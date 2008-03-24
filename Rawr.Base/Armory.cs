@@ -628,9 +628,13 @@ namespace Rawr
                         // Restores 7 mana per 5 sec.
                         else if (spellDesc.StartsWith("Restores "))
                         {
-                            spellDesc = spellDesc.Substring("Restores ".Length);
-                            spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" mana"));
-                            stats.Mp5 += int.Parse(spellDesc);
+                            // Check for essense infused shroom, this doesn't restore MP5, ignore it if it is.
+                            if (!spellDesc.StartsWith("Restores 200 health when you kill a target "))
+                            {
+                                spellDesc = spellDesc.Substring("Restores ".Length);
+                                spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" mana"));
+                                stats.Mp5 += int.Parse(spellDesc);
+                            }
                         }
                         else if (spellDesc.StartsWith("You gain an Electrical Charge each time you cause a damaging spell critical strike.  When you reach 3 Electrical Charges, they will release, firing a Lightning Bolt for 694 to 806 damage.  Electrical Charge cannot be gained more often than once every 2.5 sec."))
                         {
