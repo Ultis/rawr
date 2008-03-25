@@ -37,8 +37,16 @@ namespace Rawr.Moonkin
                 Character.CalculationOptions["FightLength"] = "5";
             if (!Character.CalculationOptions.ContainsKey("Innervate"))
                 Character.CalculationOptions["Innervate"] = "No";
+            if (!Character.CalculationOptions.ContainsKey("InnervateDelay"))
+                Character.CalculationOptions["InnervateDelay"] = "1";
             if (!Character.CalculationOptions.ContainsKey("ShadowPriest"))
                 Character.CalculationOptions["ShadowPriest"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("ManaPots"))
+                Character.CalculationOptions["ManaPots"] = "No";
+            if (!Character.CalculationOptions.ContainsKey("ManaPotDelay"))
+                Character.CalculationOptions["ManaPotDelay"] = "1.5";
+            if (!Character.CalculationOptions.ContainsKey("ManaPotType"))
+                Character.CalculationOptions["ManaPotType"] = "Super Mana Potion";
 
             cmbTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             chkMetagem.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
@@ -46,6 +54,13 @@ namespace Rawr.Moonkin
             txtFightLength.Text = Character.CalculationOptions["FightLength"];
             txtShadowPriest.Text = Character.CalculationOptions["ShadowPriest"];
             chkInnervate.Checked = Character.CalculationOptions["Innervate"] == "Yes";
+            chkManaPots.Checked = Character.CalculationOptions["ManaPots"] == "Yes";
+            cmbPotType.SelectedItem = Character.CalculationOptions["ManaPotType"];
+            cmbPotType.Enabled = chkManaPots.Checked;
+            txtInnervateDelay.Text = Character.CalculationOptions["InnervateDelay"];
+            txtInnervateDelay.Enabled = chkInnervate.Checked;
+            txtManaPotDelay.Text = Character.CalculationOptions["ManaPotDelay"];
+            txtManaPotDelay.Enabled = chkManaPots.Checked;
 
             if (talents != null) talents.LoadCalculationOptions();
         }
@@ -77,12 +92,39 @@ namespace Rawr.Moonkin
         private void chkInnervate_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["Innervate"] = chkInnervate.Checked ? "Yes" : "No";
+            txtInnervateDelay.Enabled = chkInnervate.Checked;
             Character.OnItemsChanged();
         }
 
         private void txtShadowPriest_Leave(object sender, EventArgs e)
         {
             Character.CalculationOptions["ShadowPriest"] = txtShadowPriest.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void chkManaPots_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ManaPots"] = chkManaPots.Checked ? "Yes" : "No";
+            cmbPotType.Enabled = chkManaPots.Checked;
+            txtManaPotDelay.Enabled = chkManaPots.Checked;
+            Character.OnItemsChanged();
+        }
+
+        private void cmbPotType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ManaPotType"] = cmbPotType.SelectedItem.ToString();
+            Character.OnItemsChanged();
+        }
+
+        private void txtInnervateDelay_Leave(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["InnervateDelay"] = txtInnervateDelay.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void txtManaPotDelay_Leave(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ManaPotDelay"] = txtManaPotDelay.Text;
             Character.OnItemsChanged();
         }
     }

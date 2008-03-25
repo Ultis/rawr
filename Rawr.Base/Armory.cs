@@ -745,6 +745,12 @@ namespace Rawr
                             spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" spell critical strike rating"));
                             stats.IdolCritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                         }
+                        else if (spellDesc.StartsWith("Your Moonfire ability has a chance to grant up to "))
+                        {
+                            spellDesc = spellDesc.Substring("Your Moonfire ability has a chance to grant up to ".Length);
+                            spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" spell damage and healing for 10 sec."));
+                            stats.UnseenMoonDamageBonus += (float)int.Parse(spellDesc);
+                        }
                         else if (spellDesc.StartsWith("Your Judgement of Command ability has a chance to grant "))
                         {
                             spellDesc = spellDesc.Substring("Your Judgement of Command ability has a chance to grant ".Length, 3);

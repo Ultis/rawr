@@ -39,6 +39,13 @@
             this.chkInnervate = new System.Windows.Forms.CheckBox();
             this.txtShadowPriest = new System.Windows.Forms.TextBox();
             this.lblShadowPriest = new System.Windows.Forms.Label();
+            this.chkManaPots = new System.Windows.Forms.CheckBox();
+            this.cmbPotType = new System.Windows.Forms.ComboBox();
+            this.lblInnervateOffset = new System.Windows.Forms.Label();
+            this.txtInnervateDelay = new System.Windows.Forms.TextBox();
+            this.txtManaPotDelay = new System.Windows.Forms.TextBox();
+            this.lblManPotDelay = new System.Windows.Forms.Label();
+            this.lblManaPotType = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -94,7 +101,7 @@
             // 
             // btnTalents
             // 
-            this.btnTalents.Location = new System.Drawing.Point(6, 134);
+            this.btnTalents.Location = new System.Drawing.Point(9, 237);
             this.btnTalents.Name = "btnTalents";
             this.btnTalents.Size = new System.Drawing.Size(195, 23);
             this.btnTalents.TabIndex = 8;
@@ -147,10 +154,83 @@
             this.lblShadowPriest.TabIndex = 14;
             this.lblShadowPriest.Text = "Shadow Priest MP5:";
             // 
+            // chkManaPots
+            // 
+            this.chkManaPots.AutoSize = true;
+            this.chkManaPots.Location = new System.Drawing.Point(6, 160);
+            this.chkManaPots.Name = "chkManaPots";
+            this.chkManaPots.Size = new System.Drawing.Size(117, 17);
+            this.chkManaPots.TabIndex = 15;
+            this.chkManaPots.Text = "Use mana potions?";
+            this.chkManaPots.UseVisualStyleBackColor = true;
+            this.chkManaPots.CheckedChanged += new System.EventHandler(this.chkManaPots_CheckedChanged);
+            // 
+            // cmbPotType
+            // 
+            this.cmbPotType.FormattingEnabled = true;
+            this.cmbPotType.Items.AddRange(new object[] {
+            "Super Mana Potion",
+            "Fel Mana Potion"});
+            this.cmbPotType.Location = new System.Drawing.Point(108, 210);
+            this.cmbPotType.Name = "cmbPotType";
+            this.cmbPotType.Size = new System.Drawing.Size(93, 21);
+            this.cmbPotType.TabIndex = 16;
+            this.cmbPotType.SelectedIndexChanged += new System.EventHandler(this.cmbPotType_SelectedIndexChanged);
+            // 
+            // lblInnervateOffset
+            // 
+            this.lblInnervateOffset.AutoSize = true;
+            this.lblInnervateOffset.Location = new System.Drawing.Point(3, 137);
+            this.lblInnervateOffset.Name = "lblInnervateOffset";
+            this.lblInnervateOffset.Size = new System.Drawing.Size(85, 13);
+            this.lblInnervateOffset.TabIndex = 17;
+            this.lblInnervateOffset.Text = "Innervate Delay:";
+            // 
+            // txtInnervateDelay
+            // 
+            this.txtInnervateDelay.Location = new System.Drawing.Point(108, 134);
+            this.txtInnervateDelay.Name = "txtInnervateDelay";
+            this.txtInnervateDelay.Size = new System.Drawing.Size(93, 20);
+            this.txtInnervateDelay.TabIndex = 18;
+            this.txtInnervateDelay.Leave += new System.EventHandler(this.txtInnervateDelay_Leave);
+            // 
+            // txtManaPotDelay
+            // 
+            this.txtManaPotDelay.Location = new System.Drawing.Point(108, 184);
+            this.txtManaPotDelay.Name = "txtManaPotDelay";
+            this.txtManaPotDelay.Size = new System.Drawing.Size(93, 20);
+            this.txtManaPotDelay.TabIndex = 19;
+            this.txtManaPotDelay.Leave += new System.EventHandler(this.txtManaPotDelay_Leave);
+            // 
+            // lblManPotDelay
+            // 
+            this.lblManPotDelay.AutoSize = true;
+            this.lblManPotDelay.Location = new System.Drawing.Point(3, 187);
+            this.lblManPotDelay.Name = "lblManPotDelay";
+            this.lblManPotDelay.Size = new System.Drawing.Size(100, 13);
+            this.lblManPotDelay.TabIndex = 20;
+            this.lblManPotDelay.Text = "Mana Potion Delay:";
+            // 
+            // lblManaPotType
+            // 
+            this.lblManaPotType.AutoSize = true;
+            this.lblManaPotType.Location = new System.Drawing.Point(3, 213);
+            this.lblManaPotType.Name = "lblManaPotType";
+            this.lblManaPotType.Size = new System.Drawing.Size(97, 13);
+            this.lblManaPotType.TabIndex = 21;
+            this.lblManaPotType.Text = "Mana Potion Type:";
+            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblManaPotType);
+            this.Controls.Add(this.lblManPotDelay);
+            this.Controls.Add(this.txtManaPotDelay);
+            this.Controls.Add(this.txtInnervateDelay);
+            this.Controls.Add(this.lblInnervateOffset);
+            this.Controls.Add(this.cmbPotType);
+            this.Controls.Add(this.chkManaPots);
             this.Controls.Add(this.lblShadowPriest);
             this.Controls.Add(this.txtShadowPriest);
             this.Controls.Add(this.chkInnervate);
@@ -182,6 +262,13 @@
         private System.Windows.Forms.CheckBox chkInnervate;
         private System.Windows.Forms.TextBox txtShadowPriest;
         private System.Windows.Forms.Label lblShadowPriest;
+        private System.Windows.Forms.CheckBox chkManaPots;
+        private System.Windows.Forms.ComboBox cmbPotType;
+        private System.Windows.Forms.Label lblInnervateOffset;
+        private System.Windows.Forms.TextBox txtInnervateDelay;
+        private System.Windows.Forms.TextBox txtManaPotDelay;
+        private System.Windows.Forms.Label lblManPotDelay;
+        private System.Windows.Forms.Label lblManaPotType;
 
     }
 }

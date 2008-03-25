@@ -13,7 +13,7 @@ namespace Rawr
     [Serializable]
 	public class Stats
 	{
-		private float[] _rawData = new float[107];
+		private float[] _rawData = new float[108];
 		/// <summary>
 		/// The properties for each stat. In order to add additional stats for Rawr to track,
 		/// first add properties here, for each stat. Apply a Category attribute to assign it to
@@ -519,6 +519,12 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float MageSpellCrit { get { return _rawData[106]; } set { _rawData[106] = value; } }
 
+        // Unseen Moon idol
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Unseen Moon proc")]
+        [Category("Equipment Procs")]
+        public float UnseenMoonDamageBonus { get { return _rawData[107]; } set { _rawData[107] = value; } }
+
 
 		#endregion
 
@@ -633,6 +639,7 @@ namespace Rawr
                 WrathDmg = a.WrathDmg + b.WrathDmg,
                 MoonfireDmg = a.MoonfireDmg + b.MoonfireDmg,
                 IdolCritRating = a.IdolCritRating + b.IdolCritRating,
+                UnseenMoonDamageBonus = a.UnseenMoonDamageBonus + b.UnseenMoonDamageBonus,
                 BonusPhysicalDamageMultiplier = (1f + a.BonusPhysicalDamageMultiplier)*(1f+b.BonusPhysicalDamageMultiplier) -1f,
                 BonusCrusaderStrikeDamageMultiplier = (1f + a.BonusCrusaderStrikeDamageMultiplier)*(1f+b.BonusCrusaderStrikeDamageMultiplier) -1f,
                 MageSpellCrit = a.MageSpellCrit + b.MageSpellCrit,

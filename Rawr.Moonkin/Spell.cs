@@ -13,14 +13,39 @@ namespace Rawr.Moonkin
 
     class DotSpell
     {
+        public float spellDamageTickCoefficient = 1.0f;
         public float numTicks = 0.0f;
         public float damagePerTick = 0.0f;
         public float tickLength = 0.0f;
+        public void AddSpellDamage(float spellDamageAdded)
+        {
+            damagePerTick += spellDamageTickCoefficient / numTicks * spellDamageAdded;
+        }
+
+        internal void RemoveSpellDamage(float spellDamageAdded)
+        {
+            damagePerTick += spellDamageTickCoefficient / numTicks * spellDamageAdded;
+        }
     }
     class Spell
     {
-        // This field will become modifiable via a property in 2.4, according to spell haste
-        public static float GlobalCooldown = 1.5f;
+        private static float globalCooldown = 1.5f;
+        public static float GlobalCooldown
+        {
+            get
+            {
+                return globalCooldown;
+            }
+            set
+            {
+                if (value < 1.0f)
+                    globalCooldown = 1.0f;
+                else if (value > 1.5f)
+                    globalCooldown = 1.5f;
+                else
+                    globalCooldown = value;
+            }
+        }
         public SpellSchool school = SpellSchool.Nature;
         public float manaCost = 0.0f;
         public float trueCastTime = 0.0f;
@@ -38,10 +63,20 @@ namespace Rawr.Moonkin
                     trueCastTime = value;
             }
         }
+        public float spellDamageCoefficient = 1.0f;
+        public void AddSpellDamage(float spellDamageAdded)
+        {
+            damagePerHit += spellDamageCoefficient * spellDamageAdded;
+        }
         public float damagePerHit = 0.0f;
         public DotSpell dotEffect = null;
         public float critBonus = 150.0f;
         public float extraCritChance = 0.0f;
+
+        internal void RemoveSpellDamage(float spellDamageAdded)
+        {
+            damagePerHit -= spellDamageCoefficient * spellDamageAdded;
+        }
     }
 
     class MoonkinSpells : IEnumerable<KeyValuePair<string, Spell>>
@@ -63,7 +98,8 @@ namespace Rawr.Moonkin
                         damagePerHit = (381.0f + 429.0f) / 2.0f,
                         dotEffect = null,
                         critBonus = 1.50f,
-                        extraCritChance = 0.0f
+                        extraCritChance = 0.0f,
+                        spellDamageCoefficient = 0.571f
                     });
                     spellList.Add("Starfire", new Spell()
                     {
@@ -73,37 +109,41 @@ namespace Rawr.Moonkin
                         damagePerHit = (540.0f + 636.0f) / 2.0f,
                         dotEffect = null,
                         critBonus = 1.50f,
-                        extraCritChance = 0.0f
+                        extraCritChance = 0.0f,
+                        spellDamageCoefficient = 1.0f
                     });
                     spellList.Add("Moonfire", new Spell()
                     {
                         manaCost = 495.0f,
                         school = SpellSchool.Arcane,
                         // Instant cast, but GCD is limiting factor
-                        castTime = 1.5f,
+                        castTime = Spell.GlobalCooldown,
                         damagePerHit = (305.0f + 357.0f) / 2.0f,
                         dotEffect = new DotSpell()
                         {
                             tickLength = 3.0f,
                             numTicks = 4.0f,
-                            damagePerTick = 150.0f
+                            damagePerTick = 150.0f,
+                            spellDamageTickCoefficient = 0.52f
                         },
                         critBonus = 1.50f,
-                        extraCritChance = 0.0f
+                        extraCritChance = 0.0f,
+                        spellDamageCoefficient = 0.15f
                     });
                     spellList.Add("Insect Swarm", new Spell()
                     {
                         manaCost = 175.0f,
                         school = SpellSchool.Nature,
                         // Instant cast, but GCD is limiting factor
-                        castTime = 1.5f,
+                        castTime = Spell.GlobalCooldown,
                         // Using a 0% damage per hit should ensure that a "critical" insect swarm doesn't do any extra damage
                         damagePerHit = 0.0f,
                         dotEffect = new DotSpell()
                         {
                             tickLength = 2.0f,
                             numTicks = 6.0f,
-                            damagePerTick = 132.0f
+                            damagePerTick = 132.0f,
+                            spellDamageTickCoefficient = 0.76f
                         },
                         critBonus = 0.0f,
                         extraCritChance = 0.0f
@@ -211,14 +251,27 @@ namespace Rawr.Moonkin
             // Mana/5 calculations
             float totalManaRegen = calcs.ManaRegen5SR * fightLength;
 
+            // Mana pot calculations
+            float manaPotDelay = float.Parse(character.CalculationOptions["ManaPotDelay"], System.Globalization.CultureInfo.InvariantCulture) * 60.0f;
+            int numPots = character.CalculationOptions["ManaPots"] == "Yes" && fightLength - manaPotDelay > 0 ? ((int)(fightLength-manaPotDelay) / 120 + 1) : 0;
+            float manaRestoredByPots = 0.0f;
+            float manaPerPot = 0.0f;
+            if (character.CalculationOptions["ManaPotType"] == "Super Mana Potion")
+                manaPerPot = 2400.0f;
+            if (character.CalculationOptions["ManaPotType"] == "Fel Mana Potion")
+                manaPerPot = 3200.0f;
+
+            manaRestoredByPots = numPots * manaPerPot;
+
             // Innervate calculations
-            int numInnervates = character.CalculationOptions["Innervate"] == "Yes" ? ((int)fightLength / (int)innervateCooldown + 1) : 0;
+            float innervateDelay = float.Parse(character.CalculationOptions["InnervateDelay"], System.Globalization.CultureInfo.InvariantCulture) * 60.0f;
+            int numInnervates = character.CalculationOptions["Innervate"] == "Yes" && fightLength - innervateDelay > 0 ? ((int)(fightLength-innervateDelay) / (int)innervateCooldown + 1) : 0;
             // Innervate mana rate increases only spirit-based regen
             float innervateManaRate = (calcs.ManaRegen - calcs.BasicStats.Mp5 / 5f) * 4 + calcs.BasicStats.Mp5 / 5f;
             float innervateTime = numInnervates * 20.0f;
             float totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * calcs.BasicStats.Mana * 0.04f);
 
-            return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen;
+            return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots;
         }
 
         public void GetRotation(Character character, ref CharacterCalculationsMoonkin calcs)
@@ -257,23 +310,17 @@ namespace Rawr.Moonkin
             {
                 float averageCritChance = 0.0f;
                 int spellCount = 0;
-                float cycleLength = 0.0f;
                 foreach (Spell sp in rotation.Value)
                 {
                     // Spells that do 0 damage are considered uncrittable in this simulation
                     if (sp.damagePerHit > 0.0f)
                         averageCritChance += calcs.SpellCrit + sp.extraCritChance;
-                    cycleLength += sp.castTime; // Rough approximation for modeling JoW procs
                     ++spellCount;
                 }
                 averageCritChance /= spellCount;
 
-                // Add in JoW mana restore
-                int numCasts = (int)((fightLength / cycleLength) * spellCount);
-                float numHits = numCasts * (1 - missRate);
-                float manaFromOther = numCasts * calcs.BasicStats.ManaRestorePerCast;
-                float manaFromJoW = numHits * calcs.BasicStats.ManaRestorePerHit;
-                totalMana += manaFromJoW + manaFromOther;
+                // Add trinket effects
+                DoTrinkets(character, calcs, rotation.Value, averageCritChance, missRate);
 
                 float damageDone = 0.0f;
                 float manaUsed = 0.0f;
@@ -292,6 +339,16 @@ namespace Rawr.Moonkin
                 // Handle the case where DoTs overflow the cast times
                 if (dotDuration > 0)
                     duration += dotDuration;
+
+                // Add in JoW mana restore
+                int numCasts = (int)((fightLength / duration) * spellCount);
+                float numHits = numCasts * (1 - missRate);
+                float manaFromOther = numCasts * calcs.BasicStats.ManaRestorePerCast;
+                float manaFromJoW = numHits * calcs.BasicStats.ManaRestorePerHit;
+                // 20-second mp5 trinket with a 2-minute cooldown.
+                float manaFromTrinket = calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min * numCasts * 20 / 240;
+                totalMana += manaFromJoW + manaFromOther + manaFromTrinket;
+
                 // Calculate how long we will burn through all our mana
                 float secsToOom = totalMana / (manaUsed / duration);
                 // This dps calc takes into account time spent not doing dps due to OOM issues
@@ -310,9 +367,106 @@ namespace Rawr.Moonkin
                 }
                 // Remove the mana added from JoW, it will change at the next cycle
                 totalMana -= manaFromJoW + manaFromOther;
+
+                // Remove trinket effects
+                UndoTrinkets(character, calcs, rotation.Value, averageCritChance, missRate);
             }
             calcs.SubPoints = new float[] { calcs.DPS * fightLength };
             calcs.OverallPoints = calcs.SubPoints[0];
+        }
+
+        private void UndoTrinkets(Character character, CharacterCalculationsMoonkin calcs, List<Spell> rotation, float averageCritChance, float missRate)
+        {
+            List<Spell> addedDamage = new List<Spell>();
+            foreach (Spell sp in rotation)
+            {
+                // Again, only remove the bonus spell damage once
+                if (!addedDamage.Contains(sp))
+                {
+                    // Remove moonfire proc bonus
+                    if (rotation.Contains(this["Moonfire"]) && calcs.BasicStats.UnseenMoonDamageBonus > 0)
+                    {
+                        sp.RemoveSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);   // 50% chance to proc, NO COOLDOWN!
+                        if (sp.dotEffect != null) sp.dotEffect.RemoveSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);
+                    }
+                    // Spell damage for 10 seconds on resist
+                    if (calcs.BasicStats.SpellDamageFor10SecOnResist > 0)
+                    {
+                        sp.RemoveSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnResist * missRate);
+                    }
+                    // 15% spell haste on cast, 45-second (4 rotation) cooldown
+                    if (calcs.BasicStats.SpellHasteFor6SecOnCast_15_45 > 0)
+                    {
+                    }
+                    // 10% spell haste on hit, 45-second (4 rotation) cooldown
+                    if (calcs.BasicStats.SpellHasteFor6SecOnHit_10_45 > 0)
+                    {
+                    }
+                    // 5% chance of spell damage on hit, no cooldown.
+                    if (calcs.BasicStats.SpellDamageFor10SecOnHit_5 > 0)
+                    {
+                        sp.RemoveSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_5 * (0.05f * (1 - missRate)));
+                    }
+                    // 10% chance of spell damage on hit, 45 second cooldown.
+                    if (calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 > 0)
+                    {
+                        sp.RemoveSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 * (0.1f * (1 - missRate)) / 4);
+                    }
+                    // 20% chance of spell damage on crit, 45 second cooldown.
+                    if (calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 > 0)
+                    {
+                        sp.RemoveSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 * (0.2f * (averageCritChance * (1 - missRate)) / 4));
+                    }
+                    addedDamage.Add(sp);
+                }
+            }
+        }
+
+        private void DoTrinkets(Character character, CharacterCalculationsMoonkin calcs, List<Spell> rotation, float averageCritChance, float missRate)
+        {
+            List<Spell> addedDamage = new List<Spell>();
+            // Separate loop for doing trinket procs (yeah, I know, seems inefficient, but the average crit chance is needed)
+            foreach (Spell sp in rotation)
+            {
+                if (!addedDamage.Contains(sp))    // Trinket procs, only add spell damage to spells that haven't been touched
+                {
+                    // Unseen Moon proc
+                    if (rotation.Contains(this["Moonfire"]) && calcs.BasicStats.UnseenMoonDamageBonus > 0)
+                    {
+                        sp.AddSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);   // 50% chance to proc, NO COOLDOWN!
+                        if (sp.dotEffect != null) sp.dotEffect.AddSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);
+                    }
+                    // Spell damage for 10 seconds on resist
+                    if (calcs.BasicStats.SpellDamageFor10SecOnResist > 0)
+                    {
+                        sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnResist * missRate);
+                    }
+                    // 15% spell haste on cast, 45-second (4 rotation) cooldown
+                    if (calcs.BasicStats.SpellHasteFor6SecOnCast_15_45 > 0)
+                    {
+                    }
+                    // 10% spell haste on hit, 45-second (4 rotation) cooldown
+                    if (calcs.BasicStats.SpellHasteFor6SecOnHit_10_45 > 0)
+                    {
+                    }
+                    // 5% chance of spell damage on hit, no cooldown.
+                    if (calcs.BasicStats.SpellDamageFor10SecOnHit_5 > 0)
+                    {
+                        sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_5 * (0.05f * (1 - missRate)));
+                    }
+                    // 10% chance of spell damage on hit, 45 second cooldown.
+                    if (calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 > 0)
+                    {
+                        sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_5 * (0.05f * (1 - missRate)));
+                    }
+                    // 20% chance of spell damage on crit, 45 second cooldown.
+                    if (calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 > 0)
+                    {
+                        sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 * (0.2f * (averageCritChance * (1 - missRate)) / 4));
+                    }
+                    addedDamage.Add(sp);
+                }
+            }
         }
 
         private void DoSpellCalculations(Spell sp, bool naturesGrace, float averageCritChance, float missRate, CharacterCalculationsMoonkin calcs, ref float damageDone, ref float manaUsed, ref float duration, ref float dotDuration)
