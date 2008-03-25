@@ -254,24 +254,27 @@ namespace Rawr
 		{
 			WebClient client = new WebClient();
 			client.Headers.Add("user-agent", Properties.NetworkSettings.Default.UserAgent);
-			if (_useDefaultProxy)
+			if (Properties.NetworkSettings.Default.ProxyType == "Http")
 			{
-				client.Proxy = HttpWebRequest.DefaultWebProxy;
-			}
-			else if (!String.IsNullOrEmpty(_proxyServer))
-			{
-				client.Proxy = new WebProxy(_proxyServer, _proxyPort);
-			}
-			if (client.Proxy != null && Rawr.Properties.NetworkSettings.Default.ProxyRequiresAuthentication)
-			{
-                if (Rawr.Properties.NetworkSettings.Default.UseDefaultAuthenticationForProxy)
-                {
-                    client.Proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
-                }
-                else
-                {
-                    client.Proxy.Credentials = new NetworkCredential(_proxyUserName, _proxyPassword, _proxyDomain);
-                }
+				if (_useDefaultProxy)
+				{
+					client.Proxy = HttpWebRequest.DefaultWebProxy;
+				}
+				else if (!String.IsNullOrEmpty(_proxyServer))
+				{
+					client.Proxy = new WebProxy(_proxyServer, _proxyPort);
+				}
+				if (client.Proxy != null && Rawr.Properties.NetworkSettings.Default.ProxyRequiresAuthentication)
+				{
+					if (Rawr.Properties.NetworkSettings.Default.UseDefaultAuthenticationForProxy)
+					{
+						client.Proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+					}
+					else
+					{
+						client.Proxy.Credentials = new NetworkCredential(_proxyUserName, _proxyPassword, _proxyDomain);
+					}
+				}
 			}
 			return client;
 		}
