@@ -460,22 +460,25 @@ namespace Rawr
         {
             Buff b = Buff.GetBuffByName(buff);
 
-            for (int i = 0; i < activeBuffs.Count; i++)
-            {
-                if (activeBuffs[i] != buff)
-                {
-                    Buff b2 = Buff.GetBuffByName(activeBuffs[i]);
-                    foreach (string buffName in b2.ConflictingBuffs)
-                    {
-                        if (Array.IndexOf<string>(b.ConflictingBuffs, buffName) >= 0)
-                        {
-                            activeBuffs.RemoveAt(i);
-                            i--;
-                            break;
-                        }
-                    }
-                }
-            }
+			if (b != null)
+			{
+				for (int i = 0; i < activeBuffs.Count; i++)
+				{
+					if (activeBuffs[i] != buff)
+					{
+						Buff b2 = Buff.GetBuffByName(activeBuffs[i]);
+						foreach (string buffName in b2.ConflictingBuffs)
+						{
+							if (Array.IndexOf<string>(b.ConflictingBuffs, buffName) >= 0)
+							{
+								activeBuffs.RemoveAt(i);
+								i--;
+								break;
+							}
+						}
+					}
+				}
+			}
         }
 
 		public virtual List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, Buff.BuffType buffType, bool activeOnly)
@@ -575,7 +578,8 @@ namespace Rawr
 		{
 			Stats statsBuffs = new Stats();
 			foreach (string buffName in buffs)
-				statsBuffs += Buff.GetBuffByName(buffName).Stats;
+				if (!string.IsNullOrEmpty(buffName))
+					statsBuffs += Buff.GetBuffByName(buffName).Stats;
 
 			return statsBuffs;
 		}

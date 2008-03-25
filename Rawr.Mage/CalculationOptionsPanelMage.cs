@@ -125,7 +125,7 @@ namespace Rawr.Mage
 
         void character_ItemsChanged(object sender, EventArgs e)
         {
-            if (int.Parse(Character.CalculationOptions["IncrementalOptimizations"], CultureInfo.InvariantCulture) == 1)
+            if (Calculations.Instance is CalculationsMage && int.Parse(Character.CalculationOptions["IncrementalOptimizations"], CultureInfo.InvariantCulture) == 1)
             {
                 // compute restricted stacking & spell combinations for incremental optimizations
                 ((CalculationsMage)Calculations.Instance).GetCharacterCalculations(Character, null, true);

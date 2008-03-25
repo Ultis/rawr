@@ -15,7 +15,7 @@ namespace Rawr
 			set { _instance = value; }
 		}
 
-		public static Dictionary<string, Item[]> Items { get { return _instance.Items; } }
+		public static SortedDictionary<string, Item[]> Items { get { return _instance.Items; } }
 
 		public static void InvalidateCachedStats() { Instance.InvalidateCachedStats(); }
 
@@ -44,15 +44,15 @@ namespace Rawr
 		public ItemCacheInstance() { }
 		public ItemCacheInstance(ItemCacheInstance instanceToClone)
 		{
-			_items = new Dictionary<string, Item[]>();
+			_items = new SortedDictionary<string, Item[]>();
 			foreach (KeyValuePair<string, Item[]> kvp in instanceToClone.Items)
 			{
 				_items.Add(kvp.Key, kvp.Value.Clone() as Item[]);
 			}
 		}
 
-		private Dictionary<string, Item[]> _items;
-		public Dictionary<string, Item[]> Items
+		private SortedDictionary<string, Item[]> _items;
+		public SortedDictionary<string, Item[]> Items
 		{
 			get
 			{
@@ -208,7 +208,7 @@ namespace Rawr
 
 		public void Load()
 		{
-			_items = new Dictionary<string, Item[]>();
+			_items = new SortedDictionary<string, Item[]>();
 			List<Item> listItems = new List<Item>();
 			if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml")))
 			{
