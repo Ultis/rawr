@@ -717,7 +717,9 @@ namespace Rawr
 
 		public Stats Clone()
 		{
-            return (Stats)this.MemberwiseClone();
+            Stats clone = (Stats)this.MemberwiseClone();
+            clone._rawData = (float[])clone._rawData.Clone();
+            return clone;
 		}
 
 		#region Multiplicative Handling
