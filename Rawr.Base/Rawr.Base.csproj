@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="SerializableDictionary.cs" />
     <Compile Include="Stats.cs" />
+    <Compile Include="StatusMessaging.cs" />
     <Compile Include="TalentItem.cs" />
     <Compile Include="TalentTree.cs" />
     <Compile Include="WebRequests.cs" />

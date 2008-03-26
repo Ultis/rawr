@@ -742,10 +742,10 @@ namespace Rawr
 
 
 
-		public static Item LoadFromId(int id, string logReason) { return LoadFromId(id, false, logReason); }
-		public static Item LoadFromId(int id, bool forceRefresh, string logReason) { return LoadFromId(id.ToString() + ".0.0.0", forceRefresh, logReason); }
-		public static Item LoadFromId(string gemmedId, string logReason) { return LoadFromId(gemmedId, false, logReason); }
-		public static Item LoadFromId(string gemmedId, bool forceRefresh, string logReason)
+		public static Item LoadFromId(int id, string logReason) { return LoadFromId(id, false, logReason, true); }
+		public static Item LoadFromId(int id, bool forceRefresh, string logReason, bool raiseEvent) { return LoadFromId(id.ToString() + ".0.0.0", forceRefresh, logReason, raiseEvent); }
+		public static Item LoadFromId(string gemmedId, string logReason) { return LoadFromId(gemmedId, false, logReason, true); }	
+        public static Item LoadFromId(string gemmedId, bool forceRefresh, string logReason, bool raiseEvent)
 		{
 			if (string.IsNullOrEmpty(gemmedId))
 				return null;
@@ -755,7 +755,10 @@ namespace Rawr
 			else
 			{
 				Item newItem = Armory.GetItem(gemmedId, logReason);
-				if (newItem != null) ItemCache.AddItem(newItem);
+                if (newItem != null)
+                {
+                    ItemCache.AddItem(newItem, true, raiseEvent);
+                }
 				return newItem;
 			}
 		}

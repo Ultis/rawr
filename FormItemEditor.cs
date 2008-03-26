@@ -240,7 +240,7 @@ namespace Rawr
 		{
 			foreach (int id in ids)
 			{
-				Item newItem = Item.LoadFromId(id, true, "Manually Added");
+				Item newItem = Item.LoadFromId(id, true, "Manually Added",true);
 				if (newItem == null)
 				{
 					if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)

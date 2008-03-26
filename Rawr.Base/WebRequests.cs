@@ -108,21 +108,12 @@ namespace Rawr
 			XmlDocument doc = null;
 			if (!String.IsNullOrEmpty(id))
 			{
-                int retry = 0;
-                bool found = false;
-                while (retry < RETRY_MAX && !found)
+                doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id));
+                if (doc == null || doc.DocumentElement == null
+                                || !doc.DocumentElement.HasChildNodes || !doc.DocumentElement.ChildNodes[0].HasChildNodes)
                 {
-                    doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id));
-                    if (doc != null && doc.DocumentElement != null
-                                    && doc.DocumentElement.HasChildNodes && doc.DocumentElement.ChildNodes[0].HasChildNodes)
-                    {
-                        found = true;
-                    }
-                    else
-                    {
-                        //No such item exists or armory fail, try a couple times just to be sure
-                        retry++;
-                    }
+					//the file is empty, return null to calling function
+					doc = null;
                 }
             }
 			return doc;

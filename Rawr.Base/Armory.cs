@@ -1262,6 +1262,26 @@ namespace Rawr
 				idealGems.Add(Item.ItemSlot.Yellow, idealYellow == null ? 0 : idealYellow.Item.Id);
 				idealGems.Add(Item.ItemSlot.None, 0);
 
+				#region status queuing
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Head.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Neck.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Shoulders.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Back.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Chest.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Wrist.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Hands.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Waist.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Legs.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Feet.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Finger1.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Finger2.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Trinket1.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Trinket2.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.MainHand.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.OffHand.ToString(), "Queued");
+				StatusMessaging.UpdateStatus(Character.CharacterSlot.Ranged.ToString(), "Queued");
+				#endregion
+				
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Head, idealGems);
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Neck, idealGems);
 				LoadUpgradesForSlot(character, Character.CharacterSlot.Shoulders, idealGems);
@@ -1291,6 +1311,7 @@ namespace Rawr
 			XmlDocument docUpgradeSearch = null;
 			try
 			{
+				StatusMessaging.UpdateStatus(slot.ToString(), "Downloading Upgrade List");
 				Item itemToUpgrade = character[slot];
 				if (itemToUpgrade != null)
 				{
@@ -1298,26 +1319,42 @@ namespace Rawr
 					docUpgradeSearch = wrw.DownloadUpgrades(character.Name, character.Region,character.Realm,itemToUpgrade.Id);
 
 					ComparisonCalculationBase currentCalculation = Calculations.GetItemCalculations(itemToUpgrade, character, slot);
-
-					foreach (XmlNode node in docUpgradeSearch.SelectNodes("page/armorySearch/searchResults/items/item"))
+					if (docUpgradeSearch != null)
 					{
-						string id = node.Attributes["id"].Value + ".0.0.0";
-						Item idealItem = GetItem(id, "Loading Upgrades");
-						idealItem._gem1Id = idealGems[idealItem.Sockets.Color1];
-						idealItem._gem2Id = idealGems[idealItem.Sockets.Color2];
-						idealItem._gem3Id = idealGems[idealItem.Sockets.Color3];
-
-						if (!ItemCache.Items.ContainsKey(idealItem.GemmedId))
+						XmlNodeList nodeList = docUpgradeSearch.SelectNodes("page/armorySearch/searchResults/items/item");
+						for (int i = 0; i < nodeList.Count; i++)
 						{
-							ComparisonCalculationBase upgradeCalculation = Calculations.GetItemCalculations(idealItem, character, slot);
-
-							if (upgradeCalculation.OverallPoints > (currentCalculation.OverallPoints * .8f))
+							StatusMessaging.UpdateStatus(slot.ToString(), string.Format("Downloading definition {0} of {1} possible upgrades", i, nodeList.Count));
+							string id = nodeList[i].Attributes["id"].Value + ".0.0.0";
+							Item idealItem = GetItem(id, "Loading Upgrades");
+							if (idealItem != null)
 							{
-								ItemCache.AddItem(idealItem);
+								idealItem._gem1Id = idealGems[idealItem.Sockets.Color1];
+								idealItem._gem2Id = idealGems[idealItem.Sockets.Color2];
+								idealItem._gem3Id = idealGems[idealItem.Sockets.Color3];
+
+								if (!ItemCache.Items.ContainsKey(idealItem.GemmedId))
+								{
+									Item newItem = ItemCache.Instance.AddItem(idealItem, true, false);
+
+									//This is calling OnItemsChanged and ItemCache.Add further down the call stack so if we add it to the cache first, 
+									// then do the compare and remove it if we don't want it, we can avoid that constant event trigger
+									ComparisonCalculationBase upgradeCalculation = Calculations.GetItemCalculations(idealItem, character, slot);
+
+									if (upgradeCalculation.OverallPoints < (currentCalculation.OverallPoints * .8f))
+									{
+										ItemCache.DeleteItem(newItem, false);
+									}
+								}
 							}
 						}
 					}
+					else
+					{
+						//no response returned, send failure event
+					}
 				}
+				StatusMessaging.UpdateStatusFinished(slot.ToString());
 			}
 			catch (Exception ex)
 			{

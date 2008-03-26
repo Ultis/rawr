@@ -50,6 +50,7 @@ namespace Rawr
 
         public static void CacheAllIcons(Item[] items)
         {
+			StatusMessaging.UpdateStatus("CacheAllIcons", "Caching all Item Icons");
 			WebRequestWrapper webRequests = new WebRequestWrapper();
 			List<string> filesDownloading = new List<string>();
             for(int i=0;i<items.Length && !WebRequestWrapper.LastWasFatalError;i++)
@@ -71,6 +72,7 @@ namespace Rawr
 			{
 				MessageBox.Show("There was an error trying to retrieve images from the armory.  Please check your proxy settings and network connection.");
 			}
+			StatusMessaging.UpdateStatusFinished("CacheAllIcons");
         }
 
         public static Image GetItemIcon(Item item)

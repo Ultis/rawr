@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Xml;
 
 using Rawr.Forms;
+using Rawr.Forms.Controllers;
 
 namespace Rawr
 {
@@ -17,9 +18,53 @@ namespace Rawr
 		private string _characterPath = "";
 		private bool _unsavedChanges = false;
 		private CharacterCalculationsBase _calculatedStats = null;
-
+		private List<ToolStripMenuItem> _recentCharacterMenuItems = new List<ToolStripMenuItem>();
 		private bool _loadingCharacter = false;
 		private Character _character = null;
+		private List<ToolStripMenuItem> _customChartMenuItems = new List<ToolStripMenuItem>();
+		private MainController _Controller;
+		private Status _StatusForm;
+		public FormMain()
+		{
+			_StatusForm = new Status();
+			_Controller = new MainController(this);
+
+			_spash.Show();
+			Application.DoEvents();
+
+			_Controller.LoadModel(_Controller.ConfigModel);
+			InitializeComponent();
+			Application.DoEvents();
+			
+
+			Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[_Controller.ConfigModel], true);
+			if (icon != null)
+			{
+				this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
+			}
+			
+			UpdateRecentCharacterMenuItems();
+
+			ToolStripMenuItem modelsToolStripMenuItem = new ToolStripMenuItem("Models");
+			menuStripMain.Items.Add(modelsToolStripMenuItem);
+			foreach (KeyValuePair<string, Type> kvp in Calculations.Models)
+			{
+				ToolStripMenuItem modelToolStripMenuItem = new ToolStripMenuItem(kvp.Key);
+				modelToolStripMenuItem.Click += new EventHandler(modelToolStripMenuItem_Click);
+				modelToolStripMenuItem.Checked = kvp.Value == Calculations.Instance.GetType();
+				modelToolStripMenuItem.Tag = kvp;
+				modelsToolStripMenuItem.DropDownItems.Add(modelToolStripMenuItem);
+			}
+
+			this.Shown += new EventHandler(FormMain_Shown);
+			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+			Calculations_ModelChanged(null, null);
+
+			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
+			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
+		}
+
 		public Character Character
 		{
 			get
@@ -123,53 +168,13 @@ namespace Rawr
 			//and the ground below grew colder / as they put you down inside
 		}
 
-
-        public void LoadModel(string displayName)
-        {
-            try
-            {
-                Calculations.LoadModel(Calculations.Models[displayName]);
-            }
-            finally
-            {
-                ConfigModel = displayName;
-            }
-        }
-
-
-		public string ConfigModel
-		{
-			get {
-                return Calculations.ValidModel(Properties.Recent.Default.RecentModel);
-            }
-			set { Properties.Recent.Default.RecentModel = value; }
-		}
-
-		public string[] ConfigRecentCharacters
-		{
-			get
-			{
-				string recentCharacters = Properties.Recent.Default.RecentFiles;
-				if (string.IsNullOrEmpty(recentCharacters))
-					return new string[0];
-				else
-					return recentCharacters.Split(';'); 
-			}
-			set { Properties.Recent.Default.RecentFiles = string.Join(";", value); }
-		}
-
 		public void AddRecentCharacter(string character)
 		{
-			List<string> recentCharacters = new List<string>(ConfigRecentCharacters);
-			recentCharacters.Remove(character);
-			recentCharacters.Add(character);
-			while (recentCharacters.Count > 8)
-				recentCharacters.RemoveRange(0, recentCharacters.Count - 8);
-			ConfigRecentCharacters = recentCharacters.ToArray();
+			_Controller.AddRecentCharacter(character);
 			UpdateRecentCharacterMenuItems();
 		}
 
-		private List<ToolStripMenuItem> _recentCharacterMenuItems = new List<ToolStripMenuItem>();
+		
 		public void UpdateRecentCharacterMenuItems()
 		{
 			foreach (ToolStripMenuItem item in _recentCharacterMenuItems)
@@ -178,7 +183,7 @@ namespace Rawr
 				item.Dispose();
 			}
 			_recentCharacterMenuItems.Clear();
-			foreach (string recentCharacter in ConfigRecentCharacters)
+			foreach (string recentCharacter in _Controller.ConfigRecentCharacters)
 			{
 				string fileName = System.IO.Path.GetFileName(recentCharacter);
 				ToolStripMenuItem recentCharacterMenuItem = new ToolStripMenuItem(fileName);
@@ -189,7 +194,7 @@ namespace Rawr
 			}
 		}
 
-		private List<ToolStripMenuItem> _customChartMenuItems = new List<ToolStripMenuItem>();
+		
 		public void UpdateCustomChartMenuItems()
 		{
 			foreach (ToolStripMenuItem item in _customChartMenuItems)
@@ -216,42 +221,7 @@ namespace Rawr
 			}
 		}
 
-		public FormMain()
-		{
-			_spash.Show();
-			Application.DoEvents();
-			
-			LoadModel(this.ConfigModel);
-			InitializeComponent();
-			Application.DoEvents();
-			
-			Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[this.ConfigModel], true);
-			if (icon != null)
-			{
-				this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
-			}
-			UpdateRecentCharacterMenuItems();
-
-			ToolStripMenuItem modelsToolStripMenuItem = new ToolStripMenuItem("Models");
-			menuStripMain.Items.Add(modelsToolStripMenuItem);
-			foreach (KeyValuePair<string, Type> kvp in Calculations.Models)
-			{
-				ToolStripMenuItem modelToolStripMenuItem = new ToolStripMenuItem(kvp.Key);
-				modelToolStripMenuItem.Click += new EventHandler(modelToolStripMenuItem_Click);
-				modelToolStripMenuItem.Checked = kvp.Value == Calculations.Instance.GetType();
-				modelToolStripMenuItem.Tag = kvp;
-				modelsToolStripMenuItem.DropDownItems.Add(modelToolStripMenuItem);					
-			}
-
-			this.Shown += new EventHandler(FormMain_Shown);
-			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
-			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
-			Calculations_ModelChanged(null, null);
-			
-			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
-			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
-		}
-
+	
 		private void modelToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			ToolStripMenuItem modelToolStripMenuItem = sender as ToolStripMenuItem;
@@ -349,13 +319,10 @@ namespace Rawr
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
 		{
-			this.Cursor = Cursors.WaitCursor;
 			Item[] items = ItemCache.RelevantItems;
-			ItemIcons.CacheAllIcons(items);
 			itemComparison1.Items = items;
 			LoadComparisonData();
 			FormItemSelection.Instance.Items = items;
-			this.Cursor = Cursors.Default;
 		}
 
 		private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -673,34 +640,53 @@ namespace Rawr
 
 		private void loadPossibleUpgradesFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.Cursor = Cursors.WaitCursor;
-			_spash = new FormSplash();
-			_spash.Show();
-			Application.DoEvents();
-			Armory.LoadUpgradesFromArmory(Character);
-			ItemCache.OnItemsChanged();
-			_spash.Hide();
-			_spash.Dispose();
-			this.Cursor = Cursors.Default;
+			Cursor = Cursors.WaitCursor;
+			if (_StatusForm == null || _StatusForm.IsDisposed)
+			{
+				_StatusForm = new Status();
+			}
+			_StatusForm.Show(this);
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += new DoWorkEventHandler(bw_GetArmoryUpgrades);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+            bw.RunWorkerAsync(Character);
 		}
+
+        void bw_GetArmoryUpgrades(object sender, DoWorkEventArgs e)
+        {
+            _Controller.GetArmoryUpgrades(e.Argument as Character);
+        }
 
         private void updateAllItemsToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-			WebRequestWrapper.ResetFatalErrorIndicator();
-			foreach (Item item in ItemCache.AllItems)
+			Cursor = Cursors.WaitCursor;
+			if (_StatusForm == null || _StatusForm.IsDisposed)
 			{
-				if (item.Id < 90000)
-				{
-					Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing");
-					if (newItem == null)
-					{
-						MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
-						ItemCache.AddItem(item, true, false);
-					}
-				}
+				_StatusForm = new Status();
 			}
-			ItemCache.OnItemsChanged();
-			//AddPTRItems();
+			_StatusForm.Show(this);
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += new DoWorkEventHandler(bw_UpdateAllCachedItems);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+            bw.RunWorkerAsync();
+        }
+
+        void bw_UpdateAllCachedItems(object sender, DoWorkEventArgs e)
+        {
+            _Controller.UpdateAllCachedItems();
+        }
+
+        void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Cursor = Cursors.Default;
+            if (e.Error != null)
+            {
+                MessageBox.Show("Error processing request: " + e.Error.Message);
+            }
+            if (_StatusForm != null && !_StatusForm.IsDisposed)
+            {
+             //   _StatusForm.Hide();
+            }
         }
 
         private void AddPTRItems()
