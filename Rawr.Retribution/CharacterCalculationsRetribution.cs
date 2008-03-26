@@ -155,27 +155,27 @@ namespace Rawr.Retribution
             CalculationsRetribution cr = new CalculationsRetribution();
 
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            dictValues.Add("Health", BasicStats.Health.ToString());
+            dictValues.Add("Health", BasicStats.Health.ToString("N2"));
 
-            dictValues.Add("Agility", BasicStats.Agility.ToString());
-            dictValues.Add("Strength", BasicStats.Strength.ToString());
+            dictValues.Add("Agility", BasicStats.Agility.ToString("N2"));
+            dictValues.Add("Strength", BasicStats.Strength.ToString("N2"));
 
-            dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
+            dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("N2"));
 
-            dictValues.Add("Hit %", (BasicStats.HitRating/15.76f).ToString());
-            dictValues.Add("Crit %", (BasicStats.CritRating/22.08f).ToString());
-            dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString());
-            dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
+            dictValues.Add("Hit", BasicStats.HitRating.ToString() + " (" + (BasicStats.HitRating / 15.76f).ToString("N2") +"% )");
+            dictValues.Add("Crit", BasicStats.CritRating.ToString() + " (" + (BasicStats.CritRating /22.08f).ToString("N2") +"% )");
+            dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString("N2"));
+            dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("N2"));
             dictValues.Add("Armor Penetration", BasicStats.ArmorPenetration.ToString());
-            dictValues.Add("Total DPS", DPSPoints.ToString());
-            dictValues.Add("Crusader Strike", CSDPSPoints.ToString());
-            dictValues.Add("Seal", SealDPSPoints.ToString());
-            dictValues.Add("White", WhiteDPSPoints.ToString());
-            dictValues.Add("Judgement", JudgementDPSPoints.ToString());
-            dictValues.Add("Consecration", ConsDPSPoints.ToString());
-            dictValues.Add("Exorcism", ExoDPSPoints.ToString());
-            dictValues.Add("Windfury", WFDPSPoints.ToString());
-            dictValues.Add("Weapon Damage", BasicStats.WeaponDamage.ToString());
+            dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
+            dictValues.Add("Crusader Strike", CSDPSPoints.ToString("N2"));
+            dictValues.Add("Seal", SealDPSPoints.ToString("N2"));
+            dictValues.Add("White", WhiteDPSPoints.ToString("N2"));
+            dictValues.Add("Judgement", JudgementDPSPoints.ToString("N2"));
+            dictValues.Add("Consecration", ConsDPSPoints.ToString("N2"));
+            dictValues.Add("Exorcism", ExoDPSPoints.ToString("N2"));
+            dictValues.Add("Windfury", WFDPSPoints.ToString("N2"));
+            dictValues.Add("Weapon Damage", BasicStats.WeaponDamage.ToString("N2"));
 
             return dictValues;
            

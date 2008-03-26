@@ -38,12 +38,16 @@
             this.checkBoxConsecration = new System.Windows.Forms.CheckBox();
             this.comboBoxConsRank = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblLength = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.txtArmor = new System.Windows.Forms.TextBox();
             this.trackBarFightLength = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.btnTalents = new System.Windows.Forms.Button();
             this.btnGraph = new System.Windows.Forms.Button();
+            this.checkBoxMeta = new System.Windows.Forms.CheckBox();
             this.groupBoxSealChoice.SuspendLayout();
             this.groupBoxSkillUsage.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -156,7 +160,7 @@
             this.comboBoxConsRank.FormattingEnabled = true;
             this.comboBoxConsRank.Items.AddRange(new object[] {
             "Rank 1",
-            "Rank 8"});
+            "Rank 6"});
             this.comboBoxConsRank.Location = new System.Drawing.Point(110, 26);
             this.comboBoxConsRank.Name = "comboBoxConsRank";
             this.comboBoxConsRank.Size = new System.Drawing.Size(66, 22);
@@ -165,6 +169,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lblLength);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txtArmor);
             this.groupBox1.Controls.Add(this.trackBarFightLength);
             this.groupBox1.Controls.Add(this.label2);
@@ -179,6 +186,34 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Skill Usage";
             // 
+            // lblLength
+            // 
+            this.lblLength.AutoSize = true;
+            this.lblLength.Location = new System.Drawing.Point(76, 48);
+            this.lblLength.Name = "lblLength";
+            this.lblLength.Size = new System.Drawing.Size(19, 14);
+            this.lblLength.TabIndex = 2;
+            this.lblLength.Text = "10";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.SystemColors.Control;
+            this.label3.Location = new System.Drawing.Point(154, 72);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(19, 14);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "10";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(94, 70);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(13, 14);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "0";
+            // 
             // txtArmor
             // 
             this.txtArmor.Location = new System.Drawing.Point(87, 87);
@@ -190,9 +225,9 @@
             // 
             // trackBarFightLength
             // 
-            this.trackBarFightLength.Location = new System.Drawing.Point(87, 41);
+            this.trackBarFightLength.Location = new System.Drawing.Point(95, 41);
             this.trackBarFightLength.Name = "trackBarFightLength";
-            this.trackBarFightLength.Size = new System.Drawing.Size(86, 42);
+            this.trackBarFightLength.Size = new System.Drawing.Size(86, 45);
             this.trackBarFightLength.TabIndex = 2;
             this.trackBarFightLength.Value = 10;
             this.trackBarFightLength.Scroll += new System.EventHandler(this.trackBarFightLength_Scroll);
@@ -220,7 +255,7 @@
             // btnTalents
             // 
             this.btnTalents.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTalents.Location = new System.Drawing.Point(8, 368);
+            this.btnTalents.Location = new System.Drawing.Point(8, 422);
             this.btnTalents.Name = "btnTalents";
             this.btnTalents.Size = new System.Drawing.Size(75, 23);
             this.btnTalents.TabIndex = 5;
@@ -231,7 +266,7 @@
             // btnGraph
             // 
             this.btnGraph.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGraph.Location = new System.Drawing.Point(118, 368);
+            this.btnGraph.Location = new System.Drawing.Point(118, 422);
             this.btnGraph.Name = "btnGraph";
             this.btnGraph.Size = new System.Drawing.Size(75, 23);
             this.btnGraph.TabIndex = 5;
@@ -239,17 +274,30 @@
             this.btnGraph.UseVisualStyleBackColor = true;
             this.btnGraph.Click += new System.EventHandler(this.btnGraph_Click);
             // 
+            // checkBoxMeta
+            // 
+            this.checkBoxMeta.AutoSize = true;
+            this.checkBoxMeta.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxMeta.Location = new System.Drawing.Point(8, 378);
+            this.checkBoxMeta.Name = "checkBoxMeta";
+            this.checkBoxMeta.Size = new System.Drawing.Size(177, 18);
+            this.checkBoxMeta.TabIndex = 6;
+            this.checkBoxMeta.Text = "Enforce Meta Requirements";
+            this.checkBoxMeta.UseVisualStyleBackColor = true;
+            this.checkBoxMeta.CheckedChanged += new System.EventHandler(this.checkBoxMeta_CheckedChanged);
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBoxMeta);
             this.Controls.Add(this.btnGraph);
             this.Controls.Add(this.btnTalents);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxSkillUsage);
             this.Controls.Add(this.groupBoxSealChoice);
             this.Name = "CalculationOptionsPanelRetribution";
-            this.Size = new System.Drawing.Size(196, 428);
+            this.Size = new System.Drawing.Size(196, 466);
             this.groupBoxSealChoice.ResumeLayout(false);
             this.groupBoxSealChoice.PerformLayout();
             this.groupBoxSkillUsage.ResumeLayout(false);
@@ -258,6 +306,7 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarFightLength)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -279,5 +328,9 @@
         private System.Windows.Forms.TextBox txtArmor;
         private System.Windows.Forms.Button btnTalents;
         private System.Windows.Forms.Button btnGraph;
+        private System.Windows.Forms.Label lblLength;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkBoxMeta;
     }
 }

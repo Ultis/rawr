@@ -35,6 +35,7 @@ namespace Rawr.Retribution
 
             comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             txtArmor.Text = Character.CalculationOptions["BossArmor"];
+            lblLength.Text = trackBarFightLength.Value.ToString();
             trackBarFightLength.Value = int.Parse(Character.CalculationOptions["FightLength"]);
             if (Character.CalculationOptions["Exorcism"] == "1")
             {
@@ -125,6 +126,7 @@ namespace Rawr.Retribution
         private void trackBarFightLength_Scroll(object sender, EventArgs e)
         {
             Character.CalculationOptions["FightLength"] = trackBarFightLength.Value.ToString();
+            lblLength.Text = trackBarFightLength.Value.ToString();
             Character.OnItemsChanged();
         }
 
@@ -328,6 +330,12 @@ namespace Rawr.Retribution
             Graph graph = new Graph(_prerenderedGraph);
             graph.Show();
                      
+        }
+
+        private void checkBoxMeta_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["EnforceMetagemRequirements"] = checkBoxMeta.Checked ? "Yes" : "No";
+            Character.OnItemsChanged();
         }
     }
 }
