@@ -239,7 +239,7 @@ namespace Rawr
 				{
 					this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
 				}
-				Calculations.LoadModel(kvpModel.Value);
+                _Controller.LoadModel(kvpModel.Key);
 			}
 		}
 
