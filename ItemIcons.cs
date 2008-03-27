@@ -98,7 +98,7 @@ namespace Rawr
             {
                 returnImage = SmallIcons.Images[iconName];
             }
-            else if (LargeIcons.Images.ContainsKey(iconName))
+            else if (!small && LargeIcons.Images.ContainsKey(iconName))
             {
                 returnImage = LargeIcons.Images[iconName];
             }
