@@ -660,6 +660,12 @@ namespace Rawr
 		//{
 		//    return CompareTo(other as Stats);
 		//}
+
+        public override int GetHashCode()
+        {
+            return _rawData.GetHashCode();
+        }
+
 		public override bool Equals(object obj)
 		{
 			return this == (obj as Stats);
