@@ -22,25 +22,28 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Tasks = new System.Windows.Forms.TabPage();
-            this.Errors = new System.Windows.Forms.TabPage();
             this.listView1 = new System.Windows.Forms.ListView();
             this.Key = new System.Windows.Forms.ColumnHeader();
             this.Details = new System.Windows.Forms.ColumnHeader();
+            this.Errors = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.Tasks.SuspendLayout();
             this.SuspendLayout();
             // 
             // progressBar1
             // 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 41);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(308, 23);
+            this.progressBar1.Size = new System.Drawing.Size(322, 23);
             this.progressBar1.TabIndex = 0;
             // 
             // Cancel
             // 
+            this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Cancel.Enabled = false;
-            this.Cancel.Location = new System.Drawing.Point(331, 12);
+            this.Cancel.Location = new System.Drawing.Point(345, 12);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(75, 23);
             this.Cancel.TabIndex = 1;
@@ -49,7 +52,8 @@
             // 
             // ShowHideDetails
             // 
-            this.ShowHideDetails.Location = new System.Drawing.Point(331, 41);
+            this.ShowHideDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ShowHideDetails.Location = new System.Drawing.Point(345, 41);
             this.ShowHideDetails.Name = "ShowHideDetails";
             this.ShowHideDetails.Size = new System.Drawing.Size(75, 23);
             this.ShowHideDetails.TabIndex = 2;
@@ -68,20 +72,25 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Location = new System.Drawing.Point(12, 90);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(394, 10);
+            this.groupBox1.Size = new System.Drawing.Size(408, 10);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.Tasks);
             this.tabControl1.Controls.Add(this.Errors);
             this.tabControl1.Location = new System.Drawing.Point(16, 110);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(390, 171);
+            this.tabControl1.Size = new System.Drawing.Size(404, 171);
             this.tabControl1.TabIndex = 6;
             // 
             // Tasks
@@ -90,20 +99,10 @@
             this.Tasks.Location = new System.Drawing.Point(4, 22);
             this.Tasks.Name = "Tasks";
             this.Tasks.Padding = new System.Windows.Forms.Padding(3);
-            this.Tasks.Size = new System.Drawing.Size(382, 145);
+            this.Tasks.Size = new System.Drawing.Size(396, 145);
             this.Tasks.TabIndex = 0;
             this.Tasks.Text = "Tasks";
             this.Tasks.UseVisualStyleBackColor = true;
-            // 
-            // Errors
-            // 
-            this.Errors.Location = new System.Drawing.Point(4, 22);
-            this.Errors.Name = "Errors";
-            this.Errors.Padding = new System.Windows.Forms.Padding(3);
-            this.Errors.Size = new System.Drawing.Size(382, 145);
-            this.Errors.TabIndex = 1;
-            this.Errors.Text = "Errors";
-            this.Errors.UseVisualStyleBackColor = true;
             // 
             // listView1
             // 
@@ -115,7 +114,7 @@
             this.listView1.Location = new System.Drawing.Point(3, 3);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(376, 139);
+            this.listView1.Size = new System.Drawing.Size(390, 139);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -130,19 +129,29 @@
             this.Details.Text = "Detail";
             this.Details.Width = 210;
             // 
+            // Errors
+            // 
+            this.Errors.Location = new System.Drawing.Point(4, 22);
+            this.Errors.Name = "Errors";
+            this.Errors.Padding = new System.Windows.Forms.Padding(3);
+            this.Errors.Size = new System.Drawing.Size(382, 145);
+            this.Errors.TabIndex = 1;
+            this.Errors.Text = "Errors";
+            this.Errors.UseVisualStyleBackColor = true;
+            // 
             // Status
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(418, 293);
+            this.ClientSize = new System.Drawing.Size(432, 293);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ShowHideDetails);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.progressBar1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(440, 327);
             this.Name = "Status";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Status";

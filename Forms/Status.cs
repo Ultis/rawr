@@ -12,34 +12,24 @@ namespace Rawr.Forms
 {
 	public partial class Status : Form
 	{
-		private bool expanded = true;
+        private const string OVERALL_PROGRESS = "{0} of {1} Tasks have completed successfully";
+        private const int MIN_HEIGHT_EXPANDED = 327;
+        private const int MIN_HEIGHT_COLLAPSED = 130;
+        private const int MIN_WIDTH = 440;
+        private bool _Expanded = true;
 		private List<StatusEventArgs> _StatusUpdates;
-		private const string overallProgress = "{0} of {1} Tasks have completed successfully";
-		private int _hScrollPosition = 0;
-		private int _vScrollPosition = 0;
+        private int _LastExpandedHeight;
+
 
 		public Status()
 		{
 			InitializeComponent();
+            _LastExpandedHeight = 392;
 			_StatusUpdates = new List<StatusEventArgs>();
 			StatusMessaging.StatusUpdate += new StatusMessaging.StatusUpdateDelegate(StatusMessaging_StatusUpdate);
-//			statusEventArgsBindingSource.DataSource = _StatusUpdates;
-//			dataGridView1.Scroll += new ScrollEventHandler(dataGridView1_Scroll);
 		}
 
-        //void dataGridView1_Scroll(object sender, ScrollEventArgs e)
-        //{
-        //    if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
-        //    {
-        //        _hScrollPosition = e.NewValue;
-        //    }
-        //    else
-        //    {
-        //        _vScrollPosition = dataGridView1.FirstDisplayedScrollingRowIndex;
-        //    }
-        //}
-
-		private void StatusMessaging_StatusUpdate(StatusEventArgs args)
+        private void StatusMessaging_StatusUpdate(StatusEventArgs args)
 		{
 			if (!this.IsDisposed)
 			{
@@ -87,24 +77,26 @@ namespace Rawr.Forms
                     listView1.Items.Add(item);
                 }
 			}
-			label1.Text = string.Format(overallProgress,doneCount, _StatusUpdates.Count);
+			label1.Text = string.Format(OVERALL_PROGRESS,doneCount, _StatusUpdates.Count);
 			progressBar1.Value = Convert.ToInt32(decimal.Round(((decimal)doneCount / (decimal)_StatusUpdates.Count) * 100));
 		}
 
-        private int _expandedHeight = 391;
-
 		private void ShowHideDetails_Click(object sender, EventArgs e)
 		{
-			expanded = !expanded;
-			if (expanded)
+			_Expanded = !_Expanded;
+			if (_Expanded)
 			{
-				this.Size = new Size(this.Size.Width,_expandedHeight);
+                this.MinimumSize = new Size(MIN_WIDTH, MIN_HEIGHT_EXPANDED);
+                this.MaximumSize = new Size(0, 0);
+				this.Size = new Size(this.Size.Width,_LastExpandedHeight);
 				ShowHideDetails.Text = "<< Details";
 			}
 			else
 			{
-                _expandedHeight = this.Size.Height;
-				this.Size = new Size(this.Size.Width,130);
+                _LastExpandedHeight = this.Size.Height;
+                this.MinimumSize = new Size(MIN_WIDTH, MIN_HEIGHT_COLLAPSED);
+                this.MaximumSize = new Size(700, MIN_HEIGHT_COLLAPSED);
+				this.Size = new Size(this.Size.Width,MIN_HEIGHT_COLLAPSED);
 				ShowHideDetails.Text = "Details >>";
 			}
 		}
