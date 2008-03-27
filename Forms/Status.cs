@@ -91,16 +91,19 @@ namespace Rawr.Forms
 			progressBar1.Value = Convert.ToInt32(decimal.Round(((decimal)doneCount / (decimal)_StatusUpdates.Count) * 100));
 		}
 
+        private int _expandedHeight = 391;
+
 		private void ShowHideDetails_Click(object sender, EventArgs e)
 		{
 			expanded = !expanded;
 			if (expanded)
 			{
-				this.Size = new Size(this.Size.Width,327);
+				this.Size = new Size(this.Size.Width,_expandedHeight);
 				ShowHideDetails.Text = "<< Details";
 			}
 			else
 			{
+                _expandedHeight = this.Size.Height;
 				this.Size = new Size(this.Size.Width,130);
 				ShowHideDetails.Text = "Details >>";
 			}
