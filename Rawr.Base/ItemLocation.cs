@@ -53,6 +53,7 @@ namespace Rawr
     [XmlInclude(typeof(ContainerItem))]
     public class ItemLocation
     {
+        [XmlIgnore]
         public ItemSource Source{get;set;}
 
         private string _description;
