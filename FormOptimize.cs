@@ -1189,7 +1189,19 @@ namespace Rawr
 				return x.Meta == y.Meta && x.Red == y.Red && x.Yellow == y.Yellow 
 					&& x.Blue == y.Blue && x.Stats == y.Stats;
 			}
+            public override int GetHashCode()
+            {
+                return Stats.GetHashCode()^GemmedId.GetHashCode();
+            }
+            public override bool Equals(object obj)
+            {
 
+                if(obj != null && obj.GetType() == this.GetType())
+                {
+                    return this == (obj as StatsColors);
+                }
+                return base.Equals(obj);
+            }
 			public static bool operator !=(StatsColors x, StatsColors y)
 			{
 				return !(x == y);
