@@ -47,6 +47,12 @@ namespace Rawr.Moonkin
                 Character.CalculationOptions["ManaPotDelay"] = "1.5";
             if (!Character.CalculationOptions.ContainsKey("ManaPotType"))
                 Character.CalculationOptions["ManaPotType"] = "Super Mana Potion";
+            if (!Character.CalculationOptions.ContainsKey("InnervateWeapon"))
+                Character.CalculationOptions["InnervateWeapon"] = "No";
+            if (!Character.CalculationOptions.ContainsKey("InnervateWeaponInt"))
+                Character.CalculationOptions["InnervateWeaponInt"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("InnervateWeaponSpi"))
+                Character.CalculationOptions["InnervateWeaponSpi"] = "0";
 
             cmbTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             chkMetagem.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
@@ -61,6 +67,11 @@ namespace Rawr.Moonkin
             txtInnervateDelay.Enabled = chkInnervate.Checked;
             txtManaPotDelay.Text = Character.CalculationOptions["ManaPotDelay"];
             txtManaPotDelay.Enabled = chkManaPots.Checked;
+            chkInnervateWeapon.Checked = Character.CalculationOptions["InnervateWeapon"] == "Yes";
+            txtInnervateWeaponInt.Enabled = chkInnervateWeapon.Checked;
+            txtInnervateWeaponInt.Text = Character.CalculationOptions["InnervateWeaponInt"];
+            txtInnervateWeaponSpi.Enabled = chkInnervateWeapon.Checked;
+            txtInnervateWeaponSpi.Text = Character.CalculationOptions["InnervateWeaponSpi"];
 
             if (talents != null) talents.LoadCalculationOptions();
         }
@@ -125,6 +136,26 @@ namespace Rawr.Moonkin
         private void txtManaPotDelay_Leave(object sender, EventArgs e)
         {
             Character.CalculationOptions["ManaPotDelay"] = txtManaPotDelay.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void txtInnervateWeaponInt_Leave(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["InnervateWeaponInt"] = txtInnervateWeaponInt.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void txtInnervateWeaponSpi_Leave(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["InnervateWeaponSpi"] = txtInnervateWeaponSpi.Text;
+            Character.OnItemsChanged();
+        }
+
+        private void chkInnervateWeapon_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["InnervateWeapon"] = chkInnervateWeapon.Checked ? "Yes" : "No";
+            txtInnervateWeaponInt.Enabled = chkInnervateWeapon.Checked;
+            txtInnervateWeaponSpi.Enabled = chkInnervateWeapon.Checked;
             Character.OnItemsChanged();
         }
     }

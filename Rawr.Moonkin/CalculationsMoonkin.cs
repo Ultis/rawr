@@ -195,17 +195,6 @@ namespace Rawr.Moonkin
             spellList["Moonfire"].dotEffect.AddSpellDamage(calcs.ArcaneDamage);
             spellList["Insect Swarm"].dotEffect.AddSpellDamage(calcs.NatureDamage);
 
-            // Add trinket effects
-            foreach (KeyValuePair<string, Spell> pair in spellList)
-            {
-                Spell sp = pair.Value;
-                // 20-second spell damage trinket with 2-minute cooldown.
-                sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor20SecOnUse2Min * 20 / 240);
-                // 15-second spell damage trinket with a 1.5-minute cooldown.
-                sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor15SecOnUse90Sec * 15 / 90);
-                // 20-second spell haste trinket with a 2-minute cooldown.
-            }
-
             // Add spell damage from idols
             spellList["Starfire"].damagePerHit += stats.StarfireDmg;
             spellList["Moonfire"].damagePerHit += stats.MoonfireDmg;
@@ -248,11 +237,20 @@ namespace Rawr.Moonkin
             spellList["Moonfire"].dotEffect.numTicks += (int)(stats.MoonfireExtension / spellList["Moonfire"].dotEffect.tickLength);
             spellList["Starfire"].extraCritChance += stats.StarfireCritChance;
 
-            // Haste and latency calculations
-            Spell.GlobalCooldown /= 1 + stats.SpellHasteRating / hasteDivisor;
+            // Haste and latency calculations, trinketed spell damage
+            // 20-second spell haste trinket with a 2-minute cooldown.
+            float trinketedHaste = calcs.BasicStats.SpellHasteFor20SecOnUse2Min * 20 / 240;
+
+            Spell.GlobalCooldown /= 1 + (stats.SpellHasteRating + trinketedHaste) / hasteDivisor;
             foreach (KeyValuePair<string, Spell> pair in spellList)
             {
-                pair.Value.castTime /= 1 + stats.SpellHasteRating / hasteDivisor;
+                Spell sp = pair.Value;
+                // 20-second spell damage trinket with 2-minute cooldown.
+                sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor20SecOnUse2Min * 20 / 240);
+                // 15-second spell damage trinket with a 1.5-minute cooldown.
+                sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor15SecOnUse90Sec * 15 / 90);
+                // Add haste calculations
+                pair.Value.castTime /= 1 + (stats.SpellHasteRating + trinketedHaste) / hasteDivisor;
                 pair.Value.castTime += calcs.Latency;
             }
             return spellList;
@@ -388,6 +386,7 @@ namespace Rawr.Moonkin
                 SpellDamageFor15SecOnUse90Sec = stats.SpellDamageFor15SecOnUse90Sec,
                 SpellHasteFor5SecOnCrit_50 = stats.SpellHasteFor5SecOnCrit_50,
                 SpellHasteFor6SecOnCast_15_45 = stats.SpellHasteFor6SecOnCast_15_45,
+                SpellHasteFor6SecOnHit_10_45 = stats.SpellHasteFor6SecOnHit_10_45,
                 StarfireDmg = stats.StarfireDmg,
                 MoonfireDmg = stats.MoonfireDmg,
                 WrathDmg = stats.WrathDmg,
@@ -398,7 +397,7 @@ namespace Rawr.Moonkin
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellNatureDamageRating + stats.SpellHasteRating + stats.SpellHitRating + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellArcaneDamageRating + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor6SecOnCrit + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus) > 0;
+            return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellNatureDamageRating + stats.SpellHasteRating + stats.SpellHitRating + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellArcaneDamageRating + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor6SecOnCrit + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus) > 0;
         }
     }
 }

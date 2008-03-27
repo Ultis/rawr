@@ -255,21 +255,46 @@ namespace Rawr.Moonkin
             float manaPotDelay = float.Parse(character.CalculationOptions["ManaPotDelay"], System.Globalization.CultureInfo.InvariantCulture) * 60.0f;
             int numPots = character.CalculationOptions["ManaPots"] == "Yes" && fightLength - manaPotDelay > 0 ? ((int)(fightLength-manaPotDelay) / 120 + 1) : 0;
             float manaRestoredByPots = 0.0f;
-            float manaPerPot = 0.0f;
-            if (character.CalculationOptions["ManaPotType"] == "Super Mana Potion")
-                manaPerPot = 2400.0f;
-            if (character.CalculationOptions["ManaPotType"] == "Fel Mana Potion")
-                manaPerPot = 3200.0f;
+            if (numPots > 0)
+            {
+                float manaPerPot = 0.0f;
+                if (character.CalculationOptions["ManaPotType"] == "Super Mana Potion")
+                    manaPerPot = 2400.0f;
+                if (character.CalculationOptions["ManaPotType"] == "Fel Mana Potion")
+                    manaPerPot = 3200.0f;
 
-            manaRestoredByPots = numPots * manaPerPot;
+                manaRestoredByPots = numPots * manaPerPot;
+            }
 
             // Innervate calculations
             float innervateDelay = float.Parse(character.CalculationOptions["InnervateDelay"], System.Globalization.CultureInfo.InvariantCulture) * 60.0f;
             int numInnervates = character.CalculationOptions["Innervate"] == "Yes" && fightLength - innervateDelay > 0 ? ((int)(fightLength-innervateDelay) / (int)innervateCooldown + 1) : 0;
-            // Innervate mana rate increases only spirit-based regen
-            float innervateManaRate = (calcs.ManaRegen - calcs.BasicStats.Mp5 / 5f) * 4 + calcs.BasicStats.Mp5 / 5f;
-            float innervateTime = numInnervates * 20.0f;
-            float totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * calcs.BasicStats.Mana * 0.04f);
+            float totalInnervateMana = 0.0f;
+            if (numInnervates > 0)
+            {
+                // Innervate mana rate increases only spirit-based regen
+                float spiritRegen = (calcs.ManaRegen - calcs.BasicStats.Mp5 / 5f);
+                // Add in calculations for an innervate weapon
+                if (character.CalculationOptions["InnervateWeapon"] == "Yes")
+                {
+                    float baseRegenConstant = 0.00932715221261f;
+                    // Calculate the intellect from a weapon swap
+                    float userIntellect = calcs.BasicStats.Intellect - character.MainHand.Stats.Intellect
+                        + int.Parse(character.CalculationOptions["InnervateWeaponInt"], System.Globalization.CultureInfo.InvariantCulture);
+                    if (character.OffHand != null)
+                        userIntellect -= character.OffHand.Stats.Intellect;
+                    // Do the same with spirit
+                    float userSpirit = calcs.BasicStats.Spirit - character.MainHand.Stats.Spirit
+                        + int.Parse(character.CalculationOptions["InnervateWeaponSpi"], System.Globalization.CultureInfo.InvariantCulture);
+                    if (character.OffHand != null)
+                        userIntellect -= character.OffHand.Stats.Spirit;
+                    // The new spirit regen for innervate periods uses the new weapon stats
+                    spiritRegen = baseRegenConstant * (float)Math.Sqrt(userIntellect) * userSpirit;
+                }
+                float innervateManaRate = spiritRegen * 4 + calcs.BasicStats.Mp5 / 5f;
+                float innervateTime = numInnervates * 20.0f;
+                totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * calcs.BasicStats.Mana * 0.04f);
+            }
 
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots;
         }
@@ -341,14 +366,17 @@ namespace Rawr.Moonkin
                     duration += dotDuration;
 
                 // Add in JoW mana restore
-                int numCasts = (int)((fightLength / duration) * spellCount);
-                float numHits = numCasts * (1 - missRate);
-                float manaFromOther = numCasts * calcs.BasicStats.ManaRestorePerCast;
-                float manaFromJoW = numHits * calcs.BasicStats.ManaRestorePerHit;
-                // 20-second mp5 trinket with a 2-minute cooldown.
-                float manaFromTrinket = calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min * numCasts * 20 / 240;
-                totalMana += manaFromJoW + manaFromOther + manaFromTrinket;
-
+                float manaFromJoW = 0.0f, manaFromOther = 0.0f, manaFromTrinket = 0.0f;
+                if (calcs.BasicStats.ManaRestorePerCast > 0 || calcs.BasicStats.ManaRestorePerHit > 0 || calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0)
+                {
+                    int numCasts = (int)((fightLength / duration) * spellCount);
+                    float numHits = numCasts * (1 - missRate);
+                    manaFromOther = numCasts * calcs.BasicStats.ManaRestorePerCast;
+                    manaFromJoW = numHits * calcs.BasicStats.ManaRestorePerHit;
+                    // 20-second mp5 trinket with a 2-minute cooldown.
+                    manaFromTrinket = calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min * numCasts * 20 / 240;
+                    totalMana += manaFromJoW + manaFromOther + manaFromTrinket;
+                }
                 // Calculate how long we will burn through all our mana
                 float secsToOom = totalMana / (manaUsed / duration);
                 // This dps calc takes into account time spent not doing dps due to OOM issues
@@ -365,8 +393,11 @@ namespace Rawr.Moonkin
                     else
                         calcs.TimeToOOM = new TimeSpan(0, (int)Math.Floor(secsToOom) / 60, (int)Math.Floor(secsToOom) % 60);
                 }
-                // Remove the mana added from JoW, it will change at the next cycle
-                totalMana -= manaFromJoW + manaFromOther;
+                if (calcs.BasicStats.ManaRestorePerCast > 0 || calcs.BasicStats.ManaRestorePerHit > 0 || calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0)
+                {
+                    // Remove the mana added from JoW, it will change at the next cycle
+                    totalMana -= manaFromJoW + manaFromOther + manaFromTrinket;
+                }
 
                 // Remove trinket effects
                 UndoTrinkets(character, calcs, rotation.Value, averageCritChance, missRate);
@@ -377,6 +408,7 @@ namespace Rawr.Moonkin
 
         private void UndoTrinkets(Character character, CharacterCalculationsMoonkin calcs, List<Spell> rotation, float averageCritChance, float missRate)
         {
+            float hasteDivisor = 1560.0f;
             List<Spell> addedDamage = new List<Spell>();
             foreach (Spell sp in rotation)
             {
@@ -394,13 +426,19 @@ namespace Rawr.Moonkin
                     {
                         sp.RemoveSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnResist * missRate);
                     }
-                    // 15% spell haste on cast, 45-second (4 rotation) cooldown
+                    // 15% chance of spell haste on cast, 45-second cooldown (Mystical Skyfire Diamond)
                     if (calcs.BasicStats.SpellHasteFor6SecOnCast_15_45 > 0)
                     {
+                        float hasteRating = calcs.BasicStats.SpellHasteFor6SecOnCast_15_45 * 0.15f * 6 / 45;
+                        Spell.GlobalCooldown *= 1 + hasteRating / hasteDivisor;
+                        sp.castTime *= 1 + hasteRating / hasteDivisor;
                     }
-                    // 10% spell haste on hit, 45-second (4 rotation) cooldown
+                    // 10% chance of spell haste on hit, 45-second cooldown (Quagmirran's Eye)
                     if (calcs.BasicStats.SpellHasteFor6SecOnHit_10_45 > 0)
                     {
+                        float hasteRating = calcs.BasicStats.SpellHasteFor6SecOnHit_10_45 * (1 - missRate) * 0.1f * 6 / 45;
+                        Spell.GlobalCooldown *= 1 + hasteRating / hasteDivisor;
+                        sp.castTime *= 1 + hasteRating / hasteDivisor;
                     }
                     // 5% chance of spell damage on hit, no cooldown.
                     if (calcs.BasicStats.SpellDamageFor10SecOnHit_5 > 0)
@@ -424,6 +462,7 @@ namespace Rawr.Moonkin
 
         private void DoTrinkets(Character character, CharacterCalculationsMoonkin calcs, List<Spell> rotation, float averageCritChance, float missRate)
         {
+            float hasteDivisor = 1560.0f;
             List<Spell> addedDamage = new List<Spell>();
             // Separate loop for doing trinket procs (yeah, I know, seems inefficient, but the average crit chance is needed)
             foreach (Spell sp in rotation)
@@ -441,13 +480,19 @@ namespace Rawr.Moonkin
                     {
                         sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnResist * missRate);
                     }
-                    // 15% spell haste on cast, 45-second (4 rotation) cooldown
+                    // 15% spell haste on cast, 45-second cooldown (Mystical Skyfire Diamond)
                     if (calcs.BasicStats.SpellHasteFor6SecOnCast_15_45 > 0)
                     {
+                        float hasteRating = calcs.BasicStats.SpellHasteFor6SecOnCast_15_45 * 0.15f * 6 / 45;
+                        Spell.GlobalCooldown *= 1 + hasteRating / hasteDivisor;
+                        sp.castTime *= 1 + hasteRating / hasteDivisor;
                     }
-                    // 10% spell haste on hit, 45-second (4 rotation) cooldown
+                    // 10% chance of spell haste on hit, 45-second cooldown (Quagmirran's Eye)
                     if (calcs.BasicStats.SpellHasteFor6SecOnHit_10_45 > 0)
                     {
+                        float hasteRating = calcs.BasicStats.SpellHasteFor6SecOnHit_10_45 * (1 - missRate) * 0.1f * 6 / 45;
+                        Spell.GlobalCooldown *= 1 + hasteRating / hasteDivisor;
+                        sp.castTime *= 1 + hasteRating / hasteDivisor;
                     }
                     // 5% chance of spell damage on hit, no cooldown.
                     if (calcs.BasicStats.SpellDamageFor10SecOnHit_5 > 0)

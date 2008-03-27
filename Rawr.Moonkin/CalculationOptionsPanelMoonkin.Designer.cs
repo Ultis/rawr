@@ -46,6 +46,11 @@
             this.txtManaPotDelay = new System.Windows.Forms.TextBox();
             this.lblManPotDelay = new System.Windows.Forms.Label();
             this.lblManaPotType = new System.Windows.Forms.Label();
+            this.chkInnervateWeapon = new System.Windows.Forms.CheckBox();
+            this.txtInnervateWeaponInt = new System.Windows.Forms.TextBox();
+            this.txtInnervateWeaponSpi = new System.Windows.Forms.TextBox();
+            this.lblInnervateWeaponInt = new System.Windows.Forms.Label();
+            this.lblInnervateWeaponSpi = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -91,7 +96,7 @@
             // chkMetagem
             // 
             this.chkMetagem.AutoSize = true;
-            this.chkMetagem.Location = new System.Drawing.Point(6, 309);
+            this.chkMetagem.Location = new System.Drawing.Point(6, 345);
             this.chkMetagem.Name = "chkMetagem";
             this.chkMetagem.Size = new System.Drawing.Size(178, 17);
             this.chkMetagem.TabIndex = 9;
@@ -101,7 +106,7 @@
             // 
             // btnTalents
             // 
-            this.btnTalents.Location = new System.Drawing.Point(9, 237);
+            this.btnTalents.Location = new System.Drawing.Point(3, 316);
             this.btnTalents.Name = "btnTalents";
             this.btnTalents.Size = new System.Drawing.Size(195, 23);
             this.btnTalents.TabIndex = 8;
@@ -220,10 +225,60 @@
             this.lblManaPotType.TabIndex = 21;
             this.lblManaPotType.Text = "Mana Potion Type:";
             // 
+            // chkInnervateWeapon
+            // 
+            this.chkInnervateWeapon.AutoSize = true;
+            this.chkInnervateWeapon.Location = new System.Drawing.Point(6, 239);
+            this.chkInnervateWeapon.Name = "chkInnervateWeapon";
+            this.chkInnervateWeapon.Size = new System.Drawing.Size(140, 17);
+            this.chkInnervateWeapon.TabIndex = 22;
+            this.chkInnervateWeapon.Text = "Use Innervate weapon?";
+            this.chkInnervateWeapon.UseVisualStyleBackColor = true;
+            this.chkInnervateWeapon.CheckedChanged += new System.EventHandler(this.chkInnervateWeapon_CheckedChanged);
+            // 
+            // txtInnervateWeaponInt
+            // 
+            this.txtInnervateWeaponInt.Location = new System.Drawing.Point(108, 263);
+            this.txtInnervateWeaponInt.Name = "txtInnervateWeaponInt";
+            this.txtInnervateWeaponInt.Size = new System.Drawing.Size(93, 20);
+            this.txtInnervateWeaponInt.TabIndex = 23;
+            this.txtInnervateWeaponInt.Leave += new System.EventHandler(this.txtInnervateWeaponInt_Leave);
+            // 
+            // txtInnervateWeaponSpi
+            // 
+            this.txtInnervateWeaponSpi.Location = new System.Drawing.Point(108, 290);
+            this.txtInnervateWeaponSpi.Name = "txtInnervateWeaponSpi";
+            this.txtInnervateWeaponSpi.Size = new System.Drawing.Size(93, 20);
+            this.txtInnervateWeaponSpi.TabIndex = 24;
+            this.txtInnervateWeaponSpi.Leave += new System.EventHandler(this.txtInnervateWeaponSpi_Leave);
+            // 
+            // lblInnervateWeaponInt
+            // 
+            this.lblInnervateWeaponInt.AutoSize = true;
+            this.lblInnervateWeaponInt.Location = new System.Drawing.Point(3, 266);
+            this.lblInnervateWeaponInt.Name = "lblInnervateWeaponInt";
+            this.lblInnervateWeaponInt.Size = new System.Drawing.Size(76, 13);
+            this.lblInnervateWeaponInt.TabIndex = 25;
+            this.lblInnervateWeaponInt.Text = "Intellect value:";
+            // 
+            // lblInnervateWeaponSpi
+            // 
+            this.lblInnervateWeaponSpi.AutoSize = true;
+            this.lblInnervateWeaponSpi.Location = new System.Drawing.Point(3, 293);
+            this.lblInnervateWeaponSpi.Name = "lblInnervateWeaponSpi";
+            this.lblInnervateWeaponSpi.Size = new System.Drawing.Size(62, 13);
+            this.lblInnervateWeaponSpi.TabIndex = 26;
+            this.lblInnervateWeaponSpi.Text = "Spirit value:";
+            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblInnervateWeaponSpi);
+            this.Controls.Add(this.lblInnervateWeaponInt);
+            this.Controls.Add(this.txtInnervateWeaponSpi);
+            this.Controls.Add(this.txtInnervateWeaponInt);
+            this.Controls.Add(this.chkInnervateWeapon);
             this.Controls.Add(this.lblManaPotType);
             this.Controls.Add(this.lblManPotDelay);
             this.Controls.Add(this.txtManaPotDelay);
@@ -243,7 +298,7 @@
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.lblTargetLevel);
             this.Name = "CalculationOptionsPanelMoonkin";
-            this.Size = new System.Drawing.Size(204, 338);
+            this.Size = new System.Drawing.Size(204, 370);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -269,6 +324,11 @@
         private System.Windows.Forms.TextBox txtManaPotDelay;
         private System.Windows.Forms.Label lblManPotDelay;
         private System.Windows.Forms.Label lblManaPotType;
+        private System.Windows.Forms.CheckBox chkInnervateWeapon;
+        private System.Windows.Forms.TextBox txtInnervateWeaponInt;
+        private System.Windows.Forms.TextBox txtInnervateWeaponSpi;
+        private System.Windows.Forms.Label lblInnervateWeaponInt;
+        private System.Windows.Forms.Label lblInnervateWeaponSpi;
 
     }
 }
