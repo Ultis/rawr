@@ -198,13 +198,34 @@ namespace Rawr
 
 		public void Save()
 		{
+#if !AGGREGATE_ITEMS
 			System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Item>));
 			StringBuilder sb = new StringBuilder();
 			System.IO.StringWriter writer = new System.IO.StringWriter(sb);
 			serializer.Serialize(writer, new List<Item>(AllItems));
 			writer.Close();
 			System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml"), sb.ToString());
-		}
+#else
+            //this is handy for debugging
+            foreach (Item item in AllItems)
+            {
+                try
+                {
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Item));
+                    StringBuilder sb = new StringBuilder();
+                    System.IO.StringWriter writer = new System.IO.StringWriter(sb);
+                    serializer.Serialize(writer, item);
+                    writer.Close();
+                    System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache-"+item.Name+".xml"), sb.ToString());
+
+                }
+                catch (System.Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine(e.Message);
+                }
+            }
+#endif
+        }
 
 		public void Load()
 		{

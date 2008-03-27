@@ -1,69 +1,75 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
-using System.Xml;
+using System.Xml.Serialization;
 
 namespace Rawr
 {
-	[Serializable]
+    [Serializable]
+    [XmlInclude(typeof(StaticDrop))]
+    [XmlInclude(typeof(WorldDrop))]
+    [XmlInclude(typeof(PvpItem))]
+    [XmlInclude(typeof(VendorItem))]
+    [XmlInclude(typeof(FactionItem))]
+    [XmlInclude(typeof(CraftedItem))]
+    [XmlInclude(typeof(QuestItem))]
+    [XmlInclude(typeof(ContainerItem))]
 	public class Item :IComparable<Item>
 	{
-		[System.Xml.Serialization.XmlElement("Name")]
+		[XmlElement("Name")]
 		public string _name;
-		[System.Xml.Serialization.XmlElement("Id")]
+		[XmlElement("Id")]
 		public int _id;
-		[System.Xml.Serialization.XmlElement("IconPath")]
+		[XmlElement("IconPath")]
 		public string _iconPath;
-		[System.Xml.Serialization.XmlElement("Slot")]
+		[XmlElement("Slot")]
 		public ItemSlot _slot;
-		[System.Xml.Serialization.XmlElement("Stats")]
+		[XmlElement("Stats")]
 		public Stats _stats = new Stats();
-		[System.Xml.Serialization.XmlElement("Sockets")]
+		[XmlElement("Sockets")]
 		public Sockets _sockets = new Sockets();
 		[System.ComponentModel.DefaultValueAttribute(0)]
-		[System.Xml.Serialization.XmlElement("Gem1Id")]
+		[XmlElement("Gem1Id")]
 		public int _gem1Id;
 		[System.ComponentModel.DefaultValueAttribute(0)]
-		[System.Xml.Serialization.XmlElement("Gem2Id")]
+		[XmlElement("Gem2Id")]
 		public int _gem2Id;
 		[System.ComponentModel.DefaultValueAttribute(0)]
-		[System.Xml.Serialization.XmlElement("Gem3Id")]
+		[XmlElement("Gem3Id")]
 		public int _gem3Id;
-		[System.Xml.Serialization.XmlElement("Quality")]
+		[XmlElement("Quality")]
 		public ItemQuality _quality;
 		[System.ComponentModel.DefaultValueAttribute("")]
-		[System.Xml.Serialization.XmlElement("SetName")]
+		[XmlElement("SetName")]
 		public string _setName;
-		[System.Xml.Serialization.XmlElement("Type")]
+		[XmlElement("Type")]
 		public ItemType _type = ItemType.None;
 		[System.ComponentModel.DefaultValueAttribute(0)]
-		[System.Xml.Serialization.XmlElement("MinDamage")]
+		[XmlElement("MinDamage")]
 		public int _minDamage = 0;
 		[System.ComponentModel.DefaultValueAttribute(0)]
-		[System.Xml.Serialization.XmlElement("MaxDamage")]
+		[XmlElement("MaxDamage")]
 		public int _maxDamage = 0;
 		[System.ComponentModel.DefaultValueAttribute(0)]
-		[System.Xml.Serialization.XmlElement("DamageType")]
+		[XmlElement("DamageType")]
         public ItemDamageType _damageType = ItemDamageType.Physical;
 		[System.ComponentModel.DefaultValueAttribute(0)]
-		[System.Xml.Serialization.XmlElement("Speed")]
+		[XmlElement("Speed")]
 		public float _speed = 0f;
 		[System.ComponentModel.DefaultValueAttribute("")]
-		[System.Xml.Serialization.XmlElement("RequiredClasses")]
+		[XmlElement("RequiredClasses")]
 		public string _requiredClasses;
 		[System.ComponentModel.DefaultValueAttribute(false)]
-		[System.Xml.Serialization.XmlElement("Unique")]
+		[XmlElement("Unique")]
 		public bool _unique;
 		
+        public ItemLocation LocationInfo{get;set;}
 
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public string Name
 		{
 			get { return _name; }
 			set { _name = value; }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public int Id
 		{
 			get { return _id; }
@@ -74,13 +80,13 @@ namespace Rawr
 				OnIdsChanged();
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public string IconPath
 		{
 			get { return _iconPath; }
 			set { _iconPath = value; }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public ItemSlot Slot
 		{
 			get { return _slot; }
@@ -89,25 +95,25 @@ namespace Rawr
 		/// <summary>
 		/// String version of Slot, to facilitate databinding.
 		/// </summary>
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public string SlotString
 		{
 			get { return _slot.ToString(); }
 			set { _slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), value); }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Stats Stats
 		{
 			get { return _stats; }
 			set { _stats = value; }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Sockets Sockets
 		{
 			get { return _sockets; }
 			set { _sockets = value; }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public int Gem1Id
 		{
 			get { return _gem1Id; }
@@ -118,7 +124,7 @@ namespace Rawr
 				OnIdsChanged();
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public int Gem2Id
 		{
 			get { return _gem2Id; }
@@ -129,7 +135,7 @@ namespace Rawr
 				OnIdsChanged();
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public int Gem3Id
 		{
 			get { return _gem3Id; }
@@ -140,7 +146,7 @@ namespace Rawr
 				OnIdsChanged();
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Item Gem1
 		{
 			get
@@ -158,7 +164,7 @@ namespace Rawr
 					Gem1Id = value.Id;
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Item Gem2
 		{
 			get
@@ -176,7 +182,7 @@ namespace Rawr
 					Gem2Id = value.Id;
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Item Gem3
 		{
 			get
@@ -195,7 +201,7 @@ namespace Rawr
 			}
 		}
 		private string _gemmedId = string.Empty;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public string GemmedId
 		{
 			get
@@ -207,7 +213,7 @@ namespace Rawr
 				return _gemmedId;
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public ItemQuality Quality
 		{
 			get
@@ -219,7 +225,7 @@ namespace Rawr
 				_quality = value;
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public string SetName
 		{
 			get
@@ -231,7 +237,7 @@ namespace Rawr
 				_setName = value;
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public ItemType Type
 		{
 			get
@@ -246,13 +252,13 @@ namespace Rawr
 		/// <summary>
 		/// String version of Type, to facilitate databinding
 		/// </summary>
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public string TypeString
 		{
 			get { return _type.ToString(); }
 			set { _type = (ItemType)Enum.Parse(typeof(ItemType), value); }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public int MinDamage
 		{
 			get
@@ -264,7 +270,7 @@ namespace Rawr
 				_minDamage = value;
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public int MaxDamage
 		{
 			get
@@ -276,7 +282,7 @@ namespace Rawr
 				_maxDamage = value;
 			}
 		}
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         public ItemDamageType DamageType
         {
             get
@@ -288,7 +294,7 @@ namespace Rawr
                 _damageType = value;
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public float Speed
 		{
 			get
@@ -300,7 +306,7 @@ namespace Rawr
 				_speed = value;
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public float DPS
 		{
 			get
@@ -309,7 +315,7 @@ namespace Rawr
 				else return ((float)(MinDamage + MaxDamage) * 0.5f) / Speed;
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public string RequiredClasses
 		{
 			get
@@ -321,7 +327,7 @@ namespace Rawr
 				_requiredClasses = value;
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public bool Unique
 		{
 			get
@@ -778,54 +784,54 @@ namespace Rawr
 	public class Sockets
 	{
 		[System.ComponentModel.DefaultValueAttribute(0)]
-		[System.Xml.Serialization.XmlElement("Color1")]
+		[XmlElement("Color1")]
 		public Item.ItemSlot _color1;
 		[System.ComponentModel.DefaultValueAttribute(0)]
-		[System.Xml.Serialization.XmlElement("Color2")]
+		[XmlElement("Color2")]
 		public Item.ItemSlot _color2;
 		[System.ComponentModel.DefaultValueAttribute(0)]
-		[System.Xml.Serialization.XmlElement("Color3")]
+		[XmlElement("Color3")]
 		public Item.ItemSlot _color3;
-		[System.Xml.Serialization.XmlElement("Stats")]
+		[XmlElement("Stats")]
 		public Stats _stats = new Stats();
 
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Item.ItemSlot Color1
 		{
 			get { return _color1; }
 			set { _color1 = value; }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Item.ItemSlot Color2
 		{
 			get { return _color2; }
 			set { _color2 = value; }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Item.ItemSlot Color3
 		{
 			get { return _color3; }
 			set { _color3 = value; }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public string Color1String
 		{
 			get { return _color1.ToString(); }
 			set { _color1 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), value); }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public string Color2String
 		{
 			get { return _color2.ToString(); }
 			set { _color2 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), value); }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public string Color3String
 		{
 			get { return _color3.ToString(); }
 			set { _color3 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), value); }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Stats Stats
 		{
 			get { return _stats; }

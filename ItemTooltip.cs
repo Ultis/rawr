@@ -244,36 +244,14 @@ namespace Rawr
                                      : CurrentItem.Sockets.Stats.ToString()),
                                 _fontStats, brushBonus, 2, 63 + statHeight);
                         }
-                        if (Properties.NetworkSettings.Default.DownloadItemInfo)
+                        string location = "Unknown source";
+                        if(CurrentItem.LocationInfo != null)
                         {
-                            WebRequestWrapper wrw = new WebRequestWrapper();
-                            XmlDocument doc = wrw.DownloadItemInformation(_currentItem.Id);
-                            if (doc != null)
-                            {
-                                XmlNode node = doc.SelectSingleNode("//cost/token");
-                                if (node != null)
-                                {
-                                    g.DrawString("Cost: " + node.Attributes["count"].Value + " Badges Of Justice", _fontStats, SystemBrushes.InfoText, 2, (hasSockets ? 78 : 18) + statHeight);
-                                }
-                                else
-                                {
-                                    node = doc.SelectSingleNode("//dropCreatures/creature");
-                                    if (node != null)
-                                    {
-                                        g.DrawString("Dropped in " + node.Attributes["area"].Value + " by " + node.Attributes["name"].Value, _fontStats, SystemBrushes.InfoText, 2, (hasSockets ? 78 : 18) + statHeight);
-                                    }
-                                    else
-                                    {
-                                        node = doc.SelectSingleNode("//createdBy");
-                                        if (node != null)
-                                        {
-                                            g.DrawString("Crafted", _fontStats, SystemBrushes.InfoText, 2, (hasSockets ? 78 : 18) + statHeight);
-                                        }
-
-                                    }
-                                }
-                            }
+                            location = CurrentItem.LocationInfo.Description;
                         }
+                        g.DrawString(location, _fontStats, SystemBrushes.InfoText, 2, (hasSockets ? 78 : 18) + statHeight);
+
+     
                         g.Dispose();
                     }
                 }

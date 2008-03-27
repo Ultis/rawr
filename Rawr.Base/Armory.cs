@@ -265,7 +265,7 @@ namespace Rawr
 				string id = gemmedId.Split('.')[0];
 				WebRequestWrapper wrw = new WebRequestWrapper();
 				docItem = wrw.DownloadItemToolTipSheet(id);
-                if (docItem == null)
+                if (docItem == null || docItem.SelectSingleNode("/page/itemTooltips/itemTooltip[1]") == null)
                 {
                     //No such item exists.
                     return null;
@@ -288,6 +288,8 @@ namespace Rawr
 				List<string> requiredClasses = new List<string>();
                 bool unique = false;
 
+						ItemLocation location = LocationFactory.Create(docItem, id);
+						
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/icon")) { iconPath = node.InnerText; }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/maxCount")) { unique = node.InnerText == "1"; }
@@ -1023,8 +1025,29 @@ namespace Rawr
 				int gem1Id = ids.Length == 4 ? int.Parse(ids[1]) : 0;
 				int gem2Id = ids.Length == 4 ? int.Parse(ids[2]) : 0;
 				int gem3Id = ids.Length == 4 ? int.Parse(ids[3]) : 0;
-				Item item = new Item(name, quality, type, int.Parse(id), iconPath, slot, setName, unique, stats, sockets, gem1Id, gem2Id, gem3Id, minDamage, maxDamage, damageType, speed, string.Join("|", requiredClasses.ToArray()));
-				return item;
+ Item item = new Item()
+                {
+                    Name = name,
+                    Quality = quality,
+                    Type = type,
+                    Id = int.Parse(id),
+                    IconPath = iconPath,
+                    Slot = slot,
+                    SetName = setName,
+                    Stats = stats,
+                    Sockets = sockets,
+                    Gem1Id = gem1Id,
+                    Gem2Id = gem2Id,
+                    Gem3Id = gem3Id,
+                    MinDamage = minDamage,
+                    MaxDamage = maxDamage,
+                    DamageType = damageType,
+                    Speed = speed,
+                    RequiredClasses = string.Join("|", requiredClasses.ToArray()),
+                    LocationInfo = location
+                };
+
+                return item;
 			}
 			catch (Exception ex)
 			{
