@@ -91,7 +91,7 @@ namespace Rawr
                     _character.IsLoading = true; // we do not need ItemsChanged event triggering until we call OnItemsChanged at the end
 					_character.EnsureItemsLoaded();
 					Calculations.CalculationOptionsPanel.Character = _character;
-					ItemToolTip.Instance.Character = FormItemSelection.Instance.Character = 
+					ItemToolTip.Instance.Character = ItemSelectionController.Instance.Character = 
 						ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
 						itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
 						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
@@ -322,7 +322,7 @@ namespace Rawr
 			Item[] items = ItemCache.RelevantItems;
 			itemComparison1.Items = items;
 			LoadComparisonData();
-			FormItemSelection.Instance.Items = items;
+			ItemSelectionController.Instance.Items = items;
 		}
 
 		private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)

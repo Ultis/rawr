@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Windows.Forms;
 using System.Xml;
+using System.Threading;
 
 namespace Rawr
 {
@@ -102,10 +103,10 @@ namespace Rawr
                 {
                     lock (_currentItem)
                     {
-                        bool hasSockets = CurrentItem.Sockets.Color1 != Item.ItemSlot.None ||
-                                          CurrentItem.Sockets.Color2 != Item.ItemSlot.None ||
-                                          CurrentItem.Sockets.Color3 != Item.ItemSlot.None;
-                        var positiveStats = Calculations.GetRelevantStats(CurrentItem.Stats).Values(x => x > 0);
+                        bool hasSockets = _currentItem.Sockets.Color1 != Item.ItemSlot.None ||
+                                          _currentItem.Sockets.Color2 != Item.ItemSlot.None ||
+                                          _currentItem.Sockets.Color3 != Item.ItemSlot.None;
+                        var positiveStats = Calculations.GetRelevantStats(_currentItem.Stats).Values(x => x > 0);
                         int statHeight = (positiveStats.Count + 2) / 3; // number of lines
                         statHeight *= 17;// * line height
                         int extraLocation = 0;
@@ -196,9 +197,9 @@ namespace Rawr
                             for (int i = 0; i < 3; i++)
                             {
                                 Item.ItemSlot slotColor = (i == 0
-                                                               ? CurrentItem.Sockets.Color1
+                                                               ? _currentItem.Sockets.Color1
                                                                :
-                                                           (i == 1 ? CurrentItem.Sockets.Color2 : CurrentItem.Sockets.Color3));
+                                                           (i == 1 ? _currentItem.Sockets.Color2 : _currentItem.Sockets.Color3));
                                 if (slotColor != Item.ItemSlot.None)
                                 {
                                     Rectangle rectGemBorder = new Rectangle(3 + (103 * (i)), 25 + statHeight, 35, 35);
@@ -217,7 +218,7 @@ namespace Rawr
                                     }
                                     g.FillRectangle(brushGemBorder, rectGemBorder);
 
-                                    Item gem = (i == 0 ? CurrentItem.Gem1 : (i == 1 ? CurrentItem.Gem2 : CurrentItem.Gem3));
+                                    Item gem = (i == 0 ? _currentItem.Gem1 : (i == 1 ? _currentItem.Gem2 : _currentItem.Gem3));
                                     if (gem != null)
                                     {
                                         Image icon = ItemIcons.GetItemIcon(gem, true);
@@ -246,9 +247,9 @@ namespace Rawr
                             }
 
                             Brush brushBonus = SystemBrushes.InfoText;
-                            if (!Item.GemMatchesSlot(CurrentItem.Gem1, CurrentItem.Sockets.Color1) ||
-                                !Item.GemMatchesSlot(CurrentItem.Gem2, CurrentItem.Sockets.Color2) ||
-                                !Item.GemMatchesSlot(CurrentItem.Gem3, CurrentItem.Sockets.Color3))
+                            if (!Item.GemMatchesSlot(_currentItem.Gem1, _currentItem.Sockets.Color1) ||
+                                !Item.GemMatchesSlot(_currentItem.Gem2, _currentItem.Sockets.Color2) ||
+                                !Item.GemMatchesSlot(_currentItem.Gem3, _currentItem.Sockets.Color3))
                                 brushBonus = SystemBrushes.GrayText;
 
                             g.DrawString(

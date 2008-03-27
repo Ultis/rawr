@@ -5,12 +5,14 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Rawr.Forms.Utilities;
 
 namespace Rawr
 {
 	public partial class FormItemEditor : Form
 	{
 		private ListViewItem _selectedItem;
+        private bool _firstLoad = true;
 
 		public ListViewItem SelectedItem
 		{
@@ -188,7 +190,7 @@ namespace Rawr
 				}
 			}
 			listViewItems.Items.AddRange(itemsToAdd.ToArray());
-			if (listViewItems.Items.Count > 0) listViewItems.SelectedIndices.Add(0);
+            listViewItems.Sort();
 		}
 
 		private string EnsureIconPath(string iconPath)
@@ -209,12 +211,31 @@ namespace Rawr
 			if (listViewItems.SelectedIndices.Count > 0)
 			{
 				SelectedItem = listViewItems.SelectedItems[0];
+                SelectedItem.EnsureVisible();
 			}
 		}
 
 		private void FormItemEditor_Load(object sender, EventArgs e)
 		{
-			listViewItems.Sort();
+            listViewItems.Sort();
+            //force a paint, without this, the sorting doesn't render correctly 
+            //until the user causes a paint event over the moved items (scrolling off the screen or clicking on the affected ones.
+            //have to do the DoEvents to force it to process too otherwise the EnsureVisible won't work correctly in the activation event 
+            //(I couldn't get it to won't work here at all)
+            listViewItems.Invalidate(true);
+            Application.DoEvents();
+            if (listViewItems.Items.Count > 0 && listViewItems.SelectedIndices.Count == 0)
+            {
+                ListViewItem item = FindFirstItem();
+                if (item != null)
+                {
+                    item.Selected = true;
+                }
+                else
+                {
+                    listViewItems.Items[0].Selected = true;
+                }
+            }
 		}
 
 		private void buttonAdd_Click(object sender, EventArgs e)
@@ -264,8 +285,6 @@ namespace Rawr
                     listViewItems.Items.Add(newLvi);
                     listViewItems.Sort();
                     listViewItems.SelectedIndices.Clear();
-                    //won't select the item graphically (box it) without selecting the control...*shrug
-                    listViewItems.Select();
                     newLvi.Selected = true;
 					newLvi.EnsureVisible();
                 
@@ -484,6 +503,34 @@ namespace Rawr
                 Item selectedItem = SelectedItem.Tag as Item;
                 selectedItem.InvalidateCachedData();
             }
+        }
+
+        private void FormItemEditor_Activated(object sender, EventArgs e)
+        {
+            if ( _firstLoad && listViewItems.SelectedIndices.Count > 0)
+            {
+                //EnsureVisible works correctly in Load, except that the list is then reordered by the sort, and doesn't shift
+                //the scroll correctly if redone in Load, it only seemed to work in another event handle.
+                listViewItems.Items[listViewItems.SelectedIndices[0]].EnsureVisible();
+            }
+        }
+
+        // Being lazy with this since its a known case and probably won't change
+        private ListViewItem FindFirstItem()
+        {
+            ListViewItem ret = null;
+            if (listViewItems.Groups.Count > 0 && listViewItems.Groups[0].Items.Count > 0)
+            {
+                ret = listViewItems.Groups[0].Items[0];
+                for (int i = 1; i < listViewItems.Groups[0].Items.Count; i++)
+                {
+                    if (string.Compare(ret.Text, listViewItems.Groups[0].Items[i].Text) > 0)
+                    {
+                        ret = listViewItems.Groups[0].Items[i];
+                    }
+                }
+            }
+            return ret;
         }
 	}
 }

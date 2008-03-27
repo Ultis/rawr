@@ -73,9 +73,6 @@ namespace Rawr
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.itemButtonGem1 = new Rawr.ItemButton();
-            this.itemButtonGem2 = new Rawr.ItemButton();
-            this.itemButtonGem3 = new Rawr.ItemButton();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonDelete = new System.Windows.Forms.Button();
@@ -96,6 +93,9 @@ namespace Rawr
             this.label11 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.itemButtonGem1 = new Rawr.ItemButton();
+            this.itemButtonGem2 = new Rawr.ItemButton();
+            this.itemButtonGem3 = new Rawr.ItemButton();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -376,45 +376,6 @@ namespace Rawr
             this.label6.TabIndex = 1;
             this.label6.Text = "Gem #1:";
             // 
-            // itemButtonGem1
-            // 
-            this.itemButtonGem1.Character = null;
-            this.itemButtonGem1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-            this.itemButtonGem1.Location = new System.Drawing.Point(6, 32);
-            this.itemButtonGem1.Name = "itemButtonGem1";
-            this.itemButtonGem1.SelectedItem = null;
-            this.itemButtonGem1.SelectedItemId = 0;
-            this.itemButtonGem1.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonGem1.TabIndex = 0;
-            this.itemButtonGem1.Text = "Gem #1";
-            this.itemButtonGem1.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonGem2
-            // 
-            this.itemButtonGem2.Character = null;
-            this.itemButtonGem2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-            this.itemButtonGem2.Location = new System.Drawing.Point(82, 32);
-            this.itemButtonGem2.Name = "itemButtonGem2";
-            this.itemButtonGem2.SelectedItem = null;
-            this.itemButtonGem2.SelectedItemId = 0;
-            this.itemButtonGem2.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonGem2.TabIndex = 1;
-            this.itemButtonGem2.Text = "Gem #2";
-            this.itemButtonGem2.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonGem3
-            // 
-            this.itemButtonGem3.Character = null;
-            this.itemButtonGem3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
-            this.itemButtonGem3.Location = new System.Drawing.Point(158, 32);
-            this.itemButtonGem3.Name = "itemButtonGem3";
-            this.itemButtonGem3.SelectedItem = null;
-            this.itemButtonGem3.SelectedItemId = 0;
-            this.itemButtonGem3.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonGem3.TabIndex = 2;
-            this.itemButtonGem3.Text = "Gem #3";
-            this.itemButtonGem3.UseVisualStyleBackColor = true;
-            // 
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -529,6 +490,7 @@ namespace Rawr
             listViewGroup21,
             listViewGroup22});
             this.listViewItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewItems.HideSelection = false;
             this.listViewItems.Location = new System.Drawing.Point(12, 38);
             this.listViewItems.MultiSelect = false;
             this.listViewItems.Name = "listViewItems";
@@ -717,6 +679,45 @@ namespace Rawr
             this.label7.TabIndex = 1;
             this.label7.Text = "Min Damage:";
             // 
+            // itemButtonGem1
+            // 
+            this.itemButtonGem1.Character = null;
+            this.itemButtonGem1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.itemButtonGem1.Location = new System.Drawing.Point(6, 32);
+            this.itemButtonGem1.Name = "itemButtonGem1";
+            this.itemButtonGem1.SelectedItem = null;
+            this.itemButtonGem1.SelectedItemId = 0;
+            this.itemButtonGem1.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonGem1.TabIndex = 0;
+            this.itemButtonGem1.Text = "Gem #1";
+            this.itemButtonGem1.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonGem2
+            // 
+            this.itemButtonGem2.Character = null;
+            this.itemButtonGem2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.itemButtonGem2.Location = new System.Drawing.Point(82, 32);
+            this.itemButtonGem2.Name = "itemButtonGem2";
+            this.itemButtonGem2.SelectedItem = null;
+            this.itemButtonGem2.SelectedItemId = 0;
+            this.itemButtonGem2.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonGem2.TabIndex = 1;
+            this.itemButtonGem2.Text = "Gem #2";
+            this.itemButtonGem2.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonGem3
+            // 
+            this.itemButtonGem3.Character = null;
+            this.itemButtonGem3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.itemButtonGem3.Location = new System.Drawing.Point(158, 32);
+            this.itemButtonGem3.Name = "itemButtonGem3";
+            this.itemButtonGem3.SelectedItem = null;
+            this.itemButtonGem3.SelectedItemId = 0;
+            this.itemButtonGem3.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonGem3.TabIndex = 2;
+            this.itemButtonGem3.Text = "Gem #3";
+            this.itemButtonGem3.UseVisualStyleBackColor = true;
+            // 
             // FormItemEditor
             // 
             this.AcceptButton = this.buttonOK;
@@ -751,6 +752,7 @@ namespace Rawr
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Item Editor...";
             this.Load += new System.EventHandler(this.FormItemEditor_Load);
+            this.Activated += new System.EventHandler(this.FormItemEditor_Activated);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();

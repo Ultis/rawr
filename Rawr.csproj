@@ -155,6 +155,7 @@
     <Compile Include="FormSplash.Designer.cs">
       <DependentUpon>FormSplash.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Controllers\ItemSelectionController.cs" />
     <Compile Include="Forms\Controllers\MainController.cs" />
     <Compile Include="Forms\Options.cs">
       <SubType>Form</SubType>
@@ -168,6 +169,7 @@
     <Compile Include="Forms\Status.Designer.cs">
       <DependentUpon>Status.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Utilities\FormHelper.cs" />
     <Compile Include="Forms\Utilities\InvokeHelper.cs" />
     <Compile Include="ItemButton.cs">
       <SubType>Component</SubType>

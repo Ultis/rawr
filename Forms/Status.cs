@@ -23,21 +23,21 @@ namespace Rawr.Forms
 			InitializeComponent();
 			_StatusUpdates = new List<StatusEventArgs>();
 			StatusMessaging.StatusUpdate += new StatusMessaging.StatusUpdateDelegate(StatusMessaging_StatusUpdate);
-			statusEventArgsBindingSource.DataSource = _StatusUpdates;
-			dataGridView1.Scroll += new ScrollEventHandler(dataGridView1_Scroll);
+//			statusEventArgsBindingSource.DataSource = _StatusUpdates;
+//			dataGridView1.Scroll += new ScrollEventHandler(dataGridView1_Scroll);
 		}
 
-		void dataGridView1_Scroll(object sender, ScrollEventArgs e)
-		{
-			if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
-			{
-				_hScrollPosition = e.NewValue;
-			}
-			else
-			{
-				_vScrollPosition = dataGridView1.FirstDisplayedScrollingRowIndex;
-			}
-		}
+        //void dataGridView1_Scroll(object sender, ScrollEventArgs e)
+        //{
+        //    if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
+        //    {
+        //        _hScrollPosition = e.NewValue;
+        //    }
+        //    else
+        //    {
+        //        _vScrollPosition = dataGridView1.FirstDisplayedScrollingRowIndex;
+        //    }
+        //}
 
 		private void StatusMessaging_StatusUpdate(StatusEventArgs args)
 		{
@@ -74,19 +74,19 @@ namespace Rawr.Forms
 				if (_StatusUpdates[i].Done)
 				{
 					doneCount++;
-				}				
+				}
+                if (listView1.Items.Count > i)
+                {
+                    listView1.Items[i].SubItems["Description"].Text = _StatusUpdates[i].Description;
+                }
+                else
+                {
+                    ListViewItem item = new ListViewItem(new string[] { _StatusUpdates[i].Key, _StatusUpdates[i].Description });
+                    item.SubItems[0].Name = "Key";
+                    item.SubItems[1].Name = "Description";
+                    listView1.Items.Add(item);
+                }
 			}
-			this.dataGridView1.SuspendLayout();
-			//BUG:  http://forums.microsoft.com/MSDN/ShowPost.aspx?PostID=2850853&SiteID=1 --
-			statusEventArgsBindingSource.DataSource = _StatusUpdates;
-			statusEventArgsBindingSource.ResetBindings(false);
-			dataGridView1.HorizontalScrollingOffset = _hScrollPosition;
-			dataGridView1.UpdateRowHeightInfo(0, true);
-			dataGridView1.Refresh();
-			this.dataGridView1.ResumeLayout();
-			//This is stupidly readonly.
-			//dataGridView1.VerticalScrollingOffset = _vScrollPosition;
-			
 			label1.Text = string.Format(overallProgress,doneCount, _StatusUpdates.Count);
 			progressBar1.Value = Convert.ToInt32(decimal.Round(((decimal)doneCount / (decimal)_StatusUpdates.Count) * 100));
 		}
