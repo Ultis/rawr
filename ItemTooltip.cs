@@ -92,6 +92,8 @@ namespace Rawr
 
         protected Image _cachedToolTipImage = null;
 
+        private static Graphics _sizeTest = Graphics.FromImage(new Bitmap(309, 50));
+
         protected Image CachedToolTipImage
         {
             get
@@ -106,7 +108,19 @@ namespace Rawr
                         var positiveStats = Calculations.GetRelevantStats(CurrentItem.Stats).Values(x => x > 0);
                         int statHeight = (positiveStats.Count + 2) / 3; // number of lines
                         statHeight *= 17;// * line height
-                        _cachedToolTipImage = new Bitmap(309, hasSockets ? 96 + statHeight : 38 + statHeight, PixelFormat.Format32bppArgb);
+                        int extraLocation = 0;
+
+                        string location = "Unknown source";
+                        if (CurrentItem.LocationInfo != null)
+                        {
+                            location = CurrentItem.LocationInfo.Description;
+                        }
+                        SizeF locationSize = _sizeTest.MeasureString(location, _fontStats);
+                        if (locationSize.Width > 300)
+                        {
+                            extraLocation = (int)locationSize.Height;
+                        }
+                        _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight)+extraLocation, PixelFormat.Format32bppArgb);
 
                         Graphics g = Graphics.FromImage(_cachedToolTipImage);
                         g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -244,12 +258,9 @@ namespace Rawr
                                      : CurrentItem.Sockets.Stats.ToString()),
                                 _fontStats, brushBonus, 2, 63 + statHeight);
                         }
-                        string location = "Unknown source";
-                        if(CurrentItem.LocationInfo != null)
-                        {
-                            location = CurrentItem.LocationInfo.Description;
-                        }
-                        g.DrawString(location, _fontStats, SystemBrushes.InfoText, 2, (hasSockets ? 78 : 18) + statHeight);
+
+                        Rectangle textRec = new Rectangle(2, (hasSockets ? 78 : 18) + statHeight+4, _cachedToolTipImage.Width - 4, _cachedToolTipImage.Height - 2 - (hasSockets ? 78 : 18) + statHeight);
+                        g.DrawString(location, _fontStats, SystemBrushes.InfoText, textRec);
 
      
                         g.Dispose();

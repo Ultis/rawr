@@ -364,7 +364,7 @@ namespace Rawr
                 string points = string.Format("Purchasable for {0} {1} Points", Points, PointType);
                 if (TokenCount > 0)
                 {
-                    return string.Format("{0} and {1} {2}", points, TokenCount, TokenType);
+                    return string.Format("{0} and {1} [{2}]", points, TokenCount, TokenType);
                 }
                 return points;
             }
@@ -523,7 +523,14 @@ namespace Rawr
                 }
                 StringBuilder basic = new StringBuilder();
 
-                basic.AppendFormat("{0} crafted {2} {1}", Bind.ToString(), Skill, Level);
+                if (Bind != BindsOn.None)
+                {
+                    basic.AppendFormat("{0} crafted {1}({2}) ", Bind.ToString(), Skill, Level);
+                }
+                else
+                {
+                    basic.AppendFormat("Crafted {1}({2})", Bind.ToString(), Skill, Level);
+                }
                 if (BopMats.Count > 0)
                 {
                     basic.Append(" using ");
