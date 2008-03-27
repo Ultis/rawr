@@ -1044,7 +1044,6 @@ namespace Rawr
                     DamageType = damageType,
                     Speed = speed,
                     RequiredClasses = string.Join("|", requiredClasses.ToArray()),
-                    LocationInfo = location
                 };
 
                 return item;

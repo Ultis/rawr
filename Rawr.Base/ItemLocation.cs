@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.IO;
+using System.Windows.Forms;
 
 namespace Rawr
 {
@@ -41,6 +43,14 @@ namespace Rawr
     delegate ItemLocation Construct();
 
     [Serializable]
+    [XmlInclude(typeof(StaticDrop))]
+    [XmlInclude(typeof(WorldDrop))]
+    [XmlInclude(typeof(PvpItem))]
+    [XmlInclude(typeof(VendorItem))]
+    [XmlInclude(typeof(FactionItem))]
+    [XmlInclude(typeof(CraftedItem))]
+    [XmlInclude(typeof(QuestItem))]
+    [XmlInclude(typeof(ContainerItem))]
     public class ItemLocation
     {
         public ItemSource Source{get;set;}
@@ -723,9 +733,63 @@ namespace Rawr
             _LocationFactory["sourceType.none"] = ItemLocation.Construct;
         }
 
+        static SerializableDictionary<string, ItemLocation> _allLocations = new SerializableDictionary<string, ItemLocation>();
+
+        public static ItemLocation Lookup(int id)
+        {
+            return Lookup(id.ToString());
+        }
+
+        public static ItemLocation Lookup(string id)
+        {
+            ItemLocation item = null;
+            if(_allLocations.TryGetValue(id, out item))
+            {
+                return item;
+            }
+            item = new ItemLocation("Unknown Location, please refresh");
+
+            return item;
+        }
+
+        public static void Save(string fileName)
+        {
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(_allLocations.GetType());
+            StringBuilder sb = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(sb);
+            serializer.Serialize(writer, _allLocations);
+            writer.Close();
+            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fileName), sb.ToString());
+
+        }
+
+        public static void Load(string fileName)
+        {
+            SerializableDictionary<string, ItemLocation> sourceInfo = null;
+            _allLocations.Clear();
+            if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fileName)))
+            {
+                try
+                {
+                    string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fileName));
+                    
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(_allLocations.GetType());
+                    System.IO.StringReader reader = new System.IO.StringReader(xml);
+                    sourceInfo = (SerializableDictionary<string, ItemLocation>) serializer.Deserialize(reader);
+                    reader.Close();
+                    _allLocations = sourceInfo;
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+        }
+
         public static ItemLocation Create(XmlNode node, string itemId)
         {
             ItemLocation item = null;
+
             try
             {
                 string sourceType = node.SelectSingleNode("page/itemTooltips/itemTooltip/itemSource").Attributes["value"].Value;
@@ -743,6 +807,7 @@ namespace Rawr
             {
                 item = new ItemLocation("Failed - " + e.Message);
             }
+            _allLocations[itemId] = item;
 
             return item;
         }

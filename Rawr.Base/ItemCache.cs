@@ -205,6 +205,8 @@ namespace Rawr
 			serializer.Serialize(writer, new List<Item>(AllItems));
 			writer.Close();
 			System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml"), sb.ToString());
+
+            LocationFactory.Save("ItemSource.xml");
 #else
             //this is handy for debugging
             foreach (Item item in AllItems)
@@ -252,6 +254,7 @@ namespace Rawr
 				AddItem(item, true, false);
 			}
 
+            LocationFactory.Load("ItemSource.xml");
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 		}
 

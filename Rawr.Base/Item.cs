@@ -4,14 +4,6 @@ using System.Xml.Serialization;
 namespace Rawr
 {
     [Serializable]
-    [XmlInclude(typeof(StaticDrop))]
-    [XmlInclude(typeof(WorldDrop))]
-    [XmlInclude(typeof(PvpItem))]
-    [XmlInclude(typeof(VendorItem))]
-    [XmlInclude(typeof(FactionItem))]
-    [XmlInclude(typeof(CraftedItem))]
-    [XmlInclude(typeof(QuestItem))]
-    [XmlInclude(typeof(ContainerItem))]
 	public class Item :IComparable<Item>
 	{
 		[XmlElement("Name")]
@@ -60,8 +52,14 @@ namespace Rawr
 		[System.ComponentModel.DefaultValueAttribute(false)]
 		[XmlElement("Unique")]
 		public bool _unique;
-		
-        public ItemLocation LocationInfo{get;set;}
+
+        public ItemLocation LocationInfo
+        {
+            get
+            {
+                return LocationFactory.Lookup(Id);
+            }
+        }
 
 		[XmlIgnore]
 		public string Name
