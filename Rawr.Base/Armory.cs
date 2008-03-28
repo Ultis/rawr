@@ -1025,7 +1025,7 @@ namespace Rawr
 				int gem1Id = ids.Length == 4 ? int.Parse(ids[1]) : 0;
 				int gem2Id = ids.Length == 4 ? int.Parse(ids[2]) : 0;
 				int gem3Id = ids.Length == 4 ? int.Parse(ids[3]) : 0;
- Item item = new Item()
+                Item item = new Item()
                 {
                     Name = name,
                     Quality = quality,
@@ -1044,6 +1044,7 @@ namespace Rawr
                     DamageType = damageType,
                     Speed = speed,
                     RequiredClasses = string.Join("|", requiredClasses.ToArray()),
+                    Unique=unique
                 };
 
                 return item;
