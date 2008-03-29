@@ -974,6 +974,9 @@ namespace Rawr
                                 case "Spell Hit Rating":
                                     stats.SpellHitRating = gemBonusValue;
                                     break;
+                                case "Spell Haste Rating":
+                                    stats.SpellHasteRating = gemBonusValue;
+                                    break;
                                 case "Spell Damage":
                                     stats.SpellDamageRating = gemBonusValue;
                                     break;
