@@ -422,7 +422,7 @@ you are being killed by burst damage, focus on Survival Points.",
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health +
 				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
-				stats.FrostResistance + stats.ShadowResistance) > 0;
+				stats.FrostResistance + stats.ShadowResistance) != 0;
 		}
     }
 

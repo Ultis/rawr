@@ -449,6 +449,8 @@ namespace Rawr
 							Stats = new Stats() { Miss = 2 }});
 						_allBuffs.Add(new Buff() { Name = "Dual Wielding Mob", Category = BuffCategory.Debuffs,
 							Stats = new Stats() { Miss = 20 }, Type = BuffType.ShortDurationDW});
+						_allBuffs.Add(new Buff() { Name = "Sunwell Radiance Mob", Category = BuffCategory.Debuffs,
+							Stats = new Stats() { Miss = -5f, DodgeRating = -20f * 18.9231f }, Type = BuffType.ShortDurationDW});
 						_allBuffs.Add(new Buff() { Name = "Faerie Fire", Category = BuffCategory.Debuffs,
 							Stats = new Stats() { ArmorPenetration = 610 }});
 						_allBuffs.Add(new Buff() { Name = "Improved Faerie Fire", Category = BuffCategory.Debuffs,
