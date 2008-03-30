@@ -69,6 +69,7 @@ namespace Rawr.Retribution
 					"Basic Stats:Haste Rating",
 					"Basic Stats:Armor Penetration",
 					"Basic Stats:Weapon Damage",
+                    "Basic Stats:Spell Damage",
 					"DPS Breakdown:Crusader Strike",
                     "DPS Breakdown:Seal",
                     "DPS Breakdown:White",
@@ -259,8 +260,8 @@ namespace Rawr.Retribution
 			float vengeance = 1f + 0.03f * ((character.CalculationOptions.ContainsKey("Vengeance")) ? float.Parse(character.CalculationOptions["Vengeance"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
             //Sanctity Aura
 			float sancAura = 1f + 0.1f * ((character.CalculationOptions.ContainsKey("SanctityAura")) ? float.Parse(character.CalculationOptions["SanctityAura"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
-            //Misery : TODO Take from Debuff List
-            float misery = 1.05f;
+            //Misery 
+            float misery = 1f + stats.BonusSpellPowerMultiplier;
             //SpellCrit Mod
             float judgementCrit = 1.0f + (0.03f * ((character.CalculationOptions.ContainsKey("Fanaticism")) ?
 				float.Parse(character.CalculationOptions["Fanaticism"], System.Globalization.CultureInfo.InvariantCulture) : 0f))
@@ -551,7 +552,9 @@ namespace Rawr.Retribution
             statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
 			statsTotal.HitRating += (15.76f * ((character.CalculationOptions.ContainsKey("Precision")) ? float.Parse(character.CalculationOptions["Precision"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
 			statsTotal.SpellHitRating += (15.76f * ((character.CalculationOptions.ContainsKey("Precision")) ? float.Parse(character.CalculationOptions["Precision"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
+            statsTotal.SpellHitRating += 15.76f * statsGearEnchantsBuffs.SpellHitRating;
 			statsTotal.SpellCritRating += (22.08f * ((character.CalculationOptions.ContainsKey("SanctifiedSeals")) ? float.Parse(character.CalculationOptions["SanctifiedSeals"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
+            statsTotal.SpellHitRating += 22.08f * statsGearEnchantsBuffs.SpellCritRating;
             statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
             
 
@@ -568,11 +571,13 @@ namespace Rawr.Retribution
             statsTotal.Bloodlust = statsGearEnchantsBuffs.Bloodlust;
             statsTotal.DrumsOfBattle = statsGearEnchantsBuffs.DrumsOfBattle;
             statsTotal.SpellDamageRating = statsGearEnchantsBuffs.SpellDamageRating;
+            statsTotal.SpellDamageRating += statsGearEnchantsBuffs.SpellDamageFromSpiritPercentage * statsGearEnchantsBuffs.Spirit;
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
             statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
             statsTotal.BonusCrusaderStrikeDamageMultiplier = statsGearEnchantsBuffs.BonusCrusaderStrikeDamageMultiplier;
             statsTotal.WindfuryAPBonus = statsGearEnchantsBuffs.WindfuryAPBonus;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
+            statsTotal.BonusSpellPowerMultiplier = statsGearEnchantsBuffs.BonusSpellPowerMultiplier;
             return (statsTotal);
 
            
@@ -670,7 +675,7 @@ namespace Rawr.Retribution
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return true;/*((
+            return ((
                 stats.Health +
                 stats.Mana +
                 stats.Stamina +
@@ -687,6 +692,7 @@ namespace Rawr.Retribution
                 stats.CritRating +
                 stats.LotPCritRating +
                 stats.BonusStrengthMultiplier +
+                stats.BonusAttackPowerMultiplier +
                 stats.BonusPhysicalDamageMultiplier +
                 stats.BonusCritMultiplier +
                 stats.BonusCrusaderStrikeDamageMultiplier +
@@ -694,7 +700,11 @@ namespace Rawr.Retribution
                 stats.Bloodlust +
                 stats.ExposeWeakness +
                 stats.DrumsOfBattle +
-                stats.WeaponDamage) > 0)*/
+                stats.WeaponDamage +
+                stats.BonusSpellPowerMultiplier +
+                stats.SpellDamageFromSpiritPercentage +
+                stats.SpellHitRating +
+                stats.Spirit) > 0)
 			; 
         }
 

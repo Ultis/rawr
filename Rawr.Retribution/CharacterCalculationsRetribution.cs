@@ -167,6 +167,7 @@ namespace Rawr.Retribution
             dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString("N2"));
             dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("N2"));
             dictValues.Add("Armor Penetration", BasicStats.ArmorPenetration.ToString());
+            dictValues.Add("Spell Damage", BasicStats.SpellDamageRating.ToString());
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
             dictValues.Add("Crusader Strike", CSDPSPoints.ToString("N2"));
             dictValues.Add("Seal", SealDPSPoints.ToString("N2"));
