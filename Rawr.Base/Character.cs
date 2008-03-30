@@ -425,6 +425,7 @@ namespace Rawr //O O . .
 				}
 			}
 		}
+
 		[System.Xml.Serialization.XmlIgnore]
 		public Enchant HeadEnchant
 		{
@@ -850,6 +851,33 @@ namespace Rawr //O O . .
             }
         }
 
+        public string[] GetAllEquipedGearIds()
+        {
+            List<string> _ids = new List<string>();
+            _ids.Add(_back);
+            _ids.Add(_chest);
+            _ids.Add(_feet);
+            _ids.Add(_finger1);
+            _ids.Add(_finger2);
+            _ids.Add(_hands);
+            _ids.Add(_head);
+            _ids.Add(_legs);
+            _ids.Add(_mainHand);
+            _ids.Add(_neck);
+            _ids.Add(_offHand);
+            _ids.Add(_projectile);
+            _ids.Add(_projectileBag);
+            _ids.Add(_ranged);
+            _ids.Add(_shirt);
+            _ids.Add(_shoulders);
+            _ids.Add(_tabard);
+            _ids.Add(_trinket1);
+            _ids.Add(_trinket2);
+            _ids.Add(_waist);
+            _ids.Add(_wrist);
+            return _ids.ToArray();
+        }
+
 		public CharacterSlot[] GetEquippedSlots(Item item)
 		{
 			List<CharacterSlot> listSlots = new List<CharacterSlot>();
@@ -1047,11 +1075,11 @@ namespace Rawr //O O . .
             return character;
         }
 
-		public void EnsureItemsLoaded()
-		{
-			Item item;
-			foreach (CharacterSlot slot in Enum.GetValues(typeof(CharacterSlot)))
-				item = this[slot];
-		}
+        //public void EnsureItemsLoaded()
+        //{
+        //    Item item;
+        //    foreach (CharacterSlot slot in Enum.GetValues(typeof(CharacterSlot)))
+        //        item = this[slot];
+        //}
 	}
 }

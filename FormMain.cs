@@ -9,6 +9,7 @@ using System.Xml;
 
 using Rawr.Forms;
 using Rawr.Forms.Controllers;
+using Rawr.Forms.Utilities;
 
 namespace Rawr
 {
@@ -83,13 +84,16 @@ namespace Rawr
 				{
 					_character.ItemsChanged -= new EventHandler(_character_ItemsChanged);
 					_character.AvailableItemsChanged -= new EventHandler(_character_AvailableItemsChanged);
-				}
+                    if (value != null && (_character.Name != value.Name || _character.Realm != value.Realm))
+                    {
+                        _characterPath = null;
+                    }
+                }
 				_character = value; 
 				if (_character != null)
 				{
 					this.Cursor = Cursors.WaitCursor;
                     _character.IsLoading = true; // we do not need ItemsChanged event triggering until we call OnItemsChanged at the end
-					_character.EnsureItemsLoaded();
 					Calculations.CalculationOptionsPanel.Character = _character;
 					ItemToolTip.Instance.Character = ItemSelectionController.Instance.Character = 
 						ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
@@ -217,7 +221,7 @@ namespace Rawr
 		{
 			if (PromptToSaveBeforeClosing())
 			{
-				LoadCharacter((sender as ToolStripMenuItem).Tag.ToString());
+                LoadSavedCharacter((sender as ToolStripMenuItem).Tag.ToString());
 			}
 		}
 
@@ -337,7 +341,7 @@ namespace Rawr
 		{
 			if (PromptToSaveBeforeClosing())
 			{
-				LoadCharacter(new Character(), string.Empty);
+				LoadCharacterIntoForm(new Character());
 			}
 		}
 
@@ -351,23 +355,50 @@ namespace Rawr
 				dialog.Multiselect = false;
 				if (dialog.ShowDialog() == DialogResult.OK)
 				{
-					LoadCharacter(dialog.FileName);
+					LoadSavedCharacter(dialog.FileName);
 				}
 			}
 		}
 
-		private void LoadCharacter(string characterPath) { LoadCharacter(Character.Load(characterPath), characterPath); }
-		private void LoadCharacter(Character character, string characterPath)
-		{
-			WebRequestWrapper.ResetFatalErrorIndicator();
-			this.Cursor = Cursors.WaitCursor;
-			Character = character;
-			_characterPath = characterPath;
-			_unsavedChanges = false;
-			if (!string.IsNullOrEmpty(characterPath))
-				AddRecentCharacter(characterPath);
-			this.Cursor = Cursors.Default;
-		}
+        private void LoadCharacterIntoForm(Character character)
+        {
+            Character = character;
+            _unsavedChanges = false;
+        }
+
+        private void LoadSavedCharacter(string path)
+        {
+            ShowStatusForm();
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_LoadSavedCharacterComplete);
+            bw.DoWork += new DoWorkEventHandler(bw_LoadSavedCharacter);
+            bw.RunWorkerAsync(path);
+        }
+
+        void bw_LoadSavedCharacter(object sender, DoWorkEventArgs e)
+        {
+            Character character = _Controller.LoadSavedCharacter(e.Argument as string);
+            if (character != null)
+            {
+                _characterPath = e.Argument as string;
+                InvokeHelper.Invoke(this, "AddRecentCharacter", new object[] { e.Argument});
+                e.Result = character;
+            }
+        }
+
+        void bw_LoadSavedCharacterComplete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                MessageBox.Show(e.Error.Message);
+            }
+            else
+            {
+                //Load Character into UI
+                LoadCharacterIntoForm(e.Result as Character);
+                FinishedProcessing();
+            }
+        }
 
 		private void loadFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -376,8 +407,6 @@ namespace Rawr
 				FormEnterNameRealm form = new FormEnterNameRealm();
 				if (form.ShowDialog() == DialogResult.OK)
 				{
-					this.Cursor = Cursors.WaitCursor;
-
 					if (form.ArmoryRegion == Character.CharacterRegion.US && form.Realm == "Dragonmaw" && form.CharacterName == "Emposter")
 					{
 						Form formForEmposter = new Form();
@@ -393,30 +422,78 @@ namespace Rawr
 						formForEmposter.Show(this);
 						Application.DoEvents();
 					}
-
-					LoadCharacter(Armory.GetCharacter(form.ArmoryRegion, form.Realm, form.CharacterName), string.Empty);
-					_unsavedChanges = true;
+                    ShowStatusForm();
+                    BackgroundWorker bw = new BackgroundWorker();
+                    bw.DoWork += new DoWorkEventHandler(bw_ArmoryGetCharacter);
+                    bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_ArmoryGetCharacterComplete);
+                    bw.RunWorkerAsync(new string[] {form.CharacterName, form.Realm, form.ArmoryRegion.ToString()});
+                    //LoadCharacter(Armory.GetCharacter(form.ArmoryRegion, form.Realm, form.CharacterName), string.Empty);
 				}
 			}
 		}
 
+        void bw_ArmoryGetCharacter(object sender, DoWorkEventArgs e)
+        {
+            string[] args = e.Argument as string[];
+            //just accessing the UI elements from off thread is ok, its changing them thats bad.
+            Character.CharacterRegion region = (args[2] == Rawr.Character.CharacterRegion.US.ToString()) ? Rawr.Character.CharacterRegion.US : Rawr.Character.CharacterRegion.EU;
+            e.Result = _Controller.GetCharacterFromArmory(args[1], args[0], region);
+        }
+
+        void bw_ArmoryGetCharacterComplete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                // TODO: log this to the status screen.
+                MessageBox.Show(e.Error.Message);
+            }
+            else
+            {
+                Character character = e.Result as Character;
+                LoadCharacterIntoForm(character);
+                _unsavedChanges = true;
+            }
+            FinishedProcessing();
+        }
+
 
         private void reloadCurrentCharacterFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Character.CharacterRegion region = radioButtonRegionUS.Checked ? Rawr.Character.CharacterRegion.US : Rawr.Character.CharacterRegion.EU;            
-            if (String.IsNullOrEmpty(textBoxName.Text))
+            Character.CharacterRegion region = radioButtonRegionUS.Checked ? Rawr.Character.CharacterRegion.US : Rawr.Character.CharacterRegion.EU;  
+            if (String.IsNullOrEmpty(Character.Name) || String.IsNullOrEmpty(Character.Realm))
             {
-                MessageBox.Show("Cannot reload when character name is empty");
-            }
-            else if (String.IsNullOrEmpty(textBoxRealm.Text))
-            {
-                MessageBox.Show("Cannot reload when Realm is empty");
+                MessageBox.Show("A valid character has not been loaded, unable to reload.","No Character Loaded",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
             else if (MessageBox.Show("Confirm reloading " + textBoxName.Text + " from the " + textBoxRealm.Text + "@" + region + " realm ", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                LoadCharacter(Armory.GetCharacter(region, textBoxRealm.Text, textBoxName.Text), string.Empty);
+                ShowStatusForm();
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += new DoWorkEventHandler(bw_ArmoryReloadCharacter);
+                bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_ArmoryGetCharacterReloadComplete);
+                bw.RunWorkerAsync(Character);
+            }
+        }
+
+        void bw_ArmoryReloadCharacter(object sender, DoWorkEventArgs e)
+        {
+            Character character = e.Argument as Character;
+            e.Result = _Controller.ReloadCharacterFromArmory(character);
+        }
+
+        void bw_ArmoryGetCharacterReloadComplete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                // TODO: log this to the status screen.
+                MessageBox.Show(e.Error.Message);
+            }
+            else
+            {
+                Character character = e.Result as Character;
+                this.Character = character;
                 _unsavedChanges = true;
             }
+            FinishedProcessing();
         }
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -640,15 +717,10 @@ namespace Rawr
 
 		private void loadPossibleUpgradesFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Cursor = Cursors.WaitCursor;
-			if (_StatusForm == null || _StatusForm.IsDisposed)
-			{
-				_StatusForm = new Status();
-			}
-			_StatusForm.Show(this);
+            ShowStatusForm();
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(bw_GetArmoryUpgrades);
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
             bw.RunWorkerAsync(Character);
 		}
 
@@ -656,18 +728,33 @@ namespace Rawr
         {
             _Controller.GetArmoryUpgrades(e.Argument as Character);
         }
+        
+        private void ShowStatusForm()
+        {
+            Cursor = Cursors.WaitCursor;
+            if (_StatusForm == null || _StatusForm.IsDisposed)
+            {
+                _StatusForm = new Status();
+            }
+            _StatusForm.Show(this);
+        }
+
+        private void FinishedProcessing()
+        {
+            if (_StatusForm != null && !_StatusForm.IsDisposed)
+            {
+                _StatusForm.Close();
+                _StatusForm.Dispose();
+            }
+            this.Cursor = Cursors.Default;
+        }
 
         private void updateAllItemsToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-			Cursor = Cursors.WaitCursor;
-			if (_StatusForm == null || _StatusForm.IsDisposed)
-			{
-				_StatusForm = new Status();
-			}
-			_StatusForm.Show(this);
+            ShowStatusForm();
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(bw_UpdateAllCachedItems);
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
             bw.RunWorkerAsync();
         }
 
@@ -676,17 +763,13 @@ namespace Rawr
             _Controller.UpdateAllCachedItems();
         }
 
-        void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        void bw_StatusCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Cursor = Cursors.Default;
             if (e.Error != null)
             {
                 MessageBox.Show("Error processing request: " + e.Error.Message);
             }
-            if (_StatusForm != null && !_StatusForm.IsDisposed)
-            {
-             //   _StatusForm.Hide();
-            }
+            FinishedProcessing();
         }
 
         private void AddPTRItems()

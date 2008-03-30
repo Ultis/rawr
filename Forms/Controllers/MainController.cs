@@ -90,11 +90,67 @@ namespace Rawr.Forms.Controllers
 		}
 
 		public void GetArmoryUpgrades(Character currentCharacter)
-		{            
+		{
+            WebRequestWrapper.ResetFatalErrorIndicator();
 			StatusMessaging.UpdateStatus("GetArmoryUpgrades", "Getting Armory Updates");
 			Armory.LoadUpgradesFromArmory(currentCharacter);
 			ItemCache.OnItemsChanged();
             StatusMessaging.UpdateStatusFinished("GetArmoryUpgrades");
 		}
+
+
+        public Character ReloadCharacterFromArmory(Character character)
+        {
+            WebRequestWrapper.ResetFatalErrorIndicator();
+            Character reload = GetCharacterFromArmory(character.Realm, character.Name, character.Region);
+            //load values for gear from armory into original character
+            foreach (Character.CharacterSlot slot in Enum.GetValues(typeof(Character.CharacterSlot)))
+            {
+                character[slot] = reload[slot];
+            }
+            return character;
+        }
+
+        public Character GetCharacterFromArmory(string realm, string name, Character.CharacterRegion region)
+        {
+            WebRequestWrapper.ResetFatalErrorIndicator();
+            StatusMessaging.UpdateStatus("GetCharacterFromArmory", " Getting Character Definition");
+            StatusMessaging.UpdateStatus("CheckingItemCache", "Queued");
+            string[] itemsOnChar;
+            Character character = Armory.GetCharacter(region, realm, name, out itemsOnChar);
+            StatusMessaging.UpdateStatusFinished("GetCharacterFromArmory");
+            EnsureItemsLoaded(itemsOnChar);
+            return character;
+        }
+
+        public void EnsureItemsLoaded(string[] ids)
+        {
+            StatusMessaging.UpdateStatus("CheckingItemCache", "Checking Item Cache for Definitions");
+            if (ids != null)
+            {
+                for (int i = 0; i < ids.Length; i++)
+                {
+                    StatusMessaging.UpdateStatus("CheckingItemCache", string.Format("Checking Item Cache for Definitions - {0} of {1}", i, ids.Length));
+                    Item.LoadFromId(ids[i], false, "Character from Armory", false);
+                }
+            }
+            ItemCache.OnItemsChanged();
+            StatusMessaging.UpdateStatusFinished("CheckingItemCache");
+        }
+
+        public void EnsureItemsLoaded(Character character)
+        {
+            EnsureItemsLoaded(character.GetAllEquipedGearIds());
+        }
+
+        public Character LoadSavedCharacter(string filePath)
+        {
+            Character ret = Character.Load(filePath);
+            if (ret != null)
+            {
+                EnsureItemsLoaded(ret);
+            }
+            return ret;
+        }
 	}
 }

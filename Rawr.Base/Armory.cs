@@ -9,7 +9,13 @@ namespace Rawr
 {
 	public static class Armory
 	{
-		public static Character GetCharacter(Character.CharacterRegion region, string realm, string name)
+        public static Character GetCharacter(Character.CharacterRegion region, string realm, string name)
+        {
+            string[] ignore;
+            return GetCharacter(region, realm, name,out ignore);
+        }
+
+		public static Character GetCharacter(Character.CharacterRegion region, string realm, string name, out string[] itemsOnCharacter)
 		{
 			XmlDocument docCharacter = null;
             XmlDocument docTalents = null;
@@ -31,7 +37,8 @@ namespace Rawr
 						itemNode.Attributes["gem0Id"].Value, itemNode.Attributes["gem1Id"].Value, itemNode.Attributes["gem2Id"].Value);
 					enchants[(Character.CharacterSlot)slot] = int.Parse(itemNode.Attributes["permanentenchant"].Value);
 				}
-
+                itemsOnCharacter = new string[items.Values.Count];
+                items.Values.CopyTo(itemsOnCharacter, 0);
 				Character character = new Character(name, realm, region, race,
 					items.ContainsKey(Character.CharacterSlot.Head) ? items[Character.CharacterSlot.Head] : null,
 					items.ContainsKey(Character.CharacterSlot.Neck) ? items[Character.CharacterSlot.Neck] : null,
@@ -252,6 +259,7 @@ namespace Rawr
 					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {3}\r\n\r\n\r\n{4}\r\n\r\n{5}",
 					name, region.ToString(), realm, docCharacter.OuterXml, ex.Message, ex.StackTrace));
 				}
+                itemsOnCharacter = null;
 				return null;
 			}
 		}
