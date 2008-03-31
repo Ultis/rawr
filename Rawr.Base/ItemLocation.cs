@@ -10,7 +10,9 @@ namespace Rawr
 {
     public enum ItemSource
     {
-        Unknown,
+        NotFound,           // doesnt exist in the armory
+        None,               // sourceType.none
+        Unknown,            // Failed to parse the sourcetype or the extended data
         Vendor,
         Faction,
         PVP,
@@ -44,6 +46,8 @@ namespace Rawr
 
     [Serializable]
     [XmlInclude(typeof(StaticDrop))]
+    [XmlInclude(typeof(NoSource))]
+    [XmlInclude(typeof(UnknownItem))]
     [XmlInclude(typeof(WorldDrop))]
     [XmlInclude(typeof(PvpItem))]
     [XmlInclude(typeof(VendorItem))]
@@ -78,7 +82,41 @@ namespace Rawr
         {
             return new ItemLocation("");
         }
+    }
 
+    [Serializable]
+    public class NoSource : ItemLocation
+    {
+        public NoSource():base("")
+        {
+            Source = ItemSource.None;
+        }
+        public new static ItemLocation Construct()
+        {
+            return new NoSource();
+        }
+    }
+    [Serializable]
+    public class UnknownItem : ItemLocation
+    {
+        [XmlIgnore]
+        public override string Description
+        {
+            get
+            {
+                return "Not found on armory";
+            }
+        }
+
+        public UnknownItem()
+            : base("")
+        {
+            Source = ItemSource.NotFound;
+        }
+        public new static ItemLocation Construct()
+        {
+            return new UnknownItem();
+        }
     }
   
     [Serializable]
@@ -87,6 +125,7 @@ namespace Rawr
         
         public string Token{get;set;}
         public int Count{get;set;}
+        public int Cost{get;set;}
 
         
         [XmlIgnore]
@@ -117,7 +156,6 @@ namespace Rawr
 
         }
 
-        public int Cost{get;set;}
 
 
         public VendorItem()
@@ -213,9 +251,6 @@ namespace Rawr
     public class FactionItem : ItemLocation
     {
 
-        public string FactionName {get;set;}
-        public ReputationLevel Level{get;set;}
-
         [XmlIgnore]
         public string CostString
         {
@@ -239,13 +274,9 @@ namespace Rawr
             }
 
         }
-
+        public string FactionName {get;set;}
+        public ReputationLevel Level{get;set;}
         public int Cost{get;set;}
-
-
-        static SortedList<string, string> tokenIDMap = new SortedList<string, string>();
-
-        private SerializableDictionary<string, int> _tokenMap = new SerializableDictionary<string, int>();
         public SerializableDictionary<string, int> TokenMap
         {
             get
@@ -257,6 +288,11 @@ namespace Rawr
                 _tokenMap = value;
             }
         }
+
+
+        static SortedList<string, string> tokenIDMap = new SortedList<string, string>();
+        private SerializableDictionary<string, int> _tokenMap = new SerializableDictionary<string, int>();
+
         public FactionItem()
         {
             Source = ItemSource.Faction;
@@ -558,6 +594,7 @@ namespace Rawr
         public string Skill {get;set;}
         public int Level {get;set;}
         public BindsOn Bind {get;set;}
+        public string SpellName{get;set;}
 
 
         public SerializableDictionary<string, int> BopMats
@@ -605,6 +642,11 @@ namespace Rawr
                 Skill = "Unknown";
             }
 
+            subNode = doc.SelectSingleNode("/page/itemInfo/item/createdBy/spell/@name");
+            if (subNode != null)
+            {
+                SpellName = subNode.InnerText;
+            }
 
 
             foreach(XmlNode reagent in doc.SelectNodes("/page/itemInfo/item/createdBy/spell/reagent"))
@@ -652,10 +694,10 @@ namespace Rawr
         }
 
 
-        String Area {get;set;}
-        String Quest {get;set;}
-        int MinLevel {get;set;}
-        int Party {get;set;}
+        public String Area {get;set;}
+        public String Quest {get;set;}
+        public int MinLevel {get;set;}
+        public int Party {get;set;}
 
         public override ItemLocation Fill(XmlNode node, string itemId)
         {
@@ -694,10 +736,10 @@ namespace Rawr
         }
 
 
-        String Area { get; set; }
-        String Container { get; set; }
-        int MinLevel { get; set; }
-        int Party { get; set; }
+        public String Area { get; set; }
+        public String Container { get; set; }
+        public int MinLevel { get; set; }
+        public int Party { get; set; }
 
         public override ItemLocation Fill(XmlNode node, string itemId)
         {
@@ -731,7 +773,7 @@ namespace Rawr
             _LocationFactory["sourceType.createdBySpell"] = CraftedItem.Construct;
             _LocationFactory["sourceType.questReward"] = QuestItem.Construct;
             _LocationFactory["sourceType.gameObjectDrop"] = ContainerItem.Construct;
-            _LocationFactory["sourceType.none"] = ItemLocation.Construct;
+            _LocationFactory["sourceType.none"] = NoSource.Construct;
         }
 
         static SerializableDictionary<string, ItemLocation> _allLocations = new SerializableDictionary<string, ItemLocation>();
@@ -793,15 +835,22 @@ namespace Rawr
 
             try
             {
-                string sourceType = node.SelectSingleNode("page/itemTooltips/itemTooltip/itemSource").Attributes["value"].Value;
-                if (_LocationFactory.ContainsKey(sourceType))
+                if (node != null && node.SelectSingleNode("page/itemTooltips/itemTooltip/itemSource") != null)
                 {
-                    item = _LocationFactory[sourceType]();
-                    item = item.Fill(node, itemId);
+                    string sourceType = node.SelectSingleNode("page/itemTooltips/itemTooltip/itemSource").Attributes["value"].Value;
+                    if (_LocationFactory.ContainsKey(sourceType))
+                    {
+                        item = _LocationFactory[sourceType]();
+                        item = item.Fill(node, itemId);
+                    }
+                    else
+                    {
+                        throw new Exception("Unrecognized item source " + sourceType);
+                    }
                 }
                 else
                 {
-                    throw new Exception("Unrecognized item source " + sourceType);
+                    item = UnknownItem.Construct();
                 }
             }
             catch (System.Exception e)

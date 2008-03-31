@@ -272,7 +272,8 @@ namespace Rawr
 			{
 				string id = gemmedId.Split('.')[0];
 				WebRequestWrapper wrw = new WebRequestWrapper();
-				docItem = wrw.DownloadItemToolTipSheet(id);
+                docItem = wrw.DownloadItemToolTipSheet(id);
+                ItemLocation location = LocationFactory.Create(docItem, id);
                 if (docItem == null || docItem.SelectSingleNode("/page/itemTooltips/itemTooltip[1]") == null)
                 {
                     //No such item exists.
@@ -296,7 +297,6 @@ namespace Rawr
 				List<string> requiredClasses = new List<string>();
                 bool unique = false;
 
-						ItemLocation location = LocationFactory.Create(docItem, id);
 						
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
 						foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/icon")) { iconPath = node.InnerText; }
@@ -672,7 +672,7 @@ namespace Rawr
                         else if (spellDesc.StartsWith("Increases the effect that healing and mana potions have on the wearer by "))
                         {
                             spellDesc = spellDesc.Substring("Increases the effect that healing and mana potions have on the wearer by ".Length);
-                            spellDesc = spellDesc.Replace(".", "").Replace(" ", "").Replace("%", "");
+                            spellDesc = spellDesc.Substring(0, spellDesc.IndexOf('%'));
                             stats.BonusManaPotion += int.Parse(spellDesc) / 100f;
                             // TODO health potion effect
                         }
