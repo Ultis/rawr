@@ -438,7 +438,7 @@ namespace Rawr
 				}
 				ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
 				enchantCalc.Name = enchant.Name;
-				enchantCalc.Item = new Item(enchant.Name, Item.ItemQuality.Common, Item.ItemType.None, 
+				enchantCalc.Item = new Item(enchant.Name, Item.ItemQuality.Temp, Item.ItemType.None, 
 					-1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, Item.ItemSlot.None, null, false, enchant.Stats, new Sockets(), 0, 0, 0, 0, 0,
 					Item.ItemDamageType.Physical, 0, null);
 				enchantCalc.Item.Name = enchant.Name;
