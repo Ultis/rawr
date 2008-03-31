@@ -141,6 +141,7 @@ namespace Rawr
                             switch (_currentItem.Quality)
                             {
                                 case Item.ItemQuality.Common:
+                                case Item.ItemQuality.Temp:
                                     nameBrush = new SolidBrush(Color.FromKnownColor(KnownColor.InfoText));
                                     break;
                                 case Item.ItemQuality.Epic:
@@ -261,10 +262,11 @@ namespace Rawr
                                          : CurrentItem.Sockets.Stats.ToString()),
                                     _fontStats, brushBonus, 2, 63 + statHeight);
                             }
-
-                            Rectangle textRec = new Rectangle(2, (hasSockets ? 78 : 18) + statHeight + 4, _cachedToolTipImage.Width - 4, _cachedToolTipImage.Height - 2 - (hasSockets ? 78 : 18) + statHeight);
-                            g.DrawString(location, _fontStats, SystemBrushes.InfoText, textRec);
-
+                            if (_currentItem.Quality != Item.ItemQuality.Temp)
+                            {
+                                Rectangle textRec = new Rectangle(2, (hasSockets ? 78 : 18) + statHeight + 4, _cachedToolTipImage.Width - 4, _cachedToolTipImage.Height - 2 - (hasSockets ? 78 : 18) + statHeight);
+                                g.DrawString(location, _fontStats, SystemBrushes.InfoText, textRec);
+                            }
 
                             g.Dispose();
                         }

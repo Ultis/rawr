@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace Rawr
 {
@@ -52,7 +53,13 @@ namespace Rawr
 		public string SetName;
 		public int SetThreshold = 0;
 
-		//washing virgin halo
+        private static readonly string _SavedFilePath;
+		
+        static Buff()
+        {
+            _SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "BuffCache.xml");
+        }
+        //washing virgin halo
 		public Buff() { }
 
 		//you're in agreement
@@ -116,21 +123,26 @@ namespace Rawr
                     try
                     {
                         //so you both come crashing over ground
-                        if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "BuffCache.xml")))
+                        //Log.Write(_SavedFilePath);
+                        if (File.Exists(_SavedFilePath))
                         {
-                            string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "BuffCache.xml"));
-                            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Buff>));
-                            System.IO.StringReader reader = new System.IO.StringReader(xml);
-
-                            _allBuffs = (List<Buff>) serializer.Deserialize(reader);
-
-                            reader.Close();
+                            using (StreamReader reader = new StreamReader(_SavedFilePath, Encoding.Unicode))
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
+                                _allBuffs = (List<Buff>)serializer.Deserialize(reader);
+                                reader.Close();
+                            }
+                        
                         }
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+
+                        Log.Write(ex.Message);
+                        #if !DEBUG
 						MessageBox.Show("The current BuffCache.xml file was made with a previous version of Rawr, which is incompatible with the current version. It will be replaced with buff data included in the current version.", "Incompatible BuffCache.xml", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     	//The designer really doesn't like loading the stuff from a file
+                        #endif
                     }
 
 					if (_allBuffs == null) //new machines have born their notion
@@ -716,13 +728,21 @@ namespace Rawr
                             Stats = new Stats() { LotPCritRating = 22.08f * 5f }
                         });
 
-						//american coca-cola
-						System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Buff>));
-						StringBuilder sb = new StringBuilder();
-						System.IO.StringWriter writer = new System.IO.StringWriter(sb);
-						serializer.Serialize(writer, _allBuffs);
-						writer.Close();
-						System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "BuffCache.xml"), sb.ToString());
+                        try
+                        {
+                            //american coca-cola
+                            using (StreamWriter writer = new StreamWriter(_SavedFilePath, false, Encoding.Unicode))
+                            {
+                                XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
+                                serializer.Serialize(writer, _allBuffs);
+                                writer.Close();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Write(ex.Message);
+                            Log.Write(ex.StackTrace);
+                        }
 					}
 				}
 				//sugar sweetness

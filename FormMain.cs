@@ -10,12 +10,13 @@ using System.Xml;
 using Rawr.Forms;
 using Rawr.Forms.Controllers;
 using Rawr.Forms.Utilities;
+using System.IO;
 
 namespace Rawr
 {
 	public partial class FormMain : Form
 	{
-		private FormSplash _spash = new FormSplash();
+        private FormSplash _spash = new FormSplash();
 		private string _characterPath = "";
 		private bool _unsavedChanges = false;
 		private CharacterCalculationsBase _calculatedStats = null;
@@ -25,6 +26,8 @@ namespace Rawr
 		private List<ToolStripMenuItem> _customChartMenuItems = new List<ToolStripMenuItem>();
 		private MainController _Controller;
 		private Status _StatusForm;
+
+
 		public FormMain()
 		{
 			_StatusForm = new Status();
@@ -84,10 +87,6 @@ namespace Rawr
 				{
 					_character.ItemsChanged -= new EventHandler(_character_ItemsChanged);
 					_character.AvailableItemsChanged -= new EventHandler(_character_AvailableItemsChanged);
-                    if (value != null && (_character.Name != value.Name || _character.Realm != value.Realm))
-                    {
-                        _characterPath = null;
-                    }
                 }
 				_character = value; 
 				if (_character != null)
@@ -138,6 +137,26 @@ namespace Rawr
 			}
 		}
 
+        private void SetTitle()
+        {
+            StringBuilder sb = new StringBuilder(_Controller.BaseTitle);
+            if (_character != null && !String.IsNullOrEmpty(_character.Name))
+            {
+                sb.Append(" - ");
+                sb.Append(_character.Name);
+            }
+            if (!String.IsNullOrEmpty(_characterPath))
+            {
+                sb.Append(" - ");
+                sb.Append(Path.GetFileName(_characterPath));
+                if (_unsavedChanges)
+                {
+                    sb.Append("*");
+                }
+            }
+            this.Text = sb.ToString();
+        }
+
 		void _character_AvailableItemsChanged(object sender, EventArgs e)
 		{
 			_unsavedChanges = true;
@@ -170,6 +189,7 @@ namespace Rawr
 
 			this.Cursor = Cursors.Default;
 			//and the ground below grew colder / as they put you down inside
+            SetTitle();
 		}
 
 		public void AddRecentCharacter(string character)
@@ -314,6 +334,7 @@ namespace Rawr
 		{
 			_spash.Close();
 			_spash.Dispose();
+            SetTitle();
 		}
 
 		private void FormMain_Load(object sender, EventArgs e)
@@ -364,6 +385,7 @@ namespace Rawr
         {
             Character = character;
             _unsavedChanges = false;
+            SetTitle();
         }
 
         private void LoadSavedCharacter(string path)
@@ -438,6 +460,7 @@ namespace Rawr
             //just accessing the UI elements from off thread is ok, its changing them thats bad.
             Character.CharacterRegion region = (args[2] == Rawr.Character.CharacterRegion.US.ToString()) ? Rawr.Character.CharacterRegion.US : Rawr.Character.CharacterRegion.EU;
             e.Result = _Controller.GetCharacterFromArmory(args[1], args[0], region);
+            _characterPath = "";  
         }
 
         void bw_ArmoryGetCharacterComplete(object sender, RunWorkerCompletedEventArgs e)
@@ -504,12 +527,14 @@ namespace Rawr
 				Character.Save(_characterPath);
 				_unsavedChanges = false;
 				AddRecentCharacter(_characterPath);
-				this.Cursor = Cursors.Default;
+                SetTitle();
+                this.Cursor = Cursors.Default;
 			}
 			else
 			{
 				saveAsToolStripMenuItem_Click(null, null);
 			}
+            
 		}
 
 		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -524,8 +549,10 @@ namespace Rawr
 				_characterPath = dialog.FileName;
 				_unsavedChanges = false;
 				AddRecentCharacter(_characterPath);
-				this.Cursor = Cursors.Default;
-			}
+                SetTitle();
+                this.Cursor = Cursors.Default;
+                
+            }
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -743,8 +770,14 @@ namespace Rawr
         {
             if (_StatusForm != null && !_StatusForm.IsDisposed)
             {
-                _StatusForm.Close();
-                _StatusForm.Dispose();
+                if (_StatusForm.HasErrors)
+                {
+                    _StatusForm.SwitchToErrorTab();
+                }else
+                {
+                    _StatusForm.Close();
+                    _StatusForm.Dispose();  
+                }
             }
             this.Cursor = Cursors.Default;
         }

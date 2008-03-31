@@ -3,19 +3,33 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using Rawr.Forms.Utilities;
+using System.Reflection;
 
 namespace Rawr.Forms.Controllers
 {
 	public class MainController
 	{
 		private Control _Parent;
+        private const string BASE_TITLE = "Rawr (Beta {0})";
+        private static readonly string versionNumber;
+
+        static MainController()
+        {
+            Version version = Assembly.GetCallingAssembly().GetName().Version;
+            versionNumber = version.Minor.ToString() +"."+ version.Build.ToString();
+        }
 
 		public MainController(Control parent)
 		{
 			_Parent = parent;
 		}
 
-		public void LoadModel(string displayName)
+        public string BaseTitle
+        {
+            get { return string.Format(BASE_TITLE, versionNumber); }
+        }
+
+        public void LoadModel(string displayName)
 		{
 			try
 			{
@@ -77,8 +91,6 @@ namespace Rawr.Forms.Controllers
 					Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing",false);
 					if (newItem == null)
 					{
-						//treat this as a status error.
-						MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
 						ItemCache.AddItem(item, true, false);
 					}
 				}
@@ -103,10 +115,13 @@ namespace Rawr.Forms.Controllers
         {
             WebRequestWrapper.ResetFatalErrorIndicator();
             Character reload = GetCharacterFromArmory(character.Realm, character.Name, character.Region);
-            //load values for gear from armory into original character
-            foreach (Character.CharacterSlot slot in Enum.GetValues(typeof(Character.CharacterSlot)))
+            if (reload != null)
             {
-                character[slot] = reload[slot];
+                //load values for gear from armory into original character
+                foreach (Character.CharacterSlot slot in Enum.GetValues(typeof(Character.CharacterSlot)))
+                {
+                    character[slot] = reload[slot];
+                }
             }
             return character;
         }

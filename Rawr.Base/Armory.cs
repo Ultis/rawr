@@ -23,7 +23,10 @@ namespace Rawr
 			{
 				WebRequestWrapper wrw = new WebRequestWrapper();
 				docCharacter = wrw.DownloadCharacterSheet(name, region, realm);
-
+                if (docCharacter == null)
+                {
+                    StatusMessaging.ReportError("GetCharacter", null, "No character returned from the Armory");
+                }
                 Character.CharacterRace race = (Character.CharacterRace)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["raceId"].Value);
                 Character.CharacterClass charClass = (Character.CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
 
@@ -241,24 +244,25 @@ namespace Rawr
 			}
 			catch (Exception ex)
 			{
-				if (docCharacter == null || docCharacter.InnerXml.Length == 0)
-				{
-					System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Character " +
-					"from Armory: {0}@{1}-{2}. Please check to make sure you've spelled the character name and realm" +
-					" exactly right, and chosen the correct Region. Rawr recieved no response to its query for character" +
-					" data, so if the character name/region/realm are correct, please check to make sure that no firewall " +
-					"or proxy software is blocking Rawr. If you still encounter this error, please copy and" +
-					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {3}\r\n\r\n\r\n{4}\r\n\r\n{5}",
-					name, region.ToString(), realm, "null", ex.Message, ex.StackTrace));
-				}
-				else
-				{
-					System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Character " +
-					"from Armory: {0}@{1}-{2}. Please check to make sure you've spelled the character name and realm" + 
-					" exactly right, and chosen the correct Region. If you still encounter this error, please copy and" +
-					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {3}\r\n\r\n\r\n{4}\r\n\r\n{5}",
-					name, region.ToString(), realm, docCharacter.OuterXml, ex.Message, ex.StackTrace));
-				}
+                StatusMessaging.ReportError("GetCharacter", ex, "Rawr encountered an error retrieving the Character - " + name + "@" + region.ToString() + "-" + realm + " from the armory");
+                //if (docCharacter == null || docCharacter.InnerXml.Length == 0)
+                //{
+                //    System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Character " +
+                //    "from Armory: {0}@{1}-{2}. Please check to make sure you've spelled the character name and realm" +
+                //    " exactly right, and chosen the correct Region. Rawr recieved no response to its query for character" +
+                //    " data, so if the character name/region/realm are correct, please check to make sure that no firewall " +
+                //    "or proxy software is blocking Rawr. If you still encounter this error, please copy and" +
+                //    " paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {3}\r\n\r\n\r\n{4}\r\n\r\n{5}",
+                //    name, region.ToString(), realm, "null", ex.Message, ex.StackTrace));
+                //}
+                //else
+                //{
+                //    System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Character " +
+                //    "from Armory: {0}@{1}-{2}. Please check to make sure you've spelled the character name and realm" + 
+                //    " exactly right, and chosen the correct Region. If you still encounter this error, please copy and" +
+                //    " paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {3}\r\n\r\n\r\n{4}\r\n\r\n{5}",
+                //    name, region.ToString(), realm, docCharacter.OuterXml, ex.Message, ex.StackTrace));
+                //}
                 itemsOnCharacter = null;
 				return null;
 			}
@@ -276,7 +280,7 @@ namespace Rawr
                 ItemLocation location = LocationFactory.Create(docItem, id);
                 if (docItem == null || docItem.SelectSingleNode("/page/itemTooltips/itemTooltip[1]") == null)
                 {
-                    //No such item exists.
+                    StatusMessaging.ReportError("GetItem", null, "No item returned from Armory for " + id);
                     return null;
                 }
 				Item.ItemQuality quality = Item.ItemQuality.Common;
@@ -1385,29 +1389,14 @@ namespace Rawr
 					}
 					else
 					{
-						//no response returned, send failure event
+                        StatusMessaging.ReportError(slot.ToString(), null, "No response returned from Armory");
 					}
 				}
 				StatusMessaging.UpdateStatusFinished(slot.ToString());
 			}
 			catch (Exception ex)
 			{
-				if (docUpgradeSearch == null || docUpgradeSearch.InnerXml.Length == 0)
-				{
-					System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Upgrades " +
-					"from Armory: {0}. Rawr recieved no response to its query for upgrade" +
-					" data, so please check to make sure that no firewall " +
-					"or proxy software is blocking Rawr. If you still encounter this error, please copy and" +
-					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {1}\r\n\r\n\r\n{2}\r\n\r\n{3}",
-					slot.ToString(), "null", ex.Message, ex.StackTrace));
-				}
-				else
-				{
-					System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Upgrades " +
-					"from Armory: {0}. If you still encounter this error, please copy and" +
-					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {1}\r\n\r\n\r\n{2}\r\n\r\n{3}",
-					slot.ToString(), docUpgradeSearch.OuterXml, ex.Message, ex.StackTrace));
-				}
+                StatusMessaging.ReportError(slot.ToString(), ex, "Error interpreting the data returned from the Armory");
 			}
 		}
 	}

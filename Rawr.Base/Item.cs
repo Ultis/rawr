@@ -366,6 +366,7 @@ namespace Rawr
 
 		public enum ItemQuality
 		{
+            Temp = -1,
 			Poor = 0,
 			Common,
 			Uncommon,

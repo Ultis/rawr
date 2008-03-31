@@ -22,12 +22,16 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Tasks = new System.Windows.Forms.TabPage();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.TaskListView = new System.Windows.Forms.ListView();
             this.Key = new System.Windows.Forms.ColumnHeader();
             this.Details = new System.Windows.Forms.ColumnHeader();
             this.Errors = new System.Windows.Forms.TabPage();
+            this.ErrorListView = new System.Windows.Forms.ListView();
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.tabControl1.SuspendLayout();
             this.Tasks.SuspendLayout();
+            this.Errors.SuspendLayout();
             this.SuspendLayout();
             // 
             // progressBar1
@@ -95,7 +99,7 @@
             // 
             // Tasks
             // 
-            this.Tasks.Controls.Add(this.listView1);
+            this.Tasks.Controls.Add(this.TaskListView);
             this.Tasks.Location = new System.Drawing.Point(4, 22);
             this.Tasks.Name = "Tasks";
             this.Tasks.Padding = new System.Windows.Forms.Padding(3);
@@ -104,20 +108,20 @@
             this.Tasks.Text = "Tasks";
             this.Tasks.UseVisualStyleBackColor = true;
             // 
-            // listView1
+            // TaskListView
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.TaskListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.Key,
             this.Details});
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.listView1.Location = new System.Drawing.Point(3, 3);
-            this.listView1.MultiSelect = false;
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(390, 139);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.TaskListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TaskListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.TaskListView.Location = new System.Drawing.Point(3, 3);
+            this.TaskListView.MultiSelect = false;
+            this.TaskListView.Name = "TaskListView";
+            this.TaskListView.Size = new System.Drawing.Size(390, 139);
+            this.TaskListView.TabIndex = 0;
+            this.TaskListView.UseCompatibleStateImageBehavior = false;
+            this.TaskListView.View = System.Windows.Forms.View.Details;
             // 
             // Key
             // 
@@ -131,13 +135,39 @@
             // 
             // Errors
             // 
+            this.Errors.Controls.Add(this.ErrorListView);
             this.Errors.Location = new System.Drawing.Point(4, 22);
             this.Errors.Name = "Errors";
             this.Errors.Padding = new System.Windows.Forms.Padding(3);
-            this.Errors.Size = new System.Drawing.Size(382, 145);
+            this.Errors.Size = new System.Drawing.Size(396, 145);
             this.Errors.TabIndex = 1;
             this.Errors.Text = "Errors";
             this.Errors.UseVisualStyleBackColor = true;
+            // 
+            // ErrorListView
+            // 
+            this.ErrorListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.ErrorListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ErrorListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.ErrorListView.Location = new System.Drawing.Point(3, 3);
+            this.ErrorListView.MultiSelect = false;
+            this.ErrorListView.Name = "ErrorListView";
+            this.ErrorListView.Size = new System.Drawing.Size(390, 139);
+            this.ErrorListView.TabIndex = 1;
+            this.ErrorListView.UseCompatibleStateImageBehavior = false;
+            this.ErrorListView.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Name";
+            this.columnHeader1.Width = 150;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Detail";
+            this.columnHeader2.Width = 210;
             // 
             // Status
             // 
@@ -154,9 +184,11 @@
             this.MinimumSize = new System.Drawing.Size(440, 327);
             this.Name = "Status";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Status";
             this.tabControl1.ResumeLayout(false);
             this.Tasks.ResumeLayout(false);
+            this.Errors.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -172,8 +204,11 @@
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage Tasks;
         private System.Windows.Forms.TabPage Errors;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView TaskListView;
         private System.Windows.Forms.ColumnHeader Key;
         private System.Windows.Forms.ColumnHeader Details;
+        private System.Windows.Forms.ListView ErrorListView;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
 	}
 }

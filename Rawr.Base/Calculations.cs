@@ -532,7 +532,7 @@ namespace Rawr
 
 					ComparisonCalculationBase buffCalc = CreateNewComparisonCalculation();
 					buffCalc.Name = buff.Name;
-					buffCalc.Item = new Item() { Name = buff.Name, Stats = buff.Stats };
+                    buffCalc.Item = new Item() { Name = buff.Name, Stats = buff.Stats, Quality = Item.ItemQuality.Temp };
                     buffCalc.Equipped = charAutoActivated.ActiveBuffs.Contains(buff.Name);
 					buffCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
 					float[] subPoints = new float[calcsEquipped.SubPoints.Length];

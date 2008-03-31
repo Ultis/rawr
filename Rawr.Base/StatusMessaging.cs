@@ -40,8 +40,39 @@ namespace Rawr
 		}
 	}
 
+    public class StatusErrorEventArgs : EventArgs
+    {
+        private string _key;
+        private Exception _ex;
+        private string _friendlyMessage;
+
+        public StatusErrorEventArgs(string key, Exception ex, string friendlyMessage)
+        {
+            _key = key;
+            _ex = ex;
+            _friendlyMessage = friendlyMessage;
+        }
+
+        public string Key
+        {
+            get { return _key; }
+        }
+        public Exception Ex
+        {
+            get { return _ex; }
+        }
+
+        public string FriendlyMessage
+        {
+            get { return _friendlyMessage; }
+        }
+    }
+
 	public static class StatusMessaging
 	{
+        public delegate void StatusErrorDelegate(StatusErrorEventArgs args);
+        public static event StatusErrorDelegate StatusError;
+
 		public delegate void StatusUpdateDelegate(StatusEventArgs args);
 		public static event StatusUpdateDelegate StatusUpdate;
 
@@ -53,6 +84,16 @@ namespace Rawr
 				del(new StatusEventArgs(key, description));
 			}
 		}
+
+        public static void ReportError(string key, Exception ex, string friendlyMessage)
+        {
+            StatusErrorDelegate del = StatusMessaging.StatusError;
+            if (del != null)
+            {
+                del(new StatusErrorEventArgs(key, ex, friendlyMessage));
+            }
+
+        }
 
 		public static void UpdateStatusFinished(string key)
 		{

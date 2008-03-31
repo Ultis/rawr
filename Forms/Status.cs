@@ -18,6 +18,7 @@ namespace Rawr.Forms
         private const int MIN_WIDTH = 440;
         private bool _Expanded = true;
 		private List<StatusEventArgs> _StatusUpdates;
+        private List<StatusErrorEventArgs> _StatusErrors;
         private int _LastExpandedHeight;
 
 
@@ -26,8 +27,29 @@ namespace Rawr.Forms
 			InitializeComponent();
             _LastExpandedHeight = 392;
 			_StatusUpdates = new List<StatusEventArgs>();
+            _StatusErrors = new List<StatusErrorEventArgs>();
 			StatusMessaging.StatusUpdate += new StatusMessaging.StatusUpdateDelegate(StatusMessaging_StatusUpdate);
+            StatusMessaging.StatusError += new StatusMessaging.StatusErrorDelegate(StatusMessaging_StatusError);
 		}
+
+        public bool HasErrors
+        {
+            get { return _StatusErrors.Count > 0; }
+        }
+
+        public void SwitchToErrorTab()
+        {
+            this.tabControl1.SelectedTab = this.tabControl1.TabPages[1];
+        }
+
+        private void StatusMessaging_StatusError(StatusErrorEventArgs args)
+        {
+            if (!this.IsDisposed)
+            {
+                _StatusErrors.Add(args);
+                InvokeHelper.BeginInvoke(this, "RefreshErrorList", new object[] { args });
+            }
+        }
 
         private void StatusMessaging_StatusUpdate(StatusEventArgs args)
 		{
@@ -56,6 +78,11 @@ namespace Rawr.Forms
 			}
 		}
 
+        private void RefreshErrorList(StatusErrorEventArgs args)
+        {
+            ErrorListView.Items.Add(new ListViewItem(new string[] { args.Key,args.FriendlyMessage}));
+        }
+
 		private void RefreshTaskList()
 		{
 			int doneCount = 0;
@@ -65,16 +92,16 @@ namespace Rawr.Forms
 				{
 					doneCount++;
 				}
-                if (listView1.Items.Count > i)
+                if (TaskListView.Items.Count > i)
                 {
-                    listView1.Items[i].SubItems["Description"].Text = _StatusUpdates[i].Description;
+                    TaskListView.Items[i].SubItems["Description"].Text = _StatusUpdates[i].Description;
                 }
                 else
                 {
                     ListViewItem item = new ListViewItem(new string[] { _StatusUpdates[i].Key, _StatusUpdates[i].Description });
                     item.SubItems[0].Name = "Key";
                     item.SubItems[1].Name = "Description";
-                    listView1.Items.Add(item);
+                    TaskListView.Items.Add(item);
                 }
 			}
 			label1.Text = string.Format(OVERALL_PROGRESS,doneCount, _StatusUpdates.Count);

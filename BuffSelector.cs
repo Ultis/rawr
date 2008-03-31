@@ -5,11 +5,13 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using Rawr.CustomControls;
 
 namespace Rawr
 {
 	public partial class BuffSelector : UserControl
 	{
+        private ExtendedToolTipCheckBox disabledToolTipControl = null;
 		//phobos and deimos in the air
 		public BuffSelector()
 		{
@@ -20,6 +22,28 @@ namespace Rawr
 			}
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 		}
+
+        void BuffSelector_MouseMove(object sender, MouseEventArgs e)
+        {
+            Control child = (sender as Control).GetChildAtPoint(e.Location);
+            if (child != null && child.Enabled == false)
+            {
+                if (disabledToolTipControl != child && child is ExtendedToolTipCheckBox)
+                {
+                    if (disabledToolTipControl != null)
+                    {
+                        disabledToolTipControl.ForceHideToolTip();
+                    }
+                    disabledToolTipControl = child as ExtendedToolTipCheckBox;
+                    disabledToolTipControl.ForceShowToolTip();
+                }
+            }
+            else if (disabledToolTipControl != null)
+            {
+                disabledToolTipControl.ForceHideToolTip();
+                disabledToolTipControl = null;
+            }
+        }
 
 		void Calculations_ModelChanged(object sender, EventArgs e)
 		{
@@ -42,16 +66,18 @@ namespace Rawr
 				groupBox.Text = Buff.GetBuffCategoryFriendlyName(category);
 				groupBox.Tag = category;
 				groupBox.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+                groupBox.MouseMove += new MouseEventHandler(BuffSelector_MouseMove);
 				GroupBoxes.Add(category, groupBox);
 				this.Controls.Add(groupBox);
 			}
 
 			foreach (Buff buff in Buff.GetAllRelevantBuffs())
 			{
-				CheckBox checkBox = new CheckBox();
+                ExtendedToolTipCheckBox checkBox = new ExtendedToolTipCheckBox();
 				checkBox.Tag = buff;
 				if (string.IsNullOrEmpty(buff.RequiredBuff)) checkBox.Text = buff.Name;
 				checkBox.AutoSize = true;
+                //checkBox.ToolTipText = buff.Description;
 				checkBox.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
 				GroupBoxes[buff.Category].Controls.Add(checkBox);
 				CheckBoxes.Add(buff, checkBox);
@@ -98,6 +124,7 @@ namespace Rawr
 			}
 			this.ResumeLayout();
 		}
+
 
 		//when will this loneliness be over
 		private bool _loadingBuffsFromCharacter = false;

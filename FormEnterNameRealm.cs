@@ -23,5 +23,10 @@ namespace Rawr
         {
             get { return radioButtonUS.Checked ? Character.CharacterRegion.US : Character.CharacterRegion.EU; }
         }
+
+        private void FormEnterNameRealm_Activated(object sender, System.EventArgs e)
+        {
+            this.textBoxName.Focus();
+        }
     }
 }
