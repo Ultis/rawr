@@ -164,6 +164,11 @@ namespace Rawr
 
 		void _character_ItemsChanged(object sender, EventArgs e)
 		{
+            if (this.InvokeRequired)
+            {
+                InvokeHelper.Invoke(this, "_character_ItemsChanged", new object[] { sender, e });
+                return;
+            }
 			this.Cursor = Cursors.WaitCursor;
 			_unsavedChanges = true;
 

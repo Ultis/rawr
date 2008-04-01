@@ -797,13 +797,12 @@ namespace Rawr
 
         public static void Save(string fileName)
         {
-            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(_allLocations.GetType());
-            StringBuilder sb = new StringBuilder();
-            System.IO.StringWriter writer = new System.IO.StringWriter(sb);
-            serializer.Serialize(writer, _allLocations);
-            writer.Close();
-            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fileName), sb.ToString());
-
+            using (StreamWriter writer = new StreamWriter(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fileName), false, Encoding.UTF8))
+            {
+                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(_allLocations.GetType());
+                serializer.Serialize(writer, _allLocations);
+                writer.Close();
+            }
         }
 
         public static void Load(string fileName)

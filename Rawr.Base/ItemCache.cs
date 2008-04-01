@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace Rawr
 {
 	public static class ItemCache
 	{
+        public static readonly string SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml");
 		private static ItemCacheInstance _instance = new ItemCacheInstance();
 		public static ItemCacheInstance Instance
 		{
@@ -199,12 +201,12 @@ namespace Rawr
 		public void Save()
 		{
 #if !AGGREGATE_ITEMS
-			System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Item>));
-			StringBuilder sb = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(sb);
-			serializer.Serialize(writer, new List<Item>(AllItems));
-			writer.Close();
-			System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml"), sb.ToString());
+            using (StreamWriter writer = new StreamWriter(ItemCache.SavedFilePath,false, Encoding.UTF8))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(List<Item>));
+                serializer.Serialize(writer, new List<Item>(AllItems));
+                writer.Close();
+            }
 
             LocationFactory.Save("ItemSource.xml");
 #else
@@ -233,11 +235,12 @@ namespace Rawr
 		{
 			_items = new SortedDictionary<string, Item[]>();
 			List<Item> listItems = new List<Item>();
-			if (File.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml")))
+			if (File.Exists(ItemCache.SavedFilePath))
 			{
 				try
 				{
-					string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "ItemCache.xml")).Replace("/images/icons/", "");
+
+					string xml = System.IO.File.ReadAllText(ItemCache.SavedFilePath).Replace("/images/icons/", "");
 					xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>TwoHand</Slot>").Replace("<Slot>Idol</Slot", "<Slot>Ranged</Slot>").Replace("<Slot>Robe</Slot", "<Slot>Chest</Slot>");
 					System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Item>));
 					System.IO.StringReader reader = new System.IO.StringReader(xml);

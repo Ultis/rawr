@@ -1042,12 +1042,12 @@ namespace Rawr //O O . .
         public void Save(string path)
         {
 			SerializeCalculationOptions();
-            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
-            StringBuilder sb = new StringBuilder();
-            System.IO.StringWriter writer = new System.IO.StringWriter(sb);
-            serializer.Serialize(writer, this);
-            writer.Close();
-			System.IO.File.WriteAllText(path, sb.ToString());//Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Character.xml"), sb.ToString());
+            using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
+            {
+                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
+                serializer.Serialize(writer, this);
+                writer.Close();
+            }
 		}
 
         public static Character Load(string path)

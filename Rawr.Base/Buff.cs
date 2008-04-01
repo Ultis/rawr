@@ -126,7 +126,7 @@ namespace Rawr
                         //Log.Write(_SavedFilePath);
                         if (File.Exists(_SavedFilePath))
                         {
-                            using (StreamReader reader = new StreamReader(_SavedFilePath, Encoding.Unicode))
+                            using (StreamReader reader = new StreamReader(_SavedFilePath, Encoding.UTF8))
                             {
                                 XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
                                 _allBuffs = (List<Buff>)serializer.Deserialize(reader);
@@ -731,7 +731,7 @@ namespace Rawr
                         try
                         {
                             //american coca-cola
-                            using (StreamWriter writer = new StreamWriter(_SavedFilePath, false, Encoding.Unicode))
+                            using (StreamWriter writer = new StreamWriter(_SavedFilePath, false, Encoding.UTF8))
                             {
                                 XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
                                 serializer.Serialize(writer, _allBuffs);
