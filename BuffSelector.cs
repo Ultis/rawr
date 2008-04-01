@@ -16,10 +16,11 @@ namespace Rawr
 		public BuffSelector()
 		{
 			InitializeComponent();
-			if (!this.DesignMode)
+            if (!this.DesignMode)
 			{ 
 				BuildControls();
 			}
+            
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 		}
 
@@ -77,7 +78,7 @@ namespace Rawr
 				checkBox.Tag = buff;
 				if (string.IsNullOrEmpty(buff.RequiredBuff)) checkBox.Text = buff.Name;
 				checkBox.AutoSize = true;
-                //checkBox.ToolTipText = buff.Description;
+                checkBox.ToolTipText = buff.Stats.ToString();
 				checkBox.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
 				GroupBoxes[buff.Category].Controls.Add(checkBox);
 				CheckBoxes.Add(buff, checkBox);

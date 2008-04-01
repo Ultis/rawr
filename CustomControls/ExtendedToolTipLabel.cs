@@ -17,8 +17,17 @@ namespace Rawr.CustomControls
         {
             InitializeComponent();
             _ToolTip = new ToolTip();
-            this.MouseEnter += new EventHandler(ExtendedToolTipLabel_MouseEnter);
             this.MouseLeave += new EventHandler(ExtendedToolTipLabel_MouseLeave);
+            this.MouseHover += new EventHandler(ExtendedToolTipLabel_MouseHover);
+        }
+
+        void ExtendedToolTipLabel_MouseHover(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(_ToolTipText))
+            {
+                int x = PointToClient(MousePosition).X + 10;
+                _ToolTip.Show(_ToolTipText, this, new Point(x, -10));
+            }
         }
 
         public string ToolTipText
@@ -33,20 +42,6 @@ namespace Rawr.CustomControls
             {
                 _ToolTip.Hide(this);
             }
-        }
-
-        void ExtendedToolTipLabel_MouseEnter(object sender, EventArgs e)
-        {
-            if (!String.IsNullOrEmpty(_ToolTipText))
-            {
-                int x = PointToClient(MousePosition).X + 10;
-                _ToolTip.Show(_ToolTipText, this, new Point(x, -10));
-            }
-        }
-
-        protected override void OnPaint(PaintEventArgs pe)
-        {
-            base.OnPaint(pe);
         }
     }
 }
