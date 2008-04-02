@@ -132,11 +132,14 @@ namespace Rawr
 
                             Rectangle rectBorder =
                                 new Rectangle(0, 0, _cachedToolTipImage.Width - 1, _cachedToolTipImage.Height - 1);
-                            g.FillRectangle(new LinearGradientBrush(rectBorder,
+                            LinearGradientBrush lgBrush = new LinearGradientBrush(rectBorder,
                                                                     Color.FromArgb(212, 212, 255), Color.FromArgb(192, 192, 255),
-                                                                    90), rectBorder);
-                            g.DrawRectangle(new Pen(Color.FromArgb(128, 0, 0, 0)), rectBorder);
-
+                                                                    90);
+                            g.FillRectangle(lgBrush, rectBorder);
+                            lgBrush.Dispose();
+                            Pen pen = new Pen(Color.FromArgb(128, 0, 0, 0));
+                            g.DrawRectangle(pen, rectBorder);
+                            pen.Dispose();
                             Brush nameBrush = null;
                             switch (_currentItem.Quality)
                             {
@@ -220,7 +223,7 @@ namespace Rawr
                                                 break;
                                         }
                                         g.FillRectangle(brushGemBorder, rectGemBorder);
-
+                                        brushGemBorder.Dispose();
                                         Item gem = (i == 0 ? _currentItem.Gem1 : (i == 1 ? _currentItem.Gem2 : _currentItem.Gem3));
                                         if (gem != null)
                                         {
@@ -229,7 +232,7 @@ namespace Rawr
                                             {
                                                 g.DrawImageUnscaled(icon, rectGemBorder.X + 2, rectGemBorder.Y + 2);
                                             }
-
+                                            icon.Dispose();
                                             Character characterWithItemEquipped = Character.Clone();
                                             characterWithItemEquipped[Character.CharacterSlot.Head] = CurrentItem;
                                             bool active = gem.MeetsRequirements(characterWithItemEquipped);
@@ -244,7 +247,11 @@ namespace Rawr
                                                              rectGemBorder.X + 39, rectGemBorder.Y + 20);
 
                                             if (!active)
-                                                g.FillRectangle(new SolidBrush(Color.FromArgb(128, Color.Silver)), rectGemBorder);
+                                            {
+                                                SolidBrush solidBrush = new SolidBrush(Color.FromArgb(128, Color.Silver));
+                                                g.FillRectangle(solidBrush, rectGemBorder);
+                                                solidBrush.Dispose();
+                                            }
                                         }
                                     }
                                 }
@@ -267,7 +274,6 @@ namespace Rawr
                                 Rectangle textRec = new Rectangle(2, (hasSockets ? 78 : 18) + statHeight + 4, _cachedToolTipImage.Width - 4, _cachedToolTipImage.Height - 2 - (hasSockets ? 78 : 18) + statHeight);
                                 g.DrawString(location, _fontStats, SystemBrushes.InfoText, textRec);
                             }
-
                             g.Dispose();
                         }
                     }
