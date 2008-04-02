@@ -42,12 +42,39 @@ namespace Rawr.Moonkin
                     "Spell Stats:Spell Haste",
                     "Spell Stats:Arcane Damage",
                     "Spell Stats:Nature Damage",
-                    "Mana Regeneration:OO5SR",
-                    "Mana Regeneration:I5SR",
-                    "Spell Rotation:Rotation Name",
-                    "Spell Rotation:DPS",
-                    "Spell Rotation:DPM",
-                    "Spell Rotation:Time To OOM"
+                    "Mana Regeneration:O5SR Per Second",
+                    "Mana Regeneration:I5SR Per Second",
+                    "Spell Info:Selected Rotation",
+                    "Spell Info:MF/SFx4 DPS",
+                    "Spell Info:MF/SFx4 DPM",
+                    "Spell Info:MF/SFx4 OOM",
+                    "Spell Info:SF Spam DPS",
+                    "Spell Info:SF Spam DPM",
+                    "Spell Info:SF Spam OOM",
+                    "Spell Info:W Spam DPS",
+                    "Spell Info:W Spam DPM",
+                    "Spell Info:W Spam OOM",
+                    "Spell Info:MF/SFx3/W DPS",
+                    "Spell Info:MF/SFx3/W DPM",
+                    "Spell Info:MF/SFx3/W OOM",
+                    "Spell Info:MF/Wx8 DPS",
+                    "Spell Info:MF/Wx8 DPM",
+                    "Spell Info:MF/Wx8 OOM",
+                    "Spell Info:IS/MF/SFx3 DPS",
+                    "Spell Info:IS/MF/SFx3 DPM",
+                    "Spell Info:IS/MF/SFx3 OOM",
+                    "Spell Info:IS/MF/Wx7 DPS",
+                    "Spell Info:IS/MF/Wx7 DPM",
+                    "Spell Info:IS/MF/Wx7 OOM",
+                    "Spell Info:IS/SFx3/W DPS",
+                    "Spell Info:IS/SFx3/W DPM",
+                    "Spell Info:IS/SFx3/W OOM",
+                    "Spell Info:IS/SFx4 DPS",
+                    "Spell Info:IS/SFx4 DPM",
+                    "Spell Info:IS/SFx4 OOM",
+                    "Spell Info:IS/Wx8 DPS",
+                    "Spell Info:IS/Wx8 DPM",
+                    "Spell Info:IS/Wx8 OOM"
                     };
                 }
                 return characterDisplayCalculationLabels;
@@ -168,6 +195,9 @@ namespace Rawr.Moonkin
             // Add the crit bonus from the idol, if present
             if (character.ActiveBuffs.Contains("Moonkin Aura"))
                 calcs.SpellCrit += stats.IdolCritRating / critRatingDivisor;
+
+            // Multiply the crit by spell crit multiplier
+            calcs.SpellCrit *= 1 + stats.BonusSpellCritMultiplier;
 
             MoonkinSpells spellList = GetFinalSpellList(character, ref calcs);
 
@@ -365,6 +395,8 @@ namespace Rawr.Moonkin
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+                BonusArcaneSpellPowerMultiplier = stats.BonusArcaneSpellPowerMultiplier,
+                BonusNatureSpellPowerMultiplier = stats.BonusNatureSpellPowerMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -391,13 +423,14 @@ namespace Rawr.Moonkin
                 MoonfireDmg = stats.MoonfireDmg,
                 WrathDmg = stats.WrathDmg,
                 IdolCritRating = stats.IdolCritRating,
-                UnseenMoonDamageBonus = stats.UnseenMoonDamageBonus
+                UnseenMoonDamageBonus = stats.UnseenMoonDamageBonus,
+                LightningCapacitorProc = stats.LightningCapacitorProc
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellNatureDamageRating + stats.SpellHasteRating + stats.SpellHitRating + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.SpellArcaneDamageRating + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor6SecOnCrit + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus) > 0;
+            return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.SpellHasteRating + stats.SpellHitRating + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.BonusNatureSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor6SecOnCrit + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc) > 0;
         }
     }
 }

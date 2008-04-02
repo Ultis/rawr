@@ -373,6 +373,13 @@ namespace Rawr
                             Stats = new Stats() { SpellDamageRating = 70 },
 							ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }
 						});
+                        _allBuffs.Add(new Buff()
+                        {
+                            Name = "Flask of Blinding Light",
+                            Category = BuffCategory.ElixirsAndFlasks,
+                            Stats = new Stats() { SpellArcaneDamageRating = 80, SpellNatureDamageRating = 80 /*, SpellHolyDamageRating = 80 */ },
+                            ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }
+                        });
                         
                         
                         //all the constant
@@ -613,7 +620,7 @@ namespace Rawr
                         // Moonkin tier 4/5/6 sets
                         _allBuffs.Add(new Buff()
                         {
-                            Name = "Malorne 2 Piece Bonus",
+                            Name = "Malorne Regalia 2 Piece Bonus",
                             Category = BuffCategory.SetBonuses,
                             Stats = new Stats() { ManaRestorePerCast = .05f * 120 },
                             SetName = "Malorne Regalia",
@@ -621,7 +628,7 @@ namespace Rawr
                         });
                         _allBuffs.Add(new Buff()
                         {
-                            Name = "Malorne 4 Piece Bonus",
+                            Name = "Malorne Regalia 4 Piece Bonus",
                             Category = BuffCategory.SetBonuses,
                             Stats = new Stats() { InnervateCooldownReduction = 48.0f },
                             SetName = "Malorne Regalia",
@@ -630,7 +637,7 @@ namespace Rawr
                         // Nordrassil 2-piece skipped because it has nothing to do with dps
                         _allBuffs.Add(new Buff()
                         {
-                            Name = "Nordrassil 4 Piece Bonus",
+                            Name = "Nordrassil Regalia 4 Piece Bonus",
                             Category = BuffCategory.SetBonuses,
                             Stats = new Stats() { StarfireBonusWithDot = 0.1f },
                             SetName = "Nordrassil Regalia",
@@ -638,7 +645,7 @@ namespace Rawr
                         });
                         _allBuffs.Add(new Buff()
                         {
-                            Name = "Thunderheart 2 Piece Bonus",
+                            Name = "Thunderheart Regalia 2 Piece Bonus",
                             Category = BuffCategory.SetBonuses,
                             Stats = new Stats() { MoonfireExtension = 3.0f },
                             SetName = "Thunderheart Regalia",
@@ -646,7 +653,7 @@ namespace Rawr
                         });
                         _allBuffs.Add(new Buff()
                         {
-                            Name = "Thunderheart 4 Piece Bonus",
+                            Name = "Thunderheart Regalia 4 Piece Bonus",
                             Category = BuffCategory.SetBonuses,
                             Stats = new Stats() { StarfireCritChance = 0.05f },
                             SetName = "Thunderheart Regalia",

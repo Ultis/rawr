@@ -7,6 +7,21 @@ namespace Rawr.Moonkin
 {
     class CharacterCalculationsMoonkin : CharacterCalculationsBase
     {
+        public CharacterCalculationsMoonkin()
+        {
+            Rotations = new List<Rotation>(new Rotation[] {
+                new Rotation() { Name = "SF Spam", DPM = 0.0f, DPS = 0.0f, TimeToOOM = new TimeSpan(0, 0, 0) },
+                new Rotation() { Name = "W Spam", DPM = 0.0f, DPS = 0.0f, TimeToOOM = new TimeSpan(0, 0, 0) },
+                new Rotation() { Name = "MF/SFx4", DPM = 0.0f, DPS = 0.0f, TimeToOOM = new TimeSpan(0, 0, 0) },
+                new Rotation() { Name = "MF/SFx3/W", DPM = 0.0f, DPS = 0.0f, TimeToOOM = new TimeSpan(0, 0, 0) },
+                new Rotation() { Name = "MF/Wx8", DPM = 0.0f, DPS = 0.0f, TimeToOOM = new TimeSpan(0, 0, 0) },
+                new Rotation() { Name = "IS/MF/SFx3", DPM = 0.0f, DPS = 0.0f, TimeToOOM = new TimeSpan(0, 0, 0) },
+                new Rotation() { Name = "IS/MF/Wx7", DPM = 0.0f, DPS = 0.0f, TimeToOOM = new TimeSpan(0, 0, 0) },
+                new Rotation() { Name = "IS/SFx3/W", DPM = 0.0f, DPS = 0.0f, TimeToOOM = new TimeSpan(0, 0, 0) },
+                new Rotation() { Name = "IS/SFx4", DPM = 0.0f, DPS = 0.0f, TimeToOOM = new TimeSpan(0, 0, 0) },
+                new Rotation() { Name = "IS/Wx8", DPM = 0.0f, DPS = 0.0f, TimeToOOM = new TimeSpan(0, 0, 0) }
+            });
+        }
         private float overallPoints = 0f;
         public override float OverallPoints
         {
@@ -42,11 +57,24 @@ namespace Rawr.Moonkin
         public float ManaRegen5SR { get; set; }
         public float Latency { get; set; }
         public float FightLength { get; set; }
-        public float DPS { get; set; }
-        public float DPM { get; set; }
         public float DamageDone { get; set; }
-        public TimeSpan TimeToOOM { get; set; }
-        public string RotationName { get; set; }
+        public Rotation SelectedRotation { get; set; }
+        public string RotationName
+        {
+            get
+            {
+                return SelectedRotation.Name;
+            }
+            set
+            {
+                foreach (Rotation r in Rotations)
+                {
+                    if (r.Name == value)
+                        SelectedRotation = r;
+                }
+            }
+        }
+        public List<Rotation> Rotations { get; set; }
 
         private Stats baseStats;
         public Stats BasicStats
@@ -76,12 +104,15 @@ namespace Rawr.Moonkin
             retVal.Add("Spell Haste", baseStats.SpellHasteRating.ToString());
             retVal.Add("Arcane Damage", ArcaneDamage.ToString());
             retVal.Add("Nature Damage", NatureDamage.ToString());
-            retVal.Add("OO5SR", ManaRegen.ToString());
-            retVal.Add("I5SR", ManaRegen5SR.ToString());
-            retVal.Add("Rotation Name", RotationName);
-            retVal.Add("DPS", DPS.ToString());
-            retVal.Add("DPM", DPM.ToString());
-            retVal.Add("Time To OOM", String.Format(TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", TimeToOOM.Minutes, TimeToOOM.Seconds));
+            retVal.Add("O5SR Per Second", String.Format("{0:F}", ManaRegen));
+            retVal.Add("I5SR Per Second", String.Format("{0:F}", ManaRegen5SR));
+            retVal.Add("Selected Rotation", RotationName);
+            foreach (Rotation r in Rotations)
+            {
+                retVal.Add(r.Name + " DPS", String.Format("{0:F}", r.DPS));
+                retVal.Add(r.Name + " DPM", String.Format("{0:F}", r.DPM));
+                retVal.Add(r.Name + " OOM", String.Format(r.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", r.TimeToOOM.Minutes, r.TimeToOOM.Seconds));
+            }
 
             return retVal;
         }

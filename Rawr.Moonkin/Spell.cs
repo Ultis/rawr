@@ -10,6 +10,13 @@ namespace Rawr.Moonkin
         Nature
     }
 
+    class Rotation
+    {
+        public string Name = "";
+        public float DPS = 0.0f;
+        public float DPM = 0.0f;
+        public TimeSpan TimeToOOM = new TimeSpan(0, 0, 0);
+    }
 
     class DotSpell
     {
@@ -227,9 +234,17 @@ namespace Rawr.Moonkin
                 spellList["Wrath"],
                 spellList["Wrath"]
             });
+            List<Spell> MFSFx4 = new List<Spell>(new Spell[] {
+                spellList["Moonfire"],
+                spellList["Starfire"],
+                spellList["Starfire"],
+                spellList["Starfire"],
+                spellList["Starfire"]
+            });
 
             // Create a "master list" of spell rotations
             Dictionary<string, List<Spell>> spellRotations = new Dictionary<string, List<Spell>>();
+            spellRotations.Add("MF/SFx4", MFSFx4);
             spellRotations.Add("MF/SFx3/W", MFSFx3W);
             spellRotations.Add("MF/Wx8", MFWx8);
             spellRotations.Add("IS/MF/SFx3", ISMFSFx3);
@@ -237,8 +252,8 @@ namespace Rawr.Moonkin
             spellRotations.Add("IS/SFx3/W", ISSFx3W);
             spellRotations.Add("IS/SFx4", ISSFx4);
             spellRotations.Add("IS/Wx8", ISWx8);
-            spellRotations.Add("Starfire Spam", SFSpam);
-            spellRotations.Add("Wrath Spam", WrathSpam);
+            spellRotations.Add("SF Spam", SFSpam);
+            spellRotations.Add("W Spam", WrathSpam);
             return spellRotations;
         }
 
@@ -333,6 +348,15 @@ namespace Rawr.Moonkin
 
             foreach (KeyValuePair<string, List<Spell>> rotation in spellRotations)
             {
+                Rotation currentRotation = null;
+                foreach (Rotation r in calcs.Rotations)
+                {
+                    if (r.Name == rotation.Key)
+                    {
+                        currentRotation = r;
+                        break;
+                    }
+                }
                 float averageCritChance = 0.0f;
                 int spellCount = 0;
                 foreach (Spell sp in rotation.Value)
@@ -382,16 +406,16 @@ namespace Rawr.Moonkin
                 // This dps calc takes into account time spent not doing dps due to OOM issues
                 float dps = damageDone / duration * (secsToOom >= fightLength ? fightLength : secsToOom) / fightLength;
                 float dpm = damageDone / manaUsed;
-                if (dps > calcs.DPS)
+                calcs.DamageDone = damageDone;
+                currentRotation.DPS = dps;
+                currentRotation.DPM = dpm;
+                if (secsToOom >= fightLength)
+                    currentRotation.TimeToOOM = new TimeSpan(0, 0, 0);
+                else
+                    currentRotation.TimeToOOM = new TimeSpan(0, (int)Math.Floor(secsToOom) / 60, (int)Math.Floor(secsToOom) % 60);
+                if (calcs.SelectedRotation == null || dps > calcs.SelectedRotation.DPS)
                 {
-                    calcs.DamageDone = damageDone;
-                    calcs.DPS = dps;
-                    calcs.DPM = dpm;
-                    calcs.RotationName = rotation.Key;
-                    if (secsToOom >= fightLength)
-                        calcs.TimeToOOM = new TimeSpan(0, 0, 0);
-                    else
-                        calcs.TimeToOOM = new TimeSpan(0, (int)Math.Floor(secsToOom) / 60, (int)Math.Floor(secsToOom) % 60);
+                    calcs.SelectedRotation = currentRotation;
                 }
                 if (calcs.BasicStats.ManaRestorePerCast > 0 || calcs.BasicStats.ManaRestorePerHit > 0 || calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0)
                 {
@@ -402,7 +426,7 @@ namespace Rawr.Moonkin
                 // Remove trinket effects
                 UndoTrinkets(character, calcs, rotation.Value, averageCritChance, missRate);
             }
-            calcs.SubPoints = new float[] { calcs.DPS * fightLength };
+            calcs.SubPoints = new float[] { calcs.SelectedRotation.DPS * fightLength };
             calcs.OverallPoints = calcs.SubPoints[0];
         }
 
@@ -421,6 +445,13 @@ namespace Rawr.Moonkin
                         sp.RemoveSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);   // 50% chance to proc, NO COOLDOWN!
                         if (sp.dotEffect != null) sp.dotEffect.RemoveSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);
                     }
+
+                    // Increased damage bonus from debuffs
+                    if (sp.school == SpellSchool.Arcane)
+                        sp.damagePerHit /= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+                    else if (sp.school == SpellSchool.Nature)
+                        sp.damagePerHit /= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+
                     // Spell damage for 10 seconds on resist
                     if (calcs.BasicStats.SpellDamageFor10SecOnResist > 0)
                     {
@@ -475,6 +506,13 @@ namespace Rawr.Moonkin
                         sp.AddSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);   // 50% chance to proc, NO COOLDOWN!
                         if (sp.dotEffect != null) sp.dotEffect.AddSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);
                     }
+
+                    // Increased damage bonus from debuffs
+                    if (sp.school == SpellSchool.Arcane)
+                        sp.damagePerHit *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+                    else if (sp.school == SpellSchool.Nature)
+                        sp.damagePerHit *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+
                     // Spell damage for 10 seconds on resist
                     if (calcs.BasicStats.SpellDamageFor10SecOnResist > 0)
                     {
