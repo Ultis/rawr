@@ -340,13 +340,6 @@ namespace Rawr
 						});
                         _allBuffs.Add(new Buff()
                         {
-                            Name = "Flask of Blinding Light",
-                            Category = BuffCategory.ElixirsAndFlasks,
-                            Stats = new Stats() { SpellArcaneDamageRating = 80 },
-							ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }
-						});
-                        _allBuffs.Add(new Buff()
-                        {
                             Name = "Flask of Distilled Wisdom",
                             Category = BuffCategory.ElixirsAndFlasks,
                             Stats = new Stats() { Intellect = 65 },

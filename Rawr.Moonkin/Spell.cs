@@ -89,7 +89,6 @@ namespace Rawr.Moonkin
     class MoonkinSpells : IEnumerable<KeyValuePair<string, Spell>>
     {
         private Dictionary<string, Spell> spellList = null;
-        public string lastRotationName = "";
         public Spell this[string spellName]
         {
             get
