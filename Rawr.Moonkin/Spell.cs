@@ -73,16 +73,30 @@ namespace Rawr.Moonkin
         public float spellDamageCoefficient = 1.0f;
         public void AddSpellDamage(float spellDamageAdded)
         {
-            damagePerHit += spellDamageCoefficient * spellDamageAdded;
+            if (damagePerHit > 0)
+                damagePerHit += spellDamageCoefficient * spellDamageAdded;
         }
-        public float damagePerHit = 0.0f;
+        private float _damagePerHit = 1.0f;
+        public float damagePerHit
+        {
+            get
+            {
+                return _damagePerHit;
+            }
+            set
+            {
+                if (_damagePerHit > 0)
+                    _damagePerHit = value;
+            }
+        }
         public DotSpell dotEffect = null;
         public float critBonus = 150.0f;
         public float extraCritChance = 0.0f;
 
         internal void RemoveSpellDamage(float spellDamageAdded)
         {
-            damagePerHit -= spellDamageCoefficient * spellDamageAdded;
+            if (_damagePerHit > 0)
+                _damagePerHit -= spellDamageCoefficient * spellDamageAdded;
         }
     }
 
@@ -400,6 +414,7 @@ namespace Rawr.Moonkin
                     manaFromTrinket = calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min * numCasts * 20 / 240;
                     totalMana += manaFromJoW + manaFromOther + manaFromTrinket;
                 }
+
                 // Calculate how long we will burn through all our mana
                 float secsToOom = totalMana / (manaUsed / duration);
                 // This dps calc takes into account time spent not doing dps due to OOM issues
@@ -438,23 +453,38 @@ namespace Rawr.Moonkin
                 // Again, only remove the bonus spell damage once
                 if (!addedDamage.Contains(sp))
                 {
-                    // Remove moonfire proc bonus
+                    // Increased damage bonus from debuffs (remove multiplicative effect first)
+                    if (sp.school == SpellSchool.Arcane)
+                    {
+                        sp.damagePerHit /= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+                        if (sp.dotEffect != null) sp.dotEffect.damagePerTick /= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+                    }
+                    else if (sp.school == SpellSchool.Nature)
+                    {
+                        sp.damagePerHit /= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+                        if (sp.dotEffect != null) sp.dotEffect.damagePerTick /= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+                    }
+
+                    // Moonfire proc bonus
                     if (rotation.Contains(this["Moonfire"]) && calcs.BasicStats.UnseenMoonDamageBonus > 0)
                     {
                         sp.RemoveSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);   // 50% chance to proc, NO COOLDOWN!
                         if (sp.dotEffect != null) sp.dotEffect.RemoveSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);
                     }
-
-                    // Increased damage bonus from debuffs
-                    if (sp.school == SpellSchool.Arcane)
-                        sp.damagePerHit /= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-                    else if (sp.school == SpellSchool.Nature)
-                        sp.damagePerHit /= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-
+                    // The Lightning Capacitor
+                    // Calculate the average passive spell damage given the proc rate and remove it from the spell hits
+                    if (calcs.BasicStats.LightningCapacitorProc > 0)
+                    {
+                        float baseDamage = (694 + 806) / 2.0f;
+                        float averageDamage = baseDamage + (baseDamage * 1.5f * calcs.SpellCrit);
+                        float castsBetweenProcs = 1 / averageCritChance * 3.0f;
+                        sp.damagePerHit -= averageDamage / castsBetweenProcs;
+                    }
                     // Spell damage for 10 seconds on resist
                     if (calcs.BasicStats.SpellDamageFor10SecOnResist > 0)
                     {
                         sp.RemoveSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnResist * missRate);
+                        if (sp.dotEffect != null) sp.dotEffect.RemoveSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnResist * missRate);
                     }
                     // 15% chance of spell haste on cast, 45-second cooldown (Mystical Skyfire Diamond)
                     if (calcs.BasicStats.SpellHasteFor6SecOnCast_15_45 > 0)
@@ -474,16 +504,19 @@ namespace Rawr.Moonkin
                     if (calcs.BasicStats.SpellDamageFor10SecOnHit_5 > 0)
                     {
                         sp.RemoveSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_5 * (0.05f * (1 - missRate)));
+                        if (sp.dotEffect != null) sp.dotEffect.RemoveSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_5 * (0.05f * (1 - missRate)));
                     }
                     // 10% chance of spell damage on hit, 45 second cooldown.
                     if (calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 > 0)
                     {
                         sp.RemoveSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 * (0.1f * (1 - missRate)) / 4);
+                        if (sp.dotEffect != null) sp.dotEffect.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 * (0.1f * (1 - missRate)) / 4);
                     }
                     // 20% chance of spell damage on crit, 45 second cooldown.
                     if (calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 > 0)
                     {
                         sp.RemoveSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 * (0.2f * (averageCritChance * (1 - missRate)) / 4));
+                        if (sp.dotEffect != null) sp.dotEffect.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 * (0.2f * (averageCritChance * (1 - missRate)) / 4));
                     }
                     addedDamage.Add(sp);
                 }
@@ -505,17 +538,20 @@ namespace Rawr.Moonkin
                         sp.AddSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);   // 50% chance to proc, NO COOLDOWN!
                         if (sp.dotEffect != null) sp.dotEffect.AddSpellDamage(calcs.BasicStats.UnseenMoonDamageBonus * 0.5f);
                     }
-
-                    // Increased damage bonus from debuffs
-                    if (sp.school == SpellSchool.Arcane)
-                        sp.damagePerHit *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-                    else if (sp.school == SpellSchool.Nature)
-                        sp.damagePerHit *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-
+                    // The Lightning Capacitor
+                    // Calculate the average passive spell damage given the proc rate and add it to the spell hits
+                    if (calcs.BasicStats.LightningCapacitorProc > 0)
+                    {
+                        float baseDamage = (694 + 806) / 2.0f;
+                        float averageDamage = baseDamage + (baseDamage * 1.5f * calcs.SpellCrit);
+                        float castsBetweenProcs = 1 / averageCritChance * 3.0f;
+                        sp.damagePerHit += averageDamage / castsBetweenProcs;
+                    }
                     // Spell damage for 10 seconds on resist
                     if (calcs.BasicStats.SpellDamageFor10SecOnResist > 0)
                     {
                         sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnResist * missRate);
+                        if (sp.dotEffect != null) sp.dotEffect.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnResist * missRate);
                     }
                     // 15% spell haste on cast, 45-second cooldown (Mystical Skyfire Diamond)
                     if (calcs.BasicStats.SpellHasteFor6SecOnCast_15_45 > 0)
@@ -535,17 +571,33 @@ namespace Rawr.Moonkin
                     if (calcs.BasicStats.SpellDamageFor10SecOnHit_5 > 0)
                     {
                         sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_5 * (0.05f * (1 - missRate)));
+                        if (sp.dotEffect != null) sp.dotEffect.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_5 * (0.05f * (1 - missRate)));
                     }
                     // 10% chance of spell damage on hit, 45 second cooldown.
                     if (calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 > 0)
                     {
-                        sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_5 * (0.05f * (1 - missRate)));
+                        sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 * (0.1f * (1 - missRate)) / 4);
+                        if (sp.dotEffect != null) sp.dotEffect.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 * (0.1f * (1 - missRate)) / 4);
                     }
                     // 20% chance of spell damage on crit, 45 second cooldown.
                     if (calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 > 0)
                     {
                         sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 * (0.2f * (averageCritChance * (1 - missRate)) / 4));
+                        if (sp.dotEffect != null) sp.dotEffect.AddSpellDamage(calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 * (0.2f * (averageCritChance * (1 - missRate)) / 4));
                     }
+
+                    // Increased damage bonus from debuffs (add multiplicative effect last)
+                    if (sp.school == SpellSchool.Arcane)
+                    {
+                        sp.damagePerHit *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+                        if (sp.dotEffect != null) sp.dotEffect.damagePerTick *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+                    }
+                    else if (sp.school == SpellSchool.Nature)
+                    {
+                        sp.damagePerHit *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+                        if (sp.dotEffect != null) sp.dotEffect.damagePerTick *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+                    }
+                    
                     addedDamage.Add(sp);
                 }
             }
