@@ -8,13 +8,12 @@ using System.Windows.Forms;
 using System.Xml;
 
 using Rawr.Forms;
-using Rawr.Forms.Controllers;
 using Rawr.Forms.Utilities;
 using System.IO;
 
 namespace Rawr
 {
-	public partial class FormMain : Form
+	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
         private FormSplash _spash = new FormSplash();
 		private string _characterPath = "";
@@ -24,28 +23,42 @@ namespace Rawr
 		private bool _loadingCharacter = false;
 		private Character _character = null;
 		private List<ToolStripMenuItem> _customChartMenuItems = new List<ToolStripMenuItem>();
-		private MainController _Controller;
-		private Status _StatusForm;
+		private Status _statusForm;
+		private string _formatWindowTitle = "Rawr (Beta {0})";
 
+
+		private FormItemSelection _formItemSelection;
+		public FormItemSelection FormItemSelection
+		{
+			get
+			{
+				if (_formItemSelection == null)
+					_formItemSelection = new FormItemSelection();
+				return _formItemSelection;
+			}
+		}
+
+		private static FormMain _instance;
+		public static FormMain Instance { get { return FormMain._instance; } }
 		public FormMain()
 		{
-			_StatusForm = new Status();
-			_Controller = new MainController(this);
-
+			_instance = this;
 			_spash.Show();
+			_statusForm = new Status();
 			Application.DoEvents();
 
-			_Controller.LoadModel(_Controller.ConfigModel);
+			Version version = System.Reflection.Assembly.GetCallingAssembly().GetName().Version;
+			_formatWindowTitle = string.Format(_formatWindowTitle, version.Minor.ToString() + "." + version.Build.ToString());
+
+			LoadModel(ConfigModel);
 			InitializeComponent();
 			Application.DoEvents();
 			
-
-			Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[_Controller.ConfigModel], true);
+			Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[ConfigModel], true);
 			if (icon != null)
 			{
 				this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
 			}
-			
 			UpdateRecentCharacterMenuItems();
 
 			ToolStripMenuItem modelsToolStripMenuItem = new ToolStripMenuItem("Models");
@@ -92,8 +105,9 @@ namespace Rawr
 				{
 					this.Cursor = Cursors.WaitCursor;
                     _character.IsLoading = true; // we do not need ItemsChanged event triggering until we call OnItemsChanged at the end
+					_character.EnsureItemsLoaded();
 					Calculations.CalculationOptionsPanel.Character = _character;
-					ItemToolTip.Instance.Character = ItemSelectionController.Instance.Character = 
+					ItemToolTip.Instance.Character = FormItemSelection.Character = 
 						ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
 						itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
 						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
@@ -138,7 +152,7 @@ namespace Rawr
 
         private void SetTitle()
         {
-            StringBuilder sb = new StringBuilder(_Controller.BaseTitle);
+            StringBuilder sb = new StringBuilder(_formatWindowTitle);
             if (_character != null && !String.IsNullOrEmpty(_character.Name))
             {
                 sb.Append(" - ");
@@ -196,12 +210,54 @@ namespace Rawr
             SetTitle();
 		}
 
-		public void AddRecentCharacter(string character)
+		public void LoadModel(string displayName)
 		{
-			_Controller.AddRecentCharacter(character);
-			UpdateRecentCharacterMenuItems();
+			try
+			{
+				Calculations.LoadModel(Calculations.Models[displayName]);
+			}
+			finally
+			{
+				this.ConfigModel = displayName;
+			}
 		}
 
+		public string ConfigModel
+		{
+			get
+			{
+				return Calculations.ValidModel(Properties.Recent.Default.RecentModel);
+			}
+			set { Properties.Recent.Default.RecentModel = value; }
+		}
+
+		public string[] ConfigRecentCharacters
+		{
+			get
+			{
+				string recentCharacters = Properties.Recent.Default.RecentFiles;
+				if (string.IsNullOrEmpty(recentCharacters))
+				{
+					return new string[0];
+				}
+				else
+				{
+					return recentCharacters.Split(';');
+				}
+			}
+			set { Properties.Recent.Default.RecentFiles = string.Join(";", value); }
+		}
+
+		public void AddRecentCharacter(string character)
+		{
+			List<string> recentCharacters = new List<string>(ConfigRecentCharacters);
+			recentCharacters.Remove(character);
+			recentCharacters.Add(character);
+			while (recentCharacters.Count > 8)
+				recentCharacters.RemoveRange(0, recentCharacters.Count - 8);
+			ConfigRecentCharacters = recentCharacters.ToArray();
+			UpdateRecentCharacterMenuItems();
+		}
 		
 		public void UpdateRecentCharacterMenuItems()
 		{
@@ -211,7 +267,7 @@ namespace Rawr
 				item.Dispose();
 			}
 			_recentCharacterMenuItems.Clear();
-			foreach (string recentCharacter in _Controller.ConfigRecentCharacters)
+			foreach (string recentCharacter in ConfigRecentCharacters)
 			{
 				string fileName = System.IO.Path.GetFileName(recentCharacter);
 				ToolStripMenuItem recentCharacterMenuItem = new ToolStripMenuItem(fileName);
@@ -267,7 +323,7 @@ namespace Rawr
 				{
 					this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
 				}
-                _Controller.LoadModel(kvpModel.Key);
+                this.LoadModel(kvpModel.Key);
 			}
 		}
 
@@ -343,24 +399,45 @@ namespace Rawr
 
 		private void FormMain_Load(object sender, EventArgs e)
 		{
-			Character.ToString(); //Load the saved character
+			Character.ToString();//Load the saved character
+
+			StatusMessaging.Ready = true;
 		}
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
 		{
+			//this.Cursor = Cursors.WaitCursor;
 			Item[] items = ItemCache.RelevantItems;
+			ItemIcons.CacheAllIcons(items);
 			itemComparison1.Items = items;
 			LoadComparisonData();
-			ItemSelectionController.Instance.Items = items;
+			//this.Cursor = Cursors.Default;
 		}
 
 		private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			FormItemEditor itemEditor = new FormItemEditor(Character);
-			itemEditor.ShowDialog();
-            itemEditor.Dispose();
+			itemEditor.ShowDialog(this);
 			ItemCache.OnItemsChanged();
 		}
+		//{
+		//    OpenItemEditor();
+		//}
+
+		//public void OpenItemEditor() { OpenItemEditor(null); }
+		//public void OpenItemEditor(Item selectedItem)
+		//{
+		//    this.Invoke(new OpenItemEditorDel(_openItemEditor), selectedItem);
+		//}
+
+		//private delegate void OpenItemEditorDel(Item selectedItem);
+		//private void _openItemEditor(Item selectedItem)
+		//{
+		//    FormItemEditor itemEditor = new FormItemEditor(Character);
+		//    if (selectedItem != null) itemEditor.SelectItem(selectedItem, true);
+		//    itemEditor.ShowDialog(this);
+		//    ItemCache.OnItemsChanged();
+		//}
 
 		#region File Commands
 		private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -383,7 +460,6 @@ namespace Rawr
 				{
 					LoadSavedCharacter(dialog.FileName);
 				}
-                dialog.Dispose();
 			}
 		}
 
@@ -405,7 +481,7 @@ namespace Rawr
 
         void bw_LoadSavedCharacter(object sender, DoWorkEventArgs e)
         {
-            Character character = _Controller.LoadSavedCharacter(e.Argument as string);
+            Character character = Character.Load(e.Argument as string);
             if (character != null)
             {
                 _characterPath = e.Argument as string;
@@ -457,7 +533,6 @@ namespace Rawr
                     bw.RunWorkerAsync(new string[] {form.CharacterName, form.Realm, form.ArmoryRegion.ToString()});
                     //LoadCharacter(Armory.GetCharacter(form.ArmoryRegion, form.Realm, form.CharacterName), string.Empty);
 				}
-                form.Dispose();
 			}
 		}
 
@@ -466,7 +541,7 @@ namespace Rawr
             string[] args = e.Argument as string[];
             //just accessing the UI elements from off thread is ok, its changing them thats bad.
             Character.CharacterRegion region = (args[2] == Rawr.Character.CharacterRegion.US.ToString()) ? Rawr.Character.CharacterRegion.US : Rawr.Character.CharacterRegion.EU;
-            e.Result = _Controller.GetCharacterFromArmory(args[1], args[0], region);
+            e.Result = this.GetCharacterFromArmory(args[1], args[0], region);
             _characterPath = "";  
         }
 
@@ -507,7 +582,7 @@ namespace Rawr
         void bw_ArmoryReloadCharacter(object sender, DoWorkEventArgs e)
         {
             Character character = e.Argument as Character;
-            e.Result = _Controller.ReloadCharacterFromArmory(character);
+            e.Result = this.ReloadCharacterFromArmory(character);
         }
 
         void bw_ArmoryGetCharacterReloadComplete(object sender, RunWorkerCompletedEventArgs e)
@@ -557,9 +632,9 @@ namespace Rawr
 				_unsavedChanges = false;
 				AddRecentCharacter(_characterPath);
                 SetTitle();
-                this.Cursor = Cursors.Default;   
+                this.Cursor = Cursors.Default;
+                
             }
-            dialog.Dispose();
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -760,30 +835,30 @@ namespace Rawr
 
         void bw_GetArmoryUpgrades(object sender, DoWorkEventArgs e)
         {
-            _Controller.GetArmoryUpgrades(e.Argument as Character);
+            this.GetArmoryUpgrades(e.Argument as Character);
         }
         
         private void ShowStatusForm()
         {
             Cursor = Cursors.WaitCursor;
-            if (_StatusForm == null || _StatusForm.IsDisposed)
+            if (_statusForm == null || _statusForm.IsDisposed)
             {
-                _StatusForm = new Status();
+                _statusForm = new Status();
             }
-            _StatusForm.Show(this);
+            _statusForm.Show(this);
         }
 
         private void FinishedProcessing()
         {
-            if (_StatusForm != null && !_StatusForm.IsDisposed)
+            if (_statusForm != null && !_statusForm.IsDisposed)
             {
-                if (_StatusForm.HasErrors)
+                if (_statusForm.HasErrors)
                 {
-                    _StatusForm.SwitchToErrorTab();
+                    _statusForm.SwitchToErrorTab();
                 }else
                 {
-                    _StatusForm.Close();
-                    _StatusForm.Dispose();  
+                    _statusForm.Close();
+                    _statusForm.Dispose();  
                 }
             }
             this.Cursor = Cursors.Default;
@@ -800,7 +875,7 @@ namespace Rawr
 
         void bw_UpdateAllCachedItems(object sender, DoWorkEventArgs e)
         {
-            _Controller.UpdateAllCachedItems();
+            this.UpdateAllCachedItems();
         }
 
         void bw_StatusCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -812,149 +887,76 @@ namespace Rawr
             FinishedProcessing();
         }
 
-        private void AddPTRItems()
-        {
-            Item[] ptrItems = new Item[]
-			{
-				//new Item() { Name = "Hard Khorium Choker", Id = 90001, Slot = Item.ItemSlot.Neck, IconPath = "temp", Stats = new Stats()
-				//{ Stamina = 42, HasteRating = 29, AttackPower = 58, ArmorPenetration = 150 }},
-				//new Item() { Name = "Hard Khorium Band", Id = 90002, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
-				//{ Agility = 30, Stamina = 42, HasteRating = 28, AttackPower = 58 }},
-				//new Item() { Name = "Bladed Chaos Tunic", Id = 90003, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 474, Agility = 42, Stamina = 45, CritRating = 38, AttackPower = 120, ArmorPenetration = 210 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Blue, Color2 = Item.ItemSlot.Yellow, Color3 = Item.ItemSlot.Red,
-				//    Stats = new Stats() { AttackPower = 8 }}},
-				//new Item() { Name = "Gloves of the Forest Drifter", Id = 90004, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 539, Strength = 34, Agility = 34, Stamina = 45, ArmorPenetration = 140 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
-				//    Stats = new Stats() { Agility = 3 }}},
-				//new Item() { Name = "Harness of Carnal Instinct", Id = 90005, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 727, Strength = 52, Agility = 44, Stamina = 64, ArmorPenetration = 196 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Yellow, Color3 = Item.ItemSlot.Blue,
-				//    Stats = new Stats() { Agility = 4 }}},
-				//new Item() { Name = "Shadowed Gauntlets of Paroxysm", Id = 90006, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 252, Agility = 41, Stamina = 33, HasteRating = 30, AttackPower = 82 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
-				//    Stats = new Stats() { Agility = 3 }}},
-				//new Item() { Name = "Demontooth Shoulderpads", Id = 90007, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 484, Strength = 38, Agility = 38, Stamina = 38, CritRating = 20, ArmorPenetration = 105 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Blue,
-				//    Stats = new Stats() { Agility = 3 }}},
-				//new Item() { Name = "Shoulderpads of Vehemence", Id = 90008, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 333, Agility = 33, Stamina = 45, HitRating = 26, HasteRating = 30, AttackPower = 90 }},
-				//new Item() { Name = "Leggings of the Immortal Beast", Id = 90009, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 765, Strength = 44, Agility = 46, Stamina = 66, ArmorPenetration = 169 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Blue,
-				//    Stats = new Stats() { Agility = 4 }}},
-				//new Item() { Name = "Leggings of the Immortal Night", Id = 90010, Slot = Item.ItemSlot.Shoulders, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 380, Agility = 41, Stamina = 48, HitRating = 32, AttackPower = 124, ArmorPenetration = 224 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Red,
-				//    Stats = new Stats() { Agility = 4 }}},
-				//new Item() { Name = "Mask of the Furry Hunter", Id = 90011, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 611, Strength = 50, Agility = 50, Stamina = 58, CritRating = 30 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Meta,
-				//    Stats = new Stats() { Stamina = 6 }}},
-				//new Item() { Name = "Duplicitous Guise", Id = 90012, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 373, Agility = 43, Stamina = 57, HitRating = 30, HasteRating = 34, AttackPower = 126 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Meta, Color2 = Item.ItemSlot.Red,
-				//    Stats = new Stats() { HitRating = 4 }}},
-				//new Item() { Name = "Gloves of Immortal Dusk", Id = 90013, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 252, Agility = 30, Stamina = 33, CritRating = 30, AttackPower = 90, ArmorPenetration = 154 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Red,
-				//    Stats = new Stats() { CritRating = 3 }}},
-				//new Item() { Name = "Carapace of Sun and Shadow", Id = 90014, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 474, Agility = 42, Stamina = 45, HasteRating = 38, HitRating = 30, AttackPower = 120 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow, Color2 = Item.ItemSlot.Red, Color3 = Item.ItemSlot.Red,
-				//    Stats = new Stats() { AttackPower = 8 }}},
-				//new Item() { Name = "Quad Deathblow X44 Goggles", Id = 90015, Slot = Item.ItemSlot.Head, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 326, Agility = 61, Stamina = 47, HitRating = 24, AttackPower = 104 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Meta, Color2 = Item.ItemSlot.Blue,
-				//    Stats = new Stats() { Agility = 4 }}},
-				//new Item() { Name = "Thunderheart Treads", Id = 90016, Slot = Item.ItemSlot.Feet, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
-				//{ Armor = 515, Strength = 35, Agility = 35, Stamina = 54, ExpertiseRating = 20 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
-				//    Stats = new Stats() { Stamina = 3 }}},
-				//new Item() { Name = "Thunderheart Waistguard", Id = 90017, Slot = Item.ItemSlot.Waist, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
-				//{ Armor = 319, Strength = 38, Agility = 40, Stamina = 34, HitRating = 22 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
-				//    Stats = new Stats() { Stamina = 3 }}},
-				//new Item() { Name = "Thunderheart Wristguards", Id = 90018, Slot = Item.ItemSlot.Wrist, SetName = "Thunderheart Harness", IconPath = "temp", Stats = new Stats()
-				//{ Armor = 264, Strength = 28, Agility = 28, Stamina = 39, ArmorPenetration = 91 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
-				//    Stats = new Stats() { Stamina = 3 }}},
-				//new Item() { Name = "Stanchion of Primal Instinct", Id = 90019, Slot = Item.ItemSlot.TwoHand, IconPath = "temp", Stats = new Stats()
-				//{ Stamina = 50, Strength = 75, AttackPower = 1197, Agility = 47, ArmorPenetration = 350 }},
-				//new Item() { Name = "Staff of the Forest Lord", Id = 90020, Slot = Item.ItemSlot.TwoHand, IconPath = "temp", Stats = new Stats()
-				//{ Stamina = 78, Strength = 50, AttackPower = 1110, Agility = 52 }}
-				
-				//new Item() { Name = "Embrace of Everlasting Prowess", Id = 90022, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 711, Strength = 40, Agility = 49, Stamina = 52, HasteRating = 20 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
-				//    Stats = new Stats() { Stamina = 3 }}},
-				//new Item() { Name = "Tameless Breeches", Id = 90023, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 667, Strength = 39, Agility = 45, Stamina = 52, HasteRating = 17 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red, Color2 = Item.ItemSlot.Yellow,
-				//    Stats = new Stats() { Stamina = 4 }}},
-				//new Item() { Name = "Belt of the Silent Path", Id = 90024, Slot = Item.ItemSlot.Waist, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 205, AttackPower = 78, Agility = 34, Stamina = 33, HitRating = 23 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow,
-				//    Stats = new Stats() { Agility = 2 }}},
-				//new Item() { Name = "Tunic of the Dark Hour", Id = 90025, Slot = Item.ItemSlot.Chest, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 474, AttackPower = 102, Agility = 44, Stamina = 51, HitRating = 34 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Red,
-				//    Stats = new Stats() { Stamina = 3 }}},
-				//new Item() { Name = "Trousers of the Scryers' Retainer", Id = 90026, Slot = Item.ItemSlot.Legs, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 380, AttackPower = 104, Agility = 43, Stamina = 45, HitRating = 30 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow, Color2 = Item.ItemSlot.Blue,
-				//    Stats = new Stats() { HitRating = 3 }}},
-				//new Item() { Name = "Handwraps of the Aggressor", Id = 90027, Slot = Item.ItemSlot.Hands, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 448, Strength = 30, Agility = 35, Stamina = 36, HasteRating = 13 },
-				//Sockets = new Sockets() { Color1 = Item.ItemSlot.Yellow,
-				//    Stats = new Stats() { Agility = 2 }}}
-				//new Item() { Name = "Sunwell Badge Loot - Melee Ring", Id = 90028, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
-				//{ Agility = 29, Stamina = 28, AttackPower = 58, ArmorPenetration = 126 }},
-				//new Item() { Name = "Sunwell Badge Loot - Tank Ring", Id = 90029, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
-				//{ Armor = 392, Stamina = 45, DodgeRating = 28 }},
-				
-				//new Item() { Name = "Clutch of Demise", Id = 90030, Slot = Item.ItemSlot.Neck, IconPath = "temp", Stats = new Stats()
-				//{ Stamina = 33, Agility = 25, AttackPower = 64, HasteRating = 30 }},
-				//new Item() { Name = "Collar of the Pit Lord", Id = 90031, Slot = Item.ItemSlot.Neck, IconPath = "temp", Stats = new Stats()
-				//{ Stamina = 63, DefenseRating = 25, ExpertiseRating = 29 }},
-				//new Item() { Name = "Shattered Sun Pendant of Might", Id = 90032, Slot = Item.ItemSlot.Neck, IconPath = "temp", Stats = new Stats()
-				//{ Stamina = 19, Agility = 18, AttackPower = 98 }},
-				//new Item() { Name = "Cloak of Blade Turning", Id = 90033, Slot = Item.ItemSlot.Back, IconPath = "temp", Stats = new Stats()
-				//{ Stamina = 31, Armor = 402, Resilience = 22 }},
-				//new Item() { Name = "Band of Determination", Id = 90034, Slot = Item.ItemSlot.Finger, IconPath = "temp", Stats = new Stats()
-				//{ Stamina = 35, Armor = 252, ExpertiseRating = 17 }},
-				//new Item() { Name = "Commendation of Kael'thas", Id = 90035, Slot = Item.ItemSlot.Trinket, IconPath = "temp", Stats = new Stats()
-				//{ Stamina = 57 }},
-				//new Item() { Name = "Figurine - Empyrean Tortoise", Id = 90036, Slot = Item.ItemSlot.Trinket, IconPath = "temp", Stats = new Stats()
-				//{ DefenseRating = 42 }},
-				//new Item() { Name = "Figurine - Shadowsong Panther", Id = 90037, Slot = Item.ItemSlot.Trinket, IconPath = "temp", Stats = new Stats()
-				//{ AttackPower = 133.333f }},
-				//new Item() { Name = "Shard of Contempt", Id = 90038, Slot = Item.ItemSlot.Trinket, IconPath = "temp", Stats = new Stats()
-				//{ ExpertiseRating = 44, AttackPower = 80 }},
-				
-			};
-
-            foreach (Item ptrItem in ptrItems)
-            {
-                ItemCache.AddItem(ptrItem, true, false);
-            }
-            ItemCache.OnItemsChanged();
-        }
 		private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Options options = new Options();
 			options.ShowDialog(this);
-            options.Dispose();
 		}
 
 		private void optimizeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			FormOptimize optimize = new FormOptimize(Character);
 			optimize.ShowDialog(this);
-            optimize.Dispose();
+		}
+
+		public void UpdateAllCachedItems()
+		{
+			WebRequestWrapper.ResetFatalErrorIndicator();
+			StatusMessaging.UpdateStatus("UpdateAllCachedItems", "Beginning Update");
+			StatusMessaging.UpdateStatus("CacheAllIcons", "Not Started");
+			for (int i = 0; i < ItemCache.AllItems.Length; i++)
+			{
+				Item item = ItemCache.AllItems[i];
+				StatusMessaging.UpdateStatus("UpdateAllCachedItems", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
+				if (item.Id < 90000)
+				{
+					Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing", false);
+					if (newItem == null)
+					{
+						ItemCache.AddItem(item, true, false);
+					}
+				}
+
+			}
+			StatusMessaging.UpdateStatusFinished("UpdateAllCachedItems");
+			ItemIcons.CacheAllIcons(ItemCache.AllItems);
+			ItemCache.OnItemsChanged();
+		}
+
+		public void GetArmoryUpgrades(Character currentCharacter)
+		{
+			WebRequestWrapper.ResetFatalErrorIndicator();
+			StatusMessaging.UpdateStatus("GetArmoryUpgrades", "Getting Armory Updates");
+			Armory.LoadUpgradesFromArmory(currentCharacter);
+			ItemCache.OnItemsChanged();
+			StatusMessaging.UpdateStatusFinished("GetArmoryUpgrades");
+		}
+
+
+		public Character ReloadCharacterFromArmory(Character character)
+		{
+			WebRequestWrapper.ResetFatalErrorIndicator();
+			Character reload = GetCharacterFromArmory(character.Realm, character.Name, character.Region);
+			if (reload != null)
+			{
+				//load values for gear from armory into original character
+				foreach (Character.CharacterSlot slot in Enum.GetValues(typeof(Character.CharacterSlot)))
+				{
+					character[slot] = reload[slot];
+				}
+			}
+			return character;
+		}
+
+		public Character GetCharacterFromArmory(string realm, string name, Character.CharacterRegion region)
+		{
+			WebRequestWrapper.ResetFatalErrorIndicator();
+			StatusMessaging.UpdateStatus("GetCharacterFromArmory", " Getting Character Definition");
+			StatusMessaging.UpdateStatus("CheckingItemCache", "Queued");
+			string[] itemsOnChar;
+			Character character = Armory.GetCharacter(region, realm, name, out itemsOnChar);
+			StatusMessaging.UpdateStatusFinished("GetCharacterFromArmory");
+			return character;
 		}
 	}
 }

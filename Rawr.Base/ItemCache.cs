@@ -144,14 +144,12 @@ namespace Rawr
 			{
 				if (existing.Length > 1)
 				{
-					SortedList<Item, Item> newArray = new SortedList<Item, Item>();
+					List<Item> newArray = new List<Item>();
 					for (int i = 0; i < existing.Length; i++)
-						if (existing[i].CompareTo(item) != 0)
-						{
-							newArray[existing[i]] = existing[i];
-						}
-					Items[item.GemmedId] = new Item[newArray.Keys.Count];
-					newArray.Keys.CopyTo(Items[item.GemmedId], 0);
+						if (existing[i].GetHashCode() != item.GetHashCode())
+							newArray.Add(existing[i]);
+
+					Items[item.GemmedId] = newArray.ToArray();
 				}
 				else
 					Items.Remove(item.GemmedId);

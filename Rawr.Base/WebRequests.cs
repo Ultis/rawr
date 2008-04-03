@@ -105,16 +105,21 @@ namespace Rawr
 
 		public XmlDocument DownloadItemToolTipSheet(string id)
 		{
+			int retry = 0;
 			XmlDocument doc = null;
-			if (!String.IsNullOrEmpty(id))
+			if (!string.IsNullOrEmpty(id))
 			{
-                doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id));
-                if (doc == null || doc.DocumentElement == null
-                                || !doc.DocumentElement.HasChildNodes || !doc.DocumentElement.ChildNodes[0].HasChildNodes)
-                {
-					//the file is empty, return null to calling function
-					doc = null;
-                }
+				while (doc == null && retry < 5)
+				{
+					doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id));
+					if (doc == null || doc.DocumentElement == null
+									|| !doc.DocumentElement.HasChildNodes || !doc.DocumentElement.ChildNodes[0].HasChildNodes)
+					{
+						//the file is empty, return null to calling function
+						doc = null;
+						retry++;
+					}
+				}
             }
 			return doc;
 		}
@@ -367,10 +372,18 @@ namespace Rawr
 		{
 			XmlDocument returnDocument = null;
 			string xml = DownloadText(URI);
-			if (!String.IsNullOrEmpty(xml))
+			if (!string.IsNullOrEmpty(xml) && !xml.Contains("<table")) 
+				//If it contains "<table", then the armory accidentally returned it as html instead of xml.
 			{
-				returnDocument = new XmlDocument();
-				returnDocument.LoadXml(xml);
+				try
+				{
+					returnDocument = new XmlDocument();
+					returnDocument.LoadXml(xml);
+				}
+				catch (Exception ex)
+				{
+					throw ex;
+				}
 			}
 			return returnDocument;
 		}

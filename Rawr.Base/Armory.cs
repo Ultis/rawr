@@ -239,6 +239,7 @@ namespace Rawr
                 //build the talent tree 
                 character.Talents.SetCharacter(character);
 
+				character.EnsureItemsLoaded();
                 //I will tell you how he lived.
 				return character;
 			}

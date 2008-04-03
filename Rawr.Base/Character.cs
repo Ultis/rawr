@@ -1084,14 +1084,22 @@ namespace Rawr //O O . .
             else
                 character = new Character();
 
+			character.EnsureItemsLoaded();
             return character;
-        }
+		}
 
-        //public void EnsureItemsLoaded()
-        //{
-        //    Item item;
-        //    foreach (CharacterSlot slot in Enum.GetValues(typeof(CharacterSlot)))
-        //        item = this[slot];
-        //}
+		public void EnsureItemsLoaded()
+		{
+			StatusMessaging.UpdateStatus("CheckingItemCache", "Checking Item Cache for Definitions");
+			Item item;
+			CharacterSlot[] slots = Enum.GetValues(typeof(CharacterSlot)) as CharacterSlot[];
+			for (int i = 0; i < slots.Length; i++)
+			{
+				StatusMessaging.UpdateStatus("CheckingItemCache", string.Format("Checking Item Cache for Definitions - {0} of {1}", i + 1, slots.Length));
+				item = this[slots[i]];
+			}
+			ItemCache.OnItemsChanged();
+			StatusMessaging.UpdateStatusFinished("CheckingItemCache");
+		}
 	}
 }

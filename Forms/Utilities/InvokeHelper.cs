@@ -59,7 +59,7 @@ namespace Rawr.Forms.Utilities
 		public static void BeginInvoke(Control control, string methodName, params object[] parameters)
 		{
 			Delegate del = LookupDelegate(control,methodName,parameters);
-			control.BeginInvoke(del, parameters);
+			if (control.Created) control.BeginInvoke(del, parameters);
 		}
 
 		/// <summary>
@@ -72,7 +72,8 @@ namespace Rawr.Forms.Utilities
 		public static object Invoke(Control control, string methodName, params object[] parameters)
 		{
 			Delegate del = LookupDelegate(control,methodName,parameters);
-			return control.Invoke(del, parameters);
+			if (control.Created) return control.Invoke(del, parameters);
+			return null;
 		}
 	}
 }

@@ -81,9 +81,7 @@ namespace Rawr
 		{
 			if (e.Button == MouseButtons.Left)
 			{
-                FormItemSelection fis = new FormItemSelection();
-                fis.Show(this, CharacterSlot);
-				//FormItemSelection.Instance.Show(this, CharacterSlot);
+				(this.FindForm() as IFormItemSelectionProvider).FormItemSelection.Show(this, CharacterSlot);
 			}
 			else if (e.Button == MouseButtons.Right && SelectedItem != null)
 			{

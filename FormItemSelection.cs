@@ -6,20 +6,81 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using Rawr.Forms.Controllers;
 using Rawr.Forms.Utilities;
 
 namespace Rawr
 {
 	public partial class FormItemSelection : Form
 	{
-        private ItemSelectionController _Controller;
-        private ItemButton _button;
-		
+		private Item[] _items;
+		public Item[] Items
+		{
+			get { return _items; }
+			set { _items = value; }
+		}
+
+		//private static FormItemSelection _instance;
+		//public static FormItemSelection Instance
+		//{
+		//    get
+		//    {
+		//        if (_instance == null)
+		//            _instance = new FormItemSelection();
+		//        return _instance;
+		//    }
+		//}
+
+		private Character _character;
+		public Character Character
+		{
+			get { return _character; }
+			set { _character = value; }
+		}
+
+		private ComparisonCalculationBase[] _itemCalculations;
+		public ComparisonCalculationBase[] ItemCalculations
+		{
+			get { return _itemCalculations; }
+			set
+			{
+				if (value == null)
+				{
+					_itemCalculations = new ComparisonCalculationBase[0];
+				}
+				else
+				{
+					List<ComparisonCalculationBase> calcs = new List<ComparisonCalculationBase>(value);
+					calcs.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
+					_itemCalculations = calcs.ToArray();
+				}
+				RebuildItemList();
+			}
+		}
+
+		private ComparisonGraph.ComparisonSort _sort;
+		public ComparisonGraph.ComparisonSort Sort
+		{
+			get { return _sort; }
+			set
+			{
+				_sort = value;
+				ItemCalculations = ItemCalculations;
+			}
+		}
+
+		protected int CompareItemCalculations(ComparisonCalculationBase a, ComparisonCalculationBase b)
+		{
+			if (Sort == ComparisonGraph.ComparisonSort.Overall)
+				return a.OverallPoints.CompareTo(b.OverallPoints);
+			else if (Sort == ComparisonGraph.ComparisonSort.Alphabetical)
+				return b.Name.CompareTo(a.Name);
+			else
+				return a.SubPoints[(int)Sort].CompareTo(b.SubPoints[(int)Sort]);
+		}
+
 		public FormItemSelection()
 		{
 			InitializeComponent();
-            _Controller = ItemSelectionController.Instance;
 
 			overallToolStripMenuItem.Tag = -1;
 			alphabeticalToolStripMenuItem.Tag = -2;
@@ -34,17 +95,16 @@ namespace Rawr
 
 			this.Activated += new EventHandler(FormItemSelection_Activated);
             
-            //we shouldn't need this anymore since the form is getting created new each time
-            //and the cache changing while it is open is highly unlikely.
-			//ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+            ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 		}
 
-        //void ItemCache_ItemsChanged(object sender, EventArgs e)
-        //{
-        //    Character.CharacterSlot characterSlot = _characterSlot;
-        //    _characterSlot = Character.CharacterSlot.None;
-        //    LoadGearBySlot(characterSlot);
-        //}
+		void ItemCache_ItemsChanged(object sender, EventArgs e)
+		{
+			Items = ItemCache.Instance.RelevantItems;
+			Character.CharacterSlot characterSlot = _characterSlot;
+			_characterSlot = Character.CharacterSlot.None;
+			LoadGearBySlot(characterSlot);
+		}
 
 		void FormItemSelection_Activated(object sender, EventArgs e)
 		{
@@ -56,13 +116,8 @@ namespace Rawr
 			if (Visible)
 			{
                 ItemToolTip.Instance.Hide(this);
+                this.Hide();
 			}
-            //hiding before closing / disposing removed some flutter as the control is disposed of
-            //When hiding the child, parent should be activated or focused first.
-            Form main = FormHelper.GetMainForm();
-            main.Focus();
-            this.Hide();
-            this.Dispose();
 		}
 
 		private void timerForceActivate_Tick(object sender, System.EventArgs e)
@@ -80,18 +135,8 @@ namespace Rawr
 		{
 			_button = button;
 			this.SetAutoLocation(button);
-            _Controller.LoadGearBySlot(slot);
-            SetSort(_Controller.Sort);
-            RebuildItemList();
-            Form main = FormHelper.GetMainForm();
-            if (main != null)
-            {
-                base.Show(main);
-            }
-            else
-            {
-                base.Show();
-            }
+			this.LoadGearBySlot(slot);
+            base.Show();
 		}
 
 		public void SetAutoLocation(Control ctrl)
@@ -110,21 +155,6 @@ namespace Rawr
 			this.Location = location;
 		}
 
-        private void SetSort(ComparisonGraph.ComparisonSort comparisonSort)
-        {
-            foreach (ToolStripItem item in toolStripDropDownButtonSort.DropDownItems)
-            {
-                ToolStripMenuItem temp = item as ToolStripMenuItem;
-                if (temp != null)
-                {
-                    if (comparisonSort.ToString() == item.Tag.ToString())
-                    {
-                       temp.PerformClick();
-                    }
-                }
-            }
-        }
-
 		private void sortToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.Cursor = Cursors.WaitCursor;
@@ -141,36 +171,58 @@ namespace Rawr
 					}
 				}
 			}
-            _Controller.Sort = sort;//(ComparisonGraph.ComparisonSort)Enum.Parse(typeof(ComparisonGraph.ComparisonSort), toolStripDropDownButtonSort.Text);
-            RebuildItemList();
-            this.Cursor = Cursors.Default;
+			this.Sort = sort;//(ComparisonGraph.ComparisonSort)Enum.Parse(typeof(ComparisonGraph.ComparisonSort), toolStripDropDownButtonSort.Text);
+			this.Cursor = Cursors.Default;
+		}
+
+		private Character.CharacterSlot _characterSlot = Character.CharacterSlot.None;
+		private ItemButton _button;
+		public void LoadGearBySlot(Character.CharacterSlot slot)
+		{
+			if (slot != _characterSlot)
+			{
+				_characterSlot = slot;
+				List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
+				if (this.Items != null && this.Character != null)
+				{
+					foreach (Item item in this.Items)
+					{
+						if (item.FitsInSlot(slot))
+						{
+							itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
+						}
+					}
+				}
+				itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
+				ItemCalculations = itemCalculations.ToArray();
+			}
 		}
 
 		private void RebuildItemList()
 		{
 			panelItems.SuspendLayout();
-			while (panelItems.Controls.Count < _Controller.ItemCalculations.Length)
+			while (panelItems.Controls.Count < this.ItemCalculations.Length)
 				panelItems.Controls.Add(new ItemSelectorItem());
-            while (panelItems.Controls.Count > _Controller.ItemCalculations.Length)
+            while (panelItems.Controls.Count > this.ItemCalculations.Length)
 				panelItems.Controls.RemoveAt(panelItems.Controls.Count - 1);
 			float maxRating = 0;
-            for (int i = 0; i < _Controller.ItemCalculations.Length; i++)
+            for (int i = 0; i < this.ItemCalculations.Length; i++)
 			{
 				ItemSelectorItem ctrl = panelItems.Controls[i] as ItemSelectorItem;
-                ComparisonCalculationBase calc = _Controller.ItemCalculations[i];
+                ComparisonCalculationBase calc = this.ItemCalculations[i];
 				calc.Equipped = calc.Item == _button.SelectedItem;
 				ctrl.ItemCalculation = calc;
-				ctrl.Sort = _Controller.Sort;
+				ctrl.Sort = this.Sort;
 				ctrl.HideToolTip();
 				bool visible = string.IsNullOrEmpty(this.toolStripTextBoxFilter.Text) || calc.Name.ToLower().Contains(this.toolStripTextBoxFilter.Text.ToLower());
 				ctrl.Visible = visible;
 				if (visible)
 				{
 					float calcRating;
-                    if (_Controller.Sort == ComparisonGraph.ComparisonSort.Overall || _Controller.Sort == ComparisonGraph.ComparisonSort.Alphabetical)
+                    if (Sort == ComparisonGraph.ComparisonSort.Overall || this.Sort == ComparisonGraph.ComparisonSort.Alphabetical)
 						calcRating = calc.OverallPoints;
 					else
-                        calcRating = calc.SubPoints[(int)_Controller.Sort];
+                        calcRating = calc.SubPoints[(int)Sort];
 					maxRating = Math.Max(maxRating, calcRating);
 				}
 			}
@@ -187,29 +239,14 @@ namespace Rawr
 		public void Select(Item item)
 		{
 			_button.SelectedItem = item;
-			_Controller.CharacterSlot = Character.CharacterSlot.None;
-            CheckToHide(null,null);
+			_characterSlot = Character.CharacterSlot.None;
+			ItemToolTip.Instance.Hide(this);
+			this.Hide();
 		}
+	}
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            for (int i = 0; i < panelItems.Controls.Count; i++)
-            {
-                ItemSelectorItem item = panelItems.Controls[i] as ItemSelectorItem;
-                if (item != null)
-                {
-                    item.Dispose();
-                }
-            }
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+	public interface IFormItemSelectionProvider
+	{
+		FormItemSelection FormItemSelection { get; }
 	}
 }

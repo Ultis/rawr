@@ -9,12 +9,27 @@ using Rawr.Forms.Utilities;
 
 namespace Rawr
 {
-	public partial class FormItemEditor : Form
+	public partial class FormItemEditor : Form, IFormItemSelectionProvider
 	{
-		private ListViewItem _selectedItem;
-        private bool _firstLoad = true;
+		private bool _firstLoad = true;
 
-		public ListViewItem SelectedItem
+		private FormItemSelection _formItemSelection;
+		public FormItemSelection FormItemSelection
+		{
+			get
+			{
+				if (_formItemSelection == null)
+				{
+					_formItemSelection = new FormItemSelection();
+					_formItemSelection.Character = FormMain.Instance.FormItemSelection.Character;
+					_formItemSelection.Items = ItemCache.RelevantItems;
+				}
+				return _formItemSelection;
+			}
+		}
+
+		private ListViewItem _selectedItem;
+        public ListViewItem SelectedItem
 		{
 			get { return _selectedItem; }
 			set

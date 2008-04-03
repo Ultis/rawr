@@ -70,6 +70,7 @@ namespace Rawr
 
 	public static class StatusMessaging
 	{
+		public static bool Ready = false;
         public delegate void StatusErrorDelegate(StatusErrorEventArgs args);
         public static event StatusErrorDelegate StatusError;
 
@@ -79,7 +80,7 @@ namespace Rawr
 		public static void UpdateStatus(string key, string description)
 		{
 			StatusUpdateDelegate del = StatusMessaging.StatusUpdate;
-			if (del != null)
+			if (Ready && del != null)
 			{
 				del(new StatusEventArgs(key, description));
 			}
@@ -88,7 +89,7 @@ namespace Rawr
         public static void ReportError(string key, Exception ex, string friendlyMessage)
         {
             StatusErrorDelegate del = StatusMessaging.StatusError;
-            if (del != null)
+            if (Ready && del != null)
             {
                 del(new StatusErrorEventArgs(key, ex, friendlyMessage));
             }
@@ -98,7 +99,7 @@ namespace Rawr
 		public static void UpdateStatusFinished(string key)
 		{
 			StatusUpdateDelegate del = StatusMessaging.StatusUpdate;
-			if (del != null)
+			if (Ready && del != null)
 			{
 				del(new StatusEventArgs(key, "Done!",true));
 			}
