@@ -56,9 +56,13 @@ namespace Rawr
 			if (Visible)
 			{
                 ItemToolTip.Instance.Hide(this);
-                //since we are creating a new form each time, we dispose of this one so the handle gets released properly.
-                this.Dispose();
 			}
+            //hiding before closing / disposing removed some flutter as the control is disposed of
+            //When hiding the child, parent should be activated or focused first.
+            Form main = FormHelper.GetMainForm();
+            main.Focus();
+            this.Hide();
+            this.Dispose();
 		}
 
 		private void timerForceActivate_Tick(object sender, System.EventArgs e)
@@ -76,7 +80,8 @@ namespace Rawr
 		{
 			_button = button;
 			this.SetAutoLocation(button);
-			_Controller.LoadGearBySlot(slot);
+            _Controller.LoadGearBySlot(slot);
+            SetSort(_Controller.Sort);
             RebuildItemList();
             Form main = FormHelper.GetMainForm();
             if (main != null)
@@ -105,6 +110,21 @@ namespace Rawr
 			this.Location = location;
 		}
 
+        private void SetSort(ComparisonGraph.ComparisonSort comparisonSort)
+        {
+            foreach (ToolStripItem item in toolStripDropDownButtonSort.DropDownItems)
+            {
+                ToolStripMenuItem temp = item as ToolStripMenuItem;
+                if (temp != null)
+                {
+                    if (comparisonSort.ToString() == item.Tag.ToString())
+                    {
+                       temp.PerformClick();
+                    }
+                }
+            }
+        }
+
 		private void sortToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.Cursor = Cursors.WaitCursor;
@@ -121,8 +141,9 @@ namespace Rawr
 					}
 				}
 			}
-			_Controller.Sort = sort;//(ComparisonGraph.ComparisonSort)Enum.Parse(typeof(ComparisonGraph.ComparisonSort), toolStripDropDownButtonSort.Text);
-			this.Cursor = Cursors.Default;
+            _Controller.Sort = sort;//(ComparisonGraph.ComparisonSort)Enum.Parse(typeof(ComparisonGraph.ComparisonSort), toolStripDropDownButtonSort.Text);
+            RebuildItemList();
+            this.Cursor = Cursors.Default;
 		}
 
 		private void RebuildItemList()
@@ -169,5 +190,26 @@ namespace Rawr
 			_Controller.CharacterSlot = Character.CharacterSlot.None;
             CheckToHide(null,null);
 		}
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            for (int i = 0; i < panelItems.Controls.Count; i++)
+            {
+                ItemSelectorItem item = panelItems.Controls[i] as ItemSelectorItem;
+                if (item != null)
+                {
+                    item.Dispose();
+                }
+            }
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 	}
 }

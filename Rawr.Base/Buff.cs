@@ -116,11 +116,22 @@ namespace Rawr
                 {
                     if (defaultBuffs[defaultBuffIndex].Name == _allBuffs[allBuffIndex].Name)
                     {
-                        found = true;
+                        if (defaultBuffs[defaultBuffIndex].Stats != _allBuffs[allBuffIndex].Stats)
+                        {
+                            if (defaultBuffs[defaultBuffIndex].Stats == null)
+                            {
+                                _allBuffs.RemoveAt(allBuffIndex);
+                            }
+                            else
+                            {
+                                _allBuffs[allBuffIndex].Stats = defaultBuffs[defaultBuffIndex].Stats;
+                            }
+                        }
+                        found = true;   
                         break;
                     }
                 }
-                if (!found)
+                if (!found && defaultBuffs[defaultBuffIndex].Stats != null)
                 {
                     _allBuffs.Add(defaultBuffs[defaultBuffIndex]);
                 }
@@ -1178,6 +1189,40 @@ namespace Rawr
                 Category = BuffCategory.ClassBuffs,
                 Stats = new Stats() { LotPCritRating = 22.08f * 5f }
             });
+
+            #region Buffs To Delete 
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Malorne 2 Piece Bonus",
+                Stats = null
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Malorne 4 Piece Bonus",
+                Stats = null
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nordrassil 2 Piece Bonus",
+                Stats = null
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nordrassil 4 Piece Bonus",
+                Stats = null
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thunderheart 2 Piece Bonus",
+                Stats = null
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thunderheart 4 Piece Bonus",
+                Stats = null
+            });
+
+            #endregion
 
             return defaultBuffs;
         }

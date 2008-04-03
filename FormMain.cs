@@ -27,7 +27,6 @@ namespace Rawr
 		private MainController _Controller;
 		private Status _StatusForm;
 
-
 		public FormMain()
 		{
 			_StatusForm = new Status();
@@ -359,6 +358,7 @@ namespace Rawr
 		{
 			FormItemEditor itemEditor = new FormItemEditor(Character);
 			itemEditor.ShowDialog();
+            itemEditor.Dispose();
 			ItemCache.OnItemsChanged();
 		}
 
@@ -383,6 +383,7 @@ namespace Rawr
 				{
 					LoadSavedCharacter(dialog.FileName);
 				}
+                dialog.Dispose();
 			}
 		}
 
@@ -456,6 +457,7 @@ namespace Rawr
                     bw.RunWorkerAsync(new string[] {form.CharacterName, form.Realm, form.ArmoryRegion.ToString()});
                     //LoadCharacter(Armory.GetCharacter(form.ArmoryRegion, form.Realm, form.CharacterName), string.Empty);
 				}
+                form.Dispose();
 			}
 		}
 
@@ -555,9 +557,9 @@ namespace Rawr
 				_unsavedChanges = false;
 				AddRecentCharacter(_characterPath);
                 SetTitle();
-                this.Cursor = Cursors.Default;
-                
+                this.Cursor = Cursors.Default;   
             }
+            dialog.Dispose();
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -945,12 +947,14 @@ namespace Rawr
 		{
 			Options options = new Options();
 			options.ShowDialog(this);
+            options.Dispose();
 		}
 
 		private void optimizeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			FormOptimize optimize = new FormOptimize(Character);
 			optimize.ShowDialog(this);
+            optimize.Dispose();
 		}
 	}
 }

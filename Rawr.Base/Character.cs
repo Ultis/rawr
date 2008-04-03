@@ -1062,6 +1062,18 @@ namespace Rawr //O O . .
 					System.IO.StringReader reader = new System.IO.StringReader(xml);
 					character = (Character)serializer.Deserialize(reader);
 					reader.Close();
+                    if (character != null)
+                    {
+                        for (int i = 0; i < character._activeBuffs.Count; i++)
+                        {
+                            Buff buff = Buff.GetBuffByName(character._activeBuffs[i]);
+                            if (buff == null)
+                            {
+                                character._activeBuffs.RemoveAt(i);
+                                i--;
+                            }
+                        }
+                    }
 				}
 				catch (Exception)
 				{

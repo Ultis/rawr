@@ -254,6 +254,7 @@ namespace Rawr
 					_changingItemCache = false;
 				}
 			}
+            form.Dispose();
 		}
 
 		private void AddItemById(int id) { AddItemsById(new int[] { id }); }
@@ -385,6 +386,7 @@ namespace Rawr
 					}
 				}
 			}
+            form.Dispose();
 		}
 
 		private void buttonDuplicate_Click(object sender, EventArgs e)

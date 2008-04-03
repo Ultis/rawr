@@ -313,7 +313,7 @@ namespace Rawr
 							}
 						}
 					}
-				} while (retry <= RETRY_MAX && !success);
+				} while (retry <= RETRY_MAX && !success && !LastWasFatalError);
 			}
 		}
 
@@ -359,7 +359,7 @@ namespace Rawr
 					}
 				}
 				retry++;
-			} while (retry <= RETRY_MAX && !success);
+			} while (retry <= RETRY_MAX && !success && !LastWasFatalError);
 			return value;
 		}
 

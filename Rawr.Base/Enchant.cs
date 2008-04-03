@@ -176,13 +176,27 @@ namespace Rawr
                 bool found = false;
                 for (int allEnchantIndex = 0; allEnchantIndex < _allEnchants.Count; allEnchantIndex++)
                 {
-                    if (defaultEnchants[defaultEnchantIndex].Equals(_allEnchants[allEnchantIndex]))
+                    if (defaultEnchants[defaultEnchantIndex].Id == _allEnchants[allEnchantIndex].Id &&
+                        defaultEnchants[defaultEnchantIndex].Slot == _allEnchants[allEnchantIndex].Slot &&
+                        defaultEnchants[defaultEnchantIndex].Name == _allEnchants[allEnchantIndex].Name
+                        )
                     {
+                        if (defaultEnchants[defaultEnchantIndex].Stats != _allEnchants[allEnchantIndex].Stats)
+                        {
+                            if (defaultEnchants[defaultEnchantIndex].Stats == null)
+                            {
+                                _allEnchants.RemoveAt(allEnchantIndex);
+                            }
+                            else
+                            {
+                                _allEnchants[allEnchantIndex].Stats = defaultEnchants[defaultEnchantIndex].Stats;
+                            }
+                        }
                         found = true;
                         break;
                     }
                 }
-                if (!found)
+                if (!found && defaultEnchants[defaultEnchantIndex].Stats != null)
                 {
                     _allEnchants.Add(defaultEnchants[defaultEnchantIndex]);
                 }
@@ -320,11 +334,14 @@ namespace Rawr
             //The stat value of mongoose and executioner is dependent on the weapon speed and is thus left to the individual models to take care of through the Id
             defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, new Stats() { }));
             defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.MainHand, new Stats() { }));
-            defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Chest, new Stats() { FrostResistance = 8 }));
-            defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Legs, new Stats() { FrostResistance = 8 }));
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Hands, new Stats() { FrostResistance = 8 }));
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Feet, new Stats() { FrostResistance = 8 }));
 
+
+            #region Enchants to Delete
+            defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Chest,null ));
+            defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Legs, null));
+            #endregion
             return defaultEnchants;
         }
 	}

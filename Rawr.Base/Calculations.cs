@@ -578,8 +578,14 @@ namespace Rawr
 		{
 			Stats statsBuffs = new Stats();
 			foreach (string buffName in buffs)
-				if (!string.IsNullOrEmpty(buffName))
-					statsBuffs += Buff.GetBuffByName(buffName).Stats;
+                if (!string.IsNullOrEmpty(buffName))
+                {
+                    Buff buff = Buff.GetBuffByName(buffName);
+                    if (buff != null)
+                    {
+                        statsBuffs += Buff.GetBuffByName(buffName).Stats;
+                    }
+                }
 
 			return statsBuffs;
 		}

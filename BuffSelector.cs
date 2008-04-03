@@ -159,8 +159,11 @@ namespace Rawr
 			foreach (string buffName in Character.ActiveBuffs)
 			{
 				Buff activeBuff = Buff.GetBuffByName(buffName);
-				if (CheckBoxes.ContainsKey(activeBuff))
-					CheckBoxes[activeBuff].Checked = true;
+                if (activeBuff != null)
+                {
+                    if (CheckBoxes.ContainsKey(activeBuff))
+                        CheckBoxes[activeBuff].Checked = true;
+                }
 			}
 			_loadingBuffsFromCharacter = false;
 		}
