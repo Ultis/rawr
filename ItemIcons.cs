@@ -53,11 +53,11 @@ namespace Rawr
 			StatusMessaging.UpdateStatus("CacheAllIcons", "Caching all Item Icons");
 			WebRequestWrapper webRequests = new WebRequestWrapper();
 			List<string> filesDownloading = new List<string>();
-            for(int i=0;i<items.Length && !WebRequestWrapper.LastWasFatalError;i++)
+			WebRequestWrapper.ResetFatalErrorIndicator();
+			for(int i=0;i<items.Length && !WebRequestWrapper.LastWasFatalError;i++)
             {
 				string iconName = items[i].IconPath.Replace(".png", "").Replace(".jpg", "").ToLower();
-			    BackgroundWorker worker = new BackgroundWorker();
-				webRequests.DownloadItemIconAsync(iconName);
+			    webRequests.DownloadItemIconAsync(iconName);
             }
             
 			while (webRequests.RequestQueueCount > 0 && !WebRequestWrapper.LastWasFatalError)

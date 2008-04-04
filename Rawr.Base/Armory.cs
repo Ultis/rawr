@@ -456,7 +456,15 @@ namespace Rawr
 
 					if (isEquip)
 					{
-                        if (spellDesc.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell damage for the next 10 sec., stacking up to 10 times."))
+                        if (spellDesc.StartsWith("Your melee and ranged attacks have a chance to call on the power"))
+                        { //Shattered Sun Pendant of Might
+                            stats.ShatteredSunMightProc += 1f;
+                        }
+                        else if (spellDesc.StartsWith("Chance on hit to increase your attack power by 230"))
+                        { //Special handling for Shard of Contempt due to higher uptime
+                            stats.AttackPower += 90f;
+                        }
+                        else if (spellDesc.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell damage for the next 10 sec., stacking up to 10 times."))
                         {
                             stats.AttackPower += 120; //Crusade = 120ap
                             stats.SpellDamageRating += 80;

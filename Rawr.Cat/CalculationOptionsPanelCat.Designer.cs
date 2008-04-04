@@ -28,7 +28,6 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelCat));
 			this.label1 = new System.Windows.Forms.Label();
 			this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
 			this.label2 = new System.Windows.Forms.Label();
@@ -57,6 +56,8 @@
 			this.label9 = new System.Windows.Forms.Label();
 			this.trackBarDrumsOfWarUptime = new System.Windows.Forms.TrackBar();
 			this.labelDrumsOfWarUptime = new System.Windows.Forms.Label();
+			this.radioButtonAldor = new System.Windows.Forms.RadioButton();
+			this.radioButtonScryer = new System.Windows.Forms.RadioButton();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
 			this.groupBoxPrimaryAttack.SuspendLayout();
 			this.groupBoxFinisher.SuspendLayout();
@@ -183,7 +184,7 @@
 			this.groupBoxPrimaryAttack.Controls.Add(this.radioButtonShred);
 			this.groupBoxPrimaryAttack.Controls.Add(this.radioButtonMangle);
 			this.groupBoxPrimaryAttack.Enabled = false;
-			this.groupBoxPrimaryAttack.Location = new System.Drawing.Point(3, 352);
+			this.groupBoxPrimaryAttack.Location = new System.Drawing.Point(3, 398);
 			this.groupBoxPrimaryAttack.Name = "groupBoxPrimaryAttack";
 			this.groupBoxPrimaryAttack.Size = new System.Drawing.Size(203, 170);
 			this.groupBoxPrimaryAttack.TabIndex = 4;
@@ -233,7 +234,7 @@
 			this.groupBoxFinisher.Controls.Add(this.radioButtonFerociousBite);
 			this.groupBoxFinisher.Controls.Add(this.radioButtonRip);
 			this.groupBoxFinisher.Enabled = false;
-			this.groupBoxFinisher.Location = new System.Drawing.Point(3, 528);
+			this.groupBoxFinisher.Location = new System.Drawing.Point(3, 574);
 			this.groupBoxFinisher.Name = "groupBoxFinisher";
 			this.groupBoxFinisher.Size = new System.Drawing.Size(203, 170);
 			this.groupBoxFinisher.TabIndex = 4;
@@ -293,7 +294,7 @@
 			// checkBoxEnforceMetagemRequirements
 			// 
 			this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-			this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 704);
+			this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 352);
 			this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
 			this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
 			this.checkBoxEnforceMetagemRequirements.TabIndex = 5;
@@ -447,12 +448,48 @@
 			this.labelDrumsOfWarUptime.TabIndex = 0;
 			this.labelDrumsOfWarUptime.Text = "25%";
 			// 
+			// radioButtonAldor
+			// 
+			this.radioButtonAldor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.radioButtonAldor.AutoSize = true;
+			this.radioButtonAldor.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+			this.radioButtonAldor.Checked = true;
+			this.radioButtonAldor.Location = new System.Drawing.Point(7, 375);
+			this.radioButtonAldor.Name = "radioButtonAldor";
+			this.radioButtonAldor.Size = new System.Drawing.Size(49, 17);
+			this.radioButtonAldor.TabIndex = 3;
+			this.radioButtonAldor.TabStop = true;
+			this.radioButtonAldor.Tag = "Mangle";
+			this.radioButtonAldor.Text = "Aldor";
+			this.radioButtonAldor.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+			this.radioButtonAldor.UseVisualStyleBackColor = true;
+			this.radioButtonAldor.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
+			// radioButtonScryer
+			// 
+			this.radioButtonScryer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.radioButtonScryer.AutoSize = true;
+			this.radioButtonScryer.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+			this.radioButtonScryer.Location = new System.Drawing.Point(83, 375);
+			this.radioButtonScryer.Name = "radioButtonScryer";
+			this.radioButtonScryer.Size = new System.Drawing.Size(55, 17);
+			this.radioButtonScryer.TabIndex = 3;
+			this.radioButtonScryer.Tag = "Shred";
+			this.radioButtonScryer.Text = "Scryer";
+			this.radioButtonScryer.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+			this.radioButtonScryer.UseVisualStyleBackColor = true;
+			this.radioButtonScryer.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
 			// CalculationOptionsPanelCat
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoScroll = true;
 			this.Controls.Add(this.checkBoxEnforceMetagemRequirements);
+			this.Controls.Add(this.radioButtonScryer);
+			this.Controls.Add(this.radioButtonAldor);
 			this.Controls.Add(this.groupBoxFinisher);
 			this.Controls.Add(this.groupBoxPrimaryAttack);
 			this.Controls.Add(this.labelDrumsOfWarUptime);
@@ -475,7 +512,7 @@
 			this.Controls.Add(this.comboBoxTargetLevel);
 			this.Controls.Add(this.label1);
 			this.Name = "CalculationOptionsPanelCat";
-			this.Size = new System.Drawing.Size(209, 738);
+			this.Size = new System.Drawing.Size(209, 776);
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
 			this.groupBoxPrimaryAttack.ResumeLayout(false);
 			this.groupBoxFinisher.ResumeLayout(false);
@@ -518,5 +555,7 @@
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.TrackBar trackBarDrumsOfWarUptime;
 		private System.Windows.Forms.Label labelDrumsOfWarUptime;
+		private System.Windows.Forms.RadioButton radioButtonAldor;
+		private System.Windows.Forms.RadioButton radioButtonScryer;
 	}
 }

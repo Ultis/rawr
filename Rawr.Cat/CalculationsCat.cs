@@ -138,11 +138,26 @@ namespace Rawr
 			int powershift = int.Parse(character.CalculationOptions["Powershift"]);
 			string primaryAttack = character.CalculationOptions["PrimaryAttack"];
 			string finisher = character.CalculationOptions["Finisher"];
+			string shattrathFaction = character.CalculationOptions["ShattrathFaction"];
 			Stats stats = GetCharacterStats(character, additionalItem);
 			float levelDifference = (targetLevel - 70f) * 0.2f;
 			CharacterCalculationsCat calculatedStats = new CharacterCalculationsCat();
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
+
+			if (stats.ShatteredSunMightProc > 0)
+			{
+				switch (shattrathFaction)
+				{
+					case "Aldor":
+						stats.AttackPower += 39.13f;
+						break;
+
+					case "Scryer":
+						stats.WeaponDamage += 4.35f;
+						break;
+				}
+			}
 
 			//Begin Toskk's 
 			
@@ -421,6 +436,7 @@ namespace Rawr
 			statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
+			statsTotal.ShatteredSunMightProc = statsRace.ShatteredSunMightProc + statsGearEnchantsBuffs.ShatteredSunMightProc;
 
 			return statsTotal;
 		}
@@ -603,7 +619,8 @@ namespace Rawr
 					ExposeWeakness = stats.ExposeWeakness,
 					Bloodlust = stats.Bloodlust,
 					DrumsOfBattle = stats.DrumsOfBattle,
-					DrumsOfWar = stats.DrumsOfWar
+					DrumsOfWar = stats.DrumsOfWar,
+					ShatteredSunMightProc = stats.ShatteredSunMightProc
 				};
 		}
 
@@ -615,7 +632,7 @@ namespace Rawr
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
-				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick) > 0;
+				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc) > 0;
 		}
 	}
 

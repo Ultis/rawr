@@ -52,6 +52,8 @@ namespace Rawr
 				Character.CalculationOptions["DrumsOfBattleUptime"] = "25";
 			if (!Character.CalculationOptions.ContainsKey("DrumsOfWarUptime"))
 				Character.CalculationOptions["DrumsOfWarUptime"] = "25";
+			if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
+				Character.CalculationOptions["ShattrathFaction"] = "Aldor";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
 			trackBarTargetArmor.Value = int.Parse(Character.CalculationOptions["TargetArmor"]);
@@ -67,7 +69,9 @@ namespace Rawr
 			radioButtonFerociousBite.Checked = Character.CalculationOptions["Finisher"] == "Ferocious Bite";
 			radioButtonNone.Checked = Character.CalculationOptions["Finisher"] == "None";
 			checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
-
+			radioButtonAldor.Checked = Character.CalculationOptions["ShattrathFaction"] == "Aldor";
+			radioButtonScryer.Checked = Character.CalculationOptions["ShattrathFaction"] == "Scryer";
+			
 			labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
 			labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
 			labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
@@ -95,6 +99,7 @@ namespace Rawr
 				Character.CalculationOptions["DrumsOfWarUptime"] = trackBarDrumsOfWarUptime.Value.ToString();
 				Character.CalculationOptions["ExposeWeaknessAPValue"] = trackBarExposeWeakness.Value.ToString();
 				Character.CalculationOptions["Powershift"] = comboBoxPowershift.SelectedIndex.ToString();
+				Character.CalculationOptions["ShattrathFaction"] = radioButtonAldor.Checked ? "Aldor" : "Scryer";
 				foreach (RadioButton radioButtonPrimaryAttack in groupBoxPrimaryAttack.Controls)
 					if (radioButtonPrimaryAttack.Checked)
 						Character.CalculationOptions["PrimaryAttack"] = radioButtonPrimaryAttack.Tag.ToString();
