@@ -80,7 +80,9 @@ namespace Rawr.Forms
 
         private void RefreshErrorList(StatusErrorEventArgs args)
         {
-            ErrorListView.Items.Add(new ListViewItem(new string[] { args.Key,args.FriendlyMessage}));
+            ListViewItem newError = new ListViewItem(new string[] { args.Key, args.FriendlyMessage });
+            newError.Tag = args;
+            ErrorListView.Items.Add(newError);
         }
 
 		private void RefreshTaskList()
@@ -141,5 +143,16 @@ namespace Rawr.Forms
 			}
 			base.Dispose(disposing);
 		}
+
+        private void ErrorListView_DoubleClick(object sender, EventArgs e)
+        {
+            if (ErrorListView.SelectedIndices.Count > 0)
+            {
+                ListViewItem item = ErrorListView.Items[ErrorListView.SelectedIndices[0]];
+                ErrorReport dialog = new ErrorReport(item.Tag as StatusErrorEventArgs);
+                dialog.ShowDialog();
+                dialog.Dispose();
+            }
+        }
 	}
 }

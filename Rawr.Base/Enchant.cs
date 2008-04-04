@@ -92,6 +92,11 @@ namespace Rawr
             }
         }
 
+        public override int GetHashCode()
+        {
+            return (Name+Id.ToString()+Slot.ToString()+Stats.ToString()).GetHashCode();
+        }
+
 		/// <summary>
 		/// A List<Enchant> containing all known enchants relevant to all models.
 		/// </summary>

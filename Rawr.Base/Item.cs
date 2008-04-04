@@ -759,9 +759,15 @@ namespace Rawr
 				return cachedItem;
 			else
 			{
-				if (cachedItem != null) ItemCache.DeleteItem(cachedItem, raiseEvent);
+                if (cachedItem != null)
+                {
+                    ItemCache.DeleteItem(cachedItem, raiseEvent);
+                }
 				Item newItem = Armory.GetItem(gemmedId, logReason);
-                if (newItem == null && cachedItem != null) ItemCache.AddItem(cachedItem, true, raiseEvent);
+                if (newItem == null && cachedItem != null)
+                {
+                    ItemCache.AddItem(cachedItem, true, raiseEvent);
+                }
                 
 				return newItem;
 			}

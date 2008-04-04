@@ -118,7 +118,6 @@ namespace Rawr
 						itemButtonWrist.Character = _character;
 					//Ahhh ahhh ahhh ahhh ahhh ahhh ahhh ahhh...
 
-					_character.EnsureItemsLoaded();
 					_character.ItemsChanged += new EventHandler(_character_ItemsChanged);
 					_character.AvailableItemsChanged += new EventHandler(_character_AvailableItemsChanged);
 					_loadingCharacter = true;
@@ -408,9 +407,9 @@ namespace Rawr
 		{
 			//this.Cursor = Cursors.WaitCursor;
 			Item[] items = ItemCache.RelevantItems;
-			ItemIcons.CacheAllIcons(items);
 			itemComparison1.Items = items;
 			LoadComparisonData();
+
 			//this.Cursor = Cursors.Default;
 		}
 
@@ -460,6 +459,7 @@ namespace Rawr
 				{
 					LoadSavedCharacter(dialog.FileName);
 				}
+                dialog.Dispose();
 			}
 		}
 
@@ -472,7 +472,7 @@ namespace Rawr
 
         private void LoadSavedCharacter(string path)
         {
-            ShowStatusForm();
+            StartProcessing();
             BackgroundWorker bw = new BackgroundWorker();
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_LoadSavedCharacterComplete);
             bw.DoWork += new DoWorkEventHandler(bw_LoadSavedCharacter);
@@ -481,9 +481,15 @@ namespace Rawr
 
         void bw_LoadSavedCharacter(object sender, DoWorkEventArgs e)
         {
+            WebRequestWrapper.ResetFatalErrorIndicator();
+            StatusMessaging.UpdateStatus("Loading Character", "Loading Saved Character");
+            StatusMessaging.UpdateStatus("Update Item Cache", "Queued");
+            StatusMessaging.UpdateStatus("Cache Item Icons", "Queued");
             Character character = Character.Load(e.Argument as string);
+            StatusMessaging.UpdateStatusFinished("Loading Character");
             if (character != null)
             {
+                this.EnsureItemsLoaded(character.GetAllEquipedGearIds());
                 _characterPath = e.Argument as string;
                 InvokeHelper.Invoke(this, "AddRecentCharacter", new object[] { e.Argument});
                 e.Result = character;
@@ -526,13 +532,14 @@ namespace Rawr
 						formForEmposter.Show(this);
 						Application.DoEvents();
 					}
-                    ShowStatusForm();
+                    StartProcessing();
                     BackgroundWorker bw = new BackgroundWorker();
                     bw.DoWork += new DoWorkEventHandler(bw_ArmoryGetCharacter);
                     bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_ArmoryGetCharacterComplete);
                     bw.RunWorkerAsync(new string[] {form.CharacterName, form.Realm, form.ArmoryRegion.ToString()});
                     //LoadCharacter(Armory.GetCharacter(form.ArmoryRegion, form.Realm, form.CharacterName), string.Empty);
 				}
+                form.Dispose();
 			}
 		}
 
@@ -571,7 +578,7 @@ namespace Rawr
             }
             else if (MessageBox.Show("Confirm reloading " + textBoxName.Text + " from the " + textBoxRealm.Text + "@" + region + " realm ", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                ShowStatusForm();
+                StartProcessing();
                 BackgroundWorker bw = new BackgroundWorker();
                 bw.DoWork += new DoWorkEventHandler(bw_ArmoryReloadCharacter);
                 bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_ArmoryGetCharacterReloadComplete);
@@ -633,8 +640,8 @@ namespace Rawr
 				AddRecentCharacter(_characterPath);
                 SetTitle();
                 this.Cursor = Cursors.Default;
-                
             }
+            dialog.Dispose();
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -826,7 +833,7 @@ namespace Rawr
 
 		private void loadPossibleUpgradesFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            ShowStatusForm();
+            StartProcessing();
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(bw_GetArmoryUpgrades);
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
@@ -837,8 +844,8 @@ namespace Rawr
         {
             this.GetArmoryUpgrades(e.Argument as Character);
         }
-        
-        private void ShowStatusForm()
+
+        private void StartProcessing()
         {
             Cursor = Cursors.WaitCursor;
             if (_statusForm == null || _statusForm.IsDisposed)
@@ -846,6 +853,9 @@ namespace Rawr
                 _statusForm = new Status();
             }
             _statusForm.Show(this);
+            menuStripMain.Enabled = false;
+            ItemContextualMenu.Instance.Enabled = false;
+            FormItemSelection.Enabled = false;
         }
 
         private void FinishedProcessing()
@@ -861,12 +871,15 @@ namespace Rawr
                     _statusForm.Dispose();  
                 }
             }
+            ItemContextualMenu.Instance.Enabled = true;
+            menuStripMain.Enabled = true;
+            FormItemSelection.Enabled = true;
             this.Cursor = Cursors.Default;
         }
 
         private void updateAllItemsToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            ShowStatusForm();
+            StartProcessing();
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += new DoWorkEventHandler(bw_UpdateAllCachedItems);
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
@@ -891,34 +904,32 @@ namespace Rawr
 		{
 			Options options = new Options();
 			options.ShowDialog(this);
+            options.Dispose();
 		}
 
 		private void optimizeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			FormOptimize optimize = new FormOptimize(Character);
 			optimize.ShowDialog(this);
+            optimize.Dispose();
 		}
 
 		public void UpdateAllCachedItems()
 		{
 			WebRequestWrapper.ResetFatalErrorIndicator();
-			StatusMessaging.UpdateStatus("UpdateAllCachedItems", "Beginning Update");
-			StatusMessaging.UpdateStatus("CacheAllIcons", "Not Started");
+			StatusMessaging.UpdateStatus("Update All Items", "Beginning Update");
+			StatusMessaging.UpdateStatus("Cache All Icons", "Not Started");
 			for (int i = 0; i < ItemCache.AllItems.Length; i++)
 			{
 				Item item = ItemCache.AllItems[i];
-				StatusMessaging.UpdateStatus("UpdateAllCachedItems", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
+				StatusMessaging.UpdateStatus("Update All Items", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
 				if (item.Id < 90000)
 				{
-					Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing", false);
-					if (newItem == null)
-					{
-						ItemCache.AddItem(item, true, false);
-					}
+					Item.LoadFromId(item.GemmedId, true, "Refreshing", false);
 				}
 
 			}
-			StatusMessaging.UpdateStatusFinished("UpdateAllCachedItems");
+			StatusMessaging.UpdateStatusFinished("Update All Items");
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);
 			ItemCache.OnItemsChanged();
 		}
@@ -951,12 +962,34 @@ namespace Rawr
 		public Character GetCharacterFromArmory(string realm, string name, Character.CharacterRegion region)
 		{
 			WebRequestWrapper.ResetFatalErrorIndicator();
-			StatusMessaging.UpdateStatus("GetCharacterFromArmory", " Getting Character Definition");
-			StatusMessaging.UpdateStatus("CheckingItemCache", "Queued");
+			StatusMessaging.UpdateStatus("Get Character From Armory", " Downloading Character Definition");
+            StatusMessaging.UpdateStatus("Update Item Cache", "Queued");
+            StatusMessaging.UpdateStatus("Cache Item Icons", "Queued");
 			string[] itemsOnChar;
 			Character character = Armory.GetCharacter(region, realm, name, out itemsOnChar);
-			StatusMessaging.UpdateStatusFinished("GetCharacterFromArmory");
+            StatusMessaging.UpdateStatusFinished("Get Character From Armory");
+            if (itemsOnChar != null)
+            {
+                EnsureItemsLoaded(itemsOnChar);
+            }
 			return character;
 		}
+
+        private void EnsureItemsLoaded(string[] ids)
+        {
+            List<Item> items = new List<Item>();
+            for (int i = 0; i < ids.Length; i++)
+            {
+                StatusMessaging.UpdateStatus("Update Item Cache", string.Format("Checking Item Cache for Definitions - {0} of {1}", i, ids.Length));
+                Item newItem = Item.LoadFromId(ids[i], false, "Character from Armory", false);
+                if (newItem != null)
+                {
+                    items.Add(newItem);
+                }
+            }
+            StatusMessaging.UpdateStatusFinished("Update Item Cache");
+            ItemIcons.CacheAllIcons(items.ToArray());
+            ItemCache.OnItemsChanged();
+        }
 	}
 }

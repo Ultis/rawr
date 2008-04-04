@@ -19,17 +19,6 @@ namespace Rawr
 			set { _items = value; }
 		}
 
-		//private static FormItemSelection _instance;
-		//public static FormItemSelection Instance
-		//{
-		//    get
-		//    {
-		//        if (_instance == null)
-		//            _instance = new FormItemSelection();
-		//        return _instance;
-		//    }
-		//}
-
 		private Character _character;
 		public Character Character
 		{
@@ -200,6 +189,11 @@ namespace Rawr
 
 		private void RebuildItemList()
 		{
+            if (this.InvokeRequired)
+            {
+                InvokeHelper.Invoke(this, "RebuildItemList", null);
+                return;
+            }
 			panelItems.SuspendLayout();
 			while (panelItems.Controls.Count < this.ItemCalculations.Length)
 				panelItems.Controls.Add(new ItemSelectorItem());

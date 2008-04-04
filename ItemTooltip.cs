@@ -42,6 +42,7 @@ namespace Rawr
 			}
 		}
 
+        private bool resetItem = false;
         public ItemToolTip()
         {
             AutomaticDelay = 0;
@@ -60,16 +61,22 @@ namespace Rawr
 
         private void CharacterItemCache_ItemsChanged(object sender, EventArgs e)
         {
-            _currentItem = null;
+            //with the way this event can be fired, it can set the current item null while the item image is being generated and cause errors
+            resetItem = true;
         }
 
-        protected Item _currentItem = null;
+        private Item _currentItem = null;
 
-        protected Item CurrentItem
+        private Item CurrentItem
         {
             get { return _currentItem; }
             set
             {
+                if (resetItem)
+                {
+                    _currentItem = null;
+                    resetItem = false;
+                }
                 if (_currentItem != value)
                 {
                     _currentItem = value;
@@ -231,8 +238,9 @@ namespace Rawr
                                             if (icon != null)
                                             {
                                                 g.DrawImageUnscaled(icon, rectGemBorder.X + 2, rectGemBorder.Y + 2);
+                                                icon.Dispose();
                                             }
-                                            icon.Dispose();
+                                            
                                             Character characterWithItemEquipped = Character.Clone();
                                             characterWithItemEquipped[Character.CharacterSlot.Head] = CurrentItem;
                                             bool active = gem.MeetsRequirements(characterWithItemEquipped);
@@ -277,6 +285,11 @@ namespace Rawr
                             g.Dispose();
                         }
                     }
+                }
+                if (resetItem)
+                {
+                    CurrentItem = null;
+                    resetItem = false;
                 }
                 return _cachedToolTipImage;
             }

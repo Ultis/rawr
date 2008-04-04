@@ -50,10 +50,10 @@ namespace Rawr
 
         public static void CacheAllIcons(Item[] items)
         {
-			StatusMessaging.UpdateStatus("CacheAllIcons", "Caching all Item Icons");
+
+            StatusMessaging.UpdateStatus("Cache Item Icons", "Caching all Item Icons");
 			WebRequestWrapper webRequests = new WebRequestWrapper();
 			List<string> filesDownloading = new List<string>();
-			WebRequestWrapper.ResetFatalErrorIndicator();
 			for(int i=0;i<items.Length && !WebRequestWrapper.LastWasFatalError;i++)
             {
 				string iconName = items[i].IconPath.Replace(".png", "").Replace(".jpg", "").ToLower();
@@ -70,9 +70,9 @@ namespace Rawr
 			//wrong by analyzing the exception.
 			if (WebRequestWrapper.LastWasFatalError)
 			{
-				MessageBox.Show("There was an error trying to retrieve images from the armory.  Please check your proxy settings and network connection.");
+                StatusMessaging.ReportError("Cache All Icons", null, "There was an error trying to retrieve images from the armory.  Please check your proxy settings and network connection.");
 			}
-			StatusMessaging.UpdateStatusFinished("CacheAllIcons");
+            StatusMessaging.UpdateStatusFinished("Cache Item Icons");
         }
 
         public static Image GetItemIcon(Item item)
@@ -108,51 +108,67 @@ namespace Rawr
                 try
                 {
                     WebRequestWrapper wrapper = new WebRequestWrapper();
-                    if (!WebRequestWrapper.LastWasFatalError && !String.IsNullOrEmpty(iconName))
+                    if (!String.IsNullOrEmpty(iconName))
                     {
 
                         pathToIcon = wrapper.DownloadItemIcon(iconName);
                         //just in case the network code is in a disconnected mode. (e.g. no network traffic sent, so no network exception)
                     }
-                    else
+
+                    if (pathToIcon == null)
                     {
                         pathToIcon = wrapper.DownloadTempImage();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Log.Write(ex.Message);
-                    Log.Write(ex.StackTrace);
+                    //Log.Write(ex.Message);
+                    //Log.Write(ex.StackTrace);
                     //log.Error("Exception trying to retrieve an icon from the armory", ex);
                 }
                 if (!String.IsNullOrEmpty(pathToIcon))
                 {
-                    try
+                    int retry = 0;
+                    do
                     {
-                        //BUG: This is throwing an intermitent error that is hard to reproduce so trying a different way of getting the file.
-                        //Image fullSizeImage = Image.FromFile(pathToIcon);
-                        Stream fileStream = File.Open(pathToIcon, FileMode.Open, FileAccess.Read, FileShare.Read);
-                        returnImage = Image.FromStream(fileStream);
+                        try
+                        {
+                            using (Stream fileStream = File.Open(pathToIcon, FileMode.Open, FileAccess.Read, FileShare.Read))
+                            {
+                                returnImage = Image.FromStream(fileStream);
+                            }
+                        }
+                        catch
+                        {
+                            returnImage = null;
+                            //possibly still downloading, give it a second
+                            Thread.Sleep(TimeSpan.FromSeconds(1));
+                            if (retry >= 3)
+                            {
+                                //log.Error("Exception trying to load an icon from local", ex);
+                                MessageBox.Show(
+                                    "Rawr encountered an error while attempting to load a saved image. If you encounter this error multiple times, please ensure that Rawr is unzipped in a location that you have full file read/write access, such as your Desktop, or My Documents.");
+                                //Log.Write(ex.Message);
+                                //Log.Write(ex.StackTrace);
+                                #if DEBUG
+                                throw;
+                                #endif
+                            }
+                        }
+                        retry++;
+                    } while (returnImage == null && retry < 5);
+
+                    if (returnImage != null)
+                    {
                         if (small)
                         {
                             returnImage = ScaleByPercent(returnImage, 50);
-                            SmallIcons.Images.Add(iconName, returnImage);   
+                            SmallIcons.Images.Add(iconName, returnImage);
                         }
                         else
                         {
                             LargeIcons.Images.Add(iconName, returnImage);
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        //log.Error("Exception trying to load an icon from local", ex);
-                        MessageBox.Show(
-                            "Rawr encountered an error while attempting to load a saved image. If you encounter this error multiple times, please ensure that Rawr is unzipped in a location that you have full file read/write access, such as your Desktop, or My Documents.");
-                        Log.Write(ex.Message);
-                        Log.Write(ex.StackTrace);
-#if DEBUG
-                        throw;
-#endif
                     }
                 }
             }

@@ -40,14 +40,14 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 41);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(322, 23);
+            this.progressBar1.Size = new System.Drawing.Size(395, 23);
             this.progressBar1.TabIndex = 0;
             // 
             // Cancel
             // 
             this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Cancel.Enabled = false;
-            this.Cancel.Location = new System.Drawing.Point(345, 12);
+            this.Cancel.Location = new System.Drawing.Point(418, 12);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(75, 23);
             this.Cancel.TabIndex = 1;
@@ -57,7 +57,7 @@
             // ShowHideDetails
             // 
             this.ShowHideDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ShowHideDetails.Location = new System.Drawing.Point(345, 41);
+            this.ShowHideDetails.Location = new System.Drawing.Point(418, 41);
             this.ShowHideDetails.Name = "ShowHideDetails";
             this.ShowHideDetails.Size = new System.Drawing.Size(75, 23);
             this.ShowHideDetails.TabIndex = 2;
@@ -80,7 +80,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Location = new System.Drawing.Point(12, 90);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(408, 10);
+            this.groupBox1.Size = new System.Drawing.Size(481, 10);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             // 
@@ -94,7 +94,7 @@
             this.tabControl1.Location = new System.Drawing.Point(16, 110);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(404, 171);
+            this.tabControl1.Size = new System.Drawing.Size(477, 171);
             this.tabControl1.TabIndex = 6;
             // 
             // Tasks
@@ -103,7 +103,7 @@
             this.Tasks.Location = new System.Drawing.Point(4, 22);
             this.Tasks.Name = "Tasks";
             this.Tasks.Padding = new System.Windows.Forms.Padding(3);
-            this.Tasks.Size = new System.Drawing.Size(396, 145);
+            this.Tasks.Size = new System.Drawing.Size(469, 145);
             this.Tasks.TabIndex = 0;
             this.Tasks.Text = "Tasks";
             this.Tasks.UseVisualStyleBackColor = true;
@@ -118,20 +118,20 @@
             this.TaskListView.Location = new System.Drawing.Point(3, 3);
             this.TaskListView.MultiSelect = false;
             this.TaskListView.Name = "TaskListView";
-            this.TaskListView.Size = new System.Drawing.Size(390, 139);
+            this.TaskListView.Size = new System.Drawing.Size(463, 139);
             this.TaskListView.TabIndex = 0;
             this.TaskListView.UseCompatibleStateImageBehavior = false;
             this.TaskListView.View = System.Windows.Forms.View.Details;
             // 
             // Key
             // 
-            this.Key.Text = "Name";
+            this.Key.Text = "Step";
             this.Key.Width = 150;
             // 
             // Details
             // 
             this.Details.Text = "Detail";
-            this.Details.Width = 210;
+            this.Details.Width = 288;
             // 
             // Errors
             // 
@@ -150,6 +150,7 @@
             this.columnHeader1,
             this.columnHeader2});
             this.ErrorListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ErrorListView.FullRowSelect = true;
             this.ErrorListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.ErrorListView.Location = new System.Drawing.Point(3, 3);
             this.ErrorListView.MultiSelect = false;
@@ -158,10 +159,11 @@
             this.ErrorListView.TabIndex = 1;
             this.ErrorListView.UseCompatibleStateImageBehavior = false;
             this.ErrorListView.View = System.Windows.Forms.View.Details;
+            this.ErrorListView.DoubleClick += new System.EventHandler(this.ErrorListView_DoubleClick);
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "Name";
+            this.columnHeader1.Text = "Step";
             this.columnHeader1.Width = 150;
             // 
             // columnHeader2
@@ -173,7 +175,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(432, 293);
+            this.ClientSize = new System.Drawing.Size(505, 293);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);

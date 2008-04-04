@@ -25,7 +25,9 @@ namespace Rawr
 				docCharacter = wrw.DownloadCharacterSheet(name, region, realm);
                 if (docCharacter == null)
                 {
-                    StatusMessaging.ReportError("GetCharacter", null, "No character returned from the Armory");
+                    StatusMessaging.ReportError("Get Character", null, "No character returned from the Armory");
+                    itemsOnCharacter = null;
+                    return null;
                 }
                 Character.CharacterRace race = (Character.CharacterRace)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["raceId"].Value);
                 Character.CharacterClass charClass = (Character.CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
@@ -239,13 +241,12 @@ namespace Rawr
                 //build the talent tree 
                 character.Talents.SetCharacter(character);
 
-				character.EnsureItemsLoaded();
                 //I will tell you how he lived.
 				return character;
 			}
 			catch (Exception ex)
 			{
-                StatusMessaging.ReportError("GetCharacter", ex, "Rawr encountered an error retrieving the Character - " + name + "@" + region.ToString() + "-" + realm + " from the armory");
+                StatusMessaging.ReportError("Get Character", ex, "Rawr encountered an error retrieving the Character - " + name + "@" + region.ToString() + "-" + realm + " from the armory");
                 //if (docCharacter == null || docCharacter.InnerXml.Length == 0)
                 //{
                 //    System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Character " +
@@ -281,7 +282,7 @@ namespace Rawr
                 ItemLocation location = LocationFactory.Create(docItem, id);
                 if (docItem == null || docItem.SelectSingleNode("/page/itemTooltips/itemTooltip[1]") == null)
                 {
-                    StatusMessaging.ReportError("GetItem", null, "No item returned from Armory for " + id);
+                    StatusMessaging.ReportError("Get Item", null, "No item returned from Armory for " + id);
                     return null;
                 }
 				Item.ItemQuality quality = Item.ItemQuality.Common;
@@ -1088,10 +1089,11 @@ namespace Rawr
                 //}
                 //else
                 //{
-					System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Item " +
-					"from Armory: {0}. If you still encounter this error, please copy and" +
-					" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {1}\r\n\r\n\r\n{2}\r\n\r\n{3}",
-					gemmedId, docItem.OuterXml, ex.Message, ex.StackTrace));
+                StatusMessaging.ReportError("Get Item", ex, "Rawr encountered an error getting Item from Armory: " + gemmedId);
+                    //System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Item " +
+                    //"from Armory: {0}. If you still encounter this error, please copy and" +
+                    //" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {1}\r\n\r\n\r\n{2}\r\n\r\n{3}",
+                    //gemmedId, docItem.OuterXml, ex.Message, ex.StackTrace));
 				//}
 				return null;
 			}

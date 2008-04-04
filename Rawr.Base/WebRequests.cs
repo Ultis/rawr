@@ -16,7 +16,8 @@ namespace Rawr
 {
 	public class WebRequestWrapper
 	{
-        private const int RETRY_MAX = 3;
+        //5 seems to be the magic number when the armory is acting up.
+        private const int RETRY_MAX = 5;
 
 		private class DownloadRequest
 		{
@@ -35,7 +36,7 @@ namespace Rawr
         private int _proxyPort;
         
 		
-		private static bool _fatalError = false;
+		private static Exception _fatalError = null;
 
 		public WebRequestWrapper()
 		{
@@ -105,21 +106,10 @@ namespace Rawr
 
 		public XmlDocument DownloadItemToolTipSheet(string id)
 		{
-			int retry = 0;
 			XmlDocument doc = null;
 			if (!string.IsNullOrEmpty(id))
 			{
-				while (doc == null && retry < 5)
-				{
-					doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id));
-					if (doc == null || doc.DocumentElement == null
-									|| !doc.DocumentElement.HasChildNodes || !doc.DocumentElement.ChildNodes[0].HasChildNodes)
-					{
-						//the file is empty, return null to calling function
-						doc = null;
-						retry++;
-					}
-				}
+                doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id));
             }
 			return doc;
 		}
@@ -201,12 +191,17 @@ namespace Rawr
 		/// </summary>
 		public static bool LastWasFatalError
 		{
-			get { return _fatalError; }
+			get { return _fatalError != null; }
 		}
+
+        public static Exception FatalError
+        {
+            get { return _fatalError; }
+        }
 
 		public static void ResetFatalErrorIndicator()
 		{
-			_fatalError = false;
+			_fatalError = null;
 		}
 		/// <summary>
 		/// Downloads an Icon Asyncronously
@@ -329,14 +324,15 @@ namespace Rawr
 		/// <param name="ex"></param>
 		private void CheckExecptionForFatalError(Exception ex)
 		{
-			Log.Write("Exception trying to download: "+ ex);
-            Log.Write(ex.StackTrace);
+			//Log.Write("Exception trying to download: "+ ex);
+            //Log.Write(ex.StackTrace);
 			if (ex.Message.Contains("407") /*proxy auth required */
 				|| ex.Message.Contains("403") /*proxy info probably wrong, if we keep issuing requests, they will probably get locked out*/
 				|| ex.Message.Contains("timed out") /*either proxy required and firewall dropped the request, or armory is down*/
-				)
+				|| ex.Message.Contains("The remote name could not be resolved") /* DNS problems*/
+                )
 			{
-				_fatalError = true;
+				_fatalError = ex;
 			}
 		}
 
@@ -371,20 +367,35 @@ namespace Rawr
 		private XmlDocument DownloadXml(string URI)
 		{
 			XmlDocument returnDocument = null;
-			string xml = DownloadText(URI);
-			if (!string.IsNullOrEmpty(xml) && !xml.Contains("<table")) 
-				//If it contains "<table", then the armory accidentally returned it as html instead of xml.
-			{
-				try
-				{
-					returnDocument = new XmlDocument();
-					returnDocument.LoadXml(xml);
-				}
-				catch (Exception ex)
-				{
-					throw ex;
-				}
-			}
+            int retry = 0;
+            //Download Text has retry logic in it as well, but that just makes sure it gets a response, this
+            //makes sure we get a valid XML response.
+            do
+            {
+                string xml = DownloadText(URI);
+                //If it contains "<table", then the armory accidentally returned it as html instead of xml.
+                if (!string.IsNullOrEmpty(xml) && !xml.Contains("<table"))
+                {
+                    try
+                    {
+                        returnDocument = new XmlDocument();
+                        returnDocument.LoadXml(xml);
+                        if (returnDocument == null || returnDocument.DocumentElement == null
+                                    || !returnDocument.DocumentElement.HasChildNodes
+                                    || !returnDocument.DocumentElement.ChildNodes[0].HasChildNodes)
+                        {
+                            //document returned no data we care about.
+                            returnDocument = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+                retry++;
+            } while (returnDocument == null && !LastWasFatalError && retry < RETRY_MAX);
+
 			return returnDocument;
 		}
 
@@ -419,7 +430,7 @@ namespace Rawr
             try
             {
                 DownloadRequest dl = null;
-                while (_downloadRequests.Count > 0 && !_fatalError)
+                while (_downloadRequests.Count > 0 && !LastWasFatalError)
                 {
                     lock (_downloadRequests)
                     {
@@ -443,10 +454,10 @@ namespace Rawr
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Log.Write(ex.Message);
-                Log.Write(ex.StackTrace);
+                //Log.Write(ex.Message);
+               // Log.Write(ex.StackTrace);
             }
 		}
 	}
