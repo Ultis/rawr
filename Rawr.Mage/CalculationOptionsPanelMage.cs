@@ -78,14 +78,14 @@ namespace Rawr.Mage
                 Character.CalculationOptions["SmartOptimization"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("DrumsOfBattle"))
                 Character.CalculationOptions["DrumsOfBattle"] = (0).ToString(CultureInfo.InvariantCulture);
-            if (!Character.CalculationOptions.ContainsKey("2_3Mode"))
-                Character.CalculationOptions["2_3Mode"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("AutomaticArmor"))
                 Character.CalculationOptions["AutomaticArmor"] = (1).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("TpsLimit"))
                 Character.CalculationOptions["TpsLimit"] = (5000).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("IncrementalOptimizations"))
                 Character.CalculationOptions["IncrementalOptimizations"] = (1).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("ReconstructSequence"))
+                Character.CalculationOptions["ReconstructSequence"] = (0).ToString(CultureInfo.InvariantCulture);
 
             loading = true;
 
@@ -113,10 +113,10 @@ namespace Rawr.Mage
             textBoxAoeDuration.Text = float.Parse(Character.CalculationOptions["AoeDuration"], CultureInfo.InvariantCulture).ToString();
             checkBoxSmartOptimization.Checked = int.Parse(Character.CalculationOptions["SmartOptimization"], CultureInfo.InvariantCulture) == 1;
             checkBoxDrumsOfBattle.Checked = int.Parse(Character.CalculationOptions["DrumsOfBattle"], CultureInfo.InvariantCulture) == 1;
-            checkBox2_3Mode.Checked = int.Parse(Character.CalculationOptions["2_3Mode"], CultureInfo.InvariantCulture) == 1;
             checkBoxAutomaticArmor.Checked = int.Parse(Character.CalculationOptions["AutomaticArmor"], CultureInfo.InvariantCulture) == 1;
             textBoxTpsLimit.Text = float.Parse(Character.CalculationOptions["TpsLimit"], CultureInfo.InvariantCulture).ToString();
             checkBoxIncrementalOptimizations.Checked = int.Parse(Character.CalculationOptions["IncrementalOptimizations"], CultureInfo.InvariantCulture) == 1;
+            checkBoxReconstructSequence.Checked = int.Parse(Character.CalculationOptions["ReconstructSequence"], CultureInfo.InvariantCulture) == 1;
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -337,12 +337,6 @@ namespace Rawr.Mage
             if (!loading) Character.OnItemsChanged();
         }
 
-        private void checkBox2_3Mode_CheckedChanged(object sender, EventArgs e)
-        {
-            Character.CalculationOptions["2_3Mode"] = (checkBox2_3Mode.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
-            if (!loading) Character.OnItemsChanged();
-        }
-
         private void checkBoxAutomaticArmor_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["AutomaticArmor"] = (checkBoxAutomaticArmor.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
@@ -362,6 +356,12 @@ namespace Rawr.Mage
         private void checkBoxIncrementalOptimizations_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["IncrementalOptimizations"] = (checkBoxIncrementalOptimizations.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
+            if (!loading) Character.OnItemsChanged();
+        }
+
+        private void checkBoxReconstructSequence_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ReconstructSequence"] = (checkBoxReconstructSequence.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
             if (!loading) Character.OnItemsChanged();
         }
 	}

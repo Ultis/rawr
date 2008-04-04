@@ -78,8 +78,6 @@
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
             this.checkBoxDrumsOfBattle = new System.Windows.Forms.CheckBox();
-            this.label25 = new System.Windows.Forms.Label();
-            this.checkBox2_3Mode = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.checkBoxAutomaticArmor = new System.Windows.Forms.CheckBox();
             this.textBoxTpsLimit = new System.Windows.Forms.TextBox();
@@ -87,6 +85,8 @@
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
             this.label27 = new System.Windows.Forms.Label();
             this.checkBoxIncrementalOptimizations = new System.Windows.Forms.CheckBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.checkBoxReconstructSequence = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -558,26 +558,6 @@
             this.checkBoxDrumsOfBattle.UseVisualStyleBackColor = true;
             this.checkBoxDrumsOfBattle.CheckedChanged += new System.EventHandler(this.checkBoxDrumsOfBattle_CheckedChanged);
             // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(3, 684);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(62, 13);
-            this.label25.TabIndex = 51;
-            this.label25.Text = "2.3 Mode: *";
-            this.toolTipMage.SetToolTip(this.label25, "Enable mode simulating 2.3 mechanics.");
-            // 
-            // checkBox2_3Mode
-            // 
-            this.checkBox2_3Mode.AutoSize = true;
-            this.checkBox2_3Mode.Location = new System.Drawing.Point(174, 684);
-            this.checkBox2_3Mode.Name = "checkBox2_3Mode";
-            this.checkBox2_3Mode.Size = new System.Drawing.Size(15, 14);
-            this.checkBox2_3Mode.TabIndex = 50;
-            this.checkBox2_3Mode.UseVisualStyleBackColor = true;
-            this.checkBox2_3Mode.CheckedChanged += new System.EventHandler(this.checkBox2_3Mode_CheckedChanged);
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -643,19 +623,40 @@
             this.checkBoxIncrementalOptimizations.UseVisualStyleBackColor = true;
             this.checkBoxIncrementalOptimizations.CheckedChanged += new System.EventHandler(this.checkBoxIncrementalOptimizations_CheckedChanged);
             // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(3, 684);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(127, 13);
+            this.label25.TabIndex = 59;
+            this.label25.Text = "Reconstruct Sequence: *";
+            this.toolTipMage.SetToolTip(this.label25, "Enable to reconstruct the sequence of spell cycles. This option should generally " +
+                    "be disabled as it can take some time to compute reconstruction in some cases.");
+            // 
+            // checkBoxReconstructSequence
+            // 
+            this.checkBoxReconstructSequence.AutoSize = true;
+            this.checkBoxReconstructSequence.Location = new System.Drawing.Point(174, 684);
+            this.checkBoxReconstructSequence.Name = "checkBoxReconstructSequence";
+            this.checkBoxReconstructSequence.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxReconstructSequence.TabIndex = 58;
+            this.checkBoxReconstructSequence.UseVisualStyleBackColor = true;
+            this.checkBoxReconstructSequence.CheckedChanged += new System.EventHandler(this.checkBoxReconstructSequence_CheckedChanged);
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.label25);
+            this.Controls.Add(this.checkBoxReconstructSequence);
             this.Controls.Add(this.label27);
             this.Controls.Add(this.checkBoxIncrementalOptimizations);
             this.Controls.Add(this.textBoxTpsLimit);
             this.Controls.Add(this.label26);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.checkBoxAutomaticArmor);
-            this.Controls.Add(this.label25);
-            this.Controls.Add(this.checkBox2_3Mode);
             this.Controls.Add(this.label24);
             this.Controls.Add(this.checkBoxDrumsOfBattle);
             this.Controls.Add(this.label23);
@@ -761,8 +762,6 @@
         private System.Windows.Forms.CheckBox checkBoxSmartOptimization;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.CheckBox checkBoxDrumsOfBattle;
-        private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.CheckBox checkBox2_3Mode;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox checkBoxAutomaticArmor;
         private System.Windows.Forms.TextBox textBoxTpsLimit;
@@ -770,5 +769,7 @@
         private System.Windows.Forms.ToolTip toolTipMage;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.CheckBox checkBoxIncrementalOptimizations;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.CheckBox checkBoxReconstructSequence;
 	}
 }

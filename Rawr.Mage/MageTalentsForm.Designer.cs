@@ -1964,6 +1964,7 @@ namespace Rawr.Mage
             "Arcane (48/0/13)",
             "Arcane (43/0/18)",
             "Arcane/Fire (40/18/3)",
+            "Arcane/Fire (40/10/11)",
             "Arcane/Frost (40/0/21)"});
             this.comboBoxTalentPreset.Location = new System.Drawing.Point(446, 10);
             this.comboBoxTalentPreset.Name = "comboBoxTalentPreset";

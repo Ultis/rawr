@@ -33,13 +33,13 @@ namespace Rawr.Mage
         public bool SmartOptimization { get; set; }
         public float DpsTime { get; set; }
         public bool DrumsOfBattle { get; set; }
-        public bool Enable2_3Mode { get; set; }
         public bool DisableBuffAutoActivation { get; set; }
         public bool AutomaticArmor { get; set; }
         public bool IncrementalOptimizations { get; set; }
         public int[] IncrementalSetCooldowns;
         public string[] IncrementalSetSpells;
         public string IncrementalSetArmor;
+        public bool ReconstructSequence { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -116,10 +116,10 @@ namespace Rawr.Mage
             SmartOptimization = int.Parse(character.CalculationOptions["SmartOptimization"], CultureInfo.InvariantCulture) == 1;
             DpsTime = float.Parse(character.CalculationOptions["DpsTime"], CultureInfo.InvariantCulture);
             DrumsOfBattle = int.Parse(character.CalculationOptions["DrumsOfBattle"], CultureInfo.InvariantCulture) == 1;
-            Enable2_3Mode = int.Parse(character.CalculationOptions["2_3Mode"], CultureInfo.InvariantCulture) == 1;
             DisableBuffAutoActivation = character.CalculationOptions.ContainsKey("DisableBuffAutoActivation") && character.CalculationOptions["DisableBuffAutoActivation"] == "Yes";
             AutomaticArmor = int.Parse(character.CalculationOptions["AutomaticArmor"], CultureInfo.InvariantCulture) == 1;
             IncrementalOptimizations = int.Parse(character.CalculationOptions["IncrementalOptimizations"], CultureInfo.InvariantCulture) == 1;
+            ReconstructSequence = int.Parse(character.CalculationOptions["ReconstructSequence"], CultureInfo.InvariantCulture) == 1;
             if (character.CalculationOptions.ContainsKey("IncrementalSetCooldowns"))
             {
                 string[] cooldowns = character.CalculationOptions["IncrementalSetCooldowns"].Split(':');
@@ -311,6 +311,8 @@ namespace Rawr.Mage
         public double Trinket1Cooldown;
         public double Trinket2Duration;
         public double Trinket2Cooldown;
+        public string Trinket1Name;
+        public string Trinket2Name;
         public int MaxManaPotion;
         public int MaxManaGem;
         public List<string> SolutionLabel = new List<string>();
@@ -318,6 +320,14 @@ namespace Rawr.Mage
         public CharacterCalculationsMage[] SolutionStats;
         public Spell[] SolutionSpells;
         public float Tps;
+
+        public double RealFightDuration
+        {
+            get
+            {
+                return FightDuration - Solution[3] - Solution[4];
+            }
+        }
 
         public void SetSpell(string spellName, Spell spell)
         {
@@ -497,72 +507,1754 @@ namespace Rawr.Mage
             return s;
         }
 
-        private string TimeFormat(double time)
+        private static string TimeFormat(double time)
         {
             TimeSpan span = new TimeSpan((long)(Math.Round(time, 2) / 0.0000001));
-            return span.ToString();
+            return string.Format("{0:00}:{1:00}.{2:000}", span.Minutes, span.Seconds, span.Milliseconds);
         }
 
-        public string ReconstructSequence()
+        private class SequenceItem : ICloneable
         {
-            if (FightDuration > 900) return "*Unavailable";
-            int N = 0;
-            List<CharacterCalculationsMage> stats = new List<CharacterCalculationsMage>();
-            List<Spell> spells = new List<Spell>();
-            List<double> remainingTime = new List<double>();
-            for (int i = 0; i < SolutionLabel.Count; i++)
+            public static CharacterCalculationsMage Calculations;
+
+            private SequenceItem() { }
+            public SequenceItem(int index, double duration) : this(index, duration, null) { }
+
+            public SequenceItem(int index, double duration, List<SequenceGroup> group)
             {
-                if (Solution[i] > 0.01)
+                if (group == null) group = new List<SequenceGroup>();
+                this.Group = group;
+                this.index = index;
+                this.Duration = duration;
+                this.spell = Calculations.SolutionSpells[index];
+                this.stats = Calculations.SolutionStats[index];
+                if (stats == null) stats = Calculations;
+
+                switch (index)
                 {
-                    if (SolutionStats[i] != null)
+                    case 0:
+                        mps = -Calculations.ManaRegen;
+                        break;
+                    case 1:
+                        spell = Calculations.GetSpell("Wand");
+                        mps = spell.CostPerSecond - spell.ManaRegenPerSecond;
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                        mps = 0;
+                        break;
+                    case 5:
+                        mps = -Calculations.ManaRegen5SR;
+                        break;
+                    default:
+                        mps = spell.CostPerSecond - spell.ManaRegenPerSecond;
+                        break;
+                }
+                minTime = 0;
+                maxTime = Calculations.RealFightDuration;
+            }
+
+            private int index;
+            public int Index
+            {
+                get
+                {
+                    return index;
+                }
+            }
+            
+            public double Duration;
+
+            private double minTime;
+            public double MinTime
+            {
+                get
+                {
+                    return minTime;
+                }
+                set
+                {
+                    minTime = Math.Max(minTime, value);
+                }
+            }
+
+            private double maxTime;
+            public double MaxTime
+            {
+                get
+                {
+                    return maxTime;
+                }
+                set
+                {
+                    maxTime = Math.Min(maxTime, value);
+                }
+            }
+
+            public List<SequenceGroup> Group;
+            public SequenceGroup SuperGroup;
+
+            // helper variables
+            public int SuperIndex;
+            public List<SequenceGroup> Tail;
+
+            private Spell spell;
+            public Spell Spell
+            {
+                get
+                {
+                    return spell;
+                }
+            }
+
+            private CharacterCalculationsMage stats;
+            public CharacterCalculationsMage Stats
+            {
+                get
+                {
+                    return stats;
+                }
+            }
+
+            private double mps;
+            public double Mps
+            {
+                get
+                {
+                    return mps;
+                }
+            }
+
+            #region ICloneable Members
+
+            object ICloneable.Clone()
+            {
+                return Clone();
+            }
+
+            public SequenceItem Clone()
+            {
+                SequenceItem clone = (SequenceItem)MemberwiseClone();
+                clone.Group = new List<SequenceGroup>(Group);
+                return clone;
+            }
+
+            #endregion
+
+            public override string ToString()
+            {
+                if (spell == null) return index.ToString();
+                return stats.BuffLabel + "+" + spell.Name;
+            }
+        }
+
+        private class CooldownConstraint
+        {
+            public SequenceGroup Group;
+            public double Cooldown;
+            public double Duration;
+        }
+
+        private class SequenceGroup
+        {
+            public double Mana;
+            public double Duration;
+            public double Mps
+            {
+                get
+                {
+                    if (Duration > 0)
                     {
-                        stats.Add(SolutionStats[i]);
-                        spells.Add(SolutionSpells[i]);
-                        remainingTime.Add(Solution[i]);
-                        N++;
+                        return Mana / Duration;
+                    }
+                    else
+                    {
+                        return 0;
                     }
                 }
             }
 
-            List<int> sequence = new List<int>();
-            string bestTiming = "*Invalid";
-            double bestUnderused = FightDuration;
-            string[] effectList = new string[] { "Mana Potion", "Mana Gem", "Evocation", "Drums of Battle", "Flame Cap", "Destruction Potion", (Character.Trinket1 != null) ? Character.Trinket1.Name : "", (Character.Trinket2 != null) ? Character.Trinket2.Name : "", "Heroism", "Molten Fury", "Combustion", "Arcane Power", "Icy Veins"};
-            float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
-            int E = effectList.Length;
-            bool lastSequenceValid = true;
-            StringBuilder timing = new StringBuilder();
+            public List<SequenceItem> Item = new List<SequenceItem>();
+            public List<CooldownConstraint> Constraint = new List<CooldownConstraint>();
 
-            do
+            public double MinTime
             {
-                // move to next sequence
-                if (lastSequenceValid)
+                get
                 {
-                    //sequence.Add(0);
-                    sequence.Add(3);
+                    double t = 0;
+                    double min = 0;
+                    foreach (SequenceItem item in Item)
+                    {
+                        min = Math.Max(min, item.MinTime - t);
+                        t += item.Duration;
+                    }
+                    return min;
+                }
+                set
+                {
+                    foreach (SequenceItem item in Item)
+                    {
+                        item.MinTime = value;
+                    }
+                }
+            }
+
+            public double MaxTime
+            {
+                get
+                {
+                    double t = 0;
+                    double max = SequenceItem.Calculations.RealFightDuration;
+                    foreach (SequenceItem item in Item)
+                    {
+                        max = Math.Min(max, item.MaxTime - t);
+                        t += item.Duration;
+                    }
+                    return max;
+                }
+                set
+                {
+                    foreach (SequenceItem item in Item)
+                    {
+                        item.MaxTime = value;
+                    }
+                }
+            }
+
+            public void Add(SequenceItem item)
+            {
+                Mana += item.Mps * item.Duration;
+                Duration += item.Duration;
+                Item.Add(item);
+            }
+
+            public void AddRange(IEnumerable<SequenceItem> collection)
+            {
+                foreach (SequenceItem item in collection)
+                {
+                    Add(item);
+                }
+            }
+
+            public void SortByMps(double minMps, double maxMps)
+            {
+                List<SequenceItem> Item2 = new List<SequenceItem>(Item);
+                List<SequenceItem> sorted = new List<SequenceItem>();
+                while (Item2.Count > 0)
+                {
+                    foreach (SequenceItem item in Item2)
+                    {
+                        item.Tail = new List<SequenceGroup>(item.Group);
+                    }
+
+                    foreach (SequenceItem item in Item2)
+                    {
+                        foreach (SequenceItem tailitem in Item2)
+                        {
+                            IEnumerable<SequenceGroup> intersect = item.Group.Intersect(tailitem.Group);
+                            if (intersect.Count() > 0)
+                            {
+                                item.Tail = intersect.Intersect(item.Tail).ToList();
+                            }
+                        }
+                    }
+
+                    SequenceItem best = null;
+                    foreach (SequenceItem item in Item2)
+                    {
+                        if (best == null || Compare(item, best, (sorted.Count > 0) ? sorted[sorted.Count - 1].Group : null, minMps, maxMps) < 0)
+                        {
+                            best = item;
+                        }
+                    }
+                    Item2.Remove(best);
+                    sorted.Add(best);
+                }
+                //Item = sorted;
+                for (int i = 0; i < sorted.Count; i++)
+                {
+                    sorted[i].SuperIndex = i;
+                }
+            }
+
+            public void SetSuperIndex()
+            {
+                for (int i = 0; i < Item.Count; i++)
+                {
+                    Item[i].SuperIndex = i;
+                }
+            }
+
+            private int Compare(SequenceItem x, SequenceItem y, List<SequenceGroup> tail, double minMps, double maxMps)
+            {
+                bool xsingletail = x.Tail.Count > 0;
+                bool ysingletail = y.Tail.Count > 0;
+                int compare = ysingletail.CompareTo(xsingletail);
+                if (compare != 0) return compare;
+                int xintersect = (tail == null) ? 0 : x.Group.Intersect(tail).Count();
+                int yintersect = (tail == null) ? 0 : y.Group.Intersect(tail).Count();
+                compare = yintersect.CompareTo(xintersect);
+                if (compare != 0) return compare;
+                return Sequence.CompareMps(x.Mps, y.Mps, minMps, maxMps);
+            }
+        }
+
+        private class Sequence : IComparer<SequenceItem>
+        {
+            private List<SequenceItem> sequence = new List<SequenceItem>();
+
+            public void Add(SequenceItem item)
+            {
+                sequence.Add(item);
+            }
+
+            public bool IsCooldownBreakpoint(int index)
+            {
+                if (index == 0) return true;
+                if (sequence[index].Index == 3 || sequence[index].Index == 4 || sequence[index].Index == 5) return false;
+                CharacterCalculationsMage stats = sequence[index].Stats;
+                CharacterCalculationsMage lastStats = null;
+                int lastindex = index - 1;
+                while (lastindex >= 0 && (sequence[lastindex].Index == 3 || sequence[lastindex].Index == 4 || sequence[lastindex].Index == 5))
+                {
+                    lastindex--;
+                }
+                if (lastindex >= 0) lastStats = sequence[lastindex].Stats;
+                if (lastStats == null || !((lastStats.ArcanePower && stats.ArcanePower) || (lastStats.IcyVeins && stats.IcyVeins) || (lastStats.Heroism && stats.Heroism) || (lastStats.MoltenFury && stats.MoltenFury) || (lastStats.DestructionPotion && stats.DestructionPotion) || (lastStats.FlameCap && stats.FlameCap) || (lastStats.DrumsOfBattle && stats.DrumsOfBattle)))
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            List<SequenceGroup> superGroup = new List<SequenceGroup>();
+
+            private void CalculateSuperGroups()
+            {
+                superGroup.Clear();
+                SequenceGroup group = null;
+                List<SequenceGroup> lastGroup = null;
+                for (int i = 0; i < sequence.Count; i++)
+                {
+                    if (lastGroup == null || (sequence[i].Index != 3 && sequence[i].Index != 4 && lastGroup.Intersect(sequence[i].Group).Count() == 0))
+                    {
+                        group = new SequenceGroup();
+                        superGroup.Add(group);
+                    }
+                    if (sequence[i].Index != 3 && sequence[i].Index != 4) lastGroup = sequence[i].Group;
+                    group.Add(sequence[i]);
+                    sequence[i].SuperGroup = group;
+                }
+            }
+
+            private bool sortByMps = true;
+            private bool preserveCooldowns = true;
+            private double sortMaxMps = double.PositiveInfinity;
+            private double sortMinMps = double.NegativeInfinity;
+            private double sortStartTime;
+            private double sortTargetTime;
+
+            public void SortByMps(bool preserveCooldowns, double minMps, double maxMps, double startTime, double targetTime, double extraMana, double startMana)
+            {
+                if (minMps > maxMps) maxMps = minMps;
+
+                this.sortByMps = true;
+                this.preserveCooldowns = preserveCooldowns;
+                this.sortMaxMps = maxMps;
+                this.sortMinMps = minMps;
+                this.sortStartTime = startTime;
+                this.sortTargetTime = targetTime;
+
+                CalculateSuperGroups();
+
+                double maxMana = maxMps * (targetTime - startTime);
+                double minMana = minMps * (targetTime - startTime);
+                double mana = 0;
+
+                double t = 0;
+                int i;
+                SequenceGroup lastGroup = null;
+                for (i = 0; i < sequence.Count; i++)
+                {
+                    double d = sequence[i].Duration;
+                    if (sequence[i].Index == 3 || sequence[i].Index == 4) d = 0;
+                    if (d > 0 && t >= startTime)
+                    {
+                        if (lastGroup != sequence[i].SuperGroup) break;
+                        else mana += sequence[i].Mps * d;
+                    }
+                    else
+                    {
+                        if (t + d > startTime) mana += sequence[i].Mps * (t + d - startTime);
+                        lastGroup = sequence[i].SuperGroup;
+                    }
+                    t += d;
+                }
+                if (extraMana == 0)
+                {
+                    foreach (SequenceGroup group in superGroup)
+                    {
+                        //group.SortByMps(minMps, maxMps);
+                        group.SetSuperIndex();
+                    }
+                    sequence.Sort(i, sequence.Count - i, this);
+                }
+                if (targetTime < t) return; // there is nothing we can do at this point
+                double T = t;
+                double Mana = mana;
+                Retry:
+                // first we have sections in the right mps range, then higher, then lower (at the end sections that are not ready yet)
+                // so the constraint that will be broken first is maxmana (unless no high burn section is available at the moment)
+                // forward to target time
+                int j;
+                int lastHigh = i;
+                double tLastHigh = t;
+                double overflowMana = startMana; // for overflow calculations assume there are no mana consumables placed after start time yet
+                double overflowLimit = BasicStats.Mana - overflowMana;
+                SequenceGroup lastSuper = null;
+                for (j = i; j < sequence.Count; j++)
+                {
+                    double d = sequence[j].Duration;
+                    if (sequence[j].Index == 3 || sequence[j].Index == 4) d = 0;
+                    if (lastSuper != sequence[j].SuperGroup)
+                    {
+                        if (sequence[j].Group.Count > 0)
+                        {
+                            overflowLimit = BasicStats.Mana - overflowMana;
+                        }
+                        lastSuper = sequence[j].SuperGroup;
+                    }
+                    if (t < sequence[j].MinTime)
+                    {
+                        // sequence positioned too early, we have to buffer up with something that can
+                        // be positioned at t and is either small enough not to disrupt max time
+                        // or is splittable
+                        bool updated = false;
+                        double minbuffer = sequence[j].MinTime - t;
+                        double buffer = sequence[j].MaxTime - t;
+                        int k;
+                        for (k = j + 1; k < sequence.Count && minbuffer > 0 && buffer > 0; k++)
+                        {
+                            if (sequence[k].SuperGroup != lastSuper) // intra super ordering not allowed
+                            {
+                                if (sequence[k].MinTime <= t)
+                                {
+                                    if (sequence[k].Group.Count == 0)
+                                    {
+                                        if (sequence[k].Duration > minbuffer + 0.000001)
+                                        {
+                                            SplitAt(k, minbuffer);
+                                        }
+                                        SequenceItem copy = sequence[k];
+                                        sequence.RemoveAt(k);
+                                        sequence.Insert(j, copy);
+                                        minbuffer -= copy.Duration;
+                                        buffer -= copy.Duration;
+                                        t += copy.Duration;
+                                        updated = true;
+                                        j++;
+                                        k = j;
+                                    }
+                                    else if (sequence[k].SuperGroup.Duration <= buffer)
+                                    {
+                                        int l;
+                                        for (l = k + 1; l < sequence.Count; l++)
+                                        {
+                                            if (sequence[l].SuperGroup != sequence[k].SuperGroup) break;
+                                        }
+                                        List<SequenceItem> copy = sequence.GetRange(k, l - k);
+                                        sequence.RemoveRange(k, l - k);
+                                        sequence.InsertRange(j, copy);
+                                        minbuffer -= copy[0].SuperGroup.Duration;
+                                        buffer -= copy[0].SuperGroup.Duration;
+                                        t += copy[0].SuperGroup.Duration;
+                                        updated = true;
+                                        j += copy.Count;
+                                        k = j;
+                                    }
+                                }
+                            }
+                        }
+                        if (updated)
+                        {
+                            t = T;
+                            mana = Mana;
+                            goto Retry;
+                        }
+                    }
+                    if (d > 0 && sequence[j].SuperGroup.Mps > maxMps)
+                    {
+                        lastHigh = j;
+                        tLastHigh = t;
+                    }
+                    if (t + d > targetTime)
+                    {
+                        mana += sequence[j].Mps * (targetTime - t);
+                        overflowMana -= sequence[j].Mps * (targetTime - t);
+                        break;
+                    }
+                    else
+                    {
+                        mana += sequence[j].Mps * d;
+                        overflowMana -= sequence[j].Mps * d;
+                        t += d;
+                    }
+                }
+                // verify max time constraints
+                double tt = T;
+                int a;
+                for (a = i; a < sequence.Count; a++)
+                {
+                    double d = sequence[a].Duration;
+                    if (sequence[a].Index == 3 || sequence[a].Index == 4) d = 0;
+                    if (lastSuper != sequence[a].SuperGroup)
+                    {
+                        lastSuper = sequence[a].SuperGroup;
+                        if (tt > lastSuper.MaxTime + 0.000001 && tt > T) // there might be other cases where it is impossible to move back without breaking others, double check for infinite cycles
+                        {
+                            // compute buffer of items that can be moved way back
+                            double buffer = 0;
+                            int b;
+                            for (b = i; b < a; b++)
+                            {
+                                if (sequence[b].MaxTime >= tt + lastSuper.Duration) buffer += sequence[b].Duration;
+                            }
+                            // place it at max time, but move back over non-splittable super groups
+                            // if move breaks constraint on some other group cancel
+                            double t3 = tt;
+                            bool updated = false;
+                            for (b = a - 1; b >= i; b--)
+                            {
+                                t3 -= sequence[b].Duration;
+                                if (t3 <= lastSuper.MaxTime)
+                                {
+                                    // possible insert point
+                                    if (sequence[b].Group.Count == 0)
+                                    {
+                                        if (sequence[b].MaxTime >= lastSuper.MaxTime + lastSuper.Duration - buffer)
+                                        {
+                                            // splittable, make a split at max time
+                                            if (lastSuper.MaxTime > t3)
+                                            {
+                                                SplitAt(b, lastSuper.MaxTime - t3);
+                                                a++;
+                                                b++;
+                                            }
+                                            sequence.InsertRange(b, RemoveSuperGroup(a));
+                                            updated = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // we are in super group, move to start
+                                        SequenceGroup super = sequence[b].SuperGroup;
+                                        while (b >= i && sequence[b].SuperGroup == super)
+                                        {
+                                            b--;
+                                            t3 -= sequence[b].Duration;
+                                        }
+                                        t3 += sequence[b].Duration;
+                                        b++;
+                                        if (super.MaxTime >= t3 + lastSuper.Duration - buffer)
+                                        {
+                                            sequence.InsertRange(b, RemoveSuperGroup(a));
+                                            updated = true;
+                                        }
+                                    }
+                                    break;
+                                }
+                                else
+                                {
+                                    // make sure we wouldn't push it out of max
+                                    if (sequence[b].MaxTime < t3 + lastSuper.Duration - buffer)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                            if (updated)
+                            {
+                                t = T;
+                                mana = Mana;
+                                goto Retry;
+                            }
+                        }
+                    }
+                    tt += d;
+                }
+                bool extraMode = extraMana > 0;
+                if (mana > maxMana || extraMana > 0)
+                {
+                    // [i....j]XXX[k....]
+                    int k;
+                    // [i..|jj..j]XXX[k..|kk.]
+                    int jj = j; double jT = targetTime - t;
+                    double tjj = t;
+                    double tkk = tLastHigh;
+                    if (jT <= 0)
+                    {
+                        jj--;
+                        if (jj > 0 && jj < sequence.Count)
+                        {
+                            jT += sequence[jj].Duration;
+                            tjj -= sequence[jj].Duration;
+                        }
+                    }
+                    double maxPush = 0;
+                    if (jj < sequence.Count) maxPush = sequence[jj].MaxTime - tjj; // you can assume jj won't be split
+                    for (k = lastHigh; k < sequence.Count; k++)
+                    {
+                        // make sure item is low mps and can be moved back
+                        if (sequence[k].SuperGroup.Mps <= maxMps && sequence[k].MinTime <= tjj + jT) break;
+                        // everything we skip will have to be pushed so make sure there is space
+                        maxPush = Math.Min(maxPush, sequence[k].MaxTime - tkk);
+                        tkk += sequence[k].Duration;
+                    }
+                    if (k < sequence.Count && maxPush > 0)
+                    {
+                        int kk = k; double kT = 0;
+                        double currentPush = 0;
+                        do
+                        {
+                            double nextT = Math.Min(jT, sequence[kk].Duration - kT);
+                            double mpsdiff = sequence[jj].Mps - sequence[kk].Mps;
+                            if (mana - mpsdiff * nextT <= minMana)
+                            {
+                                nextT = (mana - minMana) / mpsdiff;
+                            }
+                            if (overflowLimit + sequence[kk].Mps * nextT < 0)
+                            {
+                                nextT = -overflowLimit / sequence[kk].Mps;
+                            }
+                            if (currentPush + nextT > maxPush)
+                            {
+                                nextT = maxPush - currentPush;
+                            }
+                            mana -= mpsdiff * nextT;
+                            overflowLimit += sequence[kk].Mps * nextT;
+                            currentPush += nextT;
+                            if (extraMode) extraMana += sequence[kk].Mps * nextT;
+                            jT -= nextT;
+                            if (jT <= 0)
+                            {
+                                SequenceGroup currentSuper = sequence[jj].SuperGroup;
+                                jj--;
+                                if (jj >= 0)
+                                {
+                                    jT += sequence[jj].Duration;
+                                    tjj -= sequence[jj].Duration;
+                                    maxPush = Math.Min(maxPush, sequence[jj].MaxTime - tjj);
+                                    // seems like this never really applies
+                                    // if we don't have enough mana for long sequence then pushing it out
+                                    // won't create new opportunities for mana consumables
+                                    //if (extraMode && sequence[jj].SuperGroup != currentSuper) extraMana = double.NegativeInfinity;
+                                }
+                                else
+                                {
+                                    if (extraMode) extraMana = double.NegativeInfinity;
+                                }
+                            }
+                            kT += nextT;
+                            if (kT >= sequence[kk].Duration)
+                            {
+                                kT -= sequence[kk].Duration;
+                                kk++;
+                            }
+                            if ((mana <= maxMana && (extraMana <= 0 || mana <= minMana)) || overflowLimit <= 0)
+                            {
+                                break;
+                            }
+                        } while (jj >= 0 && kk < sequence.Count && sequence[k].MinTime <= tjj + jT && sequence[kk].MinTime <= tjj + jT + currentPush - kT && currentPush < maxPush);
+                        // [i..[k..||jj..j]XXXkk.]
+                        if (kT > 0)
+                        {
+                            SplitAt(kk, kT);
+                            kk++;
+                        }
+                        // if k has negative mps, then just placing it at the end won't work
+                        // we're breaking max mana constraint, this means we're most likely oom
+                        // placing -mps at the end won't help us get from negative
+                        // we have to place it before it gets to that point
+                        // when we're filling with extra mana this does not apply
+                        List<SequenceItem> copy = sequence.GetRange(k, kk - k);
+                        double totalmana = copy.Sum(item => item.Mps * item.Duration);
+                        while (currentPush <= maxPush && !extraMode && totalmana < 0)
+                        {
+                            if (sequence[jj].Mps * jT > -totalmana)
+                            {
+                                jT += totalmana / sequence[jj].Mps;
+                                break;
+                            }
+                            totalmana += sequence[jj].Mps * jT;
+                            jj--;
+                            jT = sequence[jj].Duration;
+                        }
+                        if (jT >= sequence[jj].Duration)
+                        {
+                            jT -= sequence[jj].Duration;
+                            jj++;
+                        }
+                        // don't split into supergroup, make a clean cut
+                        if (jT > 0 && sequence[jj].Group.Count > 0 && currentPush <= maxPush) // if we're mid super group, and we can push the end we can push the whole super group
+                        {
+                            // move to start of super group
+                            jT = 0;
+                            SequenceGroup super = sequence[jj].SuperGroup;
+                            while (jj >= 0 && sequence[jj].SuperGroup == super)
+                            {
+                                jj--;
+                            }
+                            jj++;
+                        }
+                        // final split and reinsert
+                        if (jj >= i)
+                        {
+                            sequence.RemoveRange(k, kk - k);
+                            if (jT > 0)
+                            {
+                                SplitAt(jj, jT);
+                                jj++;
+                                kk++;
+                            }
+                            sequence.InsertRange(jj, copy);
+                        }
+                    }
+                }
+                else if (mana < minMana)
+                {
+                    // no high burn sequence is available yet
+                    // take first super group with enough burn and place it as soon as possible
+                    t = T;
+                    for (j = i; j < sequence.Count; j++)
+                    {
+                        double d = sequence[j].Duration;
+                        if (sequence[j].Index == 3 || sequence[j].Index == 4) d = 0;
+                        if (t > targetTime)
+                        {
+                            SequenceGroup super = sequence[j].SuperGroup;
+                            double insertTime = super.MinTime;
+                            if (insertTime < T) insertTime = T;
+                            if (super.Mps > minMps && insertTime < targetTime)
+                            {
+                                int k;
+                                for (k = j + 1; k < sequence.Count; k++)
+                                {
+                                    if (sequence[k].SuperGroup != super) break;
+                                }
+                                List<SequenceItem> copy = sequence.GetRange(j, k - j);
+                                sequence.RemoveRange(j, k - j);
+                                SplitAt(insertTime);
+                                t = T;
+                                for (k = i; k < sequence.Count; k++)
+                                {
+                                    d = sequence[k].Duration;
+                                    if (sequence[k].Index == 3 || sequence[k].Index == 4) d = 0;
+                                    if (t >= insertTime)
+                                    {
+                                        sequence.InsertRange(k, copy);
+                                        t = T;
+                                        mana = Mana;
+                                        goto Retry;
+                                    }
+                                    t += d;
+                                }
+                                // fail safe
+                                sequence.AddRange(copy);
+                                break;
+                            }
+                        }
+                        t += d;
+                    }
+                }
+            }
+
+            int IComparer<SequenceItem>.Compare(SequenceItem x, SequenceItem y)
+            {
+                if (sortByMps)
+                {
+                    if (preserveCooldowns)
+                    {
+                        if (x.SuperGroup == y.SuperGroup)
+                        {
+                            return x.SuperIndex.CompareTo(y.SuperIndex);
+                        }
+                        else
+                        {
+                            bool xcritical = x.SuperGroup.MaxTime <= sortStartTime;
+                            bool ycritical = y.SuperGroup.MaxTime <= sortStartTime;
+                            int compare = ycritical.CompareTo(xcritical);
+                            if (compare != 0) return compare;
+                            compare = CompareByMps(x.SuperGroup, y.SuperGroup);
+                            if (compare != 0) return compare;
+                            // if two super groups have same mps make sure to group by super group
+                            return x.SuperGroup.MinTime.CompareTo(y.SuperGroup.MinTime); // is min time unique???
+                        }
+                    }
+                    else
+                    {
+                        return CompareByMps(x, y);
+                    }
+                }
+                return 0;
+            }
+
+            private int CompareByMps(SequenceItem x, SequenceItem y)
+            {
+                return CompareMps(x.Mps, y.Mps, sortMinMps, sortMaxMps);
+            }
+
+            private int CompareByMps(SequenceGroup x, SequenceGroup y)
+            {
+                return CompareMps(x.Mps, y.Mps, sortMinMps, sortMaxMps);
+            }
+
+            public static int CompareMps(double x, double y, double minMps, double maxMps)
+            {
+                int xrange, yrange;
+                if (x < maxMps && x >= minMps) xrange = 0;
+                else if (x >= maxMps) xrange = 1;
+                else xrange = 2;
+                if (y < maxMps && y >= minMps) yrange = 0;
+                else if (y >= maxMps) yrange = 1;
+                else yrange = 2;
+                int compare = xrange.CompareTo(yrange);
+                if (compare != 0) return compare;
+                if (xrange == 0 || xrange == 2) return y.CompareTo(x);
+                else return x.CompareTo(y);
+            }
+
+            private void SplitAt(double time)
+            {
+                double t = 0;
+                for (int i = 0; i < sequence.Count; i++)
+                {
+                    double d = sequence[i].Duration;
+                    if (sequence[i].Index == 3 || sequence[i].Index == 4) d = 0;
+                    if (t + d > time)
+                    {
+                        if (time > t)
+                        {
+                            SplitAt(i, time - t);
+                        }
+                        return;
+                    }
+                    t += d;
+                }
+            }
+
+            private List<SequenceItem> RemoveSuperGroup(int index)
+            {
+                int i;
+                SequenceGroup super = sequence[index].SuperGroup;
+                for (i = index; i < sequence.Count; i++)
+                {
+                    if (sequence[i].SuperGroup != super) break;
+                }
+                List<SequenceItem> copy = sequence.GetRange(index, i - index);
+                sequence.RemoveRange(index, i - index);
+                return copy;
+            }
+
+            private void SplitAt(int index, double time)
+            {
+                if (time > 0 && time < sequence[index].Duration)
+                {
+                    double d = sequence[index].Duration;
+                    sequence.Insert(index, sequence[index].Clone());
+                    sequence[index].Duration = time;
+                    sequence[index + 1].Duration = d - time;
+                }
+            }
+
+            private SequenceItem Split(SequenceItem item, double time)
+            {
+                int index = sequence.IndexOf(item);
+                SplitAt(index, time);
+                return sequence[index];
+            }
+
+            private double RemoveIndex(int index)
+            {
+                double ret = 0;
+                for (int i = 0; i < sequence.Count; i++)
+                {
+                    if (sequence[i].Index == index)
+                    {
+                        ret += sequence[i].Duration;
+                        sequence.RemoveAt(i);
+                        i--;
+                    }
+                }
+                return ret;
+            }
+
+            private SequenceItem InsertIndex(int index, double duration, double time)
+            {
+                SequenceItem item = new SequenceItem(index, duration);
+                InsertIndex(item, time);
+                return item;
+            }
+
+            private void InsertIndex(SequenceItem item, double time)
+            {
+                double t = 0;
+                for (int i = 0; i < sequence.Count; i++)
+                {
+                    double d = sequence[i].Duration;
+                    if (sequence[i].Index == 3 || sequence[i].Index == 4) d = 0;
+                    if (t + d > time)
+                    {
+                        if (time <= t)
+                        {
+                            sequence.Insert(i, item);
+                            return;
+                        }
+                        else
+                        {
+                            sequence.Insert(i, sequence[i].Clone());
+                            sequence[i].Duration = time - t;
+                            sequence[i + 1].Duration = d - (time - t);
+                            sequence.Insert(i + 1, item);
+                            return;
+                        }
+                    }
+                    t += d;
+                }
+            }
+
+            public enum EvaluationMode
+            {
+                Unexplained,
+                ManaBelow,
+                ManaAtTime,
+                CooldownBreak,
+            }
+
+            private Stats BasicStats
+            {
+                get
+                {
+                    return SequenceItem.Calculations.BasicStats;
+                }
+            }
+
+            private double EvocationRegen
+            {
+                get
+                {
+                    return SequenceItem.Calculations.EvocationRegen;
+                }
+            }
+
+            private double EvocationDuration
+            {
+                get
+                {
+                    return SequenceItem.Calculations.EvocationDuration;
+                }
+            }
+
+            private double FightDuration
+            {
+                get
+                {
+                    return SequenceItem.Calculations.FightDuration;
+                }
+            }
+
+            private double RealFightDuration
+            {
+                get
+                {
+                    return SequenceItem.Calculations.RealFightDuration;
+                }
+            }
+
+            private double ManaPotionTime
+            {
+                get
+                {
+                    return SequenceItem.Calculations.ManaPotionTime;
+                }
+            }
+
+            private double Trinket1Duration
+            {
+                get
+                {
+                    return SequenceItem.Calculations.Trinket1Duration;
+                }
+            }
+
+            private double Trinket2Duration
+            {
+                get
+                {
+                    return SequenceItem.Calculations.Trinket2Duration;
+                }
+            }
+
+            public void GroupTrinket1()
+            {
+                List<SequenceItem> list = new List<SequenceItem>();
+                foreach (SequenceItem item in sequence)
+                {
+                    if (item.Stats.Trinket1) list.Add(item);
+                }
+                GroupCooldown(list, Trinket1Duration, SequenceItem.Calculations.Trinket1Cooldown);
+            }
+
+            public void GroupTrinket2()
+            {
+                List<SequenceItem> list = new List<SequenceItem>();
+                foreach (SequenceItem item in sequence)
+                {
+                    if (item.Stats.Trinket2) list.Add(item);
+                }
+                GroupCooldown(list, Trinket2Duration, SequenceItem.Calculations.Trinket2Cooldown);
+            }
+
+            public void GroupCombustion()
+            {
+                List<SequenceItem> list = new List<SequenceItem>();
+                foreach (SequenceItem item in sequence)
+                {
+                    if (item.Stats.Combustion) list.Add(item);
+                }
+                GroupCooldown(list, 0, 180, true, false);
+            }
+
+            public void GroupArcanePower()
+            {
+                List<SequenceItem> list = new List<SequenceItem>();
+                foreach (SequenceItem item in sequence)
+                {
+                    if (item.Stats.ArcanePower) list.Add(item);
+                }
+                GroupCooldown(list, 15, 180);
+            }
+
+            public void GroupIcyVeins()
+            {
+                List<SequenceItem> list = new List<SequenceItem>();
+                foreach (SequenceItem item in sequence)
+                {
+                    if (item.Stats.IcyVeins) list.Add(item);
+                }
+                GroupCooldown(list, 20, 180);
+            }
+
+            public void GroupFlameCap()
+            {
+                List<SequenceItem> list = new List<SequenceItem>();
+                foreach (SequenceItem item in sequence)
+                {
+                    if (item.Stats.FlameCap) list.Add(item);
+                }
+                GroupCooldown(list, 60, 180);
+            }
+
+            public void GroupDestructionPotion()
+            {
+                List<SequenceItem> list = new List<SequenceItem>();
+                foreach (SequenceItem item in sequence)
+                {
+                    if (item.Stats.DestructionPotion) list.Add(item);
+                }
+                GroupCooldown(list, 15, 120);
+            }
+
+            public void GroupDrumsOfBattle()
+            {
+                List<SequenceItem> list = new List<SequenceItem>();
+                foreach (SequenceItem item in sequence)
+                {
+                    if (item.Stats.DrumsOfBattle) list.Add(item);
+                }
+                List<SequenceGroup> groups = GroupCooldown(list, 30 - SequenceItem.Calculations.GlobalCooldown, 120);
+                double drums = RemoveIndex(5);
+                for (int i = 0; i < groups.Count; i++)
+                {
+                    //double drum = Math.Min(drums, SequenceItem.Calculations.GlobalCooldown);
+                    SequenceItem item = InsertIndex(5, drums / groups.Count, 0);
+                    item.Group.Add(groups[i]);
+                    groups[i].Add(item);
+                    //drums -= drum;
+                }
+            }
+
+            private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown)
+            {
+                return GroupCooldown(cooldownItems, maxDuration, cooldown, false, false);
+            }
+
+            private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool combustionMode, bool coldSnapMode)
+            {
+                List<SequenceGroup> existingGroup = new List<SequenceGroup>();
+                List<SequenceGroup> unresolvedGroup = new List<SequenceGroup>();
+                foreach (SequenceItem item in cooldownItems)
+                {
+                    foreach (SequenceGroup group in item.Group)
+                    {
+                        if (!existingGroup.Contains(group)) existingGroup.Add(group);
+                    }
+                }
+                List<List<SequenceItem>> chains = new List<List<SequenceItem>>();
+                foreach (SequenceGroup group in existingGroup)
+                {
+                    // if group duration is less than cooldown then all must be contiguous
+                    if (group.Duration <= cooldown)
+                    {
+                        // check if any of the items is already an existing chain
+                        List<SequenceItem> chain = null;
+                        foreach (SequenceItem item in group.Item)
+                        {
+                            if (cooldownItems.Contains(item))
+                            {
+                                for (int i = 0; i < chains.Count; i++)
+                                {
+                                    List<SequenceItem> c = chains[i];
+                                    if (c.Contains(item))
+                                    {
+                                        if (chain != null && chain != c)
+                                        {
+                                            // merge chains
+                                            chain.AddRange(c);
+                                            chains.RemoveAt(i);
+                                            i--;
+                                        }
+                                        else
+                                        {
+                                            chain = c;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        // add new items to chain
+                        if (chain == null)
+                        {
+                            chain = new List<SequenceItem>();
+                            chains.Add(chain);
+                        }
+                        foreach (SequenceItem item in group.Item)
+                        {
+                            if (cooldownItems.Contains(item))
+                            {
+                                if (!chain.Contains(item)) chain.Add(item);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        unresolvedGroup.Add(group);
+                    }
+                }
+                List<SequenceItem> unchained = new List<SequenceItem>();
+                double totalDuration = 0;
+                double combustionCount = 0;
+                foreach (SequenceItem item in cooldownItems)
+                {
+                    totalDuration += item.Duration;
+                    if (combustionMode) combustionCount += item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                    bool chained = false;
+                    foreach (List<SequenceItem> chain in chains)
+                    {
+                        if (chain.Contains(item))
+                        {
+                            chained = true;
+                            break;
+                        }
+                    }
+                    if (!chained) unchained.Add(item);
+                }
+                // at this point we have a number of chains and remaining unchained items
+                // chains cannot be split, unchained items can
+                int maxChains = 0;
+                if (combustionMode)
+                {
+                    maxChains = (int)Math.Ceiling(combustionCount - 0.000001);
                 }
                 else
                 {
-                    // pop last effect and move on
-                    sequence[sequence.Count - 1]++;
-                    while (sequence.Count > 0 && sequence[sequence.Count - 1] >= E)
-                    {
-                        sequence.RemoveAt(sequence.Count - 1);
-                        if (sequence.Count > 0) sequence[sequence.Count - 1]++;
-                    }
-                    if (sequence.Count == 0) break;
+                    maxChains = (int)Math.Ceiling(totalDuration / maxDuration);
                 }
-                // evaluate sequence
-                lastSequenceValid = true;
+                List<SequenceGroup> partialGroups = new List<SequenceGroup>();
+                foreach (List<SequenceItem> chain in chains)
+                {
+                    SequenceGroup group = new SequenceGroup();
+                    group.AddRange(chain);
+                    partialGroups.Add(group);
+                }
+                partialGroups.Sort((x, y) => y.Duration.CompareTo(x.Duration));
+                if (partialGroups.Count < maxChains)
+                {
+                    int addCount = maxChains - partialGroups.Count;
+                    for (int i = 0; i < addCount; i++)
+                    {
+                        partialGroups.Add(new SequenceGroup());
+                    }
+                }
+
+                for (int i = 0; i < partialGroups.Count; i++)
+                {
+                    SequenceGroup group = partialGroups[i];
+                    double gap = 0;
+                    if (combustionMode)
+                    {
+                        gap = 1 - group.Item.Sum(item => item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs));
+                    }
+                    else
+                    {
+                        gap = maxDuration - group.Duration;
+                    }
+                    if (gap > 0.000001)
+                    {
+                        for (int j = i + 1; j < partialGroups.Count; j++)
+                        {
+                            SequenceGroup subgroup = partialGroups[j];
+                            double gapReduction = 0;
+                            if (combustionMode)
+                            {
+                                gapReduction = subgroup.Item.Sum(item => item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs));
+                            }
+                            else
+                            {
+                                gapReduction = subgroup.Duration;
+                            }
+                            if (subgroup.Duration > 0 && gapReduction <= gap)
+                            {
+                                gap -= gapReduction;
+                                group.AddRange(subgroup.Item);
+                                partialGroups.RemoveAt(j);
+                                j--;
+                            }
+                        }
+                        for (int j = 0; j < unchained.Count; j++)
+                        {
+                            SequenceItem item = unchained[j];
+                            double gapReduction = 0;
+                            if (combustionMode)
+                            {
+                                gapReduction = item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                            }
+                            else
+                            {
+                                gapReduction = item.Duration;
+                            }
+                            if (gapReduction <= gap + 0.000001)
+                            {
+                                gap -= gapReduction;
+                                group.Add(item);
+                                unchained.RemoveAt(j);
+                                j--;
+                            }
+                            else
+                            {
+                                double split = 0;
+                                if (combustionMode)
+                                {
+                                    split = gap * (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                                }
+                                else
+                                {
+                                    split = gap;
+                                }
+                                group.Add(Split(item, split));
+                                gap = 0;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // finalize groups
+                for (int i = 0; i < partialGroups.Count; i++)
+                {
+                    SequenceGroup group = partialGroups[i];
+                    if (group.Duration > 0)
+                    {
+                        foreach (SequenceItem item in group.Item)
+                        {
+                            item.Group.Add(group);
+                        }
+                    }
+                    for (int j = 0; j < partialGroups.Count; j++)
+                    {
+                        if (i != j)
+                        {
+                            group.Constraint.Add(new CooldownConstraint() { Cooldown = cooldown, Duration = maxDuration, Group = partialGroups[j] });
+                        }
+                    }
+                }
+                partialGroups.RemoveAll(group => group.Duration == 0);
+                return partialGroups;
+            }
+
+            public void GroupHeroism()
+            {
+                SequenceGroup group = new SequenceGroup();
+                foreach (SequenceItem item in sequence)
+                {
+                    if (item.Stats.Heroism)
+                    {
+                        group.Add(item);
+                        item.Group.Add(group);
+                    }
+                }
+            }
+
+            private double moltenFuryStart = 0;
+            public void GroupMoltenFury()
+            {
+                SequenceGroup group = new SequenceGroup();
+                foreach (SequenceItem item in sequence)
+                {
+                    if (item.Stats.MoltenFury)
+                    {
+                        group.Add(item);
+                        item.Group.Add(group);
+                    }
+                }
+                moltenFuryStart = SequenceItem.Calculations.RealFightDuration - group.Duration;
+                group.MinTime = moltenFuryStart;
+            }
+
+            List<SequenceItem> compactItems;
+            List<double> compactTime;
+            double compactTotalTime;
+
+            public void SortGroups()
+            {
+                List<SequenceItem> groupedItems = sequence.Where(item => item.Group.Count > 0).ToList();
+                compactTotalTime = double.PositiveInfinity;
+                SortGroups_AddRemainingItems(new List<SequenceItem>(), new List<double>(), groupedItems);
+
+                for (int i = 0; i < compactItems.Count; i++)
+                {
+                    compactItems[i].MinTime = compactTime[i];
+                }
+
+                // compute max time
+                double time = RealFightDuration;
+                for (int i = compactItems.Count - 1; i >= 0; i--)
+                {
+                    SequenceItem item = compactItems[i];
+                    time = Math.Min(time - item.Duration, item.MaxTime);
+                    // check constraints
+                    foreach (SequenceGroup group in item.Group)
+                    {
+                        // only compute max for first item in group
+                        if (i == 0 || !compactItems[i - 1].Group.Contains(group))
+                        {
+                            foreach (CooldownConstraint constraint in group.Constraint)
+                            {
+                                for (int j = i + 1; j < compactItems.Count; j++)
+                                {
+                                    if (compactItems[j].Group.Contains(constraint.Group))
+                                    {
+                                        time = Math.Min(time, compactItems[j].MaxTime - constraint.Cooldown);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    item.MaxTime = time;
+                    double t = time;
+                    for (int j = i + 1; j < compactItems.Count && compactItems[j].Group.Intersect(compactItems[j - 1].Group).Count() > 0; j++)
+                    {
+                        t += compactItems[j - 1].Duration;
+                        compactItems[j].MaxTime = t;
+                    }
+                }
+
+
+                sequence.Sort((x, y) => {
+                    bool xgrouped = x.Group.Count > 0;
+                    bool ygrouped = y.Group.Count > 0;
+                    int compare = xgrouped.CompareTo(ygrouped);
+                    if (compare != 0) return compare;
+                    return x.MinTime.CompareTo(y.MinTime);
+                });
+            }
+
+            private int SortGroups_Compare(SequenceItem x, SequenceItem y, List<SequenceGroup> tail)
+            {
+                bool xsingletail = x.Tail.Count > 0;
+                bool ysingletail = y.Tail.Count > 0;
+                int compare = ysingletail.CompareTo(xsingletail);
+                if (compare != 0) return compare;
+                int xintersect = (tail == null) ? 0 : x.Group.Intersect(tail).Count();
+                int yintersect = (tail == null) ? 0 : y.Group.Intersect(tail).Count();
+                return yintersect.CompareTo(xintersect);
+            }
+
+            private void SortGroups_AddRemainingItems(List<SequenceItem> constructionList, List<double> constructionTime, List<SequenceItem> remainingList)
+            {
+                if (remainingList.Count == 0)
+                {
+                    double time = 0;
+                    if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + constructionList[constructionTime.Count - 1].Duration;
+                    if (time < compactTotalTime)
+                    {
+                        compactTotalTime = time;
+                        compactTime = new List<double>(constructionTime);
+                        compactItems = new List<SequenceItem>(constructionList);
+                    }
+                }
+                else
+                {
+                    foreach (SequenceItem item in remainingList)
+                    {
+                        item.Tail = new List<SequenceGroup>(item.Group);
+                    }
+
+                    foreach (SequenceItem item in remainingList)
+                    {
+                        foreach (SequenceItem tailitem in remainingList)
+                        {
+                            IEnumerable<SequenceGroup> intersect = item.Group.Intersect(tailitem.Group);
+                            if (intersect.Count() > 0)
+                            {
+                                item.Tail = intersect.Intersect(item.Tail).ToList();
+                            }
+                        }
+                    }
+
+                    List<SequenceGroup> tail = (constructionList.Count > 0) ? constructionList[constructionList.Count - 1].Group : null;
+                    SequenceItem best = null;
+                    foreach (SequenceItem item in remainingList)
+                    {
+                        if (best == null || SortGroups_Compare(item, best, tail) < 0)
+                        {
+                            best = item;
+                        }
+                    }
+
+                    for (int i = 0; i < remainingList.Count; i++)
+                    {
+                        SequenceItem item = remainingList[i];
+                        if (SortGroups_Compare(item, best, tail) == 0)
+                        {
+                            remainingList.RemoveAt(i);
+                            constructionList.Add(item);
+                            double time = 0;
+                            if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + constructionList[constructionTime.Count - 1].Duration;
+                            time = Math.Max(time, item.MinTime);
+                            // check constraints
+                            foreach (SequenceGroup group in item.Group)
+                            {
+                                foreach (CooldownConstraint constraint in group.Constraint)
+                                {
+                                    for (int j = 0; j < constructionList.Count; j++)
+                                    {
+                                        if (constructionList[j].Group.Contains(constraint.Group))
+                                        {
+                                            time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            List<double> adjustedConstructionTime = new List<double>(constructionTime);
+                            adjustedConstructionTime.Add(time);
+                            // adjust min time of items in same super group
+                            for (int j = adjustedConstructionTime.Count - 2; j >= 0 && constructionList[j].Group.Intersect(constructionList[j + 1].Group).Count() > 0; j--)
+                            {
+                                time -= constructionList[j].Duration;
+                                adjustedConstructionTime[j] = time;
+                            }
+                            SortGroups_AddRemainingItems(constructionList, adjustedConstructionTime, remainingList);
+                            //constructionTime.RemoveAt(constructionTime.Count - 1);
+                            constructionList.RemoveAt(constructionList.Count - 1);
+                            remainingList.Insert(i, item);
+                        }
+                    }
+                }
+            }
+
+            public void Compact()
+            {
+                for (int i = 0; i + 1 < sequence.Count; i++)
+                {
+                    if (sequence[i].Index == sequence[i + 1].Index && sequence[i].Group.Count == 0)
+                    {
+                        sequence[i].Duration += sequence[i + 1].Duration;
+                        sequence.RemoveAt(i + 1);
+                        i--;
+                    }
+                }
+            }
+
+            public void RepositionManaConsumption()
+            {
+                double ghostMana = Math.Max(0, -ManaCheck());
+                double fight = RealFightDuration;
+                double potTime = RemoveIndex(3);
+                double gemTime = RemoveIndex(4);
+                double evoTime = RemoveIndex(2);
+                float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
+                float[] gemMaxValue = new float[] { 2460f, 2460f, 2460f, 1127f, 871f };
+                int gemCount = 0;
                 double time = 0;
-                double mana = BasicStats.Mana;
+                double nextGem = 0;
+                double nextPot = 0;
+                double nextEvo = 0;
+                do
+                {
+                    double mana = Evaluate(null, EvaluationMode.ManaAtTime, time);
+                    double maxMps = double.PositiveInfinity;
+                    if (!((potTime > 0 && nextPot == 0) || (gemTime > 0 && nextGem == 0) || (evoTime > 0 && nextEvo == 0)))
+                    {
+                        double m = mana + ghostMana;
+                        for (double _potTime = potTime; _potTime > 0; _potTime -= ManaPotionTime)
+                        {
+                            m += (1 + BasicStats.BonusManaPotion) * 2400;
+                        }
+                        int _gemCount = gemCount;
+                        for (double _gemTime = gemTime; _gemTime > 0; _gemTime -= ManaPotionTime, _gemCount++)
+                        {
+                            m += (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
+                        }
+                        m += EvocationRegen * evoTime;
+                        maxMps = m / (fight - time);
+                    }
+                    double minMps = double.NegativeInfinity;
+                    double targetTime = fight;
+                    if (nextGem > time && gemTime > 0)
+                    {
+                        double m = mana;
+                        if (potTime > 0 && nextPot < nextGem) m += (1 + BasicStats.BonusManaPotion) * 2400;
+                        if (evoTime > 0 && nextEvo < nextGem) m += EvocationRegen * Math.Min(evoTime, EvocationDuration);
+                        double mps = m / (nextGem - time);
+                        if (mps < maxMps)
+                        {
+                            maxMps = mps;
+                            targetTime = nextGem;
+                        }
+                    }
+                    if (nextPot > time && potTime > 0)
+                    {
+                        double m = mana;
+                        if (gemTime > 0 && nextGem < nextPot) m += (1 + BasicStats.BonusManaGem) * gemValue[gemCount];
+                        if (evoTime > 0 && nextEvo < nextPot) m += EvocationRegen * Math.Min(evoTime, EvocationDuration);
+                        double mps = m / (nextPot - time);
+                        if (mps < maxMps)
+                        {
+                            maxMps = mps;
+                            targetTime = nextPot;
+                        }
+                    }
+                    if (nextEvo > time && evoTime > 0)
+                    {
+                        double m = mana;
+                        if (potTime > 0 && nextPot < nextEvo) m += (1 + BasicStats.BonusManaPotion) * 2400;
+                        if (gemTime > 0 && nextGem < nextEvo) m += (1 + BasicStats.BonusManaGem) * gemValue[gemCount];
+                        double mps = m / (nextEvo - time);
+                        if (mps < maxMps)
+                        {
+                            maxMps = mps;
+                            targetTime = nextEvo;
+                        }
+                    }
+                    if (potTime > 0 && (nextPot <= nextGem || nextPot == 0) && (nextPot <= nextEvo || nextPot == 0 || evoTime <= 0))
+                    {
+                        if (nextPot <= time)
+                        {
+                            minMps = maxMps;
+                        }
+                        else
+                        {
+                            targetTime = nextPot;
+                            minMps = ((1 + BasicStats.BonusManaPotion) * 3000 - (BasicStats.Mana - mana)) / (targetTime - time);
+                        }
+                    }
+                    else if (gemTime > 0 && nextGem <= nextPot && (nextGem <= nextEvo || nextGem == 0 || evoTime <= 0))
+                    {
+                        if (nextGem <= time)
+                        {
+                            minMps = maxMps;
+                        }
+                        else
+                        {
+                            targetTime = nextGem;
+                            minMps = ((1 + BasicStats.BonusManaGem) * gemMaxValue[gemCount] - (BasicStats.Mana - mana)) / (targetTime - time);
+                        }
+                    }
+                    else if (evoTime > 0 && nextEvo <= nextPot && nextEvo <= nextGem)
+                    {
+                        if (nextEvo <= time)
+                        {
+                            minMps = maxMps;
+                        }
+                        else
+                        {
+                            targetTime = nextEvo;
+                            minMps = (EvocationRegen * Math.Min(evoTime, EvocationDuration) - (BasicStats.Mana - mana)) / (targetTime - time);
+                        }
+                    }
+                    if (potTime <= 0 && gemTime <= 0 && evoTime <= 0)
+                    {
+                        maxMps = mana / (targetTime - time);
+                        minMps = -(BasicStats.Mana - mana) / (targetTime - time);
+                    }
+                    double lastTargetMana = -1;
+                    double extraMana = 0;
+                Retry:
+                    SortByMps(true, minMps, maxMps, time, targetTime, extraMana, mana);
+                    // guard against trailing oom
+                    double targetmana = Evaluate(null, EvaluationMode.ManaAtTime, targetTime);
+                    if (targetmana != lastTargetMana)
+                    {
+                        double tmana = targetmana;
+                        double t = 0;
+                        int i;
+                        for (i = 0; i < sequence.Count; i++)
+                        {
+                            double d = sequence[i].Duration;
+                            if (sequence[i].Index == 3 || sequence[i].Index == 4) d = 0;
+                            if (d > 0 && t + d > targetTime)
+                            {
+                                break;
+                            }
+                            t += d;
+                        }
+                        if (!(i >= sequence.Count || sequence[i].Group.Count == 0 || (targetTime <= t && (i == 0 || sequence[i - 1].SuperGroup != sequence[i].SuperGroup))))
+                        {
+                            // count mana till end of super group
+                            SequenceGroup super = sequence[i].SuperGroup;
+                            targetmana -= sequence[i].Mps * (sequence[i].Duration - (targetTime - t));
+                            t += sequence[i].Duration;
+                            i++;
+                            while (i < sequence.Count && sequence[i].SuperGroup == super)
+                            {
+                                targetmana -= sequence[i].Mps * sequence[i].Duration;
+                                t += sequence[i].Duration;
+                                i++;
+                            }
+                            // account for to be used consumables (don't assume evo during super group)
+                            double manaUsed = mana;
+                            if (potTime > 0 && nextPot < t)
+                            {
+                                targetmana += (1 + BasicStats.BonusManaPotion) * 2400;
+                            }
+                            if (gemTime > 0 && nextGem < t)
+                            {
+                                targetmana += (1 + BasicStats.BonusManaGem) * gemValue[gemCount];
+                            }
+                            if (t >= fight) targetmana += ghostMana;
+                            if (targetmana < 0)
+                            {
+                                //maxMps = (mana - (tmana - targetmana)) / (targetTime - time);
+                                minMps = -(BasicStats.Mana - mana) / (targetTime - time);
+                                extraMana = -targetmana;
+                                lastTargetMana = tmana;
+                                goto Retry;
+                            }
+                        }
+                    }
+                    //Compact();
+                    double gem = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem));
+                    double pot = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 3000, Math.Max(time, nextPot));
+                    double evo = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - EvocationRegen * Math.Min(evoTime, EvocationDuration), Math.Max(time, nextEvo));
+                    double breakpoint = Evaluate(null, EvaluationMode.CooldownBreak, evo);
+                    if (breakpoint < fight) evo = breakpoint;
+                    // always use pot & gem before evo, they need tighter packing
+                    // always start with pot because pot needs more buffer than gem
+                    if (potTime > 0 && (pot <= gem || nextPot == 0) && (pot <= evo || nextPot == 0 || evoTime <= 0))
+                    {
+                        InsertIndex(3, Math.Min(ManaPotionTime, potTime), pot);
+                        time = pot;
+                        nextPot = pot + 120;
+                        potTime -= ManaPotionTime;
+                        if (potTime <= 0) nextPot = fight;
+                    }
+                    else if (gemTime > 0 && gem <= pot && (gem <= evo || nextGem == 0 || evoTime <= 0))
+                    {
+                        InsertIndex(4, Math.Min(ManaPotionTime, gemTime), gem);
+                        time = gem;
+                        nextGem = gem + 120;
+                        gemCount++;
+                        gemTime -= ManaPotionTime;
+                        if (gemTime <= 0) nextGem = fight;
+                    }
+                    else if (evoTime > 0 && evo <= pot && evo <= gem)
+                    {
+                        InsertIndex(2, Math.Min(EvocationDuration, evoTime), evo);
+                        time = evo + Math.Min(EvocationDuration, evoTime);
+                        nextEvo = evo + 60 * 8;
+                        evoTime -= EvocationDuration;
+                        if (evoTime <= 0)
+                        {
+                            evoTime = 0;
+                            nextEvo = fight;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (true);
+            }
+
+            public double ManaCheck()
+            {
+                float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
+                double mana = SequenceItem.Calculations.BasicStats.Mana;
+                for (int i = 0; i < sequence.Count; i++)
+                {
+                    int index = sequence[i].Index;
+                    double duration = sequence[i].Duration;
+                    double mps = sequence[i].Mps;
+                    if (index == 3)
+                    {
+                        for (double _potTime = duration; _potTime > 0; _potTime -= ManaPotionTime)
+                        {
+                            mana += (1 + BasicStats.BonusManaPotion) * 2400;
+                        }
+                    }
+                    else if (index == 4)
+                    {
+                        int _gemCount = 0;
+                        for (double _gemTime = duration; _gemTime > 0; _gemTime -= ManaPotionTime, _gemCount++)
+                        {
+                            mana += (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
+                        }
+                    }
+                    else if (index == 2)
+                    {
+                        mana += EvocationRegen * sequence[i].Duration;
+                    }
+                    else
+                    {
+                        mana -= mps * duration;
+                    }
+                }
+                return mana;
+            }
+
+            public enum ReportMode
+            {
+                Listing,
+                Compact
+            }
+
+            public double Evaluate(StringBuilder timing, EvaluationMode mode, params double[] data)
+            {
+                double time = 0;
+                double mana = SequenceItem.Calculations.BasicStats.Mana;
+                float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
+
+                ReportMode reportMode = ReportMode.Compact;
+
                 int gemCount = 0;
                 double potionCooldown = 0;
                 double gemCooldown = 0;
                 double trinket1Cooldown = 0;
                 double trinket2Cooldown = 0;
                 bool heroismUsed = false;
-                bool moltenFuryUsed = false;
                 double evocationCooldown = 0;
                 double drumsCooldown = 0;
                 double apCooldown = 0;
@@ -578,444 +2270,630 @@ namespace Rawr.Mage
                 double heroismTime = -1;
                 double apTime = -1;
                 double ivTime = -1;
-                double[] remaining = remainingTime.ToArray();
-                double[] remainingBase = new double[] { Solution[0], Solution[1], Solution[2], Solution[3], Solution[4], Solution[5] };
-                timing.Length = 0;
-                timing.Append("*");
-                string lastSpell = null;
-                double fight = FightDuration;
-                bool timeLimitReached = false;
-                for (int e = 0; e <= sequence.Count; e++)
+
+                double unexplained = 0;
+
+                if (timing != null) timing.Length = 0;
+                if (timing != null) timing.Append("*");
+
+                // for each cooldown compute how much time is unexplainable
+                for (int i = 0; i < sequence.Count; i++)
                 {
-                    int effect = -1;
-                    if (e < sequence.Count)
+                    int index = sequence[i].Index;
+                    double duration = sequence[i].Duration;
+                    Spell spell = sequence[i].Spell;
+                    CharacterCalculationsMage stats = sequence[i].Stats;
+                    double mps = sequence[i].Mps;
+                    if (index == 3 || index == 4) duration = 0;
+                    double manabefore = mana;
+                    bool cooldownContinuation = false;
+                    if (!(drumsTime == -1 && flameCapTime == -1 && destructionTime == -1 && trinket1time == -1 && trinket2time == -1 && heroismTime == -1 && moltenFuryTime == -1 && combustionTime == -1 && apTime == -1 && ivTime == -1))
                     {
-                        effect = sequence[e];
+                        cooldownContinuation = true;
+                    }
+                    // Mana
+                    if (mps > 0)
+                    {
+                        double maxtime = mana / mps;
+                        if (duration > maxtime)
+                        {
+                            // allow some leeway due to rounding errors from LP solver
+                            if (!(i == sequence.Count - 1 && mps * duration < mana + 100))
+                            {
+                                unexplained += duration - maxtime;
+                                if (timing != null) timing.AppendLine("WARNING: Will run out of mana!");
+                            }
+                        }
+                        if (mode == EvaluationMode.ManaBelow)
+                        {
+                            double limit = data[0];
+                            double aftertime = data[1];
+                            double timetolimit = (mana - limit) / mps;
+                            if (time + duration > aftertime)
+                            {
+                                if (time >= aftertime && mana < limit) return time;
+                                if (time + timetolimit >= aftertime && timetolimit < duration) return time + timetolimit;
+                                if (timetolimit < duration) return aftertime;
+                            }
+                        }
                     }
                     else
                     {
-                        if (remainingBase[0] < 0 && -remainingBase[0] > bestUnderused) lastSequenceValid = false;
-                        if (time >= fight) timeLimitReached = true;
-                    }
-                    bool effectApplied = false;
-                    do
-                    {
-                        double minTimeNeeded = 0;
-                        switch (effect)
+                        if (mode == EvaluationMode.ManaBelow)
                         {
-                            case -1: // No effect, run remaining time
-                                if (time >= fight) effectApplied = true;
-                                minTimeNeeded = fight - time;
-                                break;
-                            case 0: // Mana Potion
-                                if (remainingBase[3] <= 0)
-                                {
-                                    lastSequenceValid = false;
-                                }
-                                else if (potionCooldown > 0)
-                                {
-                                    minTimeNeeded = potionCooldown;
-                                }
-                                else if (mana <= BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 2400f)
-                                {
-                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
-                                    mana += (1 + BasicStats.BonusManaPotion) * 2400f;
-                                    potionCooldown = 120;
-                                    remainingBase[3] -= ManaPotionTime;
-                                    fight -= ManaPotionTime;
-                                    effectApplied = true;
-                                    lastSpell = null;
-                                }
-                                else
-                                {
-                                    float highestMps = 0;
-                                    for (int i = 0; i < N; i++)
-                                    {
-                                        if ((stats[i].ArcanePower != apTime < 0) && (stats[i].MoltenFury != moltenFuryTime < 0) && (stats[i].IcyVeins != ivTime < 0) && (stats[i].Heroism != heroismTime < 0) && (stats[i].DestructionPotion != destructionTime < 0) && (stats[i].FlameCap != flameCapTime < 0) && (stats[i].Trinket1 != trinket1time < 0) && (stats[i].Trinket2 != trinket2time < 0) && (stats[i].Combustion != combustionTime < 0) && (stats[i].DrumsOfBattle != drumsTime < 0))
-                                        {
-                                            if (remaining[i] > 0 && spells[i].CostPerSecond - spells[i].ManaRegenPerSecond > highestMps)
-                                            {
-                                                highestMps = spells[i].CostPerSecond - spells[i].ManaRegenPerSecond;
-                                            }
-                                        }
-                                    }
-                                    if (highestMps > 0)
-                                    {
-                                        minTimeNeeded = (mana - (BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 2400f)) / highestMps;
-                                    }
-                                    else
-                                    {
-                                        lastSequenceValid = false;
-                                    }
-                                }
-                                break;
-                            case 1: // Mana Gem
-                                if (remainingBase[4] <= 0)
-                                {
-                                    lastSequenceValid = false;
-                                }
-                                if (gemCooldown > 0)
-                                {
-                                    minTimeNeeded = gemCooldown;
-                                }
-                                else if (mana <= BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemValue[gemCount])
-                                {
-                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
-                                    mana += (1 + BasicStats.BonusManaGem) * gemValue[gemCount];
-                                    gemCooldown = 120;
-                                    fight -= ManaPotionTime;
-                                    remainingBase[4] -= ManaPotionTime;
-                                    effectApplied = true;
-                                    lastSpell = null;
-                                }
-                                else
-                                {
-                                    float highestMps = 0;
-                                    for (int i = 0; i < N; i++)
-                                    {
-                                        if ((stats[i].ArcanePower != apTime < 0) && (stats[i].MoltenFury != moltenFuryTime < 0) && (stats[i].IcyVeins != ivTime < 0) && (stats[i].Heroism != heroismTime < 0) && (stats[i].DestructionPotion != destructionTime < 0) && (stats[i].FlameCap != flameCapTime < 0) && (stats[i].Trinket1 != trinket1time < 0) && (stats[i].Trinket2 != trinket2time < 0) && (stats[i].Combustion != combustionTime < 0) && (stats[i].DrumsOfBattle != drumsTime < 0))
-                                        {
-                                            if (remaining[i] > 0 && spells[i].CostPerSecond - spells[i].ManaRegenPerSecond > highestMps)
-                                            {
-                                                highestMps = spells[i].CostPerSecond - spells[i].ManaRegenPerSecond;
-                                            }
-                                        }
-                                    }
-                                    if (highestMps > 0)
-                                    {
-                                        minTimeNeeded = (mana - (BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemValue[gemCount])) / highestMps;
-                                    }
-                                    else
-                                    {
-                                        lastSequenceValid = false;
-                                    }
-                                }
-                                break;
-                            case 2: // Evocation
-                                if (evocationCooldown > 0)
-                                {
-                                    minTimeNeeded = evocationCooldown;
-                                }
-                                else if (mana <= BasicStats.Mana - Math.Min(EvocationDuration, remainingBase[2]) * EvocationRegen)
-                                {
-                                    double move = Math.Min(EvocationDuration, remainingBase[2]);
-                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
-                                    mana += move * EvocationRegen;
-                                    evocationCooldown = 60 * 8;
-                                    remainingBase[2] -= move;
-                                    effectApplied = true;
-
-
-                                    lastSpell = null;
-
-                                    if (apTime >= 0 && 15 - (time - apTime) <= move) apTime = -1;
-                                    if (ivTime >= 0 && 20 - (time - ivTime) <= move) ivTime = -1;
-                                    if (heroismTime >= 0 && 40 - (time - heroismTime) <= move) heroismTime = -1;
-                                    if (destructionTime >= 0 && 15 - (time - destructionTime) <= move) destructionTime = -1;
-                                    if (flameCapTime >= 0 && 60 - (time - flameCapTime) <= move) flameCapTime = -1;
-                                    if (trinket1time >= 0 && Trinket1Duration - (time - trinket1time) <= move) trinket1time = -1;
-                                    if (trinket2time >= 0 && Trinket2Duration - (time - trinket2time) <= move) trinket2time = -1;
-                                    if (drumsTime >= 0 && 30 - (time - drumsTime) <= move) drumsTime = -1;
-
-                                    time += move;
-
-                                    apCooldown -= move;
-                                    ivCooldown -= move;
-                                    potionCooldown -= move;
-                                    gemCooldown -= move;
-                                    trinket1Cooldown -= move;
-                                    trinket2Cooldown -= move;
-                                    combustionCooldown -= move;
-                                    drumsCooldown -= move;
-                                }
-                                else
-                                {
-                                    float highestMps = 0;
-                                    for (int i = 0; i < N; i++)
-                                    {
-                                        if ((stats[i].ArcanePower != apTime < 0) && (stats[i].MoltenFury != moltenFuryTime < 0) && (stats[i].IcyVeins != ivTime < 0) && (stats[i].Heroism != heroismTime < 0) && (stats[i].DestructionPotion != destructionTime < 0) && (stats[i].FlameCap != flameCapTime < 0) && (stats[i].Trinket1 != trinket1time < 0) && (stats[i].Trinket2 != trinket2time < 0) && (stats[i].Combustion != combustionTime < 0) && (stats[i].DrumsOfBattle != drumsTime < 0))
-                                        {
-                                            if (remaining[i] > 0 && spells[i].CostPerSecond - spells[i].ManaRegenPerSecond > highestMps)
-                                            {
-                                                highestMps = spells[i].CostPerSecond - spells[i].ManaRegenPerSecond;
-                                            }
-                                        }
-                                    }
-                                    if (highestMps > 0)
-                                    {
-                                        minTimeNeeded = (mana - (BasicStats.Mana - Math.Min(EvocationDuration, remainingBase[2]) * EvocationRegen)) / highestMps;
-                                    }
-                                    else
-                                    {
-                                        lastSequenceValid = false;
-                                    }
-                                }
-                                break;
-                            case 3: // Drums of Battle
-                                lastSequenceValid = false;
-                                break;
-                            case 4: // Flame Cap
-                                lastSequenceValid = false;
-                                break;
-                            case 5: // Destruction Potion
-                                lastSequenceValid = false;
-                                break;
-                            case 6: // Trinket1
-                                if (Trinket1Duration == 0)
-                                {
-                                    lastSequenceValid = false;
-                                }
-                                else if (trinket1Cooldown > 0)
-                                {
-                                    minTimeNeeded = trinket1Cooldown;
-                                }
-                                else
-                                {
-                                    trinket1Cooldown = Trinket1Cooldown;
-                                    trinket1time = time;
-                                    effectApplied = true;
-                                    lastSpell = null;
-                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
-                                }
-                                break;
-                            case 7: // Trinket2
-                                if (Trinket2Duration == 0)
-                                {
-                                    lastSequenceValid = false;
-                                }
-                                if (trinket2Cooldown > 0)
-                                {
-                                    minTimeNeeded = trinket2Cooldown;
-                                }
-                                else
-                                {
-                                    trinket2Cooldown = Trinket2Cooldown;
-                                    trinket2time = time;
-                                    effectApplied = true;
-                                    lastSpell = null;
-                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
-                                }
-                                break;
-                            case 8: // Heroism
-                                if (heroismUsed)
-                                {
-                                    lastSequenceValid = false;
-                                }
-                                else
-                                {
-                                    heroismUsed = true;
-                                    heroismTime = time;
-                                    effectApplied = true;
-                                    lastSpell = null;
-                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
-                                }
-                                break;
-                            case 9: // Molten Fury
-                                lastSequenceValid = false;
-                                break;
-                            case 10: // Combustion
-                                lastSequenceValid = false;
-                                break;
-                            case 11: // Arcane Power
-                                if (CalculationOptions.ArcanePower == 0)
-                                {
-                                    lastSequenceValid = false;
-                                }
-                                else if (apCooldown > 0)
-                                {
-                                    minTimeNeeded = apCooldown;
-                                }
-                                else
-                                {
-                                    apCooldown = 180;
-                                    apTime = time;
-                                    effectApplied = true;
-                                    lastSpell = null;
-                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
-                                }
-                                break;
-                            case 12: // Icy Veins
-                                if (CalculationOptions.IcyVeins == 0)
-                                {
-                                    lastSequenceValid = false;
-                                }
-                                if (ivCooldown > 0)
-                                {
-                                    minTimeNeeded = ivCooldown;
-                                }
-                                else
-                                {
-                                    ivCooldown = 180;
-                                    ivTime = time;
-                                    effectApplied = true;
-                                    lastSpell = null;
-                                    timing.AppendLine(TimeFormat(time) + ": " + effectList[effect] + " (" + Math.Round(mana).ToString() + " mana)");
-                                }
-                                break;
+                            double limit = data[0];
+                            double aftertime = data[1];
+                            if (time + duration > aftertime)
+                            {
+                                if (time >= aftertime && mana < limit) return time;
+                                if (mana - mps * (aftertime - time) < limit) return aftertime;
+                            }
                         }
-                        if (minTimeNeeded > 0)
+                    }
+                    if (mode == EvaluationMode.ManaAtTime && duration > 0)
+                    {
+                        double evalTime = data[0];
+                        if (time + duration > evalTime)
                         {
-                            // progress time
-                            if (fight - time < minTimeNeeded) minTimeNeeded = fight - time;
-                            float highestMps = float.NegativeInfinity;
-                            float lowestMps = float.PositiveInfinity;
-                            Spell spell = null;
-                            CharacterCalculationsMage stat = null;
-                            int selectedIndex = -1;
-                            double selectedRemaining = 0;
-                            for (int i = 0; i < N; i++)
+                            return mana - mps * (evalTime - time);
+                        }
+                    }
+                    mana -= mps * duration;
+                    // Mana Potion
+                    if (index == 3)
+                    {
+                        if (potionCooldown > 0.000001)
+                        {
+                            unexplained += sequence[i].Duration;
+                            if (timing != null) timing.AppendLine("WARNING: Potion cooldown not ready!");
+                        }
+                        else
+                        {
+                            if (sequence[i].Duration > ManaPotionTime)
                             {
-                                if ((stats[i].ArcanePower != apTime < 0) && (stats[i].MoltenFury != moltenFuryTime < 0) && (stats[i].IcyVeins != ivTime < 0) && (stats[i].Heroism != heroismTime < 0) && (stats[i].DestructionPotion != destructionTime < 0) && (stats[i].FlameCap != flameCapTime < 0) && (stats[i].Trinket1 != trinket1time < 0) && (stats[i].Trinket2 != trinket2time < 0) && (stats[i].Combustion != combustionTime < 0) && (stats[i].DrumsOfBattle != drumsTime < 0))
-                                {
-                                    if (remaining[i] > 0 && (mana > 0 || spells[i].CostPerSecond - spells[i].ManaRegenPerSecond < 0) && spells[i].CostPerSecond - spells[i].ManaRegenPerSecond > highestMps)
-                                    {
-                                        highestMps = spells[i].CostPerSecond - spells[i].ManaRegenPerSecond;
-                                        stat = stats[i];
-                                        spell = spells[i];
-                                        selectedRemaining = remaining[i];
-                                        selectedIndex = i;
-                                    }
-                                    if (remaining[i] > 0 && spells[i].CostPerSecond - spells[i].ManaRegenPerSecond < lowestMps)
-                                    {
-                                        lowestMps = spells[i].CostPerSecond - spells[i].ManaRegenPerSecond;
-                                    }
-                                }
+                                unexplained += sequence[i].Duration - ManaPotionTime;
+                                if (timing != null) timing.AppendLine("WARNING: Potion ammount too big!");
                             }
-                            if (float.IsNegativeInfinity(highestMps))
+                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Mana Potion (" + Math.Round(mana).ToString() + " mana)");
+                            mana += (1 + BasicStats.BonusManaPotion) * 2400;
+                            potionCooldown = 120;
+                        }
+                    }
+                    // Mana Gem
+                    if (index == 4)
+                    {
+                        if (gemCooldown > 0.000001)
+                        {
+                            unexplained += sequence[i].Duration;
+                            if (timing != null) timing.AppendLine("WARNING: Gem cooldown not ready!");
+                        }
+                        else
+                        {
+                            if (sequence[i].Duration > ManaPotionTime)
                             {
-                                // this cooldown combo is either overused or does not appear in solution
-                                // try using up idle/wand time
-                                if (remainingBase[0] > 0)
-                                {
-                                    stat = this;
-                                    spell = null;
-                                    selectedRemaining = remainingBase[0];
-                                    highestMps = -ManaRegen;
-                                }
-                                else if (remainingBase[1] > 0)
-                                {
-                                    stat = this;
-                                    spell = GetSpell("Wand");
-                                    selectedRemaining = remainingBase[1];
-                                    highestMps = spell.CostPerSecond - spell.ManaRegenPerSecond;
-                                }
-                                else
-                                {
-                                    stat = null;
-                                    spell = null;
-                                    selectedRemaining = double.PositiveInfinity;
-                                    highestMps = -ManaRegen;
-                                }
+                                unexplained += sequence[i].Duration - ManaPotionTime;
+                                if (timing != null) timing.AppendLine("WARNING: Gem ammount too big!");
                             }
-                            double apLeft = (apTime < 0) ? 0 : 15 - (time - apTime);
-                            double ivLeft = (ivTime < 0) ? 0 : 20 - (time - ivTime);
-                            double heroismLeft = (heroismTime < 0) ? 0 : 40 - (time - heroismTime);
-                            double dpLeft = (destructionTime < 0) ? 0 : 15 - (time - destructionTime);
-                            double fcLeft = (flameCapTime < 0) ? 0 : 60 - (time - flameCapTime);
-                            double t1Left = (trinket1time < 0) ? 0 : Trinket1Duration - (time - trinket1time);
-                            double t2Left = (trinket2time < 0) ? 0 : Trinket2Duration - (time - trinket2time);
-                            double combustionLeft = (combustionTime < 0 || stat == null) ? 0 : stat.CombustionDuration - (time - combustionTime);
-                            double drumsLeft = (drumsTime < 0) ? 0 : 30 - (time - drumsTime);
-
-                            double shortestLeft = double.PositiveInfinity;
-                            if (apLeft > 0) shortestLeft = Math.Min(shortestLeft, apLeft);
-                            if (ivLeft > 0) shortestLeft = Math.Min(shortestLeft, ivLeft);
-                            if (heroismLeft > 0) shortestLeft = Math.Min(shortestLeft, heroismLeft);
-                            if (dpLeft > 0) shortestLeft = Math.Min(shortestLeft, dpLeft);
-                            if (fcLeft > 0) shortestLeft = Math.Min(shortestLeft, fcLeft);
-                            if (t1Left > 0) shortestLeft = Math.Min(shortestLeft, t1Left);
-                            if (t2Left > 0) shortestLeft = Math.Min(shortestLeft, t2Left);
-                            if (combustionLeft > 0) shortestLeft = Math.Min(shortestLeft, combustionLeft);
-                            if (drumsLeft > 0) shortestLeft = Math.Min(shortestLeft, drumsLeft);
-
-                            // move forward and drop cooldowns that fell off
-                            double move = Math.Min(Math.Min(minTimeNeeded, selectedRemaining), shortestLeft);
-                            //if (move * highestMps > mana) move = mana / highestMps;
-                            if (selectedIndex >= 0)
+                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Mana Gem (" + Math.Round(mana).ToString() + " mana)");
+                            mana += (1 + BasicStats.BonusManaGem) * gemValue[gemCount];
+                            gemCount++;
+                            gemCooldown = 120;
+                        }
+                    }
+                    // Evocation
+                    if (index == 2)
+                    {
+                        if (evocationCooldown > 0.000001)
+                        {
+                            unexplained += duration;
+                            if (timing != null) timing.AppendLine("WARNING: Evocation cooldown not ready!");
+                        }
+                        else
+                        {
+                            if (duration > EvocationDuration)
                             {
-                                remaining[selectedIndex] -= move;
-                                if (spell.Name != lastSpell)
-                                {
-                                    lastSpell = spell.Name;
-                                    timing.AppendLine(TimeFormat(time) + ": " + lastSpell + " (" + Math.Round(mana).ToString() + " mana, " + highestMps.ToString("F") + " mps)");
-                                }
+                                unexplained += duration - EvocationDuration;
+                                if (timing != null) timing.AppendLine("WARNING: Evocation duration too long!");
                             }
-                            else if (remainingBase[0] > 0)
+                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (" + Math.Round(mana).ToString() + " mana)");
+                            mana += Math.Min(EvocationDuration, duration) * EvocationRegen;
+                            evocationCooldown = 60 * 8;
+                        }
+                    }
+                    if (mana < 0) mana = 0;
+                    if (mana > BasicStats.Mana + 0.000001)
+                    {
+                        if (timing != null) timing.AppendLine("INFO: Mana overflow!");
+                        mana = BasicStats.Mana;
+                    }
+                    // Drums of Battle
+                    if (index == 5)
+                    {
+                        if (drumsCooldown > 0.000001)
+                        {
+                            unexplained += duration;
+                            if (timing != null) timing.AppendLine("WARNING: Drums of Battle cooldown not ready!");
+                        }
+                        else
+                        {
+                            //if (timing != null) timing.AppendLine(TimeFormat(time) + ": Drums of Battle (" + Math.Round(manabefore).ToString() + " mana)");
+                            drumsCooldown = 120;
+                            drumsTime = time;
+                        }
+                    }
+                    else if (drumsTime >= 0)
+                    {
+                        if (stats != null && stats.DrumsOfBattle)
+                        {
+                            if (time + duration > drumsTime + 30 + 0.000001)
                             {
-                                remainingBase[0] -= move;
-                                if ("Idle Regen" != lastSpell)
-                                {
-                                    lastSpell = "Idle Regen";
-                                    timing.AppendLine(TimeFormat(time) + ": " + lastSpell + " (" + Math.Round(mana).ToString() + " mana, " + highestMps.ToString("F") + " mps)");
-                                }
+                                unexplained += time + duration - drumsTime - 30;
+                                if (timing != null) timing.AppendLine("WARNING: Drums of Battle duration too long!");
                             }
-                            else if (remainingBase[1] > 0)
+                        }
+                        else if (duration > 0 && 30 - (time - drumsTime) > 0.000001)
+                        {
+                            //unexplained += Math.Min(duration, 30 - (time - drumsTime));
+                            if (timing != null) timing.AppendLine("INFO: Drums of Battle is still up!");
+                        }
+                    }
+                    else
+                    {
+                        if (stats != null && stats.DrumsOfBattle)
+                        {
+                            unexplained += duration;
+                            if (timing != null) timing.AppendLine("WARNING: Drums of Battle not activated!");
+                        }
+                    }
+                    // Flame Cap
+                    if (flameCapTime >= 0)
+                    {
+                        if (stats != null && stats.FlameCap)
+                        {
+                            if (time + duration > flameCapTime + 60 + 0.000001)
                             {
-                                remainingBase[1] -= move;
-                                if ("Wand" != lastSpell)
-                                {
-                                    lastSpell = "Wand";
-                                    timing.AppendLine(TimeFormat(time) + ": " + lastSpell + " (" + Math.Round(mana).ToString() + " mana, " + highestMps.ToString("F") + " mps)");
-                                }
+                                unexplained += time + duration - flameCapTime - 60;
+                                if (timing != null) timing.AppendLine("WARNING: Flame Cap duration too long!");
+                            }
+                        }
+                        else if (duration > 0 && 60 - (time - flameCapTime) > 0.000001)
+                        {
+                            //unexplained += Math.Min(duration, 15 - (time - apTime));
+                            if (timing != null) timing.AppendLine("INFO: Flame Cap is still up!");
+                        }
+                    }
+                    else
+                    {
+                        if (stats != null && stats.FlameCap)
+                        {
+                            if (gemCooldown > 0.000001)
+                            {
+                                unexplained += duration;
+                                if (timing != null) timing.AppendLine("WARNING: Flame Cap cooldown not ready!");
                             }
                             else
                             {
-                                // emergency regen, only enough to be able to continue casting
-                                /*if (BasicStats.Mana > 0 && mana <= 0 && !float.IsPositiveInfinity(lowestMps))
-                                {
-                                    move = lowestMps * move / (lowestMps + ManaRegen) + 0.001;
-                                }
-                                else*/ if (effect >= 0)
-                                {
-                                    lastSequenceValid = false;
-                                }
-                                remainingBase[0] -= move;
-                                if ("Idle Regen" != lastSpell)
-                                {
-                                    lastSpell = "Idle Regen";
-                                    timing.AppendLine(TimeFormat(time) + ": " + lastSpell + " (" + Math.Round(mana).ToString() + " mana, " + highestMps.ToString("F") + " mps)");
-                                }
+                                if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Flame Cap (" + Math.Round(manabefore).ToString() + " mana)");
+                                gemCooldown = 180;
+                                flameCapTime = time;
                             }
-                            apCooldown -= move;
-                            ivCooldown -= move;
-                            potionCooldown -= move;
-                            gemCooldown -= move;
-                            trinket1Cooldown -= move;
-                            trinket2Cooldown -= move;
-                            combustionCooldown -= move;
-                            drumsCooldown -= move;
-                            time += move;
-                            //mana -= move * highestMps;
-                            //if (mana > BasicStats.Mana) mana = BasicStats.Mana;
-                            if (apLeft <= move) apTime = -1;
-                            if (ivLeft <= move) ivTime = -1;
-                            if (heroismLeft <= move) heroismTime = -1;
-                            if (dpLeft <= move) destructionTime = -1;
-                            if (fcLeft <= move) flameCapTime = -1;
-                            if (t1Left <= move) trinket1time = -1;
-                            if (t2Left <= move) trinket2time = -1;
-                            if (combustionLeft <= move) combustionTime = -1;
-                            if (drumsLeft <= move) drumsTime = -1;
                         }
-                    } while (!effectApplied && lastSequenceValid && time < fight);
+                    }
+                    // Destruction Potion
+                    if (destructionTime >= 0)
+                    {
+                        if (stats != null && stats.DestructionPotion)
+                        {
+                            if (time + duration > destructionTime + 15 + 0.000001)
+                            {
+                                unexplained += time + duration - destructionTime - 15;
+                                if (timing != null) timing.AppendLine("WARNING: Destruction Potion duration too long!");
+                            }
+                        }
+                        else if (duration > 0 && 15 - (time - destructionTime) > 0.000001)
+                        {
+                            //unexplained += Math.Min(duration, 15 - (time - apTime));
+                            if (timing != null) timing.AppendLine("INFO: Destruction Potion is still up!");
+                        }
+                    }
+                    else
+                    {
+                        if (stats != null && stats.DestructionPotion)
+                        {
+                            if (potionCooldown > 0.000001)
+                            {
+                                unexplained += duration;
+                                if (timing != null) timing.AppendLine("WARNING: Destruction Potion cooldown not ready!");
+                            }
+                            else
+                            {
+                                if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Destruction Potion (" + Math.Round(manabefore).ToString() + " mana)");
+                                potionCooldown = 120;
+                                destructionTime = time;
+                            }
+                        }
+                    }
+                    // Trinket1
+                    if (trinket1time >= 0)
+                    {
+                        if (stats != null && stats.Trinket1)
+                        {
+                            if (time + duration > trinket1time + Trinket1Duration + 0.000001)
+                            {
+                                unexplained += time + duration - trinket1time - Trinket1Duration;
+                                if (timing != null) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket1Name + " duration too long!");
+                            }
+                        }
+                        else if (duration > 0 && Trinket1Duration - (time - trinket1time) > 0.000001)
+                        {
+                            //unexplained += Math.Min(duration, Trinket1Duration - (time - trinket1time));
+                            if (timing != null) timing.AppendLine("INFO: " + SequenceItem.Calculations.Trinket1Name + " is still up!");
+                        }
+                    }
+                    else
+                    {
+                        if (stats != null && stats.Trinket1)
+                        {
+                            if (trinket1Cooldown > 0.000001)
+                            {
+                                unexplained += duration;
+                                if (timing != null) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket1Name + " cooldown not ready!");
+                            }
+                            else
+                            {
+                                if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": " + SequenceItem.Calculations.Trinket1Name + " (" + Math.Round(manabefore).ToString() + " mana)");
+                                trinket1Cooldown = SequenceItem.Calculations.Trinket1Cooldown;
+                                trinket1time = time;
+                            }
+                        }
+                    }
+                    // Trinket2
+                    if (trinket2time >= 0)
+                    {
+                        if (stats != null && stats.Trinket2)
+                        {
+                            if (time + duration > trinket2time + Trinket2Duration + 0.000001)
+                            {
+                                unexplained += time + duration - trinket2time - Trinket2Duration;
+                                if (timing != null) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket2Name + " duration too long!");
+                            }
+                        }
+                        else if (duration > 0 && Trinket2Duration - (time - trinket2time) > 0.000001)
+                        {
+                            //unexplained += Math.Min(duration, Trinket2Duration - (time - trinket2time));
+                            if (timing != null) timing.AppendLine("INFO: " + SequenceItem.Calculations.Trinket2Name + " is still up!");
+                        }
+                    }
+                    else
+                    {
+                        if (stats != null && stats.Trinket2)
+                        {
+                            if (trinket2Cooldown > 0.000001)
+                            {
+                                unexplained += duration;
+                                if (timing != null) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket2Name + " cooldown not ready!");
+                            }
+                            else
+                            {
+                                if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": " + SequenceItem.Calculations.Trinket2Name + " (" + Math.Round(manabefore).ToString() + " mana)");
+                                trinket2Cooldown = SequenceItem.Calculations.Trinket2Cooldown;
+                                trinket2time = time;
+                            }
+                        }
+                    }
+                    // Heroism
+                    if (heroismTime >= 0)
+                    {
+                        if (stats != null && stats.Heroism)
+                        {
+                            if (time + duration > heroismTime + 40 + 0.000001)
+                            {
+                                unexplained += time + duration - heroismTime - 40;
+                                if (timing != null) timing.AppendLine("WARNING: Heroism duration too long!");
+                            }
+                        }
+                        else if (duration > 0 && 40 - (time - heroismTime) > 0.000001)
+                        {
+                            //unexplained += Math.Min(duration, 40 - (time - heroismTime));
+                            if (timing != null) timing.AppendLine("INFO: Heroism is still up!");
+                        }
+                    }
+                    else
+                    {
+                        if (stats != null && stats.Heroism)
+                        {
+                            if (heroismUsed)
+                            {
+                                unexplained += duration;
+                                if (timing != null) timing.AppendLine("WARNING: Heroism cooldown not ready!");
+                            }
+                            else
+                            {
+                                if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Heroism (" + Math.Round(manabefore).ToString() + " mana)");
+                                heroismUsed = true;
+                                heroismTime = time;
+                            }
+                        }
+                    }
+                    // Molten Fury
+                    if (moltenFuryTime >= 0)
+                    {
+                        if (!(stats != null && stats.MoltenFury) && duration > 0)
+                        {
+                            //unexplained += duration;
+                            if (timing != null) timing.AppendLine("INFO: Molten Fury is still up!");
+                        }
+                    }
+                    else
+                    {
+                        if (stats != null && stats.MoltenFury)
+                        {
+                            if (time < moltenFuryStart - 0.000001)
+                            {
+                                unexplained += Math.Min(duration, moltenFuryStart - time);
+                                if (timing != null) timing.AppendLine("WARNING: Molten Fury is not available yet!");
+                            }
+                            else
+                            {
+                                if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Molten Fury (" + Math.Round(manabefore).ToString() + " mana)");
+                                moltenFuryTime = time;
+                            }
+                        }
+                    }
+                    // Combustion
+                    if (combustionTime >= 0)
+                    {
+                        if (stats != null && stats.Combustion)
+                        {
+                            if (time + duration > combustionTime + (stats.CombustionDuration * spell.CastTime / spell.CastProcs) + 0.000001)
+                            {
+                                unexplained += time + duration - combustionTime - (stats.CombustionDuration * spell.CastTime / spell.CastProcs);
+                                if (timing != null) timing.AppendLine("WARNING: Combustion duration too long!");
+                            }
+                        }
+                        else if (spell != null && duration > 0 && (stats.CombustionDuration * spell.CastTime / spell.CastProcs) - (time - combustionTime) > 0.000001)
+                        {
+                            //unexplained += Math.Min(duration, 15 - (time - apTime));
+                            combustionTime = -1;
+                            if (timing != null) timing.AppendLine("INFO: Combustion is still up!");
+                        }
+                        else
+                        {
+                            combustionTime = -1;
+                        }
+                    }
+                    else
+                    {
+                        if (stats != null && stats.Combustion)
+                        {
+                            if (combustionCooldown > 0.000001)
+                            {
+                                unexplained += duration;
+                                if (timing != null) timing.AppendLine("WARNING: Combustion cooldown not ready!");
+                            }
+                            else
+                            {
+                                if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Combustion (" + Math.Round(manabefore).ToString() + " mana)");
+                                combustionCooldown = 180 + (stats.CombustionDuration * spell.CastTime / spell.CastProcs);
+                                combustionTime = time;
+                            }
+                        }
+                    }
+                    // Arcane Power
+                    if (apTime >= 0)
+                    {
+                        if (stats != null && stats.ArcanePower)
+                        {
+                            if (time + duration > apTime + 15 + 0.000001)
+                            {
+                                unexplained += time + duration - apTime - 15;
+                                if (timing != null) timing.AppendLine("WARNING: Arcane Power duration too long!");
+                            }
+                        }
+                        else if (duration > 0 && 15 - (time - apTime) > 0.000001)
+                        {
+                            //unexplained += Math.Min(duration, 15 - (time - apTime));
+                            if (timing != null) timing.AppendLine("INFO: Arcane Power is still up!");
+                        }
+                    }
+                    else
+                    {
+                        if (stats != null && stats.ArcanePower)
+                        {
+                            if (apCooldown > 0.000001)
+                            {
+                                unexplained += duration;
+                                if (timing != null) timing.AppendLine("WARNING: Arcane Power cooldown not ready!");
+                            }
+                            else
+                            {
+                                if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Arcane Power (" + Math.Round(manabefore).ToString() + " mana)");
+                                apCooldown = 180;
+                                apTime = time;
+                            }
+                        }
+                    }
+                    // Icy Veins
+                    if (ivTime >= 0)
+                    {
+                        if (stats != null && stats.IcyVeins)
+                        {
+                            if (time + duration > ivTime + 20 + 0.000001)
+                            {
+                                unexplained += time + duration - ivTime - 20;
+                                if (timing != null) timing.AppendLine("WARNING: Icy Veins duration too long!");
+                            }
+                        }
+                        else if (duration > 0 && 20 - (time - ivTime) > 0.000001)
+                        {
+                            //unexplained += Math.Min(duration, 20 - (time - ivTime));
+                            if (timing != null) timing.AppendLine("INFO: Icy Veins is still up!");
+                        }
+                    }
+                    else
+                    {
+                        if (stats != null && stats.IcyVeins)
+                        {
+                            if (ivCooldown > 0.000001)
+                            {
+                                unexplained += duration;
+                                if (timing != null) timing.AppendLine("WARNING: Icy Veins cooldown not ready!");
+                            }
+                            else
+                            {
+                                if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Icy Veins (" + Math.Round(manabefore).ToString() + " mana)");
+                                ivCooldown = 180;
+                                ivTime = time;
+                            }
+                        }
+                    }
+                    // Move time forward
+                    if (mode == EvaluationMode.CooldownBreak)
+                    {
+                        double aftertime = data[0];
+                        if (aftertime >= time && aftertime <= time + duration)
+                        {
+                            if (drumsTime == -1 && flameCapTime == -1 && destructionTime == -1 && trinket1time == -1 && trinket2time == -1 && heroismTime == -1 && moltenFuryTime == -1 && combustionTime == -1 && apTime == -1 && ivTime == -1)
+                            {
+                                return aftertime;
+                            }
+                        }
+                        if (time >= aftertime && !cooldownContinuation)
+                        {
+                            return time;
+                        }
+                    }
+                    string label = null;
+                    switch (index)
+                    {
+                        case 0:
+                            label = "Idle Regen";
+                            break;
+                        case 1:
+                            label = "Wand";
+                            break;
+                        case 2:
+                        case 3:
+                        case 4:
+                            break;
+                        case 5:
+                            label = "Drums of Battle";
+                            break;
+                        default:
+                            label = spell.Name;
+                            break;
+                    }
+                    if (reportMode == ReportMode.Listing)
+                    {
+                        if (timing != null && label != null && (i == 0 || index != sequence[i - 1].Index)) timing.AppendLine(TimeFormat(time) + ": " + label + " (" + Math.Round(manabefore).ToString() + " mana)");
+                    }
+                    else if (reportMode == ReportMode.Compact)
+                    {
+                        if (timing != null && label != null && (i == 0 || index != sequence[i - 1].Index))
+                        {
+                            timing.AppendLine(TimeFormat(time) + ": " + (string.IsNullOrEmpty(stats.BuffLabel) ? "" : (stats.BuffLabel + "+")) + label + " (" + Math.Round(manabefore).ToString() + " mana)");
+                        }
+                    }
+                    time += duration;
+                    apCooldown -= duration;
+                    ivCooldown -= duration;
+                    potionCooldown -= duration;
+                    gemCooldown -= duration;
+                    trinket1Cooldown -= duration;
+                    trinket2Cooldown -= duration;
+                    combustionCooldown -= duration;
+                    drumsCooldown -= duration;
+                    if (apTime >= 0 && 15 - (time - apTime) <= 0) apTime = -1;
+                    if (ivTime >= 0 && 20 - (time - ivTime) <= 0) ivTime = -1;
+                    if (heroismTime >= 0 && 40 - (time - heroismTime) <= 0) heroismTime = -1;
+                    if (destructionTime >= 0 && 15 - (time - destructionTime) <= 0) destructionTime = -1;
+                    if (flameCapTime >= 0 && 60 - (time - flameCapTime) <= 0) flameCapTime = -1;
+                    if (trinket1time >= 0 && Trinket1Duration - (time - trinket1time) <= 0) trinket1time = -1;
+                    if (trinket2time >= 0 && Trinket2Duration - (time - trinket2time) <= 0) trinket2time = -1;
+                    if (drumsTime >= 0 && 30 - (time - drumsTime) <= 0) drumsTime = -1;
                 }
-                double rem = 0;
-                for (int i = 0; i <= 5; i++) rem += Math.Max(0, remainingBase[i]);
-                for (int i = 0; i < N; i++) rem += Math.Max(0, remaining[i]);
-                if (rem > 0)
+                if (timing != null && unexplained > 0)
                 {
                     timing.AppendLine();
-                    timing.AppendLine(string.Format("Divergence: {0:F} sec", rem));
+                    timing.AppendLine(string.Format("Score: {0:F}", Math.Max(0, 100 - 100 * unexplained / FightDuration)));
                 }
-                if (rem < bestUnderused)
+
+                switch (mode)
                 {
-                    bestUnderused = rem;
-                    bestTiming = timing.ToString();
+                    case EvaluationMode.Unexplained:
+                        return unexplained;
+                    case EvaluationMode.ManaBelow:
+                        return FightDuration;
+                    case EvaluationMode.CooldownBreak:
+                        return FightDuration;
                 }
-                if (bestUnderused == 0) break;
-                if (timeLimitReached) lastSequenceValid = false;
-            } while (true);
-            
+                return unexplained;
+            }
+        }
+
+        public string ReconstructSequence()
+        {
+            if (!CalculationOptions.ReconstructSequence) return "*Enable sequence reconstruction in options";
+            if (FightDuration > 900) return "*Unavailable";
+            List<int> validIndex = new List<int>();
+            double fight = FightDuration;
+            for (int i = 0; i < SolutionLabel.Count; i++)
+            {
+                if (Solution[i] > 0.01)
+                {
+                    if (i == 3 || i == 4)
+                    {
+                        // mana pot and mana gem do not actually take time
+                        fight -= Solution[i];
+                    }
+                    validIndex.Add(i);
+                }
+            }
+
+            SequenceItem.Calculations = this;
+            Sequence sequence = new Sequence();
+
+            for (int i = 0; i < validIndex.Count; i++)
+            {
+                sequence.Add(new SequenceItem(validIndex[i], Solution[validIndex[i]]));
+            }
+
+            StringBuilder timing = new StringBuilder();
+            double bestUnexplained = double.PositiveInfinity;
+            string bestTiming = "*";
+
+            // evaluate sequence
+            double unexplained = sequence.Evaluate(timing, Sequence.EvaluationMode.Unexplained);
+            if (unexplained < bestUnexplained)
+            {
+                bestUnexplained = unexplained;
+                bestTiming = timing.ToString();
+            }
+
+            sequence.GroupMoltenFury();
+            sequence.GroupHeroism();
+            sequence.GroupCombustion();
+            sequence.GroupArcanePower();
+            sequence.GroupDestructionPotion();
+            sequence.GroupIcyVeins();
+            sequence.GroupTrinket1();
+            sequence.GroupTrinket2();
+            sequence.GroupDrumsOfBattle();
+            sequence.GroupFlameCap();
+
+            sequence.SortGroups();
+
+            // mana gem/pot/evo positioning
+            sequence.RepositionManaConsumption();
+
+            // evaluate sequence
+            unexplained = sequence.Evaluate(timing, Sequence.EvaluationMode.Unexplained);
+            if (unexplained < bestUnexplained)
+            {
+                bestUnexplained = unexplained;
+                bestTiming = timing.ToString();
+            }
+
             return bestTiming;
         }
 
@@ -1069,7 +2947,7 @@ namespace Rawr.Mage
             dictValues.Add("Total Damage", String.Format("{0:F}", OverallPoints * FightDuration));
             dictValues.Add("Dps", String.Format("{0:F}", OverallPoints));
             dictValues.Add("Tps", String.Format("{0:F}", Tps));
-            //dictValues.Add("Sequence", ReconstructSequence());
+            dictValues.Add("Sequence", ReconstructSequence());
             StringBuilder sb = new StringBuilder("*");
             if (MageArmor != null) sb.AppendLine(MageArmor);
             for (int i = 0; i < SolutionLabel.Count; i++)

@@ -14,7 +14,7 @@ namespace Rawr.Mage
             int[] idlist = { 30735, 30725, 28515, 29240, 29255, 24267, 24263, 29241, 28799, 24257, 29242, 29258, 28517, 28670, 30050, 30531, 28797, 28804, 29076, 29986, 30064, 30206, 30020, 21870, 21869, 28404, 28405, 28402, 28409, 28411, 28410, 24256, 25854, 25855, 25857, 25856, 25858, 30680, 30205, 29080, 30668, 28507, 28477, 30079, 30673, 30763, 30764, 30761, 30762, 30532, 30207, 30734, 29078, 30675, 28654, 24260, 30210, 30024, 28726, 28980, 28981, 28982, 29001, 29002, 29003, 29918, 29122, 28565, 29079, 30684, 24258, 30056, 28602, 30196, 28766, 28585, 29257, 28379, 28378, 28570, 28653, 29369, 28780, 21863, 21864, 21865, 21846, 21847, 21848, 24266, 24262, 28594, 28744, 24255, 30067, 29077, 28586, 31340, 29177, 29349, 28762, 30061, 29172, 29922, 31319, 29997, 28516, 29383, 28530, 31338, 30059, 31321, 29381, 29352, 28830, 28789, 30049, 30619, 29270, 30099, 28649, 28346, 29387, 29119, 29370, 28734, 28781, 29273, 31339, 29368, 32649, 29123, 28730, 28745, 28528, 29386, 29272, 28245, 28244, 30008, 30022, 28727, 31746, 29379, 29367, 30109, 30052, 30738, 28753, 30083, 30667, 29384, 28757, 30666, 28579, 28674, 29269, 30629, 29126, 30720, 30028, 30626, 30834, 28675, 28510, 30620, 29271, 28603, 29347, 30007, 28785, 29181, 31326, 30627, 31113, 29277, 29278, 29281, 29285, 29286, 29282, 29287, 29279, 29283, 28509, 29359, 24557, 28633, 31334, 28658, 29355, 29988, 30021, 28783, 29350, 28673, 28320, 29982, 32089, 29972, 32239, 32343, 30894, 30872, 28792, 32587, 32586, 32270, 32247, 30913, 32256, 31056, 31055, 31058, 31059, 31057, 28793, 30037, 32655, 30038, 32541, 30107, 32757, 30884, 29992, 30015, 32374, 29303, 30870, 29987, 32349, 30888, 32338, 30916, 32327, 32047, 32048, 32049, 32050, 32051, 32962, 32055, 33056, 32799, 32811, 32787, 33067, 33065, 32807, 32820, 32795, 32525, 32483, 33054, 32331, 34073, 32488, 33494, 34049, 33192, 33304, 34162, 33357, 33285, 33453, 33497, 33489, 33584, 33588, 33591, 33293, 33500, 33586, 33766, 33291, 33829, 33466, 33317, 34066, 33757, 33758, 33759, 33760, 33761, 33764, 33853, 33920, 33921, 34577, 34579, 34540, 34182, 35326, 34557, 34574, 34447, 35321, 34810, 34607, 34808, 34406, 34405, 34386, 34399, 34610, 34678, 34393, 34366, 34364, 34470, 35320, 35319, 34347, 34837, 35700, 35703, 34889, 34919, 34937, 34938, 34918, 34917, 34936, 35290, 33140, 32204, 32225, 33133, 32207, 32215, 32210, 32202, 32218, 32224, 32196, 32201, 32203, 32221, 24047, 34220, 24065, 25890, 35503, 35318, 24050, 24056, 31861, 25901, 24037, 25893, 24059, 35315, 24066, 35316, 24030, 24035, 24039, 31867 };
             foreach (int id in idlist)
             {
-                Item.LoadFromId(id, true, "Batch Load",true);
+                Item.LoadFromId(id, true, "Batch Load", true);
             }
         }
 
@@ -56,7 +56,7 @@ namespace Rawr.Mage
                     "Solution:Dps",
                     "Solution:Tps*Threat per second",
                     "Solution:Spell Cycles",
-                    //"Solution:Sequence*Cycle sequence that best matches optimum spell cycles",
+                    "Solution:Sequence*Cycle sequence reconstruction based on optimum cycles",
                     "Spell Info:Wand",
                     "Spell Info:Arcane Missiles",
                     "Spell Info:Arcane Blast*Spammed",
@@ -459,8 +459,8 @@ namespace Rawr.Mage
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
             CompactLP lp = new CompactLP(lpRows, lpCols);
             double[] tps = new double[lpCols];
-            //calculatedStats.SolutionStats = new CharacterCalculationsMage[lpCols];
-            //calculatedStats.SolutionSpells = new Spell[lpCols];
+            calculatedStats.SolutionStats = new CharacterCalculationsMage[lpCols];
+            calculatedStats.SolutionSpells = new Spell[lpCols];
 
             int[] incrementalSetCooldown = null;
             string[] incrementalSetSpell = null;
@@ -490,6 +490,7 @@ namespace Rawr.Mage
                     trinket1cooldown = 90;
                 }
                 t1length = (1 + (int)((calculatedStats.FightDuration - trinket1duration) / trinket1cooldown)) * trinket1duration;
+                calculatedStats.Trinket1Name = character.Trinket1.Name;
             }
             if (trinket2Available)
             {
@@ -511,6 +512,7 @@ namespace Rawr.Mage
                     trinket2cooldown = 90;
                 }
                 t2length = (1 + (int)((calculatedStats.FightDuration - trinket2duration) / trinket2cooldown)) * trinket2duration;
+                calculatedStats.Trinket2Name = character.Trinket2.Name;
             }
 
             calculatedStats.Trinket1Duration = trinket1duration;
@@ -597,7 +599,7 @@ namespace Rawr.Mage
                 drumsaplength += 30;
             }
 
-            // disabled unused constraints and variables
+            // disable unused constraints and variables
             if (character.Ranged == null || character.Ranged.Type != Item.ItemType.Wand) lp.DisableColumn(1);
             for (int buffset = 0; buffset < statsList.Count; buffset++)
             {
@@ -753,8 +755,8 @@ namespace Rawr.Mage
                         Spell s = statsList[buffset].GetSpell(spellList[spell]);
                         if ((s.AffectedByFlameCap || !statsList[buffset].FlameCap) && (!s.ABCycle || calculationOptions.ABCycles))
                         {
-                            //calculatedStats.SolutionStats[index] = statsList[buffset];
-                            //calculatedStats.SolutionSpells[index] = s;
+                            calculatedStats.SolutionStats[index] = statsList[buffset];
+                            calculatedStats.SolutionSpells[index] = s;
                             calculatedStats.SolutionLabel.Add(((statsList[buffset].BuffLabel.Length > 0) ? (statsList[buffset].BuffLabel + "+") : "") + s.Name);
                             if (computeIncrementalSet)
                             {
@@ -884,8 +886,8 @@ namespace Rawr.Mage
             lp[31, lpCols] = 1;
             lp[32, lpCols] = 1;
             lp[33, lpCols] = coldsnap ? 40 : 20;
-            lp[35, lpCols] = 30;
-            lp[36, lpCols] = 30;
+            lp[35, lpCols] = 30 - calculatedStats.GlobalCooldown;
+            lp[36, lpCols] = 30 - calculatedStats.GlobalCooldown;
             lp[37, lpCols] = drumsivlength;
             lp[38, lpCols] = drumsaplength;
             lp[39, lpCols] = calculationOptions.TpsLimit * calculationOptions.FightDuration;
@@ -1206,14 +1208,7 @@ namespace Rawr.Mage
             calculatedStats.NatureHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculatedStats.SpellHit);
             calculatedStats.ShadowHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculatedStats.SpellHit);
 
-            if (calculationOptions.Enable2_3Mode)
-            {
-                calculatedStats.SpiritRegen = 6.25f + stats.Spirit / 8f;
-            }
-            else
-            {
-                calculatedStats.SpiritRegen = 0.001f + stats.Spirit * 0.009327f * (float)Math.Sqrt(stats.Intellect);
-            }
+            calculatedStats.SpiritRegen = 0.001f + stats.Spirit * 0.009327f * (float)Math.Sqrt(stats.Intellect);
             calculatedStats.ManaRegen = calculatedStats.SpiritRegen + stats.Mp5 / 5f;
             calculatedStats.ManaRegen5SR = calculatedStats.SpiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
             calculatedStats.ManaRegenDrinking = calculatedStats.ManaRegen + 240f;
@@ -1268,7 +1263,7 @@ namespace Rawr.Mage
             calculatedStats.FightDuration = calculationOptions.FightDuration;
             calculatedStats.ClearcastingChance = 0.02f * calculationOptions.ArcaneConcentration;
 
-            calculatedStats.GlobalCooldownLimit = calculationOptions.Enable2_3Mode ? 1.5f : 1f;
+            calculatedStats.GlobalCooldownLimit = 1f;
             calculatedStats.GlobalCooldown = Math.Max(calculatedStats.GlobalCooldownLimit, 1.5f / calculatedStats.CastingSpeed);
 
             calculatedStats.ArcaneSpellModifier = (1 + 0.01f * calculationOptions.ArcaneInstability) * (1 + 0.01f * calculationOptions.PlayingWithFire) * (1 + stats.BonusSpellPowerMultiplier);
@@ -1582,7 +1577,7 @@ namespace Rawr.Mage
 
                     comparisonList.Add(comparison);
 
-                    string[] talentSpecList = new string[] { "Fire (2/48/11)", "Fire (10/48/3)", "Fire/Cold Snap (0/40/21)", "Frost (10/0/51)", "Arcane (48/0/13)", "Arcane (43/0/18)", "Arcane/Fire (40/18/3)", "Arcane/Frost (40/0/21)" };
+                    string[] talentSpecList = new string[] { "Fire (2/48/11)", "Fire (10/48/3)", "Fire/Cold Snap (0/40/21)", "Frost (10/0/51)", "Arcane (48/0/13)", "Arcane (43/0/18)", "Arcane/Fire (40/18/3)", "Arcane/Fire (40/10/11)", "Arcane/Frost (40/0/21)" };
                     Character charClone = character.Clone();
                     charClone.CalculationOptions["IncrementalOptimizations"] = "0";
                     charClone.CalculationOptions["SmartOptimization"] = "1";
@@ -1742,6 +1737,9 @@ namespace Rawr.Mage
                     break;
                 case "Arcane/Fire (40/18/3)":
                     talentCode = "2500050300230150330125050520001230000000000000030000000000000000000";
+                    break;
+                case "Arcane/Fire (40/10/11)":
+                    talentCode = "2500050300230150330125050500000000000000000000532000010000000000000";
                     break;
                 case "Arcane/Frost (40/0/21)":
                     talentCode = "2500052300030150330125000000000000000000000000535000310030010000000";
