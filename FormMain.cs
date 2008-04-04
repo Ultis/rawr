@@ -105,7 +105,6 @@ namespace Rawr
 				{
 					this.Cursor = Cursors.WaitCursor;
                     _character.IsLoading = true; // we do not need ItemsChanged event triggering until we call OnItemsChanged at the end
-					_character.EnsureItemsLoaded();
 					Calculations.CalculationOptionsPanel.Character = _character;
 					ItemToolTip.Instance.Character = FormItemSelection.Character = 
 						ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
@@ -119,6 +118,7 @@ namespace Rawr
 						itemButtonWrist.Character = _character;
 					//Ahhh ahhh ahhh ahhh ahhh ahhh ahhh ahhh...
 
+					_character.EnsureItemsLoaded();
 					_character.ItemsChanged += new EventHandler(_character_ItemsChanged);
 					_character.AvailableItemsChanged += new EventHandler(_character_AvailableItemsChanged);
 					_loadingCharacter = true;

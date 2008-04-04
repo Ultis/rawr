@@ -84,9 +84,11 @@ namespace Rawr.Mage
                 Character.CalculationOptions["TpsLimit"] = (5000).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("IncrementalOptimizations"))
                 Character.CalculationOptions["IncrementalOptimizations"] = (1).ToString(CultureInfo.InvariantCulture);
-            if (!Character.CalculationOptions.ContainsKey("ReconstructSequence"))
-                Character.CalculationOptions["ReconstructSequence"] = (0).ToString(CultureInfo.InvariantCulture);
-
+			if (!Character.CalculationOptions.ContainsKey("ReconstructSequence"))
+				Character.CalculationOptions["ReconstructSequence"] = (0).ToString(CultureInfo.InvariantCulture);
+			if (!Character.CalculationOptions.ContainsKey("IncrementalSetCooldowns"))
+				Character.CalculationOptions["IncrementalSetCooldowns"] = string.Empty;
+			
             loading = true;
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
