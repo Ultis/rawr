@@ -838,7 +838,7 @@ namespace Rawr
 			dictValues.Add("Melee Damage", MeleeDamage.ToString() + "%");
 			dictValues.Add("Rip Damage", RipDamage.ToString() + "%");
 			dictValues.Add("Bite Damage", FerociousBiteDamage.ToString() + "%");
-			dictValues.Add("DPS Points", DPSPoints.ToString() + "*" + (DPSPoints / 100f).ToString() + " DPS");
+			dictValues.Add("DPS Points", DPSPoints.ToString());
 			dictValues.Add("Overall Points", OverallPoints.ToString());
 			
 			return dictValues;
