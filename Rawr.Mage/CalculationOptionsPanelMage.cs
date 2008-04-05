@@ -86,8 +86,6 @@ namespace Rawr.Mage
                 Character.CalculationOptions["IncrementalOptimizations"] = (1).ToString(CultureInfo.InvariantCulture);
 			if (!Character.CalculationOptions.ContainsKey("ReconstructSequence"))
 				Character.CalculationOptions["ReconstructSequence"] = (0).ToString(CultureInfo.InvariantCulture);
-			if (!Character.CalculationOptions.ContainsKey("IncrementalSetCooldowns"))
-				Character.CalculationOptions["IncrementalSetCooldowns"] = string.Empty;
 			
             loading = true;
 
