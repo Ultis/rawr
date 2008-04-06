@@ -785,7 +785,7 @@ namespace Rawr
                         {
                             spellDesc = spellDesc.Substring("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by ".Length, 2);
                             spellDesc = spellDesc.Replace(".", "");
-                            stats.CritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+                            stats.CritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture)*5f/9f;
                         }
                         else if (spellDesc.StartsWith("Increases the damage dealt by your Crusader Strike ability by "))
                         {

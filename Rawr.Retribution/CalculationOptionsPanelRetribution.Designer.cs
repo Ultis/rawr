@@ -48,10 +48,14 @@
             this.btnTalents = new System.Windows.Forms.Button();
             this.btnGraph = new System.Windows.Forms.Button();
             this.checkBoxMeta = new System.Windows.Forms.CheckBox();
+            this.radioButtonAldor = new System.Windows.Forms.RadioButton();
+            this.radioButtonScryer = new System.Windows.Forms.RadioButton();
+            this.Faction = new System.Windows.Forms.GroupBox();
             this.groupBoxSealChoice.SuspendLayout();
             this.groupBoxSkillUsage.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarFightLength)).BeginInit();
+            this.Faction.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -160,6 +164,7 @@
             this.comboBoxConsRank.FormattingEnabled = true;
             this.comboBoxConsRank.Items.AddRange(new object[] {
             "Rank 1",
+            "Rank 4",
             "Rank 6"});
             this.comboBoxConsRank.Location = new System.Drawing.Point(110, 26);
             this.comboBoxConsRank.Name = "comboBoxConsRank";
@@ -255,7 +260,7 @@
             // btnTalents
             // 
             this.btnTalents.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTalents.Location = new System.Drawing.Point(8, 422);
+            this.btnTalents.Location = new System.Drawing.Point(8, 480);
             this.btnTalents.Name = "btnTalents";
             this.btnTalents.Size = new System.Drawing.Size(75, 23);
             this.btnTalents.TabIndex = 5;
@@ -266,7 +271,7 @@
             // btnGraph
             // 
             this.btnGraph.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGraph.Location = new System.Drawing.Point(118, 422);
+            this.btnGraph.Location = new System.Drawing.Point(118, 480);
             this.btnGraph.Name = "btnGraph";
             this.btnGraph.Size = new System.Drawing.Size(75, 23);
             this.btnGraph.TabIndex = 5;
@@ -278,7 +283,7 @@
             // 
             this.checkBoxMeta.AutoSize = true;
             this.checkBoxMeta.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxMeta.Location = new System.Drawing.Point(8, 378);
+            this.checkBoxMeta.Location = new System.Drawing.Point(8, 436);
             this.checkBoxMeta.Name = "checkBoxMeta";
             this.checkBoxMeta.Size = new System.Drawing.Size(177, 18);
             this.checkBoxMeta.TabIndex = 6;
@@ -286,10 +291,49 @@
             this.checkBoxMeta.UseVisualStyleBackColor = true;
             this.checkBoxMeta.CheckedChanged += new System.EventHandler(this.checkBoxMeta_CheckedChanged);
             // 
+            // radioButtonAldor
+            // 
+            this.radioButtonAldor.AutoSize = true;
+            this.radioButtonAldor.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButtonAldor.Location = new System.Drawing.Point(12, 19);
+            this.radioButtonAldor.Name = "radioButtonAldor";
+            this.radioButtonAldor.Size = new System.Drawing.Size(54, 18);
+            this.radioButtonAldor.TabIndex = 7;
+            this.radioButtonAldor.TabStop = true;
+            this.radioButtonAldor.Text = "Aldor";
+            this.radioButtonAldor.UseVisualStyleBackColor = true;
+            this.radioButtonAldor.CheckedChanged += new System.EventHandler(this.radioButtonAldor_CheckedChanged);
+            // 
+            // radioButtonScryer
+            // 
+            this.radioButtonScryer.AutoSize = true;
+            this.radioButtonScryer.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButtonScryer.Location = new System.Drawing.Point(88, 19);
+            this.radioButtonScryer.Name = "radioButtonScryer";
+            this.radioButtonScryer.Size = new System.Drawing.Size(56, 18);
+            this.radioButtonScryer.TabIndex = 7;
+            this.radioButtonScryer.TabStop = true;
+            this.radioButtonScryer.Text = "Scryer";
+            this.radioButtonScryer.UseVisualStyleBackColor = true;
+            this.radioButtonScryer.CheckedChanged += new System.EventHandler(this.radioButtonScryer_CheckedChanged);
+            // 
+            // Faction
+            // 
+            this.Faction.Controls.Add(this.radioButtonAldor);
+            this.Faction.Controls.Add(this.radioButtonScryer);
+            this.Faction.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Faction.Location = new System.Drawing.Point(8, 359);
+            this.Faction.Name = "Faction";
+            this.Faction.Size = new System.Drawing.Size(188, 52);
+            this.Faction.TabIndex = 8;
+            this.Faction.TabStop = false;
+            this.Faction.Text = "Faction";
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.Faction);
             this.Controls.Add(this.checkBoxMeta);
             this.Controls.Add(this.btnGraph);
             this.Controls.Add(this.btnTalents);
@@ -297,7 +341,7 @@
             this.Controls.Add(this.groupBoxSkillUsage);
             this.Controls.Add(this.groupBoxSealChoice);
             this.Name = "CalculationOptionsPanelRetribution";
-            this.Size = new System.Drawing.Size(196, 466);
+            this.Size = new System.Drawing.Size(196, 508);
             this.groupBoxSealChoice.ResumeLayout(false);
             this.groupBoxSealChoice.PerformLayout();
             this.groupBoxSkillUsage.ResumeLayout(false);
@@ -305,6 +349,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarFightLength)).EndInit();
+            this.Faction.ResumeLayout(false);
+            this.Faction.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -332,5 +378,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBoxMeta;
+        private System.Windows.Forms.RadioButton radioButtonAldor;
+        private System.Windows.Forms.RadioButton radioButtonScryer;
+        private System.Windows.Forms.GroupBox Faction;
     }
 }

@@ -181,6 +181,17 @@ namespace Rawr.Retribution
             float modifiedTargetArmor = bossArmor - totalArP;
             float mitigation = 1 - modifiedTargetArmor / (modifiedTargetArmor + 10557.5f);
             #endregion
+            string shattrathFaction = character.CalculationOptions["ShattrathFaction"];
+            if (stats.ShatteredSunMightProc > 0)
+            {
+                switch (shattrathFaction)
+                {
+                    case "Aldor":
+                        stats.AttackPower += 39.13f;
+                        break;
+                }
+            }
+
 
             #region White Damage and Multipliers
             //2 Handed Spec
@@ -268,7 +279,7 @@ namespace Rawr.Retribution
                 + (stats.CritRating / 22.08f) / 100f;
             //Blood Frenzy : TODO Take from Debuff List
             float bloodFrenzy = 1.0f + stats.BonusPhysicalDamageMultiplier;
-
+            float ssoNeckProcDPS = 0f;
            
 
             //TODO: Add Mitigation
@@ -276,6 +287,16 @@ namespace Rawr.Retribution
             float dpsWhite = avgBaseWeaponHitPost / hastedSpeed;
             calcs.WhiteDPSPoints = dpsWhite;
             #endregion
+
+          if (stats.ShatteredSunMightProc > 0)
+            {
+                switch (shattrathFaction)
+                {
+                    case "Scryer":
+                        ssoNeckProcDPS = 350f * avWrath * misery * impSancAura * physicalCritModifier / 50f;
+                        break;
+                }
+            }
 
             #region Seal of Blood
             if (character.CalculationOptions["Seal"] == "1")
@@ -330,9 +351,13 @@ namespace Rawr.Retribution
                 {
                     avgConsPre = 64f + 0.46f * stats.SpellDamageRating + 0.97f * 219f;
                 }
-                else
+                else if(consRank ==6)
                 {
                     avgConsPre = 512f + 0.95f * stats.SpellDamageRating + 0.97f * 219f;
+                }
+                else if (consRank == 4)
+                {
+                    avgConsPre = 280 + 0.95f * stats.SpellDamageRating + 0.97f * 219f;
                 }
                 float avgConsPost = avgConsPre * (1.0f - 0.14f / 8.0f) * impSancAura * crusade * avWrath * vengeance * sancAura * misery * 0.96f;
                 consDPS = avgConsPost / cooldownCons;
@@ -396,7 +421,7 @@ namespace Rawr.Retribution
             }
             #endregion
 
-            calcs.DPSPoints = dpsCS + dpsWhite + calcs.SealDPSPoints + consDPS + exoDPS + wfDPS + calcs.JudgementDPSPoints;
+            calcs.DPSPoints = dpsCS + dpsWhite + calcs.SealDPSPoints + consDPS + exoDPS + wfDPS + calcs.JudgementDPSPoints + ssoNeckProcDPS;
             calcs.SubPoints = new float[] { calcs.DPSPoints };
             calcs.OverallPoints = calcs.DPSPoints;
             calcs.BasicStats.WeaponDamage = avgBaseWeaponHit * impSancAura;
@@ -578,6 +603,7 @@ namespace Rawr.Retribution
             statsTotal.WindfuryAPBonus = statsGearEnchantsBuffs.WindfuryAPBonus;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
             statsTotal.BonusSpellPowerMultiplier = statsGearEnchantsBuffs.BonusSpellPowerMultiplier;
+            statsTotal.ShatteredSunMightProc = statsGearEnchantsBuffs.ShatteredSunMightProc;
             return (statsTotal);
 
            
@@ -675,37 +701,37 @@ namespace Rawr.Retribution
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return ((
-                stats.Health +
-                stats.Mana +
-                stats.Stamina +
-                stats.Intellect +
-                stats.SpellCritRating +
-                stats.SpellDamageRating +
-                stats.Strength +
-                stats.Agility +
-                stats.AttackPower +
-                stats.ArmorPenetration +
-                stats.ExpertiseRating +
-                stats.HasteRating +
-                stats.HitRating +
-                stats.CritRating +
-                stats.LotPCritRating +
-                stats.BonusStrengthMultiplier +
-                stats.BonusAttackPowerMultiplier +
-                stats.BonusPhysicalDamageMultiplier +
-                stats.BonusCritMultiplier +
-                stats.BonusCrusaderStrikeDamageMultiplier +
-                stats.WindfuryAPBonus +
-                stats.Bloodlust +
-                stats.ExposeWeakness +
-                stats.DrumsOfBattle +
-                stats.WeaponDamage +
-                stats.BonusSpellPowerMultiplier +
-                stats.SpellDamageFromSpiritPercentage +
-                stats.SpellHitRating +
-                stats.Spirit) > 0)
-			; 
+            return true;/* ((
+                 stats.Health +
+                 stats.Mana +
+                 stats.Stamina +
+                 stats.Intellect +
+                 stats.SpellCritRating +
+                 stats.SpellDamageRating +
+                 stats.Strength +
+                 stats.Agility +
+                 stats.AttackPower +
+                 stats.ArmorPenetration +
+                 stats.ExpertiseRating +
+                 stats.HasteRating +
+                 stats.HitRating +
+                 stats.CritRating +
+                 stats.LotPCritRating +
+                 stats.BonusStrengthMultiplier +
+                 stats.BonusAttackPowerMultiplier +
+                 stats.BonusPhysicalDamageMultiplier +
+                 stats.BonusCritMultiplier +
+                 stats.BonusCrusaderStrikeDamageMultiplier +
+                 stats.WindfuryAPBonus +
+                 stats.Bloodlust +
+                 stats.ExposeWeakness +
+                 stats.DrumsOfBattle +
+                 stats.WeaponDamage +
+                 stats.BonusSpellPowerMultiplier +
+                 stats.SpellDamageFromSpiritPercentage +
+                 stats.SpellHitRating +
+                 stats.Spirit) > 0)*/
+             ; 
         }
 
         /// <summary>

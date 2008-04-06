@@ -32,6 +32,8 @@ namespace Rawr.Retribution
                 Character.CalculationOptions["Seal"] = "1";
             if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
                 Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
+            if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
+                Character.CalculationOptions["ShattrathFaction"] = "Aldor";
 
             comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             txtArmor.Text = Character.CalculationOptions["BossArmor"];
@@ -335,6 +337,18 @@ namespace Rawr.Retribution
         private void checkBoxMeta_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["EnforceMetagemRequirements"] = checkBoxMeta.Checked ? "Yes" : "No";
+            Character.OnItemsChanged();
+        }
+
+        private void radioButtonAldor_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ShattrathFaction"] = radioButtonAldor.Checked ? "Aldor" : "Scryer";
+            Character.OnItemsChanged();
+        }
+
+        private void radioButtonScryer_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["ShattrathFaction"] = radioButtonAldor.Checked ? "Aldor" : "Scryer";
             Character.OnItemsChanged();
         }
     }
