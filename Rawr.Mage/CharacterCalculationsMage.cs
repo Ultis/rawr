@@ -598,6 +598,7 @@ namespace Rawr.Mage
             // helper variables
             public int SuperIndex;
             public List<SequenceGroup> Tail;
+            public int CooldownHex;
 
             private Spell spell;
             public Spell Spell
@@ -925,7 +926,7 @@ namespace Rawr.Mage
                         }
                         lastSuper = sequence[j].SuperGroup;
                     }
-                    if (t < sequence[j].MinTime)
+                    if (t < sequence[j].MinTime - 0.000001)
                     {
                         // sequence positioned too early, we have to buffer up with something that can
                         // be positioned at t and is either small enough not to disrupt max time
@@ -1011,7 +1012,7 @@ namespace Rawr.Mage
                     if (lastSuper != sequence[a].SuperGroup)
                     {
                         lastSuper = sequence[a].SuperGroup;
-                        if (tt > lastSuper.MaxTime + 0.000001 && tt > T) // there might be other cases where it is impossible to move back without breaking others, double check for infinite cycles
+                        if (tt > lastSuper.MaxTime + 0.000001 && tt > T && lastSuper.MinTime < lastSuper.MaxTime) // there might be other cases where it is impossible to move back without breaking others, double check for infinite cycles
                         {
                             // compute buffer of items that can be moved way back
                             double buffer = 0;
@@ -1052,9 +1053,9 @@ namespace Rawr.Mage
                                         while (b >= i && sequence[b].SuperGroup == super)
                                         {
                                             b--;
-                                            t3 -= sequence[b].Duration;
+                                            if (b >= 0) t3 -= sequence[b].Duration;
                                         }
-                                        t3 += sequence[b].Duration;
+                                        if (b >= 0) t3 += sequence[b].Duration;
                                         b++;
                                         if (super.MaxTime >= t3 + lastSuper.Duration - buffer)
                                         {
@@ -1829,7 +1830,8 @@ namespace Rawr.Mage
             {
                 List<SequenceItem> groupedItems = sequence.Where(item => item.Group.Count > 0).ToList();
                 compactTotalTime = double.PositiveInfinity;
-                SortGroups_AddRemainingItems(new List<SequenceItem>(), new List<double>(), groupedItems);
+                //SortGroups_AddRemainingItems(new List<SequenceItem>(), new List<double>(), groupedItems);
+                SortGroups_Compute(groupedItems);
 
                 for (int i = 0; i < compactItems.Count; i++)
                 {
@@ -1889,6 +1891,208 @@ namespace Rawr.Mage
                 int xintersect = (tail == null) ? 0 : x.Group.Intersect(tail).Count();
                 int yintersect = (tail == null) ? 0 : y.Group.Intersect(tail).Count();
                 return yintersect.CompareTo(xintersect);
+            }
+
+            private void SortGroups_Compute(List<SequenceItem> itemList)
+            {
+                int N = itemList.Count;
+                List<double> constructionTime = new List<double>();
+                List<double>[] constructionTimeHistory = new List<double>[N];
+                bool[] used = new bool[N];
+                int[] index = new int[N];
+                int[] maxIntersect = new int[N];
+                for (int j = 0; j < N; j++) itemList[j].SuperIndex = -1;
+                int super = -1;
+                for (int j = 0; j < N; j++)
+                {
+                    if (itemList[j].SuperIndex == -1)
+                    {
+                        super++;
+                        itemList[j].SuperIndex = super;
+                        List<SequenceItem> superList = new List<SequenceItem>();
+                        superList.Add(itemList[j]);
+                        bool more = false;
+                        do
+                        {
+                            more = false;
+                            for (int k = j + 1; k < N; k++)
+                            {
+                                if (itemList[k].SuperIndex == -1)
+                                {
+                                    foreach (SequenceItem item in superList)
+                                    {
+                                        if (item.Group.Intersect(itemList[k].Group).Count() > 0)
+                                        {
+                                            itemList[k].SuperIndex = super;
+                                            superList.Add(itemList[k]);
+                                            more = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        } while (more);
+                        List<SequenceGroup> superGroups = new List<SequenceGroup>();
+                        foreach (SequenceItem item in superList)
+                        {
+                            int hex = 0;
+                            foreach (SequenceGroup group in item.Group)
+                            {
+                                if (!superGroups.Contains(group)) superGroups.Add(group);
+                                hex |= (1 << superGroups.IndexOf(group));
+                            }
+                            item.CooldownHex = hex;
+                        }
+                    }
+                }
+                super++;
+                int[] superLeft = new int[super];
+                for (int j = 0; j < N; j++)
+                {
+                    superLeft[itemList[j].SuperIndex]++;
+                }
+                int i = 0;
+                index[0] = -1;
+                constructionTimeHistory[0] = constructionTime;
+                do
+                {
+                    if (i == N)
+                    {
+                        double time = 0;
+                        if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[N - 1]].Duration;
+                        /*bool mf = false;
+                        for (int j = 0; j < N; j++)
+                        {
+                            mf = mf || itemList[index[j]].Stats.MoltenFury;
+                        }*/
+                        if (time < compactTotalTime/* && (!mf || itemList[index[N - 1]].Stats.MoltenFury)*/)
+                        {
+                            compactTotalTime = time;
+                            compactTime = new List<double>(constructionTime);
+                            compactItems = new List<SequenceItem>();
+                            for (int j = 0; j < N; j++)
+                            {
+                                compactItems.Add(itemList[index[j]]);
+                            }
+                        }
+                        i--;
+                        if (i >= 0)
+                        {
+                            constructionTime = constructionTimeHistory[i];
+                            used[index[i]] = false;
+                            superLeft[itemList[index[i]].SuperIndex]++;
+                        }
+                    }
+                    else
+                    {
+                        do
+                        {
+                            index[i]++;
+                        } while (index[i] < N && used[index[i]]);
+                        if (index[i] == N)
+                        {
+                            i--;
+                            if (i >= 0)
+                            {
+                                constructionTime = constructionTimeHistory[i];
+                                used[index[i]] = false;
+                                superLeft[itemList[index[i]].SuperIndex]++;
+                            }
+                        }
+                        else
+                        {
+                            // check if valid
+                            SequenceItem item = itemList[index[i]];
+                            if (i == 0 || superLeft[itemList[index[i - 1]].SuperIndex] == 0 || item.SuperIndex == itemList[index[i - 1]].SuperIndex)
+                            {
+                                int tail = item.CooldownHex;
+                                int activeTail = 0;
+                                int intersectHex = 0;
+                                if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
+                                {
+                                    activeTail = itemList[index[i - 1]].CooldownHex;
+                                    intersectHex = tail & activeTail;
+                                    if (intersectHex > maxIntersect[i]) maxIntersect[i] = intersectHex;
+                                }
+                                if (intersectHex >= maxIntersect[i])
+                                {
+                                    used[index[i]] = true;
+                                    superLeft[itemList[index[i]].SuperIndex]--;
+                                    for (int j = 0; j < N; j++)
+                                    {
+                                        if (!used[j] && itemList[j].SuperIndex == item.SuperIndex)
+                                        {
+                                            if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
+                                            {
+                                                int intersectHexJ = itemList[j].CooldownHex & activeTail;
+                                                if (intersectHexJ > intersectHex)
+                                                {
+                                                    // anything up to j is not valid, so skip ahead
+                                                    used[index[i]] = false;
+                                                    superLeft[itemList[index[i]].SuperIndex]++;
+                                                    index[i] = j;
+                                                    used[j] = true;
+                                                    superLeft[itemList[index[i]].SuperIndex]--;
+                                                    intersectHex = intersectHexJ;
+                                                    maxIntersect[i] = intersectHex;
+                                                    item = itemList[j];
+                                                    tail = item.CooldownHex;
+                                                    j = -1;
+                                                    continue;
+                                                }
+                                            }
+                                            int intersect = item.CooldownHex & itemList[j].CooldownHex;
+                                            if (intersect > 0)
+                                            {
+                                                tail = intersect & tail;
+                                                if (tail == 0) break;
+                                            }
+                                        }
+                                    }
+                                    if (tail > 0)
+                                    {
+                                        double time = 0;
+                                        if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[i - 1]].Duration;
+                                        time = Math.Max(time, item.MinTime);
+                                        // check constraints
+                                        foreach (SequenceGroup group in item.Group)
+                                        {
+                                            foreach (CooldownConstraint constraint in group.Constraint)
+                                            {
+                                                for (int j = 0; j < i; j++)
+                                                {
+                                                    if (itemList[index[j]].Group.Contains(constraint.Group))
+                                                    {
+                                                        time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        List<double> adjustedConstructionTime = new List<double>(constructionTime);
+                                        adjustedConstructionTime.Add(time);
+                                        // adjust min time of items in same super group
+                                        for (int j = adjustedConstructionTime.Count - 2; j >= 0 && itemList[index[j]].SuperIndex == item.SuperIndex; j--)
+                                        {
+                                            time -= itemList[index[j]].Duration;
+                                            adjustedConstructionTime[j] = time;
+                                        }
+                                        constructionTimeHistory[i] = constructionTime;
+                                        constructionTime = adjustedConstructionTime;
+                                        i++;
+                                        if (i < N) index[i] = -1;
+                                        if (i < N) maxIntersect[i] = 0;
+                                    }
+                                    else
+                                    {
+                                        used[index[i]] = false;
+                                        superLeft[itemList[index[i]].SuperIndex]++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } while (i >= 0);
             }
 
             private void SortGroups_AddRemainingItems(List<SequenceItem> constructionList, List<double> constructionTime, List<SequenceItem> remainingList)
