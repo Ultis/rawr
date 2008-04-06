@@ -84,8 +84,8 @@
             this.label26 = new System.Windows.Forms.Label();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
             this.label27 = new System.Windows.Forms.Label();
-            this.checkBoxIncrementalOptimizations = new System.Windows.Forms.CheckBox();
             this.label25 = new System.Windows.Forms.Label();
+            this.checkBoxIncrementalOptimizations = new System.Windows.Forms.CheckBox();
             this.checkBoxReconstructSequence = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
@@ -613,16 +613,6 @@
             this.toolTipMage.SetToolTip(this.label27, "Heavily restricts cooldown stacking and spell combinations when computing solutio" +
                     "ns of incremental changes.");
             // 
-            // checkBoxIncrementalOptimizations
-            // 
-            this.checkBoxIncrementalOptimizations.AutoSize = true;
-            this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(174, 664);
-            this.checkBoxIncrementalOptimizations.Name = "checkBoxIncrementalOptimizations";
-            this.checkBoxIncrementalOptimizations.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxIncrementalOptimizations.TabIndex = 56;
-            this.checkBoxIncrementalOptimizations.UseVisualStyleBackColor = true;
-            this.checkBoxIncrementalOptimizations.CheckedChanged += new System.EventHandler(this.checkBoxIncrementalOptimizations_CheckedChanged);
-            // 
             // label25
             // 
             this.label25.AutoSize = true;
@@ -634,9 +624,20 @@
             this.toolTipMage.SetToolTip(this.label25, "Enable to reconstruct the sequence of spell cycles. This option should generally " +
                     "be disabled as it can take some time to compute reconstruction in some cases.");
             // 
+            // checkBoxIncrementalOptimizations
+            // 
+            this.checkBoxIncrementalOptimizations.AutoSize = true;
+            this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(174, 664);
+            this.checkBoxIncrementalOptimizations.Name = "checkBoxIncrementalOptimizations";
+            this.checkBoxIncrementalOptimizations.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxIncrementalOptimizations.TabIndex = 56;
+            this.checkBoxIncrementalOptimizations.UseVisualStyleBackColor = true;
+            this.checkBoxIncrementalOptimizations.CheckedChanged += new System.EventHandler(this.checkBoxIncrementalOptimizations_CheckedChanged);
+            // 
             // checkBoxReconstructSequence
             // 
             this.checkBoxReconstructSequence.AutoSize = true;
+            this.checkBoxReconstructSequence.Enabled = false;
             this.checkBoxReconstructSequence.Location = new System.Drawing.Point(174, 684);
             this.checkBoxReconstructSequence.Name = "checkBoxReconstructSequence";
             this.checkBoxReconstructSequence.Size = new System.Drawing.Size(15, 14);

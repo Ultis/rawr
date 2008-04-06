@@ -1012,7 +1012,7 @@ namespace Rawr.Mage
                     if (lastSuper != sequence[a].SuperGroup)
                     {
                         lastSuper = sequence[a].SuperGroup;
-                        if (tt > lastSuper.MaxTime + 0.000001 && tt > T && lastSuper.MinTime < lastSuper.MaxTime) // there might be other cases where it is impossible to move back without breaking others, double check for infinite cycles
+                        if (tt > lastSuper.MaxTime + 0.000001 && tt > T && tt > lastSuper.MinTime + 0.000001) // there might be other cases where it is impossible to move back without breaking others, double check for infinite cycles
                         {
                             // compute buffer of items that can be moved way back
                             double buffer = 0;
@@ -2359,7 +2359,7 @@ namespace Rawr.Mage
                             }
                         }
                     }
-                    //Compact();
+                    Compact();
                     double gem = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem));
                     double pot = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 3000, Math.Max(time, nextPot));
                     double evo = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - EvocationRegen * Math.Min(evoTime, EvocationDuration), Math.Max(time, nextEvo));
