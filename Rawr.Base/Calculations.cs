@@ -552,10 +552,12 @@ namespace Rawr
 			List<Item> items = new List<Item>(new Item[] {character.Back, character.Chest, character.Feet, character.Finger1,
 				character.Finger2, character.Hands, character.Head, character.Legs, character.Neck,
 				character.Shirt, character.Shoulders, character.Tabard, character.Trinket1, character.Trinket2,
-				character.Waist, character.MainHand, character.OffHand, character.Ranged, character.Projectile, 
+				character.Waist, character.MainHand, character.Ranged, character.Projectile, 
 				character.ProjectileBag, character.Wrist});
 			if (additionalItem != null)
 				items.Add(additionalItem);
+			if (character.MainHand == null || character.MainHand.Slot != Item.ItemSlot.TwoHand)
+				items.Add(character.OffHand);
 
 			Stats statsItems = new Stats();
 			foreach (Item item in items)
@@ -606,9 +608,15 @@ namespace Rawr
 
 		public virtual bool IsItemRelevant(Item item)
 		{
-			return (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Contains(TargetClass.ToString())) &&
-				(RelevantItemTypes.Contains(item.Type)) &&
-				HasRelevantStats(item.Stats);
+			try
+			{
+				return (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Contains(TargetClass.ToString())) &&
+					(RelevantItemTypes.Contains(item.Type)) && HasRelevantStats(item.Stats);
+			}
+			catch (Exception ex)
+			{
+				return false;
+			}
 		}
 
         public virtual bool CanUseAmmo

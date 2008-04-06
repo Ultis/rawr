@@ -170,7 +170,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			calculatedStats.CappedCritReduction = Math.Min(2f + levelDifference, calculatedStats.CritReduction);
 			//Out of 100 attacks, you'll take...
 			float crits = 2f + (0.2f * levelDifference) - calculatedStats.CappedCritReduction;
-			float crushes = targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (calculatedStats.DodgePlusMiss)), 15f), 0f) : 0f;
+			float crushes = targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (calculatedStats.DodgePlusMiss)), 15f) - stats.CrushChanceReduction, 0f) : 0f;
 			float hits = Math.Max(100f - (crits + crushes + (calculatedStats.DodgePlusMiss)), 0f);
 			//Apply armor and multipliers for each attack type...
 			crits *= (100f - calculatedStats.CappedMitigation) * .02f;
@@ -228,7 +228,8 @@ you are being killed by burst damage, focus on Survival Points.",
 			statsTotal.Health = (float)Math.Round(((statsRace.Health + statsBaseGear.Health + statsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
 			statsTotal.Armor = (float)Math.Round(((statsBaseGear.Armor * 5.5f) + statsRace.Armor + statsBuffs.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
 			statsTotal.Miss = statsRace.Miss + statsBaseGear.Miss + statsBuffs.Miss;
-            statsTotal.NatureResistance = statsEnchants.NatureResistance + statsRace.NatureResistance + statsBaseGear.NatureResistance + statsBuffs.NatureResistance;
+			statsTotal.CrushChanceReduction = statsBuffs.CrushChanceReduction;
+			statsTotal.NatureResistance = statsEnchants.NatureResistance + statsRace.NatureResistance + statsBaseGear.NatureResistance + statsBuffs.NatureResistance;
             statsTotal.FireResistance = statsEnchants.FireResistance + statsRace.FireResistance + statsBaseGear.FireResistance + statsBuffs.FireResistance;
             statsTotal.FrostResistance = statsEnchants.FrostResistance + statsRace.FrostResistance + statsBaseGear.FrostResistance + statsBuffs.FrostResistance;
             statsTotal.ShadowResistance = statsEnchants.ShadowResistance + statsRace.ShadowResistance + statsBaseGear.ShadowResistance + statsBuffs.ShadowResistance;
@@ -407,6 +408,7 @@ you are being killed by burst damage, focus on Survival Points.",
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 				Health = stats.Health,
 				Miss = stats.Miss,
+				CrushChanceReduction = stats.CrushChanceReduction,
 				AllResist = stats.AllResist,
 				ArcaneResistance = stats.ArcaneResistance,
 				NatureResistance = stats.NatureResistance,
@@ -422,7 +424,7 @@ you are being killed by burst damage, focus on Survival Points.",
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health +
 				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
-				stats.FrostResistance + stats.ShadowResistance) != 0;
+				stats.FrostResistance + stats.ShadowResistance + stats.CrushChanceReduction) != 0;
 		}
     }
 

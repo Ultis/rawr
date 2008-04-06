@@ -184,7 +184,7 @@ namespace Rawr
 			this.Cursor = Cursors.WaitCursor;
 			_unsavedChanges = true;
 
-			itemButtonOffHand.Enabled = _character.MainHand == null || _character.MainHand.Slot != Item.ItemSlot.TwoHand;
+			//itemButtonOffHand.Enabled = _character.MainHand == null || _character.MainHand.Slot != Item.ItemSlot.TwoHand;
 			if (!_loadingCharacter)
 			{
 				itemButtonBack.UpdateSelectedItem(); itemButtonChest.UpdateSelectedItem(); itemButtonFeet.UpdateSelectedItem();

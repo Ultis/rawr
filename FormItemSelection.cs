@@ -46,7 +46,7 @@ namespace Rawr
 			}
 		}
 
-		private ComparisonGraph.ComparisonSort _sort;
+		private ComparisonGraph.ComparisonSort _sort = ComparisonGraph.ComparisonSort.Overall;
 		public ComparisonGraph.ComparisonSort Sort
 		{
 			get { return _sort; }

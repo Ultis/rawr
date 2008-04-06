@@ -367,8 +367,8 @@ namespace Rawr //O O . .
 				if (value == null || _mainHand != value.GemmedId)
                 {
 					_mainHand = value != null ? value.GemmedId : null;
-					if (MainHand != null && MainHand.Slot == Item.ItemSlot.TwoHand)
-						OffHand = null;
+					//if (MainHand != null && MainHand.Slot == Item.ItemSlot.TwoHand)
+					//    OffHand = null;
                     OnItemsChanged();
                 }
             }

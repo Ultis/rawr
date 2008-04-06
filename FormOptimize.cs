@@ -14,6 +14,8 @@ namespace Rawr
 		private BackgroundWorker _worker;
 		private string _calculationToOptimize;
 		private OptimizationRequirement[] _requirements;
+		private int _thoroughness;
+		private bool _allGemmings;
 
 		public FormOptimize(Character character)
 		{
@@ -41,8 +43,11 @@ namespace Rawr
 		private void buttonOptimize_Click(object sender, EventArgs e)
 		{
 			buttonOptimize.Text = "Optimizing...";
-			buttonOptimize.Enabled = false;
+			buttonOptimize.Enabled = radioButtonAllGemmings.Enabled = radioButtonKnownGemmingsOnly.Enabled =
+				trackBarThoroughness.Enabled = false;
 
+			_allGemmings = radioButtonAllGemmings.Checked;
+			_thoroughness = trackBarThoroughness.Value;
 			_calculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize);
 			List<OptimizationRequirement> requirements = new List<OptimizationRequirement>();
 			foreach (Control ctrl in groupBoxRequirements.Controls)
@@ -59,7 +64,7 @@ namespace Rawr
 								break;
 
 							case "comboBoxRequirementGreaterLessThan":
-								requirement.LessThan = (reqCtrl as ComboBox).SelectedIndex == 0;
+								requirement.LessThan = (reqCtrl as ComboBox).SelectedIndex == 1;
 								break;
 
 							case "numericUpDownRequirementValue":
@@ -116,7 +121,8 @@ namespace Rawr
 			{
 				labelMax.Text = string.Empty;
 				buttonOptimize.Text = "Optimize";
-				buttonOptimize.Enabled = true;
+				buttonOptimize.Enabled = radioButtonAllGemmings.Enabled = radioButtonKnownGemmingsOnly.Enabled =
+				 trackBarThoroughness.Enabled = true;
 				progressBarAlt.Value = progressBarMain.Value = 0;
 			}
 			else
@@ -200,8 +206,8 @@ namespace Rawr
 			comboBoxRequirementGreaterLessThan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			comboBoxRequirementGreaterLessThan.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			comboBoxRequirementGreaterLessThan.Items.AddRange(new object[] {
-            "≤",
-            "≥"});
+            "≥",
+            "≤"});
 			comboBoxRequirementGreaterLessThan.Location = new System.Drawing.Point(195, 4);
 			comboBoxRequirementGreaterLessThan.Name = "comboBoxRequirementGreaterLessThan";
 			comboBoxRequirementGreaterLessThan.Size = new System.Drawing.Size(30, 21);
@@ -381,7 +387,7 @@ namespace Rawr
 				{
 					item = ItemCache.FindItemById(itemId);
 
-					if (Calculations.IsItemRelevant(item))
+					if (item != null && Calculations.IsItemRelevant(item))
 					{
 						possibleGemmedIds = GetPossibleGemmedIdsForItem(item, gemIds, metaGemIds);
 						if (item.FitsInSlot(Character.CharacterSlot.Head)) headIdList.AddRange(possibleGemmedIds);
@@ -457,10 +463,10 @@ namespace Rawr
 
 				//Begin Genetic
 				int noImprove, i1, i2;
-				float best = 0;
+				float best = -10000000;
 
-				int popSize = 200;
-				int cycleLimit = 200;
+				int popSize = _thoroughness;
+				int cycleLimit = _thoroughness;
 				Character[] population = new Character[popSize];
 				Character[] popCopy = new Character[popSize];
 				float[] values = new float[popSize];
@@ -469,40 +475,50 @@ namespace Rawr
 				Character bestCharacter = null;
 				rand = new Random();
 
-				for (int i = 0; i < popSize; i++)
+				if (_thoroughness > 1)
 				{
-					population[i] = BuildRandomCharacter();
+					for (int i = 0; i < popSize; i++)
+					{
+						population[i] = BuildRandomCharacter();
+					}
+				}
+				else
+				{
+					bestCharacter = _character;
 				}
 
 				noImprove = 0;
 				while (noImprove < cycleLimit)
 				{
-					if (_worker.CancellationPending) return null;
-					_worker.ReportProgress(noImprove / 2, best);
-						
-					minv = 10000000;
-					maxv = -10000000;
-					for (int i = 0; i < popSize; i++)
+					if (_thoroughness > 1)
 					{
-						values[i] = GetCalculationsValue(Calculations.GetCharacterCalculations(population[i]));
-						if (values[i] < minv) minv = values[i];
-						if (values[i] > maxv) maxv = values[i];
-						if (values[i] > best)
+						if (_worker.CancellationPending) return null;
+						_worker.ReportProgress((int)Math.Round((float)noImprove / ((float)cycleLimit / 100f)), best);
+
+						minv = 10000000;
+						maxv = -10000000;
+						for (int i = 0; i < popSize; i++)
 						{
-							best = values[i];
-							bestCharacter = population[i];
-							noImprove = -1;
+							values[i] = GetCalculationsValue(Calculations.GetCharacterCalculations(population[i]));
+							if (values[i] < minv) minv = values[i];
+							if (values[i] > maxv) maxv = values[i];
+							if (values[i] > best)
+							{
+								best = values[i];
+								bestCharacter = population[i];
+								noImprove = -1;
+							}
 						}
+						sum = 0;
+						for (int i = 0; i < popSize; i++)
+							sum += values[i] - minv + (maxv - minv) / 2;
+						for (int i = 0; i < popSize; i++)
+							share[i] = sum == 0 ? 1f / popSize : (values[i] - minv + (maxv - minv) / 2) / sum;
 					}
-					sum = 0;
-					for (int i = 0; i < popSize; i++)
-						sum += values[i] - minv + (maxv - minv) / 2;
-					for (int i = 0; i < popSize; i++)
-						share[i] = sum == 0 ? 1f / popSize : (values[i] - minv + (maxv - minv) / 2) / sum;
 
 					noImprove++;
 
-					if (noImprove == 0 || noImprove % (cycleLimit / 2) != 0)
+					if (_thoroughness > 1 && noImprove == 0 || noImprove % Math.Max(1, cycleLimit / 2) != 0)
 					{
 						population.CopyTo(popCopy, 0);
 						if (bestCharacter == null)
@@ -707,21 +723,24 @@ namespace Rawr
 
 		private float GetCalculationsValue(CharacterCalculationsBase calcs)
 		{
+			float ret = 0;
 			foreach (OptimizationRequirement requirement in _requirements)
 			{
+				float calcValue = GetCalculationValue(calcs, requirement.Calculation);
 				if (requirement.LessThan)
 				{
-					if (!(GetCalculationValue(calcs, requirement.Calculation) <= requirement.Value))
-						return 0f;
+					if (!(calcValue <= requirement.Value))
+						ret += requirement.Value - calcValue;
 				}
 				else
 				{
-					if (!(GetCalculationValue(calcs, requirement.Calculation) >= requirement.Value))
-						return 0f;
+					if (!(calcValue >= requirement.Value))
+						ret += calcValue - requirement.Value;
 				}
 			}
 
-			return GetCalculationValue(calcs, _calculationToOptimize);
+			if (ret < 0) return ret;
+			else return GetCalculationValue(calcs, _calculationToOptimize);
 		}
 
 		private float GetCalculationValue(CharacterCalculationsBase calcs, string calculation)
@@ -1005,67 +1024,76 @@ namespace Rawr
 		private string[] GetPossibleGemmedIdsForItem(Item item, List<int> gemIDs, List<int> metaGemIDs)
 		{
 			List<string> possibleGemmedIds = new List<string>();
-			List<int> possibleId1s, possibleId2s, possibleId3s = null;
-			switch (item.Sockets.Color1)
+			if (!_allGemmings)
 			{
-				case Item.ItemSlot.Meta:
-					possibleId1s = metaGemIDs;
-					break;
-				case Item.ItemSlot.Red:
-				case Item.ItemSlot.Orange:
-				case Item.ItemSlot.Yellow:
-				case Item.ItemSlot.Green:
-				case Item.ItemSlot.Blue:
-				case Item.ItemSlot.Purple:
-				case Item.ItemSlot.Prismatic:
-					possibleId1s = gemIDs;
-					break;
-				default:
-					possibleId1s = new List<int>(new int[] { 0 });
-					break;
+				foreach (Item knownItem in ItemCache.AllItems)
+					if (knownItem.Id == item.Id)
+						possibleGemmedIds.Add(knownItem.GemmedId);
 			}
-			switch (item.Sockets.Color2)
+			else
 			{
-				case Item.ItemSlot.Meta:
-					possibleId2s = metaGemIDs;
-					break;
-				case Item.ItemSlot.Red:
-				case Item.ItemSlot.Orange:
-				case Item.ItemSlot.Yellow:
-				case Item.ItemSlot.Green:
-				case Item.ItemSlot.Blue:
-				case Item.ItemSlot.Purple:
-				case Item.ItemSlot.Prismatic:
-					possibleId2s = gemIDs;
-					break;
-				default:
-					possibleId2s = new List<int>(new int[] { 0 });
-					break;
-			}
-			switch (item.Sockets.Color3)
-			{
-				case Item.ItemSlot.Meta:
-					possibleId3s = metaGemIDs;
-					break;
-				case Item.ItemSlot.Red:
-				case Item.ItemSlot.Orange:
-				case Item.ItemSlot.Yellow:
-				case Item.ItemSlot.Green:
-				case Item.ItemSlot.Blue:
-				case Item.ItemSlot.Purple:
-				case Item.ItemSlot.Prismatic:
-					possibleId3s = gemIDs;
-					break;
-				default:
-					possibleId3s = new List<int>(new int[] { 0 });
-					break;
-			}
+				List<int> possibleId1s, possibleId2s, possibleId3s = null;
+				switch (item.Sockets.Color1)
+				{
+					case Item.ItemSlot.Meta:
+						possibleId1s = metaGemIDs;
+						break;
+					case Item.ItemSlot.Red:
+					case Item.ItemSlot.Orange:
+					case Item.ItemSlot.Yellow:
+					case Item.ItemSlot.Green:
+					case Item.ItemSlot.Blue:
+					case Item.ItemSlot.Purple:
+					case Item.ItemSlot.Prismatic:
+						possibleId1s = gemIDs;
+						break;
+					default:
+						possibleId1s = new List<int>(new int[] { 0 });
+						break;
+				}
+				switch (item.Sockets.Color2)
+				{
+					case Item.ItemSlot.Meta:
+						possibleId2s = metaGemIDs;
+						break;
+					case Item.ItemSlot.Red:
+					case Item.ItemSlot.Orange:
+					case Item.ItemSlot.Yellow:
+					case Item.ItemSlot.Green:
+					case Item.ItemSlot.Blue:
+					case Item.ItemSlot.Purple:
+					case Item.ItemSlot.Prismatic:
+						possibleId2s = gemIDs;
+						break;
+					default:
+						possibleId2s = new List<int>(new int[] { 0 });
+						break;
+				}
+				switch (item.Sockets.Color3)
+				{
+					case Item.ItemSlot.Meta:
+						possibleId3s = metaGemIDs;
+						break;
+					case Item.ItemSlot.Red:
+					case Item.ItemSlot.Orange:
+					case Item.ItemSlot.Yellow:
+					case Item.ItemSlot.Green:
+					case Item.ItemSlot.Blue:
+					case Item.ItemSlot.Purple:
+					case Item.ItemSlot.Prismatic:
+						possibleId3s = gemIDs;
+						break;
+					default:
+						possibleId3s = new List<int>(new int[] { 0 });
+						break;
+				}
 
-			int id0 = item.Id;
-			foreach (int id1 in possibleId1s)
-				foreach (int id2 in possibleId2s)
-					foreach (int id3 in possibleId3s)
-						possibleGemmedIds.Add(string.Format("{0}.{1}.{2}.{3}", id0, id1, id2, id3));
+				int id0 = item.Id;
+				foreach (int id1 in possibleId1s)
+					foreach (int id2 in possibleId2s)
+						foreach (int id3 in possibleId3s)
+							possibleGemmedIds.Add(string.Format("{0}.{1}.{2}.{3}", id0, id1, id2, id3));
+			}
 
 			return possibleGemmedIds.ToArray();
 		}

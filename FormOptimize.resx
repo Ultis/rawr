@@ -120,4 +120,7 @@
   <data name="labelInfo.Text" xml:space="preserve">
     <value>This optimizer will attempt to find the best combination of gear, enchants, and gems, from a collection of gear / enchants / gems that you have available. Before using the optimizer, you need to mark which items you have available, by marking the diamond next to each item/enchant/gem in the charts on the main window.</value>
   </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Thoroughness controls how extensively the Optimizer will search for possible upgrades. Even at maximum thoroughness, finding the best possible gearset is not guaranteed, just very likely. At minimum thoroughness, the optimizer will only search for individual direct upgrades. The higher you set Thoroughness, the longer optimization will take.</value>
+  </data>
 </root>

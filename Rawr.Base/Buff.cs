@@ -751,7 +751,14 @@ namespace Rawr
                 Category = BuffCategory.Debuffs,
                 Stats = new Stats() { Miss = -5f, DodgeRating = -20f * 18.9231f },
                 Type = BuffType.ShortDurationDW
-            });
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Crushless Mob",
+				Category = BuffCategory.Debuffs,
+				Stats = new Stats() { CrushChanceReduction = 15f },
+				Type = BuffType.ShortDurationDW
+			});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Faerie Fire",

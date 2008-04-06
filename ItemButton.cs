@@ -106,9 +106,25 @@ namespace Rawr
 			get { return _character; }
 			set
 			{
+				if (_character != null)
+				{
+					_character.ItemsChanged -= new EventHandler(_character_ItemsChanged);
+				}
 				_character = value;
 				if (_character != null)
+				{
+					_character.ItemsChanged += new EventHandler(_character_ItemsChanged);
 					SelectedItem = _character[CharacterSlot];
+				}
+			}
+		}
+
+		void _character_ItemsChanged(object sender, EventArgs e)
+		{
+			if (CharacterSlot == Character.CharacterSlot.OffHand)
+			{
+				_dimIcon = Character[Character.CharacterSlot.MainHand] != null &&
+					Character[Character.CharacterSlot.MainHand].Slot == Item.ItemSlot.TwoHand;
 			}
 		}
 
@@ -133,7 +149,7 @@ namespace Rawr
 				_selectedItem = Character[CharacterSlot];
 			}
 			this.Text = string.Empty;
-			this.Image = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem) : null;
+			this.ItemIcon = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem) : null;
 		}
 
 		private Item _selectedItem;
@@ -154,6 +170,35 @@ namespace Rawr
 				//	menuItem.Checked = (menuItem.Tag == _selectedItem);
 
 			}
+		}
+
+		private bool _dimIcon = false;
+		private Image _itemIcon = null;
+		public Image ItemIcon
+		{
+			get { return _itemIcon; }
+			set
+			{
+				_itemIcon = value;
+				if (_dimIcon && value != null)
+					this.Image = GetDimIcon(value);
+				else
+					this.Image = value;
+			}
+		}
+
+		private Image GetDimIcon(Image icon)
+		{
+			Bitmap bmp = new Bitmap(icon.Width, icon.Height);
+			Graphics g = Graphics.FromImage(bmp);
+			System.Drawing.Imaging.ImageAttributes ia = new System.Drawing.Imaging.ImageAttributes();
+			System.Drawing.Imaging.ColorMatrix cm = new System.Drawing.Imaging.ColorMatrix();
+			cm.Matrix33 = 0.5f;
+			ia.SetColorMatrix(cm);
+			g.DrawImage(icon, new Rectangle(0, 0, icon.Width, icon.Height), 0, 0, icon.Width, icon.Height, GraphicsUnit.Pixel, ia);
+			g.Dispose();
+			ia.Dispose();
+			return bmp;
 		}
 
 		//public Item[] _sortedItems = new Item[0];
