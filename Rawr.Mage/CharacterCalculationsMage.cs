@@ -3037,7 +3037,7 @@ namespace Rawr.Mage
 
         public string ReconstructSequence()
         {
-            if (!CalculationOptions.ReconstructSequence) return "*Enable sequence reconstruction in options";
+            if (!CalculationOptions.ReconstructSequence) return "*Disabled";
             if (FightDuration > 900) return "*Unavailable";
             List<int> validIndex = new List<int>();
             double fight = FightDuration;

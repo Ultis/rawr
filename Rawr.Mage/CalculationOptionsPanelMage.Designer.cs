@@ -621,8 +621,7 @@
             this.label25.Size = new System.Drawing.Size(127, 13);
             this.label25.TabIndex = 59;
             this.label25.Text = "Reconstruct Sequence: *";
-            this.toolTipMage.SetToolTip(this.label25, "Enable to reconstruct the sequence of spell cycles. This option should generally " +
-                    "be disabled as it can take some time to compute reconstruction in some cases.");
+            this.toolTipMage.SetToolTip(this.label25, "This option is currently disabled.");
             // 
             // checkBoxIncrementalOptimizations
             // 
