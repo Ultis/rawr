@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Globalization;
 
@@ -753,10 +752,10 @@ namespace Rawr.Mage
                     {
                         foreach (SequenceItem tailitem in Item2)
                         {
-                            IEnumerable<SequenceGroup> intersect = item.Group.Intersect(tailitem.Group);
-                            if (intersect.Count() > 0)
+                            List<SequenceGroup> intersect = Rawr.Mage.ListUtils.Intersect<SequenceGroup>(item.Group, tailitem.Group);
+                            if (intersect.Count > 0)
                             {
-                                item.Tail = intersect.Intersect(item.Tail).ToList();
+								item.Tail = Rawr.Mage.ListUtils.Intersect<SequenceGroup>(intersect, item.Tail);
                             }
                         }
                     }
@@ -793,8 +792,8 @@ namespace Rawr.Mage
                 bool ysingletail = y.Tail.Count > 0;
                 int compare = ysingletail.CompareTo(xsingletail);
                 if (compare != 0) return compare;
-                int xintersect = (tail == null) ? 0 : x.Group.Intersect(tail).Count();
-                int yintersect = (tail == null) ? 0 : y.Group.Intersect(tail).Count();
+                int xintersect = (tail == null) ? 0 : Rawr.Mage.ListUtils.Intersect<SequenceGroup>(x.Group, tail).Count;
+				int yintersect = (tail == null) ? 0 : Rawr.Mage.ListUtils.Intersect<SequenceGroup>(y.Group, tail).Count;
                 compare = yintersect.CompareTo(xintersect);
                 if (compare != 0) return compare;
                 return Sequence.CompareMps(x.Mps, y.Mps, minMps, maxMps);
@@ -838,7 +837,7 @@ namespace Rawr.Mage
                 List<SequenceGroup> lastGroup = null;
                 for (int i = 0; i < sequence.Count; i++)
                 {
-                    if (lastGroup == null || (sequence[i].Index != 3 && sequence[i].Index != 4 && lastGroup.Intersect(sequence[i].Group).Count() == 0))
+                    if (lastGroup == null || (sequence[i].Index != 3 && sequence[i].Index != 4 && Rawr.Mage.ListUtils.Intersect<SequenceGroup>(lastGroup, sequence[i].Group).Count == 0))
                     {
                         group = new SequenceGroup();
                         superGroup.Add(group);
@@ -1179,7 +1178,9 @@ namespace Rawr.Mage
                         // we have to place it before it gets to that point
                         // when we're filling with extra mana this does not apply
                         List<SequenceItem> copy = sequence.GetRange(k, kk - k);
-                        double totalmana = copy.Sum(item => item.Mps * item.Duration);
+						double totalmana = 0;
+						foreach (SequenceItem item in copy)
+							totalmana += item.Mps * item.Duration;
                         while (currentPush <= maxPush && !extraMode && totalmana < 0)
                         {
                             if (sequence[jj].Mps * jT > -totalmana)
@@ -1704,7 +1705,10 @@ namespace Rawr.Mage
                     double gap = 0;
                     if (combustionMode)
                     {
-                        gap = 1 - group.Item.Sum(item => item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs));
+						double tempSum = 0;
+						foreach (SequenceItem item in group.Item)
+							tempSum += item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                        gap = 1 - tempSum;
                     }
                     else
                     {
@@ -1718,7 +1722,10 @@ namespace Rawr.Mage
                             double gapReduction = 0;
                             if (combustionMode)
                             {
-                                gapReduction = subgroup.Item.Sum(item => item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs));
+								double tempSum = 0;
+								foreach (SequenceItem item in subgroup.Item)
+									tempSum += item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                                gapReduction = tempSum;
                             }
                             else
                             {
@@ -1828,8 +1835,12 @@ namespace Rawr.Mage
 
             public void SortGroups()
             {
-                List<SequenceItem> groupedItems = sequence.Where(item => item.Group.Count > 0).ToList();
-                compactTotalTime = double.PositiveInfinity;
+				List<SequenceItem> groupedItems = new List<SequenceItem>();
+				foreach(SequenceItem item in sequence)
+					if (item.Group.Count > 0)
+						groupedItems.Add(item);
+
+				compactTotalTime = double.PositiveInfinity;
                 //SortGroups_AddRemainingItems(new List<SequenceItem>(), new List<double>(), groupedItems);
                 SortGroups_Compute(groupedItems);
 
@@ -1865,7 +1876,7 @@ namespace Rawr.Mage
                     }
                     item.MaxTime = time;
                     double t = time;
-                    for (int j = i + 1; j < compactItems.Count && compactItems[j].Group.Intersect(compactItems[j - 1].Group).Count() > 0; j++)
+                    for (int j = i + 1; j < compactItems.Count && Rawr.Mage.ListUtils.Intersect<SequenceGroup>(compactItems[j].Group, compactItems[j - 1].Group).Count > 0; j++)
                     {
                         t += compactItems[j - 1].Duration;
                         compactItems[j].MaxTime = t;
@@ -1888,8 +1899,8 @@ namespace Rawr.Mage
                 bool ysingletail = y.Tail.Count > 0;
                 int compare = ysingletail.CompareTo(xsingletail);
                 if (compare != 0) return compare;
-                int xintersect = (tail == null) ? 0 : x.Group.Intersect(tail).Count();
-                int yintersect = (tail == null) ? 0 : y.Group.Intersect(tail).Count();
+                int xintersect = (tail == null) ? 0 : Rawr.Mage.ListUtils.Intersect<SequenceGroup>(x.Group, tail).Count;
+                int yintersect = (tail == null) ? 0 : Rawr.Mage.ListUtils.Intersect<SequenceGroup>(y.Group, tail).Count;
                 return yintersect.CompareTo(xintersect);
             }
 
@@ -1921,7 +1932,7 @@ namespace Rawr.Mage
                                 {
                                     foreach (SequenceItem item in superList)
                                     {
-                                        if (item.Group.Intersect(itemList[k].Group).Count() > 0)
+                                        if (Rawr.Mage.ListUtils.Intersect<SequenceGroup>(item.Group, itemList[k].Group).Count > 0)
                                         {
                                             itemList[k].SuperIndex = super;
                                             superList.Add(itemList[k]);
@@ -2119,10 +2130,10 @@ namespace Rawr.Mage
                     {
                         foreach (SequenceItem tailitem in remainingList)
                         {
-                            IEnumerable<SequenceGroup> intersect = item.Group.Intersect(tailitem.Group);
-                            if (intersect.Count() > 0)
+                            List<SequenceGroup> intersect = Rawr.Mage.ListUtils.Intersect<SequenceGroup>(item.Group, tailitem.Group);
+                            if (intersect.Count > 0)
                             {
-                                item.Tail = intersect.Intersect(item.Tail).ToList();
+                                item.Tail = Rawr.Mage.ListUtils.Intersect<SequenceGroup>(intersect, item.Tail);
                             }
                         }
                     }
@@ -2165,7 +2176,7 @@ namespace Rawr.Mage
                             List<double> adjustedConstructionTime = new List<double>(constructionTime);
                             adjustedConstructionTime.Add(time);
                             // adjust min time of items in same super group
-                            for (int j = adjustedConstructionTime.Count - 2; j >= 0 && constructionList[j].Group.Intersect(constructionList[j + 1].Group).Count() > 0; j--)
+                            for (int j = adjustedConstructionTime.Count - 2; j >= 0 && Rawr.Mage.ListUtils.Intersect<SequenceGroup>(constructionList[j].Group, constructionList[j + 1].Group).Count > 0; j--)
                             {
                                 time -= constructionList[j].Duration;
                                 adjustedConstructionTime[j] = time;

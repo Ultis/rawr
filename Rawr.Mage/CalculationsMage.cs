@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Globalization;
 
@@ -363,7 +362,7 @@ namespace Rawr.Mage
             for (int flameCap = 0; flameCap < 2; flameCap++)
             for (int destructionPotion = 0; destructionPotion < 2; destructionPotion++)
             {
-                if (!calculationOptions.IncrementalOptimizations || calculationOptions.IncrementalSetCooldowns.Contains(incrementalSetIndex))
+                if (!calculationOptions.IncrementalOptimizations || new List<int>(calculationOptions.IncrementalSetCooldowns).Contains(incrementalSetIndex))
                 {
                     for (int trinket1 = 0; trinket1 < 2; trinket1++)
                         for (int trinket2 = 0; trinket2 < 2; trinket2++)

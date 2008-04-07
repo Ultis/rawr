@@ -129,10 +129,20 @@ namespace Rawr
 			{
 				progressBarAlt.Value = progressBarMain.Value = 100;
 				Character bestCharacter = e.Result as Character;
-				if (MessageBox.Show(string.Format("The Optimizer found a gearset with a score of {0}. " + 
+				if (bestCharacter == null)
+				{
+					labelMax.Text = string.Empty;
+					buttonOptimize.Text = "Optimize";
+					buttonOptimize.Enabled = radioButtonAllGemmings.Enabled = radioButtonKnownGemmingsOnly.Enabled =
+					 trackBarThoroughness.Enabled = true;
+					progressBarAlt.Value = progressBarMain.Value = 0;
+					MessageBox.Show("Sorry, Rawr was unable to find a gearset to meet your requirements.", "Rawr Optimizer Results");
+				}
+
+				if (_character == null || MessageBox.Show(string.Format("The Optimizer found a gearset with a score of {0}. " +
 					"(Your currently equipped gear has a score of {1}) Would you like to equip the optimized gear?",
 					GetCalculationsValue(Calculations.GetCharacterCalculations(bestCharacter)),
-					GetCalculationsValue(Calculations.GetCharacterCalculations(_character))), 
+					GetCalculationsValue(Calculations.GetCharacterCalculations(_character))),
 					"Rawr Optimizer Results", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					_character.Back = bestCharacter.Back;
@@ -169,6 +179,14 @@ namespace Rawr
 					_character.WristEnchant = bestCharacter.WristEnchant;
 					_character.OnItemsChanged();
 					Close();
+				}
+				else
+				{
+					labelMax.Text = string.Empty;
+					buttonOptimize.Text = "Optimize";
+					buttonOptimize.Enabled = radioButtonAllGemmings.Enabled = radioButtonKnownGemmingsOnly.Enabled =
+					 trackBarThoroughness.Enabled = true;
+					progressBarAlt.Value = progressBarMain.Value = 0;
 				}
 			}
 		}
@@ -1143,7 +1161,7 @@ namespace Rawr
 					Blue = blue
 				};
 				bool addItem = true;
-				List<StatsColors> removeItems = null;
+				List<StatsColors> removeItems = new List<StatsColors>();
 				foreach (StatsColors statsColorsB in filteredStatsColors)
 				{
 					ArrayUtils.CompareResult compare = statsColorsA.CompareTo(statsColorsB);
