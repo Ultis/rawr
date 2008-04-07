@@ -3,8 +3,23 @@ using System.Windows.Forms;
 
 namespace Rawr
 {
-    public partial class FormFillSockets : Form
-    {
+    public partial class FormFillSockets : Form, IFormItemSelectionProvider
+	{
+		private FormItemSelection _formItemSelection;
+		public FormItemSelection FormItemSelection
+		{
+			get
+			{
+				if (_formItemSelection == null)
+				{
+					_formItemSelection = new FormItemSelection();
+					_formItemSelection.Character = FormMain.Instance.FormItemSelection.Character;
+					_formItemSelection.Items = ItemCache.RelevantItems;
+				}
+				return _formItemSelection;
+			}
+		}
+
         public bool FillEmptySockets
         {
             get { return radioButtonEmpty.Checked; }
