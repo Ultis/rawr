@@ -918,7 +918,7 @@ namespace Rawr
 		{
 			WebRequestWrapper.ResetFatalErrorIndicator();
 			StatusMessaging.UpdateStatus("Update All Items", "Beginning Update");
-			StatusMessaging.UpdateStatus("Cache All Icons", "Not Started");
+			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
 			for (int i = 0; i < ItemCache.AllItems.Length; i++)
 			{
 				Item item = ItemCache.AllItems[i];
@@ -927,7 +927,6 @@ namespace Rawr
 				{
 					Item.LoadFromId(item.GemmedId, true, "Refreshing", false);
 				}
-
 			}
 			StatusMessaging.UpdateStatusFinished("Update All Items");
 			ItemIcons.CacheAllIcons(ItemCache.AllItems);

@@ -129,40 +129,47 @@ namespace Rawr
 			{
 				progressBarAlt.Value = progressBarMain.Value = 100;
 				Character bestCharacter = e.Result as Character;
-				_character.Back = bestCharacter.Back;
-				_character.BackEnchant = bestCharacter.BackEnchant;
-				_character.Chest = bestCharacter.Chest;
-				_character.ChestEnchant = bestCharacter.ChestEnchant;
-				_character.Feet = bestCharacter.Feet;
-				_character.FeetEnchant = bestCharacter.FeetEnchant;
-				_character.Finger1 = bestCharacter.Finger1;
-				_character.Finger1Enchant = bestCharacter.Finger1Enchant;
-				_character.Finger2 = bestCharacter.Finger2;
-				_character.Finger2Enchant = bestCharacter.Finger2Enchant;
-				_character.Hands = bestCharacter.Hands;
-				_character.HandsEnchant = bestCharacter.HandsEnchant;
-				_character.Head = bestCharacter.Head;
-				_character.HeadEnchant = bestCharacter.HeadEnchant;
-				_character.Legs = bestCharacter.Legs;
-				_character.LegsEnchant = bestCharacter.LegsEnchant;
-				_character.MainHand = bestCharacter.MainHand;
-				_character.MainHandEnchant = bestCharacter.MainHandEnchant;
-				_character.Neck = bestCharacter.Neck;
-				_character.OffHand = bestCharacter.OffHand;
-				_character.OffHandEnchant = bestCharacter.OffHandEnchant;
-				_character.Projectile = bestCharacter.Projectile;
-				_character.ProjectileBag = bestCharacter.ProjectileBag;
-				_character.Ranged = bestCharacter.Ranged;
-				_character.RangedEnchant = bestCharacter.RangedEnchant;
-				_character.Shoulders = bestCharacter.Shoulders;
-				_character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
-				_character.Trinket1 = bestCharacter.Trinket1;
-				_character.Trinket2 = bestCharacter.Trinket2;
-				_character.Waist = bestCharacter.Waist;
-				_character.Wrist = bestCharacter.Wrist;
-				_character.WristEnchant = bestCharacter.WristEnchant;
-				_character.OnItemsChanged();
-				Close();
+				if (MessageBox.Show(string.Format("The Optimizer found a gearset with a score of {0}. " + 
+					"(Your currently equipped gear has a score of {1}) Would you like to equip the optimized gear?",
+					GetCalculationsValue(Calculations.GetCharacterCalculations(bestCharacter)),
+					GetCalculationsValue(Calculations.GetCharacterCalculations(_character))), 
+					"Rawr Optimizer Results", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				{
+					_character.Back = bestCharacter.Back;
+					_character.BackEnchant = bestCharacter.BackEnchant;
+					_character.Chest = bestCharacter.Chest;
+					_character.ChestEnchant = bestCharacter.ChestEnchant;
+					_character.Feet = bestCharacter.Feet;
+					_character.FeetEnchant = bestCharacter.FeetEnchant;
+					_character.Finger1 = bestCharacter.Finger1;
+					_character.Finger1Enchant = bestCharacter.Finger1Enchant;
+					_character.Finger2 = bestCharacter.Finger2;
+					_character.Finger2Enchant = bestCharacter.Finger2Enchant;
+					_character.Hands = bestCharacter.Hands;
+					_character.HandsEnchant = bestCharacter.HandsEnchant;
+					_character.Head = bestCharacter.Head;
+					_character.HeadEnchant = bestCharacter.HeadEnchant;
+					_character.Legs = bestCharacter.Legs;
+					_character.LegsEnchant = bestCharacter.LegsEnchant;
+					_character.MainHand = bestCharacter.MainHand;
+					_character.MainHandEnchant = bestCharacter.MainHandEnchant;
+					_character.Neck = bestCharacter.Neck;
+					_character.OffHand = bestCharacter.OffHand;
+					_character.OffHandEnchant = bestCharacter.OffHandEnchant;
+					_character.Projectile = bestCharacter.Projectile;
+					_character.ProjectileBag = bestCharacter.ProjectileBag;
+					_character.Ranged = bestCharacter.Ranged;
+					_character.RangedEnchant = bestCharacter.RangedEnchant;
+					_character.Shoulders = bestCharacter.Shoulders;
+					_character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
+					_character.Trinket1 = bestCharacter.Trinket1;
+					_character.Trinket2 = bestCharacter.Trinket2;
+					_character.Waist = bestCharacter.Waist;
+					_character.Wrist = bestCharacter.Wrist;
+					_character.WristEnchant = bestCharacter.WristEnchant;
+					_character.OnItemsChanged();
+					Close();
+				}
 			}
 		}
 
@@ -442,8 +449,8 @@ namespace Rawr
 				waistIds = FilterList(waistIdList);
 				legsIds = FilterList(legsIdList);
 				feetIds = FilterList(feetIdList);
-				fingerIds = FilterList(fingerIdList);
-				trinketIds = FilterList(trinketIdList);
+				fingerIds = fingerIdList.ToArray(); //When one ring/trinket is completely better than another
+				trinketIds = trinketIdList.ToArray(); //you may still want to use both, so don't filter
 				mainHandIds = FilterList(mainHandIdList);
 				offHandIds = FilterList(offHandIdList);
 				rangedIds = FilterList(rangedIdList);
@@ -1136,14 +1143,13 @@ namespace Rawr
 					Blue = blue
 				};
 				bool addItem = true;
-				StatsColors removeItem = null;
+				List<StatsColors> removeItems = null;
 				foreach (StatsColors statsColorsB in filteredStatsColors)
 				{
 					ArrayUtils.CompareResult compare = statsColorsA.CompareTo(statsColorsB);
 					if (compare == ArrayUtils.CompareResult.GreaterThan) //A>B
 					{
-						removeItem = statsColorsB;
-						break;
+						removeItems.Add(statsColorsB);
 					}
 					else if (compare == ArrayUtils.CompareResult.Equal || compare == ArrayUtils.CompareResult.LessThan)
 					{
@@ -1151,7 +1157,8 @@ namespace Rawr
 						break;
 					}
 				}
-				if (removeItem != null) filteredStatsColors.Remove(removeItem);
+				foreach(StatsColors removeItem in removeItems)
+					filteredStatsColors.Remove(removeItem);
 				if (addItem) filteredStatsColors.Add(statsColorsA);
 			}
 			foreach (StatsColors statsColors in filteredStatsColors)

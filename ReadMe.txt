@@ -1,27 +1,22 @@
-Rawr Beta 12.1
+Rawr Beta 13
 ------------
-There's probably alot of people reading this who are new to Rawr. So, welcome! Two versions ago, Rawr supported only a single model, Bear. Last version, Cat was added. That was a pretty big addition, but still limited Rawr's users to one spec of one class. Well, lets octuple that, shall we? Rawr now supports 3 more models: *Moonkin*, *Mage*, and *Warlock*. Please keep in mind that these models are brand new, and in various stages of polish. There will be bugs, there will be missing features. I strongly urge you to come post an Issue on our development site, http://www.codeplex.com/Rawr/, with any feedback you have on Rawr, especially the 3 new models. Dopefish is developing the Moonkin model, Kavan is developing the Mage model, and CBennight is developing the Warlock model. And as usual, there's a number of additional enhancements to core Rawr functionality. Big thanks to Dwin, and Bashui for help on core Rawr functionality. Also, stay tuned, because there are more models in the works. Healadin and Retribution are coming along well, and Rogue, ProtWarr, Protadin, Hunter, ElemShammy, and DPSWarr are beginning development as well. If you'd like to help out with any of these models, a new model, or the project in general, let me know, we could always use a hand.
-
-This release is dedicated to Gary Gygax. Without him, Rawr probably wouldn't exist.
+ Welcome to Rawr b13. New in this beta are two major new features, the Optimizer, and the Retribution model, as well as a multitude of fixes and improvements to the app in general, and each model. You'll be able to mark items as available to your character, and then use the Optimizer to find the best possible set of gear from all available items, with a variety of additional optional requirements. The Retribute model, developed by Anarkii, will help all the Retadins out there build their gear set!
 
 Anyway, as usual, thanks very much for testing Rawr. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
 FAQ
 ---
- Q: Why are some features disabled on the Options tab for Cat?
- A: See the "Missing Features" section below. All of these will be solved in the next major version, b12.
-
- Q: The calculations don't match my character screen. Are they wrong?
- A: Most likely, no. First, the calculations in Rawr are for combat against raid boss mobs, which changes the chances to be missed, to dodge, to be crushed, and to be crit, so you'll see values off by 0.6% from what the character sheet says. Additionall, WoW sometimes rounds stats oddly, when many buffs are involved. I've gone to great lengths to make Rawr as accurate as possible, but it'll still calculate Stamina and Agility off by 1 in about 5 to 10% of cases. That in turn may make your health, dodge, and armor off by a tiny amount as well. Anyway, that's rare, and even when it does happen, the difference is *extremely* negligable, so don't worry about it. If you do find a situation where other calculations are off, or any of those are off significantly, please let me know. I want to ensure Rawr is as accurate as possible.
-
  Q: I get an error on load, "To run this application you must first install..." or "The application failed to initialize properly (0xc0000135)." How do I fix this?
  A: Install .NET Framework 2.0 from Microsoft. If it still doesn't work, uninstall .NET Framework completely, reinstall .NET Framework 2.0, and try Rawr again. Download link for .NET Framework 2.0 from Microsoft: http://go.microsoft.com/fwlink/?linkid=32168 
+
+ Q: The Bear calculations don't match my character screen. Are they wrong?
+ A: Most likely, no. First, the calculations in Rawr are for combat against raid boss mobs, which changes the chances to be missed, to dodge, to be crushed, and to be crit, so you'll see values off by 0.6% from what the character sheet says. Additionall, WoW sometimes rounds stats oddly, when many buffs are involved. I've gone to great lengths to make Rawr as accurate as possible, but it'll still calculate Stamina and Agility off by 1 in about 5 to 10% of cases. That in turn may make your health, dodge, and armor off by a tiny amount as well. Anyway, that's rare, and even when it does happen, the difference is *extremely* negligable, so don't worry about it. If you do find a situation where other calculations are off, or any of those are off significantly, please let me know. I want to ensure Rawr is as accurate as possible.
 
  Q: There's an item missing! Can you please add [Some Item]?
  A: No, I designed Rawr so that I wouldn't need to update it with new items every time a new tanking item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
  
- Q: Can you make it, or does Rawr work for Cats, Moonkin, or Trees?
- A: Rawr finally has Cat support! After Cat is cleaned up and fully functional, I expect many other spinoffs to be made, such as for Moonkin, Trees, or even different classes.
+ Q: Can you make it, or does Rawr work for [insert class/spec here]?
+ A: What you see in Rawr is what's currently developed to release quality. A few more models are in development. If you're a C# developer and would like to begin or help with another model, let me know!
 
  
 Notes on Rawr.Cat
@@ -68,6 +63,22 @@ Notes on Rawr.Moonkin
 
 Version History
 ---------------
+Beta 13:
+ - Rawr now includes a Retribution model, built by Anarkii! Since it's our first Ret release, it may have some bugs, so please report anything you find wrong with it, and welcome to Rawr, Retadins!
+ - Added an Optimizer feature. The Optimizer works by looking at different combinations of gear that you have available (mark items as available by clicking the diamond next to the item in the charts), and finding the best possible set of gear. There's lots to see in the Optimizer, so give it a try, and let us know how it works. One known issue with the optimizer: Unique gems may be used multiple times; best to just not mark any unique gems as Available for now.
+ - Added a Status dialog that will show the status of all pending network operations (like loading items from the Armory). Note that there's still no way to cancel these operations while they're in-progress, but we hope to have that in a future update, soon.
+ - Improved the performance of loading and saving cached items, and performing some common item stat calculations, and fixed several bugs with the item editor.
+ - Items with class restrictions will not show up for other classes.
+ - Items will now display a Location, of where to get them. The data for this is still vague or non-existent in some cases, since it's loaded from the Armory, but for the most part it should be useful.
+ - All DPS models' DPS rating is calculated in terms of plain DPS (as opposed to DPS*100);
+ - Downloads from the Armory should be more resilient now, retrying whenever random failures occur, and correctly supporting more types of proxy servers where needed.
+ - The current character name and filename will appear in the title bar.
+ - Tooltips are now shown for buffs on the buff selection tab.
+ - Buffs and Enchants will now combine the built-in lists with what's in your itemcache, so that you can preserve customizations between versions.
+ - Rawr.Bear: Added all missing 2.4 items/enchants to the default ItemCache, resist enchants are now correctly counted, there are now debuffs for Sunwell Radiance and mobs that don't crush.
+ - Rawr.Mage: Added more AB-AM cycles, now shows a tradeoff coefficient for all spells, improved rotation and trinket optimization, improved performance, now tracks threat, auto selects Mage/Molten armor,
+ - Rawr.Moonkin: Removed the Mana Efficiency rating, since it was already contained in the total damage rating, improved the accuracy of several calculations, added set bonuses, updated mechanics for 2.4, now shows several different damage-related calculations similar to the spreadsheet.
+
 Beta 12.1:
  - Fixed a bug that would cause "Input string not in correct format" errors when Rawr was run on copies of Windows for a region where a period is not the decimal separator (ie european countries where it would be "1,23" instead of "1.23").
  - For proxies that filter by user-agent, the user-agent used by Rawr is now customizable in the proxy options.
