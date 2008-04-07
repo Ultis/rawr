@@ -1,5 +1,5 @@
-Rawr Beta 13
-------------
+Rawr Beta 13.1
+--------------
  Welcome to Rawr b13. New in this beta are two major new features, the Optimizer, and the Retribution model, as well as a multitude of fixes and improvements to the app in general, and each model. You'll be able to mark items as available to your character, and then use the Optimizer to find the best possible set of gear from all available items, with a variety of additional optional requirements. The Retribute model, developed by Anarkii, will help all the Retadins out there build their gear set!
 
 Anyway, as usual, thanks very much for testing Rawr. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
@@ -63,6 +63,10 @@ Notes on Rawr.Moonkin
 
 Version History
 ---------------
+Beta 13.1:
+ - Fix for several Optimizer crashes. If you can get the Optimizer to crash still, please e-mail me your character file (cnervig@hotmail.com).
+ - Fix for Rawr.Mage requiring .NET 3.5.
+
 Beta 13:
  - Rawr now includes a Retribution model, built by Anarkii! Since it's our first Ret release, it may have some bugs, so please report anything you find wrong with it, and welcome to Rawr, Retadins!
  - Added an Optimizer feature. The Optimizer works by looking at different combinations of gear that you have available (mark items as available by clicking the diamond next to the item in the charts), and finding the best possible set of gear. There's lots to see in the Optimizer, so give it a try, and let us know how it works. One known issue with the optimizer: Unique gems may be used multiple times; best to just not mark any unique gems as Available for now.
