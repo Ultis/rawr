@@ -113,6 +113,9 @@ namespace Rawr
 				labelMax.Text = e.UserState.ToString();
 			progressBarAlt.Value = e.ProgressPercentage;
 			progressBarMain.Value = Math.Max(e.ProgressPercentage, progressBarMain.Value);
+
+
+            Text = string.Format("{0}% Complete - Rawr Optimizer", progressBarMain.Value);
 		}
 
 		void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -145,41 +148,41 @@ namespace Rawr
 					GetCalculationsValue(Calculations.GetCharacterCalculations(_character))),
 					"Rawr Optimizer Results", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
-					_character.Back = bestCharacter.Back;
-					_character.BackEnchant = bestCharacter.BackEnchant;
-					_character.Chest = bestCharacter.Chest;
-					_character.ChestEnchant = bestCharacter.ChestEnchant;
-					_character.Feet = bestCharacter.Feet;
-					_character.FeetEnchant = bestCharacter.FeetEnchant;
-					_character.Finger1 = bestCharacter.Finger1;
-					_character.Finger1Enchant = bestCharacter.Finger1Enchant;
-					_character.Finger2 = bestCharacter.Finger2;
-					_character.Finger2Enchant = bestCharacter.Finger2Enchant;
-					_character.Hands = bestCharacter.Hands;
-					_character.HandsEnchant = bestCharacter.HandsEnchant;
-					_character.Head = bestCharacter.Head;
-					_character.HeadEnchant = bestCharacter.HeadEnchant;
-					_character.Legs = bestCharacter.Legs;
-					_character.LegsEnchant = bestCharacter.LegsEnchant;
-					_character.MainHand = bestCharacter.MainHand;
-					_character.MainHandEnchant = bestCharacter.MainHandEnchant;
-					_character.Neck = bestCharacter.Neck;
-					_character.OffHand = bestCharacter.OffHand;
-					_character.OffHandEnchant = bestCharacter.OffHandEnchant;
-					_character.Projectile = bestCharacter.Projectile;
-					_character.ProjectileBag = bestCharacter.ProjectileBag;
-					_character.Ranged = bestCharacter.Ranged;
-					_character.RangedEnchant = bestCharacter.RangedEnchant;
-					_character.Shoulders = bestCharacter.Shoulders;
-					_character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
-					_character.Trinket1 = bestCharacter.Trinket1;
-					_character.Trinket2 = bestCharacter.Trinket2;
-					_character.Waist = bestCharacter.Waist;
-					_character.Wrist = bestCharacter.Wrist;
-					_character.WristEnchant = bestCharacter.WristEnchant;
-					_character.OnItemsChanged();
-					Close();
-				}
+				_character.Back = bestCharacter.Back;
+				_character.BackEnchant = bestCharacter.BackEnchant;
+				_character.Chest = bestCharacter.Chest;
+				_character.ChestEnchant = bestCharacter.ChestEnchant;
+				_character.Feet = bestCharacter.Feet;
+				_character.FeetEnchant = bestCharacter.FeetEnchant;
+				_character.Finger1 = bestCharacter.Finger1;
+				_character.Finger1Enchant = bestCharacter.Finger1Enchant;
+				_character.Finger2 = bestCharacter.Finger2;
+				_character.Finger2Enchant = bestCharacter.Finger2Enchant;
+				_character.Hands = bestCharacter.Hands;
+				_character.HandsEnchant = bestCharacter.HandsEnchant;
+				_character.Head = bestCharacter.Head;
+				_character.HeadEnchant = bestCharacter.HeadEnchant;
+				_character.Legs = bestCharacter.Legs;
+				_character.LegsEnchant = bestCharacter.LegsEnchant;
+				_character.MainHand = bestCharacter.MainHand;
+				_character.MainHandEnchant = bestCharacter.MainHandEnchant;
+				_character.Neck = bestCharacter.Neck;
+				_character.OffHand = bestCharacter.OffHand;
+				_character.OffHandEnchant = bestCharacter.OffHandEnchant;
+				_character.Projectile = bestCharacter.Projectile;
+				_character.ProjectileBag = bestCharacter.ProjectileBag;
+				_character.Ranged = bestCharacter.Ranged;
+				_character.RangedEnchant = bestCharacter.RangedEnchant;
+				_character.Shoulders = bestCharacter.Shoulders;
+				_character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
+				_character.Trinket1 = bestCharacter.Trinket1;
+				_character.Trinket2 = bestCharacter.Trinket2;
+				_character.Waist = bestCharacter.Waist;
+				_character.Wrist = bestCharacter.Wrist;
+				_character.WristEnchant = bestCharacter.WristEnchant;
+				_character.OnItemsChanged();
+				Close();
+			}
 				else
 				{
 					labelMax.Text = string.Empty;
@@ -502,10 +505,10 @@ namespace Rawr
 
 				if (_thoroughness > 1)
 				{
-					for (int i = 0; i < popSize; i++)
-					{
-						population[i] = BuildRandomCharacter();
-					}
+				for (int i = 0; i < popSize; i++)
+				{
+					population[i] = BuildRandomCharacter();
+				}
 				}
 				else
 				{
@@ -517,28 +520,28 @@ namespace Rawr
 				{
 					if (_thoroughness > 1)
 					{
-						if (_worker.CancellationPending) return null;
+					if (_worker.CancellationPending) return null;
 						_worker.ReportProgress((int)Math.Round((float)noImprove / ((float)cycleLimit / 100f)), best);
-
-						minv = 10000000;
-						maxv = -10000000;
-						for (int i = 0; i < popSize; i++)
+						
+					minv = 10000000;
+					maxv = -10000000;
+					for (int i = 0; i < popSize; i++)
+					{
+						values[i] = GetCalculationsValue(Calculations.GetCharacterCalculations(population[i]));
+						if (values[i] < minv) minv = values[i];
+						if (values[i] > maxv) maxv = values[i];
+						if (values[i] > best)
 						{
-							values[i] = GetCalculationsValue(Calculations.GetCharacterCalculations(population[i]));
-							if (values[i] < minv) minv = values[i];
-							if (values[i] > maxv) maxv = values[i];
-							if (values[i] > best)
-							{
-								best = values[i];
-								bestCharacter = population[i];
-								noImprove = -1;
-							}
+							best = values[i];
+							bestCharacter = population[i];
+							noImprove = -1;
 						}
-						sum = 0;
-						for (int i = 0; i < popSize; i++)
-							sum += values[i] - minv + (maxv - minv) / 2;
-						for (int i = 0; i < popSize; i++)
-							share[i] = sum == 0 ? 1f / popSize : (values[i] - minv + (maxv - minv) / 2) / sum;
+					}
+					sum = 0;
+					for (int i = 0; i < popSize; i++)
+						sum += values[i] - minv + (maxv - minv) / 2;
+					for (int i = 0; i < popSize; i++)
+						share[i] = sum == 0 ? 1f / popSize : (values[i] - minv + (maxv - minv) / 2) / sum;
 					}
 
 					noImprove++;
@@ -1057,67 +1060,67 @@ namespace Rawr
 			}
 			else
 			{
-				List<int> possibleId1s, possibleId2s, possibleId3s = null;
-				switch (item.Sockets.Color1)
-				{
-					case Item.ItemSlot.Meta:
-						possibleId1s = metaGemIDs;
-						break;
-					case Item.ItemSlot.Red:
-					case Item.ItemSlot.Orange:
-					case Item.ItemSlot.Yellow:
-					case Item.ItemSlot.Green:
-					case Item.ItemSlot.Blue:
-					case Item.ItemSlot.Purple:
-					case Item.ItemSlot.Prismatic:
-						possibleId1s = gemIDs;
-						break;
-					default:
-						possibleId1s = new List<int>(new int[] { 0 });
-						break;
-				}
-				switch (item.Sockets.Color2)
-				{
-					case Item.ItemSlot.Meta:
-						possibleId2s = metaGemIDs;
-						break;
-					case Item.ItemSlot.Red:
-					case Item.ItemSlot.Orange:
-					case Item.ItemSlot.Yellow:
-					case Item.ItemSlot.Green:
-					case Item.ItemSlot.Blue:
-					case Item.ItemSlot.Purple:
-					case Item.ItemSlot.Prismatic:
-						possibleId2s = gemIDs;
-						break;
-					default:
-						possibleId2s = new List<int>(new int[] { 0 });
-						break;
-				}
-				switch (item.Sockets.Color3)
-				{
-					case Item.ItemSlot.Meta:
-						possibleId3s = metaGemIDs;
-						break;
-					case Item.ItemSlot.Red:
-					case Item.ItemSlot.Orange:
-					case Item.ItemSlot.Yellow:
-					case Item.ItemSlot.Green:
-					case Item.ItemSlot.Blue:
-					case Item.ItemSlot.Purple:
-					case Item.ItemSlot.Prismatic:
-						possibleId3s = gemIDs;
-						break;
-					default:
-						possibleId3s = new List<int>(new int[] { 0 });
-						break;
-				}
+			List<int> possibleId1s, possibleId2s, possibleId3s = null;
+			switch (item.Sockets.Color1)
+			{
+				case Item.ItemSlot.Meta:
+					possibleId1s = metaGemIDs;
+					break;
+				case Item.ItemSlot.Red:
+				case Item.ItemSlot.Orange:
+				case Item.ItemSlot.Yellow:
+				case Item.ItemSlot.Green:
+				case Item.ItemSlot.Blue:
+				case Item.ItemSlot.Purple:
+				case Item.ItemSlot.Prismatic:
+					possibleId1s = gemIDs;
+					break;
+				default:
+					possibleId1s = new List<int>(new int[] { 0 });
+					break;
+			}
+			switch (item.Sockets.Color2)
+			{
+				case Item.ItemSlot.Meta:
+					possibleId2s = metaGemIDs;
+					break;
+				case Item.ItemSlot.Red:
+				case Item.ItemSlot.Orange:
+				case Item.ItemSlot.Yellow:
+				case Item.ItemSlot.Green:
+				case Item.ItemSlot.Blue:
+				case Item.ItemSlot.Purple:
+				case Item.ItemSlot.Prismatic:
+					possibleId2s = gemIDs;
+					break;
+				default:
+					possibleId2s = new List<int>(new int[] { 0 });
+					break;
+			}
+			switch (item.Sockets.Color3)
+			{
+				case Item.ItemSlot.Meta:
+					possibleId3s = metaGemIDs;
+					break;
+				case Item.ItemSlot.Red:
+				case Item.ItemSlot.Orange:
+				case Item.ItemSlot.Yellow:
+				case Item.ItemSlot.Green:
+				case Item.ItemSlot.Blue:
+				case Item.ItemSlot.Purple:
+				case Item.ItemSlot.Prismatic:
+					possibleId3s = gemIDs;
+					break;
+				default:
+					possibleId3s = new List<int>(new int[] { 0 });
+					break;
+			}
 
-				int id0 = item.Id;
-				foreach (int id1 in possibleId1s)
-					foreach (int id2 in possibleId2s)
-						foreach (int id3 in possibleId3s)
-							possibleGemmedIds.Add(string.Format("{0}.{1}.{2}.{3}", id0, id1, id2, id3));
+			int id0 = item.Id;
+			foreach (int id1 in possibleId1s)
+				foreach (int id2 in possibleId2s)
+					foreach (int id3 in possibleId3s)
+						possibleGemmedIds.Add(string.Format("{0}.{1}.{2}.{3}", id0, id1, id2, id3));
 			}
 
 			return possibleGemmedIds.ToArray();
