@@ -162,14 +162,16 @@ namespace Rawr
             try
             {
                 if (File.Exists(_SaveFilePath))
-                {                    string xml = System.IO.File.ReadAllText(_SaveFilePath);
-                        xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>MainHand</Slot>");
-                        System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
-                        System.IO.StringReader reader = new System.IO.StringReader(xml);
-                        _allEnchants = (List<Enchant>)serializer.Deserialize(reader);
-                        reader.Close();
+                {
+                    string xml = System.IO.File.ReadAllText(_SaveFilePath);
+                    xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>MainHand</Slot>");
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
+                    System.IO.StringReader reader = new System.IO.StringReader(xml);
+                    _allEnchants = (List<Enchant>)serializer.Deserialize(reader);
+                    reader.Close();
                 }
             }
+            catch (Exception) { /* should ignore exception if there is a problem with the file */ }
             finally
             {
                 if(_allEnchants == null)
