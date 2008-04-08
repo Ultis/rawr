@@ -613,7 +613,7 @@ namespace Rawr
 				return (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Contains(TargetClass.ToString())) &&
 					(RelevantItemTypes.Contains(item.Type)) && HasRelevantStats(item.Stats);
 			}
-			catch (Exception ex)
+			catch (Exception )
 			{
 				return false;
 			}

@@ -178,10 +178,6 @@ namespace Rawr
 
                 }
             }
-            else
-            {
-                _allEnchants = new List<Enchant>();
-            }
 
             List<Enchant> defaultEnchants = GetDefaultEnchants();
             for (int defaultEnchantIndex = 0; defaultEnchantIndex < defaultEnchants.Count; defaultEnchantIndex++)
