@@ -410,8 +410,7 @@ namespace Rawr
 							spellDesc = spellDesc.Substring("Increases agility by ".Length);
 							if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
 							if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-							stats.CritRating += ((((float)int.Parse(spellDesc)) / 6f) / 25f) * 22.08f;
-							stats.AttackPower += (((float)int.Parse(spellDesc)) / 6f) * 1.03f;
+                            stats.AverageAgility += (((float) int.Parse(spellDesc)) / 6f) * 1.03f;
 						}
                         // Increases damage and healing done by magical spells and effects by up to 211 for 20 sec.
                         // some pre-tbc have passive spell damage as on use

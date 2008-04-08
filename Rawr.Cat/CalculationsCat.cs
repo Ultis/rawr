@@ -394,6 +394,7 @@ namespace Rawr
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
 			Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
+            statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
 			statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * (float.Parse(character.CalculationOptions["DrumsOfWarUptime"], System.Globalization.CultureInfo.InvariantCulture) / 100f);
 			statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * (float.Parse(character.CalculationOptions["DrumsOfBattleUptime"], System.Globalization.CultureInfo.InvariantCulture) / 100f);
@@ -601,7 +602,7 @@ namespace Rawr
 					Stamina = stats.Stamina,
 					HasteRating = stats.HasteRating,
 					ExpertiseRating = stats.ExpertiseRating,
-					ArmorPenetration = stats.ArmorPenetration,
+                    ArmorPenetration = stats.ArmorPenetration,
 					BloodlustProc = stats.BloodlustProc,
 					TerrorProc = stats.TerrorProc,
 					BonusMangleDamage = stats.BonusMangleDamage,

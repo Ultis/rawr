@@ -13,7 +13,7 @@ namespace Rawr
     [Serializable]
 	public class Stats
 	{
-		private float[] _rawData = new float[110];
+		private float[] _rawData = new float[112];
 		/// <summary>
 		/// The properties for each stat. In order to add additional stats for Rawr to track,
 		/// first add properties here, for each stat. Apply a Category attribute to assign it to
@@ -532,6 +532,15 @@ namespace Rawr
 		public float CrushChanceReduction { get { return _rawData[109]; } set { _rawData[109] = value; } }
 
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        public float CatFormStrength { get { return _rawData[109]; } set { _rawData[110] = value; } }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        public float AverageAgility { get { return _rawData[110]; } set { _rawData[111] = value; } }
+
+
 		#endregion
 
 		/// <summary>
@@ -651,6 +660,8 @@ namespace Rawr
 				MageSpellCrit = a.MageSpellCrit + b.MageSpellCrit,
 				ShatteredSunMightProc = a.ShatteredSunMightProc + b.ShatteredSunMightProc,
 				CrushChanceReduction = a.CrushChanceReduction + b.CrushChanceReduction,
+				CatFormStrength = a.CatFormStrength + b.CatFormStrength,
+				AverageAgility = a.AverageAgility + b.AverageAgility ,
 				WindfuryAPBonus = a.WindfuryAPBonus + b.WindfuryAPBonus
 			};
 		}

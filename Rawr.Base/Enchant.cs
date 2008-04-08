@@ -158,20 +158,24 @@ namespace Rawr
 
         private static void LoadEnchants()
         {
-            if (File.Exists(_SaveFilePath))
+
+            try
             {
-                try
-                {
-                    string xml = System.IO.File.ReadAllText(_SaveFilePath);
-                    xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>MainHand</Slot>");
-                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
-                    System.IO.StringReader reader = new System.IO.StringReader(xml);
-                    _allEnchants = (List<Enchant>)serializer.Deserialize(reader);
-                    reader.Close();
+                if (File.Exists(_SaveFilePath))
+                {                    string xml = System.IO.File.ReadAllText(_SaveFilePath);
+                        xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>MainHand</Slot>");
+                        System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
+                        System.IO.StringReader reader = new System.IO.StringReader(xml);
+                        _allEnchants = (List<Enchant>)serializer.Deserialize(reader);
+                        reader.Close();
                 }
-                catch
+            }
+            finally
+            {
+                if(_allEnchants == null)
                 {
                     _allEnchants = new List<Enchant>();
+
                 }
             }
             else

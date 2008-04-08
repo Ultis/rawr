@@ -566,6 +566,10 @@ namespace Rawr
             {
                 if(Skill == "Unknown")
                 {
+                    if (SpellName != null)
+                    {
+                        return string.Format("Created via {0}", SpellName);
+                    }
                     return "Crafted";
                 }
                 StringBuilder basic = new StringBuilder();
