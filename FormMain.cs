@@ -405,12 +405,16 @@ namespace Rawr
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
 		{
-			//this.Cursor = Cursors.WaitCursor;
-			Item[] items = ItemCache.RelevantItems;
-			itemComparison1.Items = items;
-			LoadComparisonData();
-
-			//this.Cursor = Cursors.Default;
+            if (this.InvokeRequired)
+            {
+                InvokeHelper.Invoke(this, "ItemCache_ItemsChanged", new object[2] { null, null });
+            }
+            else
+            {
+                Item[] items = ItemCache.RelevantItems;
+                itemComparison1.Items = items;
+                LoadComparisonData();
+            }
 		}
 
 		private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -443,6 +447,7 @@ namespace Rawr
 		{
 			if (PromptToSaveBeforeClosing())
 			{
+                _characterPath = null;
 				LoadCharacterIntoForm(new Character());
 			}
 		}
@@ -862,6 +867,7 @@ namespace Rawr
         {
             if (_statusForm != null && !_statusForm.IsDisposed)
             {
+                _statusForm.AllowedToClose = true;
                 if (_statusForm.HasErrors)
                 {
                     _statusForm.SwitchToErrorTab();
@@ -970,6 +976,12 @@ namespace Rawr
             if (itemsOnChar != null)
             {
                 EnsureItemsLoaded(itemsOnChar);
+            }
+            else
+            {
+                StatusMessaging.UpdateStatusFinished("Update Item Cache");
+                StatusMessaging.UpdateStatusFinished("Cache Item Icons");
+
             }
 			return character;
 		}

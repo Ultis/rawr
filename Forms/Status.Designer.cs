@@ -139,7 +139,7 @@
             this.Errors.Location = new System.Drawing.Point(4, 22);
             this.Errors.Name = "Errors";
             this.Errors.Padding = new System.Windows.Forms.Padding(3);
-            this.Errors.Size = new System.Drawing.Size(396, 145);
+            this.Errors.Size = new System.Drawing.Size(469, 145);
             this.Errors.TabIndex = 1;
             this.Errors.Text = "Errors";
             this.Errors.UseVisualStyleBackColor = true;
@@ -155,7 +155,7 @@
             this.ErrorListView.Location = new System.Drawing.Point(3, 3);
             this.ErrorListView.MultiSelect = false;
             this.ErrorListView.Name = "ErrorListView";
-            this.ErrorListView.Size = new System.Drawing.Size(390, 139);
+            this.ErrorListView.Size = new System.Drawing.Size(463, 139);
             this.ErrorListView.TabIndex = 1;
             this.ErrorListView.UseCompatibleStateImageBehavior = false;
             this.ErrorListView.View = System.Windows.Forms.View.Details;
@@ -188,6 +188,7 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Status";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Status_FormClosing);
             this.tabControl1.ResumeLayout(false);
             this.Tasks.ResumeLayout(false);
             this.Errors.ResumeLayout(false);

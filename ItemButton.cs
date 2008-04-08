@@ -191,15 +191,18 @@ namespace Rawr
 		{
 			try
 			{
-				Bitmap bmp = new Bitmap(icon.Width, icon.Height);
+                Bitmap original = new Bitmap(icon);
+                Bitmap bmp = new Bitmap(original.Width, original.Height);
 				Graphics g = Graphics.FromImage(bmp);
 				System.Drawing.Imaging.ImageAttributes ia = new System.Drawing.Imaging.ImageAttributes();
 				System.Drawing.Imaging.ColorMatrix cm = new System.Drawing.Imaging.ColorMatrix();
 				cm.Matrix33 = 0.5f;
 				ia.SetColorMatrix(cm);
-				g.DrawImage(icon, new Rectangle(0, 0, icon.Width, icon.Height), 0, 0, icon.Width, icon.Height, GraphicsUnit.Pixel, ia);
+                g.DrawImage(original, new Rectangle(0, 0, original.Width, original.Height), 0, 0,
+                                original.Width, original.Height, GraphicsUnit.Pixel, ia);
 				g.Dispose();
 				ia.Dispose();
+                original.Dispose();
 				return bmp;
 			}
 			catch

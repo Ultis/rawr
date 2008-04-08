@@ -754,7 +754,7 @@ namespace Rawr
 		{
 			if (string.IsNullOrEmpty(gemmedId))
 				return null;
-			Item cachedItem = ItemCache.FindItemById(gemmedId, true);
+			Item cachedItem = ItemCache.FindItemById(gemmedId, true,raiseEvent);
 			if (cachedItem != null && !forceRefresh)
 				return cachedItem;
 			else

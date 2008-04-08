@@ -279,7 +279,8 @@ namespace Rawr
 		{
 			int retry = 0;
 			bool success = false;
-			if (!File.Exists(localPath))
+            //occasionally a zero byte file slips through without throwing an exception
+			if (!File.Exists(localPath) || new FileInfo(localPath).Length <= 0)
 			{
 				do
 				{
@@ -294,7 +295,7 @@ namespace Rawr
 							try
 							{
 								client.DownloadFile(URI, localPath);
-								success = true;
+                                success = true;
 							}
 							catch (Exception ex)
 							{

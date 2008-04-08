@@ -20,18 +20,24 @@ namespace Rawr.Forms
 		private List<StatusEventArgs> _StatusUpdates;
         private List<StatusErrorEventArgs> _StatusErrors;
         private int _LastExpandedHeight;
-
+        private bool _AllowedToClose;
 
 		public Status()
 		{
-			InitializeComponent();
+            InitializeComponent();
             _LastExpandedHeight = 392;
+            _AllowedToClose = false;
 			_StatusUpdates = new List<StatusEventArgs>();
             _StatusErrors = new List<StatusErrorEventArgs>();
 			StatusMessaging.StatusUpdate += new StatusMessaging.StatusUpdateDelegate(StatusMessaging_StatusUpdate);
             StatusMessaging.StatusError += new StatusMessaging.StatusErrorDelegate(StatusMessaging_StatusError);
 		}
 
+        public bool AllowedToClose
+        {
+            get { return _AllowedToClose; }
+            set { _AllowedToClose = value; }
+        }
         public bool HasErrors
         {
             get { return _StatusErrors.Count > 0; }
@@ -152,6 +158,14 @@ namespace Rawr.Forms
                 ErrorReport dialog = new ErrorReport(item.Tag as StatusErrorEventArgs);
                 dialog.ShowDialog();
                 dialog.Dispose();
+            }
+        }
+
+        private void Status_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!AllowedToClose)
+            {
+                e.Cancel = true;
             }
         }
 	}

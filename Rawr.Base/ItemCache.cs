@@ -24,7 +24,7 @@ namespace Rawr
 		public static Item FindItemById(int id) { return _instance.FindItemById(id); }
 		public static Item FindItemById(string gemmedId) { return _instance.FindItemById(gemmedId); }
 		public static Item FindItemById(int id, bool createIfCorrectGemmingNotFound) { return _instance.FindItemById(id, createIfCorrectGemmingNotFound); }
-		public static Item FindItemById(string gemmedId, bool createIfCorrectGemmingNotFound) { return _instance.FindItemById(gemmedId, createIfCorrectGemmingNotFound); }
+		public static Item FindItemById(string gemmedId, bool createIfCorrectGemmingNotFound, bool raiseEvent) { return _instance.FindItemById(gemmedId, createIfCorrectGemmingNotFound,raiseEvent); }
 
 		public static Item AddItem(Item item) { return _instance.AddItem(item); }
 		public static Item AddItem(Item item, bool removeOldCopy, bool raiseEvent) { return _instance.AddItem(item, removeOldCopy, raiseEvent); }
@@ -76,9 +76,9 @@ namespace Rawr
         }
 
 		public Item FindItemById(int id) { return FindItemById(id.ToString() + ".0.0.0"); }
-		public Item FindItemById(string gemmedId) { return FindItemById(gemmedId, true); }
-		public Item FindItemById(int id, bool createIfCorrectGemmingNotFound) { return FindItemById(id.ToString() + ".0.0.0", createIfCorrectGemmingNotFound); }
-		public Item FindItemById(string gemmedId, bool createIfCorrectGemmingNotFound)
+		public Item FindItemById(string gemmedId) { return FindItemById(gemmedId, true,true); }
+		public Item FindItemById(int id, bool createIfCorrectGemmingNotFound) { return FindItemById(id.ToString() + ".0.0.0", createIfCorrectGemmingNotFound,true); }
+		public Item FindItemById(string gemmedId, bool createIfCorrectGemmingNotFound, bool raiseEvent)
         {
 			if (!string.IsNullOrEmpty(gemmedId))
 			{
@@ -100,7 +100,7 @@ namespace Rawr
 						Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
 							item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), id1, id2, id3, item.MinDamage,
 							item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
-						AddItem(copy, false, true);
+						AddItem(copy, false, raiseEvent);
 						return copy;
 					}
 			}

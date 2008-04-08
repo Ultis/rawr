@@ -25,7 +25,7 @@ namespace Rawr
 				docCharacter = wrw.DownloadCharacterSheet(name, region, realm);
                 if (docCharacter == null)
                 {
-                    StatusMessaging.ReportError("Get Character", null, "No character returned from the Armory");
+                    StatusMessaging.ReportError("Get Character", null, string.Format("No character returned from the Armory for {0}@{1}.{2}",name,realm,region.ToString()));
                     itemsOnCharacter = null;
                     return null;
                 }
