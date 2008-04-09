@@ -934,7 +934,7 @@ namespace Rawr
                         try
 						{
 							int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
-							switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1))
+							switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1).Trim())
 							{
                                 case "Resist All":
                                     stats.AllResist = gemBonusValue;
