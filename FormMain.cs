@@ -365,7 +365,7 @@ namespace Rawr
 			comboBoxEnchantLegs.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Legs).ToArray());
 			comboBoxEnchantShoulders.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Shoulders).ToArray());
 			comboBoxEnchantMainHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.MainHand).ToArray());
-			comboBoxEnchantOffHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.MainHand).ToArray());
+			comboBoxEnchantOffHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.OffHand).ToArray());
 			comboBoxEnchantRanged.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Ranged).ToArray());
 			comboBoxEnchantWrists.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Wrist).ToArray());
 

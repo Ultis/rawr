@@ -348,6 +348,9 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Hands, new Stats() { FrostResistance = 8 }));
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Feet, new Stats() { FrostResistance = 8 }));
 
+            //Need to fix the enchant class to know offhand only enchants, either that or add a shield ItemSlot
+            defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.MainHand, new Stats() { Stamina = 18 }));
+
 
             #region Enchants to Delete
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Chest,null ));

@@ -328,6 +328,10 @@ namespace Rawr
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/armor")) { stats.Armor = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDefenseSkillRating")) { stats.DefenseRating = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDodgeRating")) { stats.DodgeRating = int.Parse(node.InnerText); }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusParryRating")) { stats.ParryRating = int.Parse(node.InnerText); }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusBlockRating")) { stats.BlockRating = int.Parse(node.InnerText); }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusBlockValue")) { stats.BlockValue = int.Parse(node.InnerText); }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/blockValue")) { stats.BlockValue = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusResilienceRating")) { stats.Resilience = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusStamina")) { stats.Stamina = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusIntellect")) { stats.Intellect = int.Parse(node.InnerText); }
@@ -558,6 +562,27 @@ namespace Rawr
                             if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
                             stats.DodgeRating += int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("Increases your parry rating by "))
+                        {
+                            spellDesc = spellDesc.Substring("Increases your parry rating by ".Length);
+                            if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                            if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                            stats.ParryRating += int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("Increases the block value of your shield by "))
+                        {
+                            spellDesc = spellDesc.Substring("Increases the block value of your shield by ".Length);
+                            if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                            if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                            stats.BlockValue += int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("Increases your shield block rating by "))
+                        {
+                            spellDesc = spellDesc.Substring("Increases your shield block rating by ".Length);
+                            if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                            if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                            stats.BlockRating += int.Parse(spellDesc);
                         }
                         else if (spellDesc.StartsWith("Increases your hit rating by "))
                         {
@@ -864,6 +889,12 @@ namespace Rawr
 							case "Dodge Rating":
 								sockets.Stats.DodgeRating = socketBonusValue;
 								break;
+                            case "Parry Rating":
+                                sockets.Stats.ParryRating = socketBonusValue;
+                                break;
+                            case "Block Rating":
+                                sockets.Stats.BlockRating = socketBonusValue;
+                                break;
 							case "Defense Rating":
 								sockets.Stats.DefenseRating = socketBonusValue;
 								break;
@@ -958,7 +989,7 @@ namespace Rawr
                         try
 						{
 							int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
-							switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1))
+							switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1).Trim())
 							{
                                 case "Resist All":
                                     stats.AllResist = gemBonusValue;
@@ -976,6 +1007,12 @@ namespace Rawr
 								case "Dodge Rating":
 									stats.DodgeRating = gemBonusValue;
 									break;
+                                case "Parry Rating":
+                                    stats.ParryRating = gemBonusValue;
+                                    break;
+                                case "Block Rating":
+                                    stats.BlockRating = gemBonusValue;
+                                    break;
 								case "Defense Rating":
 									stats.DefenseRating = gemBonusValue;
                                     break;
