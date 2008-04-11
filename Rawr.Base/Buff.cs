@@ -487,6 +487,13 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
+                Name = "Elixir of Major Strength",
+                Category = BuffCategory.ElixirsAndFlasks,
+                Stats = new Stats() { Strength = 35 },
+                ConflictingBuffs = new string[] { "Battle Elixir" }
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Flask of Fortification",
                 Category = BuffCategory.ElixirsAndFlasks,
                 Stats = new Stats() { Health = 500, DefenseRating = 10 },

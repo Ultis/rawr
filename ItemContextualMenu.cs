@@ -100,7 +100,8 @@ namespace Rawr
 
 		void _menuItemWowhead_Click(object sender, EventArgs e)
 		{
-			System.Diagnostics.Process.Start("http://www.wowhead.com/?item=" + _item.Id);
+			//System.Diagnostics.Process.Start("http://www.wowhead.com/?item=" + _item.Id);
+            Help.ShowHelp(null, "http://www.wowhead.com/?item=" + _item.Id);
 		}
 
 		void _menuItemEdit_Click(object sender, EventArgs e)
@@ -112,6 +113,7 @@ namespace Rawr
 				FormItemEditor itemEditor = new FormItemEditor(Character);
 				itemEditor.SelectItem(_item, true);
 				itemEditor.ShowDialog(FormMain.Instance);
+                itemEditor.Dispose();
 				ItemCache.OnItemsChanged();
 				//FormMain.Instance.OpenItemEditor(_item);
 			}
