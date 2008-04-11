@@ -53,6 +53,8 @@ namespace Rawr.Moonkin
                 Character.CalculationOptions["InnervateWeaponInt"] = "0";
             if (!Character.CalculationOptions.ContainsKey("InnervateWeaponSpi"))
                 Character.CalculationOptions["InnervateWeaponSpi"] = "0";
+            if (!Character.CalculationOptions.ContainsKey("AldorScryer"))
+                Character.CalculationOptions["AldorScryer"] = "Aldor";
 
             cmbTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             chkMetagem.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
@@ -72,6 +74,8 @@ namespace Rawr.Moonkin
             txtInnervateWeaponInt.Text = Character.CalculationOptions["InnervateWeaponInt"];
             txtInnervateWeaponSpi.Enabled = chkInnervateWeapon.Checked;
             txtInnervateWeaponSpi.Text = Character.CalculationOptions["InnervateWeaponSpi"];
+            rdbAldor.Checked = Character.CalculationOptions["AldorScryer"] == "Aldor";
+            rdbScryer.Checked = Character.CalculationOptions["AldorScryer"] == "Scryer";
 
             if (talents != null) talents.LoadCalculationOptions();
         }
@@ -156,6 +160,12 @@ namespace Rawr.Moonkin
             Character.CalculationOptions["InnervateWeapon"] = chkInnervateWeapon.Checked ? "Yes" : "No";
             txtInnervateWeaponInt.Enabled = chkInnervateWeapon.Checked;
             txtInnervateWeaponSpi.Enabled = chkInnervateWeapon.Checked;
+            Character.OnItemsChanged();
+        }
+
+        private void rdbScryer_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["AldorScryer"] = rdbScryer.Checked ? "Scryer" : "Aldor";
             Character.OnItemsChanged();
         }
     }

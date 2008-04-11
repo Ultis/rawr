@@ -78,7 +78,8 @@
       <DependentUpon>MoonkinTalentsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="Spell.cs" />
+    <None Include="Spell.cs" />
+    <Compile Include="Spell2.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

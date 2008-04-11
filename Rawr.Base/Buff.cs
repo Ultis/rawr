@@ -101,18 +101,16 @@ namespace Rawr
             }
             catch (System.Exception)
             {
+                //Log.Write(ex.Message);
                 #if !DEBUG
 				MessageBox.Show("The current BuffCache.xml file was made with a previous version of Rawr, which is incompatible with the current version. It will be replaced with buff data included in the current version.", "Incompatible BuffCache.xml", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             	//The designer really doesn't like loading the stuff from a file
                 #endif
             }
             //the serializer doens't throw an exception in the designer, just sets the value null, have to move this outside the try cactch
-            finally
+            if (_allBuffs == null)
             {
-	            if (_allBuffs == null)
-	            {
-	                _allBuffs = new List<Buff>();
-	            }
+                _allBuffs = new List<Buff>();
             }
             List<Buff> defaultBuffs = GetDefaultBuffs();
             for (int defaultBuffIndex = 0; defaultBuffIndex < defaultBuffs.Count; defaultBuffIndex++)
@@ -883,7 +881,7 @@ namespace Rawr
             {
                 Name = "Malorne Harness 4 Piece Bonus",
                 Category = BuffCategory.SetBonuses,
-                Stats = new Stats() { Armor = 1400, CatFormStrength = 30 },
+                Stats = new Stats() { Armor = 1400, Strength = 30 },
                 SetName = "Malorne Harness",
                 SetThreshold = 4
             });
@@ -983,6 +981,15 @@ namespace Rawr
             //    SetName = "Lightbringer Raiment",
             //    SetThreshold = 4
             //});
+            // Windhawk (epic leather caster) set
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Windhawk Armor",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { Mp5 = 8.0f },
+                SetName = "Windhawk Armor",
+                SetThreshold = 3
+            });
             // Moonkin tier 4/5/6 sets
             defaultBuffs.Add(new Buff()
             {

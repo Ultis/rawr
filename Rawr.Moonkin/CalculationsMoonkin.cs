@@ -147,143 +147,46 @@ namespace Rawr.Moonkin
             Stats stats = GetCharacterStats(character, additionalItem);
             calcs.BasicStats = stats;
 
-            float hitRatingDivisor = 1260.5f;
+            float hitRatingMultiplier = 1.0f / 1262.0f;
+            float critRatingMultiplier = 1.0f / 2208.0f;
 
-            float critBase = 0.0185f;
-            float critIntDivisor = 7997f;
-            float critRatingDivisor = 2206.6f;
-
-            calcs.SpellCrit = critBase + stats.SpellCritRating / critRatingDivisor;
-            calcs.SpellHit = stats.SpellHitRating / hitRatingDivisor;
+            calcs.SpellCrit = stats.SpellCritRating * critRatingMultiplier;
+            calcs.SpellHit = stats.SpellHitRating * hitRatingMultiplier;
 
             // All spells: Damage +((0.08/0.16/0.25) * Int)
-            float lunarGuidancePercent = 0.0f;
             switch (int.Parse(character.CalculationOptions["LunarGuidance"]))
             {
                 case 1:
-                    lunarGuidancePercent = 0.08f;
+                    stats.SpellDamageFromIntellectPercentage += 0.08f;
                     break;
                 case 2:
-                    lunarGuidancePercent = 0.16f;
+                    stats.SpellDamageFromIntellectPercentage += 0.16f;
                     break;
                 case 3:
-                    lunarGuidancePercent = 0.25f;
+                    stats.SpellDamageFromIntellectPercentage += 0.25f;
                     break;
                 default:
-                    lunarGuidancePercent = 0.0f;
+                    stats.SpellDamageFromIntellectPercentage += 0.0f;
                     break;
             }
-            calcs.ArcaneDamage = stats.SpellDamageRating + stats.SpellArcaneDamageRating + (lunarGuidancePercent + stats.SpellDamageFromIntellectPercentage) * stats.Intellect + stats.SpellDamageFromSpiritPercentage * stats.Spirit;
-            calcs.NatureDamage = stats.SpellDamageRating + stats.SpellNatureDamageRating + (lunarGuidancePercent + stats.SpellDamageFromIntellectPercentage) * stats.Intellect + stats.SpellDamageFromSpiritPercentage * stats.Spirit;
+            calcs.ArcaneDamage = stats.SpellDamageRating + stats.SpellArcaneDamageRating + stats.SpellDamageFromIntellectPercentage * stats.Intellect + stats.SpellDamageFromSpiritPercentage * stats.Spirit;
+            calcs.NatureDamage = stats.SpellDamageRating + stats.SpellNatureDamageRating + stats.SpellDamageFromIntellectPercentage * stats.Intellect + stats.SpellDamageFromSpiritPercentage * stats.Spirit;
 
 			calcs.Latency = float.Parse(character.CalculationOptions["Latency"], System.Globalization.CultureInfo.InvariantCulture);
 			calcs.FightLength = float.Parse(character.CalculationOptions["FightLength"], System.Globalization.CultureInfo.InvariantCulture);
+            calcs.TargetLevel = int.Parse(character.CalculationOptions["TargetLevel"], System.Globalization.CultureInfo.InvariantCulture);
+            calcs.Scryer = character.CalculationOptions["AldorScryer"] == "Scryer";
 
             // 2.4 spirit regen
             float baseRegenConstant = 0.00932715221261f;
-            float spiritRegen = baseRegenConstant * (float)Math.Sqrt(calcs.BasicStats.Intellect) * calcs.BasicStats.Spirit;
+            float spiritRegen = 0.001f + baseRegenConstant * (float)Math.Sqrt(calcs.BasicStats.Intellect) * calcs.BasicStats.Spirit;
             calcs.ManaRegen = spiritRegen + stats.Mp5 / 5f;
             calcs.ManaRegen5SR = spiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
 
-            // All spells: Hit% +(0.02 * Balance of Power)
-            calcs.SpellHit += 0.02f * int.Parse(character.CalculationOptions["BalanceofPower"]);
-            // All spells: Crit% + (0.01 * Natural Perfection)
-            calcs.SpellCrit += 0.01f * int.Parse(character.CalculationOptions["NaturalPerfection"]);
-
-            // Finally, add the int portion of spell crit into the equation
-            calcs.SpellCrit += stats.Intellect / critIntDivisor;
-            // Add the crit bonus from the idol, if present
-            if (character.ActiveBuffs.Contains("Moonkin Aura"))
-                calcs.SpellCrit += stats.IdolCritRating / critRatingDivisor;
-
-            // Multiply the crit by spell crit multiplier
-            calcs.SpellCrit *= 1 + stats.BonusSpellCritMultiplier;
-
-            MoonkinSpells spellList = GetFinalSpellList(character, ref calcs);
-
-            // Get the optimal DPS rotation
-            spellList.GetRotation(character, ref calcs);
+            // Run the solver to do final calculations
+            MoonkinSolver.Solve(character, ref calcs);
 
             return calcs;
-        }
-
-        private MoonkinSpells GetFinalSpellList(Character character, ref CharacterCalculationsMoonkin calcs)
-        {
-            float hasteDivisor = 1560.0f;
-            Stats stats = calcs.BasicStats;
-            // Create the offensive spell group class
-            MoonkinSpells spellList = new MoonkinSpells();
-            // Add (possibly talented) +spelldmg
-            // Starfire: Damage +(0.04 * Wrath of Cenarius)
-            // Wrath: Damage +(0.02 * Wrath of Cenarius)
-            spellList["Wrath"].spellDamageCoefficient += 0.02f * int.Parse(character.CalculationOptions["WrathofCenarius"]);
-            spellList["Starfire"].spellDamageCoefficient += 0.04f * int.Parse(character.CalculationOptions["WrathofCenarius"]);
-
-            spellList["Wrath"].AddSpellDamage(calcs.NatureDamage);
-            spellList["Starfire"].AddSpellDamage(calcs.ArcaneDamage);
-            spellList["Moonfire"].AddSpellDamage(calcs.ArcaneDamage);
-            spellList["Moonfire"].dotEffect.AddSpellDamage(calcs.ArcaneDamage);
-            spellList["Insect Swarm"].dotEffect.AddSpellDamage(calcs.NatureDamage);
-
-            // Add spell damage from idols
-            spellList["Starfire"].damagePerHit += stats.StarfireDmg;
-            spellList["Moonfire"].damagePerHit += stats.MoonfireDmg;
-            spellList["Wrath"].damagePerHit += stats.WrathDmg;
-
-            // Add spell-specific damage
-            // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)
-            spellList["Wrath"].damagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
-            spellList["Moonfire"].damagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
-            spellList["Moonfire"].dotEffect.damagePerTick *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
-            spellList["Starfire"].damagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
-
-            // Add spell-specific crit chance
-            // Wrath, Starfire: Crit chance +(0.02 * Focused Starlight)
-            spellList["Wrath"].extraCritChance += 0.02f * int.Parse(character.CalculationOptions["FocusedStarlight"]);
-            spellList["Starfire"].extraCritChance += 0.02f * int.Parse(character.CalculationOptions["FocusedStarlight"]);
-            // Moonfire: Damage, Crit chance +(0.05 * Imp Moonfire)
-            spellList["Moonfire"].damagePerHit *= 1.0f + (0.05f * int.Parse(character.CalculationOptions["ImpMoonfire"]));
-            spellList["Moonfire"].dotEffect.damagePerTick *= 1.0f + (0.05f * int.Parse(character.CalculationOptions["ImpMoonfire"]));
-            spellList["Moonfire"].extraCritChance += 0.05f * int.Parse(character.CalculationOptions["ImpMoonfire"]);
-
-            // Add spell-specific critical strike damage
-            // Starfire, Moonfire, Wrath: Crit damage +(0.2 * Vengeance)
-            spellList["Starfire"].critBonus += 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
-            spellList["Moonfire"].critBonus += 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
-            spellList["Wrath"].critBonus += 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
-
-            // Reduce spell-specific mana costs
-            // Starfire, Moonfire, Wrath: Mana cost -(0.03 * Moonglow)
-            spellList["Starfire"].manaCost *= 1.0f - (0.03f * int.Parse(character.CalculationOptions["Moonglow"]));
-            spellList["Moonfire"].manaCost *= 1.0f - (0.03f * int.Parse(character.CalculationOptions["Moonglow"]));
-            spellList["Wrath"].manaCost *= 1.0f - (0.03f * int.Parse(character.CalculationOptions["Moonglow"]));
-
-            // Reduce spell-specific cast times
-            // Wrath, Starfire: Cast time -(0.1 * Starlight Wrath)
-            spellList["Wrath"].castTime -= 0.1f * int.Parse(character.CalculationOptions["StarlightWrath"]);
-            spellList["Starfire"].castTime -= 0.1f * int.Parse(character.CalculationOptions["StarlightWrath"]);
-            
-            // Add set bonuses
-            spellList["Moonfire"].dotEffect.numTicks += (int)(stats.MoonfireExtension / spellList["Moonfire"].dotEffect.tickLength);
-            spellList["Starfire"].extraCritChance += stats.StarfireCritChance;
-
-            // Haste and latency calculations, trinketed spell damage
-            // 20-second spell haste trinket with a 2-minute cooldown.
-            float trinketedHaste = calcs.BasicStats.SpellHasteFor20SecOnUse2Min * 20 / 240;
-
-            Spell.GlobalCooldown /= 1 + (stats.SpellHasteRating + trinketedHaste) / hasteDivisor;
-            foreach (KeyValuePair<string, Spell> pair in spellList)
-            {
-                Spell sp = pair.Value;
-                // 20-second spell damage trinket with 2-minute cooldown.
-                sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor20SecOnUse2Min * 20 / 240);
-                // 15-second spell damage trinket with a 1.5-minute cooldown.
-                sp.AddSpellDamage(calcs.BasicStats.SpellDamageFor15SecOnUse90Sec * 15 / 90);
-                // Add haste calculations
-                pair.Value.castTime /= 1 + (stats.SpellHasteRating + trinketedHaste) / hasteDivisor;
-                pair.Value.castTime += calcs.Latency;
-            }
-            return spellList;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -365,10 +268,25 @@ namespace Rawr.Moonkin
                     dreamstatePercent = 0.0f;
                     break;
             }
-            statsTotal.Mp5 += dreamstatePercent * statsTotal.Intellect;
+            statsTotal.Mp5 += (float)(int)(dreamstatePercent * statsTotal.Intellect);
 
-            // Add mp5 from shadow priest
-			statsTotal.Mp5 += float.Parse(character.CalculationOptions["ShadowPriest"], System.Globalization.CultureInfo.InvariantCulture);
+            // Hit rating
+            // All spells: Hit% +(0.02 * Balance of Power)
+            statsTotal.SpellHitRating += 0.02f * int.Parse(character.CalculationOptions["BalanceofPower"]) * 1262f;
+
+            // Crit rating
+            // Application order: Stats, Talents, Gear
+            // Add druid base crit
+            statsTotal.SpellCritRating += (0.0185f * 2208f);
+            // Add intellect-based crit rating to crit (all classes except warlock: 1/80)
+            statsTotal.SpellCritRating += (statsTotal.Intellect / 8000.0f) * 2208f;
+            // All spells: Crit% + (0.01 * Natural Perfection)
+            statsTotal.SpellCritRating += 0.01f * int.Parse(character.CalculationOptions["NaturalPerfection"]) * 2208f;
+            // Add the crit bonus from the idol, if present
+            if (character.ActiveBuffs.Contains("Moonkin Aura"))
+                statsTotal.SpellCritRating += statsTotal.IdolCritRating;
+            // Multiply the crit by spell crit multiplier
+            statsTotal.SpellCritRating += statsTotal.BonusSpellCritMultiplier * 2208f;
 
             return statsTotal;
         }
@@ -427,13 +345,16 @@ namespace Rawr.Moonkin
                 InnervateCooldownReduction = stats.InnervateCooldownReduction,
                 StarfireBonusWithDot = stats.StarfireBonusWithDot,
                 MoonfireExtension = stats.MoonfireExtension,
-                StarfireCritChance = stats.StarfireCritChance
+                StarfireCritChance = stats.StarfireCritChance,
+                BonusManaPotion = stats.BonusManaPotion,
+                ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
+                TimbalsProc = stats.TimbalsProc
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.SpellHasteRating + stats.SpellHitRating + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.BonusNatureSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot) > 0;
+            return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.SpellHasteRating + stats.SpellHitRating + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.BonusNatureSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot + stats.BonusManaPotion + stats.ShatteredSunAcumenProc + stats.TimbalsProc) > 0;
         }
     }
 }

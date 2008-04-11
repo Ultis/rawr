@@ -51,6 +51,8 @@
             this.txtInnervateWeaponSpi = new System.Windows.Forms.TextBox();
             this.lblInnervateWeaponInt = new System.Windows.Forms.Label();
             this.lblInnervateWeaponSpi = new System.Windows.Forms.Label();
+            this.rdbAldor = new System.Windows.Forms.RadioButton();
+            this.rdbScryer = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -96,7 +98,7 @@
             // chkMetagem
             // 
             this.chkMetagem.AutoSize = true;
-            this.chkMetagem.Location = new System.Drawing.Point(6, 345);
+            this.chkMetagem.Location = new System.Drawing.Point(6, 368);
             this.chkMetagem.Name = "chkMetagem";
             this.chkMetagem.Size = new System.Drawing.Size(178, 17);
             this.chkMetagem.TabIndex = 9;
@@ -106,7 +108,7 @@
             // 
             // btnTalents
             // 
-            this.btnTalents.Location = new System.Drawing.Point(3, 316);
+            this.btnTalents.Location = new System.Drawing.Point(6, 339);
             this.btnTalents.Name = "btnTalents";
             this.btnTalents.Size = new System.Drawing.Size(195, 23);
             this.btnTalents.TabIndex = 8;
@@ -270,10 +272,35 @@
             this.lblInnervateWeaponSpi.TabIndex = 26;
             this.lblInnervateWeaponSpi.Text = "Spirit value:";
             // 
+            // rdbAldor
+            // 
+            this.rdbAldor.AutoSize = true;
+            this.rdbAldor.Location = new System.Drawing.Point(39, 316);
+            this.rdbAldor.Name = "rdbAldor";
+            this.rdbAldor.Size = new System.Drawing.Size(49, 17);
+            this.rdbAldor.TabIndex = 27;
+            this.rdbAldor.TabStop = true;
+            this.rdbAldor.Text = "Aldor";
+            this.rdbAldor.UseVisualStyleBackColor = true;
+            // 
+            // rdbScryer
+            // 
+            this.rdbScryer.AutoSize = true;
+            this.rdbScryer.Location = new System.Drawing.Point(94, 316);
+            this.rdbScryer.Name = "rdbScryer";
+            this.rdbScryer.Size = new System.Drawing.Size(55, 17);
+            this.rdbScryer.TabIndex = 28;
+            this.rdbScryer.TabStop = true;
+            this.rdbScryer.Text = "Scryer";
+            this.rdbScryer.UseVisualStyleBackColor = true;
+            this.rdbScryer.CheckedChanged += new System.EventHandler(this.rdbScryer_CheckedChanged);
+            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.rdbScryer);
+            this.Controls.Add(this.rdbAldor);
             this.Controls.Add(this.lblInnervateWeaponSpi);
             this.Controls.Add(this.lblInnervateWeaponInt);
             this.Controls.Add(this.txtInnervateWeaponSpi);
@@ -298,7 +325,7 @@
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.lblTargetLevel);
             this.Name = "CalculationOptionsPanelMoonkin";
-            this.Size = new System.Drawing.Size(204, 370);
+            this.Size = new System.Drawing.Size(204, 390);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -329,6 +356,8 @@
         private System.Windows.Forms.TextBox txtInnervateWeaponSpi;
         private System.Windows.Forms.Label lblInnervateWeaponInt;
         private System.Windows.Forms.Label lblInnervateWeaponSpi;
+        private System.Windows.Forms.RadioButton rdbAldor;
+        private System.Windows.Forms.RadioButton rdbScryer;
 
     }
 }

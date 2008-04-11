@@ -25,7 +25,7 @@ namespace Rawr
 				docCharacter = wrw.DownloadCharacterSheet(name, region, realm);
                 if (docCharacter == null)
                 {
-                    StatusMessaging.ReportError("Get Character", null, string.Format("No character returned from the Armory for {0}@{1}.{2}",name,realm,region.ToString()));
+                    StatusMessaging.ReportError("Get Character", null, "No character returned from the Armory");
                     itemsOnCharacter = null;
                     return null;
                 }
@@ -410,7 +410,8 @@ namespace Rawr
 							spellDesc = spellDesc.Substring("Increases agility by ".Length);
 							if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
 							if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-                            stats.AverageAgility += (((float) int.Parse(spellDesc)) / 6f) * 1.03f;
+							stats.CritRating += ((((float)int.Parse(spellDesc)) / 6f) / 25f) * 22.08f;
+							stats.AttackPower += (((float)int.Parse(spellDesc)) / 6f) * 1.03f;
 						}
                         // Increases damage and healing done by magical spells and effects by up to 211 for 20 sec.
                         // some pre-tbc have passive spell damage as on use
@@ -460,6 +461,10 @@ namespace Rawr
                         { //Shattered Sun Pendant of Might
                             stats.ShatteredSunMightProc += 1f;
                         }
+                        if (spellDesc.StartsWith("Your spells have a chance to call on the power"))
+                        { //Shattered Sun Pendant of Acumen
+                            stats.ShatteredSunAcumenProc += 1f;
+                        }
                         else if (spellDesc.StartsWith("Chance on hit to increase your attack power by 230"))
                         { //Special handling for Shard of Contempt due to higher uptime
                             stats.AttackPower += 90f;
@@ -489,13 +494,22 @@ namespace Rawr
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
                             stats.AttackPower += ((float)int.Parse(spellDesc)) / 6f;
                         }
+                        // Idol of the Raven Goddess (already added)
                         else if (spellDesc.Contains(" critical strike rating to the Leader of the Pack aura"))
                         {
+                            string moonkinSpellDesc = spellDesc;
+                            // Bear/Cat form
                             spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" critical strike rating to the Leader of the Pack aura"));
                             spellDesc = spellDesc.Substring(spellDesc.LastIndexOf(' ') + 1);
                             if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
                             stats.CritRating += (float)int.Parse(spellDesc);
+                            // Moonkin Form
+                            moonkinSpellDesc = moonkinSpellDesc.Substring(0, moonkinSpellDesc.IndexOf(" spell critical strike rating to the Moonkin form aura."));
+                            moonkinSpellDesc = moonkinSpellDesc.Substring(moonkinSpellDesc.LastIndexOf(' ') + 1);
+                            if (moonkinSpellDesc.Contains(".")) moonkinSpellDesc = moonkinSpellDesc.Substring(0, moonkinSpellDesc.IndexOf("."));
+                            if (moonkinSpellDesc.Contains(" ")) moonkinSpellDesc = moonkinSpellDesc.Substring(0, moonkinSpellDesc.IndexOf(" "));
+                            stats.IdolCritRating += (float)int.Parse(moonkinSpellDesc);
                         }
                         else if (spellDesc.StartsWith("Your Mangle ability also increases your attack power by "))
                         {
@@ -707,6 +721,11 @@ namespace Rawr
                                     break;
                             }
                         }
+                        // Timbal's Focusing Crystal
+                        else if (spellDesc.StartsWith("Each time one of your spells deals periodic damage"))
+                        {
+                            stats.TimbalsProc = 1.0f;
+                        }
                         else if (spellDesc.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to "))
                         {
                             // Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to 130 for 10 sec.
@@ -762,12 +781,6 @@ namespace Rawr
                             spellDesc = spellDesc.Replace(".", "");
                             stats.WrathDmg += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                         }
-                        else if (spellDesc.StartsWith("Increases the healing granted by the Tree of Life form"))
-                        {
-                            spellDesc = spellDesc.Substring(spellDesc.IndexOf("and adds "));
-                            spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" spell critical strike rating"));
-                            stats.IdolCritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
-                        }
                         else if (spellDesc.StartsWith("Your Moonfire ability has a chance to grant up to "))
                         {
                             spellDesc = spellDesc.Substring("Your Moonfire ability has a chance to grant up to ".Length);
@@ -784,7 +797,7 @@ namespace Rawr
                         {
                             spellDesc = spellDesc.Substring("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by ".Length, 2);
                             spellDesc = spellDesc.Replace(".", "");
-                            stats.CritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture)*5f/9f;
+                            stats.CritRating += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture) * 5f / 9f;
                         }
                         else if (spellDesc.StartsWith("Increases the damage dealt by your Crusader Strike ability by "))
                         {
@@ -934,7 +947,7 @@ namespace Rawr
                         try
 						{
 							int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
-							switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1).Trim())
+							switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1))
 							{
                                 case "Resist All":
                                     stats.AllResist = gemBonusValue;

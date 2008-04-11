@@ -396,7 +396,7 @@ namespace Rawr
 
         // Moonkin Aura idol
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell critical bonus")]
+        [DisplayName("Moonkin Aura bonus")]
         [Category("Equipment Procs")]
         public float IdolCritRating { get { return _rawData[80]; } set { _rawData[80] = value; } }
 
@@ -521,7 +521,7 @@ namespace Rawr
 
         // Unseen Moon idol
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Unseen Moon proc")]
+        [DisplayName("Spell Damage (10 sec on Moonfire)")]
         [Category("Equipment Procs")]
         public float UnseenMoonDamageBonus { get { return _rawData[107]; } set { _rawData[107] = value; } }
 
@@ -529,16 +529,17 @@ namespace Rawr
 		public float ShatteredSunMightProc { get { return _rawData[108]; } set { _rawData[108] = value; } }
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
-		public float CrushChanceReduction { get { return _rawData[109]; } set { _rawData[109] = value; } }
+        public float CrushChanceReduction { get { return _rawData[109]; } set { _rawData[109] = value; } }
 
-
+        [DisplayName("Shattered Sun Caster Neck proc")]
+        [Category("Equipment Procs")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        public float CatFormStrength { get { return _rawData[109]; } set { _rawData[110] = value; } }
+        public float ShatteredSunAcumenProc { get { return _rawData[110]; } set { _rawData[110] = value; } }
 
+        [DisplayName("Timbal's Focusing Crystal proc")]
+        [Category("Equipment Procs")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        public float AverageAgility { get { return _rawData[110]; } set { _rawData[111] = value; } }
+        public float TimbalsProc { get { return _rawData[111]; } set { _rawData[111] = value; } }
 
 
 		#endregion
@@ -660,9 +661,9 @@ namespace Rawr
 				MageSpellCrit = a.MageSpellCrit + b.MageSpellCrit,
 				ShatteredSunMightProc = a.ShatteredSunMightProc + b.ShatteredSunMightProc,
 				CrushChanceReduction = a.CrushChanceReduction + b.CrushChanceReduction,
-				CatFormStrength = a.CatFormStrength + b.CatFormStrength,
-				AverageAgility = a.AverageAgility + b.AverageAgility ,
-				WindfuryAPBonus = a.WindfuryAPBonus + b.WindfuryAPBonus
+				WindfuryAPBonus = a.WindfuryAPBonus + b.WindfuryAPBonus,
+                ShatteredSunAcumenProc = a.ShatteredSunAcumenProc + b.ShatteredSunAcumenProc,
+                TimbalsProc = a.TimbalsProc + b.TimbalsProc
 			};
 		}
 

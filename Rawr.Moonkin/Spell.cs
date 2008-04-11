@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Rawr.Moonkin
 {
-    enum SpellSchool
+    /*enum SpellSchool
     {
         Arcane,
         Nature
-    }
+    }*/
 
     class Rotation
     {
@@ -323,8 +323,11 @@ namespace Rawr.Moonkin
                 float innervateTime = numInnervates * 20.0f;
                 totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * calcs.BasicStats.Mana * 0.04f);
             }
+            // Shadow priest calculations
+            float sPriestMp5 = float.Parse(character.CalculationOptions["ShadowPriest"], System.Globalization.CultureInfo.InvariantCulture);
+            float sPriestMana = sPriestMp5 / 5 * fightLength;
 
-            return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots;
+            return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + sPriestMana;
         }
 
         public void GetRotation(Character character, ref CharacterCalculationsMoonkin calcs)
