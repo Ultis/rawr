@@ -4,6 +4,7 @@ using System.Text;
 using System.Net;
 using System.IO;
 using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace Rawr
 {
@@ -457,6 +458,11 @@ namespace Rawr
 
 					if (isEquip)
 					{
+                        
+                        if (spellDesc.StartsWith("Increases initial and per application periodic damage done by Lacerate by "))
+                        {
+                            stats.BonusLacerateDamage = float.Parse(spellDesc.Substring("Increases initial and per application periodic damage done by Lacerate by ".Length));
+                        }
                         if (spellDesc.StartsWith("Your melee and ranged attacks have a chance to call on the power"))
                         { //Shattered Sun Pendant of Might
                             stats.ShatteredSunMightProc += 1f;
@@ -576,10 +582,15 @@ namespace Rawr
                         }
                         else if (spellDesc.StartsWith("Increases the damage dealt by Mangle (Cat) by "))
                         {
+                          
                             spellDesc = spellDesc.Substring("Increases the damage dealt by Mangle (Cat) by ".Length);
                             if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-                            stats.BonusMangleDamage += int.Parse(spellDesc);
+                            stats.BonusMangleCatDamage += int.Parse(spellDesc);
+
+                            // WTB Regex
+                            stats.BonusMangleBearDamage += 51.75f;
+
                         }
                         else if (spellDesc.EndsWith(" Weapon Damage."))
                         {
