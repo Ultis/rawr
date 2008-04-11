@@ -1181,10 +1181,7 @@ namespace Rawr
 
 #region NoStackStats
         [System.ComponentModel.DefaultValueAttribute(0f)]
-<<<<<<< .mine
-=======
         [DisplayName("Spell Damage (10 sec on Moonfire)")]
->>>>>>> .r17541
         [Category("Equipment Procs")]
         public float BonusManaPotion
         {
@@ -1193,14 +1190,8 @@ namespace Rawr
         }
 
 
-<<<<<<< .mine
 #endregion
-=======
-		[System.ComponentModel.DefaultValueAttribute(0f)]
-        public float CrushChanceReduction { get { return _rawData[109]; } set { _rawData[109] = value; } }
->>>>>>> .r17541
-
-<<<<<<< .mine
+	
         /// <summary>
         /// Adds together two stats, when using a + operator. When adding additional stats for
         /// Rawr to track, after adding the stat property, also add a line for it to this method,
@@ -1213,11 +1204,6 @@ namespace Rawr
         {
             Stats c = new Stats();
 
-=======
-        [DisplayName("Shattered Sun Caster Neck proc")]
-        [Category("Equipment Procs")]
->>>>>>> .r17541
-<<<<<<< .mine
             int count = c._rawAdditiveData.Length;
             for (int i = 0; i < count; i++)
             {
@@ -1235,12 +1221,7 @@ namespace Rawr
             }
             return c;
         }
-=======
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ShatteredSunAcumenProc { get { return _rawData[110]; } set { _rawData[110] = value; } }
->>>>>>> .r17541
-
-<<<<<<< .mine
+      
         public bool Equals(Stats other)
         {
             return this == other;
@@ -1257,12 +1238,7 @@ namespace Rawr
         //{
         //    return CompareTo(other as Stats);
         //}
-=======
-        [DisplayName("Timbal's Focusing Crystal proc")]
-        [Category("Equipment Procs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float TimbalsProc { get { return _rawData[111]; } set { _rawData[111] = value; } }
->>>>>>> .r17541
+     
 
         public override int GetHashCode()
         {
@@ -1312,151 +1288,6 @@ namespace Rawr
                 && ArrayUtils.AllCompare(x._rawNoStackData, y._rawNoStackData, comparison) ;
         }
 
-<<<<<<< .mine
-        //with hands held high into the sky so blue
-        public Stats()
-=======
-		/// <summary>
-		/// Adds together two stats, when using a + operator. When adding additional stats for
-		/// Rawr to track, after adding the stat property, also add a line for it to this method,
-		/// to properly combine the stat, as appropriate.
-		/// </summary>
-		/// <param name="a">The first Stats object to combine.</param>
-		/// <param name="b">The second Stats object to combine.</param>
-		/// <returns>The combined Stats object.</returns>
-		public static Stats operator +(Stats a, Stats b)
-		{
-			return new Stats()
-			{
-				//NOTE: This is hard-coded, not using reflection, due to speed and maintainability.
-				//GetValue and SetValue via reflection are *extremely* slow, and cause noticable lag in the app.
-				//We also tried at one point to dynamically generate this code at runtime, which worked, but was
-				//very complex and not maintainable by anyone who didn't already know wtf it was doing. So,
-				//we're back to just hard-coding it, which isn't that big of a deal.
-				Armor = a.Armor + b.Armor,
-				Health = a.Health + b.Health,
-				Agility = a.Agility + b.Agility,
-				Stamina = a.Stamina + b.Stamina,
-				AttackPower = a.AttackPower + b.AttackPower,
-				Strength = a.Strength + b.Strength,
-				Intellect = a.Intellect + b.Intellect,
-				Spirit = a.Spirit + b.Spirit,
-				WeaponDamage = a.WeaponDamage + b.WeaponDamage,
-				ArmorPenetration = a.ArmorPenetration + b.ArmorPenetration,
-				FrostResistance = a.FrostResistance + b.FrostResistance,
-				NatureResistance = a.NatureResistance + b.NatureResistance,
-				FireResistance = a.FireResistance + b.FireResistance,
-				ShadowResistance = a.ShadowResistance + b.ShadowResistance,
-				ArcaneResistance = a.ArcaneResistance + b.ArcaneResistance,
-				AllResist = a.AllResist + b.AllResist,
-				CritRating = a.CritRating + b.CritRating,
-				LotPCritRating = a.LotPCritRating + b.LotPCritRating,
-				HitRating = a.HitRating + b.HitRating,
-				DodgeRating = a.DodgeRating + b.DodgeRating,
-				ParryRating = a.ParryRating + b.ParryRating,
-				BlockRating = a.BlockRating + b.BlockRating,
-                BlockValue = a.BlockValue + b.BlockValue,
-				DefenseRating = a.DefenseRating + b.DefenseRating,
-				Resilience = a.Resilience + b.Resilience,
-				ExpertiseRating = a.ExpertiseRating + b.ExpertiseRating,
-				HasteRating = a.HasteRating + b.HasteRating,
-				Mp5 = a.Mp5 + b.Mp5,
-                Hp5 = a.Hp5 + b.Hp5,
-				BloodlustProc = a.BloodlustProc + b.BloodlustProc,
-				TerrorProc = a.TerrorProc + b.TerrorProc,
-				Miss = a.Miss + b.Miss,
-				BonusShredDamage = a.BonusShredDamage + b.BonusShredDamage,
-				BonusMangleDamage = a.BonusMangleDamage + b.BonusMangleDamage,
-				BonusRipDamagePerCPPerTick = a.BonusRipDamagePerCPPerTick + b.BonusRipDamagePerCPPerTick,
-				MangleCostReduction = a.MangleCostReduction + b.MangleCostReduction,
-				ExposeWeakness = a.ExposeWeakness + b.ExposeWeakness,
-				Bloodlust = a.Bloodlust + b.Bloodlust,
-				DrumsOfBattle = a.DrumsOfBattle + b.DrumsOfBattle,
-				DrumsOfWar = a.DrumsOfWar + b.DrumsOfWar,
-				BonusAgilityMultiplier = (1f + a.BonusAgilityMultiplier) * (1f + b.BonusAgilityMultiplier) - 1f,
-                BonusStrengthMultiplier = (1f + a.BonusStrengthMultiplier) * (1f + b.BonusStrengthMultiplier) - 1f,
-				BonusStaminaMultiplier = (1f + a.BonusStaminaMultiplier) * (1f + b.BonusStaminaMultiplier) - 1f,
-				BonusArmorMultiplier = (1f + a.BonusArmorMultiplier) * (1f + b.BonusArmorMultiplier) - 1f,
-				BonusAttackPowerMultiplier = (1f + a.BonusAttackPowerMultiplier) * (1f + b.BonusAttackPowerMultiplier) - 1f,
-				BonusCritMultiplier = (1f + a.BonusCritMultiplier) * (1f + b.BonusCritMultiplier) - 1f,
-				BonusRipDamageMultiplier = (1f + a.BonusRipDamageMultiplier) * (1f + b.BonusRipDamageMultiplier) - 1f,
-				BonusIntellectMultiplier = (1f + a.BonusIntellectMultiplier) * (1f + b.BonusIntellectMultiplier) - 1f,
-				BonusSpellCritMultiplier = (1f + a.BonusSpellCritMultiplier) * (1f + b.BonusSpellCritMultiplier) - 1f,
-				BonusSpellPowerMultiplier = (1f + a.BonusSpellPowerMultiplier) * (1f + b.BonusSpellPowerMultiplier) - 1f,
-                BonusFireSpellPowerMultiplier = (1f + a.BonusFireSpellPowerMultiplier) * (1f + b.BonusFireSpellPowerMultiplier) - 1f,
-                BonusFrostSpellPowerMultiplier = (1f + a.BonusFrostSpellPowerMultiplier) * (1f + b.BonusFrostSpellPowerMultiplier) - 1f,
-                BonusArcaneSpellPowerMultiplier = (1f + a.BonusArcaneSpellPowerMultiplier) * (1f + b.BonusArcaneSpellPowerMultiplier) - 1f,
-                BonusShadowSpellPowerMultiplier = (1f + a.BonusShadowSpellPowerMultiplier) * (1f + b.BonusShadowSpellPowerMultiplier) - 1f,
-                BonusNatureSpellPowerMultiplier = (1f + a.BonusNatureSpellPowerMultiplier) * (1f + b.BonusNatureSpellPowerMultiplier) - 1f,
-                BonusSpiritMultiplier = (1f + a.BonusSpiritMultiplier) * (1f + b.BonusSpiritMultiplier) - 1f,
-                ThreatMultiplier = (1f + a.ThreatMultiplier) * (1f + b.ThreatMultiplier) - 1f,
-                SpellCritRating = a.SpellCritRating + b.SpellCritRating,
-                SpellFrostCritRating = a.SpellFrostCritRating + b.SpellFrostCritRating,
-                SpellDamageRating = a.SpellDamageRating + b.SpellDamageRating,
-				SpellFireDamageRating = a.SpellFireDamageRating + b.SpellFireDamageRating,
-				SpellHasteRating = a.SpellHasteRating + b.SpellHasteRating,
-				SpellHitRating = a.SpellHitRating + b.SpellHitRating,
-				SpellShadowDamageRating = a.SpellShadowDamageRating + b.SpellShadowDamageRating,
-				SpellFrostDamageRating = a.SpellFrostDamageRating + b.SpellFrostDamageRating,
-                SpellArcaneDamageRating = a.SpellArcaneDamageRating + b.SpellArcaneDamageRating,
-                SpellNatureDamageRating = a.SpellNatureDamageRating + b.SpellNatureDamageRating,
-                SpellPenetration = a.SpellPenetration + b.SpellPenetration,
-                Mana = a.Mana + b.Mana,
-                LightningCapacitorProc = a.LightningCapacitorProc + b.LightningCapacitorProc,
-                ArcaneBlastBonus = a.ArcaneBlastBonus + b.ArcaneBlastBonus,
-                SpellDamageFor6SecOnCrit = a.SpellDamageFor6SecOnCrit + b.SpellDamageFor6SecOnCrit,
-                EvocationExtension = a.EvocationExtension + b.EvocationExtension,
-                BonusMageNukeMultiplier = (1f + a.BonusMageNukeMultiplier) * (1f + b.BonusMageNukeMultiplier) - 1f,
-                ManaRestorePerHit = a.ManaRestorePerHit + b.ManaRestorePerHit,
-                ManaRestorePerCast = a.ManaRestorePerCast + b.ManaRestorePerCast,
-                BonusManaGem = a.BonusManaGem + b.BonusManaGem,
-                BonusManaPotion = Math.Max(a.BonusManaPotion, b.BonusManaPotion), // does not stack
-                SpellDamageFor10SecOnHit_10_45 = a.SpellDamageFor10SecOnHit_10_45 + b.SpellDamageFor10SecOnHit_10_45,
-                SpellDamageFromIntellectPercentage = a.SpellDamageFromIntellectPercentage + b.SpellDamageFromIntellectPercentage,
-                SpellDamageFromSpiritPercentage = a.SpellDamageFromSpiritPercentage + b.SpellDamageFromSpiritPercentage,
-                SpellDamageFor10SecOnResist = a.SpellDamageFor10SecOnResist + b.SpellDamageFor10SecOnResist,
-                SpellDamageFor15SecOnCrit_20_45 = a.SpellDamageFor15SecOnCrit_20_45 + b.SpellDamageFor15SecOnCrit_20_45,
-                SpellCombatManaRegeneration = a.SpellCombatManaRegeneration + b.SpellCombatManaRegeneration,
-                SpellHasteFor5SecOnCrit_50 = a.SpellHasteFor5SecOnCrit_50 + b.SpellHasteFor5SecOnCrit_50,
-                SpellHasteFor6SecOnCast_15_45 = a.SpellHasteFor6SecOnCast_15_45 + b.SpellHasteFor6SecOnCast_15_45,
-                SpellDamageFor10SecOnHit_5 = a.SpellDamageFor10SecOnHit_5 + b.SpellDamageFor10SecOnHit_5,
-                SpellHasteFor6SecOnHit_10_45 = a.SpellHasteFor6SecOnHit_10_45 + b.SpellHasteFor6SecOnHit_10_45,
-                SpellDamageFor10SecOnCrit_20_45 = a.SpellDamageFor10SecOnCrit_20_45 + b.SpellDamageFor10SecOnCrit_20_45,
-                Healing = a.Healing + b.Healing,
-                StarfireDmg = a.StarfireDmg + b.StarfireDmg,
-                WrathDmg = a.WrathDmg + b.WrathDmg,
-                MoonfireDmg = a.MoonfireDmg + b.MoonfireDmg,
-                IdolCritRating = a.IdolCritRating + b.IdolCritRating,
-                UnseenMoonDamageBonus = a.UnseenMoonDamageBonus + b.UnseenMoonDamageBonus,
-                BonusPhysicalDamageMultiplier = (1f + a.BonusPhysicalDamageMultiplier)*(1f+b.BonusPhysicalDamageMultiplier) -1f,
-                BonusCrusaderStrikeDamageMultiplier = (1f + a.BonusCrusaderStrikeDamageMultiplier)*(1f+b.BonusCrusaderStrikeDamageMultiplier) -1f,
-				MageSpellCrit = a.MageSpellCrit + b.MageSpellCrit,
-				ShatteredSunMightProc = a.ShatteredSunMightProc + b.ShatteredSunMightProc,
-				CrushChanceReduction = a.CrushChanceReduction + b.CrushChanceReduction,
-				WindfuryAPBonus = a.WindfuryAPBonus + b.WindfuryAPBonus,
-                ShatteredSunAcumenProc = a.ShatteredSunAcumenProc + b.ShatteredSunAcumenProc,
-                TimbalsProc = a.TimbalsProc + b.TimbalsProc
-			};
-		}
-
-		public bool Equals(Stats other)
-		{
-			return this == other;
-		}
-		public ArrayUtils.CompareResult CompareTo(Stats other)
-		{
-			if (ReferenceEquals(other, null)) return 0;
-			return ArrayUtils.AllCompare(this._rawData, other._rawData);
-		}
-		//int IComparable.CompareTo(object other)
-		//{
-		//    return CompareTo(other as Stats);
-		//}
-
-        public override int GetHashCode()
->>>>>>> .r17541
-        {
-        }
 
         //as the ocean opens up to swallow you
         public override string ToString()
