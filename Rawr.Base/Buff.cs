@@ -26,7 +26,7 @@ namespace Rawr
 			switch (buffCategory)
 			{
 				case BuffCategory.ClassBuffs: return "Class Buffs";
-				case BuffCategory.ElixirsAndFlasks: return "Elixirs & Flasks";
+				case BuffCategory.ElixirsAndFlasks: return "Elixirs && Flasks";
 				case BuffCategory.OtherConsumables: return "Other Consumables";
 				case BuffCategory.Debuffs: return "Debuffs";
 				case BuffCategory.SetBonuses: return "Set Bonuses";
