@@ -152,10 +152,6 @@ namespace Rawr
 					case "Aldor":
 						stats.AttackPower += 39.13f;
 						break;
-
-					case "Scryer":
-						stats.WeaponDamage += 4.35f;
-						break;
 				}
 			}
 
@@ -167,6 +163,7 @@ namespace Rawr
 			float modArmor = (baseArmor / (baseArmor + 10557.5f )) * 100f;
 
 			float critMultiplier = 2 * (1 + stats.BonusCritMultiplier);
+            float physicalCritModifier = 1.0f + ((stats.CritRating / 22.08f) / 100.0f) * (1f + stats.BonusCritMultiplier * 2f);
 			float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
 
 			float hitBonus = stats.HitRating * 52f / 82f / 1000f;
@@ -333,7 +330,19 @@ namespace Rawr
 
 			#endregion
 
-			float dps = 1.1f * (((dmgMangles + dmgShreds + dmgMelee) * (1f - modArmor / 100f) + dmgRips) / cycleTime);
+            float ssoNeckProcDPS = 0f;
+            
+            if (stats.ShatteredSunMightProc > 0)
+            {
+                switch (shattrathFaction)
+                {
+                    case "Scryer":
+                        //Need to add Misery and Curse of Shadows to options.
+                        ssoNeckProcDPS = 350f * physicalCritModifier / 50f;
+                        break;
+                }
+            }
+            float dps = 1.1f * (((dmgMangles + dmgShreds + dmgMelee) * (1f - modArmor / 100f) + dmgRips) / cycleTime) + ssoNeckProcDPS;
 
 			calculatedStats.DPSPoints = dps;// *100f;
 			calculatedStats.OverallPoints = dps;// *100f;
