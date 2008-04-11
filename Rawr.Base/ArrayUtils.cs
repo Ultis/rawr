@@ -7,6 +7,24 @@ namespace Rawr
 	{
 		public enum CompareResult { LessThan, Equal, Unequal, GreaterThan }
 
+        public static CompareResult And(CompareResult a, CompareResult b)
+        {
+            if(a==b)
+            {
+                return a;
+            }
+            if(a==CompareResult.Equal)
+            {
+                return b;
+            }
+            if(b==CompareResult.Equal)
+            {
+                return a;
+            }
+            return CompareResult.Unequal;
+        }
+     
+
 		[Flags]
 		public enum CompareOption { LessThan = 1, Equal = 2, GreaterThan = 4 }
 
