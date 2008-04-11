@@ -223,41 +223,41 @@ you are being killed by burst damage, focus on Survival Points.",
             float hitBonus = stats.HitRating * 52f / 82f / 1000f;
             float expertiseBonus = 2*stats.ExpertiseRating * 52f / 82f / 2.5f * 0.0025f;
 
-
-            float chanceCrit = Math.Min(0.75f, (stats.CritRating / 22.08f + (stats.Agility / 25f)) / 100f) - 0.042f; 
             float chanceDodge = Math.Max(0f, 2*0.065f - expertiseBonus);
+
             float chanceMiss = Math.Max(0f, 0.09f - hitBonus) + chanceDodge;
 
+            float chanceCrit = Math.Min(0.75f, (stats.CritRating / 22.08f + ((stats.Agility + (1-chanceMiss)*stats.TerrorProc*2.0f/3.0f) / 25f)) / 100f); 
 
             calculatedStats.AvoidedAttacks = chanceMiss * 100f;
             calculatedStats.DodgedAttacks = chanceDodge * 100f;
             calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks - calculatedStats.DodgedAttacks;
 
 
-            float critRageTPS = chanceCrit*(1 / attackSpeed + 1 / 6.0f)*25;
+            float critRageTPS = 5*chanceCrit*(1 / attackSpeed + 4 / 6.0f)*5;
 
-            float averageDamage = 1 - chanceMiss +  (1 + stats.BonusCritMultiplier) * chanceCrit;
 
             float weaponDamage = stats.WeaponDamage+(2.5f* + (768f + attackPower) / 14f);
 
             float whiteTPS = weaponDamage / attackSpeed ;
 
-            // need 2T6 bonus, idol bonus
-            float mangleTPS = 1.3f* 1.15f * (weaponDamage + 155f) / 6;
+            float mangleTPS = (1+stats.BonusMangleBearThreat)*1.3f* 1.15f * (weaponDamage + 155f + stats.BonusMangleBearDamage) / 6;
 
-            // 3 rips per 6 second mangle cooldown
-            float LacerateTPS = 285 / 2;
+            float LacerateTPS = 1.3f*(31+stats.AttackPower/20+stats.BonusLacerateDamage) / 2;
+            float LacerateBaseTPS = 285 * (1 - chanceMiss);
+            float lacerateDotTPS = 1.3f*0.2f*(155/5 + 5*(stats.AttackPower / 20 + stats.BonusLacerateDamage))/3;
 
-            // need to add 4t5 bonus
-            float lacerateDotTPS = 1.3f*0.2f*(155 + 5*stats.AttackPower / 20)/15;
-
+            float BloodlustTPS = 1 / attackSpeed*(1-chanceMiss) * stats.BloodlustProc / 4.0f * 5;
 
             calculatedStats.ThreatScale = float.Parse(character.CalculationOptions["ThreatScale"]);
+   
 
-            //need to add 2t4 bonus
+            float averageDamage = 1 - chanceMiss +  (1 + stats.BonusCritMultiplier) * chanceCrit;
 
-            calculatedStats.ThreatPoints = calculatedStats.ThreatScale * 1.45f * (1.1f * ((whiteTPS + mangleTPS) * averageDamage *modArmor + lacerateDotTPS) + LacerateTPS + critRageTPS);
-            calculatedStats.UnlimitedThreat = calculatedStats.ThreatScale * 1.45f * (1.1f * ((whiteTPS + 179 / attackSpeed + mangleTPS) * averageDamage * modArmor + lacerateDotTPS) + LacerateTPS + critRageTPS) + 322 / attackSpeed;
+            calculatedStats.ThreatPoints    = calculatedStats.ThreatScale * 1.45f * (LacerateBaseTPS + critRageTPS + BloodlustTPS + 
+                1.1f * (((whiteTPS                     + mangleTPS)* modArmor +LacerateTPS )* averageDamage + lacerateDotTPS) );
+            calculatedStats.UnlimitedThreat = calculatedStats.ThreatScale * 1.45f * (LacerateBaseTPS + critRageTPS + BloodlustTPS + 322 / attackSpeed + 
+                1.1f * (((whiteTPS + 179 / attackSpeed + mangleTPS)* modArmor +LacerateTPS )* averageDamage + lacerateDotTPS) );
 
             calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
 			return calculatedStats;
@@ -358,8 +358,12 @@ you are being killed by burst damage, focus on Survival Points.",
 
             statsTotal.Armor = (float) Math.Round(((statsBaseGear.Armor * 5.5f) + statsRace.Armor + statsBuffs.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
 
-            
-            
+            statsTotal.TerrorProc = statsGearEnchantsBuffs.TerrorProc;
+            statsTotal.BonusSwipeDamageMultiplier = statsGearEnchantsBuffs.BonusSwipeDamageMultiplier;
+            statsTotal.BonusLacerateDamage = statsGearEnchantsBuffs.BonusLacerateDamage;
+            statsTotal.BonusMangleBearDamage = statsGearEnchantsBuffs.BonusMangleBearDamage;
+            statsTotal.BonusMangleBearThreat = statsGearEnchantsBuffs.BonusMangleBearThreat;
+            statsTotal.BloodlustProc = statsGearEnchantsBuffs.BloodlustProc;
             
 			return statsTotal;
 		}
@@ -550,7 +554,12 @@ you are being killed by burst damage, focus on Survival Points.",
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetration = stats.ArmorPenetration,
                 WeaponDamage = stats.WeaponDamage,
-                BonusCritMultiplier = stats.BonusCritMultiplier
+                BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusMangleBearThreat = stats.BonusMangleBearThreat,
+                BonusLacerateDamage = stats.BonusLacerateDamage,
+                BonusSwipeDamageMultiplier = stats.BonusSwipeDamageMultiplier,
+                BloodlustProc = stats.BloodlustProc,
+                BonusMangleBearDamage = stats.BonusMangleBearDamage
 
 			};
 		}
@@ -564,6 +573,8 @@ you are being killed by burst damage, focus on Survival Points.",
 				stats.FrostResistance + stats.ShadowResistance
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
+                 + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamage + stats.BonusSwipeDamageMultiplier
+                 + stats.BloodlustProc + stats.BonusMangleBearDamage
                 ) != 0;
 		}
     }

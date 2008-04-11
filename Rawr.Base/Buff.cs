@@ -889,7 +889,7 @@ namespace Rawr
             {
                 Name = "Nordrassil Harness 4 Piece Bonus",
                 Category = BuffCategory.SetBonuses,
-                Stats = new Stats() { BonusShredDamage = 75 },
+                Stats = new Stats() { BonusShredDamage = 75, BonusLacerateDamage = 15/5},
                 SetName = "Nordrassil Harness",
                 SetThreshold = 4
             });
@@ -897,7 +897,7 @@ namespace Rawr
             {
                 Name = "Thunderheart Harness 2 Piece Bonus",
                 Category = BuffCategory.SetBonuses,
-                Stats = new Stats() { MangleCostReduction = 5 },
+                Stats = new Stats() { MangleCatCostReduction = 5, BonusMangleBearThreat = 0.15f },
                 SetName = "Thunderheart Harness",
                 SetThreshold = 2
             });
@@ -905,7 +905,7 @@ namespace Rawr
             {
                 Name = "Thunderheart Harness 4 Piece Bonus",
                 Category = BuffCategory.SetBonuses,
-                Stats = new Stats() { BonusRipDamageMultiplier = .15f },
+                Stats = new Stats() { BonusRipDamageMultiplier = .15f, BonusSwipeDamageMultiplier = .15f },
                 SetName = "Thunderheart Harness",
                 SetThreshold = 4
             });
