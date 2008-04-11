@@ -179,9 +179,9 @@ namespace Rawr
 			float chanceMiss = Math.Max(0f, 0.09f - hitBonus) + chanceDodge;
 						
 			float meleeDamage = stats.WeaponDamage + (768f + attackPower) / 14f;
-			float mangleCost = 40f - stats.MangleCostReduction;
+			float mangleCost = 40f - stats.MangleCatCostReduction;
 			float totalMangleCost = 1f / (1f - chanceMiss) * (mangleCost * (1f - chanceMiss) + mangleCost / 5f * chanceMiss);
-			float mangleDamage = 1.2f * (meleeDamage * 1.6f + 264f + stats.BonusMangleDamage);
+			float mangleDamage = 1.2f * (meleeDamage * 1.6f + 264f + stats.BonusMangleCatDamage);
 
 			float shredCost = 42f;
 			float totalShredCost = chanceMiss * shredCost / 5f + (1f - chanceMiss) * shredCost;
@@ -424,7 +424,7 @@ namespace Rawr
 			statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + statsTotal.Agility + (statsTotal.Strength * 2)) *  (1f + statsTotal.BonusAttackPowerMultiplier));
 			statsTotal.BloodlustProc = statsRace.BloodlustProc + statsGearEnchantsBuffs.BloodlustProc;
 			statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
-			statsTotal.BonusMangleDamage = statsRace.BonusMangleDamage + statsGearEnchantsBuffs.BonusMangleDamage;
+			statsTotal.BonusMangleCatDamage = statsRace.BonusMangleCatDamage + statsGearEnchantsBuffs.BonusMangleCatDamage;
 			statsTotal.BonusRipDamageMultiplier = ((1 + statsRace.BonusRipDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusRipDamageMultiplier)) - 1;
 			statsTotal.BonusShredDamage = statsRace.BonusShredDamage + statsGearEnchantsBuffs.BonusShredDamage;
 			statsTotal.BonusRipDamagePerCPPerTick = statsRace.BonusRipDamagePerCPPerTick + statsGearEnchantsBuffs.BonusRipDamagePerCPPerTick;
@@ -432,7 +432,7 @@ namespace Rawr
 			statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
 			statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
 			statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
-			statsTotal.MangleCostReduction = statsRace.MangleCostReduction + statsGearEnchantsBuffs.MangleCostReduction;
+			statsTotal.MangleCatCostReduction = statsRace.MangleCatCostReduction + statsGearEnchantsBuffs.MangleCatCostReduction;
 			statsTotal.TerrorProc = statsRace.TerrorProc + statsGearEnchantsBuffs.TerrorProc;
 			statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
@@ -605,7 +605,7 @@ namespace Rawr
                     ArmorPenetration = stats.ArmorPenetration,
 					BloodlustProc = stats.BloodlustProc,
 					TerrorProc = stats.TerrorProc,
-					BonusMangleDamage = stats.BonusMangleDamage,
+					BonusMangleCatDamage = stats.BonusMangleCatDamage,
 					BonusShredDamage = stats.BonusShredDamage,
 					BonusRipDamagePerCPPerTick = stats.BonusRipDamagePerCPPerTick,
 					WeaponDamage = stats.WeaponDamage,
@@ -616,7 +616,7 @@ namespace Rawr
 					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
 					Health = stats.Health,
-					MangleCostReduction = stats.MangleCostReduction,
+					MangleCatCostReduction = stats.MangleCatCostReduction,
 					ExposeWeakness = stats.ExposeWeakness,
 					Bloodlust = stats.Bloodlust,
 					DrumsOfBattle = stats.DrumsOfBattle,
@@ -629,9 +629,9 @@ namespace Rawr
 		{
 			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.BloodlustProc +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
-				stats.BonusMangleDamage + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
+				stats.BonusMangleCatDamage + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
-				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCostReduction + /*stats.Stamina +*/
+				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
 				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc) > 0;
 		}
