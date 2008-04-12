@@ -489,21 +489,29 @@ you are being killed by burst damage, focus on Survival Points.",
 			statsBuffs.Health += statsEnchants.Health;
 			statsBuffs.Armor += statsEnchants.Armor;
 
-            float stamina = (float)Math.Floor((statsRace.Stamina + statsBaseGear.Stamina + statsBuffs.Stamina) *
+            float staBase = (float)Math.Floor((statsRace.Stamina) *
+                             (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier) *
+                             (1 + statsRace.BonusStaminaMultiplier) *
+                             (1 + statsTalents.BonusStaminaMultiplier));
+            float stamina = (float)Math.Floor(staBase + (statsBaseGear.Stamina + statsBuffs.Stamina) *
                              (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier) *
                              (1 + statsRace.BonusStaminaMultiplier) *
                              (1 + statsTalents.BonusStaminaMultiplier));
 
-            float health = (statsRace.Health + statsBaseGear.Health + statsBuffs.Health +
+            float health = (float)Math.Floor((statsRace.Health + statsBaseGear.Health + statsBuffs.Health +
                             stamina * WarriorConversions.StaminaToHP) *
                              (1 + statsGearEnchantsBuffs.BonusHealthMultiplier) *
                              (1 + statsRace.BonusHealthMultiplier) *
-                             (1 + statsTalents.BonusHealthMultiplier);
+                             (1 + statsTalents.BonusHealthMultiplier));
 
-            float strength = (statsRace.Strength + statsBaseGear.Strength + statsBuffs.Strength) *
+            float strBase = (float)Math.Floor((statsRace.Strength) *
                              (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier) *
                              (1 + statsRace.BonusStrengthMultiplier) *
-                             (1 + statsTalents.BonusStrengthMultiplier);
+                             (1 + statsTalents.BonusStrengthMultiplier));
+            float strength = (float)Math.Floor(strBase + (statsBaseGear.Strength + statsBuffs.Strength) *
+                              (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier) *
+                              (1 + statsRace.BonusStrengthMultiplier) *
+                              (1 + statsTalents.BonusStrengthMultiplier));
             
 			Stats statsTotal = new Stats();
 			statsTotal.Stamina = stamina;
@@ -513,7 +521,7 @@ you are being killed by burst damage, focus on Survival Points.",
             statsTotal.BlockRating = statsRace.BlockRating + statsBaseGear.BlockRating + statsBuffs.BlockRating;
             statsTotal.BlockValue = statsRace.BlockValue + statsBaseGear.BlockValue + statsBuffs.BlockValue;
 			statsTotal.Resilience = statsRace.Resilience + statsBaseGear.Resilience + statsBuffs.Resilience;
-            statsTotal.Health = (float)Math.Floor(health);
+            statsTotal.Health = health;
 			statsTotal.Miss = statsRace.Miss + statsBaseGear.Miss + statsBuffs.Miss;
             statsTotal.CrushChanceReduction = statsGearEnchantsBuffs.CrushChanceReduction + statsRace.CrushChanceReduction;
             statsTotal.NatureResistance = statsGearEnchantsBuffs.NatureResistance + statsRace.NatureResistance;
@@ -548,7 +556,7 @@ you are being killed by burst damage, focus on Survival Points.",
                                                   (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier) *
                                                   (1 + statsTalents.BonusStrengthMultiplier)) - 1;
             statsTotal.Agility = statsRace.Agility + statsGearEnchantsBuffs.Agility + statsTalents.Agility; ;
-            statsTotal.Strength = (float)Math.Floor(strength);
+            statsTotal.Strength = strength;
  
             statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + (statsTotal.Strength * 2)) * (1f + statsTotal.BonusAttackPowerMultiplier));
@@ -561,7 +569,9 @@ you are being killed by burst damage, focus on Survival Points.",
             statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
             statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
 
-            statsTotal.Armor = (float)Math.Floor(((statsBaseGear.Armor * (1 + statsTalents.BonusArmorMultiplier)) + statsRace.Armor + statsBuffs.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
+            statsTotal.Armor = (float)Math.Floor(((statsBaseGear.Armor * (1 + statsTalents.BonusArmorMultiplier)) +
+                                statsRace.Armor + statsBuffs.Armor +
+                                (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
 
 			return statsTotal;
 		}
