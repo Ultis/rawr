@@ -112,7 +112,7 @@ you are being killed by burst damage, focus on Survival Points.",
 					"Mitigation % from Armor",
 					"Avoidance %",
 					"% Chance to be Crit",
-                    "% Chance to be Crushed",
+                    "% to be Crushed",
                     "Nature Survival",
                     "Fire Survival",
                     "Frost Survival",
@@ -243,7 +243,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
 
 			calculatedStats.SurvivalPoints = (stats.Health / (1f - (calculatedStats.CappedMitigation / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
-            calculatedStats.MitigationPoints = (7000f * (1f / (calculatedStats.DamageTaken / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
+            calculatedStats.MitigationPoints = (1000f * (1f / (calculatedStats.DamageTaken / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
 
             float cappedResist = targetLevel * 5;
 
@@ -1055,12 +1055,31 @@ you are being killed by burst damage, focus on Survival Points.",
 
 		public override float GetOptimizableCalculationValue(string calculation)
 		{
+            /*
+             * 					"Health",
+                    "Hit Rating",
+                    "Expertise Rating",
+					"Haste Rating",
+                    "Missed Attacks",
+                    "Unlimited Threat",
+                    "Limited Threat",
+					"Mitigation % from Armor",
+					"Avoidance %",
+					"% Chance to be Crit",
+                    "% to be Crushed",
+                    "Nature Survival",
+                    "Fire Survival",
+                    "Frost Survival",
+                    "Shadow Survival",
+                    "Arcane Survival",
+             */
 			switch (calculation)
 			{
 				case "Health": return BasicStats.Health;
 				case "Mitigation % from Armor": return Mitigation;
                 case "Avoidance %": return DodgePlusMissPlusParry;
 				case "% Chance to be Crit": return ((5f + (0.2f * (TargetLevel - 70))) - CritReduction);
+                case "% to be Crushed": return Math.Min((100 - DodgePlusMissPlusParryPlusBlock - BlockOverCap), 15f);
 				case "Nature Survival": return NatureSurvivalPoints;
 				case "Fire Survival": return FireSurvivalPoints;
 				case "Frost Survival": return FrostSurvivalPoints;
