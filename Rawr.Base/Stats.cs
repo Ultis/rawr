@@ -17,6 +17,7 @@ namespace Rawr
         ArmorPenetration,
         AttackPower,
         AverageAgility,
+        Block,
         BlockRating,
         BlockValue,
         Bloodlust,
@@ -28,9 +29,12 @@ namespace Rawr
         BonusRipDamagePerCPPerTick,
         BonusShredDamage,
         CatFormStrength,
+        Crit,
         CritRating,
         CrushChanceReduction,
+        Defense,
         DefenseRating,
+        Dodge,
         DodgeRating,
         DrumsOfBattle,
         DrumsOfWar,
@@ -42,6 +46,7 @@ namespace Rawr
         HasteRating,
         Healing,
         Health,
+        Hit,
         HitRating,
         Hp5,
         IdolCritRating,
@@ -60,6 +65,7 @@ namespace Rawr
         Mp5,
         Mp5OnCastFor20SecOnUse2Min,
         NatureResistance,
+        Parry,
         ParryRating,
         Resilience,
         ScopeDamage, 
@@ -113,6 +119,7 @@ namespace Rawr
         BonusAgilityMultiplier,
         BonusArcaneSpellPowerMultiplier,
         BonusArmorMultiplier,
+        BonusBlockValueMultiplier,
         BonusAttackPowerMultiplier,
         BonusCritMultiplier,
         BonusCrusaderStrikeDamageMultiplier,
@@ -126,6 +133,7 @@ namespace Rawr
         BonusSpellCritMultiplier,
         BonusSpellPowerMultiplier,
         BonusSpiritMultiplier,
+        BonusHealthMultiplier,
         BonusStaminaMultiplier,
         BonusStrengthMultiplier,
         BonusSwipeDamageMultiplier,
@@ -427,8 +435,17 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Combat Ratings")]
+        [Category("Combat Values")]
         [DisplayName("Crit")]
+        public float Crit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Crit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Crit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Ratings")]
+        [DisplayName("Crit Rating")]
         public float CritRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritRating]; }
@@ -437,7 +454,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Hit")]
+        [DisplayName("Hit Rating")]
         public float HitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HitRating]; }
@@ -445,8 +462,17 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Values")]
+        [DisplayName("Hit")]
+        public float Hit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Hit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Hit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Dodge")]
+        [DisplayName("Dodge Rating")]
         public float DodgeRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DodgeRating]; }
@@ -454,8 +480,26 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Combat Ratings")]
+        [Category("Combat Values")]
+        [DisplayName("Dodge")]
+        public float Dodge
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Dodge]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Dodge] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Values")]
         [DisplayName("Parry")]
+        public float Parry
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Parry]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Parry] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Ratings")]
+        [DisplayName("Parry Rating")]
         public float ParryRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ParryRating]; }
@@ -463,8 +507,17 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Combat Ratings")]
+        [Category("Combat Values")]
         [DisplayName("Block")]
+        public float Block
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Block]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Block] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Ratings")]
+        [DisplayName("Block Rating")]
         public float BlockRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BlockRating]; }
@@ -481,8 +534,17 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Combat Ratings")]
+        [Category("Combat Values")]
         [DisplayName("Defense")]
+        public float Defense
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Defense]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Defense] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Ratings")]
+        [DisplayName("Defense Rating")]
         public float DefenseRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DefenseRating]; }
@@ -986,7 +1048,7 @@ namespace Rawr
 
 #endregion
 
-#region MultiplicativeStats
+        #region MultiplicativeStats
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% CStrike Dmg")]
@@ -1043,6 +1105,15 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
+        [DisplayName("% Health")]
+        public float BonusHealthMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusHealthMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusHealthMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Multiplicative]
         [DisplayName("% Int")]
         public float BonusIntellectMultiplier
         {
@@ -1057,6 +1128,15 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusArmorMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusArmorMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Multiplicative]
+        [DisplayName("% Block Value")]
+        public float BonusBlockValueMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusBlockValueMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusBlockValueMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1179,7 +1259,7 @@ namespace Rawr
 
         #endregion
 
-#region NoStackStats
+        #region NoStackStats
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (10 sec on Moonfire)")]
         [Category("Equipment Procs")]

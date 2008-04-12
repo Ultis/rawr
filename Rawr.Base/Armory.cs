@@ -556,6 +556,13 @@ namespace Rawr
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
                             stats.AttackPower += int.Parse(spellDesc);
                         }
+                        else if (spellDesc.StartsWith("Increases defense rating by "))
+                        {
+                            spellDesc = spellDesc.Substring("Increases defense rating by ".Length);
+                            if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                            if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                            stats.DefenseRating += int.Parse(spellDesc);
+                        }
                         else if (spellDesc.StartsWith("Increases your dodge rating by "))
                         {
                             spellDesc = spellDesc.Substring("Increases your dodge rating by ".Length);
@@ -580,6 +587,13 @@ namespace Rawr
                         else if (spellDesc.StartsWith("Increases your shield block rating by "))
                         {
                             spellDesc = spellDesc.Substring("Increases your shield block rating by ".Length);
+                            if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
+                            if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
+                            stats.BlockRating += int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("Increases your block rating by "))
+                        {
+                            spellDesc = spellDesc.Substring("Increases your block rating by ".Length);
                             if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
                             stats.BlockRating += int.Parse(spellDesc);
@@ -894,6 +908,9 @@ namespace Rawr
                                 break;
                             case "Block Rating":
                                 sockets.Stats.BlockRating = socketBonusValue;
+                                break;
+                            case "Block Value":
+                                sockets.Stats.BlockValue = socketBonusValue;
                                 break;
 							case "Defense Rating":
 								sockets.Stats.DefenseRating = socketBonusValue;
