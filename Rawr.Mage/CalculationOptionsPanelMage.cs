@@ -86,6 +86,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["IncrementalOptimizations"] = (1).ToString(CultureInfo.InvariantCulture);
 			if (!Character.CalculationOptions.ContainsKey("ReconstructSequence"))
 				Character.CalculationOptions["ReconstructSequence"] = (0).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("Innervate"))
+                Character.CalculationOptions["Innervate"] = (0).ToString(CultureInfo.InvariantCulture);
 			
             loading = true;
 
@@ -117,6 +119,7 @@ namespace Rawr.Mage
             textBoxTpsLimit.Text = float.Parse(Character.CalculationOptions["TpsLimit"], CultureInfo.InvariantCulture).ToString();
             checkBoxIncrementalOptimizations.Checked = int.Parse(Character.CalculationOptions["IncrementalOptimizations"], CultureInfo.InvariantCulture) == 1;
             checkBoxReconstructSequence.Checked = int.Parse(Character.CalculationOptions["ReconstructSequence"], CultureInfo.InvariantCulture) == 1;
+            textBoxInnervate.Text = float.Parse(Character.CalculationOptions["Innervate"], CultureInfo.InvariantCulture).ToString();
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -363,6 +366,16 @@ namespace Rawr.Mage
         {
             Character.CalculationOptions["ReconstructSequence"] = (checkBoxReconstructSequence.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
             if (!loading) Character.OnItemsChanged();
+        }
+
+        private void textBoxInnervate_TextChanged(object sender, EventArgs e)
+        {
+            float value;
+            if (float.TryParse(textBoxInnervate.Text, out value))
+            {
+                Character.CalculationOptions["Innervate"] = value.ToString(CultureInfo.InvariantCulture);
+                if (!loading) Character.OnItemsChanged();
+            }
         }
 	}
 }

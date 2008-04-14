@@ -39,6 +39,7 @@ namespace Rawr.Mage
         public string[] IncrementalSetSpells;
         public string IncrementalSetArmor;
         public bool ReconstructSequence { get; set; }
+        public float Innervate { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -137,6 +138,7 @@ namespace Rawr.Mage
             {
                 IncrementalSetArmor = character.CalculationOptions["IncrementalSetArmor"];
             }
+            Innervate = float.Parse(character.CalculationOptions["Innervate"], CultureInfo.InvariantCulture);
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"], CultureInfo.InvariantCulture);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"], CultureInfo.InvariantCulture);
@@ -1591,6 +1593,45 @@ namespace Rawr.Mage
                 return GroupCooldown(cooldownItems, maxDuration, cooldown, false, false);
             }
 
+            private bool ItemsCompatible(List<SequenceItem> item1, List<SequenceItem> item2, double maxCooldown)
+            {
+                return ConstraintsCompatible(GetAllGroups(item1), GetAllGroups(item2), maxCooldown);
+            }
+
+            private bool ItemsCompatible(List<SequenceItem> item1, SequenceItem item2, double maxCooldown)
+            {
+                return ConstraintsCompatible(GetAllGroups(item1), item2.Group, maxCooldown);
+            }
+
+            private List<SequenceGroup> GetAllGroups(List<SequenceItem> items)
+            {
+                //return items.Aggregate<SequenceItem, IEnumerable<SequenceGroup>>(new List<SequenceGroup>(), (list, item) => list.Union(item.Group)).ToList();
+                List<SequenceGroup> result = new List<SequenceGroup>();
+                foreach (SequenceItem item in items)
+                {
+                    foreach (SequenceGroup group in item.Group)
+                    {
+                        if (!result.Contains(group)) result.Add(group);
+                    }
+                }
+                return result;
+            }
+
+            private bool ConstraintsCompatible(List<SequenceGroup> group1, List<SequenceGroup> group2, double maxCooldown)
+            {
+                foreach (SequenceGroup group in group1)
+                {
+                    foreach (CooldownConstraint constraint in group.Constraint)
+                    {
+                        if (constraint.Cooldown > maxCooldown && group2.Contains(constraint.Group))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
             private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool combustionMode, bool coldSnapMode)
             {
                 List<SequenceGroup> existingGroup = new List<SequenceGroup>();
@@ -1731,7 +1772,7 @@ namespace Rawr.Mage
                             {
                                 gapReduction = subgroup.Duration;
                             }
-                            if (subgroup.Duration > 0 && gapReduction <= gap)
+                            if (subgroup.Duration > 0 && gapReduction <= gap && ItemsCompatible(group.Item, subgroup.Item, 0))
                             {
                                 gap -= gapReduction;
                                 group.AddRange(subgroup.Item);
@@ -1843,6 +1884,7 @@ namespace Rawr.Mage
 				compactTotalTime = double.PositiveInfinity;
                 //SortGroups_AddRemainingItems(new List<SequenceItem>(), new List<double>(), groupedItems);
                 SortGroups_Compute(groupedItems);
+                if (compactItems == null) return;
 
                 for (int i = 0; i < compactItems.Count; i++)
                 {
@@ -1902,6 +1944,17 @@ namespace Rawr.Mage
                 int xintersect = (tail == null) ? 0 : Rawr.Mage.ListUtils.Intersect<SequenceGroup>(x.Group, tail).Count;
                 int yintersect = (tail == null) ? 0 : Rawr.Mage.ListUtils.Intersect<SequenceGroup>(y.Group, tail).Count;
                 return yintersect.CompareTo(xintersect);
+            }
+
+            private int HexCount(int hex)
+            {
+                int count = 0;
+                while (hex > 0)
+                {
+                    count += (hex & 1);
+                    hex >>= 1;
+                }
+                return count;
             }
 
             private void SortGroups_Compute(List<SequenceItem> itemList)
@@ -2022,7 +2075,7 @@ namespace Rawr.Mage
                                 if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
                                 {
                                     activeTail = itemList[index[i - 1]].CooldownHex;
-                                    intersectHex = tail & activeTail;
+                                    intersectHex = HexCount(tail & activeTail);
                                     if (intersectHex > maxIntersect[i]) maxIntersect[i] = intersectHex;
                                 }
                                 if (intersectHex >= maxIntersect[i])
@@ -2035,7 +2088,7 @@ namespace Rawr.Mage
                                         {
                                             if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
                                             {
-                                                int intersectHexJ = itemList[j].CooldownHex & activeTail;
+                                                int intersectHexJ = HexCount(itemList[j].CooldownHex & activeTail);
                                                 if (intersectHexJ > intersectHex)
                                                 {
                                                     // anything up to j is not valid, so skip ahead
@@ -3190,6 +3243,26 @@ namespace Rawr.Mage
             if (WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", WaterElementalDuration / 45f));
             dictValues.Add("Spell Cycles", sb.ToString());
             return dictValues;
+        }
+
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
+                case "Health":
+                    return BasicStats.Health;
+                case "Nature Resistance":
+                    return BasicStats.AllResist + BasicStats.NatureResistance;
+                case "Fire Resistance":
+                    return BasicStats.AllResist + BasicStats.FireResistance;
+                case "Frost Resistance":
+                    return BasicStats.AllResist + BasicStats.FrostResistance;
+                case "Shadow Resistance":
+                    return BasicStats.AllResist + BasicStats.ShadowResistance;
+                case "Arcane Resistance":
+                    return BasicStats.AllResist + BasicStats.ArcaneResistance;
+            }
+            return 0;
         }
     }
 }

@@ -1230,6 +1230,7 @@ namespace Rawr.Mage
             calculatedStats.ShadowHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculatedStats.SpellHit);
 
             calculatedStats.SpiritRegen = 0.001f + stats.Spirit * 0.009327f * (float)Math.Sqrt(stats.Intellect);
+            stats.Mp5 += 5 * calculatedStats.SpiritRegen * (5 - stats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration;
             calculatedStats.ManaRegen = calculatedStats.SpiritRegen + stats.Mp5 / 5f;
             calculatedStats.ManaRegen5SR = calculatedStats.SpiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
             calculatedStats.ManaRegenDrinking = calculatedStats.ManaRegen + 240f;
@@ -1633,11 +1634,11 @@ namespace Rawr.Mage
                         new Item() { Stats = new Stats() { SpellHitRating = 10 } },
                     };
                     string[] statList = new string[] {
-                        "Spell Damage",
-                        "Mana per 5 sec",
-                        "Spell Crit Rating",
-                        "Spell Haste Rating",
-                        "Spell Hit Rating",
+                        "11.7 Spell Damage",
+                        "4 Mana per 5 sec",
+                        "10 Spell Crit Rating",
+                        "10 Spell Haste Rating",
+                        "10 Spell Hit Rating",
                     };
 
                     baseCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
@@ -1682,7 +1683,7 @@ namespace Rawr.Mage
                     intToSubtract += 0.01f;
 
                     comparison = CreateNewComparisonCalculation();
-                    comparison.Name = "Intellect";
+                    comparison.Name = "10 Intellect";
                     comparison.Equipped = false;
                     comparison.OverallPoints = 10 * (calcAtAdd.OverallPoints - baseCalc.OverallPoints) / (intToAdd - intToSubtract);
                     subPoints = new float[baseCalc.SubPoints.Length];
@@ -1715,7 +1716,7 @@ namespace Rawr.Mage
                     spiToSubtract += 0.01f;
 
                     comparison = CreateNewComparisonCalculation();
-                    comparison.Name = "Spirit";
+                    comparison.Name = "10 Spirit";
                     comparison.Equipped = false;
                     comparison.OverallPoints = 10 * (calcAtAdd.OverallPoints - baseCalc.OverallPoints) / (spiToAdd - spiToSubtract);
                     subPoints = new float[baseCalc.SubPoints.Length];
@@ -1730,6 +1731,24 @@ namespace Rawr.Mage
                     return comparisonList.ToArray();
                 default:
                     return new ComparisonCalculationBase[0];
+            }
+        }
+
+        private string[] _optimizableCalculationLabels = null;
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {
+					"Health",
+                    "Nature Resistance",
+                    "Fire Resistance",
+                    "Frost Resistance",
+                    "Shadow Resistance",
+                    "Arcane Resistance",
+					};
+                return _optimizableCalculationLabels;
             }
         }
 
@@ -1913,7 +1932,7 @@ namespace Rawr.Mage
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.MageSpellCrit + Math.Abs(stats.ThreatMultiplier)) > 0;
+            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.MageSpellCrit + Math.Abs(stats.ThreatMultiplier) + stats.Stamina + stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance) > 0;
         }
     }
 }
