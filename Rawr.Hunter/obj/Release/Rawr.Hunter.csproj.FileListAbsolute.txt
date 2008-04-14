@@ -1,0 +1,5 @@
+C:\CodePlex Projects\Rawr\Rawr.Hunter\obj\Release\ResolveAssemblyReference.cache
+C:\CodePlex Projects\Rawr\Rawr.Hunter\obj\Release\Rawr.Hunter.CalculationOptionsPanelHunter.resources
+C:\CodePlex Projects\Rawr\Rawr.Hunter\obj\Release\Rawr.Hunter.HunterTalentsForm.resources
+C:\CodePlex Projects\Rawr\Rawr.Hunter\obj\Release\Rawr.Hunter.Properties.Resources.resources
+C:\CodePlex Projects\Rawr\Rawr.Hunter\obj\Release\Rawr.Hunter.csproj.GenerateResource.Cache
