@@ -830,7 +830,7 @@ namespace Rawr
                 else if (_thoroughness > 1 && injectCharacter != null && !injected && injectValue > best)
                 {
                     population[popSize - 1] = injectCharacter;
-                    noImprove = -1;
+                    noImprove = 0;
                     injected = true;
                 }
                 else

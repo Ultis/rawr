@@ -1960,6 +1960,7 @@ namespace Rawr.Mage
             private void SortGroups_Compute(List<SequenceItem> itemList)
             {
                 int N = itemList.Count;
+                if (N == 0) return;
                 List<double> constructionTime = new List<double>();
                 List<double>[] constructionTimeHistory = new List<double>[N];
                 bool[] used = new bool[N];
