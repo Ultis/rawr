@@ -854,7 +854,12 @@ namespace Rawr.Mage
             }
             // mana burn estimate
             float manaBurn = 80;
-            if (calculationOptions.EmpoweredFireball > 0)
+            if (calculationOptions.AoeDuration > 0)
+            {
+                Spell s = calculatedStats.GetSpell("Arcane Explosion");
+                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+            }
+            else if (calculationOptions.EmpoweredFireball > 0)
             {
                 Spell s = calculatedStats.GetSpell("Fireball");
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
@@ -868,6 +873,11 @@ namespace Rawr.Mage
             {
                 Spell s = calculatedStats.GetSpell("Arcane Blast");
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+            }
+
+            if (calculatedStats.FightDuration - 7800 / manaBurn < 0) // fix for maximum pot+gem constraint
+            {
+                manaBurn = 7800 / calculatedStats.FightDuration;
             }
 
             lp[0, lpCols] = characterStats.Mana;
