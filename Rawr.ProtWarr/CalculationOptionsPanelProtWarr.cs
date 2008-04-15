@@ -6,7 +6,7 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Rawr
+namespace Rawr.ProtWarr
 {
 	public partial class CalculationOptionsPanelProtWarr : CalculationOptionsPanelBase
 	{
@@ -23,12 +23,15 @@ namespace Rawr
                 Character.CalculationOptions["BossAttackValue"] = "20000";
             if (!Character.CalculationOptions.ContainsKey("ThreatScale"))
                 Character.CalculationOptions["ThreatScale"] = "1";
+            if (!Character.CalculationOptions.ContainsKey("MitigationScale"))
+                Character.CalculationOptions["MitigationScale"] = "1";
 			if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
 				Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
 
 			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
             bossAttackValue.Value = decimal.Parse(Character.CalculationOptions["BossAttackValue"]);
             threatScaleFactor.Value = decimal.Parse(Character.CalculationOptions["ThreatScale"]);
+            mitigationScaleFactor.Value = decimal.Parse(Character.CalculationOptions["MitigationScale"]);
 			checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
 		}
 	
@@ -51,10 +54,30 @@ namespace Rawr
 
         }
 
+        private void mitigationScaleFactor_ValueChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["MitigationScale"] = mitigationScaleFactor.Value.ToString();
+            Character.OnItemsChanged();
+        }
+
         private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
         {
             Character.CalculationOptions["EnforceMetagemRequirements"] = checkBoxEnforceMetagemRequirements.Checked ? "Yes" : "No";
             Character.OnItemsChanged();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (Character.Talents != null)
+            {
+                TalentForm tf = new TalentForm();
+                tf.SetParameters(Character.Talents, Character.Class);
+                tf.Show();
+            }
+            else
+            {
+                MessageBox.Show("No talents found");
+            }
         }
 	}
 }

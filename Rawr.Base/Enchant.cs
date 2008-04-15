@@ -343,13 +343,13 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3004, "Glyph of the Gladiator", Item.ItemSlot.Head, new Stats() { Stamina = 18, Resilience = 20 }));
 
             //The stat value of mongoose and executioner is dependent on the weapon speed and is thus left to the individual models to take care of through the Id
-            defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, new Stats() { }));
+            defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, new Stats() { MongooseProc = 1 }));
             defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.MainHand, new Stats() { }));
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Hands, new Stats() { FrostResistance = 8 }));
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Feet, new Stats() { FrostResistance = 8 }));
 
             //Need to fix the enchant class to know offhand only enchants, either that or add a shield ItemSlot
-            defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.MainHand, new Stats() { Stamina = 18 }));
+            defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.OffHand, new Stats() { Stamina = 18 }));
 
 
             #region Enchants to Delete

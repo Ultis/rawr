@@ -39,6 +39,7 @@ namespace Rawr
         DrumsOfBattle,
         DrumsOfWar,
         EvocationExtension,
+        Expertise,
         ExpertiseRating,
         ExposeWeakness,
         FireResistance,
@@ -62,6 +63,7 @@ namespace Rawr
         Miss,
         MoonfireDmg,
         MoonfireExtension,
+        MongooseProc,
         Mp5,
         Mp5OnCastFor20SecOnUse2Min,
         NatureResistance,
@@ -560,8 +562,17 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Combat Ratings")]
+        [Category("Combat Values")]
         [DisplayName("Expertise")]
+        public float Expertise
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Expertise]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Expertise] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Ratings")]
+        [DisplayName("ExpertiseRating")]
         public float ExpertiseRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ExpertiseRating]; }
@@ -1025,6 +1036,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AverageAgility]; }
             set { _rawAdditiveData[(int)AdditiveStat.AverageAgility] = value; }
+        }
+
+        [DisplayName("Mongoose Proc")]
+        [Category("Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MongooseProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MongooseProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MongooseProc] = value; }
         }
 
         [DisplayName("Shattered Sun Caster Neck proc")]
