@@ -600,6 +600,7 @@ namespace Rawr.Mage
             public int SuperIndex;
             public List<SequenceGroup> Tail;
             public int CooldownHex;
+            public int OrderIndex;
 
             private Spell spell;
             public Spell Spell
@@ -1029,7 +1030,7 @@ namespace Rawr.Mage
                             for (b = a - 1; b >= i; b--)
                             {
                                 t3 -= sequence[b].Duration;
-                                if (t3 <= lastSuper.MaxTime)
+                                if (t3 <= lastSuper.MaxTime + 0.000001)
                                 {
                                     // possible insert point
                                     if (sequence[b].Group.Count == 0)
@@ -1499,24 +1500,37 @@ namespace Rawr.Mage
                 }
             }
 
-            public void GroupTrinket1()
+            public List<SequenceGroup> GroupTrinket1()
             {
                 List<SequenceItem> list = new List<SequenceItem>();
                 foreach (SequenceItem item in sequence)
                 {
                     if (item.Stats.Trinket1) list.Add(item);
                 }
-                GroupCooldown(list, Trinket1Duration, SequenceItem.Calculations.Trinket1Cooldown);
+                return GroupCooldown(list, Trinket1Duration, SequenceItem.Calculations.Trinket1Cooldown);
             }
 
-            public void GroupTrinket2()
+            public List<SequenceGroup> GroupTrinket2()
             {
                 List<SequenceItem> list = new List<SequenceItem>();
                 foreach (SequenceItem item in sequence)
                 {
                     if (item.Stats.Trinket2) list.Add(item);
                 }
-                GroupCooldown(list, Trinket2Duration, SequenceItem.Calculations.Trinket2Cooldown);
+                return GroupCooldown(list, Trinket2Duration, SequenceItem.Calculations.Trinket2Cooldown);
+            }
+
+            public void ConstrainTrinkets(List<SequenceGroup> t1, List<SequenceGroup> t2)
+            {
+                if (t1.Count == 0 || t2.Count == 0) return;
+                foreach (SequenceGroup g1 in t1)
+                {
+                    foreach (SequenceGroup g2 in t2)
+                    {
+                        g1.Constraint.Add(new CooldownConstraint() { Group = g2, Cooldown = g2.Duration });
+                        g2.Constraint.Add(new CooldownConstraint() { Group = g1, Cooldown = g2.Duration });
+                    }
+                }
             }
 
             public void GroupCombustion()
@@ -1873,6 +1887,7 @@ namespace Rawr.Mage
             List<SequenceItem> compactItems;
             List<double> compactTime;
             double compactTotalTime;
+            int compactGroupSplits;
 
             public void SortGroups()
             {
@@ -1882,6 +1897,7 @@ namespace Rawr.Mage
 						groupedItems.Add(item);
 
 				compactTotalTime = double.PositiveInfinity;
+                compactGroupSplits = int.MaxValue;
                 //SortGroups_AddRemainingItems(new List<SequenceItem>(), new List<double>(), groupedItems);
                 SortGroups_Compute(groupedItems);
                 if (compactItems == null) return;
@@ -2010,6 +2026,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
+                List<SequenceGroup> groupList = GetAllGroups(itemList);
                 super++;
                 int[] superLeft = new int[super];
                 for (int j = 0; j < N; j++)
@@ -2025,13 +2042,27 @@ namespace Rawr.Mage
                     {
                         double time = 0;
                         if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[N - 1]].Duration;
+                        // compute group splits
+                        int groupSplits = 0;
+                        foreach (SequenceGroup group in groupList)
+                        {
+                            int minIndex = N - 1;
+                            int maxIndex = 0;
+                            foreach (SequenceItem item in group.Item)
+                            {
+                                if (item.OrderIndex < minIndex) minIndex = item.OrderIndex;
+                                if (item.OrderIndex > maxIndex) maxIndex = item.OrderIndex;
+                            }
+                            groupSplits += (maxIndex - minIndex + 1) - group.Item.Count;
+                        }
                         /*bool mf = false;
                         for (int j = 0; j < N; j++)
                         {
                             mf = mf || itemList[index[j]].Stats.MoltenFury;
                         }*/
-                        if (time < compactTotalTime/* && (!mf || itemList[index[N - 1]].Stats.MoltenFury)*/)
+                        if (groupSplits < compactGroupSplits || (groupSplits == compactGroupSplits && time < compactTotalTime)/* && (!mf || itemList[index[N - 1]].Stats.MoltenFury)*/)
                         {
+                            compactGroupSplits = groupSplits;
                             compactTotalTime = time;
                             compactTime = new List<double>(constructionTime);
                             compactItems = new List<SequenceItem>();
@@ -2082,6 +2113,7 @@ namespace Rawr.Mage
                                 if (intersectHex >= maxIntersect[i])
                                 {
                                     used[index[i]] = true;
+                                    itemList[index[i]].OrderIndex = i;
                                     superLeft[itemList[index[i]].SuperIndex]--;
                                     for (int j = 0; j < N; j++)
                                     {
@@ -2097,6 +2129,7 @@ namespace Rawr.Mage
                                                     superLeft[itemList[index[i]].SuperIndex]++;
                                                     index[i] = j;
                                                     used[j] = true;
+                                                    itemList[j].OrderIndex = i;
                                                     superLeft[itemList[index[i]].SuperIndex]--;
                                                     intersectHex = intersectHexJ;
                                                     maxIntersect[i] = intersectHex;
@@ -2425,9 +2458,9 @@ namespace Rawr.Mage
                         }
                     }
                     Compact();
-                    double gem = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem));
-                    double pot = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 3000, Math.Max(time, nextPot));
-                    double evo = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - EvocationRegen * Math.Min(evoTime, EvocationDuration), Math.Max(time, nextEvo));
+                    double gem = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem), 4);
+                    double pot = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 3000, Math.Max(time, nextPot), 3);
+                    double evo = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - EvocationRegen * Math.Min(evoTime, EvocationDuration), Math.Max(time, nextEvo), 2);
                     double breakpoint = Evaluate(null, EvaluationMode.CooldownBreak, evo);
                     if (breakpoint < fight) evo = breakpoint;
                     // always use pot & gem before evo, they need tighter packing
@@ -2539,6 +2572,16 @@ namespace Rawr.Mage
                 double heroismTime = -1;
                 double apTime = -1;
                 double ivTime = -1;
+                bool potionWarning = false;
+                bool gemWarning = false;
+                bool trinket1warning = false;
+                bool trinket2warning = false;
+                bool apWarning = false;
+                bool ivWarning = false;
+                bool combustionWarning = false;
+                bool drumsWarning = false;
+                bool manaWarning = false;
+                double combustionLeft = 0;
 
                 double unexplained = 0;
 
@@ -2561,6 +2604,20 @@ namespace Rawr.Mage
                         cooldownContinuation = true;
                     }
                     // Mana
+                    if (mode == EvaluationMode.ManaBelow)
+                    {
+                        if (data.Length > 2)
+                        {
+                            if (data[2] == 3)
+                            {
+                                if (potionCooldown > 0) data[1] = Math.Max(data[1], time + potionCooldown);
+                            }
+                            else if (data[2] == 4)
+                            {
+                                if (gemCooldown > 0) data[1] = Math.Max(data[1], time + gemCooldown);
+                            }
+                        }
+                    }
                     if (mps > 0)
                     {
                         double maxtime = mana / mps;
@@ -2570,7 +2627,8 @@ namespace Rawr.Mage
                             if (!(i == sequence.Count - 1 && mps * duration < mana + 100))
                             {
                                 unexplained += duration - maxtime;
-                                if (timing != null) timing.AppendLine("WARNING: Will run out of mana!");
+                                if (timing != null && !manaWarning) timing.AppendLine("WARNING: Will run out of mana!");
+                                manaWarning = true;
                             }
                         }
                         if (mode == EvaluationMode.ManaBelow)
@@ -2626,6 +2684,7 @@ namespace Rawr.Mage
                             if (timing != null) timing.AppendLine(TimeFormat(time) + ": Mana Potion (" + Math.Round(mana).ToString() + " mana)");
                             mana += (1 + BasicStats.BonusManaPotion) * 2400;
                             potionCooldown = 120;
+                            potionWarning = false;
                         }
                     }
                     // Mana Gem
@@ -2647,6 +2706,7 @@ namespace Rawr.Mage
                             mana += (1 + BasicStats.BonusManaGem) * gemValue[gemCount];
                             gemCount++;
                             gemCooldown = 120;
+                            gemWarning = false;
                         }
                     }
                     // Evocation
@@ -2675,19 +2735,22 @@ namespace Rawr.Mage
                         if (timing != null) timing.AppendLine("INFO: Mana overflow!");
                         mana = BasicStats.Mana;
                     }
+                    if (mana > 0) manaWarning = false;
                     // Drums of Battle
                     if (index == 5)
                     {
                         if (drumsCooldown > 0.000001)
                         {
                             unexplained += duration;
-                            if (timing != null) timing.AppendLine("WARNING: Drums of Battle cooldown not ready!");
+                            if (timing != null && !drumsWarning) timing.AppendLine("WARNING: Drums of Battle cooldown not ready!");
+                            drumsWarning = true;
                         }
                         else
                         {
                             //if (timing != null) timing.AppendLine(TimeFormat(time) + ": Drums of Battle (" + Math.Round(manabefore).ToString() + " mana)");
                             drumsCooldown = 120;
                             drumsTime = time;
+                            drumsWarning = false;
                         }
                     }
                     else if (drumsTime >= 0)
@@ -2738,13 +2801,15 @@ namespace Rawr.Mage
                             if (gemCooldown > 0.000001)
                             {
                                 unexplained += duration;
-                                if (timing != null) timing.AppendLine("WARNING: Flame Cap cooldown not ready!");
+                                if (timing != null && !gemWarning) timing.AppendLine("WARNING: Flame Cap cooldown not ready!");
+                                gemWarning = true;
                             }
                             else
                             {
                                 if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Flame Cap (" + Math.Round(manabefore).ToString() + " mana)");
                                 gemCooldown = 180;
                                 flameCapTime = time;
+                                gemWarning = false;
                             }
                         }
                     }
@@ -2772,13 +2837,15 @@ namespace Rawr.Mage
                             if (potionCooldown > 0.000001)
                             {
                                 unexplained += duration;
-                                if (timing != null) timing.AppendLine("WARNING: Destruction Potion cooldown not ready!");
+                                if (timing != null && !potionWarning) timing.AppendLine("WARNING: Destruction Potion cooldown not ready!");
+                                potionWarning = true;
                             }
                             else
                             {
                                 if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Destruction Potion (" + Math.Round(manabefore).ToString() + " mana)");
                                 potionCooldown = 120;
                                 destructionTime = time;
+                                potionWarning = false;
                             }
                         }
                     }
@@ -2806,13 +2873,15 @@ namespace Rawr.Mage
                             if (trinket1Cooldown > 0.000001)
                             {
                                 unexplained += duration;
-                                if (timing != null) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket1Name + " cooldown not ready!");
+                                if (timing != null && !trinket1warning) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket1Name + " cooldown not ready!");
+                                trinket1warning = true;
                             }
                             else
                             {
                                 if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": " + SequenceItem.Calculations.Trinket1Name + " (" + Math.Round(manabefore).ToString() + " mana)");
                                 trinket1Cooldown = SequenceItem.Calculations.Trinket1Cooldown;
                                 trinket1time = time;
+                                trinket1warning = false;
                             }
                         }
                     }
@@ -2840,13 +2909,15 @@ namespace Rawr.Mage
                             if (trinket2Cooldown > 0.000001)
                             {
                                 unexplained += duration;
-                                if (timing != null) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket2Name + " cooldown not ready!");
+                                if (timing != null && !trinket2warning) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket2Name + " cooldown not ready!");
+                                trinket2warning = true;
                             }
                             else
                             {
                                 if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": " + SequenceItem.Calculations.Trinket2Name + " (" + Math.Round(manabefore).ToString() + " mana)");
                                 trinket2Cooldown = SequenceItem.Calculations.Trinket2Cooldown;
                                 trinket2time = time;
+                                trinket2warning = false;
                             }
                         }
                     }
@@ -2914,21 +2985,24 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.Combustion)
                         {
-                            if (time + duration > combustionTime + (stats.CombustionDuration * spell.CastTime / spell.CastProcs) + 0.000001)
+                            if (duration / (stats.CombustionDuration * spell.CastTime / spell.CastProcs) >= combustionLeft + 0.000001)
                             {
                                 unexplained += time + duration - combustionTime - (stats.CombustionDuration * spell.CastTime / spell.CastProcs);
                                 if (timing != null) timing.AppendLine("WARNING: Combustion duration too long!");
                             }
+                            combustionLeft -= duration / (stats.CombustionDuration * spell.CastTime / spell.CastProcs);
                         }
-                        else if (spell != null && duration > 0 && (stats.CombustionDuration * spell.CastTime / spell.CastProcs) - (time - combustionTime) > 0.000001)
+                        else if (spell != null && duration > 0 && combustionLeft > 0.000001)
                         {
                             //unexplained += Math.Min(duration, 15 - (time - apTime));
                             combustionTime = -1;
+                            combustionLeft = 0;
                             if (timing != null) timing.AppendLine("INFO: Combustion is still up!");
                         }
                         else
                         {
                             combustionTime = -1;
+                            combustionLeft = 0;
                         }
                     }
                     else
@@ -2938,13 +3012,17 @@ namespace Rawr.Mage
                             if (combustionCooldown > 0.000001)
                             {
                                 unexplained += duration;
-                                if (timing != null) timing.AppendLine("WARNING: Combustion cooldown not ready!");
+                                if (timing != null && !combustionWarning) timing.AppendLine("WARNING: Combustion cooldown not ready!");
+                                combustionWarning = true;
                             }
                             else
                             {
                                 if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Combustion (" + Math.Round(manabefore).ToString() + " mana)");
+                                combustionLeft = 1;
                                 combustionCooldown = 180 + (stats.CombustionDuration * spell.CastTime / spell.CastProcs);
                                 combustionTime = time;
+                                combustionWarning = false;
+                                combustionLeft -= duration / (stats.CombustionDuration * spell.CastTime / spell.CastProcs);
                             }
                         }
                     }
@@ -2972,13 +3050,15 @@ namespace Rawr.Mage
                             if (apCooldown > 0.000001)
                             {
                                 unexplained += duration;
-                                if (timing != null) timing.AppendLine("WARNING: Arcane Power cooldown not ready!");
+                                if (timing != null && !apWarning) timing.AppendLine("WARNING: Arcane Power cooldown not ready!");
+                                apWarning = true;
                             }
                             else
                             {
                                 if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Arcane Power (" + Math.Round(manabefore).ToString() + " mana)");
                                 apCooldown = 180;
                                 apTime = time;
+                                apWarning = false;
                             }
                         }
                     }
@@ -3006,13 +3086,15 @@ namespace Rawr.Mage
                             if (ivCooldown > 0.000001)
                             {
                                 unexplained += duration;
-                                if (timing != null) timing.AppendLine("WARNING: Icy Veins cooldown not ready!");
+                                if (timing != null && !ivWarning) timing.AppendLine("WARNING: Icy Veins cooldown not ready!");
+                                ivWarning = true;
                             }
                             else
                             {
                                 if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Icy Veins (" + Math.Round(manabefore).ToString() + " mana)");
                                 ivCooldown = 180;
                                 ivTime = time;
+                                ivWarning = false;
                             }
                         }
                     }

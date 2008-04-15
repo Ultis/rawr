@@ -838,7 +838,7 @@ namespace Rawr.Mage
                             lp[37, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].IcyVeins) ? 1 : 0;
                             lp[38, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].ArcanePower) ? 1 : 0;
                             lp[39, index] = s.ThreatPerSecond;
-                            lp[40, index] = (statsList[buffset].FlameCap ? 1 : 0);
+                            lp[40, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
                             lp[lpRows, index] = s.DamagePerSecond;
                         }
                         else
