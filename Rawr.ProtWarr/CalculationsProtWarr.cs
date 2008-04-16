@@ -224,14 +224,15 @@ you are being killed by burst damage, focus on Survival Points.",
 
             //Miss -> Dodge -> Parry -> Block -> Crushing Blow -> Critical Strikes -> Hit
 			//Out of 100 attacks, you'll take...
-            //Technically block's happen before crits, but I'd rather not risk it, I'm assuming
-            //you have to be crit immune from defense/resiliance.
+
             float crits = Math.Max(5f + (0.2f * levelDifference) - calculatedStats.CritReduction, 0f);
             float blocked = Math.Min(100f - (crits + (calculatedStats.DodgePlusMissPlusParry)), calculatedStats.Block);
             float crushes = targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (calculatedStats.DodgePlusMissPlusParryPlusBlock)), 15f) - stats.CrushChanceReduction, 0f) : 0f;
             float hits = Math.Max(100f - (crits + crushes + blocked + (calculatedStats.DodgePlusMissPlusParry)), 0f);
 
-            float damagePerBossAttack = float.Parse(character.CalculationOptions["BossAttackValue"]); ;
+            calculatedStats.CrushChance = crushes;
+
+            float damagePerBossAttack = float.Parse(character.CalculationOptions["BossAttackValue"]);
 			//Apply armor and multipliers for each attack type...
 			crits *= (100f - calculatedStats.CappedMitigation) * .02f;
 			crushes *= (100f - calculatedStats.CappedMitigation) * .015f;
@@ -266,7 +267,8 @@ you are being killed by burst damage, focus on Survival Points.",
             if (character != null && character.MainHand != null)
             {
                 float attackSpeed = (character.MainHand.Speed) / (1f + hasteBonus);
-
+                if (attackSpeed < 1f)
+                    attackSpeed = 1.0f;
 
                 float hitBonus = stats.HitRating * WarriorConversions.HitRatingToHit / 100f;
                 float expertiseBonus = (stats.ExpertiseRating * WarriorConversions.ExpertiseRatingToExpertise +
@@ -322,8 +324,11 @@ you are being killed by burst damage, focus on Survival Points.",
             }
             else
             {
-                calculatedStats.ThreatPoints = 0f;
-                calculatedStats.UnlimitedThreat = 0f;
+                calculatedStats.ThreatScale = float.Parse(character.CalculationOptions["ThreatScale"]);
+
+                //Default threat
+                calculatedStats.ThreatPoints = calculatedStats.ThreatScale * 100f;
+                calculatedStats.UnlimitedThreat = calculatedStats.ThreatScale * 100f;
             }
 
             calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
@@ -556,6 +561,11 @@ you are being killed by burst damage, focus on Survival Points.",
             statsTotal.Hit = statsRace.Hit + statsTalents.Hit;
             statsTotal.Crit = statsRace.Crit + statsTalents.Crit;
             statsTotal.Expertise = statsRace.Expertise + statsTalents.Expertise;
+            if ((character.Race == Character.CharacterRace.Orc) && (character.MainHand != null) &&
+               (character.MainHand.Type == Item.ItemType.OneHandAxe))
+            {
+                statsTotal.Expertise += 5f;
+            }
 
             statsTotal.BonusArmorMultiplier = ((1 + statsRace.BonusArmorMultiplier) *
                                                   (1 + statsGearEnchantsBuffs.BonusArmorMultiplier) *
@@ -942,6 +952,13 @@ you are being killed by burst damage, focus on Survival Points.",
 			set { _cappedCritReduction = value; }
 		}
 
+        private float _crushChance;
+        public float CrushChance
+        {
+            get { return _crushChance; }
+            set { _crushChance = value; }
+        }
+
         private float _missedAttacks;
 	    public float MissedAttacks
 	    {
@@ -1051,7 +1068,7 @@ you are being killed by burst damage, focus on Survival Points.",
 				dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
 					+ string.Format("%*Uncrittable by bosses. {0} defense rating or {1} resilience over the crit cap.",
 					Math.Floor(((5f + levelDifference) - CritReduction) * -60f), Math.Floor(((5f + levelDifference) - CritReduction) * -39.423f)));
-            dictValues.Add("Chance Crushed", (100 - DodgePlusMissPlusParryPlusBlock - BlockOverCap).ToString() + "%");
+            dictValues.Add("Chance Crushed", CrushChance.ToString() + "%");
             dictValues.Add("Overall Points", OverallPoints.ToString());
 			dictValues.Add("Mitigation Points", MitigationPoints.ToString());
 			dictValues.Add("Survival Points", SurvivalPoints.ToString());
@@ -1110,7 +1127,7 @@ you are being killed by burst damage, focus on Survival Points.",
 				case "Mitigation % from Armor": return Mitigation;
                 case "Avoidance %": return DodgePlusMissPlusParry;
 				case "% Chance to be Crit": return ((5f + (0.2f * (TargetLevel - 70))) - CritReduction);
-                case "% to be Crushed": return Math.Min((100 - DodgePlusMissPlusParryPlusBlock - BlockOverCap), 15f);
+                case "% to be Crushed": return CrushChance;
 				case "Nature Survival": return NatureSurvivalPoints;
 				case "Fire Survival": return FireSurvivalPoints;
 				case "Frost Survival": return FrostSurvivalPoints;
