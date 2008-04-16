@@ -85,10 +85,12 @@
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
             this.label27 = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
             this.checkBoxIncrementalOptimizations = new System.Windows.Forms.CheckBox();
             this.checkBoxReconstructSequence = new System.Windows.Forms.CheckBox();
             this.textBoxInnervate = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
+            this.textBoxManaTide = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -200,7 +202,7 @@
             // 
             // textBoxArcaneResist
             // 
-            this.textBoxArcaneResist.Location = new System.Drawing.Point(114, 535);
+            this.textBoxArcaneResist.Location = new System.Drawing.Point(114, 561);
             this.textBoxArcaneResist.Name = "textBoxArcaneResist";
             this.textBoxArcaneResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxArcaneResist.TabIndex = 13;
@@ -209,7 +211,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 538);
+            this.label6.Location = new System.Drawing.Point(3, 564);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(100, 13);
             this.label6.TabIndex = 12;
@@ -217,7 +219,7 @@
             // 
             // textBoxFireResist
             // 
-            this.textBoxFireResist.Location = new System.Drawing.Point(114, 561);
+            this.textBoxFireResist.Location = new System.Drawing.Point(114, 587);
             this.textBoxFireResist.Name = "textBoxFireResist";
             this.textBoxFireResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxFireResist.TabIndex = 15;
@@ -226,7 +228,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 564);
+            this.label7.Location = new System.Drawing.Point(3, 590);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(83, 13);
             this.label7.TabIndex = 14;
@@ -234,7 +236,7 @@
             // 
             // textBoxFrostResist
             // 
-            this.textBoxFrostResist.Location = new System.Drawing.Point(114, 587);
+            this.textBoxFrostResist.Location = new System.Drawing.Point(114, 613);
             this.textBoxFrostResist.Name = "textBoxFrostResist";
             this.textBoxFrostResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxFrostResist.TabIndex = 17;
@@ -243,7 +245,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(3, 590);
+            this.label8.Location = new System.Drawing.Point(3, 616);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(89, 13);
             this.label8.TabIndex = 16;
@@ -251,7 +253,7 @@
             // 
             // textBoxNatureResist
             // 
-            this.textBoxNatureResist.Location = new System.Drawing.Point(114, 613);
+            this.textBoxNatureResist.Location = new System.Drawing.Point(114, 639);
             this.textBoxNatureResist.Name = "textBoxNatureResist";
             this.textBoxNatureResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxNatureResist.TabIndex = 19;
@@ -260,7 +262,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 616);
+            this.label9.Location = new System.Drawing.Point(3, 642);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(98, 13);
             this.label9.TabIndex = 18;
@@ -465,7 +467,7 @@
             // 
             // textBoxShadowResist
             // 
-            this.textBoxShadowResist.Location = new System.Drawing.Point(114, 639);
+            this.textBoxShadowResist.Location = new System.Drawing.Point(114, 665);
             this.textBoxShadowResist.Name = "textBoxShadowResist";
             this.textBoxShadowResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxShadowResist.TabIndex = 41;
@@ -474,7 +476,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(3, 642);
+            this.label20.Location = new System.Drawing.Point(3, 668);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(105, 13);
             this.label20.TabIndex = 40;
@@ -521,7 +523,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(3, 666);
+            this.label23.Location = new System.Drawing.Point(3, 692);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(112, 13);
             this.label23.TabIndex = 47;
@@ -533,7 +535,7 @@
             // checkBoxSmartOptimization
             // 
             this.checkBoxSmartOptimization.AutoSize = true;
-            this.checkBoxSmartOptimization.Location = new System.Drawing.Point(174, 665);
+            this.checkBoxSmartOptimization.Location = new System.Drawing.Point(174, 691);
             this.checkBoxSmartOptimization.Name = "checkBoxSmartOptimization";
             this.checkBoxSmartOptimization.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSmartOptimization.TabIndex = 46;
@@ -607,7 +609,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(3, 685);
+            this.label27.Location = new System.Drawing.Point(3, 711);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(137, 13);
             this.label27.TabIndex = 57;
@@ -618,17 +620,27 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(3, 705);
+            this.label25.Location = new System.Drawing.Point(3, 731);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(127, 13);
             this.label25.TabIndex = 59;
             this.label25.Text = "Reconstruct Sequence: *";
             this.toolTipMage.SetToolTip(this.label25, "This option is currently disabled.");
             // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(3, 512);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(62, 13);
+            this.label28.TabIndex = 60;
+            this.label28.Text = "Innervate: *";
+            this.toolTipMage.SetToolTip(this.label28, "Number of innervates received.");
+            // 
             // checkBoxIncrementalOptimizations
             // 
             this.checkBoxIncrementalOptimizations.AutoSize = true;
-            this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(174, 685);
+            this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(174, 711);
             this.checkBoxIncrementalOptimizations.Name = "checkBoxIncrementalOptimizations";
             this.checkBoxIncrementalOptimizations.Size = new System.Drawing.Size(15, 14);
             this.checkBoxIncrementalOptimizations.TabIndex = 56;
@@ -638,7 +650,7 @@
             // checkBoxReconstructSequence
             // 
             this.checkBoxReconstructSequence.AutoSize = true;
-            this.checkBoxReconstructSequence.Location = new System.Drawing.Point(174, 705);
+            this.checkBoxReconstructSequence.Location = new System.Drawing.Point(174, 731);
             this.checkBoxReconstructSequence.Name = "checkBoxReconstructSequence";
             this.checkBoxReconstructSequence.Size = new System.Drawing.Size(15, 14);
             this.checkBoxReconstructSequence.TabIndex = 58;
@@ -653,21 +665,32 @@
             this.textBoxInnervate.TabIndex = 61;
             this.textBoxInnervate.TextChanged += new System.EventHandler(this.textBoxInnervate_TextChanged);
             // 
-            // label28
+            // textBoxManaTide
             // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(3, 512);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(62, 13);
-            this.label28.TabIndex = 60;
-            this.label28.Text = "Innervate: *";
-            this.toolTipMage.SetToolTip(this.label28, "Number of innervates received.");
+            this.textBoxManaTide.Location = new System.Drawing.Point(114, 535);
+            this.textBoxManaTide.Name = "textBoxManaTide";
+            this.textBoxManaTide.Size = new System.Drawing.Size(75, 20);
+            this.textBoxManaTide.TabIndex = 63;
+            this.textBoxManaTide.TextChanged += new System.EventHandler(this.textBoxManaTide_TextChanged);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(3, 538);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(101, 13);
+            this.label29.TabIndex = 62;
+            this.label29.Text = "Mana Tide Totem: *";
+            this.toolTipMage.SetToolTip(this.label29, "Number of Mana Tide Totems cast in your group (a resto shaman can cast one every " +
+                    "5 minutes).");
             // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.textBoxManaTide);
+            this.Controls.Add(this.label29);
             this.Controls.Add(this.textBoxInnervate);
             this.Controls.Add(this.label28);
             this.Controls.Add(this.label25);
@@ -727,7 +750,7 @@
             this.Controls.Add(this.comboBoxTargetLevel);
             this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelMage";
-            this.Size = new System.Drawing.Size(204, 726);
+            this.Size = new System.Drawing.Size(204, 772);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -794,5 +817,7 @@
         private System.Windows.Forms.CheckBox checkBoxReconstructSequence;
         private System.Windows.Forms.TextBox textBoxInnervate;
         private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox textBoxManaTide;
+        private System.Windows.Forms.Label label29;
 	}
 }

@@ -1240,8 +1240,8 @@ namespace Rawr.Mage
             calculatedStats.ShadowHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculatedStats.SpellHit);
 
             calculatedStats.SpiritRegen = 0.001f + stats.Spirit * 0.009327f * (float)Math.Sqrt(stats.Intellect);
-            calculatedStats.ManaRegen = calculatedStats.SpiritRegen + stats.Mp5 / 5f + calculatedStats.SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration;
-            calculatedStats.ManaRegen5SR = calculatedStats.SpiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f + calculatedStats.SpiritRegen * (5 - stats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration;
+            calculatedStats.ManaRegen = calculatedStats.SpiritRegen + stats.Mp5 / 5f + calculatedStats.SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * stats.Mana / calculationOptions.FightDuration;
+            calculatedStats.ManaRegen5SR = calculatedStats.SpiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f + calculatedStats.SpiritRegen * (5 - stats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * stats.Mana / calculationOptions.FightDuration;
             calculatedStats.ManaRegenDrinking = calculatedStats.ManaRegen + 240f;
             calculatedStats.HealthRegen = 0.0312f * stats.Spirit + stats.Hp5 / 5f;
             calculatedStats.HealthRegenCombat = stats.Hp5 / 5f;

@@ -40,6 +40,7 @@ namespace Rawr.Mage
         public string IncrementalSetArmor;
         public bool ReconstructSequence { get; set; }
         public float Innervate { get; set; }
+        public float ManaTide { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -139,6 +140,7 @@ namespace Rawr.Mage
                 IncrementalSetArmor = character.CalculationOptions["IncrementalSetArmor"];
             }
             Innervate = float.Parse(character.CalculationOptions["Innervate"], CultureInfo.InvariantCulture);
+            ManaTide = float.Parse(character.CalculationOptions["ManaTide"], CultureInfo.InvariantCulture);
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"], CultureInfo.InvariantCulture);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"], CultureInfo.InvariantCulture);
@@ -914,7 +916,7 @@ namespace Rawr.Mage
                 int lastHigh = i;
                 double tLastHigh = t;
                 double overflowMana = startMana; // for overflow calculations assume there are no mana consumables placed after start time yet
-                double overflowLimit = BasicStats.Mana - overflowMana;
+                double overflowLimit = maxMana;
                 SequenceGroup lastSuper = null;
                 for (j = i; j < sequence.Count; j++)
                 {
@@ -925,6 +927,10 @@ namespace Rawr.Mage
                         if (sequence[j].Group.Count > 0)
                         {
                             overflowLimit = BasicStats.Mana - overflowMana;
+                        }
+                        else
+                        {
+                            overflowLimit = maxMana;
                         }
                         lastSuper = sequence[j].SuperGroup;
                     }
@@ -1087,7 +1093,7 @@ namespace Rawr.Mage
                     tt += d;
                 }
                 bool extraMode = extraMana > 0;
-                if (mana > maxMana || extraMana > 0)
+                if (mana > maxMana + 0.000001 || extraMana > 0)
                 {
                     // [i....j]XXX[k....]
                     int k;
@@ -2402,6 +2408,7 @@ namespace Rawr.Mage
                         maxMps = mana / (targetTime - time);
                         minMps = -(BasicStats.Mana - mana) / (targetTime - time);
                     }
+                    if (maxMps < minMps) maxMps = minMps; // if we have min mps constraint then at that point we'll be full on mana, whatever max mana has to be handled will have to deal with it later
                     double lastTargetMana = -1;
                     double extraMana = 0;
                 Retry:

@@ -88,6 +88,8 @@ namespace Rawr.Mage
 				Character.CalculationOptions["ReconstructSequence"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("Innervate"))
                 Character.CalculationOptions["Innervate"] = (0).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("ManaTide"))
+                Character.CalculationOptions["ManaTide"] = (0).ToString(CultureInfo.InvariantCulture);
 			
             loading = true;
 
@@ -120,6 +122,7 @@ namespace Rawr.Mage
             checkBoxIncrementalOptimizations.Checked = int.Parse(Character.CalculationOptions["IncrementalOptimizations"], CultureInfo.InvariantCulture) == 1;
             checkBoxReconstructSequence.Checked = int.Parse(Character.CalculationOptions["ReconstructSequence"], CultureInfo.InvariantCulture) == 1;
             textBoxInnervate.Text = float.Parse(Character.CalculationOptions["Innervate"], CultureInfo.InvariantCulture).ToString();
+            textBoxManaTide.Text = float.Parse(Character.CalculationOptions["ManaTide"], CultureInfo.InvariantCulture).ToString();
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -374,6 +377,16 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxInnervate.Text, out value))
             {
                 Character.CalculationOptions["Innervate"] = value.ToString(CultureInfo.InvariantCulture);
+                if (!loading) Character.OnItemsChanged();
+            }
+        }
+
+        private void textBoxManaTide_TextChanged(object sender, EventArgs e)
+        {
+            float value;
+            if (float.TryParse(textBoxManaTide.Text, out value))
+            {
+                Character.CalculationOptions["ManaTide"] = value.ToString(CultureInfo.InvariantCulture);
                 if (!loading) Character.OnItemsChanged();
             }
         }
