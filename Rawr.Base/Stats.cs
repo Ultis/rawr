@@ -162,10 +162,10 @@ namespace Rawr
     [Serializable]
     public class Stats
     {
-        private float[] _rawAdditiveData = new float[Enum.GetValues(typeof(AdditiveStat)).Length];
-        private float[] _rawMultiplicativeData = new float[Enum.GetValues(typeof(MultiplicativeStat)).Length];
-        private float[] _rawInverseMultiplicativeData = new float[Enum.GetValues(typeof(InverseMultiplicativeStat)).Length];
-        private float[] _rawNoStackData = new float[Enum.GetValues(typeof(NonStackingStat)).Length];
+        private float[] _rawAdditiveData = new float[AdditiveStatCount];
+        private float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
+        private float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
+        private float[] _rawNoStackData = new float[NonStackingStatCount];
         /// <summary>
         /// The properties for each stat. In order to add additional stats for Rawr to track,
         /// first add properties here, for each stat. Apply a Category attribute to assign it to
@@ -1458,6 +1458,10 @@ namespace Rawr
         #region Multiplicative Handling
         private static PropertyInfo[] _propertyInfoCache = null;
         private static List<PropertyInfo> _multiplicativeProperties = new List<PropertyInfo>();
+        private static int AdditiveStatCount = 0;
+        private static int MultiplicativeStatCount = 0;
+        private static int InverseMultiplicativeStatCount = 0;
+        private static int NonStackingStatCount = 0;
 
         static Stats()
         {
@@ -1479,6 +1483,11 @@ namespace Rawr
                     _multiplicativeProperties.Add(info);
                 }
             }
+
+            AdditiveStatCount = Enum.GetValues(typeof(AdditiveStat)).Length;
+            MultiplicativeStatCount = Enum.GetValues(typeof(MultiplicativeStat)).Length;
+            InverseMultiplicativeStatCount = Enum.GetValues(typeof(InverseMultiplicativeStat)).Length;
+            NonStackingStatCount = Enum.GetValues(typeof(NonStackingStat)).Length;
         }
 
         public static PropertyInfo[] PropertyInfoCache
