@@ -680,6 +680,8 @@ namespace Rawr.Mage
 
             lp.Compact();
 
+            float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
+
             // idle regen
             calculatedStats.SolutionLabel.Add("Idle Regen");
             lp[0, 0] = -calculatedStats.ManaRegen;
@@ -716,7 +718,7 @@ namespace Rawr.Mage
             lp[0, 2] = -calculatedStats.ManaRegen5SR - 0.15f * evocationMana / 2f;
             lp[1, 2] = 1;
             lp[2, 2] = 1;
-            lp[39, 2] = 0.15f * evocationMana / 2f * 0.5f * (1 + characterStats.ThreatMultiplier); // should split among all targets if more than one, assume one only
+            lp[39, 2] = 0.15f * evocationMana / 2f * 0.5f * threatFactor; // should split among all targets if more than one, assume one only
             lp[lpRows, 2] = 0;
             // mana pot
             calculatedStats.SolutionLabel.Add("Mana Potion");
@@ -724,7 +726,7 @@ namespace Rawr.Mage
             lp[0, 3] = -calculatedStats.ManaRegen5SR - (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime;
             lp[1, 3] = 1;
             lp[3, 3] = 1;
-            lp[39, 3] = (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime * 0.5f * (1 + characterStats.ThreatMultiplier);
+            lp[39, 3] = (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime * 0.5f * threatFactor;
             lp[40, 3] = 40 / calculatedStats.ManaPotionTime;
             lp[lpRows, 3] = 0;
             // mana gem
@@ -736,7 +738,7 @@ namespace Rawr.Mage
             lp[4, 4] = 1;
             lp[14, 4] = 1;
             lp[23, 4] = - 1 / calculatedStats.ManaPotionTime;
-            lp[39, 4] = manaGemRegenRate * 0.5f * (1 + characterStats.ThreatMultiplier);
+            lp[39, 4] = manaGemRegenRate * 0.5f * threatFactor;
             lp[40, 4] = 40 / calculatedStats.ManaPotionTime;
             lp[lpRows, 4] = 0;
             // drums
@@ -1336,11 +1338,13 @@ namespace Rawr.Mage
             calculatedStats.NatureCritRate = calculatedStats.SpellCrit;
             calculatedStats.ShadowCritRate = calculatedStats.SpellCrit;
 
-            calculatedStats.ArcaneThreatMultiplier = (1 + stats.ThreatMultiplier) * (1 - calculationOptions.ArcaneSubtlety * 0.2f);
-            calculatedStats.FireThreatMultiplier = (1 + stats.ThreatMultiplier) * (1 - calculationOptions.BurningSoul * 0.05f);
-            calculatedStats.FrostThreatMultiplier = (1 + stats.ThreatMultiplier) * (1 - ((calculationOptions.FrostChanneling > 0) ? (0.01f + 0.03f * calculationOptions.FrostChanneling) : 0f));
-            calculatedStats.NatureThreatMultiplier = (1 + stats.ThreatMultiplier);
-            calculatedStats.ShadowThreatMultiplier = (1 + stats.ThreatMultiplier);
+            float threatFactor = (1 + stats.ThreatIncreaseMultiplier) * (1 - stats.ThreatReductionMultiplier);
+
+            calculatedStats.ArcaneThreatMultiplier = threatFactor * (1 - calculationOptions.ArcaneSubtlety * 0.2f);
+            calculatedStats.FireThreatMultiplier = threatFactor * (1 - calculationOptions.BurningSoul * 0.05f);
+            calculatedStats.FrostThreatMultiplier = threatFactor * (1 - ((calculationOptions.FrostChanneling > 0) ? (0.01f + 0.03f * calculationOptions.FrostChanneling) : 0f));
+            calculatedStats.NatureThreatMultiplier = threatFactor;
+            calculatedStats.ShadowThreatMultiplier = threatFactor;
 
             return calculatedStats;
         }
@@ -1937,13 +1941,14 @@ namespace Rawr.Mage
                 SpellDamageFor10SecOnCrit_20_45 = stats.SpellDamageFor10SecOnCrit_20_45,
                 BonusManaPotion = stats.BonusManaPotion,
                 MageSpellCrit = stats.MageSpellCrit,
-                ThreatMultiplier = stats.ThreatMultiplier
+                ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
+                ThreatReductionMultiplier = stats.ThreatReductionMultiplier
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.MageSpellCrit + Math.Abs(stats.ThreatMultiplier) + stats.Stamina + stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance) > 0;
+            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.MageSpellCrit + stats.ThreatReductionMultiplier + stats.Stamina + stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance) > 0;
         }
     }
 }

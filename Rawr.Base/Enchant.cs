@@ -284,8 +284,8 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2723, "Khorium Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 12 }));
             defaultEnchants.Add(new Enchant(2724, "Stabilized Eternium Scope", Item.ItemSlot.Ranged, new Stats() { CritRating = 28 }));
 
-            defaultEnchants.Add(new Enchant(2621, "Subtlety", Item.ItemSlot.Back, new Stats() { ThreatMultiplier = -0.02f }));
-            defaultEnchants.Add(new Enchant(2613, "Threat", Item.ItemSlot.Hands, new Stats() { ThreatMultiplier = 0.02f }));
+            defaultEnchants.Add(new Enchant(2621, "Subtlety", Item.ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f }));
+            defaultEnchants.Add(new Enchant(2613, "Threat", Item.ItemSlot.Hands, new Stats() { ThreatIncreaseMultiplier = 0.02f }));
 
             //spell stufff
             defaultEnchants.Add(new Enchant(2650, "Spellpower", Item.ItemSlot.Wrist, new Stats() { SpellDamageRating = 15 }));

@@ -140,7 +140,13 @@ namespace Rawr
         BonusStaminaMultiplier,
         BonusStrengthMultiplier,
         BonusSwipeDamageMultiplier,
-        BonusShadowSpellPowerMultiplier
+        BonusShadowSpellPowerMultiplier,
+        ThreatIncreaseMultiplier,
+    }
+
+    enum InverseMultiplicativeStat : int
+    {
+        ThreatReductionMultiplier,
     }
 
     enum NonStackingStat : int
@@ -158,6 +164,7 @@ namespace Rawr
     {
         private float[] _rawAdditiveData = new float[Enum.GetValues(typeof(AdditiveStat)).Length];
         private float[] _rawMultiplicativeData = new float[Enum.GetValues(typeof(MultiplicativeStat)).Length];
+        private float[] _rawInverseMultiplicativeData = new float[Enum.GetValues(typeof(InverseMultiplicativeStat)).Length];
         private float[] _rawNoStackData = new float[Enum.GetValues(typeof(NonStackingStat)).Length];
         /// <summary>
         /// The properties for each stat. In order to add additional stats for Rawr to track,
@@ -725,14 +732,6 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.DrumsOfWar] = value; }
         }
 
-        // threat dealt is damage * (1 + ThreatMultiplier)
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ThreatMultiplier
-        {
-            get;
-            set;
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float DrumsOfBattle
         {
@@ -1075,9 +1074,19 @@ namespace Rawr
         }
 
 
-#endregion
+        #endregion
 
         #region MultiplicativeStats
+        // threat dealt is damage * (1 + ThreatIncreaseMultiplier) * (1 - ThreatReductionMultiplier)
+        [Multiplicative]
+        [DisplayName("% Threat Increase")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ThreatIncreaseMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.ThreatIncreaseMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.ThreatIncreaseMultiplier] = value; }
+        }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% CStrike Dmg")]
@@ -1288,6 +1297,18 @@ namespace Rawr
 
         #endregion
 
+        #region InverseMultiplicativeStats
+        // threat dealt is damage * (1 + ThreatIncreaseMultiplier) * (1 - ThreatReductionMultiplier)
+        [Multiplicative]
+        [DisplayName("% Threat Reduction")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ThreatReductionMultiplier
+        {
+            get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ThreatReductionMultiplier]; }
+            set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ThreatReductionMultiplier] = value; }
+        }
+        #endregion
+
         #region NoStackStats
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (10 sec on Moonfire)")]
@@ -1321,7 +1342,12 @@ namespace Rawr
             count = c._rawMultiplicativeData.Length;
             for (int i = 0; i < count; i++)
             {
-                c._rawMultiplicativeData[i] = (1+a._rawMultiplicativeData[i]) * (1+b._rawMultiplicativeData[i])-1;
+                c._rawMultiplicativeData[i] = (1 + a._rawMultiplicativeData[i]) * (1 + b._rawMultiplicativeData[i]) - 1;
+            }
+            count = c._rawInverseMultiplicativeData.Length;
+            for (int i = 0; i < count; i++)
+            {
+                c._rawInverseMultiplicativeData[i] = 1 - (1 - a._rawInverseMultiplicativeData[i]) * (1 - b._rawInverseMultiplicativeData[i]);
             }
             count = c._rawNoStackData.Length;
             for (int i = 0; i < count; i++)
@@ -1393,8 +1419,9 @@ namespace Rawr
             if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
                 throw new ArgumentNullException();
             return ArrayUtils.AllCompare(x._rawAdditiveData, y._rawAdditiveData, comparison) 
-                && ArrayUtils.AllCompare(x._rawMultiplicativeData, y._rawMultiplicativeData, comparison)  
-                && ArrayUtils.AllCompare(x._rawNoStackData, y._rawNoStackData, comparison) ;
+                && ArrayUtils.AllCompare(x._rawMultiplicativeData, y._rawMultiplicativeData, comparison)
+                && ArrayUtils.AllCompare(x._rawInverseMultiplicativeData, y._rawInverseMultiplicativeData, comparison)
+                && ArrayUtils.AllCompare(x._rawNoStackData, y._rawNoStackData, comparison);
         }
 
 

@@ -406,7 +406,7 @@ namespace Rawr
             {
                 Name = "Tranquil Air Totem",
                 Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { ThreatMultiplier = -0.2f }
+                Stats = new Stats() { ThreatReductionMultiplier = 0.2f }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -431,7 +431,7 @@ namespace Rawr
             {
                 Name = "Blessing of Salvation",
                 Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { ThreatMultiplier = -0.3f }
+                Stats = new Stats() { ThreatReductionMultiplier = 0.3f }
             });
             defaultBuffs.Add(new Buff()
             {

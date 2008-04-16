@@ -391,13 +391,13 @@ namespace Rawr.Mage
             }
 
             ManaRegenPerSecond = calculations.ManaRegen5SR + OO5SR * (calculations.ManaRegen - calculations.ManaRegen5SR) + calculations.BasicStats.ManaRestorePerHit * HitProcs / CastTime + calculations.BasicStats.ManaRestorePerCast * CastProcs / CastTime;
-            ThreatPerSecond += (calculations.BasicStats.ManaRestorePerHit * HitProcs / CastTime + calculations.BasicStats.ManaRestorePerCast * CastProcs / CastTime) * 0.5f * (1 + calculations.BasicStats.ThreatMultiplier);
+            ThreatPerSecond += (calculations.BasicStats.ManaRestorePerHit * HitProcs / CastTime + calculations.BasicStats.ManaRestorePerCast * CastProcs / CastTime) * 0.5f * (1 + calculations.BasicStats.ThreatIncreaseMultiplier) * (1 - calculations.BasicStats.ThreatReductionMultiplier);
 
             if (calculations.Mp5OnCastFor20Sec > 0 && CastProcs > 0)
             {
                 float totalMana = calculations.Mp5OnCastFor20Sec / 5f / CastTime * 0.5f * (20 - CastTime / HitProcs / 2f) * (20 - CastTime / HitProcs / 2f);
                 ManaRegenPerSecond += totalMana / 20f;
-                ThreatPerSecond += totalMana / 20f * 0.5f * (1 + calculations.BasicStats.ThreatMultiplier);
+                ThreatPerSecond += totalMana / 20f * 0.5f * (1 + calculations.BasicStats.ThreatIncreaseMultiplier) * (1 - calculations.BasicStats.ThreatReductionMultiplier);
             }
         }
     }
