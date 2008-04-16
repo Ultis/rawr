@@ -55,6 +55,7 @@ namespace Rawr
         Intellect,
         LightningCapacitorProc,
         LotPCritRating,
+        MageAllResist,
         MageSpellCrit,
         Mana,
         ManaRestorePerCast,
@@ -317,6 +318,14 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AllResist]; }
             set { _rawAdditiveData[(int)AdditiveStat.AllResist] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Resist")]
+        public float MageAllResist
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MageAllResist]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MageAllResist] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

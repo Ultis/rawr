@@ -437,7 +437,7 @@ namespace Rawr
             {
                 Name = "Mage Armor",
                 Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { SpellCombatManaRegeneration = 0.3f, AllResist = 18 },
+                Stats = new Stats() { SpellCombatManaRegeneration = 0.3f, MageAllResist = 18 },
                 ConflictingBuffs = new string[] { "Armor" }
             });
             defaultBuffs.Add(new Buff()
