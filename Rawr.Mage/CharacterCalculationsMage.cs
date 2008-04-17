@@ -89,6 +89,7 @@ namespace Rawr.Mage
         public int ImprovedFlamestrike { get; set; }
         public int ImprovedFrostNova { get; set; }
         public int ImprovedConeOfCold { get; set; }
+        public int ArcticWinds { get; set; }
 
         public CompiledCalculationOptions(Character character)
         {
@@ -189,6 +190,7 @@ namespace Rawr.Mage
             ImprovedFlamestrike = int.Parse(character.CalculationOptions["ImprovedFlamestrike"], CultureInfo.InvariantCulture);
             ImprovedFrostNova = int.Parse(character.CalculationOptions["ImprovedFrostNova"], CultureInfo.InvariantCulture);
             ImprovedConeOfCold = int.Parse(character.CalculationOptions["ImprovedConeOfCold"], CultureInfo.InvariantCulture);
+            ArcticWinds = int.Parse(character.CalculationOptions["ArcticWinds"], CultureInfo.InvariantCulture);
         }
     }
 
@@ -2465,11 +2467,17 @@ namespace Rawr.Mage
                         }
                     }
                     Compact();
-                    double gem = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem), 4);
-                    double pot = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 3000, Math.Max(time, nextPot), 3);
-                    double evo = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - EvocationRegen * Math.Min(evoTime, EvocationDuration), Math.Max(time, nextEvo), 2);
-                    double breakpoint = Evaluate(null, EvaluationMode.CooldownBreak, evo);
-                    if (breakpoint < fight) evo = breakpoint;
+                    double gem = nextGem;
+                    double pot = nextPot;
+                    double evo = nextEvo;
+                    if (gemTime > 0) gem = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem), 4);
+                    if (potTime > 0) pot = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 3000, Math.Max(time, nextPot), 3);
+                    if (evoTime > 0)
+                    {
+                        evo = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - EvocationRegen * Math.Min(evoTime, EvocationDuration), Math.Max(time, nextEvo), 2);
+                        double breakpoint = Evaluate(null, EvaluationMode.CooldownBreak, evo);
+                        if (breakpoint < fight) evo = breakpoint;
+                    }
                     // always use pot & gem before evo, they need tighter packing
                     // always start with pot because pot needs more buffer than gem
                     if (potTime > 0 && (pot <= gem || nextPot == 0) && (pot <= evo || nextPot == 0 || evoTime <= 0))

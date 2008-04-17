@@ -714,11 +714,11 @@ namespace Rawr.Mage
                 Stats evocationStats = GetCharacterStats(character, additionalItem, evocationRawStats, calculationOptions);
                 if (evocationStats.Mana > evocationMana) evocationMana = evocationStats.Mana;
             }
-            calculatedStats.EvocationRegen = calculatedStats.ManaRegen5SR + 0.15f * evocationMana / 2f;
-            lp[0, 2] = -calculatedStats.ManaRegen5SR - 0.15f * evocationMana / 2f;
+            calculatedStats.EvocationRegen = calculatedStats.ManaRegen5SR + 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed;
+            lp[0, 2] = -calculatedStats.EvocationRegen;
             lp[1, 2] = 1;
             lp[2, 2] = 1;
-            lp[39, 2] = 0.15f * evocationMana / 2f * 0.5f * threatFactor; // should split among all targets if more than one, assume one only
+            lp[39, 2] = 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed * 0.5f * threatFactor; // should split among all targets if more than one, assume one only
             lp[lpRows, 2] = 0;
             // mana pot
             calculatedStats.SolutionLabel.Add("Mana Potion");
@@ -1309,7 +1309,7 @@ namespace Rawr.Mage
                 calculatedStats.ArcaneSpellModifier *= (1 + 0.1f * calculationOptions.MoltenFury);
             }
             calculatedStats.FireSpellModifier = calculatedStats.ArcaneSpellModifier * (1 + 0.02f * calculationOptions.FirePower);
-            calculatedStats.FrostSpellModifier = calculatedStats.ArcaneSpellModifier * (1 + 0.02f * calculationOptions.PiercingIce);
+            calculatedStats.FrostSpellModifier = calculatedStats.ArcaneSpellModifier * (1 + 0.02f * calculationOptions.PiercingIce) * (1 + 0.01f * calculationOptions.ArcticWinds);
             calculatedStats.NatureSpellModifier = calculatedStats.ArcaneSpellModifier;
             calculatedStats.ShadowSpellModifier = calculatedStats.ArcaneSpellModifier;
             calculatedStats.ArcaneSpellModifier *= (1 + stats.BonusArcaneSpellPowerMultiplier);
@@ -1782,7 +1782,7 @@ namespace Rawr.Mage
                     talentCode = "0000000000000000000000050510200230233005112500535000310030010000000";
                     break;
                 case "Frost (10/0/51)":
-                    talentCode = "2300050000000000000000000000000000000000000000535020313235010051551";
+                    talentCode = "2300050000000000000000000000000000000000000000535020312235010251551";
                     break;
                 case "Arcane (48/0/13)":
                     talentCode = "2550050300230150333125000000000000000000000000534000010000000000000";
