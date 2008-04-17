@@ -23,7 +23,7 @@ namespace Rawr
 		{
 			InitializeComponent();
 			_character = character;
-            _workerOptimize = new BackgroundWorker();
+            _worker = _workerOptimize = new BackgroundWorker();
             _workerOptimize.WorkerReportsProgress = _workerOptimize.WorkerSupportsCancellation = true;
             _workerOptimize.DoWork += new DoWorkEventHandler(_worker_DoWork);
             _workerOptimize.ProgressChanged += new ProgressChangedEventHandler(_worker_ProgressChanged);
