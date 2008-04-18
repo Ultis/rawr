@@ -1075,7 +1075,7 @@ namespace Rawr
         }
 
 
-        #endregion
+#endregion
 
         #region MultiplicativeStats
         // threat dealt is damage * (1 + ThreatIncreaseMultiplier) * (1 - ThreatReductionMultiplier)
@@ -1334,24 +1334,25 @@ namespace Rawr
         public static Stats operator +(Stats a, Stats b)
         {
             Stats c = new Stats();
-
-            int count = c._rawAdditiveData.Length;
-            for (int i = 0; i < count; i++)
+           
+            int i = c._rawAdditiveData.Length;
+            while(--i >=0)
             {
                 c._rawAdditiveData[i] = a._rawAdditiveData[i] + b._rawAdditiveData[i];
             }
-            count = c._rawMultiplicativeData.Length;
-            for (int i = 0; i < count; i++)
+            i = c._rawMultiplicativeData.Length;
+            while(--i >=0)
             {
-                c._rawMultiplicativeData[i] = (1 + a._rawMultiplicativeData[i]) * (1 + b._rawMultiplicativeData[i]) - 1;
+                c._rawMultiplicativeData[i] = (1+a._rawMultiplicativeData[i]) * (1+b._rawMultiplicativeData[i])-1;
             }
-            count = c._rawInverseMultiplicativeData.Length;
-            for (int i = 0; i < count; i++)
+            i = c._rawInverseMultiplicativeData.Length;
+            while(--i >=0)
             {
-                c._rawInverseMultiplicativeData[i] = 1 - (1 - a._rawInverseMultiplicativeData[i]) * (1 - b._rawInverseMultiplicativeData[i]);
+                c._rawInverseMultiplicativeData[i] = 1-(1-a._rawInverseMultiplicativeData[i]) * (1-b._rawInverseMultiplicativeData[i]);
             }
-            count = c._rawNoStackData.Length;
-            for (int i = 0; i < count; i++)
+            
+            i = c._rawNoStackData.Length;
+            while(--i >=0)
             {
                 c._rawNoStackData[i] = Math.Max(a._rawNoStackData[i], b._rawNoStackData[i]);
             }
@@ -1420,9 +1421,9 @@ namespace Rawr
             if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
                 throw new ArgumentNullException();
             return ArrayUtils.AllCompare(x._rawAdditiveData, y._rawAdditiveData, comparison) 
-                && ArrayUtils.AllCompare(x._rawMultiplicativeData, y._rawMultiplicativeData, comparison)
+                && ArrayUtils.AllCompare(x._rawMultiplicativeData, y._rawMultiplicativeData, comparison)  
                 && ArrayUtils.AllCompare(x._rawInverseMultiplicativeData, y._rawInverseMultiplicativeData, comparison)
-                && ArrayUtils.AllCompare(x._rawNoStackData, y._rawNoStackData, comparison);
+                && ArrayUtils.AllCompare(x._rawNoStackData, y._rawNoStackData, comparison) ;
         }
 
 
@@ -1453,6 +1454,8 @@ namespace Rawr
         {
             Stats clone = (Stats) this.MemberwiseClone();
             clone._rawAdditiveData = (float[]) clone._rawAdditiveData.Clone();
+            clone._rawMultiplicativeData = (float[]) clone._rawMultiplicativeData.Clone();
+            clone._rawNoStackData = (float[]) clone._rawNoStackData.Clone();
             return clone;
         }
 
