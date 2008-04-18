@@ -626,7 +626,7 @@ you are being killed by burst damage, focus on Survival Points.",
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health +
 				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
-				stats.FrostResistance + stats.ShadowResistance
+				stats.FrostResistance + stats.ShadowResistance + stats.CrushChanceReduction
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
                  + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamage + stats.BonusSwipeDamageMultiplier

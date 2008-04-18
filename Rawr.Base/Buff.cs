@@ -666,7 +666,14 @@ namespace Rawr
                 Category = BuffCategory.OtherConsumables,
                 Stats = new Stats() { WeaponDamage = 12, CritRating = 14 },
                 ConflictingBuffs = new string[] { "Temporary Weapon Enchantment" }
-            });
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Righteous Weapon Coating",
+				Category = BuffCategory.OtherConsumables,
+				Stats = new Stats() { AttackPower = 60 },
+				ConflictingBuffs = new string[] { "Temporary Weapon Enchantment" }
+			});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Elemental Sharpening Stone",
