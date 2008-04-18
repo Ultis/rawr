@@ -854,6 +854,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana Gem Effect")]
         [Category("Equipment Procs")]
         public float BonusManaGem
         {
@@ -1311,7 +1312,7 @@ namespace Rawr
 
         #region NoStackStats
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (10 sec on Moonfire)")]
+        [DisplayName("Mana Potion Effect")]
         [Category("Equipment Procs")]
         public float BonusManaPotion
         {
