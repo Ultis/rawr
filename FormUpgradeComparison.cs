@@ -33,7 +33,7 @@ namespace Rawr
         public void LoadData(Character character, Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> calculations)
         {
             comparisonGraph1.Character = character;
-            toolStripDropDownButtonSort.DropDownItems.Clear();
+            /*toolStripDropDownButtonSort.DropDownItems.Clear();
             toolStripDropDownButtonSort.DropDownItems.Add(overallToolStripMenuItem);
             toolStripDropDownButtonSort.DropDownItems.Add(alphabeticalToolStripMenuItem);
             foreach (string name in Calculations.SubPointNameColors.Keys)
@@ -42,7 +42,7 @@ namespace Rawr
                 toolStripMenuItemSubPoint.Tag = toolStripDropDownButtonSort.DropDownItems.Count - 2;
                 toolStripMenuItemSubPoint.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
                 toolStripDropDownButtonSort.DropDownItems.Add(toolStripMenuItemSubPoint);
-            }
+            }*/
 
             itemCalculations = new Dictionary<string, ComparisonCalculationBase[]>();
             List<ComparisonCalculationBase> all = new List<ComparisonCalculationBase>();
