@@ -362,7 +362,7 @@ namespace Rawr.Mage
             for (int flameCap = 0; flameCap < 2; flameCap++)
             for (int destructionPotion = 0; destructionPotion < 2; destructionPotion++)
             {
-                if (!calculationOptions.IncrementalOptimizations || new List<int>(calculationOptions.IncrementalSetCooldowns).Contains(incrementalSetIndex))
+                if (!calculationOptions.IncrementalOptimizations || Array.IndexOf<int>(calculationOptions.IncrementalSetCooldowns, incrementalSetIndex) >= 0)
                 {
                     for (int trinket1 = 0; trinket1 < 2; trinket1++)
                         for (int trinket2 = 0; trinket2 < 2; trinket2++)
@@ -635,6 +635,11 @@ namespace Rawr.Mage
                             int index = buffset * spellList.Count + spell + colOffset - 1;
                             lp.DisableColumn(index);
                         }
+                    }
+                    else
+                    {
+                        int index = buffset * spellList.Count + spell + colOffset - 1;
+                        lp.DisableColumn(index);
                     }
                 }
             }
