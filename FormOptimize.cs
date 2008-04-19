@@ -347,13 +347,14 @@ namespace Rawr
                                 itemCalc.Item = item;
                                 itemCalc.Name = item.Name;
                                 itemCalc.Equipped = false;
-                                itemCalc.OverallPoints = bestCalculations.OverallPoints - baseCalculations.OverallPoints;
+                                /*itemCalc.OverallPoints = bestCalculations.OverallPoints - baseCalculations.OverallPoints;
                                 float[] subPoints = new float[bestCalculations.SubPoints.Length];
                                 for (int j = 0; j < bestCalculations.SubPoints.Length; j++)
                                 {
                                     subPoints[j] = bestCalculations.SubPoints[j] - baseCalculations.SubPoints[j];
                                 }
-                                itemCalc.SubPoints = subPoints;
+                                itemCalc.SubPoints = subPoints;*/
+                                itemCalc.OverallPoints = best - baseValue;
 
                                 comparisons.Add(itemCalc);
                             }

@@ -300,6 +300,7 @@
             // 
             this.comparisonGraph1.BackColor = System.Drawing.Color.White;
             this.comparisonGraph1.Character = null;
+            this.comparisonGraph1.DisplayMode = Rawr.ComparisonGraph.GraphDisplayMode.Overall;
             this.comparisonGraph1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comparisonGraph1.Font = new System.Drawing.Font("Verdana", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comparisonGraph1.ItemCalculations = new Rawr.ComparisonCalculationBase[0];

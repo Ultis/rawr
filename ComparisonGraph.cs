@@ -70,6 +70,14 @@ namespace Rawr
 			}
 		}
 
+        public enum GraphDisplayMode
+        {
+            Subpoints,
+            Overall
+        }
+
+        public GraphDisplayMode DisplayMode { get; set; }
+
 		public Point GetTooltipLocation(Point offset)
 		{
 			//ItemTooltip tooltip = ItemTooltip.Instance;
@@ -199,25 +207,28 @@ namespace Rawr
 
 						Font fontLegend = new Font(this.Font.FontFamily, 10f, GraphicsUnit.Pixel);
 						int legendX = 2;
-						for (int i = 0; i < subPointNames.Length; i++)
-						{
-							string subPointName = subPointNames[i];
-							int widthSubPoint = (int)Math.Ceiling(g.MeasureString(subPointName, fontLegend).Width + 2f);
-							rectSubPoint = new Rectangle(legendX, 2, widthSubPoint, 16);
-							blendSubPoint = new ColorBlend(3);
-							blendSubPoint.Colors = new Color[] { colorSubPointsA[i], colorSubPointsB[i], colorSubPointsA[i] };
-							blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
-							brushSubPointFill = new LinearGradientBrush(rectSubPoint, colorSubPointsA[i], colorSubPointsB[i], 67f);
-							brushSubPointFill.InterpolationColors = blendSubPoint;
+                        if (DisplayMode == GraphDisplayMode.Subpoints)
+                        {
+                            for (int i = 0; i < subPointNames.Length; i++)
+                            {
+                                string subPointName = subPointNames[i];
+                                int widthSubPoint = (int)Math.Ceiling(g.MeasureString(subPointName, fontLegend).Width + 2f);
+                                rectSubPoint = new Rectangle(legendX, 2, widthSubPoint, 16);
+                                blendSubPoint = new ColorBlend(3);
+                                blendSubPoint.Colors = new Color[] { colorSubPointsA[i], colorSubPointsB[i], colorSubPointsA[i] };
+                                blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
+                                brushSubPointFill = new LinearGradientBrush(rectSubPoint, colorSubPointsA[i], colorSubPointsB[i], 67f);
+                                brushSubPointFill.InterpolationColors = blendSubPoint;
 
-							g.FillRectangle(brushSubPointFill, rectSubPoint);
-							g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
-							g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
-							g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                                g.FillRectangle(brushSubPointFill, rectSubPoint);
+                                g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                                g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                                g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
 
-							g.DrawString(subPointName, fontLegend, brushSubPoints[i], rectSubPoint, formatSubPoint);
-							legendX += widthSubPoint;
-						}
+                                g.DrawString(subPointName, fontLegend, brushSubPoints[i], rectSubPoint, formatSubPoint);
+                                legendX += widthSubPoint;
+                            }
+                        }
 
 						legendX += 16;
 						Bitmap bmpDiamond = Rawr.Properties.Resources.Diamond;
@@ -342,32 +353,54 @@ namespace Rawr
 							if (overallWidth > 0 && item.OverallPoints > 0.00001f)
 							{
 								int barStart = 0;
-								for (int j = 0; j < item.SubPoints.Length; j++)
-								{
-									float subPoint = item.SubPoints[j];
-									int barWidth = (int)Math.Round((subPoint / item.OverallPoints) * overallWidth);
-									if (float.IsPositiveInfinity(subPoint)) barWidth = overallWidth;
+                                if (DisplayMode == GraphDisplayMode.Subpoints)
+                                {
+                                    for (int j = 0; j < item.SubPoints.Length; j++)
+                                    {
+                                        float subPoint = item.SubPoints[j];
+                                        int barWidth = (int)Math.Round((subPoint / item.OverallPoints) * overallWidth);
+                                        if (float.IsPositiveInfinity(subPoint)) barWidth = overallWidth;
 
-									rectSubPoint = new Rectangle((int)graphStart + 1 + barStart, 50 + i * 36, barWidth, 24);
-									barStart += barWidth;
+                                        rectSubPoint = new Rectangle((int)graphStart + 1 + barStart, 50 + i * 36, barWidth, 24);
+                                        barStart += barWidth;
 
-									brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(
-										new Rectangle((int)graphStart + 1, rectSubPoint.Y, overallWidth, 24), colorSubPointsA[j], colorSubPointsB[j],
-										67f + (20f * (float.IsPositiveInfinity(item.OverallPoints) ? 1f : (item.OverallPoints / maxScale))));
-									blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
-									blendSubPoint.Colors = new Color[] { colorSubPointsA[j], colorSubPointsB[j], colorSubPointsA[j]};
-									blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
-									brushSubPointFill.InterpolationColors = blendSubPoint;
+                                        brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(
+                                            new Rectangle((int)graphStart + 1, rectSubPoint.Y, overallWidth, 24), colorSubPointsA[j], colorSubPointsB[j],
+                                            67f + (20f * (float.IsPositiveInfinity(item.OverallPoints) ? 1f : (item.OverallPoints / maxScale))));
+                                        blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
+                                        blendSubPoint.Colors = new Color[] { colorSubPointsA[j], colorSubPointsB[j], colorSubPointsA[j] };
+                                        blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
+                                        brushSubPointFill.InterpolationColors = blendSubPoint;
 
-									g.FillRectangle(brushSubPointFill, rectSubPoint);
-									g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
-									g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
-									g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                                        g.FillRectangle(brushSubPointFill, rectSubPoint);
+                                        g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                                        g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                                        g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
 
-									if (RoundValues && subPoint > 0) g.DrawString(subPoint.ToString("F"),
-										this.Font, brushSubPoints[j], rectSubPoint, formatSubPoint);
-								
-								}
+                                        if (RoundValues && subPoint > 0) g.DrawString(subPoint.ToString("F"),
+                                            this.Font, brushSubPoints[j], rectSubPoint, formatSubPoint);
+
+                                    }
+                                }
+                                else if (DisplayMode == GraphDisplayMode.Overall)
+                                {
+                                    int barWidth = overallWidth;
+                                    rectSubPoint = new Rectangle((int)graphStart + 1 + barStart, 50 + i * 36, barWidth, 24);
+                                    barStart += barWidth;
+
+                                    brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(
+                                        new Rectangle((int)graphStart + 1, rectSubPoint.Y, overallWidth, 24), Color.FromArgb(128, 64, 0, 64), Color.FromArgb(128, 128, 0, 128),
+                                        67f + (20f * (float.IsPositiveInfinity(item.OverallPoints) ? 1f : (item.OverallPoints / maxScale))));
+                                    blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
+                                    blendSubPoint.Colors = new Color[] { Color.FromArgb(128, 64, 0, 64), Color.FromArgb(128, 128, 0, 128), Color.FromArgb(128, 64, 0, 64) };
+                                    blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
+                                    brushSubPointFill.InterpolationColors = blendSubPoint;
+
+                                    g.FillRectangle(brushSubPointFill, rectSubPoint);
+                                    g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                                    g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                                    g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                                }
 
 								if (item.OverallPoints > 0) g.DrawString(RoundValues ? item.OverallPoints.ToString("F") :
 									item.OverallPoints.ToString(), this.Font, brushOverall, new Rectangle((int)graphStart + barStart + 2, 50 + i * 36, 50, 24), formatOverall);
