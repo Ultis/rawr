@@ -454,7 +454,6 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Values")]
-        [DisplayName("Crit")]
         public float Crit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Crit]; }
@@ -463,7 +462,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Crit Rating")]
+        [DisplayName("Crit")]
         public float CritRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritRating]; }
@@ -472,7 +471,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Hit Rating")]
+        [DisplayName("Hit")]
         public float HitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HitRating]; }
@@ -481,7 +480,6 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Values")]
-        [DisplayName("Hit")]
         public float Hit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Hit]; }
@@ -490,7 +488,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Dodge Rating")]
+        [DisplayName("Dodge")]
         public float DodgeRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DodgeRating]; }
@@ -499,7 +497,6 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Values")]
-        [DisplayName("Dodge")]
         public float Dodge
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Dodge]; }
@@ -508,7 +505,6 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Values")]
-        [DisplayName("Parry")]
         public float Parry
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Parry]; }
@@ -517,7 +513,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Parry Rating")]
+        [DisplayName("Parry")]
         public float ParryRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ParryRating]; }
@@ -526,7 +522,6 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Values")]
-        [DisplayName("Block")]
         public float Block
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Block]; }
@@ -535,7 +530,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Block Rating")]
+        [DisplayName("Block")]
         public float BlockRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BlockRating]; }
@@ -553,7 +548,6 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Values")]
-        [DisplayName("Defense")]
         public float Defense
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Defense]; }
@@ -562,7 +556,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Defense Rating")]
+        [DisplayName("Defense")]
         public float DefenseRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DefenseRating]; }
@@ -571,6 +565,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
+        [DisplayName("Resilience")]
         public float Resilience
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Resilience]; }
@@ -579,7 +574,6 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Values")]
-        [DisplayName("Expertise")]
         public float Expertise
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Expertise]; }
@@ -588,7 +582,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("ExpertiseRating")]
+        [DisplayName("Expertise")]
         public float ExpertiseRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ExpertiseRating]; }

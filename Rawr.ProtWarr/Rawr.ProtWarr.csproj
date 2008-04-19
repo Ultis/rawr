@@ -49,6 +49,8 @@
       <DependentUpon>CalculationOptionsPanelProtWarr.cs</DependentUpon>
     </Compile>
     <Compile Include="CalculationsProtWarr.cs" />
+    <Compile Include="CharacterCalculationsProtWarr.cs" />
+    <Compile Include="ComparisonCalculationsProtWarr.cs" />
     <Compile Include="TalentForm.cs">
       <SubType>Form</SubType>
     </Compile>

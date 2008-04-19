@@ -30,25 +30,39 @@ namespace Rawr.ProtWarr
 		{
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
-            this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.threatScaleFactor = new System.Windows.Forms.NumericUpDown();
-            this.labelBossAttack = new System.Windows.Forms.Label();
-            this.bossAttackValue = new System.Windows.Forms.NumericUpDown();
-            this.button1 = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.mitigationScaleFactor = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.threatScaleFactor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bossAttackValue)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mitigationScaleFactor)).BeginInit();
+            this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
+            this.labelTargetArmorDescription = new System.Windows.Forms.Label();
+            this.groupBoxWarriorSkills = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseShieldBlock = new System.Windows.Forms.CheckBox();
+            this.labelShieldBlockUptime = new System.Windows.Forms.Label();
+            this.buttonTalents = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.trackBarShieldBlockUptime = new System.Windows.Forms.TrackBar();
+            this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.trackBarBossAttackValue = new System.Windows.Forms.TrackBar();
+            this.labelBossAttackValue = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.trackBarThreatScale = new System.Windows.Forms.TrackBar();
+            this.labelThreatScale = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.trackBarMitigationScale = new System.Windows.Forms.TrackBar();
+            this.labelMitigationScale = new System.Windows.Forms.Label();
+            this.radioButtonAldor = new System.Windows.Forms.RadioButton();
+            this.radioButtonScryer = new System.Windows.Forms.RadioButton();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
+            this.groupBoxWarriorSkills.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarShieldBlockUptime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThreatScale)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarMitigationScale)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 11);
+            this.label1.Location = new System.Drawing.Point(3, 6);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 0;
@@ -56,166 +70,319 @@ namespace Rawr.ProtWarr
             // 
             // comboBoxTargetLevel
             // 
+            this.comboBoxTargetLevel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTargetLevel.Enabled = false;
             this.comboBoxTargetLevel.FormattingEnabled = true;
             this.comboBoxTargetLevel.Items.AddRange(new object[] {
             "70",
             "71",
             "72",
             "73"});
-            this.comboBoxTargetLevel.Location = new System.Drawing.Point(82, 8);
+            this.comboBoxTargetLevel.Location = new System.Drawing.Point(83, 3);
             this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-            this.comboBoxTargetLevel.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxTargetLevel.Size = new System.Drawing.Size(123, 21);
             this.comboBoxTargetLevel.TabIndex = 1;
-            this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetLevel_SelectedIndexChanged);
+            this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(9, 186);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(61, 42);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Target Armor: ";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // trackBarTargetArmor
+            // 
+            this.trackBarTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarTargetArmor.LargeChange = 1000;
+            this.trackBarTargetArmor.Location = new System.Drawing.Point(75, 183);
+            this.trackBarTargetArmor.Maximum = 9000;
+            this.trackBarTargetArmor.Minimum = 3000;
+            this.trackBarTargetArmor.Name = "trackBarTargetArmor";
+            this.trackBarTargetArmor.Size = new System.Drawing.Size(131, 45);
+            this.trackBarTargetArmor.SmallChange = 100;
+            this.trackBarTargetArmor.TabIndex = 2;
+            this.trackBarTargetArmor.TickFrequency = 300;
+            this.trackBarTargetArmor.Value = 7700;
+            this.trackBarTargetArmor.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // labelTargetArmorDescription
+            // 
+            this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTargetArmorDescription.Location = new System.Drawing.Point(6, 231);
+            this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
+            this.labelTargetArmorDescription.Size = new System.Drawing.Size(200, 40);
+            this.labelTargetArmorDescription.TabIndex = 0;
+            this.labelTargetArmorDescription.Text = "7700 Armor: Hydross, Lurker, Leotheras, Tidewalker, Al\'ar, Naj\'entus, Supremus, A" +
+                "kama, Gurtogg";
+            // 
+            // groupBoxWarriorSkills
+            // 
+            this.groupBoxWarriorSkills.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxWarriorSkills.Controls.Add(this.checkBoxUseShieldBlock);
+            this.groupBoxWarriorSkills.Controls.Add(this.labelShieldBlockUptime);
+            this.groupBoxWarriorSkills.Controls.Add(this.buttonTalents);
+            this.groupBoxWarriorSkills.Controls.Add(this.label9);
+            this.groupBoxWarriorSkills.Controls.Add(this.trackBarShieldBlockUptime);
+            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 336);
+            this.groupBoxWarriorSkills.Name = "groupBoxWarriorSkills";
+            this.groupBoxWarriorSkills.Size = new System.Drawing.Size(203, 170);
+            this.groupBoxWarriorSkills.TabIndex = 4;
+            this.groupBoxWarriorSkills.TabStop = false;
+            this.groupBoxWarriorSkills.Text = "Warrior Skills";
+            // 
+            // checkBoxUseShieldBlock
+            // 
+            this.checkBoxUseShieldBlock.AutoSize = true;
+            this.checkBoxUseShieldBlock.Location = new System.Drawing.Point(3, 99);
+            this.checkBoxUseShieldBlock.Name = "checkBoxUseShieldBlock";
+            this.checkBoxUseShieldBlock.Size = new System.Drawing.Size(107, 17);
+            this.checkBoxUseShieldBlock.TabIndex = 5;
+            this.checkBoxUseShieldBlock.Text = "Use Shield Block";
+            this.checkBoxUseShieldBlock.UseVisualStyleBackColor = true;
+            this.checkBoxUseShieldBlock.CheckedChanged += new System.EventHandler(this.checkBoxUseShieldBlock_CheckedChanged);
+            // 
+            // labelShieldBlockUptime
+            // 
+            this.labelShieldBlockUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelShieldBlockUptime.AutoSize = true;
+            this.labelShieldBlockUptime.Location = new System.Drawing.Point(77, 80);
+            this.labelShieldBlockUptime.Name = "labelShieldBlockUptime";
+            this.labelShieldBlockUptime.Size = new System.Drawing.Size(33, 13);
+            this.labelShieldBlockUptime.TabIndex = 0;
+            this.labelShieldBlockUptime.Text = "100%";
+            // 
+            // buttonTalents
+            // 
+            this.buttonTalents.Location = new System.Drawing.Point(9, 19);
+            this.buttonTalents.Name = "buttonTalents";
+            this.buttonTalents.Size = new System.Drawing.Size(84, 23);
+            this.buttonTalents.TabIndex = 6;
+            this.buttonTalents.Text = "Show Talents";
+            this.buttonTalents.UseVisualStyleBackColor = true;
+            this.buttonTalents.Click += new System.EventHandler(this.buttonTalents_Click);
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(3, 48);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(64, 45);
+            this.label9.TabIndex = 0;
+            this.label9.Text = "Shield Block Uptime %:";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // trackBarShieldBlockUptime
+            // 
+            this.trackBarShieldBlockUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarShieldBlockUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarShieldBlockUptime.Enabled = false;
+            this.trackBarShieldBlockUptime.LargeChange = 10;
+            this.trackBarShieldBlockUptime.Location = new System.Drawing.Point(72, 48);
+            this.trackBarShieldBlockUptime.Maximum = 100;
+            this.trackBarShieldBlockUptime.Name = "trackBarShieldBlockUptime";
+            this.trackBarShieldBlockUptime.Size = new System.Drawing.Size(125, 45);
+            this.trackBarShieldBlockUptime.TabIndex = 2;
+            this.trackBarShieldBlockUptime.TickFrequency = 10;
+            this.trackBarShieldBlockUptime.Value = 100;
+            this.trackBarShieldBlockUptime.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // checkBoxEnforceMetagemRequirements
             // 
             this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 115);
+            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 290);
             this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
             this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
-            this.checkBoxEnforceMetagemRequirements.TabIndex = 4;
+            this.checkBoxEnforceMetagemRequirements.TabIndex = 5;
             this.checkBoxEnforceMetagemRequirements.Text = "Enforce Metagem Requirements";
             this.checkBoxEnforceMetagemRequirements.UseVisualStyleBackColor = true;
             this.checkBoxEnforceMetagemRequirements.CheckedChanged += new System.EventHandler(this.checkBoxEnforceMetagemRequirements_CheckedChanged);
             // 
-            // label2
+            // label4
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 63);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Threat Scale: ";
+            this.label4.Location = new System.Drawing.Point(6, 30);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(64, 45);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Boss Attack:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // threatScaleFactor
+            // trackBarBossAttackValue
             // 
-            this.threatScaleFactor.Location = new System.Drawing.Point(83, 61);
-            this.threatScaleFactor.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.threatScaleFactor.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.threatScaleFactor.Name = "threatScaleFactor";
-            this.threatScaleFactor.Size = new System.Drawing.Size(120, 20);
-            this.threatScaleFactor.TabIndex = 3;
-            this.threatScaleFactor.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.threatScaleFactor.ValueChanged += new System.EventHandler(this.threatScaleFactor_ValueChanged);
+            this.trackBarBossAttackValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarBossAttackValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarBossAttackValue.LargeChange = 5000;
+            this.trackBarBossAttackValue.Location = new System.Drawing.Point(75, 30);
+            this.trackBarBossAttackValue.Maximum = 50000;
+            this.trackBarBossAttackValue.Minimum = 500;
+            this.trackBarBossAttackValue.Name = "trackBarBossAttackValue";
+            this.trackBarBossAttackValue.Size = new System.Drawing.Size(131, 45);
+            this.trackBarBossAttackValue.SmallChange = 500;
+            this.trackBarBossAttackValue.TabIndex = 2;
+            this.trackBarBossAttackValue.TickFrequency = 2500;
+            this.trackBarBossAttackValue.Value = 20000;
+            this.trackBarBossAttackValue.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // labelBossAttack
+            // labelBossAttackValue
             // 
-            this.labelBossAttack.AutoSize = true;
-            this.labelBossAttack.Location = new System.Drawing.Point(3, 37);
-            this.labelBossAttack.Name = "labelBossAttack";
-            this.labelBossAttack.Size = new System.Drawing.Size(70, 13);
-            this.labelBossAttack.TabIndex = 4;
-            this.labelBossAttack.Text = "Boss Attack: ";
+            this.labelBossAttackValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelBossAttackValue.AutoSize = true;
+            this.labelBossAttackValue.Location = new System.Drawing.Point(80, 62);
+            this.labelBossAttackValue.Name = "labelBossAttackValue";
+            this.labelBossAttackValue.Size = new System.Drawing.Size(37, 13);
+            this.labelBossAttackValue.TabIndex = 0;
+            this.labelBossAttackValue.Text = "20000";
             // 
-            // bossAttackValue
+            // label5
             // 
-            this.bossAttackValue.Location = new System.Drawing.Point(83, 35);
-            this.bossAttackValue.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.bossAttackValue.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.bossAttackValue.Name = "bossAttackValue";
-            this.bossAttackValue.Size = new System.Drawing.Size(120, 20);
-            this.bossAttackValue.TabIndex = 2;
-            this.bossAttackValue.Value = new decimal(new int[] {
-            20000,
-            0,
-            0,
-            0});
-            this.bossAttackValue.ValueChanged += new System.EventHandler(this.bossAttackValue_ValueChanged);
+            this.label5.Location = new System.Drawing.Point(6, 81);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(64, 45);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Threat Scale:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // button1
+            // trackBarThreatScale
             // 
-            this.button1.Location = new System.Drawing.Point(6, 19);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(86, 23);
-            this.button1.TabIndex = 20;
-            this.button1.Text = "Show Talents";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.trackBarThreatScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarThreatScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarThreatScale.LargeChange = 50;
+            this.trackBarThreatScale.Location = new System.Drawing.Point(75, 81);
+            this.trackBarThreatScale.Maximum = 1000;
+            this.trackBarThreatScale.Minimum = 1;
+            this.trackBarThreatScale.Name = "trackBarThreatScale";
+            this.trackBarThreatScale.Size = new System.Drawing.Size(131, 45);
+            this.trackBarThreatScale.TabIndex = 2;
+            this.trackBarThreatScale.TickFrequency = 50;
+            this.trackBarThreatScale.Value = 1;
+            this.trackBarThreatScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // groupBox1
+            // labelThreatScale
             // 
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(6, 138);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(197, 56);
-            this.groupBox1.TabIndex = 16;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Misc";
+            this.labelThreatScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelThreatScale.AutoSize = true;
+            this.labelThreatScale.Location = new System.Drawing.Point(80, 113);
+            this.labelThreatScale.Name = "labelThreatScale";
+            this.labelThreatScale.Size = new System.Drawing.Size(13, 13);
+            this.labelThreatScale.TabIndex = 0;
+            this.labelThreatScale.Text = "1";
             // 
-            // label3
+            // label7
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 89);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(88, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Mitigation Scale: ";
+            this.label7.Location = new System.Drawing.Point(9, 132);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(61, 45);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "Mitigation Scale:";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // mitigationScaleFactor
+            // trackBarMitigationScale
             // 
-            this.mitigationScaleFactor.Location = new System.Drawing.Point(83, 87);
-            this.mitigationScaleFactor.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.mitigationScaleFactor.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.mitigationScaleFactor.Name = "mitigationScaleFactor";
-            this.mitigationScaleFactor.Size = new System.Drawing.Size(120, 20);
-            this.mitigationScaleFactor.TabIndex = 3;
-            this.mitigationScaleFactor.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.mitigationScaleFactor.ValueChanged += new System.EventHandler(this.mitigationScaleFactor_ValueChanged);
+            this.trackBarMitigationScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarMitigationScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarMitigationScale.LargeChange = 1000;
+            this.trackBarMitigationScale.Location = new System.Drawing.Point(75, 132);
+            this.trackBarMitigationScale.Maximum = 10000;
+            this.trackBarMitigationScale.Minimum = 1000;
+            this.trackBarMitigationScale.Name = "trackBarMitigationScale";
+            this.trackBarMitigationScale.Size = new System.Drawing.Size(131, 45);
+            this.trackBarMitigationScale.SmallChange = 50;
+            this.trackBarMitigationScale.TabIndex = 2;
+            this.trackBarMitigationScale.TickFrequency = 500;
+            this.trackBarMitigationScale.Value = 2500;
+            this.trackBarMitigationScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // labelMitigationScale
+            // 
+            this.labelMitigationScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelMitigationScale.AutoSize = true;
+            this.labelMitigationScale.Location = new System.Drawing.Point(80, 164);
+            this.labelMitigationScale.Name = "labelMitigationScale";
+            this.labelMitigationScale.Size = new System.Drawing.Size(31, 13);
+            this.labelMitigationScale.TabIndex = 0;
+            this.labelMitigationScale.Text = "2500";
+            // 
+            // radioButtonAldor
+            // 
+            this.radioButtonAldor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioButtonAldor.AutoSize = true;
+            this.radioButtonAldor.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.radioButtonAldor.Checked = true;
+            this.radioButtonAldor.Location = new System.Drawing.Point(7, 313);
+            this.radioButtonAldor.Name = "radioButtonAldor";
+            this.radioButtonAldor.Size = new System.Drawing.Size(49, 17);
+            this.radioButtonAldor.TabIndex = 3;
+            this.radioButtonAldor.TabStop = true;
+            this.radioButtonAldor.Tag = "Mangle";
+            this.radioButtonAldor.Text = "Aldor";
+            this.radioButtonAldor.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.radioButtonAldor.UseVisualStyleBackColor = true;
+            this.radioButtonAldor.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // radioButtonScryer
+            // 
+            this.radioButtonScryer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioButtonScryer.AutoSize = true;
+            this.radioButtonScryer.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.radioButtonScryer.Location = new System.Drawing.Point(83, 313);
+            this.radioButtonScryer.Name = "radioButtonScryer";
+            this.radioButtonScryer.Size = new System.Drawing.Size(55, 17);
+            this.radioButtonScryer.TabIndex = 3;
+            this.radioButtonScryer.Tag = "Shred";
+            this.radioButtonScryer.Text = "Scryer";
+            this.radioButtonScryer.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.radioButtonScryer.UseVisualStyleBackColor = true;
+            this.radioButtonScryer.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // CalculationOptionsPanelProtWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.labelBossAttack);
-            this.Controls.Add(this.bossAttackValue);
-            this.Controls.Add(this.mitigationScaleFactor);
-            this.Controls.Add(this.threatScaleFactor);
+            this.AutoScroll = true;
             this.Controls.Add(this.checkBoxEnforceMetagemRequirements);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.comboBoxTargetLevel);
+            this.Controls.Add(this.radioButtonScryer);
+            this.Controls.Add(this.radioButtonAldor);
+            this.Controls.Add(this.groupBoxWarriorSkills);
+            this.Controls.Add(this.labelMitigationScale);
+            this.Controls.Add(this.labelThreatScale);
+            this.Controls.Add(this.labelBossAttackValue);
+            this.Controls.Add(this.labelTargetArmorDescription);
+            this.Controls.Add(this.trackBarMitigationScale);
+            this.Controls.Add(this.trackBarThreatScale);
+            this.Controls.Add(this.trackBarBossAttackValue);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.trackBarTargetArmor);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.comboBoxTargetLevel);
             this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelProtWarr";
-            this.Size = new System.Drawing.Size(221, 337);
-            ((System.ComponentModel.ISupportInitialize)(this.threatScaleFactor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bossAttackValue)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mitigationScaleFactor)).EndInit();
+            this.Size = new System.Drawing.Size(209, 776);
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
+            this.groupBoxWarriorSkills.ResumeLayout(false);
+            this.groupBoxWarriorSkills.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarShieldBlockUptime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThreatScale)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarMitigationScale)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -225,14 +392,26 @@ namespace Rawr.ProtWarr
 
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ComboBox comboBoxTargetLevel;
-		private System.Windows.Forms.CheckBox checkBoxEnforceMetagemRequirements;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.NumericUpDown threatScaleFactor;
-        private System.Windows.Forms.Label labelBossAttack;
-        private System.Windows.Forms.NumericUpDown bossAttackValue;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown mitigationScaleFactor;
+		private System.Windows.Forms.TrackBar trackBarTargetArmor;
+        private System.Windows.Forms.Label labelTargetArmorDescription;
+        private System.Windows.Forms.GroupBox groupBoxWarriorSkills;
+		private System.Windows.Forms.CheckBox checkBoxEnforceMetagemRequirements;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.TrackBar trackBarBossAttackValue;
+		private System.Windows.Forms.Label labelBossAttackValue;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.TrackBar trackBarThreatScale;
+		private System.Windows.Forms.Label labelThreatScale;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.TrackBar trackBarMitigationScale;
+		private System.Windows.Forms.Label labelMitigationScale;
+        private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.RadioButton radioButtonAldor;
+		private System.Windows.Forms.RadioButton radioButtonScryer;
+        private System.Windows.Forms.Button buttonTalents;
+        private System.Windows.Forms.Label labelShieldBlockUptime;
+        private System.Windows.Forms.TrackBar trackBarShieldBlockUptime;
+        private System.Windows.Forms.CheckBox checkBoxUseShieldBlock;
 	}
 }
