@@ -1015,6 +1015,7 @@ namespace Rawr.Mage
                 // verify max time constraints
                 double tt = T;
                 int a;
+                lastSuper = null;
                 for (a = i; a < sequence.Count; a++)
                 {
                     double d = sequence[a].Duration;
@@ -1238,46 +1239,80 @@ namespace Rawr.Mage
                 {
                     // no high burn sequence is available yet
                     // take first super group with enough burn and place it as soon as possible
-                    t = T;
-                    for (j = i; j < sequence.Count; j++)
+                    tt = T;
+                    lastSuper = null;
+                    for (a = i; a < sequence.Count; a++)
                     {
-                        double d = sequence[j].Duration;
-                        if (sequence[j].Index == 3 || sequence[j].Index == 4) d = 0;
-                        if (t > targetTime)
+                        double d = sequence[a].Duration;
+                        if (sequence[a].Index == 3 || sequence[a].Index == 4) d = 0;
+                        if (lastSuper != sequence[a].SuperGroup)
                         {
-                            SequenceGroup super = sequence[j].SuperGroup;
-                            double insertTime = super.MinTime;
-                            if (insertTime < T) insertTime = T;
-                            if (super.Mps > minMps && insertTime < targetTime)
+                            lastSuper = sequence[a].SuperGroup;
+                            if (tt + lastSuper.Duration > targetTime && lastSuper.Mps > minMps && tt > T && tt > lastSuper.MinTime + 0.000001)
                             {
-                                int k;
-                                for (k = j + 1; k < sequence.Count; k++)
+                                // compute buffer of items that can be moved way back
+                                double buffer = 0;
+                                int b;
+                                for (b = i; b < a; b++)
                                 {
-                                    if (sequence[k].SuperGroup != super) break;
+                                    if (sequence[b].MaxTime >= tt + lastSuper.Duration) buffer += sequence[b].Duration;
                                 }
-                                List<SequenceItem> copy = sequence.GetRange(j, k - j);
-                                sequence.RemoveRange(j, k - j);
-                                SplitAt(insertTime);
-                                t = T;
-                                for (k = i; k < sequence.Count; k++)
+                                // place it at min time, but move forward over non-splittable super groups
+                                // if move breaks constraint on some other group cancel
+                                int lastSafeInsert = a;
+                                double t3 = tt;
+                                bool updated = false;
+                                for (b = a - 1; b >= i; b--)
                                 {
-                                    d = sequence[k].Duration;
-                                    if (sequence[k].Index == 3 || sequence[k].Index == 4) d = 0;
-                                    if (t >= insertTime)
+                                    if (b == 0 || sequence[b].SuperGroup != sequence[b - 1].SuperGroup) lastSafeInsert = b;
+                                    t3 -= sequence[b].Duration;
+                                    if (t3 <= lastSuper.MinTime + 0.000001)
                                     {
-                                        sequence.InsertRange(k, copy);
-                                        t = T;
-                                        mana = Mana;
-                                        goto Retry;
+                                        // possible insert point
+                                        if (sequence[b].Group.Count == 0)
+                                        {
+                                            if (sequence[b].MaxTime >= lastSuper.MinTime + lastSuper.Duration - buffer)
+                                            {
+                                                // splittable, make a split at max time
+                                                if (lastSuper.MinTime > t3)
+                                                {
+                                                    SplitAt(b, lastSuper.MinTime - t3);
+                                                    a++;
+                                                    b++;
+                                                }
+                                                sequence.InsertRange(b, RemoveSuperGroup(a));
+                                                updated = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // we are in super group, use last safe insert
+                                            if (lastSafeInsert < a)
+                                            {
+                                                sequence.InsertRange(lastSafeInsert, RemoveSuperGroup(a));
+                                                updated = true;
+                                            }
+                                        }
+                                        break;
                                     }
-                                    t += d;
+                                    else
+                                    {
+                                        // make sure we wouldn't push it out of max
+                                        if (sequence[b].MaxTime < t3 + lastSuper.Duration - buffer)
+                                        {
+                                            break;
+                                        }
+                                    }
                                 }
-                                // fail safe
-                                sequence.AddRange(copy);
-                                break;
+                                if (updated)
+                                {
+                                    t = T;
+                                    mana = Mana;
+                                    goto Retry;
+                                }
                             }
                         }
-                        t += d;
+                        tt += d;
                     }
                 }
             }
@@ -2479,8 +2514,8 @@ namespace Rawr.Mage
                         if (breakpoint < fight) evo = breakpoint;
                     }
                     // always use pot & gem before evo, they need tighter packing
-                    // always start with pot because pot needs more buffer than gem
-                    if (potTime > 0 && (pot <= gem || nextPot == 0) && (pot <= evo || nextPot == 0 || evoTime <= 0))
+                    // always start with pot because pot needs more buffer than gem, unless
+                    if (potTime > 0 && (pot <= gem || (nextPot == 0 && pot < gem + 30)) && (pot <= evo || nextPot == 0 || evoTime <= 0))
                     {
                         InsertIndex(3, Math.Min(ManaPotionTime, potTime), pot);
                         time = pot;

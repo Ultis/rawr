@@ -453,7 +453,7 @@ namespace Rawr.Mage
                 if (calculationOptions.DragonsBreath == 1) spellList.Add("Dragon's Breath");
             }
 
-            int lpRows = 41;
+            int lpRows = 42;
             int colOffset = 7;
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
             CompactLP lp = new CompactLP(lpRows, lpCols);
@@ -555,7 +555,7 @@ namespace Rawr.Mage
                     calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDuration * calculatedStats.WaterElementalDps;
             }
 
-            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time, aoe duration, flamestrike, cone of cold, blast wave, dragon's breath, combustion, combustion+mf, heroism+iv, drums, drums+mf, drums+heroism, drums+iv, drums+ap, threat, pot+gem]
+            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time, aoe duration, flamestrike, cone of cold, blast wave, dragon's breath, combustion, combustion+mf, heroism+iv, drums, drums+mf, drums+heroism, drums+iv, drums+ap, threat, pot+gem, drumsmax]
             double aplength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
             double ivlength = (1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 30f) / 180f)) * 20;
             double mflength = calculationOptions.MoltenFuryPercentage * calculatedStats.FightDuration;
@@ -677,6 +677,7 @@ namespace Rawr.Mage
             if (!(calculationOptions.DrumsOfBattle && heroismAvailable)) lp.DisableRow(36);
             if (!(calculationOptions.DrumsOfBattle && ivAvailable)) lp.DisableRow(37);
             if (!(calculationOptions.DrumsOfBattle && apAvailable)) lp.DisableRow(38);
+            if (!calculationOptions.DrumsOfBattle) lp.DisableRow(41);
 
             lp.Compact();
 
@@ -746,6 +747,7 @@ namespace Rawr.Mage
             lp[0, 5] = -calculatedStats.ManaRegen5SR;
             lp[1, 5] = 1;
             lp[34, 5] = - 1 / calculatedStats.GlobalCooldown;
+            lp[41, 5] = 1 / calculatedStats.GlobalCooldown;
             lp[lpRows, 5] = 0;
             // spells
             for (int buffset = 0; buffset < statsList.Count; buffset++)
@@ -840,7 +842,7 @@ namespace Rawr.Mage
                             lp[37, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].IcyVeins) ? 1 : 0;
                             lp[38, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].ArcanePower) ? 1 : 0;
                             lp[39, index] = s.ThreatPerSecond;
-                            lp[40, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
+                            //lp[40, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
                             lp[lpRows, index] = s.DamagePerSecond;
                         }
                         else
@@ -924,6 +926,7 @@ namespace Rawr.Mage
             lp[38, lpCols] = drumsaplength;
             lp[39, lpCols] = calculationOptions.TpsLimit * calculationOptions.FightDuration;
             lp[40, lpCols] = ((int)((calculatedStats.FightDuration - 7800 / manaBurn) / 60f + 2)) * 40;
+            lp[41, lpCols] = (1 + (int)((calculatedStats.FightDuration - 30) / 120));
 
             for (int col = 0; col < lpCols; col++) tps[col] = lp[39, col];
 

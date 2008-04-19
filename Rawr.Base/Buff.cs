@@ -164,16 +164,29 @@ namespace Rawr
 		}
 
 		//enter static
-		public static List<Buff> GetBuffsByType(BuffType type)
+        private static Dictionary<BuffType, List<Buff>> _relevantBuffsByType = new Dictionary<BuffType,List<Buff>>();
+        public static List<Buff> GetBuffsByType(BuffType type)
 		{
-			return AllBuffs.FindAll(new Predicate<Buff>(
-				delegate(Buff buff)
-				{
-					return Calculations.HasRelevantStats(buff.Stats) &&
-						(type == BuffType.All || buff.Type == type);
-				}
-			));
+            List<Buff> ret = null;
+            _relevantBuffsByType.TryGetValue(type, out ret);
+            if (ret == null)
+            {
+                ret = AllBuffs.FindAll(new Predicate<Buff>(
+                    delegate(Buff buff)
+                    {
+                        return Calculations.HasRelevantStats(buff.Stats) &&
+                            (type == BuffType.All || buff.Type == type);
+                    }
+                ));
+                _relevantBuffsByType[type] = ret;
+            }
+            return ret;
 		}
+
+        public static void InvalidateCachedData()
+        {
+            _relevantBuffsByType.Clear();
+        }
 
         private static Dictionary<string, Buff> _allBuffsByName = null;
         private static Dictionary<string, Buff> AllBuffsByName
@@ -202,12 +215,7 @@ namespace Rawr
 
 		public static List<Buff> GetAllRelevantBuffs()
 		{
-			return AllBuffs.FindAll(new Predicate<Buff>(
-				delegate(Buff buff)
-				{
-					return Calculations.HasRelevantStats(buff.Stats);
-				}
-			));
+            return GetBuffsByType(BuffType.All);
 		}
 
         private static List<Buff> GetDefaultBuffs()
