@@ -744,16 +744,25 @@ namespace Rawr.Retribution
             {
                 if (character.Talents.Trees.Count > 0)
                 {
-                    character.CalculationOptions.Add("Precision", character.Talents.Trees["Protection"][2].PointsInvested.ToString());
-                    character.CalculationOptions.Add("Crusade", character.Talents.Trees["Retribution"][11].PointsInvested.ToString());
-                    character.CalculationOptions.Add("TwoHandedSpec", character.Talents.Trees["Retribution"][12].PointsInvested.ToString());
-                    character.CalculationOptions.Add("SanctityAura", character.Talents.Trees["Retribution"][13].PointsInvested.ToString());
-                    character.CalculationOptions.Add("ImprovedSanctityAura", character.Talents.Trees["Retribution"][14].PointsInvested.ToString());
-                    character.CalculationOptions.Add("SanctifiedSeals", character.Talents.Trees["Retribution"][17].PointsInvested.ToString());
-                    character.CalculationOptions.Add("Fanaticism", character.Talents.Trees["Retribution"][20].PointsInvested.ToString());
-                    character.CalculationOptions.Add("Vengeance", character.Talents.Trees["Retribution"][15].PointsInvested.ToString());
-                    character.CalculationOptions.Add("DivineStrength", character.Talents.Trees["Holy"][0].PointsInvested.ToString());
-                    character.CalculationOptions.Add("Conviction", character.Talents.Trees["Retribution"][6].PointsInvested.ToString());
+					if (character.Talents.Trees.ContainsKey("Protection"))
+					{
+						character.CalculationOptions.Add("Precision", character.Talents.Trees["Protection"][2].PointsInvested.ToString());
+					}
+					if (character.Talents.Trees.ContainsKey("Retribution"))
+					{
+						character.CalculationOptions.Add("Crusade", character.Talents.Trees["Retribution"][11].PointsInvested.ToString());
+						character.CalculationOptions.Add("TwoHandedSpec", character.Talents.Trees["Retribution"][12].PointsInvested.ToString());
+						character.CalculationOptions.Add("SanctityAura", character.Talents.Trees["Retribution"][13].PointsInvested.ToString());
+						character.CalculationOptions.Add("ImprovedSanctityAura", character.Talents.Trees["Retribution"][14].PointsInvested.ToString());
+						character.CalculationOptions.Add("SanctifiedSeals", character.Talents.Trees["Retribution"][17].PointsInvested.ToString());
+						character.CalculationOptions.Add("Fanaticism", character.Talents.Trees["Retribution"][20].PointsInvested.ToString());
+						character.CalculationOptions.Add("Vengeance", character.Talents.Trees["Retribution"][15].PointsInvested.ToString());
+						character.CalculationOptions.Add("Conviction", character.Talents.Trees["Retribution"][6].PointsInvested.ToString());
+					}
+					if (character.Talents.Trees.ContainsKey("Holy"))
+					{
+						character.CalculationOptions.Add("DivineStrength", character.Talents.Trees["Holy"][0].PointsInvested.ToString());
+					}
                     character.CalculationOptions["TalentsSaved"] = "1";
                 }
             }
