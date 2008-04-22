@@ -41,6 +41,7 @@ namespace Rawr.Mage
         public bool ReconstructSequence { get; set; }
         public float Innervate { get; set; }
         public float ManaTide { get; set; }
+        public float Fragmentation { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -142,6 +143,7 @@ namespace Rawr.Mage
             }
             Innervate = float.Parse(character.CalculationOptions["Innervate"], CultureInfo.InvariantCulture);
             ManaTide = float.Parse(character.CalculationOptions["ManaTide"], CultureInfo.InvariantCulture);
+            Fragmentation = float.Parse(character.CalculationOptions["Fragmentation"], CultureInfo.InvariantCulture);
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"], CultureInfo.InvariantCulture);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"], CultureInfo.InvariantCulture);
@@ -570,6 +572,7 @@ namespace Rawr.Mage
             }
             
             public double Duration;
+            public double Timestamp;
 
             private double minTime;
             public double MinTime
@@ -862,6 +865,45 @@ namespace Rawr.Mage
             private double sortStartTime;
             private double sortTargetTime;
 
+            public void ComputeTimestamps()
+            {
+                double t = 0;
+                for (int i = 0; i < sequence.Count; i++)
+                {
+                    double d = sequence[i].Duration;
+                    if (sequence[i].Index == 3 || sequence[i].Index == 4) d = 0;
+                    sequence[i].Timestamp = t;
+                    t += d;
+                }
+            }
+
+            private double MinTime(SequenceGroup super, int placedUpTo)
+            {
+                double minTime = super.MinTime;
+                foreach (SequenceGroup group in GetAllGroups(super.Item))
+                {
+                    double diff = group.MinTime - super.MinTime;
+                    foreach (CooldownConstraint constraint in group.Constraint)
+                    {
+                        for (int j = 0; j <= placedUpTo; j++)
+                        {
+                            if (sequence[j].Group.Contains(constraint.Group))
+                            {
+                                minTime = Math.Max(minTime, sequence[j].Timestamp + constraint.Cooldown - diff);
+                                break;
+                            }
+                        }
+                    }
+                }
+                return minTime;
+            }
+
+            private double MinTime(int i, int placedUpTo)
+            {
+                if (placedUpTo >= i) placedUpTo = i - 1;
+                return MinTime(sequence[i].SuperGroup, placedUpTo) + sequence[i].MinTime - sequence[i].SuperGroup.MinTime;
+            }
+
             public void SortByMps(bool preserveCooldowns, double minMps, double maxMps, double startTime, double targetTime, double extraMana, double startMana)
             {
                 if (minMps > maxMps) maxMps = minMps;
@@ -906,11 +948,12 @@ namespace Rawr.Mage
                         group.SetSuperIndex();
                     }
                     sequence.Sort(i, sequence.Count - i, this);
+                    ComputeTimestamps();
                 }
                 if (targetTime < t) return; // there is nothing we can do at this point
                 double T = t;
                 double Mana = mana;
-                Retry:
+            Retry:
                 // first we have sections in the right mps range, then higher, then lower (at the end sections that are not ready yet)
                 // so the constraint that will be broken first is maxmana (unless no high burn section is available at the moment)
                 // forward to target time
@@ -936,20 +979,20 @@ namespace Rawr.Mage
                         }
                         lastSuper = sequence[j].SuperGroup;
                     }
-                    if (t < sequence[j].MinTime - 0.000001)
+                    if (t < MinTime(j, j - 1) - 0.000001)
                     {
                         // sequence positioned too early, we have to buffer up with something that can
                         // be positioned at t and is either small enough not to disrupt max time
                         // or is splittable
                         bool updated = false;
-                        double minbuffer = sequence[j].MinTime - t;
+                        double minbuffer = MinTime(j, j - 1) - t;
                         double buffer = sequence[j].MaxTime - t;
                         int k;
                         for (k = j + 1; k < sequence.Count && minbuffer > 0 && buffer > 0; k++)
                         {
                             if (sequence[k].SuperGroup != lastSuper) // intra super ordering not allowed
                             {
-                                if (sequence[k].MinTime <= t)
+                                if (MinTime(k, j - 1) <= t)
                                 {
                                     if (sequence[k].Group.Count == 0)
                                     {
@@ -960,6 +1003,7 @@ namespace Rawr.Mage
                                         SequenceItem copy = sequence[k];
                                         sequence.RemoveAt(k);
                                         sequence.Insert(j, copy);
+                                        ComputeTimestamps();
                                         minbuffer -= copy.Duration;
                                         buffer -= copy.Duration;
                                         t += copy.Duration;
@@ -977,6 +1021,7 @@ namespace Rawr.Mage
                                         List<SequenceItem> copy = sequence.GetRange(k, l - k);
                                         sequence.RemoveRange(k, l - k);
                                         sequence.InsertRange(j, copy);
+                                        ComputeTimestamps();
                                         minbuffer -= copy[0].SuperGroup.Duration;
                                         buffer -= copy[0].SuperGroup.Duration;
                                         t += copy[0].SuperGroup.Duration;
@@ -1023,7 +1068,7 @@ namespace Rawr.Mage
                     if (lastSuper != sequence[a].SuperGroup)
                     {
                         lastSuper = sequence[a].SuperGroup;
-                        if (tt > lastSuper.MaxTime + 0.000001 && tt > T && tt > lastSuper.MinTime + 0.000001) // there might be other cases where it is impossible to move back without breaking others, double check for infinite cycles
+                        if (tt > lastSuper.MaxTime + 0.000001 && tt > T && tt > MinTime(lastSuper, a - 1) + 0.000001) // there might be other cases where it is impossible to move back without breaking others, double check for infinite cycles
                         {
                             // compute buffer of items that can be moved way back
                             double buffer = 0;
@@ -1054,6 +1099,7 @@ namespace Rawr.Mage
                                                 b++;
                                             }
                                             sequence.InsertRange(b, RemoveSuperGroup(a));
+                                            ComputeTimestamps();
                                             updated = true;
                                         }
                                     }
@@ -1071,6 +1117,7 @@ namespace Rawr.Mage
                                         if (super.MaxTime >= t3 + lastSuper.Duration - buffer)
                                         {
                                             sequence.InsertRange(b, RemoveSuperGroup(a));
+                                            ComputeTimestamps();
                                             updated = true;
                                         }
                                     }
@@ -1115,10 +1162,15 @@ namespace Rawr.Mage
                     }
                     double maxPush = 0;
                     if (jj < sequence.Count) maxPush = sequence[jj].MaxTime - tjj; // you can assume jj won't be split
+                    if (lastHigh <= j && j < sequence.Count - 1)
+                    {
+                        if (sequence[j].Group.Count == 0) lastHigh = j;
+                        else lastHigh = j + 1;
+                    }
                     for (k = lastHigh; k < sequence.Count; k++)
                     {
                         // make sure item is low mps and can be moved back
-                        if (sequence[k].SuperGroup.Mps <= maxMps && sequence[k].MinTime <= tjj + jT) break;
+                        if (sequence[k].SuperGroup.Mps <= maxMps && MinTime(k, j) <= tjj + jT) break;
                         // everything we skip will have to be pushed so make sure there is space
                         maxPush = Math.Min(maxPush, sequence[k].MaxTime - tkk);
                         tkk += sequence[k].Duration;
@@ -1177,7 +1229,7 @@ namespace Rawr.Mage
                             {
                                 break;
                             }
-                        } while (jj >= 0 && kk < sequence.Count && sequence[k].MinTime <= tjj + jT && sequence[kk].MinTime <= tjj + jT + currentPush - kT && currentPush < maxPush);
+                        } while (jj >= 0 && kk < sequence.Count && MinTime(k, jj) <= tjj + jT && MinTime(kk, jj) <= tjj + jT + currentPush - kT && currentPush < maxPush);
                         // [i..[k..||jj..j]XXXkk.]
                         if (kT > 0)
                         {
@@ -1233,6 +1285,7 @@ namespace Rawr.Mage
                             }
                             sequence.InsertRange(jj, copy);
                         }
+                        ComputeTimestamps();
                     }
                 }
                 else if (mana < minMana)
@@ -1248,7 +1301,8 @@ namespace Rawr.Mage
                         if (lastSuper != sequence[a].SuperGroup)
                         {
                             lastSuper = sequence[a].SuperGroup;
-                            if (tt + lastSuper.Duration > targetTime && lastSuper.Mps > minMps && tt > T && tt > lastSuper.MinTime + 0.000001)
+                            double minLastSuper = MinTime(lastSuper, a - 1);
+                            if (tt + lastSuper.Duration > targetTime && lastSuper.Mps > minMps && tt > T && tt > minLastSuper + 0.000001)
                             {
                                 // compute buffer of items that can be moved way back
                                 double buffer = 0;
@@ -1266,21 +1320,22 @@ namespace Rawr.Mage
                                 {
                                     if (b == 0 || sequence[b].SuperGroup != sequence[b - 1].SuperGroup) lastSafeInsert = b;
                                     t3 -= sequence[b].Duration;
-                                    if (t3 <= lastSuper.MinTime + 0.000001)
+                                    if (t3 <= minLastSuper + 0.000001)
                                     {
                                         // possible insert point
                                         if (sequence[b].Group.Count == 0)
                                         {
-                                            if (sequence[b].MaxTime >= lastSuper.MinTime + lastSuper.Duration - buffer)
+                                            if (sequence[b].MaxTime >= minLastSuper + lastSuper.Duration - buffer)
                                             {
                                                 // splittable, make a split at max time
-                                                if (lastSuper.MinTime > t3)
+                                                if (MinTime(lastSuper, a - 1) > t3)
                                                 {
-                                                    SplitAt(b, lastSuper.MinTime - t3);
+                                                    SplitAt(b, minLastSuper - t3);
                                                     a++;
                                                     b++;
                                                 }
                                                 sequence.InsertRange(b, RemoveSuperGroup(a));
+                                                ComputeTimestamps();
                                                 updated = true;
                                             }
                                         }
@@ -1290,6 +1345,7 @@ namespace Rawr.Mage
                                             if (lastSafeInsert < a)
                                             {
                                                 sequence.InsertRange(lastSafeInsert, RemoveSuperGroup(a));
+                                                ComputeTimestamps();
                                                 updated = true;
                                             }
                                         }
@@ -2515,7 +2571,7 @@ namespace Rawr.Mage
                     }
                     // always use pot & gem before evo, they need tighter packing
                     // always start with pot because pot needs more buffer than gem, unless
-                    if (potTime > 0 && (pot <= gem || (nextPot == 0 && pot < gem + 30)) && (pot <= evo || nextPot == 0 || evoTime <= 0))
+                    if (potTime > 0 && (pot <= gem || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (pot <= evo || nextPot == 0 || evoTime <= 0))
                     {
                         InsertIndex(3, Math.Min(ManaPotionTime, potTime), pot);
                         time = pot;

@@ -90,6 +90,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["Innervate"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("ManaTide"))
                 Character.CalculationOptions["ManaTide"] = (0).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("Fragmentation"))
+                Character.CalculationOptions["Fragmentation"] = (0).ToString(CultureInfo.InvariantCulture);
 			
             loading = true;
 
@@ -123,6 +125,7 @@ namespace Rawr.Mage
             checkBoxReconstructSequence.Checked = int.Parse(Character.CalculationOptions["ReconstructSequence"], CultureInfo.InvariantCulture) == 1;
             textBoxInnervate.Text = float.Parse(Character.CalculationOptions["Innervate"], CultureInfo.InvariantCulture).ToString();
             textBoxManaTide.Text = float.Parse(Character.CalculationOptions["ManaTide"], CultureInfo.InvariantCulture).ToString();
+            textBoxFragmentation.Text = float.Parse(Character.CalculationOptions["Fragmentation"], CultureInfo.InvariantCulture).ToString();
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -387,6 +390,16 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxManaTide.Text, out value))
             {
                 Character.CalculationOptions["ManaTide"] = value.ToString(CultureInfo.InvariantCulture);
+                if (!loading) Character.OnItemsChanged();
+            }
+        }
+
+        private void textBoxFragmentation_TextChanged(object sender, EventArgs e)
+        {
+            float value;
+            if (float.TryParse(textBoxFragmentation.Text, out value))
+            {
+                Character.CalculationOptions["Fragmentation"] = value.ToString(CultureInfo.InvariantCulture);
                 if (!loading) Character.OnItemsChanged();
             }
         }

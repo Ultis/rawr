@@ -94,6 +94,7 @@ namespace Rawr
         SpellFrostCritRating,
         SpellFrostDamageRating,
         SpellHasteFor20SecOnUse2Min,
+        SpellHasteFor20SecOnUse5Min,
         SpellHasteFor5SecOnCrit_50,
         SpellHasteFor6SecOnCast_15_45,
         SpellHasteFor6SecOnHit_10_45,
@@ -826,6 +827,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteFor20SecOnUse2Min]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellHasteFor20SecOnUse2Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spell Haste (20 sec/5 min)")]
+        [Category("Equipment Procs")]
+        public float SpellHasteFor20SecOnUse5Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteFor20SecOnUse5Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellHasteFor20SecOnUse5Min] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

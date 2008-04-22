@@ -458,6 +458,11 @@ namespace Rawr
                         {
                             stats.Mp5 += 5f * 900f / 300f;
                         }
+                        // Mind Quickening Gem
+                        else if (spellDesc.StartsWith("Quickens the mind, increasing the Mage's spell haste rating by 330 for 20 sec."))
+                        {
+                            stats.SpellHasteFor20SecOnUse5Min += 330;
+                        }
                     }
 
 					if (isEquip)
@@ -775,6 +780,11 @@ namespace Rawr
                         else if (spellDesc.StartsWith("Each time one of your spells deals periodic damage"))
                         {
                             stats.TimbalsProc = 1.0f;
+                        }
+                        // Wrath of Cenarius
+                        else if (spellDesc.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by 132 for 10 sec."))
+                        {
+                            stats.SpellDamageFor10SecOnHit_5 += 132;
                         }
                         else if (spellDesc.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to "))
                         {

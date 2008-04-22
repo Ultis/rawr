@@ -328,7 +328,7 @@ namespace Rawr.Mage
                 CostPerSecond = 0;
             }
 
-            if (calculations.BasicStats.SpellDamageFor10SecOnHit_5 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnHit_5 * ProcBuffUp(1 - (float)Math.Pow(0.95, HitProcs), 10, CastTime);
+            if (calculations.BasicStats.SpellDamageFor10SecOnHit_5 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnHit_5 * ProcBuffUp(1 - (float)Math.Pow(0.95, TargetProcs), 10, CastTime);
             if (calculations.BasicStats.SpellDamageFor6SecOnCrit > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor6SecOnCrit * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
             if (calculations.BasicStats.SpellDamageFor10SecOnHit_10_45 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
             if (calculations.BasicStats.SpellDamageFor10SecOnResist > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnResist * ProcBuffUp(1 - (float)Math.Pow(HitRate, HitProcs), 10, CastTime);
