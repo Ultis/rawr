@@ -903,7 +903,7 @@ namespace Rawr
             {
                 Name = "Malorne Harness 4 Piece Bonus",
                 Category = BuffCategory.SetBonuses,
-                Stats = new Stats() { Armor = 1400, Strength = 30 },
+                Stats = new Stats() { Armor = 1400, CatFormStrength = 30 },
                 SetName = "Malorne Harness",
                 SetThreshold = 4
             });
