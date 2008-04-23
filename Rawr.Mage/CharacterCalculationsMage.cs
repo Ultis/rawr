@@ -555,6 +555,7 @@ namespace Rawr.Mage
                 this.Duration = duration;
                 this.spell = Calculations.SolutionSpells[index];
                 this.stats = Calculations.SolutionStats[index];
+                if (Calculations.SolutionSegments != null) this.segment = Calculations.SolutionSegments[index];
                 if (stats == null) stats = Calculations;
 
                 switch (index)
@@ -588,6 +589,15 @@ namespace Rawr.Mage
                 get
                 {
                     return index;
+                }
+            }
+
+            private int segment;
+            public int Segment
+            {
+                get
+                {
+                    return segment;
                 }
             }
             
@@ -749,6 +759,20 @@ namespace Rawr.Mage
                     {
                         item.MaxTime = value;
                     }
+                }
+            }
+
+            public int Segment
+            {
+                get
+                {
+                    if (Item.Count == 0) return -1;
+                    int seg = int.MaxValue;
+                    foreach (SequenceItem item in Item)
+                    {
+                        seg = Math.Min(seg, item.Segment);
+                    }
+                    return seg;
                 }
             }
 
@@ -1890,6 +1914,7 @@ namespace Rawr.Mage
                     }
                     if (gap > 0.000001)
                     {
+                        int maxSegDistance = (int)Math.Ceiling(maxDuration / 30) + 1;
                         for (int j = i + 1; j < partialGroups.Count; j++)
                         {
                             SequenceGroup subgroup = partialGroups[j];
@@ -1905,7 +1930,7 @@ namespace Rawr.Mage
                             {
                                 gapReduction = subgroup.Duration;
                             }
-                            if (subgroup.Duration > 0 && gapReduction <= gap && ItemsCompatible(group.Item, subgroup.Item, 0))
+                            if (subgroup.Duration > 0 && gapReduction <= gap && Math.Abs(group.Segment - subgroup.Segment) < maxSegDistance && ItemsCompatible(group.Item, subgroup.Item, 0))
                             {
                                 gap -= gapReduction;
                                 group.AddRange(subgroup.Item);
@@ -1916,36 +1941,39 @@ namespace Rawr.Mage
                         for (int j = 0; j < unchained.Count; j++)
                         {
                             SequenceItem item = unchained[j];
-                            double gapReduction = 0;
-                            if (combustionMode)
+                            if (group.Segment == -1 || Math.Abs(group.Segment - item.Segment) < maxSegDistance)
                             {
-                                gapReduction = item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
-                            }
-                            else
-                            {
-                                gapReduction = item.Duration;
-                            }
-                            if (gapReduction <= gap + 0.000001)
-                            {
-                                gap -= gapReduction;
-                                group.Add(item);
-                                unchained.RemoveAt(j);
-                                j--;
-                            }
-                            else
-                            {
-                                double split = 0;
+                                double gapReduction = 0;
                                 if (combustionMode)
                                 {
-                                    split = gap * (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                                    gapReduction = item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
                                 }
                                 else
                                 {
-                                    split = gap;
+                                    gapReduction = item.Duration;
                                 }
-                                group.Add(Split(item, split));
-                                gap = 0;
-                                break;
+                                if (gapReduction <= gap + 0.000001)
+                                {
+                                    gap -= gapReduction;
+                                    group.Add(item);
+                                    unchained.RemoveAt(j);
+                                    j--;
+                                }
+                                else
+                                {
+                                    double split = 0;
+                                    if (combustionMode)
+                                    {
+                                        split = gap * (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                                    }
+                                    else
+                                    {
+                                        split = gap;
+                                    }
+                                    group.Add(Split(item, split));
+                                    gap = 0;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -3280,13 +3308,13 @@ namespace Rawr.Mage
                     trinket2Cooldown -= duration;
                     combustionCooldown -= duration;
                     drumsCooldown -= duration;
-                    if (apTime >= 0 && 15 - (time - apTime) <= 0) apTime = -1;
-                    if (ivTime >= 0 && 20 - (time - ivTime) <= 0) ivTime = -1;
-                    if (heroismTime >= 0 && 40 - (time - heroismTime) <= 0) heroismTime = -1;
-                    if (destructionTime >= 0 && 15 - (time - destructionTime) <= 0) destructionTime = -1;
-                    if (flameCapTime >= 0 && 60 - (time - flameCapTime) <= 0) flameCapTime = -1;
-                    if (trinket1time >= 0 && Trinket1Duration - (time - trinket1time) <= 0) trinket1time = -1;
-                    if (trinket2time >= 0 && Trinket2Duration - (time - trinket2time) <= 0) trinket2time = -1;
+                    if (apTime >= 0 && 15 - (time - apTime) <= 0.000001) apTime = -1;
+                    if (ivTime >= 0 && 20 - (time - ivTime) <= 0.000001) ivTime = -1;
+                    if (heroismTime >= 0 && 40 - (time - heroismTime) <= 0.000001) heroismTime = -1;
+                    if (destructionTime >= 0 && 15 - (time - destructionTime) <= 0.000001) destructionTime = -1;
+                    if (flameCapTime >= 0 && 60 - (time - flameCapTime) <= 0.000001) flameCapTime = -1;
+                    if (trinket1time >= 0 && Trinket1Duration - (time - trinket1time) <= 0.000001) trinket1time = -1;
+                    if (trinket2time >= 0 && Trinket2Duration - (time - trinket2time) <= 0.000001) trinket2time = -1;
                     if (drumsTime >= 0 && 30 - (time - drumsTime) <= 0) drumsTime = -1;
                 }
                 if (timing != null && unexplained > 0)
@@ -3340,12 +3368,13 @@ namespace Rawr.Mage
             string bestTiming = "*";
 
             // evaluate sequence
-            double unexplained = sequence.Evaluate(timing, Sequence.EvaluationMode.Unexplained);
+            double unexplained;
+            /*unexplained = sequence.Evaluate(timing, Sequence.EvaluationMode.Unexplained);
             if (unexplained < bestUnexplained)
             {
                 bestUnexplained = unexplained;
                 bestTiming = timing.ToString();
-            }
+            }*/
 
             sequence.GroupMoltenFury();
             sequence.GroupHeroism();
