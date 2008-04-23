@@ -1548,6 +1548,97 @@ namespace Rawr.Mage
         }
     }
 
+    class ABAM3FrBCCAMFail : Spell
+    {
+        public ABAM3FrBCCAMFail(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "ABAM3FrBCCFail";
+            ABCycle = true;
+
+            //AMCC-AB0                       0.1
+            //AM?0-AB1-AMCC-AB0              0.9*0.1
+            //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
+            //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
+
+            //TIME = 0.1*[AMCC+AB0] + 0.9*0.1*[AM+AMCC+AB0+AB1] + 0.9*0.9*0.1*[2*AM+AMCC+AB0+AB1+AB2] + 0.9*0.9*0.9*[3*AM+AB1+AB2+AB3?]
+            //     = [0.1 + 0.9*0.1 + 0.9*0.9*0.1]*[AMCC+AB0] + [0.9*0.1 + 2*0.9*0.9*0.1 + 3*0.9*0.9*0.9]*AM + 0.9*AB1 + 0.9*0.9*AB2 + 0.9*0.9*0.9*[S+AB3?]
+            //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
+            //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
+
+            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
+            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
+            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
+            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
+            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
+            Spell FrB0 = calculations.GetSpell("Frostbolt no CC");
+
+            Spell AB3 = calculations.GetSpell("Arcane Blast 0,0");
+            Spell FrB = calculations.GetSpell("Frostbolt");
+
+            float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
+
+            //AMCC-AB0                       0.1
+            SpellCycle chain1 = new SpellCycle(2);
+            chain1.AddSpell(AMCC, calculations);
+            chain1.AddSpell(AB0, calculations);
+            chain1.Calculate(character, calculations);
+
+            //AM?0-AB1-AMCC-AB0              0.9*0.1
+            SpellCycle chain2 = new SpellCycle(4);
+            chain2.AddSpell(AMc0, calculations);
+            chain2.AddSpell(AB1, calculations);
+            chain2.AddSpell(AMCC, calculations);
+            chain2.AddSpell(AB0, calculations);
+            chain2.Calculate(character, calculations);
+
+            //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
+            SpellCycle chain3 = new SpellCycle(6);
+            chain3.AddSpell(AMc0, calculations);
+            chain3.AddSpell(AB1, calculations);
+            chain3.AddSpell(AMc0, calculations);
+            chain3.AddSpell(AB2, calculations);
+            chain3.AddSpell(AMCC, calculations);
+            chain3.AddSpell(AB0, calculations);
+            chain3.Calculate(character, calculations);
+
+            //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
+            SpellCycle chain4 = new SpellCycle(13);
+            chain4.AddSpell(AMc0, calculations);
+            chain4.AddSpell(AB1, calculations);
+            chain4.AddSpell(AMc0, calculations);
+            chain4.AddSpell(AB2, calculations);
+            chain4.AddSpell(AMc0, calculations);
+            chain4.AddSpell(FrB0, calculations);
+            float gap = 8 - AMc0.CastTime - FrB0.CastTime;
+            while (gap - AB3.CastTime >= FrB.CastTime)
+            {
+                chain4.AddSpell(FrB, calculations);
+                gap -= FrB.CastTime;
+            }
+            if (AB3.CastTime < gap) chain4.AddPause(gap - AB3.CastTime + calculations.Latency);
+            chain4.AddSpell(AB3, calculations);
+            chain4.Calculate(character, calculations);
+
+            CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
+            CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
+            DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ThreatPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+
+            commonChain = chain4;
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
+        }
+    }
+
     class ABAM3FrBScCCAM : Spell
     {
         public ABAM3FrBScCCAM(Character character, CharacterCalculationsMage calculations)

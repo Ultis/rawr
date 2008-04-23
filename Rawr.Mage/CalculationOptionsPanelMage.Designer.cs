@@ -87,12 +87,16 @@
             this.label25 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
             this.checkBoxIncrementalOptimizations = new System.Windows.Forms.CheckBox();
             this.checkBoxReconstructSequence = new System.Windows.Forms.CheckBox();
             this.textBoxInnervate = new System.Windows.Forms.TextBox();
             this.textBoxManaTide = new System.Windows.Forms.TextBox();
             this.textBoxFragmentation = new System.Windows.Forms.TextBox();
-            this.label30 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.checkBoxSMP = new System.Windows.Forms.CheckBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.checkBoxSMPDisplay = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -627,7 +631,8 @@
             this.label25.Size = new System.Drawing.Size(127, 13);
             this.label25.TabIndex = 59;
             this.label25.Text = "Reconstruct Sequence: *";
-            this.toolTipMage.SetToolTip(this.label25, "This option is currently disabled.");
+            this.toolTipMage.SetToolTip(this.label25, "Enable to calculate the timing of different abilities that best match the solutio" +
+                    "n. Only enable when needed as it is computationally expensive.");
             // 
             // label28
             // 
@@ -649,6 +654,18 @@
             this.label29.Text = "Mana Tide Totem: *";
             this.toolTipMage.SetToolTip(this.label29, "Number of Mana Tide Totems cast in your group (a resto shaman can cast one every " +
                     "5 minutes).");
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(3, 189);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(108, 13);
+            this.label30.TabIndex = 64;
+            this.label30.Text = "Fragmentation (0-1): *";
+            this.toolTipMage.SetToolTip(this.label30, "Indicates how fragmented the dps time is and translates to how much out of five s" +
+                    "econd rule time you get when not dpsing (higher value means more time inside fiv" +
+                    "e second rule).");
             // 
             // checkBoxIncrementalOptimizations
             // 
@@ -694,23 +711,56 @@
             this.textBoxFragmentation.TabIndex = 65;
             this.textBoxFragmentation.TextChanged += new System.EventHandler(this.textBoxFragmentation_TextChanged);
             // 
-            // label30
+            // label31
             // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(3, 189);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(108, 13);
-            this.label30.TabIndex = 64;
-            this.label30.Text = "Fragmentation (0-1): *";
-            this.toolTipMage.SetToolTip(this.label30, "Indicates how fragmented the dps time is and translates to how much out of five s" +
-                    "econd rule time you get when not dpsing (higher value means more time inside fiv" +
-                    "e second rule).");
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(3, 777);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(168, 13);
+            this.label31.TabIndex = 67;
+            this.label31.Text = "Segmented Multi-Pass Algorithm: *";
+            this.toolTipMage.SetToolTip(this.label31, "Enable SMP algorithm to improve the solution quality at the cost of performance (" +
+                    "due to increased complexity global optimizations are enforced).");
+            // 
+            // checkBoxSMP
+            // 
+            this.checkBoxSMP.AutoSize = true;
+            this.checkBoxSMP.Location = new System.Drawing.Point(174, 777);
+            this.checkBoxSMP.Name = "checkBoxSMP";
+            this.checkBoxSMP.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxSMP.TabIndex = 66;
+            this.checkBoxSMP.UseVisualStyleBackColor = true;
+            this.checkBoxSMP.CheckedChanged += new System.EventHandler(this.checkBoxSMP_CheckedChanged);
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(3, 797);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(112, 13);
+            this.label32.TabIndex = 69;
+            this.label32.Text = "SMP for display only: *";
+            this.toolTipMage.SetToolTip(this.label32, "Only calculate the SMP value for display and sequence reconstruction.");
+            // 
+            // checkBoxSMPDisplay
+            // 
+            this.checkBoxSMPDisplay.AutoSize = true;
+            this.checkBoxSMPDisplay.Location = new System.Drawing.Point(174, 797);
+            this.checkBoxSMPDisplay.Name = "checkBoxSMPDisplay";
+            this.checkBoxSMPDisplay.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxSMPDisplay.TabIndex = 68;
+            this.checkBoxSMPDisplay.UseVisualStyleBackColor = true;
+            this.checkBoxSMPDisplay.CheckedChanged += new System.EventHandler(this.checkBoxSMPDisplay_CheckedChanged);
             // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.label32);
+            this.Controls.Add(this.checkBoxSMPDisplay);
+            this.Controls.Add(this.label31);
+            this.Controls.Add(this.checkBoxSMP);
             this.Controls.Add(this.textBoxFragmentation);
             this.Controls.Add(this.label30);
             this.Controls.Add(this.textBoxManaTide);
@@ -774,7 +824,7 @@
             this.Controls.Add(this.comboBoxTargetLevel);
             this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelMage";
-            this.Size = new System.Drawing.Size(198, 803);
+            this.Size = new System.Drawing.Size(198, 838);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -845,5 +895,9 @@
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.TextBox textBoxFragmentation;
         private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.CheckBox checkBoxSMP;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.CheckBox checkBoxSMPDisplay;
 	}
 }

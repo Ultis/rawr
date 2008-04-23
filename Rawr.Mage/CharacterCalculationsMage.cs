@@ -36,12 +36,15 @@ namespace Rawr.Mage
         public bool AutomaticArmor { get; set; }
         public bool IncrementalOptimizations { get; set; }
         public int[] IncrementalSetCooldowns;
+        public int[] IncrementalSetSegments;
         public string[] IncrementalSetSpells;
         public string IncrementalSetArmor;
         public bool ReconstructSequence { get; set; }
         public float Innervate { get; set; }
         public float ManaTide { get; set; }
         public float Fragmentation { get; set; }
+        public bool SMP { get; set; }
+        public bool SMPDisplay { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -123,6 +126,8 @@ namespace Rawr.Mage
             AutomaticArmor = int.Parse(character.CalculationOptions["AutomaticArmor"], CultureInfo.InvariantCulture) == 1;
             IncrementalOptimizations = int.Parse(character.CalculationOptions["IncrementalOptimizations"], CultureInfo.InvariantCulture) == 1;
             ReconstructSequence = int.Parse(character.CalculationOptions["ReconstructSequence"], CultureInfo.InvariantCulture) == 1;
+            SMP = int.Parse(character.CalculationOptions["SMP"], CultureInfo.InvariantCulture) == 1;
+            SMPDisplay = int.Parse(character.CalculationOptions["SMPDisplay"], CultureInfo.InvariantCulture) == 1;
             if (character.CalculationOptions.ContainsKey("IncrementalSetCooldowns"))
             {
                 string[] cooldowns = character.CalculationOptions["IncrementalSetCooldowns"].Split(':');
@@ -131,6 +136,16 @@ namespace Rawr.Mage
                 for (int i = 0; i < cooldowns.Length; i++)
                 {
                     IncrementalSetCooldowns[i] = int.Parse(cooldowns[i], CultureInfo.InvariantCulture);
+                }
+            }
+            if (character.CalculationOptions.ContainsKey("IncrementalSetSegments"))
+            {
+                string[] segments = character.CalculationOptions["IncrementalSetSegments"].Split(':');
+                if (character.CalculationOptions["IncrementalSetSegments"] == "") segments = new string[] { };
+                IncrementalSetSegments = new int[segments.Length];
+                for (int i = 0; i < segments.Length; i++)
+                {
+                    IncrementalSetSegments[i] = int.Parse(segments[i], CultureInfo.InvariantCulture);
                 }
             }
             if (character.CalculationOptions.ContainsKey("IncrementalSetSpells"))
@@ -225,6 +240,7 @@ namespace Rawr.Mage
 
         public int IncrementalSetIndex { get; set; }
         public int[] IncrementalSetCooldown { get; set; }
+        public int[] IncrementalSetSegment { get; set; }
         public string[] IncrementalSetSpell { get; set; }
 
         public float SpellCrit { get; set; }
@@ -326,6 +342,7 @@ namespace Rawr.Mage
         public double[] Solution;
         public CharacterCalculationsMage[] SolutionStats;
         public Spell[] SolutionSpells;
+        public int[] SolutionSegments;
         public float Tps;
 
         public double RealFightDuration
@@ -477,6 +494,9 @@ namespace Rawr.Mage
                     break;
                 case "ABAM3FrBCCAM":
                     s = new ABAM3FrBCCAM(Character, this);
+                    break;
+                case "ABAM3FrBCCAMFail":
+                    s = new ABAM3FrBCCAMFail(Character, this);
                     break;
                 case "ABAM3FrBScCCAM":
                     s = new ABAM3FrBScCCAM(Character, this);
@@ -3356,6 +3376,22 @@ namespace Rawr.Mage
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
+            if (CalculationOptions.SMPDisplay)
+            {
+                CalculationOptions.IncrementalOptimizations = false;
+                CharacterCalculationsMage smp = (CharacterCalculationsMage)((CalculationsMage)Calculations.Instance).GetCharacterCalculations_SMP(Character, null, CalculationOptions, MageArmor, false);
+                Dictionary<string, string> ret = smp.GetCharacterDisplayCalculationValuesInternal();
+                ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.OverallPoints, Math.Abs(OverallPoints - smp.OverallPoints) / OverallPoints * 100);
+                return ret;
+            }
+            else
+            {
+                return GetCharacterDisplayCalculationValuesInternal();
+            }
+        }
+
+        private Dictionary<string, string> GetCharacterDisplayCalculationValuesInternal()
+        {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
@@ -3407,6 +3443,7 @@ namespace Rawr.Mage
             dictValues.Add("Sequence", ReconstructSequence());
             StringBuilder sb = new StringBuilder("*");
             if (MageArmor != null) sb.AppendLine(MageArmor);
+            Dictionary<string, double> combinedSolution = new Dictionary<string, double>();
             for (int i = 0; i < SolutionLabel.Count; i++)
             {
                 if (Solution[i] > 0.01)
@@ -3424,10 +3461,17 @@ namespace Rawr.Mage
                             sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i] / GlobalCooldown));
                             break;
                         default:
-                            sb.AppendLine(String.Format("{0}: {1:F} sec", SolutionLabel[i], Solution[i]));
+                            double value;
+                            combinedSolution.TryGetValue(SolutionLabel[i], out value);
+                            combinedSolution[SolutionLabel[i]] = value + Solution[i];
+                            //sb.AppendLine(String.Format("{0}: {1:F} sec", SolutionLabel[i], Solution[i]));
                             break;
                     }
                 }
+            }
+            foreach (KeyValuePair<string, double> kvp in combinedSolution)
+            {
+                sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
             }
             if (WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", WaterElementalDuration / 45f));
             dictValues.Add("Spell Cycles", sb.ToString());

@@ -92,6 +92,10 @@ namespace Rawr.Mage
                 Character.CalculationOptions["ManaTide"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("Fragmentation"))
                 Character.CalculationOptions["Fragmentation"] = (0).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("SMP"))
+                Character.CalculationOptions["SMP"] = (0).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("SMPDisplay"))
+                Character.CalculationOptions["SMPDisplay"] = (0).ToString(CultureInfo.InvariantCulture);
 			
             loading = true;
 
@@ -126,6 +130,8 @@ namespace Rawr.Mage
             textBoxInnervate.Text = float.Parse(Character.CalculationOptions["Innervate"], CultureInfo.InvariantCulture).ToString();
             textBoxManaTide.Text = float.Parse(Character.CalculationOptions["ManaTide"], CultureInfo.InvariantCulture).ToString();
             textBoxFragmentation.Text = float.Parse(Character.CalculationOptions["Fragmentation"], CultureInfo.InvariantCulture).ToString();
+            checkBoxSMP.Checked = int.Parse(Character.CalculationOptions["SMP"], CultureInfo.InvariantCulture) == 1;
+            checkBoxSMPDisplay.Checked = int.Parse(Character.CalculationOptions["SMPDisplay"], CultureInfo.InvariantCulture) == 1;
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -402,6 +408,18 @@ namespace Rawr.Mage
                 Character.CalculationOptions["Fragmentation"] = value.ToString(CultureInfo.InvariantCulture);
                 if (!loading) Character.OnItemsChanged();
             }
+        }
+
+        private void checkBoxSMP_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["SMP"] = (checkBoxSMP.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
+            if (!loading) Character.OnItemsChanged();
+        }
+
+        private void checkBoxSMPDisplay_CheckedChanged(object sender, EventArgs e)
+        {
+            Character.CalculationOptions["SMPDisplay"] = (checkBoxSMPDisplay.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
+            if (!loading) Character.OnItemsChanged();
         }
 	}
 }
