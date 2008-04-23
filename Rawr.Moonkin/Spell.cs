@@ -796,7 +796,7 @@ namespace Rawr.Moonkin
                     currentStep += 21;
                 }
                 averageBuffMp5 /= (currentStep - 21) / 21;
-                manaFromTrinket = averageBuffMp5 * 4 / 240.0f;
+                manaFromTrinket = averageBuffMp5 * 4 / 120.0f;
             }
             return manaFromJoW + manaFromOther + manaFromTrinket;
         }
