@@ -43,7 +43,7 @@ namespace Rawr.Moonkin
         public float Latency { get; set; }
         public int TargetLevel { get; set; }
         public float FightLength { get; set; }
-        public float DamageDone { get; set; }
+        public float DPS { get; set; }
         public bool Scryer { get; set; }
         public SpellRotation SelectedRotation { get; set; }
         public string RotationName

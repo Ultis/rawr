@@ -778,7 +778,7 @@ namespace Rawr.Moonkin
                     TimeToOOM = rotation.TimeToOOM
                 };
             }
-            calcs.SubPoints = new float[] { maxDPS * fightLength };
+            calcs.SubPoints = new float[] { maxDPS };
             calcs.OverallPoints = calcs.SubPoints[0];
             calcs.Rotations = cachedResults;
         }
