@@ -146,6 +146,7 @@ namespace Rawr
             this.currentBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.currentGearEnchantsBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.directUpgradesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripDropDownButtonSort = new System.Windows.Forms.ToolStripDropDownButton();
@@ -1100,6 +1101,7 @@ namespace Rawr
             this.currentBuffsToolStripMenuItem,
             this.toolStripSeparator7,
             this.currentGearEnchantsBuffsToolStripMenuItem,
+            this.directUpgradesMenuItem,
             this.toolStripSeparator9});
             this.toolStripDropDownButtonSlot.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonSlot.Image")));
             this.toolStripDropDownButtonSlot.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -1458,6 +1460,14 @@ namespace Rawr
             this.currentGearEnchantsBuffsToolStripMenuItem.Tag = "Current Gear/Enchants/Buffs";
             this.currentGearEnchantsBuffsToolStripMenuItem.Text = "Current Gear/Enchants/Buffs";
             this.currentGearEnchantsBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // directUpgradesMenuItem
+            // 
+            this.directUpgradesMenuItem.Name = "directUpgradesMenuItem";
+            this.directUpgradesMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.directUpgradesMenuItem.Tag = "Direct Upgrades";
+            this.directUpgradesMenuItem.Text = "Direct Upgrades";
+            this.directUpgradesMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
             // 
             // toolStripSeparator9
             // 
@@ -1900,6 +1910,7 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripMenuItem loadPossibleUpgradesFromArmoryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem alphabeticalToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem currentGearEnchantsBuffsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem directUpgradesMenuItem;
 		private BuffSelector buffSelector1;
 		private System.Windows.Forms.ToolStripMenuItem allBuffsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem allLongDurationBuffsNoDWToolStripMenuItem;

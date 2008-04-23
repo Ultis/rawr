@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Rawr
@@ -608,6 +609,40 @@ namespace Rawr
 					return gem == null;
 			}
 		}
+        
+        public static SortedList<Item.ItemSlot, Character.CharacterSlot> DefaultSlotMap{ get; private set;}
+        static Item()
+        {
+            SortedList<Item.ItemSlot, Character.CharacterSlot> list = new SortedList<Item.ItemSlot, Character.CharacterSlot>();
+
+            foreach(Item.ItemSlot iSlot in Enum.GetValues(typeof(Item.ItemSlot)))
+            {
+                list[iSlot] = Character.CharacterSlot.None;
+            }
+            list[Item.ItemSlot.Head] = Character.CharacterSlot.Head;
+            list[Item.ItemSlot.Neck] = Character.CharacterSlot.Neck;
+            list[Item.ItemSlot.Shoulders] = Character.CharacterSlot.Shoulders;
+            list[Item.ItemSlot.Back] = Character.CharacterSlot.Back;
+            list[Item.ItemSlot.Chest] = Character.CharacterSlot.Chest;
+            list[Item.ItemSlot.Shirt] = Character.CharacterSlot.Shirt;
+            list[Item.ItemSlot.Tabard] = Character.CharacterSlot.Tabard;
+            list[Item.ItemSlot.Wrist] = Character.CharacterSlot.Wrist;
+            list[Item.ItemSlot.Hands] = Character.CharacterSlot.Hands;
+            list[Item.ItemSlot.Waist] = Character.CharacterSlot.Waist;
+            list[Item.ItemSlot.Legs] = Character.CharacterSlot.Legs;
+            list[Item.ItemSlot.Feet] = Character.CharacterSlot.Feet;
+            list[Item.ItemSlot.Finger] = Character.CharacterSlot.Finger1;
+            list[Item.ItemSlot.Trinket] = Character.CharacterSlot.Trinket1;
+            list[Item.ItemSlot.OneHand] = Character.CharacterSlot.MainHand;
+            list[Item.ItemSlot.TwoHand] = Character.CharacterSlot.MainHand;
+            list[Item.ItemSlot.MainHand] = Character.CharacterSlot.MainHand;
+            list[Item.ItemSlot.OffHand] = Character.CharacterSlot.OffHand;
+            list[Item.ItemSlot.Ranged] = Character.CharacterSlot.Ranged;
+            list[Item.ItemSlot.Projectile] = Character.CharacterSlot.Projectile;
+            list[Item.ItemSlot.ProjectileBag] = Character.CharacterSlot.ProjectileBag;
+            list.TrimExcess();
+            DefaultSlotMap = list;
+        }
 
 		public bool FitsInSlot(Character.CharacterSlot charSlot)
 		{

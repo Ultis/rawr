@@ -75,6 +75,30 @@ namespace Rawr
             }
         }
 
+        public ICollection<Item> FindAllItemsById(int id)
+        {
+            List<Item> items = new List<Item>();
+			string keyStartsWith = id.ToString() + ".";
+			string keyNoGem= id.ToString() + ".0.0.0";
+            Item[] noGem = null;
+            foreach (string key in Items.Keys)
+            {
+                if(key == keyNoGem)
+                {
+                    noGem = Items[key];
+                }
+                else if (key.StartsWith(keyStartsWith))
+                {
+                    items.AddRange(Items[key]);
+                }
+            }
+            if(noGem != null && items.Count == 0)
+            {
+                items.AddRange(noGem);
+            }
+            return items;
+        }
+
 		public Item FindItemById(int id) { return FindItemById(id.ToString() + ".0.0.0"); }
 		public Item FindItemById(string gemmedId) { return FindItemById(gemmedId, true,true); }
 		public Item FindItemById(int id, bool createIfCorrectGemmingNotFound) { return FindItemById(id.ToString() + ".0.0.0", createIfCorrectGemmingNotFound,true); }

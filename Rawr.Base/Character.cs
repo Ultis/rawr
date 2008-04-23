@@ -927,7 +927,8 @@ namespace Rawr //O O . .
 			
 			Gems = 100,
 			Metas = 101,
-			ProjectileBag = 102
+			ProjectileBag = 102,
+            AutoSelect = 1000,
         }
 
         public enum CharacterClass

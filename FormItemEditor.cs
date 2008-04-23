@@ -173,7 +173,7 @@ namespace Rawr
 			if (!_changingItemCache && SelectedItem != null)
 			{
 				Item selectedItem = SelectedItem.Tag as Item;
-				LoadItems();
+				//LoadItems();
 				SelectItem(selectedItem, true);
 			}
 		}

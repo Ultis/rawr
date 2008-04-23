@@ -786,6 +786,7 @@ namespace Rawr
 			{
 				if (item is ToolStripMenuItem && (item as ToolStripMenuItem).Checked && item.Tag != null)
 				{
+                    itemComparison1.DisplayMode = ComparisonGraph.GraphDisplayMode.Subpoints;
 					string[] tag = item.Tag.ToString().Split('.');
 					switch (tag[0])
 					{
@@ -807,6 +808,10 @@ namespace Rawr
 
 						case "Current Gear/Enchants/Buffs":
 							itemComparison1.LoadCurrentGearEnchantsBuffs(_calculatedStats);
+							break;
+
+						case "Direct Upgrades":
+							itemComparison1.LoadAvailableGear(_calculatedStats);
 							break;
 
 						case "Custom":
