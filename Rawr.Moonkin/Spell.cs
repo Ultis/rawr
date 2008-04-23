@@ -362,6 +362,7 @@ namespace Rawr.Moonkin
 
     class RotationData
     {
+        public float RawDPS = 0.0f;
         public float DPS = 0.0f;
         public float DPM = 0.0f;
         public TimeSpan TimeToOOM = new TimeSpan(0, 0, 0);
@@ -450,6 +451,7 @@ namespace Rawr.Moonkin
                 accumulatedManaUsed += sp.ManaCost * numberOfCasts;
                 accumulatedDuration += sp.CastTime * numberOfCasts;
             }
+            RawDPS = accumulatedDamage / accumulatedDuration;
             DPM = accumulatedDamage / accumulatedManaUsed;
             float secsToOOM = manaPool / (accumulatedManaUsed / accumulatedDuration);
             if (secsToOOM > fightLength)
@@ -557,6 +559,7 @@ namespace Rawr.Moonkin
         // These fields get filled in only after the DPS calculations are done
         public float DPM { get; set; }
         public TimeSpan TimeToOOM { get; set; }
+        public float RawDPS { get; set; }
     }
 
     static class MoonkinSolver
@@ -704,6 +707,8 @@ namespace Rawr.Moonkin
 
         public static void Solve(Character character, ref CharacterCalculationsMoonkin calcs)
         {
+            // Try to reset the cached results dictionary on each call
+            cachedResults = new Dictionary<string, RotationData>();
             float effectiveSpellHit = calcs.BasicStats.SpellHitRating;
             bool naturesGrace = int.Parse(character.CalculationOptions["NaturesGrace"]) > 0 ? true : false;
             float fightLength = calcs.FightLength * 60.0f;
@@ -767,6 +772,7 @@ namespace Rawr.Moonkin
                 }
                 cachedResults[rotation.Name] = new RotationData()
                 {
+                    RawDPS = rotation.RawDPS,
                     DPS = currentDPS,
                     DPM = rotation.DPM,
                     TimeToOOM = rotation.TimeToOOM

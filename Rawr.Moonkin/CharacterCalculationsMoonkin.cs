@@ -89,6 +89,7 @@ namespace Rawr.Moonkin
             {
                 RotationData r = pair.Value;
                 string name = pair.Key;
+                retVal.Add(name + " RDPS", String.Format("{0:F}", r.RawDPS));
                 retVal.Add(name + " DPS", String.Format("{0:F}", r.DPS));
                 retVal.Add(name + " DPM", String.Format("{0:F}", r.DPM));
                 retVal.Add(name + " OOM", String.Format(r.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", r.TimeToOOM.Minutes, r.TimeToOOM.Seconds));
