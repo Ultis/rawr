@@ -164,13 +164,22 @@ namespace Rawr
 		}
 
 		//enter static
+		private static string _cachedModel = "";
         private static Dictionary<BuffType, List<Buff>> _relevantBuffsByType = new Dictionary<BuffType,List<Buff>>();
         public static List<Buff> GetBuffsByType(BuffType type)
 		{
             List<Buff> ret = null;
-            _relevantBuffsByType.TryGetValue(type, out ret);
+			if (_cachedModel == Calculations.Instance.ToString())
+			{
+				_relevantBuffsByType.TryGetValue(type, out ret);
+			}
+			else
+			{
+				_relevantBuffsByType.Clear();
+			}
             if (ret == null)
             {
+				_cachedModel = Calculations.Instance.ToString();
                 ret = AllBuffs.FindAll(new Predicate<Buff>(
                     delegate(Buff buff)
                     {
@@ -182,11 +191,6 @@ namespace Rawr
             }
             return ret;
 		}
-
-        public static void InvalidateCachedData()
-        {
-            _relevantBuffsByType.Clear();
-        }
 
         private static Dictionary<string, Buff> _allBuffsByName = null;
         private static Dictionary<string, Buff> AllBuffsByName
@@ -606,6 +610,13 @@ namespace Rawr
                 ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }
             });
 
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Haste Potion",
+				Category = BuffCategory.OtherConsumables,
+				Stats = new Stats() { HasteRating = 50 },
+				ConflictingBuffs = new string[] { "Potion" }
+			});
 
             //all the constant
             defaultBuffs.Add(new Buff()

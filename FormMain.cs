@@ -328,8 +328,7 @@ namespace Rawr
 
 		private void Calculations_ModelChanged(object sender, EventArgs e)
 		{
-            Buff.InvalidateCachedData();
-			bool unsavedChanges = _unsavedChanges;
+            bool unsavedChanges = _unsavedChanges;
 
 			UpdateCustomChartMenuItems();
 			toolStripDropDownButtonSort.DropDownItems.Clear();
