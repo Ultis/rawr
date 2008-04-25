@@ -282,14 +282,15 @@ namespace Rawr.Mage
             {
                 if (compactSolution == null)
                 {
-                    if (allowReuse)
+                    /*if (allowReuse)
                     {
                         compactSolution = LPSolveUnsafe((double[,])lp.Clone(), cRows, cCols);
                     }
                     else
                     {
                         compactSolution = LPSolveUnsafe(lp, cRows, cCols);
-                    }
+                    }*/
+                    compactSolution = LP.Solve(lp, cRows, cCols);
                 }
             }
 
@@ -1921,15 +1922,15 @@ namespace Rawr.Mage
             bool valid = true;
             do
             {
-                if (heap.Head.Value > max + 0.00000001)
+                if (heap.Head.Value > max + 0.000001)
                 {
                     System.Windows.Forms.MessageBox.Show("Instability detected, aborting SMP algorithm");
-                    heap.Head[0, 0] = heap.Head[0, 0];
-                    heap.Head.Solve();
+                    // find something reasonably stable
+                    while (heap.Count > 0 && (lp = heap.Pop()).Value > max + 0.000001) { }
                     break;
                 }
                 lp = heap.Pop();
-                max = lp.Value;
+                //max = lp.Value; instability fix?
                 // this is the best non-evaluated option (highest partially-constrained LP, the optimum has to be lower)
                 // if this one is valid than all others are sub-optimal
                 // validate all segments for each cooldown
@@ -2314,8 +2315,15 @@ namespace Rawr.Mage
                                 v = ai[cols] / ai[c];
                                 if (bestv == -1 || v < bestv)
                                 {
-                                    bestv = v;
-                                    r = i;
+                                    if (ai[c] > 0.0000000001)
+                                    {
+                                        bestv = v;
+                                        r = i;
+                                    }
+                                    else
+                                    {
+                                        ai[c] = 0;
+                                    }
                                 }
                             }
                         }
@@ -2341,6 +2349,7 @@ namespace Rawr.Mage
                                 }
                             }
                         }
+                        //System.Diagnostics.Debug.WriteLine(round + ": " + XN[c] + " <=> " + XB[r]);
                         t = XN[c];
                         XN[c] = XB[r];
                         XB[r] = t;
