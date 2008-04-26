@@ -281,7 +281,9 @@ you are being killed by burst damage, focus on Survival Points.",
                 float chanceDodge = Math.Max(0f, 0.05f + levelDifference / 100f - expertiseBonus);
                 float chanceParry = Math.Max(0f, 0.05f + levelDifference / 100f + 0.08f - expertiseBonus);
                 float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
-                float defStanceThreatMod = 1.3f * (1 + character.Talents.GetTalent("Defiance").PointsInvested * 0.05f);
+                float defStanceThreatMod = 1.3f *
+                                           (1 + character.Talents.GetTalent("Defiance").PointsInvested * 0.05f) *
+                                           (1 + stats.ThreatIncreaseMultiplier);
                 float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 
 
@@ -594,6 +596,9 @@ you are being killed by burst damage, focus on Survival Points.",
             statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) *
                                                   (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier) *
                                                   (1 + statsTalents.BonusStrengthMultiplier)) - 1;
+            statsTotal.ThreatIncreaseMultiplier = ((1 + statsRace.ThreatIncreaseMultiplier) *
+                                                   (1 + statsGearEnchantsBuffs.ThreatIncreaseMultiplier) *
+                                                    (1 + statsTalents.ThreatIncreaseMultiplier)) - 1;
             statsTotal.Agility = statsRace.Agility + statsGearEnchantsBuffs.Agility + statsTalents.Agility; ;
             statsTotal.Strength = strength;
  
@@ -787,6 +792,7 @@ you are being killed by burst damage, focus on Survival Points.",
                 ArmorPenetration = stats.ArmorPenetration,
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
+                ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
 
                 MongooseProc = stats.MongooseProc
 
@@ -795,7 +801,6 @@ you are being killed by burst damage, focus on Survival Points.",
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-            //return true;
 			return (stats.Agility + stats.Armor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
 				    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.ParryRating +
                     stats.BlockRating + stats.BlockValue + stats.Health + 
@@ -804,7 +809,8 @@ you are being killed by burst damage, focus on Survival Points.",
 				    stats.FrostResistance + stats.ShadowResistance +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage +
-                    stats.BonusCritMultiplier + stats.MongooseProc + stats.CrushChanceReduction
+                    stats.BonusCritMultiplier + stats.MongooseProc + stats.CrushChanceReduction +
+                    stats.ThreatIncreaseMultiplier
                    ) != 0;
 		}
     }
