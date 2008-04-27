@@ -67,6 +67,7 @@
       <DependentUpon>MageTalentsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SparseMatrix.cs" />
     <Compile Include="Spell.cs" />
   </ItemGroup>
   <ItemGroup>

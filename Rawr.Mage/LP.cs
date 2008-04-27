@@ -6,7 +6,7 @@ namespace Rawr.Mage
 {
     public class LP
     {
-        private double[,] data;
+        private SparseMatrix A;
         private int[] disabled;
         private int rows;
         private int cols;
@@ -21,15 +21,17 @@ namespace Rawr.Mage
         double[] _wd;
         double[] _u;
         double[] _c;
+        double[] _b;
+        double[] _cost;
 
         public LP Clone()
         {
             LP clone = (LP)MemberwiseClone();
             clone._B = (int[])_B.Clone();
             clone._V = (int[])_V.Clone();
-            clone._d = (double[])_d.Clone();
-            clone._u = (double[])_u.Clone();
-            clone._c = (double[])_c.Clone();
+            //clone._d = (double[])_d.Clone();
+            //clone._u = (double[])_u.Clone();
+            //clone._c = (double[])_c.Clone();
             clone.disabled = (int[])disabled.Clone();
             return clone;
         }
@@ -39,12 +41,41 @@ namespace Rawr.Mage
             disabled[col] = 1;
         }
 
-        public LP(double[,] data, int rows, int cols)
+        public double this[int row, int col]
+        {
+            get
+            {
+                if (row == rows - 1) return _cost[col];
+                else if (col == cols) return _b[row];
+                else return A[row, col];
+            }
+            set
+            {
+                if (row == rows - 1) _cost[col] = value;
+                else if (col == cols) _b[row] = value;
+                else A[row, col] = value;
+            }
+        }
+
+        private bool constructed;
+        public void EndConstruction()
+        {
+            if (constructed) return;
+            for (int i = 0; i < rows - 1; i++)
+            {
+                A[i, cols + i] = 1.0;
+            }
+            A.EndConstruction();
+            constructed = true;
+        }
+
+        public LP(int rows, int cols)
         {
             rows++; // add extra row for disabled
-            this.data = data;
             this.rows = rows;
             this.cols = cols;
+
+            A = new SparseMatrix(rows - 1, cols + rows);
 
             _B = new int[rows];
             _V = new int[cols];
@@ -56,7 +87,10 @@ namespace Rawr.Mage
             _wd = new double[cols];
             _u = new double[rows];
             _c = new double[cols];
-            disabled = new int[cols];
+            _cost = new double[cols];
+            _b = new double[rows];
+            disabled = new int[cols + rows];
+            disabled[cols + rows - 1] = 1;
 
             for (int i = 0; i < rows; i++)
             {
@@ -89,7 +123,7 @@ namespace Rawr.Mage
             int round = 0;
             double* aij, xx, cc;
             int step;
-            fixed (double* a = data, LU = _LU, d = _d, x = _x, w = _w, c = _c, u = _u)
+            fixed (double* a = A.data, LU = _LU, d = _d, x = _x, w = _w, c = _c, u = _u, b = _b, cost = _cost)
             {
                 fixed (int* B = _B, V = _V, D = disabled)
                 {
@@ -99,22 +133,11 @@ namespace Rawr.Mage
                         for (j = 0; j < rows; j++)
                         {
                             int col = B[j];
-                            if (col < cols)
+                            for (i = 0; i < rows - 1; i++)
                             {
-                                for (i = 0; i < rows - 1; i++)
-                                {
-                                    LU[i * rows + j] = a[i * (cols + 1) + col];
-                                }
-                                LU[i * rows + j] = D[col];
+                                LU[i * rows + j] = a[i * (cols + rows) + col];
                             }
-                            else
-                            {
-                                col -= cols;
-                                for (i = 0; i < rows; i++)
-                                {
-                                    LU[i * rows + j] = ((i == col) ? 1 : 0);
-                                }
-                            }
+                            LU[i * rows + j] = D[col];
                         }
                         lu.Decompose();
                         if (lu.Singular)
@@ -129,7 +152,7 @@ namespace Rawr.Mage
                             // d = U \ (L \ b);
                             for (i = 0; i < rows - 1; i++)
                             {
-                                d[i] = a[i * (cols + 1) + cols];
+                                d[i] = b[i];
                             }
                             d[i] = 0;
                             lu.Solve(d, 1);
@@ -148,7 +171,7 @@ namespace Rawr.Mage
                                 // we have a feasible solution, initialize phase 2
                                 for (i = 0; i < rows; i++)
                                 {
-                                    if (B[i] < cols) u[i] = a[(rows - 1) * (cols + 1) + B[i]];
+                                    if (B[i] < cols) u[i] = cost[B[i]];
                                     else u[i] = 0;
                                 }
                                 lu.SolveForward(u);
@@ -156,20 +179,13 @@ namespace Rawr.Mage
                                 {
                                     int col = V[j];
 
-                                    double cost = ((col < cols) ? a[(rows - 1) * (cols + 1) + col] : 0);
-                                    if (col < cols)
+                                    double costcol = ((col < cols) ? cost[col] : 0);
+                                    for (i = 0; i < rows - 1; i++)
                                     {
-                                        for (i = 0; i < rows - 1; i++)
-                                        {
-                                            cost -= a[i * (cols + 1) + col] * u[i];
-                                        }
-                                        cost -= D[col] * u[i];
+                                        costcol -= a[i * (cols + rows) + col] * u[i];
                                     }
-                                    else
-                                    {
-                                        cost -= u[col - cols];
-                                    }
-                                    c[j] = cost;
+                                    costcol -= D[col] * u[i];
+                                    c[j] = costcol;
                                 }
                             }
                         }
@@ -193,20 +209,13 @@ namespace Rawr.Mage
                             {
                                 int col = V[j];
 
-                                double cost = 0;
-                                if (col < cols)
+                                double costcol = 0;
+                                for (i = 0; i < rows - 1; i++)
                                 {
-                                    for (i = 0; i < rows - 1; i++)
-                                    {
-                                        cost -= a[i * (cols + 1) + col] * x[i];
-                                    }
-                                    cost -= D[col] * x[i];
+                                    costcol -= a[i * (cols + rows) + col] * x[i];
                                 }
-                                else
-                                {
-                                    cost -= x[col - cols];
-                                }
-                                c[j] = cost;
+                                costcol -= D[col] * x[i];
+                                c[j] = costcol;
                             }
                         }
 
@@ -214,10 +223,10 @@ namespace Rawr.Mage
                         int maxj = -1;
                         for (j = 0; j < cols; j++)
                         {
-                            double cost = c[j];
-                            if (cost > maxc)
+                            double costj = c[j];
+                            if (costj > maxc)
                             {
-                                maxc = cost;
+                                maxc = costj;
                                 maxj = j;
                             }
                         }
@@ -234,7 +243,7 @@ namespace Rawr.Mage
                             double value = 0;
                             for (i = 0; i < rows; i++)
                             {
-                                if (B[i] < cols) value += a[(rows - 1) * (cols + 1) + B[i]] * d[i];
+                                if (B[i] < cols) value += cost[B[i]] * d[i];
                             }
                             ret[cols] = value;
                             //System.Diagnostics.Debug.WriteLine("Primal solved in " + round);
@@ -243,21 +252,11 @@ namespace Rawr.Mage
 
                         // w = U \ (L \ A(:,j));
                         int maxcol = V[maxj];
-                        if (maxcol < cols)
+                        for (i = 0; i < rows - 1; i++)
                         {
-                            for (i = 0; i < rows - 1; i++)
-                            {
-                                w[i] = a[i * (cols + 1) + maxcol];
-                            }
-                            w[i] = D[maxcol];
+                            w[i] = a[i * (cols + rows) + maxcol];
                         }
-                        else
-                        {
-                            for (i = 0; i < rows; i++)
-                            {
-                                w[i] = ((i == maxcol - cols) ? 1 : 0);
-                            }
-                        }
+                        w[i] = D[maxcol];
                         lu.Solve(w, 1);
 
                         // min over i of d[i]/w[i] where w[i]>0
@@ -307,21 +306,14 @@ namespace Rawr.Mage
                             for (j = 0; j < cols; j++, cc++)
                             {
                                 int col = V[j];
-                                if (col < cols)
+                                aij = a + col;
+                                step = cols + rows;
+                                xx = x;
+                                for (i = 0; i < rows - 1; i++, aij += step, xx++)
                                 {
-                                    aij = a + col;
-                                    step = cols + 1;
-                                    xx = x;
-                                    for (i = 0; i < rows - 1; i++, aij += step, xx++)
-                                    {
-                                        *cc -= rd * *aij * *xx;
-                                    }
-                                    *cc -= rd * D[col] * *xx;
+                                    *cc -= rd * *aij * *xx;
                                 }
-                                else
-                                {
-                                    *cc -= rd * x[col - cols];
-                                }
+                                *cc -= rd * D[col] * *xx;
                                 c[maxj] = -rd;
                             }
                         }
@@ -361,7 +353,7 @@ namespace Rawr.Mage
             int i, j;
             int round = 0;
             bool needsRecalc = true;
-            fixed (double* a = data, LU = _LU, d = _d, x = _x, w = _w, c = _c, u = _u, wd = _wd)
+            fixed (double* a = A.data, LU = _LU, d = _d, x = _x, w = _w, c = _c, u = _u, wd = _wd, b = _b, cost = _cost)
             {
                 fixed (int* B = _B, V = _V, D = disabled)
                 {
@@ -371,29 +363,18 @@ namespace Rawr.Mage
                         for (j = 0; j < rows; j++)
                         {
                             int col = B[j];
-                            if (col < cols)
+                            for (i = 0; i < rows - 1; i++)
                             {
-                                for (i = 0; i < rows - 1; i++)
-                                {
-                                    LU[i * rows + j] = a[i * (cols + 1) + col];
-                                }
-                                LU[i * rows + j] = D[col];
+                                LU[i * rows + j] = a[i * (cols + rows) + col];
                             }
-                            else
-                            {
-                                col -= cols;
-                                for (i = 0; i < rows; i++)
-                                {
-                                    LU[i * rows + j] = ((i == col) ? 1 : 0);
-                                }
-                            }
+                            LU[i * rows + j] = D[col];
                         }
                         lu.Decompose();
                         if (lu.Singular)
                         {
                             //System.Diagnostics.Debug.WriteLine("Basis singular");
                             // when restricting constraints sometimes the basis becomes singular
-                            // restart normal primal problem
+                            // restart normal primal problem from scratch
                             for (i = 0; i < rows; i++)
                             {
                                 B[i] = cols + i;
@@ -408,16 +389,15 @@ namespace Rawr.Mage
                         if (needsRecalc)
                         {
                             // d = U \ (L \ b);
-                            for (i = 0; i < rows - 1; i++)
+                            for (i = 0; i < rows; i++)
                             {
-                                d[i] = a[i * (cols + 1) + cols];
+                                d[i] = b[i]; // TODO block copy?
                             }
-                            d[i] = 0;
                             lu.Solve(d, 1);
 
                             for (i = 0; i < rows; i++)
                             {
-                                if (B[i] < cols) u[i] = a[(rows - 1) * (cols + 1) + B[i]];
+                                if (B[i] < cols) u[i] = cost[B[i]];
                                 else u[i] = 0;
                             }
                             lu.SolveForward(u);
@@ -425,20 +405,13 @@ namespace Rawr.Mage
                             {
                                 int col = V[j];
 
-                                double cost = ((col < cols) ? a[(rows - 1) * (cols + 1) + col] : 0);
-                                if (col < cols)
+                                double costcol = ((col < cols) ? cost[col] : 0);
+                                for (i = 0; i < rows - 1; i++)
                                 {
-                                    for (i = 0; i < rows - 1; i++)
-                                    {
-                                        cost -= a[i * (cols + 1) + col] * u[i];
-                                    }
-                                    cost -= D[col] * u[i];
+                                    costcol -= a[i * (cols + rows) + col] * u[i];
                                 }
-                                else
-                                {
-                                    cost -= u[col - cols];
-                                }
-                                if (cost > eps)
+                                costcol -= D[col] * u[i];
+                                if (costcol > eps)
                                 {
                                     // this should only happen if dual is not feasible
                                     // should not come here unless LU is singular
@@ -447,7 +420,7 @@ namespace Rawr.Mage
                                     // at least we don't have to start from scratch
                                     return SolvePrimal();
                                 }
-                                c[j] = cost;
+                                c[j] = costcol;
                             }
 
                             needsRecalc = false;
@@ -457,10 +430,10 @@ namespace Rawr.Mage
                         int mini = -1;
                         for (i = 0; i < rows; i++)
                         {
-                            double cost = d[i];
-                            if (cost < mind)
+                            double costi = d[i];
+                            if (costi < mind)
                             {
-                                mind = cost;
+                                mind = costi;
                                 mini = i;
                             }
                         }
@@ -477,7 +450,7 @@ namespace Rawr.Mage
                             double value = 0;
                             for (i = 0; i < rows; i++)
                             {
-                                if (B[i] < cols) value += a[(rows - 1) * (cols + 1) + B[i]] * d[i];
+                                if (B[i] < cols) value += cost[B[i]] * d[i];
                             }
                             ret[cols] = value;
                             //System.Diagnostics.Debug.WriteLine("Dual solved in " + round);
@@ -498,18 +471,11 @@ namespace Rawr.Mage
                         {
                             wd[j] = 0;
                             int col = V[j];
-                            if (col < cols)
+                            for (i = 0; i < rows - 1; i++)
                             {
-                                for (i = 0; i < rows - 1; i++)
-                                {
-                                    wd[j] += a[i * (cols + 1) + col] * x[i];
-                                }
-                                wd[j] += D[col] * x[i];
+                                wd[j] += a[i * (cols + rows) + col] * x[i];
                             }
-                            else
-                            {
-                                wd[j] += x[col - cols];
-                            }
+                            wd[j] += D[col] * x[i];
                             if (wd[j] < -eps)
                             {
                                 double r = c[j] / wd[j];
@@ -529,21 +495,11 @@ namespace Rawr.Mage
 
                         // w = U \ (L \ A(:,j));
                         int mincol = V[minj];
-                        if (mincol < cols)
+                        for (i = 0; i < rows - 1; i++)
                         {
-                            for (i = 0; i < rows - 1; i++)
-                            {
-                                w[i] = a[i * (cols + 1) + mincol];
-                            }
-                            w[i] = D[mincol];
+                            w[i] = a[i * (cols + rows) + mincol];
                         }
-                        else
-                        {
-                            for (i = 0; i < rows; i++)
-                            {
-                                w[i] = ((i == mincol - cols) ? 1 : 0);
-                            }
-                        }
+                        w[i] = D[mincol];
                         lu.Solve(w, 1);
 
                         // -minr = dual step
@@ -569,255 +525,6 @@ namespace Rawr.Mage
                         int k = B[mini];
                         B[mini] = V[minj];
                         V[minj] = k;
-
-                        round++;
-                        if (round == 5000) round++;
-                    } while (round < 5000);
-                }
-            }
-            // just in case
-            return new double[cols + 1];
-        }
-
-        private unsafe double[] SolvePrimalWithoutDisabledRow()
-        {
-            // c = data[rows,:]
-            // A = data[0:rows-1,0:cols-1][I(rows)]
-            // b = data[:,cols]
-            // B = [cols:cols+rows-1]
-
-            // http://books.google.com/books?id=-afIqQSZE5AC&pg=PA313&dq=revised+simplex+FTRAN&source=gbs_toc_s&cad=1&sig=dPDCfoi0CqPh14mIfnQr-wM2AKg#PPA159,M1
-            // LU = A_B
-            // d = x_B <- A_B^-1*b ... primal solution
-            // u = u <- c_B*A_B^-1 ... dual solution
-            // w_N <- c_N - u*A_N
-
-            //  eps1 = 10-5, eps2 = 10-8, and eps3 = 10-6
-            double eps = 0.00001;
-
-            int i, j;
-            bool feasible = false;
-            int round = 0;
-            fixed (double* a = data, LU = _LU, d = _d, x = _x, w = _w, c = _c, u = _u)
-            {
-                fixed (int* B = _B, V = _V)
-                {
-                    do
-                    {
-                        // [L U] = lu(A(:,B_indices));
-                        for (j = 0; j < rows; j++)
-                        {
-                            int col = B[j];
-                            if (col < cols)
-                            {
-                                for (i = 0; i < rows; i++)
-                                {
-                                    LU[i * rows + j] = a[i * (cols + 1) + col];
-                                }
-                            }
-                            else
-                            {
-                                col -= cols;
-                                for (i = 0; i < rows; i++)
-                                {
-                                    LU[i * rows + j] = ((i == col) ? 1 : 0);
-                                }
-                            }
-                        }
-                        lu.Decompose();
-
-                        if (!feasible)
-                        {
-                            // d = U \ (L \ b);
-                            for (i = 0; i < rows; i++)
-                            {
-                                d[i] = a[i * (cols + 1) + cols];
-                            }
-                            lu.Solve(d, 1);
-
-                            feasible = true;
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (d[i] < -eps)
-                                {
-                                    feasible = false;
-                                    break;
-                                }
-                            }
-                            if (feasible)
-                            {
-                                // we have a feasible solution, initialize phase 2
-                                for (i = 0; i < rows; i++)
-                                {
-                                    if (B[i] < cols) u[i] = a[rows * (cols + 1) + B[i]];
-                                    else u[i] = 0;
-                                }
-                                lu.SolveForward(u);
-                                for (j = 0; j < cols; j++)
-                                {
-                                    int col = V[j];
-
-                                    double cost = ((col < cols) ? a[rows * (cols + 1) + col] : 0);
-                                    if (col < cols)
-                                    {
-                                        for (i = 0; i < rows; i++)
-                                        {
-                                            cost -= a[i * (cols + 1) + col] * u[i];
-                                        }
-                                    }
-                                    else
-                                    {
-                                        cost -= u[col - cols];
-                                    }
-                                    c[j] = cost;
-                                }
-                            }
-                        }
-
-                        // c_tilde(:,V_indices) = c(:,V_indices) - ((c(:,B_indices) \ U) \ L) *  A(:,V_indices);
-                        // compute max c~ = cV - cB * AV
-                        if (!feasible)
-                        {
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (d[B[i]] < -eps) x[i] = -1;
-                                else x[i] = 0;
-                            }
-                            lu.SolveForward(x);
-                            for (j = 0; j < cols; j++)
-                            {
-                                int col = V[j];
-
-                                double cost = ((feasible && col < cols) ? a[rows * (cols + 1) + col] : 0);
-                                if (col < cols)
-                                {
-                                    for (i = 0; i < rows; i++)
-                                    {
-                                        cost -= a[i * (cols + 1) + col] * x[i];
-                                    }
-                                }
-                                else
-                                {
-                                    cost -= x[col - cols];
-                                }
-                                c[j] = cost;
-                            }
-                        }
-
-                        double maxc = eps;
-                        int maxj = -1;
-                        for (j = 0; j < cols; j++)
-                        {
-                            double cost = c[j];
-                            if (cost > maxc)
-                            {
-                                maxc = cost;
-                                maxj = j;
-                            }
-                        }
-
-                        if (maxj == -1)
-                        {
-                            // optimum, return solution (or could be no feasible solution)
-                            // solution(B_indices,:) = d;
-                            double[] ret = new double[cols + 1];
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (B[i] < cols) ret[B[i]] = d[i];
-                            }
-                            double value = 0;
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (B[i] < cols) value += a[rows * (cols + 1) + B[i]] * d[i];
-                            }
-                            ret[cols] = value;
-                            return ret;
-                        }
-
-                        // w = U \ (L \ A(:,j));
-                        int maxcol = V[maxj];
-                        if (maxcol < cols)
-                        {
-                            for (i = 0; i < rows; i++)
-                            {
-                                w[i] = a[i * (cols + 1) + maxcol];
-                            }
-                        }
-                        else
-                        {
-                            for (i = 0; i < rows; i++)
-                            {
-                                w[i] = ((i == maxcol - cols) ? 1 : 0);
-                            }
-                        }
-                        lu.Solve(w, 1);
-
-                        // min over i of d[i]/w[i] where w[i]>0
-                        double minr = double.PositiveInfinity;
-                        int mini = -1;
-                        for (i = 0; i < rows; i++)
-                        {
-                            if (w[i] > eps)
-                            {
-                                double r = d[i] / w[i];
-                                if (r < minr)
-                                {
-                                    minr = r;
-                                    mini = i;
-                                }
-                            }
-                        }
-
-                        if (mini == -1)
-                        {
-                            // unbounded
-                            throw new ArgumentException();
-                        }
-
-                        if (feasible)
-                        {
-                            // minr = primal step
-                            // rd = dual step
-
-                            double rd = c[maxj] / w[mini];
-
-                            // x = z <- e_mini*A_B^-1
-                            for (i = 0; i < rows; i++)
-                            {
-                                x[i] = ((i == mini) ? 1 : 0);
-                            }
-                            lu.SolveForward(x); // TODO exploit nature of x
-
-                            // update primal and dual
-                            for (i = 0; i < rows; i++)
-                            {
-                                d[i] -= minr * w[i];
-                                u[i] -= rd * x[i];
-                            }
-                            d[mini] = minr;
-                            for (j = 0; j < cols; j++)
-                            {
-                                int col = V[j];
-                                if (col < cols)
-                                {
-                                    for (i = 0; i < rows; i++)
-                                    {
-                                        c[j] -= rd * a[i * (cols + 1) + col] * x[i];
-                                    }
-                                }
-                                else
-                                {
-                                    c[j] -= rd * x[col - cols];
-                                }
-                                c[maxj] = -rd;
-                            }
-                        }
-
-                        //System.Diagnostics.Debug.WriteLine(round + ": " + V[maxj] + " <=> " + B[mini]);
-                        // swap base
-                        int k = B[mini];
-                        B[mini] = V[maxj];
-                        V[maxj] = k;
 
                         round++;
                         if (round == 5000) round++;

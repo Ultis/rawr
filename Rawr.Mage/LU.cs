@@ -5,7 +5,7 @@ using System.Text;
 namespace Rawr.Mage
 {
     // LU decomposition
-    class LU
+    public class LU
     {
         private int size;
         private double[,] data;

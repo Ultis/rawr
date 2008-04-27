@@ -167,8 +167,7 @@ namespace Rawr.Mage
         {
             private int lpRows, cRows;
             private int lpCols, cCols;
-            double[,] lp;
-            public LP solver;
+            public LP lp;
             bool[] rowEnabled, colEnabled;
             int[] CRow, CCol;
             double[] compactSolution = null;
@@ -185,7 +184,7 @@ namespace Rawr.Mage
                 CompactLP clone = (CompactLP)this.MemberwiseClone();
                 clone.compactSolution = null;
                 //clone.lp = (double[,])clone.lp.Clone();
-                clone.solver = solver.Clone();
+                clone.lp = lp.Clone();
                 return clone;
             }
 
@@ -237,8 +236,7 @@ namespace Rawr.Mage
                 CRow[lpRows] = cRows;
                 CCol[lpCols] = cCols;
 
-                lp = new double[cRows + 1, cCols + 1];
-                solver = new LP(lp, cRows, cCols);
+                lp = new LP(cRows, cCols);
             }
 
             public void DisableRow(int row)
@@ -284,7 +282,7 @@ namespace Rawr.Mage
                 {
                     lp[row, col] = 0;
                 }*/
-                solver.DisableColumn(col);
+                lp.DisableColumn(col);
                 compactSolution = null;
                 needsDual = true;
             }
@@ -293,22 +291,15 @@ namespace Rawr.Mage
             {
                 if (compactSolution == null)
                 {
-                    /*if (allowReuse)
-                    {
-                        compactSolution = LPSolveUnsafe((double[,])lp.Clone(), cRows, cCols);
-                    }
-                    else
-                    {
-                        compactSolution = LPSolveUnsafe(lp, cRows, cCols);
-                    }*/
+                    lp.EndConstruction();
                     if (needsDual)
                     {
                         //System.Diagnostics.Debug.WriteLine("Solving H=" + HeroismHash.ToString("X") + ", AP=" + APHash.ToString("X") + ", IV=" + IVHash.ToString("X"));
-                        compactSolution = solver.SolveDual();
+                        compactSolution = lp.SolveDual();
                     }
                     else
                     {
-                        compactSolution = solver.SolvePrimal();
+                        compactSolution = lp.SolvePrimal();
                     }
                 }
             }
