@@ -815,17 +815,40 @@ namespace Rawr.Mage
             calculatedStats.EvocationDuration = evocationDuration;
             calculatedStats.SolutionLabel.Add("Evocation");
             float evocationMana = characterStats.Mana;
-            if (calculationOptions.EvocationWeapon > 0)
+            calculatedStats.EvocationRegen = calculatedStats.ManaRegen5SR + 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed;
+            if (calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0)
             {
                 Stats evocationRawStats = rawStats.Clone();
-                if (character.MainHand != null) evocationRawStats.Intellect -= character.MainHand.GetTotalStats().Intellect;
-                if (character.OffHand != null) evocationRawStats.Intellect -= character.OffHand.GetTotalStats().Intellect;
-                if (character.Ranged != null) evocationRawStats.Intellect -= character.Ranged.GetTotalStats().Intellect;
+                if (character.MainHand != null)
+                {
+                    evocationRawStats.Intellect -= character.MainHand.GetTotalStats().Intellect;
+                    evocationRawStats.Spirit -= character.MainHand.GetTotalStats().Spirit;
+                }
+                if (character.OffHand != null)
+                {
+                    evocationRawStats.Intellect -= character.OffHand.GetTotalStats().Intellect;
+                    evocationRawStats.Spirit -= character.OffHand.GetTotalStats().Spirit;
+                }
+                if (character.Ranged != null)
+                {
+                    evocationRawStats.Intellect -= character.Ranged.GetTotalStats().Intellect;
+                    evocationRawStats.Spirit -= character.Ranged.GetTotalStats().Spirit;
+                }
+                if (character.MainHandEnchant != null)
+                {
+                    evocationRawStats.Intellect -= character.MainHandEnchant.Stats.Intellect;
+                    evocationRawStats.Spirit -= character.MainHandEnchant.Stats.Spirit;
+                }
                 evocationRawStats.Intellect += calculationOptions.EvocationWeapon;
+                evocationRawStats.Spirit += calculationOptions.EvocationSpirit;
                 Stats evocationStats = GetCharacterStats(character, additionalItem, evocationRawStats, calculationOptions);
-                if (evocationStats.Mana > evocationMana) evocationMana = evocationStats.Mana;
+                float evocationRegen = ((0.001f + evocationStats.Spirit * 0.009327f * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + calculatedStats.SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration) + 0.15f * evocationStats.Mana / 2f * calculatedStats.CastingSpeed;
+                if (evocationRegen > calculatedStats.EvocationRegen)
+                {
+                    evocationMana = evocationStats.Mana;
+                    calculatedStats.EvocationRegen = evocationRegen;
+                }
             }
-            calculatedStats.EvocationRegen = calculatedStats.ManaRegen5SR + 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed;
             lp[0, 2] = -calculatedStats.EvocationRegen;
             lp[1, 2] = 1;
             lp[2, 2] = 1;
@@ -1570,17 +1593,40 @@ namespace Rawr.Mage
             calculatedStats.EvocationDuration = evocationDuration;
             calculatedStats.SolutionLabel.Add("Evocation");
             float evocationMana = characterStats.Mana;
-            if (calculationOptions.EvocationWeapon > 0)
+            calculatedStats.EvocationRegen = calculatedStats.ManaRegen5SR + 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed;
+            if (calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0)
             {
                 Stats evocationRawStats = rawStats.Clone();
-                if (character.MainHand != null) evocationRawStats.Intellect -= character.MainHand.GetTotalStats().Intellect;
-                if (character.OffHand != null) evocationRawStats.Intellect -= character.OffHand.GetTotalStats().Intellect;
-                if (character.Ranged != null) evocationRawStats.Intellect -= character.Ranged.GetTotalStats().Intellect;
+                if (character.MainHand != null)
+                {
+                    evocationRawStats.Intellect -= character.MainHand.GetTotalStats().Intellect;
+                    evocationRawStats.Spirit -= character.MainHand.GetTotalStats().Spirit;
+                }
+                if (character.OffHand != null)
+                {
+                    evocationRawStats.Intellect -= character.OffHand.GetTotalStats().Intellect;
+                    evocationRawStats.Spirit -= character.OffHand.GetTotalStats().Spirit;
+                }
+                if (character.Ranged != null)
+                {
+                    evocationRawStats.Intellect -= character.Ranged.GetTotalStats().Intellect;
+                    evocationRawStats.Spirit -= character.Ranged.GetTotalStats().Spirit;
+                }
+                if (character.MainHandEnchant != null)
+                {
+                    evocationRawStats.Intellect -= character.MainHandEnchant.Stats.Intellect;
+                    evocationRawStats.Spirit -= character.MainHandEnchant.Stats.Spirit;
+                }
                 evocationRawStats.Intellect += calculationOptions.EvocationWeapon;
+                evocationRawStats.Spirit += calculationOptions.EvocationSpirit;
                 Stats evocationStats = GetCharacterStats(character, additionalItem, evocationRawStats, calculationOptions);
-                if (evocationStats.Mana > evocationMana) evocationMana = evocationStats.Mana;
+                float evocationRegen = ((0.001f + evocationStats.Spirit * 0.009327f * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + calculatedStats.SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration) + 0.15f * evocationStats.Mana / 2f * calculatedStats.CastingSpeed;
+                if (evocationRegen > calculatedStats.EvocationRegen)
+                {
+                    evocationMana = evocationStats.Mana;
+                    calculatedStats.EvocationRegen = evocationRegen;
+                }
             }
-            calculatedStats.EvocationRegen = calculatedStats.ManaRegen5SR + 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed;
             lp[0, 2] = -calculatedStats.EvocationRegen;
             lp[1, 2] = 1;
             lp[2, 2] = 1;

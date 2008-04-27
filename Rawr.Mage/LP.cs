@@ -87,6 +87,8 @@ namespace Rawr.Mage
             int i, j;
             bool feasible = false;
             int round = 0;
+            double* aij, xx, cc;
+            int step;
             fixed (double* a = data, LU = _LU, d = _d, x = _x, w = _w, c = _c, u = _u)
             {
                 fixed (int* B = _B, V = _V, D = disabled)
@@ -301,20 +303,24 @@ namespace Rawr.Mage
                                 //u[i] -= rd * x[i];
                             }
                             d[mini] = minr;
-                            for (j = 0; j < cols; j++)
+                            cc = c;
+                            for (j = 0; j < cols; j++, cc++)
                             {
                                 int col = V[j];
                                 if (col < cols)
                                 {
-                                    for (i = 0; i < rows - 1; i++)
+                                    aij = a + col;
+                                    step = cols + 1;
+                                    xx = x;
+                                    for (i = 0; i < rows - 1; i++, aij += step, xx++)
                                     {
-                                        c[j] -= rd * a[i * (cols + 1) + col] * x[i];
+                                        *cc -= rd * *aij * *xx;
                                     }
-                                    c[j] -= rd * D[col] * x[i];
+                                    *cc -= rd * D[col] * *xx;
                                 }
                                 else
                                 {
-                                    c[j] -= rd * x[col - cols];
+                                    *cc -= rd * x[col - cols];
                                 }
                                 c[maxj] = -rd;
                             }

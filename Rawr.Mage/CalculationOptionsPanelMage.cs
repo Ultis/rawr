@@ -96,6 +96,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["SMP"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("SMPDisplay"))
                 Character.CalculationOptions["SMPDisplay"] = (0).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("EvocationSpirit"))
+                Character.CalculationOptions["EvocationSpirit"] = (0).ToString(CultureInfo.InvariantCulture);
 			
             loading = true;
 
@@ -132,6 +134,7 @@ namespace Rawr.Mage
             textBoxFragmentation.Text = float.Parse(Character.CalculationOptions["Fragmentation"], CultureInfo.InvariantCulture).ToString();
             checkBoxSMP.Checked = int.Parse(Character.CalculationOptions["SMP"], CultureInfo.InvariantCulture) == 1;
             checkBoxSMPDisplay.Checked = int.Parse(Character.CalculationOptions["SMPDisplay"], CultureInfo.InvariantCulture) == 1;
+            textBoxEvocationSpirit.Text = float.Parse(Character.CalculationOptions["EvocationSpirit"], CultureInfo.InvariantCulture).ToString();
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -420,6 +423,16 @@ namespace Rawr.Mage
         {
             Character.CalculationOptions["SMPDisplay"] = (checkBoxSMPDisplay.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
             if (!loading) Character.OnItemsChanged();
+        }
+
+        private void textBoxEvocationSpirit_TextChanged(object sender, EventArgs e)
+        {
+            float value;
+            if (float.TryParse(textBoxEvocationSpirit.Text, out value))
+            {
+                Character.CalculationOptions["EvocationSpirit"] = value.ToString(CultureInfo.InvariantCulture);
+                if (!loading) Character.OnItemsChanged();
+            }
         }
 	}
 }

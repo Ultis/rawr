@@ -28,6 +28,7 @@ namespace Rawr.Mage
         public float InterruptFrequency { get; set; }
         public bool JudgementOfWisdom { get; set; }
         public float EvocationWeapon { get; set; }
+        public float EvocationSpirit { get; set; }
         public float AoeDuration { get; set; }
         public bool SmartOptimization { get; set; }
         public float DpsTime { get; set; }
@@ -118,6 +119,7 @@ namespace Rawr.Mage
             InterruptFrequency = float.Parse(character.CalculationOptions["InterruptFrequency"], CultureInfo.InvariantCulture);
             JudgementOfWisdom = character.ActiveBuffs.Contains("Judgement of Wisdom");
             EvocationWeapon = float.Parse(character.CalculationOptions["EvocationWeapon"], CultureInfo.InvariantCulture);
+            EvocationSpirit = float.Parse(character.CalculationOptions["EvocationSpirit"], CultureInfo.InvariantCulture);
             AoeDuration = float.Parse(character.CalculationOptions["AoeDuration"], CultureInfo.InvariantCulture);
             SmartOptimization = int.Parse(character.CalculationOptions["SmartOptimization"], CultureInfo.InvariantCulture) == 1;
             DpsTime = float.Parse(character.CalculationOptions["DpsTime"], CultureInfo.InvariantCulture);
