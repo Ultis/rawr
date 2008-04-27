@@ -59,6 +59,11 @@ namespace Rawr.Mage
         public bool SpammedDot;
         public float TargetProcs;
         public float AoeDamageCap;
+        public float MinHitDamage;
+        public float MaxHitDamage;
+        public float MinCritDamage;
+        public float MaxCritDamage;
+        public float DotDamage;
 
         public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float spellDamageCoefficient) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, spellDamageCoefficient, 0, 0, false) { }
         public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, instant ? (1.5f / 3.5f) : (castTime / 3.5f), 0, 0, false) { }
@@ -328,6 +333,13 @@ namespace Rawr.Mage
                 CostPerSecond = 0;
             }
 
+            // hit & crit ranges, do it before passive spell damage effects for cleaner comparison in game
+            MinHitDamage = (BaseMinDamage + RawSpellDamage * SpellDamageCoefficient) * SpellModifier;
+            MaxHitDamage = (BaseMaxDamage + RawSpellDamage * SpellDamageCoefficient) * SpellModifier;
+            MinCritDamage = MinHitDamage * CritBonus;
+            MaxCritDamage = MaxHitDamage * CritBonus;
+            DotDamage = (BasePeriodicDamage + DotDamageCoefficient * RawSpellDamage) * SpellModifier;
+
             if (calculations.BasicStats.SpellDamageFor10SecOnHit_5 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnHit_5 * ProcBuffUp(1 - (float)Math.Pow(0.95, TargetProcs), 10, CastTime);
             if (calculations.BasicStats.SpellDamageFor6SecOnCrit > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor6SecOnCrit * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
             if (calculations.BasicStats.SpellDamageFor10SecOnHit_10_45 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
@@ -553,6 +565,20 @@ namespace Rawr.Mage
             BaseCastTime -= 0.1f * calculations.CalculationOptions.ImprovedFireball;
             SpellDamageCoefficient += 0.03f * calculations.CalculationOptions.EmpoweredFireball;
             SpellModifier *= (1 + calculations.BasicStats.BonusMageNukeMultiplier);
+            CalculateDerivedStats(character, calculations);
+        }
+    }
+
+    class Pyroblast : BaseSpell
+    {
+        public Pyroblast(Character character, CharacterCalculationsMage calculations)
+            : base("Pyroblast", false, false, false, false, 500, 35, 6f, 0, MagicSchool.Fire, 939, 1191, 356)
+        {
+            Calculate(character, calculations);
+            SpammedDot = false;
+            DotDuration = 12;
+            SpellDamageCoefficient = 1.15f;
+            DotDamageCoefficient = 0.2f;
             CalculateDerivedStats(character, calculations);
         }
     }

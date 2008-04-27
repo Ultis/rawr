@@ -392,6 +392,9 @@ namespace Rawr.Mage
                 case "Fireball":
                     s = new Fireball(Character, this);
                     break;
+                case "Pyroblast":
+                    s = new Pyroblast(Character, this);
+                    break;
                 case "Fire Blast":
                     s = new FireBlast(Character, this);
                     break;
@@ -3448,7 +3451,7 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Frostbolt", "Arcane Blast", "ABAMP", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrBSc", "ABFB3FBSc", "FireballScorch", "FireballFireBlast", "Fire Blast", "ABAM3ScCCAM", "ABAM3Sc2CCAM", "ABAM3FrBCCAM", "ABAM3FrBScCCAM", "ABAMCCAM", "ABAM3CCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold" };
+            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Pyroblast", "Frostbolt", "Arcane Blast", "ABAMP", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrBSc", "ABFB3FBSc", "FireballScorch", "FireballFireBlast", "Fire Blast", "ABAM3ScCCAM", "ABAM3Sc2CCAM", "ABAM3FrBCCAM", "ABAM3FrBScCCAM", "ABAMCCAM", "ABAM3CCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold" };
             Spell AB = GetSpell("Arcane Blast");
             foreach (string spell in spellList)
             {
@@ -3458,7 +3461,7 @@ namespace Rawr.Mage
                     if (s is BaseSpell)
                     {
                         BaseSpell bs = s as BaseSpell;
-                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} Tps\n{3:F} sec\n{4:F}x Amplify\n{5:F}% Crit Rate\n{6:F}% Hit Rate\n{7:F} Crit Multiplier\nAB Spam Tradeoff: {8:F} Dpm", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond)));
+                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} Tps\n{3:F} sec\n{9:F} - {10:F} Hit\n{11:F} - {12:F} Crit{13}\n{4:F}x Amplify\n{5:F}% Crit Rate\n{6:F}% Hit Rate\n{7:F} Crit Multiplier\nAB Spam Tradeoff: {8:F} Dpm", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), bs.MinHitDamage, bs.MaxHitDamage, bs.MinCritDamage, bs.MaxCritDamage, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : "")));
                     }
                     else
                     {

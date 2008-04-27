@@ -13,6 +13,8 @@ namespace Rawr.Mage
         private int pivotSign;
         private double[] column;
 
+        public bool Singular { get; set; }
+
         // data will be modified, if you need to retain it clean pass a clone
         public LU(double[,] data, int size)
         {
@@ -32,7 +34,8 @@ namespace Rawr.Mage
                     // solve b = y*U
                     for (k = 0; k < size; k++)
                     {
-                        b[k] /= a[k * size + k];
+                        if (a[k * size + k] != 0) b[k] /= a[k * size + k];
+                        else b[k] = 0; // value underspecified
                         for (i = k + 1; i < size; i++)
                         {
                             b[i] -= b[k] * a[k * size + i];
@@ -107,6 +110,7 @@ namespace Rawr.Mage
 
         public unsafe void Decompose()
         {
+            Singular = false;
             fixed (double* a = data, c = column)
             {
                 fixed (int* p = pivots)
@@ -165,9 +169,14 @@ namespace Rawr.Mage
                             pivotSign = -pivotSign;
                         }
 
-                        if ((j < size) && (a[j * size + j] != 0.0))
+                        double ajj = a[j * size + j];
+                        if (Math.Abs(ajj) < 0.000001)
                         {
-                            double ajj = a[j * size + j];
+                            a[j * size + j] = 0;
+                            Singular = true;
+                        }
+                        else
+                        {
                             for (int i = j + 1; i < size; i++)
                             {
                                 a[i * size + j] /= ajj;

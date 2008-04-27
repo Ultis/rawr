@@ -57,6 +57,31 @@ namespace Rawr.Mage
                 }
             }
             calculationSuspended = false;
+            ComputeTalentTotals();
+        }
+
+        private void ComputeTalentTotals()
+        {
+            List<string> totals = new List<string>();
+            foreach (Control c in Controls)
+            {
+                if (c is GroupBox)
+                {
+                    int total = 0;
+                    foreach (Control cc in c.Controls)
+                    {
+                        if (cc is ComboBox)
+                        {
+                            ComboBox cb = (ComboBox)cc;
+                            string talent = cb.Name.Substring(8);
+                            total += int.Parse(Character.CalculationOptions[talent]);
+                        }
+                    }
+                    totals.Add(total.ToString());
+                }
+            }
+            totals.Reverse();
+            Text = "Mage Talents (" + string.Join("/", totals.ToArray()) + ")";
         }
 
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -64,7 +89,11 @@ namespace Rawr.Mage
             ComboBox cb = (ComboBox)sender;
             string talent = cb.Name.Substring(8);
             Character.CalculationOptions[talent] = cb.SelectedItem.ToString();
-            if (!calculationSuspended) Character.OnItemsChanged();
+            if (!calculationSuspended)
+            {
+                Character.OnItemsChanged();
+                ComputeTalentTotals();
+            }
         }
 
         private void MageTalentsForm_FormClosing(object sender, FormClosingEventArgs e)

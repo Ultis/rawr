@@ -61,6 +61,7 @@ namespace Rawr.Mage
                     "Spell Info:Arcane Blast*Spammed",
                     "Spell Info:Scorch",
                     "Spell Info:Fire Blast",
+                    "Spell Info:Pyroblast*Requires talent points",
                     "Spell Info:Fireball",
                     "Spell Info:FireballScorch*Must enable Maintain Scorch and have points in Improved Scorch talent to enable",
                     "Spell Info:FireballFireBlast",
@@ -167,17 +168,24 @@ namespace Rawr.Mage
             private int lpRows, cRows;
             private int lpCols, cCols;
             double[,] lp;
+            public LP solver;
             bool[] rowEnabled, colEnabled;
             int[] CRow, CCol;
             double[] compactSolution = null;
             bool allowReuse;
+            bool needsDual;
+
+            public int HeroismHash;
+            public int APHash;
+            public int IVHash;
 
             public CompactLP Clone()
             {
                 if (compactSolution != null && !allowReuse) throw new InvalidOperationException();
                 CompactLP clone = (CompactLP)this.MemberwiseClone();
                 clone.compactSolution = null;
-                clone.lp = (double[,])clone.lp.Clone();
+                //clone.lp = (double[,])clone.lp.Clone();
+                clone.solver = solver.Clone();
                 return clone;
             }
 
@@ -230,6 +238,7 @@ namespace Rawr.Mage
                 CCol[lpCols] = cCols;
 
                 lp = new double[cRows + 1, cCols + 1];
+                solver = new LP(lp, cRows, cCols);
             }
 
             public void DisableRow(int row)
@@ -271,11 +280,13 @@ namespace Rawr.Mage
             {
                 col = CCol[col];
                 if (col == -1) return;
-                for (int row = 0; row <= cRows; row++)
+                /*for (int row = 0; row <= cRows; row++)
                 {
                     lp[row, col] = 0;
-                }
+                }*/
+                solver.DisableColumn(col);
                 compactSolution = null;
+                needsDual = true;
             }
 
             private void SolveInternal()
@@ -290,7 +301,15 @@ namespace Rawr.Mage
                     {
                         compactSolution = LPSolveUnsafe(lp, cRows, cCols);
                     }*/
-                    compactSolution = LP.Solve(lp, cRows, cCols);
+                    if (needsDual)
+                    {
+                        //System.Diagnostics.Debug.WriteLine("Solving H=" + HeroismHash.ToString("X") + ", AP=" + APHash.ToString("X") + ", IV=" + IVHash.ToString("X"));
+                        compactSolution = solver.SolveDual();
+                    }
+                    else
+                    {
+                        compactSolution = solver.SolvePrimal();
+                    }
                 }
             }
 
@@ -1022,6 +1041,7 @@ namespace Rawr.Mage
             for (int col = 0; col < lpCols; col++) tps[col] = lp[39, col];
 
             calculatedStats.Solution = lp.Solve();
+
             if (computeIncrementalSet)
             {
                 calculatedStats.IncrementalSetCooldown = incrementalSetCooldown;
@@ -1139,7 +1159,7 @@ namespace Rawr.Mage
                     spellList.Add("Arcane Blast");
                     if (calculationOptions.ImprovedFrostbolt > 0) spellList.Add("Frostbolt");
                     if (calculationOptions.ImprovedFireball > 0) spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
-                    if (calculationOptions.ImprovedArcaneMissiles > 0) spellList.Add("Arcane Missiles");
+                    if (calculationOptions.ImprovedArcaneMissiles + calculationOptions.EmpoweredArcaneMissiles > 0) spellList.Add("Arcane Missiles");
                 }
                 else
                 {
@@ -1161,23 +1181,32 @@ namespace Rawr.Mage
             }
             if (calculationOptions.ABCycles)
             {
-                spellList.Add("ABAMP");
-                spellList.Add("ABAM");
-                spellList.Add("AB3AMSc");
-                spellList.Add("ABAM3Sc");
-                spellList.Add("ABAM3Sc2");
-                spellList.Add("ABAM3FrB");
-                spellList.Add("ABAM3FrB2");
-                spellList.Add("ABFrB3FrB");
-                spellList.Add("ABFrB3FrBSc");
-                spellList.Add("ABFB3FBSc");
-                //spellList.Add("AB3Sc");
-                spellList.Add("ABAM3ScCCAM");
-                spellList.Add("ABAM3Sc2CCAM");
-                spellList.Add("ABAM3FrBCCAM");
-                spellList.Add("ABAM3FrBScCCAM");
-                spellList.Add("ABAMCCAM");
-                spellList.Add("ABAM3CCAM");
+                if (calculationOptions.EmpoweredArcaneMissiles > 0)
+                {
+                    spellList.Add("ABAMP");
+                    spellList.Add("ABAM");
+                    spellList.Add("AB3AMSc");
+                    spellList.Add("ABAM3Sc");
+                    spellList.Add("ABAM3Sc2");
+                    spellList.Add("ABAM3FrB");
+                    spellList.Add("ABAM3FrB2");
+                    spellList.Add("ABAM3ScCCAM");
+                    spellList.Add("ABAM3Sc2CCAM");
+                    spellList.Add("ABAM3FrBCCAM");
+                    spellList.Add("ABAM3FrBScCCAM");
+                    spellList.Add("ABAMCCAM");
+                    spellList.Add("ABAM3CCAM");
+                }
+                if (calculationOptions.ImprovedFrostbolt > 0)
+                {
+                    spellList.Add("ABFrB3FrB");
+                    spellList.Add("ABFrB3FrBSc");
+                }
+                if (calculationOptions.ImprovedFireball > 0)
+                {
+                    spellList.Add("ABFB3FBSc");
+                    //spellList.Add("AB3Sc");
+                }
             }
             if (calculationOptions.AoeDuration > 0)
             {
@@ -1973,6 +2002,7 @@ namespace Rawr.Mage
                             // branch on whether cooldown is used in this segment
                             CompactLP cooldownUsed = lp.Clone();
                             // cooldown not used
+                            lp.HeroismHash += 1 << seg;
                             for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                             {
                                 CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
@@ -1984,6 +2014,7 @@ namespace Rawr.Mage
                             {
                                 if (Math.Abs(outseg - seg) > mindist)
                                 {
+                                    cooldownUsed.HeroismHash += 1 << outseg;
                                     for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                                     {
                                         CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
@@ -2031,6 +2062,7 @@ namespace Rawr.Mage
                             // branch on whether cooldown is used in this segment
                             CompactLP cooldownUsed = lp.Clone();
                             // cooldown not used
+                            lp.APHash += 1 << seg;
                             for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                             {
                                 CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
@@ -2042,6 +2074,7 @@ namespace Rawr.Mage
                             {
                                 if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
                                 {
+                                    cooldownUsed.APHash += 1 << outseg;
                                     for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                                     {
                                         CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
@@ -2089,6 +2122,7 @@ namespace Rawr.Mage
                             // branch on whether cooldown is used in this segment
                             CompactLP cooldownUsed = lp.Clone();
                             // cooldown not used
+                            lp.IVHash += 1 << seg;
                             for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                             {
                                 CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
@@ -2100,6 +2134,7 @@ namespace Rawr.Mage
                             {
                                 if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
                                 {
+                                    cooldownUsed.IVHash += 1 << outseg;
                                     for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                                     {
                                         CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
