@@ -121,11 +121,12 @@ namespace Rawr.Mage
             int i, j;
             bool feasible = false;
             int round = 0;
-            double* aij, xx, cc;
-            int step;
-            fixed (double* a = A.data, LU = _LU, d = _d, x = _x, w = _w, c = _c, u = _u, b = _b, cost = _cost)
+            double* cc, sValue;
+            int* sRow;
+            int sCol1, sCol2;
+            fixed (double* a = A.data, LU = _LU, d = _d, x = _x, w = _w, c = _c, u = _u, b = _b, cost = _cost, sparseValue = A.value)
             {
-                fixed (int* B = _B, V = _V, D = disabled)
+                fixed (int* B = _B, V = _V, D = disabled, sparseRow = A.row, sparseCol = A.col)
                 {
                     do
                     {
@@ -180,11 +181,15 @@ namespace Rawr.Mage
                                     int col = V[j];
 
                                     double costcol = ((col < cols) ? cost[col] : 0);
-                                    for (i = 0; i < rows - 1; i++)
+                                    sCol1 = sparseCol[col];
+                                    sCol2 = sparseCol[col + 1];
+                                    sRow = sparseRow + sCol1;
+                                    sValue = sparseValue + sCol1;
+                                    for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
                                     {
-                                        costcol -= a[i * (cols + rows) + col] * u[i];
+                                        costcol -= *sValue * u[*sRow];
                                     }
-                                    costcol -= D[col] * u[i];
+                                    costcol -= D[col] * u[rows - 1];
                                     c[j] = costcol;
                                 }
                             }
@@ -210,11 +215,15 @@ namespace Rawr.Mage
                                 int col = V[j];
 
                                 double costcol = 0;
-                                for (i = 0; i < rows - 1; i++)
+                                sCol1 = sparseCol[col];
+                                sCol2 = sparseCol[col + 1];
+                                sRow = sparseRow + sCol1;
+                                sValue = sparseValue + sCol1;
+                                for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
                                 {
-                                    costcol -= a[i * (cols + rows) + col] * x[i];
+                                    costcol -= *sValue * x[*sRow];
                                 }
-                                costcol -= D[col] * x[i];
+                                costcol -= D[col] * x[rows - 1];
                                 c[j] = costcol;
                             }
                         }
@@ -306,14 +315,15 @@ namespace Rawr.Mage
                             for (j = 0; j < cols; j++, cc++)
                             {
                                 int col = V[j];
-                                aij = a + col;
-                                step = cols + rows;
-                                xx = x;
-                                for (i = 0; i < rows - 1; i++, aij += step, xx++)
+                                sCol1 = sparseCol[col];
+                                sCol2 = sparseCol[col + 1];
+                                sRow = sparseRow + sCol1;
+                                sValue = sparseValue + sCol1;
+                                for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
                                 {
-                                    *cc -= rd * *aij * *xx;
+                                    *cc -= rd * *sValue * x[*sRow];
                                 }
-                                *cc -= rd * D[col] * *xx;
+                                *cc -= rd * D[col] * x[rows - 1];
                                 c[maxj] = -rd;
                             }
                         }
@@ -353,9 +363,12 @@ namespace Rawr.Mage
             int i, j;
             int round = 0;
             bool needsRecalc = true;
-            fixed (double* a = A.data, LU = _LU, d = _d, x = _x, w = _w, c = _c, u = _u, wd = _wd, b = _b, cost = _cost)
+            double* sValue;
+            int* sRow;
+            int sCol1, sCol2;
+            fixed (double* a = A.data, LU = _LU, d = _d, x = _x, w = _w, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = A.value)
             {
-                fixed (int* B = _B, V = _V, D = disabled)
+                fixed (int* B = _B, V = _V, D = disabled, sparseRow = A.row, sparseCol = A.col)
                 {
                     do
                     {
@@ -406,11 +419,15 @@ namespace Rawr.Mage
                                 int col = V[j];
 
                                 double costcol = ((col < cols) ? cost[col] : 0);
-                                for (i = 0; i < rows - 1; i++)
+                                sCol1 = sparseCol[col];
+                                sCol2 = sparseCol[col + 1];
+                                sRow = sparseRow + sCol1;
+                                sValue = sparseValue + sCol1;
+                                for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
                                 {
-                                    costcol -= a[i * (cols + rows) + col] * u[i];
+                                    costcol -= *sValue * u[*sRow];
                                 }
-                                costcol -= D[col] * u[i];
+                                costcol -= D[col] * u[rows - 1];
                                 if (costcol > eps)
                                 {
                                     // this should only happen if dual is not feasible
@@ -471,11 +488,15 @@ namespace Rawr.Mage
                         {
                             wd[j] = 0;
                             int col = V[j];
-                            for (i = 0; i < rows - 1; i++)
+                            sCol1 = sparseCol[col];
+                            sCol2 = sparseCol[col + 1];
+                            sRow = sparseRow + sCol1;
+                            sValue = sparseValue + sCol1;
+                            for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
                             {
-                                wd[j] += a[i * (cols + rows) + col] * x[i];
+                                wd[j] += *sValue * x[*sRow];
                             }
-                            wd[j] += D[col] * x[i];
+                            wd[j] += D[col] * x[rows - 1];
                             if (wd[j] < -eps)
                             {
                                 double r = c[j] / wd[j];

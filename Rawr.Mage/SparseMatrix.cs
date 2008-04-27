@@ -85,6 +85,7 @@ namespace Rawr.Mage
                 this.row[sparseIndex] = row;
                 this.value[sparseIndex] = value;
                 data[row, col] = value;
+                lastCol = col;
                 sparseIndex++;
             }
         }
