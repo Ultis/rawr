@@ -17,8 +17,7 @@ namespace Rawr
 		//private static readonly ILog log = LogManager.GetLogger(typeof(ItemIcons));
 
         private static ImageList _largeIcons = null;
-
-        private static ImageList LargeIcons
+		public static ImageList LargeIcons
         {
             get
             {
@@ -33,8 +32,7 @@ namespace Rawr
         }
 
         private static ImageList _smallIcons = null;
-
-        private static ImageList SmallIcons
+        public static ImageList SmallIcons
         {
             get
             {

@@ -170,7 +170,7 @@ namespace Rawr
                                                 otherSlot = Character.CharacterSlot.MainHand;
                                                 break;
                                         }
-                                        if (otherSlot != Character.CharacterSlot.None && Character[otherSlot].Id == item.Id)
+										if (otherSlot != Character.CharacterSlot.None && Character[otherSlot] != null && Character[otherSlot].Id == item.Id)
                                         {
                                             continue;
                                         }

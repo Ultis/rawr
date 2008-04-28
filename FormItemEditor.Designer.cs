@@ -79,7 +79,6 @@ namespace Rawr
             this.buttonFillSockets = new System.Windows.Forms.Button();
             this.listViewItems = new System.Windows.Forms.ListView();
             this.columnHeaderName = new System.Windows.Forms.ColumnHeader();
-            this.imageListItems = new System.Windows.Forms.ImageList(this.components);
             this.buttonDuplicate = new System.Windows.Forms.Button();
             this.textBoxFilter = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
@@ -495,7 +494,6 @@ namespace Rawr
             this.listViewItems.MultiSelect = false;
             this.listViewItems.Name = "listViewItems";
             this.listViewItems.Size = new System.Drawing.Size(233, 301);
-            this.listViewItems.SmallImageList = this.imageListItems;
             this.listViewItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewItems.TabIndex = 0;
             this.listViewItems.UseCompatibleStateImageBehavior = false;
@@ -505,12 +503,6 @@ namespace Rawr
             // columnHeaderName
             // 
             this.columnHeaderName.Width = 229;
-            // 
-            // imageListItems
-            // 
-            this.imageListItems.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.imageListItems.ImageSize = new System.Drawing.Size(32, 32);
-            this.imageListItems.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // buttonDuplicate
             // 
@@ -801,7 +793,6 @@ namespace Rawr
 		private System.Windows.Forms.Button buttonFillSockets;
 		private System.Windows.Forms.ListView listViewItems;
 		private System.Windows.Forms.ColumnHeader columnHeaderName;
-		private System.Windows.Forms.ImageList imageListItems;
 		private System.Windows.Forms.Button buttonDuplicate;
 		private System.Windows.Forms.TextBox textBoxFilter;
         private System.Windows.Forms.Label label22;

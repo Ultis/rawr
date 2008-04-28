@@ -142,6 +142,7 @@ namespace Rawr
 		{
 			InitializeComponent();
 			_character = character;
+			listViewItems.SmallImageList = ItemIcons.SmallIcons;
             LoadItems();
 
 
@@ -210,11 +211,11 @@ namespace Rawr
 
 		private string EnsureIconPath(string iconPath)
 		{
-			if (!imageListItems.Images.ContainsKey(iconPath))
+			if (!ItemIcons.SmallIcons.Images.ContainsKey(iconPath))
 			{
 				try
 				{
-					imageListItems.Images.Add(iconPath, ItemIcons.GetItemIcon(iconPath, true));
+					/*imageListItems.Images.Add(iconPath, */ItemIcons.GetItemIcon(iconPath, true)/*)*/;
 				}
 				catch { }
 			}
