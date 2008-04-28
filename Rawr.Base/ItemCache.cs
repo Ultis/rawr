@@ -102,15 +102,20 @@ namespace Rawr
 		public Item FindItemById(int id) { return FindItemById(id.ToString() + ".0.0.0"); }
 		public Item FindItemById(string gemmedId) { return FindItemById(gemmedId, true,true); }
 		public Item FindItemById(int id, bool createIfCorrectGemmingNotFound) { return FindItemById(id.ToString() + ".0.0.0", createIfCorrectGemmingNotFound,true); }
-		public Item FindItemById(string gemmedId, bool createIfCorrectGemmingNotFound, bool raiseEvent)
-        {
+		public Item FindItemById(string gemmedId, bool createIfCorrectGemmingNotFound, bool raiseEvent) { return FindItemById(gemmedId, createIfCorrectGemmingNotFound, raiseEvent, false); }
+		public Item FindItemById(string gemmedId, bool createIfCorrectGemmingNotFound, bool raiseEvent, bool hintSkipRelevant)
+		{
 			if (!string.IsNullOrEmpty(gemmedId))
 			{
-				Item[] ret;
-				if (Items.TryGetValue(gemmedId, out ret))
-					return ret[0];
+				Item retRelevant;
+				if (!hintSkipRelevant && RelevantItemsDictionary.TryGetValue(gemmedId, out retRelevant))
+					return retRelevant;
+				Item[] retIrrelevant;
+				if (Items.TryGetValue(gemmedId, out retIrrelevant))
+					return retIrrelevant[0];
 				else if (!createIfCorrectGemmingNotFound)
 					return null;
+
 				string[] ids = gemmedId.Split('.');
 				int id = int.Parse(ids[0]);
 				int id1 = ids.Length == 4 ? int.Parse(ids[1]) : 0;
@@ -190,11 +195,25 @@ namespace Rawr
 				{
 					List<Item> items = new List<Item>();
 					foreach (Item[] itemArray in Items.Values)
-						foreach (Item item in itemArray)
-							items.Add(item);
+						items.AddRange(itemArray);
 					_allItems = items.ToArray();
 				}
 				return _allItems;
+			}
+		}
+
+		private SortedDictionary<string, Item> _relevantItemsDictionary = null;
+		public SortedDictionary<string, Item> RelevantItemsDictionary
+		{
+			get
+			{
+				if (_relevantItemsDictionary == null)
+				{
+					_relevantItemsDictionary = new SortedDictionary<string, Item>();
+					foreach (Item item in RelevantItems)
+						_relevantItemsDictionary.Add(item.GemmedId, item);
+				}
+				return _relevantItemsDictionary;
 			}
 		}
 
@@ -205,8 +224,8 @@ namespace Rawr
 			{
 				if (_relevantItems == null)
 				{
-					_relevantItems = new List<Item>(AllItems).FindAll(new Predicate<Item>(delegate(Item item)
-					{ return Calculations.IsItemRelevant(item); })).ToArray();
+					_relevantItems = new List<Item>(AllItems).FindAll(new Predicate<Item>(
+						delegate(Item item) { return Calculations.IsItemRelevant(item); })).ToArray();
 				}
 				return _relevantItems;
 			}

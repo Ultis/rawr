@@ -146,14 +146,19 @@ namespace Rawr
 			}
 		}
 		[XmlIgnore]
+		private Item _gem1Cached = null;
+		[XmlIgnore]
 		public Item Gem1
 		{
 			get
 			{
 				if (Gem1Id == 0) return null;
-				Item gem = Item.LoadFromId(Gem1Id, "Gem1 in " + GemmedId);
-				if (gem == null) Gem1Id = 0;
-				return gem;
+				if (_gem1Cached == null || _gem1Cached.Id != Gem1Id)
+				{
+					_gem1Cached = Item.LoadFromId(Gem1Id, "Gem1 in " + GemmedId);
+					if (_gem1Cached == null) Gem1Id = 0;
+				}
+				return _gem1Cached;
 			}
 			set
 			{
@@ -164,14 +169,19 @@ namespace Rawr
 			}
 		}
 		[XmlIgnore]
+		private Item _gem2Cached = null;
+		[XmlIgnore]
 		public Item Gem2
 		{
 			get
 			{
 				if (Gem2Id == 0) return null;
-				Item gem = Item.LoadFromId(Gem2Id, "Gem2 in " + GemmedId);
-				if (gem == null) Gem2Id = 0;
-				return gem;
+				if (_gem2Cached == null || _gem2Cached.Id != Gem2Id)
+				{
+					_gem2Cached = Item.LoadFromId(Gem2Id, "Gem2 in " + GemmedId);
+					if (_gem2Cached == null) Gem2Id = 0;
+				}
+				return _gem2Cached;
 			}
 			set
 			{
@@ -182,14 +192,19 @@ namespace Rawr
 			}
 		}
 		[XmlIgnore]
+		private Item _gem3Cached = null;
+		[XmlIgnore]
 		public Item Gem3
 		{
 			get
 			{
 				if (Gem3Id == 0) return null;
-				Item gem = Item.LoadFromId(Gem3Id, "Gem3 in " + GemmedId);
-				if (gem == null) Gem3Id = 0;
-				return gem;
+				if (_gem3Cached == null || _gem3Cached.Id != Gem3Id)
+				{
+					_gem3Cached = Item.LoadFromId(Gem3Id, "Gem3 in " + GemmedId);
+					if (_gem3Cached == null) Gem3Id = 0;
+				}
+				return _gem3Cached;
 			}
 			set
 			{

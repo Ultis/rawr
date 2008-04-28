@@ -217,14 +217,13 @@ namespace Rawr
 		public void SetMaxRating(float maxRating)
 		{
 			_lastMaxRating = maxRating;
-			foreach (Panel panelSubPoint in panelBottom.Controls)
-			{
-				try
-				{
-					panelSubPoint.Width = (int)Math.Floor((float)(panelBottom.Width - panelBottom.Padding.Horizontal) * (_itemCalculation.SubPoints[(int)panelSubPoint.Tag] / maxRating));
-				}
-				catch { }
-			}
+			if (_itemCalculation != null)
+				foreach (Panel panelSubPoint in panelBottom.Controls)
+					try
+					{
+						panelSubPoint.Width = (int)Math.Floor((float)(panelBottom.Width - panelBottom.Padding.Horizontal) * (_itemCalculation.SubPoints[(int)panelSubPoint.Tag] / maxRating));
+					}
+					catch { }
 		}
 
         /// <summary> 

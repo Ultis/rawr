@@ -580,6 +580,12 @@ you are being killed by burst damage, focus on Survival Points.",
 			}
 		}
 
+		public override bool IsItemRelevant(Item item)
+		{
+			if (item.Slot == Item.ItemSlot.OffHand) return false;
+			return base.IsItemRelevant(item);
+		}
+
 		public override Stats GetRelevantStats(Stats stats)
 		{
 			return new Stats()

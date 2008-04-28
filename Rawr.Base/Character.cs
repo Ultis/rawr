@@ -150,10 +150,20 @@ namespace Rawr //O O . .
             get { return _activeBuffs; }
 			set { _activeBuffs = value; }
         }
+
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _headCached = null;
         [System.Xml.Serialization.XmlIgnore]
         public Item Head
         {
-            get { return Item.LoadFromId(_head, "Equipped Head"); }
+			get
+			{
+				if (_headCached == null || _headCached.GemmedId != _head)
+				{
+					_headCached = Item.LoadFromId(_head, "Equipped Head");
+				}
+				return _headCached;
+			}
             set
             {
                 if (value == null || _head != value.GemmedId)
@@ -163,10 +173,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _neckCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Neck
         {
-			get { return Item.LoadFromId(_neck, "Equipped Neck"); }
+			get
+			{
+				if (_neckCached == null || _neckCached.GemmedId != _neck)
+				{
+					_neckCached = Item.LoadFromId(_neck, "Equipped Neck");
+				}
+				return _neckCached;
+			}
             set
             {
                 if (value == null || _neck != value.GemmedId)
@@ -176,10 +195,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _shouldersCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Shoulders
         {
-			get { return Item.LoadFromId(_shoulders, "Equipped Shoulders"); }
+			get
+			{
+				if (_shouldersCached == null || _shouldersCached.GemmedId != _shoulders)
+				{
+					_shouldersCached = Item.LoadFromId(_shoulders, "Equipped Shoulders");
+				}
+				return _shouldersCached;
+			}
             set
             {
                 if (value == null || _shoulders != value.GemmedId)
@@ -189,10 +217,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _backCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Back
         {
-			get { return Item.LoadFromId(_back, "Equipped Back"); }
+			get
+			{
+				if (_backCached == null || _backCached.GemmedId != _back)
+				{
+					_backCached = Item.LoadFromId(_back, "Equipped Back");
+				}
+				return _backCached;
+			}
             set
             {
                 if (value == null || _back != value.GemmedId)
@@ -202,10 +239,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _chestCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Chest
         {
-			get { return Item.LoadFromId(_chest, "Equipped Chest"); }
+			get
+			{
+				if (_chestCached == null || _chestCached.GemmedId != _chest)
+				{
+					_chestCached = Item.LoadFromId(_chest, "Equipped Chest");
+				}
+				return _chestCached;
+			}
             set
             {
                 if (value == null || _chest != value.GemmedId)
@@ -215,10 +261,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _shirtCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Shirt
         {
-			get { return Item.LoadFromId(_shirt, "Equipped Shirt"); }
+			get
+			{
+				if (_shirtCached == null || _shirtCached.GemmedId != _shirt)
+				{
+					_shirtCached = Item.LoadFromId(_shirt, "Equipped Shirt");
+				}
+				return _shirtCached;
+			}
             set
             {
                 if (value == null || _shirt != value.GemmedId)
@@ -228,10 +283,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _tabardCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Tabard
         {
-			get { return Item.LoadFromId(_tabard, "Equipped Tabard"); }
+			get
+			{
+				if (_tabardCached == null || _tabardCached.GemmedId != _tabard)
+				{
+					_tabardCached = Item.LoadFromId(_tabard, "Equipped Tabard");
+				}
+				return _tabardCached;
+			}
             set
             {
                 if (value == null || _tabard != value.GemmedId)
@@ -241,10 +305,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _wristCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Wrist
         {
-			get { return Item.LoadFromId(_wrist, "Equipped Wrist"); }
+			get
+			{
+				if (_wristCached == null || _wristCached.GemmedId != _wrist)
+				{
+					_wristCached = Item.LoadFromId(_wrist, "Equipped Wrist");
+				}
+				return _wristCached;
+			} 
             set
             {
                 if (value == null || _wrist != value.GemmedId)
@@ -254,10 +327,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _handsCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Hands
         {
-			get { return Item.LoadFromId(_hands, "Equipped Hands"); }
+			get
+			{
+				if (_handsCached == null || _handsCached.GemmedId != _hands)
+				{
+					_handsCached = Item.LoadFromId(_hands, "Equipped Hands");
+				}
+				return _handsCached;
+			} 
             set
             {
                 if (value == null || _hands != value.GemmedId)
@@ -267,10 +349,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _waistCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Waist
         {
-			get { return Item.LoadFromId(_waist, "Equipped Waist"); }
+			get
+			{
+				if (_waistCached == null || _waistCached.GemmedId != _waist)
+				{
+					_waistCached = Item.LoadFromId(_waist, "Equipped Waist");
+				}
+				return _waistCached;
+			}
             set
             {
                 if (value == null || _waist != value.GemmedId)
@@ -280,10 +371,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _legsCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Legs
         {
-			get { return Item.LoadFromId(_legs, "Equipped Legs"); }
+			get
+			{
+				if (_legsCached == null || _legsCached.GemmedId != _legs)
+				{
+					_legsCached = Item.LoadFromId(_legs, "Equipped Legs");
+				}
+				return _legsCached;
+			}
             set
             {
                 if (value == null || _legs != value.GemmedId)
@@ -293,10 +393,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _feetCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Feet
         {
-			get { return Item.LoadFromId(_feet, "Equipped Feet"); }
+			get
+			{
+				if (_feetCached == null || _feetCached.GemmedId != _feet)
+				{
+					_feetCached = Item.LoadFromId(_feet, "Equipped Feet");
+				}
+				return _feetCached;
+			} 
             set
             {
                 if (value == null || _feet != value.GemmedId)
@@ -306,10 +415,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _finger1Cached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Finger1
         {
-			get { return Item.LoadFromId(_finger1, "Equipped Finger1"); }
+			get
+			{
+				if (_finger1Cached == null || _finger1Cached.GemmedId != _finger1)
+				{
+					_finger1Cached = Item.LoadFromId(_finger1, "Equipped Finger1");
+				}
+				return _finger1Cached;
+			}
             set
             {
                 if (value == null || _finger1 != value.GemmedId)
@@ -319,10 +437,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _finger2Cached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Finger2
         {
-			get { return Item.LoadFromId(_finger2, "Equipped Finger2"); }
+			get
+			{
+				if (_finger2Cached == null || _finger2Cached.GemmedId != _finger2)
+				{
+					_finger2Cached = Item.LoadFromId(_finger2, "Equipped Finger2");
+				}
+				return _finger2Cached;
+			}
             set
             {
                 if (value == null || _finger2 != value.GemmedId)
@@ -332,10 +459,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _trinket1Cached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Trinket1
         {
-			get { return Item.LoadFromId(_trinket1, "Equipped Trinket1"); }
+			get
+			{
+				if (_trinket1Cached == null || _trinket1Cached.GemmedId != _trinket1)
+				{
+					_trinket1Cached = Item.LoadFromId(_trinket1, "Equipped Trinket1");
+				}
+				return _trinket1Cached;
+			}
             set
             {
                 if (value == null || _trinket1 != value.GemmedId)
@@ -345,10 +481,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _trinket2Cached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Trinket2
         {
-			get { return Item.LoadFromId(_trinket2, "Equipped Trinket2"); }
+			get
+			{
+				if (_trinket2Cached == null || _trinket2Cached.GemmedId != _trinket2)
+				{
+					_trinket2Cached = Item.LoadFromId(_trinket2, "Equipped Trinket2");
+				}
+				return _trinket2Cached;
+			}
             set
             {
                 if (value == null || _trinket2 != value.GemmedId)
@@ -358,10 +503,19 @@ namespace Rawr //O O . .
                 }
             }
         }
-        [System.Xml.Serialization.XmlIgnore]
+		[System.Xml.Serialization.XmlIgnore]
+		private Item _mainHandCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item MainHand
         {
-			get { return Item.LoadFromId(_mainHand, "Equipped MainHand"); }
+			get
+			{
+				if (_mainHandCached == null || _mainHandCached.GemmedId != _mainHand)
+				{
+					_mainHandCached = Item.LoadFromId(_mainHand, "Equipped MainHand");
+				}
+				return _mainHandCached;
+			}
             set
             {
 				if (value == null || _mainHand != value.GemmedId)
@@ -374,9 +528,18 @@ namespace Rawr //O O . .
             }
         }
 		[System.Xml.Serialization.XmlIgnore]
+		private Item _offHandCached = null;
+		[System.Xml.Serialization.XmlIgnore]
 		public Item OffHand
 		{
-			get { return Item.LoadFromId(_offHand, "Equipped OffHand"); }
+			get
+			{
+				if (_offHandCached == null || _offHandCached.GemmedId != _offHand)
+				{
+					_offHandCached = Item.LoadFromId(_offHand, "Equipped OffHand");
+				}
+				return _offHandCached;
+			}
 			set
 			{
 				if (value == null || _offHand != value.GemmedId)
@@ -387,9 +550,18 @@ namespace Rawr //O O . .
 			}
 		}
 		[System.Xml.Serialization.XmlIgnore]
+		private Item _rangedCached = null;
+		[System.Xml.Serialization.XmlIgnore]
         public Item Ranged
         {
-			get { return Item.LoadFromId(_ranged, "Equipped Ranged"); }
+			get
+			{
+				if (_rangedCached == null || _rangedCached.GemmedId != _ranged)
+				{
+					_rangedCached = Item.LoadFromId(_ranged, "Equipped Ranged");
+				}
+				return _rangedCached;
+			} 
             set
             {
 				if (value == null || _ranged != value.GemmedId)
@@ -400,9 +572,18 @@ namespace Rawr //O O . .
             }
 		}
 		[System.Xml.Serialization.XmlIgnore]
+		private Item _projectileCached = null;
+		[System.Xml.Serialization.XmlIgnore]
 		public Item Projectile
 		{
-			get { return Item.LoadFromId(_projectile, "Equipped Projectile"); }
+			get
+			{
+				if (_projectileCached == null || _projectileCached.GemmedId != _projectile)
+				{
+					_projectileCached = Item.LoadFromId(_projectile, "Equipped Projectile");
+				}
+				return _projectileCached;
+			} 
 			set
 			{
 				if (value == null || _projectile != value.GemmedId)
@@ -413,9 +594,18 @@ namespace Rawr //O O . .
 			}
 		}
 		[System.Xml.Serialization.XmlIgnore]
+		private Item _projectileBagCached = null;
+		[System.Xml.Serialization.XmlIgnore]
 		public Item ProjectileBag
 		{
-			get { return Item.LoadFromId(_projectileBag, "Equipped ProjectileBag"); }
+			get
+			{
+				if (_projectileBagCached == null || _projectileBagCached.GemmedId != _projectileBag)
+				{
+					_projectileBagCached = Item.LoadFromId(_projectileBag, "Equipped ProjectileBag");
+				}
+				return _projectileBagCached;
+			} 
 			set
 			{
 				if (value == null || _projectileBag != value.GemmedId)

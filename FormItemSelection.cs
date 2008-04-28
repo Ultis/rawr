@@ -187,6 +187,7 @@ namespace Rawr
 			}
 		}
 
+		private List<ItemSelectorItem> _itemSelectorItems = new List<ItemSelectorItem>();
 		private void RebuildItemList()
 		{
             if (this.InvokeRequired)
@@ -195,10 +196,30 @@ namespace Rawr
                 return;
             }
 			panelItems.SuspendLayout();
-			while (panelItems.Controls.Count < this.ItemCalculations.Length)
-				panelItems.Controls.Add(new ItemSelectorItem());
-            while (panelItems.Controls.Count > this.ItemCalculations.Length)
-				panelItems.Controls.RemoveAt(panelItems.Controls.Count - 1);
+
+			////Replaced this...
+			//while (panelItems.Controls.Count < this.ItemCalculations.Length)
+			//	panelItems.Controls.Add(new ItemSelectorItem());
+			//while (panelItems.Controls.Count > this.ItemCalculations.Length)
+			//	panelItems.Controls.RemoveAt(panelItems.Controls.Count - 1);
+
+			////...with this, so as not to constantly create and remove lots of controls
+			int currentItemLength = panelItems.Controls.Count;
+			int targetItemLength = this.ItemCalculations.Length;
+			if (currentItemLength < targetItemLength)
+			{
+				int itemSelectorsToCreate = targetItemLength - _itemSelectorItems.Count;
+				for (int i = 0; i < itemSelectorsToCreate; i++)
+					_itemSelectorItems.Add(new ItemSelectorItem());
+				for (int i = currentItemLength; i < targetItemLength; i++)
+					panelItems.Controls.Add(_itemSelectorItems[i]);
+			}
+			else if (currentItemLength > targetItemLength)
+			{
+				for (int i = currentItemLength; i > targetItemLength; i--)
+					panelItems.Controls.RemoveAt(i - 1);
+			}
+
 			float maxRating = 0;
             for (int i = 0; i < this.ItemCalculations.Length; i++)
 			{
