@@ -1029,7 +1029,7 @@ namespace Rawr
             this.itemComparison1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.itemComparison1.Location = new System.Drawing.Point(3, 41);
             this.itemComparison1.Name = "itemComparison1";
-            this.itemComparison1.Size = new System.Drawing.Size(-1,-1);
+			this.itemComparison1.Size = new System.Drawing.Size(-1, 600);
             this.itemComparison1.Sort = Rawr.ComparisonGraph.ComparisonSort.Overall;
             this.itemComparison1.TabIndex = 3;
             // 
