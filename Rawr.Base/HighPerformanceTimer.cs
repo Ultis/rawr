@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace Rawr
 {
-    internal class HighPerformanceTimer
+    public class HighPerformanceTimer
     {
         [DllImport("Kernel32.dll")]
         private static extern bool QueryPerformanceCounter(

@@ -236,6 +236,7 @@ namespace Rawr
 		{
 			_allItems = null;
 			_relevantItems = null;
+            _relevantItemsDictionary = null;
 			if (ItemsChanged != null) ItemsChanged(null, null);
 		}
 

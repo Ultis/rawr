@@ -169,6 +169,7 @@ namespace Rawr //O O . .
                 if (value == null || _head != value.GemmedId)
                 {
                     _head = value != null ? value.GemmedId : null;
+                    _headCached = value;
                     OnItemsChanged();
                 }
             }
@@ -191,6 +192,7 @@ namespace Rawr //O O . .
                 if (value == null || _neck != value.GemmedId)
                 {
                     _neck = value != null ? value.GemmedId : null;
+                    _neckCached = value;
                     OnItemsChanged();
                 }
             }
@@ -213,6 +215,7 @@ namespace Rawr //O O . .
                 if (value == null || _shoulders != value.GemmedId)
                 {
                     _shoulders = value != null ? value.GemmedId : null;
+                    _shouldersCached = value;
                     OnItemsChanged();
                 }
             }
@@ -235,6 +238,7 @@ namespace Rawr //O O . .
                 if (value == null || _back != value.GemmedId)
                 {
                     _back = value != null ? value.GemmedId : null;
+                    _backCached = value;
                     OnItemsChanged();
                 }
             }
@@ -257,6 +261,7 @@ namespace Rawr //O O . .
                 if (value == null || _chest != value.GemmedId)
                 {
                     _chest = value != null ? value.GemmedId : null;
+                    _chestCached = value;
                     OnItemsChanged();
                 }
             }
@@ -279,6 +284,7 @@ namespace Rawr //O O . .
                 if (value == null || _shirt != value.GemmedId)
                 {
                     _shirt = value != null ? value.GemmedId : null;
+                    _shirtCached = value;
                     OnItemsChanged();
                 }
             }
@@ -301,6 +307,7 @@ namespace Rawr //O O . .
                 if (value == null || _tabard != value.GemmedId)
                 {
                     _tabard = value != null ? value.GemmedId : null;
+                    _tabardCached = value;
                     OnItemsChanged();
                 }
             }
@@ -323,6 +330,7 @@ namespace Rawr //O O . .
                 if (value == null || _wrist != value.GemmedId)
                 {
                     _wrist = value != null ? value.GemmedId : null;
+                    _wristCached = value;
                     OnItemsChanged();
                 }
             }
@@ -345,6 +353,7 @@ namespace Rawr //O O . .
                 if (value == null || _hands != value.GemmedId)
                 {
                     _hands = value != null ? value.GemmedId : null;
+                    _handsCached = value;
                     OnItemsChanged();
                 }
             }
@@ -367,6 +376,7 @@ namespace Rawr //O O . .
                 if (value == null || _waist != value.GemmedId)
                 {
                     _waist = value != null ? value.GemmedId : null;
+                    _waistCached = value;
                     OnItemsChanged();
                 }
             }
@@ -389,6 +399,7 @@ namespace Rawr //O O . .
                 if (value == null || _legs != value.GemmedId)
                 {
                     _legs = value != null ? value.GemmedId : null;
+                    _legsCached = value;
                     OnItemsChanged();
                 }
             }
@@ -411,6 +422,7 @@ namespace Rawr //O O . .
                 if (value == null || _feet != value.GemmedId)
                 {
                     _feet = value != null ? value.GemmedId : null;
+                    _feetCached = value;
                     OnItemsChanged();
                 }
             }
@@ -433,6 +445,7 @@ namespace Rawr //O O . .
                 if (value == null || _finger1 != value.GemmedId)
                 {
                     _finger1 = value != null ? value.GemmedId : null;
+                    _finger1Cached = value;
                     OnItemsChanged();
                 }
             }
@@ -455,6 +468,7 @@ namespace Rawr //O O . .
                 if (value == null || _finger2 != value.GemmedId)
                 {
                     _finger2 = value != null ? value.GemmedId : null;
+                    _finger2Cached = value;
                     OnItemsChanged();
                 }
             }
@@ -477,6 +491,7 @@ namespace Rawr //O O . .
                 if (value == null || _trinket1 != value.GemmedId)
                 {
                     _trinket1 = value != null ? value.GemmedId : null;
+                    _trinket1Cached = value;
                     OnItemsChanged();
                 }
             }
@@ -499,6 +514,7 @@ namespace Rawr //O O . .
                 if (value == null || _trinket2 != value.GemmedId)
                 {
                     _trinket2 = value != null ? value.GemmedId : null;
+                    _trinket2Cached = value;
                     OnItemsChanged();
                 }
             }
@@ -523,6 +539,7 @@ namespace Rawr //O O . .
 					_mainHand = value != null ? value.GemmedId : null;
 					//if (MainHand != null && MainHand.Slot == Item.ItemSlot.TwoHand)
 					//    OffHand = null;
+                    _mainHandCached = value;
                     OnItemsChanged();
                 }
             }
@@ -545,6 +562,7 @@ namespace Rawr //O O . .
 				if (value == null || _offHand != value.GemmedId)
 				{
 					_offHand = value != null ? value.GemmedId : null;
+                    _offHandCached = value;
 					OnItemsChanged();
 				}
 			}
@@ -567,6 +585,7 @@ namespace Rawr //O O . .
 				if (value == null || _ranged != value.GemmedId)
                 {
 					_ranged = value != null ? value.GemmedId : null;
+                    _rangedCached = value;
                     OnItemsChanged();
                 }
             }
@@ -589,6 +608,7 @@ namespace Rawr //O O . .
 				if (value == null || _projectile != value.GemmedId)
 				{
 					_projectile = value != null ? value.GemmedId : null;
+                    _projectileCached = value;
 					OnItemsChanged();
 				}
 			}
@@ -611,89 +631,272 @@ namespace Rawr //O O . .
 				if (value == null || _projectileBag != value.GemmedId)
 				{
 					_projectileBag = value != null ? value.GemmedId : null;
+                    _projectileBagCached = value;
 					OnItemsChanged();
 				}
 			}
 		}
 
-		[System.Xml.Serialization.XmlIgnore]
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _headEnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant HeadEnchant
 		{
-			get { return Enchant.FindEnchant(_headEnchant, Item.ItemSlot.Head); }
-			set { _headEnchant = value == null ? 0 : value.Id; }
+			get
+            {
+                if (_headEnchantCached == null || _headEnchantCached.Id != _headEnchant)
+                {
+                    _headEnchantCached = Enchant.FindEnchant(_headEnchant, Item.ItemSlot.Head);
+                }
+                return _headEnchantCached;
+            }
+			set 
+            {
+                _headEnchant = value == null ? 0 : value.Id;
+                _headEnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _shouldersEnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant ShouldersEnchant
 		{
-			get { return Enchant.FindEnchant(_shouldersEnchant, Item.ItemSlot.Shoulders); }
-			set { _shouldersEnchant = value == null ? 0 : value.Id; }
+			get 
+            {
+                if (_shouldersEnchantCached == null || _shouldersEnchantCached.Id != _shouldersEnchant)
+                {
+                    _shouldersEnchantCached = Enchant.FindEnchant(_shouldersEnchant, Item.ItemSlot.Shoulders);
+                }
+                return _shouldersEnchantCached;
+            }
+			set 
+            {
+                _shouldersEnchant = value == null ? 0 : value.Id;
+                _shouldersEnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _backEnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant BackEnchant
 		{
-			get { return Enchant.FindEnchant(_backEnchant, Item.ItemSlot.Back); }
-			set { _backEnchant = value == null ? 0 : value.Id; }
+			get 
+            {
+                if (_backEnchantCached == null || _backEnchantCached.Id != _backEnchant)
+                {
+                    _backEnchantCached = Enchant.FindEnchant(_backEnchant, Item.ItemSlot.Back);
+                }
+                return _backEnchantCached;
+            }
+			set 
+            {
+                _backEnchant = value == null ? 0 : value.Id;
+                _backEnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _chestEnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant ChestEnchant
 		{
-			get { return Enchant.FindEnchant(_chestEnchant, Item.ItemSlot.Chest); }
-			set { _chestEnchant = value == null ? 0 : value.Id; }
+			get
+            {
+                if (_chestEnchantCached == null || _chestEnchantCached.Id != _chestEnchant)
+                {
+                    _chestEnchantCached = Enchant.FindEnchant(_chestEnchant, Item.ItemSlot.Chest);
+                }
+                return _chestEnchantCached;
+            }
+			set
+            {
+                _chestEnchant = value == null ? 0 : value.Id;
+                _chestEnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _wristEnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant WristEnchant
 		{
-			get { return Enchant.FindEnchant(_wristEnchant, Item.ItemSlot.Wrist); }
-			set { _wristEnchant = value == null ? 0 : value.Id; }
+			get 
+            {
+                if (_wristEnchantCached == null || _wristEnchantCached.Id != _wristEnchant)
+                {
+                    _wristEnchantCached = Enchant.FindEnchant(_wristEnchant, Item.ItemSlot.Wrist);
+                }
+                return _wristEnchantCached;
+            }
+			set
+            {
+                _wristEnchant = value == null ? 0 : value.Id;
+                _wristEnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _handsEnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant HandsEnchant
 		{
-			get { return Enchant.FindEnchant(_handsEnchant, Item.ItemSlot.Hands); }
-			set { _handsEnchant = value == null ? 0 : value.Id; }
+			get
+            {
+                if (_handsEnchantCached == null || _handsEnchantCached.Id != _handsEnchant)
+                {
+                    _handsEnchantCached = Enchant.FindEnchant(_handsEnchant, Item.ItemSlot.Hands);
+                }
+                return _handsEnchantCached;
+            }
+			set
+            {
+                _handsEnchant = value == null ? 0 : value.Id;
+                _handsEnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _legsEnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant LegsEnchant
 		{
-			get { return Enchant.FindEnchant(_legsEnchant, Item.ItemSlot.Legs); }
-			set { _legsEnchant = value == null ? 0 : value.Id; }
+			get 
+            {
+                if (_legsEnchantCached == null || _legsEnchantCached.Id != _legsEnchant)
+                {
+                    _legsEnchantCached = Enchant.FindEnchant(_legsEnchant, Item.ItemSlot.Legs);
+                }
+                return _legsEnchantCached;
+            }
+			set
+            {
+                _legsEnchant = value == null ? 0 : value.Id;
+                _legsEnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _feetEnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant FeetEnchant
 		{
-			get { return Enchant.FindEnchant(_feetEnchant, Item.ItemSlot.Feet); }
-			set { _feetEnchant = value == null ? 0 : value.Id; }
+			get
+            {
+                if (_feetEnchantCached == null || _feetEnchantCached.Id != _feetEnchant)
+                {
+                    _feetEnchantCached = Enchant.FindEnchant(_feetEnchant, Item.ItemSlot.Feet);
+                }
+                return _feetEnchantCached;
+            }
+			set 
+            {
+                _feetEnchant = value == null ? 0 : value.Id;
+                _feetEnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _finger1EnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant Finger1Enchant
 		{
-			get { return Enchant.FindEnchant(_finger1Enchant, Item.ItemSlot.Finger); }
-			set { _finger1Enchant = value == null ? 0 : value.Id; }
+			get 
+            {
+                if (_finger1EnchantCached == null || _finger1EnchantCached.Id != _finger1Enchant)
+                {
+                    _finger1EnchantCached = Enchant.FindEnchant(_finger1Enchant, Item.ItemSlot.Finger);
+                }
+                return _finger1EnchantCached;
+            }
+			set
+            {
+                _finger1Enchant = value == null ? 0 : value.Id;
+                _finger1EnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _finger2EnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant Finger2Enchant
 		{
-			get { return Enchant.FindEnchant(_finger2Enchant, Item.ItemSlot.Finger); }
-			set { _finger2Enchant = value == null ? 0 : value.Id; }
+			get 
+            {
+                if (_finger2EnchantCached == null || _finger2EnchantCached.Id != _finger2Enchant)
+                {
+                    _finger2EnchantCached = Enchant.FindEnchant(_finger2Enchant, Item.ItemSlot.Finger);
+                }
+                return _finger2EnchantCached;
+            }
+			set
+            {
+                _finger2Enchant = value == null ? 0 : value.Id;
+                _finger2EnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _mainHandEnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant MainHandEnchant
 		{
-			get { return Enchant.FindEnchant(_mainHandEnchant, Item.ItemSlot.MainHand); }
-			set { _mainHandEnchant = value == null ? 0 : value.Id; }
+			get 
+            {
+                if (_mainHandEnchantCached == null || _mainHandEnchantCached.Id != _mainHandEnchant)
+                {
+                    _mainHandEnchantCached = Enchant.FindEnchant(_mainHandEnchant, Item.ItemSlot.MainHand);
+                }
+                return _mainHandEnchantCached;
+            }
+			set
+            {
+                _mainHandEnchant = value == null ? 0 : value.Id;
+                _mainHandEnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _offHandEnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant OffHandEnchant
 		{
-			get { return Enchant.FindEnchant(_offHandEnchant, Item.ItemSlot.MainHand); }
-			set { _offHandEnchant = value == null ? 0 : value.Id; }
+			get 
+            {
+                if (_offHandEnchantCached == null || _offHandEnchantCached.Id != _offHandEnchant)
+                {
+                    _offHandEnchantCached = Enchant.FindEnchant(_offHandEnchant, Item.ItemSlot.MainHand);
+                }
+                return _offHandEnchantCached;
+            }
+			set 
+            {
+                _offHandEnchant = value == null ? 0 : value.Id;
+                _offHandEnchantCached = value;
+            }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+
+        [System.Xml.Serialization.XmlIgnore]
+        private Enchant _rangedEnchantCached = null;
+        [System.Xml.Serialization.XmlIgnore]
 		public Enchant RangedEnchant
 		{
-			get { return Enchant.FindEnchant(_rangedEnchant, Item.ItemSlot.Ranged); }
-			set { _rangedEnchant = value == null ? 0 : value.Id; }
+			get
+            {
+                if (_rangedEnchantCached == null || _rangedEnchantCached.Id != _rangedEnchant)
+                {
+                    _rangedEnchantCached = Enchant.FindEnchant(_rangedEnchant, Item.ItemSlot.Ranged);
+                }
+                return _rangedEnchantCached;
+            }
+			set
+            {
+                _rangedEnchant = value == null ? 0 : value.Id;
+                _rangedEnchantCached = value;
+            }
 		}
+
 		[System.Xml.Serialization.XmlIgnore]
 		public string[] CalculationOptionsStrings
 		{
@@ -856,10 +1059,10 @@ namespace Rawr //O O . .
 		public event EventHandler ItemsChanged;
 		public void OnItemsChanged()
 		{
+            if (IsLoading) return;
 			RecalculateSetBonuses();
 
-			if (!IsLoading && ItemsChanged != null) // alternatively enclose the whole function inside !IsLoading
-				ItemsChanged(this, EventArgs.Empty);
+			if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
 		}
 
 		public void RecalculateSetBonuses()
@@ -1186,43 +1389,130 @@ namespace Rawr //O O . .
 			_rangedEnchant = enchantRanged;
 		}
 
+        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
+                Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile, Item projectileBag,
+            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged)
+        {
+            IsLoading = true;
+            _name = name;
+            _realm = realm;
+            _region = region;
+            _race = race;
+            Head = head;
+            Neck = neck;
+            Shoulders = shoulders;
+            Back = back;
+            Chest = chest;
+            Shirt = shirt;
+            Tabard = tabard;
+            Wrist = wrist;
+            Hands = hands;
+            Waist = waist;
+            Legs = legs;
+            Feet = feet;
+            Finger1 = finger1;
+            Finger2 = finger2;
+            Trinket1 = trinket1;
+            Trinket2 = trinket2;
+            MainHand = mainHand;
+            OffHand = offHand;
+            Ranged = ranged;
+            Projectile = projectile;
+            ProjectileBag = projectileBag;
+
+            HeadEnchant = enchantHead;
+            ShouldersEnchant = enchantShoulders;
+            BackEnchant = enchantBack;
+            ChestEnchant = enchantChest;
+            WristEnchant = enchantWrist;
+            HandsEnchant = enchantHands;
+            LegsEnchant = enchantLegs;
+            FeetEnchant = enchantFeet;
+            Finger1Enchant = enchantFinger1;
+            Finger2Enchant = enchantFinger2;
+            MainHandEnchant = enchantMainHand;
+            OffHandEnchant = enchantOffHand;
+            RangedEnchant = enchantRanged;
+            IsLoading = false;
+            RecalculateSetBonuses();
+        }
+
+        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
+                Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile, Item projectileBag,
+            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, List<string> activeBuffs)
+        {
+            IsLoading = true;
+            _name = name;
+            _realm = realm;
+            _region = region;
+            _race = race;
+            Head = head;
+            Neck = neck;
+            Shoulders = shoulders;
+            Back = back;
+            Chest = chest;
+            Shirt = shirt;
+            Tabard = tabard;
+            Wrist = wrist;
+            Hands = hands;
+            Waist = waist;
+            Legs = legs;
+            Feet = feet;
+            Finger1 = finger1;
+            Finger2 = finger2;
+            Trinket1 = trinket1;
+            Trinket2 = trinket2;
+            MainHand = mainHand;
+            OffHand = offHand;
+            Ranged = ranged;
+            Projectile = projectile;
+            ProjectileBag = projectileBag;
+
+            HeadEnchant = enchantHead;
+            ShouldersEnchant = enchantShoulders;
+            BackEnchant = enchantBack;
+            ChestEnchant = enchantChest;
+            WristEnchant = enchantWrist;
+            HandsEnchant = enchantHands;
+            LegsEnchant = enchantLegs;
+            FeetEnchant = enchantFeet;
+            Finger1Enchant = enchantFinger1;
+            Finger2Enchant = enchantFinger2;
+            MainHandEnchant = enchantMainHand;
+            OffHandEnchant = enchantOffHand;
+            RangedEnchant = enchantRanged;
+            IsLoading = false;
+            ActiveBuffs.AddRange(activeBuffs);
+            RecalculateSetBonuses();
+        }
+
 		public Character Clone()
 		{
-			Character clone = new Character(this.Name, this.Realm, this.Region, this.Race,
-						this.Head == null ? null : this.Head.GemmedId,
-						this.Neck == null ? null : this.Neck.GemmedId,
-						this.Shoulders == null ? null : this.Shoulders.GemmedId,
-						this.Back == null ? null : this.Back.GemmedId,
-						this.Chest == null ? null : this.Chest.GemmedId,
-						this.Shirt == null ? null : this.Shirt.GemmedId,
-						this.Tabard == null ? null : this.Tabard.GemmedId,
-						this.Wrist == null ? null : this.Wrist.GemmedId,
-						this.Hands == null ? null : this.Hands.GemmedId,
-						this.Waist == null ? null : this.Waist.GemmedId,
-						this.Legs == null ? null : this.Legs.GemmedId,
-						this.Feet == null ? null : this.Feet.GemmedId,
-						this.Finger1 == null ? null : this.Finger1.GemmedId,
-						this.Finger2 == null ? null : this.Finger2.GemmedId,
-						this.Trinket1 == null ? null : this.Trinket1.GemmedId,
-						this.Trinket2 == null ? null : this.Trinket2.GemmedId,
-						this.MainHand == null ? null : this.MainHand.GemmedId,
-						this.OffHand == null ? null : this.OffHand.GemmedId,
-						this.Ranged == null ? null : this.Ranged.GemmedId,
-						this.Projectile == null ? null : this.Projectile.GemmedId,
-						this.ProjectileBag == null ? null : this.ProjectileBag.GemmedId,
-						this.HeadEnchant.Id,
-						this.ShouldersEnchant.Id,
-						this.BackEnchant.Id,
-						this.ChestEnchant.Id,
-						this.WristEnchant.Id,
-						this.HandsEnchant.Id,
-						this.LegsEnchant.Id,
-						this.FeetEnchant.Id,
-						this.Finger1Enchant.Id,
-						this.Finger2Enchant.Id,
-						this.MainHandEnchant.Id,
-						this.OffHandEnchant.Id,
-						this.RangedEnchant.Id);
+            Character clone = new Character(this.Name, this.Realm, this.Region, this.Race,
+                        this.Head, this.Neck, this.Shoulders, this.Back, this.Chest, this.Shirt,
+                        this.Tabard, this.Wrist, this.Hands, this.Waist, this.Legs, this.Feet,
+                        this.Finger1,
+                        this.Finger2,
+                        this.Trinket1,
+                        this.Trinket2,
+                        this.MainHand,
+                        this.OffHand,
+                        this.Ranged,
+                        this.Projectile,
+                        this.ProjectileBag,
+                        this.HeadEnchant,
+                        this.ShouldersEnchant,
+                        this.BackEnchant,
+                        this.ChestEnchant,
+                        this.WristEnchant,
+                        this.HandsEnchant,
+                        this.LegsEnchant,
+                        this.FeetEnchant,
+                        this.Finger1Enchant,
+                        this.Finger2Enchant,
+                        this.MainHandEnchant,
+                        this.OffHandEnchant,
+                        this.RangedEnchant);
 			foreach (string buff in this.ActiveBuffs) clone.ActiveBuffs.Add(buff);
 			clone.CalculationOptionsStrings = this.CalculationOptionsStrings;
             clone.Class = this.Class;

@@ -166,6 +166,7 @@ namespace Rawr
 					Gem1Id = 0;
 				else
 					Gem1Id = value.Id;
+                _gem1Cached = value;
 			}
 		}
 		[XmlIgnore]
@@ -189,6 +190,7 @@ namespace Rawr
 					Gem2Id = 0;
 				else
 					Gem2Id = value.Id;
+                _gem2Cached = value;
 			}
 		}
 		[XmlIgnore]
@@ -212,6 +214,7 @@ namespace Rawr
 					Gem3Id = 0;
 				else
 					Gem3Id = value.Id;
+                _gem3Cached = value;
 			}
 		}
 		private string _gemmedId = string.Empty;
