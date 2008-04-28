@@ -108,8 +108,11 @@ namespace Rawr.Mage
             }
         }
 
+        //internal static HighPerformanceTimer DecomposeTimer = new HighPerformanceTimer();
+
         public unsafe void Decompose()
         {
+            //DecomposeTimer.Start();
             Singular = false;
             fixed (double* a = data, c = column)
             {
@@ -185,6 +188,7 @@ namespace Rawr.Mage
                     }
                 }
             }
+            //DecomposeTimer.Stop();
         }
     }
 }

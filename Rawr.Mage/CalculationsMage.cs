@@ -1002,6 +1002,14 @@ namespace Rawr.Mage
                 Spell s = calculatedStats.GetSpell("Arcane Blast");
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
+            if (ivAvailable)
+            {
+                manaBurn *= 1.1f;
+            }
+            if (apAvailable)
+            {
+                manaBurn *= 1.1f;
+            }
 
             if (calculatedStats.FightDuration - 7800 / manaBurn < 0) // fix for maximum pot+gem constraint
             {
@@ -1871,6 +1879,14 @@ namespace Rawr.Mage
             {
                 Spell s = calculatedStats.GetSpell("Arcane Blast");
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+            }
+            if (ivAvailable)
+            {
+                manaBurn *= 1.1f;
+            }
+            if (apAvailable)
+            {
+                manaBurn *= 1.1f;
             }
 
             if (calculatedStats.FightDuration - 7800 / manaBurn < 0) // fix for maximum pot+gem constraint
