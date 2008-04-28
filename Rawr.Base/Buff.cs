@@ -177,20 +177,23 @@ namespace Rawr
 			{
 				_relevantBuffsByType.Clear();
 			}
-			if (ret == null && Calculations.Instance != null)
+			if (ret == null)
 			{
-				_cachedModel = Calculations.Instance.ToString();
-				ret = AllBuffs.FindAll(new Predicate<Buff>(
-					delegate(Buff buff)
-					{
-						return Calculations.HasRelevantStats(buff.Stats) &&
-							(type == BuffType.All || buff.Type == type);
-					}
-				));
-				_relevantBuffsByType[type] = ret;
+				if (Calculations.Instance != null)
+				{
+					_cachedModel = Calculations.Instance.ToString();
+					ret = AllBuffs.FindAll(new Predicate<Buff>(
+						delegate(Buff buff)
+						{
+							return Calculations.HasRelevantStats(buff.Stats) &&
+								(type == BuffType.All || buff.Type == type);
+						}
+					));
+					_relevantBuffsByType[type] = ret;
+				}
+				else
+					ret = new List<Buff>();
 			}
-			else
-				ret = new List<Buff>();
             return ret;
 		}
 
