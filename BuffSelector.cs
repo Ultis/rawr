@@ -19,9 +19,8 @@ namespace Rawr
             if (!this.DesignMode)
 			{ 
 				BuildControls();
+				Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 			}
-            
-			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 		}
 
         void BuffSelector_MouseMove(object sender, MouseEventArgs e)
@@ -68,8 +67,10 @@ namespace Rawr
 				groupBox.Tag = category;
 				groupBox.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
                 groupBox.MouseMove += new MouseEventHandler(BuffSelector_MouseMove);
+				groupBox.Dock = DockStyle.Top;
 				GroupBoxes.Add(category, groupBox);
 				this.Controls.Add(groupBox);
+				groupBox.BringToFront();
 			}
 
 			foreach (Buff buff in Buff.GetAllRelevantBuffs())
@@ -97,7 +98,7 @@ namespace Rawr
 						checkY += 23;
 					}
 				}
-				groupBox.Bounds = new Rectangle(3, groupY, 208, checkY);
+				groupBox.Bounds = new Rectangle(3, groupY, this.Width, checkY);
 				groupY += checkY + 6;
 				bool hasImprovedBuffs = false;
 				foreach (CheckBox checkBox in groupBox.Controls)
@@ -109,7 +110,7 @@ namespace Rawr
 						foreach (CheckBox requiredCheckBox in groupBox.Controls)
 							if (requiredCheckBox.Text == buff.RequiredBuff)
 							{
-								checkBox.Location = new Point(154, requiredCheckBox.Top + 1);
+								checkBox.Location = new Point(this.Width - this.Width / 4 - checkBox.Width / 2, requiredCheckBox.Top + 1);
 								break;
 							}
 					}
@@ -119,7 +120,8 @@ namespace Rawr
 				{
 					Label labelImproved = new Label();
 					labelImproved.Text = "Improved";
-					labelImproved.Location = new Point(136, 6);
+					labelImproved.AutoSize = true;
+					labelImproved.Location = new Point(this.Width - (4 * labelImproved.Width) / 5, 6);
 					groupBox.Controls.Add(labelImproved);
 				}
 			}

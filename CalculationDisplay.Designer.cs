@@ -36,6 +36,7 @@ namespace Rawr
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoScroll = true;
 			this.Name = "BuffSelector";
+			this.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
 			this.Size = new System.Drawing.Size(214, 1142);
 			this.ResumeLayout(false);
 

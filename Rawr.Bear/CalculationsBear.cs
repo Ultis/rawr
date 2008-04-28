@@ -283,7 +283,7 @@ you are being killed by burst damage, focus on Survival Points.",
                 } :
 				new Stats() { 
                     Health = 3434, 
-                    Agility = 64, 
+                    Agility = 65, 
                     Stamina = 85, 
                     DodgeRating = 40, 
                     NatureResistance = 10,

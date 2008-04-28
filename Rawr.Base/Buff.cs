@@ -169,7 +169,7 @@ namespace Rawr
         public static List<Buff> GetBuffsByType(BuffType type)
 		{
             List<Buff> ret = null;
-			if (_cachedModel == Calculations.Instance.ToString())
+			if (Calculations.Instance != null && _cachedModel == Calculations.Instance.ToString())
 			{
 				_relevantBuffsByType.TryGetValue(type, out ret);
 			}
@@ -177,18 +177,20 @@ namespace Rawr
 			{
 				_relevantBuffsByType.Clear();
 			}
-            if (ret == null)
-            {
+			if (ret == null && Calculations.Instance != null)
+			{
 				_cachedModel = Calculations.Instance.ToString();
-                ret = AllBuffs.FindAll(new Predicate<Buff>(
-                    delegate(Buff buff)
-                    {
-                        return Calculations.HasRelevantStats(buff.Stats) &&
-                            (type == BuffType.All || buff.Type == type);
-                    }
-                ));
-                _relevantBuffsByType[type] = ret;
-            }
+				ret = AllBuffs.FindAll(new Predicate<Buff>(
+					delegate(Buff buff)
+					{
+						return Calculations.HasRelevantStats(buff.Stats) &&
+							(type == BuffType.All || buff.Type == type);
+					}
+				));
+				_relevantBuffsByType[type] = ret;
+			}
+			else
+				ret = new List<Buff>();
             return ret;
 		}
 

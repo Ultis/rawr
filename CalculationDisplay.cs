@@ -54,8 +54,10 @@ namespace Rawr
 					groupBox.Text = group;
 					groupBox.Tag = group;
 					groupBox.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+					groupBox.Dock = DockStyle.Top;
 					GroupBoxes.Add(group, groupBox);
 					this.Controls.Add(groupBox);
+					groupBox.BringToFront();
 				}
 
 				string name = displayLabelConfigurationSplit[1];
@@ -74,7 +76,7 @@ namespace Rawr
                 }
 
                 ExtendedToolTipLabel labelValue = new ExtendedToolTipLabel();
-				labelValue.Left = 102;
+				labelValue.Left = this.Width / 2;
 				labelValue.AutoSize = true;
 				GroupBoxes[group].Controls.Add(labelValue);
 				ValueLabels.Add(name, labelValue);

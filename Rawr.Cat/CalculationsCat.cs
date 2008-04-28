@@ -389,7 +389,7 @@ namespace Rawr
 				new Stats() { 
 					Health = 3434f,
 					Strength = 81f,
-					Agility = 64.5f,
+					Agility = 65f,
 					Stamina = 85f,
 					DodgeRating = 40f,
 					AttackPower = 227f,
