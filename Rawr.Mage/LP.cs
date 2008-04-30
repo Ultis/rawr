@@ -159,7 +159,7 @@ namespace Rawr.Mage
                                 d[i] = b[i];
                             }
                             d[i] = 0;
-                            lu.Solve(d, 1);
+                            lu.FSolve(d, 1);
 
                             feasible = true;
                             for (i = 0; i < rows; i++)
@@ -178,7 +178,7 @@ namespace Rawr.Mage
                                     if (B[i] < cols) u[i] = cost[B[i]];
                                     else u[i] = 0;
                                 }
-                                lu.SolveForward(u);
+                                lu.BSolve(u);
                                 for (j = 0; j < cols; j++)
                                 {
                                     int col = V[j];
@@ -212,7 +212,7 @@ namespace Rawr.Mage
                                 }
                                 else x[i] = 0;
                             }
-                            lu.SolveForward(x);
+                            lu.BSolve(x);
                             for (j = 0; j < cols; j++)
                             {
                                 int col = V[j];
@@ -270,7 +270,7 @@ namespace Rawr.Mage
                             w[i] = a[i * (cols + rows) + maxcol];
                         }
                         w[i] = D[maxcol];
-                        lu.Solve(w, 1);
+                        lu.FSolve(w, 1);
 
                         // min over i of d[i]/w[i] where w[i]>0
                         double minr = double.PositiveInfinity;
@@ -306,7 +306,7 @@ namespace Rawr.Mage
                             {
                                 x[i] = ((i == mini) ? 1 : 0);
                             }
-                            lu.SolveForward(x); // TODO exploit nature of x
+                            lu.BSolve(x); // TODO exploit nature of x
 
                             // update primal and dual
                             for (i = 0; i < rows; i++)
@@ -412,14 +412,14 @@ namespace Rawr.Mage
                             {
                                 d[i] = b[i]; // TODO block copy?
                             }
-                            lu.Solve(d, 1);
+                            lu.FSolve(d, 1);
 
                             for (i = 0; i < rows; i++)
                             {
                                 if (B[i] < cols) u[i] = cost[B[i]];
                                 else u[i] = 0;
                             }
-                            lu.SolveForward(u);
+                            lu.BSolve(u);
                             for (j = 0; j < cols; j++)
                             {
                                 int col = V[j];
@@ -485,7 +485,7 @@ namespace Rawr.Mage
                         {
                             x[i] = ((i == mini) ? 1 : 0);
                         }
-                        lu.SolveForward(x); // TODO exploit nature of x
+                        lu.BSolve(x); // TODO exploit nature of x
 
                         // min over i of d[i]/w[i] where w[i]>0
                         double minr = double.PositiveInfinity;
@@ -527,7 +527,7 @@ namespace Rawr.Mage
                             w[i] = a[i * (cols + rows) + mincol];
                         }
                         w[i] = D[mincol];
-                        lu.Solve(w, 1);
+                        lu.FSolve(w, 1);
 
                         // -minr = dual step
                         // rp = primal step
@@ -625,7 +625,7 @@ namespace Rawr.Mage
                         {
                             d[i] = a[i * (cols + 1) + cols];
                         }
-                        lu.Solve(d, 1);
+                        lu.FSolve(d, 1);
 
                         if (!feasible)
                         {
@@ -658,7 +658,7 @@ namespace Rawr.Mage
                                 else x[i] = 0;
                             }
                         }
-                        lu.SolveForward(x);
+                        lu.BSolve(x);
 
                         double maxc = eps;
                         int maxj = -1;
@@ -720,7 +720,7 @@ namespace Rawr.Mage
                                 w[i] = ((i == maxcol - cols) ? 1 : 0);
                             }
                         }
-                        lu.Solve(w, 1);
+                        lu.FSolve(w, 1);
 
                         // min over i of d[i]/w[i] where w[i]>0
                         double minr = double.PositiveInfinity;

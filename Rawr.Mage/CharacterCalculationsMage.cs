@@ -699,6 +699,7 @@ namespace Rawr.Mage
             public SequenceGroup Group;
             public double Cooldown;
             public double Duration;
+            public bool ColdSnap;
         }
 
         private class SequenceGroup
@@ -1708,7 +1709,7 @@ namespace Rawr.Mage
                 {
                     if (item.Stats.IcyVeins) list.Add(item);
                 }
-                GroupCooldown(list, 20, 180);
+                GroupCooldown(list, 20, 180, false, SequenceItem.Calculations.CalculationOptions.ColdSnap == 1);
             }
 
             public void GroupFlameCap()
@@ -1999,7 +2000,7 @@ namespace Rawr.Mage
                     {
                         if (i != j)
                         {
-                            group.Constraint.Add(new CooldownConstraint() { Cooldown = cooldown, Duration = maxDuration, Group = partialGroups[j] });
+                            group.Constraint.Add(new CooldownConstraint() { Cooldown = cooldown, Duration = maxDuration, Group = partialGroups[j], ColdSnap = coldSnapMode });
                         }
                     }
                 }
@@ -2075,7 +2076,8 @@ namespace Rawr.Mage
                             {
                                 for (int j = i + 1; j < compactItems.Count; j++)
                                 {
-                                    if (compactItems[j].Group.Contains(constraint.Group))
+                                    // skip cooldown constraints that are coldsnapped in the solution
+                                    if (compactItems[j].Group.Contains(constraint.Group) && (!constraint.ColdSnap || (compactItems[j].MinTime - item.MinTime >= 180 - 0.000001)))
                                     {
                                         time = Math.Min(time, compactItems[j].MaxTime - constraint.Cooldown);
                                         break;
@@ -2133,6 +2135,7 @@ namespace Rawr.Mage
                 List<double>[] constructionTimeHistory = new List<double>[N];
                 bool[] used = new bool[N];
                 int[] index = new int[N];
+                int[] coldsnap = new int[N];
                 int[] maxIntersect = new int[N];
                 for (int j = 0; j < N; j++) itemList[j].SuperIndex = -1;
                 int super = -1;
@@ -2186,8 +2189,9 @@ namespace Rawr.Mage
                     superLeft[itemList[j].SuperIndex]++;
                 }
                 int i = 0;
-                index[0] = -1;
+                index[0] = 0;
                 constructionTimeHistory[0] = constructionTime;
+                coldsnap[0] = 2;
                 do
                 {
                     if (i == N)
@@ -2233,10 +2237,15 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        do
+                        coldsnap[i]--;
+                        if (coldsnap[i] < 0 || used[index[i]])
                         {
-                            index[i]++;
-                        } while (index[i] < N && used[index[i]]);
+                            coldsnap[i] = 1;
+                            do
+                            {
+                                index[i]++;
+                            } while (index[i] < N && used[index[i]]);
+                        }
                         if (index[i] == N)
                         {
                             i--;
@@ -2267,35 +2276,43 @@ namespace Rawr.Mage
                                     used[index[i]] = true;
                                     itemList[index[i]].OrderIndex = i;
                                     superLeft[itemList[index[i]].SuperIndex]--;
-                                    for (int j = 0; j < N; j++)
+                                    if (coldsnap[i] == 0)
                                     {
-                                        if (!used[j] && itemList[j].SuperIndex == item.SuperIndex)
+                                        tail = 0;
+                                        // skip tests, we already computed all this for coldsnap == 1
+                                    }
+                                    else
+                                    {
+                                        for (int j = 0; j < N; j++)
                                         {
-                                            if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
+                                            if (!used[j] && itemList[j].SuperIndex == item.SuperIndex)
                                             {
-                                                int intersectHexJ = HexCount(itemList[j].CooldownHex & activeTail);
-                                                if (intersectHexJ > intersectHex)
+                                                if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
                                                 {
-                                                    // anything up to j is not valid, so skip ahead
-                                                    used[index[i]] = false;
-                                                    superLeft[itemList[index[i]].SuperIndex]++;
-                                                    index[i] = j;
-                                                    used[j] = true;
-                                                    itemList[j].OrderIndex = i;
-                                                    superLeft[itemList[index[i]].SuperIndex]--;
-                                                    intersectHex = intersectHexJ;
-                                                    maxIntersect[i] = intersectHex;
-                                                    item = itemList[j];
-                                                    tail = item.CooldownHex;
-                                                    j = -1;
-                                                    continue;
+                                                    int intersectHexJ = HexCount(itemList[j].CooldownHex & activeTail);
+                                                    if (intersectHexJ > intersectHex)
+                                                    {
+                                                        // anything up to j is not valid, so skip ahead
+                                                        used[index[i]] = false;
+                                                        superLeft[itemList[index[i]].SuperIndex]++;
+                                                        index[i] = j;
+                                                        used[j] = true;
+                                                        itemList[j].OrderIndex = i;
+                                                        superLeft[itemList[index[i]].SuperIndex]--;
+                                                        intersectHex = intersectHexJ;
+                                                        maxIntersect[i] = intersectHex;
+                                                        item = itemList[j];
+                                                        tail = item.CooldownHex;
+                                                        j = -1;
+                                                        continue;
+                                                    }
                                                 }
-                                            }
-                                            int intersect = item.CooldownHex & itemList[j].CooldownHex;
-                                            if (intersect > 0)
-                                            {
-                                                tail = intersect & tail;
-                                                if (tail == 0) break;
+                                                int intersect = item.CooldownHex & itemList[j].CooldownHex;
+                                                if (intersect > 0)
+                                                {
+                                                    tail = intersect & tail;
+                                                    if (tail == 0) break;
+                                                }
                                             }
                                         }
                                     }
@@ -2305,19 +2322,93 @@ namespace Rawr.Mage
                                         if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[i - 1]].Duration;
                                         time = Math.Max(time, item.MinTime);
                                         // check constraints
+                                        List<int> coldsnapStarts = new List<int>();
                                         foreach (SequenceGroup group in item.Group)
                                         {
                                             foreach (CooldownConstraint constraint in group.Constraint)
                                             {
-                                                for (int j = 0; j < i; j++)
+                                                if (!constraint.ColdSnap)
                                                 {
-                                                    if (itemList[index[j]].Group.Contains(constraint.Group))
+                                                    for (int j = 0; j < i; j++)
                                                     {
-                                                        time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
-                                                        break;
+                                                        if (itemList[index[j]].Group.Contains(constraint.Group))
+                                                        {
+                                                            time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    // if we're in group with already placed item then no need to redo all this
+                                                    if (i > 0 && itemList[index[i - 1]].Group.Contains(group)) continue;
+                                                    int minIndex = i;
+                                                    foreach (SequenceItem coldsnapItem in constraint.Group.Item)
+                                                    {
+                                                        if (coldsnapItem.OrderIndex > 0 && coldsnapItem.OrderIndex < N && index[coldsnapItem.OrderIndex] < N && itemList[index[coldsnapItem.OrderIndex]] == coldsnapItem && used[index[coldsnapItem.OrderIndex]] && coldsnapItem.OrderIndex < minIndex)
+                                                        {
+                                                            minIndex = coldsnapItem.OrderIndex;
+                                                        }
+                                                    }
+                                                    if (minIndex < i)
+                                                    {
+                                                        coldsnapStarts.Add(minIndex);
                                                     }
                                                 }
                                             }
+                                        }
+                                        // we absolutely can't come faster than time
+                                        // now check coldsnap constraints
+                                        // the constraints should link to all the other icy veins groups
+                                        // look at the ones that were placed already and sort them by order index
+                                        // if the last one that needed coldsnap is farther than coldsnap cooldown then we can use it again
+                                        // if we don't need to use coldsnap anyway then adjust coldsnap to 0
+                                        if (coldsnapStarts.Count > 0)
+                                        {
+                                            // this is only called for first coldsnap item in group
+                                            coldsnapStarts.Sort();
+                                            int lastColdsnap = -1;
+                                            for (int j = 0; j < coldsnapStarts.Count - 1; j++)
+                                            {
+                                                if (constructionTime[j + 1] - constructionTime[j] < 180 - 0.000001)
+                                                {
+                                                    lastColdsnap = j;
+                                                }
+                                            }
+                                            if (time - constructionTime[coldsnapStarts.Count - 1] >= 180 - 0.000001)
+                                            {
+                                                // don't need coldsnap and can start right at time
+                                                coldsnap[i] = 0;
+                                            }
+                                            else if (coldsnap[i] == 1)
+                                            {
+                                                // use coldsnap
+                                                double normalTime = Math.Max(time, constructionTime[coldsnapStarts.Count - 1] + 180);
+                                                double coldsnapTime = 0;
+                                                if (lastColdsnap >= 0) coldsnapTime = constructionTime[lastColdsnap] + 8 * 60 * (1 - 0.1 * SequenceItem.Calculations.CalculationOptions.IceFloes);
+                                                if (coldsnapTime >= normalTime)
+                                                {
+                                                    // coldsnap won't be ready until IV will be back anyway, so we don't actually need it
+                                                    coldsnap[i] = 0;
+                                                    time = normalTime;
+                                                }
+                                                else
+                                                {
+                                                    // go now or when coldsnap is ready
+                                                    time = Math.Max(coldsnapTime, time);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                // we are not allowed to use coldsnap even if we could
+                                                // make sure to adjust by coldsnap constraints
+                                                time = Math.Max(time, constructionTime[coldsnapStarts.Count - 1] + 180); 
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // no coldsnap constraints active
+                                            coldsnap[i] = 0;
                                         }
                                         List<double> adjustedConstructionTime = new List<double>(constructionTime);
                                         adjustedConstructionTime.Add(time);
@@ -2330,8 +2421,12 @@ namespace Rawr.Mage
                                         constructionTimeHistory[i] = constructionTime;
                                         constructionTime = adjustedConstructionTime;
                                         i++;
-                                        if (i < N) index[i] = -1;
-                                        if (i < N) maxIntersect[i] = 0;
+                                        if (i < N)
+                                        {
+                                            index[i] = 0;
+                                            maxIntersect[i] = 0;
+                                            coldsnap[i] = 2;
+                                        }
                                     }
                                     else
                                     {
@@ -2710,6 +2805,9 @@ namespace Rawr.Mage
 
                 ReportMode reportMode = ReportMode.Compact;
 
+                bool coldsnap = SequenceItem.Calculations.CalculationOptions.ColdSnap == 1;
+                float coldsnapCooldownDuration = 8 * 60 * (1 - 0.1f * SequenceItem.Calculations.CalculationOptions.IceFloes);
+
                 int gemCount = 0;
                 double potionCooldown = 0;
                 double gemCooldown = 0;
@@ -2721,6 +2819,7 @@ namespace Rawr.Mage
                 double apCooldown = 0;
                 double ivCooldown = 0;
                 double combustionCooldown = 0;
+                double coldsnapCooldown = 0;
                 double trinket1time = -1;
                 double trinket2time = -1;
                 double flameCapTime = -1;
@@ -2741,6 +2840,7 @@ namespace Rawr.Mage
                 bool drumsWarning = false;
                 bool manaWarning = false;
                 double combustionLeft = 0;
+                double lastIVstart = 0;
 
                 double unexplained = 0;
 
@@ -3228,8 +3328,17 @@ namespace Rawr.Mage
                         {
                             if (time + duration > ivTime + 20 + 0.000001)
                             {
-                                unexplained += time + duration - ivTime - 20;
-                                if (timing != null) timing.AppendLine("WARNING: Icy Veins duration too long!");
+                                if (coldsnapCooldown <= (ivTime + 20 - time) + 0.000001)
+                                {
+                                    ivTime += 20;
+                                    ivCooldown += 20;
+                                    coldsnapCooldown = coldsnapCooldownDuration - (ivTime + 20 - time);
+                                }
+                                if (time + duration > ivTime + 20 + 0.000001)
+                                {
+                                    unexplained += time + duration - ivTime - 20;
+                                    if (timing != null) timing.AppendLine("WARNING: Icy Veins duration too long!");
+                                }
                             }
                         }
                         else if (duration > 0 && 20 - (time - ivTime) > 0.000001)
@@ -3242,7 +3351,7 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.IcyVeins)
                         {
-                            if (ivCooldown > 0.000001)
+                            if (ivCooldown > 0.000001 && coldsnapCooldown > 0.000001)
                             {
                                 unexplained += duration;
                                 if (timing != null && !ivWarning) timing.AppendLine("WARNING: Icy Veins cooldown not ready!");
@@ -3250,10 +3359,15 @@ namespace Rawr.Mage
                             }
                             else
                             {
+                                if (ivCooldown > 0.000001 && coldsnapCooldown <= 0.000001)
+                                {
+                                    coldsnapCooldown = coldsnapCooldownDuration - (time - Math.Max(time + coldsnapCooldown, lastIVstart));
+                                }
                                 if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Icy Veins (" + Math.Round(manabefore).ToString() + " mana)");
                                 ivCooldown = 180;
                                 ivTime = time;
                                 ivWarning = false;
+                                lastIVstart = time;
                             }
                         }
                     }
@@ -3313,6 +3427,7 @@ namespace Rawr.Mage
                     trinket2Cooldown -= duration;
                     combustionCooldown -= duration;
                     drumsCooldown -= duration;
+                    coldsnapCooldown -= duration;
                     if (apTime >= 0 && 15 - (time - apTime) <= 0.000001) apTime = -1;
                     if (ivTime >= 0 && 20 - (time - ivTime) <= 0.000001) ivTime = -1;
                     if (heroismTime >= 0 && 40 - (time - heroismTime) <= 0.000001) heroismTime = -1;
@@ -3453,7 +3568,7 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Pyroblast", "Frostbolt", "Arcane Blast", "ABAMP", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrBSc", "ABFB3FBSc", "FireballScorch", "FireballFireBlast", "Fire Blast", "ABAM3ScCCAM", "ABAM3Sc2CCAM", "ABAM3FrBCCAM", "ABAM3FrBScCCAM", "ABAMCCAM", "ABAM3CCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold" };
+            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Pyroblast", "Frostbolt", "Arcane Blast", "ABAMP", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrBSc", "ABFB3FBSc", "FireballScorch", "FireballFireBlast", "Fire Blast", "ABAM3ScCCAM", "ABAM3Sc2CCAM", "ABAM3FrBCCAM", "ABAM3FrBScCCAM", "ABAMCCAM", "ABAM3CCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold"/*, "ABAM3FrBCCAMFail"*/ };
             Spell AB = GetSpell("Arcane Blast");
             foreach (string spell in spellList)
             {

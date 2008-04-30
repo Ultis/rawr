@@ -24,7 +24,7 @@ namespace Rawr.Mage
             column = new double[size];
         }
 
-        public unsafe void SolveForward(double* b)
+        public unsafe void BSolve(double* b)
         {
             int i, k;
             fixed (double* a = data, c = column)
@@ -66,7 +66,7 @@ namespace Rawr.Mage
             }
         }
 
-        public unsafe void Solve(double* b, int cols)
+        public unsafe void FSolve(double* b, int cols)
         {
             int i, k;
             fixed (double* a = data, c = column)
