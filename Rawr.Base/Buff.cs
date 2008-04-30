@@ -1003,22 +1003,22 @@ namespace Rawr
                 SetName = "Spellstrike Infusion",
                 SetThreshold = 2
             });
-            //_allBuffs.Add(new Buff()
-            //{
-            //    Name = "2 Piece T6",
-            //    Category = BuffCategory.SetBonuses,
-            //    Stats = new Stats() { HLCrit = .05f },
-            //    SetName = "Lightbringer Raiment",
-            //    SetThreshold = 2
-            //});
-            //_allBuffs.Add(new Buff()
-            //{
-            //    Name = "4 Piece T6",
-            //    Category = BuffCategory.SetBonuses,
-            //    Stats = new Stats() { FoLMultiple = .05f },
-            //    SetName = "Lightbringer Raiment",
-            //    SetThreshold = 4
-            //});
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Lightbringer Raiment 2 Piece",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { HLCrit = .05f },
+                SetName = "Lightbringer Raiment",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Lightbringer Raiment 4 Piece",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { FoLMultiplier = .05f },
+                SetName = "Lightbringer Raiment",
+                SetThreshold = 4
+            });
             // Windhawk (epic leather caster) set
             defaultBuffs.Add(new Buff()
             {

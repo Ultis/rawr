@@ -867,27 +867,27 @@ namespace Rawr
                             stats.BonusCrusaderStrikeDamageMultiplier += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture) / 100f;
 
                         }
-						//else if (spellDesc.StartsWith("Increases the benefit your Flash of Light"))
-						//{
-						//    stats.HLBoL = 120;
-						//    stats.FoLBoL = 60;
-						//}
-						//else if (spellDesc.StartsWith("Reduces the mana cost of Holy Light by"))
-						//{
-						//    stats.HLCost = 34;
-						//}
-						//else if (spellDesc.StartsWith("Increases healing done by Flash of Light by up to"))
-						//{
-						//    spellDesc = spellDesc.Substring("Increases healing done by Flash of Light by up to ".Length);
-						//    spellDesc = spellDesc.Replace(".", "");
-						//    stats.FoLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
-						//}
-						//else if (spellDesc.StartsWith("Increases healing done by Holy Light by up to"))
-						//{
-						//    spellDesc = spellDesc.Substring("Increases healing done by Holy Light by up to ".Length);
-						//    spellDesc = spellDesc.Replace(".", "");
-						//    stats.HLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
-						//}
+						else if (spellDesc.StartsWith("Increases the benefit your Flash of Light"))
+						{
+						    stats.HLBoL = 120;
+						    stats.FoLBoL = 60;
+						}
+						else if (spellDesc.StartsWith("Reduces the mana cost of Holy Light by"))
+						{
+						    stats.HLCost = 34;
+						}
+						else if (spellDesc.StartsWith("Increases healing done by Flash of Light by up to"))
+						{
+						    spellDesc = spellDesc.Substring("Increases healing done by Flash of Light by up to ".Length);
+						    spellDesc = spellDesc.Replace(".", "");
+						    stats.FoLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+						}
+						else if (spellDesc.StartsWith("Increases healing done by Holy Light by up to"))
+						{
+						    spellDesc = spellDesc.Substring("Increases healing done by Holy Light by up to ".Length);
+						    spellDesc = spellDesc.Replace(".", "");
+						    stats.HLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+						}
                     }
 				}
 
@@ -985,6 +985,7 @@ namespace Rawr
                             case "Mana ever 5 Sec":
                             case "mana per 5 sec":
                             case "mana per 5 sec.":
+                            case "Mana per 5 sec.":
                             case "Mana per 5 Seconds":
                                 sockets.Stats.Mp5 = socketBonusValue;
                                 break;

@@ -40,11 +40,12 @@ namespace Rawr.Healadin
             set { _subPoints[1] = value; }
         }
 
-        public float Hps { get; set; }
-        public float Uptime { get; set; }
-        public float AvgHps { get; set; }
-        public float AvgHpm { get; set; }
+
+        public float AvgHPS { get; set; }
+        public float AvgHPM { get; set; }
         public float Healed { get; set; }
+        public float TimeHL { get; set; }
+        public float HealHL { get; set; }
 
         private Stats _basicStats;
         public Stats BasicStats
@@ -80,11 +81,11 @@ namespace Rawr.Healadin
             dictValues.Add("Spell Crit", Math.Round(_spells[0].SpellCrit*100-5,2).ToString()+"%*"+BasicStats.SpellCritRating.ToString() + " Spell Crit rating");
             dictValues.Add("Spell Haste", Math.Round(BasicStats.SpellHasteRating/15.7,2).ToString()+"%*"
                 +BasicStats.SpellHasteRating.ToString()+ " Spell Haste rating");
-            dictValues.Add("Cycle Uptime", Math.Round(Uptime*100,2).ToString()+"%");
-            dictValues.Add("Cycle Hps", Math.Round(Hps).ToString());
             dictValues.Add("Total Healed", Math.Round(Healed).ToString());
-            dictValues.Add("Average Hps", Math.Round(AvgHps).ToString());
-            dictValues.Add("Average Hpm", Math.Round(AvgHpm,2).ToString());
+            dictValues.Add("Average Hps", Math.Round(AvgHPS).ToString());
+            dictValues.Add("Average Hpm", Math.Round(AvgHPM, 2).ToString());
+            dictValues.Add("Holy Light Time", Math.Round(TimeHL * 100).ToString() + "%");
+            dictValues.Add("Holy Light Healing", Math.Round(HealHL * 100).ToString() + "%");
             dictValues.Add("Flash of Light", Math.Round(_spells[0].Hps).ToString() + " hps*"+Math.Round(_spells[0].Hpm,2).ToString()+
                 " hpm\n" + Math.Round(_spells[0].AverageHeal).ToString() + " average heal");
             dictValues.Add("Holy Light 11", Math.Round(_spells[1].Hps).ToString() + " hps*" + Math.Round(_spells[1].Hpm, 2).ToString() +

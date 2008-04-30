@@ -43,12 +43,19 @@ namespace Rawr
         ExpertiseRating,
         ExposeWeakness,
         FireResistance,
+        FoLHeal,
+        FoLCrit,
+        FoLBoL,
         FrostResistance,
         HasteRating,
         Healing,
         Health,
         Hit,
         HitRating,
+        HLCost,
+        HLHeal,
+        HLBoL,
+        HLCrit,
         Hp5,
         IdolCritRating,
         InnervateCooldownReduction,
@@ -142,6 +149,7 @@ namespace Rawr
         BonusStrengthMultiplier,
         BonusSwipeDamageMultiplier,
         BonusShadowSpellPowerMultiplier,
+        FoLMultiplier,
         ThreatIncreaseMultiplier,
     }
 
@@ -1078,6 +1086,68 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.TimbalsProc] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("FoL Bonus Heal")]
+        [Category("Equipment Procs")]
+        public float FoLHeal
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FoLHeal]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FoLHeal] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("FoL BoL Bonus")]
+        [Category("Equipment Procs")]
+        public float FoLBoL
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FoLBoL]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FoLBoL] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("FoL Bonus Crit")]
+        [Category("Equipment Procs")]
+        public float FoLCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FoLCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FoLCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("HL Bonus Heal")]
+        [Category("Equipment Procs")]
+        public float HLHeal
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HLHeal]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HLHeal] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("HL Reduced Cost")]
+        [Category("Equipment Procs")]
+        public float HLCost
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HLCost]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HLCost] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("HL Bonus Crit")]
+        [Category("Equipment Procs")]
+        public float HLCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HLCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HLCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("HL BoL Bonus")]
+        [Category("Equipment Procs")]
+        public float HLBoL
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HLBoL]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HLBoL] = value; }
+        }
 
 #endregion
 
@@ -1299,6 +1369,16 @@ namespace Rawr
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPhysicalDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPhysicalDamageMultiplier] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("FoL Multiplier")]
+        [Category("Equipment Procs")]
+        public float FoLMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.FoLMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.FoLMultiplier] = value; }
+        }
+
 
         #endregion
 

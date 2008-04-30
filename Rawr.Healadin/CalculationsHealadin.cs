@@ -37,11 +37,11 @@ namespace Rawr.Healadin
 					"Basic Stats:Mp5",
 					"Basic Stats:Spell Crit",
 					"Basic Stats:Spell Haste",
-					"Cycle Stats:Cycle Uptime",
-					"Cycle Stats:Cycle Hps",
 					"Cycle Stats:Total Healed",
 					"Cycle Stats:Average Hps",
 					"Cycle Stats:Average Hpm",
+					"Cycle Stats:Holy Light Time",
+					"Cycle Stats:Holy Light Healing",
                     "Spell Stats:Flash of Light",
                     "Spell Stats:Holy Light 11",
                     "Spell Stats:Holy Light 10",
@@ -126,7 +126,8 @@ namespace Rawr.Healadin
             float activity = int.Parse(character.CalculationOptions["Activity"]) / 100f;
 			float length = float.Parse(character.CalculationOptions["Length"], System.Globalization.CultureInfo.InvariantCulture) * 60;
             float totalMana = stats.Mana + (length * stats.Mp5 / 5) + (float.Parse(character.CalculationOptions["Spriest"]) * length / 5) +
-                ((1 + stats.BonusManaPotion) * float.Parse(character.CalculationOptions["ManaAmt"]) * (float)Math.Ceiling((length / 60 - 1) / float.Parse(character.CalculationOptions["ManaTime"])));
+                ((1 + stats.BonusManaPotion) * float.Parse(character.CalculationOptions["ManaAmt"]) * (float)Math.Ceiling((length / 60 - 1) / float.Parse(character.CalculationOptions["ManaTime"])))
+                + float.Parse(character.CalculationOptions["Spiritual"]);
             length *= activity; 
 
             calculatedStats[0] = new Spell("Flash of Light", 7);
@@ -138,59 +139,22 @@ namespace Rawr.Healadin
             calculatedStats[6] = new Spell("Holy Light", 6);
             calculatedStats[7] = new Spell("Holy Light", 5);
             calculatedStats[8] = new Spell("Holy Light", 4);
+            Spell FoL = calculatedStats[0];
+            Spell HL = calculatedStats[1];
 
-            int[] r = {0, 12 - int.Parse(character.CalculationOptions["Rank1"]), 12 - int.Parse(character.CalculationOptions["Rank2"]),
-                              12 - int.Parse(character.CalculationOptions["Rank3"]), 12 - int.Parse(character.CalculationOptions["Rank4"]),
-                              12 - int.Parse(character.CalculationOptions["Rank5"])};
+            float time_hl = Math.Max(0, (totalMana - (length * FoL.Mps)) / (HL.Mps - FoL.Mps));
+            float time_fol= length - time_hl;
 
-            #region Spell Cycle Modelling
-            float[] cycle = {int.Parse(character.CalculationOptions["CycleFoL"]) * calculatedStats[r[0]].CastTime,
-                int.Parse(character.CalculationOptions["CycleHL1"]) * calculatedStats[r[1]].CastTime,
-                int.Parse(character.CalculationOptions["CycleHL2"]) * calculatedStats[r[2]].CastTime,
-                int.Parse(character.CalculationOptions["CycleHL3"]) * calculatedStats[r[3]].CastTime,
-                int.Parse(character.CalculationOptions["CycleHL4"]) * calculatedStats[r[4]].CastTime,
-                int.Parse(character.CalculationOptions["CycleHL5"]) * calculatedStats[r[5]].CastTime};
-            float mpc = 0, ctime = 0, hpc = 0;
-            for (int i = 0; i < 6; i++)
-            {
-                ctime += cycle[i];
-                mpc += calculatedStats[r[i]].Mps * cycle[i];
-                hpc += calculatedStats[r[i]].Hps * cycle[i];
-            }
-            #endregion
+            float healing_fol = time_fol * FoL.Hps;
+            float healing_hl = time_hl * HL.Hps;
 
-            #region Divine Illumination Modelling
-            calculatedStats.Calculate(true);
-            float dicycles = (float)Math.Ceiling(length / 180);
-            length -= dicycles * 15;
-            float[] dicycle = {int.Parse(character.CalculationOptions["DIFoL"]) * calculatedStats[r[0]].CastTime,
-                int.Parse(character.CalculationOptions["DIHL1"]) * calculatedStats[r[1]].CastTime,
-                int.Parse(character.CalculationOptions["DIHL2"]) * calculatedStats[r[2]].CastTime,
-                int.Parse(character.CalculationOptions["DIHL3"]) * calculatedStats[r[3]].CastTime,
-                int.Parse(character.CalculationOptions["DIHL4"]) * calculatedStats[r[4]].CastTime,
-                int.Parse(character.CalculationOptions["DIHL5"]) * calculatedStats[r[5]].CastTime};
-            float dimana = 0, dihpc = 0, dictime = 0;
-            for (int i = 0; i < 6; i++)
-            {
-                dictime += dicycle[i];
-                dimana += calculatedStats[r[i]].Mps * dicycle[i];
-                dihpc += calculatedStats[r[i]].Hps * dicycle[i];
-            }
-            dimana *= 15 / dictime;
-            dihpc *= 15 / dictime;
-            totalMana -= dimana * dicycles;
-            calculatedStats.Calculate(false);
-            #endregion
+            calculatedStats.ThroughputPoints = calculatedStats.Healed = healing_fol + healing_hl;
+            calculatedStats.LongevityPoints = 0;
 
-            float maxcycles =  length / ctime;
-            float cycles = Math.Min(totalMana / mpc, maxcycles);
-
-            calculatedStats.LongevityPoints = calculatedStats.Healed = (hpc * cycles) + (dihpc * dicycles);
-            calculatedStats.ThroughputPoints = (hpc * maxcycles) + (dihpc * dicycles);
-            calculatedStats.Hps = ((hpc / ctime * 2.75f) + (dihpc / 15 * .25f)) / 3;
-            calculatedStats.Uptime = ((cycles*ctime) + (dicycles*15)) / ((maxcycles*ctime) + (dicycles*15));
-            calculatedStats.AvgHpm = calculatedStats.Healed / (totalMana + (dimana * dicycles));
-            calculatedStats.AvgHps = calculatedStats.Healed / (length + (dicycles * 15));
+            calculatedStats.HealHL = healing_hl / calculatedStats.Healed;
+            calculatedStats.TimeHL = time_hl / (time_fol + time_hl);
+            calculatedStats.AvgHPS = calculatedStats.Healed / length / activity;
+            calculatedStats.AvgHPM = calculatedStats.Healed / totalMana;
 
             calculatedStats.OverallPoints = calculatedStats.ThroughputPoints + calculatedStats.LongevityPoints;
 
@@ -302,14 +266,24 @@ namespace Rawr.Healadin
                 Health = stats.Health,
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
+                BonusManaPotion = stats.BonusManaPotion,
+                FoLBoL = stats.FoLBoL,
+                FoLCrit = stats.FoLCrit,
+                FoLHeal = stats.FoLHeal,
+                FoLMultiplier = stats.FoLMultiplier,
+                HLHeal = stats.HLHeal,
+                HLCrit = stats.HLCrit,
+                HLCost = stats.HLCost,
+                HLBoL = stats.HLBoL
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.Stamina + stats.Mp5 + stats.Healing + stats.SpellCritRating
+            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
-                + stats.FoLBoL + stats.FoLHeal + stats.FoLMultiple + stats.HLBoL + stats.HLCost + stats.HLCrit + stats.HLHeal) > 0;
+                + stats.BonusManaPotion + stats.FoLMultiplier + stats.FoLHeal + stats.FoLCrit + stats.FoLBoL + stats.HLBoL + stats.HLCost
+                + stats.HLCrit + stats.HLHeal) > 0;
         }
     }
 }

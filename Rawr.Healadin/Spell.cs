@@ -69,7 +69,7 @@ namespace Rawr.Healadin
             
             if (name.Equals("Holy Light"))
             {
-                spellCrit += .05f + stats.HLCrit;
+                spellCrit += .06f + stats.HLCrit;
                 bonus = stats.HLHeal;
                 multi = healMultiple;
                 bol = bolBonus + stats.HLBoL;
@@ -78,7 +78,7 @@ namespace Rawr.Healadin
             else
             {
                 bonus = stats.FoLHeal;
-                multi = healMultiple * (1 + stats.FoLMultiple);
+                multi = healMultiple + stats.FoLMultiplier;
                 bol = bolBonus + stats.FoLBoL;
                 cost = 0;
             }
