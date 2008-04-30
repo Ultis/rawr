@@ -814,14 +814,14 @@ namespace Rawr
             {
                 Name = "Expose Armor (5cp)",
                 Category = BuffCategory.Debuffs,
-                Stats = new Stats() { ArmorPenetration = 2000 },
+                Stats = new Stats() { ArmorPenetration = 2050 },
                 ConflictingBuffs = new string[] { "Sunder Armor" }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Improved Expose Armor (5cp)",
                 Category = BuffCategory.Debuffs,
-                Stats = new Stats() { ArmorPenetration = 1000 },
+                Stats = new Stats() { ArmorPenetration = 1025 },
                 RequiredBuff = "Expose Armor (5cp)"
             });
             defaultBuffs.Add(new Buff()

@@ -296,7 +296,6 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2935, "Spell Strike", Item.ItemSlot.Hands, new Stats() { SpellHitRating = 15 }));
             defaultEnchants.Add(new Enchant(2928, "Spellpower", Item.ItemSlot.Finger, new Stats() { SpellDamageRating = 12 }));
             defaultEnchants.Add(new Enchant(2669, "Major Spellpower", Item.ItemSlot.MainHand, new Stats() { SpellDamageRating = 40 }));
-            defaultEnchants.Add(new Enchant(2660, "Exceptional Mana", Item.ItemSlot.Chest, new Stats() { Mana = 150 }));
             defaultEnchants.Add(new Enchant(2666, "Major Intellect", Item.ItemSlot.MainHand, new Stats() { Intellect = 30 }));
             defaultEnchants.Add(new Enchant(2679, "Restore Mana Prime", Item.ItemSlot.Wrist, new Stats() { Mp5 = 6 }));
             defaultEnchants.Add(new Enchant(2748, "Runic Spellthread", Item.ItemSlot.Legs, new Stats() { SpellDamageRating = 35, Stamina = 20 }));
@@ -364,7 +363,8 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Chest, null));
 			defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Legs, null));
 			defaultEnchants.Add(new Enchant(9001, "Major Defense", Item.ItemSlot.Chest, null));
-            #endregion
+			defaultEnchants.Add(new Enchant(2660, "Exceptional Mana", Item.ItemSlot.Chest, null));
+			#endregion
             return defaultEnchants;
         }
 	}
