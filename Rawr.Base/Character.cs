@@ -1513,7 +1513,9 @@ namespace Rawr //O O . .
                         this.MainHandEnchant,
                         this.OffHandEnchant,
                         this.RangedEnchant);
-			foreach (string buff in this.ActiveBuffs) clone.ActiveBuffs.Add(buff);
+			foreach (string buff in this.ActiveBuffs) 
+				if (!clone.ActiveBuffs.Contains(buff))
+					clone.ActiveBuffs.Add(buff);
 			clone.CalculationOptionsStrings = this.CalculationOptionsStrings;
             clone.Class = this.Class;
             clone.Talents = this.Talents;
