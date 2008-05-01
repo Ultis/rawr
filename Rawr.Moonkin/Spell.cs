@@ -837,7 +837,7 @@ namespace Rawr.Moonkin
             // Unseen Moon proc
             if (rotation.HasMoonfire && calcs.BasicStats.UnseenMoonDamageBonus > 0)
             {
-                float numberOfProcs = 0.5f / rotation.CastCount;    // 50% proc chance on one spell in the whole rotation
+                float numberOfProcs = 0.5f;    // 50% proc chance
                 float timeBetweenProcs = rotation.Duration / numberOfProcs;
                 effectiveArcaneDamage += calcs.BasicStats.UnseenMoonDamageBonus * 10.0f / timeBetweenProcs;
                 effectiveNatureDamage += calcs.BasicStats.UnseenMoonDamageBonus * 10.0f / timeBetweenProcs;
