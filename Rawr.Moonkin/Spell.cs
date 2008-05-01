@@ -258,7 +258,7 @@ namespace Rawr.Moonkin
             // Use the property so that haste over the haste cap will clip at the current GCD, if possible to achieve for Starfire
             CastTime = (unhastedCastTime - naturesGraceTime * critCoefficient * hitCoefficient) / hasteCoefficient;
 
-            return (damageCoefficient * (critDamageCoefficient + critCoefficient) * hitCoefficient) / ((baseCastTime - naturesGraceTime * critCoefficient * hitCoefficient) / hasteCoefficient);
+            return (damageCoefficient * (critDamageCoefficient + critCoefficient) * hitCoefficient) / (baseCastTime - naturesGraceTime * critCoefficient * hitCoefficient);
         }
     }
 
@@ -400,6 +400,18 @@ namespace Rawr.Moonkin
             float accumulatedManaUsed = 0.0f;
             float accumulatedDuration = 0.0f;
             Dictionary<float, float> activeDots = new Dictionary<float,float>();
+            // Handle case where two non-DoT spells are cast (DoTs should not fall off before last spell cast)
+            bool has1NonDot = false;
+            float lastSpellCastTime = 0.0f;
+            foreach (Spell sp in spells)
+            {
+                if (sp.DoT == null && has1NonDot)
+                {
+                    lastSpellCastTime = sp.CastTime;
+                }
+                if (sp.DoT == null && !has1NonDot)
+                    has1NonDot = true;
+            }
             foreach (Spell sp in spells)
             {
                 float currentSpellDPS = 0.0f;
@@ -421,7 +433,7 @@ namespace Rawr.Moonkin
                         if (pair.Value > dotDuration)
                             dotDuration = pair.Value;
                     }
-                    while (timeSpentCasting < dotDuration)
+                    while (timeSpentCasting < dotDuration - lastSpellCastTime)
                     {
                         timeSpentCasting += sp.CastTime;
                         ++numberOfCasts;
@@ -447,7 +459,9 @@ namespace Rawr.Moonkin
                 {
                     activeDots[key] -= timeSpentCasting;
                 }
-                accumulatedDamage += currentSpellDPS * timeSpentCasting;
+                // Prevent double-counting of DoT spells
+                if (sp.DoT == null)
+                    accumulatedDamage += currentSpellDPS * timeSpentCasting;
                 accumulatedManaUsed += sp.ManaCost * numberOfCasts;
                 accumulatedDuration += sp.CastTime * numberOfCasts;
             }
