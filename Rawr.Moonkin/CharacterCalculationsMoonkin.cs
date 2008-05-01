@@ -20,7 +20,7 @@ namespace Rawr.Moonkin
             }
         }
 
-        private float[] subPoints = new float[] { 0f };
+        private float[] subPoints = new float[] { 0f, 0f };
 
         public override float[] SubPoints
         {
@@ -43,14 +43,21 @@ namespace Rawr.Moonkin
         public float Latency { get; set; }
         public int TargetLevel { get; set; }
         public float FightLength { get; set; }
-        public float DPS { get; set; }
         public bool Scryer { get; set; }
         public SpellRotation SelectedRotation { get; set; }
+        public SpellRotation MaxDPSRotation { get; set; }
         public string RotationName
         {
             get
             {
                 return SelectedRotation.Name;
+            }
+        }
+        public string DpsRotationName
+        {
+            get
+            {
+                return MaxDPSRotation.Name;
             }
         }
         public Dictionary<string, RotationData> Rotations { get; set; }
@@ -85,6 +92,7 @@ namespace Rawr.Moonkin
             retVal.Add("O5SR Per Second", String.Format("{0:F}", ManaRegen));
             retVal.Add("I5SR Per Second", String.Format("{0:F}", ManaRegen5SR));
             retVal.Add("Selected Rotation", RotationName);
+            retVal.Add("Max DPS Rotation", DpsRotationName);
             foreach (KeyValuePair<string, RotationData> pair in Rotations)
             {
                 RotationData r = pair.Value;

@@ -742,6 +742,7 @@ namespace Rawr.Moonkin
             RecreateSpells(character, ref calcs);
 
             float maxDPS = 0.0f;
+            float maxRawDPS = 0.0f;
             foreach (SpellRotation rotation in SpellRotations)
             {
                 // Reset all parameters to defaults
@@ -765,10 +766,16 @@ namespace Rawr.Moonkin
                 moonfire.CastTime = Spell.GlobalCooldown;
 
                 float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / 1262.0f, effectiveSpellCrit / 2208.0f, effectiveSpellHaste / 1576.0f, effectiveMana, fightLength, naturesGrace);
+                float currentRawDPS = rotation.RawDPS;
                 if (currentDPS > maxDPS)
                 {
                     calcs.SelectedRotation = rotation;
                     maxDPS = currentDPS;
+                }
+                if (currentRawDPS > maxRawDPS)
+                {
+                    calcs.MaxDPSRotation = rotation;
+                    maxRawDPS = currentRawDPS;
                 }
                 cachedResults[rotation.Name] = new RotationData()
                 {
@@ -778,8 +785,8 @@ namespace Rawr.Moonkin
                     TimeToOOM = rotation.TimeToOOM
                 };
             }
-            calcs.SubPoints = new float[] { maxDPS };
-            calcs.OverallPoints = calcs.SubPoints[0];
+            calcs.SubPoints = new float[] { maxDPS, maxRawDPS };
+            calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
             calcs.Rotations = cachedResults;
         }
 
@@ -791,18 +798,22 @@ namespace Rawr.Moonkin
             // Pendant of the Violet Eye - stacking mp5 buff for 20 sec
             if (calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0)
             {
-                float averageBuffMp5 = 0.0f;
-                float averageCastTime = rotation.CastCount / rotation.Duration;
-                int currentStep = 21;
                 float currentTime = 0.0f;
+                float currentMp5 = 21.0f;
+                float timeSinceLastCast = 0.0f;
                 while (currentTime < 20.0f)
                 {
-                    averageBuffMp5 += (float)currentStep * (20.0f - currentTime > averageCastTime ? averageCastTime : 20.0f - currentTime);
-                    currentTime += averageCastTime;
-                    currentStep += 21;
+                    manaFromTrinket += currentMp5 / 5.0f * 2.0f;
+                    currentTime += 2.0f;
+                    timeSinceLastCast += 2.0f;
+                    if (timeSinceLastCast >= rotation.Duration / rotation.CastCount)
+                    {
+                        timeSinceLastCast -= rotation.Duration / rotation.CastCount;
+                        currentMp5 += 21.0f;
+                    }
                 }
-                averageBuffMp5 /= (currentStep - 21) / 21;
-                manaFromTrinket = averageBuffMp5 * 4 / 120.0f;
+                manaFromTrinket /= 120.0f;
+                manaFromTrinket *= rotation.Duration;
             }
             return manaFromJoW + manaFromOther + manaFromTrinket;
         }

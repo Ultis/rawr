@@ -16,7 +16,8 @@ namespace Rawr.Moonkin
                 if (subColors == null)
                 {
                     subColors = new Dictionary<string, System.Drawing.Color>();
-                    subColors.Add("Damage", System.Drawing.Color.Red);
+                    subColors.Add("Damage", System.Drawing.Color.Blue);
+                    subColors.Add("Raw Damage", System.Drawing.Color.Red);
                 }
                 return subColors;
             }
@@ -45,6 +46,7 @@ namespace Rawr.Moonkin
                     "Mana Regeneration:O5SR Per Second",
                     "Mana Regeneration:I5SR Per Second",
                     "Spell Info:Selected Rotation",
+                    "Spell Info:Max DPS Rotation",
                     "Spell Info:MF/SFx4 RDPS",
                     "Spell Info:MF/SFx4 DPS",
                     "Spell Info:MF/SFx4 DPM",
