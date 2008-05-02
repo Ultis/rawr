@@ -162,6 +162,18 @@
     <Compile Include="FormSplash.Designer.cs">
       <DependentUpon>FormSplash.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\EditEnchants.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EditEnchants.Designer.cs">
+      <DependentUpon>EditEnchants.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EditBuffs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EditBuffs.Designer.cs">
+      <DependentUpon>EditBuffs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ErrorReport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -254,6 +266,14 @@
     <EmbeddedResource Include="FormSplash.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormSplash.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EditEnchants.resx">
+      <DependentUpon>EditEnchants.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EditBuffs.resx">
+      <DependentUpon>EditBuffs.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ErrorReport.resx">
       <DependentUpon>ErrorReport.cs</DependentUpon>
