@@ -297,8 +297,6 @@ namespace Rawr.Moonkin
             // Add the crit bonus from the idol, if present
             if (character.ActiveBuffs.Contains("Moonkin Aura"))
                 statsTotal.SpellCritRating += statsTotal.IdolCritRating;
-            // Multiply the crit by spell crit multiplier
-            statsTotal.SpellCritRating += statsTotal.BonusSpellCritMultiplier * 2208f;
 
             return statsTotal;
         }

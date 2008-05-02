@@ -72,18 +72,16 @@ namespace Rawr.Moonkin
                 spellDamageMultiplier = value;
             }
         }
-
-        // Critical hit damage = baseDamage * (baseCriticalOffset + baseCriticalMultiplier);
-        protected float baseCriticalOffset = 1.0f;        // Chaotic Skyfire Diamond adds 0.03f to this value
-        public float CriticalHitIncrement
+        protected float specialDamageModifier = 1.0f;
+        public float SpecialDamageModifier
         {
             get
             {
-                return baseCriticalOffset;
+                return specialDamageModifier;
             }
             set
             {
-                baseCriticalOffset = value;
+                specialDamageModifier = value;
             }
         }
         protected float baseCriticalMultiplier = 0.5f;
@@ -247,9 +245,9 @@ namespace Rawr.Moonkin
             else
                 unhastedCastTime = baseCastTime;
 
-            float damageCoefficient = baseDamage + spellDamageMultiplier * spellDamage;
+            float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
-            float critDamageCoefficient = (baseCriticalOffset + baseCriticalMultiplier) / 2.0f;
+            float critDamageCoefficient = (1 + baseCriticalMultiplier) / 2.0f;
             float critCoefficient = baseCriticalChance + critRate;
             float naturesGraceTime = naturesGrace ? 0.5f : 0.0f;
             float hitCoefficient = hitRate;
@@ -283,15 +281,15 @@ namespace Rawr.Moonkin
         }
         public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace)
         {
-            float damageCoefficient = baseDamage + spellDamageMultiplier * spellDamage;
+            float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
-            float critDamageCoefficient = (baseCriticalOffset + baseCriticalMultiplier) / 2.0f;
+            float critDamageCoefficient = (1 + baseCriticalMultiplier) / 2.0f;
             float critCoefficient = baseCriticalChance + critRate;
             // Nature's Grace is ignored for Moonfire, because it is an instant cast
             float hitCoefficient = hitRate;
             // Haste rating is ignored for Moonfire, because it is an instant cast
             // Calculate DoT component
-            float dotEffectDPS = dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) / dotEffect.Duration;
+            float dotEffectDPS = (dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) * specialDamageModifier) / dotEffect.Duration;
             // Moonfire DPS is calculated over the duration of the DoT
             return (damageCoefficient * (critDamageCoefficient + critCoefficient) * hitCoefficient) / dotEffect.Duration + dotEffectDPS;
         }
@@ -318,9 +316,9 @@ namespace Rawr.Moonkin
             else
                 unhastedCastTime = baseCastTime;
 
-            float damageCoefficient = baseDamage + spellDamageMultiplier * spellDamage;
+            float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
-            float critDamageCoefficient = (baseCriticalOffset + baseCriticalMultiplier) / 2.0f;
+            float critDamageCoefficient = (1 + baseCriticalMultiplier) / 2.0f;
             float critCoefficient = baseCriticalChance + critRate;
             // Nature's Grace is ignored for Wrath, because it does not reduce the GCD
             float hitCoefficient = hitRate;
@@ -355,7 +353,7 @@ namespace Rawr.Moonkin
         public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace)
         {
             // Insect Swarm is a pure DoT, therefore the calculations are relatively uncomplicated
-            float dotEffectDPS = dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) / dotEffect.Duration;
+            float dotEffectDPS = (dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) * specialDamageModifier) / dotEffect.Duration;
             return dotEffectDPS;
         }
     }
@@ -394,7 +392,7 @@ namespace Rawr.Moonkin
                 spells = value;
             }
         }
-        public float DPS(float arcaneDamage, float natureDamage, float spellHit, float spellCrit, float spellHaste, float manaPool, float fightLength, bool naturesGrace)
+        public float DPS(float arcaneDamage, float natureDamage, float spellHit, float spellCrit, float spellHaste, float manaPool, float fightLength, bool naturesGrace, float T54pcBonus)
         {
             float accumulatedDamage = 0.0f;
             float accumulatedManaUsed = 0.0f;
@@ -417,6 +415,7 @@ namespace Rawr.Moonkin
                 float currentSpellDPS = 0.0f;
                 float timeSpentCasting = 0.0f;
                 int numberOfCasts = 0;
+                float timeSpentCastingIn4T5 = 0.0f;
                 if (sp.School == SpellSchool.Arcane)
                 {
                     currentSpellDPS = sp.DPS(arcaneDamage, spellHit, spellCrit, spellHaste, naturesGrace);
@@ -435,6 +434,12 @@ namespace Rawr.Moonkin
                     }
                     while (timeSpentCasting < dotDuration - lastSpellCastTime)
                     {
+                        // Nordrassil Regalia (4T5 bonus)
+                        // This should handle the case where a DoT tick falls off before the last cast completes (I hope)
+                        if (T54pcBonus > 0.0f && sp.Name == "SF" && dotDuration - timeSpentCasting - lastSpellCastTime >= sp.CastTime)
+                        {
+                            timeSpentCastingIn4T5 += sp.CastTime;
+                        }
                         timeSpentCasting += sp.CastTime;
                         ++numberOfCasts;
                     }
@@ -461,7 +466,9 @@ namespace Rawr.Moonkin
                 }
                 // Prevent double-counting of DoT spells
                 if (sp.DoT == null)
-                    accumulatedDamage += currentSpellDPS * timeSpentCasting;
+                {
+                    accumulatedDamage += (currentSpellDPS * timeSpentCastingIn4T5 * (1+T54pcBonus)) + (currentSpellDPS * (timeSpentCasting - timeSpentCastingIn4T5));
+                }
                 accumulatedManaUsed += sp.ManaCost * numberOfCasts;
                 accumulatedDuration += sp.CastTime * numberOfCasts;
             }
@@ -477,6 +484,18 @@ namespace Rawr.Moonkin
         private void CalculateRotationalVariables()
         {
             Dictionary<float, float> activeDots = new Dictionary<float, float>();
+            // Handle case where two non-DoT spells are cast (DoTs should not fall off before last spell cast)
+            bool has1NonDot = false;
+            float lastSpellCastTime = 0.0f;
+            foreach (Spell sp in spells)
+            {
+                if (sp.DoT == null && has1NonDot)
+                {
+                    lastSpellCastTime = sp.CastTime;
+                }
+                if (sp.DoT == null && !has1NonDot)
+                    has1NonDot = true;
+            }
             foreach (Spell sp in spells)
             {
                 float timeSpentCasting = 0.0f;
@@ -488,7 +507,7 @@ namespace Rawr.Moonkin
                         if (pair.Value > dotDuration)
                             dotDuration = pair.Value;
                     }
-                    while (timeSpentCasting < dotDuration)
+                    while (timeSpentCasting < dotDuration - lastSpellCastTime)
                     {
                         timeSpentCasting += sp.CastTime;
                         ++_castCount;
@@ -584,6 +603,7 @@ namespace Rawr.Moonkin
         static InsectSwarm insectSwarm = null;
         static Dictionary<string, RotationData> cachedResults = new Dictionary<string, RotationData>();
         static List<SpellRotation> SpellRotations = null;
+        static float trinketExtraDPS = 0.0f;
 
         private static float GetEffectiveManaPool(Character character, CharacterCalculationsMoonkin calcs)
         {
@@ -662,18 +682,16 @@ namespace Rawr.Moonkin
 
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)
-            wrath.DamagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
-            moonfire.DamagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
-            moonfire.DoT.DamagePerTick *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
-            starfire.DamagePerHit *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
+            wrath.SpecialDamageModifier *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
+            moonfire.SpecialDamageModifier *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
+            starfire.SpecialDamageModifier *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
 
             // Wrath, Insect Swarm: Nature spell damage multipliers
-            wrath.DamagePerHit *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-            insectSwarm.DoT.DamagePerTick *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+            wrath.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+            insectSwarm.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
             // Starfire, Moonfire: Arcane damage multipliers
-            starfire.DamagePerHit *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-            moonfire.DamagePerHit *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-            moonfire.DoT.DamagePerTick *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+            starfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+            moonfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
 
             // Add spell-specific crit chance
             // Wrath, Starfire: Crit chance +(0.02 * Focused Starlight)
@@ -685,17 +703,18 @@ namespace Rawr.Moonkin
             moonfire.SpecialCriticalModifier += 0.05f * int.Parse(character.CalculationOptions["ImpMoonfire"]);
 
             // Add spell-specific critical strike damage
-            // Chaotic Skyfire Diamond
-            starfire.CriticalHitIncrement += calcs.BasicStats.BonusSpellCritMultiplier;
-            starfire.CriticalHitMultiplier += calcs.BasicStats.BonusSpellCritMultiplier;
-            moonfire.CriticalHitIncrement += calcs.BasicStats.BonusSpellCritMultiplier;
-            moonfire.CriticalHitMultiplier += calcs.BasicStats.BonusSpellCritMultiplier;
-            wrath.CriticalHitIncrement += calcs.BasicStats.BonusSpellCritMultiplier;
-            wrath.CriticalHitMultiplier += calcs.BasicStats.BonusSpellCritMultiplier;
             // Starfire, Moonfire, Wrath: Crit damage +(0.2 * Vengeance)
             starfire.CriticalHitMultiplier *= 1 + 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
             moonfire.CriticalHitMultiplier *= 1 + 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
             wrath.CriticalHitMultiplier *= 1 + 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
+            // Chaotic Skyfire Diamond
+            // This is a crude hack based on mathematical results, and if they ever change CSD I will regret this
+            if (calcs.BasicStats.BonusSpellCritMultiplier > 0)
+            {
+                starfire.CriticalHitMultiplier *= 1.09f;
+                moonfire.CriticalHitMultiplier *= 1.09f;
+                wrath.CriticalHitMultiplier *= 1.09f;
+            }
 
             // Reduce spell-specific mana costs
             // Starfire, Moonfire, Wrath: Mana cost -(0.03 * Moonglow)
@@ -768,6 +787,7 @@ namespace Rawr.Moonkin
                 float effectiveMana = GetEffectiveManaPool(character, calcs);
 
                 // Trinkets
+                trinketExtraDPS = 0.0f;
                 DoTrinketCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / 1262.0f, ref effectiveArcaneDamage, ref effectiveNatureDamage, ref effectiveSpellCrit, ref effectiveSpellHaste);
 
                 // JoW/mana restore procs
@@ -779,8 +799,8 @@ namespace Rawr.Moonkin
                 insectSwarm.CastTime = Spell.GlobalCooldown;
                 moonfire.CastTime = Spell.GlobalCooldown;
 
-                float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / 1262.0f, effectiveSpellCrit / 2208.0f, effectiveSpellHaste / 1576.0f, effectiveMana, fightLength, naturesGrace);
-                float currentRawDPS = rotation.RawDPS;
+                float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / 1262.0f, effectiveSpellCrit / 2208.0f, effectiveSpellHaste / 1576.0f, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS;
+                float currentRawDPS = rotation.RawDPS + trinketExtraDPS;
                 if (currentDPS > maxDPS)
                 {
                     calcs.SelectedRotation = rotation;
@@ -793,7 +813,7 @@ namespace Rawr.Moonkin
                 }
                 cachedResults[rotation.Name] = new RotationData()
                 {
-                    RawDPS = rotation.RawDPS,
+                    RawDPS = currentRawDPS,
                     DPS = currentDPS,
                     DPM = rotation.DPM,
                     TimeToOOM = rotation.TimeToOOM
@@ -843,25 +863,25 @@ namespace Rawr.Moonkin
                 effectiveNatureDamage += calcs.BasicStats.UnseenMoonDamageBonus * 10.0f / timeBetweenProcs;
             }
             // The Lightning Capacitor
-            // Calculate the average passive spell damage given the proc rate
             if (calcs.BasicStats.LightningCapacitorProc > 0)
             {
+                float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier);
                 float baseDamage = (694 + 806) / 2.0f;
-                float averageDamage = baseDamage + (baseDamage * 1.5f * calcs.SpellCrit);
-                float castsBetweenProcs = 1 / (rotation.AverageCritChance + calcs.SpellCrit) * 3.0f;
-                effectiveArcaneDamage += averageDamage / castsBetweenProcs;
-                effectiveNatureDamage += averageDamage / castsBetweenProcs;
+                float averageDamage = hitRate * baseDamage * (1 + 1.5f * calcs.SpellCrit) * specialDamageModifier;
+                float timeBetweenProcs = rotation.Duration / (hitRate * (calcs.SpellCrit + rotation.AverageCritChance) * rotation.CastCount);
+                if (timeBetweenProcs < 2.5f) timeBetweenProcs = timeBetweenProcs * 3.0f + 2.5f;
+                else timeBetweenProcs *= 3.0f;
+                trinketExtraDPS += averageDamage / timeBetweenProcs;
             }
             // Shatterered Sun Pendant (45s internal CD)
             if (calcs.BasicStats.ShatteredSunAcumenProc > 0)
             {
                 if (calcs.Scryer)
                 {
+                    float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier);
                     float baseDamage = (333 + 367) / 2.0f;
-                    float averageDamage = baseDamage + (baseDamage * 1.5f * calcs.SpellCrit);
-                    float castsBetweenProcs = rotation.CastCount * (45.0f / rotation.Duration);
-                    effectiveArcaneDamage += averageDamage / castsBetweenProcs;
-                    effectiveNatureDamage += averageDamage / castsBetweenProcs;
+                    float averageDamage = hitRate * baseDamage * (1 + 1.5f * calcs.SpellCrit) * specialDamageModifier;
+                    trinketExtraDPS += averageDamage / 45.0f;
                 }
                 else
                 {
@@ -872,12 +892,11 @@ namespace Rawr.Moonkin
             // Timbal's Focusing Crystal (10% proc on a DoT tick, 15s internal cooldown)
             if (calcs.BasicStats.TimbalsProc > 0 && rotation.TotalDotTicks > 0)
             {
+                float specialDamageModifier = (1 + calcs.BasicStats.BonusShadowSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier);
                 float baseDamage = (285 + 475) / 2.0f;
-                float averageDamage = baseDamage + (baseDamage * 1.5f * calcs.SpellCrit);
+                float averageDamage = hitRate * baseDamage * (1 + 1.5f * calcs.SpellCrit) * specialDamageModifier;
                 float timeBetweenProcs = 1 / (rotation.TotalDotTicks / rotation.Duration * 0.1f) + 15.0f;
-                float castsBetweenProcs = rotation.CastCount * (timeBetweenProcs / rotation.Duration);
-                effectiveArcaneDamage += averageDamage / castsBetweenProcs;
-                effectiveNatureDamage += averageDamage / castsBetweenProcs;
+                trinketExtraDPS += averageDamage / timeBetweenProcs;
             }
             // Spell damage for 10 seconds on resist
             if (calcs.BasicStats.SpellDamageFor10SecOnResist > 0)
