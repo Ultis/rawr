@@ -492,7 +492,10 @@ namespace Rawr
                         else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance to inject poison"))
                             stats.WeaponDamage += 2f; //Romulo's = 4dmg
                         else if (spellDesc.StartsWith("Mangle has a 40% chance to grant 140 Strength for 8sec"))
+                        {
                             stats.Strength += 37f; //Ashtongue = 37str
+                            stats.DruidAshtongueTrinket = 150.0f;
+                        }
                         else if (spellDesc.StartsWith("Your spells and attacks in each form have a chance to grant you a blessing for 15 sec."))
                             stats.Strength += 32f; //LivingRoot = 32str
                         else if (spellDesc.StartsWith("Chance on critical hit to increase your attack power by "))
@@ -626,7 +629,7 @@ namespace Rawr
                         }
                         else if (spellDesc.StartsWith("Increases the damage dealt by Mangle (Cat) by "))
                         {
-                          
+
                             spellDesc = spellDesc.Substring("Increases the damage dealt by Mangle (Cat) by ".Length);
                             if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
@@ -722,9 +725,9 @@ namespace Rawr
                         // and Essense Infused Shroom Restore health.
                         else if (spellDesc.StartsWith("Restores ") && spellDesc.Contains("mana"))
                         {
-                                spellDesc = spellDesc.Substring("Restores ".Length);
-                                spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" mana"));
-                                stats.Mp5 += int.Parse(spellDesc);
+                            spellDesc = spellDesc.Substring("Restores ".Length);
+                            spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" mana"));
+                            stats.Mp5 += int.Parse(spellDesc);
                         }
                         else if (spellDesc.StartsWith("You gain an Electrical Charge each time you cause a damaging spell critical strike.  When you reach 3 Electrical Charges, they will release, firing a Lightning Bolt for 694 to 806 damage.  Electrical Charge cannot be gained more often than once every 2.5 sec."))
                         {
@@ -867,27 +870,27 @@ namespace Rawr
                             stats.BonusCrusaderStrikeDamageMultiplier += float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture) / 100f;
 
                         }
-						else if (spellDesc.StartsWith("Increases the benefit your Flash of Light"))
-						{
-						    stats.HLBoL = 120;
-						    stats.FoLBoL = 60;
-						}
-						else if (spellDesc.StartsWith("Reduces the mana cost of Holy Light by"))
-						{
-						    stats.HLCost = 34;
-						}
-						else if (spellDesc.StartsWith("Increases healing done by Flash of Light by up to"))
-						{
-						    spellDesc = spellDesc.Substring("Increases healing done by Flash of Light by up to ".Length);
-						    spellDesc = spellDesc.Replace(".", "");
-						    stats.FoLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
-						}
-						else if (spellDesc.StartsWith("Increases healing done by Holy Light by up to"))
-						{
-						    spellDesc = spellDesc.Substring("Increases healing done by Holy Light by up to ".Length);
-						    spellDesc = spellDesc.Replace(".", "");
-						    stats.HLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
-						}
+                        else if (spellDesc.StartsWith("Increases the benefit your Flash of Light"))
+                        {
+                            stats.HLBoL = 120;
+                            stats.FoLBoL = 60;
+                        }
+                        else if (spellDesc.StartsWith("Reduces the mana cost of Holy Light by"))
+                        {
+                            stats.HLCost = 34;
+                        }
+                        else if (spellDesc.StartsWith("Increases healing done by Flash of Light by up to"))
+                        {
+                            spellDesc = spellDesc.Substring("Increases healing done by Flash of Light by up to ".Length);
+                            spellDesc = spellDesc.Replace(".", "");
+                            stats.FoLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+                        }
+                        else if (spellDesc.StartsWith("Increases healing done by Holy Light by up to"))
+                        {
+                            spellDesc = spellDesc.Substring("Increases healing done by Holy Light by up to ".Length);
+                            spellDesc = spellDesc.Replace(".", "");
+                            stats.HLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
+                        }
                     }
 				}
 

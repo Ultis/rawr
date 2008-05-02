@@ -256,7 +256,7 @@ namespace Rawr.Moonkin
             // Use the property so that haste over the haste cap will clip at the current GCD, if possible to achieve for Starfire
             CastTime = (unhastedCastTime - naturesGraceTime * critCoefficient * hitCoefficient) / hasteCoefficient;
 
-            return (damageCoefficient * (critDamageCoefficient + critCoefficient) * hitCoefficient) / (baseCastTime - naturesGraceTime * critCoefficient * hitCoefficient);
+            return (damageCoefficient * (critDamageCoefficient + critCoefficient) * hitCoefficient) / baseCastTime;
         }
     }
 
@@ -483,6 +483,7 @@ namespace Rawr.Moonkin
         }
         private void CalculateRotationalVariables()
         {
+            StarfireCount = 0;
             Dictionary<float, float> activeDots = new Dictionary<float, float>();
             // Handle case where two non-DoT spells are cast (DoTs should not fall off before last spell cast)
             bool has1NonDot = false;
@@ -509,6 +510,8 @@ namespace Rawr.Moonkin
                     }
                     while (timeSpentCasting < dotDuration - lastSpellCastTime)
                     {
+                        if (sp.Name == "SF")
+                            ++StarfireCount;
                         timeSpentCasting += sp.CastTime;
                         ++_castCount;
                     }
@@ -588,6 +591,11 @@ namespace Rawr.Moonkin
                 }
                 return false;
             }
+        }
+        public int StarfireCount
+        {
+            get;
+            set;
         }
         // These fields get filled in only after the DPS calculations are done
         public float DPM { get; set; }
@@ -861,6 +869,14 @@ namespace Rawr.Moonkin
                 float timeBetweenProcs = rotation.Duration / numberOfProcs;
                 effectiveArcaneDamage += calcs.BasicStats.UnseenMoonDamageBonus * 10.0f / timeBetweenProcs;
                 effectiveNatureDamage += calcs.BasicStats.UnseenMoonDamageBonus * 10.0f / timeBetweenProcs;
+            }
+            // Ashtongue Talisman of Equilibrium (Moonkin version)
+            if (rotation.StarfireCount > 0 && calcs.BasicStats.DruidAshtongueTrinket > 0)
+            {
+                double starfireCastsIn8Sec = 8.0 / starfire.CastTime;
+                double uptime = Math.Pow(1 - (1 - 0.25), starfireCastsIn8Sec);
+                effectiveArcaneDamage += calcs.BasicStats.DruidAshtongueTrinket * (float)uptime;
+                effectiveNatureDamage += calcs.BasicStats.DruidAshtongueTrinket * (float)uptime;
             }
             // The Lightning Capacitor
             if (calcs.BasicStats.LightningCapacitorProc > 0)

@@ -121,7 +121,8 @@ namespace Rawr
         UnseenMoonDamageBonus,
         WeaponDamage,
         WindfuryAPBonus,
-        WrathDmg
+        WrathDmg,
+        DruidAshtongueTrinket
     }
 
     enum MultiplicativeStat : int
@@ -1084,6 +1085,15 @@ namespace Rawr
         { 
             get { return _rawAdditiveData[(int)AdditiveStat.TimbalsProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.TimbalsProc] = value; }
+        }
+
+        [DisplayName("Spell damage (8 sec, 25% chance on Starfire)")]
+        [Category("Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float DruidAshtongueTrinket
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DruidAshtongueTrinket]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DruidAshtongueTrinket] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
