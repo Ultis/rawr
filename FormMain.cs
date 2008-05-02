@@ -122,20 +122,6 @@ namespace Rawr
 					_character.AvailableItemsChanged += new EventHandler(_character_AvailableItemsChanged);
 					_loadingCharacter = true;
 
-					comboBoxEnchantBack.SelectedItem = Character.BackEnchant;
-					comboBoxEnchantChest.SelectedItem = Character.ChestEnchant;
-					comboBoxEnchantFeet.SelectedItem = Character.FeetEnchant;
-					comboBoxEnchantFinger1.SelectedItem = Character.Finger1Enchant;
-					comboBoxEnchantFinger2.SelectedItem = Character.Finger2Enchant;
-					comboBoxEnchantHands.SelectedItem = Character.HandsEnchant;
-					comboBoxEnchantHead.SelectedItem = Character.HeadEnchant;
-					comboBoxEnchantLegs.SelectedItem = Character.LegsEnchant;
-					comboBoxEnchantShoulders.SelectedItem = Character.ShouldersEnchant;
-					comboBoxEnchantMainHand.SelectedItem = Character.MainHandEnchant;
-					comboBoxEnchantOffHand.SelectedItem = Character.OffHandEnchant;
-					comboBoxEnchantRanged.SelectedItem = Character.RangedEnchant;
-					comboBoxEnchantWrists.SelectedItem = Character.WristEnchant;
-
 					textBoxName.Text = Character.Name;
 					textBoxRealm.Text = Character.Realm;
 					radioButtonRegionUS.Checked = Character.Region == Character.CharacterRegion.US;
@@ -174,6 +160,23 @@ namespace Rawr
 			_unsavedChanges = true;
 		}
 
+		private void ItemEnchantsChanged()
+		{
+			comboBoxEnchantBack.SelectedItem = Character.BackEnchant;
+			comboBoxEnchantChest.SelectedItem = Character.ChestEnchant;
+			comboBoxEnchantFeet.SelectedItem = Character.FeetEnchant;
+			comboBoxEnchantFinger1.SelectedItem = Character.Finger1Enchant;
+			comboBoxEnchantFinger2.SelectedItem = Character.Finger2Enchant;
+			comboBoxEnchantHands.SelectedItem = Character.HandsEnchant;
+			comboBoxEnchantHead.SelectedItem = Character.HeadEnchant;
+			comboBoxEnchantLegs.SelectedItem = Character.LegsEnchant;
+			comboBoxEnchantShoulders.SelectedItem = Character.ShouldersEnchant;
+			comboBoxEnchantMainHand.SelectedItem = Character.MainHandEnchant;
+			comboBoxEnchantOffHand.SelectedItem = Character.OffHandEnchant;
+			comboBoxEnchantRanged.SelectedItem = Character.RangedEnchant;
+			comboBoxEnchantWrists.SelectedItem = Character.WristEnchant;
+		}
+
 		void _character_ItemsChanged(object sender, EventArgs e)
 		{
             if (this.InvokeRequired)
@@ -194,6 +197,7 @@ namespace Rawr
 				itemButtonTabard.UpdateSelectedItem(); itemButtonTrinket1.UpdateSelectedItem(); itemButtonTrinket2.UpdateSelectedItem();
 				itemButtonWaist.UpdateSelectedItem(); itemButtonMainHand.UpdateSelectedItem(); itemButtonOffHand.UpdateSelectedItem();
 				itemButtonProjectile.UpdateSelectedItem(); itemButtonProjectileBag.UpdateSelectedItem(); itemButtonWrist.UpdateSelectedItem();
+				ItemEnchantsChanged();
 			}
 			//and the clouds above move closer / looking so dissatisfied
 			Calculations.ClearCache();
@@ -423,6 +427,7 @@ namespace Rawr
 			itemEditor.ShowDialog(this);
 			ItemCache.OnItemsChanged();
 		}
+
 		//{
 		//    OpenItemEditor();
 		//}
@@ -1007,5 +1012,32 @@ namespace Rawr
             ItemIcons.CacheAllIcons(items.ToArray());
             ItemCache.OnItemsChanged();
         }
+
+		//private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
+		//{
+		//    FormItemEditor itemEditor = new FormItemEditor(Character);
+		//    itemEditor.ShowDialog(this);
+		//    ItemCache.OnItemsChanged();
+		//}
+
+		//private void buffsToolStripMenuItem1_Click(object sender, EventArgs e)
+		//{
+		//    EditBuffs edit = new EditBuffs(Buff.AllBuffs);
+		//    if (edit.ShowDialog() == DialogResult.OK)
+		//    {
+		//        //copy edited buffs to buff cache
+		//    }
+		//    edit.Dispose();
+		//}
+
+		//private void enchantsToolStripMenuItem1_Click(object sender, EventArgs e)
+		//{
+		//    EditEnchants edit = new EditEnchants(Enchant.AllEnchants);
+		//    if (edit.ShowDialog() == DialogResult.OK)
+		//    {
+		//        //copy edited enchants to enchant cache.
+		//    }
+		//    edit.Dispose();
+		//}
 	}
 }
