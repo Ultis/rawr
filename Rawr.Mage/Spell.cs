@@ -607,6 +607,7 @@ namespace Rawr.Mage
             base.Calculate(character, calculations);
             BaseCastTime -= 0.1f * calculations.CalculationOptions.ImprovedFrostbolt;
             CritRate += 0.01f * calculations.CalculationOptions.EmpoweredFrostbolt;
+            InterruptProtection += calculations.BasicStats.AldorRegaliaInterruptProtection;
             SpellDamageCoefficient += 0.02f * calculations.CalculationOptions.EmpoweredFrostbolt;
             int targetLevel = calculations.CalculationOptions.TargetLevel;
             HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit + 0.02f * calculations.CalculationOptions.ElementalPrecision); // bugged Elemental Precision
@@ -623,6 +624,7 @@ namespace Rawr.Mage
             Calculate(character, calculations);
             SpammedDot = true;
             DotDuration = 8;
+            InterruptProtection += calculations.BasicStats.AldorRegaliaInterruptProtection;
             BaseCastTime -= 0.1f * calculations.CalculationOptions.ImprovedFireball;
             SpellDamageCoefficient += 0.03f * calculations.CalculationOptions.EmpoweredFireball;
             SpellModifier *= (1 + calculations.BasicStats.BonusMageNukeMultiplier);

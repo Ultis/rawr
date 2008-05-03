@@ -957,6 +957,14 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
+                Name = "Aldor Regalia 2 Piece Bonus",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { AldorRegaliaInterruptProtection = 1 },
+                SetName = "Aldor Regalia",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Tirisfal Regalia 2 Piece Bonus",
                 Category = BuffCategory.SetBonuses,
                 Stats = new Stats() { ArcaneBlastBonus = .2f },

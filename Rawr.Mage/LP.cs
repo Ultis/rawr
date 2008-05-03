@@ -406,23 +406,28 @@ namespace Rawr.Mage
             double* sValue;
             int* sRow;
             int sCol1, sCol2;
-            fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value)
+            int redecompose = 0;
+            fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value)
             {
                 fixed (int* B = _B, V = _V, D = disabled, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
                 {
                     do
                     {
-                        // [L U] = lu(A(:,B_indices));
-                        for (j = 0; j < rows; j++)
+                        if (redecompose <= 0)
                         {
-                            int col = B[j];
-                            for (i = 0; i < rows - 1; i++)
+                            // [L U] = lu(A(:,B_indices));
+                            for (j = 0; j < rows; j++)
                             {
-                                LU[i * rows + j] = a[i * (cols + rows) + col];
+                                int col = B[j];
+                                for (i = 0; i < rows - 1; i++)
+                                {
+                                    LU[i * rows + j] = a[i * (cols + rows) + col];
+                                }
+                                LU[i * rows + j] = D[col];
                             }
-                            LU[i * rows + j] = D[col];
+                            lu.Decompose();
+                            redecompose = 50;
                         }
-                        lu.Decompose();
                         if (lu.Singular)
                         {
                             //System.Diagnostics.Debug.WriteLine("Basis singular");
@@ -561,7 +566,9 @@ namespace Rawr.Mage
                             w[i] = a[i * (cols + rows) + mincol];
                         }
                         w[i] = D[mincol];
-                        lu.FSolve(w);
+                        //lu.FSolve(w);
+                        lu.FSolveL(w, ww);
+                        lu.FSolveU(ww, w);
 
                         // -minr = dual step
                         // rp = primal step
@@ -581,7 +588,12 @@ namespace Rawr.Mage
                         }
                         c[minj] = -minr;
 
-                        //System.Diagnostics.Debug.WriteLine(round + ": " + V[maxj] + " <=> " + B[mini]);
+                        redecompose--;
+                        if (redecompose > 0)
+                        {
+                            lu.Update(ww, mini);
+                        }
+
                         // swap base
                         int k = B[mini];
                         B[mini] = V[minj];

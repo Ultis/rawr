@@ -11,6 +11,7 @@ namespace Rawr
     {
         Agility,
         AllResist,
+        AldorRegaliaInterruptProtection,
         ArcaneBlastBonus,
         ArcaneResistance,
         Armor,
@@ -648,6 +649,13 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Miss]; }
             set { _rawAdditiveData[(int)AdditiveStat.Miss] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float AldorRegaliaInterruptProtection
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.AldorRegaliaInterruptProtection]; }
+            set { _rawAdditiveData[(int)AdditiveStat.AldorRegaliaInterruptProtection] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
