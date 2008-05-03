@@ -1066,8 +1066,9 @@ namespace Rawr
 						fingerEnchants[rand.Next(fingerEnchants.Length)], fingerEnchants[rand.Next(fingerEnchants.Length)],
 						mainHandEnchants[rand.Next(mainHandEnchants.Length)], offHandEnchants[rand.Next(offHandEnchants.Length)],
                         rangedEnchants[rand.Next(rangedEnchants.Length)], _character.ActiveBuffs);
-			foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
-				character.CalculationOptions.Add(kvp.Key, kvp.Value);
+			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
+			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
+            character.CalculationOptions = _character.CalculationOptions;
 			character.Class = _character.Class;
 			character.Talents = _character.Talents;
 			//character.RecalculateSetBonuses();
@@ -1130,9 +1131,10 @@ namespace Rawr
 				rand.NextDouble() < 0.5d ? father.OffHandEnchant : mother.OffHandEnchant,
 				rand.NextDouble() < 0.5d ? father.RangedEnchant : mother.RangedEnchant,
                 _character.ActiveBuffs);
-			foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
-				character.CalculationOptions.Add(kvp.Key, kvp.Value);
-			character.Class = _character.Class;
+			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
+			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
+            character.CalculationOptions = _character.CalculationOptions;
+            character.Class = _character.Class;
 			character.Talents = _character.Talents;
 			//character.RecalculateSetBonuses();
 			return character;
@@ -1198,9 +1200,10 @@ namespace Rawr
 				rand.NextDouble() < mutationChance ? offHandEnchants[rand.Next(offHandEnchants.Length)] : parent.OffHandEnchant,
 				rand.NextDouble() < mutationChance ? rangedEnchants[rand.Next(rangedEnchants.Length)] : parent.RangedEnchant,
                 _character.ActiveBuffs);
-			foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
-				character.CalculationOptions.Add(kvp.Key, kvp.Value);
-			character.Class = _character.Class;
+			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
+			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
+            character.CalculationOptions = _character.CalculationOptions;
+            character.Class = _character.Class;
 			character.Talents = _character.Talents;
 			//character.RecalculateSetBonuses();
 			return character;
@@ -1244,9 +1247,10 @@ namespace Rawr
 				baseCharacter.OffHandEnchant,
 				baseCharacter.RangedEnchant,
                 _character.ActiveBuffs);
-			foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
-				character.CalculationOptions.Add(kvp.Key, kvp.Value);
-			character.Class = _character.Class;
+			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
+			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
+            character.CalculationOptions = _character.CalculationOptions;
+            character.Class = _character.Class;
 			character.Talents = _character.Talents;
 			//character.RecalculateSetBonuses();
 			return character;
@@ -1289,9 +1293,10 @@ namespace Rawr
 				slot == Character.CharacterSlot.OffHand ? enchant : baseCharacter.OffHandEnchant,
 				slot == Character.CharacterSlot.Ranged ? enchant : baseCharacter.RangedEnchant,
                 _character.ActiveBuffs);
-			foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
-				character.CalculationOptions.Add(kvp.Key, kvp.Value);
-			character.Class = _character.Class;
+			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
+			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
+            character.CalculationOptions = _character.CalculationOptions;
+            character.Class = _character.Class;
 			character.Talents = _character.Talents;
 			//character.RecalculateSetBonuses();
 			return character;
