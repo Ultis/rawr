@@ -162,6 +162,7 @@ namespace Rawr
 
 		private void ItemEnchantsChanged()
 		{
+			_loadingCharacter = true;
 			comboBoxEnchantBack.SelectedItem = Character.BackEnchant;
 			comboBoxEnchantChest.SelectedItem = Character.ChestEnchant;
 			comboBoxEnchantFeet.SelectedItem = Character.FeetEnchant;
@@ -175,6 +176,7 @@ namespace Rawr
 			comboBoxEnchantOffHand.SelectedItem = Character.OffHandEnchant;
 			comboBoxEnchantRanged.SelectedItem = Character.RangedEnchant;
 			comboBoxEnchantWrists.SelectedItem = Character.WristEnchant;
+			_loadingCharacter = false;
 		}
 
 		void _character_ItemsChanged(object sender, EventArgs e)
