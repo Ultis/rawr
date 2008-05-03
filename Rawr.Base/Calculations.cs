@@ -547,7 +547,7 @@ namespace Rawr
 			return buffCalcs;
 		}
 
-		public virtual Stats GetItemStats(Character character, Item additionalItem)
+        public virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
 		{
 			List<Item> items = new List<Item>(new Item[] {character.Back, character.Chest, character.Feet, character.Finger1,
 				character.Finger2, character.Hands, character.Head, character.Legs, character.Neck,
@@ -559,37 +559,74 @@ namespace Rawr
 			if (character.MainHand == null || character.MainHand.Slot != Item.ItemSlot.TwoHand)
 				items.Add(character.OffHand);
 
-			Stats statsItems = new Stats();
 			foreach (Item item in items)
 				if (item != null)
-					statsItems += item.GetTotalStats(character);
-
-			return statsItems;
+                    stats.Accumulate(item.GetTotalStats(character));
 		}
+
+        public virtual Stats GetItemStats(Character character, Item additionalItem)
+        {
+            Stats stats = new Stats();
+            AccumulateItemStats(stats, character, additionalItem);
+            return stats;
+        }
+
+        public virtual void AccumulateEnchantsStats(Stats stats, Character character)
+        {
+            stats.Accumulate(character.BackEnchant.Stats);
+            stats.Accumulate(character.ChestEnchant.Stats);
+            stats.Accumulate(character.FeetEnchant.Stats);
+            stats.Accumulate(character.Finger1Enchant.Stats);
+            stats.Accumulate(character.Finger2Enchant.Stats);
+            stats.Accumulate(character.HandsEnchant.Stats);
+            stats.Accumulate(character.HeadEnchant.Stats);
+            stats.Accumulate(character.LegsEnchant.Stats);
+            stats.Accumulate(character.ShouldersEnchant.Stats);
+            if (character.MainHand != null)
+            {
+                if (character.OffHand == null || character.MainHand.Slot == Item.ItemSlot.TwoHand)
+                {
+                    stats.Accumulate(character.MainHandEnchant.Stats);
+                }
+                else
+                {
+                    stats.Accumulate(character.MainHandEnchant.Stats);
+                    stats.Accumulate(character.OffHandEnchant.Stats);
+                }
+            }
+            else if (character.OffHand != null)
+            {
+                stats.Accumulate(character.OffHandEnchant.Stats);
+            }
+            stats.Accumulate(character.RangedEnchant.Stats);
+            stats.Accumulate(character.WristEnchant.Stats);
+        }
 
 		public virtual Stats GetEnchantsStats(Character character)
 		{
-			return character.BackEnchant.Stats + character.ChestEnchant.Stats + character.FeetEnchant.Stats + 
-				character.Finger1Enchant.Stats + character.Finger2Enchant.Stats + character.HandsEnchant.Stats +
-				character.HeadEnchant.Stats + character.LegsEnchant.Stats + character.ShouldersEnchant.Stats + 
-				(character.OffHand == null ? character.MainHandEnchant.Stats : character.MainHandEnchant.Stats + 
-				character.OffHandEnchant.Stats) + character.RangedEnchant.Stats + character.WristEnchant.Stats;
-		}
+            Stats stats = new Stats();
+            AccumulateEnchantsStats(stats, character);
+            return stats;
+        }
 
-		public virtual Stats GetBuffsStats(IEnumerable<string> buffs)
-		{
-			Stats statsBuffs = new Stats();
-			foreach (string buffName in buffs)
+        public virtual void AccumulateBuffsStats(Stats stats, IEnumerable<string> buffs)
+        {
+            foreach (string buffName in buffs)
                 if (!string.IsNullOrEmpty(buffName))
                 {
                     Buff buff = Buff.GetBuffByName(buffName);
                     if (buff != null)
                     {
-                        statsBuffs += Buff.GetBuffByName(buffName).Stats;
+                        stats.Accumulate(Buff.GetBuffByName(buffName).Stats);
                     }
                 }
+        }
 
-			return statsBuffs;
+		public virtual Stats GetBuffsStats(IEnumerable<string> buffs)
+		{
+            Stats stats = new Stats();
+            AccumulateBuffsStats(stats, buffs);
+            return stats;
 		}
 
 		public virtual string GetCharacterStatsString(Character character)

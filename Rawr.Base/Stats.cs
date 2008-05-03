@@ -1452,6 +1452,42 @@ namespace Rawr
             }
             return c;
         }
+
+        public unsafe void Accumulate(Stats data)
+        {
+            int i = _rawAdditiveData.Length;
+            fixed (float* rawAdditiveData = _rawAdditiveData, rawAdditiveData2 = data._rawAdditiveData)
+            {
+                while (--i >= 0)
+                {
+                    rawAdditiveData[i] += rawAdditiveData2[i];
+                }
+            }
+            i = _rawMultiplicativeData.Length;
+            fixed (float* rawMultiplicativeData = _rawMultiplicativeData, rawMultiplicativeData2 = data._rawMultiplicativeData)
+            {
+                while (--i >= 0)
+                {
+                    rawMultiplicativeData[i] = (1 + rawMultiplicativeData[i]) * (1 + rawMultiplicativeData2[i]) - 1;
+                }
+            }
+            i = _rawInverseMultiplicativeData.Length;
+            fixed (float* rawInverseMultiplicativeData = _rawInverseMultiplicativeData, rawInverseMultiplicativeData2 = data._rawInverseMultiplicativeData)
+            {
+                while (--i >= 0)
+                {
+                    rawInverseMultiplicativeData[i] = 1 - (1 - rawInverseMultiplicativeData[i]) * (1 - rawInverseMultiplicativeData2[i]);
+                }
+            }
+            i = _rawNoStackData.Length;
+            fixed (float* rawNoStackData = _rawNoStackData, rawNoStackData2 = data._rawNoStackData)
+            {
+                while (--i >= 0)
+                {
+                    rawNoStackData[i] = Math.Max(rawNoStackData[i], rawNoStackData2[i]);
+                }
+            }
+        }
       
         public bool Equals(Stats other)
         {

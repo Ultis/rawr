@@ -2636,8 +2636,9 @@ namespace Rawr.Mage
 
         private Stats GetRawStats(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions, List<string> autoActivatedBuffs, string armor)
         {
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            Stats stats = new Stats();
+            AccumulateItemStats(stats, character, additionalItem);
+            AccumulateEnchantsStats(stats, character);
             List<string> activeBuffs = new List<string>();
             activeBuffs.AddRange(character.ActiveBuffs);
 
@@ -2673,11 +2674,9 @@ namespace Rawr.Mage
                 }
             }
 
-            Stats statsBuffs = GetBuffsStats(activeBuffs);
+            AccumulateBuffsStats(stats, activeBuffs);
 
-            Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
-
-            return statsGearEnchantsBuffs;
+            return stats;
         }
 
         // required by base class, but never used
