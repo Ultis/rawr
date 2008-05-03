@@ -71,6 +71,30 @@ namespace Rawr.Test
         }
 
         [TestMethod]
+        public void TestUpdate()
+        {
+            for (int size = 1; size < 100; size++)
+            {
+                for (int run = 0; run < 10; run++)
+                {
+                    TestUpdateSize(size);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestUpdateFSolve()
+        {
+            for (int size = 1; size < 100; size++)
+            {
+                for (int run = 0; run < 10; run++)
+                {
+                    TestUpdateFSolveSize(size);
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestFSolve()
         {
             for (int size = 1; size < 100; size++)
@@ -119,14 +143,19 @@ namespace Rawr.Test
                 }
                 for (int k = 0; k < lu.etaSize; k++)
                 {
-                    int row = lu._LI[k]; // we're updating using row, if element is zero we can skip
+                    int row = lu._LJ[k]; // we're updating using row, if element is zero we can skip
                     // b~ = b + eta (erow' b)
                     double f = L[row];
                     if (Math.Abs(f) >= 0.000001)
                     {
-                        for (int i = 0; i < size; i++)
+                        /*for (int i = 0; i < size; i++)
                         {
                             L[i] += f * lu._L[k * size + i];
+                        }*/
+                        int maxi = lu.sparseLstart[k + 1];
+                        for (int i = lu.sparseLstart[k]; i < maxi; i++)
+                        {
+                            L[lu.sparseLI[i]] += f * lu.sparseL[i];
                         }
                     }
                 }
@@ -145,6 +174,146 @@ namespace Rawr.Test
                 {
                     Assert.AreEqual(L[i], R[i], 0.00001, "Size = " + size);
                 }
+            }
+        }
+
+        private void TestUpdateSize(int size)
+        {
+            Random rnd = new Random();
+            double[,] B = new double[size, size];
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    B[i, j] = rnd.NextDouble();
+                }
+            }
+            double[,] B0 = (double[,])B.Clone();
+            int c = rnd.Next(size);
+            double[] newB = new double[size];
+            double[] tmp = new double[size];
+            for (int i = 0; i < size; i++)
+            {
+                newB[i] = rnd.NextDouble();
+                B[i, c] = newB[i];
+                //newB[i] = B[i, c];
+            }
+            Mage.LU2 lu = new Rawr.Mage.LU2(B0, size);
+            lu.Decompose();
+            unsafe
+            {
+                fixed (double* nb = newB, t = tmp)
+                {
+                    lu.FSolveL(nb, t);
+                    lu.Update(t, c);
+                }
+            }
+            for (int j = 0; j < size; j++)
+            {
+                // Ln...L0 B = P U Q
+                // left hand side
+                double[] L = new double[size];
+                for (int i = 0; i < size; i++)
+                {
+                    L[i] = B[i, j];
+                }
+                for (int k = 0; k < lu.etaSize; k++)
+                {
+                    if (k < size)
+                    {
+                        int row = lu._LJ[k]; // we're updating using row, if element is zero we can skip
+                        // b~ = b + eta (erow' b)
+                        double f = L[row];
+                        if (Math.Abs(f) >= 0.000001)
+                        {
+                            /*for (int i = 0; i < size; i++)
+                            {
+                                L[i] += f * lu._L[k * size + i];
+                            }*/
+                            int maxi = lu.sparseLstart[k + 1];
+                            for (int i = lu.sparseLstart[k]; i < maxi; i++)
+                            {
+                                L[lu.sparseLI[i]] += f * lu.sparseL[i];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        int row = lu._LJ[k]; // we're updating row element
+                        double f = 0.0;
+                        int maxi = lu.sparseLstart[k + 1];
+                        for (int i = lu.sparseLstart[k]; i < maxi; i++)
+                        {
+                            f += L[lu.sparseLI[i]] * lu.sparseL[i];
+                        }
+                        L[row] += f;
+                    }
+                }
+                // right hand side
+                double[] R = new double[size];
+                int jj = j;
+                for (jj = 0; jj < size; jj++)
+                {
+                    if (lu._Q[jj] == j) break;
+                }
+                for (int i = 0; i < size; i++)
+                {
+                    R[lu._P[i]] = lu._U[i, jj]; // DON'T CHANGE THIS!!! THIS IS HOW IT REALLY SHOULD BE!!!!1!!
+                }
+                for (int i = 0; i < size; i++)
+                {
+                    Assert.AreEqual(L[i], R[i], 0.00001, "Size = " + size);
+                }
+            }
+        }
+
+        private void TestUpdateFSolveSize(int size)
+        {
+            Random rnd = new Random();
+            double[,] B = new double[size, size];
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    B[i, j] = rnd.NextDouble();
+                }
+            }
+            double[,] B0 = (double[,])B.Clone();
+            int c = rnd.Next(size);
+            double[] newB = new double[size];
+            double[] tmp = new double[size];
+            for (int i = 0; i < size; i++)
+            {
+                newB[i] = rnd.NextDouble();
+                B[i, c] = newB[i];
+            }
+            double[] x = new double[size];
+            for (int i = 0; i < size; i++)
+            {
+                x[i] = rnd.NextDouble();
+            }
+            double[] b = new double[size];
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    b[i] += B[i, j] * x[j];
+                }
+            }
+            Mage.LU2 lu = new Rawr.Mage.LU2(B0, size);
+            lu.Decompose();
+            unsafe
+            {
+                fixed (double* nb = newB, t = tmp, _b = b)
+                {
+                    lu.FSolveL(nb, t);
+                    lu.Update(t, c);
+                    lu.FSolve(_b);
+                }
+            }
+            for (int i = 0; i < size; i++)
+            {
+                Assert.AreEqual(x[i], b[i], 0.000001, "Size = " + size);
             }
         }
 

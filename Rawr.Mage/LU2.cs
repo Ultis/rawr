@@ -12,8 +12,11 @@ namespace Rawr.Mage
         public double[,] _U;
         public int[] _P;
         public int[] _Q;
-        public double[] _L; // eta file
-        public int[] _LI; // col/row eta index   Li = I + L[i*size:(i+1)*size-1] * e_LI[i]'
+        //public double[] _L; // eta file
+        public double[] sparseL; // packed non-zero elements of eta vectors
+        public int[] sparseLI; // indices of non-zero elements
+        public int[] sparseLstart; // start index of non-zero elements of eta vector i
+        public int[] _LJ; // col/row eta index   Li = I + L[i*size:(i+1)*size-1] * e_LI[i]'
         private double[] column;
         private double[] column2;
 
@@ -48,6 +51,10 @@ namespace Rawr.Mage
         // P2 E P2' = I + P2 eta ep' P2'
         // ep' P2' = (P2 ep)'
 
+        // E = I + ep eta'
+        // P E P' = I + P ep eta' P'
+        // eta' P' = (P eta)'
+
         public bool Singular { get; set; }
 
         // data will be modified, if you need to retain it clean pass a clone
@@ -59,8 +66,11 @@ namespace Rawr.Mage
             _U = data;
             _P = new int[size];
             _Q = new int[size];
-            _L = new double[etaMax * size];
-            _LI = new int[etaMax];
+            //_L = new double[etaMax * size];
+            _LJ = new int[etaMax];
+            sparseL = new double[etaMax * size];
+            sparseLI = new int[etaMax * size];
+            sparseLstart = new int[etaMax];
             column = new double[size];
             column2 = new double[size];
         }
@@ -77,9 +87,9 @@ namespace Rawr.Mage
         public unsafe void BSolveU(double* b, double* c)
         {
             int i, j, k;
-            fixed (double* L = _L, U = _U)
+            fixed (double* U = _U)
             {
-                fixed (int* P = _P, Q = _Q, LI = _LI)
+                fixed (int* P = _P, Q = _Q)
                 {
                     for (i = 0; i < size; i++)
                     {
@@ -101,9 +111,9 @@ namespace Rawr.Mage
         public unsafe void BSolveL(double* b, double* c)
         {
             int i, j;
-            fixed (double* L = _L, U = _U)
+            fixed (double* /*L = _L, */U = _U, sL = sparseL)
             {
-                fixed (int* P = _P, Q = _Q, LI = _LI)
+                fixed (int* P = _P, Q = _Q, LJ = _LJ, sLI = sparseLI, sLstart = sparseLstart)
                 {
                     for (i = 0; i < size; i++)
                     {
@@ -111,14 +121,38 @@ namespace Rawr.Mage
                     }
                     for (j = etaSize - 1; j >= 0; j--)
                     {
-                        int row = LI[j]; // we're updating row element
-                        // c~ = c + erow (eta' c)
-                        double f = 0.0;
-                        for (i = 0; i < size; i++)
+                        if (j < size)
                         {
-                            f += c[i] * L[j * size + i];
+                            // eta columns from initial decomposition
+                            int row = LJ[j]; // we're updating row element
+                            // c~ = c + erow (eta' c)
+                            double f = 0.0;
+                            /*for (i = 0; i < size; i++)
+                            {
+                                f += c[i] * L[j * size + i];
+                            }*/
+                            int maxi = sLstart[j + 1];
+                            for (i = sLstart[j]; i < maxi; i++)
+                            {
+                                f += c[sLI[i]] * sL[i];
+                            }
+                            c[row] += f;
                         }
-                        c[row] += f;
+                        else
+                        {
+                            // eta rows from update
+                            int row = LJ[j]; // we're updating using row, if element is zero we can skip
+                            // c~ = c + eta (erow' c)
+                            double f = c[row];
+                            if (Math.Abs(f) >= 0.00000001)
+                            {
+                                int maxi = sLstart[j + 1];
+                                for (i = sLstart[j]; i < maxi; i++)
+                                {
+                                    c[sLI[i]] += f * sL[i];
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -136,9 +170,9 @@ namespace Rawr.Mage
         public unsafe void FSolveU(double* b, double* c)
         {
             int i, j, k;
-            fixed (double* L = _L, U = _U, c2 = column2)
+            fixed (double* U = _U, c2 = column2)
             {
-                fixed (int* P = _P, Q = _Q, LI = _LI)
+                fixed (int* P = _P, Q = _Q)
                 {
                     for (i = 0; i < size; i++)
                     {
@@ -166,21 +200,43 @@ namespace Rawr.Mage
         {
             // perform all eta operations and finally apply row permutation P
             int i, j, k;
-            fixed (double* L = _L, U = _U)
+            fixed (double* /*L = _L, */U = _U, sL = sparseL)
             {
-                fixed (int* P = _P, Q = _Q, LI = _LI)
+                fixed (int* P = _P, Q = _Q, LJ = _LJ, sLI = sparseLI, sLstart = sparseLstart)
                 {
                     for (j = 0; j < etaSize; j++)
                     {
-                        int row = LI[j]; // we're updating using row, if element is zero we can skip
-                        // b~ = b + eta (erow' b)
-                        double f = b[row];
-                        if (Math.Abs(f) >= 0.00000001)
+                        if (j < size)
                         {
-                            for (i = 0; i < size; i++)
+                            // eta columns from initial decomposition
+                            int row = LJ[j]; // we're updating using row, if element is zero we can skip
+                            // b~ = b + eta (erow' b)
+                            double f = b[row];
+                            if (Math.Abs(f) >= 0.00000001)
                             {
-                                b[i] += f * L[j * size + i];
+                                /*for (i = 0; i < size; i++)
+                                {
+                                    b[i] += f * L[j * size + i];
+                                }*/
+                                int maxi = sLstart[j + 1];
+                                for (i = sLstart[j]; i < maxi; i++)
+                                {
+                                    b[sLI[i]] += f * sL[i];
+                                }
                             }
+                        }
+                        else
+                        {
+                            // eta rows from updates
+                            // b~ = b + erow (eta' b)
+                            int row = LJ[j]; // we're updating row element
+                            double f = 0.0;
+                            int maxi = sLstart[j + 1];
+                            for (i = sLstart[j]; i < maxi; i++)
+                            {
+                                f += b[sLI[i]] * sL[i];
+                            }
+                            b[row] += f;
                         }
                     }
                     for (i = 0; i < size; i++)
@@ -192,26 +248,34 @@ namespace Rawr.Mage
         }
 
         internal static HighPerformanceTimer DecomposeTimer = new HighPerformanceTimer();
+        internal static int decomposeCount = 0;
+        internal static int updateCount = 0;
 
         // Performance Log, start, load Kavan, repeat dps time = 1
         // Primal=6.08148534180949E-05, Decompose=3.38125119182951E-05 implementation LU
         // Primal=7.7155968256824E-05, Decompose=4.80555577214333E-05  initial implementation LU2 with column pivoting
         // Primal=4.44975972839637E-05, Decompose=1.34763462504299E-05 LU2 no column pivoting
+        // Primal=4.10642857990147E-05, Decompose=1.28461907883656E-05 FSolveL => sparse
+        // Primal=3.96870122800117E-05, Decompose=1.36131169065829E-05 BSolveL => sparse
+        // Primal=2.73956138996725E-05, Decompose=4.29207679646327E-06 update rule
 
         // SMP
-        // Primal=0.000248019081795013, Decompose=7.31092948026856E-05  LU2 no column pivoting
+        // Primal=0.000248019081795013, Decompose=7.31092948026856E-05 LU2 no column pivoting
+        // Primal=0.000217759250424469, Decompose=7.53546090376799E-05 sparse L
+        // Primal=0.00013135285568704, Decompose=1.44506264553419E-05 update rule
 
         public unsafe void Decompose()
         {
+            decomposeCount++;
             DecomposeTimer.Start();
             etaSize = 0; // reset eta file
-            Array.Clear(_L, 0, _L.Length);
+            //Array.Clear(_L, 0, _L.Length);
             Singular = false;
 
             int i, j, k, pivi, pivj;
-            fixed (double* L = _L, U = _U)
+            fixed (double* /*L = _L, */U = _U, sL = sparseL)
             {
-                fixed (int* P = _P, Q = _Q, LI = _LI)
+                fixed (int* P = _P, Q = _Q, LJ = _LJ, sLI = sparseLI, sLstart = sparseLstart)
                 {
                     // init P, Q
                     for (i = 0; i < size; i++)
@@ -290,27 +354,153 @@ namespace Rawr.Mage
 
                         if (Math.Abs(max) < 0.000001) Singular = true;
 
+                        sLstart[etaSize + 1] = sLstart[etaSize];
                         double a = 1 / U[j * size + j];
                         for (i = j + 1; i < size; i++)
                         {
                             int pi = P[i];
                             double f = -U[i * size + j] * a;
-                            L[etaSize * size + pi] = f; // eta element that eliminates element in row i
                             U[i * size + j] = 0;
                             if (Math.Abs(f) > 0.00000001)
                             {
+                                //L[etaSize * size + pi] = f; // eta element that eliminates element in row i
+                                // sparse L construction
+                                sL[sLstart[etaSize + 1]] = f;
+                                sLI[sLstart[etaSize + 1]] = pi;
+                                sLstart[etaSize + 1]++;
+                                // update U
                                 for (k = j + 1; k < size; k++)
                                 {
                                     U[i * size + k] += f * U[j * size + k];
                                 }
                             }
                         }
-                        LI[etaSize] = P[j]; // yes I had to guess, but I used unit test to make sure it works :)
+                        LJ[etaSize] = P[j]; // yes I had to guess, but I used unit test to make sure it works :)
                         etaSize++;
                     }
                 }
             }
             DecomposeTimer.Stop();
         }
+
+        // B~ = B + aj ecol'
+        // Ln...L0 B~ = P U~ Q = P U Q + Ln...L0 aj ecol'
+        // U~ = U + [P' Ln...L0 aj] ecol' Q'
+        // a = [P' Ln...L0 aj]
+
+        // replace column col in basis B with aj
+        public unsafe void Update(double* a, int col)
+        {
+            updateCount++;
+            DecomposeTimer.Start();
+
+            int i, j, k;
+            fixed (double* /*L = _L, */U = _U, sL = sparseL, c = column)
+            {
+                fixed (int* P = _P, Q = _Q, LJ = _LJ, sLI = sparseLI, sLstart = sparseLstart)
+                {
+                    for (j = 0; j < size; j++)
+                    {
+                        if (Q[j] == col) break;
+                        //c[i] = ecol[Q[i]]; // shuffle Q
+                    }
+                    col = j;
+
+                    // place in column col = j
+                    // rotate columns to get upper hessenberg form (col...lastnz)
+                    int lastnz = -1;
+                    for (i = 0; i < size; i++)
+                    {
+                        if (Math.Abs(a[i]) > 0.000001) lastnz = i;
+                    }
+                    // XXaXXXX    XXXXXaX
+                    //  XaXXXX     XXXXaX
+                    //   aXXXX      XXXaX   <--- col
+                    //   aXXXX  =>  XXXaX
+                    //   a XXX       XXaX
+                    //   a  XX        XaX   <--- lastnz
+                    //       X          X
+
+                    int Qcol = Q[col];
+                    for (j = col; j < lastnz; j++)
+                    {
+                        Q[j] = Q[j + 1];
+                        for (i = 0; i <= j + 1; i++)
+                        {
+                            U[i * size + j] = U[i * size + j + 1];
+                        }                        
+                    }
+                    Q[lastnz] = Qcol;
+                    for (i = 0; i <= lastnz; i++)
+                    {
+                        U[i * size + lastnz] = a[i];
+                    }
+
+                    // eliminate row at index col up to lastnz using rows below it
+                    // we're eliminating on previous diagonals, so we know it is safe (we shouldn't update on a singular basis)
+
+                    // E = I + ep eta'
+                    // P E P' = I + P ep eta' P'
+                    // eta' P' = (P eta)'
+
+                    if (etaSize >= etaMax) throw new InvalidOperationException();
+
+                    sLstart[etaSize + 1] = sLstart[etaSize];
+
+                    for (j = col; j < lastnz; j++)
+                    {
+                        int pj = P[j + 1];
+                        double f = -U[col * size + j] / U[(j + 1) * size + j];
+                        U[col * size + j] = 0;
+                        if (Math.Abs(f) > 0.00000001)
+                        {
+                            // sparse L construction
+                            sL[sLstart[etaSize + 1]] = f;
+                            sLI[sLstart[etaSize + 1]] = pj;
+                            sLstart[etaSize + 1]++;
+                            // update U
+                            for (k = j + 1; k < size; k++)
+                            {
+                                U[col * size + k] += f * U[(j + 1) * size + k];
+                            }
+                        }
+                    }
+                    LJ[etaSize] = P[col];
+                    etaSize++;
+
+                    // rotate rows to get upper triangular form (col...lastnz)
+
+                    // XXXXXXX    XXXXXXX
+                    //  XXXXXX     XXXXXX
+                    //      XX      XXXXX   <--- col
+                    //   XXXXX  =>   XXXX
+                    //    XXXX        XXX
+                    //     XXX         XX   <--- lastnz
+                    //       X          X
+
+                    // store col in temp
+                    int Pcol = P[col];
+                    for (j = lastnz; j < size; j++)
+                    {
+                        c[j] = U[col * size + j];
+                    }
+                    for (i = col; i < lastnz; i++)
+                    {
+                        P[i] = P[i + 1];
+                        for (j = (i == 0 ? 0 : i - 1); j < size; j++)
+                        {
+                            U[i * size + j] = U[(i + 1) * size + j];
+                        }
+                    }
+                    P[lastnz] = Pcol;
+                    if (lastnz > 0) U[lastnz * size + lastnz - 1] = 0.0;
+                    for (j = lastnz; j < size; j++)
+                    {
+                        U[lastnz * size + j] = c[j];
+                    }
+                }
+            }
+            DecomposeTimer.Stop();
+        }    
     }
 }

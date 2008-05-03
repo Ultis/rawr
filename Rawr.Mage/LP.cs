@@ -18,6 +18,7 @@ namespace Rawr.Mage
         double[] _d;
         double[] _x;
         double[] _w;
+        double[] _ww;
         double[] _wd;
         double[] _u;
         double[] _c;
@@ -84,6 +85,7 @@ namespace Rawr.Mage
             _d = new double[rows];
             _x = new double[rows];
             _w = new double[rows];
+            _ww = new double[rows];
             _wd = new double[cols];
             _u = new double[rows];
             _c = new double[cols];
@@ -126,7 +128,8 @@ namespace Rawr.Mage
             double* cc, sValue;
             int* sRow;
             int sCol1, sCol2;
-            fixed (double* a = A.data, LU = _LU, d = _d, x = _x, w = _w, c = _c, u = _u, b = _b, cost = _cost, sparseValue = A.value)
+            int redecompose = 0;
+            fixed (double* a = A.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, c = _c, u = _u, b = _b, cost = _cost, sparseValue = A.value)
             {
                 fixed (int* B = _B, V = _V, D = disabled, sparseRow = A.row, sparseCol = A.col)
                 {
@@ -134,16 +137,20 @@ namespace Rawr.Mage
                     {
                         PrimalTimer.Start();
                         // [L U] = lu(A(:,B_indices));
-                        for (j = 0; j < rows; j++)
+                        if (redecompose <= 0)
                         {
-                            int col = B[j];
-                            for (i = 0; i < rows - 1; i++)
+                            for (j = 0; j < rows; j++)
                             {
-                                LU[i * rows + j] = a[i * (cols + rows) + col];
+                                int col = B[j];
+                                for (i = 0; i < rows - 1; i++)
+                                {
+                                    LU[i * rows + j] = a[i * (cols + rows) + col];
+                                }
+                                LU[i * rows + j] = D[col];
                             }
-                            LU[i * rows + j] = D[col];
+                            lu.Decompose();
+                            redecompose = 50; // decompose every 50 iterations to maintain stability
                         }
-                        lu.Decompose();
                         if (lu.Singular)
                         {
                             //System.Diagnostics.Debug.WriteLine("Basis singular");
@@ -259,7 +266,7 @@ namespace Rawr.Mage
                             }
                             ret[cols] = value;
                             PrimalTimer.Stop();
-                            System.Diagnostics.Debug.WriteLine("Primal=" + PrimalTimer.Average + ", Decompose=" + Mage.LU2.DecomposeTimer.Average);
+                            System.Diagnostics.Debug.WriteLine("Primal=" + PrimalTimer.Average + ", Decompose=" + LU2.DecomposeTimer.Average);
                             return ret;
                         }
 
@@ -270,7 +277,9 @@ namespace Rawr.Mage
                             w[i] = a[i * (cols + rows) + maxcol];
                         }
                         w[i] = D[maxcol];
-                        lu.FSolve(w);
+                        //lu.FSolve(w);
+                        lu.FSolveL(w, ww);
+                        lu.FSolveU(ww, w);
 
                         // min over i of d[i]/w[i] where w[i]>0
                         double minr = double.PositiveInfinity;
@@ -334,6 +343,13 @@ namespace Rawr.Mage
 
                         //System.Diagnostics.Debug.WriteLine(round + ": " + V[maxj] + " <=> " + B[mini]);
                         // swap base
+
+                        redecompose--;
+                        if (redecompose > 0)
+                        {
+                            lu.Update(ww, mini);
+                        }
+
                         int k = B[mini];
                         B[mini] = V[maxj];
                         V[maxj] = k;
