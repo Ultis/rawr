@@ -365,12 +365,12 @@ namespace Rawr.Mage
             List<string> cooldownList = new List<string>();
             List<string> spellList = new List<string>();
             List<string> segmentList = new List<string>();
-            for (int i = 0; i < calculations.SolutionLabel.Count; i++)
+            for (int i = 0; i < calculations.SolutionLabel.Length; i++)
             {
-                if (calculations.Solution[i] > 0 && calculations.IncrementalSetSpell[i] != null)
+                if (calculations.Solution[i] > 0 && calculations.IncrementalSetSpell[i] != SpellId.None)
                 {
                     cooldownList.Add(calculations.IncrementalSetCooldown[i].ToString(CultureInfo.InvariantCulture));
-                    spellList.Add(calculations.IncrementalSetSpell[i]);
+                    spellList.Add(((int)calculations.IncrementalSetSpell[i]).ToString(CultureInfo.InvariantCulture));
                     if (calculations.IncrementalSetSegment != null) segmentList.Add(calculations.IncrementalSetSegment[i].ToString(CultureInfo.InvariantCulture));
                 }
             }
@@ -470,73 +470,73 @@ namespace Rawr.Mage
             calculatedStats.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
             calculatedStats.MageArmor = armor;
 
-            List<string> spellList = new List<string>();
+            List<SpellId> spellList = new List<SpellId>();
 
             if (calculationOptions.SmartOptimization)
             {
                 if (calculationOptions.EmpoweredFireball > 0)
                 {
-                    spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
+                    spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
                 }
                 else if (calculationOptions.EmpoweredFrostbolt > 0)
                 {
-                    spellList.Add("Frostbolt");
+                    spellList.Add(SpellId.Frostbolt);
                 }
                 else if (calculationOptions.SpellPower > 0)
                 {
-                    spellList.Add("Arcane Blast");
-                    if (calculationOptions.ImprovedFrostbolt > 0) spellList.Add("Frostbolt");
-                    if (calculationOptions.ImprovedFireball > 0) spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
-                    if (calculationOptions.ImprovedArcaneMissiles > 0) spellList.Add("Arcane Missiles");
+                    spellList.Add(SpellId.ArcaneBlast33);
+                    if (calculationOptions.ImprovedFrostbolt > 0) spellList.Add(SpellId.Frostbolt);
+                    if (calculationOptions.ImprovedFireball > 0) spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                    if (calculationOptions.ImprovedArcaneMissiles > 0) spellList.Add(SpellId.ArcaneMissiles);
                 }
                 else
                 {
-                    spellList.Add("Arcane Missiles");
-                    spellList.Add("Scorch");
-                    spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
-                    spellList.Add("Frostbolt");
-                    spellList.Add("Arcane Blast");
+                    spellList.Add(SpellId.ArcaneMissiles);
+                    spellList.Add(SpellId.Scorch);
+                    spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                    spellList.Add(SpellId.Frostbolt);
+                    spellList.Add(SpellId.ArcaneBlast33);
                 }
             }
             else
             {
-                spellList.Add("Arcane Missiles");
-                spellList.Add("Scorch");
-                spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
-                spellList.Add("FireballFireBlast");
-                spellList.Add("Frostbolt");
-                spellList.Add("Arcane Blast");
+                spellList.Add(SpellId.ArcaneMissiles);
+                spellList.Add(SpellId.Scorch);
+                spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                spellList.Add(SpellId.FireballFireBlast);
+                spellList.Add(SpellId.Frostbolt);
+                spellList.Add(SpellId.ArcaneBlast33);
             }
             if (calculationOptions.ABCycles)
             {
-                spellList.Add("ABAMP");
-                spellList.Add("ABAM");
-                spellList.Add("AB3AMSc");
-                spellList.Add("ABAM3Sc");
-                spellList.Add("ABAM3Sc2");
-                spellList.Add("ABAM3FrB");
-                spellList.Add("ABAM3FrB2");
-                spellList.Add("ABFrB3FrB");
-                spellList.Add("ABFrB3FrBSc");
-                spellList.Add("ABFB3FBSc");
-                //spellList.Add("AB3Sc");
-                spellList.Add("ABAM3ScCCAM");
-                spellList.Add("ABAM3Sc2CCAM");
-                spellList.Add("ABAM3FrBCCAM");
+                spellList.Add(SpellId.ABAMP);
+                spellList.Add(SpellId.ABAM);
+                spellList.Add(SpellId.AB3AMSc);
+                spellList.Add(SpellId.ABAM3Sc);
+                spellList.Add(SpellId.ABAM3Sc2);
+                spellList.Add(SpellId.ABAM3FrB);
+                spellList.Add(SpellId.ABAM3FrB2);
+                spellList.Add(SpellId.ABFrB3FrB);
+                spellList.Add(SpellId.ABFrB3FrBSc);
+                spellList.Add(SpellId.ABFB3FBSc);
+                //spellList.Add(SpellId.AB3Sc);
+                spellList.Add(SpellId.ABAM3ScCCAM);
+                spellList.Add(SpellId.ABAM3Sc2CCAM);
+                spellList.Add(SpellId.ABAM3FrBCCAM);
                 //spellList.Add("ABAM3FrBCCAMFail");
-                spellList.Add("ABAM3FrBScCCAM");
-                spellList.Add("ABAMCCAM");
-                spellList.Add("ABAM3CCAM");
+                spellList.Add(SpellId.ABAM3FrBScCCAM);
+                spellList.Add(SpellId.ABAMCCAM);
+                spellList.Add(SpellId.ABAM3CCAM);
             }
             if (calculationOptions.AoeDuration > 0)
             {
-                spellList.Add("Arcane Explosion");
-                spellList.Add("Flamestrike (spammed)");
-                spellList.Add("Flamestrike (single)");
-                spellList.Add("Blizzard");
-                spellList.Add("Cone of Cold");
-                if (calculationOptions.BlastWave == 1) spellList.Add("Blast Wave");
-                if (calculationOptions.DragonsBreath == 1) spellList.Add("Dragon's Breath");
+                spellList.Add(SpellId.ArcaneExplosion);
+                spellList.Add(SpellId.FlamestrikeSpammed);
+                spellList.Add(SpellId.FlamestrikeSingle);
+                spellList.Add(SpellId.Blizzard);
+                spellList.Add(SpellId.ConeOfCold);
+                if (calculationOptions.BlastWave == 1) spellList.Add(SpellId.BlastWave);
+                if (calculationOptions.DragonsBreath == 1) spellList.Add(SpellId.DragonsBreath);
             }
 
             int lpRows = 42;
@@ -546,13 +546,14 @@ namespace Rawr.Mage
             double[] tps = new double[lpCols];
             calculatedStats.SolutionStats = new CharacterCalculationsMage[lpCols];
             calculatedStats.SolutionSpells = new Spell[lpCols];
+            calculatedStats.SolutionLabel = new string[lpCols];
 
             int[] incrementalSetCooldown = null;
-            string[] incrementalSetSpell = null;
+            SpellId[] incrementalSetSpell = null;
             if (computeIncrementalSet)
             {
                 incrementalSetCooldown = new int[lpCols];
-                incrementalSetSpell = new string[lpCols];
+                incrementalSetSpell = new SpellId[lpCols];
             }
 
             if (trinket1Available)
@@ -785,17 +786,17 @@ namespace Rawr.Mage
             float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
 
             // idle regen
-            calculatedStats.SolutionLabel.Add("Idle Regen");
+            calculatedStats.SolutionLabel[0] = "Idle Regen";
             lp[0, 0] = -(calculatedStats.ManaRegen * (1 - calculationOptions.Fragmentation) + calculatedStats.ManaRegen5SR * calculationOptions.Fragmentation);
             lp[1, 0] = 1;
             lp[24, 0] = -1;
             lp[lpRows, 0] = 0;
             // wand
-            calculatedStats.SolutionLabel.Add("Wand");
+            calculatedStats.SolutionLabel[1] = "Wand";
             if (character.Ranged != null && character.Ranged.Type == Item.ItemType.Wand)
             {
                 Spell wand = new Wand(character, calculatedStats, (MagicSchool)character.Ranged.DamageType, character.Ranged.MinDamage, character.Ranged.MaxDamage, character.Ranged.Speed);
-                calculatedStats.SetSpell("Wand", wand);
+                calculatedStats.SetSpell(SpellId.Wand, wand);
                 lp[0, 1] = wand.CostPerSecond - wand.ManaRegenPerSecond;
                 lp[1, 1] = 1;
                 lp[39, 1] = wand.ThreatPerSecond;
@@ -804,7 +805,7 @@ namespace Rawr.Mage
             // evocation
             double evocationDuration = (8f + characterStats.EvocationExtension) / calculatedStats.CastingSpeed;
             calculatedStats.EvocationDuration = evocationDuration;
-            calculatedStats.SolutionLabel.Add("Evocation");
+            calculatedStats.SolutionLabel[2] = "Evocation";
             float evocationMana = characterStats.Mana;
             calculatedStats.EvocationRegen = calculatedStats.ManaRegen5SR + 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed;
             if (calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0)
@@ -846,7 +847,7 @@ namespace Rawr.Mage
             lp[39, 2] = 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed * 0.5f * threatFactor; // should split among all targets if more than one, assume one only
             lp[lpRows, 2] = 0;
             // mana pot
-            calculatedStats.SolutionLabel.Add("Mana Potion");
+            calculatedStats.SolutionLabel[3] = "Mana Potion";
             calculatedStats.MaxManaPotion = 1 + (int)((calculatedStats.FightDuration - 30f) / 120f);
             lp[0, 3] = -calculatedStats.ManaRegen5SR - (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime;
             lp[1, 3] = 1;
@@ -855,7 +856,7 @@ namespace Rawr.Mage
             lp[40, 3] = 40 / calculatedStats.ManaPotionTime;
             lp[lpRows, 3] = 0;
             // mana gem
-            calculatedStats.SolutionLabel.Add("Mana Gem");
+            calculatedStats.SolutionLabel[4] = "Mana Gem";
             calculatedStats.MaxManaGem = Math.Min(5, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f));
             double manaGemRegenRate = (1 + characterStats.BonusManaGem) * (-Math.Min(3, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f)) * 2400f - ((calculatedStats.FightDuration >= 390) ? 1100f : 0f) - ((calculatedStats.FightDuration >= 510) ? 850 : 0)) / (calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime);
             lp[0, 4] = -calculatedStats.ManaRegen5SR + manaGemRegenRate;
@@ -867,7 +868,7 @@ namespace Rawr.Mage
             lp[40, 4] = 40 / calculatedStats.ManaPotionTime;
             lp[lpRows, 4] = 0;
             // drums
-            calculatedStats.SolutionLabel.Add("Drums of Battle");
+            calculatedStats.SolutionLabel[5] = "Drums of Battle";
             lp[0, 5] = -calculatedStats.ManaRegen5SR;
             lp[1, 5] = 1;
             lp[34, 5] = -1 / calculatedStats.GlobalCooldown;
@@ -886,7 +887,7 @@ namespace Rawr.Mage
                         {
                             calculatedStats.SolutionStats[index] = statsList[buffset];
                             calculatedStats.SolutionSpells[index] = s;
-                            calculatedStats.SolutionLabel.Add(((statsList[buffset].BuffLabel.Length > 0) ? (statsList[buffset].BuffLabel + "+") : "") + s.Name);
+                            calculatedStats.SolutionLabel[index] = ((statsList[buffset].BuffLabel.Length > 0) ? (statsList[buffset].BuffLabel + "+") : "") + s.Name;
                             if (computeIncrementalSet)
                             {
                                 incrementalSetCooldown[index] = statsList[buffset].IncrementalSetIndex;
@@ -969,14 +970,6 @@ namespace Rawr.Mage
                             //lp[40, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
                             lp[lpRows, index] = s.DamagePerSecond;
                         }
-                        else
-                        {
-                            calculatedStats.SolutionLabel.Add("dummy");
-                        }
-                    }
-                    else
-                    {
-                        calculatedStats.SolutionLabel.Add("dummy");
                     }
                 }
             }
@@ -984,22 +977,22 @@ namespace Rawr.Mage
             float manaBurn = 80;
             if (calculationOptions.AoeDuration > 0)
             {
-                Spell s = calculatedStats.GetSpell("Arcane Explosion");
+                Spell s = calculatedStats.GetSpell(SpellId.ArcaneExplosion);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             else if (calculationOptions.EmpoweredFireball > 0)
             {
-                Spell s = calculatedStats.GetSpell("Fireball");
+                Spell s = calculatedStats.GetSpell(SpellId.Fireball);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             else if (calculationOptions.EmpoweredFrostbolt > 0)
             {
-                Spell s = calculatedStats.GetSpell("Frostbolt");
+                Spell s = calculatedStats.GetSpell(SpellId.Frostbolt);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             else if (calculationOptions.SpellPower > 0)
             {
-                Spell s = calculatedStats.GetSpell("Arcane Blast");
+                Spell s = calculatedStats.GetSpell(SpellId.ArcaneBlast33);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             if (ivAvailable)
@@ -1164,81 +1157,81 @@ namespace Rawr.Mage
             calculatedStats.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
             calculatedStats.MageArmor = armor;
 
-            List<string> spellList = new List<string>();
+            List<SpellId> spellList = new List<SpellId>();
 
             if (calculationOptions.SmartOptimization)
             {
                 if (calculationOptions.EmpoweredFireball > 0)
                 {
-                    spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
+                    spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
                 }
                 else if (calculationOptions.EmpoweredFrostbolt > 0)
                 {
-                    spellList.Add("Frostbolt");
+                    spellList.Add(SpellId.Frostbolt);
                 }
                 else if (calculationOptions.SpellPower > 0)
                 {
-                    spellList.Add("Arcane Blast");
-                    if (calculationOptions.ImprovedFrostbolt > 0) spellList.Add("Frostbolt");
-                    if (calculationOptions.ImprovedFireball > 0) spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
-                    if (calculationOptions.ImprovedArcaneMissiles + calculationOptions.EmpoweredArcaneMissiles > 0) spellList.Add("Arcane Missiles");
+                    spellList.Add(SpellId.ArcaneBlast33);
+                    if (calculationOptions.ImprovedFrostbolt > 0) spellList.Add(SpellId.Frostbolt);
+                    if (calculationOptions.ImprovedFireball > 0) spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                    if (calculationOptions.ImprovedArcaneMissiles + calculationOptions.EmpoweredArcaneMissiles > 0) spellList.Add(SpellId.ArcaneMissiles);
                 }
                 else
                 {
-                    spellList.Add("Arcane Missiles");
-                    spellList.Add("Scorch");
-                    spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
-                    spellList.Add("Frostbolt");
-                    spellList.Add("Arcane Blast");
+                    spellList.Add(SpellId.ArcaneMissiles);
+                    spellList.Add(SpellId.Scorch);
+                    spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                    spellList.Add(SpellId.Frostbolt);
+                    spellList.Add(SpellId.ArcaneBlast33);
                 }
             }
             else
             {
-                spellList.Add("Arcane Missiles");
-                spellList.Add("Scorch");
-                spellList.Add(calculationOptions.MaintainScorch ? "FireballScorch" : "Fireball");
-                spellList.Add("FireballFireBlast");
-                spellList.Add("Frostbolt");
-                spellList.Add("Arcane Blast");
+                spellList.Add(SpellId.ArcaneMissiles);
+                spellList.Add(SpellId.Scorch);
+                spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                spellList.Add(SpellId.FireballFireBlast);
+                spellList.Add(SpellId.Frostbolt);
+                spellList.Add(SpellId.ArcaneBlast33);
             }
             if (calculationOptions.ABCycles)
             {
                 if (calculationOptions.EmpoweredArcaneMissiles > 0)
                 {
-                    spellList.Add("ABAMP");
-                    spellList.Add("ABAM");
-                    spellList.Add("AB3AMSc");
-                    spellList.Add("ABAM3Sc");
-                    spellList.Add("ABAM3Sc2");
-                    spellList.Add("ABAM3FrB");
-                    spellList.Add("ABAM3FrB2");
-                    spellList.Add("ABAM3ScCCAM");
-                    spellList.Add("ABAM3Sc2CCAM");
-                    spellList.Add("ABAM3FrBCCAM");
-                    spellList.Add("ABAM3FrBScCCAM");
-                    spellList.Add("ABAMCCAM");
-                    spellList.Add("ABAM3CCAM");
+                    spellList.Add(SpellId.ABAMP);
+                    spellList.Add(SpellId.ABAM);
+                    spellList.Add(SpellId.AB3AMSc);
+                    spellList.Add(SpellId.ABAM3Sc);
+                    spellList.Add(SpellId.ABAM3Sc2);
+                    spellList.Add(SpellId.ABAM3FrB);
+                    spellList.Add(SpellId.ABAM3FrB2);
+                    spellList.Add(SpellId.ABAM3ScCCAM);
+                    spellList.Add(SpellId.ABAM3Sc2CCAM);
+                    spellList.Add(SpellId.ABAM3FrBCCAM);
+                    spellList.Add(SpellId.ABAM3FrBScCCAM);
+                    spellList.Add(SpellId.ABAMCCAM);
+                    spellList.Add(SpellId.ABAM3CCAM);
                 }
                 if (calculationOptions.ImprovedFrostbolt > 0)
                 {
-                    spellList.Add("ABFrB3FrB");
-                    spellList.Add("ABFrB3FrBSc");
+                    spellList.Add(SpellId.ABFrB3FrB);
+                    spellList.Add(SpellId.ABFrB3FrBSc);
                 }
                 if (calculationOptions.ImprovedFireball > 0)
                 {
-                    spellList.Add("ABFB3FBSc");
-                    //spellList.Add("AB3Sc");
+                    spellList.Add(SpellId.ABFB3FBSc);
+                    //spellList.Add(SpellId.AB3Sc);
                 }
             }
             if (calculationOptions.AoeDuration > 0)
             {
-                spellList.Add("Arcane Explosion");
-                spellList.Add("Flamestrike (spammed)");
-                spellList.Add("Flamestrike (single)");
-                spellList.Add("Blizzard");
-                spellList.Add("Cone of Cold");
-                if (calculationOptions.BlastWave == 1) spellList.Add("Blast Wave");
-                if (calculationOptions.DragonsBreath == 1) spellList.Add("Dragon's Breath");
+                spellList.Add(SpellId.ArcaneExplosion);
+                spellList.Add(SpellId.FlamestrikeSpammed);
+                spellList.Add(SpellId.FlamestrikeSingle);
+                spellList.Add(SpellId.Blizzard);
+                spellList.Add(SpellId.ConeOfCold);
+                if (calculationOptions.BlastWave == 1) spellList.Add(SpellId.BlastWave);
+                if (calculationOptions.DragonsBreath == 1) spellList.Add(SpellId.DragonsBreath);
             }
 
             int rowOffset = 42;
@@ -1250,14 +1243,15 @@ namespace Rawr.Mage
             calculatedStats.SolutionStats = new CharacterCalculationsMage[lpCols];
             calculatedStats.SolutionSpells = new Spell[lpCols];
             calculatedStats.SolutionSegments = new int[lpCols];
+            calculatedStats.SolutionLabel = new string[lpCols];
 
             int[] incrementalSetCooldown = null;
-            string[] incrementalSetSpell = null;
+            SpellId[] incrementalSetSpell = null;
             int[] incrementalSetSegment = null;
             if (computeIncrementalSet)
             {
                 incrementalSetCooldown = new int[lpCols];
-                incrementalSetSpell = new string[lpCols];
+                incrementalSetSpell = new SpellId[lpCols];
                 incrementalSetSegment = new int[lpCols];
             }
 
@@ -1571,17 +1565,17 @@ namespace Rawr.Mage
             float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
 
             // idle regen
-            calculatedStats.SolutionLabel.Add("Idle Regen");
+            calculatedStats.SolutionLabel[0] = "Idle Regen";
             lp[0, 0] = -(calculatedStats.ManaRegen * (1 - calculationOptions.Fragmentation) + calculatedStats.ManaRegen5SR * calculationOptions.Fragmentation);
             lp[1, 0] = 1;
             lp[24, 0] = -1;
             lp[lpRows, 0] = 0;
             // wand
-            calculatedStats.SolutionLabel.Add("Wand");
+            calculatedStats.SolutionLabel[1] = "Wand";
             if (character.Ranged != null && character.Ranged.Type == Item.ItemType.Wand)
             {
                 Spell wand = new Wand(character, calculatedStats, (MagicSchool)character.Ranged.DamageType, character.Ranged.MinDamage, character.Ranged.MaxDamage, character.Ranged.Speed);
-                calculatedStats.SetSpell("Wand", wand);
+                calculatedStats.SetSpell(SpellId.Wand, wand);
                 lp[0, 1] = wand.CostPerSecond - wand.ManaRegenPerSecond;
                 lp[1, 1] = 1;
                 lp[39, 1] = wand.ThreatPerSecond;
@@ -1590,7 +1584,7 @@ namespace Rawr.Mage
             // evocation
             double evocationDuration = (8f + characterStats.EvocationExtension) / calculatedStats.CastingSpeed;
             calculatedStats.EvocationDuration = evocationDuration;
-            calculatedStats.SolutionLabel.Add("Evocation");
+            calculatedStats.SolutionLabel[2] = "Evocation";
             float evocationMana = characterStats.Mana;
             calculatedStats.EvocationRegen = calculatedStats.ManaRegen5SR + 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed;
             if (calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0)
@@ -1632,7 +1626,7 @@ namespace Rawr.Mage
             lp[39, 2] = 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed * 0.5f * threatFactor; // should split among all targets if more than one, assume one only
             lp[lpRows, 2] = 0;
             // mana pot
-            calculatedStats.SolutionLabel.Add("Mana Potion");
+            calculatedStats.SolutionLabel[3] = "Mana Potion";
             calculatedStats.MaxManaPotion = 1 + (int)((calculatedStats.FightDuration - 30f) / 120f);
             lp[0, 3] = -calculatedStats.ManaRegen5SR - (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime;
             lp[1, 3] = 1;
@@ -1641,7 +1635,7 @@ namespace Rawr.Mage
             lp[40, 3] = 40 / calculatedStats.ManaPotionTime;
             lp[lpRows, 3] = 0;
             // mana gem
-            calculatedStats.SolutionLabel.Add("Mana Gem");
+            calculatedStats.SolutionLabel[4] = "Mana Gem";
             calculatedStats.MaxManaGem = Math.Min(5, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f));
             double manaGemRegenRate = (1 + characterStats.BonusManaGem) * (-Math.Min(3, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f)) * 2400f - ((calculatedStats.FightDuration >= 390) ? 1100f : 0f) - ((calculatedStats.FightDuration >= 510) ? 850 : 0)) / (calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime);
             lp[0, 4] = -calculatedStats.ManaRegen5SR + manaGemRegenRate;
@@ -1653,7 +1647,7 @@ namespace Rawr.Mage
             lp[40, 4] = 40 / calculatedStats.ManaPotionTime;
             lp[lpRows, 4] = 0;
             // drums
-            calculatedStats.SolutionLabel.Add("Drums of Battle");
+            calculatedStats.SolutionLabel[5] = "Drums of Battle";
             lp[0, 5] = -calculatedStats.ManaRegen5SR;
             lp[1, 5] = 1;
             lp[34, 5] = - 1 / calculatedStats.GlobalCooldown;
@@ -1675,7 +1669,7 @@ namespace Rawr.Mage
                                 calculatedStats.SolutionStats[index] = statsList[buffset];
                                 calculatedStats.SolutionSpells[index] = s;
                                 calculatedStats.SolutionSegments[index] = seg;
-                                calculatedStats.SolutionLabel.Add(((statsList[buffset].BuffLabel.Length > 0) ? (statsList[buffset].BuffLabel + "+") : "") + s.Name);
+                                calculatedStats.SolutionLabel[index] = ((statsList[buffset].BuffLabel.Length > 0) ? (statsList[buffset].BuffLabel + "+") : "") + s.Name;
                                 if (computeIncrementalSet)
                                 {
                                     incrementalSetCooldown[index] = statsList[buffset].IncrementalSetIndex;
@@ -1846,14 +1840,6 @@ namespace Rawr.Mage
                                 }
                                 if (statsList[buffset] != calculatedStats) lp[rowOffset + 10 * segments + seg, index] = 1;
                             }
-                            else
-                            {
-                                calculatedStats.SolutionLabel.Add("dummy");
-                            }
-                        }
-                        else
-                        {
-                            calculatedStats.SolutionLabel.Add("dummy");
                         }
                     }
                 }
@@ -1862,22 +1848,22 @@ namespace Rawr.Mage
             float manaBurn = 80;
             if (calculationOptions.AoeDuration > 0)
             {
-                Spell s = calculatedStats.GetSpell("Arcane Explosion");
+                Spell s = calculatedStats.GetSpell(SpellId.ArcaneExplosion);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             else if (calculationOptions.EmpoweredFireball > 0)
             {
-                Spell s = calculatedStats.GetSpell("Fireball");
+                Spell s = calculatedStats.GetSpell(SpellId.Fireball);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             else if (calculationOptions.EmpoweredFrostbolt > 0)
             {
-                Spell s = calculatedStats.GetSpell("Frostbolt");
+                Spell s = calculatedStats.GetSpell(SpellId.Frostbolt);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             else if (calculationOptions.SpellPower > 0)
             {
-                Spell s = calculatedStats.GetSpell("Arcane Blast");
+                Spell s = calculatedStats.GetSpell(SpellId.ArcaneBlast33);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             if (ivAvailable)

@@ -8,14 +8,14 @@ namespace Rawr.Mage
     public class LU
     {
         private int size;
-        private double[,] data;
+        private double[] data;
         private int[] pivots;
         private double[] column;
 
         public bool Singular { get; set; }
 
         // data will be modified, if you need to retain it clean pass a clone
-        public LU(double[,] data, int size)
+        public LU(double[] data, int size)
         {
             this.size = size;
             this.data = data;

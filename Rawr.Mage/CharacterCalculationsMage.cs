@@ -38,7 +38,7 @@ namespace Rawr.Mage
         public bool IncrementalOptimizations { get; set; }
         public int[] IncrementalSetCooldowns;
         public int[] IncrementalSetSegments;
-        public string[] IncrementalSetSpells;
+        public SpellId[] IncrementalSetSpells;
         public string IncrementalSetArmor;
         public bool ReconstructSequence { get; set; }
         public float Innervate { get; set; }
@@ -152,7 +152,15 @@ namespace Rawr.Mage
             }
             if (character.CalculationOptions.ContainsKey("IncrementalSetSpells"))
             {
-                IncrementalSetSpells = character.CalculationOptions["IncrementalSetSpells"].Split(':');
+                string[] spells = character.CalculationOptions["IncrementalSetSpells"].Split(':');
+                if (character.CalculationOptions["IncrementalSetSpells"] == "") spells = new string[] { };
+                IncrementalSetSpells = new SpellId[spells.Length];
+                for (int i = 0; i < spells.Length; i++)
+                {
+                    int spell = (int)SpellId.Wand;
+                    int.TryParse(spells[i], out spell);
+                    IncrementalSetSpells[i] = (SpellId)spell;
+                }
             }
             if (character.CalculationOptions.ContainsKey("IncrementalSetArmor"))
             {
@@ -243,7 +251,7 @@ namespace Rawr.Mage
         public int IncrementalSetIndex { get; set; }
         public int[] IncrementalSetCooldown { get; set; }
         public int[] IncrementalSetSegment { get; set; }
-        public string[] IncrementalSetSpell { get; set; }
+        public SpellId[] IncrementalSetSpell { get; set; }
 
         public float SpellCrit { get; set; }
         public float SpellHit { get; set; }
@@ -328,7 +336,6 @@ namespace Rawr.Mage
         public string BuffLabel { get; set; }
         public string MageArmor { get; set; }
 
-        private Dictionary<string, Spell> Spells = new Dictionary<string, Spell> ();
         public double EvocationDuration;
         public double EvocationRegen;
         public double ManaPotionTime = 0.1f;
@@ -340,7 +347,7 @@ namespace Rawr.Mage
         public string Trinket2Name;
         public int MaxManaPotion;
         public int MaxManaGem;
-        public List<string> SolutionLabel = new List<string>();
+        public string[] SolutionLabel;
         public double[] Solution;
         public CharacterCalculationsMage[] SolutionStats;
         public Spell[] SolutionSpells;
@@ -355,186 +362,198 @@ namespace Rawr.Mage
             }
         }
 
-        public void SetSpell(string spellName, Spell spell)
+        /*private static int SpellIdCount;
+
+        static CharacterCalculationsMage()
         {
-            Spells[spellName] = spell;
+            SpellIdCount = Enum.GetValues(typeof(SpellId)).Length;
         }
 
-        public Spell GetSpell(string spellName)
-        {
-            Spell s = null;
-            if (Spells.TryGetValue(spellName, out s)) return s;
+        private Spell[] Spells = new Spell[SpellIdCount];*/
 
-            switch (spellName)
+        private Dictionary<int, Spell> Spells = new Dictionary<int, Spell>();
+
+        public void SetSpell(SpellId spellId, Spell spell)
+        {
+            Spells[(int)spellId] = spell;
+        }
+
+        public Spell GetSpell(SpellId spellId)
+        {
+            //Spell s = Spells[(int)spellId];
+            //if (s != null) return s;
+            Spell s = null;
+            if (Spells.TryGetValue((int)spellId, out s)) return s;
+
+            switch (spellId)
             {
-                case "Lightning Bolt":
+                case SpellId.LightningBolt:
                     s = new LightningBolt(Character, this);
                     break;
-                case "Arcane Missiles":
+                case SpellId.ArcaneMissiles:
                     s = new ArcaneMissiles(Character, this);
                     break;
-                case "Arcane Missiles CC":
+                case SpellId.ArcaneMissilesCC:
                     s = new ArcaneMissilesCC(Character, this);
                     break;
-                case "Arcane Missiles no proc":
+                case SpellId.ArcaneMissilesNoProc:
                     s = new ArcaneMissiles(Character, this, true, false, false);
                     break;
-                case "Arcane Missiles FTF":
+                /*case SpellId.ArcaneMissilesFTF:
                     s = new ArcaneMissiles(Character, this);
                     break;
-                case "Arcane Missiles FTT":
+                case SpellId.ArcaneMissilesFTT:
                     s = new ArcaneMissiles(Character, this);
-                    break;
-                case "Frostbolt":
+                    break;*/
+                case SpellId.Frostbolt:
                     s = new Frostbolt(Character, this);
                     break;
-                case "Frostbolt no CC":
+                case SpellId.FrostboltNoCC:
                     s = new Frostbolt(Character, this, false);
                     break;
-                case "Fireball":
+                case SpellId.Fireball:
                     s = new Fireball(Character, this);
                     break;
-                case "Pyroblast":
+                case SpellId.Pyroblast:
                     s = new Pyroblast(Character, this);
                     break;
-                case "Fire Blast":
+                case SpellId.FireBlast:
                     s = new FireBlast(Character, this);
                     break;
-                case "Scorch":
+                case SpellId.Scorch:
                     s = new Scorch(Character, this);
                     break;
-                case "Scorch no CC":
+                case SpellId.ScorchNoCC:
                     s = new Scorch(Character, this, false);
                     break;
-                case "Arcane Blast 3,3":
-                case "Arcane Blast":
+                case SpellId.ArcaneBlast33:
                     s = new ArcaneBlast(Character, this, 3, 3);
                     break;
-                case "Arcane Blast 3,3 no CC":
+                case SpellId.ArcaneBlast33NoCC:
                     s = new ArcaneBlast(Character, this, 3, 3, false);
                     break;
-                case "Arcane Blast 0,0":
+                case SpellId.ArcaneBlast00:
                     s = new ArcaneBlast(Character, this, 0, 0);
                     break;
-                case "Arcane Blast 0,0 no CC":
+                case SpellId.ArcaneBlast00NoCC:
                     s = new ArcaneBlast(Character, this, 0, 0, false);
                     break;
-                case "Arcane Blast 1,0":
+                case SpellId.ArcaneBlast10:
                     s = new ArcaneBlast(Character, this, 1, 0);
                     break;
-                case "Arcane Blast 0,1":
+                case SpellId.ArcaneBlast01:
                     s = new ArcaneBlast(Character, this, 0, 1);
                     break;
-                case "Arcane Blast 1,1":
+                case SpellId.ArcaneBlast11:
                     s = new ArcaneBlast(Character, this, 1, 1);
                     break;
-                case "Arcane Blast 1,1 no CC":
+                case SpellId.ArcaneBlast11NoCC:
                     s = new ArcaneBlast(Character, this, 1, 1, false);
                     break;
-                case "Arcane Blast 2,2":
+                case SpellId.ArcaneBlast22:
                     s = new ArcaneBlast(Character, this, 2, 2);
                     break;
-                case "Arcane Blast 2,2 no CC":
+                case SpellId.ArcaneBlast22NoCC:
                     s = new ArcaneBlast(Character, this, 2, 2, false);
                     break;
-                case "Arcane Blast 1,2":
+                case SpellId.ArcaneBlast12:
                     s = new ArcaneBlast(Character, this, 1, 2);
                     break;
-                case "Arcane Blast 2,3":
+                case SpellId.ArcaneBlast23:
                     s = new ArcaneBlast(Character, this, 2, 3);
                     break;
-                case "Arcane Blast 3,0":
+                case SpellId.ArcaneBlast30:
                     s = new ArcaneBlast(Character, this, 3, 0);
                     break;
-                case "ABAM":
+                case SpellId.ABAM:
                     s = new ABAM(Character, this);
                     break;
-                case "ABAMP":
+                case SpellId.ABAMP:
                     s = new ABAMP(Character, this);
                     break;
-                case "AB3AMSc":
+                case SpellId.AB3AMSc:
                     s = new AB3AMSc(Character, this);
                     break;
-                case "ABAM3Sc":
+                case SpellId.ABAM3Sc:
                     s = new ABAM3Sc(Character, this);
                     break;
-                case "ABAM3Sc2":
+                case SpellId.ABAM3Sc2:
                     s = new ABAM3Sc2(Character, this);
                     break;
-                case "ABAM3FrB":
+                case SpellId.ABAM3FrB:
                     s = new ABAM3FrB(Character, this);
                     break;
-                case "ABAM3FrB2":
+                case SpellId.ABAM3FrB2:
                     s = new ABAM3FrB2(Character, this);
                     break;
-                case "AB3FrB":
+                case SpellId.AB3FrB:
                     s = new AB3FrB(Character, this);
                     break;
-                case "ABFrB3FrB":
+                case SpellId.ABFrB3FrB:
                     s = new ABFrB3FrB(Character, this);
                     break;
-                case "ABFrB3FrB2":
+                case SpellId.ABFrB3FrB2:
                     s = new ABFrB3FrB2(Character, this);
                     break;
-                case "ABFrB3FrBSc":
+                case SpellId.ABFrB3FrBSc:
                     s = new ABFrB3FrBSc(Character, this);
                     break;
-                case "ABFB3FBSc":
+                case SpellId.ABFB3FBSc:
                     s = new ABFB3FBSc(Character, this);
                     break;
-                case "AB3Sc":
+                case SpellId.AB3Sc:
                     s = new AB3Sc(Character, this);
                     break;
-                case "FireballScorch":
+                case SpellId.FireballScorch:
                     s = new FireballScorch(Character, this);
                     break;
-                case "FireballFireBlast":
+                case SpellId.FireballFireBlast:
                     s = new FireballFireBlast(Character, this);
                     break;
-                case "ABAM3ScCCAM":
+                case SpellId.ABAM3ScCCAM:
                     s = new ABAM3ScCCAM(Character, this);
                     break;
-                case "ABAM3Sc2CCAM":
+                case SpellId.ABAM3Sc2CCAM:
                     s = new ABAM3Sc2CCAM(Character, this);
                     break;
-                case "ABAM3FrBCCAM":
+                case SpellId.ABAM3FrBCCAM:
                     s = new ABAM3FrBCCAM(Character, this);
                     break;
-                case "ABAM3FrBCCAMFail":
+                case SpellId.ABAM3FrBCCAMFail:
                     s = new ABAM3FrBCCAMFail(Character, this);
                     break;
-                case "ABAM3FrBScCCAM":
+                case SpellId.ABAM3FrBScCCAM:
                     s = new ABAM3FrBScCCAM(Character, this);
                     break;
-                case "ABAMCCAM":
+                case SpellId.ABAMCCAM:
                     s = new ABAMCCAM(Character, this);
                     break;
-                case "ABAM3CCAM":
+                case SpellId.ABAM3CCAM:
                     s = new ABAM3CCAM(Character, this);
                     break;
-                case "Arcane Explosion":
+                case SpellId.ArcaneExplosion:
                     s = new ArcaneExplosion(Character, this);
                     break;
-                case "Flamestrike (spammed)":
+                case SpellId.FlamestrikeSpammed:
                     s = new Flamestrike(Character, this, true);
                     break;
-                case "Flamestrike (single)":
+                case SpellId.FlamestrikeSingle:
                     s = new Flamestrike(Character, this, false);
                     break;
-                case "Blizzard":
+                case SpellId.Blizzard:
                     s = new Blizzard(Character, this);
                     break;
-                case "Blast Wave":
+                case SpellId.BlastWave:
                     s = new BlastWave(Character, this);
                     break;
-                case "Dragon's Breath":
+                case SpellId.DragonsBreath:
                     s = new DragonsBreath(Character, this);
                     break;
-                case "Cone of Cold":
+                case SpellId.ConeOfCold:
                     s = new ConeOfCold(Character, this);
                     break;
             }
-            if (s != null) Spells[spellName] = s;
+            if (s != null) Spells[(int)spellId] = s;
 
             return s;
         }
@@ -569,7 +588,7 @@ namespace Rawr.Mage
                         mps = -Calculations.ManaRegen;
                         break;
                     case 1:
-                        spell = Calculations.GetSpell("Wand");
+                        spell = Calculations.GetSpell(SpellId.Wand);
                         mps = spell.CostPerSecond - spell.ManaRegenPerSecond;
                         break;
                     case 2:
@@ -3462,7 +3481,7 @@ namespace Rawr.Mage
             if (FightDuration > 900) return "*Unavailable";
             List<int> validIndex = new List<int>();
             double fight = FightDuration;
-            for (int i = 0; i < SolutionLabel.Count; i++)
+            for (int i = 0; i < SolutionLabel.Length; i++)
             {
                 if (Solution[i] > 0.01)
                 {
@@ -3568,9 +3587,9 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-            List<string> spellList = new List<string>() { "Wand", "Arcane Missiles", "Scorch", "Fireball", "Pyroblast", "Frostbolt", "Arcane Blast", "ABAMP", "ABAM", "AB3AMSc", "ABAM3Sc", "ABAM3Sc2", "ABAM3FrB", "ABAM3FrB2", "ABFrB3FrB", "ABFrB3FrBSc", "ABFB3FBSc", "FireballScorch", "FireballFireBlast", "Fire Blast", "ABAM3ScCCAM", "ABAM3Sc2CCAM", "ABAM3FrBCCAM", "ABAM3FrBScCCAM", "ABAMCCAM", "ABAM3CCAM", "Arcane Explosion", "Flamestrike (spammed)", "Blizzard", "Blast Wave", "Dragon's Breath", "Cone of Cold"/*, "ABAM3FrBCCAMFail"*/ };
-            Spell AB = GetSpell("Arcane Blast");
-            foreach (string spell in spellList)
+            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.ArcaneBlast33, SpellId.ABAMP, SpellId.ABAM, SpellId.AB3AMSc, SpellId.ABAM3Sc, SpellId.ABAM3Sc2, SpellId.ABAM3FrB, SpellId.ABAM3FrB2, SpellId.ABFrB3FrB, SpellId.ABFrB3FrBSc, SpellId.ABFB3FBSc, SpellId.FireballScorch, SpellId.FireballFireBlast, SpellId.FireBlast, SpellId.ABAM3ScCCAM, SpellId.ABAM3Sc2CCAM, SpellId.ABAM3FrBCCAM, SpellId.ABAM3FrBScCCAM, SpellId.ABAMCCAM, SpellId.ABAM3CCAM, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold/*, SpellId.ABAM3FrBCCAMFail*/ };
+            Spell AB = GetSpell(SpellId.ArcaneBlast33);
+            foreach (SpellId spell in spellList)
             {
                 Spell s = GetSpell(spell);
                 if (s != null)
@@ -3593,7 +3612,7 @@ namespace Rawr.Mage
             StringBuilder sb = new StringBuilder("*");
             if (MageArmor != null) sb.AppendLine(MageArmor);
             Dictionary<string, double> combinedSolution = new Dictionary<string, double>();
-            for (int i = 0; i < SolutionLabel.Count; i++)
+            for (int i = 0; i < SolutionLabel.Length; i++)
             {
                 if (Solution[i] > 0.01)
                 {

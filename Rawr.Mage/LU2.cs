@@ -6,19 +6,40 @@ namespace Rawr.Mage
 {
     public class LU2
     {
+        private static int etaMax;
+        private static int sizeMax;
+        public static int[] _P;
+        public static int[] _Q;
+        public static double[] sparseL; // packed non-zero elements of eta vectors
+        public static int[] sparseLI; // indices of non-zero elements
+        public static int[] sparseLstart; // start index of non-zero elements of eta vector i
+        public static int[] _LJ; // col/row eta index   Li = I + L[i*size:(i+1)*size-1] * e_LI[i]'
+        private static double[] column;
+        private static double[] column2;
+
         private int size;
-        private int etaMax;
         public int etaSize;
-        public double[,] _U;
-        public int[] _P;
-        public int[] _Q;
-        //public double[] _L; // eta file
-        public double[] sparseL; // packed non-zero elements of eta vectors
-        public int[] sparseLI; // indices of non-zero elements
-        public int[] sparseLstart; // start index of non-zero elements of eta vector i
-        public int[] _LJ; // col/row eta index   Li = I + L[i*size:(i+1)*size-1] * e_LI[i]'
-        private double[] column;
-        private double[] column2;
+        public double[] _U;
+
+        static LU2()
+        {
+            sizeMax = 200;
+            RecreateArrays();
+        }
+
+        private static void RecreateArrays()
+        {
+            etaMax = Math.Max(sizeMax + 100, 2 * sizeMax);
+            _P = new int[sizeMax];
+            _Q = new int[sizeMax];
+            //_L = new double[etaMax * size];
+            _LJ = new int[etaMax];
+            sparseL = new double[etaMax * sizeMax];
+            sparseLI = new int[etaMax * sizeMax];
+            sparseLstart = new int[etaMax];
+            column = new double[sizeMax];
+            column2 = new double[sizeMax];
+        }
 
         // Ln...L0 B = P U Q
         // B = (Ln...L0)inv P U Q
@@ -58,21 +79,16 @@ namespace Rawr.Mage
         public bool Singular { get; set; }
 
         // data will be modified, if you need to retain it clean pass a clone
-        public LU2(double[,] data, int size)
+        public LU2(double[] data, int size)
         {
             this.size = size;
             etaSize = 0;
-            etaMax = Math.Max(size + 100, 5 * size);
             _U = data;
-            _P = new int[size];
-            _Q = new int[size];
-            //_L = new double[etaMax * size];
-            _LJ = new int[etaMax];
-            sparseL = new double[etaMax * size];
-            sparseLI = new int[etaMax * size];
-            sparseLstart = new int[etaMax];
-            column = new double[size];
-            column2 = new double[size];
+            if (size > sizeMax)
+            {
+                sizeMax = size;
+                RecreateArrays();
+            }
         }
 
         public unsafe void BSolve(double* b)

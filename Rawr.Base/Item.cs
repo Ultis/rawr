@@ -596,17 +596,17 @@ namespace Rawr
             if (cachedTotalStats != null) return cachedTotalStats;
             bool volatileGem = false, volatileItem = false;
 			Stats totalItemStats = new Stats();
-			totalItemStats += this.Stats;
+			totalItemStats.Accumulate(this.Stats);
 			bool eligibleForSocketBonus = GemMatchesSlot(Gem1, Sockets.Color1) &&
 				GemMatchesSlot(Gem2, Sockets.Color2) &&
 				GemMatchesSlot(Gem3, Sockets.Color3);
-			if (Gem1 != null && Gem1.MeetsRequirements(character, out volatileGem)) totalItemStats += Gem1.Stats;
+			if (Gem1 != null && Gem1.MeetsRequirements(character, out volatileGem)) totalItemStats.Accumulate(Gem1.Stats);
             volatileItem = volatileItem || volatileGem;
-            if (Gem2 != null && Gem2.MeetsRequirements(character, out volatileGem)) totalItemStats += Gem2.Stats;
+            if (Gem2 != null && Gem2.MeetsRequirements(character, out volatileGem)) totalItemStats.Accumulate(Gem2.Stats);
             volatileItem = volatileItem || volatileGem;
-            if (Gem3 != null && Gem3.MeetsRequirements(character, out volatileGem)) totalItemStats += Gem3.Stats;
+            if (Gem3 != null && Gem3.MeetsRequirements(character, out volatileGem)) totalItemStats.Accumulate(Gem3.Stats);
             volatileItem = volatileItem || volatileGem;
-            if (eligibleForSocketBonus) totalItemStats += Sockets.Stats;
+            if (eligibleForSocketBonus) totalItemStats.Accumulate(Sockets.Stats);
             if (!volatileItem) cachedTotalStats = totalItemStats;
 			return totalItemStats;
 		}

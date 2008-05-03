@@ -11,28 +11,51 @@ namespace Rawr.Mage
         private int rows;
         private int cols;
 
-        int[] _B;
-        int[] _V;
-        double[,] _LU;
+        private int[] _B;
+        private int[] _V;
         LU2 lu;
-        double[] _d;
-        double[] _x;
-        double[] _w;
-        double[] _ww;
-        double[] _wd;
-        double[] _u;
-        double[] _c;
-        double[] _b;
-        double[] _cost;
+
+        private static double[] _LU;
+        private static double[] _d;
+        private static double[] _x;
+        private static double[] _w;
+        private static double[] _ww;
+        private static double[] _wd;
+        private static double[] _u;
+        private static double[] _c;
+        private static double[] _b;
+        private static double[] _cost;
+
+        private static int maxRows = 0;
+        private static int maxCols = 0;
+
+        static LP()
+        {
+            maxRows = 200;
+            maxCols = 5000;
+            RecreateArrays();
+        }
+
+        private static void RecreateArrays()
+        {
+            _LU = new double[maxRows * maxRows];
+            _d = new double[maxRows];
+            _x = new double[maxRows];
+            _w = new double[maxRows];
+            _ww = new double[maxRows];
+            _wd = new double[maxCols];
+            _u = new double[maxRows];
+            _c = new double[maxCols];
+            _cost = new double[maxCols];
+            _b = new double[maxRows];
+        }
+
 
         public LP Clone()
         {
             LP clone = (LP)MemberwiseClone();
             clone._B = (int[])_B.Clone();
             clone._V = (int[])_V.Clone();
-            //clone._d = (double[])_d.Clone();
-            //clone._u = (double[])_u.Clone();
-            //clone._c = (double[])_c.Clone();
             clone.disabled = (int[])disabled.Clone();
             return clone;
         }
@@ -73,24 +96,19 @@ namespace Rawr.Mage
         public LP(int rows, int cols)
         {
             rows++; // add extra row for disabled
+            if (rows > maxRows || cols > maxCols)
+            {
+                maxRows = Math.Max(rows, maxRows);
+                maxCols = Math.Max(cols, maxCols);
+                RecreateArrays();
+            }
             this.rows = rows;
             this.cols = cols;
 
             A = new SparseMatrix(rows - 1, cols + rows);
-
             _B = new int[rows];
             _V = new int[cols];
-            _LU = new double[rows, rows];
             lu = new LU2(_LU, rows);
-            _d = new double[rows];
-            _x = new double[rows];
-            _w = new double[rows];
-            _ww = new double[rows];
-            _wd = new double[cols];
-            _u = new double[rows];
-            _c = new double[cols];
-            _cost = new double[cols];
-            _b = new double[rows];
             disabled = new int[cols + rows];
             disabled[cols + rows - 1] = 1;
 
@@ -129,9 +147,9 @@ namespace Rawr.Mage
             int* sRow;
             int sCol1, sCol2;
             int redecompose = 0;
-            fixed (double* a = A.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, c = _c, u = _u, b = _b, cost = _cost, sparseValue = A.value)
+            fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value)
             {
-                fixed (int* B = _B, V = _V, D = disabled, sparseRow = A.row, sparseCol = A.col)
+                fixed (int* B = _B, V = _V, D = disabled, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
                 {
                     do
                     {
@@ -388,9 +406,9 @@ namespace Rawr.Mage
             double* sValue;
             int* sRow;
             int sCol1, sCol2;
-            fixed (double* a = A.data, LU = _LU, d = _d, x = _x, w = _w, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = A.value)
+            fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value)
             {
-                fixed (int* B = _B, V = _V, D = disabled, sparseRow = A.row, sparseCol = A.col)
+                fixed (int* B = _B, V = _V, D = disabled, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
                 {
                     do
                     {
@@ -568,203 +586,6 @@ namespace Rawr.Mage
                         int k = B[mini];
                         B[mini] = V[minj];
                         V[minj] = k;
-
-                        round++;
-                        if (round == 5000) round++;
-                    } while (round < 5000);
-                }
-            }
-            // just in case
-            return new double[cols + 1];
-        }
-
-        public static unsafe double[] Solve(double[,] data, int rows, int cols)
-        {
-            // c = data[rows,:]
-            // A = data[0:rows-1,0:cols-1][I(rows)]
-            // b = data[:,cols]
-            // B = [cols:cols+rows-1]
-            
-            //  eps1 = 10-5, eps2 = 10-8, and eps3 = 10-6
-            double eps = 0.00001;
-
-            int[] _B = new int[rows];
-            int[] _V = new int[cols];
-            int i, j;            
-            double[,] _LU = new double[rows, rows];
-            LU lu = new LU(_LU, rows);
-            double[] _d = new double[rows];
-            double[] _x = new double[rows];
-            double[] _w = new double[rows];
-
-            bool feasible = false;
-            int round = 0;
-            fixed (double* a = data, LU = _LU, d = _d, x = _x, w = _w)
-            {
-                fixed (int* B = _B, V = _V)
-                {
-                    for (i = 0; i < rows; i++)
-                    {
-                        B[i] = cols + i;
-                    }
-                    for (j = 0; j < cols; j++)
-                    {
-                        V[j] = j;
-                    }
-
-                    do
-                    {
-                        // [L U] = lu(A(:,B_indices));
-                        for (j = 0; j < rows; j++)
-                        {
-                            int col = B[j];
-                            if (col < cols)
-                            {
-                                for (i = 0; i < rows; i++)
-                                {
-                                    LU[i * rows + j] = a[i * (cols + 1) + col];
-                                }
-                            }
-                            else
-                            {
-                                col -= cols;
-                                for (i = 0; i < rows; i++)
-                                {
-                                    LU[i * rows + j] = ((i == col) ? 1 : 0);
-                                }
-                            }
-                        }
-                        lu.Decompose();
-
-                        // d = U \ (L \ b);
-                        for (i = 0; i < rows; i++)
-                        {
-                            d[i] = a[i * (cols + 1) + cols];
-                        }
-                        lu.FSolve(d);
-
-                        if (!feasible)
-                        {
-                            feasible = true;
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (d[i] < -eps)
-                                {
-                                    feasible = false;
-                                    break;
-                                }
-                            }
-                        }
-
-                        // c_tilde(:,V_indices) = c(:,V_indices) - ((c(:,B_indices) \ U) \ L) *  A(:,V_indices);
-                        // compute max c~ = cV - cB * AV
-                        if (feasible)
-                        {
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (B[i] < cols) x[i] = a[rows * (cols + 1) + B[i]];
-                                else x[i] = 0;
-                            }
-                        }
-                        else
-                        {
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (d[i] < -eps) x[i] = 1;
-                                else x[i] = 0;
-                            }
-                        }
-                        lu.BSolve(x);
-
-                        double maxc = eps;
-                        int maxj = -1;
-                        for (j = 0; j < cols; j++)
-                        {
-                            int col = V[j];
-
-                            double c = ((feasible && col < cols) ? a[rows * (cols + 1) + col] : 0);
-                            if (col < cols)
-                            {
-                                for (i = 0; i < rows; i++)
-                                {
-                                    c -= a[i * (cols + 1) + col] * x[i];
-                                }
-                            }
-                            else
-                            {
-                                c -= x[col - cols];
-                            }
-
-                            if (c > maxc)
-                            {
-                                maxc = c;
-                                maxj = j;
-                            }
-                        }
-
-                        if (maxj == -1)
-                        {
-                            // optimum, return solution (or could be no feasible solution)
-                            // solution(B_indices,:) = d;
-                            double[] ret = new double[cols + 1];
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (B[i] < cols) ret[B[i]] = d[i];
-                            }
-                            double value = 0;
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (B[i] < cols) value += a[rows * (cols + 1) + B[i]] * d[i];
-                            }
-                            ret[cols] = value;
-                            return ret;
-                        }
-
-                        // w = U \ (L \ A(:,j));
-                        int maxcol = V[maxj];
-                        if (maxcol < cols)
-                        {
-                            for (i = 0; i < rows; i++)
-                            {
-                                w[i] = a[i * (cols + 1) + maxcol];
-                            }
-                        }
-                        else
-                        {
-                            for (i = 0; i < rows; i++)
-                            {
-                                w[i] = ((i == maxcol - cols) ? 1 : 0);
-                            }
-                        }
-                        lu.FSolve(w);
-
-                        // min over i of d[i]/w[i] where w[i]>0
-                        double minr = double.PositiveInfinity;
-                        int mini = -1;
-                        for (i = 0; i < rows; i++)
-                        {
-                            if (w[i] > eps)
-                            {
-                                double r = d[i] / w[i];
-                                if (r < minr)
-                                {
-                                    minr = r;
-                                    mini = i;
-                                }
-                            }
-                        }
-
-                        if (mini == -1)
-                        {
-                            // unbounded
-                            throw new ArgumentException();
-                        }
-
-                        //System.Diagnostics.Debug.WriteLine(round + ": " + V[maxj] + " <=> " + B[mini]);
-                        // swap base
-                        int k = B[mini];
-                        B[mini] = V[maxj];
-                        V[maxj] = k;
 
                         round++;
                         if (round == 5000) round++;

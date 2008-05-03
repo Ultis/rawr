@@ -1,4 +1,5 @@
 ﻿using System;
+using Rawr.Mage;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -121,15 +122,15 @@ namespace Rawr.Test
         private void TestDecomposeSize(int size)
         {
             Random rnd = new Random();
-            double[,] B = new double[size, size];
+            double[] B = new double[size * size];
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    B[i, j] = rnd.NextDouble();
+                    B[i * size + j] = rnd.NextDouble();
                 }
             }
-            double[,] B0 = (double[,])B.Clone();
+            double[] B0 = (double[])B.Clone();
             Mage.LU2 lu = new Rawr.Mage.LU2(B, size);
             lu.Decompose();
             for (int j = 0; j < size; j++)
@@ -139,11 +140,11 @@ namespace Rawr.Test
                 double[] L = new double[size];
                 for (int i = 0; i < size; i++)
                 {
-                    L[i] = B0[i, j];
+                    L[i] = B0[i * size + j];
                 }
                 for (int k = 0; k < lu.etaSize; k++)
                 {
-                    int row = lu._LJ[k]; // we're updating using row, if element is zero we can skip
+                    int row = LU2._LJ[k]; // we're updating using row, if element is zero we can skip
                     // b~ = b + eta (erow' b)
                     double f = L[row];
                     if (Math.Abs(f) >= 0.000001)
@@ -152,10 +153,10 @@ namespace Rawr.Test
                         {
                             L[i] += f * lu._L[k * size + i];
                         }*/
-                        int maxi = lu.sparseLstart[k + 1];
-                        for (int i = lu.sparseLstart[k]; i < maxi; i++)
+                        int maxi = LU2.sparseLstart[k + 1];
+                        for (int i = LU2.sparseLstart[k]; i < maxi; i++)
                         {
-                            L[lu.sparseLI[i]] += f * lu.sparseL[i];
+                            L[LU2.sparseLI[i]] += f * LU2.sparseL[i];
                         }
                     }
                 }
@@ -164,11 +165,11 @@ namespace Rawr.Test
                 int jj = j;
                 for (jj = 0; jj < size; jj++)
                 {
-                    if (lu._Q[jj] == j) break;
+                    if (LU2._Q[jj] == j) break;
                 }
                 for (int i = 0; i < size; i++)
                 {
-                    R[lu._P[i]] = lu._U[i, jj]; // DON'T CHANGE THIS!!! THIS IS HOW IT REALLY SHOULD BE!!!!1!!
+                    R[LU2._P[i]] = lu._U[i * size + jj]; // DON'T CHANGE THIS!!! THIS IS HOW IT REALLY SHOULD BE!!!!1!!
                 }
                 for (int i = 0; i < size; i++)
                 {
@@ -180,22 +181,22 @@ namespace Rawr.Test
         private void TestUpdateSize(int size)
         {
             Random rnd = new Random();
-            double[,] B = new double[size, size];
+            double[] B = new double[size * size];
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    B[i, j] = rnd.NextDouble();
+                    B[i * size + j] = rnd.NextDouble();
                 }
             }
-            double[,] B0 = (double[,])B.Clone();
+            double[] B0 = (double[])B.Clone();
             int c = rnd.Next(size);
             double[] newB = new double[size];
             double[] tmp = new double[size];
             for (int i = 0; i < size; i++)
             {
                 newB[i] = rnd.NextDouble();
-                B[i, c] = newB[i];
+                B[i * size + c] = newB[i];
                 //newB[i] = B[i, c];
             }
             Mage.LU2 lu = new Rawr.Mage.LU2(B0, size);
@@ -215,13 +216,13 @@ namespace Rawr.Test
                 double[] L = new double[size];
                 for (int i = 0; i < size; i++)
                 {
-                    L[i] = B[i, j];
+                    L[i] = B[i * size + j];
                 }
                 for (int k = 0; k < lu.etaSize; k++)
                 {
                     if (k < size)
                     {
-                        int row = lu._LJ[k]; // we're updating using row, if element is zero we can skip
+                        int row = LU2._LJ[k]; // we're updating using row, if element is zero we can skip
                         // b~ = b + eta (erow' b)
                         double f = L[row];
                         if (Math.Abs(f) >= 0.000001)
@@ -230,21 +231,21 @@ namespace Rawr.Test
                             {
                                 L[i] += f * lu._L[k * size + i];
                             }*/
-                            int maxi = lu.sparseLstart[k + 1];
-                            for (int i = lu.sparseLstart[k]; i < maxi; i++)
+                            int maxi = LU2.sparseLstart[k + 1];
+                            for (int i = LU2.sparseLstart[k]; i < maxi; i++)
                             {
-                                L[lu.sparseLI[i]] += f * lu.sparseL[i];
+                                L[LU2.sparseLI[i]] += f * LU2.sparseL[i];
                             }
                         }
                     }
                     else
                     {
-                        int row = lu._LJ[k]; // we're updating row element
+                        int row = LU2._LJ[k]; // we're updating row element
                         double f = 0.0;
-                        int maxi = lu.sparseLstart[k + 1];
-                        for (int i = lu.sparseLstart[k]; i < maxi; i++)
+                        int maxi = LU2.sparseLstart[k + 1];
+                        for (int i = LU2.sparseLstart[k]; i < maxi; i++)
                         {
-                            f += L[lu.sparseLI[i]] * lu.sparseL[i];
+                            f += L[LU2.sparseLI[i]] * LU2.sparseL[i];
                         }
                         L[row] += f;
                     }
@@ -254,11 +255,11 @@ namespace Rawr.Test
                 int jj = j;
                 for (jj = 0; jj < size; jj++)
                 {
-                    if (lu._Q[jj] == j) break;
+                    if (LU2._Q[jj] == j) break;
                 }
                 for (int i = 0; i < size; i++)
                 {
-                    R[lu._P[i]] = lu._U[i, jj]; // DON'T CHANGE THIS!!! THIS IS HOW IT REALLY SHOULD BE!!!!1!!
+                    R[LU2._P[i]] = lu._U[i * size + jj]; // DON'T CHANGE THIS!!! THIS IS HOW IT REALLY SHOULD BE!!!!1!!
                 }
                 for (int i = 0; i < size; i++)
                 {
@@ -270,22 +271,22 @@ namespace Rawr.Test
         private void TestUpdateFSolveSize(int size)
         {
             Random rnd = new Random();
-            double[,] B = new double[size, size];
+            double[] B = new double[size * size];
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    B[i, j] = rnd.NextDouble();
+                    B[i * size + j] = rnd.NextDouble();
                 }
             }
-            double[,] B0 = (double[,])B.Clone();
+            double[] B0 = (double[])B.Clone();
             int c = rnd.Next(size);
             double[] newB = new double[size];
             double[] tmp = new double[size];
             for (int i = 0; i < size; i++)
             {
                 newB[i] = rnd.NextDouble();
-                B[i, c] = newB[i];
+                B[i * size + c] = newB[i];
             }
             double[] x = new double[size];
             for (int i = 0; i < size; i++)
@@ -297,7 +298,7 @@ namespace Rawr.Test
             {
                 for (int j = 0; j < size; j++)
                 {
-                    b[i] += B[i, j] * x[j];
+                    b[i] += B[i * size + j] * x[j];
                 }
             }
             Mage.LU2 lu = new Rawr.Mage.LU2(B0, size);
@@ -320,12 +321,12 @@ namespace Rawr.Test
         private void TestFSolveSize(int size)
         {
             Random rnd = new Random();
-            double[,] B = new double[size, size];
+            double[] B = new double[size * size];
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    B[i, j] = rnd.NextDouble();
+                    B[i * size + j] = rnd.NextDouble();
                 }
             }
             double[] x = new double[size];
@@ -338,7 +339,7 @@ namespace Rawr.Test
             {
                 for (int j = 0; j < size; j++)
                 {
-                    b[i] += B[i, j] * x[j];
+                    b[i] += B[i * size + j] * x[j];
                 }
             }
             Mage.LU2 lu = new Rawr.Mage.LU2(B, size);
@@ -359,12 +360,12 @@ namespace Rawr.Test
         private void TestBSolveSize(int size)
         {
             Random rnd = new Random();
-            double[,] B = new double[size, size];
+            double[] B = new double[size * size];
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    B[i, j] = rnd.NextDouble();
+                    B[i * size + j] = rnd.NextDouble();
                 }
             }
             double[] x = new double[size];
@@ -377,7 +378,7 @@ namespace Rawr.Test
             {
                 for (int j = 0; j < size; j++)
                 {
-                    b[i] += B[j, i] * x[j];
+                    b[i] += B[j * size + i] * x[j];
                 }
             }
             Mage.LU2 lu = new Rawr.Mage.LU2(B, size);

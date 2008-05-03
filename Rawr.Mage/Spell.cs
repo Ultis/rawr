@@ -13,6 +13,67 @@ namespace Rawr.Mage
         Arcane
     }
 
+    enum SpellId
+    {
+        None,
+        Wand,
+        LightningBolt,
+        ArcaneMissiles,
+        ArcaneMissilesCC,
+        ArcaneMissilesNoProc,
+        //ArcaneMissilesFTF,
+        //ArcaneMissilesFTT,
+        Frostbolt,
+        FrostboltNoCC,
+        Fireball,
+        Pyroblast,
+        FireBlast,
+        Scorch,
+        ScorchNoCC,
+        ArcaneBlast33,
+        ArcaneBlast33NoCC,
+        ArcaneBlast00,
+        ArcaneBlast00NoCC,
+        ArcaneBlast10,
+        ArcaneBlast01,
+        ArcaneBlast11,
+        ArcaneBlast11NoCC,
+        ArcaneBlast22,
+        ArcaneBlast22NoCC,
+        ArcaneBlast12,
+        ArcaneBlast23,
+        ArcaneBlast30,
+        ABAM,
+        ABAMP,
+        AB3AMSc,
+        ABAM3Sc,
+        ABAM3Sc2,
+        ABAM3FrB,
+        ABAM3FrB2,
+        AB3FrB,
+        ABFrB3FrB,
+        ABFrB3FrB2,
+        ABFrB3FrBSc,
+        ABFB3FBSc,
+        AB3Sc,
+        FireballScorch,
+        FireballFireBlast,
+        ABAM3ScCCAM,
+        ABAM3Sc2CCAM,
+        ABAM3FrBCCAM,
+        ABAM3FrBCCAMFail,
+        ABAM3FrBScCCAM,
+        ABAMCCAM,
+        ABAM3CCAM,
+        ArcaneExplosion,
+        FlamestrikeSpammed,
+        FlamestrikeSingle,
+        Blizzard,
+        BlastWave,
+        DragonsBreath,
+        ConeOfCold,
+    }
+
     abstract class Spell
     {
         public string Name;
@@ -369,7 +430,7 @@ namespace Rawr.Mage
 
             if (Name != "Lightning Bolt" && calculations.BasicStats.LightningCapacitorProc > 0)
             {
-                BaseSpell LightningBolt = (BaseSpell)calculations.GetSpell("Lightning Bolt");
+                BaseSpell LightningBolt = (BaseSpell)calculations.GetSpell(SpellId.LightningBolt);
                 //discrete model
                 int hitsInsideCooldown = (int)(2.5f / (CastTime / HitProcs));
                 float avgCritsPerHit = CritRate * TargetProcs / HitProcs;
@@ -836,8 +897,8 @@ namespace Rawr.Mage
             Name = "ABAMP";
             ABCycle = true;
 
-            Spell AB = calculations.GetSpell("Arcane Blast 1,0");
-            Spell AM = calculations.GetSpell("Arcane Missiles");
+            Spell AB = calculations.GetSpell(SpellId.ArcaneBlast10);
+            Spell AM = calculations.GetSpell(SpellId.ArcaneMissiles);
 
             AddSpell(AB, calculations);
             AddSpell(AM, calculations);
@@ -854,8 +915,8 @@ namespace Rawr.Mage
             Name = "ABAM";
             ABCycle = true;
 
-            Spell AB = calculations.GetSpell("Arcane Blast");
-            Spell AM = calculations.GetSpell("Arcane Missiles");
+            Spell AB = calculations.GetSpell(SpellId.ArcaneBlast33);
+            Spell AM = calculations.GetSpell(SpellId.ArcaneMissiles);
 
             AddSpell(AB, calculations);
             AddSpell(AM, calculations);
@@ -871,11 +932,11 @@ namespace Rawr.Mage
             Name = "AB3AMSc";
             ABCycle = true;
 
-            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell AB01 = calculations.GetSpell("Arcane Blast 0,1");
-            Spell AB12 = calculations.GetSpell("Arcane Blast 1,2");
-            Spell AM = calculations.GetSpell("Arcane Missiles");
-            Spell Sc = calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell AB01 = calculations.GetSpell(SpellId.ArcaneBlast01);
+            Spell AB12 = calculations.GetSpell(SpellId.ArcaneBlast12);
+            Spell AM = calculations.GetSpell(SpellId.ArcaneMissiles);
+            Spell Sc = calculations.GetSpell(SpellId.Scorch);
 
             AddSpell(AB30, calculations);
             AddSpell(AB01, calculations);
@@ -900,11 +961,11 @@ namespace Rawr.Mage
             Name = "ABAM3Sc";
             ABCycle = true;
 
-            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
-            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
-            Spell AM = calculations.GetSpell("Arcane Missiles");
-            Spell Sc = calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell AB11 = calculations.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB22 = calculations.GetSpell(SpellId.ArcaneBlast22);
+            Spell AM = calculations.GetSpell(SpellId.ArcaneMissiles);
+            Spell Sc = calculations.GetSpell(SpellId.Scorch);
 
             AddSpell(AB30, calculations);
             AddSpell(AM, calculations);
@@ -931,11 +992,11 @@ namespace Rawr.Mage
             Name = "ABAM3Sc2";
             ABCycle = true;
 
-            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
-            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
-            Spell AM = calculations.GetSpell("Arcane Missiles");
-            Spell Sc = calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell AB11 = calculations.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB22 = calculations.GetSpell(SpellId.ArcaneBlast22);
+            Spell AM = calculations.GetSpell(SpellId.ArcaneMissiles);
+            Spell Sc = calculations.GetSpell(SpellId.Scorch);
 
             AddSpell(AB30, calculations);
             AddSpell(AM, calculations);
@@ -962,11 +1023,11 @@ namespace Rawr.Mage
             Name = "ABAM3FrB";
             ABCycle = true;
 
-            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
-            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
-            Spell AM = calculations.GetSpell("Arcane Missiles");
-            Spell FrB = calculations.GetSpell("Frostbolt");
+            Spell AB30 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell AB11 = calculations.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB22 = calculations.GetSpell(SpellId.ArcaneBlast22);
+            Spell AM = calculations.GetSpell(SpellId.ArcaneMissiles);
+            Spell FrB = calculations.GetSpell(SpellId.Frostbolt);
 
             AddSpell(AB30, calculations);
             AddSpell(AM, calculations);
@@ -993,11 +1054,11 @@ namespace Rawr.Mage
             Name = "ABAM3FrB2";
             ABCycle = true;
 
-            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
-            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
-            Spell AM = calculations.GetSpell("Arcane Missiles");
-            Spell FrB = calculations.GetSpell("Frostbolt");
+            Spell AB30 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell AB11 = calculations.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB22 = calculations.GetSpell(SpellId.ArcaneBlast22);
+            Spell AM = calculations.GetSpell(SpellId.ArcaneMissiles);
+            Spell FrB = calculations.GetSpell(SpellId.Frostbolt);
 
             AddSpell(AB30, calculations);
             AddSpell(AM, calculations);
@@ -1024,10 +1085,10 @@ namespace Rawr.Mage
             Name = "AB3FrB";
             ABCycle = true;
 
-            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell AB01 = calculations.GetSpell("Arcane Blast 0,1");
-            Spell AB12 = calculations.GetSpell("Arcane Blast 1,2");
-            Spell FrB = calculations.GetSpell("Frostbolt");
+            Spell AB30 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell AB01 = calculations.GetSpell(SpellId.ArcaneBlast01);
+            Spell AB12 = calculations.GetSpell(SpellId.ArcaneBlast12);
+            Spell FrB = calculations.GetSpell(SpellId.Frostbolt);
 
             AddSpell(AB30, calculations);
             AddSpell(AB01, calculations);
@@ -1051,10 +1112,10 @@ namespace Rawr.Mage
             Name = "ABFrB3FrB";
             ABCycle = true;
 
-            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
-            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
-            Spell FrB = calculations.GetSpell("Frostbolt");
+            Spell AB30 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell AB11 = calculations.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB22 = calculations.GetSpell(SpellId.ArcaneBlast22);
+            Spell FrB = calculations.GetSpell(SpellId.Frostbolt);
 
             AddSpell(AB30, calculations);
             AddSpell(FrB, calculations);
@@ -1080,10 +1141,10 @@ namespace Rawr.Mage
             Name = "ABFrB3FrB2";
             ABCycle = true;
 
-            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
-            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
-            Spell FrB = calculations.GetSpell("Frostbolt");
+            Spell AB30 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell AB11 = calculations.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB22 = calculations.GetSpell(SpellId.ArcaneBlast22);
+            Spell FrB = calculations.GetSpell(SpellId.Frostbolt);
 
             AddSpell(AB30, calculations);
             AddSpell(FrB, calculations);
@@ -1109,11 +1170,11 @@ namespace Rawr.Mage
             Name = "ABFrB3FrBSc";
             ABCycle = true;
 
-            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
-            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
-            Spell FrB = calculations.GetSpell("Frostbolt");
-            Spell Sc = calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell AB11 = calculations.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB22 = calculations.GetSpell(SpellId.ArcaneBlast22);
+            Spell FrB = calculations.GetSpell(SpellId.Frostbolt);
+            Spell Sc = calculations.GetSpell(SpellId.Scorch);
 
             AddSpell(AB30, calculations);
             AddSpell(FrB, calculations);
@@ -1144,11 +1205,11 @@ namespace Rawr.Mage
             Name = "ABFB3FBSc";
             ABCycle = true;
 
-            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell AB11 = calculations.GetSpell("Arcane Blast 1,1");
-            Spell AB22 = calculations.GetSpell("Arcane Blast 2,2");
-            Spell FB = calculations.GetSpell("Fireball");
-            Spell Sc = calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell AB11 = calculations.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB22 = calculations.GetSpell(SpellId.ArcaneBlast22);
+            Spell FB = calculations.GetSpell(SpellId.Fireball);
+            Spell Sc = calculations.GetSpell(SpellId.Scorch);
 
             AddSpell(AB30, calculations);
             AddSpell(FB, calculations);
@@ -1179,10 +1240,10 @@ namespace Rawr.Mage
             Name = "AB3Sc";
             ABCycle = true;
 
-            Spell AB30 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell AB01 = calculations.GetSpell("Arcane Blast 0,1");
-            Spell AB12 = calculations.GetSpell("Arcane Blast 1,2");
-            Spell Sc = calculations.GetSpell("Scorch");
+            Spell AB30 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell AB01 = calculations.GetSpell(SpellId.ArcaneBlast01);
+            Spell AB12 = calculations.GetSpell(SpellId.ArcaneBlast12);
+            Spell Sc = calculations.GetSpell(SpellId.Scorch);
 
             AddSpell(AB30, calculations);
             AddSpell(AB01, calculations);
@@ -1205,8 +1266,8 @@ namespace Rawr.Mage
         {
             Name = "FireballScorch";
 
-            Spell FB = calculations.GetSpell("Fireball");
-            Spell Sc = calculations.GetSpell("Scorch");
+            Spell FB = calculations.GetSpell(SpellId.Fireball);
+            Spell Sc = calculations.GetSpell(SpellId.Scorch);
 
             if (calculations.CalculationOptions.ImprovedScorch == 0)
             {
@@ -1245,9 +1306,9 @@ namespace Rawr.Mage
         {
             Name = "FireballFireBlast";
 
-            Spell FB = calculations.GetSpell("Fireball");
-            BaseSpell Blast = (BaseSpell)calculations.GetSpell("Fire Blast");
-            Spell Sc = calculations.GetSpell("Scorch");
+            Spell FB = calculations.GetSpell(SpellId.Fireball);
+            BaseSpell Blast = (BaseSpell)calculations.GetSpell(SpellId.FireBlast);
+            Spell Sc = calculations.GetSpell(SpellId.Scorch);
 
             if (calculations.CalculationOptions.ImprovedScorch == 0)
             {
@@ -1318,15 +1379,15 @@ namespace Rawr.Mage
             //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
             //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
 
-            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
-            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
-            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
-            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
-            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
-            Spell Sc0 = calculations.GetSpell("Scorch no CC");
+            Spell AMc0 = calculations.GetSpell(SpellId.ArcaneMissilesNoProc);
+            Spell AMCC = calculations.GetSpell(SpellId.ArcaneMissilesCC);
+            Spell AB0 = calculations.GetSpell(SpellId.ArcaneBlast00NoCC);
+            Spell AB1 = calculations.GetSpell(SpellId.ArcaneBlast11NoCC);
+            Spell AB2 = calculations.GetSpell(SpellId.ArcaneBlast22NoCC);
+            Spell Sc0 = calculations.GetSpell(SpellId.ScorchNoCC);
 
-            Spell AB3 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell Sc = calculations.GetSpell("Scorch");
+            Spell AB3 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell Sc = calculations.GetSpell(SpellId.Scorch);
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
@@ -1409,15 +1470,15 @@ namespace Rawr.Mage
             //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
             //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
 
-            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
-            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
-            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
-            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
-            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
-            Spell Sc0 = calculations.GetSpell("Scorch no CC");
+            Spell AMc0 = calculations.GetSpell(SpellId.ArcaneMissilesNoProc);
+            Spell AMCC = calculations.GetSpell(SpellId.ArcaneMissilesCC);
+            Spell AB0 = calculations.GetSpell(SpellId.ArcaneBlast00NoCC);
+            Spell AB1 = calculations.GetSpell(SpellId.ArcaneBlast11NoCC);
+            Spell AB2 = calculations.GetSpell(SpellId.ArcaneBlast22NoCC);
+            Spell Sc0 = calculations.GetSpell(SpellId.ScorchNoCC);
 
-            Spell AB3 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell Sc = calculations.GetSpell("Scorch");
+            Spell AB3 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell Sc = calculations.GetSpell(SpellId.Scorch);
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
@@ -1500,15 +1561,15 @@ namespace Rawr.Mage
             //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
             //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
 
-            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
-            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
-            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
-            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
-            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
-            Spell FrB0 = calculations.GetSpell("Frostbolt no CC");
+            Spell AMc0 = calculations.GetSpell(SpellId.ArcaneMissilesNoProc);
+            Spell AMCC = calculations.GetSpell(SpellId.ArcaneMissilesCC);
+            Spell AB0 = calculations.GetSpell(SpellId.ArcaneBlast00NoCC);
+            Spell AB1 = calculations.GetSpell(SpellId.ArcaneBlast11NoCC);
+            Spell AB2 = calculations.GetSpell(SpellId.ArcaneBlast22NoCC);
+            Spell FrB0 = calculations.GetSpell(SpellId.FrostboltNoCC);
 
-            Spell AB3 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell FrB = calculations.GetSpell("Frostbolt");
+            Spell AB3 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell FrB = calculations.GetSpell(SpellId.Frostbolt);
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
@@ -1591,15 +1652,15 @@ namespace Rawr.Mage
             //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
             //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
 
-            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
-            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
-            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
-            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
-            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
-            Spell FrB0 = calculations.GetSpell("Frostbolt no CC");
+            Spell AMc0 = calculations.GetSpell(SpellId.ArcaneMissilesNoProc);
+            Spell AMCC = calculations.GetSpell(SpellId.ArcaneMissilesCC);
+            Spell AB0 = calculations.GetSpell(SpellId.ArcaneBlast00NoCC);
+            Spell AB1 = calculations.GetSpell(SpellId.ArcaneBlast11NoCC);
+            Spell AB2 = calculations.GetSpell(SpellId.ArcaneBlast22NoCC);
+            Spell FrB0 = calculations.GetSpell(SpellId.FrostboltNoCC);
 
-            Spell AB3 = calculations.GetSpell("Arcane Blast 0,0");
-            Spell FrB = calculations.GetSpell("Frostbolt");
+            Spell AB3 = calculations.GetSpell(SpellId.ArcaneBlast00);
+            Spell FrB = calculations.GetSpell(SpellId.Frostbolt);
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
@@ -1682,17 +1743,17 @@ namespace Rawr.Mage
             //     = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
             //DAMAGE = 0.271*[AMCC+AB0] + 2.439*AM + 0.9*AB1 + 0.81*AB2 + 0.729*[S+AB3?]
 
-            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
-            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
-            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
-            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
-            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
-            Spell FrB0 = calculations.GetSpell("Frostbolt no CC");
+            Spell AMc0 = calculations.GetSpell(SpellId.ArcaneMissilesNoProc);
+            Spell AMCC = calculations.GetSpell(SpellId.ArcaneMissilesCC);
+            Spell AB0 = calculations.GetSpell(SpellId.ArcaneBlast00NoCC);
+            Spell AB1 = calculations.GetSpell(SpellId.ArcaneBlast11NoCC);
+            Spell AB2 = calculations.GetSpell(SpellId.ArcaneBlast22NoCC);
+            Spell FrB0 = calculations.GetSpell(SpellId.FrostboltNoCC);
 
-            Spell AM = calculations.GetSpell("Arcane Missiles");
-            Spell AB3 = calculations.GetSpell("Arcane Blast 3,0");
-            Spell FrB = calculations.GetSpell("Frostbolt");
-            Spell Sc = calculations.GetSpell("Scorch");
+            Spell AM = calculations.GetSpell(SpellId.ArcaneMissiles);
+            Spell AB3 = calculations.GetSpell(SpellId.ArcaneBlast30);
+            Spell FrB = calculations.GetSpell(SpellId.Frostbolt);
+            Spell Sc = calculations.GetSpell(SpellId.Scorch);
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
@@ -1784,13 +1845,13 @@ namespace Rawr.Mage
             //AMCC-AB00-AB01-AB12-AB23       0.1
             //AM?0-AB33                      0.9
 
-            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
-            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
-            Spell AB00 = calculations.GetSpell("Arcane Blast 0,0 no CC");
-            Spell AB01 = calculations.GetSpell("Arcane Blast 0,1");
-            Spell AB12 = calculations.GetSpell("Arcane Blast 1,2");
-            Spell AB23 = calculations.GetSpell("Arcane Blast 2,3");
-            Spell AB33 = calculations.GetSpell("Arcane Blast 3,3 no CC");
+            Spell AMc0 = calculations.GetSpell(SpellId.ArcaneMissilesNoProc);
+            Spell AMCC = calculations.GetSpell(SpellId.ArcaneMissilesCC);
+            Spell AB00 = calculations.GetSpell(SpellId.ArcaneBlast00NoCC);
+            Spell AB01 = calculations.GetSpell(SpellId.ArcaneBlast01);
+            Spell AB12 = calculations.GetSpell(SpellId.ArcaneBlast12);
+            Spell AB23 = calculations.GetSpell(SpellId.ArcaneBlast23);
+            Spell AB33 = calculations.GetSpell(SpellId.ArcaneBlast33NoCC);
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 
@@ -1876,12 +1937,12 @@ namespace Rawr.Mage
             //AB00-AM?0-AB11-AMCC                                 0.9*0.1
             //AB00-AMCC                                           0.1
 
-            Spell AMc0 = calculations.GetSpell("Arcane Missiles no proc");
-            Spell AMCC = calculations.GetSpell("Arcane Missiles CC");
-            Spell AB0 = calculations.GetSpell("Arcane Blast 0,0 no CC");
-            Spell AB1 = calculations.GetSpell("Arcane Blast 1,1 no CC");
-            Spell AB2 = calculations.GetSpell("Arcane Blast 2,2 no CC");
-            Spell AB3 = calculations.GetSpell("Arcane Blast 3,3 no CC");
+            Spell AMc0 = calculations.GetSpell(SpellId.ArcaneMissilesNoProc);
+            Spell AMCC = calculations.GetSpell(SpellId.ArcaneMissilesCC);
+            Spell AB0 = calculations.GetSpell(SpellId.ArcaneBlast00NoCC);
+            Spell AB1 = calculations.GetSpell(SpellId.ArcaneBlast11NoCC);
+            Spell AB2 = calculations.GetSpell(SpellId.ArcaneBlast22NoCC);
+            Spell AB3 = calculations.GetSpell(SpellId.ArcaneBlast33NoCC);
 
             float CC = 0.02f * calculations.CalculationOptions.ArcaneConcentration;
 

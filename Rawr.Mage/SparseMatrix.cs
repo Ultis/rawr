@@ -4,18 +4,37 @@ using System.Text;
 
 namespace Rawr.Mage
 {
+    // only one should exist at a time, otherwise behavior unspecified
     public class SparseMatrix
     {
-        internal double[] value;
-        internal int[] row;
-        internal int[] col;
+        internal static double[] value;
+        internal static int[] row;
+        internal static int[] col;
+        internal static double[] data; // still store the dense version, memory is cheap and it speeds some stuff up
+        private static int maxRows = 0;
+        private static int maxCols = 0;
+        private static int sparseSize;
+
+        static SparseMatrix()
+        {
+            maxRows = 200;
+            maxCols = 5000;
+            RecreateArrays();
+        }
+
+        private static void RecreateArrays()
+        {
+            sparseSize = Math.Max(sparseSize, (int)(maxRows * maxCols * 0.4));
+            value = new double[sparseSize];
+            row = new int[sparseSize];
+            col = new int[maxCols + 1];
+            data = new double[maxRows * maxCols];
+        }
+
         private int cols;
         private int rows;
-        private int sparseSize;
-        private int sparseIndex;
+        private int sparseIndex = 0;
         private int lastCol = 0;
-
-        internal double[,] data; // still store the dense version, memory is cheap and it speeds some stuff up
 
         private bool finalized;
 
@@ -45,20 +64,22 @@ namespace Rawr.Mage
 
         public SparseMatrix(int rows, int cols)
         {
+            if (rows > maxRows || cols > maxCols)
+            {
+                maxRows = Math.Max(rows, maxRows);
+                maxCols = Math.Max(cols, maxCols);
+                RecreateArrays();
+            }
             this.rows = rows;
             this.cols = cols;
-            sparseSize = (int)(rows * cols * 0.4);
-            value = new double[sparseSize];
-            row = new int[sparseSize];
-            col = new int[cols + 1];
-            data = new double[rows, cols];
+            Array.Clear(data, 0, data.Length);
         }
 
         public double this[int row, int col]
         {
             get
             {
-                return data[row, col];
+                return data[row * cols + col];
             }
             set
             {
@@ -69,22 +90,22 @@ namespace Rawr.Mage
                 {
                     for (int c = lastCol + 1; c <= col; c++)
                     {
-                        this.col[c] = sparseIndex;
+                        SparseMatrix.col[c] = sparseIndex;
                     }
                 }
                 if (sparseIndex >= sparseSize)
                 {
                     sparseSize += (int)(rows * cols * 0.1);
                     int[] newRow = new int[sparseSize];
-                    Array.Copy(this.row, newRow, this.row.Length);
-                    this.row = newRow;
+                    Array.Copy(SparseMatrix.row, newRow, SparseMatrix.row.Length);
+                    SparseMatrix.row = newRow;
                     double[] newValue = new double[sparseSize];
-                    Array.Copy(this.value, newValue, this.value.Length);
-                    this.value = newValue;
+                    Array.Copy(SparseMatrix.value, newValue, SparseMatrix.value.Length);
+                    SparseMatrix.value = newValue;
                 }
-                this.row[sparseIndex] = row;
-                this.value[sparseIndex] = value;
-                data[row, col] = value;
+                SparseMatrix.row[sparseIndex] = row;
+                SparseMatrix.value[sparseIndex] = value;
+                data[row * cols + col] = value;
                 lastCol = col;
                 sparseIndex++;
             }
@@ -94,7 +115,7 @@ namespace Rawr.Mage
         {
             for (int c = lastCol + 1; c <= cols; c++)
             {
-                this.col[c] = sparseIndex;
+                SparseMatrix.col[c] = sparseIndex;
             }            
             finalized = true;
         }

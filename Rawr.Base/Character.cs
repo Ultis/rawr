@@ -1034,10 +1034,23 @@ namespace Rawr //O O . .
 			}
 		}
 
+        private static CharacterSlot[] _characterSlots;
+        private static CharacterSlot[] CharacterSlots
+        {
+            get
+            {
+                if (_characterSlots == null)
+                {
+                    _characterSlots = (CharacterSlot[])Enum.GetValues(typeof(CharacterSlot));
+                }
+                return _characterSlots;
+            }
+        }
+
         public int GetGemColorCount(Item.ItemSlot slotColor)
         {
             int count = 0;
-			foreach (CharacterSlot slot in Enum.GetValues(typeof(CharacterSlot)))
+            foreach (CharacterSlot slot in CharacterSlots)
 			{
 				Item item = this[slot];
 				if (item == null) continue;
