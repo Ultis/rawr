@@ -10,7 +10,6 @@ namespace Rawr.Mage
         private int size;
         private double[,] data;
         private int[] pivots;
-        private int pivotSign;
         private double[] column;
 
         public bool Singular { get; set; }
@@ -66,53 +65,50 @@ namespace Rawr.Mage
             }
         }
 
-        public unsafe void FSolve(double* b, int cols)
+        public unsafe void FSolve(double* b)
         {
             int i, k;
             fixed (double* a = data, c = column)
             {
                 fixed (int* p = pivots)
                 {
-                    for (int bcol = 0; bcol < cols; bcol++)
+                    for (i = 0; i < size; i++)
                     {
-                        for (i = 0; i < size; i++)
-                        {
-                            c[i] = b[p[i] * cols + bcol];
-                        }
+                        c[i] = b[p[i]];
+                    }
 
-                        // solve L*Y = B(piv,:)
-                        for (k = 0; k < size; k++)
+                    // solve L*Y = B(piv,:)
+                    for (k = 0; k < size; k++)
+                    {
+                        for (i = k + 1; i < size; i++)
                         {
-                            for (i = k + 1; i < size; i++)
-                            {
-                                c[i] -= c[k] * a[i * size + k];
-                            }
+                            c[i] -= c[k] * a[i * size + k];
                         }
-                        // solve U*X = Y;
-                        for (k = size - 1; k >= 0; k--)
+                    }
+                    // solve U*X = Y;
+                    for (k = size - 1; k >= 0; k--)
+                    {
+                        if (a[k * size + k] != 0) c[k] /= a[k * size + k];
+                        else c[k] = 0; // value underspecified
+                        for (i = 0; i < k; i++)
                         {
-                            if (a[k * size + k] != 0) c[k] /= a[k * size + k];
-                            else c[k] = 0; // value underspecified
-                            for (i = 0; i < k; i++)
-                            {
-                                c[i] -= c[k] * a[i * size + k];
-                            }
+                            c[i] -= c[k] * a[i * size + k];
                         }
-                        // copy back
-                        for (i = 0; i < size; i++)
-                        {
-                            b[i * cols + bcol] = c[i];
-                        }
+                    }
+                    // copy back
+                    for (i = 0; i < size; i++)
+                    {
+                        b[i] = c[i];
                     }
                 }
             }
         }
 
-        //internal static HighPerformanceTimer DecomposeTimer = new HighPerformanceTimer();
+        internal static HighPerformanceTimer DecomposeTimer = new HighPerformanceTimer();
 
         public unsafe void Decompose()
         {
-            //DecomposeTimer.Start();
+            DecomposeTimer.Start();
             Singular = false;
             fixed (double* a = data, c = column)
             {
@@ -122,8 +118,6 @@ namespace Rawr.Mage
                     {
                         p[i] = i;
                     }
-
-                    pivotSign = 1;
 
                     for (int j = 0; j < size; j++)
                     {
@@ -168,8 +162,6 @@ namespace Rawr.Mage
                             int tmp = p[piv];
                             p[piv] = p[j];
                             p[j] = tmp;
-
-                            pivotSign = -pivotSign;
                         }
 
                         double ajj = a[j * size + j];
@@ -188,7 +180,7 @@ namespace Rawr.Mage
                     }
                 }
             }
-            //DecomposeTimer.Stop();
+            DecomposeTimer.Stop();
         }
     }
 }

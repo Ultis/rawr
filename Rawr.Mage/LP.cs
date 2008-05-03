@@ -14,7 +14,7 @@ namespace Rawr.Mage
         int[] _B;
         int[] _V;
         double[,] _LU;
-        LU lu;
+        LU2 lu;
         double[] _d;
         double[] _x;
         double[] _w;
@@ -80,7 +80,7 @@ namespace Rawr.Mage
             _B = new int[rows];
             _V = new int[cols];
             _LU = new double[rows, rows];
-            lu = new LU(_LU, rows);
+            lu = new LU2(_LU, rows);
             _d = new double[rows];
             _x = new double[rows];
             _w = new double[rows];
@@ -102,7 +102,7 @@ namespace Rawr.Mage
             }
         }
 
-        //internal static HighPerformanceTimer PrimalTimer = new HighPerformanceTimer();
+        internal static HighPerformanceTimer PrimalTimer = new HighPerformanceTimer();
 
         public unsafe double[] SolvePrimal()
         {
@@ -132,7 +132,7 @@ namespace Rawr.Mage
                 {
                     do
                     {
-                        //PrimalTimer.Start();
+                        PrimalTimer.Start();
                         // [L U] = lu(A(:,B_indices));
                         for (j = 0; j < rows; j++)
                         {
@@ -159,7 +159,7 @@ namespace Rawr.Mage
                                 d[i] = b[i];
                             }
                             d[i] = 0;
-                            lu.FSolve(d, 1);
+                            lu.FSolve(d);
 
                             feasible = true;
                             for (i = 0; i < rows; i++)
@@ -258,8 +258,8 @@ namespace Rawr.Mage
                                 if (B[i] < cols) value += cost[B[i]] * d[i];
                             }
                             ret[cols] = value;
-                            //PrimalTimer.Stop();
-                            //System.Diagnostics.Debug.WriteLine("Primal=" + PrimalTimer.Average + ", Decompose=" + Mage.LU.DecomposeTimer.Average);
+                            PrimalTimer.Stop();
+                            System.Diagnostics.Debug.WriteLine("Primal=" + PrimalTimer.Average + ", Decompose=" + Mage.LU2.DecomposeTimer.Average);
                             return ret;
                         }
 
@@ -270,7 +270,7 @@ namespace Rawr.Mage
                             w[i] = a[i * (cols + rows) + maxcol];
                         }
                         w[i] = D[maxcol];
-                        lu.FSolve(w, 1);
+                        lu.FSolve(w);
 
                         // min over i of d[i]/w[i] where w[i]>0
                         double minr = double.PositiveInfinity;
@@ -338,7 +338,7 @@ namespace Rawr.Mage
                         B[mini] = V[maxj];
                         V[maxj] = k;
 
-                        //PrimalTimer.Stop();
+                        PrimalTimer.Stop();
 
                         round++;
                         if (round == 5000) round++;
@@ -412,7 +412,7 @@ namespace Rawr.Mage
                             {
                                 d[i] = b[i]; // TODO block copy?
                             }
-                            lu.FSolve(d, 1);
+                            lu.FSolve(d);
 
                             for (i = 0; i < rows; i++)
                             {
@@ -527,7 +527,7 @@ namespace Rawr.Mage
                             w[i] = a[i * (cols + rows) + mincol];
                         }
                         w[i] = D[mincol];
-                        lu.FSolve(w, 1);
+                        lu.FSolve(w);
 
                         // -minr = dual step
                         // rp = primal step
@@ -625,7 +625,7 @@ namespace Rawr.Mage
                         {
                             d[i] = a[i * (cols + 1) + cols];
                         }
-                        lu.FSolve(d, 1);
+                        lu.FSolve(d);
 
                         if (!feasible)
                         {
@@ -720,7 +720,7 @@ namespace Rawr.Mage
                                 w[i] = ((i == maxcol - cols) ? 1 : 0);
                             }
                         }
-                        lu.FSolve(w, 1);
+                        lu.FSolve(w);
 
                         // min over i of d[i]/w[i] where w[i]>0
                         double minr = double.PositiveInfinity;
