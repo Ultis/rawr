@@ -211,7 +211,7 @@ namespace Rawr
 				{
 					_relevantItemsDictionary = new SortedDictionary<string, Item>();
 					foreach (Item item in RelevantItems)
-						_relevantItemsDictionary.Add(item.GemmedId, item);
+						_relevantItemsDictionary[item.GemmedId] = item;
 				}
 				return _relevantItemsDictionary;
 			}

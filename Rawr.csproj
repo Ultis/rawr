@@ -221,6 +221,11 @@
     <Compile Include="ItemToolTip.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Properties\Optimizer.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Optimizer.settings</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BuffSelector.resx">
@@ -304,6 +309,10 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Options\OptimizerSettings.resx">
+      <DependentUpon>OptimizerSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\Options\NetworkSettings.resx">
       <DependentUpon>NetworkSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -322,6 +331,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Recent.settings</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\Options\OptimizerSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Options\OptimizerSettings.Designer.cs">
+      <DependentUpon>OptimizerSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\Options\IOptions.cs" />
     <Compile Include="UserControls\Options\NetworkSettings.cs">
       <SubType>UserControl</SubType>
@@ -339,6 +354,10 @@
   <ItemGroup>
     <Content Include="RawrIcon.ico" />
     <Content Include="ReadMe.txt" />
+    <None Include="Properties\Optimizer.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Optimizer.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\DiamondOutline.png" />
     <None Include="Resources\Diamond.png" />
     <None Include="Properties\Recent.settings">

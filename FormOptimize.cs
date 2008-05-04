@@ -41,6 +41,34 @@ namespace Rawr
 				comboBoxCalculationToOptimize.Items.Add(subPoint + " Rating");
 			comboBoxCalculationToOptimize.Items.AddRange(Calculations.OptimizableCalculationLabels);
 			comboBoxCalculationToOptimize.SelectedIndex = 0;
+
+            radioButtonAllGemmings.Checked = Properties.Optimizer.Default.AllGemmings;
+            radioButtonKnownGemmingsOnly.Checked = !Properties.Optimizer.Default.AllGemmings;
+            trackBarThoroughness.Value = Properties.Optimizer.Default.Thoroughness;
+            string calculationString = Properties.Optimizer.Default.CalculationToOptimize;
+            if (calculationString != null)
+            {
+                if (calculationString.StartsWith("[Overall]"))
+                {
+                    comboBoxCalculationToOptimize.SelectedIndex = 0;
+                }
+                else if (calculationString.StartsWith("[SubPoint "))
+                {
+                    calculationString = calculationString.Substring(10).TrimEnd(']');
+                    int index = int.Parse(calculationString);
+                    if (index < Calculations.SubPointNameColors.Count)
+                    {
+                        comboBoxCalculationToOptimize.SelectedIndex = index + 1;
+                    }
+                }
+                else
+                {
+                    if (Array.IndexOf(Calculations.OptimizableCalculationLabels, calculationString) >= 0)
+                    {
+                        comboBoxCalculationToOptimize.SelectedItem = calculationString;
+                    }
+                }
+            }
 		}
 
 		private void FormOptimize_FormClosing(object sender, FormClosingEventArgs e)
@@ -112,7 +140,12 @@ namespace Rawr
 				ItemCacheInstance itemCacheOptimize = new ItemCacheInstance(itemCacheMain);
 				ItemCache.Instance = itemCacheOptimize;
 
-                PopulateAvailableIds(itemCacheMain);
+                if (!PopulateAvailableIds(itemCacheMain))
+                {
+                    e.Result = null;
+                    e.Cancel = true;
+                    return;
+                }
 			    e.Result = Optimize();
             }
             catch (Exception ex)
@@ -233,7 +266,11 @@ namespace Rawr
                 ItemCacheInstance itemCacheOptimize = new ItemCacheInstance(itemCacheMain);
                 ItemCache.Instance = itemCacheOptimize;
 
-                PopulateAvailableIds(itemCacheMain);
+                if (!PopulateAvailableIds(itemCacheMain))
+                {
+                    e.Cancel = true;
+                    return;
+                }
                 Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> result = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>>();
 
                 Item[] items = itemCacheMain.RelevantItems;
@@ -509,8 +546,8 @@ namespace Rawr
 			buttonAddRequirement.Top -= 29;
 		}
 
-        List<int> metaGemIds;
-        List<int> gemIds;
+        Item[] metaGemItems;
+        Item[] gemItems;
         //SortedList<Item, bool> uniqueItems; not needed since we store the items themselves, we can just check Unique on the item
 		Item[] headItems, neckItems, shouldersItems, backItems, chestItems, wristItems, handsItems, waistItems,
 					legsItems, feetItems, fingerItems, trinketItems, mainHandItems, offHandItems, rangedItems, 
@@ -523,27 +560,36 @@ namespace Rawr
 
         private void PopulateLockedItems(Item item)
         {
-            lockedItems = GetPossibleGemmedItemsForItem(item, gemIds, metaGemIds);
+            lockedItems = GetPossibleGemmedItemsForItem(item, gemItems, metaGemItems);
             //foreach (Item possibleGemmedItem in lockedItems)
             //    uniqueItems[possibleGemmedItem] = item.Unique;
         }
 
-        private void PopulateAvailableIds(ItemCacheInstance itemCacheMain)
+        private bool PopulateAvailableIds(ItemCacheInstance itemCacheMain)
         {
-            metaGemIds = new List<int>();
-            gemIds = new List<int>();
-            List<int> itemIds = new List<int>(_character.AvailableItems.ToArray());
+            Dictionary<int, Item> relevantItemMap = new Dictionary<int, Item>();
+            foreach (Item relevantItem in itemCacheMain.RelevantItems)
+            {
+                relevantItemMap[relevantItem.Id] = relevantItem;
+            }
+
+            List<int> itemIds = new List<int>(_character.AvailableItems);
+            List<int> removeIds = new List<int>();
+            List<Item> metaGemItemList = new List<Item>();
+            List<Item> gemItemList = new List<Item>();
             foreach (int id in _character.AvailableItems)
             {
                 if (id > 0)
                 {
-                    Item availableItem = itemCacheMain.FindItemById(id, false);
+                    Item availableItem;
+                    relevantItemMap.TryGetValue(id, out availableItem);
                     if (availableItem != null)
                     {
                         switch (availableItem.Slot)
                         {
                             case Item.ItemSlot.Meta:
-                                metaGemIds.Add(id);
+                                metaGemItemList.Add(availableItem);
+                                removeIds.Add(availableItem.Id);
                                 break;
                             case Item.ItemSlot.Red:
                             case Item.ItemSlot.Orange:
@@ -552,15 +598,19 @@ namespace Rawr
                             case Item.ItemSlot.Blue:
                             case Item.ItemSlot.Purple:
                             case Item.ItemSlot.Prismatic:
-                                gemIds.Add(id);
+                                gemItemList.Add(availableItem);
+                                removeIds.Add(availableItem.Id);
                                 break;
                         }
                     }
                 }
             }
-            if (gemIds.Count == 0) gemIds.Add(0);
-            if (metaGemIds.Count == 0) metaGemIds.Add(0);
-            itemIds.RemoveAll(new Predicate<int>(delegate(int id) { return id < 0 || gemIds.Contains(id) || metaGemIds.Contains(id); }));
+            if (gemItemList.Count == 0) gemItemList.Add(null);
+            if (metaGemItemList.Count == 0) metaGemItemList.Add(null);
+            itemIds.RemoveAll(new Predicate<int>(delegate(int id) { return id < 0 || removeIds.Contains(id); }));
+
+            metaGemItems = metaGemItemList.ToArray();
+            gemItems = FilterList(gemItemList);
 
             List<Item> headItemList = new List<Item>();
             List<Item> neckItemList = new List<Item>();
@@ -629,16 +679,16 @@ namespace Rawr
                 wristEnchantList.Add(enchant);
             wristEnchants = wristEnchantList.ToArray();
 
-            Dictionary<Item, bool> uniqueDict = new Dictionary<Item, bool>();
+            //Dictionary<Item, bool> uniqueDict = new Dictionary<Item, bool>();
             Item item = null;
             Item[] possibleGemmedItems = null;
             foreach (int itemId in itemIds)
             {
-                item = ItemCache.FindItemById(itemId);
+                relevantItemMap.TryGetValue(itemId, out item);
 
-                if (item != null && Calculations.IsItemRelevant(item))
+                if (item != null)
                 {
-                    possibleGemmedItems = GetPossibleGemmedItemsForItem(item, gemIds, metaGemIds);
+                    possibleGemmedItems = GetPossibleGemmedItemsForItem(item, gemItems, metaGemItems);
                     if (item.FitsInSlot(Character.CharacterSlot.Head)) headItemList.AddRange(possibleGemmedItems);
                     if (item.FitsInSlot(Character.CharacterSlot.Neck)) neckItemList.AddRange(possibleGemmedItems);
                     if (item.FitsInSlot(Character.CharacterSlot.Shoulders)) shouldersItemList.AddRange(possibleGemmedItems);
@@ -657,8 +707,8 @@ namespace Rawr
                     if (item.FitsInSlot(Character.CharacterSlot.Projectile)) projectileItemList.AddRange(possibleGemmedItems);
                     if (item.FitsInSlot(Character.CharacterSlot.ProjectileBag)) projectileBagItemList.AddRange(possibleGemmedItems);
 
-                    foreach (Item possibleGemmedItem in possibleGemmedItems)
-                        uniqueDict.Add(possibleGemmedItem, item.Unique);
+                    //foreach (Item possibleGemmedItem in possibleGemmedItems)
+                    //    uniqueDict.Add(possibleGemmedItem, item.Unique);
                 }
             }
             //uniqueItems = new SortedList<Item, bool>(uniqueDict);
@@ -699,7 +749,80 @@ namespace Rawr
             projectileItems = FilterList(projectileItemList);
             projectileBagItems = FilterList(projectileBagItemList);
 
-            ulong totalCombinations = (ulong)headItems.Length * (ulong)neckItems.Length * (ulong)shouldersItems.Length * (ulong)backItems.Length
+            if (Properties.Optimizer.Default.WarningsEnabled)
+            {
+                int gemLimit = 8;
+                int itemLimit = 512;
+                int enchantLimit = 8;
+
+                List<string> emptyList = new List<string>();
+                List<string> tooManyList = new List<string>();
+
+                CalculateWarnings(gemItems, "Gems", emptyList, tooManyList, gemLimit);
+                CalculateWarnings(metaGemItems, "Meta Gems", emptyList, tooManyList, gemLimit);
+
+                CalculateWarnings(headItems, "Head Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(neckItems, "Neck Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(shouldersItems, "Shoulder Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(backItems, "Back Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(chestItems, "Chest Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(wristItems, "Wrist Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(handsItems, "Hands Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(waistItems, "Waist Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(legsItems, "Legs Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(feetItems, "Feet Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(fingerItems, "Finger Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(trinketItems, "Trinket Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(mainHandItems, "Main Hand Items", emptyList, tooManyList, itemLimit);
+                CalculateWarnings(offHandItems, "Offhand Items", null, tooManyList, itemLimit);
+                CalculateWarnings(rangedItems, "Ranged Items", null, tooManyList, itemLimit);
+                CalculateWarnings(projectileItems, "Projectile Items", null, tooManyList, itemLimit);
+                CalculateWarnings(projectileBagItems, "Projectile Bag Items", null, tooManyList, itemLimit);
+
+                CalculateWarnings(backEnchants, "Back Enchants", emptyList, tooManyList, enchantLimit);
+                CalculateWarnings(chestEnchants, "Chest Enchants", emptyList, tooManyList, enchantLimit);
+                CalculateWarnings(feetEnchants, "Feet Enchants", emptyList, tooManyList, enchantLimit);
+                CalculateWarnings(fingerEnchants, "Finger Enchants", null, tooManyList, enchantLimit);
+                CalculateWarnings(handsEnchants, "Hands Enchants", emptyList, tooManyList, enchantLimit);
+                CalculateWarnings(headEnchants, "Head Enchants", emptyList, tooManyList, enchantLimit);
+                CalculateWarnings(legsEnchants, "Legs Enchants", emptyList, tooManyList, enchantLimit);
+                CalculateWarnings(shouldersEnchants, "Shoulder Enchants", emptyList, tooManyList, enchantLimit);
+                CalculateWarnings(mainHandEnchants, "Main Hand Enchants", emptyList, tooManyList, enchantLimit);
+                CalculateWarnings(offHandEnchants, "Offhand Enchants", null, tooManyList, enchantLimit);
+                CalculateWarnings(rangedEnchants, "Ranged Enchants", null, tooManyList, enchantLimit);
+                CalculateWarnings(wristEnchants, "Wrist Enchants", emptyList, tooManyList, enchantLimit);
+
+                if (emptyList.Count + tooManyList.Count > 0)
+                {
+                    if (emptyList.Count > 5)
+                    {
+                        emptyList.RemoveRange(5, emptyList.Count - 5);
+                        emptyList.Add("...");
+                    }
+                    if (tooManyList.Count > 5)
+                    {
+                        tooManyList.RemoveRange(5, tooManyList.Count - 5);
+                        tooManyList.Add("...");
+                    }
+                    if (tooManyList.Count == 0)
+                    {
+                        // good sizes but some are empty
+                        return MessageBox.Show("You have not selected any of the following:" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", emptyList.ToArray()) + Environment.NewLine + Environment.NewLine + "Do you want to continue with the optimization?", "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
+                    }
+                    else if (emptyList.Count == 0)
+                    {
+                        return MessageBox.Show("The following slots have a very large number of items selected :" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", tooManyList.ToArray()) + Environment.NewLine + Environment.NewLine + "Do you want to continue with the optimization?", "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
+                    }
+                    else
+                    {
+                        return MessageBox.Show("You have not selected any of the following:" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", emptyList.ToArray()) + Environment.NewLine + Environment.NewLine + "The following slots have a very large number of items selected :" + Environment.NewLine + Environment.NewLine + "\t" + string.Join(Environment.NewLine + "\t", tooManyList.ToArray()) + Environment.NewLine + Environment.NewLine + "Do you want to continue with the optimization?", "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
+                    }
+                }
+            }
+
+            return true;
+
+            /*ulong totalCombinations = (ulong)headItems.Length * (ulong)neckItems.Length * (ulong)shouldersItems.Length * (ulong)backItems.Length
                  * (ulong)chestItems.Length * (ulong)wristItems.Length * (ulong)handsItems.Length * (ulong)waistItems.Length * (ulong)legsItems.Length *
                  (ulong)feetItems.Length * (ulong)fingerItems.Length * (ulong)fingerItems.Length * (ulong)trinketItems.Length * (ulong)trinketItems.Length
                  * (ulong)mainHandItems.Length * (ulong)offHandItems.Length * (ulong)rangedItems.Length * (ulong)projectileItems.Length *
@@ -708,7 +831,13 @@ namespace Rawr
                  (ulong)feetEnchants.Length * (ulong)fingerEnchants.Length * (ulong)fingerEnchants.Length * (ulong)mainHandItems.Length
                  * (ulong)offHandEnchants.Length * (ulong)rangedEnchants.Length;
 
-            totalCombinations.ToString("f0");
+            totalCombinations.ToString("f0");*/
+        }
+
+        private void CalculateWarnings(Array list, string group, List<string> emptyList, List<string> tooManyList, int tooManyLimit)
+        {
+            if (emptyList != null && (list.Length == 0 || (list.Length == 1 && list.GetValue(0) == null))) emptyList.Add(group);
+            if (tooManyList != null && list.Length > tooManyLimit) tooManyList.Add(group);
         }
 
         private Character Optimize()
@@ -942,12 +1071,12 @@ namespace Rawr
 			foreach (Item item in items)
 			{
 				if (item != null &&
-					!(slot == Character.CharacterSlot.Finger1 && bestCharacter._finger2 == item.GemmedId && item.Unique) &&
-                    !(slot == Character.CharacterSlot.Finger2 && bestCharacter._finger1 == item.GemmedId && item.Unique) &&
-                    !(slot == Character.CharacterSlot.Trinket1 && bestCharacter._trinket2 == item.GemmedId && item.Unique) &&
-                    !(slot == Character.CharacterSlot.Trinket2 && bestCharacter._trinket1 == item.GemmedId && item.Unique) &&
-                    !(slot == Character.CharacterSlot.MainHand && bestCharacter._mainHand == item.GemmedId && item.Unique) &&
-                    !(slot == Character.CharacterSlot.OffHand && bestCharacter._offHand == item.GemmedId && item.Unique))
+					!(slot == Character.CharacterSlot.Finger1 && bestCharacter.Finger2 != null && bestCharacter.Finger2.Id == item.Id && item.Unique) &&
+                    !(slot == Character.CharacterSlot.Finger2 && bestCharacter.Finger1 != null && bestCharacter.Finger1.Id == item.Id && item.Unique) &&
+                    !(slot == Character.CharacterSlot.Trinket1 && bestCharacter.Trinket2 != null && bestCharacter.Trinket2.Id == item.Id && item.Unique) &&
+                    !(slot == Character.CharacterSlot.Trinket2 && bestCharacter.Trinket1 != null && bestCharacter.Trinket1.Id == item.Id && item.Unique) &&
+                    !(slot == Character.CharacterSlot.MainHand && bestCharacter.MainHand != null && bestCharacter.MainHand.Id == item.Id && item.Unique) &&
+                    !(slot == Character.CharacterSlot.OffHand && bestCharacter.OffHand != null && bestCharacter.OffHand.Id == item.Id && item.Unique))
 				{
 					charSwap = BuildSingleItemSwapCharacter(bestCharacter, slot, item);
                     CharacterCalculationsBase calculations;
@@ -1027,17 +1156,17 @@ namespace Rawr
 		{
 			Item finger1Item = (lockedSlot == Character.CharacterSlot.Finger1) ? lockedItems[rand.Next(lockedItems.Length)] : fingerItems[rand.Next(fingerItems.Length)];
             Item finger2Item = fingerItems[rand.Next(fingerItems.Length)];
-			while (finger1Item == finger2Item && finger1Item != null && finger1Item.Unique)
+			while (finger1Item != null && finger2Item != null && finger1Item.Id == finger2Item.Id && finger1Item.Unique)
 				finger2Item = fingerItems[rand.Next(fingerItems.Length)];
 
             Item trinket1Item = (lockedSlot == Character.CharacterSlot.Trinket1) ? lockedItems[rand.Next(lockedItems.Length)] : trinketItems[rand.Next(trinketItems.Length)];
             Item trinket2Item = trinketItems[rand.Next(trinketItems.Length)];
-			while (trinket1Item == trinket2Item && trinket1Item != null && trinket1Item.Unique)
+            while (trinket1Item != null && trinket2Item != null && trinket1Item.Id == trinket2Item.Id && trinket1Item.Unique)
 				trinket2Item = trinketItems[rand.Next(trinketItems.Length)];
 
             Item mainHandItem = (lockedSlot == Character.CharacterSlot.MainHand) ? lockedItems[rand.Next(lockedItems.Length)] : mainHandItems[rand.Next(mainHandItems.Length)];
             Item offHandItem = (lockedSlot == Character.CharacterSlot.OffHand) ? lockedItems[rand.Next(lockedItems.Length)] : offHandItems[rand.Next(offHandItems.Length)];
-			while (mainHandItem == offHandItem && mainHandItem != null && mainHandItem.Unique)
+			while (mainHandItem != null && offHandItem != null && mainHandItem.Id == offHandItem.Id && mainHandItem.Unique)
 			{
                 mainHandItem = (lockedSlot == Character.CharacterSlot.MainHand) ? lockedItems[rand.Next(lockedItems.Length)] : mainHandItems[rand.Next(mainHandItems.Length)];
                 offHandItem = (lockedSlot == Character.CharacterSlot.OffHand) ? lockedItems[rand.Next(lockedItems.Length)] : offHandItems[rand.Next(offHandItems.Length)];
@@ -1079,7 +1208,7 @@ namespace Rawr
 		{
             Item finger1Item = rand.NextDouble() < 0.5d ? father.Finger1 : mother.Finger1;
             Item finger2Item = rand.NextDouble() < 0.5d ? father.Finger2 : mother.Finger2;
-			while (finger1Item == finger2Item && finger1Item != null && finger1Item.Unique)
+            while (finger1Item != null && finger2Item != null && finger1Item.Id == finger2Item.Id && finger1Item.Unique)
 			{
 				finger1Item = rand.NextDouble() < 0.5d ? father.Finger1 : mother.Finger1;
 				finger2Item = rand.NextDouble() < 0.5d ? father.Finger2 : mother.Finger2;
@@ -1087,7 +1216,7 @@ namespace Rawr
 
             Item trinket1Item = rand.NextDouble() < 0.5d ? father.Trinket1 : mother.Trinket1;
             Item trinket2Item = rand.NextDouble() < 0.5d ? father.Trinket2 : mother.Trinket2;
-			while (trinket1Item == trinket2Item && trinket1Item != null && trinket1Item.Unique)
+            while (trinket1Item != null && trinket2Item != null && trinket1Item.Id == trinket2Item.Id && trinket1Item.Unique)
 			{
 				trinket1Item = rand.NextDouble() < 0.5d ? father.Trinket1 : mother.Trinket1;
 				trinket2Item = rand.NextDouble() < 0.5d ? father.Trinket2 : mother.Trinket2;
@@ -1095,7 +1224,7 @@ namespace Rawr
 
             Item mainHandItem = rand.NextDouble() < 0.5d ? father.MainHand : mother.MainHand;
             Item offHandItem = rand.NextDouble() < 0.5d ? father.OffHand : mother.OffHand;
-			while (mainHandItem == offHandItem && mainHandItem != null && mainHandItem.Unique)
+            while (mainHandItem != null && offHandItem != null && mainHandItem.Id == offHandItem.Id && mainHandItem.Unique)
 			{
 				mainHandItem = rand.NextDouble() < 0.5d ? father.MainHand : mother.MainHand;
 				offHandItem = rand.NextDouble() < 0.5d ? father.OffHand : mother.OffHand;
@@ -1148,7 +1277,7 @@ namespace Rawr
 
             Item finger1Item = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.Finger1) ? lockedItems[rand.Next(lockedItems.Length)] : fingerItems[rand.Next(fingerItems.Length)]) : parent.Finger1;
             Item finger2Item = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.Finger2) ? lockedItems[rand.Next(lockedItems.Length)] : fingerItems[rand.Next(fingerItems.Length)]) : parent.Finger2;
-			while (finger1Item == finger2Item && finger1Item != null && finger1Item.Unique)
+            while (finger1Item != null && finger2Item != null && finger1Item.Id == finger2Item.Id && finger1Item.Unique)
 			{
                 finger1Item = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.Finger1) ? lockedItems[rand.Next(lockedItems.Length)] : fingerItems[rand.Next(fingerItems.Length)]) : parent.Finger1;
                 finger2Item = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.Finger2) ? lockedItems[rand.Next(lockedItems.Length)] : fingerItems[rand.Next(fingerItems.Length)]) : parent.Finger2;
@@ -1156,7 +1285,7 @@ namespace Rawr
 
             Item trinket1Item = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.Trinket1) ? lockedItems[rand.Next(lockedItems.Length)] : trinketItems[rand.Next(trinketItems.Length)]) : parent.Trinket1;
             Item trinket2Item = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.Trinket2) ? lockedItems[rand.Next(lockedItems.Length)] : trinketItems[rand.Next(trinketItems.Length)]) : parent.Trinket2;
-			while (trinket1Item == trinket2Item && trinket1Item != null && trinket1Item.Unique)
+            while (trinket1Item != null && trinket2Item != null && trinket1Item.Id == trinket2Item.Id && trinket1Item.Unique)
 			{
                 trinket1Item = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.Trinket1) ? lockedItems[rand.Next(lockedItems.Length)] : trinketItems[rand.Next(trinketItems.Length)]) : parent.Trinket1;
                 trinket2Item = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.Trinket2) ? lockedItems[rand.Next(lockedItems.Length)] : trinketItems[rand.Next(trinketItems.Length)]) : parent.Trinket2;
@@ -1164,7 +1293,7 @@ namespace Rawr
 
             Item mainHandItem = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.MainHand) ? lockedItems[rand.Next(lockedItems.Length)] : mainHandItems[rand.Next(mainHandItems.Length)]) : parent.MainHand;
             Item offHandItem = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.OffHand) ? lockedItems[rand.Next(lockedItems.Length)] : offHandItems[rand.Next(offHandItems.Length)]) : parent.OffHand;
-			while (mainHandItem == offHandItem && mainHandItem != null && mainHandItem.Unique)
+            while (mainHandItem != null && offHandItem != null && mainHandItem.Id == offHandItem.Id && mainHandItem.Unique)
 			{
                 mainHandItem = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.MainHand) ? lockedItems[rand.Next(lockedItems.Length)] : mainHandItems[rand.Next(mainHandItems.Length)]) : parent.MainHand;
                 offHandItem = rand.NextDouble() < mutationChance ? ((lockedSlot == Character.CharacterSlot.OffHand) ? lockedItems[rand.Next(lockedItems.Length)] : offHandItems[rand.Next(offHandItems.Length)]) : parent.OffHand;
@@ -1302,22 +1431,22 @@ namespace Rawr
 			return character;
 		}
 
-		private Item[] GetPossibleGemmedItemsForItem(Item item, List<int> gemIDs, List<int> metaGemIDs)
+        private Item[] GetPossibleGemmedItemsForItem(Item item, Item[] gemItems, Item[] metaGemItems)
 		{
 			List<Item> possibleGemmedItems = new List<Item>();
 			if (!_allGemmings)
 			{
-				foreach (Item knownItem in ItemCache.AllItems)
+				foreach (Item knownItem in ItemCache.RelevantItems)
 					if (knownItem.Id == item.Id)
 						possibleGemmedItems.Add(knownItem);
 			}
 			else
 			{
-			    List<int> possibleId1s, possibleId2s, possibleId3s = null;
+                Item[] possibleGem1s, possibleGem2s, possibleGem3s = null;
 			    switch (item.Sockets.Color1)
 			    {
 				    case Item.ItemSlot.Meta:
-					    possibleId1s = metaGemIDs;
+					    possibleGem1s = metaGemItems;
 					    break;
 				    case Item.ItemSlot.Red:
 				    case Item.ItemSlot.Orange:
@@ -1326,16 +1455,16 @@ namespace Rawr
 				    case Item.ItemSlot.Blue:
 				    case Item.ItemSlot.Purple:
 				    case Item.ItemSlot.Prismatic:
-					    possibleId1s = gemIDs;
+					    possibleGem1s = gemItems;
 					    break;
 				    default:
-					    possibleId1s = new List<int>(new int[] { 0 });
+                        possibleGem1s = new Item[] { null };
 					    break;
 			    }
 			    switch (item.Sockets.Color2)
 			    {
 				    case Item.ItemSlot.Meta:
-					    possibleId2s = metaGemIDs;
+					    possibleGem2s = metaGemItems;
 					    break;
 				    case Item.ItemSlot.Red:
 				    case Item.ItemSlot.Orange:
@@ -1344,16 +1473,16 @@ namespace Rawr
 				    case Item.ItemSlot.Blue:
 				    case Item.ItemSlot.Purple:
 				    case Item.ItemSlot.Prismatic:
-					    possibleId2s = gemIDs;
+					    possibleGem2s = gemItems;
 					    break;
 				    default:
-					    possibleId2s = new List<int>(new int[] { 0 });
+                        possibleGem2s = new Item[] { null };
 					    break;
 			    }
 			    switch (item.Sockets.Color3)
 			    {
 				    case Item.ItemSlot.Meta:
-					    possibleId3s = metaGemIDs;
+					    possibleGem3s = metaGemItems;
 					    break;
 				    case Item.ItemSlot.Red:
 				    case Item.ItemSlot.Orange:
@@ -1362,27 +1491,28 @@ namespace Rawr
 				    case Item.ItemSlot.Blue:
 				    case Item.ItemSlot.Purple:
 				    case Item.ItemSlot.Prismatic:
-					    possibleId3s = gemIDs;
+					    possibleGem3s = gemItems;
 					    break;
 				    default:
-					    possibleId3s = new List<int>(new int[] { 0 });
+                        possibleGem3s = new Item[] { null };
 					    break;
 			    }
 
-			    int id0 = item.Id;
-			    foreach (int id1 in possibleId1s)
-				    foreach (int id2 in possibleId2s)
-                        foreach (int id3 in possibleId3s)
+                foreach (Item gem1 in possibleGem1s)
+                    foreach (Item gem2 in possibleGem2s)
+                        foreach (Item gem3 in possibleGem3s)
                         {
                             //possibleGemmedItems.Add(ItemCache.Instance.FindItemById(string.Format("{0}.{1}.{2}.{3}", id0, id1, id2, id3), true, false, true));
                             // skip item cache, since we're creating new gemmings most likely they don't exist
                             // it will search through all item to find the item we already have and then clone it
                             // so skip all do that and do cloning ourselves
                             Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
-                                item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), id1, id2, id3, item.MinDamage,
+                                item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), 0, 0, 0, item.MinDamage,
                                 item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
+                            copy.Gem1 = gem1;
+                            copy.Gem2 = gem2;
+                            copy.Gem3 = gem3;
                             possibleGemmedItems.Add(copy);
-                            // TODO possible improvement with working directly with gems instead of ids, would bypass the item cache search for gems on each item
                         }
 			}
 
@@ -1565,6 +1695,14 @@ namespace Rawr
 
             _worker = _workerUpgrades;
             _worker.RunWorkerAsync();
+        }
+
+        private void FormOptimize_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Properties.Optimizer.Default.AllGemmings = radioButtonAllGemmings.Checked;
+            Properties.Optimizer.Default.Thoroughness = trackBarThoroughness.Value;
+            Properties.Optimizer.Default.CalculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize);
+            Properties.Optimizer.Default.Save();
         }
 	}
 }

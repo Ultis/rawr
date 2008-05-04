@@ -177,7 +177,7 @@
             // trackBarThoroughness
             // 
             this.trackBarThoroughness.Location = new System.Drawing.Point(90, 126);
-            this.trackBarThoroughness.Maximum = 200;
+            this.trackBarThoroughness.Maximum = 400;
             this.trackBarThoroughness.Minimum = 1;
             this.trackBarThoroughness.Name = "trackBarThoroughness";
             this.trackBarThoroughness.Size = new System.Drawing.Size(149, 45);
@@ -258,6 +258,7 @@
             this.Name = "FormOptimize";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rawr Optimizer Tools";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormOptimize_FormClosed);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormOptimize_FormClosing);
             this.groupBoxRequirements.ResumeLayout(false);
             this.groupBoxOptions.ResumeLayout(false);
