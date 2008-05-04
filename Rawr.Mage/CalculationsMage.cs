@@ -366,9 +366,21 @@ namespace Rawr.Mage
         private void StoreIncrementalSet(Character character, CharacterCalculationsMage calculations)
         {
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            calculationOptions.IncrementalSetCooldowns = calculations.IncrementalSetCooldown;
-            calculationOptions.IncrementalSetSpells = calculations.IncrementalSetSpell;
-            calculationOptions.IncrementalSetSegments = calculations.IncrementalSetSegment;
+            List<int> cooldownList = new List<int>();
+            List<SpellId> spellList = new List<SpellId>();
+            List<int> segmentList = new List<int>();
+            for (int i = 0; i < calculations.SolutionLabel.Length; i++)
+            {
+                if (calculations.Solution[i] > 0 && calculations.IncrementalSetSpell[i] != SpellId.None)
+                {
+                    cooldownList.Add(calculations.IncrementalSetCooldown[i]);
+                    spellList.Add(calculations.IncrementalSetSpell[i]);
+                    if (calculations.IncrementalSetSegment != null) segmentList.Add(calculations.IncrementalSetSegment[i]);
+                }
+            }
+            calculationOptions.IncrementalSetCooldowns = cooldownList.ToArray();
+            calculationOptions.IncrementalSetSpells = spellList.ToArray();
+            calculationOptions.IncrementalSetSegments = segmentList.ToArray();
             calculationOptions.IncrementalSetArmor = calculations.MageArmor;
         }
 
