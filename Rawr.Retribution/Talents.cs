@@ -28,7 +28,7 @@ namespace Rawr.Retribution
 
         private void Talents_Load(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             if (calcOpts.TalentsSaved)
             {
 				comboBoxTwoHandedSpec.SelectedItem = calcOpts.TwoHandedSpec;
@@ -48,7 +48,7 @@ namespace Rawr.Retribution
         {
             ComboBox cb = (ComboBox)sender;
             string talent = cb.Name.Substring(8);
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             switch (talent)
 			{
 				case "TwoHandedSpec": calcOpts.TwoHandedSpec = int.Parse(cb.SelectedItem.ToString()); break;

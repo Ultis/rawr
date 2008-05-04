@@ -197,7 +197,7 @@ you are being killed by burst damage, focus on Survival Points.",
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			_cachedCharacter = character;
-			CalculationOptionsProtWarr calcOpts = character.CurrentCalculationOptions as CalculationOptionsProtWarr;
+			CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
 			int targetLevel = calcOpts.TargetLevel;
 
 			Stats stats = GetCharacterStats(character, additionalItem);
@@ -501,6 +501,8 @@ you are being killed by burst damage, focus on Survival Points.",
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
+            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
+
             Stats statsRace = GetRaceStats(character);
 			Stats statsBaseGear = GetItemStats(character, additionalItem);
 			Stats statsEnchants = GetEnchantsStats(character);
@@ -586,7 +588,7 @@ you are being killed by burst damage, focus on Survival Points.",
             statsTotal.Crit = statsRace.Crit + statsTalents.Crit;
             statsTotal.Expertise = statsRace.Expertise + statsTalents.Expertise;
 
-            statsTotal.Block += (character.CalculationOptions["UseShieldBlock"] == "Yes" ? 75f : 0f);
+            statsTotal.Block += (calcOpts.UseShieldBlock ? 75f : 0f);
 
             statsTotal.BonusArmorMultiplier = ((1 + statsRace.BonusArmorMultiplier) *
                                                   (1 + statsGearEnchantsBuffs.BonusArmorMultiplier) *

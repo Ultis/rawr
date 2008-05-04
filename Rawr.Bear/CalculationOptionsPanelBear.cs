@@ -18,8 +18,8 @@ namespace Rawr
 		protected override void LoadCalculationOptions()
 		{
 			_loadingCalculationOptions = true;
-			if (Character.CurrentCalculationOptions == null)
-				Character.CurrentCalculationOptions = new CalculationOptionsBear();
+			if (Character.CalculationOptions == null)
+				Character.CalculationOptions = new CalculationOptionsBear();
 			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
 			//    Character.CalculationOptions["TargetLevel"] = "73";
 			//if (!Character.CalculationOptions.ContainsKey("ThreatScale"))
@@ -27,7 +27,7 @@ namespace Rawr
 			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
 			//    Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
 
-			CalculationOptionsBear calcOpts = Character.CurrentCalculationOptions as CalculationOptionsBear;
+			CalculationOptionsBear calcOpts = Character.CalculationOptions as CalculationOptionsBear;
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
             numericUpDownThreatValue.Value = (decimal)calcOpts.ThreatScale;
 			checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
@@ -63,7 +63,7 @@ namespace Rawr
 		{
 			if (!_loadingCalculationOptions)
 			{
-				CalculationOptionsBear calcOpts = Character.CurrentCalculationOptions as CalculationOptionsBear;
+				CalculationOptionsBear calcOpts = Character.CalculationOptions as CalculationOptionsBear;
 				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 				calcOpts.ThreatScale = (float)numericUpDownThreatValue.Value;
 				Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;

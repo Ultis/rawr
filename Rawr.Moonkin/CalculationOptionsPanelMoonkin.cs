@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
+using System.Xml;
 using System.Text;
 using System.Windows.Forms;
 
@@ -27,8 +27,8 @@ namespace Rawr.Moonkin
         // Load the options into the form
         protected override void LoadCalculationOptions()
         {
-			if (Character.CurrentCalculationOptions == null)
-				Character.CurrentCalculationOptions = new CalculationOptionsMoonkin();
+			if (Character.CalculationOptions == null)
+				Character.CalculationOptions = new CalculationOptionsMoonkin(Character);
 			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
 			//    calcOpts.TargetLevel = "73";
 			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
@@ -58,7 +58,7 @@ namespace Rawr.Moonkin
 			//if (!Character.CalculationOptions.ContainsKey("AldorScryer"))
 			//    calcOpts.AldorScryer = "Aldor";
 
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             cmbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			chkMetagem.Checked = Character.EnforceMetagemRequirements;
             txtLatency.Text = calcOpts.Latency.ToString();
@@ -85,35 +85,35 @@ namespace Rawr.Moonkin
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.TargetLevel = int.Parse(cmbTargetLevel.SelectedItem.ToString());
             Character.OnItemsChanged();
         }
 
         private void txtLatency_TextChanged(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.Latency = float.Parse(txtLatency.Text);
             Character.OnItemsChanged();
         }
 
         private void chkMetagem_Leave(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			Character.EnforceMetagemRequirements = chkMetagem.Checked;
             Character.OnItemsChanged();
         }
 
         private void txtFightLength_Leave(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.FightLength = float.Parse(txtFightLength.Text);
             Character.OnItemsChanged();
         }
 
         private void chkInnervate_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.Innervate = chkInnervate.Checked;
             txtInnervateDelay.Enabled = chkInnervate.Checked;
             Character.OnItemsChanged();
@@ -121,14 +121,14 @@ namespace Rawr.Moonkin
 
         private void txtShadowPriest_Leave(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.ShadowPriest = float.Parse(txtShadowPriest.Text);
             Character.OnItemsChanged();
         }
 
         private void chkManaPots_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.ManaPots = chkManaPots.Checked;
             cmbPotType.Enabled = chkManaPots.Checked;
             txtManaPotDelay.Enabled = chkManaPots.Checked;
@@ -137,42 +137,42 @@ namespace Rawr.Moonkin
 
         private void cmbPotType_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.ManaPotType = cmbPotType.SelectedItem.ToString();
             Character.OnItemsChanged();
         }
 
         private void txtInnervateDelay_Leave(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.InnervateDelay = float.Parse(txtInnervateDelay.Text);
             Character.OnItemsChanged();
         }
 
         private void txtManaPotDelay_Leave(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.ManaPotDelay = float.Parse(txtManaPotDelay.Text);
             Character.OnItemsChanged();
         }
 
         private void txtInnervateWeaponInt_Leave(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.InnervateWeaponInt = float.Parse(txtInnervateWeaponInt.Text);
             Character.OnItemsChanged();
         }
 
         private void txtInnervateWeaponSpi_Leave(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.InnervateWeaponSpi = float.Parse(txtInnervateWeaponSpi.Text);
             Character.OnItemsChanged();
         }
 
         private void chkInnervateWeapon_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.InnervateWeapon = chkInnervateWeapon.Checked;
             txtInnervateWeaponInt.Enabled = chkInnervateWeapon.Checked;
             txtInnervateWeaponSpi.Enabled = chkInnervateWeapon.Checked;
@@ -181,7 +181,7 @@ namespace Rawr.Moonkin
 
         private void rdbScryer_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.AldorScryer = rdbScryer.Checked ? "Scryer" : "Aldor";
             Character.OnItemsChanged();
         }
@@ -199,6 +199,94 @@ namespace Rawr.Moonkin
 			serializer.Serialize(writer, this);
 			return xml.ToString();
 		}
+
+        public CalculationOptionsMoonkin()
+        {
+        }
+
+        public CalculationOptionsMoonkin(Character character)
+        {
+            #region Druid Talents Import
+            try
+            {
+                WebRequestWrapper wrw = new WebRequestWrapper();
+                if (character.Class == Character.CharacterClass.Druid && character.Name != null && character.Region != null && character.Realm != null)
+                {
+                    XmlDocument docTalents = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm);
+
+                    //<talentTab>
+                    //  <talentTree value="50002201050313523105100000000000000530000000000300001000030300"/>
+                    //</talentTab>
+                    string talentCode = docTalents.SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
+                    StarlightWrath = int.Parse(talentCode.Substring(0, 1));
+                    NaturesGrasp = int.Parse(talentCode.Substring(1, 1));
+                    ImpNaturesGrasp = int.Parse(talentCode.Substring(2, 1));
+                    ControlofNature = int.Parse(talentCode.Substring(3, 1));
+                    FocusedStarlight = int.Parse(talentCode.Substring(4, 1));
+                    ImpMoonfire = int.Parse(talentCode.Substring(5, 1));
+                    Brambles = int.Parse(talentCode.Substring(6, 1));
+                    InsectSwarm = int.Parse(talentCode.Substring(7, 1));
+                    NaturesReach = int.Parse(talentCode.Substring(8, 1));
+                    Vengeance = int.Parse(talentCode.Substring(9, 1));
+                    CelestialFocus = int.Parse(talentCode.Substring(10, 1));
+                    LunarGuidance = int.Parse(talentCode.Substring(11, 1));
+                    NaturesGrace = int.Parse(talentCode.Substring(12, 1));
+                    Moonglow = int.Parse(talentCode.Substring(13, 1));
+                    Moonfury = int.Parse(talentCode.Substring(14, 1));
+                    BalanceofPower = int.Parse(talentCode.Substring(15, 1));
+                    Dreamstate = int.Parse(talentCode.Substring(16, 1));
+                    MoonkinForm = int.Parse(talentCode.Substring(17, 1));
+                    ImprovedFF = int.Parse(talentCode.Substring(18, 1));
+                    WrathofCenarius = int.Parse(talentCode.Substring(19, 1));
+                    ForceofNature = int.Parse(talentCode.Substring(20, 1));
+                    Ferocity = int.Parse(talentCode.Substring(21, 1));
+                    FeralAggression = int.Parse(talentCode.Substring(22, 1));
+                    FeralInstinct = int.Parse(talentCode.Substring(23, 1));
+                    BrutalImpact = int.Parse(talentCode.Substring(24, 1));
+                    ThickHide = int.Parse(talentCode.Substring(25, 1));
+                    FeralSwiftness = int.Parse(talentCode.Substring(26, 1));
+                    FeralCharge = int.Parse(talentCode.Substring(27, 1));
+                    SharpenedClaws = int.Parse(talentCode.Substring(28, 1));
+                    ShreddingAttacks = int.Parse(talentCode.Substring(29, 1));
+                    PredatoryStrikes = int.Parse(talentCode.Substring(30, 1));
+                    PrimalFury = int.Parse(talentCode.Substring(31, 1));
+                    SavageFury = int.Parse(talentCode.Substring(32, 1));
+                    FeralFaerieFire = int.Parse(talentCode.Substring(33, 1));
+                    NurturingInstinct = int.Parse(talentCode.Substring(34, 1));
+                    HotW = int.Parse(talentCode.Substring(35, 1));
+                    SotF = int.Parse(talentCode.Substring(36, 1));
+                    PrimalTenacity = int.Parse(talentCode.Substring(37, 1));
+                    LotP = int.Parse(talentCode.Substring(38, 1));
+                    ImprovedLotP = int.Parse(talentCode.Substring(39, 1));
+                    PredatoryInstincts = int.Parse(talentCode.Substring(40, 1));
+                    Mangle = int.Parse(talentCode.Substring(41, 1));
+                    ImprovedMotW = int.Parse(talentCode.Substring(42, 1));
+                    Furor = int.Parse(talentCode.Substring(43, 1));
+                    Naturalist = int.Parse(talentCode.Substring(44, 1));
+                    NaturesFocus = int.Parse(talentCode.Substring(45, 1));
+                    NaturalShapeshifter = int.Parse(talentCode.Substring(46, 1));
+                    Intensity = int.Parse(talentCode.Substring(47, 1));
+                    Subtlety = int.Parse(talentCode.Substring(48, 1));
+                    OmenofClarity = int.Parse(talentCode.Substring(49, 1));
+                    TranquilSpirit = int.Parse(talentCode.Substring(50, 1));
+                    ImprovedRejuv = int.Parse(talentCode.Substring(51, 1));
+                    NaturesSwiftness = int.Parse(talentCode.Substring(52, 1));
+                    GiftofNature = int.Parse(talentCode.Substring(53, 1));
+                    ImpTranquility = int.Parse(talentCode.Substring(54, 1));
+                    EmpoweredTouch = int.Parse(talentCode.Substring(55, 1));
+                    ImprovedRegrowth = int.Parse(talentCode.Substring(56, 1));
+                    LivingSpirit = int.Parse(talentCode.Substring(57, 1));
+                    Swiftmend = int.Parse(talentCode.Substring(58, 1));
+                    NaturalPerfection = int.Parse(talentCode.Substring(59, 1));
+                    EmpoweredRejuv = int.Parse(talentCode.Substring(60, 1));
+                    TreeofLife = int.Parse(talentCode.Substring(61, 1));
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            #endregion
+        }
 
 		public int TargetLevel = 73;
 		public bool EnforceMetagemRequirements = false;

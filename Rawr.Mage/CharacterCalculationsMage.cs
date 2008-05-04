@@ -4,11 +4,12 @@ using System.Text;
 using System.Globalization;
 using System.Xml.Serialization;
 using System.Reflection;
+using System.Xml;
 
 namespace Rawr.Mage
 {
     [Serializable]
-    class CalculationOptionsMage
+    public class CalculationOptionsMage : ICalculationOptionBase
     {
         public int TargetLevel { get; set; }
         public int AoeTargetLevel { get; set; }
@@ -36,7 +37,6 @@ namespace Rawr.Mage
         public bool SmartOptimization { get; set; }
         public float DpsTime { get; set; }
         public bool DrumsOfBattle { get; set; }
-        public bool DisableBuffAutoActivation { get; set; }
         public bool AutomaticArmor { get; set; }
         public bool IncrementalOptimizations { get; set; }
 
@@ -56,6 +56,16 @@ namespace Rawr.Mage
         public bool SMP { get; set; }
         public bool SMPDisplay { get; set; }
         public float SurvivabilityRating { get; set; }
+
+        public CalculationOptionsMage Clone()
+        {
+            CalculationOptionsMage clone = (CalculationOptionsMage)MemberwiseClone();
+            clone.IncrementalSetArmor = null;
+            clone.IncrementalSetCooldowns = null;
+            clone.IncrementalSetSegments = null;
+            clone.IncrementalSetSpells = null;
+            return clone;
+        }
 
         public int GetTalentByName(string name)
         {
@@ -139,7 +149,11 @@ namespace Rawr.Mage
         public int ImprovedManaShield { get; set; }
         public int MagicAttunement { get; set; }
 
-        public CalculationOptionsMage()
+        private CalculationOptionsMage()
+        {
+        }
+
+        public CalculationOptionsMage(Character character)
         {
             TargetLevel = 73;
             AoeTargetLevel = 70;
@@ -175,6 +189,107 @@ namespace Rawr.Mage
             SMPDisplay = false;
             EvocationSpirit = 0;
             SurvivabilityRating = 0.001f;
+
+            // pull talents
+            #region Mage Talents Import
+            try
+            {
+                WebRequestWrapper wrw = new WebRequestWrapper();
+
+                if (character.Class == Character.CharacterClass.Mage && character.Name != null && character.Region != null && character.Realm != null)
+                {
+                    XmlDocument docTalents = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm);
+
+                    //<talentTab>
+                    //  <talentTree value="2550050300230151333125100000000000000000000002030302010000000000000"/>
+                    //</talentTab>
+                    if (docTalents != null)
+                    {
+                        string talentCode = docTalents.SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
+                        ArcaneSubtlety = int.Parse(talentCode.Substring(0, 1));
+                        ArcaneFocus = int.Parse(talentCode.Substring(1, 1));
+                        ImprovedArcaneMissiles = int.Parse(talentCode.Substring(2, 1));
+                        WandSpecialization = int.Parse(talentCode.Substring(3, 1));
+                        MagicAbsorption = int.Parse(talentCode.Substring(4, 1));
+                        ArcaneConcentration = int.Parse(talentCode.Substring(5, 1));
+                        MagicAttunement = int.Parse(talentCode.Substring(6, 1));
+                        ArcaneImpact = int.Parse(talentCode.Substring(7, 1));
+                        ArcaneFortitude = int.Parse(talentCode.Substring(8, 1));
+                        ImprovedManaShield = int.Parse(talentCode.Substring(9, 1));
+                        ImprovedCounterspell = int.Parse(talentCode.Substring(10, 1));
+                        ArcaneMeditation = int.Parse(talentCode.Substring(11, 1));
+                        ImprovedBlink = int.Parse(talentCode.Substring(12, 1));
+                        PresenceOfMind = int.Parse(talentCode.Substring(13, 1));
+                        ArcaneMind = int.Parse(talentCode.Substring(14, 1));
+                        PrismaticCloak = int.Parse(talentCode.Substring(15, 1));
+                        ArcaneInstability = int.Parse(talentCode.Substring(16, 1));
+                        ArcanePotency = int.Parse(talentCode.Substring(17, 1));
+                        EmpoweredArcaneMissiles = int.Parse(talentCode.Substring(18, 1));
+                        ArcanePower = int.Parse(talentCode.Substring(19, 1));
+                        SpellPower = int.Parse(talentCode.Substring(20, 1));
+                        MindMastery = int.Parse(talentCode.Substring(21, 1));
+                        Slow = int.Parse(talentCode.Substring(22, 1));
+                        ImprovedFireball = int.Parse(talentCode.Substring(23, 1));
+                        Impact = int.Parse(talentCode.Substring(24, 1));
+                        Ignite = int.Parse(talentCode.Substring(25, 1));
+                        FlameThrowing = int.Parse(talentCode.Substring(26, 1));
+                        ImprovedFireBlast = int.Parse(talentCode.Substring(27, 1));
+                        Incinerate = int.Parse(talentCode.Substring(28, 1));
+                        ImprovedFlamestrike = int.Parse(talentCode.Substring(29, 1));
+                        Pyroblast = int.Parse(talentCode.Substring(30, 1));
+                        BurningSoul = int.Parse(talentCode.Substring(31, 1));
+                        ImprovedScorch = int.Parse(talentCode.Substring(32, 1));
+                        ImprovedFireWard = int.Parse(talentCode.Substring(33, 1));
+                        MasterOfElements = int.Parse(talentCode.Substring(34, 1));
+                        PlayingWithFire = int.Parse(talentCode.Substring(35, 1));
+                        CriticalMass = int.Parse(talentCode.Substring(36, 1));
+                        BlastWave = int.Parse(talentCode.Substring(37, 1));
+                        BlazingSpeed = int.Parse(talentCode.Substring(38, 1));
+                        FirePower = int.Parse(talentCode.Substring(39, 1));
+                        Pyromaniac = int.Parse(talentCode.Substring(40, 1));
+                        Combustion = int.Parse(talentCode.Substring(41, 1));
+                        MoltenFury = int.Parse(talentCode.Substring(42, 1));
+                        EmpoweredFireball = int.Parse(talentCode.Substring(43, 1));
+                        DragonsBreath = int.Parse(talentCode.Substring(44, 1));
+                        FrostWarding = int.Parse(talentCode.Substring(45, 1));
+                        ImprovedFrostbolt = int.Parse(talentCode.Substring(46, 1));
+                        ElementalPrecision = int.Parse(talentCode.Substring(47, 1));
+                        IceShards = int.Parse(talentCode.Substring(48, 1));
+                        Frostbite = int.Parse(talentCode.Substring(49, 1));
+                        ImprovedFrostNova = int.Parse(talentCode.Substring(50, 1));
+                        Permafrost = int.Parse(talentCode.Substring(51, 1));
+                        PiercingIce = int.Parse(talentCode.Substring(52, 1));
+                        IcyVeins = int.Parse(talentCode.Substring(53, 1));
+                        ImprovedBlizzard = int.Parse(talentCode.Substring(54, 1));
+                        ArcticReach = int.Parse(talentCode.Substring(55, 1));
+                        FrostChanneling = int.Parse(talentCode.Substring(56, 1));
+                        Shatter = int.Parse(talentCode.Substring(57, 1));
+                        FrozenCore = int.Parse(talentCode.Substring(58, 1));
+                        ColdSnap = int.Parse(talentCode.Substring(59, 1));
+                        ImprovedConeOfCold = int.Parse(talentCode.Substring(60, 1));
+                        IceFloes = int.Parse(talentCode.Substring(61, 1));
+                        WintersChill = int.Parse(talentCode.Substring(62, 1));
+                        IceBarrier = int.Parse(talentCode.Substring(63, 1));
+                        ArcticWinds = int.Parse(talentCode.Substring(64, 1));
+                        EmpoweredFrostbolt = int.Parse(talentCode.Substring(65, 1));
+                        SummonWaterElemental = int.Parse(talentCode.Substring(66, 1));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            #endregion
+        }
+
+        string ICalculationOptionBase.GetXml()
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsMage));
+            StringBuilder xml = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
         }
     }
 

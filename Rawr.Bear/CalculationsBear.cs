@@ -182,7 +182,7 @@ you are being killed by burst damage, focus on Survival Points.",
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			_cachedCharacter = character;
-			CalculationOptionsBear calcOpts = character.CurrentCalculationOptions as CalculationOptionsBear;
+			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
 			int targetLevel = calcOpts.TargetLevel;
 			Stats stats = GetCharacterStats(character, additionalItem);
 			float levelDifference = (targetLevel - 70f) * 0.2f;

@@ -622,7 +622,7 @@ namespace Rawr.Moonkin
             // Mana/5 calculations
             float totalManaRegen = calcs.ManaRegen5SR * fightLength;
 
-			CalculationOptionsMoonkin calcOpts = character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Mana pot calculations
             float manaPotDelay = calcOpts.ManaPotDelay * 60.0f;
             int numPots = calcOpts.ManaPots && fightLength - manaPotDelay > 0 ? ((int)(fightLength - manaPotDelay) / 120 + 1) : 0;
@@ -678,7 +678,7 @@ namespace Rawr.Moonkin
         private static void UpdateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
         {
             Stats stats = calcs.BasicStats;
-			CalculationOptionsMoonkin calcOpts = character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Add (possibly talented) +spelldmg
             // Starfire: Damage +(0.04 * Wrath of Cenarius)
             // Wrath: Damage +(0.02 * Wrath of Cenarius)
@@ -753,7 +753,7 @@ namespace Rawr.Moonkin
             // Try to reset the cached results dictionary on each call
             cachedResults = new Dictionary<string, RotationData>();
             float effectiveSpellHit = calcs.BasicStats.SpellHitRating;
-			CalculationOptionsMoonkin calcOpts = character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
 			bool naturesGrace = calcOpts.NaturesGrace > 0 ? true : false;
             float fightLength = calcs.FightLength * 60.0f;
 

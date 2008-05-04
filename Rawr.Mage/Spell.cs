@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Mage
 {
-    enum MagicSchool
+    public enum MagicSchool
     {
         Fire = 2,
         Nature,
@@ -13,7 +13,7 @@ namespace Rawr.Mage
         Arcane
     }
 
-    enum SpellId
+    public enum SpellId
     {
         None,
         Wand,

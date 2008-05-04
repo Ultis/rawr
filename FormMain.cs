@@ -74,12 +74,18 @@ namespace Rawr
 
 			this.Shown += new EventHandler(FormMain_Shown);
 			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+            Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 			Calculations_ModelChanged(null, null);
 
 			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
 		}
+
+        void Calculations_ModelChanging(object sender, EventArgs e)
+        {
+            Character.SerializeCalculationOptions();
+        }
 
 		public Character Character
 		{

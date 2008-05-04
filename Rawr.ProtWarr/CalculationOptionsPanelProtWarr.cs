@@ -32,8 +32,8 @@ namespace Rawr.ProtWarr
 		protected override void LoadCalculationOptions()
 		{
 			_loadingCalculationOptions = true;
-			if (Character.CurrentCalculationOptions == null)
-				Character.CurrentCalculationOptions = new CalculationOptionsProtWarr();
+			if (Character.CalculationOptions == null)
+				Character.CalculationOptions = new CalculationOptionsProtWarr();
 			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
 			//    calcOpts.TargetLevel = "73";
 			//if (!Character.CalculationOptions.ContainsKey("TargetArmor"))
@@ -53,7 +53,7 @@ namespace Rawr.ProtWarr
 			//if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
 			//    calcOpts.ShattrathFaction = "Scryer";
 
-			CalculationOptionsProtWarr calcOpts = Character.CurrentCalculationOptions as CalculationOptionsProtWarr;
+			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			trackBarTargetArmor.Value = calcOpts.TargetArmor;
             trackBarBossAttackValue.Value = calcOpts.BossAttackValue;
@@ -79,7 +79,7 @@ namespace Rawr.ProtWarr
 		{
 			if (!_loadingCalculationOptions)
 			{
-				CalculationOptionsProtWarr calcOpts = Character.CurrentCalculationOptions as CalculationOptionsProtWarr;
+				CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
 				trackBarTargetArmor.Value = 100 * (trackBarTargetArmor.Value / 100);
 				labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
 				labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
@@ -101,14 +101,14 @@ namespace Rawr.ProtWarr
 
 		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
 		{
-			CalculationOptionsProtWarr calcOpts = Character.CurrentCalculationOptions as CalculationOptionsProtWarr;
+			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
 			Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
 			Character.OnItemsChanged();
 		}
 
         private void checkBoxUseShieldBlock_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsProtWarr calcOpts = Character.CurrentCalculationOptions as CalculationOptionsProtWarr;
+			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
 			calcOpts.UseShieldBlock = checkBoxUseShieldBlock.Checked;
             Character.OnItemsChanged();
         }

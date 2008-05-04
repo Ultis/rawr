@@ -140,7 +140,7 @@ namespace Rawr
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			_cachedCharacter = character;
-			CalculationOptionsCat calcOpts = character.CurrentCalculationOptions as CalculationOptionsCat;
+			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 			int targetLevel = calcOpts.TargetLevel;
 			float targetArmor = calcOpts.TargetArmor;
 			float exposeWeaknessAPValue = calcOpts.ExposeWeaknessAPValue;
@@ -416,7 +416,7 @@ namespace Rawr
 			Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
             statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
-			CalculationOptionsCat calcOpts = character.CurrentCalculationOptions as CalculationOptionsCat;
+			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 			statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime;
 			statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime;
 

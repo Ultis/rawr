@@ -75,7 +75,7 @@ namespace Rawr.Warlock
             {
                 if (_character != null)
                 {
-                    switch ((_character.CurrentCalculationOptions as CalculationOptionsWarlock).TargetLevel)
+                    switch ((_character.CalculationOptions as CalculationOptionsWarlock).TargetLevel)
                     {
                         case 73:
                             return 0.16f;

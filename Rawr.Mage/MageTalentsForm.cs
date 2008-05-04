@@ -36,7 +36,7 @@ namespace Rawr.Mage
 
         public void LoadCalculationOptions()
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationSuspended = true;
             foreach (Control c in Controls)
             {
@@ -60,7 +60,7 @@ namespace Rawr.Mage
 
         private void ComputeTalentTotals()
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             List<string> totals = new List<string>();
             foreach (Control c in Controls)
             {
@@ -85,7 +85,7 @@ namespace Rawr.Mage
 
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             ComboBox cb = (ComboBox)sender;
             string talent = cb.Name.Substring(8);
             calculationOptions.SetTalentByName(talent, int.Parse(cb.SelectedItem.ToString()));

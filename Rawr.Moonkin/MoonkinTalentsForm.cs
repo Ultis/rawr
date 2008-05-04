@@ -34,7 +34,7 @@ namespace Rawr.Moonkin
         // Load talent points from a character's calculation options.
         public void LoadCalculationOptions()
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			cmbStarlightWrath.SelectedItem = calcOpts.StarlightWrath.ToString();
 			cmbForceofNature.SelectedItem = calcOpts.ForceofNature.ToString();
 			cmbWrathofCenarius.SelectedItem = calcOpts.WrathofCenarius.ToString();
@@ -131,7 +131,7 @@ namespace Rawr.Moonkin
         // Update character calculation options when a talent point is set
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.StarlightWrath = cmbStarlightWrath.SelectedIndex;
 			calcOpts.ForceofNature = cmbForceofNature.SelectedIndex;
 			calcOpts.WrathofCenarius = cmbWrathofCenarius.SelectedIndex;

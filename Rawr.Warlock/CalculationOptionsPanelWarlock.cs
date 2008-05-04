@@ -23,8 +23,8 @@ namespace Rawr.Warlock
 
 		protected override void LoadCalculationOptions()
 		{
-			if (Character.CurrentCalculationOptions == null)
-				Character.CurrentCalculationOptions = new CalculationOptionsWarlock();
+			if (Character.CalculationOptions == null)
+				Character.CalculationOptions = new CalculationOptionsWarlock();
 			//setDefaultOption("TargetLevel", "73");
 			//setDefaultOption("EnforceMetagemRequirements", "T");
 			//setDefaultOption("Latency", "0.05");
@@ -43,7 +43,7 @@ namespace Rawr.Warlock
 			//setDefaultOption("Pet", "Succubus");
 
 
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
             textBoxLatency.Text = calcOpts.Latency.ToString();
@@ -60,14 +60,14 @@ namespace Rawr.Warlock
 	
 		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 			Character.OnItemsChanged();
 		}
 
 		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
 		{
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
 			Character.OnItemsChanged();
 		}
@@ -76,7 +76,7 @@ namespace Rawr.Warlock
 
         private void textBoxLatency_TextChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			try
 			{
 			calcOpts.Latency = float.Parse(textBoxLatency.Text);
@@ -86,7 +86,7 @@ namespace Rawr.Warlock
 
         private void comboBoxFilterSpell_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.FillerSpell = (sender as ComboBox).SelectedItem.ToString();
             if (calcOpts.FillerSpell.ToUpper() == "INCINERATE")
                 checkImmolate.Checked = true;
@@ -95,77 +95,77 @@ namespace Rawr.Warlock
 
         private void comboBoxCastCurse_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.Curse = (sender as ComboBox).SelectedItem.ToString();
             Character.OnItemsChanged();
         }
 
         private void checkImmolate_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.Immolate = (sender as CheckBox).Checked;
             Character.OnItemsChanged();
         }
 
         private void checkCorruption_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.Corruption = (sender as CheckBox).Checked;
             Character.OnItemsChanged();
         }
 
         private void checkSiphonLife_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.SiphonLife = (sender as CheckBox).Checked;
             Character.OnItemsChanged();
         }
 
         private void checkUnstable_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.UnstableAffliction = (sender as CheckBox).Checked;
             Character.OnItemsChanged();
         }
 
         private void comboBoxPetSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.Pet = (sender as ComboBox).SelectedItem.ToString();
             Character.OnItemsChanged();
         }
 
         private void checkSacraficed_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.SacrificedPet = (sender as CheckBox).Checked ? calcOpts.Pet : "";
             Character.OnItemsChanged();
         }
 
         private void checkScorch_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.Scorch = (sender as CheckBox).Checked;
             Character.OnItemsChanged();
         }
 
         private void checkShadowWeaving_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.ShadowWeaving = (sender as CheckBox).Checked;
             Character.OnItemsChanged();
         }
 
         private void checkMisery_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			calcOpts.Misery = (sender as CheckBox).Checked;
             Character.OnItemsChanged();
         }
 
         private void comboBoxElements_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			try
 			{
 				calcOpts.ElementsBonus = float.Parse((sender as ComboBox).SelectedItem.ToString());
@@ -176,7 +176,7 @@ namespace Rawr.Warlock
 
         private void comboBoxShadows_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			try
 			{
 			calcOpts.ShadowsBonus = float.Parse((sender as ComboBox).SelectedItem.ToString());
@@ -187,7 +187,7 @@ namespace Rawr.Warlock
 
         private void textBoxISBUptime_TextChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			try
 			{
 				calcOpts.ISBUptime = float.Parse((sender as TextBox).Text);
@@ -198,7 +198,7 @@ namespace Rawr.Warlock
 
         private void textBoxDuration_TextChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock calcOpts = Character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
 			try
 			{
 				calcOpts.Duration = float.Parse((sender as TextBox).Text);

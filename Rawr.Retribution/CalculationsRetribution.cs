@@ -167,7 +167,7 @@ namespace Rawr.Retribution
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
-			CalculationOptionsRetribution calcOpts = character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             int sealChoice = calcOpts.Seal;
             character = GetTalents(character);
             Stats stats = GetCharacterStats( character, additionalItem );
@@ -302,7 +302,7 @@ namespace Rawr.Retribution
             }
 
             #region Seal of Blood
-            if (character.CalculationOptions["Seal"] == "1")
+            if (calcOpts.Seal == 1)
             {
                 float ppmSoB = (60f / hastedSpeed * (1 - (chanceToBeDodged + chanceToMiss) / 100.0f)) * (1 + 0.2f * (1 - (chanceToMiss + chanceToBeDodged) / 100.0f));
                 float avgSoBHitPre = 0.35f * avgBaseWeaponHit;
@@ -316,7 +316,7 @@ namespace Rawr.Retribution
             #endregion
 
             #region Seal of Command
-            if (character.CalculationOptions["Seal"] == "0")
+            if (calcOpts.Seal == 0)
             {
                 float socProcChance = 7.0f / (60f / hastedSpeed);
                 float whiteHits = (60f / hastedSpeed) * (1f - (chanceToBeDodged + chanceToMiss) / 100f);
@@ -345,7 +345,7 @@ namespace Rawr.Retribution
             #endregion
 
             #region Consecration
-            if (character.CalculationOptions.ContainsKey("ConsecRank") && character.CalculationOptions["ConsecRank"] != "0")
+            if (calcOpts.ConsecRank != 0)
             {
                 //Rank 1
                 float cooldownCons = 8.0f, avgConsPre= 0.0f;
@@ -370,7 +370,7 @@ namespace Rawr.Retribution
             #endregion
 
             #region Exorcism
-            if (character.CalculationOptions.ContainsKey("Exorcism") && character.CalculationOptions["Exorcism"] != "0")
+            if (calcOpts.Exorcism)
             {               
                 float cooldownExo = 15.0f, avgExoPre = 0.0f;
 
@@ -401,7 +401,7 @@ namespace Rawr.Retribution
             #endregion 
 
             #region Judgement of Blood
-            if (character.CalculationOptions["Seal"] == "1")
+            if (calcOpts.Seal == 1)
             {
                 float cooldownJoB = 9.0f;
                 float avgJoBPre = 310f + 0.43f * (stats.SpellDamageRating + 219f);
@@ -413,7 +413,7 @@ namespace Rawr.Retribution
             #endregion                       
 
             #region Judgement of Command
-            if (character.CalculationOptions["Seal"] == "0")
+            if (calcOpts.Seal == 0)
             {
                 float cooldownJoC = 9.0f;
                 float avgJoCPre = 240f + 0.43f * (stats.SpellDamageRating + 219f);
@@ -553,7 +553,7 @@ namespace Rawr.Retribution
             float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
             float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier));
 
-			CalculationOptionsRetribution calcOpts = character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             Stats statsTotal = new Stats();
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
@@ -744,30 +744,31 @@ namespace Rawr.Retribution
         /// <param name="character">The character for whom the talents should be saved</param>
         public Character GetTalents(Character character)
         {
-            if (!character.CalculationOptions.ContainsKey("TalentsSaved") || character.CalculationOptions["TalentsSaved"] == "0")
+            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            if (!calcOpts.TalentsSaved)
             {
                 if (character.Talents.Trees.Count > 0)
                 {
 					if (character.Talents.Trees.ContainsKey("Protection"))
 					{
-						character.CalculationOptions.Add("Precision", character.Talents.Trees["Protection"][2].PointsInvested.ToString());
+						calcOpts.Precision = character.Talents.Trees["Protection"][2].PointsInvested;
 					}
 					if (character.Talents.Trees.ContainsKey("Retribution"))
 					{
-						character.CalculationOptions.Add("Crusade", character.Talents.Trees["Retribution"][11].PointsInvested.ToString());
-						character.CalculationOptions.Add("TwoHandedSpec", character.Talents.Trees["Retribution"][12].PointsInvested.ToString());
-						character.CalculationOptions.Add("SanctityAura", character.Talents.Trees["Retribution"][13].PointsInvested.ToString());
-						character.CalculationOptions.Add("ImprovedSanctityAura", character.Talents.Trees["Retribution"][14].PointsInvested.ToString());
-						character.CalculationOptions.Add("SanctifiedSeals", character.Talents.Trees["Retribution"][17].PointsInvested.ToString());
-						character.CalculationOptions.Add("Fanaticism", character.Talents.Trees["Retribution"][20].PointsInvested.ToString());
-						character.CalculationOptions.Add("Vengeance", character.Talents.Trees["Retribution"][15].PointsInvested.ToString());
-						character.CalculationOptions.Add("Conviction", character.Talents.Trees["Retribution"][6].PointsInvested.ToString());
+						calcOpts.Crusade = character.Talents.Trees["Retribution"][11].PointsInvested;
+						calcOpts.TwoHandedSpec = character.Talents.Trees["Retribution"][12].PointsInvested;
+                        calcOpts.SanctityAura = character.Talents.Trees["Retribution"][13].PointsInvested;
+						calcOpts.ImprovedSanctityAura = character.Talents.Trees["Retribution"][14].PointsInvested;
+						calcOpts.SanctifiedSeals = character.Talents.Trees["Retribution"][17].PointsInvested;
+						calcOpts.Fanaticism = character.Talents.Trees["Retribution"][20].PointsInvested;
+                        calcOpts.Vengeance = character.Talents.Trees["Retribution"][15].PointsInvested;
+						calcOpts.Conviction = character.Talents.Trees["Retribution"][6].PointsInvested;
 					}
 					if (character.Talents.Trees.ContainsKey("Holy"))
 					{
-						character.CalculationOptions.Add("DivineStrength", character.Talents.Trees["Holy"][0].PointsInvested.ToString());
+						calcOpts.DivineStrength = character.Talents.Trees["Holy"][0].PointsInvested;
 					}
-                    character.CalculationOptions["TalentsSaved"] = "1";
+                    calcOpts.TalentsSaved = true;
                 }
             }
             return character;

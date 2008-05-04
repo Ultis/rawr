@@ -18,8 +18,8 @@ namespace Rawr.Retribution
         }
         protected override void LoadCalculationOptions()
         {
-			if (Character.CurrentCalculationOptions == null)
-				Character.CurrentCalculationOptions = new CalculationOptionsRetribution();
+			if (Character.CalculationOptions == null)
+				Character.CalculationOptions = new CalculationOptionsRetribution();
 			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
 			//    Character.CalculationOptions["TargetLevel"] = "73";
 			//if (!Character.CalculationOptions.ContainsKey("BossArmor"))
@@ -37,7 +37,7 @@ namespace Rawr.Retribution
 			//if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
 			//    Character.CalculationOptions["ShattrathFaction"] = "Aldor";
 
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
             txtArmor.Text = calcOpts.BossArmor.ToString();
 			trackBarFightLength.Value = calcOpts.FightLength;
@@ -53,14 +53,14 @@ namespace Rawr.Retribution
 
         private void rbSoC_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.Seal = rbSoC.Checked ? 0 : 1;
             Character.OnItemsChanged();
         }
 
         private void rbSoB_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.Seal = rbSoB.Checked ? 1 : 0;
             Character.OnItemsChanged();
 
@@ -68,7 +68,7 @@ namespace Rawr.Retribution
 
         private void checkBoxConsecration_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			if (checkBoxConsecration.Checked)
             {
                 comboBoxConsRank.Enabled = true;
@@ -86,21 +86,21 @@ namespace Rawr.Retribution
 
         private void comboBoxConsRank_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.ConsecRank = int.Parse(comboBoxConsRank.SelectedItem.ToString().Substring(5, 1));
             Character.OnItemsChanged();
         }
 
         private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
             Character.OnItemsChanged();
         }
 
         private void trackBarFightLength_Scroll(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.FightLength = trackBarFightLength.Value;
             lblLength.Text = trackBarFightLength.Value.ToString();
             Character.OnItemsChanged();
@@ -108,7 +108,7 @@ namespace Rawr.Retribution
 
         private void txtArmor_TextChanged(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			try
 			{
 				calcOpts.BossArmor = int.Parse(txtArmor.Text);
@@ -119,7 +119,7 @@ namespace Rawr.Retribution
 
         private void checkBoxExorcism_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.Exorcism = checkBoxExorcism.Checked;
             Character.OnItemsChanged();
         }
@@ -309,21 +309,21 @@ namespace Rawr.Retribution
 
         private void checkBoxMeta_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			Character.EnforceMetagemRequirements = checkBoxMeta.Checked;
             Character.OnItemsChanged();
         }
 
         private void radioButtonAldor_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
             Character.OnItemsChanged();
         }
 
         private void radioButtonScryer_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
             Character.OnItemsChanged();
         }

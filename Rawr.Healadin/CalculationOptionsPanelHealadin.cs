@@ -32,7 +32,7 @@ namespace Rawr.Healadin
 			//if (!Character.CalculationOptions.ContainsKey("Spiritual"))
 			//    Character.CalculationOptions["Spiritual"] = "0";
 
-			CalculationOptionsHealadin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsHealadin;
+			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
             cmbLength.Value = (decimal)calcOpts.Length;
             cmbManaAmt.Text = calcOpts.ManaAmt.ToString();
             cmbManaTime.Value = (decimal)calcOpts.ManaTime;
@@ -45,14 +45,14 @@ namespace Rawr.Healadin
  
         private void cmbLength_ValueChanged(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsHealadin;
+			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
 			calcOpts.Length = (float)cmbLength.Value;
             Character.OnItemsChanged();
         }
 
         private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsHealadin;
+			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
 			try
 			{
 				calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
@@ -63,14 +63,14 @@ namespace Rawr.Healadin
 
         private void cmbManaTime_ValueChanged(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsHealadin;
+			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
 			calcOpts.ManaTime = (float)cmbManaTime.Value;
             Character.OnItemsChanged();
         }
 
         private void cmbManaAmt_TextUpdate(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsHealadin;
+			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
 			try
 			{
 				calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
@@ -81,7 +81,7 @@ namespace Rawr.Healadin
 
         private void trkActivity_Scroll(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsHealadin;
+			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
 			lblActivity.Text = "Activity (" + trkActivity.Value + "%):";
             calcOpts.Activity = trkActivity.Value;
             Character.OnItemsChanged();
@@ -89,14 +89,14 @@ namespace Rawr.Healadin
 
         private void cmbSpriest_ValueChanged(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsHealadin;
+			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
 			calcOpts.Spriest = (float)cmbSpriest.Value;
             Character.OnItemsChanged();
         }
 
         private void cmbSpiritual_ValueChanged(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsHealadin;
+			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
 			calcOpts.Spiritual = (float)cmbSpiritual.Value;
             Character.OnItemsChanged();
         }

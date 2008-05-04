@@ -187,7 +187,7 @@ namespace Rawr.Warlock
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             Stats charStats = GetCharacterStats(character, additionalItem);
-			CalculationOptionsWarlock calcOpts = character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = character.CalculationOptions as CalculationOptionsWarlock;
 			int duration = (int)calcOpts.Duration;
 			float latency = calcOpts.Latency;
             Dictionary<int, Spell> priorityList = new Dictionary<int, Spell>();
@@ -403,7 +403,7 @@ namespace Rawr.Warlock
             statsTotal.Stamina = statsTotal.Stamina * (1 + statsBuffs.BonusStaminaMultiplier);
 
 
-			CalculationOptionsWarlock calcOpts = character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			CalculationOptionsWarlock calcOpts = character.CalculationOptions as CalculationOptionsWarlock;
             //Master Demonologist
 			if (calcOpts.SacrificedPet == "")
             {

@@ -132,7 +132,7 @@ namespace Rawr.Healadin
             CharacterCalculationsHealadin calculatedStats = new CharacterCalculationsHealadin();
             calculatedStats.BasicStats = stats;
 
-			CalculationOptionsHealadin calcOpts = character.CurrentCalculationOptions as CalculationOptionsHealadin;
+			CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
 			float activity = (float)calcOpts.Activity / 100f;
 			float length = calcOpts.Length * 60;
             float totalMana = stats.Mana + (length * stats.Mp5 / 5) + (calcOpts.Spriest * length / 5) +

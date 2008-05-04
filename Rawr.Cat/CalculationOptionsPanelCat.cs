@@ -32,8 +32,8 @@ namespace Rawr
 		protected override void LoadCalculationOptions()
 		{
 			_loadingCalculationOptions = true;
-			if (Character.CurrentCalculationOptions == null)
-				Character.CurrentCalculationOptions = new CalculationOptionsCat();
+			if (Character.CalculationOptions == null)
+				Character.CalculationOptions = new CalculationOptionsCat();
 			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
 			//    Character.CalculationOptions["TargetLevel"] = "73";
 			//if (!Character.CalculationOptions.ContainsKey("TargetArmor"))
@@ -57,7 +57,7 @@ namespace Rawr
 			//if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
 			//    Character.CalculationOptions["ShattrathFaction"] = "Aldor";
 
-			CalculationOptionsCat calcOpts = Character.CurrentCalculationOptions as CalculationOptionsCat;
+			CalculationOptionsCat calcOpts = Character.CalculationOptions as CalculationOptionsCat;
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			trackBarTargetArmor.Value = calcOpts.TargetArmor;
 			trackBarExposeWeakness.Value = calcOpts.ExposeWeaknessAPValue;
@@ -95,7 +95,7 @@ namespace Rawr
 				labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
 				labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
 
-				CalculationOptionsCat calcOpts = Character.CurrentCalculationOptions as CalculationOptionsCat;
+				CalculationOptionsCat calcOpts = Character.CalculationOptions as CalculationOptionsCat;
 				Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
 				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 				calcOpts.TargetArmor = trackBarTargetArmor.Value;

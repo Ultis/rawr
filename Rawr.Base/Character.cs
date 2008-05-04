@@ -93,7 +93,7 @@ namespace Rawr //O O . .
 		[XmlElement("RangedEnchant")]
 		public int _rangedEnchant = 0;
 		[XmlElement("CalculationOptions")]
-		public SerializableDictionary<string, string> _calculationOptions = new SerializableDictionary<string, string>();
+		public SerializableDictionary<string, string> _serializedCalculationOptions = new SerializableDictionary<string, string>();
         [XmlElement("Talents")]
         public TalentTree _talents = new TalentTree();
 		[XmlElement("AvailableItems")]
@@ -903,59 +903,25 @@ namespace Rawr //O O . .
             }
 		}
 
-		//[XmlIgnore]
-		//public string[] CalculationOptionsStrings
-		//{
-		//    get
-		//    {
-		//        SerializeCalculationOptions();
-		//        return _calculationOptionsStrings; 
-		//    }
-		//    set { _calculationOptionsStrings = value; }
-		//}
-		//[XmlIgnore]
-		//private Dictionary<string, string> _calculationOptions = null;
 		[XmlIgnore]
-		public SerializableDictionary<string, string> CalculationOptions
+        private Dictionary<string, ICalculationOptionBase> _calculationOptions = new SerializableDictionary<string, ICalculationOptionBase>();
+		[XmlIgnore]
+		public ICalculationOptionBase CalculationOptions
 		{
 			get
 			{
-				//if (_calculationOptions == null)
-				//{
-				//    _calculationOptions = new Dictionary<string, object>();
-				//    if (_calculationOptionsStrings != null)
-				//    {
-				//        foreach (string calcOpt in _calculationOptionsStrings)
-				//        {
-				//            string[] calcOptSplit = calcOpt.Split('=');
-				//            _calculationOptions.Add(calcOptSplit[0], calcOptSplit[1]);
-				//        }
-				//    }
-				//}
-				if (_calculationOptions == null)
-				{
-					_calculationOptions = new SerializableDictionary<string, string>();
-				}
-				return _calculationOptions;
-			}
-			set { _calculationOptions = value; }
-		}
-
-		[XmlIgnore]
-		private ICalculationOptionBase _currentCalculationOptions;
-		[XmlIgnore]
-		public ICalculationOptionBase CurrentCalculationOptions
-		{
-			get
-			{
-				if (_currentCalculationOptions == null && _calculationOptions.ContainsKey(CurrentModel))
-					_currentCalculationOptions = Calculations.DeserializeDataObject(_calculationOptions[CurrentModel]);
-				return _currentCalculationOptions;
+                ICalculationOptionBase ret;
+                _calculationOptions.TryGetValue(CurrentModel, out ret);
+                if (ret == null && _serializedCalculationOptions.ContainsKey(CurrentModel))
+                {
+                    ret = Calculations.DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
+                    _calculationOptions[CurrentModel] = ret;
+                }
+                return ret;
 			}
 			set
 			{
-				_calculationOptions[_currentModel] = value.GetXml();
-				_currentCalculationOptions = null;
+				_calculationOptions[CurrentModel] = value;
 			}
 		}
 
@@ -975,7 +941,6 @@ namespace Rawr //O O . .
 			set
 			{
 				_currentModel = value;
-				_currentCalculationOptions = null;
 			}
 		}
 
@@ -985,6 +950,10 @@ namespace Rawr //O O . .
 			get { return _enforceMetagemRequirements; }
 			set { _enforceMetagemRequirements = value; }
 		}
+
+        [XmlIgnore]
+        public bool DisableBuffAutoActivation { get; set; }
+
 
         [XmlIgnore]
         public TalentTree Talents
@@ -999,16 +968,10 @@ namespace Rawr //O O . .
 			set { _availableItems = value; }
 		}
 
-
-
-		private void SerializeCalculationOptions()
+		public void SerializeCalculationOptions()
 		{
-			//List<string> listCalcOpts = new List<string>();
-			//foreach (KeyValuePair<string, string> kvp in CalculationOptions)
-			//    listCalcOpts.Add(string.Format("{0}={1}", kvp.Key, kvp.Value));
-			//_calculationOptionsStrings = listCalcOpts.ToArray();
-			if (CurrentCalculationOptions != null)
-				CalculationOptions[CurrentModel] = CurrentCalculationOptions.GetXml();
+			if (CalculationOptions != null)
+				_serializedCalculationOptions[CurrentModel] = CalculationOptions.GetXml();
 		}
 
 		public Enchant GetEnchantBySlot(Item.ItemSlot slot)
@@ -1129,7 +1092,6 @@ namespace Rawr //O O . .
 		public event EventHandler ItemsChanged;
 		public void OnItemsChanged()
 		{
-			SerializeCalculationOptions();
             if (IsLoading) return;
 			RecalculateSetBonuses();
 
@@ -1595,7 +1557,7 @@ namespace Rawr //O O . .
     
         public void Save(string path)
         {
-			//SerializeCalculationOptions();
+			SerializeCalculationOptions();
 			using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
             {
                 System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));

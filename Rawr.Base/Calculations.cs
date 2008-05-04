@@ -72,9 +72,18 @@ namespace Rawr
 				ModelChanged(null, EventArgs.Empty);
 		}
 
+        public static event EventHandler ModelChanging;
+        protected static void OnModelChanging()
+        {
+            if (ModelChanging != null)
+                ModelChanging(null, EventArgs.Empty);
+        }
+
+
 		public static void LoadModel(Type type) { LoadModel((CalculationsBase)Activator.CreateInstance(type)); }
 		public static void LoadModel(CalculationsBase model)
 		{
+            OnModelChanging();
             Instance = model;
 			OnModelChanged();
 		}
@@ -508,7 +517,7 @@ namespace Rawr
                     RemoveConflictingBuffs(charAutoActivated.ActiveBuffs, autoBuff);
                 }
             }
-            charAutoActivated.CalculationOptions["DisableBuffAutoActivation"] = "Yes";
+            charAutoActivated.DisableBuffAutoActivation = true;
             foreach (Buff buff in Buff.GetBuffsByType(buffType))
 			{
                 if (!activeOnly || charAutoActivated.ActiveBuffs.Contains(buff.Name))

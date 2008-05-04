@@ -28,8 +28,8 @@ namespace Rawr.Mage
             character = Character;
             if (character != null) character.ItemsChanged += new EventHandler(character_ItemsChanged);
 
-            if (Character.CurrentCalculationOptions == null) Character.CurrentCalculationOptions = new CalculationOptionsMage();
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsMage(character);
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
 
             loading = true;
 
@@ -76,7 +76,7 @@ namespace Rawr.Mage
 
         void character_ItemsChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             if (calculationOptions != null && calculationOptions.IncrementalOptimizations)
             {
                 // compute restricted stacking & spell combinations for incremental optimizations
@@ -86,7 +86,7 @@ namespace Rawr.Mage
 	
 		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
 		{
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 			if (!loading) Character.OnItemsChanged();
 		}
@@ -99,14 +99,14 @@ namespace Rawr.Mage
 
         private void comboBoxAoeTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.AoeTargetLevel = int.Parse(comboBoxAoeTargetLevel.SelectedItem.ToString());
             if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxLatency_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxLatency.Text, out value))
             {
@@ -122,7 +122,7 @@ namespace Rawr.Mage
 
         private void textBoxAoeTargets_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             int value;
             if (int.TryParse(textBoxAoeTargets.Text, out value))
             {
@@ -133,7 +133,7 @@ namespace Rawr.Mage
 
         private void textBoxArcaneResist_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxArcaneResist.Text, out value))
             {
@@ -144,7 +144,7 @@ namespace Rawr.Mage
 
         private void textBoxFireResist_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxFireResist.Text, out value))
             {
@@ -155,7 +155,7 @@ namespace Rawr.Mage
 
         private void textBoxFrostResist_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxFrostResist.Text, out value))
             {
@@ -166,7 +166,7 @@ namespace Rawr.Mage
 
         private void textBoxNatureResist_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxNatureResist.Text, out value))
             {
@@ -177,7 +177,7 @@ namespace Rawr.Mage
 
         private void textBoxFightDuration_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxFightDuration.Text, out value))
             {
@@ -188,7 +188,7 @@ namespace Rawr.Mage
 
         private void textBoxShadowPriest_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxShadowPriest.Text, out value))
             {
@@ -199,14 +199,14 @@ namespace Rawr.Mage
 
         private void checkBoxHeroism_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.HeroismAvailable = checkBoxHeroism.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxMoltenFuryPercentage_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxMoltenFuryPercentage.Text, out value))
             {
@@ -217,28 +217,28 @@ namespace Rawr.Mage
 
         private void checkBoxDestructionPotion_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.DestructionPotion = checkBoxDestructionPotion.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void checkBoxFlameCap_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.FlameCap = checkBoxFlameCap.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void checkBoxABCycles_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.ABCycles = checkBoxABCycles.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxDpsTime_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxDpsTime.Text, out value))
             {
@@ -249,14 +249,14 @@ namespace Rawr.Mage
 
         private void checkBoxMaintainScorch_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.MaintainScorch = checkBoxMaintainScorch.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxInterruptFrequency_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxInterruptFrequency.Text, out value))
             {
@@ -267,7 +267,7 @@ namespace Rawr.Mage
 
         private void textBoxShadowResist_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxShadowResist.Text, out value))
             {
@@ -278,7 +278,7 @@ namespace Rawr.Mage
 
         private void textBoxEvocationWeapon_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             int value;
             if (int.TryParse(textBoxEvocationWeapon.Text, out value))
             {
@@ -289,7 +289,7 @@ namespace Rawr.Mage
 
         private void textBoxAoeDuration_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxAoeDuration.Text, out value))
             {
@@ -300,28 +300,28 @@ namespace Rawr.Mage
 
         private void checkBoxSmartOptimization_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.SmartOptimization = checkBoxSmartOptimization.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void checkBoxDrumsOfBattle_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.DrumsOfBattle = checkBoxDrumsOfBattle.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void checkBoxAutomaticArmor_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.AutomaticArmor = checkBoxAutomaticArmor.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxTpsLimit_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxTpsLimit.Text, out value))
             {
@@ -332,21 +332,21 @@ namespace Rawr.Mage
 
         private void checkBoxIncrementalOptimizations_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.IncrementalOptimizations = checkBoxIncrementalOptimizations.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void checkBoxReconstructSequence_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.ReconstructSequence = checkBoxReconstructSequence.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxInnervate_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxInnervate.Text, out value))
             {
@@ -357,7 +357,7 @@ namespace Rawr.Mage
 
         private void textBoxManaTide_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxManaTide.Text, out value))
             {
@@ -368,7 +368,7 @@ namespace Rawr.Mage
 
         private void textBoxFragmentation_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxFragmentation.Text, out value))
             {
@@ -379,21 +379,21 @@ namespace Rawr.Mage
 
         private void checkBoxSMP_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.SMP = checkBoxSMP.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void checkBoxSMPDisplay_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.SMPDisplay = checkBoxSMPDisplay.Checked;
             if (!loading) Character.OnItemsChanged();
         }
 
         private void textBoxEvocationSpirit_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxEvocationSpirit.Text, out value))
             {
@@ -404,7 +404,7 @@ namespace Rawr.Mage
 
         private void textBoxSurvivabilityRating_TextChanged(object sender, EventArgs e)
         {
-            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
             if (float.TryParse(textBoxSurvivabilityRating.Text, out value))
             {

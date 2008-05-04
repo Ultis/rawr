@@ -23,6 +23,15 @@ namespace Rawr.Mage
             }
         }
 
+        public override ICalculationOptionBase DeserializeDataObject(string xml)
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsMage));
+            System.IO.StringReader reader = new System.IO.StringReader(xml);
+            CalculationOptionsMage calcOpts = serializer.Deserialize(reader) as CalculationOptionsMage;
+            return calcOpts;
+        }
+
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels
         {
@@ -328,46 +337,39 @@ namespace Rawr.Mage
 
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool computeIncrementalSet)
         {
-            CalculationOptionsMage calculationOptions = character.CurrentCalculationOptions as CalculationOptionsMage;
+            CharacterCalculationsBase ret;
+            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+            bool savedIncrementalOptimizations = calculationOptions.IncrementalOptimizations;
             if (computeIncrementalSet) calculationOptions.IncrementalOptimizations = false;
-            if (calculationOptions.IncrementalOptimizations && !calculationOptions.DisableBuffAutoActivation)
+            if (calculationOptions.IncrementalOptimizations && !character.DisableBuffAutoActivation)
             {
-                return GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, computeIncrementalSet);
+                ret = GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, computeIncrementalSet);
             }
-            else if (calculationOptions.AutomaticArmor && !calculationOptions.DisableBuffAutoActivation)
+            else if (calculationOptions.AutomaticArmor && !character.DisableBuffAutoActivation)
             {
                 CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calculationOptions, "Mage Armor", computeIncrementalSet);
                 CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calculationOptions, "Molten Armor", computeIncrementalSet);
                 CharacterCalculationsBase calc = (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
                 if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
-                return calc;
+                ret = calc;
             }
             else
             {
                 CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calculationOptions, null, computeIncrementalSet);
                 if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
-                return calc;
+                ret = calc;
             }
+            calculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
+            return ret;
         }
 
         private void StoreIncrementalSet(Character character, CharacterCalculationsMage calculations)
         {
-            List<string> cooldownList = new List<string>();
-            List<string> spellList = new List<string>();
-            List<string> segmentList = new List<string>();
-            for (int i = 0; i < calculations.SolutionLabel.Length; i++)
-            {
-                if (calculations.Solution[i] > 0 && calculations.IncrementalSetSpell[i] != SpellId.None)
-                {
-                    cooldownList.Add(calculations.IncrementalSetCooldown[i].ToString(CultureInfo.InvariantCulture));
-                    spellList.Add(((int)calculations.IncrementalSetSpell[i]).ToString(CultureInfo.InvariantCulture));
-                    if (calculations.IncrementalSetSegment != null) segmentList.Add(calculations.IncrementalSetSegment[i].ToString(CultureInfo.InvariantCulture));
-                }
-            }
-            character.CalculationOptions["IncrementalSetCooldowns"] = string.Join(":", cooldownList.ToArray());
-            character.CalculationOptions["IncrementalSetSpells"] = string.Join(":", spellList.ToArray());
-            character.CalculationOptions["IncrementalSetSegments"] = string.Join(":", segmentList.ToArray());
-            character.CalculationOptions["IncrementalSetArmor"] = calculations.MageArmor;
+            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+            calculationOptions.IncrementalSetCooldowns = calculations.IncrementalSetCooldown;
+            calculationOptions.IncrementalSetSpells = calculations.IncrementalSetSpell;
+            calculationOptions.IncrementalSetSegments = calculations.IncrementalSetSegment;
+            calculationOptions.IncrementalSetArmor = calculations.MageArmor;
         }
 
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool computeIncrementalSet)
@@ -388,7 +390,12 @@ namespace Rawr.Mage
             Stats rawStats = GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
             Stats characterStats = GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
 
-            calculationOptions.SmartOptimization = true;
+            bool savedSmartOptimization = calculationOptions.SmartOptimization;
+            bool savedABCycles = calculationOptions.ABCycles;
+            bool savedDestructionPotion = calculationOptions.DestructionPotion;
+            bool savedFlameCap = calculationOptions.FlameCap;
+
+            if (useSMP) calculationOptions.SmartOptimization = true;
             double segmentDuration = 30;
             int segments = useSMP ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
 
@@ -1525,6 +1532,11 @@ namespace Rawr.Mage
             }
             calculatedStats.Tps = threat / calculationOptions.FightDuration;
 
+            calculationOptions.SmartOptimization = savedSmartOptimization;
+            calculationOptions.ABCycles = savedABCycles;
+            calculationOptions.DestructionPotion = savedDestructionPotion;
+            calculationOptions.FlameCap = savedFlameCap;
+
             return calculatedStats;
         }
 
@@ -1948,7 +1960,7 @@ namespace Rawr.Mage
             List<string> activeBuffs = new List<string>();
             activeBuffs.AddRange(character.ActiveBuffs);
 
-            if (!calculationOptions.DisableBuffAutoActivation)
+            if (!character.DisableBuffAutoActivation)
             {
                 if (calculationOptions.MaintainScorch)
                 {
@@ -1988,7 +2000,7 @@ namespace Rawr.Mage
         // required by base class, but never used
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            CalculationOptionsMage calculationOptions = character.CurrentCalculationOptions as CalculationOptionsMage;
+            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions, new List<string>(), null), calculationOptions);
         }
 
@@ -2139,7 +2151,7 @@ namespace Rawr.Mage
             switch (chartName)
             {
                 case "Talents (per talent point)":
-                    CalculationOptionsMage calculationOptions = character.CurrentCalculationOptions as CalculationOptionsMage;
+                    CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
                     for (int index = 0; index < TalentList.Length; index++ )
@@ -2150,7 +2162,7 @@ namespace Rawr.Mage
 
                         if (currentPoints > 0)
                         {
-                            character.CalculationOptions[talent] = "0";
+                            calculationOptions.SetTalentByName(talent, 0);
                             calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
                             comparison = CreateNewComparisonCalculation();
@@ -2169,7 +2181,7 @@ namespace Rawr.Mage
 
                         if (currentPoints < MaxTalentPoints[index])
                         {
-                            character.CalculationOptions[talent] = MaxTalentPoints[index].ToString();
+                            calculationOptions.SetTalentByName(talent, MaxTalentPoints[index]);
                             calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
                             comparison = CreateNewComparisonCalculation();
@@ -2186,7 +2198,7 @@ namespace Rawr.Mage
                             comparisonList.Add(comparison);
                         }
 
-                        character.CalculationOptions[talent] = currentPoints.ToString();
+                        calculationOptions.SetTalentByName(talent, currentPoints);
                     }
 
                     return comparisonList.ToArray();
@@ -2207,8 +2219,11 @@ namespace Rawr.Mage
 
                     string[] talentSpecList = new string[] { "Fire (2/48/11)", "Fire (10/48/3)", "Fire/Cold Snap (0/40/21)", "Frost (10/0/51)", "Arcane (48/0/13)", "Arcane (43/0/18)", "Arcane/Fire (40/18/3)", "Arcane/Fire (40/10/11)", "Arcane/Frost (40/0/21)" };
                     Character charClone = character.Clone();
-                    charClone.CalculationOptions["IncrementalOptimizations"] = "0";
-                    charClone.CalculationOptions["SmartOptimization"] = "1";
+                    calculationOptions = charClone.CalculationOptions as CalculationOptionsMage;
+                    calculationOptions = calculationOptions.Clone();
+                    charClone.CalculationOptions = calculationOptions;
+                    calculationOptions.IncrementalOptimizations = false;
+                    calculationOptions.SmartOptimization = true;
 
                     for (int index = 0; index < talentSpecList.Length; index++)
                     {
@@ -2398,74 +2413,75 @@ namespace Rawr.Mage
         public static void LoadTalentCode(Character character, string talentCode)
         {
             if (talentCode == null || talentCode.Length < 66) return;
+            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
 
-            character.CalculationOptions["ArcaneSubtlety"] = talentCode.Substring(0, 1);
-            character.CalculationOptions["ArcaneFocus"] = talentCode.Substring(1, 1);
-            character.CalculationOptions["ImprovedArcaneMissiles"] = talentCode.Substring(2, 1);
-            character.CalculationOptions["WandSpecialization"] = talentCode.Substring(3, 1);
-            character.CalculationOptions["MagicAbsorption"] = talentCode.Substring(4, 1);
-            character.CalculationOptions["ArcaneConcentration"] = talentCode.Substring(5, 1);
-            character.CalculationOptions["MagicAttunement"] = talentCode.Substring(6, 1);
-            character.CalculationOptions["ArcaneImpact"] = talentCode.Substring(7, 1);
-            character.CalculationOptions["ArcaneFortitude"] = talentCode.Substring(8, 1);
-            character.CalculationOptions["ImprovedManaShield"] = talentCode.Substring(9, 1);
-            character.CalculationOptions["ImprovedCounterspell"] = talentCode.Substring(10, 1);
-            character.CalculationOptions["ArcaneMeditation"] = talentCode.Substring(11, 1);
-            character.CalculationOptions["ImprovedBlink"] = talentCode.Substring(12, 1);
-            character.CalculationOptions["PresenceOfMind"] = talentCode.Substring(13, 1);
-            character.CalculationOptions["ArcaneMind"] = talentCode.Substring(14, 1);
-            character.CalculationOptions["PrismaticCloak"] = talentCode.Substring(15, 1);
-            character.CalculationOptions["ArcaneInstability"] = talentCode.Substring(16, 1);
-            character.CalculationOptions["ArcanePotency"] = talentCode.Substring(17, 1);
-            character.CalculationOptions["EmpoweredArcaneMissiles"] = talentCode.Substring(18, 1);
-            character.CalculationOptions["ArcanePower"] = talentCode.Substring(19, 1);
-            character.CalculationOptions["SpellPower"] = talentCode.Substring(20, 1);
-            character.CalculationOptions["MindMastery"] = talentCode.Substring(21, 1);
-            character.CalculationOptions["Slow"] = talentCode.Substring(22, 1);
-            character.CalculationOptions["ImprovedFireball"] = talentCode.Substring(23, 1);
-            character.CalculationOptions["Impact"] = talentCode.Substring(24, 1);
-            character.CalculationOptions["Ignite"] = talentCode.Substring(25, 1);
-            character.CalculationOptions["FlameThrowing"] = talentCode.Substring(26, 1);
-            character.CalculationOptions["ImprovedFireBlast"] = talentCode.Substring(27, 1);
-            character.CalculationOptions["Incinerate"] = talentCode.Substring(28, 1);
-            character.CalculationOptions["ImprovedFlamestrike"] = talentCode.Substring(29, 1);
-            character.CalculationOptions["Pyroblast"] = talentCode.Substring(30, 1);
-            character.CalculationOptions["BurningSoul"] = talentCode.Substring(31, 1);
-            character.CalculationOptions["ImprovedScorch"] = talentCode.Substring(32, 1);
-            character.CalculationOptions["ImprovedFireWard"] = talentCode.Substring(33, 1);
-            character.CalculationOptions["MasterOfElements"] = talentCode.Substring(34, 1);
-            character.CalculationOptions["PlayingWithFire"] = talentCode.Substring(35, 1);
-            character.CalculationOptions["CriticalMass"] = talentCode.Substring(36, 1);
-            character.CalculationOptions["BlastWave"] = talentCode.Substring(37, 1);
-            character.CalculationOptions["BlazingSpeed"] = talentCode.Substring(38, 1);
-            character.CalculationOptions["FirePower"] = talentCode.Substring(39, 1);
-            character.CalculationOptions["Pyromaniac"] = talentCode.Substring(40, 1);
-            character.CalculationOptions["Combustion"] = talentCode.Substring(41, 1);
-            character.CalculationOptions["MoltenFury"] = talentCode.Substring(42, 1);
-            character.CalculationOptions["EmpoweredFireball"] = talentCode.Substring(43, 1);
-            character.CalculationOptions["DragonsBreath"] = talentCode.Substring(44, 1);
-            character.CalculationOptions["FrostWarding"] = talentCode.Substring(45, 1);
-            character.CalculationOptions["ImprovedFrostbolt"] = talentCode.Substring(46, 1);
-            character.CalculationOptions["ElementalPrecision"] = talentCode.Substring(47, 1);
-            character.CalculationOptions["IceShards"] = talentCode.Substring(48, 1);
-            character.CalculationOptions["Frostbite"] = talentCode.Substring(49, 1);
-            character.CalculationOptions["ImprovedFrostNova"] = talentCode.Substring(50, 1);
-            character.CalculationOptions["Permafrost"] = talentCode.Substring(51, 1);
-            character.CalculationOptions["PiercingIce"] = talentCode.Substring(52, 1);
-            character.CalculationOptions["IcyVeins"] = talentCode.Substring(53, 1);
-            character.CalculationOptions["ImprovedBlizzard"] = talentCode.Substring(54, 1);
-            character.CalculationOptions["ArcticReach"] = talentCode.Substring(55, 1);
-            character.CalculationOptions["FrostChanneling"] = talentCode.Substring(56, 1);
-            character.CalculationOptions["Shatter"] = talentCode.Substring(57, 1);
-            character.CalculationOptions["FrozenCore"] = talentCode.Substring(58, 1);
-            character.CalculationOptions["ColdSnap"] = talentCode.Substring(59, 1);
-            character.CalculationOptions["ImprovedConeOfCold"] = talentCode.Substring(60, 1);
-            character.CalculationOptions["IceFloes"] = talentCode.Substring(61, 1);
-            character.CalculationOptions["WintersChill"] = talentCode.Substring(62, 1);
-            character.CalculationOptions["IceBarrier"] = talentCode.Substring(63, 1);
-            character.CalculationOptions["ArcticWinds"] = talentCode.Substring(64, 1);
-            character.CalculationOptions["EmpoweredFrostbolt"] = talentCode.Substring(65, 1);
-            character.CalculationOptions["SummonWaterElemental"] = talentCode.Substring(66, 1);
+            calculationOptions.ArcaneSubtlety = int.Parse(talentCode.Substring(0, 1));
+            calculationOptions.ArcaneFocus = int.Parse(talentCode.Substring(1, 1));
+            calculationOptions.ImprovedArcaneMissiles = int.Parse(talentCode.Substring(2, 1));
+            calculationOptions.WandSpecialization = int.Parse(talentCode.Substring(3, 1));
+            calculationOptions.MagicAbsorption = int.Parse(talentCode.Substring(4, 1));
+            calculationOptions.ArcaneConcentration = int.Parse(talentCode.Substring(5, 1));
+            calculationOptions.MagicAttunement = int.Parse(talentCode.Substring(6, 1));
+            calculationOptions.ArcaneImpact = int.Parse(talentCode.Substring(7, 1));
+            calculationOptions.ArcaneFortitude = int.Parse(talentCode.Substring(8, 1));
+            calculationOptions.ImprovedManaShield = int.Parse(talentCode.Substring(9, 1));
+            calculationOptions.ImprovedCounterspell = int.Parse(talentCode.Substring(10, 1));
+            calculationOptions.ArcaneMeditation = int.Parse(talentCode.Substring(11, 1));
+            calculationOptions.ImprovedBlink = int.Parse(talentCode.Substring(12, 1));
+            calculationOptions.PresenceOfMind = int.Parse(talentCode.Substring(13, 1));
+            calculationOptions.ArcaneMind = int.Parse(talentCode.Substring(14, 1));
+            calculationOptions.PrismaticCloak = int.Parse(talentCode.Substring(15, 1));
+            calculationOptions.ArcaneInstability = int.Parse(talentCode.Substring(16, 1));
+            calculationOptions.ArcanePotency = int.Parse(talentCode.Substring(17, 1));
+            calculationOptions.EmpoweredArcaneMissiles = int.Parse(talentCode.Substring(18, 1));
+            calculationOptions.ArcanePower = int.Parse(talentCode.Substring(19, 1));
+            calculationOptions.SpellPower = int.Parse(talentCode.Substring(20, 1));
+            calculationOptions.MindMastery = int.Parse(talentCode.Substring(21, 1));
+            calculationOptions.Slow = int.Parse(talentCode.Substring(22, 1));
+            calculationOptions.ImprovedFireball = int.Parse(talentCode.Substring(23, 1));
+            calculationOptions.Impact = int.Parse(talentCode.Substring(24, 1));
+            calculationOptions.Ignite = int.Parse(talentCode.Substring(25, 1));
+            calculationOptions.FlameThrowing = int.Parse(talentCode.Substring(26, 1));
+            calculationOptions.ImprovedFireBlast = int.Parse(talentCode.Substring(27, 1));
+            calculationOptions.Incinerate = int.Parse(talentCode.Substring(28, 1));
+            calculationOptions.ImprovedFlamestrike = int.Parse(talentCode.Substring(29, 1));
+            calculationOptions.Pyroblast = int.Parse(talentCode.Substring(30, 1));
+            calculationOptions.BurningSoul = int.Parse(talentCode.Substring(31, 1));
+            calculationOptions.ImprovedScorch = int.Parse(talentCode.Substring(32, 1));
+            calculationOptions.ImprovedFireWard = int.Parse(talentCode.Substring(33, 1));
+            calculationOptions.MasterOfElements = int.Parse(talentCode.Substring(34, 1));
+            calculationOptions.PlayingWithFire = int.Parse(talentCode.Substring(35, 1));
+            calculationOptions.CriticalMass = int.Parse(talentCode.Substring(36, 1));
+            calculationOptions.BlastWave = int.Parse(talentCode.Substring(37, 1));
+            calculationOptions.BlazingSpeed = int.Parse(talentCode.Substring(38, 1));
+            calculationOptions.FirePower = int.Parse(talentCode.Substring(39, 1));
+            calculationOptions.Pyromaniac = int.Parse(talentCode.Substring(40, 1));
+            calculationOptions.Combustion = int.Parse(talentCode.Substring(41, 1));
+            calculationOptions.MoltenFury = int.Parse(talentCode.Substring(42, 1));
+            calculationOptions.EmpoweredFireball = int.Parse(talentCode.Substring(43, 1));
+            calculationOptions.DragonsBreath = int.Parse(talentCode.Substring(44, 1));
+            calculationOptions.FrostWarding = int.Parse(talentCode.Substring(45, 1));
+            calculationOptions.ImprovedFrostbolt = int.Parse(talentCode.Substring(46, 1));
+            calculationOptions.ElementalPrecision = int.Parse(talentCode.Substring(47, 1));
+            calculationOptions.IceShards = int.Parse(talentCode.Substring(48, 1));
+            calculationOptions.Frostbite = int.Parse(talentCode.Substring(49, 1));
+            calculationOptions.ImprovedFrostNova = int.Parse(talentCode.Substring(50, 1));
+            calculationOptions.Permafrost = int.Parse(talentCode.Substring(51, 1));
+            calculationOptions.PiercingIce = int.Parse(talentCode.Substring(52, 1));
+            calculationOptions.IcyVeins = int.Parse(talentCode.Substring(53, 1));
+            calculationOptions.ImprovedBlizzard = int.Parse(talentCode.Substring(54, 1));
+            calculationOptions.ArcticReach = int.Parse(talentCode.Substring(55, 1));
+            calculationOptions.FrostChanneling = int.Parse(talentCode.Substring(56, 1));
+            calculationOptions.Shatter = int.Parse(talentCode.Substring(57, 1));
+            calculationOptions.FrozenCore = int.Parse(talentCode.Substring(58, 1));
+            calculationOptions.ColdSnap = int.Parse(talentCode.Substring(59, 1));
+            calculationOptions.ImprovedConeOfCold = int.Parse(talentCode.Substring(60, 1));
+            calculationOptions.IceFloes = int.Parse(talentCode.Substring(61, 1));
+            calculationOptions.WintersChill = int.Parse(talentCode.Substring(62, 1));
+            calculationOptions.IceBarrier = int.Parse(talentCode.Substring(63, 1));
+            calculationOptions.ArcticWinds = int.Parse(talentCode.Substring(64, 1));
+            calculationOptions.EmpoweredFrostbolt = int.Parse(talentCode.Substring(65, 1));
+            calculationOptions.SummonWaterElemental = int.Parse(talentCode.Substring(66, 1));
         }
 
         public override Stats GetRelevantStats(Stats stats)

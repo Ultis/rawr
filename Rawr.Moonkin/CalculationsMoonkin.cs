@@ -174,7 +174,7 @@ namespace Rawr.Moonkin
             calcs.SpellCrit = stats.SpellCritRating * critRatingMultiplier;
             calcs.SpellHit = stats.SpellHitRating * hitRatingMultiplier;
 
-			CalculationOptionsMoonkin calcOpts = character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // All spells: Damage +((0.08/0.16/0.25) * Int)
             switch (calcOpts.LunarGuidance)
             {
@@ -241,7 +241,7 @@ namespace Rawr.Moonkin
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
-			CalculationOptionsMoonkin calcOpts = character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Create the total stats object
             Stats statsTotal = statsGearEnchantsBuffs + statsRace;
 
