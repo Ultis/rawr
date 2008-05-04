@@ -173,7 +173,8 @@ you are being killed by burst damage, focus on Survival Points.",
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			_cachedCharacter = character;
-			int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
+			CalculationOptionsBear calcOpts = character.CurrentCalculationOptions as CalculationOptionsBear;
+			int targetLevel = calcOpts.TargetLevel;
 			Stats stats = GetCharacterStats(character, additionalItem);
 			float levelDifference = (targetLevel - 70f) * 0.2f;
 			CharacterCalculationsBear calculatedStats = new CharacterCalculationsBear();
@@ -249,7 +250,7 @@ you are being killed by burst damage, focus on Survival Points.",
 
             float BloodlustTPS = 1 / attackSpeed*(1-chanceMiss) * stats.BloodlustProc / 4.0f * 5;
 
-            calculatedStats.ThreatScale = float.Parse(character.CalculationOptions["ThreatScale"]);
+            calculatedStats.ThreatScale = calcOpts.ThreatScale;
    
 
             float averageDamage = 1 - chanceMiss +  (1 + stats.BonusCritMultiplier) * chanceCrit;

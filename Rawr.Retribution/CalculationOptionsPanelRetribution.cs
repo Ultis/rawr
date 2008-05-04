@@ -18,136 +18,109 @@ namespace Rawr.Retribution
         }
         protected override void LoadCalculationOptions()
         {
-            if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
-                Character.CalculationOptions["TargetLevel"] = "73";
-            if (!Character.CalculationOptions.ContainsKey("BossArmor"))
-                Character.CalculationOptions["BossArmor"] = "7700";
-            if (!Character.CalculationOptions.ContainsKey("FightLength"))
-                Character.CalculationOptions["FightLength"] = "10";
-            if (!Character.CalculationOptions.ContainsKey("Exorcism"))
-                Character.CalculationOptions["Exorcism"] = "0";
-            if (!Character.CalculationOptions.ContainsKey("ConsecRank"))
-                Character.CalculationOptions["ConsecRank"] = "0";
-            if (!Character.CalculationOptions.ContainsKey("Seal"))
-                Character.CalculationOptions["Seal"] = "1";
-            if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-                Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
-            if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
-                Character.CalculationOptions["ShattrathFaction"] = "Aldor";
+			if (Character.CurrentCalculationOptions == null)
+				Character.CurrentCalculationOptions = new CalculationOptionsRetribution();
+			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
+			//    Character.CalculationOptions["TargetLevel"] = "73";
+			//if (!Character.CalculationOptions.ContainsKey("BossArmor"))
+			//    Character.CalculationOptions["BossArmor"] = "7700";
+			//if (!Character.CalculationOptions.ContainsKey("FightLength"))
+			//    Character.CalculationOptions["FightLength"] = "10";
+			//if (!Character.CalculationOptions.ContainsKey("Exorcism"))
+			//    Character.CalculationOptions["Exorcism"] = "0";
+			//if (!Character.CalculationOptions.ContainsKey("ConsecRank"))
+			//    Character.CalculationOptions["ConsecRank"] = "0";
+			//if (!Character.CalculationOptions.ContainsKey("Seal"))
+			//    Character.CalculationOptions["Seal"] = "1";
+			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
+			//    Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
+			//if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
+			//    Character.CalculationOptions["ShattrathFaction"] = "Aldor";
 
-            comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
-            txtArmor.Text = Character.CalculationOptions["BossArmor"];
-            lblLength.Text = trackBarFightLength.Value.ToString();
-            trackBarFightLength.Value = int.Parse(Character.CalculationOptions["FightLength"]);
-            if (Character.CalculationOptions["Exorcism"] == "1")
-            {
-                checkBoxExorcism.Checked = true;
-            }
-            else
-            {
-                checkBoxExorcism.Checked = false;
-            }
-            if (Character.CalculationOptions["ConsecRank"] == "0")
-            {
-                checkBoxConsecration.Checked = false;
-            }
-            else
-            {
-                checkBoxConsecration.Checked = true;
-                comboBoxConsRank.SelectedItem = "Rank " + Character.CalculationOptions["ConsecRank"];
-            }
-            if (Character.CalculationOptions["Seal"] == "1")
-            {
-                rbSoB.Checked = true;
-            }
-            else
-            {
-                rbSoC.Checked = true;
-            }
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+            comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
+            txtArmor.Text = calcOpts.BossArmor.ToString();
+			trackBarFightLength.Value = calcOpts.FightLength;
+			lblLength.Text = trackBarFightLength.Value.ToString();
+            checkBoxExorcism.Checked = calcOpts.Exorcism;
+            checkBoxConsecration.Checked = calcOpts.ConsecRank > 0;
+            comboBoxConsRank.SelectedItem = "Rank " + calcOpts.ConsecRank.ToString();
             
-
+            rbSoB.Checked = calcOpts.Seal == 1;
+            rbSoC.Checked = calcOpts.Seal == 0;
         }
         
 
         private void rbSoC_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbSoC.Checked)
-            {
-                Character.CalculationOptions["Seal"] = "0";
-            }
-            else
-            {
-                Character.CalculationOptions["Seal"] = "1";
-            }
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			calcOpts.Seal = rbSoC.Checked ? 0 : 1;
             Character.OnItemsChanged();
         }
 
         private void rbSoB_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbSoB.Checked)
-            {
-                Character.CalculationOptions["Seal"] = "1";
-            }
-            else
-            {
-                Character.CalculationOptions["Seal"] = "0";
-            }
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			calcOpts.Seal = rbSoB.Checked ? 1 : 0;
             Character.OnItemsChanged();
 
         }
 
         private void checkBoxConsecration_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBoxConsecration.Checked)
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			if (checkBoxConsecration.Checked)
             {
                 comboBoxConsRank.Enabled = true;
                 comboBoxConsRank.SelectedItem = "Rank 1";
-                Character.CalculationOptions["ConsecRank"] = "1";
+                calcOpts.ConsecRank = 1;
                 
             }
             else
             {
                 comboBoxConsRank.Enabled = false;
-                Character.CalculationOptions["ConsecRank"] = "0";
+                calcOpts.ConsecRank = 0;
             }
             Character.OnItemsChanged();
         }
 
         private void comboBoxConsRank_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["ConsecRank"] = comboBoxConsRank.SelectedItem.ToString().Substring(5, 1);
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			calcOpts.ConsecRank = int.Parse(comboBoxConsRank.SelectedItem.ToString().Substring(5, 1));
             Character.OnItemsChanged();
         }
 
         private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["TargetLevel"] = comboBoxTargetLevel.SelectedItem.ToString();
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
             Character.OnItemsChanged();
         }
 
         private void trackBarFightLength_Scroll(object sender, EventArgs e)
         {
-            Character.CalculationOptions["FightLength"] = trackBarFightLength.Value.ToString();
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			calcOpts.FightLength = trackBarFightLength.Value;
             lblLength.Text = trackBarFightLength.Value.ToString();
             Character.OnItemsChanged();
         }
 
         private void txtArmor_TextChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["BossArmor"] = txtArmor.Text;
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			try
+			{
+				calcOpts.BossArmor = int.Parse(txtArmor.Text);
+			}
+			catch { }
             Character.OnItemsChanged();
         }
 
         private void checkBoxExorcism_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBoxExorcism.Checked)
-            {
-                Character.CalculationOptions["Exorcism"] = "1";
-            }
-            else
-            {
-                Character.CalculationOptions["Exorcism"] = "0";
-            }
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			calcOpts.Exorcism = checkBoxExorcism.Checked;
             Character.OnItemsChanged();
         }
 
@@ -336,20 +309,48 @@ namespace Rawr.Retribution
 
         private void checkBoxMeta_CheckedChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["EnforceMetagemRequirements"] = checkBoxMeta.Checked ? "Yes" : "No";
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			Character.EnforceMetagemRequirements = checkBoxMeta.Checked;
             Character.OnItemsChanged();
         }
 
         private void radioButtonAldor_CheckedChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["ShattrathFaction"] = radioButtonAldor.Checked ? "Aldor" : "Scryer";
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
             Character.OnItemsChanged();
         }
 
         private void radioButtonScryer_CheckedChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["ShattrathFaction"] = radioButtonAldor.Checked ? "Aldor" : "Scryer";
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+			calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
             Character.OnItemsChanged();
         }
     }
+
+	[Serializable]
+	public class CalculationOptionsRetribution
+	{
+		public int TargetLevel = 73;
+		public int BossArmor = 7700;
+		public int FightLength = 10;
+		public bool Exorcism = false;
+		public int ConsecRank = 0;
+		public int Seal = 1;
+		public bool EnforceMetagemRequirements = false;
+		public string ShattrathFaction = "Aldor";
+	
+		public int TwoHandedSpec = 0;
+		public int Conviction = 0;
+		public int Crusade = 0;
+		public int DivineStrength = 0;
+		public int Fanaticism = 0;
+		public int ImprovedSanctityAura = 0;
+		public int Precision = 0;
+		public int SanctityAura = 0;
+		public int SanctifiedSeals = 0;
+		public int Vengeance = 0;
+		public bool TalentsSaved = false;
+	}
 }

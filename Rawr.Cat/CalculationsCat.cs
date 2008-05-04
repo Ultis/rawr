@@ -131,14 +131,15 @@ namespace Rawr
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			_cachedCharacter = character;
-			int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
-			float targetArmor = int.Parse(character.CalculationOptions["TargetArmor"]);
-			float exposeWeaknessAPValue = int.Parse(character.CalculationOptions["ExposeWeaknessAPValue"]);
-			float bloodlustUptime = float.Parse(character.CalculationOptions["BloodlustUptime"], System.Globalization.CultureInfo.InvariantCulture) / 100f;
-			int powershift = int.Parse(character.CalculationOptions["Powershift"]);
-			string primaryAttack = character.CalculationOptions["PrimaryAttack"];
-			string finisher = character.CalculationOptions["Finisher"];
-			string shattrathFaction = character.CalculationOptions["ShattrathFaction"];
+			CalculationOptionsCat calcOpts = character.CurrentCalculationOptions as CalculationOptionsCat;
+			int targetLevel = calcOpts.TargetLevel;
+			float targetArmor = calcOpts.TargetArmor;
+			float exposeWeaknessAPValue = calcOpts.ExposeWeaknessAPValue;
+			float bloodlustUptime = calcOpts.BloodlustUptime;
+			int powershift = calcOpts.Powershift;
+			string primaryAttack = calcOpts.PrimaryAttack;
+			string finisher = calcOpts.Finisher;
+			string shattrathFaction = calcOpts.ShattrathFaction;
 			Stats stats = GetCharacterStats(character, additionalItem);
 			float levelDifference = (targetLevel - 70f) * 0.2f;
 			CharacterCalculationsCat calculatedStats = new CharacterCalculationsCat();
@@ -406,8 +407,9 @@ namespace Rawr
 			Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
             statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
-			statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * (float.Parse(character.CalculationOptions["DrumsOfWarUptime"], System.Globalization.CultureInfo.InvariantCulture) / 100f);
-			statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * (float.Parse(character.CalculationOptions["DrumsOfBattleUptime"], System.Globalization.CultureInfo.InvariantCulture) / 100f);
+			CalculationOptionsCat calcOpts = character.CurrentCalculationOptions as CalculationOptionsCat;
+			statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime;
+			statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime;
 
 			float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
 			float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));

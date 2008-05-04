@@ -734,7 +734,7 @@ namespace Rawr
         /// <returns>True if the item meets the requirements.</returns>
 		public bool MeetsRequirements(Character character, out bool volatileRequirements)
 		{
-            volatileRequirements = false;
+			volatileRequirements = false;
             int redGems = 0, yellowGems = 0, blueGems = 0;
             if (character != null)
             {
@@ -794,9 +794,9 @@ namespace Rawr
                     meetsRequirements = true;
                     break;
 			}
-            if (character == null || character.CalculationOptions["EnforceMetagemRequirements"] != "Yes") meetsRequirements = true;
-
-            return meetsRequirements;
+            
+            if (character == null || character.EnforceMetagemRequirements) return true;
+			return meetsRequirements;
 		}
 
 

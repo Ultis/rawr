@@ -158,7 +158,8 @@ namespace Rawr.Retribution
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
-            int sealChoice = Int32.Parse(character.CalculationOptions["Seal"]);
+			CalculationOptionsRetribution calcOpts = character.CurrentCalculationOptions as CalculationOptionsRetribution;
+            int sealChoice = calcOpts.Seal;
             character = GetTalents(character);
             Stats stats = GetCharacterStats( character, additionalItem );
             
@@ -171,17 +172,12 @@ namespace Rawr.Retribution
             float consDPS = 0.0f, exoDPS=0.0f, wfDPS = 0.0f, jobDPS = 0.0f,socDPS=0.0f,jocDPS = 0.0f;
             #region Mitigation
             //Default Boss Armor
-            float bossArmor = 7700f;
-
-            if (character.CalculationOptions.ContainsKey("BossArmor") && character.CalculationOptions["BossArmor"].Trim().Length>0)
-            {
-				bossArmor = float.Parse(character.CalculationOptions["BossArmor"], System.Globalization.CultureInfo.InvariantCulture);
-            }
+            float bossArmor = calcOpts.BossArmor;
             float totalArP = stats.ArmorPenetration;
             float modifiedTargetArmor = bossArmor - totalArP;
             float mitigation = 1 - modifiedTargetArmor / (modifiedTargetArmor + 10557.5f);
             #endregion
-            string shattrathFaction = character.CalculationOptions["ShattrathFaction"];
+            string shattrathFaction = calcOpts.ShattrathFaction;
             if (stats.ShatteredSunMightProc > 0)
             {
                 switch (shattrathFaction)
@@ -195,8 +191,7 @@ namespace Rawr.Retribution
 
             #region White Damage and Multipliers
             //2 Handed Spec
-            float twoHandedSpec = 1.0f + (0.02f * ((character.CalculationOptions.ContainsKey("TwoHandedSpec")) ?
-                float.Parse(character.CalculationOptions["TwoHandedSpec"]) : 0f));
+            float twoHandedSpec = 1.0f + (0.02f * (float)calcOpts.TwoHandedSpec);
             if (character.MainHand != null)
             {
                 avgBaseWeaponHit = twoHandedSpec*(character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage*2f) / 2.0f;
@@ -222,11 +217,11 @@ namespace Rawr.Retribution
             float avgBaseWeaponHitPost = (avgBaseWeaponHit * physicalCritModifier - avgBaseWeaponHit * (chanceToMiss + chanceToBeDodged) / 100.0f
                 - avgBaseWeaponHit * chanceToGlance * glancingAmount);
             //Fight duration
-            float fightDuration = int.Parse(character.CalculationOptions["FightLength"])*60;
+            float fightDuration = calcOpts.FightLength * 60;
             //Improved Sanctity Aura
-			float impSancAura = 1f + 0.01f * ((character.CalculationOptions.ContainsKey("ImprovedSanctityAura")) ? float.Parse(character.CalculationOptions["ImprovedSanctityAura"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
+			float impSancAura = 1f + 0.01f * (float)calcOpts.ImprovedSanctityAura;
             //Crusade
-			float crusade = 1f + 0.01f * ((character.CalculationOptions.ContainsKey("Crusade")) ? float.Parse(character.CalculationOptions["Crusade"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
+			float crusade = 1f + 0.01f * (float)calcOpts.Crusade;
             //Avenging Wrath -- Calculating uptime
             int remainder = 0, noOfFullAW = 0, noOfFullBL;
             int div = Math.DivRem(Convert.ToInt32(fightDuration), 180,out remainder);
@@ -268,14 +263,13 @@ namespace Rawr.Retribution
             #endregion
             
             //Vengeance
-			float vengeance = 1f + 0.03f * ((character.CalculationOptions.ContainsKey("Vengeance")) ? float.Parse(character.CalculationOptions["Vengeance"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
+			float vengeance = 1f + 0.03f * (float)calcOpts.Vengeance;
             //Sanctity Aura
-			float sancAura = 1f + 0.1f * ((character.CalculationOptions.ContainsKey("SanctityAura")) ? float.Parse(character.CalculationOptions["SanctityAura"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
+			float sancAura = 1f + 0.1f * (float)calcOpts.SanctityAura;
             //Misery 
             float misery = 1f + stats.BonusSpellPowerMultiplier;
             //SpellCrit Mod
-            float judgementCrit = 1.0f + (0.03f * ((character.CalculationOptions.ContainsKey("Fanaticism")) ?
-				float.Parse(character.CalculationOptions["Fanaticism"], System.Globalization.CultureInfo.InvariantCulture) : 0f))
+            float judgementCrit = 1.0f + (0.03f * (float)calcOpts.Fanaticism)
                 + (stats.CritRating / 22.08f) / 100f;
             //Blood Frenzy : TODO Take from Debuff List
             float bloodFrenzy = 1.0f + stats.BonusPhysicalDamageMultiplier;
@@ -346,7 +340,7 @@ namespace Rawr.Retribution
             {
                 //Rank 1
                 float cooldownCons = 8.0f, avgConsPre= 0.0f;
-                int consRank = int.Parse(character.CalculationOptions["ConsecRank"]);
+                int consRank = calcOpts.ConsecRank;
                 if (consRank == 1)
                 {
                     avgConsPre = 64f + 0.46f * stats.SpellDamageRating + 0.97f * 219f;
@@ -550,6 +544,7 @@ namespace Rawr.Retribution
             float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
             float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier));
 
+			CalculationOptionsRetribution calcOpts = character.CurrentCalculationOptions as CalculationOptionsRetribution;
             Stats statsTotal = new Stats();
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
@@ -562,7 +557,7 @@ namespace Rawr.Retribution
 
             statsTotal.Strength = (strBase + (float)Math.Floor((strBase * statsBuffs.BonusStrengthMultiplier) + strBonus * (1 + statsBuffs.BonusStrengthMultiplier)));
 
-			statsTotal.Strength *= 1f + 0.02f * ((character.CalculationOptions.ContainsKey("DivineStrength")) ? float.Parse(character.CalculationOptions["DivineStrength"], System.Globalization.CultureInfo.InvariantCulture) : 0f);
+			statsTotal.Strength *= 1f + 0.02f * (float)calcOpts.DivineStrength;
             statsTotal.Stamina = (staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier)));          
 
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina-staBase) * 10f))));
@@ -572,13 +567,13 @@ namespace Rawr.Retribution
 
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.CritRating += (((statsTotal.Agility - agiBase)/ 25f) * 22.08f);
-			statsTotal.CritRating += (22.08f * ((character.CalculationOptions.ContainsKey("Conviction")) ? float.Parse(character.CalculationOptions["Conviction"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
-			statsTotal.CritRating += (22.08f * ((character.CalculationOptions.ContainsKey("SanctifiedSeals")) ? float.Parse(character.CalculationOptions["SanctifiedSeals"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
+			statsTotal.CritRating += (22.08f * (float)calcOpts.Conviction);
+			statsTotal.CritRating += (22.08f * (float)calcOpts.SanctifiedSeals);
             statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
-			statsTotal.HitRating += (15.76f * ((character.CalculationOptions.ContainsKey("Precision")) ? float.Parse(character.CalculationOptions["Precision"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
-			statsTotal.SpellHitRating += (15.76f * ((character.CalculationOptions.ContainsKey("Precision")) ? float.Parse(character.CalculationOptions["Precision"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
+			statsTotal.HitRating += (15.76f * (float)calcOpts.Precision);
+			statsTotal.SpellHitRating += (15.76f * (float)calcOpts.Precision);
             statsTotal.SpellHitRating += 15.76f * statsGearEnchantsBuffs.SpellHitRating;
-			statsTotal.SpellCritRating += (22.08f * ((character.CalculationOptions.ContainsKey("SanctifiedSeals")) ? float.Parse(character.CalculationOptions["SanctifiedSeals"], System.Globalization.CultureInfo.InvariantCulture) : 0f));
+			statsTotal.SpellCritRating += (22.08f * (float)calcOpts.SanctifiedSeals);
             statsTotal.SpellHitRating += 22.08f * statsGearEnchantsBuffs.SpellCritRating;
             statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
             

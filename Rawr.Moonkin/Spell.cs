@@ -622,16 +622,17 @@ namespace Rawr.Moonkin
             // Mana/5 calculations
             float totalManaRegen = calcs.ManaRegen5SR * fightLength;
 
+			CalculationOptionsMoonkin calcOpts = character.CurrentCalculationOptions as CalculationOptionsMoonkin;
             // Mana pot calculations
-            float manaPotDelay = float.Parse(character.CalculationOptions["ManaPotDelay"], System.Globalization.CultureInfo.InvariantCulture) * 60.0f;
-            int numPots = character.CalculationOptions["ManaPots"] == "Yes" && fightLength - manaPotDelay > 0 ? ((int)(fightLength - manaPotDelay) / 120 + 1) : 0;
+            float manaPotDelay = calcOpts.ManaPotDelay * 60.0f;
+            int numPots = calcOpts.ManaPots && fightLength - manaPotDelay > 0 ? ((int)(fightLength - manaPotDelay) / 120 + 1) : 0;
             float manaRestoredByPots = 0.0f;
             if (numPots > 0)
             {
                 float manaPerPot = 0.0f;
-                if (character.CalculationOptions["ManaPotType"] == "Super Mana Potion")
+                if (calcOpts.ManaPotType == "Super Mana Potion")
                     manaPerPot = 2400.0f;
-                if (character.CalculationOptions["ManaPotType"] == "Fel Mana Potion")
+                if (calcOpts.ManaPotType == "Fel Mana Potion")
                     manaPerPot = 3200.0f;
                 // Bonus from Alchemist's Stone
                 if (calcs.BasicStats.BonusManaPotion > 0)
@@ -643,23 +644,23 @@ namespace Rawr.Moonkin
             }
 
             // Innervate calculations
-            float innervateDelay = float.Parse(character.CalculationOptions["InnervateDelay"], System.Globalization.CultureInfo.InvariantCulture) * 60.0f;
-            int numInnervates = character.CalculationOptions["Innervate"] == "Yes" && fightLength - innervateDelay > 0 ? ((int)(fightLength - innervateDelay) / (int)innervateCooldown + 1) : 0;
+            float innervateDelay = calcOpts.InnervateDelay * 60.0f;
+            int numInnervates = calcOpts.Innervate && fightLength - innervateDelay > 0 ? ((int)(fightLength - innervateDelay) / (int)innervateCooldown + 1) : 0;
             float totalInnervateMana = 0.0f;
             if (numInnervates > 0)
             {
                 // Innervate mana rate increases only spirit-based regen
                 float spiritRegen = (calcs.ManaRegen - calcs.BasicStats.Mp5 / 5f);
                 // Add in calculations for an innervate weapon
-                if (character.CalculationOptions["InnervateWeapon"] == "Yes")
+                if (calcOpts.InnervateWeapon)
                 {
                     float baseRegenConstant = 0.00932715221261f;
                     // Calculate the intellect from a weapon swap
                     float userIntellect = calcs.BasicStats.Intellect - (character.MainHand == null ? 0 : character.MainHand.Stats.Intellect) - (character.OffHand == null ? 0 : character.OffHand.Stats.Intellect)
-                        + int.Parse(character.CalculationOptions["InnervateWeaponInt"], System.Globalization.CultureInfo.InvariantCulture);
+                        + calcOpts.InnervateWeaponInt;
                     // Do the same with spirit
                     float userSpirit = calcs.BasicStats.Spirit - (character.MainHand == null ? 0 : character.MainHand.Stats.Spirit) - (character.OffHand == null ? 0 : character.OffHand.Stats.Spirit)
-                        + int.Parse(character.CalculationOptions["InnervateWeaponSpi"], System.Globalization.CultureInfo.InvariantCulture);
+                        + calcOpts.InnervateWeaponSpi;
                     // The new spirit regen for innervate periods uses the new weapon stats
                     spiritRegen = baseRegenConstant * (float)Math.Sqrt(userIntellect) * userSpirit;
                 }
@@ -668,7 +669,7 @@ namespace Rawr.Moonkin
                 totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * calcs.BasicStats.Mana * 0.04f);
             }
             // Shadow priest calculations
-            float sPriestMp5 = float.Parse(character.CalculationOptions["ShadowPriest"], System.Globalization.CultureInfo.InvariantCulture);
+            float sPriestMp5 = calcOpts.ShadowPriest;
             float sPriestMana = sPriestMp5 / 5 * fightLength;
 
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + sPriestMana;
@@ -677,11 +678,12 @@ namespace Rawr.Moonkin
         private static void UpdateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
         {
             Stats stats = calcs.BasicStats;
+			CalculationOptionsMoonkin calcOpts = character.CurrentCalculationOptions as CalculationOptionsMoonkin;
             // Add (possibly talented) +spelldmg
             // Starfire: Damage +(0.04 * Wrath of Cenarius)
             // Wrath: Damage +(0.02 * Wrath of Cenarius)
-            wrath.SpellDamageModifier += 0.02f * int.Parse(character.CalculationOptions["WrathofCenarius"]);
-            starfire.SpellDamageModifier += 0.04f * int.Parse(character.CalculationOptions["WrathofCenarius"]);
+            wrath.SpellDamageModifier += 0.02f * calcOpts.WrathofCenarius;
+            starfire.SpellDamageModifier += 0.04f * calcOpts.WrathofCenarius;
 
             // Add spell damage from idols
             starfire.DamagePerHit += stats.StarfireDmg;
@@ -690,9 +692,9 @@ namespace Rawr.Moonkin
 
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)
-            wrath.SpecialDamageModifier *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
-            moonfire.SpecialDamageModifier *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
-            starfire.SpecialDamageModifier *= 1.0f + (0.02f * int.Parse(character.CalculationOptions["Moonfury"]));
+            wrath.SpecialDamageModifier *= 1.0f + (0.02f * calcOpts.Moonfury);
+            moonfire.SpecialDamageModifier *= 1.0f + (0.02f * calcOpts.Moonfury);
+            starfire.SpecialDamageModifier *= 1.0f + (0.02f * calcOpts.Moonfury);
 
             // Wrath, Insect Swarm: Nature spell damage multipliers
             wrath.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
@@ -703,18 +705,18 @@ namespace Rawr.Moonkin
 
             // Add spell-specific crit chance
             // Wrath, Starfire: Crit chance +(0.02 * Focused Starlight)
-            wrath.SpecialCriticalModifier += 0.02f * int.Parse(character.CalculationOptions["FocusedStarlight"]);
-            starfire.SpecialCriticalModifier += 0.02f * int.Parse(character.CalculationOptions["FocusedStarlight"]);
+            wrath.SpecialCriticalModifier += 0.02f * calcOpts.FocusedStarlight;
+            starfire.SpecialCriticalModifier += 0.02f * calcOpts.FocusedStarlight;
             // Moonfire: Damage, Crit chance +(0.05 * Imp Moonfire)
-            moonfire.DamagePerHit *= 1.0f + (0.05f * int.Parse(character.CalculationOptions["ImpMoonfire"]));
-            moonfire.DoT.DamagePerTick *= 1.0f + (0.05f * int.Parse(character.CalculationOptions["ImpMoonfire"]));
-            moonfire.SpecialCriticalModifier += 0.05f * int.Parse(character.CalculationOptions["ImpMoonfire"]);
+            moonfire.DamagePerHit *= 1.0f + (0.05f * calcOpts.ImpMoonfire);
+            moonfire.DoT.DamagePerTick *= 1.0f + (0.05f * calcOpts.ImpMoonfire);
+            moonfire.SpecialCriticalModifier += 0.05f * calcOpts.ImpMoonfire;
 
             // Add spell-specific critical strike damage
             // Starfire, Moonfire, Wrath: Crit damage +(0.2 * Vengeance)
-            starfire.CriticalHitMultiplier *= 1 + 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
-            moonfire.CriticalHitMultiplier *= 1 + 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
-            wrath.CriticalHitMultiplier *= 1 + 0.2f * int.Parse(character.CalculationOptions["Vengeance"]);
+            starfire.CriticalHitMultiplier *= 1 + 0.2f * calcOpts.Vengeance;
+            moonfire.CriticalHitMultiplier *= 1 + 0.2f * calcOpts.Vengeance;
+            wrath.CriticalHitMultiplier *= 1 + 0.2f * calcOpts.Vengeance;
             // Chaotic Skyfire Diamond
             // This is a crude hack based on mathematical results, and if they ever change CSD I will regret this
             if (calcs.BasicStats.BonusSpellCritMultiplier > 0)
@@ -726,14 +728,14 @@ namespace Rawr.Moonkin
 
             // Reduce spell-specific mana costs
             // Starfire, Moonfire, Wrath: Mana cost -(0.03 * Moonglow)
-            starfire.ManaCost *= 1.0f - (0.03f * int.Parse(character.CalculationOptions["Moonglow"]));
-            moonfire.ManaCost *= 1.0f - (0.03f * int.Parse(character.CalculationOptions["Moonglow"]));
-            wrath.ManaCost *= 1.0f - (0.03f * int.Parse(character.CalculationOptions["Moonglow"]));
+            starfire.ManaCost *= 1.0f - (0.03f * calcOpts.Moonglow);
+            moonfire.ManaCost *= 1.0f - (0.03f * calcOpts.Moonglow);
+            wrath.ManaCost *= 1.0f - (0.03f * calcOpts.Moonglow);
 
             // Reduce spell-specific cast times
             // Wrath, Starfire: Cast time -(0.1 * Starlight Wrath)
-            wrath.CastTime -= 0.1f * int.Parse(character.CalculationOptions["StarlightWrath"]);
-            starfire.CastTime -= 0.1f * int.Parse(character.CalculationOptions["StarlightWrath"]);
+            wrath.CastTime -= 0.1f * calcOpts.StarlightWrath;
+            starfire.CastTime -= 0.1f * calcOpts.StarlightWrath;
 
             // Add set bonuses
             moonfire.DoT.Duration += stats.MoonfireExtension;
@@ -751,7 +753,8 @@ namespace Rawr.Moonkin
             // Try to reset the cached results dictionary on each call
             cachedResults = new Dictionary<string, RotationData>();
             float effectiveSpellHit = calcs.BasicStats.SpellHitRating;
-            bool naturesGrace = int.Parse(character.CalculationOptions["NaturesGrace"]) > 0 ? true : false;
+			CalculationOptionsMoonkin calcOpts = character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			bool naturesGrace = calcOpts.NaturesGrace > 0 ? true : false;
             float fightLength = calcs.FightLength * 60.0f;
 
             float baseHitRate = 0.83f;

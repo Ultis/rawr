@@ -17,35 +17,73 @@ namespace Rawr
 
 		protected override void LoadCalculationOptions()
 		{
-			if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
-				Character.CalculationOptions["TargetLevel"] = "73";
-            if (!Character.CalculationOptions.ContainsKey("ThreatScale"))
-                Character.CalculationOptions["ThreatScale"] = "1";
-			if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-				Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
+			_loadingCalculationOptions = true;
+			if (Character.CurrentCalculationOptions == null)
+				Character.CurrentCalculationOptions = new CalculationOptionsBear();
+			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
+			//    Character.CalculationOptions["TargetLevel"] = "73";
+			//if (!Character.CalculationOptions.ContainsKey("ThreatScale"))
+			//    Character.CalculationOptions["ThreatScale"] = "1";
+			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
+			//    Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
 
-			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
-            threatScaleFactor.Value = decimal.Parse(Character.CalculationOptions["ThreatScale"]);
-			checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
+			CalculationOptionsBear calcOpts = Character.CurrentCalculationOptions as CalculationOptionsBear;
+			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
+            numericUpDownThreatValue.Value = (decimal)calcOpts.ThreatScale;
+			checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
+
+			switch (numericUpDownThreatValue.Value.ToString())
+			{
+				case "0":
+					comboBoxThreatValue.SelectedIndex = 0;
+					break;
+
+				case "10":
+					comboBoxThreatValue.SelectedIndex = 1;
+					break;
+
+				case "50":
+					comboBoxThreatValue.SelectedIndex = 2;
+					break;
+
+				case "100":
+					comboBoxThreatValue.SelectedIndex = 3;
+					break;
+
+				default:
+					comboBoxThreatValue.SelectedIndex = 4;
+					break;
+			}
+
+			_loadingCalculationOptions = false;
 		}
 	
-		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
+		private bool _loadingCalculationOptions = false;
+		private void calculationOptionControl_Changed(object sender, EventArgs e)
 		{
-			Character.CalculationOptions["TargetLevel"] = comboBoxTargetLevel.SelectedItem.ToString();
-			Character.OnItemsChanged();
+			if (!_loadingCalculationOptions)
+			{
+				CalculationOptionsBear calcOpts = Character.CurrentCalculationOptions as CalculationOptionsBear;
+				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
+				calcOpts.ThreatScale = (float)numericUpDownThreatValue.Value;
+				Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
+
+				Character.OnItemsChanged();
+			}
         }
-        private void threatScaleFactor_ValueChanged(object sender, EventArgs e)
+		private void comboBoxThreatValue_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["ThreatScale"] = threatScaleFactor.Value.ToString();
-            Character.OnItemsChanged();
-
-        }
-
-		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
-		{
-			Character.CalculationOptions["EnforceMetagemRequirements"] = checkBoxEnforceMetagemRequirements.Checked ? "Yes" : "No";
-			Character.OnItemsChanged();
+			numericUpDownThreatValue.Enabled = comboBoxThreatValue.SelectedIndex == 4;
+			if (comboBoxThreatValue.SelectedIndex < 4)
+				numericUpDownThreatValue.Value = (new decimal[] { 0, 10, 50, 100 })[comboBoxThreatValue.SelectedIndex];
 		}
+	}
 
+	[Serializable]
+	public class CalculationOptionsBear
+	{
+		public int TargetLevel = 73;
+		public float ThreatScale = 10f;
+		public bool EnforceMetagemRequirements = false;
 	}
 }

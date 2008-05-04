@@ -32,35 +32,38 @@ namespace Rawr.ProtWarr
 		protected override void LoadCalculationOptions()
 		{
 			_loadingCalculationOptions = true;
-			if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
-				Character.CalculationOptions["TargetLevel"] = "73";
-			if (!Character.CalculationOptions.ContainsKey("TargetArmor"))
-				Character.CalculationOptions["TargetArmor"] = "7700";
-            if (!Character.CalculationOptions.ContainsKey("BossAttackValue"))
-                Character.CalculationOptions["BossAttackValue"] = "20000";
-            if (!Character.CalculationOptions.ContainsKey("ThreatScale"))
-                Character.CalculationOptions["ThreatScale"] = "1";
-            if (!Character.CalculationOptions.ContainsKey("MitigationScale"))
-                Character.CalculationOptions["MitigationScale"] = "2500";
-			if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-				Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
-            if (!Character.CalculationOptions.ContainsKey("ShieldBlockUptime"))
-                Character.CalculationOptions["ShieldBlockUptime"] = "100";
-            if (!Character.CalculationOptions.ContainsKey("UseShieldBlock"))
-                Character.CalculationOptions["UseShieldBlock"] = "No";
-			if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
-                Character.CalculationOptions["ShattrathFaction"] = "Scryer";
+			if (Character.CurrentCalculationOptions == null)
+				Character.CurrentCalculationOptions = new CalculationOptionsProtWarr();
+			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
+			//    calcOpts.TargetLevel = "73";
+			//if (!Character.CalculationOptions.ContainsKey("TargetArmor"))
+			//    calcOpts.TargetArmor = "7700";
+			//if (!Character.CalculationOptions.ContainsKey("BossAttackValue"))
+			//    calcOpts.BossAttackValue = "20000";
+			//if (!Character.CalculationOptions.ContainsKey("ThreatScale"))
+			//    calcOpts.ThreatScale = "1";
+			//if (!Character.CalculationOptions.ContainsKey("MitigationScale"))
+			//    calcOpts.MitigationScale = "2500";
+			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
+			//    character.EnforceMetagemRequirements = "No";
+			//if (!Character.CalculationOptions.ContainsKey("ShieldBlockUptime"))
+			//    calcOpts.ShieldBlockUptime = "100";
+			//if (!Character.CalculationOptions.ContainsKey("UseShieldBlock"))
+			//    calcOpts.UseShieldBlock = "No";
+			//if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
+			//    calcOpts.ShattrathFaction = "Scryer";
 
-			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
-			trackBarTargetArmor.Value = int.Parse(Character.CalculationOptions["TargetArmor"]);
-            trackBarBossAttackValue.Value = int.Parse(Character.CalculationOptions["BossAttackValue"]);
-            trackBarThreatScale.Value = int.Parse(Character.CalculationOptions["ThreatScale"]);
-            trackBarMitigationScale.Value = int.Parse(Character.CalculationOptions["MitigationScale"]);
-            trackBarShieldBlockUptime.Value = int.Parse(Character.CalculationOptions["ShieldBlockUptime"]);
-            checkBoxUseShieldBlock.Checked = Character.CalculationOptions["UseShieldBlock"] == "Yes";
-			checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
-			radioButtonAldor.Checked = Character.CalculationOptions["ShattrathFaction"] == "Aldor";
-			radioButtonScryer.Checked = Character.CalculationOptions["ShattrathFaction"] == "Scryer";
+			CalculationOptionsProtWarr calcOpts = Character.CurrentCalculationOptions as CalculationOptionsProtWarr;
+			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
+			trackBarTargetArmor.Value = calcOpts.TargetArmor;
+            trackBarBossAttackValue.Value = calcOpts.BossAttackValue;
+            trackBarThreatScale.Value = (int)calcOpts.ThreatScale;
+            trackBarMitigationScale.Value = calcOpts.MitigationScale;
+            trackBarShieldBlockUptime.Value = (int)calcOpts.ShieldBlockUptime;
+            checkBoxUseShieldBlock.Checked = calcOpts.UseShieldBlock;
+			checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
+			radioButtonAldor.Checked = calcOpts.ShattrathFaction == "Aldor";
+			radioButtonScryer.Checked = calcOpts.ShattrathFaction == "Scryer";
 			
 			labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
             labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
@@ -76,6 +79,7 @@ namespace Rawr.ProtWarr
 		{
 			if (!_loadingCalculationOptions)
 			{
+				CalculationOptionsProtWarr calcOpts = Character.CurrentCalculationOptions as CalculationOptionsProtWarr;
 				trackBarTargetArmor.Value = 100 * (trackBarTargetArmor.Value / 100);
 				labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
 				labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
@@ -83,13 +87,13 @@ namespace Rawr.ProtWarr
 				labelMitigationScale.Text = trackBarMitigationScale.Value.ToString();
                 labelShieldBlockUptime.Text = trackBarShieldBlockUptime.Value.ToString() + "%";
 
-				Character.CalculationOptions["TargetLevel"] = comboBoxTargetLevel.SelectedItem.ToString();
-				Character.CalculationOptions["TargetArmor"] = trackBarTargetArmor.Value.ToString();
-                Character.CalculationOptions["BossAttackValue"] = trackBarBossAttackValue.Value.ToString();
-                Character.CalculationOptions["ThreatScale"] = trackBarThreatScale.Value.ToString();
-                Character.CalculationOptions["MitigationScale"] = trackBarMitigationScale.Value.ToString();
-                Character.CalculationOptions["ShieldBlockUptime"] = trackBarShieldBlockUptime.Value.ToString();
-				Character.CalculationOptions["ShattrathFaction"] = radioButtonAldor.Checked ? "Aldor" : "Scryer";
+				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
+				calcOpts.TargetArmor = trackBarTargetArmor.Value;
+                calcOpts.BossAttackValue = trackBarBossAttackValue.Value;
+                calcOpts.ThreatScale = trackBarThreatScale.Value;
+                calcOpts.MitigationScale = trackBarMitigationScale.Value;
+                calcOpts.ShieldBlockUptime = trackBarShieldBlockUptime.Value;
+				calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
 
 				Character.OnItemsChanged();
 			}
@@ -97,13 +101,15 @@ namespace Rawr.ProtWarr
 
 		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
 		{
-			Character.CalculationOptions["EnforceMetagemRequirements"] = checkBoxEnforceMetagemRequirements.Checked ? "Yes" : "No";
+			CalculationOptionsProtWarr calcOpts = Character.CurrentCalculationOptions as CalculationOptionsProtWarr;
+			Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
 			Character.OnItemsChanged();
 		}
 
         private void checkBoxUseShieldBlock_CheckedChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["UseShieldBlock"] = checkBoxUseShieldBlock.Checked ? "Yes" : "No";
+			CalculationOptionsProtWarr calcOpts = Character.CurrentCalculationOptions as CalculationOptionsProtWarr;
+			calcOpts.UseShieldBlock = checkBoxUseShieldBlock.Checked;
             Character.OnItemsChanged();
         }
 
@@ -120,5 +126,19 @@ namespace Rawr.ProtWarr
                 MessageBox.Show("No talents found");
             }
         }
+	}
+
+	[Serializable]
+	public class CalculationOptionsProtWarr
+	{
+		public int TargetLevel = 73;
+		public int TargetArmor = 7700;
+		public int BossAttackValue = 20000;
+		public float ThreatScale = 1;
+		public int MitigationScale = 2500;
+		public bool EnforceMetagemRequirements = false;
+		public float ShieldBlockUptime = 100;
+		public bool UseShieldBlock = false;
+		public string ShattrathFaction = "Scryer";
 	}
 }

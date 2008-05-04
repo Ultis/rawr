@@ -11,35 +11,36 @@ namespace Rawr.Retribution
 {
     public partial class Talents : Form
     {
-        public Talents(CalculationOptionsPanelRetribution retCalcOpts)
+        public Talents(CalculationOptionsPanelRetribution retCalcOptsPanel)
         {
-            this.calcOptions = retCalcOpts;
+            this.calcOptionsPanel = retCalcOptsPanel;
             InitializeComponent();            
         }
-        private CalculationOptionsPanelRetribution calcOptions;
+        private CalculationOptionsPanelRetribution calcOptionsPanel;
 
         public Character Character
         {
             get
             {
-                return calcOptions.Character;
+                return calcOptionsPanel.Character;
             }
         }
 
         private void Talents_Load(object sender, EventArgs e)
         {
-            if (Character.CalculationOptions.ContainsKey("TalentsSaved") && Character.CalculationOptions["TalentsSaved"] == "1")
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+            if (calcOpts.TalentsSaved)
             {
-                comboBoxTwoHandedSpec.SelectedItem =(Character.CalculationOptions.ContainsKey("TwoHandedSpec") ? Character.CalculationOptions["TwoHandedSpec"] : "0");
-                comboBoxConviction.SelectedItem = (Character.CalculationOptions.ContainsKey("Conviction") ? Character.CalculationOptions["Conviction"] : "0");
-                comboBoxCrusade.SelectedItem = (Character.CalculationOptions.ContainsKey("Crusade") ? Character.CalculationOptions["Crusade"] : "0");
-                comboBoxDivineStrength.SelectedItem = (Character.CalculationOptions.ContainsKey("DivineStrength") ? Character.CalculationOptions["DivineStrength"] : "0");
-                comboBoxFanaticism.SelectedItem = (Character.CalculationOptions.ContainsKey("Fanaticism") ? Character.CalculationOptions["Fanaticism"] : "0");
-                comboBoxImprovedSanctityAura.SelectedItem = (Character.CalculationOptions.ContainsKey("ImprovedSanctityAura") ? Character.CalculationOptions["ImprovedSanctityAura"] : "0");
-                comboBoxPrecision.SelectedItem = (Character.CalculationOptions.ContainsKey("Precision") ? Character.CalculationOptions["Precision"] : "0");
-                comboBoxSanctityAura.SelectedItem = (Character.CalculationOptions.ContainsKey("SanctityAura") ? Character.CalculationOptions["SanctityAura"] : "0");
-                comboBoxSanctifiedSeals.SelectedItem = (Character.CalculationOptions.ContainsKey("SanctifiedSeals") ? Character.CalculationOptions["SanctifiedSeals"] : "0");
-                comboBoxVengeance.SelectedItem = (Character.CalculationOptions.ContainsKey("Vengeance") ? Character.CalculationOptions["Vengeance"] : "0");
+				comboBoxTwoHandedSpec.SelectedItem = calcOpts.TwoHandedSpec;
+				comboBoxConviction.SelectedItem = calcOpts.Conviction;
+                comboBoxCrusade.SelectedItem = calcOpts.Crusade;
+                comboBoxDivineStrength.SelectedItem = calcOpts.DivineStrength;
+                comboBoxFanaticism.SelectedItem = calcOpts.Fanaticism;
+                comboBoxImprovedSanctityAura.SelectedItem = calcOpts.ImprovedSanctityAura;
+                comboBoxPrecision.SelectedItem = calcOpts.Precision;
+                comboBoxSanctityAura.SelectedItem = calcOpts.SanctityAura;
+                comboBoxSanctifiedSeals.SelectedItem = calcOpts.SanctifiedSeals;
+                comboBoxVengeance.SelectedItem = calcOpts.Vengeance;
                                
             }
         }
@@ -47,9 +48,22 @@ namespace Rawr.Retribution
         {
             ComboBox cb = (ComboBox)sender;
             string talent = cb.Name.Substring(8);
-            Character.CalculationOptions[talent] = cb.SelectedItem.ToString();
+			CalculationOptionsRetribution calcOpts = Character.CurrentCalculationOptions as CalculationOptionsRetribution;
+            switch (talent)
+			{
+				case "TwoHandedSpec": calcOpts.TwoHandedSpec = int.Parse(cb.SelectedItem.ToString()); break;
+				case "Conviction": calcOpts.Conviction = int.Parse(cb.SelectedItem.ToString()); break;
+				case "Crusade": calcOpts.Crusade = int.Parse(cb.SelectedItem.ToString()); break;
+				case "DivineStrength": calcOpts.DivineStrength = int.Parse(cb.SelectedItem.ToString()); break;
+				case "Fanaticism": calcOpts.Fanaticism = int.Parse(cb.SelectedItem.ToString()); break;
+				case "ImprovedSanctityAura": calcOpts.ImprovedSanctityAura = int.Parse(cb.SelectedItem.ToString()); break;
+				case "Precision": calcOpts.Precision = int.Parse(cb.SelectedItem.ToString()); break;
+				case "SanctityAura": calcOpts.SanctityAura = int.Parse(cb.SelectedItem.ToString()); break;
+				case "SanctifiedSeals": calcOpts.SanctifiedSeals = int.Parse(cb.SelectedItem.ToString()); break;
+				case "Vengeance": calcOpts.Vengeance = int.Parse(cb.SelectedItem.ToString()); break;
+			}
             Character.OnItemsChanged();
-            Character.CalculationOptions["TalentsSaved"] = "1";
+			calcOpts.TalentsSaved = true;
         }
         
     }

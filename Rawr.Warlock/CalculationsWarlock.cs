@@ -178,44 +178,45 @@ namespace Rawr.Warlock
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             Stats charStats = GetCharacterStats(character, additionalItem);
-            int duration = Int32.Parse(character.CalculationOptions["Duration"]);
-			float latency = float.Parse(character.CalculationOptions["Latency"], System.Globalization.CultureInfo.InvariantCulture);
+			CalculationOptionsWarlock calcOpts = character.CurrentCalculationOptions as CalculationOptionsWarlock;
+			int duration = (int)calcOpts.Duration;
+			float latency = calcOpts.Latency;
             Dictionary<int, Spell> priorityList = new Dictionary<int, Spell>();
             
             WarlockSpellRotation wsr = new WarlockSpellRotation(charStats, character, duration);
             int priority = 1;
             
-            if (character.CalculationOptions["Curse"] == "CurseOfAgony")
+            if (calcOpts.Curse == "CurseOfAgony")
             {
                 priorityList.Add(priority, new CurseOfAgony(character, charStats));
                 priority++;
             }
 
-            if (character.CalculationOptions["Curse"] == "CurseOfDoom")
+			if (calcOpts.Curse == "CurseOfDoom")
             {
                 priorityList.Add(priority, new CurseOfDoom(character, charStats));
                 priority++;
             }
 
-            if (character.CalculationOptions["Corruption"] == "T")
+			if (calcOpts.Corruption)
             {
                 priorityList.Add(priority, new Corruption(character, charStats));
                 priority++;
             }
 
-            if (character.CalculationOptions["UnstableAffliction"] == "T")
+			if (calcOpts.UnstableAffliction)
             {
                 priorityList.Add(priority, new UnstableAffliction(character, charStats));
                 priority++;
             }
 
-            if (character.CalculationOptions["Immolate"] == "T")
+			if (calcOpts.Immolate)
             {
                 priorityList.Add(priority, new Immolate(character, charStats));
                 priority++;
             }
 
-            if (character.CalculationOptions["SiphonLife"] == "T")
+			if (calcOpts.SiphonLife)
             {
                 priorityList.Add(priority, new SiphonLife(character, charStats));
                 priority++;
@@ -223,7 +224,7 @@ namespace Rawr.Warlock
 
             Spell filler = null;
 
-            if (character.CalculationOptions["FillerSpell"].ToUpper() == "SHADOWBOLT")
+			if (calcOpts.FillerSpell.ToUpper() == "SHADOWBOLT")
                 filler = new ShadowBolt(character, charStats);
             else
                 filler = new Incinerate(character, charStats);
@@ -393,12 +394,12 @@ namespace Rawr.Warlock
             statsTotal.Stamina = statsTotal.Stamina * (1 + statsBuffs.BonusStaminaMultiplier);
 
 
-
+			CalculationOptionsWarlock calcOpts = character.CurrentCalculationOptions as CalculationOptionsWarlock;
             //Master Demonologist
-            if (character.CalculationOptions["SacraficedPet"] == "")
+			if (calcOpts.SacrificedPet == "")
             {
                 int MDTalents = character.Talents.GetTalent("MasterDemonologist").PointsInvested;
-                switch (character.CalculationOptions["Pet"].ToUpper())
+				switch (calcOpts.Pet.ToUpper())
                 {
                     case "SUCCUBUS":
                         statsTotal.BonusShadowSpellPowerMultiplier *= 1f + (0.02f * MDTalents);
@@ -422,7 +423,7 @@ namespace Rawr.Warlock
             //demonic sacrafice
             if (tree.GetTalent("DemonicSacrifice").PointsInvested == 1)
             {
-                switch (character.CalculationOptions["SacraficedPet"].ToUpper())
+				switch (calcOpts.SacrificedPet.ToUpper())
                 {
                     case "SUCCUBUS":
                         statsTotal.BonusShadowSpellPowerMultiplier *= 1f + 0.15f;

@@ -105,6 +105,9 @@ namespace Rawr
 				{
 					this.Cursor = Cursors.WaitCursor;
                     _character.IsLoading = true; // we do not need ItemsChanged event triggering until we call OnItemsChanged at the end
+
+					Character.CurrentModel = null;
+					
 					Calculations.CalculationOptionsPanel.Character = _character;
 					ItemToolTip.Instance.Character = FormItemSelection.Character = 
 						ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
@@ -336,6 +339,8 @@ namespace Rawr
 		{
             bool unsavedChanges = _unsavedChanges;
 
+			Character.CurrentModel = null;
+
 			UpdateCustomChartMenuItems();
 			toolStripDropDownButtonSort.DropDownItems.Clear();
 			toolStripDropDownButtonSort.DropDownItems.Add(overallToolStripMenuItem);
@@ -370,7 +375,9 @@ namespace Rawr
 			comboBoxEnchantHead.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Head).ToArray());
 			comboBoxEnchantLegs.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Legs).ToArray());
 			comboBoxEnchantShoulders.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Shoulders).ToArray());
-			comboBoxEnchantMainHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.MainHand).ToArray());
+			comboBoxEnchantMainHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.OneHand).ToArray());
+			comboBoxEnchantMainHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.TwoHand).ToArray());
+			comboBoxEnchantOffHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.OneHand).ToArray());
 			comboBoxEnchantOffHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.OffHand).ToArray());
 			comboBoxEnchantRanged.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Ranged).ToArray());
 			comboBoxEnchantWrists.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Wrist).ToArray());

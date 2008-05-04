@@ -165,8 +165,9 @@ namespace Rawr.Moonkin
             calcs.SpellCrit = stats.SpellCritRating * critRatingMultiplier;
             calcs.SpellHit = stats.SpellHitRating * hitRatingMultiplier;
 
+			CalculationOptionsMoonkin calcOpts = character.CurrentCalculationOptions as CalculationOptionsMoonkin;
             // All spells: Damage +((0.08/0.16/0.25) * Int)
-            switch (int.Parse(character.CalculationOptions["LunarGuidance"]))
+            switch (calcOpts.LunarGuidance)
             {
                 case 1:
                     stats.SpellDamageFromIntellectPercentage += 0.08f;
@@ -184,10 +185,10 @@ namespace Rawr.Moonkin
             calcs.ArcaneDamage = stats.SpellDamageRating + stats.SpellArcaneDamageRating + stats.SpellDamageFromIntellectPercentage * stats.Intellect + stats.SpellDamageFromSpiritPercentage * stats.Spirit;
             calcs.NatureDamage = stats.SpellDamageRating + stats.SpellNatureDamageRating + stats.SpellDamageFromIntellectPercentage * stats.Intellect + stats.SpellDamageFromSpiritPercentage * stats.Spirit;
 
-			calcs.Latency = float.Parse(character.CalculationOptions["Latency"], System.Globalization.CultureInfo.InvariantCulture);
-			calcs.FightLength = float.Parse(character.CalculationOptions["FightLength"], System.Globalization.CultureInfo.InvariantCulture);
-            calcs.TargetLevel = int.Parse(character.CalculationOptions["TargetLevel"], System.Globalization.CultureInfo.InvariantCulture);
-            calcs.Scryer = character.CalculationOptions["AldorScryer"] == "Scryer";
+			calcs.Latency = calcOpts.Latency;
+			calcs.FightLength = calcOpts.FightLength;
+			calcs.TargetLevel = calcOpts.TargetLevel;
+            calcs.Scryer = calcOpts.AldorScryer == "Scryer";
 
             // 2.4 spirit regen
             float baseRegenConstant = 0.00932715221261f;
@@ -231,6 +232,7 @@ namespace Rawr.Moonkin
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
+			CalculationOptionsMoonkin calcOpts = character.CurrentCalculationOptions as CalculationOptionsMoonkin;
             // Create the total stats object
             Stats statsTotal = statsGearEnchantsBuffs + statsRace;
 
@@ -241,14 +243,14 @@ namespace Rawr.Moonkin
             statsTotal.Spirit = (float)Math.Floor((Math.Floor(statsRace.Spirit * (1 + statsRace.BonusSpiritMultiplier)) + statsGearEnchantsBuffs.Spirit * (1 + statsRace.BonusSpiritMultiplier)) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
             // Base stats: Intellect% +(0.04 * Heart of the Wild)
-            statsTotal.Intellect *= 1 + 0.04f * int.Parse(character.CalculationOptions["HotW"]);
+			statsTotal.Intellect *= 1 + 0.04f * calcOpts.HotW;
             // Base stats: Stam%, Int%, Spi%, Agi% +(0.01 * Survival of the Fittest)
-            statsTotal.Intellect *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
-            statsTotal.Stamina *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
-            statsTotal.Agility *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
-            statsTotal.Spirit *= 1 + 0.01f * int.Parse(character.CalculationOptions["SotF"]);
+			statsTotal.Intellect *= 1 + 0.01f * calcOpts.SotF;
+			statsTotal.Stamina *= 1 + 0.01f * calcOpts.SotF;
+			statsTotal.Agility *= 1 + 0.01f * calcOpts.SotF;
+			statsTotal.Spirit *= 1 + 0.01f * calcOpts.SotF;
             // Base stats: Spirit% +(0.05 * Living Spirit)
-            statsTotal.Spirit *= 1 + 0.05f * int.Parse(character.CalculationOptions["LivingSpirit"]);
+			statsTotal.Spirit *= 1 + 0.05f * calcOpts.LivingSpirit;
 
             // Bonus multipliers
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
@@ -262,10 +264,10 @@ namespace Rawr.Moonkin
             statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f);
 
             // Regen mechanic: mp5 +((0.1 * Intensity) * Spiritmp5())
-            statsTotal.SpellCombatManaRegeneration += 0.1f * int.Parse(character.CalculationOptions["Intensity"]);
+			statsTotal.SpellCombatManaRegeneration += 0.1f * calcOpts.Intensity;
             // Regen mechanic: mp5 +(0.04/0.07/0.10) * Int)
             float dreamstatePercent = 0.0f;
-            switch (int.Parse(character.CalculationOptions["Dreamstate"]))
+            switch (calcOpts.Dreamstate)
             {
                 case 1:
                     dreamstatePercent = 0.04f;
@@ -284,7 +286,7 @@ namespace Rawr.Moonkin
 
             // Hit rating
             // All spells: Hit% +(0.02 * Balance of Power)
-            statsTotal.SpellHitRating += 0.02f * int.Parse(character.CalculationOptions["BalanceofPower"]) * 1262f;
+            statsTotal.SpellHitRating += 0.02f * calcOpts.BalanceofPower * 1262f;
 
             // Crit rating
             // Application order: Stats, Talents, Gear
@@ -293,7 +295,7 @@ namespace Rawr.Moonkin
             // Add intellect-based crit rating to crit (all classes except warlock: 1/80)
             statsTotal.SpellCritRating += (statsTotal.Intellect / 8000.0f) * 2208f;
             // All spells: Crit% + (0.01 * Natural Perfection)
-            statsTotal.SpellCritRating += 0.01f * int.Parse(character.CalculationOptions["NaturalPerfection"]) * 2208f;
+            statsTotal.SpellCritRating += 0.01f * calcOpts.NaturalPerfection * 2208f;
             // Add the crit bonus from the idol, if present
             if (character.ActiveBuffs.Contains("Moonkin Aura"))
                 statsTotal.SpellCritRating += statsTotal.IdolCritRating;

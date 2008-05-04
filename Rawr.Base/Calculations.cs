@@ -582,22 +582,33 @@ namespace Rawr
             stats.Accumulate(character.HeadEnchant.Stats);
             stats.Accumulate(character.LegsEnchant.Stats);
             stats.Accumulate(character.ShouldersEnchant.Stats);
-            if (character.MainHand != null)
-            {
-                if (character.OffHand == null || character.MainHand.Slot == Item.ItemSlot.TwoHand)
-                {
-                    stats.Accumulate(character.MainHandEnchant.Stats);
-                }
-                else
-                {
-                    stats.Accumulate(character.MainHandEnchant.Stats);
-                    stats.Accumulate(character.OffHandEnchant.Stats);
-                }
-            }
-            else if (character.OffHand != null)
-            {
-                stats.Accumulate(character.OffHandEnchant.Stats);
-            }
+			if (character.MainHand != null &&
+				(character.MainHandEnchant.Slot == Item.ItemSlot.OneHand ||
+				(character.MainHandEnchant.Slot == Item.ItemSlot.TwoHand &&
+				character.MainHand.Slot == Item.ItemSlot.TwoHand)))
+			{
+				stats.Accumulate(character.MainHandEnchant.Stats);
+			}
+			if (character.OffHand != null &&
+				(
+					(
+						character.OffHandEnchant.Slot == Item.ItemSlot.OneHand &&
+						(character.OffHand.Slot == Item.ItemSlot.OneHand ||
+						character.OffHand.Slot == Item.ItemSlot.OffHand) &&
+						character.OffHand.Type != Item.ItemType.None &&
+						character.OffHand.Type != Item.ItemType.Shield
+					) 
+					||
+					(
+						character.OffHandEnchant.Slot == Item.ItemSlot.OffHand &&
+						character.OffHand.Slot == Item.ItemSlot.OffHand &&
+						character.OffHand.Type == Item.ItemType.Shield
+					)
+				)
+			   )
+			{
+				stats.Accumulate(character.OffHandEnchant.Stats);
+			}
             stats.Accumulate(character.RangedEnchant.Stats);
             stats.Accumulate(character.WristEnchant.Stats);
         }

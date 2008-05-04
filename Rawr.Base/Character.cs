@@ -1,128 +1,134 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net;
-using System.Windows.Forms;
 using System.IO;
+using System.Net;
+using System.Text;
+using System.Windows.Forms;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Rawr //O O . .
 {
     [Serializable]
     public class Character
     {
-        [System.Xml.Serialization.XmlElement("Name")]
+        [XmlElement("Name")]
         public string _name;
-        [System.Xml.Serialization.XmlElement("Realm")]
+        [XmlElement("Realm")]
         public string _realm;
-        [System.Xml.Serialization.XmlElement("Region")]
+        [XmlElement("Region")]
 		public Character.CharacterRegion _region = CharacterRegion.US;
-        [System.Xml.Serialization.XmlElement("Race")]
+        [XmlElement("Race")]
         public CharacterRace _race = CharacterRace.NightElf;
-        [System.Xml.Serialization.XmlElement("Class")]
+        [XmlElement("Class")]
         public CharacterClass _class = CharacterClass.Druid;
-        [System.Xml.Serialization.XmlElement("ActiveBuffs")]
+        [XmlElement("ActiveBuffs")]
 		public List<string> _activeBuffs = new List<string>();
-        [System.Xml.Serialization.XmlElement("Head")]
+        [XmlElement("Head")]
         public string _head;
-        [System.Xml.Serialization.XmlElement("Neck")]
+        [XmlElement("Neck")]
         public string _neck;
-        [System.Xml.Serialization.XmlElement("Shoulders")]
+        [XmlElement("Shoulders")]
         public string _shoulders;
-        [System.Xml.Serialization.XmlElement("Back")]
+        [XmlElement("Back")]
         public string _back;
-        [System.Xml.Serialization.XmlElement("Chest")]
+        [XmlElement("Chest")]
         public string _chest;
-        [System.Xml.Serialization.XmlElement("Shirt")]
+        [XmlElement("Shirt")]
         public string _shirt;
-        [System.Xml.Serialization.XmlElement("Tabard")]
+        [XmlElement("Tabard")]
         public string _tabard;
-        [System.Xml.Serialization.XmlElement("Wrist")]
+        [XmlElement("Wrist")]
         public string _wrist;
-        [System.Xml.Serialization.XmlElement("Hands")]
+        [XmlElement("Hands")]
         public string _hands;
-        [System.Xml.Serialization.XmlElement("Waist")]
+        [XmlElement("Waist")]
         public string _waist;
-        [System.Xml.Serialization.XmlElement("Legs")]
+        [XmlElement("Legs")]
         public string _legs;
-        [System.Xml.Serialization.XmlElement("Feet")]
+        [XmlElement("Feet")]
         public string _feet;
-        [System.Xml.Serialization.XmlElement("Finger1")]
+        [XmlElement("Finger1")]
         public string _finger1;
-        [System.Xml.Serialization.XmlElement("Finger2")]
+        [XmlElement("Finger2")]
         public string _finger2;
-        [System.Xml.Serialization.XmlElement("Trinket1")]
+        [XmlElement("Trinket1")]
         public string _trinket1;
-        [System.Xml.Serialization.XmlElement("Trinket2")]
+        [XmlElement("Trinket2")]
         public string _trinket2;
-		[System.Xml.Serialization.XmlElement("MainHand")]
+		[XmlElement("MainHand")]
 		public string _mainHand;
-		[System.Xml.Serialization.XmlElement("OffHand")]
+		[XmlElement("OffHand")]
 		public string _offHand;
-		[System.Xml.Serialization.XmlElement("Ranged")]
+		[XmlElement("Ranged")]
 		public string _ranged;
-		[System.Xml.Serialization.XmlElement("Projectile")]
+		[XmlElement("Projectile")]
 		public string _projectile;
-		[System.Xml.Serialization.XmlElement("ProjectileBag")]
+		[XmlElement("ProjectileBag")]
 		public string _projectileBag;
-		[System.Xml.Serialization.XmlElement("HeadEnchant")]
+		[XmlElement("HeadEnchant")]
 		public int _headEnchant = 0;
-		[System.Xml.Serialization.XmlElement("ShouldersEnchant")]
+		[XmlElement("ShouldersEnchant")]
 		public int _shouldersEnchant = 0;
-		[System.Xml.Serialization.XmlElement("BackEnchant")]
+		[XmlElement("BackEnchant")]
 		public int _backEnchant = 0;
-		[System.Xml.Serialization.XmlElement("ChestEnchant")]
+		[XmlElement("ChestEnchant")]
 		public int _chestEnchant = 0;
-		[System.Xml.Serialization.XmlElement("WristEnchant")]
+		[XmlElement("WristEnchant")]
 		public int _wristEnchant = 0;
-		[System.Xml.Serialization.XmlElement("HandsEnchant")]
+		[XmlElement("HandsEnchant")]
 		public int _handsEnchant = 0;
-		[System.Xml.Serialization.XmlElement("LegsEnchant")]
+		[XmlElement("LegsEnchant")]
 		public int _legsEnchant = 0;
-		[System.Xml.Serialization.XmlElement("FeetEnchant")]
+		[XmlElement("FeetEnchant")]
 		public int _feetEnchant = 0;
-		[System.Xml.Serialization.XmlElement("Finger1Enchant")]
+		[XmlElement("Finger1Enchant")]
 		public int _finger1Enchant = 0;
-		[System.Xml.Serialization.XmlElement("Finger2Enchant")]
+		[XmlElement("Finger2Enchant")]
 		public int _finger2Enchant = 0;
-		[System.Xml.Serialization.XmlElement("MainHandEnchant")]
+		[XmlElement("MainHandEnchant")]
 		public int _mainHandEnchant = 0;
-		[System.Xml.Serialization.XmlElement("OffHandEnchant")]
+		[XmlElement("OffHandEnchant")]
 		public int _offHandEnchant = 0;
-		[System.Xml.Serialization.XmlElement("RangedEnchant")]
+		[XmlElement("RangedEnchant")]
 		public int _rangedEnchant = 0;
-		[System.Xml.Serialization.XmlElement("CalculationOptions")]
-		public string[] _calculationOptionsStrings = new string[0];
-        [System.Xml.Serialization.XmlElement("Talents")]
+		[XmlElement("CalculationOptions")]
+		public SerializableDictionary<string, object> _calculationOptions = new SerializableDictionary<string, object>();
+        [XmlElement("Talents")]
         public TalentTree _talents = new TalentTree();
-		[System.Xml.Serialization.XmlElement("AvailableItems")]
+		[XmlElement("AvailableItems")]
 		public List<int> _availableItems = new List<int>();
+		[XmlElement("CurrentModel")]
+		public string _currentModel;
+		[XmlElement("EnforceMetagemRequirements")]
+		public bool _enforceMetagemRequirements = false;
 
 
 
         // set to true to suppress ItemsChanged event
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         public bool IsLoading { get; set; }
         
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         public string Name
         {
             get { return _name; }
             set { _name = value; }
         }
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         public string Realm
         {
             get { return _realm; }
             set { _realm = value; }
         }
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Character.CharacterRegion Region
         {
             get { return _region; }
             set { _region = value; }
         }
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         public CharacterRace Race
         {
             get { return _race; }
@@ -136,7 +142,7 @@ namespace Rawr //O O . .
             }
         }
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         public Character.CharacterClass Class
         {
             get { return _class; }
@@ -144,16 +150,16 @@ namespace Rawr //O O . .
         }
 
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         public List<string> ActiveBuffs
         {
             get { return _activeBuffs; }
 			set { _activeBuffs = value; }
         }
 
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _headCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         public Item Head
         {
 			get
@@ -174,9 +180,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _neckCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Neck
         {
 			get
@@ -197,9 +203,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _shouldersCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Shoulders
         {
 			get
@@ -220,9 +226,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _backCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Back
         {
 			get
@@ -243,9 +249,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _chestCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Chest
         {
 			get
@@ -266,9 +272,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _shirtCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Shirt
         {
 			get
@@ -289,9 +295,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _tabardCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Tabard
         {
 			get
@@ -312,9 +318,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _wristCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Wrist
         {
 			get
@@ -335,9 +341,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _handsCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Hands
         {
 			get
@@ -358,9 +364,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _waistCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Waist
         {
 			get
@@ -381,9 +387,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _legsCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Legs
         {
 			get
@@ -404,9 +410,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _feetCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Feet
         {
 			get
@@ -427,9 +433,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _finger1Cached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Finger1
         {
 			get
@@ -450,9 +456,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _finger2Cached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Finger2
         {
 			get
@@ -473,9 +479,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _trinket1Cached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Trinket1
         {
 			get
@@ -496,9 +502,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _trinket2Cached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Trinket2
         {
 			get
@@ -519,9 +525,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _mainHandCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item MainHand
         {
 			get
@@ -544,9 +550,9 @@ namespace Rawr //O O . .
                 }
             }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _offHandCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Item OffHand
 		{
 			get
@@ -567,9 +573,9 @@ namespace Rawr //O O . .
 				}
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _rangedCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
         public Item Ranged
         {
 			get
@@ -590,9 +596,9 @@ namespace Rawr //O O . .
                 }
             }
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _projectileCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Item Projectile
 		{
 			get
@@ -613,9 +619,9 @@ namespace Rawr //O O . .
 				}
 			}
 		}
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		private Item _projectileBagCached = null;
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public Item ProjectileBag
 		{
 			get
@@ -637,9 +643,9 @@ namespace Rawr //O O . .
 			}
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _headEnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant HeadEnchant
 		{
 			get
@@ -657,9 +663,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _shouldersEnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant ShouldersEnchant
 		{
 			get 
@@ -677,9 +683,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _backEnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant BackEnchant
 		{
 			get 
@@ -697,9 +703,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _chestEnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant ChestEnchant
 		{
 			get
@@ -717,9 +723,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _wristEnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant WristEnchant
 		{
 			get 
@@ -737,9 +743,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _handsEnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant HandsEnchant
 		{
 			get
@@ -757,9 +763,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _legsEnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant LegsEnchant
 		{
 			get 
@@ -777,9 +783,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _feetEnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant FeetEnchant
 		{
 			get
@@ -797,9 +803,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _finger1EnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant Finger1Enchant
 		{
 			get 
@@ -817,9 +823,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _finger2EnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant Finger2Enchant
 		{
 			get 
@@ -837,9 +843,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _mainHandEnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant MainHandEnchant
 		{
 			get 
@@ -857,9 +863,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _offHandEnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant OffHandEnchant
 		{
 			get 
@@ -877,9 +883,9 @@ namespace Rawr //O O . .
             }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         private Enchant _rangedEnchantCached = null;
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
 		public Enchant RangedEnchant
 		{
 			get
@@ -897,47 +903,95 @@ namespace Rawr //O O . .
             }
 		}
 
-		[System.Xml.Serialization.XmlIgnore]
-		public string[] CalculationOptionsStrings
+		//[XmlIgnore]
+		//public string[] CalculationOptionsStrings
+		//{
+		//    get
+		//    {
+		//        SerializeCalculationOptions();
+		//        return _calculationOptionsStrings; 
+		//    }
+		//    set { _calculationOptionsStrings = value; }
+		//}
+		//[XmlIgnore]
+		//private Dictionary<string, string> _calculationOptions = null;
+		[XmlIgnore]
+		public SerializableDictionary<string, object> CalculationOptions
 		{
 			get
 			{
-				SerializeCalculationOptions();
-				return _calculationOptionsStrings; 
-			}
-			set { _calculationOptionsStrings = value; }
-		}
-		[System.Xml.Serialization.XmlIgnore]
-		private Dictionary<string, string> _calculationOptions = null;
-		[System.Xml.Serialization.XmlIgnore]
-		public Dictionary<string, string> CalculationOptions
-		{
-			get
-			{
+				//if (_calculationOptions == null)
+				//{
+				//    _calculationOptions = new Dictionary<string, object>();
+				//    if (_calculationOptionsStrings != null)
+				//    {
+				//        foreach (string calcOpt in _calculationOptionsStrings)
+				//        {
+				//            string[] calcOptSplit = calcOpt.Split('=');
+				//            _calculationOptions.Add(calcOptSplit[0], calcOptSplit[1]);
+				//        }
+				//    }
+				//}
 				if (_calculationOptions == null)
 				{
-					_calculationOptions = new Dictionary<string, string>();
-					if (_calculationOptionsStrings != null)
-					{
-						foreach (string calcOpt in _calculationOptionsStrings)
-						{
-							string[] calcOptSplit = calcOpt.Split('=');
-							_calculationOptions.Add(calcOptSplit[0], calcOptSplit[1]);
-						}
-					}
+				    _calculationOptions = new SerializableDictionary<string, object>();
 				}
 				return _calculationOptions;
 			}
 			set { _calculationOptions = value; }
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
+		private object _currentCalculationOptions;
+		[XmlIgnore]
+		public object CurrentCalculationOptions
+		{
+			get
+			{
+				if (_currentCalculationOptions == null && _calculationOptions.ContainsKey(CurrentModel))
+					_currentCalculationOptions = _calculationOptions[CurrentModel];
+				return _currentCalculationOptions;
+			}
+			set
+			{
+				_calculationOptions[_currentModel] = value;
+			}
+		}
+
+		[XmlIgnore]
+		public string CurrentModel
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(_currentModel))
+				{
+					foreach (KeyValuePair<string, Type> kvp in Calculations.Models)
+						if (kvp.Value == Calculations.Instance.GetType())
+							_currentModel = kvp.Key;
+				}
+				return _currentModel;
+			}
+			set
+			{
+				_currentModel = value;
+				_currentCalculationOptions = null;
+			}
+		}
+
+		[XmlIgnore]
+		public bool EnforceMetagemRequirements
+		{
+			get { return _enforceMetagemRequirements; }
+			set { _enforceMetagemRequirements = value; }
+		}
+
+        [XmlIgnore]
         public TalentTree Talents
         {
             get { return _talents; }
             set { _talents = value; }
         }
-		[System.Xml.Serialization.XmlIgnore]
+		[XmlIgnore]
 		public List<int> AvailableItems
 		{
 			get { return _availableItems; }
@@ -946,13 +1000,13 @@ namespace Rawr //O O . .
 
 
 
-		private void SerializeCalculationOptions()
-		{
-			List<string> listCalcOpts = new List<string>();
-			foreach (KeyValuePair<string, string> kvp in CalculationOptions)
-				listCalcOpts.Add(string.Format("{0}={1}", kvp.Key, kvp.Value));
-			_calculationOptionsStrings = listCalcOpts.ToArray();
-		}
+		//private void SerializeCalculationOptions()
+		//{
+		//    List<string> listCalcOpts = new List<string>();
+		//    foreach (KeyValuePair<string, string> kvp in CalculationOptions)
+		//        listCalcOpts.Add(string.Format("{0}={1}", kvp.Key, kvp.Value));
+		//    _calculationOptionsStrings = listCalcOpts.ToArray();
+		//}
 
 		public Enchant GetEnchantBySlot(Item.ItemSlot slot)
 		{
@@ -1112,7 +1166,7 @@ namespace Rawr //O O . .
 			}
 		}
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         public Item this[CharacterSlot slot]
         {
             get
@@ -1529,7 +1583,7 @@ namespace Rawr //O O . .
 			foreach (string buff in this.ActiveBuffs) 
 				if (!clone.ActiveBuffs.Contains(buff))
 					clone.ActiveBuffs.Add(buff);
-			clone.CalculationOptionsStrings = this.CalculationOptionsStrings;
+			clone.CalculationOptions = this.CalculationOptions;
             clone.Class = this.Class;
             clone.Talents = this.Talents;
 			return clone;
@@ -1537,7 +1591,7 @@ namespace Rawr //O O . .
     
         public void Save(string path)
         {
-			SerializeCalculationOptions();
+			//SerializeCalculationOptions();
             using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
             {
                 System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
@@ -1554,6 +1608,7 @@ namespace Rawr //O O . .
 				try
 				{
 					string xml = System.IO.File.ReadAllText(path).Replace("<Region>en", "<Region>US").Replace("<Weapon>", "<MainHand>").Replace("</Weapon>", "</MainHand>").Replace("<Idol>", "<Ranged>").Replace("</Idol>", "</Ranged>").Replace("<WeaponEnchant>", "<MainHandEnchant>").Replace("</WeaponEnchant>", "</MainHandEnchant>");
+					//while (xml.Contains("<CalculationOption>"))
 					System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
 					System.IO.StringReader reader = new System.IO.StringReader(xml);
 					character = (Character)serializer.Deserialize(reader);

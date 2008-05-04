@@ -188,7 +188,8 @@ you are being killed by burst damage, focus on Survival Points.",
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			_cachedCharacter = character;
-			int targetLevel = int.Parse(character.CalculationOptions["TargetLevel"]);
+			CalculationOptionsProtWarr calcOpts = character.CurrentCalculationOptions as CalculationOptionsProtWarr;
+			int targetLevel = calcOpts.TargetLevel;
 
 			Stats stats = GetCharacterStats(character, additionalItem);
 			float levelDifference = (targetLevel - 70f) * 0.2f;
@@ -232,7 +233,7 @@ you are being killed by burst damage, focus on Survival Points.",
 
             calculatedStats.CrushChance = crushes;
 
-            float damagePerBossAttack = float.Parse(character.CalculationOptions["BossAttackValue"]);
+            float damagePerBossAttack = calcOpts.BossAttackValue;
 			//Apply armor and multipliers for each attack type...
 			crits *= (100f - calculatedStats.CappedMitigation) * .02f;
 			crushes *= (100f - calculatedStats.CappedMitigation) * .015f;
@@ -241,7 +242,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			calculatedStats.DamageTaken = blocked + hits + crushes + crits;
 			calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
 
-            int mitigationScale = int.Parse(character.CalculationOptions["MitigationScale"]);
+            int mitigationScale = calcOpts.MitigationScale;
 
 			calculatedStats.SurvivalPoints = (stats.Health / ((1f - (calculatedStats.CappedMitigation / 100f))*0.9f)); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
             calculatedStats.MitigationPoints = mitigationScale * (1f * (1f / (calculatedStats.DamageTaken / 100f))*0.9f); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
@@ -254,7 +255,7 @@ you are being killed by burst damage, focus on Survival Points.",
             calculatedStats.ShadowSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ShadowResistance + stats.AllResist) / cappedResist) * .75)));
             calculatedStats.ArcaneSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ArcaneResistance + stats.AllResist) / cappedResist) * .75)));
 
-            float targetArmor = float.Parse(character.CalculationOptions["TargetArmor"]);
+            float targetArmor = calcOpts.TargetArmor;
             float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
             float modArmor = 1-(baseArmor / (baseArmor + 10557.5f));
 
@@ -319,14 +320,14 @@ you are being killed by burst damage, focus on Survival Points.",
                                         208f * averageDamage) / 6f;
 
 
-                calculatedStats.ThreatScale = float.Parse(character.CalculationOptions["ThreatScale"]);
+                calculatedStats.ThreatScale = calcOpts.ThreatScale;
 
                 calculatedStats.ThreatPoints = calculatedStats.ThreatScale * (whiteTPS + shieldSlamTPS + revengeTPS + devastateTPS);
                 calculatedStats.UnlimitedThreat = calculatedStats.ThreatScale * (whiteTPS + shieldSlamTPS + revengeTPS + devastateTPS + heroicStrikeTPS);
             }
             else
             {
-                calculatedStats.ThreatScale = float.Parse(character.CalculationOptions["ThreatScale"]);
+				calculatedStats.ThreatScale = calcOpts.ThreatScale;
 
                 //Default threat
                 calculatedStats.ThreatPoints = calculatedStats.ThreatScale * 100f;

@@ -32,45 +32,48 @@ namespace Rawr
 		protected override void LoadCalculationOptions()
 		{
 			_loadingCalculationOptions = true;
-			if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
-				Character.CalculationOptions["TargetLevel"] = "73";
-			if (!Character.CalculationOptions.ContainsKey("TargetArmor"))
-				Character.CalculationOptions["TargetArmor"] = "7700";
-			if (!Character.CalculationOptions.ContainsKey("ExposeWeaknessAPValue"))
-				Character.CalculationOptions["ExposeWeaknessAPValue"] = "200";
-			if (!Character.CalculationOptions.ContainsKey("Powershift"))
-				Character.CalculationOptions["Powershift"] = "4";
-			if (!Character.CalculationOptions.ContainsKey("PrimaryAttack"))
-				Character.CalculationOptions["PrimaryAttack"] = "Both";
-			if (!Character.CalculationOptions.ContainsKey("Finisher"))
-				Character.CalculationOptions["Finisher"] = "Rip";
-			if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-				Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
-			if (!Character.CalculationOptions.ContainsKey("BloodlustUptime"))
-				Character.CalculationOptions["BloodlustUptime"] = "15";
-			if (!Character.CalculationOptions.ContainsKey("DrumsOfBattleUptime"))
-				Character.CalculationOptions["DrumsOfBattleUptime"] = "25";
-			if (!Character.CalculationOptions.ContainsKey("DrumsOfWarUptime"))
-				Character.CalculationOptions["DrumsOfWarUptime"] = "25";
-			if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
-				Character.CalculationOptions["ShattrathFaction"] = "Aldor";
+			if (Character.CurrentCalculationOptions == null)
+				Character.CurrentCalculationOptions = new CalculationOptionsCat();
+			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
+			//    Character.CalculationOptions["TargetLevel"] = "73";
+			//if (!Character.CalculationOptions.ContainsKey("TargetArmor"))
+			//    Character.CalculationOptions["TargetArmor"] = "7700";
+			//if (!Character.CalculationOptions.ContainsKey("ExposeWeaknessAPValue"))
+			//    Character.CalculationOptions["ExposeWeaknessAPValue"] = "200";
+			//if (!Character.CalculationOptions.ContainsKey("Powershift"))
+			//    Character.CalculationOptions["Powershift"] = "4";
+			//if (!Character.CalculationOptions.ContainsKey("PrimaryAttack"))
+			//    Character.CalculationOptions["PrimaryAttack"] = "Both";
+			//if (!Character.CalculationOptions.ContainsKey("Finisher"))
+			//    Character.CalculationOptions["Finisher"] = "Rip";
+			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
+			//    Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
+			//if (!Character.CalculationOptions.ContainsKey("BloodlustUptime"))
+			//    Character.CalculationOptions["BloodlustUptime"] = "15";
+			//if (!Character.CalculationOptions.ContainsKey("DrumsOfBattleUptime"))
+			//    Character.CalculationOptions["DrumsOfBattleUptime"] = "25";
+			//if (!Character.CalculationOptions.ContainsKey("DrumsOfWarUptime"))
+			//    Character.CalculationOptions["DrumsOfWarUptime"] = "25";
+			//if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
+			//    Character.CalculationOptions["ShattrathFaction"] = "Aldor";
 
-			comboBoxTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
-			trackBarTargetArmor.Value = int.Parse(Character.CalculationOptions["TargetArmor"]);
-			trackBarExposeWeakness.Value = int.Parse(Character.CalculationOptions["ExposeWeaknessAPValue"]);
-			trackBarBloodlustUptime.Value = int.Parse(Character.CalculationOptions["BloodlustUptime"]);
-			trackBarDrumsOfBattleUptime.Value = int.Parse(Character.CalculationOptions["DrumsOfBattleUptime"]);
-			trackBarDrumsOfWarUptime.Value = int.Parse(Character.CalculationOptions["DrumsOfWarUptime"]);
-			comboBoxPowershift.SelectedIndex = int.Parse(Character.CalculationOptions["Powershift"]);
-			radioButtonMangle.Checked = Character.CalculationOptions["PrimaryAttack"] == "Mangle";
-			radioButtonShred.Checked = Character.CalculationOptions["PrimaryAttack"] == "Shred";
-			radioButtonBoth.Checked = Character.CalculationOptions["PrimaryAttack"] == "Both";
-			radioButtonRip.Checked = Character.CalculationOptions["Finisher"] == "Rip";
-			radioButtonFerociousBite.Checked = Character.CalculationOptions["Finisher"] == "Ferocious Bite";
-			radioButtonNone.Checked = Character.CalculationOptions["Finisher"] == "None";
-			checkBoxEnforceMetagemRequirements.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
-			radioButtonAldor.Checked = Character.CalculationOptions["ShattrathFaction"] == "Aldor";
-			radioButtonScryer.Checked = Character.CalculationOptions["ShattrathFaction"] == "Scryer";
+			CalculationOptionsCat calcOpts = Character.CurrentCalculationOptions as CalculationOptionsCat;
+			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
+			trackBarTargetArmor.Value = calcOpts.TargetArmor;
+			trackBarExposeWeakness.Value = calcOpts.ExposeWeaknessAPValue;
+			trackBarBloodlustUptime.Value = (int)Math.Round(calcOpts.BloodlustUptime);
+			trackBarDrumsOfBattleUptime.Value = (int)Math.Round(calcOpts.DrumsOfBattleUptime);
+			trackBarDrumsOfWarUptime.Value = (int)Math.Round(calcOpts.DrumsOfWarUptime);
+			comboBoxPowershift.SelectedIndex = calcOpts.Powershift;
+			radioButtonMangle.Checked = calcOpts.PrimaryAttack == "Mangle";
+			radioButtonShred.Checked = calcOpts.PrimaryAttack == "Shred";
+			radioButtonBoth.Checked = calcOpts.PrimaryAttack == "Both";
+			radioButtonRip.Checked = calcOpts.Finisher == "Rip";
+			radioButtonFerociousBite.Checked = calcOpts.Finisher == "Ferocious Bite";
+			radioButtonNone.Checked = calcOpts.Finisher == "None";
+			checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
+			radioButtonAldor.Checked = calcOpts.ShattrathFaction == "Aldor";
+			radioButtonScryer.Checked = calcOpts.ShattrathFaction == "Scryer";
 			
 			labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
 			labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
@@ -92,29 +95,41 @@ namespace Rawr
 				labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
 				labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
 
-				Character.CalculationOptions["TargetLevel"] = comboBoxTargetLevel.SelectedItem.ToString();
-				Character.CalculationOptions["TargetArmor"] = trackBarTargetArmor.Value.ToString();
-				Character.CalculationOptions["BloodlustUptime"] = trackBarBloodlustUptime.Value.ToString();
-				Character.CalculationOptions["DrumsOfBattleUptime"] = trackBarDrumsOfBattleUptime.Value.ToString();
-				Character.CalculationOptions["DrumsOfWarUptime"] = trackBarDrumsOfWarUptime.Value.ToString();
-				Character.CalculationOptions["ExposeWeaknessAPValue"] = trackBarExposeWeakness.Value.ToString();
-				Character.CalculationOptions["Powershift"] = comboBoxPowershift.SelectedIndex.ToString();
-				Character.CalculationOptions["ShattrathFaction"] = radioButtonAldor.Checked ? "Aldor" : "Scryer";
+				CalculationOptionsCat calcOpts = Character.CurrentCalculationOptions as CalculationOptionsCat;
+				Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
+				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
+				calcOpts.TargetArmor = trackBarTargetArmor.Value;
+				calcOpts.BloodlustUptime = (float)trackBarBloodlustUptime.Value / 100f;
+				calcOpts.DrumsOfBattleUptime = (float)trackBarDrumsOfBattleUptime.Value / 100f;
+				calcOpts.DrumsOfWarUptime = (float)trackBarDrumsOfWarUptime.Value / 100f;
+				calcOpts.ExposeWeaknessAPValue = trackBarExposeWeakness.Value;
+				calcOpts.Powershift = comboBoxPowershift.SelectedIndex;
+				calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
 				foreach (RadioButton radioButtonPrimaryAttack in groupBoxPrimaryAttack.Controls)
 					if (radioButtonPrimaryAttack.Checked)
-						Character.CalculationOptions["PrimaryAttack"] = radioButtonPrimaryAttack.Tag.ToString();
+						calcOpts.PrimaryAttack = radioButtonPrimaryAttack.Tag.ToString();
 				foreach (RadioButton radioButtonFinisher in groupBoxFinisher.Controls)
 					if (radioButtonFinisher.Checked)
-						Character.CalculationOptions["Finisher"] = radioButtonFinisher.Tag.ToString();
+						calcOpts.Finisher = radioButtonFinisher.Tag.ToString();
 
 				Character.OnItemsChanged();
 			}
 		}
+	}
 
-		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
-		{
-			Character.CalculationOptions["EnforceMetagemRequirements"] = checkBoxEnforceMetagemRequirements.Checked ? "Yes" : "No";
-			Character.OnItemsChanged();
-		}
+	[Serializable]
+	public class CalculationOptionsCat
+	{
+		public int TargetLevel = 73;
+		public int TargetArmor = 7700;
+		public int ExposeWeaknessAPValue = 200;
+		public int Powershift = 4;
+		public string PrimaryAttack = "Both";
+		public string Finisher = "Rip";
+		public bool EnforceMetagemRequirements = false;
+		public float BloodlustUptime = 15f;
+		public float DrumsOfBattleUptime = 25f;
+		public float DrumsOfWarUptime = 25f;
+		public string ShattrathFaction = "Aldor";
 	}
 }

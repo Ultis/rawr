@@ -300,7 +300,7 @@
 			this.checkBoxEnforceMetagemRequirements.TabIndex = 5;
 			this.checkBoxEnforceMetagemRequirements.Text = "Enforce Metagem Requirements";
 			this.checkBoxEnforceMetagemRequirements.UseVisualStyleBackColor = true;
-			this.checkBoxEnforceMetagemRequirements.CheckedChanged += new System.EventHandler(this.checkBoxEnforceMetagemRequirements_CheckedChanged);
+			this.checkBoxEnforceMetagemRequirements.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// label4
 			// 

@@ -123,11 +123,12 @@ namespace Rawr.Healadin
             CharacterCalculationsHealadin calculatedStats = new CharacterCalculationsHealadin();
             calculatedStats.BasicStats = stats;
 
-            float activity = int.Parse(character.CalculationOptions["Activity"]) / 100f;
-			float length = float.Parse(character.CalculationOptions["Length"], System.Globalization.CultureInfo.InvariantCulture) * 60;
-            float totalMana = stats.Mana + (length * stats.Mp5 / 5) + (float.Parse(character.CalculationOptions["Spriest"]) * length / 5) +
-                ((1 + stats.BonusManaPotion) * float.Parse(character.CalculationOptions["ManaAmt"]) * (float)Math.Ceiling((length / 60 - 1) / float.Parse(character.CalculationOptions["ManaTime"])))
-                + float.Parse(character.CalculationOptions["Spiritual"]);
+			CalculationOptionsHealadin calcOpts = character.CurrentCalculationOptions as CalculationOptionsHealadin;
+			float activity = (float)calcOpts.Activity / 100f;
+			float length = calcOpts.Length * 60;
+            float totalMana = stats.Mana + (length * stats.Mp5 / 5) + (calcOpts.Spriest * length / 5) +
+                ((1 + stats.BonusManaPotion) * calcOpts.ManaAmt * (float)Math.Ceiling((length / 60 - 1) / calcOpts.ManaTime))
+                + calcOpts.Spiritual;
             length *= activity; 
 
             calculatedStats[0] = new Spell("Flash of Light", 7);

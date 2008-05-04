@@ -27,99 +27,109 @@ namespace Rawr.Moonkin
         // Load the options into the form
         protected override void LoadCalculationOptions()
         {
-            if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
-                Character.CalculationOptions["TargetLevel"] = "73";
-            if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-                Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
-            if (!Character.CalculationOptions.ContainsKey("Latency"))
-                Character.CalculationOptions["Latency"] = "0.4";
-            if (!Character.CalculationOptions.ContainsKey("FightLength"))
-                Character.CalculationOptions["FightLength"] = "5";
-            if (!Character.CalculationOptions.ContainsKey("Innervate"))
-                Character.CalculationOptions["Innervate"] = "No";
-            if (!Character.CalculationOptions.ContainsKey("InnervateDelay"))
-                Character.CalculationOptions["InnervateDelay"] = "1";
-            if (!Character.CalculationOptions.ContainsKey("ShadowPriest"))
-                Character.CalculationOptions["ShadowPriest"] = "0";
-            if (!Character.CalculationOptions.ContainsKey("ManaPots"))
-                Character.CalculationOptions["ManaPots"] = "No";
-            if (!Character.CalculationOptions.ContainsKey("ManaPotDelay"))
-                Character.CalculationOptions["ManaPotDelay"] = "1.5";
-            if (!Character.CalculationOptions.ContainsKey("ManaPotType"))
-                Character.CalculationOptions["ManaPotType"] = "Super Mana Potion";
-            if (!Character.CalculationOptions.ContainsKey("InnervateWeapon"))
-                Character.CalculationOptions["InnervateWeapon"] = "No";
-            if (!Character.CalculationOptions.ContainsKey("InnervateWeaponInt"))
-                Character.CalculationOptions["InnervateWeaponInt"] = "0";
-            if (!Character.CalculationOptions.ContainsKey("InnervateWeaponSpi"))
-                Character.CalculationOptions["InnervateWeaponSpi"] = "0";
-            if (!Character.CalculationOptions.ContainsKey("AldorScryer"))
-                Character.CalculationOptions["AldorScryer"] = "Aldor";
+			if (Character.CurrentCalculationOptions == null)
+				Character.CurrentCalculationOptions = new CalculationOptionsMoonkin();
+			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
+			//    calcOpts.TargetLevel = "73";
+			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
+			//    character.EnforceMetagemRequirements = "No";
+			//if (!Character.CalculationOptions.ContainsKey("Latency"))
+			//    calcOpts.Latency = "0.4";
+			//if (!Character.CalculationOptions.ContainsKey("FightLength"))
+			//    calcOpts.FightLength = "5";
+			//if (!Character.CalculationOptions.ContainsKey("Innervate"))
+			//    calcOpts.Innervate = "No";
+			//if (!Character.CalculationOptions.ContainsKey("InnervateDelay"))
+			//    calcOpts.InnervateDelay = "1";
+			//if (!Character.CalculationOptions.ContainsKey("ShadowPriest"))
+			//    calcOpts.ShadowPriest = "0";
+			//if (!Character.CalculationOptions.ContainsKey("ManaPots"))
+			//    calcOpts.ManaPots = "No";
+			//if (!Character.CalculationOptions.ContainsKey("ManaPotDelay"))
+			//    calcOpts.ManaPotDelay = "1.5";
+			//if (!Character.CalculationOptions.ContainsKey("ManaPotType"))
+			//    calcOpts.ManaPotType = "Super Mana Potion";
+			//if (!Character.CalculationOptions.ContainsKey("InnervateWeapon"))
+			//    calcOpts.InnervateWeapon = "No";
+			//if (!Character.CalculationOptions.ContainsKey("InnervateWeaponInt"))
+			//    calcOpts.InnervateWeaponInt = "0";
+			//if (!Character.CalculationOptions.ContainsKey("InnervateWeaponSpi"))
+			//    calcOpts.InnervateWeaponSpi = "0";
+			//if (!Character.CalculationOptions.ContainsKey("AldorScryer"))
+			//    calcOpts.AldorScryer = "Aldor";
 
-            cmbTargetLevel.SelectedItem = Character.CalculationOptions["TargetLevel"];
-            chkMetagem.Checked = Character.CalculationOptions["EnforceMetagemRequirements"] == "Yes";
-            txtLatency.Text = Character.CalculationOptions["Latency"];
-            txtFightLength.Text = Character.CalculationOptions["FightLength"];
-            txtShadowPriest.Text = Character.CalculationOptions["ShadowPriest"];
-            chkInnervate.Checked = Character.CalculationOptions["Innervate"] == "Yes";
-            chkManaPots.Checked = Character.CalculationOptions["ManaPots"] == "Yes";
-            cmbPotType.SelectedItem = Character.CalculationOptions["ManaPotType"];
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+            cmbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
+			chkMetagem.Checked = Character.EnforceMetagemRequirements;
+            txtLatency.Text = calcOpts.Latency.ToString();
+            txtFightLength.Text = calcOpts.FightLength.ToString();
+            txtShadowPriest.Text = calcOpts.ShadowPriest.ToString();
+            chkInnervate.Checked = calcOpts.Innervate;
+            chkManaPots.Checked = calcOpts.ManaPots;
+            cmbPotType.SelectedItem = calcOpts.ManaPotType;
             cmbPotType.Enabled = chkManaPots.Checked;
-            txtInnervateDelay.Text = Character.CalculationOptions["InnervateDelay"];
+            txtInnervateDelay.Text = calcOpts.InnervateDelay.ToString();
             txtInnervateDelay.Enabled = chkInnervate.Checked;
-            txtManaPotDelay.Text = Character.CalculationOptions["ManaPotDelay"];
+            txtManaPotDelay.Text = calcOpts.ManaPotDelay.ToString();
             txtManaPotDelay.Enabled = chkManaPots.Checked;
-            chkInnervateWeapon.Checked = Character.CalculationOptions["InnervateWeapon"] == "Yes";
+            chkInnervateWeapon.Checked = calcOpts.InnervateWeapon;
             txtInnervateWeaponInt.Enabled = chkInnervateWeapon.Checked;
-            txtInnervateWeaponInt.Text = Character.CalculationOptions["InnervateWeaponInt"];
+            txtInnervateWeaponInt.Text = calcOpts.InnervateWeaponInt.ToString();
             txtInnervateWeaponSpi.Enabled = chkInnervateWeapon.Checked;
-            txtInnervateWeaponSpi.Text = Character.CalculationOptions["InnervateWeaponSpi"];
-            rdbAldor.Checked = Character.CalculationOptions["AldorScryer"] == "Aldor";
-            rdbScryer.Checked = Character.CalculationOptions["AldorScryer"] == "Scryer";
+            txtInnervateWeaponSpi.Text = calcOpts.InnervateWeaponSpi.ToString();
+            rdbAldor.Checked = calcOpts.AldorScryer == "Aldor";
+            rdbScryer.Checked = calcOpts.AldorScryer == "Scryer";
 
             if (talents != null) talents.LoadCalculationOptions();
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["TargetLevel"] = cmbTargetLevel.SelectedItem.ToString();
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.TargetLevel = int.Parse(cmbTargetLevel.SelectedItem.ToString());
             Character.OnItemsChanged();
         }
 
         private void txtLatency_TextChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["Latency"] = txtLatency.Text;
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.Latency = float.Parse(txtLatency.Text);
             Character.OnItemsChanged();
         }
 
         private void chkMetagem_Leave(object sender, EventArgs e)
         {
-            Character.CalculationOptions["EnforceMetagemRequirements"] = chkMetagem.Checked ? "Yes" : "No";
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			Character.EnforceMetagemRequirements = chkMetagem.Checked;
             Character.OnItemsChanged();
         }
 
         private void txtFightLength_Leave(object sender, EventArgs e)
         {
-            Character.CalculationOptions["FightLength"] = txtFightLength.Text;
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.FightLength = float.Parse(txtFightLength.Text);
             Character.OnItemsChanged();
         }
 
         private void chkInnervate_CheckedChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["Innervate"] = chkInnervate.Checked ? "Yes" : "No";
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.Innervate = chkInnervate.Checked;
             txtInnervateDelay.Enabled = chkInnervate.Checked;
             Character.OnItemsChanged();
         }
 
         private void txtShadowPriest_Leave(object sender, EventArgs e)
         {
-            Character.CalculationOptions["ShadowPriest"] = txtShadowPriest.Text;
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.ShadowPriest = float.Parse(txtShadowPriest.Text);
             Character.OnItemsChanged();
         }
 
         private void chkManaPots_CheckedChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["ManaPots"] = chkManaPots.Checked ? "Yes" : "No";
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.ManaPots = chkManaPots.Checked;
             cmbPotType.Enabled = chkManaPots.Checked;
             txtManaPotDelay.Enabled = chkManaPots.Checked;
             Character.OnItemsChanged();
@@ -127,37 +137,43 @@ namespace Rawr.Moonkin
 
         private void cmbPotType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["ManaPotType"] = cmbPotType.SelectedItem.ToString();
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.ManaPotType = cmbPotType.SelectedItem.ToString();
             Character.OnItemsChanged();
         }
 
         private void txtInnervateDelay_Leave(object sender, EventArgs e)
         {
-            Character.CalculationOptions["InnervateDelay"] = txtInnervateDelay.Text;
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.InnervateDelay = float.Parse(txtInnervateDelay.Text);
             Character.OnItemsChanged();
         }
 
         private void txtManaPotDelay_Leave(object sender, EventArgs e)
         {
-            Character.CalculationOptions["ManaPotDelay"] = txtManaPotDelay.Text;
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.ManaPotDelay = float.Parse(txtManaPotDelay.Text);
             Character.OnItemsChanged();
         }
 
         private void txtInnervateWeaponInt_Leave(object sender, EventArgs e)
         {
-            Character.CalculationOptions["InnervateWeaponInt"] = txtInnervateWeaponInt.Text;
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.InnervateWeaponInt = float.Parse(txtInnervateWeaponInt.Text);
             Character.OnItemsChanged();
         }
 
         private void txtInnervateWeaponSpi_Leave(object sender, EventArgs e)
         {
-            Character.CalculationOptions["InnervateWeaponSpi"] = txtInnervateWeaponSpi.Text;
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.InnervateWeaponSpi = float.Parse(txtInnervateWeaponSpi.Text);
             Character.OnItemsChanged();
         }
 
         private void chkInnervateWeapon_CheckedChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["InnervateWeapon"] = chkInnervateWeapon.Checked ? "Yes" : "No";
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.InnervateWeapon = chkInnervateWeapon.Checked;
             txtInnervateWeaponInt.Enabled = chkInnervateWeapon.Checked;
             txtInnervateWeaponSpi.Enabled = chkInnervateWeapon.Checked;
             Character.OnItemsChanged();
@@ -165,8 +181,91 @@ namespace Rawr.Moonkin
 
         private void rdbScryer_CheckedChanged(object sender, EventArgs e)
         {
-            Character.CalculationOptions["AldorScryer"] = rdbScryer.Checked ? "Scryer" : "Aldor";
+			CalculationOptionsMoonkin calcOpts = Character.CurrentCalculationOptions as CalculationOptionsMoonkin;
+			calcOpts.AldorScryer = rdbScryer.Checked ? "Scryer" : "Aldor";
             Character.OnItemsChanged();
         }
     }
+
+	[Serializable]
+	public class CalculationOptionsMoonkin
+	{
+		public int TargetLevel = 73;
+		public bool EnforceMetagemRequirements = false;
+		public float Latency = 0.4f;
+		public float FightLength = 5;
+		public bool Innervate = false;
+		public float InnervateDelay = 1;
+		public float ShadowPriest = 0;
+		public bool ManaPots = false;
+		public float ManaPotDelay = 1.5f;
+		public string ManaPotType = "Super Mana Potion";
+		public bool InnervateWeapon = false;
+		public float InnervateWeaponInt = 0;
+		public float InnervateWeaponSpi = 0;
+		public string AldorScryer = "Aldor";
+
+		public int StarlightWrath;
+		public int ForceofNature;
+		public int WrathofCenarius;
+		public int ImprovedFF;
+		public int MoonkinForm;
+		public int Dreamstate;
+		public int BalanceofPower;
+		public int Moonfury;
+		public int Moonglow;
+		public int NaturesGrace;
+		public int LunarGuidance;
+		public int CelestialFocus;
+		public int Vengeance;
+		public int NaturesReach;
+		public int InsectSwarm;
+		public int Brambles;
+		public int ImpMoonfire;
+		public int FocusedStarlight;
+		public int ControlofNature;
+		public int ImpNaturesGrasp;
+		public int NaturesGrasp;
+		public int Ferocity;
+		public int FeralAggression;
+		public int FeralInstinct;
+		public int BrutalImpact;
+		public int ThickHide;
+		public int FeralSwiftness;
+		public int FeralCharge;
+		public int SharpenedClaws;
+		public int ShreddingAttacks;
+		public int PredatoryStrikes;
+		public int PrimalFury;
+		public int SavageFury;
+		public int FeralFaerieFire;
+		public int NurturingInstinct;
+		public int HotW;
+		public int SotF;
+		public int PrimalTenacity;
+		public int LotP;
+		public int ImprovedLotP;
+		public int Mangle;
+		public int PredatoryInstincts;
+		public int TreeofLife;
+		public int ImprovedMotW;
+		public int EmpoweredRejuv;
+		public int Furor;
+		public int NaturalPerfection;
+		public int Naturalist;
+		public int Swiftmend;
+		public int NaturesFocus;
+		public int LivingSpirit;
+		public int NaturalShapeshifter;
+		public int ImprovedRegrowth;
+		public int Intensity;
+		public int EmpoweredTouch;
+		public int Subtlety;
+		public int ImpTranquility;
+		public int OmenofClarity;
+		public int GiftofNature;
+		public int TranquilSpirit;
+		public int NaturesSwiftness;
+		public int ImprovedRejuv;
+	}
 }
