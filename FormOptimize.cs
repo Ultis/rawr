@@ -175,46 +175,46 @@ namespace Rawr
 					GetCalculationsValue(Calculations.GetCharacterCalculations(_character))),
 					"Rawr Optimizer Results", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
-				_character.Back = bestCharacter.Back;
-				_character.BackEnchant = bestCharacter.BackEnchant;
-				_character.Chest = bestCharacter.Chest;
-				_character.ChestEnchant = bestCharacter.ChestEnchant;
-				_character.Feet = bestCharacter.Feet;
-				_character.FeetEnchant = bestCharacter.FeetEnchant;
-				_character.Finger1 = bestCharacter.Finger1;
-				_character.Finger1Enchant = bestCharacter.Finger1Enchant;
-				_character.Finger2 = bestCharacter.Finger2;
-				_character.Finger2Enchant = bestCharacter.Finger2Enchant;
-				_character.Hands = bestCharacter.Hands;
-				_character.HandsEnchant = bestCharacter.HandsEnchant;
-				_character.Head = bestCharacter.Head;
-				_character.HeadEnchant = bestCharacter.HeadEnchant;
-				_character.Legs = bestCharacter.Legs;
-				_character.LegsEnchant = bestCharacter.LegsEnchant;
-				_character.MainHand = bestCharacter.MainHand;
-				_character.MainHandEnchant = bestCharacter.MainHandEnchant;
-				_character.Neck = bestCharacter.Neck;
-				_character.OffHand = bestCharacter.OffHand;
-				_character.OffHandEnchant = bestCharacter.OffHandEnchant;
-				_character.Projectile = bestCharacter.Projectile;
-				_character.ProjectileBag = bestCharacter.ProjectileBag;
-				_character.Ranged = bestCharacter.Ranged;
-				_character.RangedEnchant = bestCharacter.RangedEnchant;
-				_character.Shoulders = bestCharacter.Shoulders;
-				_character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
-				_character.Trinket1 = bestCharacter.Trinket1;
-				_character.Trinket2 = bestCharacter.Trinket2;
-				_character.Waist = bestCharacter.Waist;
-				_character.Wrist = bestCharacter.Wrist;
-				_character.WristEnchant = bestCharacter.WristEnchant;
-				_character.OnItemsChanged();
-				Close();
-			}
+					_character.Back = bestCharacter.Back == null ? null : ItemCache.FindItemById(bestCharacter.Back.GemmedId);
+					_character.Chest = bestCharacter.Chest == null ? null : ItemCache.FindItemById(bestCharacter.Chest.GemmedId);
+					_character.Feet = bestCharacter.Feet == null ? null : ItemCache.FindItemById(bestCharacter.Feet.GemmedId);
+					_character.Finger1 = bestCharacter.Finger1 == null ? null : ItemCache.FindItemById(bestCharacter.Finger1.GemmedId);
+					_character.Finger2 = bestCharacter.Finger2 == null ? null : ItemCache.FindItemById(bestCharacter.Finger2.GemmedId);
+					_character.Hands = bestCharacter.Hands == null ? null : ItemCache.FindItemById(bestCharacter.Hands.GemmedId);
+					_character.Head = bestCharacter.Head == null ? null : ItemCache.FindItemById(bestCharacter.Head.GemmedId);
+					_character.Legs = bestCharacter.Legs == null ? null : ItemCache.FindItemById(bestCharacter.Legs.GemmedId);
+					_character.MainHand = bestCharacter.MainHand == null ? null : ItemCache.FindItemById(bestCharacter.MainHand.GemmedId);
+					_character.Neck = bestCharacter.Neck == null ? null : ItemCache.FindItemById(bestCharacter.Neck.GemmedId);
+					_character.OffHand = bestCharacter.OffHand == null ? null : ItemCache.FindItemById(bestCharacter.OffHand.GemmedId);
+					_character.Projectile = bestCharacter.Projectile == null ? null : ItemCache.FindItemById(bestCharacter.Projectile.GemmedId);
+					_character.ProjectileBag = bestCharacter.ProjectileBag == null ? null : ItemCache.FindItemById(bestCharacter.ProjectileBag.GemmedId);
+					_character.Ranged = bestCharacter.Ranged == null ? null : ItemCache.FindItemById(bestCharacter.Ranged.GemmedId);
+					_character.Shoulders = bestCharacter.Shoulders == null ? null : ItemCache.FindItemById(bestCharacter.Shoulders.GemmedId);
+					_character.Trinket1 = bestCharacter.Trinket1 == null ? null : ItemCache.FindItemById(bestCharacter.Trinket1.GemmedId);
+					_character.Trinket2 = bestCharacter.Trinket2 == null ? null : ItemCache.FindItemById(bestCharacter.Trinket2.GemmedId);
+					_character.Waist = bestCharacter.Waist == null ? null : ItemCache.FindItemById(bestCharacter.Waist.GemmedId);
+					_character.Wrist = bestCharacter.Wrist == null ? null : ItemCache.FindItemById(bestCharacter.Wrist.GemmedId);
+					_character.BackEnchant = bestCharacter.BackEnchant;
+					_character.ChestEnchant = bestCharacter.ChestEnchant;
+					_character.FeetEnchant = bestCharacter.FeetEnchant;
+					_character.Finger1Enchant = bestCharacter.Finger1Enchant;
+					_character.Finger2Enchant = bestCharacter.Finger2Enchant;
+					_character.HandsEnchant = bestCharacter.HandsEnchant;
+					_character.HeadEnchant = bestCharacter.HeadEnchant;
+					_character.LegsEnchant = bestCharacter.LegsEnchant;
+					_character.MainHandEnchant = bestCharacter.MainHandEnchant;
+					_character.OffHandEnchant = bestCharacter.OffHandEnchant;
+					_character.RangedEnchant = bestCharacter.RangedEnchant;
+					_character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
+					_character.WristEnchant = bestCharacter.WristEnchant;
+					_character.OnItemsChanged();
+					Close();
+				}
 				else
 				{
 					labelMax.Text = string.Empty;
 					buttonOptimize.Text = "Optimize";
-                    buttonOptimize.Enabled = buttonUpgrades.Enabled = radioButtonAllGemmings.Enabled = radioButtonKnownGemmingsOnly.Enabled =
+					buttonOptimize.Enabled = buttonUpgrades.Enabled = radioButtonAllGemmings.Enabled = radioButtonKnownGemmingsOnly.Enabled =
 					 trackBarThoroughness.Enabled = true;
 					progressBarAlt.Value = progressBarMain.Value = 0;
 				}
