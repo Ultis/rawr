@@ -1313,67 +1313,76 @@ namespace Rawr
 			}
 			else
 			{
-			List<int> possibleId1s, possibleId2s, possibleId3s = null;
-			switch (item.Sockets.Color1)
-			{
-				case Item.ItemSlot.Meta:
-					possibleId1s = metaGemIDs;
-					break;
-				case Item.ItemSlot.Red:
-				case Item.ItemSlot.Orange:
-				case Item.ItemSlot.Yellow:
-				case Item.ItemSlot.Green:
-				case Item.ItemSlot.Blue:
-				case Item.ItemSlot.Purple:
-				case Item.ItemSlot.Prismatic:
-					possibleId1s = gemIDs;
-					break;
-				default:
-					possibleId1s = new List<int>(new int[] { 0 });
-					break;
-			}
-			switch (item.Sockets.Color2)
-			{
-				case Item.ItemSlot.Meta:
-					possibleId2s = metaGemIDs;
-					break;
-				case Item.ItemSlot.Red:
-				case Item.ItemSlot.Orange:
-				case Item.ItemSlot.Yellow:
-				case Item.ItemSlot.Green:
-				case Item.ItemSlot.Blue:
-				case Item.ItemSlot.Purple:
-				case Item.ItemSlot.Prismatic:
-					possibleId2s = gemIDs;
-					break;
-				default:
-					possibleId2s = new List<int>(new int[] { 0 });
-					break;
-			}
-			switch (item.Sockets.Color3)
-			{
-				case Item.ItemSlot.Meta:
-					possibleId3s = metaGemIDs;
-					break;
-				case Item.ItemSlot.Red:
-				case Item.ItemSlot.Orange:
-				case Item.ItemSlot.Yellow:
-				case Item.ItemSlot.Green:
-				case Item.ItemSlot.Blue:
-				case Item.ItemSlot.Purple:
-				case Item.ItemSlot.Prismatic:
-					possibleId3s = gemIDs;
-					break;
-				default:
-					possibleId3s = new List<int>(new int[] { 0 });
-					break;
-			}
+			    List<int> possibleId1s, possibleId2s, possibleId3s = null;
+			    switch (item.Sockets.Color1)
+			    {
+				    case Item.ItemSlot.Meta:
+					    possibleId1s = metaGemIDs;
+					    break;
+				    case Item.ItemSlot.Red:
+				    case Item.ItemSlot.Orange:
+				    case Item.ItemSlot.Yellow:
+				    case Item.ItemSlot.Green:
+				    case Item.ItemSlot.Blue:
+				    case Item.ItemSlot.Purple:
+				    case Item.ItemSlot.Prismatic:
+					    possibleId1s = gemIDs;
+					    break;
+				    default:
+					    possibleId1s = new List<int>(new int[] { 0 });
+					    break;
+			    }
+			    switch (item.Sockets.Color2)
+			    {
+				    case Item.ItemSlot.Meta:
+					    possibleId2s = metaGemIDs;
+					    break;
+				    case Item.ItemSlot.Red:
+				    case Item.ItemSlot.Orange:
+				    case Item.ItemSlot.Yellow:
+				    case Item.ItemSlot.Green:
+				    case Item.ItemSlot.Blue:
+				    case Item.ItemSlot.Purple:
+				    case Item.ItemSlot.Prismatic:
+					    possibleId2s = gemIDs;
+					    break;
+				    default:
+					    possibleId2s = new List<int>(new int[] { 0 });
+					    break;
+			    }
+			    switch (item.Sockets.Color3)
+			    {
+				    case Item.ItemSlot.Meta:
+					    possibleId3s = metaGemIDs;
+					    break;
+				    case Item.ItemSlot.Red:
+				    case Item.ItemSlot.Orange:
+				    case Item.ItemSlot.Yellow:
+				    case Item.ItemSlot.Green:
+				    case Item.ItemSlot.Blue:
+				    case Item.ItemSlot.Purple:
+				    case Item.ItemSlot.Prismatic:
+					    possibleId3s = gemIDs;
+					    break;
+				    default:
+					    possibleId3s = new List<int>(new int[] { 0 });
+					    break;
+			    }
 
-			int id0 = item.Id;
-			foreach (int id1 in possibleId1s)
-				foreach (int id2 in possibleId2s)
-					foreach (int id3 in possibleId3s)
-                        possibleGemmedItems.Add(ItemCache.Instance.FindItemById(string.Format("{0}.{1}.{2}.{3}", id0, id1, id2, id3), true, false, true));
+			    int id0 = item.Id;
+			    foreach (int id1 in possibleId1s)
+				    foreach (int id2 in possibleId2s)
+                        foreach (int id3 in possibleId3s)
+                        {
+                            //possibleGemmedItems.Add(ItemCache.Instance.FindItemById(string.Format("{0}.{1}.{2}.{3}", id0, id1, id2, id3), true, false, true));
+                            // skip item cache, since we're creating new gemmings most likely they don't exist
+                            // it will search through all item to find the item we already have and then clone it
+                            // so skip all do that and do cloning ourselves
+                            Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
+                                item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), id1, id2, id3, item.MinDamage,
+                                item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
+                            // TODO possible improvement with working directly with gems instead of ids, would bypass the item cache search for gems on each item
+                        }
 			}
 
 			return possibleGemmedItems.ToArray();

@@ -558,7 +558,8 @@ namespace Rawr
 				MaxDamage = this.MaxDamage,
                 DamageType = this.DamageType,
 				Speed = this.Speed,
-				RequiredClasses = this.RequiredClasses
+				RequiredClasses = this.RequiredClasses,
+                Unique = this.Unique
 			};
 		}
 
