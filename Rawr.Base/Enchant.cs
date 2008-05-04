@@ -122,13 +122,18 @@ namespace Rawr
 
 		public static List<Enchant> FindEnchants(Item.ItemSlot slot)
 		{
-			//if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.TwoHand || slot == Item.ItemSlot.OneHand) 
-			//    slot = Item.ItemSlot.MainHand; //All enchants are defined for mainhand, currently
+			List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+			if (slot != Item.ItemSlot.MainHand)
+				validSlots.Add(slot);
+			if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand)
+				validSlots.Add(Item.ItemSlot.OneHand);
+			if (slot == Item.ItemSlot.MainHand)
+				validSlots.Add(Item.ItemSlot.TwoHand);
 			return AllEnchants.FindAll(new Predicate<Enchant>(
 				delegate(Enchant enchant)
 				{
 					return Calculations.HasRelevantStats(enchant.Stats) &&
-						( enchant.Slot == slot || slot == Item.ItemSlot.None )
+						( validSlots.Contains(enchant.Slot) || slot == Item.ItemSlot.None )
 						|| enchant.Slot == Item.ItemSlot.None;
 				}
 			));

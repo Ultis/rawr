@@ -375,14 +375,8 @@ namespace Rawr
 			comboBoxEnchantHead.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Head).ToArray());
 			comboBoxEnchantLegs.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Legs).ToArray());
 			comboBoxEnchantShoulders.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Shoulders).ToArray());
-			comboBoxEnchantMainHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.OneHand).ToArray());
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.TwoHand))
-				if (!comboBoxEnchantMainHand.Items.Contains(enchant))
-					comboBoxEnchantMainHand.Items.Add(enchant);
-			comboBoxEnchantOffHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.OneHand).ToArray());
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.OffHand))
-				if (!comboBoxEnchantOffHand.Items.Contains(enchant))
-					comboBoxEnchantOffHand.Items.Add(enchant);
+			comboBoxEnchantMainHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.MainHand).ToArray());
+			comboBoxEnchantOffHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.OffHand).ToArray());
 			comboBoxEnchantRanged.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Ranged).ToArray());
 			comboBoxEnchantWrists.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Wrist).ToArray());
 
