@@ -36,6 +36,7 @@ namespace Rawr.Mage
 
         public void LoadCalculationOptions()
         {
+            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
             calculationSuspended = true;
             foreach (Control c in Controls)
             {
@@ -48,10 +49,7 @@ namespace Rawr.Mage
                             ComboBox cb = (ComboBox)cc;
                             string talent = cb.Name.Substring(8);
 
-                            if (!Character.CalculationOptions.ContainsKey(talent))
-                                Character.CalculationOptions[talent] = "0";
-
-                            cb.SelectedItem = Character.CalculationOptions[talent];
+                            cb.SelectedItem = calculationOptions.GetTalentByName(talent).ToString();
                         }
                     }
                 }
@@ -62,6 +60,7 @@ namespace Rawr.Mage
 
         private void ComputeTalentTotals()
         {
+            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
             List<string> totals = new List<string>();
             foreach (Control c in Controls)
             {
@@ -74,7 +73,7 @@ namespace Rawr.Mage
                         {
                             ComboBox cb = (ComboBox)cc;
                             string talent = cb.Name.Substring(8);
-                            total += int.Parse(Character.CalculationOptions[talent]);
+                            total += calculationOptions.GetTalentByName(talent);
                         }
                     }
                     totals.Add(total.ToString());
@@ -86,9 +85,10 @@ namespace Rawr.Mage
 
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            CalculationOptionsMage calculationOptions = Character.CurrentCalculationOptions as CalculationOptionsMage;
             ComboBox cb = (ComboBox)sender;
             string talent = cb.Name.Substring(8);
-            Character.CalculationOptions[talent] = cb.SelectedItem.ToString();
+            calculationOptions.SetTalentByName(talent, int.Parse(cb.SelectedItem.ToString()));
             if (!calculationSuspended)
             {
                 Character.OnItemsChanged();

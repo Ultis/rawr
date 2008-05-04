@@ -328,7 +328,7 @@ namespace Rawr.Mage
 
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool computeIncrementalSet)
         {
-            CompiledCalculationOptions calculationOptions = new CompiledCalculationOptions(character);
+            CalculationOptionsMage calculationOptions = character.CurrentCalculationOptions as CalculationOptionsMage;
             if (computeIncrementalSet) calculationOptions.IncrementalOptimizations = false;
             if (calculationOptions.IncrementalOptimizations && !calculationOptions.DisableBuffAutoActivation)
             {
@@ -370,7 +370,7 @@ namespace Rawr.Mage
             character.CalculationOptions["IncrementalSetArmor"] = calculations.MageArmor;
         }
 
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions, string armor, bool computeIncrementalSet)
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool computeIncrementalSet)
         {
             if (calculationOptions.SMP && !calculationOptions.SMPDisplay)
             {
@@ -382,7 +382,7 @@ namespace Rawr.Mage
             }
         }
 
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions, string armor, bool computeIncrementalSet, bool useSMP)
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool computeIncrementalSet, bool useSMP)
         {
             List<string> autoActivatedBuffs = new List<string>();
             Stats rawStats = GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
@@ -1778,7 +1778,7 @@ namespace Rawr.Mage
             return duration;
         }
 
-        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Stats characterStats, CompiledCalculationOptions calculationOptions, string armor, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, int incrementalSetIndex)
+        public CharacterCalculationsMage GetTemporaryCharacterCalculations(Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, Item additionalItem, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, int incrementalSetIndex)
         {
             CharacterCalculationsMage calculatedStats = new CharacterCalculationsMage();
             Stats stats = characterStats.Clone();
@@ -1940,7 +1940,7 @@ namespace Rawr.Mage
             return calculatedStats;
         }
 
-        private Stats GetRawStats(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions, List<string> autoActivatedBuffs, string armor)
+        private Stats GetRawStats(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<string> autoActivatedBuffs, string armor)
         {
             Stats stats = new Stats();
             AccumulateItemStats(stats, character, additionalItem);
@@ -1988,11 +1988,11 @@ namespace Rawr.Mage
         // required by base class, but never used
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            CompiledCalculationOptions calculationOptions = new CompiledCalculationOptions(character);
+            CalculationOptionsMage calculationOptions = character.CurrentCalculationOptions as CalculationOptionsMage;
             return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions, new List<string>(), null), calculationOptions);
         }
 
-        public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats, CompiledCalculationOptions calculationOptions)
+        public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats, CalculationOptionsMage calculationOptions)
         {
             Stats statsRace;
             switch (character.Race)
@@ -2139,13 +2139,14 @@ namespace Rawr.Mage
             switch (chartName)
             {
                 case "Talents (per talent point)":
+                    CalculationOptionsMage calculationOptions = character.CurrentCalculationOptions as CalculationOptionsMage;
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
                     for (int index = 0; index < TalentList.Length; index++ )
                     {
                         string talent = TalentList[index];
                         int maxPoints = MaxTalentPoints[index];
-                        int currentPoints = int.Parse(character.CalculationOptions[talent], CultureInfo.InvariantCulture);
+                        int currentPoints = calculationOptions.GetTalentByName(talent);
 
                         if (currentPoints > 0)
                         {

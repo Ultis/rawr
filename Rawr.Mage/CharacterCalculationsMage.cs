@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using System.Xml.Serialization;
+using System.Reflection;
 
 namespace Rawr.Mage
 {
-    class CompiledCalculationOptions
+    [Serializable]
+    class CalculationOptionsMage
     {
         public int TargetLevel { get; set; }
         public int AoeTargetLevel { get; set; }
@@ -36,10 +39,16 @@ namespace Rawr.Mage
         public bool DisableBuffAutoActivation { get; set; }
         public bool AutomaticArmor { get; set; }
         public bool IncrementalOptimizations { get; set; }
+
+        [XmlIgnore]
         public int[] IncrementalSetCooldowns;
+        [XmlIgnore]
         public int[] IncrementalSetSegments;
+        [XmlIgnore]
         public SpellId[] IncrementalSetSpells;
+        [XmlIgnore]
         public string IncrementalSetArmor;
+
         public bool ReconstructSequence { get; set; }
         public float Innervate { get; set; }
         public float ManaTide { get; set; }
@@ -47,6 +56,18 @@ namespace Rawr.Mage
         public bool SMP { get; set; }
         public bool SMPDisplay { get; set; }
         public float SurvivabilityRating { get; set; }
+
+        public int GetTalentByName(string name)
+        {
+            Type t = typeof(CalculationOptionsMage);
+            return (int)t.GetProperty(name).GetValue(this, null);
+        }
+
+        public void SetTalentByName(string name, int value)
+        {
+            Type t = typeof(CalculationOptionsMage);
+            t.GetProperty(name).SetValue(this, value, null);
+        }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -97,129 +118,63 @@ namespace Rawr.Mage
         public int ImprovedConeOfCold { get; set; }
         public int ArcticWinds { get; set; }
 
-        public CompiledCalculationOptions(Character character)
-        {
-            TargetLevel = int.Parse(character.CalculationOptions["TargetLevel"], CultureInfo.InvariantCulture);
-            AoeTargetLevel = int.Parse(character.CalculationOptions["AoeTargetLevel"], CultureInfo.InvariantCulture);
-            Latency = float.Parse(character.CalculationOptions["Latency"], CultureInfo.InvariantCulture);
-            AoeTargets = int.Parse(character.CalculationOptions["AoeTargets"], CultureInfo.InvariantCulture);
-            ArcaneResist = float.Parse(character.CalculationOptions["ArcaneResist"], CultureInfo.InvariantCulture);
-            FireResist = float.Parse(character.CalculationOptions["FireResist"], CultureInfo.InvariantCulture);
-            FrostResist = float.Parse(character.CalculationOptions["FrostResist"], CultureInfo.InvariantCulture);
-            NatureResist = float.Parse(character.CalculationOptions["NatureResist"], CultureInfo.InvariantCulture);
-            ShadowResist = float.Parse(character.CalculationOptions["ShadowResist"], CultureInfo.InvariantCulture);
-            FightDuration = float.Parse(character.CalculationOptions["FightDuration"], CultureInfo.InvariantCulture);
-            TpsLimit = float.Parse(character.CalculationOptions["TpsLimit"], CultureInfo.InvariantCulture);
-            ShadowPriest = float.Parse(character.CalculationOptions["ShadowPriest"], CultureInfo.InvariantCulture);
-            HeroismAvailable = int.Parse(character.CalculationOptions["HeroismAvailable"], CultureInfo.InvariantCulture) == 1;
-            MoltenFuryPercentage = float.Parse(character.CalculationOptions["MoltenFuryPercentage"], CultureInfo.InvariantCulture);
-            DestructionPotion = int.Parse(character.CalculationOptions["DestructionPotion"], CultureInfo.InvariantCulture) == 1;
-            FlameCap = int.Parse(character.CalculationOptions["FlameCap"], CultureInfo.InvariantCulture) == 1;
-            ABCycles = int.Parse(character.CalculationOptions["ABCycles"], CultureInfo.InvariantCulture) == 1;
-            MaintainScorch = int.Parse(character.CalculationOptions["MaintainScorch"], CultureInfo.InvariantCulture) == 1;
-            InterruptFrequency = float.Parse(character.CalculationOptions["InterruptFrequency"], CultureInfo.InvariantCulture);
-            JudgementOfWisdom = character.ActiveBuffs.Contains("Judgement of Wisdom");
-            EvocationWeapon = float.Parse(character.CalculationOptions["EvocationWeapon"], CultureInfo.InvariantCulture);
-            EvocationSpirit = float.Parse(character.CalculationOptions["EvocationSpirit"], CultureInfo.InvariantCulture);
-            AoeDuration = float.Parse(character.CalculationOptions["AoeDuration"], CultureInfo.InvariantCulture);
-            SmartOptimization = int.Parse(character.CalculationOptions["SmartOptimization"], CultureInfo.InvariantCulture) == 1;
-            DpsTime = float.Parse(character.CalculationOptions["DpsTime"], CultureInfo.InvariantCulture);
-            DrumsOfBattle = int.Parse(character.CalculationOptions["DrumsOfBattle"], CultureInfo.InvariantCulture) == 1;
-            DisableBuffAutoActivation = character.CalculationOptions.ContainsKey("DisableBuffAutoActivation") && character.CalculationOptions["DisableBuffAutoActivation"] == "Yes";
-            AutomaticArmor = int.Parse(character.CalculationOptions["AutomaticArmor"], CultureInfo.InvariantCulture) == 1;
-            IncrementalOptimizations = int.Parse(character.CalculationOptions["IncrementalOptimizations"], CultureInfo.InvariantCulture) == 1;
-            ReconstructSequence = int.Parse(character.CalculationOptions["ReconstructSequence"], CultureInfo.InvariantCulture) == 1;
-            SMP = int.Parse(character.CalculationOptions["SMP"], CultureInfo.InvariantCulture) == 1;
-            SMPDisplay = int.Parse(character.CalculationOptions["SMPDisplay"], CultureInfo.InvariantCulture) == 1;
-            if (character.CalculationOptions.ContainsKey("IncrementalSetCooldowns"))
-            {
-                string[] cooldowns = character.CalculationOptions["IncrementalSetCooldowns"].Split(':');
-                if (character.CalculationOptions["IncrementalSetCooldowns"] == "") cooldowns = new string[] { };
-                IncrementalSetCooldowns = new int[cooldowns.Length];
-                for (int i = 0; i < cooldowns.Length; i++)
-                {
-                    IncrementalSetCooldowns[i] = int.Parse(cooldowns[i], CultureInfo.InvariantCulture);
-                }
-            }
-            if (character.CalculationOptions.ContainsKey("IncrementalSetSegments"))
-            {
-                string[] segments = character.CalculationOptions["IncrementalSetSegments"].Split(':');
-                if (character.CalculationOptions["IncrementalSetSegments"] == "") segments = new string[] { };
-                IncrementalSetSegments = new int[segments.Length];
-                for (int i = 0; i < segments.Length; i++)
-                {
-                    IncrementalSetSegments[i] = int.Parse(segments[i], CultureInfo.InvariantCulture);
-                }
-            }
-            if (character.CalculationOptions.ContainsKey("IncrementalSetSpells"))
-            {
-                string[] spells = character.CalculationOptions["IncrementalSetSpells"].Split(':');
-                if (character.CalculationOptions["IncrementalSetSpells"] == "") spells = new string[] { };
-                IncrementalSetSpells = new SpellId[spells.Length];
-                for (int i = 0; i < spells.Length; i++)
-                {
-                    int spell = (int)SpellId.Wand;
-                    int.TryParse(spells[i], out spell);
-                    IncrementalSetSpells[i] = (SpellId)spell;
-                }
-            }
-            if (character.CalculationOptions.ContainsKey("IncrementalSetArmor"))
-            {
-                IncrementalSetArmor = character.CalculationOptions["IncrementalSetArmor"];
-            }
-            Innervate = float.Parse(character.CalculationOptions["Innervate"], CultureInfo.InvariantCulture);
-            ManaTide = float.Parse(character.CalculationOptions["ManaTide"], CultureInfo.InvariantCulture);
-            Fragmentation = float.Parse(character.CalculationOptions["Fragmentation"], CultureInfo.InvariantCulture);
-            SurvivabilityRating = float.Parse(character.CalculationOptions["SurvivabilityRating"], CultureInfo.InvariantCulture);
+        // not implemented
+        public int IceBarrier { get; set; }
+        public int FrozenCore { get; set; }
+        public int Shatter { get; set; }
+        public int ArcticReach { get; set; }
+        public int ImprovedBlizzard { get; set; }
+        public int Permafrost { get; set; }
+        public int Frostbite { get; set; }
+        public int BlazingSpeed { get; set; }
+        public int ImprovedFireWard { get; set; }
+        public int Pyroblast { get; set; }
+        public int FlameThrowing { get; set; }
+        public int Impact { get; set; }
+        public int Slow { get; set; }
+        public int PrismaticCloak { get; set; }
+        public int PresenceOfMind { get; set; }
+        public int ImprovedBlink { get; set; }
+        public int ImprovedCounterspell { get; set; }
+        public int ImprovedManaShield { get; set; }
+        public int MagicAttunement { get; set; }
 
-            Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"], CultureInfo.InvariantCulture);
-            ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"], CultureInfo.InvariantCulture);
-            FrostChanneling = int.Parse(character.CalculationOptions["FrostChanneling"], CultureInfo.InvariantCulture);
-            MasterOfElements = int.Parse(character.CalculationOptions["MasterOfElements"], CultureInfo.InvariantCulture);
-            ArcaneConcentration = int.Parse(character.CalculationOptions["ArcaneConcentration"], CultureInfo.InvariantCulture);
-            MindMastery = int.Parse(character.CalculationOptions["MindMastery"], CultureInfo.InvariantCulture);
-            ArcaneInstability = int.Parse(character.CalculationOptions["ArcaneInstability"], CultureInfo.InvariantCulture);
-            ArcanePotency = int.Parse(character.CalculationOptions["ArcanePotency"], CultureInfo.InvariantCulture);
-            ArcaneFocus = int.Parse(character.CalculationOptions["ArcaneFocus"], CultureInfo.InvariantCulture);
-            PlayingWithFire = int.Parse(character.CalculationOptions["PlayingWithFire"], CultureInfo.InvariantCulture);
-            MoltenFury = int.Parse(character.CalculationOptions["MoltenFury"], CultureInfo.InvariantCulture);
-            FirePower = int.Parse(character.CalculationOptions["FirePower"], CultureInfo.InvariantCulture);
-            PiercingIce = int.Parse(character.CalculationOptions["PiercingIce"], CultureInfo.InvariantCulture);
-            SpellPower = int.Parse(character.CalculationOptions["SpellPower"], CultureInfo.InvariantCulture);
-            Ignite = int.Parse(character.CalculationOptions["Ignite"], CultureInfo.InvariantCulture);
-            IceShards = int.Parse(character.CalculationOptions["IceShards"], CultureInfo.InvariantCulture);
-            CriticalMass = int.Parse(character.CalculationOptions["CriticalMass"], CultureInfo.InvariantCulture);
-            Combustion = int.Parse(character.CalculationOptions["Combustion"], CultureInfo.InvariantCulture);
-            ImprovedFrostbolt = int.Parse(character.CalculationOptions["ImprovedFrostbolt"], CultureInfo.InvariantCulture);
-            EmpoweredFrostbolt = int.Parse(character.CalculationOptions["EmpoweredFrostbolt"], CultureInfo.InvariantCulture);
-            ImprovedFireball = int.Parse(character.CalculationOptions["ImprovedFireball"], CultureInfo.InvariantCulture);
-            EmpoweredFireball = int.Parse(character.CalculationOptions["EmpoweredFireball"], CultureInfo.InvariantCulture);
-            ArcaneImpact = int.Parse(character.CalculationOptions["ArcaneImpact"], CultureInfo.InvariantCulture);
-            EmpoweredArcaneMissiles = int.Parse(character.CalculationOptions["EmpoweredArcaneMissiles"], CultureInfo.InvariantCulture);
-            Incinerate = int.Parse(character.CalculationOptions["Incinerate"], CultureInfo.InvariantCulture);
-            ImprovedScorch = int.Parse(character.CalculationOptions["ImprovedScorch"], CultureInfo.InvariantCulture);
-            WintersChill = int.Parse(character.CalculationOptions["WintersChill"], CultureInfo.InvariantCulture);
-            BurningSoul = int.Parse(character.CalculationOptions["BurningSoul"], CultureInfo.InvariantCulture);
-            ImprovedArcaneMissiles = int.Parse(character.CalculationOptions["ImprovedArcaneMissiles"], CultureInfo.InvariantCulture);
-            WandSpecialization = int.Parse(character.CalculationOptions["WandSpecialization"], CultureInfo.InvariantCulture);
-            BlastWave = int.Parse(character.CalculationOptions["BlastWave"], CultureInfo.InvariantCulture);
-            DragonsBreath = int.Parse(character.CalculationOptions["DragonsBreath"], CultureInfo.InvariantCulture);
-            ArcanePower = int.Parse(character.CalculationOptions["ArcanePower"], CultureInfo.InvariantCulture);
-            IcyVeins = int.Parse(character.CalculationOptions["IcyVeins"], CultureInfo.InvariantCulture);
-            ColdSnap = int.Parse(character.CalculationOptions["ColdSnap"], CultureInfo.InvariantCulture);
-            IceFloes = int.Parse(character.CalculationOptions["IceFloes"], CultureInfo.InvariantCulture);
-            SummonWaterElemental = int.Parse(character.CalculationOptions["SummonWaterElemental"], CultureInfo.InvariantCulture);
-            ArcaneMind = int.Parse(character.CalculationOptions["ArcaneMind"], CultureInfo.InvariantCulture);
-            ArcaneFortitude = int.Parse(character.CalculationOptions["ArcaneFortitude"], CultureInfo.InvariantCulture);
-            MagicAbsorption = int.Parse(character.CalculationOptions["MagicAbsorption"], CultureInfo.InvariantCulture);
-            FrostWarding = int.Parse(character.CalculationOptions["FrostWarding"], CultureInfo.InvariantCulture);
-            ArcaneMeditation = int.Parse(character.CalculationOptions["ArcaneMeditation"], CultureInfo.InvariantCulture);
-            ArcaneSubtlety = int.Parse(character.CalculationOptions["ArcaneSubtlety"], CultureInfo.InvariantCulture);
-            ImprovedFireBlast = int.Parse(character.CalculationOptions["ImprovedFireBlast"], CultureInfo.InvariantCulture);
-            ImprovedFlamestrike = int.Parse(character.CalculationOptions["ImprovedFlamestrike"], CultureInfo.InvariantCulture);
-            ImprovedFrostNova = int.Parse(character.CalculationOptions["ImprovedFrostNova"], CultureInfo.InvariantCulture);
-            ImprovedConeOfCold = int.Parse(character.CalculationOptions["ImprovedConeOfCold"], CultureInfo.InvariantCulture);
-            ArcticWinds = int.Parse(character.CalculationOptions["ArcticWinds"], CultureInfo.InvariantCulture);
+        public CalculationOptionsMage()
+        {
+            TargetLevel = 73;
+            AoeTargetLevel = 70;
+            Latency = 0.05f;
+            AoeTargets = 9;
+            ArcaneResist = 0;
+            FireResist = 0;
+            FrostResist = 0;
+            NatureResist = 0;
+            ShadowResist = 0;
+            FightDuration = 300;
+            ShadowPriest = 175;
+            HeroismAvailable = true;
+            MoltenFuryPercentage = 0.15f;
+            DestructionPotion = true;
+            FlameCap = true;
+            ABCycles = true;
+            DpsTime = 1;
+            MaintainScorch = true;
+            InterruptFrequency = 0;
+            EvocationWeapon = 0;
+            AoeDuration = 0;
+            SmartOptimization = false;
+            DrumsOfBattle = false;
+            AutomaticArmor = true;
+            TpsLimit = 5000;
+            IncrementalOptimizations = true;
+            ReconstructSequence = false;
+            Innervate = 0;
+            ManaTide = 0;
+            Fragmentation = 0;
+            SMP = false;
+            SMPDisplay = false;
+            EvocationSpirit = 0;
+            SurvivabilityRating = 0.001f;
         }
     }
 
@@ -262,7 +217,7 @@ namespace Rawr.Mage
             set { _basicStats = value; }
         }
 
-        public CompiledCalculationOptions CalculationOptions { get; set; }
+        public CalculationOptionsMage CalculationOptions { get; set; }
 
         public Character Character { get; set; }
 
