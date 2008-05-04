@@ -104,8 +104,18 @@ namespace Rawr.Healadin
     }
 
 	[Serializable]
-	public class CalculationOptionsHealadin
+	public class CalculationOptionsHealadin : ICalculationOptionBase
 	{
+		public string GetXml()
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHealadin));
+			StringBuilder xml = new StringBuilder();
+			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+			serializer.Serialize(writer, this);
+			return xml.ToString();
+		}
+
 		public bool EnforceMetagemRequirements = false;
 		public float Length = 5;
 		public float ManaAmt = 2400;

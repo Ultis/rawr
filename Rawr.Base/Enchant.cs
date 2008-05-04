@@ -110,13 +110,20 @@ namespace Rawr
 
 		public static Enchant FindEnchant(int id, Item.ItemSlot slot)
 		{
-			return AllEnchants.Find(new Predicate<Enchant>(delegate(Enchant enchant) { return (enchant.Id == id) && (enchant.Slot == slot); })) ?? AllEnchants[0];
+			List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+			if (slot != Item.ItemSlot.MainHand)
+				validSlots.Add(slot);
+			if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand)
+				validSlots.Add(Item.ItemSlot.OneHand);
+			if (slot == Item.ItemSlot.MainHand)
+				validSlots.Add(Item.ItemSlot.TwoHand);
+			return AllEnchants.Find(new Predicate<Enchant>(delegate(Enchant enchant) { return (enchant.Id == id) && (validSlots.Contains(enchant.Slot)); })) ?? AllEnchants[0];
 		}
 
 		public static List<Enchant> FindEnchants(Item.ItemSlot slot)
 		{
-			if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.TwoHand || slot == Item.ItemSlot.OneHand) 
-				slot = Item.ItemSlot.MainHand; //All enchants are defined for mainhand, currently
+			//if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.TwoHand || slot == Item.ItemSlot.OneHand) 
+			//    slot = Item.ItemSlot.MainHand; //All enchants are defined for mainhand, currently
 			return AllEnchants.FindAll(new Predicate<Enchant>(
 				delegate(Enchant enchant)
 				{
@@ -360,6 +367,20 @@ namespace Rawr
 
 
             #region Enchants to Delete
+			defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(2655, "Shield Block", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(2653, "Tough Shield", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(2654, "Intellect", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(2669, "Major Spellpower", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(2666, "Major Intellect", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(2671, "Sunfire", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(2672, "Soulfrost", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(2667, "Savagery", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(2670, "Major Agility", Item.ItemSlot.MainHand, null));
+			defaultEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.MainHand, null));
 			defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Chest, null));
 			defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Legs, null));
 			defaultEnchants.Add(new Enchant(9001, "Major Defense", Item.ItemSlot.Chest, null));

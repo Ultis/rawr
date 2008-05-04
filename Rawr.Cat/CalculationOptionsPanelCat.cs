@@ -61,9 +61,9 @@ namespace Rawr
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			trackBarTargetArmor.Value = calcOpts.TargetArmor;
 			trackBarExposeWeakness.Value = calcOpts.ExposeWeaknessAPValue;
-			trackBarBloodlustUptime.Value = (int)Math.Round(calcOpts.BloodlustUptime);
-			trackBarDrumsOfBattleUptime.Value = (int)Math.Round(calcOpts.DrumsOfBattleUptime);
-			trackBarDrumsOfWarUptime.Value = (int)Math.Round(calcOpts.DrumsOfWarUptime);
+			trackBarBloodlustUptime.Value = (int)Math.Round(calcOpts.BloodlustUptime * 100);
+			trackBarDrumsOfBattleUptime.Value = (int)Math.Round(calcOpts.DrumsOfBattleUptime * 100);
+			trackBarDrumsOfWarUptime.Value = (int)Math.Round(calcOpts.DrumsOfWarUptime * 100);
 			comboBoxPowershift.SelectedIndex = calcOpts.Powershift;
 			radioButtonMangle.Checked = calcOpts.PrimaryAttack == "Mangle";
 			radioButtonShred.Checked = calcOpts.PrimaryAttack == "Shred";
@@ -118,8 +118,18 @@ namespace Rawr
 	}
 
 	[Serializable]
-	public class CalculationOptionsCat
+	public class CalculationOptionsCat : ICalculationOptionBase
 	{
+		public string GetXml()
+		{
+			System.Xml.Serialization.XmlSerializer serializer = 
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsCat));
+			StringBuilder xml = new StringBuilder();
+			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+			serializer.Serialize(writer, this);
+			return xml.ToString();
+		}
+
 		public int TargetLevel = 73;
 		public int TargetArmor = 7700;
 		public int ExposeWeaknessAPValue = 200;
@@ -127,9 +137,9 @@ namespace Rawr
 		public string PrimaryAttack = "Both";
 		public string Finisher = "Rip";
 		public bool EnforceMetagemRequirements = false;
-		public float BloodlustUptime = 15f;
-		public float DrumsOfBattleUptime = 25f;
-		public float DrumsOfWarUptime = 25f;
+		public float BloodlustUptime = 0.15f;
+		public float DrumsOfBattleUptime = 0.25f;
+		public float DrumsOfWarUptime = 0.25f;
 		public string ShattrathFaction = "Aldor";
 	}
 }

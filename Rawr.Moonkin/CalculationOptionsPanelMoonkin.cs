@@ -188,8 +188,18 @@ namespace Rawr.Moonkin
     }
 
 	[Serializable]
-	public class CalculationOptionsMoonkin
+	public class CalculationOptionsMoonkin : ICalculationOptionBase
 	{
+		public string GetXml()
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsMoonkin));
+			StringBuilder xml = new StringBuilder();
+			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+			serializer.Serialize(writer, this);
+			return xml.ToString();
+		}
+
 		public int TargetLevel = 73;
 		public bool EnforceMetagemRequirements = false;
 		public float Latency = 0.4f;

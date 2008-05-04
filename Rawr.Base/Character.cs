@@ -93,7 +93,7 @@ namespace Rawr //O O . .
 		[XmlElement("RangedEnchant")]
 		public int _rangedEnchant = 0;
 		[XmlElement("CalculationOptions")]
-		public SerializableDictionary<string, object> _calculationOptions = new SerializableDictionary<string, object>();
+		public SerializableDictionary<string, string> _calculationOptions = new SerializableDictionary<string, string>();
         [XmlElement("Talents")]
         public TalentTree _talents = new TalentTree();
 		[XmlElement("AvailableItems")]
@@ -872,7 +872,7 @@ namespace Rawr //O O . .
             {
                 if (_offHandEnchantCached == null || _offHandEnchantCached.Id != _offHandEnchant)
                 {
-                    _offHandEnchantCached = Enchant.FindEnchant(_offHandEnchant, Item.ItemSlot.MainHand);
+                    _offHandEnchantCached = Enchant.FindEnchant(_offHandEnchant, Item.ItemSlot.OffHand);
                 }
                 return _offHandEnchantCached;
             }
@@ -916,7 +916,7 @@ namespace Rawr //O O . .
 		//[XmlIgnore]
 		//private Dictionary<string, string> _calculationOptions = null;
 		[XmlIgnore]
-		public SerializableDictionary<string, object> CalculationOptions
+		public SerializableDictionary<string, string> CalculationOptions
 		{
 			get
 			{
@@ -934,7 +934,7 @@ namespace Rawr //O O . .
 				//}
 				if (_calculationOptions == null)
 				{
-				    _calculationOptions = new SerializableDictionary<string, object>();
+					_calculationOptions = new SerializableDictionary<string, string>();
 				}
 				return _calculationOptions;
 			}
@@ -942,19 +942,20 @@ namespace Rawr //O O . .
 		}
 
 		[XmlIgnore]
-		private object _currentCalculationOptions;
+		private ICalculationOptionBase _currentCalculationOptions;
 		[XmlIgnore]
-		public object CurrentCalculationOptions
+		public ICalculationOptionBase CurrentCalculationOptions
 		{
 			get
 			{
 				if (_currentCalculationOptions == null && _calculationOptions.ContainsKey(CurrentModel))
-					_currentCalculationOptions = _calculationOptions[CurrentModel];
+					_currentCalculationOptions = Calculations.DeserializeDataObject(_calculationOptions[CurrentModel]);
 				return _currentCalculationOptions;
 			}
 			set
 			{
-				_calculationOptions[_currentModel] = value;
+				_calculationOptions[_currentModel] = value.GetXml();
+				_currentCalculationOptions = null;
 			}
 		}
 
@@ -1000,13 +1001,15 @@ namespace Rawr //O O . .
 
 
 
-		//private void SerializeCalculationOptions()
-		//{
-		//    List<string> listCalcOpts = new List<string>();
-		//    foreach (KeyValuePair<string, string> kvp in CalculationOptions)
-		//        listCalcOpts.Add(string.Format("{0}={1}", kvp.Key, kvp.Value));
-		//    _calculationOptionsStrings = listCalcOpts.ToArray();
-		//}
+		private void SerializeCalculationOptions()
+		{
+			//List<string> listCalcOpts = new List<string>();
+			//foreach (KeyValuePair<string, string> kvp in CalculationOptions)
+			//    listCalcOpts.Add(string.Format("{0}={1}", kvp.Key, kvp.Value));
+			//_calculationOptionsStrings = listCalcOpts.ToArray();
+			if (CurrentCalculationOptions != null)
+				CalculationOptions[CurrentModel] = CurrentCalculationOptions.GetXml();
+		}
 
 		public Enchant GetEnchantBySlot(Item.ItemSlot slot)
 		{
@@ -1126,6 +1129,7 @@ namespace Rawr //O O . .
 		public event EventHandler ItemsChanged;
 		public void OnItemsChanged()
 		{
+			SerializeCalculationOptions();
             if (IsLoading) return;
 			RecalculateSetBonuses();
 
@@ -1592,7 +1596,7 @@ namespace Rawr //O O . .
         public void Save(string path)
         {
 			//SerializeCalculationOptions();
-            using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
+			using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
             {
                 System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
                 serializer.Serialize(writer, this);
@@ -1608,7 +1612,13 @@ namespace Rawr //O O . .
 				try
 				{
 					string xml = System.IO.File.ReadAllText(path).Replace("<Region>en", "<Region>US").Replace("<Weapon>", "<MainHand>").Replace("</Weapon>", "</MainHand>").Replace("<Idol>", "<Ranged>").Replace("</Idol>", "</Ranged>").Replace("<WeaponEnchant>", "<MainHandEnchant>").Replace("</WeaponEnchant>", "</MainHandEnchant>");
-					//while (xml.Contains("<CalculationOption>"))
+
+					if (xml.IndexOf("<CalculationOptions>") != xml.LastIndexOf("<CalculationOptions>"))
+					{
+						xml = xml.Substring(0, xml.IndexOf("<CalculationOptions>")) +
+							xml.Substring(xml.LastIndexOf("</CalculationOptions>") + "</CalculationOptions>".Length);
+					}
+
 					System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
 					System.IO.StringReader reader = new System.IO.StringReader(xml);
 					character = (Character)serializer.Deserialize(reader);
@@ -1637,5 +1647,10 @@ namespace Rawr //O O . .
 
             return character;
 		}
+	}
+
+	public interface ICalculationOptionBase
+	{
+		string GetXml();
 	}
 }

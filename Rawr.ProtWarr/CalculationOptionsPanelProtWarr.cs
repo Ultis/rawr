@@ -129,8 +129,18 @@ namespace Rawr.ProtWarr
 	}
 
 	[Serializable]
-	public class CalculationOptionsProtWarr
+	public class CalculationOptionsProtWarr : ICalculationOptionBase
 	{
+		public string GetXml()
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsProtWarr));
+			StringBuilder xml = new StringBuilder();
+			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+			serializer.Serialize(writer, this);
+			return xml.ToString();
+		}
+
 		public int TargetLevel = 73;
 		public int TargetArmor = 7700;
 		public int BossAttackValue = 20000;

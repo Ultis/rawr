@@ -184,6 +184,12 @@ namespace Rawr
 				return Instance.IsItemRelevant(item);
 			return false;
 		}
+		public static ICalculationOptionBase DeserializeDataObject(string xml)
+		{
+			if (Instance != null)
+				return Instance.DeserializeDataObject(xml);
+			return null;
+		}
       
 		public static string GetCharacterStatsString(Character character)
 		{
@@ -202,7 +208,7 @@ namespace Rawr
             }
             return null;
         }
-    }
+	}
 
 	/// <summary>
 	/// CalculationsBase is the base class which each model's main Calculations class will inherit from.
@@ -355,6 +361,13 @@ namespace Rawr
 		/// <returns>True if any of the positive stats in the Stats are relevant.</returns>
 		public abstract bool HasRelevantStats(Stats stats);
 		
+		/// <summary>
+		/// Deserializes the model's CalculationOptions data object from xml
+		/// </summary>
+		/// <param name="xml">The serialized xml representing the model's CalculationOptions data object.</param>
+		/// <returns>The model's CalculationOptions data object.</returns>
+		public abstract ICalculationOptionBase DeserializeDataObject(string xml);
+
 		public virtual void ClearCache()
 		{
 			_cachedCharacter = null;
@@ -672,7 +685,8 @@ namespace Rawr
             get { return false; }
         }
 
-        
+
+
 	}
 
 	/// <summary>

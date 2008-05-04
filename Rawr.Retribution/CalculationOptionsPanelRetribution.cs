@@ -330,8 +330,18 @@ namespace Rawr.Retribution
     }
 
 	[Serializable]
-	public class CalculationOptionsRetribution
+	public class CalculationOptionsRetribution : ICalculationOptionBase
 	{
+		public string GetXml()
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRetribution));
+			StringBuilder xml = new StringBuilder();
+			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+			serializer.Serialize(writer, this);
+			return xml.ToString();
+		}
+
 		public int TargetLevel = 73;
 		public int BossArmor = 7700;
 		public int FightLength = 10;

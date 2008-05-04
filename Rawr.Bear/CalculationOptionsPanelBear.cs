@@ -80,8 +80,18 @@ namespace Rawr
 	}
 
 	[Serializable]
-	public class CalculationOptionsBear
+	public class CalculationOptionsBear : ICalculationOptionBase
 	{
+		public string GetXml()
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsBear));
+			StringBuilder xml = new StringBuilder();
+			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+			serializer.Serialize(writer, this);
+			return xml.ToString();
+		}
+
 		public int TargetLevel = 73;
 		public float ThreatScale = 10f;
 		public bool EnforceMetagemRequirements = false;

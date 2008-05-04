@@ -159,6 +159,15 @@ namespace Rawr.Warlock
         }
 
 
+		public override ICalculationOptionBase DeserializeDataObject(string xml)
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsWarlock));
+			System.IO.StringReader reader = new System.IO.StringReader(xml);
+			CalculationOptionsWarlock calcOpts = serializer.Deserialize(reader) as CalculationOptionsWarlock;
+			return calcOpts;
+		}
+
         
         /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations

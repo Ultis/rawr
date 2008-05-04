@@ -128,6 +128,15 @@ namespace Rawr
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationCat(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsCat(); }
 
+		public override ICalculationOptionBase DeserializeDataObject(string xml)
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsCat));
+			System.IO.StringReader reader = new System.IO.StringReader(xml);
+			CalculationOptionsCat calcOpts = serializer.Deserialize(reader) as CalculationOptionsCat;
+			return calcOpts;
+		}
+
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			_cachedCharacter = character;

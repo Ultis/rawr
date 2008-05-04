@@ -116,6 +116,15 @@ namespace Rawr.Healadin
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealadin(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHealadin(); }
 
+		public override ICalculationOptionBase DeserializeDataObject(string xml)
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHealadin));
+			System.IO.StringReader reader = new System.IO.StringReader(xml);
+			CalculationOptionsHealadin calcOpts = serializer.Deserialize(reader) as CalculationOptionsHealadin;
+			return calcOpts;
+		}
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             _cachedCharacter = character;

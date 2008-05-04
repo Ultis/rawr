@@ -153,6 +153,15 @@ namespace Rawr.Moonkin
             return new CharacterCalculationsMoonkin();
         }
 
+		public override ICalculationOptionBase DeserializeDataObject(string xml)
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsMoonkin));
+			System.IO.StringReader reader = new System.IO.StringReader(xml);
+			CalculationOptionsMoonkin calcOpts = serializer.Deserialize(reader) as CalculationOptionsMoonkin;
+			return calcOpts;
+		}
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CharacterCalculationsMoonkin calcs = new CharacterCalculationsMoonkin();

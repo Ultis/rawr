@@ -170,6 +170,15 @@ you are being killed by burst damage, focus on Survival Points.",
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationBear(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsBear(); }
 
+		public override ICalculationOptionBase DeserializeDataObject(string xml)
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsBear));
+			System.IO.StringReader reader = new System.IO.StringReader(xml);
+			CalculationOptionsBear calcOpts = serializer.Deserialize(reader) as CalculationOptionsBear;
+			return calcOpts;
+		}
+
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			_cachedCharacter = character;

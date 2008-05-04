@@ -229,8 +229,18 @@ namespace Rawr.Warlock
 	}
 
 	[Serializable]
-	public class CalculationOptionsWarlock
+	public class CalculationOptionsWarlock : ICalculationOptionBase
 	{
+		public string GetXml()
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsWarlock));
+			StringBuilder xml = new StringBuilder();
+			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+			serializer.Serialize(writer, this);
+			return xml.ToString();
+		}
+
 		public int TargetLevel = 73;
 		public bool EnforceMetagemRequirements = false;
 		public float Latency = 0.05f;

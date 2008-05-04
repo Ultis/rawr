@@ -140,6 +140,15 @@ namespace Rawr.Retribution
         }
 
 
+		public override ICalculationOptionBase DeserializeDataObject(string xml)
+		{
+			System.Xml.Serialization.XmlSerializer serializer =
+				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRetribution));
+			System.IO.StringReader reader = new System.IO.StringReader(xml);
+			CalculationOptionsRetribution calcOpts = serializer.Deserialize(reader) as CalculationOptionsRetribution;
+			return calcOpts;
+		}
+
 
         /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
