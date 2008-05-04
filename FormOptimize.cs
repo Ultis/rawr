@@ -1381,6 +1381,7 @@ namespace Rawr
                             Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
                                 item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), id1, id2, id3, item.MinDamage,
                                 item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
+                            possibleGemmedItems.Add(copy);
                             // TODO possible improvement with working directly with gems instead of ids, would bypass the item cache search for gems on each item
                         }
 			}

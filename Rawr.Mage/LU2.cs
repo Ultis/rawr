@@ -102,7 +102,7 @@ namespace Rawr.Mage
 
         public unsafe void BSolveU(double* b, double* c)
         {
-            int i, j, k;
+            int i, k;
             fixed (double* U = _U)
             {
                 fixed (int* P = _P, Q = _Q)
@@ -185,7 +185,7 @@ namespace Rawr.Mage
 
         public unsafe void FSolveU(double* b, double* c)
         {
-            int i, j, k;
+            int i, k;
             fixed (double* U = _U, c2 = column2)
             {
                 fixed (int* P = _P, Q = _Q)
@@ -215,7 +215,7 @@ namespace Rawr.Mage
         public unsafe void FSolveL(double* b, double* c)
         {
             // perform all eta operations and finally apply row permutation P
-            int i, j, k;
+            int i, j;
             fixed (double* /*L = _L, */U = _U, sL = sparseL)
             {
                 fixed (int* P = _P, Q = _Q, LJ = _LJ, sLI = sparseLI, sLstart = sparseLstart)

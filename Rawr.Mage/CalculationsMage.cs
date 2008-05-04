@@ -8,15 +8,6 @@ namespace Rawr.Mage
 	[System.ComponentModel.DisplayName("Mage|Spell_Holy_MagicalSentry")]
     class CalculationsMage : CalculationsBase
     {
-        public static void LoadRelevantItems()
-        {
-            int[] idlist = { 30735, 30725, 28515, 29240, 29255, 24267, 24263, 29241, 28799, 24257, 29242, 29258, 28517, 28670, 30050, 30531, 28797, 28804, 29076, 29986, 30064, 30206, 30020, 21870, 21869, 28404, 28405, 28402, 28409, 28411, 28410, 24256, 25854, 25855, 25857, 25856, 25858, 30680, 30205, 29080, 30668, 28507, 28477, 30079, 30673, 30763, 30764, 30761, 30762, 30532, 30207, 30734, 29078, 30675, 28654, 24260, 30210, 30024, 28726, 28980, 28981, 28982, 29001, 29002, 29003, 29918, 29122, 28565, 29079, 30684, 24258, 30056, 28602, 30196, 28766, 28585, 29257, 28379, 28378, 28570, 28653, 29369, 28780, 21863, 21864, 21865, 21846, 21847, 21848, 24266, 24262, 28594, 28744, 24255, 30067, 29077, 28586, 31340, 29177, 29349, 28762, 30061, 29172, 29922, 31319, 29997, 28516, 29383, 28530, 31338, 30059, 31321, 29381, 29352, 28830, 28789, 30049, 30619, 29270, 30099, 28649, 28346, 29387, 29119, 29370, 28734, 28781, 29273, 31339, 29368, 32649, 29123, 28730, 28745, 28528, 29386, 29272, 28245, 28244, 30008, 30022, 28727, 31746, 29379, 29367, 30109, 30052, 30738, 28753, 30083, 30667, 29384, 28757, 30666, 28579, 28674, 29269, 30629, 29126, 30720, 30028, 30626, 30834, 28675, 28510, 30620, 29271, 28603, 29347, 30007, 28785, 29181, 31326, 30627, 31113, 29277, 29278, 29281, 29285, 29286, 29282, 29287, 29279, 29283, 28509, 29359, 24557, 28633, 31334, 28658, 29355, 29988, 30021, 28783, 29350, 28673, 28320, 29982, 32089, 29972, 32239, 32343, 30894, 30872, 28792, 32587, 32586, 32270, 32247, 30913, 32256, 31056, 31055, 31058, 31059, 31057, 28793, 30037, 32655, 30038, 32541, 30107, 32757, 30884, 29992, 30015, 32374, 29303, 30870, 29987, 32349, 30888, 32338, 30916, 32327, 32047, 32048, 32049, 32050, 32051, 32962, 32055, 33056, 32799, 32811, 32787, 33067, 33065, 32807, 32820, 32795, 32525, 32483, 33054, 32331, 34073, 32488, 33494, 34049, 33192, 33304, 34162, 33357, 33285, 33453, 33497, 33489, 33584, 33588, 33591, 33293, 33500, 33586, 33766, 33291, 33829, 33466, 33317, 34066, 33757, 33758, 33759, 33760, 33761, 33764, 33853, 33920, 33921, 34577, 34579, 34540, 34182, 35326, 34557, 34574, 34447, 35321, 34810, 34607, 34808, 34406, 34405, 34386, 34399, 34610, 34678, 34393, 34366, 34364, 34470, 35320, 35319, 34347, 34837, 35700, 35703, 34889, 34919, 34937, 34938, 34918, 34917, 34936, 35290, 33140, 32204, 32225, 33133, 32207, 32215, 32210, 32202, 32218, 32224, 32196, 32201, 32203, 32221, 24047, 34220, 24065, 25890, 35503, 35318, 24050, 24056, 31861, 25901, 24037, 25893, 24059, 35315, 24066, 35316, 24030, 24035, 24039, 31867 };
-            foreach (int id in idlist)
-            {
-                Item.LoadFromId(id, true, "Batch Load", true);
-            }
-        }
-
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
@@ -26,6 +17,7 @@ namespace Rawr.Mage
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
                     _subPointNameColors.Add("Dps", System.Drawing.Color.FromArgb(0, 128, 255));
+                    _subPointNameColors.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
                 }
                 return _subPointNameColors;
             }
@@ -171,7 +163,6 @@ namespace Rawr.Mage
             bool[] rowEnabled, colEnabled;
             int[] CRow, CCol;
             double[] compactSolution = null;
-            bool allowReuse;
             bool needsDual;
 
             public int HeroismHash;
@@ -180,7 +171,7 @@ namespace Rawr.Mage
 
             public CompactLP Clone()
             {
-                if (compactSolution != null && !allowReuse) throw new InvalidOperationException();
+                //if (compactSolution != null && !allowReuse) throw new InvalidOperationException();
                 CompactLP clone = (CompactLP)this.MemberwiseClone();
                 clone.compactSolution = null;
                 //clone.lp = (double[,])clone.lp.Clone();
@@ -188,9 +179,8 @@ namespace Rawr.Mage
                 return clone;
             }
 
-            public CompactLP(int rows, int cols, bool allowReuse)
+            public CompactLP(int rows, int cols)
             {
-                this.allowReuse = allowReuse;
                 lpRows = rows;
                 lpCols = cols;
 
@@ -384,698 +374,15 @@ namespace Rawr.Mage
         {
             if (calculationOptions.SMP && !calculationOptions.SMPDisplay)
             {
-                return GetCharacterCalculations_SMP(character, additionalItem, calculationOptions, armor, computeIncrementalSet);
+                return GetCharacterCalculations(character, additionalItem, calculationOptions, armor, computeIncrementalSet, true);
             }
             else
             {
-                return GetCharacterCalculations_Basic(character, additionalItem, calculationOptions, armor, computeIncrementalSet);
+                return GetCharacterCalculations(character, additionalItem, calculationOptions, armor, computeIncrementalSet, false);
             }
         }
 
-        public CharacterCalculationsBase GetCharacterCalculations_Basic(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions, string armor, bool computeIncrementalSet)
-        {
-            List<string> autoActivatedBuffs = new List<string>();
-            Stats rawStats = GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
-            Stats characterStats = GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
-
-            bool heroismAvailable = calculationOptions.HeroismAvailable;
-            bool apAvailable = calculationOptions.ArcanePower == 1;
-            bool ivAvailable = calculationOptions.IcyVeins == 1;
-            bool combustionAvailable = calculationOptions.Combustion == 1;
-            bool mfAvailable = calculationOptions.MoltenFury > 0;
-            bool trinket1Available = IsItemActivatable(character.Trinket1);
-            bool trinket2Available = IsItemActivatable(character.Trinket2);
-            bool coldsnap = calculationOptions.ColdSnap == 1;
-            float coldsnapCooldown = 8 * 60 * (1 - 0.1f * calculationOptions.IceFloes);
-            float combustionCount = 0;
-
-            double trinket1cooldown = 0, trinket1duration = 0, trinket2cooldown = 0, trinket2duration = 0, t1length = 0, t2length = 0;
-            bool t1ismg = false, t2ismg = false;
-
-            if (calculationOptions.SmartOptimization)
-            {
-                if (calculationOptions.SpellPower == 0)
-                {
-                    calculationOptions.ABCycles = false;
-                }
-                else
-                {
-                    calculationOptions.DestructionPotion = false;
-                    calculationOptions.FlameCap = false;
-                }
-            }
-
-            if (armor == null)
-            {
-                if (character.ActiveBuffs.Contains("Mage Armor")) armor = "Mage Armor";
-                if (character.ActiveBuffs.Contains("Molten Armor")) armor = "Molten Armor";
-            }
-
-            // temporary buffs: Arcane Power, Icy Veins, Molten Fury, Combustion?, Trinket1, Trinket2, Heroism, Destro Pot, Flame Cap, Drums?
-            // compute stats for temporary bonuses, each gives a list of spells used for final LP, solutions of LP stored in calculatedStats
-            List<CharacterCalculationsMage> statsList = new List<CharacterCalculationsMage>();
-
-            CharacterCalculationsMage calculatedStats = null;
-
-            int incrementalSetIndex = 0;
-            for (int mf = 0; mf < 2; mf++)
-                for (int heroism = 0; heroism < 2; heroism++)
-                    for (int ap = 0; ap < 2; ap++)
-                        for (int iv = 0; iv < 2; iv++)
-                            for (int combustion = 0; combustion < 2; combustion++)
-                                for (int drums = 0; drums < 2; drums++)
-                                    for (int flameCap = 0; flameCap < 2; flameCap++)
-                                        for (int destructionPotion = 0; destructionPotion < 2; destructionPotion++)
-                                        {
-                                            if (!calculationOptions.IncrementalOptimizations || Array.IndexOf<int>(calculationOptions.IncrementalSetCooldowns, incrementalSetIndex) >= 0)
-                                            {
-                                                for (int trinket1 = 0; trinket1 < 2; trinket1++)
-                                                    for (int trinket2 = 0; trinket2 < 2; trinket2++)
-                                                        if ((mfAvailable || mf == 1) && (heroismAvailable || heroism == 1) && (apAvailable || ap == 1) && (ivAvailable || iv == 1) && (calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1) && (combustion == 1 || calculationOptions.Combustion == 1) && (drums == 1 || calculationOptions.DrumsOfBattle))
-                                                        {
-                                                            if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
-                                                            {
-                                                                statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, armor, character, additionalItem, ap == 0, mf == 0, iv == 0, heroism == 0, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0, drums == 0, incrementalSetIndex));
-                                                                if (ap != 0 && mf != 0 && iv != 0 && heroism != 0 && destructionPotion != 0 && flameCap != 0 && trinket1 != 0 && trinket2 != 0 && combustion != 0 && drums != 0)
-                                                                {
-                                                                    calculatedStats = statsList[statsList.Count - 1];
-                                                                }
-                                                            }
-                                                        }
-                                            }
-                                            incrementalSetIndex++;
-                                        }
-            if (calculatedStats == null) calculatedStats = GetTemporaryCharacterCalculations(characterStats, calculationOptions, armor, character, additionalItem, false, false, false, false, false, false, false, false, false, false, incrementalSetIndex - 1);
-
-            calculatedStats.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
-            calculatedStats.MageArmor = armor;
-
-            List<SpellId> spellList = new List<SpellId>();
-
-            if (calculationOptions.SmartOptimization)
-            {
-                if (calculationOptions.EmpoweredFireball > 0)
-                {
-                    spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
-                }
-                else if (calculationOptions.EmpoweredFrostbolt > 0)
-                {
-                    spellList.Add(SpellId.Frostbolt);
-                }
-                else if (calculationOptions.SpellPower > 0)
-                {
-                    spellList.Add(SpellId.ArcaneBlast33);
-                    if (calculationOptions.ImprovedFrostbolt > 0) spellList.Add(SpellId.Frostbolt);
-                    if (calculationOptions.ImprovedFireball > 0) spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
-                    if (calculationOptions.ImprovedArcaneMissiles > 0) spellList.Add(SpellId.ArcaneMissiles);
-                }
-                else
-                {
-                    spellList.Add(SpellId.ArcaneMissiles);
-                    spellList.Add(SpellId.Scorch);
-                    spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
-                    spellList.Add(SpellId.Frostbolt);
-                    spellList.Add(SpellId.ArcaneBlast33);
-                }
-            }
-            else
-            {
-                spellList.Add(SpellId.ArcaneMissiles);
-                spellList.Add(SpellId.Scorch);
-                spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
-                spellList.Add(SpellId.FireballFireBlast);
-                spellList.Add(SpellId.Frostbolt);
-                spellList.Add(SpellId.ArcaneBlast33);
-            }
-            if (calculationOptions.ABCycles)
-            {
-                spellList.Add(SpellId.ABAMP);
-                spellList.Add(SpellId.ABAM);
-                spellList.Add(SpellId.AB3AMSc);
-                spellList.Add(SpellId.ABAM3Sc);
-                spellList.Add(SpellId.ABAM3Sc2);
-                spellList.Add(SpellId.ABAM3FrB);
-                spellList.Add(SpellId.ABAM3FrB2);
-                spellList.Add(SpellId.ABFrB3FrB);
-                spellList.Add(SpellId.ABFrB3FrBSc);
-                spellList.Add(SpellId.ABFB3FBSc);
-                //spellList.Add(SpellId.AB3Sc);
-                spellList.Add(SpellId.ABAM3ScCCAM);
-                spellList.Add(SpellId.ABAM3Sc2CCAM);
-                spellList.Add(SpellId.ABAM3FrBCCAM);
-                //spellList.Add("ABAM3FrBCCAMFail");
-                spellList.Add(SpellId.ABAM3FrBScCCAM);
-                spellList.Add(SpellId.ABAMCCAM);
-                spellList.Add(SpellId.ABAM3CCAM);
-            }
-            if (calculationOptions.AoeDuration > 0)
-            {
-                spellList.Add(SpellId.ArcaneExplosion);
-                spellList.Add(SpellId.FlamestrikeSpammed);
-                spellList.Add(SpellId.FlamestrikeSingle);
-                spellList.Add(SpellId.Blizzard);
-                spellList.Add(SpellId.ConeOfCold);
-                if (calculationOptions.BlastWave == 1) spellList.Add(SpellId.BlastWave);
-                if (calculationOptions.DragonsBreath == 1) spellList.Add(SpellId.DragonsBreath);
-            }
-
-            int lpRows = 42;
-            int colOffset = 7;
-            int lpCols = colOffset - 1 + spellList.Count * statsList.Count;
-            CompactLP lp = new CompactLP(lpRows, lpCols, false);
-            double[] tps = new double[lpCols];
-            calculatedStats.SolutionStats = new CharacterCalculationsMage[lpCols];
-            calculatedStats.SolutionSpells = new Spell[lpCols];
-            calculatedStats.SolutionLabel = new string[lpCols];
-
-            int[] incrementalSetCooldown = null;
-            SpellId[] incrementalSetSpell = null;
-            if (computeIncrementalSet)
-            {
-                incrementalSetCooldown = new int[lpCols];
-                incrementalSetSpell = new SpellId[lpCols];
-            }
-
-            if (trinket1Available)
-            {
-                Stats s = character.Trinket1.Stats;
-                if (s.SpellDamageFor20SecOnUse2Min + s.SpellHasteFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
-                {
-                    trinket1duration = 20;
-                    trinket1cooldown = 120;
-                }
-                if (s.SpellDamageFor15SecOnManaGem > 0)
-                {
-                    trinket1duration = 15;
-                    trinket1cooldown = 120;
-                    t1ismg = true;
-                }
-                if (s.SpellDamageFor15SecOnUse90Sec > 0)
-                {
-                    trinket1duration = 15;
-                    trinket1cooldown = 90;
-                }
-                if (s.SpellHasteFor20SecOnUse5Min > 0)
-                {
-                    trinket1duration = 20;
-                    trinket1cooldown = 300;
-                }
-                t1length = (1 + (int)((calculatedStats.FightDuration - trinket1duration) / trinket1cooldown)) * trinket1duration;
-                calculatedStats.Trinket1Name = character.Trinket1.Name;
-            }
-            if (trinket2Available)
-            {
-                Stats s = character.Trinket2.Stats;
-                if (s.SpellDamageFor20SecOnUse2Min + s.SpellHasteFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
-                {
-                    trinket2duration = 20;
-                    trinket2cooldown = 120;
-                }
-                if (s.SpellDamageFor15SecOnManaGem > 0)
-                {
-                    trinket2duration = 15;
-                    trinket2cooldown = 120;
-                    t2ismg = true;
-                }
-                if (s.SpellDamageFor15SecOnUse90Sec > 0)
-                {
-                    trinket2duration = 15;
-                    trinket2cooldown = 90;
-                }
-                if (s.SpellHasteFor20SecOnUse5Min > 0)
-                {
-                    trinket2duration = 20;
-                    trinket2cooldown = 300;
-                }
-                t2length = (1 + (int)((calculatedStats.FightDuration - trinket2duration) / trinket2cooldown)) * trinket2duration;
-                calculatedStats.Trinket2Name = character.Trinket2.Name;
-            }
-
-            calculatedStats.Trinket1Duration = trinket1duration;
-            calculatedStats.Trinket1Cooldown = trinket1cooldown;
-            calculatedStats.Trinket2Duration = trinket2duration;
-            calculatedStats.Trinket2Cooldown = trinket2cooldown;
-
-            combustionCount = combustionAvailable ? (1 + (int)((calculatedStats.FightDuration - 15f) / 195f)) : 0;
-
-            int coldsnapCount = coldsnap ? (1 + (int)((calculatedStats.FightDuration - 45f) / coldsnapCooldown)) : 0;
-            double coldsnapDelay = 0;
-            if (ivAvailable) coldsnapDelay = 20;
-
-            // water elemental
-            if (calculationOptions.SummonWaterElemental == 1)
-            {
-                coldsnapDelay = 45;
-                int targetLevel = calculationOptions.TargetLevel;
-                calculatedStats.WaterElemental = true;
-                // 45 sec, 3 min cooldown + cold snap
-                // 2.5 sec Waterbolt, affected by heroism, totems, 0.4x frost damage from character
-                // TODO consider adding water elemental as part of optimization for stacking with cooldowns
-                float spellHit = 0;
-                if (character.ActiveBuffs.Contains("Totem of Wrath")) spellHit += 0.03f;
-                if (character.ActiveBuffs.Contains("Inspiring Presence")) spellHit += 0.01f;
-                float hitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + spellHit);
-                float spellCrit = 0.05f;
-                if (character.ActiveBuffs.Contains("Winter's Chill") || calculationOptions.WintersChill == 1) spellHit += 0.1f;
-                float multiplier = hitRate;
-                if (character.ActiveBuffs.Contains("Curse of the Elements")) multiplier *= 1.1f;
-                if (character.ActiveBuffs.Contains("Improved Curse of the Elements")) multiplier *= 1.13f / 1.1f;
-                if (character.ActiveBuffs.Contains("Misery")) multiplier *= 1.05f;
-                float realResistance = calculationOptions.FrostResist;
-                float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > 70) ? ((targetLevel - 70) * 0.02f) : 0f));
-                multiplier *= partialResistFactor;
-                calculatedStats.WaterElementalDps = (521.5f + (0.4f * calculatedStats.FrostDamage + (character.ActiveBuffs.Contains("Wrath of Air") ? 101 : 0)) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f;
-                calculatedStats.WaterElementalDuration = (float)(1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 45f) / 180f)) * 45;
-                if (heroismAvailable)
-                    calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDps * ((calculatedStats.WaterElementalDuration - 40) + 40 * 1.3f);
-                else
-                    calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDuration * calculatedStats.WaterElementalDps;
-            }
-
-            // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time, aoe duration, flamestrike, cone of cold, blast wave, dragon's breath, combustion, combustion+mf, heroism+iv, drums, drums+mf, drums+heroism, drums+iv, drums+ap, threat, pot+gem, drumsmax]
-            double aplength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
-            double ivlength = (1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 30f) / 180f)) * 20;
-            double mflength = calculationOptions.MoltenFuryPercentage * calculatedStats.FightDuration;
-            double dpivstackArea = calculatedStats.FightDuration;
-            //if (mfAvailable && heroismAvailable) dpivstackArea -= 120; // only applies if heroism and iv cannot stack
-            double dpivlength = 15 * (int)(dpivstackArea / 360f);
-            if (dpivstackArea % 360f < 195)
-            {
-                dpivlength += 15;
-            }
-            else
-            {
-                dpivlength += 30;
-            }
-            double dpflamelength = 15 * (int)(calculatedStats.FightDuration / 360f);
-            if (calculatedStats.FightDuration % 360f < 195)
-            {
-                dpflamelength += 15;
-            }
-            else
-            {
-                dpflamelength += 30;
-            }
-            double drumsivlength = 20 * (int)(calculatedStats.FightDuration / 360f);
-            if (calculatedStats.FightDuration % 360f < 195)
-            {
-                drumsivlength += 20;
-            }
-            else
-            {
-                drumsivlength += 40;
-            }
-            double drumsaplength = 15 * (int)(calculatedStats.FightDuration / 360f);
-            if (calculatedStats.FightDuration % 360f < 195)
-            {
-                drumsaplength += 15;
-            }
-            else
-            {
-                drumsaplength += 30;
-            }
-
-            // disable unused constraints and variables
-            if (character.Ranged == null || character.Ranged.Type != Item.ItemType.Wand) lp.DisableColumn(1);
-            for (int buffset = 0; buffset < statsList.Count; buffset++)
-            {
-                for (int spell = 0; spell < spellList.Count; spell++)
-                {
-                    bool viable = true;
-                    if (calculationOptions.IncrementalOptimizations)
-                    {
-                        viable = false;
-                        for (int i = 0; i < calculationOptions.IncrementalSetCooldowns.Length; i++)
-                        {
-                            if (statsList[buffset].IncrementalSetIndex == calculationOptions.IncrementalSetCooldowns[i] && spellList[spell] == calculationOptions.IncrementalSetSpells[i])
-                            {
-                                viable = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (viable)
-                    {
-                        Spell s = statsList[buffset].GetSpell(spellList[spell]);
-                        bool spellRelevant = true;
-                        if (!s.AffectedByFlameCap && statsList[buffset].FlameCap) spellRelevant = false;
-                        if (s.ABCycle && !calculationOptions.ABCycles) spellRelevant = false;
-                        if (calculationOptions.SmartOptimization)
-                        {
-                            if (calculationOptions.EmpoweredFireball > 0)
-                            {
-                                if (!s.AreaEffect && !(s is Fireball || s is FireballScorch)) spellRelevant = false;
-                            }
-                        }
-                        if (!spellRelevant)
-                        {
-                            int index = buffset * spellList.Count + spell + colOffset - 1;
-                            lp.DisableColumn(index);
-                        }
-                    }
-                    else
-                    {
-                        int index = buffset * spellList.Count + spell + colOffset - 1;
-                        lp.DisableColumn(index);
-                    }
-                }
-            }
-            if (!heroismAvailable) lp.DisableRow(5);
-            if (!apAvailable) lp.DisableRow(6);
-            if (!heroismAvailable || !apAvailable) lp.DisableRow(7);
-            if (!ivAvailable) lp.DisableRow(8);
-            if (!mfAvailable) lp.DisableRow(9);
-            if (!mfAvailable || !calculationOptions.DestructionPotion) lp.DisableRow(10);
-            if (!mfAvailable || !ivAvailable) lp.DisableRow(11);
-            if (!heroismAvailable || !calculationOptions.DestructionPotion) lp.DisableRow(12);
-            if (!ivAvailable || !calculationOptions.DestructionPotion) lp.DisableRow(13);
-            if (!mfAvailable || !calculationOptions.FlameCap) lp.DisableRow(15);
-            if (!calculationOptions.FlameCap || !calculationOptions.DestructionPotion) lp.DisableRow(16);
-            if (!trinket1Available) lp.DisableRow(17);
-            if (!trinket2Available) lp.DisableRow(18);
-            if (!(mfAvailable && trinket1Available)) lp.DisableRow(19);
-            if (!(mfAvailable && trinket2Available)) lp.DisableRow(20);
-            if (!(heroismAvailable && trinket1Available)) lp.DisableRow(21);
-            if (!(heroismAvailable && trinket2Available)) lp.DisableRow(22);
-            if (calculationOptions.AoeDuration > 0)
-            {
-                if (calculationOptions.BlastWave == 0) lp.DisableRow(28);
-                if (calculationOptions.DragonsBreath == 0) lp.DisableRow(29);
-            }
-            else
-            {
-                lp.DisableRow(25);
-                lp.DisableRow(26);
-                lp.DisableRow(27);
-                lp.DisableRow(28);
-                lp.DisableRow(29);
-            }
-            if (!combustionAvailable) lp.DisableRow(30);
-            if (!(combustionAvailable && mfAvailable)) lp.DisableRow(31);
-            if (!(combustionAvailable && heroismAvailable)) lp.DisableRow(32);
-            if (!(ivAvailable && heroismAvailable)) lp.DisableRow(33);
-            if (!calculationOptions.DrumsOfBattle) lp.DisableRow(34);
-            if (!(calculationOptions.DrumsOfBattle && mfAvailable)) lp.DisableRow(35);
-            if (!(calculationOptions.DrumsOfBattle && heroismAvailable)) lp.DisableRow(36);
-            if (!(calculationOptions.DrumsOfBattle && ivAvailable)) lp.DisableRow(37);
-            if (!(calculationOptions.DrumsOfBattle && apAvailable)) lp.DisableRow(38);
-            if (!calculationOptions.DrumsOfBattle) lp.DisableRow(41);
-
-            lp.Compact();
-
-            float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
-
-            // idle regen
-            calculatedStats.SolutionLabel[0] = "Idle Regen";
-            lp[0, 0] = -(calculatedStats.ManaRegen * (1 - calculationOptions.Fragmentation) + calculatedStats.ManaRegen5SR * calculationOptions.Fragmentation);
-            lp[1, 0] = 1;
-            lp[24, 0] = -1;
-            lp[lpRows, 0] = 0;
-            // wand
-            calculatedStats.SolutionLabel[1] = "Wand";
-            if (character.Ranged != null && character.Ranged.Type == Item.ItemType.Wand)
-            {
-                Spell wand = new Wand(character, calculatedStats, (MagicSchool)character.Ranged.DamageType, character.Ranged.MinDamage, character.Ranged.MaxDamage, character.Ranged.Speed);
-                calculatedStats.SetSpell(SpellId.Wand, wand);
-                lp[0, 1] = wand.CostPerSecond - wand.ManaRegenPerSecond;
-                lp[1, 1] = 1;
-                lp[39, 1] = wand.ThreatPerSecond;
-                lp[lpRows, 1] = wand.DamagePerSecond;
-            }
-            // evocation
-            double evocationDuration = (8f + characterStats.EvocationExtension) / calculatedStats.CastingSpeed;
-            calculatedStats.EvocationDuration = evocationDuration;
-            calculatedStats.SolutionLabel[2] = "Evocation";
-            float evocationMana = characterStats.Mana;
-            calculatedStats.EvocationRegen = calculatedStats.ManaRegen5SR + 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed;
-            if (calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0)
-            {
-                Stats evocationRawStats = rawStats.Clone();
-                if (character.MainHand != null)
-                {
-                    evocationRawStats.Intellect -= character.MainHand.GetTotalStats().Intellect;
-                    evocationRawStats.Spirit -= character.MainHand.GetTotalStats().Spirit;
-                }
-                if (character.OffHand != null)
-                {
-                    evocationRawStats.Intellect -= character.OffHand.GetTotalStats().Intellect;
-                    evocationRawStats.Spirit -= character.OffHand.GetTotalStats().Spirit;
-                }
-                if (character.Ranged != null)
-                {
-                    evocationRawStats.Intellect -= character.Ranged.GetTotalStats().Intellect;
-                    evocationRawStats.Spirit -= character.Ranged.GetTotalStats().Spirit;
-                }
-                if (character.MainHandEnchant != null)
-                {
-                    evocationRawStats.Intellect -= character.MainHandEnchant.Stats.Intellect;
-                    evocationRawStats.Spirit -= character.MainHandEnchant.Stats.Spirit;
-                }
-                evocationRawStats.Intellect += calculationOptions.EvocationWeapon;
-                evocationRawStats.Spirit += calculationOptions.EvocationSpirit;
-                Stats evocationStats = GetCharacterStats(character, additionalItem, evocationRawStats, calculationOptions);
-                float evocationRegen = ((0.001f + evocationStats.Spirit * 0.009327f * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + calculatedStats.SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration) + 0.15f * evocationStats.Mana / 2f * calculatedStats.CastingSpeed;
-                if (evocationRegen > calculatedStats.EvocationRegen)
-                {
-                    evocationMana = evocationStats.Mana;
-                    calculatedStats.EvocationRegen = evocationRegen;
-                }
-            }
-            lp[0, 2] = -calculatedStats.EvocationRegen;
-            lp[1, 2] = 1;
-            lp[2, 2] = 1;
-            lp[39, 2] = 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed * 0.5f * threatFactor; // should split among all targets if more than one, assume one only
-            lp[lpRows, 2] = 0;
-            // mana pot
-            calculatedStats.SolutionLabel[3] = "Mana Potion";
-            calculatedStats.MaxManaPotion = 1 + (int)((calculatedStats.FightDuration - 30f) / 120f);
-            lp[0, 3] = -calculatedStats.ManaRegen5SR - (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime;
-            lp[1, 3] = 1;
-            lp[3, 3] = 1;
-            lp[39, 3] = (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime * 0.5f * threatFactor;
-            lp[40, 3] = 40 / calculatedStats.ManaPotionTime;
-            lp[lpRows, 3] = 0;
-            // mana gem
-            calculatedStats.SolutionLabel[4] = "Mana Gem";
-            calculatedStats.MaxManaGem = Math.Min(5, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f));
-            double manaGemRegenRate = (1 + characterStats.BonusManaGem) * (-Math.Min(3, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f)) * 2400f - ((calculatedStats.FightDuration >= 390) ? 1100f : 0f) - ((calculatedStats.FightDuration >= 510) ? 850 : 0)) / (calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime);
-            lp[0, 4] = -calculatedStats.ManaRegen5SR + manaGemRegenRate;
-            lp[1, 4] = 1;
-            lp[4, 4] = 1;
-            lp[14, 4] = 1;
-            lp[23, 4] = -1 / calculatedStats.ManaPotionTime;
-            lp[39, 4] = manaGemRegenRate * 0.5f * threatFactor;
-            lp[40, 4] = 40 / calculatedStats.ManaPotionTime;
-            lp[lpRows, 4] = 0;
-            // drums
-            calculatedStats.SolutionLabel[5] = "Drums of Battle";
-            lp[0, 5] = -calculatedStats.ManaRegen5SR;
-            lp[1, 5] = 1;
-            lp[34, 5] = -1 / calculatedStats.GlobalCooldown;
-            lp[41, 5] = 1 / calculatedStats.GlobalCooldown;
-            lp[lpRows, 5] = 0;
-            // spells
-            for (int buffset = 0; buffset < statsList.Count; buffset++)
-            {
-                for (int spell = 0; spell < spellList.Count; spell++)
-                {
-                    int index = buffset * spellList.Count + spell + colOffset - 1;
-                    if (lp.IsColumnEnabled(index))
-                    {
-                        Spell s = statsList[buffset].GetSpell(spellList[spell]);
-                        if ((s.AffectedByFlameCap || !statsList[buffset].FlameCap) && (!s.ABCycle || calculationOptions.ABCycles))
-                        {
-                            calculatedStats.SolutionStats[index] = statsList[buffset];
-                            calculatedStats.SolutionSpells[index] = s;
-                            calculatedStats.SolutionLabel[index] = ((statsList[buffset].BuffLabel.Length > 0) ? (statsList[buffset].BuffLabel + "+") : "") + s.Name;
-                            if (computeIncrementalSet)
-                            {
-                                incrementalSetCooldown[index] = statsList[buffset].IncrementalSetIndex;
-                                incrementalSetSpell[index] = spellList[spell];
-                            }
-                            lp[0, index] = s.CostPerSecond - s.ManaRegenPerSecond;
-                            lp[1, index] = 1;
-                            if (statsList[buffset].DestructionPotion) lp[3, index] = calculatedStats.ManaPotionTime / 15f;
-                            lp[5, index] = (statsList[buffset].Heroism ? 1 : 0);
-                            lp[6, index] = (statsList[buffset].ArcanePower ? 1 : 0);
-                            lp[7, index] = ((statsList[buffset].Heroism && statsList[buffset].ArcanePower) ? 1 : 0);
-                            lp[8, index] = (statsList[buffset].IcyVeins ? 1 : 0);
-                            lp[9, index] = (statsList[buffset].MoltenFury ? 1 : 0);
-                            lp[10, index] = ((statsList[buffset].MoltenFury && statsList[buffset].DestructionPotion) ? 1 : 0);
-                            lp[11, index] = ((statsList[buffset].MoltenFury && statsList[buffset].IcyVeins) ? 1 : 0);
-                            lp[12, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].Heroism) ? 1 : 0);
-                            lp[13, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].IcyVeins) ? 1 : 0);
-                            lp[14, index] = (statsList[buffset].FlameCap ? (calculatedStats.ManaPotionTime / 40f) : 0); ;
-                            lp[15, index] = ((statsList[buffset].MoltenFury && statsList[buffset].FlameCap) ? 1 : 0); ;
-                            lp[16, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].FlameCap) ? 1 : 0);
-                            lp[17, index] = (statsList[buffset].Trinket1 ? 1 : 0);
-                            lp[18, index] = (statsList[buffset].Trinket2 ? 1 : 0);
-                            lp[19, index] = ((statsList[buffset].MoltenFury && statsList[buffset].Trinket1) ? 1 : 0);
-                            lp[20, index] = ((statsList[buffset].MoltenFury && statsList[buffset].Trinket2) ? 1 : 0);
-                            lp[21, index] = ((statsList[buffset].Heroism && statsList[buffset].Trinket1) ? 1 : 0);
-                            lp[22, index] = ((statsList[buffset].Heroism && statsList[buffset].Trinket2) ? 1 : 0);
-                            lp[23, index] = ((statsList[buffset].Trinket1 && t1ismg) ? 1 / trinket1duration : 0) + ((statsList[buffset].Trinket2 && t2ismg) ? 1 / trinket2duration : 0);
-                            //aoe duration, flamestrike, cone of cold, blast wave, dragon's breath
-                            lp[25, index] = (s.AreaEffect ? 1 : 0);
-                            if (s.AreaEffect)
-                            {
-                                Flamestrike fs = s as Flamestrike;
-                                if (fs != null)
-                                {
-                                    if (!fs.SpammedDot) lp[26, index] = fs.DotDuration / fs.CastTime;
-                                }
-                                else
-                                {
-                                    lp[26, index] = -1;
-                                }
-                                ConeOfCold coc = s as ConeOfCold;
-                                if (coc != null)
-                                {
-                                    lp[27, index] = (coc.Cooldown / coc.CastTime - 1);
-                                }
-                                else
-                                {
-                                    lp[27, index] = -1;
-                                }
-                                BlastWave bw = s as BlastWave;
-                                if (bw != null)
-                                {
-                                    lp[28, index] = (bw.Cooldown / bw.CastTime - 1);
-                                }
-                                else
-                                {
-                                    lp[28, index] = -1;
-                                }
-                                DragonsBreath db = s as DragonsBreath;
-                                if (db != null)
-                                {
-                                    lp[29, index] = (db.Cooldown / db.CastTime - 1);
-                                }
-                                else
-                                {
-                                    lp[29, index] = -1;
-                                }
-                            }
-                            lp[30, index] = (statsList[buffset].Combustion) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
-                            lp[31, index] = (statsList[buffset].Combustion && statsList[buffset].MoltenFury) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
-                            lp[32, index] = (statsList[buffset].Combustion && statsList[buffset].Heroism) ? (1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs)) : 0;
-                            lp[33, index] = (statsList[buffset].IcyVeins && statsList[buffset].Heroism) ? 1 : 0;
-                            //drums, drums+mf, drums+heroism, drums+iv, drums+ap
-                            lp[34, index] = (statsList[buffset].DrumsOfBattle) ? 1 / (30 - calculatedStats.GlobalCooldown) : 0;
-                            lp[35, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].MoltenFury) ? 1 : 0;
-                            lp[36, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].Heroism) ? 1 : 0;
-                            lp[37, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].IcyVeins) ? 1 : 0;
-                            lp[38, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].ArcanePower) ? 1 : 0;
-                            lp[39, index] = s.ThreatPerSecond;
-                            //lp[40, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
-                            lp[lpRows, index] = s.DamagePerSecond;
-                        }
-                    }
-                }
-            }
-            // mana burn estimate
-            float manaBurn = 80;
-            if (calculationOptions.AoeDuration > 0)
-            {
-                Spell s = calculatedStats.GetSpell(SpellId.ArcaneExplosion);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            }
-            else if (calculationOptions.EmpoweredFireball > 0)
-            {
-                Spell s = calculatedStats.GetSpell(SpellId.Fireball);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            }
-            else if (calculationOptions.EmpoweredFrostbolt > 0)
-            {
-                Spell s = calculatedStats.GetSpell(SpellId.Frostbolt);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            }
-            else if (calculationOptions.SpellPower > 0)
-            {
-                Spell s = calculatedStats.GetSpell(SpellId.ArcaneBlast33);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            }
-            if (ivAvailable)
-            {
-                manaBurn *= 1.1f;
-            }
-            if (apAvailable)
-            {
-                manaBurn *= 1.1f;
-            }
-
-            if (calculatedStats.FightDuration - 7800 / manaBurn < 0) // fix for maximum pot+gem constraint
-            {
-                manaBurn = 7800 / calculatedStats.FightDuration;
-            }
-
-            lp[0, lpCols] = characterStats.Mana;
-            lp[1, lpCols] = calculatedStats.FightDuration;
-            lp[2, lpCols] = evocationDuration * Math.Max(1, (1 + Math.Floor((calculatedStats.FightDuration - 200f) / 480f)));
-            lp[3, lpCols] = calculatedStats.MaxManaPotion * calculatedStats.ManaPotionTime;
-            lp[4, lpCols] = calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime;
-            if (heroismAvailable) lp[5, lpCols] = 40;
-            if (apAvailable) lp[6, lpCols] = aplength;
-            if (heroismAvailable && apAvailable) lp[7, lpCols] = 15;
-            if (ivAvailable) lp[8, lpCols] = ivlength;
-            if (mfAvailable) lp[9, lpCols] = mflength;
-            if (mfAvailable) lp[10, lpCols] = 15;
-            if (mfAvailable && ivAvailable) lp[11, lpCols] = coldsnap ? 40 : 20;
-            if (heroismAvailable) lp[12, lpCols] = 15;
-            if (ivAvailable) lp[13, lpCols] = dpivlength;
-            if (calculationOptions.FlameCap && !(!calculationOptions.SmartOptimization && calculationOptions.SpellPower > 0))
-            {
-                lp[14, lpCols] = ((int)(calculatedStats.FightDuration / 180f + 2f / 3f)) * calculatedStats.ManaPotionTime * 3f / 2f;
-            }
-            else
-            {
-                lp[14, lpCols] = calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime;
-            }
-            if (mfAvailable) lp[15, lpCols] = 60;
-            lp[16, lpCols] = dpflamelength;
-            if (trinket1Available) lp[17, lpCols] = t1length;
-            if (trinket2Available) lp[18, lpCols] = t2length;
-            if (mfAvailable && trinket1Available) lp[19, lpCols] = trinket1duration;
-            if (mfAvailable && trinket2Available) lp[20, lpCols] = trinket2duration;
-            if (heroismAvailable && trinket1Available) lp[21, lpCols] = trinket1duration;
-            if (heroismAvailable && trinket2Available) lp[22, lpCols] = trinket2duration;
-            lp[24, lpCols] = -(1 - calculationOptions.DpsTime) * calculationOptions.FightDuration;
-            lp[25, lpCols] = calculationOptions.AoeDuration * calculationOptions.FightDuration;
-            lp[30, lpCols] = combustionCount;
-            lp[31, lpCols] = 1;
-            lp[32, lpCols] = 1;
-            lp[33, lpCols] = coldsnap ? 40 : 20;
-            lp[35, lpCols] = 30 - calculatedStats.GlobalCooldown;
-            lp[36, lpCols] = 30 - calculatedStats.GlobalCooldown;
-            lp[37, lpCols] = drumsivlength;
-            lp[38, lpCols] = drumsaplength;
-            lp[39, lpCols] = calculationOptions.TpsLimit * calculationOptions.FightDuration;
-            lp[40, lpCols] = ((int)((calculatedStats.FightDuration - 7800 / manaBurn) / 60f + 2)) * 40;
-            lp[41, lpCols] = (1 + (int)((calculatedStats.FightDuration - 30) / 120));
-
-            for (int col = 0; col < lpCols; col++) tps[col] = lp[39, col];
-
-            calculatedStats.Solution = lp.Solve();
-
-            if (computeIncrementalSet)
-            {
-                calculatedStats.IncrementalSetCooldown = incrementalSetCooldown;
-                calculatedStats.IncrementalSetSpell = incrementalSetSpell;
-            }
-
-            calculatedStats.SubPoints[0] = ((float)calculatedStats.Solution[lpCols] + calculatedStats.WaterElementalDamage) / calculationOptions.FightDuration;
-            calculatedStats.OverallPoints = calculatedStats.SubPoints[0];
-            float threat = 0;
-            for (int i = 0; i < lpCols; i++)
-            {
-                threat += (float)(tps[i] * calculatedStats.Solution[i]);
-            }
-            calculatedStats.Tps = threat / calculationOptions.FightDuration;
-
-            return calculatedStats;
-        }
-
-        public CharacterCalculationsBase GetCharacterCalculations_SMP(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions, string armor, bool computeIncrementalSet)
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CompiledCalculationOptions calculationOptions, string armor, bool computeIncrementalSet, bool useSMP)
         {
             List<string> autoActivatedBuffs = new List<string>();
             Stats rawStats = GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
@@ -1083,7 +390,7 @@ namespace Rawr.Mage
 
             calculationOptions.SmartOptimization = true;
             double segmentDuration = 30;
-            int segments = (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration);
+            int segments = useSMP ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
 
             bool heroismAvailable = calculationOptions.HeroismAvailable;
             bool apAvailable = calculationOptions.ArcanePower == 1;
@@ -1235,14 +542,14 @@ namespace Rawr.Mage
             }
 
             int rowOffset = 42;
-            int lpRows = rowOffset + 11 * segments; // packing constraints for each of 10 cooldowns + timing for each segment
+            int lpRows = rowOffset + (useSMP ? 11 * segments : 0); // packing constraints for each of 10 cooldowns + timing for each segment
             int colOffset = 7;
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count * segments;
-            CompactLP lp = new CompactLP(lpRows, lpCols, true);
+            CompactLP lp = new CompactLP(lpRows, lpCols);
             double[] tps = new double[lpCols];
             calculatedStats.SolutionStats = new CharacterCalculationsMage[lpCols];
             calculatedStats.SolutionSpells = new Spell[lpCols];
-            calculatedStats.SolutionSegments = new int[lpCols];
+            if (useSMP) calculatedStats.SolutionSegments = new int[lpCols];
             calculatedStats.SolutionLabel = new string[lpCols];
 
             int[] incrementalSetCooldown = null;
@@ -1252,7 +559,7 @@ namespace Rawr.Mage
             {
                 incrementalSetCooldown = new int[lpCols];
                 incrementalSetSpell = new SpellId[lpCols];
-                incrementalSetSegment = new int[lpCols];
+                if (useSMP) incrementalSetSegment = new int[lpCols];
             }
 
             if (trinket1Available)
@@ -1408,14 +715,14 @@ namespace Rawr.Mage
                             viable = false;
                             for (int i = 0; i < calculationOptions.IncrementalSetCooldowns.Length; i++)
                             {
-                                if (seg == calculationOptions.IncrementalSetSegments[i] && statsList[buffset].IncrementalSetIndex == calculationOptions.IncrementalSetCooldowns[i] && spellList[spell] == calculationOptions.IncrementalSetSpells[i])
+                                if ((!useSMP || seg == calculationOptions.IncrementalSetSegments[i]) && statsList[buffset].IncrementalSetIndex == calculationOptions.IncrementalSetCooldowns[i] && spellList[spell] == calculationOptions.IncrementalSetSpells[i])
                                 {
                                     viable = true;
                                     break;
                                 }
                             }
                         }
-                        if (statsList[buffset].MoltenFury && (seg + 1) * segmentDuration <= calculationOptions.FightDuration - mflength) viable = false;
+                        if (useSMP && statsList[buffset].MoltenFury && (seg + 1) * segmentDuration <= calculationOptions.FightDuration - mflength) viable = false;
                         if (statsList[buffset] == calculatedStats && seg < segments - 1) viable = false;
                         if (viable)
                         {
@@ -1484,80 +791,83 @@ namespace Rawr.Mage
             if (!(calculationOptions.DrumsOfBattle && ivAvailable)) lp.DisableRow(37);
             if (!(calculationOptions.DrumsOfBattle && apAvailable)) lp.DisableRow(38);
             if (!calculationOptions.DrumsOfBattle) lp.DisableRow(41);
-            // mf, heroism, ap, iv, combustion, drums, flamecap, destruction, t1, t2
-            // mf
-            for (int seg = 0; seg < segments; seg++)
+            if (useSMP)
             {
-                if (mfAvailable || (seg + 1) * segmentDuration <= calculationOptions.FightDuration - mflength) lp.DisableRow(rowOffset + 0 * segments + seg);
-            }
-            // heroism
-            for (int seg = 0; seg < segments; seg++)
-            {
-                lp.DisableRow(rowOffset + 1 * segments + seg); // disable all, might change this if we decide to model multiple heroisms
-            }
-            // ap
-            bool allCovered = !apAvailable;
-            for (int seg = 0; seg < segments; seg++)
-            {
-                if (allCovered) lp.DisableRow(rowOffset + 2 * segments + seg);
-                double cool = 180;
-                if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
-            }
-            // iv
-            allCovered = !ivAvailable;
-            for (int seg = 0; seg < segments; seg++)
-            {
-                if (allCovered) lp.DisableRow(rowOffset + 3 * segments + seg);
-                double cool = 180 + (coldsnap ? 20 : 0);
-                if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
-            }
-            // combustion
-            allCovered = !combustionAvailable;
-            for (int seg = 0; seg < segments; seg++)
-            {
-                if (allCovered) lp.DisableRow(rowOffset + 4 * segments + seg);
-                double cool = 180 + 15;
-                if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
-            }
-            // drums
-            allCovered = !calculationOptions.DrumsOfBattle;
-            for (int seg = 0; seg < segments; seg++)
-            {
-                if (allCovered) lp.DisableRow(rowOffset + 5 * segments + seg);
-                double cool = 120;
-                if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
-            }
-            // flamecap
-            allCovered = !calculationOptions.FlameCap;
-            for (int seg = 0; seg < segments; seg++)
-            {
-                if (allCovered) lp.DisableRow(rowOffset + 6 * segments + seg);
-                double cool = 180;
-                if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
-            }
-            // destruction
-            allCovered = !calculationOptions.DestructionPotion;
-            for (int seg = 0; seg < segments; seg++)
-            {
-                if (allCovered) lp.DisableRow(rowOffset + 7 * segments + seg);
-                double cool = 120;
-                if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
-            }
-            // t1
-            allCovered = !trinket1Available;
-            for (int seg = 0; seg < segments; seg++)
-            {
-                if (allCovered) lp.DisableRow(rowOffset + 8 * segments + seg);
-                double cool = trinket1cooldown;
-                if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
-            }
-            // t2
-            allCovered = !trinket2Available;
-            for (int seg = 0; seg < segments; seg++)
-            {
-                if (allCovered) lp.DisableRow(rowOffset + 9 * segments + seg);
-                double cool = trinket2cooldown;
-                if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
+                // mf, heroism, ap, iv, combustion, drums, flamecap, destruction, t1, t2
+                // mf
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    if (mfAvailable || (seg + 1) * segmentDuration <= calculationOptions.FightDuration - mflength) lp.DisableRow(rowOffset + 0 * segments + seg);
+                }
+                // heroism
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    lp.DisableRow(rowOffset + 1 * segments + seg); // disable all, might change this if we decide to model multiple heroisms
+                }
+                // ap
+                bool allCovered = !apAvailable;
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    if (allCovered) lp.DisableRow(rowOffset + 2 * segments + seg);
+                    double cool = 180;
+                    if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
+                }
+                // iv
+                allCovered = !ivAvailable;
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    if (allCovered) lp.DisableRow(rowOffset + 3 * segments + seg);
+                    double cool = 180 + (coldsnap ? 20 : 0);
+                    if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
+                }
+                // combustion
+                allCovered = !combustionAvailable;
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    if (allCovered) lp.DisableRow(rowOffset + 4 * segments + seg);
+                    double cool = 180 + 15;
+                    if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
+                }
+                // drums
+                allCovered = !calculationOptions.DrumsOfBattle;
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    if (allCovered) lp.DisableRow(rowOffset + 5 * segments + seg);
+                    double cool = 120;
+                    if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
+                }
+                // flamecap
+                allCovered = !calculationOptions.FlameCap;
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    if (allCovered) lp.DisableRow(rowOffset + 6 * segments + seg);
+                    double cool = 180;
+                    if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
+                }
+                // destruction
+                allCovered = !calculationOptions.DestructionPotion;
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    if (allCovered) lp.DisableRow(rowOffset + 7 * segments + seg);
+                    double cool = 120;
+                    if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
+                }
+                // t1
+                allCovered = !trinket1Available;
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    if (allCovered) lp.DisableRow(rowOffset + 8 * segments + seg);
+                    double cool = trinket1cooldown;
+                    if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
+                }
+                // t2
+                allCovered = !trinket2Available;
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    if (allCovered) lp.DisableRow(rowOffset + 9 * segments + seg);
+                    double cool = trinket2cooldown;
+                    if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
+                }
             }
 
             lp.Compact();
@@ -1668,13 +978,13 @@ namespace Rawr.Mage
                             {
                                 calculatedStats.SolutionStats[index] = statsList[buffset];
                                 calculatedStats.SolutionSpells[index] = s;
-                                calculatedStats.SolutionSegments[index] = seg;
+                                if (useSMP) calculatedStats.SolutionSegments[index] = seg;
                                 calculatedStats.SolutionLabel[index] = ((statsList[buffset].BuffLabel.Length > 0) ? (statsList[buffset].BuffLabel + "+") : "") + s.Name;
                                 if (computeIncrementalSet)
                                 {
                                     incrementalSetCooldown[index] = statsList[buffset].IncrementalSetIndex;
                                     incrementalSetSpell[index] = spellList[spell];
-                                    incrementalSetSegment[index] = seg;
+                                    if (useSMP) incrementalSetSegment[index] = seg;
                                 }
                                 lp[0, index] = s.CostPerSecond - s.ManaRegenPerSecond;
                                 lp[1, index] = 1;
@@ -1752,93 +1062,96 @@ namespace Rawr.Mage
                                 lp[39, index] = s.ThreatPerSecond;
                                 //lp[40, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
                                 lp[lpRows, index] = s.DamagePerSecond;
-                                // mf, heroism, ap, iv, combustion, drums, flamecap, destro, t1, t2
-                                if (statsList[buffset].MoltenFury)
+                                if (useSMP)
                                 {
-                                    lp[rowOffset + 0 * segments + seg, index] = 1;
-                                }
-                                //lp[rowOffset + 1 * segments + seg, index] = 1;
-                                if (statsList[buffset].ArcanePower)
-                                {
-                                    for (int ss = 0; ss < segments; ss++)
+                                    // mf, heroism, ap, iv, combustion, drums, flamecap, destro, t1, t2
+                                    if (statsList[buffset].MoltenFury)
                                     {
-                                        double cool = 180;
-                                        int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
-                                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
-                                        if (seg >= ss && seg <= maxs) lp[rowOffset + 2 * segments + ss, index] = 1;
+                                        lp[rowOffset + 0 * segments + seg, index] = 1;
                                     }
-                                }
-                                if (statsList[buffset].IcyVeins)
-                                {
-                                    for (int ss = 0; ss < segments; ss++)
+                                    //lp[rowOffset + 1 * segments + seg, index] = 1;
+                                    if (statsList[buffset].ArcanePower)
                                     {
-                                        double cool = 180 + (coldsnap ? 20 : 0);
-                                        int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
-                                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
-                                        if (seg >= ss && seg <= maxs) lp[rowOffset + 3 * segments + ss, index] = 1;
+                                        for (int ss = 0; ss < segments; ss++)
+                                        {
+                                            double cool = 180;
+                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                            if (seg >= ss && seg <= maxs) lp[rowOffset + 2 * segments + ss, index] = 1;
+                                        }
                                     }
-                                }
-                                if (statsList[buffset].Combustion)
-                                {
-                                    for (int ss = 0; ss < segments; ss++)
+                                    if (statsList[buffset].IcyVeins)
                                     {
-                                        double cool = 180 + 15;
-                                        int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
-                                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
-                                        if (seg >= ss && seg <= maxs) lp[rowOffset + 4 * segments + ss, index] = 1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs);
+                                        for (int ss = 0; ss < segments; ss++)
+                                        {
+                                            double cool = 180 + (coldsnap ? 20 : 0);
+                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                            if (seg >= ss && seg <= maxs) lp[rowOffset + 3 * segments + ss, index] = 1;
+                                        }
                                     }
-                                }
-                                if (statsList[buffset].DrumsOfBattle)
-                                {
-                                    for (int ss = 0; ss < segments; ss++)
+                                    if (statsList[buffset].Combustion)
                                     {
-                                        double cool = 120;
-                                        int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
-                                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
-                                        if (seg >= ss && seg <= maxs) lp[rowOffset + 5 * segments + ss, index] = 1;
+                                        for (int ss = 0; ss < segments; ss++)
+                                        {
+                                            double cool = 180 + 15;
+                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                            if (seg >= ss && seg <= maxs) lp[rowOffset + 4 * segments + ss, index] = 1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs);
+                                        }
                                     }
-                                }
-                                if (statsList[buffset].FlameCap)
-                                {
-                                    for (int ss = 0; ss < segments; ss++)
+                                    if (statsList[buffset].DrumsOfBattle)
                                     {
-                                        double cool = 180;
-                                        int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
-                                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
-                                        if (seg >= ss && seg <= maxs) lp[rowOffset + 6 * segments + ss, index] = 1;
+                                        for (int ss = 0; ss < segments; ss++)
+                                        {
+                                            double cool = 120;
+                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                            if (seg >= ss && seg <= maxs) lp[rowOffset + 5 * segments + ss, index] = 1;
+                                        }
                                     }
-                                }
-                                if (statsList[buffset].DestructionPotion)
-                                {
-                                    for (int ss = 0; ss < segments; ss++)
+                                    if (statsList[buffset].FlameCap)
                                     {
-                                        double cool = 120;
-                                        int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
-                                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
-                                        if (seg >= ss && seg <= maxs) lp[rowOffset + 7 * segments + ss, index] = 1;
+                                        for (int ss = 0; ss < segments; ss++)
+                                        {
+                                            double cool = 180;
+                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                            if (seg >= ss && seg <= maxs) lp[rowOffset + 6 * segments + ss, index] = 1;
+                                        }
                                     }
-                                }
-                                if (statsList[buffset].Trinket1)
-                                {
-                                    for (int ss = 0; ss < segments; ss++)
+                                    if (statsList[buffset].DestructionPotion)
                                     {
-                                        double cool = trinket1cooldown;
-                                        int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
-                                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
-                                        if (seg >= ss && seg <= maxs) lp[rowOffset + 8 * segments + ss, index] = 1;
+                                        for (int ss = 0; ss < segments; ss++)
+                                        {
+                                            double cool = 120;
+                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                            if (seg >= ss && seg <= maxs) lp[rowOffset + 7 * segments + ss, index] = 1;
+                                        }
                                     }
-                                }
-                                if (statsList[buffset].Trinket2)
-                                {
-                                    for (int ss = 0; ss < segments; ss++)
+                                    if (statsList[buffset].Trinket1)
                                     {
-                                        double cool = trinket2cooldown;
-                                        int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
-                                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
-                                        if (seg >= ss && seg <= maxs) lp[rowOffset + 9 * segments + ss, index] = 1;
+                                        for (int ss = 0; ss < segments; ss++)
+                                        {
+                                            double cool = trinket1cooldown;
+                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                            if (seg >= ss && seg <= maxs) lp[rowOffset + 8 * segments + ss, index] = 1;
+                                        }
                                     }
+                                    if (statsList[buffset].Trinket2)
+                                    {
+                                        for (int ss = 0; ss < segments; ss++)
+                                        {
+                                            double cool = trinket2cooldown;
+                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                            if (seg >= ss && seg <= maxs) lp[rowOffset + 9 * segments + ss, index] = 1;
+                                        }
+                                    }
+                                    if (statsList[buffset] != calculatedStats) lp[rowOffset + 10 * segments + seg, index] = 1;
                                 }
-                                if (statsList[buffset] != calculatedStats) lp[rowOffset + 10 * segments + seg, index] = 1;
                             }
                         }
                     }
@@ -1924,280 +1237,287 @@ namespace Rawr.Mage
             lp[40, lpCols] = ((int)((calculatedStats.FightDuration - 7800 / manaBurn) / 60f + 2)) * 40;
             lp[41, lpCols] = (1 + (int)((calculatedStats.FightDuration - 30) / 120));
 
-            // mf
-            if (mfAvailable)
+            if (useSMP)
             {
+                // mf
+                if (mfAvailable)
+                {
+                    for (int seg = 0; seg < segments; seg++)
+                    {
+                        if (calculationOptions.FightDuration - mflength < seg * segmentDuration) lp[rowOffset + 0 * segments + seg, lpCols] = segmentDuration;
+                        else lp[rowOffset + 0 * segments + seg, lpCols] = Math.Max(0, segmentDuration - (calculationOptions.FightDuration - mflength - seg * segmentDuration));
+                    }
+                }
+                // heroism, nothing needed for now
+                // ap
                 for (int seg = 0; seg < segments; seg++)
                 {
-                    if (calculationOptions.FightDuration - mflength < seg * segmentDuration) lp[rowOffset + 0 * segments + seg, lpCols] = segmentDuration;
-                    else lp[rowOffset + 0 * segments + seg, lpCols] = Math.Max(0, segmentDuration - (calculationOptions.FightDuration - mflength - seg * segmentDuration));
+                    lp[rowOffset + 2 * segments + seg, lpCols] = 15;
                 }
-            }
-            // heroism, nothing needed for now
-            // ap
-            for (int seg = 0; seg < segments; seg++)
-            {
-                lp[rowOffset + 2 * segments + seg, lpCols] = 15;
-            }
-            // iv
-            for (int seg = 0; seg < segments; seg++)
-            {
-                lp[rowOffset + 3 * segments + seg, lpCols] = 20 + (coldsnap ? 20 : 0);
-            }
-            // combustion
-            for (int seg = 0; seg < segments; seg++)
-            {
-                lp[rowOffset + 4 * segments + seg, lpCols] = 1;
-            }
-            // drums
-            for (int seg = 0; seg < segments; seg++)
-            {
-                lp[rowOffset + 5 * segments + seg, lpCols] = 30 - calculatedStats.GlobalCooldown;
-            }
-            // flamecap
-            for (int seg = 0; seg < segments; seg++)
-            {
-                lp[rowOffset + 6 * segments + seg, lpCols] = 60;
-            }
-            // destruction
-            for (int seg = 0; seg < segments; seg++)
-            {
-                lp[rowOffset + 7 * segments + seg, lpCols] = 15;
-            }
-            // t1
-            for (int seg = 0; seg < segments; seg++)
-            {
-                lp[rowOffset + 8 * segments + seg, lpCols] = trinket1duration;
-            }
-            // t2
-            for (int seg = 0; seg < segments; seg++)
-            {
-                lp[rowOffset + 9 * segments + seg, lpCols] = trinket2duration;
-            }
-            // timing
-            for (int seg = 0; seg < segments; seg++)
-            {
-                lp[rowOffset + 10 * segments + seg, lpCols] = segmentDuration;
+                // iv
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    lp[rowOffset + 3 * segments + seg, lpCols] = 20 + (coldsnap ? 20 : 0);
+                }
+                // combustion
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    lp[rowOffset + 4 * segments + seg, lpCols] = 1;
+                }
+                // drums
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    lp[rowOffset + 5 * segments + seg, lpCols] = 30 - calculatedStats.GlobalCooldown;
+                }
+                // flamecap
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    lp[rowOffset + 6 * segments + seg, lpCols] = 60;
+                }
+                // destruction
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    lp[rowOffset + 7 * segments + seg, lpCols] = 15;
+                }
+                // t1
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    lp[rowOffset + 8 * segments + seg, lpCols] = trinket1duration;
+                }
+                // t2
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    lp[rowOffset + 9 * segments + seg, lpCols] = trinket2duration;
+                }
+                // timing
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    lp[rowOffset + 10 * segments + seg, lpCols] = segmentDuration;
+                }
             }
 
             for (int col = 0; col < lpCols; col++) tps[col] = lp[39, col];
 
-            Heap<CompactLP> heap = new Heap<CompactLP>(HeapType.MaximumHeap);
-            heap.Push(lp);
-
-            double max = lp.Value;
-
-            bool valid = true;
-            do
+            if (useSMP)
             {
-                if (heap.Head.Value > max + 0.000001)
+                Heap<CompactLP> heap = new Heap<CompactLP>(HeapType.MaximumHeap);
+                heap.Push(lp);
+
+                double max = lp.Value;
+
+                bool valid = true;
+                do
                 {
-                    System.Windows.Forms.MessageBox.Show("Instability detected, aborting SMP algorithm");
-                    // find something reasonably stable
-                    while (heap.Count > 0 && (lp = heap.Pop()).Value > max + 0.000001) { }
-                    break;
-                }
-                lp = heap.Pop();
-                //max = lp.Value; instability fix?
-                // this is the best non-evaluated option (highest partially-constrained LP, the optimum has to be lower)
-                // if this one is valid than all others are sub-optimal
-                // validate all segments for each cooldown
-                double[] solution = lp.Solve();
-                valid = true;
-                for (int seg = 0; seg < segments; seg++)
-                {
-                    // mf is trivially satisfied
-                    // heroism
-                    double inseg = 0;
-                    for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                    if (heap.Head.Value > max + 0.000001)
                     {
-                        CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                        if (stats != null && stats.Heroism) inseg += solution[index];
+                        System.Windows.Forms.MessageBox.Show("Instability detected, aborting SMP algorithm");
+                        // find something reasonably stable
+                        while (heap.Count > 0 && (lp = heap.Pop()).Value > max + 0.000001) { }
+                        break;
                     }
-                    if (inseg > 0)
+                    lp = heap.Pop();
+                    //max = lp.Value; instability fix?
+                    // this is the best non-evaluated option (highest partially-constrained LP, the optimum has to be lower)
+                    // if this one is valid than all others are sub-optimal
+                    // validate all segments for each cooldown
+                    double[] solution = lp.Solve();
+                    valid = true;
+                    for (int seg = 0; seg < segments; seg++)
                     {
-                        double duration = 40;
-                        int mindist = (int)Math.Ceiling(duration / segmentDuration);
-                        // verify that outside duration segments are 0
-                        valid = true;
-                        for (int outseg = 0; outseg < segments; outseg++)
+                        // mf is trivially satisfied
+                        // heroism
+                        double inseg = 0;
+                        for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                         {
-                            if (Math.Abs(outseg - seg) > mindist)
-                            {
-                                for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                                {
-                                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                    if (stats != null && stats.Heroism && solution[index] > 0)
-                                    {
-                                        valid = false;
-                                        goto breakHeroism;
-                                    }
-                                }
-                            }
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.Heroism) inseg += solution[index];
                         }
-                    breakHeroism:
-                        if (!valid)
+                        if (inseg > 0)
                         {
-                            // branch on whether cooldown is used in this segment
-                            CompactLP cooldownUsed = lp.Clone();
-                            // cooldown not used
-                            lp.HeroismHash += 1 << seg;
-                            for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                            {
-                                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                if (stats != null && stats.Heroism) lp.EraseColumn(index);
-                            }
-                            heap.Push(lp);
-                            // cooldown used
+                            double duration = 40;
+                            int mindist = (int)Math.Ceiling(duration / segmentDuration);
+                            // verify that outside duration segments are 0
+                            valid = true;
                             for (int outseg = 0; outseg < segments; outseg++)
                             {
                                 if (Math.Abs(outseg - seg) > mindist)
                                 {
-                                    cooldownUsed.HeroismHash += 1 << outseg;
                                     for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                                     {
                                         CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                        if (stats != null && stats.Heroism) cooldownUsed.EraseColumn(index);
+                                        if (stats != null && stats.Heroism && solution[index] > 0)
+                                        {
+                                            valid = false;
+                                            goto breakHeroism;
+                                        }
                                     }
                                 }
                             }
-                            heap.Push(cooldownUsed);
-                            break;
-                        }
-                    }
-                    // ap
-                    inseg = 0;
-                    for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                    {
-                        CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                        if (stats != null && stats.ArcanePower) inseg += solution[index];
-                    }
-                    if (inseg > 0)
-                    {
-                        double duration = 15;
-                        double cool = 180;
-                        int mindist = (int)Math.Ceiling(duration / segmentDuration);
-                        int maxdist = (int)Math.Floor((cool - duration) / segmentDuration);
-                        // verify that outside duration segments are 0
-                        valid = true;
-                        for (int outseg = 0; outseg < segments; outseg++)
-                        {
-                            if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                        breakHeroism:
+                            if (!valid)
                             {
-                                for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                                // branch on whether cooldown is used in this segment
+                                CompactLP cooldownUsed = lp.Clone();
+                                // cooldown not used
+                                lp.HeroismHash += 1 << seg;
+                                for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                                 {
                                     CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                    if (stats != null && stats.ArcanePower && solution[index] > 0)
+                                    if (stats != null && stats.Heroism) lp.EraseColumn(index);
+                                }
+                                heap.Push(lp);
+                                // cooldown used
+                                for (int outseg = 0; outseg < segments; outseg++)
+                                {
+                                    if (Math.Abs(outseg - seg) > mindist)
                                     {
-                                        valid = false;
-                                        goto breakAP;
+                                        cooldownUsed.HeroismHash += 1 << outseg;
+                                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                                        {
+                                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                            if (stats != null && stats.Heroism) cooldownUsed.EraseColumn(index);
+                                        }
                                     }
                                 }
+                                heap.Push(cooldownUsed);
+                                break;
                             }
                         }
-                    breakAP:
-                        if (!valid)
+                        // ap
+                        inseg = 0;
+                        for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                         {
-                            // branch on whether cooldown is used in this segment
-                            CompactLP cooldownUsed = lp.Clone();
-                            // cooldown not used
-                            lp.APHash += 1 << seg;
-                            for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                            {
-                                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                if (stats != null && stats.ArcanePower) lp.EraseColumn(index);
-                            }
-                            heap.Push(lp);
-                            // cooldown used
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.ArcanePower) inseg += solution[index];
+                        }
+                        if (inseg > 0)
+                        {
+                            double duration = 15;
+                            double cool = 180;
+                            int mindist = (int)Math.Ceiling(duration / segmentDuration);
+                            int maxdist = (int)Math.Floor((cool - duration) / segmentDuration);
+                            // verify that outside duration segments are 0
+                            valid = true;
                             for (int outseg = 0; outseg < segments; outseg++)
                             {
                                 if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
                                 {
-                                    cooldownUsed.APHash += 1 << outseg;
                                     for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                                     {
                                         CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                        if (stats != null && stats.ArcanePower) cooldownUsed.EraseColumn(index);
+                                        if (stats != null && stats.ArcanePower && solution[index] > 0)
+                                        {
+                                            valid = false;
+                                            goto breakAP;
+                                        }
                                     }
                                 }
                             }
-                            heap.Push(cooldownUsed);
-                            break;
-                        }
-                    }
-                    // iv
-                    inseg = 0;
-                    for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                    {
-                        CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                        if (stats != null && stats.IcyVeins) inseg += solution[index];
-                    }
-                    if (inseg > 0)
-                    {
-                        double duration = 20 + (coldsnap ? 20 : 0);
-                        double cool = 180 + (coldsnap ? 20 : 0);
-                        int mindist = (int)Math.Ceiling(duration / segmentDuration);
-                        int maxdist = (int)Math.Floor((cool - duration) / segmentDuration);
-                        // verify that outside duration segments are 0
-                        valid = true;
-                        for (int outseg = 0; outseg < segments; outseg++)
-                        {
-                            if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                        breakAP:
+                            if (!valid)
                             {
-                                for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                                // branch on whether cooldown is used in this segment
+                                CompactLP cooldownUsed = lp.Clone();
+                                // cooldown not used
+                                lp.APHash += 1 << seg;
+                                for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                                 {
                                     CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                    if (stats != null && stats.IcyVeins && solution[index] > 0)
+                                    if (stats != null && stats.ArcanePower) lp.EraseColumn(index);
+                                }
+                                heap.Push(lp);
+                                // cooldown used
+                                for (int outseg = 0; outseg < segments; outseg++)
+                                {
+                                    if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
                                     {
-                                        valid = false;
-                                        goto breakIV;
+                                        cooldownUsed.APHash += 1 << outseg;
+                                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                                        {
+                                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                            if (stats != null && stats.ArcanePower) cooldownUsed.EraseColumn(index);
+                                        }
                                     }
                                 }
+                                heap.Push(cooldownUsed);
+                                break;
                             }
                         }
-                    breakIV:
-                        if (!valid)
+                        // iv
+                        inseg = 0;
+                        for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                         {
-                            // branch on whether cooldown is used in this segment
-                            CompactLP cooldownUsed = lp.Clone();
-                            // cooldown not used
-                            lp.IVHash += 1 << seg;
-                            for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                            {
-                                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                if (stats != null && stats.IcyVeins) lp.EraseColumn(index);
-                            }
-                            heap.Push(lp);
-                            // cooldown used
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.IcyVeins) inseg += solution[index];
+                        }
+                        if (inseg > 0)
+                        {
+                            double duration = 20 + (coldsnap ? 20 : 0);
+                            double cool = 180 + (coldsnap ? 20 : 0);
+                            int mindist = (int)Math.Ceiling(duration / segmentDuration);
+                            int maxdist = (int)Math.Floor((cool - duration) / segmentDuration);
+                            // verify that outside duration segments are 0
+                            valid = true;
                             for (int outseg = 0; outseg < segments; outseg++)
                             {
                                 if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
                                 {
-                                    cooldownUsed.IVHash += 1 << outseg;
                                     for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                                     {
                                         CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                        if (stats != null && stats.IcyVeins) cooldownUsed.EraseColumn(index);
+                                        if (stats != null && stats.IcyVeins && solution[index] > 0)
+                                        {
+                                            valid = false;
+                                            goto breakIV;
+                                        }
                                     }
                                 }
                             }
-                            heap.Push(cooldownUsed);
-                            break;
+                        breakIV:
+                            if (!valid)
+                            {
+                                // branch on whether cooldown is used in this segment
+                                CompactLP cooldownUsed = lp.Clone();
+                                // cooldown not used
+                                lp.IVHash += 1 << seg;
+                                for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                                {
+                                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                    if (stats != null && stats.IcyVeins) lp.EraseColumn(index);
+                                }
+                                heap.Push(lp);
+                                // cooldown used
+                                for (int outseg = 0; outseg < segments; outseg++)
+                                {
+                                    if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                                    {
+                                        cooldownUsed.IVHash += 1 << outseg;
+                                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                                        {
+                                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                            if (stats != null && stats.IcyVeins) cooldownUsed.EraseColumn(index);
+                                        }
+                                    }
+                                }
+                                heap.Push(cooldownUsed);
+                                break;
+                            }
                         }
                     }
-                }
-            } while (heap.Count > 0 && !valid);
+                } while (heap.Count > 0 && !valid);
+            }
 
             calculatedStats.Solution = lp.Solve();
             if (computeIncrementalSet)
             {
                 calculatedStats.IncrementalSetCooldown = incrementalSetCooldown;
                 calculatedStats.IncrementalSetSpell = incrementalSetSpell;
-                calculatedStats.IncrementalSetSegment = incrementalSetSegment;
+                if (useSMP) calculatedStats.IncrementalSetSegment = incrementalSetSegment;
             }
 
             calculatedStats.SubPoints[0] = ((float)calculatedStats.Solution[lpCols] + calculatedStats.WaterElementalDamage) / calculationOptions.FightDuration;
-            calculatedStats.OverallPoints = calculatedStats.SubPoints[0];
+            calculatedStats.SubPoints[1] = calculatedStats.BasicStats.Health * calculationOptions.SurvivabilityRating;
+            calculatedStats.OverallPoints = calculatedStats.SubPoints[0] + calculatedStats.SubPoints[1];
             float threat = 0;
             for (int i = 0; i < lpCols; i++)
             {

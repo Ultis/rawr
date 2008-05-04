@@ -72,7 +72,7 @@ namespace Rawr.Mage
             }
             this.rows = rows;
             this.cols = cols;
-            Array.Clear(data, 0, data.Length);
+            Array.Clear(data, 0, rows * cols); // only need to clear what will be used
         }
 
         public double this[int row, int col]

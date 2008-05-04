@@ -98,6 +98,8 @@ namespace Rawr.Mage
                 Character.CalculationOptions["SMPDisplay"] = (0).ToString(CultureInfo.InvariantCulture);
             if (!Character.CalculationOptions.ContainsKey("EvocationSpirit"))
                 Character.CalculationOptions["EvocationSpirit"] = (0).ToString(CultureInfo.InvariantCulture);
+            if (!Character.CalculationOptions.ContainsKey("SurvivabilityRating"))
+                Character.CalculationOptions["SurvivabilityRating"] = (0.001).ToString(CultureInfo.InvariantCulture);
 			
             loading = true;
 
@@ -135,6 +137,7 @@ namespace Rawr.Mage
             checkBoxSMP.Checked = int.Parse(Character.CalculationOptions["SMP"], CultureInfo.InvariantCulture) == 1;
             checkBoxSMPDisplay.Checked = int.Parse(Character.CalculationOptions["SMPDisplay"], CultureInfo.InvariantCulture) == 1;
             textBoxEvocationSpirit.Text = float.Parse(Character.CalculationOptions["EvocationSpirit"], CultureInfo.InvariantCulture).ToString();
+            textBoxSurvivabilityRating.Text = float.Parse(Character.CalculationOptions["SurvivabilityRating"], CultureInfo.InvariantCulture).ToString();
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -431,6 +434,16 @@ namespace Rawr.Mage
             if (float.TryParse(textBoxEvocationSpirit.Text, out value))
             {
                 Character.CalculationOptions["EvocationSpirit"] = value.ToString(CultureInfo.InvariantCulture);
+                if (!loading) Character.OnItemsChanged();
+            }
+        }
+
+        private void textBoxSurvivabilityRating_TextChanged(object sender, EventArgs e)
+        {
+            float value;
+            if (float.TryParse(textBoxSurvivabilityRating.Text, out value))
+            {
+                Character.CalculationOptions["SurvivabilityRating"] = value.ToString(CultureInfo.InvariantCulture);
                 if (!loading) Character.OnItemsChanged();
             }
         }

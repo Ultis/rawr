@@ -90,6 +90,7 @@
             this.label30 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
             this.checkBoxIncrementalOptimizations = new System.Windows.Forms.CheckBox();
             this.checkBoxReconstructSequence = new System.Windows.Forms.CheckBox();
             this.textBoxInnervate = new System.Windows.Forms.TextBox();
@@ -98,7 +99,8 @@
             this.checkBoxSMP = new System.Windows.Forms.CheckBox();
             this.checkBoxSMPDisplay = new System.Windows.Forms.CheckBox();
             this.textBoxEvocationSpirit = new System.Windows.Forms.TextBox();
-            this.label33 = new System.Windows.Forms.Label();
+            this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -531,7 +533,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(3, 744);
+            this.label23.Location = new System.Drawing.Point(3, 770);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(112, 13);
             this.label23.TabIndex = 47;
@@ -543,7 +545,7 @@
             // checkBoxSmartOptimization
             // 
             this.checkBoxSmartOptimization.AutoSize = true;
-            this.checkBoxSmartOptimization.Location = new System.Drawing.Point(174, 743);
+            this.checkBoxSmartOptimization.Location = new System.Drawing.Point(174, 769);
             this.checkBoxSmartOptimization.Name = "checkBoxSmartOptimization";
             this.checkBoxSmartOptimization.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSmartOptimization.TabIndex = 46;
@@ -617,7 +619,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(3, 763);
+            this.label27.Location = new System.Drawing.Point(3, 789);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(137, 13);
             this.label27.TabIndex = 57;
@@ -628,7 +630,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(3, 783);
+            this.label25.Location = new System.Drawing.Point(3, 809);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(127, 13);
             this.label25.TabIndex = 59;
@@ -672,7 +674,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(3, 803);
+            this.label31.Location = new System.Drawing.Point(3, 829);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(168, 13);
             this.label31.TabIndex = 67;
@@ -683,17 +685,28 @@
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(3, 823);
+            this.label32.Location = new System.Drawing.Point(3, 849);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(112, 13);
             this.label32.TabIndex = 69;
             this.label32.Text = "SMP for display only: *";
             this.toolTipMage.SetToolTip(this.label32, "Only calculate the SMP value for display and sequence reconstruction.");
             // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(3, 538);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(106, 13);
+            this.label33.TabIndex = 70;
+            this.label33.Text = "Evo. Weapons Spi: *";
+            this.toolTipMage.SetToolTip(this.label33, "Value of spirit on weapons you swap in for evocation (main hand, off-hand, wand)." +
+                    " Set to 0 to disable evocation swapping.");
+            // 
             // checkBoxIncrementalOptimizations
             // 
             this.checkBoxIncrementalOptimizations.AutoSize = true;
-            this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(174, 763);
+            this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(174, 789);
             this.checkBoxIncrementalOptimizations.Name = "checkBoxIncrementalOptimizations";
             this.checkBoxIncrementalOptimizations.Size = new System.Drawing.Size(15, 14);
             this.checkBoxIncrementalOptimizations.TabIndex = 56;
@@ -703,7 +716,7 @@
             // checkBoxReconstructSequence
             // 
             this.checkBoxReconstructSequence.AutoSize = true;
-            this.checkBoxReconstructSequence.Location = new System.Drawing.Point(174, 783);
+            this.checkBoxReconstructSequence.Location = new System.Drawing.Point(174, 809);
             this.checkBoxReconstructSequence.Name = "checkBoxReconstructSequence";
             this.checkBoxReconstructSequence.Size = new System.Drawing.Size(15, 14);
             this.checkBoxReconstructSequence.TabIndex = 58;
@@ -737,7 +750,7 @@
             // checkBoxSMP
             // 
             this.checkBoxSMP.AutoSize = true;
-            this.checkBoxSMP.Location = new System.Drawing.Point(174, 803);
+            this.checkBoxSMP.Location = new System.Drawing.Point(174, 829);
             this.checkBoxSMP.Name = "checkBoxSMP";
             this.checkBoxSMP.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSMP.TabIndex = 66;
@@ -747,7 +760,7 @@
             // checkBoxSMPDisplay
             // 
             this.checkBoxSMPDisplay.AutoSize = true;
-            this.checkBoxSMPDisplay.Location = new System.Drawing.Point(174, 823);
+            this.checkBoxSMPDisplay.Location = new System.Drawing.Point(174, 849);
             this.checkBoxSMPDisplay.Name = "checkBoxSMPDisplay";
             this.checkBoxSMPDisplay.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSMPDisplay.TabIndex = 68;
@@ -762,22 +775,32 @@
             this.textBoxEvocationSpirit.TabIndex = 71;
             this.textBoxEvocationSpirit.TextChanged += new System.EventHandler(this.textBoxEvocationSpirit_TextChanged);
             // 
-            // label33
+            // textBoxSurvivabilityRating
             // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(3, 538);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(106, 13);
-            this.label33.TabIndex = 70;
-            this.label33.Text = "Evo. Weapons Spi: *";
-            this.toolTipMage.SetToolTip(this.label33, "Value of spirit on weapons you swap in for evocation (main hand, off-hand, wand)." +
-                    " Set to 0 to disable evocation swapping.");
+            this.textBoxSurvivabilityRating.Location = new System.Drawing.Point(114, 743);
+            this.textBoxSurvivabilityRating.Name = "textBoxSurvivabilityRating";
+            this.textBoxSurvivabilityRating.Size = new System.Drawing.Size(75, 20);
+            this.textBoxSurvivabilityRating.TabIndex = 73;
+            this.textBoxSurvivabilityRating.TextChanged += new System.EventHandler(this.textBoxSurvivabilityRating_TextChanged);
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(3, 746);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(107, 13);
+            this.label34.TabIndex = 72;
+            this.label34.Text = "Survivability Rating: *";
+            this.toolTipMage.SetToolTip(this.label34, "Determines the weight of health in the overall rating (express in terms of dps va" +
+                    "lue per health).");
             // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.textBoxSurvivabilityRating);
+            this.Controls.Add(this.label34);
             this.Controls.Add(this.textBoxEvocationSpirit);
             this.Controls.Add(this.label33);
             this.Controls.Add(this.label32);
@@ -847,7 +870,7 @@
             this.Controls.Add(this.comboBoxTargetLevel);
             this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelMage";
-            this.Size = new System.Drawing.Size(198, 844);
+            this.Size = new System.Drawing.Size(198, 882);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -924,5 +947,7 @@
         private System.Windows.Forms.CheckBox checkBoxSMPDisplay;
         private System.Windows.Forms.TextBox textBoxEvocationSpirit;
         private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.TextBox textBoxSurvivabilityRating;
+        private System.Windows.Forms.Label label34;
 	}
 }

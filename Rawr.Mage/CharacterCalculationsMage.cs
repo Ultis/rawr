@@ -46,6 +46,7 @@ namespace Rawr.Mage
         public float Fragmentation { get; set; }
         public bool SMP { get; set; }
         public bool SMPDisplay { get; set; }
+        public float SurvivabilityRating { get; set; }
 
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
@@ -169,6 +170,7 @@ namespace Rawr.Mage
             Innervate = float.Parse(character.CalculationOptions["Innervate"], CultureInfo.InvariantCulture);
             ManaTide = float.Parse(character.CalculationOptions["ManaTide"], CultureInfo.InvariantCulture);
             Fragmentation = float.Parse(character.CalculationOptions["Fragmentation"], CultureInfo.InvariantCulture);
+            SurvivabilityRating = float.Parse(character.CalculationOptions["SurvivabilityRating"], CultureInfo.InvariantCulture);
 
             Pyromaniac = int.Parse(character.CalculationOptions["Pyromaniac"], CultureInfo.InvariantCulture);
             ElementalPrecision = int.Parse(character.CalculationOptions["ElementalPrecision"], CultureInfo.InvariantCulture);
@@ -230,11 +232,27 @@ namespace Rawr.Mage
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f };
+        private float[] _subPoints = new float[] { 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
             set { _subPoints = value; }
+        }
+
+        public float DpsRating
+        {
+            get
+            {
+                return _subPoints[0];
+            }
+        }
+
+        public float SurvivabilityRating
+        {
+            get
+            {
+                return _subPoints[1];
+            }
         }
 
         private Stats _basicStats;
@@ -3547,9 +3565,9 @@ namespace Rawr.Mage
             if (CalculationOptions.SMPDisplay)
             {
                 CalculationOptions.IncrementalOptimizations = false;
-                CharacterCalculationsMage smp = (CharacterCalculationsMage)((CalculationsMage)Calculations.Instance).GetCharacterCalculations_SMP(Character, null, CalculationOptions, MageArmor, false);
+                CharacterCalculationsMage smp = (CharacterCalculationsMage)((CalculationsMage)Calculations.Instance).GetCharacterCalculations(Character, null, CalculationOptions, MageArmor, false, true);
                 Dictionary<string, string> ret = smp.GetCharacterDisplayCalculationValuesInternal();
-                ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.OverallPoints, Math.Abs(OverallPoints - smp.OverallPoints) / OverallPoints * 100);
+                ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.DpsRating, Math.Abs(DpsRating - smp.DpsRating) / DpsRating * 100);
                 return ret;
             }
             else
@@ -3605,8 +3623,8 @@ namespace Rawr.Mage
                     }
                 }
             }
-            dictValues.Add("Total Damage", String.Format("{0:F}", OverallPoints * FightDuration));
-            dictValues.Add("Dps", String.Format("{0:F}", OverallPoints));
+            dictValues.Add("Total Damage", String.Format("{0:F}", DpsRating * FightDuration));
+            dictValues.Add("Dps", String.Format("{0:F}", DpsRating));
             dictValues.Add("Tps", String.Format("{0:F}", Tps));
             dictValues.Add("Sequence", ReconstructSequence());
             StringBuilder sb = new StringBuilder("*");
