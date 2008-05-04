@@ -524,6 +524,8 @@ namespace Rawr
 				{
                     Character charUnequipped = charAutoActivated.Clone();
                     Character charEquipped = charAutoActivated.Clone();
+                    charUnequipped.DisableBuffAutoActivation = true;
+                    charEquipped.DisableBuffAutoActivation = true;
 					if (charUnequipped.ActiveBuffs.Contains(buff.Name))
 						charUnequipped.ActiveBuffs.Remove(buff.Name);
 					if (string.IsNullOrEmpty(buff.RequiredBuff))
