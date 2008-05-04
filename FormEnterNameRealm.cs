@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using System;
 
 namespace Rawr
 {
@@ -7,6 +8,7 @@ namespace Rawr
         public FormEnterNameRealm()
         {
             InitializeComponent();
+			comboBoxRegion.SelectedIndex = 0;
         }
 
         public string CharacterName
@@ -21,7 +23,7 @@ namespace Rawr
 
         public Character.CharacterRegion ArmoryRegion
         {
-            get { return radioButtonUS.Checked ? Character.CharacterRegion.US : Character.CharacterRegion.EU; }
+            get { return (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion), comboBoxRegion.Text); }
         }
 
         private void FormEnterNameRealm_Activated(object sender, System.EventArgs e)

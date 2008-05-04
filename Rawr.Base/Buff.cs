@@ -318,7 +318,13 @@ namespace Rawr
                 Category = BuffCategory.ClassBuffs,
                 Stats = new Stats() { Armor = (float)Math.Floor(861f * 0.4f) },
                 RequiredBuff = "Devotion Aura"
-            });
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Ferocious Inspiration",
+				Category = BuffCategory.ClassBuffs,
+				Stats = new Stats() { BonusPhysicalDamageMultiplier = 0.03f }
+			});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Grace of Air Totem",
@@ -494,7 +500,14 @@ namespace Rawr
                 Category = BuffCategory.ElixirsAndFlasks,
                 Stats = new Stats() { Agility = 35, CritRating = 20 },
                 ConflictingBuffs = new string[] { "Battle Elixir" }
-            });
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Demonslaying",
+				Category = BuffCategory.ElixirsAndFlasks,
+				Stats = new Stats() { AttackPower = 265 },
+				ConflictingBuffs = new string[] { "Battle Elixir" }
+			});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Elixir of Mastery",
@@ -1139,7 +1152,14 @@ namespace Rawr
                 Category = BuffCategory.TemporaryBuffs,
                 Stats = new Stats() { BonusArmorMultiplier = 0.25f },
                 Type = BuffType.ShortDurationDW
-            });
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Stomp",
+				Category = BuffCategory.TemporaryBuffs,
+				Stats = new Stats() { BonusArmorMultiplier = -0.5f },
+				Type = BuffType.ShortDurationDW
+			});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Improved Lay On Hands",

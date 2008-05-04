@@ -37,6 +37,7 @@ namespace Rawr
         
 		
 		private static Exception _fatalError = null;
+		private Dictionary<Character.CharacterRegion, string> _domains = new Dictionary<Character.CharacterRegion,string>();
 
 		public WebRequestWrapper()
 		{
@@ -51,6 +52,10 @@ namespace Rawr
 			_proxyUserName = Rawr.Properties.NetworkSettings.Default.ProxyUserName;
 			_proxyPassword = Rawr.Properties.NetworkSettings.Default.ProxyPassword;
             _proxyDomain = Rawr.Properties.NetworkSettings.Default.ProxyDomain;
+			_domains.Add(Character.CharacterRegion.US, "www");
+			_domains.Add(Character.CharacterRegion.EU, "eu");
+			_domains.Add(Character.CharacterRegion.KR, "kr");
+			_domains.Add(Character.CharacterRegion.TW, "tw");
 		}
 
 
@@ -63,7 +68,7 @@ namespace Rawr
 		public XmlDocument DownloadCharacterTalentTree(string characterName, Character.CharacterRegion region, string realm)
 		{
 			//http://{0}.wowarmory.com/character-talents.xml?r={1}&n={2}
-			string domain = region == Character.CharacterRegion.US ? "www" : "eu";
+			string domain = _domains[region];
 			XmlDocument doc = null;
 			if (!String.IsNullOrEmpty(characterName))
 			{
@@ -76,7 +81,7 @@ namespace Rawr
 		public XmlDocument DownloadCharacterSheet(string characterName, Character.CharacterRegion region, string realm)
 		{
 			//http://{0}.wowarmory.com/character-sheet.xml?r={1}&n={2}
-			string domain = region == Character.CharacterRegion.US ? "www" : "eu";
+			string domain = _domains[region];
 			XmlDocument doc = null;
 			if (!String.IsNullOrEmpty(characterName))
 			{
@@ -89,7 +94,7 @@ namespace Rawr
 		public XmlDocument DownloadUpgrades(string characterName, Character.CharacterRegion region, string realm, int itemId)
 		{
 			//http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}
-			string domain = region == Character.CharacterRegion.US ? "www" : "eu";
+			string domain = _domains[region];
 			XmlDocument doc = null;
 			if (!String.IsNullOrEmpty(characterName))
 			{

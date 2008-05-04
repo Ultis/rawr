@@ -61,6 +61,7 @@ namespace Rawr
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			trackBarTargetArmor.Value = calcOpts.TargetArmor;
 			trackBarExposeWeakness.Value = calcOpts.ExposeWeaknessAPValue;
+			trackBarNumberOfFerociousInspirations.Value = calcOpts.NumberOfFerociousInspirations;
 			trackBarBloodlustUptime.Value = (int)Math.Round(calcOpts.BloodlustUptime * 100);
 			trackBarDrumsOfBattleUptime.Value = (int)Math.Round(calcOpts.DrumsOfBattleUptime * 100);
 			trackBarDrumsOfWarUptime.Value = (int)Math.Round(calcOpts.DrumsOfWarUptime * 100);
@@ -76,6 +77,7 @@ namespace Rawr
 			radioButtonScryer.Checked = calcOpts.ShattrathFaction == "Scryer";
 			
 			labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
+			labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
 			labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
 			labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
 			labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
@@ -91,6 +93,7 @@ namespace Rawr
 				trackBarTargetArmor.Value = 100 * (trackBarTargetArmor.Value / 100);
 				labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
 				labelExposeWeakness.Text = trackBarExposeWeakness.Value.ToString();
+				labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
 				labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
 				labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
 				labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
@@ -99,6 +102,7 @@ namespace Rawr
 				Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
 				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 				calcOpts.TargetArmor = trackBarTargetArmor.Value;
+				calcOpts.NumberOfFerociousInspirations = trackBarNumberOfFerociousInspirations.Value;
 				calcOpts.BloodlustUptime = (float)trackBarBloodlustUptime.Value / 100f;
 				calcOpts.DrumsOfBattleUptime = (float)trackBarDrumsOfBattleUptime.Value / 100f;
 				calcOpts.DrumsOfWarUptime = (float)trackBarDrumsOfWarUptime.Value / 100f;
@@ -115,6 +119,7 @@ namespace Rawr
 				Character.OnItemsChanged();
 			}
 		}
+
 	}
 
 	[Serializable]
@@ -133,6 +138,7 @@ namespace Rawr
 		public int TargetLevel = 73;
 		public int TargetArmor = 7700;
 		public int ExposeWeaknessAPValue = 200;
+		public int NumberOfFerociousInspirations = 2;
 		public int Powershift = 4;
 		public string PrimaryAttack = "Both";
 		public string Finisher = "Rip";

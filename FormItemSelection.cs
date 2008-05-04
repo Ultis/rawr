@@ -140,7 +140,7 @@ namespace Rawr
 			if (location.X + this.Width > workingArea.Right)
 				location.X = ctrlScreen.X - this.Width;
 			if (location.Y + this.Height > workingArea.Bottom)
-				location.Y = ctrlScreen.Y + ctrl.Height - this.Height;
+				location.Y = workingArea.Bottom - this.Height;
 			this.Location = location;
 		}
 

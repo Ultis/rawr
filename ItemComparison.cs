@@ -141,12 +141,18 @@ namespace Rawr
                         }
                         if (slot != Character.CharacterSlot.None)
                         {
-                            ComparisonCalculationBase slotCalc = Calculations.GetItemCalculations(Character[slot], Character, slot);
+                            ComparisonCalculationBase slotCalc;
+							Item currentItem = Character[slot];
+							if (currentItem == null)
+								slotCalc = Calculations.CreateNewComparisonCalculation();
+							else
+								slotCalc = Calculations.GetItemCalculations(currentItem, Character, slot);
+
                             foreach (Item item in ItemCache.Instance.FindAllItemsById(relevantItem.Id))
                             {
-                                if (!items.ContainsKey(item.GemmedId) && Character[slot].GemmedId != item.GemmedId)
+								if (!items.ContainsKey(item.GemmedId) && (currentItem == null || currentItem.GemmedId != item.GemmedId))
                                 {
-                                    if (Character[slot].Unique)
+									if (currentItem != null && currentItem.Unique)
                                     {
                                         Character.CharacterSlot otherSlot = Character.CharacterSlot.None;
                                         switch (slot)

@@ -55,6 +55,7 @@ namespace Rawr
 					"Complex Stats:Rip Damage",
 					"Complex Stats:Bite Damage",
 					"Complex Stats:DPS Points*DPS Points is your theoretical DPS.",
+					"Complex Stats:Survivability Points*One thousandth of your health.",
 					"Complex Stats:Overall Points*Rawr is designed to support an Overall point value, comprised of one or more sub point values. Cats only have DPS, so Overall Points will always be identical to DPS Points."
 				};
 				return _characterDisplayCalculationLabels;
@@ -99,6 +100,7 @@ namespace Rawr
 				{
 					_subPointNameColors = new Dictionary<string, System.Drawing.Color>();
 					_subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(160, 0, 224));
+					_subPointNameColors.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
 				}
 				return _subPointNameColors;
 			}
@@ -173,7 +175,7 @@ namespace Rawr
 			float modArmor = (baseArmor / (baseArmor + 10557.5f )) * 100f;
 
 			float critMultiplier = 2 * (1 + stats.BonusCritMultiplier);
-            float physicalCritModifier = 1.0f + ((stats.CritRating / 22.08f) / 100.0f) * (1f + stats.BonusCritMultiplier * 2f);
+            float physicalCritModifier = 1.0f + ((stats.CritRating / (1148f / 52f)) / 100.0f) * (1f + stats.BonusCritMultiplier * 2f);
 			float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
 
 			float hitBonus = stats.HitRating * 52f / 82f / 1000f;
@@ -181,7 +183,7 @@ namespace Rawr
 
 			float glancingRate = 0.2335774f; // Glancing rate data from Toskk
 
-			float chanceCrit = Math.Min(0.75f, (stats.CritRating / 22.08f + (stats.Agility / 25f)) / 100f) - 0.042f; // Crit Reduction data from Toskk
+			float chanceCrit = Math.Min(0.75f, (stats.CritRating / (1148f / 52f) + (stats.Agility / 25f)) / 100f) - 0.042f; // Crit Reduction data from Toskk
 			float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
 			float chanceMiss = Math.Max(0f, 0.09f - hitBonus) + chanceDodge;
 						
@@ -353,10 +355,12 @@ namespace Rawr
                         break;
                 }
             }
-            float dps = 1.1f * (((dmgMangles + dmgShreds + dmgMelee) * (1f - modArmor / 100f) + dmgRips) / cycleTime) + ssoNeckProcDPS;
+            float dps = ((1.1f * (((dmgMangles + dmgShreds + dmgMelee) * (1f - modArmor / 100f) + dmgRips) / cycleTime)) 
+				* (1 + stats.BonusPhysicalDamageMultiplier)) + ssoNeckProcDPS;
 
-			calculatedStats.DPSPoints = dps;// *100f;
-			calculatedStats.OverallPoints = dps;// *100f;
+			calculatedStats.DPSPoints = dps;
+			calculatedStats.SurvivabilityPoints = stats.Health * 0.002f;
+			calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
 			calculatedStats.AvoidedAttacks = chanceMiss * 100f;
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
 			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks - calculatedStats.DodgedAttacks;
@@ -419,6 +423,9 @@ namespace Rawr
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 			statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime;
 			statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime;
+			if (character.ActiveBuffs.Contains("Ferocious Inspiration"))
+				statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier) * 
+					(float)Math.Pow(1.03f, calcOpts.NumberOfFerociousInspirations - 1f)) - 1f;
 
 			float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
 			float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
@@ -450,6 +457,7 @@ namespace Rawr
 			statsTotal.BonusMangleCatDamage = statsRace.BonusMangleCatDamage + statsGearEnchantsBuffs.BonusMangleCatDamage;
 			statsTotal.BonusRipDamageMultiplier = ((1 + statsRace.BonusRipDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusRipDamageMultiplier)) - 1;
 			statsTotal.BonusShredDamage = statsRace.BonusShredDamage + statsGearEnchantsBuffs.BonusShredDamage;
+			statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
 			statsTotal.BonusRipDamagePerCPPerTick = statsRace.BonusRipDamagePerCPPerTick + statsGearEnchantsBuffs.BonusRipDamagePerCPPerTick;
 			statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
 			statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
@@ -616,6 +624,7 @@ namespace Rawr
 		public override bool IsItemRelevant(Item item)
 		{
 			if (item.Slot == Item.ItemSlot.OffHand) return false;
+			if (item.Slot == Item.ItemSlot.TwoHand && item.Stats.AttackPower < 300) return false;
 			return base.IsItemRelevant(item);
 		}
 
@@ -641,6 +650,7 @@ namespace Rawr
 					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 					BonusCritMultiplier = stats.BonusCritMultiplier,
+					BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
 					BonusRipDamageMultiplier = stats.BonusRipDamageMultiplier,
 					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -660,7 +670,7 @@ namespace Rawr
 		{
 			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.BloodlustProc +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
-				stats.BonusMangleCatDamage + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
+				stats.BonusMangleCatDamage + stats.BonusPhysicalDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
@@ -678,7 +688,7 @@ namespace Rawr
 			set { _overallPoints = value; }
 		}
 
-		private float[] _subPoints = new float[] { 0f };
+		private float[] _subPoints = new float[] { 0f, 0f };
 		public override float[] SubPoints
 		{
 			get { return _subPoints; }
@@ -689,6 +699,12 @@ namespace Rawr
 		{
 			get { return _subPoints[0]; }
 			set { _subPoints[0] = value; }
+		}
+
+		public float SurvivabilityPoints
+		{
+			get { return _subPoints[1]; }
+			set { _subPoints[1] = value; }
 		}
 
 		private Stats _basicStats;
@@ -872,6 +888,7 @@ namespace Rawr
 			dictValues.Add("Rip Damage", RipDamage.ToString() + "%");
 			dictValues.Add("Bite Damage", FerociousBiteDamage.ToString() + "%");
 			dictValues.Add("DPS Points", DPSPoints.ToString());
+			dictValues.Add("Survivability Points", SurvivabilityPoints.ToString());
 			dictValues.Add("Overall Points", OverallPoints.ToString());
 			
 			return dictValues;

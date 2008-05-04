@@ -58,6 +58,9 @@
 			this.labelDrumsOfWarUptime = new System.Windows.Forms.Label();
 			this.radioButtonAldor = new System.Windows.Forms.RadioButton();
 			this.radioButtonScryer = new System.Windows.Forms.RadioButton();
+			this.label6 = new System.Windows.Forms.Label();
+			this.trackBarNumberOfFerociousInspirations = new System.Windows.Forms.TrackBar();
+			this.labelNumberOfFerociousInspirations = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
 			this.groupBoxPrimaryAttack.SuspendLayout();
 			this.groupBoxFinisher.SuspendLayout();
@@ -65,6 +68,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfBattleUptime)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfWarUptime)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -97,7 +101,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(3, 237);
+			this.label2.Location = new System.Drawing.Point(3, 288);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(74, 13);
 			this.label2.TabIndex = 0;
@@ -106,7 +110,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(3, 328);
+			this.label3.Location = new System.Drawing.Point(3, 379);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(62, 13);
 			this.label3.TabIndex = 0;
@@ -125,7 +129,7 @@
             "Every 3rd Cycle",
             "Every 4th Cycle",
             "Every 5th Cycle"});
-			this.comboBoxPowershift.Location = new System.Drawing.Point(83, 325);
+			this.comboBoxPowershift.Location = new System.Drawing.Point(83, 376);
 			this.comboBoxPowershift.Name = "comboBoxPowershift";
 			this.comboBoxPowershift.Size = new System.Drawing.Size(123, 21);
 			this.comboBoxPowershift.TabIndex = 1;
@@ -137,7 +141,7 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
 			this.trackBarTargetArmor.LargeChange = 1000;
-			this.trackBarTargetArmor.Location = new System.Drawing.Point(75, 234);
+			this.trackBarTargetArmor.Location = new System.Drawing.Point(75, 285);
 			this.trackBarTargetArmor.Maximum = 9000;
 			this.trackBarTargetArmor.Minimum = 3000;
 			this.trackBarTargetArmor.Name = "trackBarTargetArmor";
@@ -152,7 +156,7 @@
 			// 
 			this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.labelTargetArmorDescription.Location = new System.Drawing.Point(6, 282);
+			this.labelTargetArmorDescription.Location = new System.Drawing.Point(6, 333);
 			this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
 			this.labelTargetArmorDescription.Size = new System.Drawing.Size(200, 40);
 			this.labelTargetArmorDescription.TabIndex = 0;
@@ -184,7 +188,7 @@
 			this.groupBoxPrimaryAttack.Controls.Add(this.radioButtonShred);
 			this.groupBoxPrimaryAttack.Controls.Add(this.radioButtonMangle);
 			this.groupBoxPrimaryAttack.Enabled = false;
-			this.groupBoxPrimaryAttack.Location = new System.Drawing.Point(3, 398);
+			this.groupBoxPrimaryAttack.Location = new System.Drawing.Point(3, 449);
 			this.groupBoxPrimaryAttack.Name = "groupBoxPrimaryAttack";
 			this.groupBoxPrimaryAttack.Size = new System.Drawing.Size(203, 170);
 			this.groupBoxPrimaryAttack.TabIndex = 4;
@@ -234,7 +238,7 @@
 			this.groupBoxFinisher.Controls.Add(this.radioButtonFerociousBite);
 			this.groupBoxFinisher.Controls.Add(this.radioButtonRip);
 			this.groupBoxFinisher.Enabled = false;
-			this.groupBoxFinisher.Location = new System.Drawing.Point(3, 574);
+			this.groupBoxFinisher.Location = new System.Drawing.Point(3, 625);
 			this.groupBoxFinisher.Name = "groupBoxFinisher";
 			this.groupBoxFinisher.Size = new System.Drawing.Size(203, 170);
 			this.groupBoxFinisher.TabIndex = 4;
@@ -294,7 +298,7 @@
 			// checkBoxEnforceMetagemRequirements
 			// 
 			this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-			this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 352);
+			this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 403);
 			this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
 			this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
 			this.checkBoxEnforceMetagemRequirements.TabIndex = 5;
@@ -455,7 +459,7 @@
 			this.radioButtonAldor.AutoSize = true;
 			this.radioButtonAldor.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.radioButtonAldor.Checked = true;
-			this.radioButtonAldor.Location = new System.Drawing.Point(7, 375);
+			this.radioButtonAldor.Location = new System.Drawing.Point(7, 426);
 			this.radioButtonAldor.Name = "radioButtonAldor";
 			this.radioButtonAldor.Size = new System.Drawing.Size(49, 17);
 			this.radioButtonAldor.TabIndex = 3;
@@ -472,7 +476,7 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.radioButtonScryer.AutoSize = true;
 			this.radioButtonScryer.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonScryer.Location = new System.Drawing.Point(83, 375);
+			this.radioButtonScryer.Location = new System.Drawing.Point(83, 426);
 			this.radioButtonScryer.Name = "radioButtonScryer";
 			this.radioButtonScryer.Size = new System.Drawing.Size(55, 17);
 			this.radioButtonScryer.TabIndex = 3;
@@ -481,6 +485,41 @@
 			this.radioButtonScryer.TextAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.radioButtonScryer.UseVisualStyleBackColor = true;
 			this.radioButtonScryer.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(16, 237);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(60, 39);
+			this.label6.TabIndex = 0;
+			this.label6.Text = "Number of\r\nFerocious\r\nInspirations";
+			this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// trackBarNumberOfFerociousInspirations
+			// 
+			this.trackBarNumberOfFerociousInspirations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.trackBarNumberOfFerociousInspirations.BackColor = System.Drawing.SystemColors.ControlLightLight;
+			this.trackBarNumberOfFerociousInspirations.Location = new System.Drawing.Point(75, 234);
+			this.trackBarNumberOfFerociousInspirations.Maximum = 4;
+			this.trackBarNumberOfFerociousInspirations.Minimum = 1;
+			this.trackBarNumberOfFerociousInspirations.Name = "trackBarNumberOfFerociousInspirations";
+			this.trackBarNumberOfFerociousInspirations.Size = new System.Drawing.Size(139, 45);
+			this.trackBarNumberOfFerociousInspirations.TabIndex = 2;
+			this.trackBarNumberOfFerociousInspirations.Value = 2;
+			this.trackBarNumberOfFerociousInspirations.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
+			// labelNumberOfFerociousInspirations
+			// 
+			this.labelNumberOfFerociousInspirations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.labelNumberOfFerociousInspirations.AutoSize = true;
+			this.labelNumberOfFerociousInspirations.Location = new System.Drawing.Point(80, 266);
+			this.labelNumberOfFerociousInspirations.Name = "labelNumberOfFerociousInspirations";
+			this.labelNumberOfFerociousInspirations.Size = new System.Drawing.Size(13, 13);
+			this.labelNumberOfFerociousInspirations.TabIndex = 0;
+			this.labelNumberOfFerociousInspirations.Text = "2";
 			// 
 			// CalculationOptionsPanelCat
 			// 
@@ -492,13 +531,16 @@
 			this.Controls.Add(this.radioButtonAldor);
 			this.Controls.Add(this.groupBoxFinisher);
 			this.Controls.Add(this.groupBoxPrimaryAttack);
+			this.Controls.Add(this.labelNumberOfFerociousInspirations);
 			this.Controls.Add(this.labelDrumsOfWarUptime);
 			this.Controls.Add(this.labelDrumsOfBattleUptime);
 			this.Controls.Add(this.labelBloodlustUptime);
 			this.Controls.Add(this.labelExposeWeakness);
 			this.Controls.Add(this.labelTargetArmorDescription);
+			this.Controls.Add(this.trackBarNumberOfFerociousInspirations);
 			this.Controls.Add(this.trackBarDrumsOfWarUptime);
 			this.Controls.Add(this.trackBarDrumsOfBattleUptime);
+			this.Controls.Add(this.label6);
 			this.Controls.Add(this.trackBarBloodlustUptime);
 			this.Controls.Add(this.label9);
 			this.Controls.Add(this.trackBarExposeWeakness);
@@ -512,7 +554,7 @@
 			this.Controls.Add(this.comboBoxTargetLevel);
 			this.Controls.Add(this.label1);
 			this.Name = "CalculationOptionsPanelCat";
-			this.Size = new System.Drawing.Size(209, 776);
+			this.Size = new System.Drawing.Size(209, 827);
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
 			this.groupBoxPrimaryAttack.ResumeLayout(false);
 			this.groupBoxFinisher.ResumeLayout(false);
@@ -520,6 +562,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfBattleUptime)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfWarUptime)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -557,5 +600,8 @@
 		private System.Windows.Forms.Label labelDrumsOfWarUptime;
 		private System.Windows.Forms.RadioButton radioButtonAldor;
 		private System.Windows.Forms.RadioButton radioButtonScryer;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.TrackBar trackBarNumberOfFerociousInspirations;
+		private System.Windows.Forms.Label labelNumberOfFerociousInspirations;
 	}
 }

@@ -133,8 +133,7 @@ namespace Rawr
 
 					textBoxName.Text = Character.Name;
 					textBoxRealm.Text = Character.Realm;
-					radioButtonRegionUS.Checked = Character.Region == Character.CharacterRegion.US;
-					radioButtonRegionEU.Checked = Character.Region == Character.CharacterRegion.EU;
+					comboBoxRegion.Text = Character.Region.ToString();
 					comboBoxRace.Text = Character.Race.ToString();
 
 					_loadingCharacter = false;
@@ -570,7 +569,7 @@ namespace Rawr
         {
             string[] args = e.Argument as string[];
             //just accessing the UI elements from off thread is ok, its changing them thats bad.
-            Character.CharacterRegion region = (args[2] == Rawr.Character.CharacterRegion.US.ToString()) ? Rawr.Character.CharacterRegion.US : Rawr.Character.CharacterRegion.EU;
+            Character.CharacterRegion region = (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion),args[2]);
             e.Result = this.GetCharacterFromArmory(args[1], args[0], region);
             _characterPath = "";  
         }
@@ -594,7 +593,7 @@ namespace Rawr
 
         private void reloadCurrentCharacterFromArmoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Character.CharacterRegion region = radioButtonRegionUS.Checked ? Rawr.Character.CharacterRegion.US : Rawr.Character.CharacterRegion.EU;  
+			Character.CharacterRegion region = (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion), comboBoxRegion.SelectedItem.ToString());
             if (String.IsNullOrEmpty(Character.Name) || String.IsNullOrEmpty(Character.Realm))
             {
                 MessageBox.Show("A valid character has not been loaded, unable to reload.","No Character Loaded",MessageBoxButtons.OK,MessageBoxIcon.Error);
@@ -731,12 +730,12 @@ namespace Rawr
 			}
 		}
 
-		private void radioButtonRegion_CheckedChanged(object sender, EventArgs e)
+		private void comboBoxRegion_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!_loadingCharacter)
 			{
-				Character.Region = radioButtonRegionUS.Checked ? Character.CharacterRegion.US : Character.CharacterRegion.EU;
-				_unsavedChanges = true;
+				Character.Region = (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion), comboBoxRegion.Text);
+				Character.OnItemsChanged();
 			}
 		}
 

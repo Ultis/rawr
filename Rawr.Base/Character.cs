@@ -1313,7 +1313,7 @@ namespace Rawr //O O . .
 			return listSlots.ToArray();
 		}
 
-		public enum CharacterRegion { US, EU }
+		public enum CharacterRegion { US, EU, KR, TW }
 		public enum CharacterRace
         {
             Human = 1,
@@ -1552,6 +1552,7 @@ namespace Rawr //O O . .
 			clone.CalculationOptions = this.CalculationOptions;
             clone.Class = this.Class;
             clone.Talents = this.Talents;
+			clone.EnforceMetagemRequirements = this.EnforceMetagemRequirements;
 			return clone;
 		}
     

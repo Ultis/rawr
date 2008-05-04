@@ -795,7 +795,7 @@ namespace Rawr
                     break;
 			}
             
-            if (character == null || character.EnforceMetagemRequirements) return true;
+            if (character == null || !character.EnforceMetagemRequirements) return true;
 			return meetsRequirements;
 		}
 

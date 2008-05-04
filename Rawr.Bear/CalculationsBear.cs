@@ -189,12 +189,13 @@ you are being killed by burst damage, focus on Survival Points.",
 			CharacterCalculationsBear calculatedStats = new CharacterCalculationsBear();
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
-			calculatedStats.Miss = 5 + stats.DefenseRating / 60f + stats.Miss - levelDifference;
-			calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, stats.Agility / 14.7059f + stats.DodgeRating / 18.9231f + stats.DefenseRating / 59.134615f - levelDifference);
+			float defSkill = (float)Math.Floor(stats.DefenseRating / (123f / 52f));
+			calculatedStats.Miss = 5f + (defSkill * 0.04f) + stats.Miss - levelDifference;
+			calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, stats.Agility / 14.7059f + (stats.DodgeRating / (984f / 52f)) + (defSkill * 0.04f) - levelDifference);
 			calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f; //(stats.Armor / (stats.Armor + 11959.5f)) * 100f; for only 73s
 			calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
 			calculatedStats.DodgePlusMiss = calculatedStats.Dodge + calculatedStats.Miss;
-			calculatedStats.CritReduction = stats.DefenseRating / 60f + stats.Resilience / 39.423f;
+			calculatedStats.CritReduction = (defSkill * 0.04f) + stats.Resilience / (2050f / 52f);
 			calculatedStats.CappedCritReduction = Math.Min(2f + levelDifference, calculatedStats.CritReduction);
 			//Out of 100 attacks, you'll take...
 			float crits = 2f + (0.2f * levelDifference) - calculatedStats.CappedCritReduction;
@@ -416,7 +417,7 @@ you are being killed by burst damage, focus on Survival Points.",
 					//CharacterCalculationsBear calcAgiValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 10 } }) as CharacterCalculationsBear;
 					//CharacterCalculationsBear calcACValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Armor = 10 } }) as CharacterCalculationsBear;
 					//CharacterCalculationsBear calcStaValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 10 } }) as CharacterCalculationsBear;
-					CharacterCalculationsBear calcDefValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = 1 } }) as CharacterCalculationsBear;
+					//CharacterCalculationsBear calcDefValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = 1 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 1 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = 1 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 1 } }) as CharacterCalculationsBear;
@@ -452,6 +453,34 @@ you are being killed by burst damage, focus on Survival Points.",
 						MitigationPoints =  (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (agiToAdd - agiToSubtract), 
                         SurvivalPoints =    (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (agiToAdd - agiToSubtract),
                         ThreatPoints =      (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (agiToAdd - agiToSubtract)};
+
+
+					//Differential Calculations for Def
+					calcAtAdd = calcBaseValue;
+					float defToAdd = 0f;
+					while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && defToAdd < 2)
+					{
+						defToAdd += 0.01f;
+						calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToAdd } }) as CharacterCalculationsBear;
+					}
+
+					calcAtSubtract = calcBaseValue;
+					float defToSubtract = 0f;
+					while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && defToSubtract > -2)
+					{
+						defToSubtract -= 0.01f;
+						calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToSubtract } }) as CharacterCalculationsBear;
+					}
+					defToSubtract += 0.01f;
+
+					ComparisonCalculationBear comparisonDef = new ComparisonCalculationBear()
+					{
+						Name = "Defense Rating",
+						OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (defToAdd - defToSubtract),
+						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (defToAdd - defToSubtract),
+						SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (defToAdd - defToSubtract),
+						ThreatPoints = (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (defToAdd - defToSubtract)
+					};
 
 
 					//Differential Calculations for AC
@@ -508,6 +537,7 @@ you are being killed by burst damage, focus on Survival Points.",
 						comparisonAgi,
 						comparisonAC,
 						comparisonSta,
+						comparisonDef,
 						new ComparisonCalculationBear() { Name = "Strength", 
                             OverallPoints = (calcStrengthValue.OverallPoints - calcBaseValue.OverallPoints), 
 							MitigationPoints = (calcStrengthValue.MitigationPoints - calcBaseValue.MitigationPoints), 

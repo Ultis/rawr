@@ -178,62 +178,64 @@ namespace Rawr
             WebRequestWrapper wrw = new WebRequestWrapper();
             XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
 
-            XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/cost/token");
-            if(subNode!= null)
-            {
+			if (doc != null)
+			{
+				XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/cost/token");
+				if (subNode != null)
+				{
 
-                string tokenId = subNode.Attributes["id"].Value;
-                int count = int.Parse(subNode.Attributes["count"].Value);
+					string tokenId = subNode.Attributes["id"].Value;
+					int count = int.Parse(subNode.Attributes["count"].Value);
 
-                string Boss = null;
-                string Area = null;
+					string Boss = null;
+					string Area = null;
 
-                if (!_idToBossMap.ContainsKey(tokenId))
-                {
-                    doc = wrw.DownloadItemInformation(int.Parse(tokenId));
+					if (!_idToBossMap.ContainsKey(tokenId))
+					{
+						doc = wrw.DownloadItemInformation(int.Parse(tokenId));
 
-                    XmlNodeList list = doc.SelectNodes("/page/itemInfo/item/dropCreatures/creature");
+						XmlNodeList list = doc.SelectNodes("/page/itemInfo/item/dropCreatures/creature");
 
-                    subNode = list[0];
-                    if (list.Count == 1)
-                    {
-                        Boss = subNode.Attributes["name"].Value;
-                        Area = subNode.Attributes["area"].Value;
-                        _idToBossMap[tokenId] = Boss;
-                        _bossToAreaMap[Boss] = Area;
-                    }
-                    else
-                    {
-                        Boss = subNode.SelectSingleNode("/page/itemInfo/item/@name").InnerText;
-                        Area = "*";
-                    }
+						subNode = list[0];
+						if (list.Count == 1)
+						{
+							Boss = subNode.Attributes["name"].Value;
+							Area = subNode.Attributes["area"].Value;
+							_idToBossMap[tokenId] = Boss;
+							_bossToAreaMap[Boss] = Area;
+						}
+						else
+						{
+							Boss = subNode.SelectSingleNode("/page/itemInfo/item/@name").InnerText;
+							Area = "*";
+						}
 
-                    _idToBossMap[tokenId] = Boss;
-                    _bossToAreaMap[Boss] = Area;
-                }
-                else
-                {
-                    Boss = _idToBossMap[tokenId];
-                    Area = _bossToAreaMap[Boss];
-                }
-                if (Area != "*")
-                {
-                    return new StaticDrop()
-                    {
-                        Area = Area,
-                        Boss = Boss,
-                        Heroic = false
-                    };
-                }
+						_idToBossMap[tokenId] = Boss;
+						_bossToAreaMap[Boss] = Area;
+					}
+					else
+					{
+						Boss = _idToBossMap[tokenId];
+						Area = _bossToAreaMap[Boss];
+					}
+					if (Area != "*")
+					{
+						return new StaticDrop()
+						{
+							Area = Area,
+							Boss = Boss,
+							Heroic = false
+						};
+					}
 
-                Count = count;
-                Token = Boss;
-
-            }
-            else
-            {
-                return new ItemLocation("Vendor");
-            }
+					Count = count;
+					Token = Boss;
+				}
+				else
+				{
+					return new ItemLocation("Vendor");
+				}
+			}
 
             return this;
         }

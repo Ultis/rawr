@@ -408,8 +408,9 @@ namespace Rawr
                                         g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
                                         g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
 
-                                        if (RoundValues && subPoint > 0)
-                                            g.DrawString(subPoint.ToString("F"),
+                                        //if (RoundValues && subPoint > 0)
+                                        if (rectSubPoint.Width > 7)
+											g.DrawString(subPoint.ToString("F"),
                                                 this.Font, brushSubPoints[j], rectSubPoint, formatSubPoint);
 
                                   
