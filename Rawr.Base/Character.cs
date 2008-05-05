@@ -1055,7 +1055,7 @@ namespace Rawr //O O . .
 		}
 
         private static CharacterSlot[] _characterSlots;
-        private static CharacterSlot[] CharacterSlots
+        public static CharacterSlot[] CharacterSlots
         {
             get
             {
@@ -1307,7 +1307,7 @@ namespace Rawr //O O . .
 		public CharacterSlot[] GetEquippedSlots(Item item)
 		{
 			List<CharacterSlot> listSlots = new List<CharacterSlot>();
-			foreach (CharacterSlot slot in Enum.GetValues(typeof(CharacterSlot)))
+            foreach (CharacterSlot slot in CharacterSlots)
 				if (this[slot] == item)
 					listSlots.Add(slot);
 			return listSlots.ToArray();

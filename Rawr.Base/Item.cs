@@ -217,6 +217,39 @@ namespace Rawr
                 _gem3Cached = value;
 			}
 		}
+
+        // 1-based index
+        public Item GetGem(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    return Gem1;
+                case 2:
+                    return Gem2;
+                case 3:
+                    return Gem3;
+                default:
+                    return null;
+            }
+        }
+
+        public void SetGem(int index, Item value)
+        {
+            switch (index)
+            {
+                case 1:
+                    Gem1 = value;
+                    break;
+                case 2:
+                    Gem2 = value;
+                    break;
+                case 3:
+                    Gem3 = value;
+                    break;
+            }
+        }
+
 		private string _gemmedId = string.Empty;
 		[XmlIgnore]
 		public string GemmedId
@@ -871,6 +904,20 @@ namespace Rawr
 			get { return _color3; }
 			set { _color3 = value; }
 		}
+        public Item.ItemSlot GetColor(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    return Color1;
+                case 2:
+                    return Color2;
+                case 3:
+                    return Color3;
+                default:
+                    return Item.ItemSlot.None;
+            }
+        }
 		[XmlIgnore]
 		public string Color1String
 		{

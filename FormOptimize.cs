@@ -836,7 +836,8 @@ namespace Rawr
 
         private void CalculateWarnings(Array list, string group, List<string> emptyList, List<string> tooManyList, int tooManyLimit)
         {
-            if (emptyList != null && (list.Length == 0 || (list.Length == 1 && list.GetValue(0) == null))) emptyList.Add(group);
+            object el0 = (list.Length > 0) ? list.GetValue(0) : null;
+            if (emptyList != null && (list.Length == 0 || (list.Length == 1 && (el0 == null || (el0 is Enchant && ((Enchant)el0).Id == 0))))) emptyList.Add(group);
             if (tooManyList != null && list.Length > tooManyLimit) tooManyList.Add(group);
         }
 
@@ -953,7 +954,18 @@ namespace Rawr
 								sum += share[i1];
 								if (sum >= s) break;
 							}
-							population[i] = BuildMutantCharacter(popCopy[i1]);
+                            if (rand.NextDouble() < 0.8)
+                            {
+                                population[i] = BuildMutantCharacter(popCopy[i1]);
+                            }
+                            else if (rand.NextDouble() < 0.5)
+                            {
+                                population[i] = BuildReplaceGemMutantCharacter(popCopy[i1]);
+                            }
+                            else
+                            {
+                                population[i] = BuildSwapGemMutantCharacter(popCopy[i1]);
+                            }
 						}
 					}
 				}
@@ -1268,6 +1280,243 @@ namespace Rawr
 			//character.RecalculateSetBonuses();
 			return character;
 		}
+
+        private Item ReplaceGems(Item item, Item gem1, Item gem2, Item gem3)
+        {
+            // alternatively construct gemmedid and retrieve from cache, trading memory footprint for dictionary access
+            Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
+                item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), 0, 0, 0, item.MinDamage,
+                item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
+            copy.Gem1 = gem1;
+            copy.Gem2 = gem2;
+            copy.Gem3 = gem3;
+            return copy;
+        }
+
+        private Item ReplaceGem(Item item, int index, Item gem)
+        {
+            // alternatively construct gemmedid and retrieve from cache, trading memory footprint for dictionary access
+            Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
+                item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), 0, 0, 0, item.MinDamage,
+                item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
+            copy.Gem1 = item.Gem1;
+            copy.Gem2 = item.Gem2;
+            copy.Gem3 = item.Gem3;
+            copy.SetGem(index, gem);
+            return copy;
+        }
+
+        private struct GemInformation
+        {
+            public Character.CharacterSlot Slot;
+            public int Index;
+            public Item Gem;
+            public Item.ItemSlot Socket;
+        }
+
+        private Character BuildReplaceGemMutantCharacter(Character parent)
+        {
+            Dictionary<Character.CharacterSlot, Item> items = new Dictionary<Character.CharacterSlot, Item>();
+            items[Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
+            items[Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
+            items[Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
+            items[Character.CharacterSlot.Back] = parent[Character.CharacterSlot.Back];
+            items[Character.CharacterSlot.Chest] = parent[Character.CharacterSlot.Chest];
+            items[Character.CharacterSlot.Wrist] = parent[Character.CharacterSlot.Wrist];
+            items[Character.CharacterSlot.Hands] = parent[Character.CharacterSlot.Hands];
+            items[Character.CharacterSlot.Waist] = parent[Character.CharacterSlot.Waist];
+            items[Character.CharacterSlot.Legs] = parent[Character.CharacterSlot.Legs];
+            items[Character.CharacterSlot.Feet] = parent[Character.CharacterSlot.Feet];
+            items[Character.CharacterSlot.Finger1] = parent[Character.CharacterSlot.Finger1];
+            items[Character.CharacterSlot.Finger2] = parent[Character.CharacterSlot.Finger2];
+            items[Character.CharacterSlot.Trinket1] = parent[Character.CharacterSlot.Trinket1];
+            items[Character.CharacterSlot.Trinket2] = parent[Character.CharacterSlot.Trinket2];
+            items[Character.CharacterSlot.MainHand] = parent[Character.CharacterSlot.MainHand];
+            items[Character.CharacterSlot.OffHand] = parent[Character.CharacterSlot.OffHand];
+            items[Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
+            items[Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
+            items[Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
+
+            // do the work
+
+            // build a list of possible mutation points
+            List<GemInformation> locationList = new List<GemInformation>();
+            foreach (KeyValuePair<Character.CharacterSlot, Item> pair in items)
+            {
+                if (pair.Value != null)
+                {
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        Item gem = pair.Value.GetGem(i);
+                        if (gem != null) locationList.Add(new GemInformation() { Slot = pair.Key, Index = i, Gem = gem, Socket = pair.Value.Sockets.GetColor(i) });
+                    }
+                }
+            }
+
+            if (locationList.Count > 0)
+            {
+                int numberMutations = rand.Next(1, 2);
+                for (int i = 0; i < numberMutations; i++)
+                {
+                    // randomly select mutation point
+                    int mutationIndex = rand.Next(locationList.Count);
+
+                    // mutate
+                    GemInformation mutation = locationList[mutationIndex];
+                    Item newGem;
+                    if (mutation.Socket == Item.ItemSlot.Meta)
+                    {
+                        newGem = metaGemItems[rand.Next(metaGemItems.Length)];
+                    }
+                    else
+                    {
+                        newGem = gemItems[rand.Next(gemItems.Length)];
+                    }
+                    items[mutation.Slot] = ReplaceGem(items[mutation.Slot], mutation.Index, newGem);
+                }
+            }
+
+            // create character
+
+            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race,
+                items[Character.CharacterSlot.Head],
+                items[Character.CharacterSlot.Neck],
+                items[Character.CharacterSlot.Shoulders],
+                items[Character.CharacterSlot.Back],
+                items[Character.CharacterSlot.Chest],
+                null, null,
+                items[Character.CharacterSlot.Wrist],
+                items[Character.CharacterSlot.Hands],
+                items[Character.CharacterSlot.Waist],
+                items[Character.CharacterSlot.Legs],
+                items[Character.CharacterSlot.Feet],
+                items[Character.CharacterSlot.Finger1], items[Character.CharacterSlot.Finger2], items[Character.CharacterSlot.Trinket1], items[Character.CharacterSlot.Trinket2], items[Character.CharacterSlot.MainHand], items[Character.CharacterSlot.OffHand],
+                items[Character.CharacterSlot.Ranged],
+                items[Character.CharacterSlot.Projectile],
+                items[Character.CharacterSlot.ProjectileBag],
+                parent.HeadEnchant,
+                parent.ShouldersEnchant,
+                parent.BackEnchant,
+                parent.ChestEnchant,
+                parent.WristEnchant,
+                parent.HandsEnchant,
+                parent.LegsEnchant,
+                parent.FeetEnchant,
+                parent.Finger1Enchant,
+                parent.Finger2Enchant,
+                parent.MainHandEnchant,
+                parent.OffHandEnchant,
+                parent.RangedEnchant,
+                _character.ActiveBuffs);
+            //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
+            //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
+            character.CalculationOptions = _character.CalculationOptions;
+            character.Class = _character.Class;
+            character.Talents = _character.Talents;
+            //character.RecalculateSetBonuses();
+            return character;
+        }
+
+        private Character BuildSwapGemMutantCharacter(Character parent)
+        {
+            Dictionary<Character.CharacterSlot, Item> items = new Dictionary<Character.CharacterSlot, Item>();
+            items[Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
+            items[Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
+            items[Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
+            items[Character.CharacterSlot.Back] = parent[Character.CharacterSlot.Back];
+            items[Character.CharacterSlot.Chest] = parent[Character.CharacterSlot.Chest];
+            items[Character.CharacterSlot.Wrist] = parent[Character.CharacterSlot.Wrist];
+            items[Character.CharacterSlot.Hands] = parent[Character.CharacterSlot.Hands];
+            items[Character.CharacterSlot.Waist] = parent[Character.CharacterSlot.Waist];
+            items[Character.CharacterSlot.Legs] = parent[Character.CharacterSlot.Legs];
+            items[Character.CharacterSlot.Feet] = parent[Character.CharacterSlot.Feet];
+            items[Character.CharacterSlot.Finger1] = parent[Character.CharacterSlot.Finger1];
+            items[Character.CharacterSlot.Finger2] = parent[Character.CharacterSlot.Finger2];
+            items[Character.CharacterSlot.Trinket1] = parent[Character.CharacterSlot.Trinket1];
+            items[Character.CharacterSlot.Trinket2] = parent[Character.CharacterSlot.Trinket2];
+            items[Character.CharacterSlot.MainHand] = parent[Character.CharacterSlot.MainHand];
+            items[Character.CharacterSlot.OffHand] = parent[Character.CharacterSlot.OffHand];
+            items[Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
+            items[Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
+            items[Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
+
+            // do the work
+
+            // build a list of possible mutation points
+            // make sure not to do meta gem swaps
+            List<GemInformation> locationList = new List<GemInformation>();
+            foreach (KeyValuePair<Character.CharacterSlot, Item> pair in items)
+            {
+                if (pair.Value != null)
+                {
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        Item gem = pair.Value.GetGem(i);
+                        if (gem != null && gem.Slot != Item.ItemSlot.Meta) locationList.Add(new GemInformation() { Slot = pair.Key, Index = i, Gem = gem, Socket = pair.Value.Sockets.GetColor(i) });
+                    }
+                }
+            }
+
+            if (locationList.Count > 1)
+            {
+                GemInformation mutation1;
+                GemInformation mutation2;
+                int tries = 0;
+                // randomly select mutation point
+                do
+                {
+                    int mutationIndex1 = rand.Next(locationList.Count);
+                    int mutationIndex2 = rand.Next(locationList.Count);
+                    mutation1 = locationList[mutationIndex1];
+                    mutation2 = locationList[mutationIndex2];
+                    tries++;
+                } while (tries < 10 && mutation1.Gem == mutation2.Gem);
+
+                // mutate
+                items[mutation1.Slot] = ReplaceGem(items[mutation1.Slot], mutation1.Index, mutation2.Gem);
+                items[mutation2.Slot] = ReplaceGem(items[mutation2.Slot], mutation2.Index, mutation1.Gem);
+            }
+
+            // create character
+
+            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race,
+                items[Character.CharacterSlot.Head],
+                items[Character.CharacterSlot.Neck],
+                items[Character.CharacterSlot.Shoulders],
+                items[Character.CharacterSlot.Back],
+                items[Character.CharacterSlot.Chest],
+                null, null,
+                items[Character.CharacterSlot.Wrist],
+                items[Character.CharacterSlot.Hands],
+                items[Character.CharacterSlot.Waist],
+                items[Character.CharacterSlot.Legs],
+                items[Character.CharacterSlot.Feet],
+                items[Character.CharacterSlot.Finger1], items[Character.CharacterSlot.Finger2], items[Character.CharacterSlot.Trinket1], items[Character.CharacterSlot.Trinket2], items[Character.CharacterSlot.MainHand], items[Character.CharacterSlot.OffHand],
+                items[Character.CharacterSlot.Ranged],
+                items[Character.CharacterSlot.Projectile],
+                items[Character.CharacterSlot.ProjectileBag],
+                parent.HeadEnchant,
+                parent.ShouldersEnchant,
+                parent.BackEnchant,
+                parent.ChestEnchant,
+                parent.WristEnchant,
+                parent.HandsEnchant,
+                parent.LegsEnchant,
+                parent.FeetEnchant,
+                parent.Finger1Enchant,
+                parent.Finger2Enchant,
+                parent.MainHandEnchant,
+                parent.OffHandEnchant,
+                parent.RangedEnchant,
+                _character.ActiveBuffs);
+            //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
+            //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
+            character.CalculationOptions = _character.CalculationOptions;
+            character.Class = _character.Class;
+            character.Talents = _character.Talents;
+            //character.RecalculateSetBonuses();
+            return character;
+        }
 
 		private Character BuildMutantCharacter(Character parent)
 		{
