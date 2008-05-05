@@ -336,7 +336,7 @@ namespace Rawr
                         }
                         else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance to inject poison"))
                             stats.WeaponDamage += 2f; //Romulo's = 4dmg
-                        else if (spellDesc.StartsWith("Mangle has a 40% chance to grant 140 Strength for 8sec"))
+                        else if (spellDesc.StartsWith("Mangle has a 40% chance to grant 140 Strength for 8 sec"))
                         {
                             stats.Strength += 37f; //Ashtongue = 37str
                             stats.DruidAshtongueTrinket = 150.0f;

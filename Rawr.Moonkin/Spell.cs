@@ -247,16 +247,16 @@ namespace Rawr.Moonkin
 
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
-            float critDamageCoefficient = (1 + baseCriticalMultiplier) / 2.0f;
-            float critCoefficient = baseCriticalChance + critRate;
+            float critDamageCoefficient = 1 + baseCriticalMultiplier;
+            float critChanceCoefficient = baseCriticalChance + critRate;
             float naturesGraceTime = naturesGrace ? 0.5f : 0.0f;
             float hitCoefficient = hitRate;
             float hasteCoefficient = 1 + hasteRating;
 
             // Use the property so that haste over the haste cap will clip at the current GCD, if possible to achieve for Starfire
-            CastTime = (unhastedCastTime - naturesGraceTime * critCoefficient * hitCoefficient) / hasteCoefficient;
+            CastTime = (unhastedCastTime - naturesGraceTime * critChanceCoefficient * hitCoefficient) / hasteCoefficient;
 
-            return (damageCoefficient * (critDamageCoefficient + critCoefficient) * hitCoefficient) / baseCastTime;
+            return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / baseCastTime;
         }
     }
 
@@ -283,15 +283,15 @@ namespace Rawr.Moonkin
         {
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
-            float critDamageCoefficient = (1 + baseCriticalMultiplier) / 2.0f;
-            float critCoefficient = baseCriticalChance + critRate;
+            float critDamageCoefficient = 1 + baseCriticalMultiplier;
+            float critChanceCoefficient = baseCriticalChance + critRate;
             // Nature's Grace is ignored for Moonfire, because it is an instant cast
             float hitCoefficient = hitRate;
             // Haste rating is ignored for Moonfire, because it is an instant cast
             // Calculate DoT component
             float dotEffectDPS = (dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) * specialDamageModifier) / dotEffect.Duration;
             // Moonfire DPS is calculated over the duration of the DoT
-            return (damageCoefficient * (critDamageCoefficient + critCoefficient) * hitCoefficient) / dotEffect.Duration + dotEffectDPS;
+            return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / dotEffect.Duration + dotEffectDPS;
         }
     }
 
@@ -318,8 +318,8 @@ namespace Rawr.Moonkin
 
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
-            float critDamageCoefficient = (1 + baseCriticalMultiplier) / 2.0f;
-            float critCoefficient = baseCriticalChance + critRate;
+            float critDamageCoefficient = 1 + baseCriticalMultiplier;
+            float critChanceCoefficient = baseCriticalChance + critRate;
             // Nature's Grace is ignored for Wrath, because it does not reduce the GCD
             float hitCoefficient = hitRate;
             float hasteCoefficient = 1 + hasteRating;
@@ -327,7 +327,7 @@ namespace Rawr.Moonkin
             // Use the property so that haste over the haste cap will clip at the current GCD
             CastTime /= hasteCoefficient;
 
-            return (damageCoefficient * (critDamageCoefficient + critCoefficient) * hitCoefficient) / baseCastTime;
+            return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / baseCastTime;
         }
     }
 
@@ -708,8 +708,7 @@ namespace Rawr.Moonkin
             wrath.SpecialCriticalModifier += 0.02f * calcOpts.FocusedStarlight;
             starfire.SpecialCriticalModifier += 0.02f * calcOpts.FocusedStarlight;
             // Moonfire: Damage, Crit chance +(0.05 * Imp Moonfire)
-            moonfire.DamagePerHit *= 1.0f + (0.05f * calcOpts.ImpMoonfire);
-            moonfire.DoT.DamagePerTick *= 1.0f + (0.05f * calcOpts.ImpMoonfire);
+            moonfire.SpecialDamageModifier *= 1.0f + (0.05f * calcOpts.ImpMoonfire);
             moonfire.SpecialCriticalModifier += 0.05f * calcOpts.ImpMoonfire;
 
             // Add spell-specific critical strike damage
@@ -718,13 +717,9 @@ namespace Rawr.Moonkin
             moonfire.CriticalHitMultiplier *= 1 + 0.2f * calcOpts.Vengeance;
             wrath.CriticalHitMultiplier *= 1 + 0.2f * calcOpts.Vengeance;
             // Chaotic Skyfire Diamond
-            // This is a crude hack based on mathematical results, and if they ever change CSD I will regret this
-            if (calcs.BasicStats.BonusSpellCritMultiplier > 0)
-            {
-                starfire.CriticalHitMultiplier *= 1.09f;
-                moonfire.CriticalHitMultiplier *= 1.09f;
-                wrath.CriticalHitMultiplier *= 1.09f;
-            }
+            starfire.CriticalHitMultiplier *= 1.0f + 1.5f / 0.5f * stats.BonusSpellCritMultiplier;
+            moonfire.CriticalHitMultiplier *= 1.0f + 1.5f / 0.5f * stats.BonusSpellCritMultiplier;
+            wrath.CriticalHitMultiplier *= 1.0f + 1.5f / 0.5f * stats.BonusSpellCritMultiplier;
 
             // Reduce spell-specific mana costs
             // Starfire, Moonfire, Wrath: Mana cost -(0.03 * Moonglow)
@@ -938,8 +933,8 @@ namespace Rawr.Moonkin
             {
                 float procsPerRotation = 0.1f * hitRate * rotation.CastCount;
                 float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveArcaneDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_5 * 10.0f / (45.0f + timeBetweenProcs);
-                effectiveNatureDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_5 * 10.0f / (45.0f + timeBetweenProcs);
+                effectiveArcaneDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 * 10.0f / (45.0f + timeBetweenProcs);
+                effectiveNatureDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 * 10.0f / (45.0f + timeBetweenProcs);
             }
             // 20% chance of spell damage on crit, 45 second cooldown.
             if (calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 > 0)

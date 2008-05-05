@@ -12,6 +12,7 @@ namespace Rawr.Moonkin
     public partial class MoonkinTalentsForm : Form
     {
         private CalculationOptionsPanelMoonkin basePanel;
+        private bool _loading = false;
         public MoonkinTalentsForm(CalculationOptionsPanelMoonkin basePanel)
         {
             this.basePanel = basePanel;
@@ -34,6 +35,7 @@ namespace Rawr.Moonkin
         // Load talent points from a character's calculation options.
         public void LoadCalculationOptions()
         {
+            _loading = true;
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			cmbStarlightWrath.SelectedItem = calcOpts.StarlightWrath.ToString();
 			cmbForceofNature.SelectedItem = calcOpts.ForceofNature.ToString();
@@ -98,7 +100,7 @@ namespace Rawr.Moonkin
 			cmbNaturesSwiftness.SelectedItem = calcOpts.NaturesSwiftness.ToString();
 			cmbImprovedRejuv.SelectedItem = calcOpts.ImprovedRejuv.ToString();
 
-
+            _loading = false;
 
 			//// Iterate through all controls on the form
 			//foreach (Control c in Controls)
@@ -131,74 +133,77 @@ namespace Rawr.Moonkin
         // Update character calculation options when a talent point is set
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-			calcOpts.StarlightWrath = cmbStarlightWrath.SelectedIndex;
-			calcOpts.ForceofNature = cmbForceofNature.SelectedIndex;
-			calcOpts.WrathofCenarius = cmbWrathofCenarius.SelectedIndex;
-			calcOpts.ImprovedFF = cmbImprovedFF.SelectedIndex;
-			calcOpts.MoonkinForm = cmbMoonkinForm.SelectedIndex;
-			calcOpts.Dreamstate = cmbDreamstate.SelectedIndex;
-			calcOpts.BalanceofPower = cmbBalanceofPower.SelectedIndex;
-			calcOpts.Moonfury = cmbMoonfury.SelectedIndex;
-			calcOpts.Moonglow = cmbMoonglow.SelectedIndex;
-			calcOpts.NaturesGrace = cmbNaturesGrace.SelectedIndex;
-			calcOpts.LunarGuidance = cmbLunarGuidance.SelectedIndex;
-			calcOpts.CelestialFocus = cmbCelestialFocus.SelectedIndex;
-			calcOpts.Vengeance = cmbVengeance.SelectedIndex;
-			calcOpts.NaturesReach = cmbNaturesReach.SelectedIndex;
-			calcOpts.InsectSwarm = cmbInsectSwarm.SelectedIndex;
-			calcOpts.Brambles = cmbBrambles.SelectedIndex;
-			calcOpts.ImpMoonfire = cmbImpMoonfire.SelectedIndex;
-			calcOpts.FocusedStarlight = cmbFocusedStarlight.SelectedIndex;
-			calcOpts.ControlofNature = cmbControlofNature.SelectedIndex;
-			calcOpts.ImpNaturesGrasp = cmbImpNaturesGrasp.SelectedIndex;
-			calcOpts.NaturesGrasp = cmbNaturesGrasp.SelectedIndex;
-			calcOpts.Ferocity = cmbFerocity.SelectedIndex;
-			calcOpts.FeralAggression = cmbFeralAggression.SelectedIndex;
-			calcOpts.FeralInstinct = cmbFeralInstinct.SelectedIndex;
-			calcOpts.BrutalImpact = cmbBrutalImpact.SelectedIndex;
-			calcOpts.ThickHide = cmbThickHide.SelectedIndex;
-			calcOpts.FeralSwiftness = cmbFeralSwiftness.SelectedIndex;
-			calcOpts.FeralCharge = cmbFeralCharge.SelectedIndex;
-			calcOpts.SharpenedClaws = cmbSharpenedClaws.SelectedIndex;
-			calcOpts.ShreddingAttacks = cmbShreddingAttacks.SelectedIndex;
-			calcOpts.PredatoryStrikes = cmbPredatoryStrikes.SelectedIndex;
-			calcOpts.PrimalFury = cmbPrimalFury.SelectedIndex;
-			calcOpts.SavageFury = cmbSavageFury.SelectedIndex;
-			calcOpts.FeralFaerieFire = cmbFeralFaerieFire.SelectedIndex;
-			calcOpts.NurturingInstinct = cmbNurturingInstinct.SelectedIndex;
-			calcOpts.HotW = cmbHotW.SelectedIndex;
-			calcOpts.SotF = cmbSotF.SelectedIndex;
-			calcOpts.PrimalTenacity = cmbPrimalTenacity.SelectedIndex;
-			calcOpts.LotP = cmbLotP.SelectedIndex;
-			calcOpts.ImprovedLotP = cmbImprovedLotP.SelectedIndex;
-			calcOpts.Mangle = cmbMangle.SelectedIndex;
-			calcOpts.PredatoryInstincts = cmbPredatoryInstincts.SelectedIndex;
-			calcOpts.TreeofLife = cmbTreeofLife.SelectedIndex;
-			calcOpts.ImprovedMotW = cmbImprovedMotW.SelectedIndex;
-			calcOpts.EmpoweredRejuv = cmbEmpoweredRejuv.SelectedIndex;
-			calcOpts.Furor = cmbFuror.SelectedIndex;
-			calcOpts.NaturalPerfection = cmbNaturalPerfection.SelectedIndex;
-			calcOpts.Naturalist = cmbNaturalist.SelectedIndex;
-			calcOpts.Swiftmend = cmbSwiftmend.SelectedIndex;
-			calcOpts.NaturesFocus = cmbNaturesFocus.SelectedIndex;
-			calcOpts.LivingSpirit = cmbLivingSpirit.SelectedIndex;
-			calcOpts.NaturalShapeshifter = cmbNaturalShapeshifter.SelectedIndex;
-			calcOpts.ImprovedRegrowth = cmbImprovedRegrowth.SelectedIndex;
-			calcOpts.Intensity = cmbIntensity.SelectedIndex;
-			calcOpts.EmpoweredTouch = cmbEmpoweredTouch.SelectedIndex;
-			calcOpts.Subtlety = cmbSubtlety.SelectedIndex;
-			calcOpts.ImpTranquility = cmbImpTranquility.SelectedIndex;
-			calcOpts.OmenofClarity = cmbOmenofClarity.SelectedIndex;
-			calcOpts.GiftofNature = cmbGiftofNature.SelectedIndex;
-			calcOpts.TranquilSpirit = cmbTranquilSpirit.SelectedIndex;
-			calcOpts.NaturesSwiftness = cmbNaturesSwiftness.SelectedIndex;
-			calcOpts.ImprovedRejuv = cmbImprovedRejuv.SelectedIndex;
+            if (!_loading)
+            {
+                CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
+                calcOpts.StarlightWrath = cmbStarlightWrath.SelectedIndex;
+                calcOpts.ForceofNature = cmbForceofNature.SelectedIndex;
+                calcOpts.WrathofCenarius = cmbWrathofCenarius.SelectedIndex;
+                calcOpts.ImprovedFF = cmbImprovedFF.SelectedIndex;
+                calcOpts.MoonkinForm = cmbMoonkinForm.SelectedIndex;
+                calcOpts.Dreamstate = cmbDreamstate.SelectedIndex;
+                calcOpts.BalanceofPower = cmbBalanceofPower.SelectedIndex;
+                calcOpts.Moonfury = cmbMoonfury.SelectedIndex;
+                calcOpts.Moonglow = cmbMoonglow.SelectedIndex;
+                calcOpts.NaturesGrace = cmbNaturesGrace.SelectedIndex;
+                calcOpts.LunarGuidance = cmbLunarGuidance.SelectedIndex;
+                calcOpts.CelestialFocus = cmbCelestialFocus.SelectedIndex;
+                calcOpts.Vengeance = cmbVengeance.SelectedIndex;
+                calcOpts.NaturesReach = cmbNaturesReach.SelectedIndex;
+                calcOpts.InsectSwarm = cmbInsectSwarm.SelectedIndex;
+                calcOpts.Brambles = cmbBrambles.SelectedIndex;
+                calcOpts.ImpMoonfire = cmbImpMoonfire.SelectedIndex;
+                calcOpts.FocusedStarlight = cmbFocusedStarlight.SelectedIndex;
+                calcOpts.ControlofNature = cmbControlofNature.SelectedIndex;
+                calcOpts.ImpNaturesGrasp = cmbImpNaturesGrasp.SelectedIndex;
+                calcOpts.NaturesGrasp = cmbNaturesGrasp.SelectedIndex;
+                calcOpts.Ferocity = cmbFerocity.SelectedIndex;
+                calcOpts.FeralAggression = cmbFeralAggression.SelectedIndex;
+                calcOpts.FeralInstinct = cmbFeralInstinct.SelectedIndex;
+                calcOpts.BrutalImpact = cmbBrutalImpact.SelectedIndex;
+                calcOpts.ThickHide = cmbThickHide.SelectedIndex;
+                calcOpts.FeralSwiftness = cmbFeralSwiftness.SelectedIndex;
+                calcOpts.FeralCharge = cmbFeralCharge.SelectedIndex;
+                calcOpts.SharpenedClaws = cmbSharpenedClaws.SelectedIndex;
+                calcOpts.ShreddingAttacks = cmbShreddingAttacks.SelectedIndex;
+                calcOpts.PredatoryStrikes = cmbPredatoryStrikes.SelectedIndex;
+                calcOpts.PrimalFury = cmbPrimalFury.SelectedIndex;
+                calcOpts.SavageFury = cmbSavageFury.SelectedIndex;
+                calcOpts.FeralFaerieFire = cmbFeralFaerieFire.SelectedIndex;
+                calcOpts.NurturingInstinct = cmbNurturingInstinct.SelectedIndex;
+                calcOpts.HotW = cmbHotW.SelectedIndex;
+                calcOpts.SotF = cmbSotF.SelectedIndex;
+                calcOpts.PrimalTenacity = cmbPrimalTenacity.SelectedIndex;
+                calcOpts.LotP = cmbLotP.SelectedIndex;
+                calcOpts.ImprovedLotP = cmbImprovedLotP.SelectedIndex;
+                calcOpts.Mangle = cmbMangle.SelectedIndex;
+                calcOpts.PredatoryInstincts = cmbPredatoryInstincts.SelectedIndex;
+                calcOpts.TreeofLife = cmbTreeofLife.SelectedIndex;
+                calcOpts.ImprovedMotW = cmbImprovedMotW.SelectedIndex;
+                calcOpts.EmpoweredRejuv = cmbEmpoweredRejuv.SelectedIndex;
+                calcOpts.Furor = cmbFuror.SelectedIndex;
+                calcOpts.NaturalPerfection = cmbNaturalPerfection.SelectedIndex;
+                calcOpts.Naturalist = cmbNaturalist.SelectedIndex;
+                calcOpts.Swiftmend = cmbSwiftmend.SelectedIndex;
+                calcOpts.NaturesFocus = cmbNaturesFocus.SelectedIndex;
+                calcOpts.LivingSpirit = cmbLivingSpirit.SelectedIndex;
+                calcOpts.NaturalShapeshifter = cmbNaturalShapeshifter.SelectedIndex;
+                calcOpts.ImprovedRegrowth = cmbImprovedRegrowth.SelectedIndex;
+                calcOpts.Intensity = cmbIntensity.SelectedIndex;
+                calcOpts.EmpoweredTouch = cmbEmpoweredTouch.SelectedIndex;
+                calcOpts.Subtlety = cmbSubtlety.SelectedIndex;
+                calcOpts.ImpTranquility = cmbImpTranquility.SelectedIndex;
+                calcOpts.OmenofClarity = cmbOmenofClarity.SelectedIndex;
+                calcOpts.GiftofNature = cmbGiftofNature.SelectedIndex;
+                calcOpts.TranquilSpirit = cmbTranquilSpirit.SelectedIndex;
+                calcOpts.NaturesSwiftness = cmbNaturesSwiftness.SelectedIndex;
+                calcOpts.ImprovedRejuv = cmbImprovedRejuv.SelectedIndex;
 
-			//ComboBox cb = (ComboBox)sender;
-			//string talent = cb.Name.Substring(3);
-			//Character.CalculationOptions[talent] = cb.SelectedItem.ToString();
-			Character.OnItemsChanged();
+                //ComboBox cb = (ComboBox)sender;
+                //string talent = cb.Name.Substring(3);
+                //Character.CalculationOptions[talent] = cb.SelectedItem.ToString();
+                Character.OnItemsChanged();
+            }
         }
 
         // Do not close the form on close; merely hide it
