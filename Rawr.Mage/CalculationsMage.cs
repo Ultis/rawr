@@ -733,20 +733,50 @@ namespace Rawr.Mage
 
             // disable unused constraints and variables
             incrementalSortedIndex = 0;
+            int lastCooldownSet = -1;
+            int lastCooldownSetSortedIndex = 0;
             if (character.Ranged == null || character.Ranged.Type != Item.ItemType.Wand) lp.DisableColumn(1);
             for (int seg = 0; seg < segments; seg++)
             {
+                if (calculationOptions.IncrementalOptimizations)
+                {
+                    if (useSMP)
+                    {
+                        while (incrementalSortedIndex < calculationOptions.IncrementalSetCooldowns.Length && seg > calculationOptions.IncrementalSetSegments[incrementalSortedIndex])
+                        {
+                            incrementalSortedIndex++;
+                        }
+                    }
+                }
+                lastCooldownSet = -1;
                 for (int buffset = 0; buffset < statsList.Count; buffset++)
                 {
+                    if (calculationOptions.IncrementalOptimizations)
+                    {
+                        if (statsList[buffset].IncrementalSetIndex != lastCooldownSet)
+                        {
+                            lastCooldownSet = statsList[buffset].IncrementalSetIndex;
+                            while (incrementalSortedIndex < calculationOptions.IncrementalSetCooldowns.Length && (!useSMP || seg == calculationOptions.IncrementalSetSegments[incrementalSortedIndex]) && lastCooldownSet > calculationOptions.IncrementalSetCooldowns[incrementalSortedIndex])
+                            {
+                                incrementalSortedIndex++;
+                            }
+                            lastCooldownSetSortedIndex = incrementalSortedIndex;
+                        }
+                    }
                     for (int spell = 0; spell < spellList.Count; spell++)
                     {
+                        incrementalSortedIndex = lastCooldownSetSortedIndex; // rewind sorted index
                         bool viable = true;
                         if (calculationOptions.IncrementalOptimizations)
                         {
                             viable = false;
-                            if (incrementalSortedIndex < calculationOptions.IncrementalSetCooldowns.Length && (!useSMP || seg == calculationOptions.IncrementalSetSegments[incrementalSortedIndex]) && statsList[buffset].IncrementalSetIndex == calculationOptions.IncrementalSetCooldowns[incrementalSortedIndex] && spellList[spell] == calculationOptions.IncrementalSetSpells[incrementalSortedIndex])
+                            while (incrementalSortedIndex < calculationOptions.IncrementalSetCooldowns.Length && (!useSMP || seg == calculationOptions.IncrementalSetSegments[incrementalSortedIndex]) && statsList[buffset].IncrementalSetIndex == calculationOptions.IncrementalSetCooldowns[incrementalSortedIndex])
                             {
-                                viable = true;
+                                if (spellList[spell] == calculationOptions.IncrementalSetSpells[incrementalSortedIndex])
+                                {
+                                    viable = true;
+                                    break;
+                                }
                                 incrementalSortedIndex++;
                             }
                         }
