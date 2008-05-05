@@ -674,7 +674,7 @@ you are being killed by burst damage, focus on Survival Points.",
 					//CharacterCalculationsProtWarr calcAgiValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 10 } }) as CharacterCalculationsProtWarr;
 					//CharacterCalculationsProtWarr calcACValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Armor = 10 } }) as CharacterCalculationsProtWarr;
 					//CharacterCalculationsProtWarr calcStaValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 10 } }) as CharacterCalculationsProtWarr;
-					CharacterCalculationsProtWarr calcDefValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = 1 } }) as CharacterCalculationsProtWarr;
+					//CharacterCalculationsProtWarr calcDefValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = 1 } }) as CharacterCalculationsProtWarr;
 					CharacterCalculationsProtWarr calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 1 } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcParryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ParryRating = 1 } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcBlockValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BlockRating = 1 } }) as CharacterCalculationsProtWarr;
@@ -701,6 +701,34 @@ you are being killed by burst damage, focus on Survival Points.",
 
 					ComparisonCalculationProtWarr comparisonAgi = new ComparisonCalculationProtWarr() { Name = "Agility", OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (agiToAdd - agiToSubtract),
 						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (agiToAdd - agiToSubtract), SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (agiToAdd - agiToSubtract)};
+
+
+					//Differential Calculations for Def
+					calcAtAdd = calcBaseValue;
+					float defToAdd = 0f;
+					while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && defToAdd < 2)
+					{
+						defToAdd += 0.01f;
+						calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToAdd } }) as CharacterCalculationsProtWarr;
+					}
+
+					calcAtSubtract = calcBaseValue;
+					float defToSubtract = 0f;
+					while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && defToSubtract > -2)
+					{
+						defToSubtract -= 0.01f;
+						calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToSubtract } }) as CharacterCalculationsProtWarr;
+					}
+					defToSubtract += 0.01f;
+
+					ComparisonCalculationProtWarr comparisonDef = new ComparisonCalculationProtWarr()
+					{
+						Name = "Defense Rating",
+						OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (defToAdd - defToSubtract),
+						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (defToAdd - defToSubtract),
+						SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (defToAdd - defToSubtract),
+						//ThreatPoints = (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (defToAdd - defToSubtract)
+					};
 
 
 					//Differential Calculations for AC
@@ -750,8 +778,9 @@ you are being killed by burst damage, focus on Survival Points.",
 						comparisonAgi,
 						comparisonAC,
 						comparisonSta,
-						new ComparisonCalculationProtWarr() { Name = "Defense Rating", OverallPoints = (calcDefValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcDefValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcDefValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
+						comparisonDef,
+						//new ComparisonCalculationProtWarr() { Name = "Defense Rating", OverallPoints = (calcDefValue.OverallPoints - calcBaseValue.OverallPoints), 
+						//	MitigationPoints = (calcDefValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcDefValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
 						new ComparisonCalculationProtWarr() { Name = "Dodge Rating", OverallPoints = (calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints), 
 							MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
                         new ComparisonCalculationProtWarr() { Name = "Parry Rating", OverallPoints = (calcParryValue.OverallPoints - calcBaseValue.OverallPoints), 
