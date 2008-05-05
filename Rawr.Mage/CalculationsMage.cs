@@ -744,11 +744,10 @@ namespace Rawr.Mage
                         if (calculationOptions.IncrementalOptimizations)
                         {
                             viable = false;
-                            if ((!useSMP || seg == calculationOptions.IncrementalSetSegments[incrementalSortedIndex]) && statsList[buffset].IncrementalSetIndex == calculationOptions.IncrementalSetCooldowns[incrementalSortedIndex] && spellList[spell] == calculationOptions.IncrementalSetSpells[incrementalSortedIndex])
+                            if (incrementalSortedIndex < calculationOptions.IncrementalSetCooldowns.Length && (!useSMP || seg == calculationOptions.IncrementalSetSegments[incrementalSortedIndex]) && statsList[buffset].IncrementalSetIndex == calculationOptions.IncrementalSetCooldowns[incrementalSortedIndex] && spellList[spell] == calculationOptions.IncrementalSetSpells[incrementalSortedIndex])
                             {
                                 viable = true;
                                 incrementalSortedIndex++;
-                                if (incrementalSortedIndex >= calculationOptions.IncrementalSetCooldowns.Length) goto EscapeDisableLoop;
                             }
                         }
                         if (useSMP && statsList[buffset].MoltenFury && (seg + 1) * segmentDuration <= calculationOptions.FightDuration - mflength) viable = false;
@@ -780,7 +779,6 @@ namespace Rawr.Mage
                     }
                 }
             }
-            EscapeDisableLoop:
             if (!heroismAvailable) lp.DisableRow(5);
             if (!apAvailable) lp.DisableRow(6);
             if (!heroismAvailable || !apAvailable) lp.DisableRow(7);
