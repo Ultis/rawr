@@ -122,8 +122,6 @@ namespace Rawr.Mage
             }
         }
 
-        internal static HighPerformanceTimer PrimalTimer = new HighPerformanceTimer();
-
         public unsafe double[] SolvePrimal()
         {
             // c = data[rows,:]
@@ -153,7 +151,6 @@ namespace Rawr.Mage
                 {
                     do
                     {
-                        PrimalTimer.Start();
                         // [L U] = lu(A(:,B_indices));
                         if (redecompose <= 0)
                         {
@@ -283,8 +280,6 @@ namespace Rawr.Mage
                                 if (B[i] < cols) value += cost[B[i]] * d[i];
                             }
                             ret[cols] = value;
-                            PrimalTimer.Stop();
-                            System.Diagnostics.Debug.WriteLine("Primal=" + PrimalTimer.Average + ", Decompose=" + LU2.DecomposeTimer.Average);
                             return ret;
                         }
 
@@ -371,8 +366,6 @@ namespace Rawr.Mage
                         int k = B[mini];
                         B[mini] = V[maxj];
                         V[maxj] = k;
-
-                        PrimalTimer.Stop();
 
                         round++;
                         if (round == 5000) round++;

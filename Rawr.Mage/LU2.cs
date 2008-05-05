@@ -263,10 +263,6 @@ namespace Rawr.Mage
             }
         }
 
-        internal static HighPerformanceTimer DecomposeTimer = new HighPerformanceTimer();
-        internal static int decomposeCount = 0;
-        internal static int updateCount = 0;
-
         // Performance Log, start, load Kavan, repeat dps time = 1
         // Primal=6.08148534180949E-05, Decompose=3.38125119182951E-05 implementation LU
         // Primal=7.7155968256824E-05, Decompose=4.80555577214333E-05  initial implementation LU2 with column pivoting
@@ -282,8 +278,6 @@ namespace Rawr.Mage
 
         public unsafe void Decompose()
         {
-            decomposeCount++;
-            DecomposeTimer.Start();
             etaSize = 0; // reset eta file
             //Array.Clear(_L, 0, _L.Length);
             Singular = false;
@@ -396,7 +390,6 @@ namespace Rawr.Mage
                     }
                 }
             }
-            DecomposeTimer.Stop();
         }
 
         // B~ = B + aj ecol'
@@ -407,9 +400,6 @@ namespace Rawr.Mage
         // replace column col in basis B with aj
         public unsafe void Update(double* a, int col)
         {
-            updateCount++;
-            DecomposeTimer.Start();
-
             int i, j, k;
             fixed (double* /*L = _L, */U = _U, sL = sparseL, c = column)
             {
@@ -516,7 +506,6 @@ namespace Rawr.Mage
                     }
                 }
             }
-            DecomposeTimer.Stop();
         }    
     }
 }

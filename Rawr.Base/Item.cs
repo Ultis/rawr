@@ -223,7 +223,7 @@ namespace Rawr
 		{
 			get
 			{
-				if (_gemmedId == string.Empty)
+                if (_gemmedId.Length == 0) // _gemmedId is never null
 				{
 					_gemmedId = string.Format("{0}.{1}.{2}.{3}", Id, Gem1Id, Gem2Id, Gem3Id);
 				}

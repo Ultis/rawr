@@ -382,6 +382,10 @@ namespace Rawr.Mage
             calculationOptions.IncrementalSetSpells = spellList.ToArray();
             calculationOptions.IncrementalSetSegments = segmentList.ToArray();
             calculationOptions.IncrementalSetArmor = calculations.MageArmor;
+
+            List<int> filteredCooldowns = ListUtils.RemoveDuplicates(cooldownList);
+            filteredCooldowns.Sort();
+            calculationOptions.IncrementalSetSortedCooldowns = filteredCooldowns.ToArray();
         }
 
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool computeIncrementalSet)
@@ -451,6 +455,7 @@ namespace Rawr.Mage
             CharacterCalculationsMage calculatedStats = null;
 
             int incrementalSetIndex = 0;
+            int incrementalSortedIndex = 0;
             for (int mf = 0; mf < 2; mf++)
             for (int heroism = 0; heroism < 2; heroism++)
             for (int ap = 0; ap < 2; ap++)
@@ -460,7 +465,7 @@ namespace Rawr.Mage
             for (int flameCap = 0; flameCap < 2; flameCap++)
             for (int destructionPotion = 0; destructionPotion < 2; destructionPotion++)
             {
-                if (!calculationOptions.IncrementalOptimizations || Array.IndexOf<int>(calculationOptions.IncrementalSetCooldowns, incrementalSetIndex) >= 0)
+                if (!calculationOptions.IncrementalOptimizations || calculationOptions.IncrementalSetSortedCooldowns[incrementalSortedIndex] == incrementalSetIndex)
                 {
                     for (int trinket1 = 0; trinket1 < 2; trinket1++)
                         for (int trinket2 = 0; trinket2 < 2; trinket2++)
@@ -475,9 +480,15 @@ namespace Rawr.Mage
                                     }
                                 }
                             }
+                    if (calculationOptions.IncrementalOptimizations)
+                    {
+                        incrementalSortedIndex++;
+                        if (incrementalSortedIndex >= calculationOptions.IncrementalSetSortedCooldowns.Length) goto EscapeCooldownLoop;
+                    }
                 }
                 incrementalSetIndex++;
             }
+            EscapeCooldownLoop:
             if (calculatedStats == null) calculatedStats = GetTemporaryCharacterCalculations(characterStats, calculationOptions, armor, character, additionalItem, false, false, false, false, false, false, false, false, false, false, incrementalSetIndex - 1);
 
             calculatedStats.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
@@ -721,6 +732,7 @@ namespace Rawr.Mage
             }
 
             // disable unused constraints and variables
+            incrementalSortedIndex = 0;
             if (character.Ranged == null || character.Ranged.Type != Item.ItemType.Wand) lp.DisableColumn(1);
             for (int seg = 0; seg < segments; seg++)
             {
@@ -732,13 +744,11 @@ namespace Rawr.Mage
                         if (calculationOptions.IncrementalOptimizations)
                         {
                             viable = false;
-                            for (int i = 0; i < calculationOptions.IncrementalSetCooldowns.Length; i++)
+                            if ((!useSMP || seg == calculationOptions.IncrementalSetSegments[incrementalSortedIndex]) && statsList[buffset].IncrementalSetIndex == calculationOptions.IncrementalSetCooldowns[incrementalSortedIndex] && spellList[spell] == calculationOptions.IncrementalSetSpells[incrementalSortedIndex])
                             {
-                                if ((!useSMP || seg == calculationOptions.IncrementalSetSegments[i]) && statsList[buffset].IncrementalSetIndex == calculationOptions.IncrementalSetCooldowns[i] && spellList[spell] == calculationOptions.IncrementalSetSpells[i])
-                                {
-                                    viable = true;
-                                    break;
-                                }
+                                viable = true;
+                                incrementalSortedIndex++;
+                                if (incrementalSortedIndex >= calculationOptions.IncrementalSetCooldowns.Length) goto EscapeDisableLoop;
                             }
                         }
                         if (useSMP && statsList[buffset].MoltenFury && (seg + 1) * segmentDuration <= calculationOptions.FightDuration - mflength) viable = false;
@@ -770,6 +780,7 @@ namespace Rawr.Mage
                     }
                 }
             }
+            EscapeDisableLoop:
             if (!heroismAvailable) lp.DisableRow(5);
             if (!apAvailable) lp.DisableRow(6);
             if (!heroismAvailable || !apAvailable) lp.DisableRow(7);
@@ -2165,6 +2176,11 @@ namespace Rawr.Mage
                 case "Talents (per talent point)":
                     CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                    bool savedIncrementalOptimizations = calculationOptions.IncrementalOptimizations;
+                    bool savedSmartOptimizations = calculationOptions.SmartOptimization;
+
+                    calculationOptions.IncrementalOptimizations = false;
+                    calculationOptions.SmartOptimization = true;
 
                     for (int index = 0; index < TalentList.Length; index++ )
                     {
@@ -2212,6 +2228,9 @@ namespace Rawr.Mage
 
                         calculationOptions.SetTalentByName(talent, currentPoints);
                     }
+
+                    calculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
+                    calculationOptions.SmartOptimization = savedSmartOptimizations;
 
                     return comparisonList.ToArray();
                 case "Talent Specs":

@@ -43,6 +43,8 @@ namespace Rawr.Mage
         [XmlIgnore]
         public int[] IncrementalSetCooldowns;
         [XmlIgnore]
+        public int[] IncrementalSetSortedCooldowns;
+        [XmlIgnore]
         public int[] IncrementalSetSegments;
         [XmlIgnore]
         public SpellId[] IncrementalSetSpells;
@@ -188,7 +190,7 @@ namespace Rawr.Mage
             SMP = false;
             SMPDisplay = false;
             EvocationSpirit = 0;
-            SurvivabilityRating = 0.001f;
+            SurvivabilityRating = 0.0001f;
 
             // pull talents
             #region Mage Talents Import
@@ -459,7 +461,7 @@ namespace Rawr.Mage
 
         private Spell[] Spells = new Spell[SpellIdCount];*/
 
-        private Dictionary<int, Spell> Spells = new Dictionary<int, Spell>();
+        private Dictionary<int, Spell> Spells = new Dictionary<int, Spell>(); // profiling doesn't show any noticeable benefit using plain array, so use dictionary to save on size
 
         public void SetSpell(SpellId spellId, Spell spell)
         {
