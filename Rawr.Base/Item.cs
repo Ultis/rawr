@@ -851,10 +851,14 @@ namespace Rawr
                     ItemCache.DeleteItem(cachedItem, raiseEvent);
                 }
 				Item newItem = Armory.GetItem(gemmedId, logReason);
-                if (newItem == null && cachedItem != null)
-                {
-                    ItemCache.AddItem(cachedItem, true, raiseEvent);
-                }
+				if (newItem == null && cachedItem != null)
+				{
+					ItemCache.AddItem(cachedItem, true, raiseEvent);
+				}
+				else
+				{
+					ItemCache.AddItem(newItem, true, raiseEvent);
+				}
                 
 				return newItem;
 			}

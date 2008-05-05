@@ -988,18 +988,18 @@ namespace Rawr
 				int gem3Id = ids.Length == 4 ? int.Parse(ids[3]) : 0;
                 Item item = new Item()
                 {
+					_id = int.Parse(id),
+                    _gem1Id = gem1Id,
+                    _gem2Id = gem2Id,
+                    _gem3Id = gem3Id, //Set the local fields so as not to call OnIdsChanging/Changed, so it's not added to the ItemCache yet.
                     Name = name,
                     Quality = quality,
                     Type = type,
-                    Id = int.Parse(id),
                     IconPath = iconPath,
                     Slot = slot,
                     SetName = setName,
                     Stats = stats,
                     Sockets = sockets,
-                    Gem1Id = gem1Id,
-                    Gem2Id = gem2Id,
-                    Gem3Id = gem3Id,
                     MinDamage = minDamage,
                     MaxDamage = maxDamage,
                     DamageType = damageType,
@@ -1310,25 +1310,35 @@ namespace Rawr
 						for (int i = 0; i < nodeList.Count; i++)
 						{
 							StatusMessaging.UpdateStatus(slot.ToString(), string.Format("Downloading definition {0} of {1} possible upgrades", i, nodeList.Count));
-							string id = nodeList[i].Attributes["id"].Value + ".0.0.0";
-							Item idealItem = GetItem(id, "Loading Upgrades");
-							if (idealItem != null)
+							string id = nodeList[i].Attributes["id"].Value;
+							List<Item> idealItemGemmings = ItemCache.Instance.FindAllItemsById(int.Parse(id)) as List<Item>;
+							if (idealItemGemmings.Count > 0)
 							{
-								idealItem._gem1Id = idealGems[idealItem.Sockets.Color1];
-								idealItem._gem2Id = idealGems[idealItem.Sockets.Color2];
-								idealItem._gem3Id = idealGems[idealItem.Sockets.Color3];
-
-								if (!ItemCache.Items.ContainsKey(idealItem.GemmedId))
+								id += string.Format(".{0}.{1}.{2}", idealGems[idealItemGemmings[0].Sockets.Color1],
+									idealGems[idealItemGemmings[0].Sockets.Color2], idealGems[idealItemGemmings[0].Sockets.Color3]);
+								ItemCache.FindItemById(id);
+							}
+							else
+							{
+								Item idealItem = GetItem(id, "Loading Upgrades");
+								if (idealItem != null)
 								{
-									Item newItem = ItemCache.Instance.AddItem(idealItem, true, false);
+									idealItem._gem1Id = idealGems[idealItem.Sockets.Color1];
+									idealItem._gem2Id = idealGems[idealItem.Sockets.Color2];
+									idealItem._gem3Id = idealGems[idealItem.Sockets.Color3];
 
-									//This is calling OnItemsChanged and ItemCache.Add further down the call stack so if we add it to the cache first, 
-									// then do the compare and remove it if we don't want it, we can avoid that constant event trigger
-									ComparisonCalculationBase upgradeCalculation = Calculations.GetItemCalculations(idealItem, character, slot);
-
-									if (upgradeCalculation.OverallPoints < (currentCalculation.OverallPoints * .8f))
+									if (!ItemCache.Items.ContainsKey(idealItem.GemmedId))
 									{
-										ItemCache.DeleteItem(newItem, false);
+										Item newItem = ItemCache.Instance.AddItem(idealItem, true, false);
+
+										//This is calling OnItemsChanged and ItemCache.Add further down the call stack so if we add it to the cache first, 
+										// then do the compare and remove it if we don't want it, we can avoid that constant event trigger
+										ComparisonCalculationBase upgradeCalculation = Calculations.GetItemCalculations(idealItem, character, slot);
+
+										if (upgradeCalculation.OverallPoints < (currentCalculation.OverallPoints * .8f))
+										{
+											ItemCache.DeleteItem(newItem, false);
+										}
 									}
 								}
 							}
