@@ -411,7 +411,7 @@ namespace Rawr
 			Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot, item.SetName, item.Unique, item.Stats.Clone(),
 				item.Sockets.Clone(), 0, 0, 0, item.MinDamage, item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
 			_changingItemCache = true;
-			ItemCache.AddItem(copy);
+			ItemCache.AddItem(copy, false, true);
 			_changingItemCache = false;
 
 			ListViewItem newLvi = new ListViewItem(copy.Name, 0, listViewItems.Groups["listViewGroup" + copy.Slot.ToString()]);
