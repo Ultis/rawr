@@ -35,7 +35,7 @@ namespace Rawr.Healadin
             this.name = name;
             this.rank = rank;
             healMultiple = 1.12f;
-            if (name.Equals("Holy Light"))
+            if (name.Equals("Holy Light") && rank > 0 && rank < 12)
             {
                 baseMana = HLMANA[rank];
                 baseHeal = HLHEAL[rank];
@@ -77,6 +77,7 @@ namespace Rawr.Healadin
             }
             else
             {
+                spellCrit += stats.FoLCrit;
                 bonus = stats.FoLHeal;
                 multi = healMultiple + stats.FoLMultiplier;
                 bol = bolBonus + stats.FoLBoL;

@@ -16,21 +16,9 @@ namespace Rawr.Healadin
         
         protected override void LoadCalculationOptions()
         {
-			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-			//    Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
 
-			//if (!Character.CalculationOptions.ContainsKey("Length"))
-			//    Character.CalculationOptions["Length"] = "5";
-			//if (!Character.CalculationOptions.ContainsKey("ManaAmt"))
-			//    Character.CalculationOptions["ManaAmt"] = "2400";
-			//if (!Character.CalculationOptions.ContainsKey("ManaTime"))
-			//    Character.CalculationOptions["ManaTime"] = "2.5";
-			//if (!Character.CalculationOptions.ContainsKey("Activity"))
-			//    Character.CalculationOptions["Activity"] = "80";
-			//if (!Character.CalculationOptions.ContainsKey("Spriest"))
-			//    Character.CalculationOptions["Spriest"] = "0";
-			//if (!Character.CalculationOptions.ContainsKey("Spiritual"))
-			//    Character.CalculationOptions["Spiritual"] = "0";
+            if (Character.CalculationOptions == null)
+                Character.CalculationOptions = new CalculationOptionsHealadin();
 
 			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
             cmbLength.Value = (decimal)calcOpts.Length;
@@ -41,6 +29,7 @@ namespace Rawr.Healadin
 
 			trkActivity.Value = (int)calcOpts.Activity;
             lblActivity.Text = "Activity (" + trkActivity.Value + "%):";
+
         }
  
         private void cmbLength_ValueChanged(object sender, EventArgs e)

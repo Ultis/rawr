@@ -152,8 +152,12 @@ namespace Rawr.Healadin
             Spell FoL = calculatedStats[0];
             Spell HL = calculatedStats[1];
 
-            float time_hl = Math.Max(0, (totalMana - (length * FoL.Mps)) / (HL.Mps - FoL.Mps));
-            float time_fol= length - time_hl;
+            float time_hl = Math.Min(length, Math.Max(0, (totalMana - (length * FoL.Mps)) / (HL.Mps - FoL.Mps)));
+            float time_fol = length - time_hl;
+            if (time_hl == 0)
+            {
+                time_fol = Math.Min(length, totalMana / FoL.Mps);
+            }
 
             float healing_fol = time_fol * FoL.Hps;
             float healing_hl = time_hl * HL.Hps;
