@@ -1281,28 +1281,16 @@ namespace Rawr
 			return character;
 		}
 
-        private Item ReplaceGems(Item item, Item gem1, Item gem2, Item gem3)
-        {
-            // alternatively construct gemmedid and retrieve from cache, trading memory footprint for dictionary access
-            Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
-                item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), 0, 0, 0, item.MinDamage,
-                item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
-            copy.Gem1 = gem1;
-            copy.Gem2 = gem2;
-            copy.Gem3 = gem3;
-            return copy;
-        }
-
         private Item ReplaceGem(Item item, int index, Item gem)
         {
             // alternatively construct gemmedid and retrieve from cache, trading memory footprint for dictionary access
             Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
                 item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), 0, 0, 0, item.MinDamage,
                 item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
-            copy.Gem1 = item.Gem1;
-            copy.Gem2 = item.Gem2;
-            copy.Gem3 = item.Gem3;
-            copy.SetGem(index, gem);
+            copy.SetGemInternal(1, item.Gem1);
+            copy.SetGemInternal(2, item.Gem2);
+            copy.SetGemInternal(3, item.Gem3);
+            copy.SetGemInternal(index, gem);
             return copy;
         }
 
@@ -1758,9 +1746,9 @@ namespace Rawr
                             Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
                                 item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), 0, 0, 0, item.MinDamage,
                                 item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
-                            copy.Gem1 = gem1;
-                            copy.Gem2 = gem2;
-                            copy.Gem3 = gem3;
+                            copy.SetGemInternal(1, gem1);
+                            copy.SetGemInternal(2, gem2);
+                            copy.SetGemInternal(3, gem3);
                             possibleGemmedItems.Add(copy);
                         }
 			}

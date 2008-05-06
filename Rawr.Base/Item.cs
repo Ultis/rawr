@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System.ComponentModel;
 
 namespace Rawr
 {
@@ -246,6 +247,27 @@ namespace Rawr
                     break;
                 case 3:
                     Gem3 = value;
+                    break;
+            }
+        }
+
+        // this version should only be used from optimizer, it bypasses the item cache completely
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void SetGemInternal(int index, Item value)
+        {
+            switch (index)
+            {
+                case 1:
+                    _gem1Cached = value;
+                    _gem1Id = (value == null) ? 0 : value.Id;
+                    break;
+                case 2:
+                    _gem2Cached = value;
+                    _gem2Id = (value == null) ? 0 : value.Id;
+                    break;
+                case 3:
+                    _gem3Cached = value;
+                    _gem3Id = (value == null) ? 0 : value.Id;
                     break;
             }
         }
