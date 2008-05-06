@@ -265,6 +265,14 @@ namespace Rawr
             {
                 ItemCacheInstance itemCacheOptimize = new ItemCacheInstance(itemCacheMain);
                 ItemCache.Instance = itemCacheOptimize;
+                if ((_allGemmings || _thoroughness > 100) && Properties.Optimizer.Default.WarningsEnabled)
+                {
+                    if (MessageBox.Show("The upgrade evaluations perform an optimization for each relevant item. With your settings this might take a long time. Consider using known gemmings only and lower thoroughness." + Environment.NewLine + Environment.NewLine + "Do you want to continue with upgrade evaluations?", "Optimizer Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+                }
 
                 if (!PopulateAvailableIds(itemCacheMain))
                 {
@@ -1292,6 +1300,8 @@ namespace Rawr
             copy.SetGemInternal(3, item.Gem3);
             copy.SetGemInternal(index, gem);
             return copy;
+            /*string gemmedId = string.Format("{0}.{1}.{2}.{3}", item.Id, (index == 1) ? gem.Id : item.Gem1Id, (index == 2) ? gem.Id : item.Gem2Id, (index == 3) ? gem.Id : item.Gem3Id);
+            return ItemCache.FindItemById(gemmedId, true, false);*/
         }
 
         private struct GemInformation
@@ -1750,6 +1760,7 @@ namespace Rawr
                             copy.SetGemInternal(2, gem2);
                             copy.SetGemInternal(3, gem3);
                             possibleGemmedItems.Add(copy);
+                            //ItemCache.AddItem(copy, true, false);
                         }
 			}
 
