@@ -140,7 +140,7 @@ namespace Rawr.Moonkin
             }
         }
 
-        public abstract float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace);
+        public abstract float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency);
         protected DotEffect dotEffect = null;
         public DotEffect DoT
         {
@@ -237,7 +237,7 @@ namespace Rawr.Moonkin
             dotEffect = null;
             school = SpellSchool.Arcane;
         }
-        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace)
+        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
         {
             // Reset base cast time
             if (unhastedCastTime > 0.0f)
@@ -254,7 +254,7 @@ namespace Rawr.Moonkin
             float hasteCoefficient = 1 + hasteRating;
 
             // Use the property so that haste over the haste cap will clip at the current GCD, if possible to achieve for Starfire
-            CastTime = (unhastedCastTime - naturesGraceTime * critChanceCoefficient * hitCoefficient) / hasteCoefficient;
+            CastTime = (unhastedCastTime - naturesGraceTime * critChanceCoefficient * hitCoefficient) / hasteCoefficient + latency;
 
             return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / baseCastTime;
         }
@@ -279,7 +279,7 @@ namespace Rawr.Moonkin
                 };
             school = SpellSchool.Arcane;
         }
-        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace)
+        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
         {
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
@@ -308,7 +308,7 @@ namespace Rawr.Moonkin
             dotEffect = null;
             school = SpellSchool.Nature;
         }
-        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace)
+        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
         {
             // Reset base cast time
             if (unhastedCastTime > 0.0f)
@@ -326,6 +326,7 @@ namespace Rawr.Moonkin
 
             // Use the property so that haste over the haste cap will clip at the current GCD
             CastTime /= hasteCoefficient;
+            CastTime += latency;
 
             return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / baseCastTime;
         }
@@ -350,7 +351,7 @@ namespace Rawr.Moonkin
             };
             school = SpellSchool.Nature;
         }
-        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace)
+        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
         {
             // Insect Swarm is a pure DoT, therefore the calculations are relatively uncomplicated
             float dotEffectDPS = (dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) * specialDamageModifier) / dotEffect.Duration;
@@ -392,7 +393,7 @@ namespace Rawr.Moonkin
                 spells = value;
             }
         }
-        public float DPS(float arcaneDamage, float natureDamage, float spellHit, float spellCrit, float spellHaste, float manaPool, float fightLength, bool naturesGrace, float T54pcBonus)
+        public float DPS(float arcaneDamage, float natureDamage, float spellHit, float spellCrit, float spellHaste, float manaPool, float fightLength, bool naturesGrace, float T54pcBonus, float latency)
         {
             float accumulatedDamage = 0.0f;
             float accumulatedManaUsed = 0.0f;
@@ -418,11 +419,11 @@ namespace Rawr.Moonkin
                 float timeSpentCastingIn4T5 = 0.0f;
                 if (sp.School == SpellSchool.Arcane)
                 {
-                    currentSpellDPS = sp.DPS(arcaneDamage, spellHit, spellCrit, spellHaste, naturesGrace);
+                    currentSpellDPS = sp.DPS(arcaneDamage, spellHit, spellCrit, spellHaste, naturesGrace, latency);
                 }
                 else
                 {
-                    currentSpellDPS = sp.DPS(natureDamage, spellHit, spellCrit, spellHaste, naturesGrace);
+                    currentSpellDPS = sp.DPS(natureDamage, spellHit, spellCrit, spellHaste, naturesGrace, latency);
                 }
                 if (sp.DoT == null)
                 {
@@ -735,12 +736,6 @@ namespace Rawr.Moonkin
             // Add set bonuses
             moonfire.DoT.Duration += stats.MoonfireExtension;
             starfire.SpecialCriticalModifier += stats.StarfireCritChance;
-
-            // Latency calculations
-            wrath.CastTime += calcs.Latency;
-            starfire.CastTime += calcs.Latency;
-            moonfire.CastTime += calcs.Latency;
-            insectSwarm.CastTime += calcs.Latency;
         }
 
         public static void Solve(Character character, ref CharacterCalculationsMoonkin calcs)
@@ -805,7 +800,7 @@ namespace Rawr.Moonkin
                 insectSwarm.CastTime = Spell.GlobalCooldown;
                 moonfire.CastTime = Spell.GlobalCooldown;
 
-                float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / 1262.0f, effectiveSpellCrit / 2208.0f, effectiveSpellHaste / 1576.0f, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS;
+                float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / 1262.0f, effectiveSpellCrit / 2208.0f, effectiveSpellHaste / 1576.0f, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency) + trinketExtraDPS;
                 float currentRawDPS = rotation.RawDPS + trinketExtraDPS;
                 if (currentDPS > maxDPS)
                 {
