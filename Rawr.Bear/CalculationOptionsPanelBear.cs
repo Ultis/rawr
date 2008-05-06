@@ -75,7 +75,7 @@ namespace Rawr
         {
 			numericUpDownThreatValue.Enabled = comboBoxThreatValue.SelectedIndex == 4;
 			if (comboBoxThreatValue.SelectedIndex < 4)
-				numericUpDownThreatValue.Value = (new decimal[] { 0, 10, 50, 100 })[comboBoxThreatValue.SelectedIndex];
+				numericUpDownThreatValue.Value = (new decimal[] { 0.0001M, 10, 50, 100 })[comboBoxThreatValue.SelectedIndex];
 		}
 	}
 
