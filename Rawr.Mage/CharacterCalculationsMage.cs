@@ -1087,7 +1087,7 @@ namespace Rawr.Mage
                 {
                     double d = sequence[i].Duration;
                     if (sequence[i].Index == 3 || sequence[i].Index == 4) d = 0;
-                    if (d > 0 && t >= startTime)
+                    if (d > 0 && t + 0.000001 >= startTime)
                     {
                         if (lastGroup != sequence[i].SuperGroup) break;
                         else mana += sequence[i].Mps * d;
@@ -1119,8 +1119,8 @@ namespace Rawr.Mage
                 int j;
                 int lastHigh = i;
                 double tLastHigh = t;
-                double overflowMana = startMana; // for overflow calculations assume there are no mana consumables placed after start time yet
-                double overflowLimit = maxMana;
+                double overflowMana = startMana - Mana; // for overflow calculations assume there are no mana consumables placed after start time yet, if we skipped a super group since startTime then we have to adjust starting mana
+                double overflowLimit = BasicStats.Mana; // was maxMana before, but I think when we have splittable group we can insert just enough to not go over (I did not think this through too much, so if something is fishy look into this)
                 SequenceGroup lastSuper = null;
                 for (j = i; j < sequence.Count; j++)
                 {
@@ -1134,7 +1134,7 @@ namespace Rawr.Mage
                         }
                         else
                         {
-                            overflowLimit = maxMana;
+                            overflowLimit = BasicStats.Mana; // this too
                         }
                         lastSuper = sequence[j].SuperGroup;
                     }
@@ -1313,7 +1313,7 @@ namespace Rawr.Mage
                     if (jT <= 0)
                     {
                         jj--;
-                        if (jj > 0 && jj < sequence.Count)
+                        if (jj >= 0 && jj < sequence.Count)
                         {
                             jT += sequence[jj].Duration;
                             tjj -= sequence[jj].Duration;
@@ -1388,7 +1388,7 @@ namespace Rawr.Mage
                             {
                                 break;
                             }
-                        } while (jj >= 0 && kk < sequence.Count && MinTime(k, jj) <= tjj + jT && MinTime(kk, jj) <= tjj + jT + currentPush - kT && currentPush < maxPush);
+                        } while (jj >= i && kk < sequence.Count && MinTime(k, jj) <= tjj + jT && MinTime(kk, jj) <= tjj + jT + currentPush - kT && currentPush < maxPush);
                         // [i..[k..||jj..j]XXXkk.]
                         if (kT > 0)
                         {
@@ -1404,7 +1404,7 @@ namespace Rawr.Mage
 						double totalmana = 0;
 						foreach (SequenceItem item in copy)
 							totalmana += item.Mps * item.Duration;
-                        while (currentPush <= maxPush && !extraMode && totalmana < 0)
+                        while (jj >= i && currentPush <= maxPush && !extraMode && totalmana < 0)
                         {
                             if (sequence[jj].Mps * jT > -totalmana)
                             {
@@ -1668,7 +1668,7 @@ namespace Rawr.Mage
                     if (sequence[i].Index == 3 || sequence[i].Index == 4) d = 0;
                     if (t + d > time)
                     {
-                        if (time <= t)
+                        if (time <= t + 0.000001)
                         {
                             sequence.Insert(i, item);
                             return;
@@ -2834,7 +2834,11 @@ namespace Rawr.Mage
                         time = pot;
                         nextPot = pot + 120;
                         potTime -= ManaPotionTime;
-                        if (potTime <= 0) nextPot = fight;
+                        if (potTime <= 0.000001)
+                        {
+                            nextPot = fight;
+                            potTime = 0.0;
+                        }
                     }
                     else if (gemTime > 0 && gem <= pot && (gem <= evo || nextGem == 0 || evoTime <= 0))
                     {
@@ -2843,7 +2847,11 @@ namespace Rawr.Mage
                         nextGem = gem + 120;
                         gemCount++;
                         gemTime -= ManaPotionTime;
-                        if (gemTime <= 0) nextGem = fight;
+                        if (gemTime <= 0.000001)
+                        {
+                            nextGem = fight;
+                            gemTime = 0.0;
+                        }
                     }
                     else if (evoTime > 0 && evo <= pot && evo <= gem)
                     {
@@ -2851,9 +2859,9 @@ namespace Rawr.Mage
                         time = evo + Math.Min(EvocationDuration, evoTime);
                         nextEvo = evo + 60 * 8;
                         evoTime -= EvocationDuration;
-                        if (evoTime <= 0)
+                        if (evoTime <= 0.000001)
                         {
-                            evoTime = 0;
+                            evoTime = 0.0;
                             nextEvo = fight;
                         }
                     }
