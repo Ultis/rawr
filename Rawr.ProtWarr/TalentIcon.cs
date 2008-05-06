@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
-//using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
@@ -16,6 +15,8 @@ namespace Rawr.ProtWarr
         private Bitmap _icon;
         private ToolTip _tt;
         private string _name;
+        private Label _treeLabel;
+
         public TalentIcon()
         {
             InitializeComponent();
@@ -33,11 +34,12 @@ namespace Rawr.ProtWarr
             _tt.Show(_name, panel1);
         }
 
-        public TalentIcon(TalentItem ti, Character.CharacterClass charClass) : this()
+        public TalentIcon(TalentItem ti, Character.CharacterClass charClass, Label treeLabel) : this()
         {
             
             Talent = ti;
             _name = ti.Name;
+            _treeLabel = treeLabel;
             CharClass = charClass;
             getIcon(ti, charClass);
             panel1.Width = _icon.Width;
@@ -86,6 +88,38 @@ namespace Rawr.ProtWarr
             }
 
             
+        }
+
+        private void panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (Talent.PointsInvested < Talent.Rank)
+                {
+                    Talent.PointsInvested++;
+                    this.Refresh();
+                    refreshTree(true);
+                }
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                if (Talent.PointsInvested > 0)
+                {
+                    Talent.PointsInvested--;
+                    this.Refresh();
+                    refreshTree(false);
+                }
+            }
+        }
+
+        private void refreshTree(bool increase)
+        {
+            int points = Int32.Parse(_treeLabel.Text.Substring(_treeLabel.Text.IndexOf('(') + 1,
+                                     _treeLabel.Text.IndexOf(')') - 1 - _treeLabel.Text.IndexOf('(')));
+            string treeName = Talent.Tree;
+            points = (increase ? points + 1 : points - 1);
+            _treeLabel.Text = treeName + " (" + points.ToString() + ")";
+            _treeLabel.Refresh();
         }
     }
 }
