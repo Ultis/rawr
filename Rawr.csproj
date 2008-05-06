@@ -102,18 +102,6 @@
     <Compile Include="CalculationDisplay.Designer.cs">
       <DependentUpon>CalculationDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\ExtendedToolTipCheckBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CustomControls\ExtendedToolTipCheckBox.Designer.cs">
-      <DependentUpon>ExtendedToolTipCheckBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\ExtendedToolTipLabel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CustomControls\ExtendedToolTipLabel.designer.cs">
-      <DependentUpon>ExtendedToolTipLabel.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormEnterId.cs">
       <SubType>Form</SubType>
     </Compile>

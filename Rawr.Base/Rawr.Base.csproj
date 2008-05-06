@@ -54,6 +54,18 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Character.cs" />
+    <Compile Include="CustomControls\ExtendedToolTipCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ExtendedToolTipCheckBox.Designer.cs">
+      <DependentUpon>ExtendedToolTipCheckBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ExtendedToolTipLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ExtendedToolTipLabel.designer.cs">
+      <DependentUpon>ExtendedToolTipLabel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Enchant.cs" />
     <Compile Include="HighPerformanceTimer.cs" />
     <Compile Include="Item.cs" />
