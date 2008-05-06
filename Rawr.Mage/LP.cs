@@ -111,6 +111,8 @@ namespace Rawr.Mage
             lu = new LU2(_LU, rows);
             disabled = new int[cols + rows];
             disabled[cols + rows - 1] = 1;
+            Array.Clear(_cost, 0, cols + rows);
+            Array.Clear(_b, 0, rows);
 
             for (int i = 0; i < rows; i++)
             {

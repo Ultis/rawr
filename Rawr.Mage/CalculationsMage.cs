@@ -315,6 +315,13 @@ namespace Rawr.Mage
                 return expanded;
             }
 
+            public void SolvePrimalDual()
+            {
+                lp.EndConstruction();
+                lp.SolvePrimal();
+                compactSolution = lp.SolveDual();
+            }
+
             public double Value
             {
                 get
@@ -1358,6 +1365,7 @@ namespace Rawr.Mage
 
             if (useSMP)
             {
+                lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
                 Heap<CompactLP> heap = new Heap<CompactLP>(HeapType.MaximumHeap);
                 heap.Push(lp);
 
@@ -1366,7 +1374,7 @@ namespace Rawr.Mage
                 bool valid = true;
                 do
                 {
-                    if (heap.Head.Value > max + 0.000001)
+                    if (heap.Head.Value > max + 0.001) // lowered instability threshold, in case it is still an issue just recompute the solution which "should" give a stable result hopefully
                     {
                         System.Windows.Forms.MessageBox.Show("Instability detected, aborting SMP algorithm");
                         // find something reasonably stable
@@ -1374,7 +1382,7 @@ namespace Rawr.Mage
                         break;
                     }
                     lp = heap.Pop();
-                    //max = lp.Value; instability fix?
+                    max = lp.Value;
                     // this is the best non-evaluated option (highest partially-constrained LP, the optimum has to be lower)
                     // if this one is valid than all others are sub-optimal
                     // validate all segments for each cooldown
