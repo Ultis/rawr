@@ -406,7 +406,7 @@ namespace Rawr.Moonkin
             {
                 if (sp.DoT == null && has1NonDot)
                 {
-                    lastSpellCastTime = sp.CastTime;
+                    lastSpellCastTime = (sp.CastTime / spellHaste) + latency;
                 }
                 if (sp.DoT == null && !has1NonDot)
                     has1NonDot = true;
@@ -484,7 +484,6 @@ namespace Rawr.Moonkin
         }
         private void CalculateRotationalVariables()
         {
-            StarfireCount = 0;
             Dictionary<float, float> activeDots = new Dictionary<float, float>();
             // Handle case where two non-DoT spells are cast (DoTs should not fall off before last spell cast)
             bool has1NonDot = false;
@@ -512,7 +511,7 @@ namespace Rawr.Moonkin
                     while (timeSpentCasting < dotDuration - lastSpellCastTime)
                     {
                         if (sp.Name == "SF")
-                            ++StarfireCount;
+                            ++_starfireCount;
                         timeSpentCasting += sp.CastTime;
                         ++_castCount;
                     }
@@ -593,10 +592,15 @@ namespace Rawr.Moonkin
                 return false;
             }
         }
+        private int _starfireCount = 0;
         public int StarfireCount
         {
-            get;
-            set;
+            get
+            {
+                if (_starfireCount == 0)
+                    CalculateRotationalVariables();
+                return _starfireCount;
+            }
         }
         // These fields get filled in only after the DPS calculations are done
         public float DPM { get; set; }
@@ -789,6 +793,8 @@ namespace Rawr.Moonkin
 
                 // Trinkets
                 trinketExtraDPS = 0.0f;
+                // Do a pre-emptive call to rotation.DPS to get corrected cast times for spells
+                rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / 1262.0f, effectiveSpellCrit / 2208.0f, effectiveSpellHaste / 1576.0f, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency);
                 DoTrinketCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / 1262.0f, ref effectiveArcaneDamage, ref effectiveNatureDamage, ref effectiveSpellCrit, ref effectiveSpellHaste);
 
                 // JoW/mana restore procs
@@ -867,7 +873,7 @@ namespace Rawr.Moonkin
             if (rotation.StarfireCount > 0 && calcs.BasicStats.DruidAshtongueTrinket > 0)
             {
                 double starfireCastsIn8Sec = 8.0 / starfire.CastTime;
-                double uptime = Math.Pow(1 - (1 - 0.25), starfireCastsIn8Sec);
+                double uptime = 1 - Math.Pow((1 - 0.25), starfireCastsIn8Sec);
                 effectiveArcaneDamage += calcs.BasicStats.DruidAshtongueTrinket * (float)uptime;
                 effectiveNatureDamage += calcs.BasicStats.DruidAshtongueTrinket * (float)uptime;
             }
