@@ -982,6 +982,8 @@ namespace Rawr
 				{
 					character[slot] = reload[slot];
 				}
+
+                character.Talents = reload.Talents;
 			}
 			return character;
 		}
