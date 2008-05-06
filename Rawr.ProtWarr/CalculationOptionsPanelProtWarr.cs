@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using Rawr.CustomControls;
 
 namespace Rawr.ProtWarr
 {
@@ -26,7 +27,7 @@ namespace Rawr.ProtWarr
 			armorBosses.Add(7600, ": Romulo, Nightbane, Malchezaar, Doomwalker");
 			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
 			armorBosses.Add(8200, ": Midnight");
-			armorBosses.Add(8800, ": Void Reaver");
+			armorBosses.Add(8800, ": Void Reaver");            
 		}
 
 		protected override void LoadCalculationOptions()
@@ -34,24 +35,6 @@ namespace Rawr.ProtWarr
 			_loadingCalculationOptions = true;
 			if (Character.CalculationOptions == null)
 				Character.CalculationOptions = new CalculationOptionsProtWarr();
-			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
-			//    calcOpts.TargetLevel = "73";
-			//if (!Character.CalculationOptions.ContainsKey("TargetArmor"))
-			//    calcOpts.TargetArmor = "7700";
-			//if (!Character.CalculationOptions.ContainsKey("BossAttackValue"))
-			//    calcOpts.BossAttackValue = "20000";
-			//if (!Character.CalculationOptions.ContainsKey("ThreatScale"))
-			//    calcOpts.ThreatScale = "1";
-			//if (!Character.CalculationOptions.ContainsKey("MitigationScale"))
-			//    calcOpts.MitigationScale = "2500";
-			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-			//    character.EnforceMetagemRequirements = "No";
-			//if (!Character.CalculationOptions.ContainsKey("ShieldBlockUptime"))
-			//    calcOpts.ShieldBlockUptime = "100";
-			//if (!Character.CalculationOptions.ContainsKey("UseShieldBlock"))
-			//    calcOpts.UseShieldBlock = "No";
-			//if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
-			//    calcOpts.ShattrathFaction = "Scryer";
 
 			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
@@ -144,8 +127,8 @@ namespace Rawr.ProtWarr
 		public int TargetLevel = 73;
 		public int TargetArmor = 7700;
 		public int BossAttackValue = 20000;
-		public float ThreatScale = 1;
-		public int MitigationScale = 2500;
+		public float ThreatScale = 20;
+		public int MitigationScale = 4000;
 		public bool EnforceMetagemRequirements = false;
 		public float ShieldBlockUptime = 100;
 		public bool UseShieldBlock = false;

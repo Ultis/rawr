@@ -194,17 +194,17 @@ you are being killed by burst damage, focus on Survival Points.",
 			return calcOpts;
 		}
 
-		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
-		{
-			_cachedCharacter = character;
-			CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-			int targetLevel = calcOpts.TargetLevel;
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
+        {
+            _cachedCharacter = character;
+            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
+            int targetLevel = calcOpts.TargetLevel;
 
-			Stats stats = GetCharacterStats(character, additionalItem);
-			float levelDifference = (targetLevel - 70f) * 0.2f;
-			CharacterCalculationsProtWarr calculatedStats = new CharacterCalculationsProtWarr();
-			calculatedStats.BasicStats = stats;
-			calculatedStats.TargetLevel = targetLevel;
+            Stats stats = GetCharacterStats(character, additionalItem);
+            float levelDifference = (targetLevel - 70f) * 0.2f;
+            CharacterCalculationsProtWarr calculatedStats = new CharacterCalculationsProtWarr();
+            calculatedStats.BasicStats = stats;
+            calculatedStats.TargetLevel = targetLevel;
             calculatedStats.Miss = 5f + (((float)Math.Floor(stats.Defense + stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToMiss) +
                                    stats.Miss - levelDifference;
             calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss,
@@ -212,7 +212,7 @@ you are being killed by burst damage, focus on Survival Points.",
                                     stats.DodgeRating * WarriorConversions.DodgeRatingToDodge +
                                     (((float)Math.Floor(stats.Defense + stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToDodge) +
                                     stats.Dodge - levelDifference);
-            calculatedStats.Parry = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge,                  
+            calculatedStats.Parry = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge,
                                     5f + stats.ParryRating * WarriorConversions.ParryRatingToParry +
                                     (((float)Math.Floor(stats.Defense + stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToParry) +
                                     stats.Parry - levelDifference);
@@ -224,16 +224,16 @@ you are being killed by burst damage, focus on Survival Points.",
             calculatedStats.BlockOverCap = ((block - calculatedStats.Block) > 0 ? (block - calculatedStats.Block) : 0.0f);
             calculatedStats.BlockValue = (float)Math.Floor((float)Math.Floor((stats.BlockValue * (1 + stats.BonusBlockValueMultiplier)) +
                                          ((float)Math.Floor(stats.Strength * WarriorConversions.StrengthToBlockValue))));
-			calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f;
-			calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
-			calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
+            calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f;
+            calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
+            calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
             calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
-			calculatedStats.CritReduction = (((float)Math.Floor(stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToCritReduction) +
+            calculatedStats.CritReduction = (((float)Math.Floor(stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToCritReduction) +
                                             (stats.Resilience * WarriorConversions.ResilienceRatingToCritReduction);
-			calculatedStats.CappedCritReduction = Math.Min(5f + levelDifference, calculatedStats.CritReduction);
+            calculatedStats.CappedCritReduction = Math.Min(5f + levelDifference, calculatedStats.CritReduction);
 
             //Miss -> Dodge -> Parry -> Block -> Crushing Blow -> Critical Strikes -> Hit
-			//Out of 100 attacks, you'll take...
+            //Out of 100 attacks, you'll take...
 
             float crits = Math.Max(5f + (0.2f * levelDifference) - calculatedStats.CritReduction, 0f);
             float blocked = Math.Min(100f - (crits + (calculatedStats.DodgePlusMissPlusParry)), calculatedStats.Block);
@@ -243,30 +243,30 @@ you are being killed by burst damage, focus on Survival Points.",
             calculatedStats.CrushChance = crushes;
 
             float damagePerBossAttack = calcOpts.BossAttackValue;
-			//Apply armor and multipliers for each attack type...
-			crits *= (100f - calculatedStats.CappedMitigation) * .02f;
-			crushes *= (100f - calculatedStats.CappedMitigation) * .015f;
-			hits *= (100f - calculatedStats.CappedMitigation) * .01f;
+            //Apply armor and multipliers for each attack type...
+            crits *= (100f - calculatedStats.CappedMitigation) * .02f;
+            crushes *= (100f - calculatedStats.CappedMitigation) * .015f;
+            hits *= (100f - calculatedStats.CappedMitigation) * .01f;
             blocked *= (100f - calculatedStats.CappedMitigation) * .01f * (1f - Math.Max((calculatedStats.BlockValue / (damagePerBossAttack * (100f - calculatedStats.CappedMitigation) / 100)), 0f)); //assume the block value is negligiable
-			calculatedStats.DamageTaken = blocked + hits + crushes + crits;
-			calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
+            calculatedStats.DamageTaken = blocked + hits + crushes + crits;
+            calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
 
             int mitigationScale = calcOpts.MitigationScale;
 
-			calculatedStats.SurvivalPoints = (stats.Health / ((1f - (calculatedStats.CappedMitigation / 100f))*0.9f)); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
-            calculatedStats.MitigationPoints = mitigationScale * (1f * (1f / (calculatedStats.DamageTaken / 100f))*0.9f); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
+            calculatedStats.SurvivalPoints = (stats.Health / ((1f - (calculatedStats.CappedMitigation / 100f)) * 0.9f)); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
+            calculatedStats.MitigationPoints = mitigationScale * (1f * (1f / (calculatedStats.DamageTaken / 100f)) * 0.9f); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
 
             float cappedResist = targetLevel * 5;
 
-            calculatedStats.NatureSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.NatureResistance + stats.AllResist) / cappedResist) * .75)));
-            calculatedStats.FrostSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FrostResistance + stats.AllResist) / cappedResist) * .75)));
-            calculatedStats.FireSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FireResistance + stats.AllResist) / cappedResist) * .75)));
-            calculatedStats.ShadowSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ShadowResistance + stats.AllResist) / cappedResist) * .75)));
-            calculatedStats.ArcaneSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ArcaneResistance + stats.AllResist) / cappedResist) * .75)));
+            calculatedStats.NatureSurvivalPoints = (float)(stats.Health / ((1f - (System.Math.Min(cappedResist, stats.NatureResistance + stats.AllResist) / cappedResist) * .75)));
+            calculatedStats.FrostSurvivalPoints = (float)(stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FrostResistance + stats.AllResist) / cappedResist) * .75)));
+            calculatedStats.FireSurvivalPoints = (float)(stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FireResistance + stats.AllResist) / cappedResist) * .75)));
+            calculatedStats.ShadowSurvivalPoints = (float)(stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ShadowResistance + stats.AllResist) / cappedResist) * .75)));
+            calculatedStats.ArcaneSurvivalPoints = (float)(stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ArcaneResistance + stats.AllResist) / cappedResist) * .75)));
 
             float targetArmor = calcOpts.TargetArmor;
             float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
-            float modArmor = 1-(baseArmor / (baseArmor + 10557.5f));
+            float modArmor = 1 - (baseArmor / (baseArmor + 10557.5f));
 
             float critMultiplier = 2 * (1 + stats.BonusCritMultiplier);
             float attackPower = stats.AttackPower * (1 + stats.BonusAttackPowerMultiplier);
@@ -274,77 +274,86 @@ you are being killed by burst damage, focus on Survival Points.",
 
             float hasteBonus = stats.HasteRating * WarriorConversions.HasteRatingToHaste / 100f;
 
+            float weaponSpeed;
+            float weaponMinDamage;
+            float weaponMaxDamage;
+
             if (character != null && character.MainHand != null)
             {
-                float attackSpeed = (character.MainHand.Speed) / (1f + hasteBonus);
-                if (attackSpeed < 1f)
-                    attackSpeed = 1.0f;
-
-                float hitBonus = stats.HitRating * WarriorConversions.HitRatingToHit / 100f;
-                float expertiseBonus = (stats.ExpertiseRating * WarriorConversions.ExpertiseRatingToExpertise +
-                                        stats.Expertise) * WarriorConversions.ExpertiseToDodgeParryReduction / 100f;
-
-
-                float chanceCrit = Math.Min(0.75f, (stats.CritRating * WarriorConversions.CritRatingToCrit +
-                                                   (stats.Agility * WarriorConversions.AgilityToCrit) +
-                                                    stats.Crit) / 100f) + 0.05f;
-                float chanceDodge = Math.Max(0f, 0.05f + levelDifference / 100f - expertiseBonus);
-                float chanceParry = Math.Max(0f, 0.05f + levelDifference / 100f + 0.08f - expertiseBonus);
-                float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
-                float defStanceThreatMod = 1.3f *
-                                           (1 + character.Talents.GetTalent("Defiance").PointsInvested * 0.05f) *
-                                           (1 + stats.ThreatIncreaseMultiplier);
-                float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
-
-
-                calculatedStats.AvoidedAttacks = (chanceMiss + chanceDodge + chanceParry) * 100f;
-                calculatedStats.DodgedAttacks = chanceDodge * 100f;
-                calculatedStats.ParriedAttacks = chanceParry * 100f;
-                calculatedStats.MissedAttacks = chanceMiss * 100f;
-
-                float averageDamage = 1 - chanceAvoided + (1 + stats.BonusCritMultiplier) * chanceCrit;
-
-                float reducedDamage = 0.9f * (1f + stats.BonusPhysicalDamageMultiplier) * modArmor;
-
-                float weaponDamage = ((character.MainHand.MaxDamage + character.MainHand.MaxDamage) / 2f +
-                                     (attackSpeed * attackPower / 14f));
-
-                float whiteTPS = defStanceThreatMod * reducedDamage * weaponDamage / attackSpeed;
-
-                //Max threat cycle is shield slam -> revenge -> devastate -> devastate -> repeat
-                //with as many herioc strikes as possible.
-                //In this basic model going to assume unlimited threat is heroic every swing, and
-                //limited threat is zero heroic strikes.
-
-                float shieldSlamTPS = (307f + defStanceThreatMod * reducedDamage *
-                                      ((440f + 420f) / 2f + calculatedStats.BlockValue) * averageDamage) / 6f;
-
-                float revengeTPS = (201f + defStanceThreatMod * reducedDamage *
-                                   ((414f + 506f) / 2f) * averageDamage) / 6f;
-
-                float devastateTPS = 2f * (106f + 14f * 5f + defStanceThreatMod * reducedDamage *
-                                     (0.5f * weaponDamage + 35f * 5f) * averageDamage) / 6f;
-
-                float heroicStrikeTPS = (6f / attackSpeed ) * (196f + defStanceThreatMod * reducedDamage *
-                                        208f * averageDamage) / 6f;
-
-
-                calculatedStats.ThreatScale = calcOpts.ThreatScale;
-
-                calculatedStats.ThreatPoints = calculatedStats.ThreatScale * (whiteTPS + shieldSlamTPS + revengeTPS + devastateTPS);
-                calculatedStats.UnlimitedThreat = calculatedStats.ThreatScale * (whiteTPS + shieldSlamTPS + revengeTPS + devastateTPS + heroicStrikeTPS);
+                weaponSpeed = character.MainHand.Speed;
+                weaponMinDamage = character.MainHand.MinDamage;
+                weaponMaxDamage = character.MainHand.MaxDamage;
             }
             else
             {
-				calculatedStats.ThreatScale = calcOpts.ThreatScale;
-
-                //Default threat
-                calculatedStats.ThreatPoints = calculatedStats.ThreatScale * 100f;
-                calculatedStats.UnlimitedThreat = calculatedStats.ThreatScale * 100f;
+                //Assume a lvl 70 green dagger if the main hand is empty
+                //so that threat values are not crazy for weapons.
+                weaponSpeed = 1.7f;
+                weaponMinDamage = 77f;
+                weaponMaxDamage = 144f;
             }
 
+            float attackSpeed = (weaponSpeed) / (1f + hasteBonus);
+            if (attackSpeed < 1f)
+                attackSpeed = 1.0f;
+
+            float hitBonus = stats.HitRating * WarriorConversions.HitRatingToHit / 100f;
+            float expertiseBonus = (stats.ExpertiseRating * WarriorConversions.ExpertiseRatingToExpertise +
+                                    stats.Expertise) * WarriorConversions.ExpertiseToDodgeParryReduction / 100f;
+
+
+            float chanceCrit = Math.Min(0.75f, (stats.CritRating * WarriorConversions.CritRatingToCrit +
+                                               (stats.Agility * WarriorConversions.AgilityToCrit) +
+                                                stats.Crit) / 100f) + 0.05f;
+            float chanceDodge = Math.Max(0f, 0.05f + levelDifference / 100f - expertiseBonus);
+            float chanceParry = Math.Max(0f, 0.05f + levelDifference / 100f + 0.08f - expertiseBonus);
+            float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
+            float defStanceThreatMod = 1.3f *
+                                       (1 + character.Talents.GetTalent("Defiance").PointsInvested * 0.05f) *
+                                       (1 + stats.ThreatIncreaseMultiplier);
+            float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+
+
+            calculatedStats.AvoidedAttacks = (chanceMiss + chanceDodge + chanceParry) * 100f;
+            calculatedStats.DodgedAttacks = chanceDodge * 100f;
+            calculatedStats.ParriedAttacks = chanceParry * 100f;
+            calculatedStats.MissedAttacks = chanceMiss * 100f;
+
+            float averageDamage = 1 - chanceAvoided + (1 + stats.BonusCritMultiplier) * chanceCrit;
+
+            float reducedDamage = 0.9f * (1f + stats.BonusPhysicalDamageMultiplier) * modArmor;
+
+            float weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2f +
+                                 (attackSpeed * attackPower / 14f));
+
+            float whiteTPS = defStanceThreatMod * reducedDamage * weaponDamage / attackSpeed;
+
+            //Max threat cycle is shield slam -> revenge -> devastate -> devastate -> repeat
+            //with as many herioc strikes as possible.
+            //In this basic model going to assume unlimited threat is heroic every swing, and
+            //limited threat is zero heroic strikes.
+
+            float shieldSlamTPS = (307f + defStanceThreatMod * reducedDamage *
+                                  ((440f + 420f) / 2f + calculatedStats.BlockValue) * averageDamage) / 6f;
+
+            float revengeTPS = (201f + defStanceThreatMod * reducedDamage *
+                               ((414f + 506f) / 2f) * averageDamage) / 6f;
+
+            float devastateTPS = 2f * (106f + 14f * 5f + defStanceThreatMod * reducedDamage *
+                                 (0.5f * weaponDamage + 35f * 5f) * averageDamage) / 6f;
+
+            float heroicStrikeTPS = (6f / attackSpeed) * (196f + defStanceThreatMod * reducedDamage *
+                                    208f * averageDamage) / 6f;
+
+
+            calculatedStats.ThreatScale = calcOpts.ThreatScale;
+
+            calculatedStats.ThreatPoints = calculatedStats.ThreatScale * (whiteTPS + shieldSlamTPS + revengeTPS + devastateTPS);
+            calculatedStats.UnlimitedThreat = calculatedStats.ThreatScale * (whiteTPS + shieldSlamTPS + revengeTPS + devastateTPS + heroicStrikeTPS);
+
+
             calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
-			return calculatedStats;
+            return calculatedStats;
         }
 
         #region Warrior Race Stats
@@ -641,7 +650,7 @@ you are being killed by burst damage, focus on Survival Points.",
 					ComparisonCalculationProtWarr calcMiss = new ComparisonCalculationProtWarr();
 					ComparisonCalculationProtWarr calcDodge = new ComparisonCalculationProtWarr();
                     ComparisonCalculationProtWarr calcParry = new ComparisonCalculationProtWarr();
-                    ComparisonCalculationProtWarr calcBlock= new ComparisonCalculationProtWarr();
+                    ComparisonCalculationProtWarr calcBlock = new ComparisonCalculationProtWarr();
 					ComparisonCalculationProtWarr calcCrit = new ComparisonCalculationProtWarr();
 					ComparisonCalculationProtWarr calcCrush = new ComparisonCalculationProtWarr();
 					ComparisonCalculationProtWarr calcHit = new ComparisonCalculationProtWarr();
@@ -671,13 +680,10 @@ you are being killed by burst damage, focus on Survival Points.",
 				
 				case "Relative Stat Values":
 					CharacterCalculationsProtWarr calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsProtWarr;
-					//CharacterCalculationsProtWarr calcAgiValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 10 } }) as CharacterCalculationsProtWarr;
-					//CharacterCalculationsProtWarr calcACValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Armor = 10 } }) as CharacterCalculationsProtWarr;
-					//CharacterCalculationsProtWarr calcStaValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 10 } }) as CharacterCalculationsProtWarr;
-					//CharacterCalculationsProtWarr calcDefValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = 1 } }) as CharacterCalculationsProtWarr;
 					CharacterCalculationsProtWarr calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 1 } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcParryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ParryRating = 1 } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcBlockValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BlockRating = 1 } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcBlockValueValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BlockValue = 1 } }) as CharacterCalculationsProtWarr;
 					CharacterCalculationsProtWarr calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = 1 } }) as CharacterCalculationsProtWarr;
 					CharacterCalculationsProtWarr calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 1 } }) as CharacterCalculationsProtWarr;
 					
@@ -699,8 +705,14 @@ you are being killed by burst damage, focus on Survival Points.",
 					}
 					agiToSubtract += 0.01f;
 
-					ComparisonCalculationProtWarr comparisonAgi = new ComparisonCalculationProtWarr() { Name = "Agility", OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (agiToAdd - agiToSubtract),
-						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (agiToAdd - agiToSubtract), SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (agiToAdd - agiToSubtract)};
+					ComparisonCalculationProtWarr comparisonAgi = new ComparisonCalculationProtWarr()
+                    { 
+                        Name = "Agility",
+                        OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (agiToAdd - agiToSubtract),
+						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (agiToAdd - agiToSubtract),
+                        SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (agiToAdd - agiToSubtract),
+                        ThreatPoints = (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (agiToAdd - agiToSubtract)
+                    };
 
 
 					//Differential Calculations for Def
@@ -727,7 +739,7 @@ you are being killed by burst damage, focus on Survival Points.",
 						OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (defToAdd - defToSubtract),
 						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (defToAdd - defToSubtract),
 						SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (defToAdd - defToSubtract),
-						//ThreatPoints = (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (defToAdd - defToSubtract)
+						ThreatPoints = (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (defToAdd - defToSubtract)
 					};
 
 
@@ -749,8 +761,14 @@ you are being killed by burst damage, focus on Survival Points.",
 					}
 					acToSubtract += 0.01f;
 
-					ComparisonCalculationProtWarr comparisonAC = new ComparisonCalculationProtWarr() { Name = "Armor", OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (acToAdd - acToSubtract),
-						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (acToAdd - acToSubtract), SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (acToAdd - acToSubtract)};
+					ComparisonCalculationProtWarr comparisonAC = new ComparisonCalculationProtWarr()
+                    {
+                        Name = "Armor",
+                        OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (acToAdd - acToSubtract),
+						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (acToAdd - acToSubtract),
+                        SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (acToAdd - acToSubtract),
+                        ThreatPoints = (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (acToAdd - acToSubtract),
+                    };
 
 
 					//Differential Calculations for Sta
@@ -771,26 +789,50 @@ you are being killed by burst damage, focus on Survival Points.",
 					}
 					staToSubtract += 0.01f;
 
-					ComparisonCalculationProtWarr comparisonSta = new ComparisonCalculationProtWarr() { Name = "Stamina", OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (staToAdd - staToSubtract),
-						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (staToAdd - staToSubtract), SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (staToAdd - staToSubtract)};
+					ComparisonCalculationProtWarr comparisonSta = new ComparisonCalculationProtWarr()
+                    {
+                        Name = "Stamina",
+                        OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (staToAdd - staToSubtract),
+						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (staToAdd - staToSubtract),
+                        SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (staToAdd - staToSubtract),
+                        ThreatPoints = (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (staToAdd - staToSubtract)
+                    };
 
 					return new ComparisonCalculationBase[] { 
 						comparisonAgi,
 						comparisonAC,
 						comparisonSta,
 						comparisonDef,
-						//new ComparisonCalculationProtWarr() { Name = "Defense Rating", OverallPoints = (calcDefValue.OverallPoints - calcBaseValue.OverallPoints), 
-						//	MitigationPoints = (calcDefValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcDefValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
-						new ComparisonCalculationProtWarr() { Name = "Dodge Rating", OverallPoints = (calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "Parry Rating", OverallPoints = (calcParryValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcParryValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "Block Rating", OverallPoints = (calcBlockValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcBlockValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
-						new ComparisonCalculationProtWarr() { Name = "Health", OverallPoints = (calcHealthValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcHealthValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
-						new ComparisonCalculationProtWarr() { Name = "Resilience", OverallPoints = (calcResilValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints), SurvivalPoints = (calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints)},
+						new ComparisonCalculationProtWarr() { Name = "Dodge Rating",
+                            OverallPoints = (calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints), 
+							MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcDodgeValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "Parry Rating",
+                            OverallPoints = (calcParryValue.OverallPoints - calcBaseValue.OverallPoints), 
+							MitigationPoints = (calcParryValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcParryValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcParryValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "Block Rating",
+                            OverallPoints = (calcBlockValue.OverallPoints - calcBaseValue.OverallPoints), 
+							MitigationPoints = (calcBlockValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcBlockValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcBlockValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "Block Value",
+                            OverallPoints = (calcBlockValueValue.OverallPoints - calcBaseValue.OverallPoints), 
+							MitigationPoints = (calcBlockValueValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcBlockValueValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcBlockValueValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+						new ComparisonCalculationProtWarr() { Name = "Health",
+                            OverallPoints = (calcHealthValue.OverallPoints - calcBaseValue.OverallPoints), 
+							MitigationPoints = (calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcHealthValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcHealthValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+						new ComparisonCalculationProtWarr() { Name = "Resilience",
+                            OverallPoints = (calcResilValue.OverallPoints - calcBaseValue.OverallPoints), 
+							MitigationPoints = (calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcResilValue.ThreatPoints - calcBaseValue.ThreatPoints)},
 					};
 				
 				default:
@@ -834,6 +876,7 @@ you are being killed by burst damage, focus on Survival Points.",
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
 
                 MongooseProc = stats.MongooseProc
 
@@ -851,7 +894,7 @@ you are being killed by burst damage, focus on Survival Points.",
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage +
                     stats.BonusCritMultiplier + stats.MongooseProc + stats.CrushChanceReduction +
-                    stats.ThreatIncreaseMultiplier
+                    stats.ThreatIncreaseMultiplier + stats.BonusPhysicalDamageMultiplier
                    ) != 0;
 		}
     }

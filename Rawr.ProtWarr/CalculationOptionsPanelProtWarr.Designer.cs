@@ -40,7 +40,7 @@ namespace Rawr.ProtWarr
             this.label9 = new System.Windows.Forms.Label();
             this.trackBarShieldBlockUptime = new System.Windows.Forms.TrackBar();
             this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.labelBossAttack = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.trackBarBossAttackValue = new System.Windows.Forms.TrackBar();
             this.labelBossAttackValue = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -207,14 +207,15 @@ namespace Rawr.ProtWarr
             this.checkBoxEnforceMetagemRequirements.UseVisualStyleBackColor = true;
             this.checkBoxEnforceMetagemRequirements.CheckedChanged += new System.EventHandler(this.checkBoxEnforceMetagemRequirements_CheckedChanged);
             // 
-            // label4
+            // labelBossAttack
             // 
-            this.label4.Location = new System.Drawing.Point(6, 30);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(64, 45);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Boss Attack:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelBossAttack.Location = new System.Drawing.Point(6, 30);
+            this.labelBossAttack.Name = "labelBossAttack";
+            this.labelBossAttack.Size = new System.Drawing.Size(64, 45);
+            this.labelBossAttack.TabIndex = 0;
+            this.labelBossAttack.Text = "Boss Attack*:";
+            this.labelBossAttack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelBossAttack.ToolTipText = "Boss attack value before armor. Used to determine the value of Block Value.";
             // 
             // trackBarBossAttackValue
             // 
@@ -296,14 +297,14 @@ namespace Rawr.ProtWarr
             this.trackBarMitigationScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarMitigationScale.LargeChange = 1000;
             this.trackBarMitigationScale.Location = new System.Drawing.Point(75, 132);
-            this.trackBarMitigationScale.Maximum = 10000;
+            this.trackBarMitigationScale.Maximum = 15000;
             this.trackBarMitigationScale.Minimum = 1000;
             this.trackBarMitigationScale.Name = "trackBarMitigationScale";
             this.trackBarMitigationScale.Size = new System.Drawing.Size(131, 45);
             this.trackBarMitigationScale.SmallChange = 50;
             this.trackBarMitigationScale.TabIndex = 2;
             this.trackBarMitigationScale.TickFrequency = 500;
-            this.trackBarMitigationScale.Value = 2500;
+            this.trackBarMitigationScale.Value = 4000;
             this.trackBarMitigationScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // labelMitigationScale
@@ -315,7 +316,7 @@ namespace Rawr.ProtWarr
             this.labelMitigationScale.Name = "labelMitigationScale";
             this.labelMitigationScale.Size = new System.Drawing.Size(31, 13);
             this.labelMitigationScale.TabIndex = 0;
-            this.labelMitigationScale.Text = "2500";
+            this.labelMitigationScale.Text = "4000";
             // 
             // radioButtonAldor
             // 
@@ -370,7 +371,7 @@ namespace Rawr.ProtWarr
             this.Controls.Add(this.label7);
             this.Controls.Add(this.trackBarTargetArmor);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.labelBossAttack);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBoxTargetLevel);
             this.Controls.Add(this.label1);
@@ -397,7 +398,7 @@ namespace Rawr.ProtWarr
         private System.Windows.Forms.Label labelTargetArmorDescription;
         private System.Windows.Forms.GroupBox groupBoxWarriorSkills;
 		private System.Windows.Forms.CheckBox checkBoxEnforceMetagemRequirements;
-		private System.Windows.Forms.Label label4;
+        private Rawr.CustomControls.ExtendedToolTipLabel labelBossAttack;
 		private System.Windows.Forms.TrackBar trackBarBossAttackValue;
 		private System.Windows.Forms.Label labelBossAttackValue;
 		private System.Windows.Forms.Label label5;

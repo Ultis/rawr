@@ -862,6 +862,10 @@ namespace Rawr
                         {
                             stats.SpellHasteFor6SecOnCast_15_45 = 320; // MSD changed in 2.4
                         }
+                        else if (gemBonus == "+10% Shield Block Value")
+                        {
+                            stats.BonusBlockValueMultiplier = 0.1f;
+                        }
                         try
 						{
 							int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
