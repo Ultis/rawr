@@ -74,7 +74,7 @@ namespace Rawr.Mage
         ConeOfCold,
     }
 
-    abstract class Spell
+    public abstract class Spell
     {
         public string Name;
         public float DamagePerSecond;

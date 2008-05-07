@@ -174,9 +174,9 @@ namespace Rawr.Mage
             double[] compactSolution = null;
             bool needsDual;
 
-            public int HeroismHash;
+            /*public int HeroismHash;
             public int APHash;
-            public int IVHash;
+            public int IVHash;*/
 
             public CompactLP Clone()
             {
@@ -284,6 +284,29 @@ namespace Rawr.Mage
                 lp.DisableColumn(col);
                 compactSolution = null;
                 needsDual = true;
+            }
+
+            bool constraintAdded;
+
+            public void AddConstraint()
+            {
+                compactSolution = null;
+                needsDual = true;
+                if (constraintAdded) return;
+                lp.AddConstraint();
+                constraintAdded = true;
+            }
+
+            public void UpdateConstraintElement(int col, double value)
+            {
+                col = CCol[col];
+                if (col == -1) return;
+                lp.SetConstraintElement(col, lp.GetConstraintElement(col) + value);
+            }
+
+            public void UpdateConstraintRHS(double value)
+            {
+                lp.SetConstraintRHS(lp.GetConstraintRHS() + value);
             }
 
             private void SolveInternal()
@@ -407,6 +430,17 @@ namespace Rawr.Mage
             }
         }
 
+        // promoted variables from GetCharacterCalculations to make it easier to refactor the code, not thread-safe
+        private const double segmentDuration = 30;
+        private int segments;
+        private List<CharacterCalculationsMage> statsList;
+        private List<SpellId> spellList;
+        private const int colOffset = 7;
+        private CompactLP lp;
+        private Heap<CompactLP> heap;
+        private double[] solution;
+        private CharacterCalculationsMage calculatedStats;
+
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool computeIncrementalSet, bool useSMP)
         {
             List<string> autoActivatedBuffs = new List<string>();
@@ -419,8 +453,7 @@ namespace Rawr.Mage
             bool savedFlameCap = calculationOptions.FlameCap;
 
             if (useSMP) calculationOptions.SmartOptimization = true;
-            double segmentDuration = 30;
-            int segments = useSMP ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
+            segments = useSMP ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
 
             bool heroismAvailable = calculationOptions.HeroismAvailable;
             bool apAvailable = calculationOptions.ArcanePower == 1;
@@ -455,11 +488,12 @@ namespace Rawr.Mage
                 if (character.ActiveBuffs.Contains("Molten Armor")) armor = "Molten Armor";
             }
 
+            #region Load Stats
             // temporary buffs: Arcane Power, Icy Veins, Molten Fury, Combustion?, Trinket1, Trinket2, Heroism, Destro Pot, Flame Cap, Drums?
             // compute stats for temporary bonuses, each gives a list of spells used for final LP, solutions of LP stored in calculatedStats
-            List<CharacterCalculationsMage> statsList = new List<CharacterCalculationsMage>();
+            statsList = new List<CharacterCalculationsMage>();
 
-            CharacterCalculationsMage calculatedStats = null;
+            calculatedStats = null;
 
             int incrementalSetIndex = 0;
             int incrementalSortedIndex = 0;
@@ -497,11 +531,13 @@ namespace Rawr.Mage
             }
             EscapeCooldownLoop:
             if (calculatedStats == null) calculatedStats = GetTemporaryCharacterCalculations(characterStats, calculationOptions, armor, character, additionalItem, false, false, false, false, false, false, false, false, false, false, incrementalSetIndex - 1);
+            #endregion
 
             calculatedStats.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
             calculatedStats.MageArmor = armor;
 
-            List<SpellId> spellList = new List<SpellId>();
+            #region Load Spells
+            spellList = new List<SpellId>();
 
             if (calculationOptions.SmartOptimization)
             {
@@ -577,12 +613,12 @@ namespace Rawr.Mage
                 if (calculationOptions.BlastWave == 1) spellList.Add(SpellId.BlastWave);
                 if (calculationOptions.DragonsBreath == 1) spellList.Add(SpellId.DragonsBreath);
             }
+            #endregion
 
             int rowOffset = 42;
             int lpRows = rowOffset + (useSMP ? 11 * segments : 0); // packing constraints for each of 10 cooldowns + timing for each segment
-            int colOffset = 7;
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count * segments;
-            CompactLP lp = new CompactLP(lpRows, lpCols);
+            lp = new CompactLP(lpRows, lpCols);
             double[] tps = new double[lpCols];
             calculatedStats.SolutionStats = new CharacterCalculationsMage[lpCols];
             calculatedStats.SolutionSpells = new Spell[lpCols];
@@ -599,6 +635,7 @@ namespace Rawr.Mage
                 if (useSMP) incrementalSetSegment = new int[lpCols];
             }
 
+            #region Setup Trinkets
             if (trinket1Available)
             {
                 Stats s = character.Trinket1.Stats;
@@ -658,6 +695,7 @@ namespace Rawr.Mage
             calculatedStats.Trinket1Cooldown = trinket1cooldown;
             calculatedStats.Trinket2Duration = trinket2duration;
             calculatedStats.Trinket2Cooldown = trinket2cooldown;
+            #endregion
 
             combustionCount = combustionAvailable ? (1 + (int)((calculatedStats.FightDuration - 15f) / 195f)) : 0;
 
@@ -738,6 +776,7 @@ namespace Rawr.Mage
                 drumsaplength += 30;
             }
 
+            #region Disable Constraints/Variables
             // disable unused constraints and variables
             incrementalSortedIndex = 0;
             int lastCooldownSet = -1;
@@ -934,11 +973,13 @@ namespace Rawr.Mage
                     if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
                 }
             }
+            #endregion
 
             lp.Compact();
 
             float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
 
+            #region Formulate LP
             // idle regen
             calculatedStats.SolutionLabel[0] = "Idle Regen";
             lp[0, 0] = -(calculatedStats.ManaRegen * (1 - calculationOptions.Fragmentation) + calculatedStats.ManaRegen5SR * calculationOptions.Fragmentation);
@@ -1360,13 +1401,15 @@ namespace Rawr.Mage
                     lp[rowOffset + 10 * segments + seg, lpCols] = segmentDuration;
                 }
             }
+            #endregion
 
             for (int col = 0; col < lpCols; col++) tps[col] = lp[39, col];
 
+            #region SMP Branch & Bound
             if (useSMP)
             {
                 lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
-                Heap<CompactLP> heap = new Heap<CompactLP>(HeapType.MaximumHeap);
+                heap = new Heap<CompactLP>(HeapType.MaximumHeap);
                 heap.Push(lp);
 
                 double max = lp.Value;
@@ -1386,192 +1429,177 @@ namespace Rawr.Mage
                     // this is the best non-evaluated option (highest partially-constrained LP, the optimum has to be lower)
                     // if this one is valid than all others are sub-optimal
                     // validate all segments for each cooldown
-                    double[] solution = lp.Solve();
+                    solution = lp.Solve();
                     valid = true;
+                    // make sure all cooldowns are tightly packed and not fragmented
                     for (int seg = 0; seg < segments; seg++)
                     {
                         // mf is trivially satisfied
                         // heroism
-                        double inseg = 0;
-                        for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        if (heroismAvailable)
                         {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.Heroism) inseg += solution[index];
-                        }
-                        if (inseg > 0)
-                        {
-                            double duration = 40;
-                            int mindist = (int)Math.Ceiling(duration / segmentDuration);
-                            // verify that outside duration segments are 0
-                            valid = true;
-                            for (int outseg = 0; outseg < segments; outseg++)
-                            {
-                                if (Math.Abs(outseg - seg) > mindist)
-                                {
-                                    for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                                    {
-                                        CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                        if (stats != null && stats.Heroism && solution[index] > 0)
-                                        {
-                                            valid = false;
-                                            goto breakHeroism;
-                                        }
-                                    }
-                                }
-                            }
-                        breakHeroism:
-                            if (!valid)
-                            {
-                                // branch on whether cooldown is used in this segment
-                                CompactLP cooldownUsed = lp.Clone();
-                                // cooldown not used
-                                lp.HeroismHash += 1 << seg;
-                                for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                                {
-                                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                    if (stats != null && stats.Heroism) lp.EraseColumn(index);
-                                }
-                                heap.Push(lp);
-                                // cooldown used
-                                for (int outseg = 0; outseg < segments; outseg++)
-                                {
-                                    if (Math.Abs(outseg - seg) > mindist)
-                                    {
-                                        cooldownUsed.HeroismHash += 1 << outseg;
-                                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                                        {
-                                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                            if (stats != null && stats.Heroism) cooldownUsed.EraseColumn(index);
-                                        }
-                                    }
-                                }
-                                heap.Push(cooldownUsed);
-                                break;
-                            }
+                            valid = ValidateCooldown(seg, Cooldown.Heroism, 40, -1);
+                            if (!valid) break;
                         }
                         // ap
-                        inseg = 0;
-                        for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        if (apAvailable)
                         {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.ArcanePower) inseg += solution[index];
-                        }
-                        if (inseg > 0)
-                        {
-                            double duration = 15;
-                            double cool = 180;
-                            int mindist = (int)Math.Ceiling(duration / segmentDuration);
-                            int maxdist = (int)Math.Floor((cool - duration) / segmentDuration);
-                            // verify that outside duration segments are 0
-                            valid = true;
-                            for (int outseg = 0; outseg < segments; outseg++)
-                            {
-                                if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
-                                {
-                                    for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                                    {
-                                        CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                        if (stats != null && stats.ArcanePower && solution[index] > 0)
-                                        {
-                                            valid = false;
-                                            goto breakAP;
-                                        }
-                                    }
-                                }
-                            }
-                        breakAP:
-                            if (!valid)
-                            {
-                                // branch on whether cooldown is used in this segment
-                                CompactLP cooldownUsed = lp.Clone();
-                                // cooldown not used
-                                lp.APHash += 1 << seg;
-                                for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                                {
-                                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                    if (stats != null && stats.ArcanePower) lp.EraseColumn(index);
-                                }
-                                heap.Push(lp);
-                                // cooldown used
-                                for (int outseg = 0; outseg < segments; outseg++)
-                                {
-                                    if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
-                                    {
-                                        cooldownUsed.APHash += 1 << outseg;
-                                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                                        {
-                                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                            if (stats != null && stats.ArcanePower) cooldownUsed.EraseColumn(index);
-                                        }
-                                    }
-                                }
-                                heap.Push(cooldownUsed);
-                                break;
-                            }
+                            valid = ValidateCooldown(seg, Cooldown.ArcanePower, 15, 180);
+                            if (!valid) break;
                         }
                         // iv
-                        inseg = 0;
-                        for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        if (ivAvailable)
                         {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.IcyVeins) inseg += solution[index];
+                            valid = ValidateCooldown(seg, Cooldown.IcyVeins, 20 + (coldsnap ? 20 : 0), 180 + (coldsnap ? 20 : 0));
+                            if (!valid) break;
                         }
-                        if (inseg > 0)
+                        // combustion
+                        if (combustionAvailable)
                         {
-                            double duration = 20 + (coldsnap ? 20 : 0);
-                            double cool = 180 + (coldsnap ? 20 : 0);
-                            int mindist = (int)Math.Ceiling(duration / segmentDuration);
-                            int maxdist = (int)Math.Floor((cool - duration) / segmentDuration);
-                            // verify that outside duration segments are 0
-                            valid = true;
-                            for (int outseg = 0; outseg < segments; outseg++)
+                            valid = ValidateCooldown(seg, Cooldown.Combustion, 15, 180 + 15); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
+                            if (!valid) break;
+                        }
+                        // drums
+                        if (calculationOptions.DrumsOfBattle)
+                        {
+                            valid = ValidateCooldown(seg, Cooldown.DrumsOfBattle, 30, 120);
+                            if (!valid) break;
+                        }
+                        // flamecap
+                        if (calculationOptions.FlameCap)
+                        {
+                            valid = ValidateCooldown(seg, Cooldown.FlameCap, 60, 180);
+                            if (!valid) break;
+                        }
+                        // destruction
+                        if (calculationOptions.DestructionPotion)
+                        {
+                            valid = ValidateCooldown(seg, Cooldown.DestructionPotion, 15, 120);
+                            if (!valid) break;
+                        }
+                        // t1
+                        if (trinket1Available)
+                        {
+                            valid = ValidateCooldown(seg, Cooldown.Trinket1, trinket1duration, trinket1cooldown);
+                            if (!valid) break;
+                        }
+                        // t2
+                        if (trinket2Available)
+                        {
+                            valid = ValidateCooldown(seg, Cooldown.Trinket2, trinket2duration, trinket2cooldown);
+                            if (!valid) break;
+                        }
+                    }
+                    // eliminate packing cycles
+                    // example:
+                    // H+IV:10
+                    // IV+Icon:10
+                    // H+Icon:10
+                    if (valid)
+                    {
+                        for (int seg = 0; seg < segments - 1; seg++)
+                        {
+                            // collect all cooldowns on the boundary seg...(seg+1)
+                            // assume one instance of cooldown max (coldsnap theoretically doesn't satisfy this, but I think it should still work)
+                            // calculate hex values for boolean arithmetic
+                            // verify if there are cycles
+
+                            // ###   ###
+                            // ######
+                            //    ######
+
+                            // ##
+                            //  ##
+                            //   ##
+                            //    ##
+                            //     ##
+                            // #    #
+
+                            // cycle = no element can be placed at the start, all have two tails that intersect to 0
+                            // inside the boundary we can have more than one cycle and several nice packings
+                            // find elements that can be placed at the start, those are the ones with nice packing
+                            // for each one you find remove the corresponding group
+                            // if we remove everything then there are no cycles
+
+                            List<int> hexList = new List<int>();
+                            for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 2) * statsList.Count * spellList.Count + colOffset - 1; index++)
                             {
-                                if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                if (stats != null && solution[index] > 0)
                                 {
-                                    for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                                    int hex = stats.GetHex();
+                                    if (hex != 0 && !hexList.Contains(hex)) hexList.Add(hex);
+                                }
+                            }
+
+                            // placed  ## ### ## #
+                            //         .. ...  
+                            //          .   . .. .
+                            // active   #   #    #
+                            //
+                            // future   #   ##      <= ok
+                            //          #   #  #    <= not ok
+
+                            // take newHex = (future - future & active)
+                            // if newHex & placed > 0 then we have cycle
+
+                            bool ok = true;
+                            int placed = 0;
+                            while (ok && hexList.Count > 0)
+                            {
+                                ok = false;
+                                // check if any can be at the start
+                                for (int i = 0; i < hexList.Count; i++)
+                                {
+                                    int tail = hexList[i];
+                                    for (int j = 0; j < hexList.Count; j++)
                                     {
-                                        CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                        if (stats != null && stats.IcyVeins && solution[index] > 0)
+                                        int intersect = hexList[i] & hexList[j];
+                                        if (i != j && intersect > 0)
                                         {
-                                            valid = false;
-                                            goto breakIV;
+                                            tail &= hexList[j];
+                                            if (tail == 0) break;
                                         }
+                                        int newHex = hexList[j] - intersect;
+                                        if ((newHex & placed) > 0)
+                                        {
+                                            tail = 0;
+                                            break;
+                                        }
+                                    }
+                                    if (tail != 0)
+                                    {
+                                        // i is good
+                                        ok = true;
+                                        placed |= hexList[i];
+                                        hexList.RemoveAt(i);
+                                        break;
                                     }
                                 }
                             }
-                        breakIV:
-                            if (!valid)
+                            if (hexList.Count > 0)
                             {
-                                // branch on whether cooldown is used in this segment
-                                CompactLP cooldownUsed = lp.Clone();
-                                // cooldown not used
-                                lp.IVHash += 1 << seg;
-                                for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                                // we have a cycle
+                                // to break the cycle we have to remove one of the elements
+                                // if all are present then obviously we have a cycle, so the true solution must have one of them missing
+                                for (int i = 0; i < hexList.Count; i++)
                                 {
-                                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                    if (stats != null && stats.IcyVeins) lp.EraseColumn(index);
-                                }
-                                heap.Push(lp);
-                                // cooldown used
-                                for (int outseg = 0; outseg < segments; outseg++)
-                                {
-                                    if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                                    CompactLP hexRemovedLP = lp.Clone();
+                                    for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 2) * statsList.Count * spellList.Count + colOffset - 1; index++)
                                     {
-                                        cooldownUsed.IVHash += 1 << outseg;
-                                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                                        {
-                                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                            if (stats != null && stats.IcyVeins) cooldownUsed.EraseColumn(index);
-                                        }
+                                        CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                        if (stats != null && stats.GetHex() == hexList[i]) hexRemovedLP.EraseColumn(index);
                                     }
+                                    heap.Push(hexRemovedLP);
                                 }
-                                heap.Push(cooldownUsed);
+                                valid = false;
                                 break;
                             }
                         }
                     }
                 } while (heap.Count > 0 && !valid);
             }
+            #endregion
 
             calculatedStats.Solution = lp.Solve();
             if (computeIncrementalSet)
@@ -1599,237 +1627,149 @@ namespace Rawr.Mage
             return calculatedStats;
         }
 
-        public double[] LPSolve(double[,] data, int rows, int cols)
+        private bool ValidateCooldown(int seg, Cooldown cooldown, double effectDuration, double cooldownDuration)
         {
-            double[,] a = data;
-            int[] XN;
-            int[] XB;
-            
-            bool feasible;
-            int i, j, r, c, t;
-            double v, bestv;
-
-            bestv = 0;
-            c = 0;
-            r = 0;
-            
-            XN = new int[cols];
-            XB = new int[rows];
-            
-            for (i = 0; i < rows; i++)
-                XB[i] = cols + i;
-            for (j = 0; j < cols; j++)
-                XN[j] = j;
-
-            int round = 0;
-
-            do
+            bool valid = true;
+            double inseg = 0;
+            double leftseg = 0;
+            double rightseg = 0;
+            for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
             {
-                feasible = true;
-                // check feasibility
-                for (i = 0; i < rows; i++)
-                {
-                    if (a[i, cols] < 0)
-                    {
-                        feasible = false;
-                        bestv = 0;
-                        for (j = 0; j < cols; j++)
-                        {
-                            if (a[i, j] < bestv)
-                            {
-                                bestv = a[i, j];
-                                c = j;
-                            }
-                        }
-                        break;
-                    }
-                }
-                if (feasible)
-                {
-                    // standard problem
-                    bestv = 0;
-                    for (j = 0; j < cols; j++)
-                    {
-                        if (a[rows, j] > bestv)
-                        {
-                            bestv = a[rows, j];
-                            c = j;
-                        }
-                    }
-                }
-                if (bestv == 0) break;
-                bestv = -1;
-                for (i = 0; i < rows; i++)
-                {
-                    if (a[i, c] > 0)
-                    {
-                        v = a[i, cols] / a[i, c];
-                        if (bestv == -1 || v < bestv)
-                        {
-                            bestv = v;
-                            r = i;
-                        }
-                    }
-                }
-                if (bestv == -1) break;
-                v = a[r, c];
-                a[r, c] = 1;
-                for (j = 0; j <= cols; j++)
-                {
-                    a[r, j] = a[r, j] / v;
-                }
-                for (i = 0; i <= rows; i++)
-                {
-                    if (i != r)
-                    {
-                        v = a[i, c];
-                        a[i, c] = 0;
-                        for (j = 0; j <= cols; j++)
-                        {
-                            a[i, j] = a[i, j] - a[r, j] * v;
-                            if (a[i, j] < 0.00000000001 && a[i, j] > -0.00000000001) a[i, j] = 0; // compensate for floating point errors
-                        }
-                    }
-                }
-                t = XN[c];
-                XN[c] = XB[r];
-                XB[r] = t;
-                round++;
-            } while (round < 5000); // fail safe for infinite loops caused by floating point instability
-            
-            double[] ret = new double[cols + 1];
-            for (i = 0; i < rows; i++)
-            {
-                if (XB[i] < cols) ret[XB[i]] = a[i, cols];
+                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                if (stats != null && stats.GetCooldown(cooldown)) inseg += solution[index];
             }
-            ret[cols] = -a[rows, cols];
-
-            return ret;
-        }
-
-        static unsafe double[] LPSolveUnsafe(double[,] data, int rows, int cols)
-        {
-            double[] ret = new double[cols + 1];
-            int[] xn = new int[cols + 1];
-            int[] xb = new int[rows + 1];
-            if (cols > 30000) return ret; // prevent unstable solutions
-
-            double* ai, aij, arows;
-
-            fixed (double* a = data)
+            int mindist = (int)Math.Ceiling(effectDuration / segmentDuration);
+            int maxdist = (cooldownDuration < 0) ? int.MaxValue : ((int)Math.Floor((cooldownDuration - effectDuration) / segmentDuration));
+            if (inseg > 0)
             {
-                fixed (int* XN = xn, XB = xb)
+                // verify that outside duration segments are 0
+                for (int outseg = 0; outseg < segments; outseg++)
                 {
-                    arows = a + rows * (cols + 1);
-
-                    bool feasible;
-                    int i, j, r, c, t;
-                    double v, bestv;
-
-                    bestv = 0;
-                    c = 0;
-                    r = 0;
-
-                    for (i = 0; i < rows; i++)
-                        XB[i] = cols + i;
-                    for (j = 0; j < cols; j++)
-                        XN[j] = j;
-
-                    int round = 0;
-
-                    do
+                    if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
                     {
-                        feasible = true;
-                        // check feasibility
-                        for (i = 0, ai = a; i < rows; i++, ai += (cols + 1))
+                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                         {
-                            if (ai[cols] < 0)
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(cooldown) && solution[index] > 0)
                             {
-                                feasible = false;
-                                bestv = 0;
-                                for (j = 0, aij = ai; j < cols; j++, aij++)
-                                {
-                                    if (*aij < bestv)
-                                    {
-                                        bestv = *aij;
-                                        c = j;
-                                    }
-                                }
-                                break;
+                                valid = false;
+                                goto breakCooldown;
                             }
                         }
-                        if (feasible)
-                        {
-                            // standard problem
-                            bestv = 0;
-                            for (j = 0, aij = arows; j < cols; j++, aij++)
-                            {
-                                if (*aij > bestv)
-                                {
-                                    bestv = *aij;
-                                    c = j;
-                                }
-                            }
-                        }
-                        if (bestv == 0) break;
-                        bestv = -1;
-                        for (i = 0, ai = a; i < rows; i++, ai += (cols + 1))
-                        {
-                            if (ai[c] > 0)
-                            {
-                                v = ai[cols] / ai[c];
-                                if (bestv == -1 || v < bestv)
-                                {
-                                    if (ai[c] > 0.0000000001)
-                                    {
-                                        bestv = v;
-                                        r = i;
-                                    }
-                                    else
-                                    {
-                                        ai[c] = 0;
-                                    }
-                                }
-                            }
-                        }
-                        if (bestv == -1) break;
-                        aij = a + r * (cols + 1) + c;
-                        v = *aij;
-                        *aij = 1;
-                        ai = a + r * (cols + 1);
-                        for (j = 0, aij = ai; j <= cols; j++, aij++)
-                        {
-                            *aij /= v;
-                        }
-                        for (i = 0, ai = a; i <= rows; i++, ai += (cols + 1))
-                        {
-                            if (i != r)
-                            {
-                                v = ai[c];
-                                ai[c] = 0;
-                                for (j = 0, aij = ai; j <= cols; j++, aij++)
-                                {
-                                    *aij -= a[r * (cols + 1) + j] * v;
-                                    if (*aij < 0.00000000001 && *aij > -0.00000000001) *aij = 0; // compensate for floating point errors
-                                }
-                            }
-                        }
-                        //System.Diagnostics.Debug.WriteLine(round + ": " + XN[c] + " <=> " + XB[r]);
-                        t = XN[c];
-                        XN[c] = XB[r];
-                        XB[r] = t;
-                        round++;
-                        if (round == 5000) round++;
-                    } while (round < 5000); // fail safe for infinite loops caused by floating point instability
-
-                    for (i = 0; i < rows; i++)
-                    {
-                        if (XB[i] < cols) ret[XB[i]] = a[i * (cols + 1) + cols];
                     }
-                    ret[cols] = -a[rows * (cols + 1) + cols];
+                    else if (Math.Abs(outseg - seg) < maxdist && outseg != seg)
+                    {
+                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(cooldown))
+                            {
+                                if (outseg < seg)
+                                {
+                                    leftseg += solution[index];
+                                }
+                                else if (outseg > seg)
+                                {
+                                    rightseg += solution[index];
+                                }
+                            }
+                        }
+                    }
+                }
+            breakCooldown:
+                if (!valid)
+                {
+                    // branch on whether cooldown is used in this segment
+                    CompactLP cooldownUsed = lp.Clone();
+                    // cooldown not used
+                    //lp.IVHash += 1 << seg;
+                    for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                    {
+                        CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                        if (stats != null && stats.GetCooldown(cooldown)) lp.EraseColumn(index);
+                    }
+                    heap.Push(lp);
+                    // cooldown used
+                    for (int outseg = 0; outseg < segments; outseg++)
+                    {
+                        if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                        {
+                            //cooldownUsed.IVHash += 1 << outseg;
+                            for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                            {
+                                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                if (stats != null && stats.GetCooldown(cooldown)) cooldownUsed.EraseColumn(index);
+                            }
+                        }
+                    }
+                    heap.Push(cooldownUsed);
                 }
             }
-            return ret;
+            else
+            {
+                for (int outseg = 0; outseg < segments; outseg++)
+                {
+                    if (Math.Abs(outseg - seg) <= mindist && outseg != seg)
+                    {
+                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(cooldown))
+                            {
+                                if (outseg < seg)
+                                {
+                                    leftseg += solution[index];
+                                }
+                                else if (outseg > seg)
+                                {
+                                    rightseg += solution[index];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (valid && inseg < segmentDuration - 0.000001 && leftseg > 0 && rightseg > 0 && cooldown != Cooldown.IcyVeins) // coldsnapped icy veins doesn't have to be contiguous
+            {
+                // fragmentation
+                // either left must be disabled, right disabled, or seg to max
+                CompactLP leftDisabled = lp.Clone();
+                for (int outseg = 0; outseg < segments; outseg++)
+                {
+                    if ((outseg < seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
+                    {
+                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(cooldown)) leftDisabled.EraseColumn(index);
+                        }
+                    }
+                }
+                heap.Push(leftDisabled);
+                CompactLP rightDisabled = lp.Clone();
+                for (int outseg = 0; outseg < segments; outseg++)
+                {
+                    if ((outseg > seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
+                    {
+                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(cooldown)) rightDisabled.EraseColumn(index);
+                        }
+                    }
+                }
+                heap.Push(rightDisabled);
+                lp.AddConstraint();
+                for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                {
+                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                    if (stats != null && stats.GetCooldown(cooldown)) lp.UpdateConstraintElement(index, -1);
+                }
+                lp.UpdateConstraintRHS(-segmentDuration);
+                heap.Push(lp);
+                valid = false;
+            }
+            return valid;
         }
 
         private float Combustion(float critRate)

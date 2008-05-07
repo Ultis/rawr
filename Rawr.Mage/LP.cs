@@ -7,9 +7,12 @@ namespace Rawr.Mage
     public class LP
     {
         private SparseMatrix A;
-        private int[] disabled;
+        private double[] extraConstraints;
+        private int numExtraConstraints;
+        private int baseRows;
         private int rows;
         private int cols;
+        private bool disableRowAdded;
 
         private int[] _B;
         private int[] _V;
@@ -56,36 +59,90 @@ namespace Rawr.Mage
             LP clone = (LP)MemberwiseClone();
             clone._B = (int[])_B.Clone();
             clone._V = (int[])_V.Clone();
-            clone.disabled = (int[])disabled.Clone();
+            if (numExtraConstraints > 0) clone.extraConstraints = (double[])extraConstraints.Clone();
             return clone;
         }
 
         public void DisableColumn(int col)
         {
-            disabled[col] = 1;
+            if (!disableRowAdded)
+            {
+                disableRowAdded = true;
+                AddConstraint();
+            }
+            extraConstraints[col] = 1;
         }
 
         public double this[int row, int col]
         {
             get
             {
-                if (row == rows - 1) return _cost[col];
+                if (row > baseRows) throw new ArgumentException();
+                else if (row == baseRows) return _cost[col];
                 else if (col == cols) return _b[row];
                 else return A[row, col];
             }
             set
             {
-                if (row == rows - 1) _cost[col] = value;
+                if (row > baseRows) throw new ArgumentException();
+                else if (row == baseRows) _cost[col] = value;
                 else if (col == cols) _b[row] = value;
                 else A[row, col] = value;
             }
+        }
+
+        public double GetConstraintElement(int col)
+        {
+            return extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + col];
+        }
+
+        public void SetConstraintElement(int col, double value)
+        {
+            extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + col] = value;
+        }
+
+        public double GetConstraintRHS()
+        {
+            return extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + cols + rows];
+        }
+
+        public void SetConstraintRHS(double value)
+        {
+            extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + cols + rows] = value;
+        }
+
+        public void AddConstraint()
+        {
+            if (!disableRowAdded)
+            {
+                disableRowAdded = true;
+                AddConstraint();
+            }
+            numExtraConstraints++;
+            rows++;
+            double[] newArray = new double[(cols + rows + 1) * numExtraConstraints];
+            for (int i = 0; i < numExtraConstraints - 1; i++)
+            {
+                Array.Copy(extraConstraints, (cols + rows) * i, newArray, (cols + rows + 1) * i, cols + rows - 1);
+                newArray[(cols + rows + 1) * i + cols + rows] = extraConstraints[(cols + rows) * i + cols + rows - 1];
+            }
+            extraConstraints = newArray;
+            extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + cols + rows - 1] = 1;
+            A.AddColumn();
+            A.EndConstruction();
+            _cost[cols + rows - 1] = 0;
+            int[] newB = new int[rows];
+            Array.Copy(_B, newB, rows - 1);
+            _B = newB;
+            _B[rows - 1] = cols + rows - 1;
+            lu = new LU2(_LU, rows);
         }
 
         private bool constructed;
         public void EndConstruction()
         {
             if (constructed) return;
-            for (int i = 0; i < rows - 1; i++)
+            for (int i = 0; i < baseRows; i++)
             {
                 A[i, cols + i] = 1.0;
             }
@@ -95,7 +152,8 @@ namespace Rawr.Mage
 
         public LP(int rows, int cols)
         {
-            rows++; // add extra row for disabled
+            baseRows = rows;
+            //rows++; // add extra row for disabled
             if (rows > maxRows || cols > maxCols)
             {
                 maxRows = Math.Max(rows, maxRows);
@@ -105,14 +163,15 @@ namespace Rawr.Mage
             this.rows = rows;
             this.cols = cols;
 
-            A = new SparseMatrix(rows - 1, cols + rows);
+            A = new SparseMatrix(baseRows, cols + rows);
             _B = new int[rows];
             _V = new int[cols];
             lu = new LU2(_LU, rows);
-            disabled = new int[cols + rows];
-            disabled[cols + rows - 1] = 1;
+            //extraConstraints = new double[cols + rows + 1];
+            //extraConstraints[cols + rows - 1] = 1;
+            //numExtraConstraints = 1;
             Array.Clear(_cost, 0, cols + rows);
-            Array.Clear(_b, 0, rows);
+            Array.Clear(_b, 0, baseRows);
 
             for (int i = 0; i < rows; i++)
             {
@@ -140,16 +199,16 @@ namespace Rawr.Mage
             //  eps1 = 10-5, eps2 = 10-8, and eps3 = 10-6
             double eps = 0.00001;
 
-            int i, j;
+            int i, j, k;
             bool feasible = false;
             int round = 0;
             double* cc, sValue;
             int* sRow;
             int sCol1, sCol2;
             int redecompose = 0;
-            fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value)
+            fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
             {
-                fixed (int* B = _B, V = _V, D = disabled, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
+                fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
                 {
                     do
                     {
@@ -159,11 +218,14 @@ namespace Rawr.Mage
                             for (j = 0; j < rows; j++)
                             {
                                 int col = B[j];
-                                for (i = 0; i < rows - 1; i++)
+                                for (i = 0; i < baseRows; i++)
                                 {
-                                    LU[i * rows + j] = a[i * (cols + rows) + col];
+                                    LU[i * rows + j] = a[i + col * baseRows];
                                 }
-                                LU[i * rows + j] = D[col];
+                                for (k = 0; k < numExtraConstraints; k++, i++)
+                                {
+                                    LU[i * rows + j] = D[k * (cols + rows + 1) + col];
+                                }
                             }
                             lu.Decompose();
                             redecompose = 50; // decompose every 50 iterations to maintain stability
@@ -178,11 +240,14 @@ namespace Rawr.Mage
                         if (!feasible)
                         {
                             // d = U \ (L \ b);
-                            for (i = 0; i < rows - 1; i++)
+                            for (i = 0; i < baseRows; i++)
                             {
                                 d[i] = b[i];
                             }
-                            d[i] = 0;
+                            for (k = 0; k < numExtraConstraints; k++, i++)
+                            {
+                                d[i] = D[k * (cols + rows + 1) + cols + rows];
+                            }
                             lu.FSolve(d);
 
                             feasible = true;
@@ -216,7 +281,10 @@ namespace Rawr.Mage
                                     {
                                         costcol -= *sValue * u[*sRow];
                                     }
-                                    costcol -= D[col] * u[rows - 1];
+                                    for (k = 0; k < numExtraConstraints; k++, i++)
+                                    {
+                                        costcol -= D[k * (cols + rows + 1) + col] * u[baseRows + k];
+                                    }
                                     c[j] = costcol;
                                 }
                             }
@@ -250,7 +318,10 @@ namespace Rawr.Mage
                                 {
                                     costcol -= *sValue * x[*sRow];
                                 }
-                                costcol -= D[col] * x[rows - 1];
+                                for (k = 0; k < numExtraConstraints; k++, i++)
+                                {
+                                    costcol -= D[k * (cols + rows + 1) + col] * x[baseRows + k];
+                                }
                                 c[j] = costcol;
                             }
                         }
@@ -287,11 +358,14 @@ namespace Rawr.Mage
 
                         // w = U \ (L \ A(:,j));
                         int maxcol = V[maxj];
-                        for (i = 0; i < rows - 1; i++)
+                        for (i = 0; i < baseRows; i++)
                         {
-                            w[i] = a[i * (cols + rows) + maxcol];
+                            w[i] = a[i + maxcol * baseRows];
                         }
-                        w[i] = D[maxcol];
+                        for (k = 0; k < numExtraConstraints; k++, i++)
+                        {
+                            w[i] = D[k * (cols + rows + 1) + maxcol];
+                        }
                         //lu.FSolve(w);
                         lu.FSolveL(w, ww);
                         lu.FSolveU(ww, w);
@@ -351,7 +425,10 @@ namespace Rawr.Mage
                                 {
                                     *cc -= rd * *sValue * x[*sRow];
                                 }
-                                *cc -= rd * D[col] * x[rows - 1];
+                                for (k = 0; k < numExtraConstraints; k++, i++)
+                                {
+                                    *cc -= rd * D[k * (cols + rows + 1) + col] * x[baseRows + k];
+                                }
                                 c[maxj] = -rd;
                             }
                         }
@@ -365,7 +442,7 @@ namespace Rawr.Mage
                             lu.Update(ww, mini);
                         }
 
-                        int k = B[mini];
+                        k = B[mini];
                         B[mini] = V[maxj];
                         V[maxj] = k;
 
@@ -395,16 +472,16 @@ namespace Rawr.Mage
             //  eps1 = 10-5, eps2 = 10-8, and eps3 = 10-6
             double eps = 0.00001;
 
-            int i, j;
+            int i, j, k;
             int round = 0;
             bool needsRecalc = true;
             double* sValue;
             int* sRow;
             int sCol1, sCol2;
             int redecompose = 0;
-            fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value)
+            fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
             {
-                fixed (int* B = _B, V = _V, D = disabled, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
+                fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
                 {
                     do
                     {
@@ -414,11 +491,14 @@ namespace Rawr.Mage
                             for (j = 0; j < rows; j++)
                             {
                                 int col = B[j];
-                                for (i = 0; i < rows - 1; i++)
+                                for (i = 0; i < baseRows; i++)
                                 {
-                                    LU[i * rows + j] = a[i * (cols + rows) + col];
+                                    LU[i * rows + j] = a[i + col * baseRows];
                                 }
-                                LU[i * rows + j] = D[col];
+                                for (k = 0; k < numExtraConstraints; k++, i++)
+                                {
+                                    LU[i * rows + j] = D[k * (cols + rows + 1) + col];
+                                }
                             }
                             lu.Decompose();
                             redecompose = 50;
@@ -442,9 +522,13 @@ namespace Rawr.Mage
                         if (needsRecalc)
                         {
                             // d = U \ (L \ b);
-                            for (i = 0; i < rows; i++)
+                            for (i = 0; i < baseRows; i++)
                             {
                                 d[i] = b[i]; // TODO block copy?
+                            }
+                            for (k = 0; k < numExtraConstraints; k++, i++)
+                            {
+                                d[i] = D[k * (cols + rows + 1) + cols + rows];
                             }
                             lu.FSolve(d);
 
@@ -467,7 +551,10 @@ namespace Rawr.Mage
                                 {
                                     costcol -= *sValue * u[*sRow];
                                 }
-                                costcol -= D[col] * u[rows - 1];
+                                for (k = 0; k < numExtraConstraints; k++, i++)
+                                {
+                                    costcol -= D[k * (cols + rows + 1) + col] * u[baseRows + k];
+                                }
                                 if (costcol > eps)
                                 {
                                     // this should only happen if dual is not feasible
@@ -536,7 +623,10 @@ namespace Rawr.Mage
                             {
                                 wd[j] += *sValue * x[*sRow];
                             }
-                            wd[j] += D[col] * x[rows - 1];
+                            for (k = 0; k < numExtraConstraints; k++, i++)
+                            {
+                                wd[j] += D[k * (cols + rows + 1) + col] * x[baseRows + k];
+                            }
                             if (wd[j] < -eps)
                             {
                                 double r = c[j] / wd[j];
@@ -550,17 +640,21 @@ namespace Rawr.Mage
 
                         if (minj == -1)
                         {
-                            // unfeasible
-                            throw new InvalidOperationException();
+                            // unfeasible, return null solution, don't pursue this branch because no solution exists here
+                            double[] ret = new double[cols + 1];
+                            return ret;
                         }
 
                         // w = U \ (L \ A(:,j));
                         int mincol = V[minj];
-                        for (i = 0; i < rows - 1; i++)
+                        for (i = 0; i < baseRows; i++)
                         {
-                            w[i] = a[i * (cols + rows) + mincol];
+                            w[i] = a[i + mincol * baseRows];
                         }
-                        w[i] = D[mincol];
+                        for (k = 0; k < numExtraConstraints; k++, i++)
+                        {
+                            w[i] = D[k * (cols + rows + 1) + mincol];
+                        }
                         //lu.FSolve(w);
                         lu.FSolveL(w, ww);
                         lu.FSolveU(ww, w);
@@ -590,7 +684,7 @@ namespace Rawr.Mage
                         }
 
                         // swap base
-                        int k = B[mini];
+                        k = B[mini];
                         B[mini] = V[minj];
                         V[minj] = k;
 
@@ -601,6 +695,239 @@ namespace Rawr.Mage
             }
             // just in case
             return new double[cols + 1];
+        }
+
+        private static double[] LPSolve(double[,] data, int rows, int cols)
+        {
+            double[,] a = data;
+            int[] XN;
+            int[] XB;
+
+            bool feasible;
+            int i, j, r, c, t;
+            double v, bestv;
+
+            bestv = 0;
+            c = 0;
+            r = 0;
+
+            XN = new int[cols];
+            XB = new int[rows];
+
+            for (i = 0; i < rows; i++)
+                XB[i] = cols + i;
+            for (j = 0; j < cols; j++)
+                XN[j] = j;
+
+            int round = 0;
+
+            do
+            {
+                feasible = true;
+                // check feasibility
+                for (i = 0; i < rows; i++)
+                {
+                    if (a[i, cols] < 0)
+                    {
+                        feasible = false;
+                        bestv = 0;
+                        for (j = 0; j < cols; j++)
+                        {
+                            if (a[i, j] < bestv)
+                            {
+                                bestv = a[i, j];
+                                c = j;
+                            }
+                        }
+                        break;
+                    }
+                }
+                if (feasible)
+                {
+                    // standard problem
+                    bestv = 0;
+                    for (j = 0; j < cols; j++)
+                    {
+                        if (a[rows, j] > bestv)
+                        {
+                            bestv = a[rows, j];
+                            c = j;
+                        }
+                    }
+                }
+                if (bestv == 0) break;
+                bestv = -1;
+                for (i = 0; i < rows; i++)
+                {
+                    if (a[i, c] > 0)
+                    {
+                        v = a[i, cols] / a[i, c];
+                        if (bestv == -1 || v < bestv)
+                        {
+                            bestv = v;
+                            r = i;
+                        }
+                    }
+                }
+                if (bestv == -1) break;
+                v = a[r, c];
+                a[r, c] = 1;
+                for (j = 0; j <= cols; j++)
+                {
+                    a[r, j] = a[r, j] / v;
+                }
+                for (i = 0; i <= rows; i++)
+                {
+                    if (i != r)
+                    {
+                        v = a[i, c];
+                        a[i, c] = 0;
+                        for (j = 0; j <= cols; j++)
+                        {
+                            a[i, j] = a[i, j] - a[r, j] * v;
+                            if (a[i, j] < 0.00000000001 && a[i, j] > -0.00000000001) a[i, j] = 0; // compensate for floating point errors
+                        }
+                    }
+                }
+                t = XN[c];
+                XN[c] = XB[r];
+                XB[r] = t;
+                round++;
+            } while (round < 5000); // fail safe for infinite loops caused by floating point instability
+
+            double[] ret = new double[cols + 1];
+            for (i = 0; i < rows; i++)
+            {
+                if (XB[i] < cols) ret[XB[i]] = a[i, cols];
+            }
+            ret[cols] = -a[rows, cols];
+
+            return ret;
+        }
+
+        private static unsafe double[] LPSolveUnsafe(double[,] data, int rows, int cols)
+        {
+            double[] ret = new double[cols + 1];
+            int[] xn = new int[cols + 1];
+            int[] xb = new int[rows + 1];
+            if (cols > 30000) return ret; // prevent unstable solutions
+
+            double* ai, aij, arows;
+
+            fixed (double* a = data)
+            {
+                fixed (int* XN = xn, XB = xb)
+                {
+                    arows = a + rows * (cols + 1);
+
+                    bool feasible;
+                    int i, j, r, c, t;
+                    double v, bestv;
+
+                    bestv = 0;
+                    c = 0;
+                    r = 0;
+
+                    for (i = 0; i < rows; i++)
+                        XB[i] = cols + i;
+                    for (j = 0; j < cols; j++)
+                        XN[j] = j;
+
+                    int round = 0;
+
+                    do
+                    {
+                        feasible = true;
+                        // check feasibility
+                        for (i = 0, ai = a; i < rows; i++, ai += (cols + 1))
+                        {
+                            if (ai[cols] < 0)
+                            {
+                                feasible = false;
+                                bestv = 0;
+                                for (j = 0, aij = ai; j < cols; j++, aij++)
+                                {
+                                    if (*aij < bestv)
+                                    {
+                                        bestv = *aij;
+                                        c = j;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        if (feasible)
+                        {
+                            // standard problem
+                            bestv = 0;
+                            for (j = 0, aij = arows; j < cols; j++, aij++)
+                            {
+                                if (*aij > bestv)
+                                {
+                                    bestv = *aij;
+                                    c = j;
+                                }
+                            }
+                        }
+                        if (bestv == 0) break;
+                        bestv = -1;
+                        for (i = 0, ai = a; i < rows; i++, ai += (cols + 1))
+                        {
+                            if (ai[c] > 0)
+                            {
+                                v = ai[cols] / ai[c];
+                                if (bestv == -1 || v < bestv)
+                                {
+                                    if (ai[c] > 0.0000000001)
+                                    {
+                                        bestv = v;
+                                        r = i;
+                                    }
+                                    else
+                                    {
+                                        ai[c] = 0;
+                                    }
+                                }
+                            }
+                        }
+                        if (bestv == -1) break;
+                        aij = a + r * (cols + 1) + c;
+                        v = *aij;
+                        *aij = 1;
+                        ai = a + r * (cols + 1);
+                        for (j = 0, aij = ai; j <= cols; j++, aij++)
+                        {
+                            *aij /= v;
+                        }
+                        for (i = 0, ai = a; i <= rows; i++, ai += (cols + 1))
+                        {
+                            if (i != r)
+                            {
+                                v = ai[c];
+                                ai[c] = 0;
+                                for (j = 0, aij = ai; j <= cols; j++, aij++)
+                                {
+                                    *aij -= a[r * (cols + 1) + j] * v;
+                                    if (*aij < 0.00000000001 && *aij > -0.00000000001) *aij = 0; // compensate for floating point errors
+                                }
+                            }
+                        }
+                        //System.Diagnostics.Debug.WriteLine(round + ": " + XN[c] + " <=> " + XB[r]);
+                        t = XN[c];
+                        XN[c] = XB[r];
+                        XB[r] = t;
+                        round++;
+                        if (round == 5000) round++;
+                    } while (round < 5000); // fail safe for infinite loops caused by floating point instability
+
+                    for (i = 0; i < rows; i++)
+                    {
+                        if (XB[i] < cols) ret[XB[i]] = a[i * (cols + 1) + cols];
+                    }
+                    ret[cols] = -a[rows * (cols + 1) + cols];
+                }
+            }
+            return ret;
         }
     }
 }

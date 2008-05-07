@@ -79,7 +79,7 @@ namespace Rawr.Mage
         {
             get
             {
-                return data[row * cols + col];
+                return data[col * rows + row];
             }
             set
             {
@@ -105,10 +105,21 @@ namespace Rawr.Mage
                 }
                 SparseMatrix.row[sparseIndex] = row;
                 SparseMatrix.value[sparseIndex] = value;
-                data[row * cols + col] = value;
+                data[col * rows + row] = value; // store data by columns, we always access by column so it will have better locality, we also never increase number of rows, only columns, that way we don't have to reposition data
                 lastCol = col;
                 sparseIndex++;
             }
+        }
+
+        public void AddColumn()
+        {
+            finalized = false;
+            cols++;
+            if (rows > maxRows || cols > maxCols)
+            {
+                throw new InvalidCastException();
+            }
+            Array.Clear(data, rows * (cols - 1), rows); // only need to clear what will be used
         }
 
         public void EndConstruction()

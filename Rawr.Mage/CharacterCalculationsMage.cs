@@ -198,7 +198,7 @@ namespace Rawr.Mage
             {
                 WebRequestWrapper wrw = new WebRequestWrapper();
 
-                if (character.Class == Character.CharacterClass.Mage && character.Name != null && character.Region != null && character.Realm != null)
+                if (character.Class == Character.CharacterClass.Mage && character.Name != null && character.Realm != null)
                 {
                     XmlDocument docTalents = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm);
 
@@ -278,7 +278,7 @@ namespace Rawr.Mage
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             #endregion
@@ -295,7 +295,21 @@ namespace Rawr.Mage
         }
     }
 
-    class CharacterCalculationsMage : CharacterCalculationsBase
+    public enum Cooldown
+    {
+        ArcanePower,
+        IcyVeins,
+        MoltenFury,
+        Heroism,
+        DestructionPotion,
+        FlameCap,
+        Trinket1,
+        Trinket2,
+        DrumsOfBattle,
+        Combustion
+    }
+
+    public class CharacterCalculationsMage : CharacterCalculationsBase
     {
         private float _overallPoints = 0f;
         public override float OverallPoints
@@ -404,6 +418,51 @@ namespace Rawr.Mage
         public float Latency { get; set; }
         public float FightDuration { get; set; }
         public float ClearcastingChance { get; set; }
+
+        public int GetHex()
+        {
+            int hex = 0;
+            hex = (hex << 1) + (ArcanePower ? 1 : 0);
+            hex = (hex << 1) + (Combustion ? 1 : 0);
+            hex = (hex << 1) + (DestructionPotion ? 1 : 0);
+            hex = (hex << 1) + (DrumsOfBattle ? 1 : 0);
+            hex = (hex << 1) + (FlameCap ? 1 : 0);
+            hex = (hex << 1) + (Heroism ? 1 : 0);
+            hex = (hex << 1) + (IcyVeins ? 1 : 0);
+            hex = (hex << 1) + (MoltenFury ? 1 : 0);
+            hex = (hex << 1) + (Trinket1 ? 1 : 0);
+            hex = (hex << 1) + (Trinket2 ? 1 : 0);
+            return hex;
+        }
+
+        public bool GetCooldown(Cooldown cooldown)
+        {
+            switch (cooldown)
+            {
+                case Cooldown.ArcanePower:
+                    return ArcanePower;
+                case Cooldown.Combustion:
+                    return Combustion;
+                case Cooldown.DestructionPotion:
+                    return DestructionPotion;
+                case Cooldown.DrumsOfBattle:
+                    return DrumsOfBattle;
+                case Cooldown.FlameCap:
+                    return FlameCap;
+                case Cooldown.Heroism:
+                    return Heroism;
+                case Cooldown.IcyVeins:
+                    return IcyVeins;
+                case Cooldown.MoltenFury:
+                    return MoltenFury;
+                case Cooldown.Trinket1:
+                    return Trinket1;
+                case Cooldown.Trinket2:
+                    return Trinket2;
+                default:
+                    return false;
+            }
+        }
 
         public bool ArcanePower { get; set; }
         public bool IcyVeins { get; set; }
@@ -1048,7 +1107,10 @@ namespace Rawr.Mage
                         {
                             if (sequence[j].Group.Contains(constraint.Group))
                             {
-                                minTime = Math.Max(minTime, sequence[j].Timestamp + constraint.Cooldown - diff);
+                                if (!constraint.ColdSnap || (group.MinTime - sequence[j].MinTime >= 180 - 0.000001)) // make sure to ignore coldsnapped constraints
+                                {
+                                    minTime = Math.Max(minTime, sequence[j].Timestamp + constraint.Cooldown - diff);
+                                }
                                 break;
                             }
                         }
@@ -2197,7 +2259,7 @@ namespace Rawr.Mage
                     }
                     item.MaxTime = time;
                     double t = time;
-                    for (int j = i + 1; j < compactItems.Count && Rawr.Mage.ListUtils.Intersect<SequenceGroup>(compactItems[j].Group, compactItems[j - 1].Group).Count > 0; j++)
+                    for (int j = i + 1; j < compactItems.Count && compactItems[j].SuperIndex == compactItems[j - 1].SuperIndex; j++)
                     {
                         t += compactItems[j - 1].Duration;
                         compactItems[j].MaxTime = t;
@@ -2454,7 +2516,7 @@ namespace Rawr.Mage
                                                     int minIndex = i;
                                                     foreach (SequenceItem coldsnapItem in constraint.Group.Item)
                                                     {
-                                                        if (coldsnapItem.OrderIndex > 0 && coldsnapItem.OrderIndex < N && index[coldsnapItem.OrderIndex] < N && itemList[index[coldsnapItem.OrderIndex]] == coldsnapItem && used[index[coldsnapItem.OrderIndex]] && coldsnapItem.OrderIndex < minIndex)
+                                                        if (coldsnapItem.OrderIndex >= 0 && coldsnapItem.OrderIndex < N && index[coldsnapItem.OrderIndex] < N && itemList[index[coldsnapItem.OrderIndex]] == coldsnapItem && used[index[coldsnapItem.OrderIndex]] && coldsnapItem.OrderIndex < minIndex)
                                                         {
                                                             minIndex = coldsnapItem.OrderIndex;
                                                         }
@@ -2479,12 +2541,12 @@ namespace Rawr.Mage
                                             int lastColdsnap = -1;
                                             for (int j = 0; j < coldsnapStarts.Count - 1; j++)
                                             {
-                                                if (constructionTime[j + 1] - constructionTime[j] < 180 - 0.000001)
+                                                if (constructionTime[coldsnapStarts[j + 1]] - constructionTime[coldsnapStarts[j]] < 180 - 0.000001)
                                                 {
                                                     lastColdsnap = j;
                                                 }
                                             }
-                                            if (time - constructionTime[coldsnapStarts.Count - 1] >= 180 - 0.000001)
+                                            if (time - constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] >= 180 - 0.000001)
                                             {
                                                 // don't need coldsnap and can start right at time
                                                 coldsnap[i] = 0;
@@ -2492,9 +2554,9 @@ namespace Rawr.Mage
                                             else if (coldsnap[i] == 1)
                                             {
                                                 // use coldsnap
-                                                double normalTime = Math.Max(time, constructionTime[coldsnapStarts.Count - 1] + 180);
+                                                double normalTime = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + 180);
                                                 double coldsnapTime = 0;
-                                                if (lastColdsnap >= 0) coldsnapTime = constructionTime[lastColdsnap] + 8 * 60 * (1 - 0.1 * SequenceItem.Calculations.CalculationOptions.IceFloes);
+                                                if (lastColdsnap >= 0) coldsnapTime = constructionTime[coldsnapStarts[lastColdsnap]] + 8 * 60 * (1 - 0.1 * SequenceItem.Calculations.CalculationOptions.IceFloes);
                                                 if (coldsnapTime >= normalTime)
                                                 {
                                                     // coldsnap won't be ready until IV will be back anyway, so we don't actually need it
@@ -2511,7 +2573,7 @@ namespace Rawr.Mage
                                             {
                                                 // we are not allowed to use coldsnap even if we could
                                                 // make sure to adjust by coldsnap constraints
-                                                time = Math.Max(time, constructionTime[coldsnapStarts.Count - 1] + 180); 
+                                                time = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + 180); 
                                             }
                                         }
                                         else
@@ -3618,9 +3680,9 @@ namespace Rawr.Mage
             sequence.GroupCombustion();
             sequence.GroupArcanePower();
             sequence.GroupDestructionPotion();
-            sequence.GroupIcyVeins();
             sequence.GroupTrinket1();
             sequence.GroupTrinket2();
+            sequence.GroupIcyVeins(); // should come after trinkets because of coldsnap
             sequence.GroupDrumsOfBattle();
             sequence.GroupFlameCap();
 
@@ -3730,7 +3792,7 @@ namespace Rawr.Mage
                             double value;
                             combinedSolution.TryGetValue(SolutionLabel[i], out value);
                             combinedSolution[SolutionLabel[i]] = value + Solution[i];
-                            //sb.AppendLine(String.Format("{0}: {1:F} sec", SolutionLabel[i], Solution[i]));
+                            //sb.AppendLine(String.Format("{2}{0}: {1:F} sec", SolutionLabel[i], Solution[i], (SolutionSegments == null) ? "" : (SolutionSegments[i].ToString() + " ")));
                             break;
                     }
                 }
