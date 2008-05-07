@@ -18,11 +18,13 @@ namespace Rawr
         ArmorPenetration,
         AttackPower,
         AverageAgility,
+        AverageArmor,
         Block,
         BlockRating,
         BlockValue,
         Bloodlust,
         BloodlustProc,
+        BonusCommandingShoutHP,
         BonusLacerateDamage,
         BonusManaGem,
         BonusMangleBearDamage,
@@ -73,6 +75,8 @@ namespace Rawr
         MoonfireDmg,
         MoonfireExtension,
         MongooseProc,
+        MongooseProcAverage,
+        MongooseProcConstant,
         Mp5,
         Mp5OnCastFor20SecOnUse2Min,
         NatureResistance,
@@ -143,6 +147,7 @@ namespace Rawr
         BonusNatureSpellPowerMultiplier,
         BonusPhysicalDamageMultiplier,
         BonusRipDamageMultiplier,
+        BonusShieldSlamDamage,
         BonusSpellCritMultiplier,
         BonusSpellPowerMultiplier,
         BonusSpiritMultiplier,
@@ -659,6 +664,14 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Bonus Commanding Shout HP")]
+        public float BonusCommandingShoutHP
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusCommandingShoutHP]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusCommandingShoutHP] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float BonusShredDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusShredDamage]; }
@@ -1068,6 +1081,15 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.AverageAgility] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Average Armor")]
+        public float AverageArmor
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.AverageArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.AverageArmor] = value; }
+        }
+
         [DisplayName("Mongoose Proc")]
         [Category("Equipment Procs")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1075,6 +1097,24 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MongooseProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.MongooseProc] = value; }
+        }
+
+        [DisplayName("Mongoose Proc Average")]
+        [Category("Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MongooseProcAverage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MongooseProcAverage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MongooseProcAverage] = value; }
+        }
+
+        [DisplayName("Mongoose Proc Constant")]
+        [Category("Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MongooseProcConstant
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MongooseProcConstant]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MongooseProcConstant] = value; }
         }
 
         [DisplayName("Shattered Sun Caster Neck proc")]
@@ -1196,6 +1236,15 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Multiplicative]
+        [DisplayName("% Shield Slam Damage")]
+        public float BonusShieldSlamDamage
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage] = value; }
         }
 
 

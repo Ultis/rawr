@@ -49,8 +49,9 @@ namespace Rawr.ProtWarr
 					"Basic Stats:Frost Resist",
 					"Basic Stats:Shadow Resist",
 					"Basic Stats:Arcane Resist",
-                    "Complex Stats:Limited Threat",
-                    "Complex Stats:Unlimited Threat",
+                    "Complex Stats:Limited Threat*Shield Slam -> Revenge -> Devastate -> Devastate",
+                    @"Complex Stats:Unlimited Threat*Shield Slam -> Revenge -> Devastate -> Devastate.
+With Heroic Strikes every auto attack.",
                     "Complex Stats:Missed Attacks",
 					"Complex Stats:Dodge",
                     "Complex Stats:Parry",
@@ -203,6 +204,8 @@ you are being killed by burst damage, focus on Survival Points.",
             Stats stats = GetCharacterStats(character, additionalItem);
             float levelDifference = (targetLevel - 70f) * 0.2f;
             CharacterCalculationsProtWarr calculatedStats = new CharacterCalculationsProtWarr();
+
+            #region Tanking Calculations
             calculatedStats.BasicStats = stats;
             calculatedStats.TargetLevel = targetLevel;
             calculatedStats.Miss = 5f + (((float)Math.Floor(stats.Defense + stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToMiss) +
@@ -263,7 +266,9 @@ you are being killed by burst damage, focus on Survival Points.",
             calculatedStats.FireSurvivalPoints = (float)(stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FireResistance + stats.AllResist) / cappedResist) * .75)));
             calculatedStats.ShadowSurvivalPoints = (float)(stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ShadowResistance + stats.AllResist) / cappedResist) * .75)));
             calculatedStats.ArcaneSurvivalPoints = (float)(stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ArcaneResistance + stats.AllResist) / cappedResist) * .75)));
+            #endregion
 
+            #region Threat Calcuations
             float targetArmor = calcOpts.TargetArmor;
             float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
             float modArmor = 1 - (baseArmor / (baseArmor + 10557.5f));
@@ -303,6 +308,7 @@ you are being killed by burst damage, focus on Survival Points.",
 
 
             float chanceCrit = Math.Min(0.75f, (stats.CritRating * WarriorConversions.CritRatingToCrit +
+                                                stats.LotPCritRating * WarriorConversions.CritRatingToCrit +
                                                (stats.Agility * WarriorConversions.AgilityToCrit) +
                                                 stats.Crit) / 100f) + 0.05f;
             float chanceDodge = Math.Max(0f, 0.05f + levelDifference / 100f - expertiseBonus);
@@ -334,7 +340,8 @@ you are being killed by burst damage, focus on Survival Points.",
             //limited threat is zero heroic strikes.
 
             float shieldSlamTPS = (307f + defStanceThreatMod * reducedDamage *
-                                  ((440f + 420f) / 2f + calculatedStats.BlockValue) * averageDamage) / 6f;
+                                  ((440f + 420f) / 2f + calculatedStats.BlockValue) * averageDamage *
+                                  (1f + stats.BonusShieldSlamDamage)) / 6f;
 
             float revengeTPS = (201f + defStanceThreatMod * reducedDamage *
                                ((414f + 506f) / 2f) * averageDamage) / 6f;
@@ -350,7 +357,7 @@ you are being killed by burst damage, focus on Survival Points.",
 
             calculatedStats.ThreatPoints = calculatedStats.ThreatScale * (whiteTPS + shieldSlamTPS + revengeTPS + devastateTPS);
             calculatedStats.UnlimitedThreat = calculatedStats.ThreatScale * (whiteTPS + shieldSlamTPS + revengeTPS + devastateTPS + heroicStrikeTPS);
-
+            #endregion
 
             calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
             return calculatedStats;
@@ -533,6 +540,32 @@ you are being killed by burst damage, focus on Survival Points.",
                     BonusStrengthMultiplier = tree.GetTalent("Vitality").PointsInvested * 0.02f,
                     Expertise = tree.GetTalent("Defiance").PointsInvested * 2f,
                 };
+
+            //Mongoose
+            if (character.MainHand != null && character.MainHandEnchant != null &&
+                character.MainHandEnchant.Id == 2673 && statsBuffs.MongooseProcAverage > 0)
+            {
+                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+            }
+            else if (character.MainHand != null && character.MainHandEnchant != null &&
+                character.MainHandEnchant.Id == 2673 && statsBuffs.MongooseProcConstant > 0)
+            {
+                statsBuffs.Agility += 120f;
+                statsBuffs.HasteRating += 15.76f * 2f;
+            }
+
+            //Executioner
+            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
+            {
+                statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+            }
+
+            if (character.ActiveBuffs.Contains("Commanding Shout"))
+            {
+                statsBuffs.Health += statsBuffs.BonusCommandingShoutHP;
+            }
+
 			
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 			
@@ -580,6 +613,9 @@ you are being killed by burst damage, focus on Survival Points.",
             statsTotal.BlockRating = statsRace.BlockRating + statsBaseGear.BlockRating + statsBuffs.BlockRating;
             statsTotal.BlockValue = statsRace.BlockValue + statsBaseGear.BlockValue + statsBuffs.BlockValue;
 			statsTotal.Resilience = statsRace.Resilience + statsBaseGear.Resilience + statsBuffs.Resilience;
+            statsTotal.AverageArmor = statsRace.AverageArmor + statsBaseGear.AverageArmor + statsBuffs.AverageArmor;
+            statsTotal.BonusShieldSlamDamage = statsRace.BonusShieldSlamDamage + statsBaseGear.BonusShieldSlamDamage + statsBuffs.BonusShieldSlamDamage;
+            statsTotal.LotPCritRating = statsBuffs.LotPCritRating;
             statsTotal.Health = health;
 			statsTotal.Miss = statsRace.Miss + statsBaseGear.Miss + statsBuffs.Miss;
             statsTotal.CrushChanceReduction = statsGearEnchantsBuffs.CrushChanceReduction + statsRace.CrushChanceReduction;
@@ -635,7 +671,7 @@ you are being killed by burst damage, focus on Survival Points.",
             statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
 
             statsTotal.Armor = (float)Math.Floor(((statsBaseGear.Armor * (1 + statsTalents.BonusArmorMultiplier)) +
-                                statsRace.Armor + statsBuffs.Armor +
+                                statsRace.Armor + statsBuffs.Armor + statsTotal.AverageArmor +
                                 (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
 
 			return statsTotal;
@@ -683,7 +719,7 @@ you are being killed by burst damage, focus on Survival Points.",
 					CharacterCalculationsProtWarr calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 1 } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcParryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ParryRating = 1 } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcBlockValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BlockRating = 1 } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcBlockValueValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BlockValue = 1 } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcBlockValueValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BlockValue = 1f / 0.65f } }) as CharacterCalculationsProtWarr;
 					CharacterCalculationsProtWarr calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = 1 } }) as CharacterCalculationsProtWarr;
 					CharacterCalculationsProtWarr calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 1 } }) as CharacterCalculationsProtWarr;
 					
@@ -834,7 +870,6 @@ you are being killed by burst damage, focus on Survival Points.",
                             SurvivalPoints = (calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcResilValue.ThreatPoints - calcBaseValue.ThreatPoints)},
 					};
-				
 				default:
 					return new ComparisonCalculationBase[0];
 			}
@@ -845,6 +880,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			return new Stats()
 			{
 				Armor = stats.Armor,
+                AverageArmor = stats.AverageArmor,
 				Stamina = stats.Stamina,
 				Agility = stats.Agility,
 				DodgeRating = stats.DodgeRating,
@@ -877,15 +913,22 @@ you are being killed by burst damage, focus on Survival Points.",
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
+                LotPCritRating = stats.LotPCritRating,
 
-                MongooseProc = stats.MongooseProc
+                MongooseProc = stats.MongooseProc,
+                MongooseProcAverage = stats.MongooseProcAverage,
+                MongooseProcConstant = stats.MongooseProcConstant,
+
+                BonusCommandingShoutHP = stats.BonusCommandingShoutHP,
+                BonusShieldSlamDamage = stats.BonusShieldSlamDamage
 
 			};
 		}
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-			return (stats.Agility + stats.Armor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
+			return (stats.Agility + stats.Armor + stats.AverageArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
 				    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.ParryRating +
                     stats.BlockRating + stats.BlockValue + stats.Health + 
 				    stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
@@ -893,8 +936,11 @@ you are being killed by burst damage, focus on Survival Points.",
 				    stats.FrostResistance + stats.ShadowResistance +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage +
-                    stats.BonusCritMultiplier + stats.MongooseProc + stats.CrushChanceReduction +
-                    stats.ThreatIncreaseMultiplier + stats.BonusPhysicalDamageMultiplier
+                    stats.BonusCritMultiplier + stats.CrushChanceReduction +
+                    stats.ThreatIncreaseMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusBlockValueMultiplier +
+                    stats.LotPCritRating +
+                    stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant +
+                    stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage
                    ) != 0;
 		}
     }

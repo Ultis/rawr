@@ -1091,6 +1091,41 @@ namespace Rawr
                 SetName = "Thunderheart Regalia",
                 SetThreshold = 4
             });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Destroyer Armor 2 Piece Bonus",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { BlockValue = 100f / 2f },
+                SetName = "Destroyer Armor",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                //This can vary depending on how many mobs are being tanked and your
+                //avoidance, for now assume it procs once every 30 seconds.
+                //200 haste for 10 sec every 10 sec = 200 / 3 = 67 haste rating
+                Name = "Destroyer Armor 4 Piece Bonus",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { HasteRating = 67 },
+                SetName = "Destroyer Armor",
+                SetThreshold = 4
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Onslaught Armor 2 Piece Bonus",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { BonusCommandingShoutHP = 170f },
+                SetName = "Onslaught Armor",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Onslaught Armor 4 Piece Bonus",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { BonusShieldSlamDamage = 0.1f },
+                SetName = "Onslaught Armor",
+                SetThreshold = 4
+            });
 
             //i think you're slipping
             defaultBuffs.Add(new Buff()
@@ -1244,14 +1279,12 @@ namespace Rawr
                 Stats = new Stats() { Health = 1250 },
                 Type = BuffType.ShortDurationDW
             });
-
             defaultBuffs.Add(new Buff()
             {
                 Name = "Blood Frenzy",
                 Category = BuffCategory.Debuffs,
                 Stats = new Stats() { BonusPhysicalDamageMultiplier = 0.04f }
             });
-
             defaultBuffs.Add(new Buff()
             {
                 Name = "Windfury",
@@ -1259,7 +1292,6 @@ namespace Rawr
                 Stats = new Stats() { WindfuryAPBonus = 445f },
                 ConflictingBuffs = new string[] { "Temporary Weapon Enchantment" }
             });
-
             defaultBuffs.Add(new Buff()
             {
                 Name = "Improved Windfury",
@@ -1268,12 +1300,25 @@ namespace Rawr
                 Stats = new Stats() { WindfuryAPBonus = 445f * 0.30f }
 
             });
-
             defaultBuffs.Add(new Buff()
             {
                 Name = "Leader of the Pack",
                 Category = BuffCategory.ClassBuffs,
                 Stats = new Stats() { LotPCritRating = 22.08f * 5f }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Mongoose Proc (Constant)",
+                Category = BuffCategory.TemporaryBuffs,
+                Stats = new Stats() { MongooseProcConstant = 1f },
+                ConflictingBuffs = new string[] { "Mongoose" }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Mongoose Proc (Average)",
+                Category = BuffCategory.TemporaryBuffs,
+                Stats = new Stats() { MongooseProcAverage = 1f },
+                ConflictingBuffs = new string[] { "Mongoose" }
             });
 
             #region Buffs To Delete 

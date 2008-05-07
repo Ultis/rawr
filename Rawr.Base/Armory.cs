@@ -736,6 +736,25 @@ namespace Rawr
                             spellDesc = spellDesc.Replace(".", "");
                             stats.HLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                         }
+                        else if (spellDesc.StartsWith("When struck in combat has a chance of increasing your armor by "))
+                        {
+                            spellDesc = spellDesc.Substring("When struck in combat has a chance of increasing your armor by ".Length);
+                            float value = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" for")));
+                            spellDesc = spellDesc.Substring(spellDesc.IndexOf(" for") + " for ".Length);
+                            int duration = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" ")));
+
+                            switch (duration)
+                            {
+                                case 10:
+                                    if (name == "Band of the Eternal Defender")
+                                    {
+                                        //The buff is up about 1/6 the time, so 800/6 = 133 armor
+                                        //TODO: Don't count this before talents since it's a buff.
+                                        stats.AverageArmor += (float)Math.Round(value / 6f);
+                                    }
+                                    break;
+                            }
+                        }
                     }
 				}
 

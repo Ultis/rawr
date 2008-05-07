@@ -303,7 +303,7 @@ namespace Rawr.ProtWarr
             this.trackBarMitigationScale.Size = new System.Drawing.Size(131, 45);
             this.trackBarMitigationScale.SmallChange = 50;
             this.trackBarMitigationScale.TabIndex = 2;
-            this.trackBarMitigationScale.TickFrequency = 500;
+            this.trackBarMitigationScale.TickFrequency = 1000;
             this.trackBarMitigationScale.Value = 4000;
             this.trackBarMitigationScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
