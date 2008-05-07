@@ -176,6 +176,7 @@ namespace Rawr.Healadin
             else
             {
                 float ohl = oldStats.TimeHL * length;
+                if (ohl > time_hl) ohl = time_hl;
                 calculatedStats.ThroughputPoints = ohl * HL.Hps + (length - ohl) * FoL.Hps;
             }
 
