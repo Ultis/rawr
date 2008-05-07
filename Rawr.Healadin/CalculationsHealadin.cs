@@ -130,6 +130,7 @@ namespace Rawr.Healadin
             _cachedCharacter = character;
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsHealadin calculatedStats = new CharacterCalculationsHealadin();
+            CharacterCalculationsHealadin oldStats = _cachedCharacterStatsWithSlotEmpty as CharacterCalculationsHealadin;
             calculatedStats.BasicStats = stats;
 
 			CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
@@ -138,7 +139,11 @@ namespace Rawr.Healadin
             float totalMana = stats.Mana + (length * stats.Mp5 / 5) + (calcOpts.Spriest * length / 5) +
                 ((1 + stats.BonusManaPotion) * calcOpts.ManaAmt * (float)Math.Ceiling((length / 60 - 1) / calcOpts.ManaTime))
                 + calcOpts.Spiritual;
-            length *= activity; 
+            if (stats.MementoProc > 0)
+            {
+                totalMana += (float)Math.Ceiling(length / 60 - .25)*stats.MementoProc*3;
+            }
+            length *= activity;
 
             calculatedStats[0] = new Spell("Flash of Light", 7);
             calculatedStats[1] = new Spell("Holy Light", 11);
@@ -151,6 +156,7 @@ namespace Rawr.Healadin
             calculatedStats[8] = new Spell("Holy Light", 4);
             Spell FoL = calculatedStats[0];
             Spell HL = calculatedStats[1];
+            
 
             float time_hl = Math.Min(length, Math.Max(0, (totalMana - (length * FoL.Mps)) / (HL.Mps - FoL.Mps)));
             float time_fol = length - time_hl;
@@ -158,19 +164,27 @@ namespace Rawr.Healadin
             {
                 time_fol = Math.Min(length, totalMana / FoL.Mps);
             }
+            calculatedStats.TimeHL = time_hl / (time_fol + time_hl);
 
             float healing_fol = time_fol * FoL.Hps;
             float healing_hl = time_hl * HL.Hps;
 
-            calculatedStats.ThroughputPoints = calculatedStats.Healed = healing_fol + healing_hl;
-            calculatedStats.LongevityPoints = 0;
+            if (oldStats == null)
+            {
+                calculatedStats.ThroughputPoints = FoL.Hps * length;
+            }
+            else
+            {
+                float ohl = oldStats.TimeHL * length;
+                calculatedStats.ThroughputPoints = ohl * HL.Hps + (length - ohl) * FoL.Hps;
+            }
+
+            calculatedStats.OverallPoints = calculatedStats.Healed = healing_fol + healing_hl;
+            calculatedStats.LongevityPoints = calculatedStats.OverallPoints - calculatedStats.ThroughputPoints;
 
             calculatedStats.HealHL = healing_hl / calculatedStats.Healed;
-            calculatedStats.TimeHL = time_hl / (time_fol + time_hl);
             calculatedStats.AvgHPS = calculatedStats.Healed / length / activity;
             calculatedStats.AvgHPM = calculatedStats.Healed / totalMana;
-
-            calculatedStats.OverallPoints = calculatedStats.ThroughputPoints + calculatedStats.LongevityPoints;
 
             return calculatedStats;
         }
@@ -288,7 +302,8 @@ namespace Rawr.Healadin
                 HLHeal = stats.HLHeal,
                 HLCrit = stats.HLCrit,
                 HLCost = stats.HLCost,
-                HLBoL = stats.HLBoL
+                HLBoL = stats.HLBoL,
+                MementoProc = stats.MementoProc
             };
         }
 
@@ -297,7 +312,7 @@ namespace Rawr.Healadin
             return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.FoLMultiplier + stats.FoLHeal + stats.FoLCrit + stats.FoLBoL + stats.HLBoL + stats.HLCost
-                + stats.HLCrit + stats.HLHeal) > 0;
+                + stats.HLCrit + stats.HLHeal + stats.MementoProc) > 0;
         }
     }
 }

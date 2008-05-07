@@ -13,10 +13,12 @@ namespace Rawr.Healadin
         {
             InitializeComponent();
         }
-        
+
+        private bool loading;
+
         protected override void LoadCalculationOptions()
         {
-
+            loading = true;
             if (Character.CalculationOptions == null)
                 Character.CalculationOptions = new CalculationOptionsHealadin();
 
@@ -26,68 +28,101 @@ namespace Rawr.Healadin
             cmbManaTime.Value = (decimal)calcOpts.ManaTime;
             cmbSpriest.Value = (decimal)calcOpts.Spriest;
             cmbSpiritual.Value = (decimal)calcOpts.Spiritual;
+            chkBoL.Checked = calcOpts.BoL;
 
 			trkActivity.Value = (int)calcOpts.Activity;
-            lblActivity.Text = "Activity (" + trkActivity.Value + "%):";
-
+            lblActivity.Text = trkActivity.Value + "%";
+            loading = false;
         }
  
         private void cmbLength_ValueChanged(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-			calcOpts.Length = (float)cmbLength.Value;
-            Character.OnItemsChanged();
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Length = (float)cmbLength.Value;
+                Character.OnItemsChanged();
+            }
         }
 
         private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-			try
-			{
-				calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
-			}
-			catch { }
-            Character.OnItemsChanged();
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                try
+                {
+                    calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
         }
 
         private void cmbManaTime_ValueChanged(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-			calcOpts.ManaTime = (float)cmbManaTime.Value;
-            Character.OnItemsChanged();
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.ManaTime = (float)cmbManaTime.Value;
+                Character.OnItemsChanged();
+            }
         }
 
         private void cmbManaAmt_TextUpdate(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-			try
-			{
-				calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
-			}
-			catch { }
-            Character.OnItemsChanged();
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                try
+                {
+                    calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
         }
 
         private void trkActivity_Scroll(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-			lblActivity.Text = "Activity (" + trkActivity.Value + "%):";
-            calcOpts.Activity = trkActivity.Value;
-            Character.OnItemsChanged();
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                lblActivity.Text = trkActivity.Value + "%";
+                calcOpts.Activity = trkActivity.Value;
+                Character.OnItemsChanged();
+            }
         }
 
         private void cmbSpriest_ValueChanged(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-			calcOpts.Spriest = (float)cmbSpriest.Value;
-            Character.OnItemsChanged();
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Spriest = (float)cmbSpriest.Value;
+                Character.OnItemsChanged();
+            }
         }
 
         private void cmbSpiritual_ValueChanged(object sender, EventArgs e)
         {
-			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-			calcOpts.Spiritual = (float)cmbSpiritual.Value;
-            Character.OnItemsChanged();
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Spiritual = (float)cmbSpiritual.Value;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void chkBoL_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.BoL = chkBoL.Checked;
+                Character.OnItemsChanged();
+            }
+
         }
 
     }
@@ -112,5 +147,6 @@ namespace Rawr.Healadin
 		public float Activity = 80;
 		public float Spriest = 0;
 		public float Spiritual = 0;
+        public bool BoL;
 	}
 }

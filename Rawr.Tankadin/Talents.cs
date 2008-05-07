@@ -16,6 +16,8 @@ namespace Rawr.Tankadin
             SacredDuty = 1.06f;
             ShieldSpecializaiton = 1.3f;
             Thoughness = 1.1f;
+            OneHandSpec = 1.05f;
+            ImpRF = 1.5f;
             //Holy Talents
             /*Deflection = 0;
             Anticipation = 0;
@@ -31,6 +33,8 @@ namespace Rawr.Tankadin
         public float SacredDuty { get; set; }
         public float ShieldSpecializaiton { get; set; }
         public float Thoughness { get; set; }
+        public float OneHandSpec { get; set; }
+        public float ImpRF { get; set; }
 
     }
 }

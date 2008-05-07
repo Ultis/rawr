@@ -736,6 +736,10 @@ namespace Rawr
                             spellDesc = spellDesc.Replace(".", "");
                             stats.HLHeal = float.Parse(spellDesc, System.Globalization.CultureInfo.InvariantCulture);
                         }
+                        else if (spellDesc.StartsWith("Each time you cast a spell, there is chance you will gain up to 76 mana per 5 for 15 sec."))
+                        {
+                            stats.MementoProc = 76;
+                        }
                         else if (spellDesc.StartsWith("When struck in combat has a chance of increasing your armor by "))
                         {
                             spellDesc = spellDesc.Substring("When struck in combat has a chance of increasing your armor by ".Length);

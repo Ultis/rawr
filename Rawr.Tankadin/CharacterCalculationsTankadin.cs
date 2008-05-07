@@ -13,7 +13,7 @@ namespace Rawr.Tankadin
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
@@ -30,6 +30,12 @@ namespace Rawr.Tankadin
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
+        }
+
+        public float ThreatPoints
+        {
+            get { return _subPoints[2]; }
+            set { _subPoints[2] = value; }
         }
 
         private Stats _basicStats;
@@ -130,6 +136,13 @@ namespace Rawr.Tankadin
             set { _critAvoidance = value; }
         }
 
+        public float OverallTPS { get; set; }
+        public float SoRTPS { get; set; }
+        public float JoRTPS { get; set; }
+        public float HolyShieldTPS { get; set; }
+        public float ConsecrateTPS { get; set; }
+        public float MiscTPS { get; set; }
+
         public float NatureSurvivalPoints { get; set; }
         public float FrostSurvivalPoints { get; set; }
         public float FireSurvivalPoints { get; set; }
@@ -141,22 +154,6 @@ namespace Rawr.Tankadin
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             int armorCap = (int)Math.Ceiling((1402.5f * TargetLevel) - 66502.5f);
             float levelDifference = 0.2f * (TargetLevel - 70);
-
-            /*					"Basic Stats:Health",
-					"Basic Stats:Armor",
-					"Basic Stats:Stamina",
-					"Basic Stats:Agility",
-					"Basic Stats:Defense",
-					"Basic Stats:Miss",
-					"Basic Stats:Dodge",
-					"Basic Stats:Parry",
-					"Basic Stats:Block",
-					"Basic Stats:Block Value",
-					"Complex Stats:Avoidance",
-					"Complex Stats:Mitigation",
-					"Complex Stats:Total Mitigation",
-					"Complex Stats:Damage Taken",
-					"Complex Stats:Chance to be Crit",*/
 
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Armor", BasicStats.Armor.ToString());
@@ -170,8 +167,8 @@ namespace Rawr.Tankadin
             dictValues.Add("Block Value", BlockValue.ToString() + "%");
             dictValues.Add("Avoidance", Avoidance.ToString() + "%");
             dictValues.Add("Mitigation", Mitigation.ToString());
+            dictValues.Add("Spell Damage", _basicStats.SpellDamageRating.ToString());
             dictValues.Add("Total Mitigation", TotalMitigation.ToString() + "%");
-            dictValues.Add("Damage Taken", DamageTaken.ToString() + "%");
             if (CritAvoidance == (5f + levelDifference))
                 dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritAvoidance).ToString()
                     + "%*Exactly enough defense rating/resilience to be uncrittable by bosses.");
@@ -186,6 +183,12 @@ namespace Rawr.Tankadin
             dictValues.Add("Overall Points", OverallPoints.ToString());
             dictValues.Add("Mitigation Points", MitigationPoints.ToString());
             dictValues.Add("Survival Points", SurvivalPoints.ToString());
+            dictValues.Add("Overall", Math.Round(OverallTPS) + " tps");
+            dictValues.Add("Holy Shield", Math.Round(HolyShieldTPS) + " tps");
+            dictValues.Add("Seal of Right", Math.Round(SoRTPS) + " tps");
+            dictValues.Add("Judgement of Right", Math.Round(JoRTPS) + " tps");
+            dictValues.Add("Consecrate", Math.Round(ConsecrateTPS) + " tps");
+            dictValues.Add("Misc", Math.Round(MiscTPS) + " tps");
 
             return dictValues;
         }

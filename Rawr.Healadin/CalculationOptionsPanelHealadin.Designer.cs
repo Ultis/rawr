@@ -31,6 +31,11 @@
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cmbSpiritual = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.cmbSpriest = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -39,17 +44,15 @@
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
             this.trkActivity = new System.Windows.Forms.TrackBar();
             this.lblActivity = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbSpiritual = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkBoL = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbSpiritual)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbSpriest)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbSpiritual)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbLength
@@ -60,7 +63,7 @@
             0,
             0,
             65536});
-            this.cmbLength.Location = new System.Drawing.Point(90, 7);
+            this.cmbLength.Location = new System.Drawing.Point(97, 7);
             this.cmbLength.Maximum = new decimal(new int[] {
             20,
             0,
@@ -84,7 +87,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 9);
+            this.label3.Location = new System.Drawing.Point(22, 9);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(69, 13);
             this.label3.TabIndex = 21;
@@ -103,12 +106,71 @@
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmbManaTime);
             this.groupBox2.Controls.Add(this.cmbManaAmt);
-            this.groupBox2.Location = new System.Drawing.Point(4, 84);
+            this.groupBox2.Location = new System.Drawing.Point(4, 113);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(205, 146);
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Mana Buffs";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(101, 118);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(33, 13);
+            this.label8.TabIndex = 11;
+            this.label8.Text = "mana";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(171, 40);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(28, 13);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "mins";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(87, 40);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(33, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "every";
+            // 
+            // cmbSpiritual
+            // 
+            this.cmbSpiritual.Increment = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.cmbSpiritual.Location = new System.Drawing.Point(19, 116);
+            this.cmbSpiritual.Maximum = new decimal(new int[] {
+            20000,
+            0,
+            0,
+            0});
+            this.cmbSpiritual.Name = "cmbSpiritual";
+            this.cmbSpiritual.Size = new System.Drawing.Size(76, 20);
+            this.cmbSpiritual.TabIndex = 8;
+            this.cmbSpiritual.Value = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            this.cmbSpiritual.ValueChanged += new System.EventHandler(this.cmbSpiritual_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 100);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(104, 13);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Spiritual Attunement:";
             // 
             // cmbSpriest
             // 
@@ -204,7 +266,7 @@
             // trkActivity
             // 
             this.trkActivity.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkActivity.Location = new System.Drawing.Point(90, 33);
+            this.trkActivity.Location = new System.Drawing.Point(97, 33);
             this.trkActivity.Maximum = 100;
             this.trkActivity.Minimum = 10;
             this.trkActivity.Name = "trkActivity";
@@ -217,75 +279,52 @@
             // lblActivity
             // 
             this.lblActivity.AutoSize = true;
-            this.lblActivity.Location = new System.Drawing.Point(11, 43);
+            this.lblActivity.Location = new System.Drawing.Point(105, 65);
             this.lblActivity.Name = "lblActivity";
-            this.lblActivity.Size = new System.Drawing.Size(73, 13);
+            this.lblActivity.Size = new System.Drawing.Size(27, 13);
             this.lblActivity.TabIndex = 24;
-            this.lblActivity.Text = "Activity (90%):";
+            this.lblActivity.Text = "90%";
             // 
-            // label1
+            // label9
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 100);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(104, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Spiritual Attunement:";
+            this.label9.Location = new System.Drawing.Point(13, 33);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(78, 45);
+            this.label9.TabIndex = 25;
+            this.label9.Text = "Activity:";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // cmbSpiritual
+            // groupBox1
             // 
-            this.cmbSpiritual.Increment = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.cmbSpiritual.Location = new System.Drawing.Point(19, 116);
-            this.cmbSpiritual.Maximum = new decimal(new int[] {
-            20000,
-            0,
-            0,
-            0});
-            this.cmbSpiritual.Name = "cmbSpiritual";
-            this.cmbSpiritual.Size = new System.Drawing.Size(76, 20);
-            this.cmbSpiritual.TabIndex = 8;
-            this.cmbSpiritual.Value = new decimal(new int[] {
-            2000,
-            0,
-            0,
-            0});
-            this.cmbSpiritual.ValueChanged += new System.EventHandler(this.cmbSpiritual_ValueChanged);
+            this.groupBox1.Location = new System.Drawing.Point(4, 265);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(205, 100);
+            this.groupBox1.TabIndex = 28;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Downranking";
             // 
-            // label2
+            // chkBoL
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(87, 40);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(33, 13);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "every";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(171, 40);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(28, 13);
-            this.label6.TabIndex = 10;
-            this.label6.Text = "mins";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(101, 118);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(33, 13);
-            this.label8.TabIndex = 11;
-            this.label8.Text = "mana";
+            this.chkBoL.Appearance = System.Windows.Forms.Appearance.Button;
+            this.chkBoL.AutoSize = true;
+            this.chkBoL.Checked = true;
+            this.chkBoL.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkBoL.Location = new System.Drawing.Point(59, 84);
+            this.chkBoL.Name = "chkBoL";
+            this.chkBoL.Size = new System.Drawing.Size(94, 23);
+            this.chkBoL.TabIndex = 29;
+            this.chkBoL.Text = "Blessing of Light";
+            this.chkBoL.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkBoL.UseVisualStyleBackColor = true;
+            this.chkBoL.CheckedChanged += new System.EventHandler(this.chkBoL_CheckedChanged);
             // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkBoL);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.lblActivity);
             this.Controls.Add(this.trkActivity);
@@ -296,10 +335,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbSpiritual)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbSpriest)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbSpiritual)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -323,5 +362,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown cmbSpiritual;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox chkBoL;
     }
 }

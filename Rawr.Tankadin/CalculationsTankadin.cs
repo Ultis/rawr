@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Tankadin
 {
-    [System.ComponentModel.DisplayName("Tankadin|Ability_Racial_BearForm")]
+    [System.ComponentModel.DisplayName("Tankadin|Spell_Holy_AvengersShield")]
     public class CalculationsTankadin : CalculationsBase
     {
         //my insides all turned to ash / so slow
@@ -39,10 +39,10 @@ namespace Rawr.Tankadin
 					"Basic Stats:Parry",
 					"Basic Stats:Block",
 					"Basic Stats:Block Value",
+					"Basic Stats:Spell Damage",
 					"Complex Stats:Avoidance",
 					"Complex Stats:Mitigation",
 					"Complex Stats:Total Mitigation",
-					"Complex Stats:Damage Taken",
 					"Complex Stats:Chance to be Crit",
 					@"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
 Overall is typically, but not always, the best way to rate gear. 
@@ -63,6 +63,12 @@ but rather get 'enough' of it, and then focus on Mitigation.
 keeping it roughly even with Mitigation Points is a good 
 way to maintain 'enough' as you progress. If you find that 
 you are being killed by burst damage, focus on Survival Points.",
+                     "Threat:Overall",
+                     "Threat:Holy Shield",
+                     "Threat:Seal of Right",
+                     "Threat:Judgement of Right",
+                     "Threat:Consecrate",
+                     "Threat:Misc"
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -93,6 +99,7 @@ you are being killed by burst damage, focus on Survival Points.",
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
                     _subPointNameColors.Add("Mitigation", System.Drawing.Color.Red);
                     _subPointNameColors.Add("Survival", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("Threat", System.Drawing.Color.DarkOliveGreen);
                 }
                 return _subPointNameColors;
             }
@@ -143,44 +150,64 @@ you are being killed by burst damage, focus on Survival Points.",
             int targetLevel = calcOpts.TargetLevel;
             Stats stats = GetCharacterStats(character, additionalItem);
             Talents talents = new Talents();
-            float levelDifference = (targetLevel - 70f) * 0.2f;
+            float targetDefense = targetLevel * 5;
             CharacterCalculationsTankadin calculatedStats = new CharacterCalculationsTankadin();
             calculatedStats.BasicStats = stats;
             calculatedStats.TargetLevel = targetLevel;
-            
+
+
             //Avoidance calculations
-            calculatedStats.Defense = 350 + (float)Math.Floor(stats.DefenseRating / 2.36f) + talents.Anticipation;
-            calculatedStats.Miss = (float)Math.Round(5 + (calculatedStats.Defense - 350) * .04f + stats.Miss - levelDifference, 2);
-            calculatedStats.Parry = (float)Math.Round(5 + (calculatedStats.Defense - 350) * .04f + stats.ParryRating / 23.6538461538462f + talents.Deflection - levelDifference, 2);
-            calculatedStats.Dodge = (float)Math.Round((calculatedStats.Defense - 350) * .04f + stats.Agility / 25f + stats.DodgeRating / 18.9231f - levelDifference, 2);
+            calculatedStats.Defense = 350 + (float)Math.Floor(stats.DefenseRating / (123f / 52f)) + talents.Anticipation;
+            calculatedStats.Miss = 5 + (calculatedStats.Defense - targetDefense) * .04f + stats.Miss;
+            calculatedStats.Parry = 5 + (calculatedStats.Defense - targetDefense) * .04f + stats.ParryRating / 23.6538461538462f + talents.Deflection;
+            calculatedStats.Dodge = (calculatedStats.Defense - targetDefense) * .04f + stats.Agility / 25f + (stats.DodgeRating / (984f / 52f));
             calculatedStats.Avoidance = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
 
-            calculatedStats.Block = (float)Math.Round(5 + (calculatedStats.Defense - 350) * .04f + stats.BlockRating / 7.884614944458f - levelDifference, 2);
-            calculatedStats.BlockValue = stats.BlockValue;
+            calculatedStats.Block = 5 + (calculatedStats.Defense - targetDefense) * .04f + stats.BlockRating / 7.884614944458f;
+            calculatedStats.BlockValue = stats.BlockValue * talents.ShieldSpecializaiton;
             calculatedStats.CrushAvoidance = calculatedStats.Avoidance + calculatedStats.Block + 30;
-            calculatedStats.CritAvoidance = talents.Anticipation / 25 + stats.DefenseRating / 59.134615f + stats.Resilience / 39.423f;
+            calculatedStats.CritAvoidance = (calculatedStats.Defense - targetDefense) * .04f + stats.Resilience / 39.423f;
             calculatedStats.Mitigation = Math.Min(75f, (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f);
 
+            float reduction = (1f - (calculatedStats.Mitigation * .01f)) * .96f;
+            float attacks = calcOpts.NumberAttackers / calcOpts.AttackSpeed * 10;
             //Apply armor and multipliers for each attack type...
-            float crits = 5f + levelDifference - Math.Min(5 + levelDifference, calculatedStats.CritAvoidance);
-            float crushes = targetLevel == 73 ? Math.Max(Math.Min(100f - crits - calculatedStats.CrushAvoidance, 15f), 0f) : 0f;
-            float hits = Math.Max(100f - (crits + crushes + calculatedStats.Avoidance), 0f);
-            crits *= (100f - calculatedStats.Mitigation) * .02f;
-            crushes *=  (100f - calculatedStats.Mitigation) * .015f;
-            hits *= (100f - calculatedStats.Mitigation) * .01f;
-            calculatedStats.DamageTaken = hits + crushes + crits;
+            float miss = Math.Min(0.01f * attacks * calculatedStats.Avoidance, attacks);
+            float block = Math.Min(Math.Min(8, attacks * (.3f + 0.01f*calculatedStats.Block)), attacks - miss);
+            if (block > 8) block += Math.Min((attacks - block) * .01f * calculatedStats.Block, attacks - miss - block);
+            float crit = Math.Min(0.01f * Math.Max(5 - calculatedStats.CritAvoidance, 0) * attacks, attacks - miss - block);
+            float crush = Math.Min((targetLevel == 73 ? .15f : 0f) * attacks, attacks - miss - block - crit);
+            float hit = attacks - miss - block - crit - crush;
+
+            float modifier = talents.OneHandSpec * (1 + (.6f * talents.ImpRF));
+            calculatedStats.HolyShieldTPS = modifier * Math.Min(block, 8f) * 1.2f * 1.35f * (155 + .05f * stats.SpellDamageRating) / 10f;
+
+            crit *= calcOpts.AverageHit * reduction * 2f;
+            crush *= calcOpts.AverageHit * reduction * 1.5f;
+            hit *= calcOpts.AverageHit * reduction;
+            block *= calcOpts.AverageHit * reduction * Math.Max(1f - (calculatedStats.BlockValue / calcOpts.AverageHit / reduction), 0);
+            calculatedStats.DamageTaken = (hit + crush + crit + block) / (attacks * calcOpts.AverageHit) * 100;
             calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
 
-            calculatedStats.SurvivalPoints = (stats.Health / (1f - (calculatedStats.Mitigation / 100f)));
-            calculatedStats.MitigationPoints = (7000f * (1f / (calculatedStats.DamageTaken / 100f)));
-            calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints;
+            calculatedStats.SurvivalPoints = stats.Health / reduction;
+            calculatedStats.MitigationPoints = calcOpts.MitigationScale * (1f * (1f / (calculatedStats.DamageTaken / 100f)));
+            float ws = character.MainHand == null ? 0 : character.MainHand.Speed;
+            float wd = character.MainHand == null ? 0 : ((character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f);
+            calculatedStats.SoRTPS = ws == 0 ? 0 : ((0.85f * (2610.43f * ws / 100f) + 0.03f * wd - 1f + (0.108f * ws * stats.SpellDamageRating * ws)) / ws) * modifier;
+            calculatedStats.ConsecrateTPS = calcOpts.NumberAttackers * (512 + .9524f * stats.SpellDamageRating) / 8f * modifier;
+            calculatedStats.JoRTPS = (218f + stats.SpellDamageRating * .7143f) / 9f * modifier;
+            calculatedStats.OverallTPS = calculatedStats.SoRTPS + calculatedStats.JoRTPS + 
+                calculatedStats.HolyShieldTPS + calculatedStats.ConsecrateTPS + calculatedStats.MiscTPS;
+            calculatedStats.ThreatPoints = calculatedStats.OverallTPS * calcOpts.ThreatScale;
+
+            calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
 
             return calculatedStats;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            Stats statsRace = new Stats() { Health = 3197, Mana = 2673, Stamina = 118, Intellect = 86, Spirit = 88, Agility = 79, DodgeRating = 12.3f};
+            Stats statsRace = new Stats() { Health = 3197, Mana = 2673, Stamina = 118, Intellect = 86, Spirit = 88, Agility = 79, DodgeRating = 12.3f };
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -189,14 +216,14 @@ you are being killed by burst damage, focus on Survival Points.",
             Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace;
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsBuffs.BonusAgilityMultiplier));
             statsTotal.Stamina = (float)Math.Round(statsTotal.Stamina * (1 + statsBuffs.BonusStaminaMultiplier) * talents.SacredDuty * talents.CombatExpertise);
-            statsTotal.Health = (float)Math.Round(statsTotal.Health + (statsTotal.Stamina*10));
+            statsTotal.Health = (float)Math.Round(statsTotal.Health + (statsTotal.Stamina * 10));
             statsTotal.Armor = (float)Math.Round((statsTotal.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier) * talents.Thoughness);
             return statsTotal;
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-                    return new ComparisonCalculationBase[0];
+            return new ComparisonCalculationBase[0];
         }
 
         public override Stats GetRelevantStats(Stats stats)
@@ -216,7 +243,11 @@ you are being killed by burst damage, focus on Survival Points.",
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 Health = stats.Health,
-                Miss = stats.Miss
+                Miss = stats.Miss,
+                SpellDamageRating = stats.SpellDamageRating,
+                HitRating = stats.HitRating,
+                SpellHitRating = stats.SpellHitRating,
+                ArmorPenetration = stats.ArmorPenetration,
             };
         }
 
@@ -224,7 +255,8 @@ you are being killed by burst damage, focus on Survival Points.",
         {
             return (stats.Agility + stats.Armor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
                 stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health +
-                stats.Miss + stats.Resilience + stats.Stamina + stats.ParryRating + stats.BlockRating + stats.BlockValue) > 0;
+                stats.Miss + stats.Resilience + stats.Stamina + stats.ParryRating + stats.BlockRating + stats.BlockValue +
+                stats.SpellHitRating + stats.SpellDamageRating + stats.HitRating + stats.ArmorPenetration) > 0;
         }
     }
 
