@@ -321,12 +321,12 @@ namespace Rawr.Moonkin
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
             float critDamageCoefficient = baseCriticalMultiplier;
             float critChanceCoefficient = baseCriticalChance + critRate;
-            // Nature's Grace is ignored for Wrath, because it does not reduce the GCD
+            // Wrath is assumed not to be affected by Nature's Grace
             float hitCoefficient = hitRate;
             float hasteCoefficient = 1 + hasteRating;
 
-            // Use the property so that haste over the haste cap will clip at the current GCD
-            CastTime /= hasteCoefficient;
+            // Use the property so that haste over the haste cap will clip at the current GCD, if possible to achieve for Starfire
+            CastTime = unhastedCastTime / hasteCoefficient;
             CastTime += latency;
 
             return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / baseCastTime;
