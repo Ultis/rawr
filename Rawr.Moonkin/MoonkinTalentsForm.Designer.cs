@@ -1288,11 +1288,7 @@
             this.cmbTreeofLife.FormattingEnabled = true;
             this.cmbTreeofLife.Items.AddRange(new object[] {
             "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"});
+            "1"});
             this.cmbTreeofLife.Location = new System.Drawing.Point(155, 557);
             this.cmbTreeofLife.Name = "cmbTreeofLife";
             this.cmbTreeofLife.Size = new System.Drawing.Size(50, 21);
@@ -1321,7 +1317,10 @@
             this.cmbEmpoweredRejuv.Items.AddRange(new object[] {
             "0",
             "1",
-            "2"});
+            "2",
+            "3",
+            "4",
+            "5"});
             this.cmbEmpoweredRejuv.Location = new System.Drawing.Point(155, 527);
             this.cmbEmpoweredRejuv.Name = "cmbEmpoweredRejuv";
             this.cmbEmpoweredRejuv.Size = new System.Drawing.Size(50, 21);

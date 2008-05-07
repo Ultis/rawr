@@ -247,14 +247,15 @@ namespace Rawr.Moonkin
 
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
-            float critDamageCoefficient = 1 + baseCriticalMultiplier;
+            float critDamageCoefficient = baseCriticalMultiplier;
             float critChanceCoefficient = baseCriticalChance + critRate;
             float naturesGraceTime = naturesGrace ? 0.5f : 0.0f;
             float hitCoefficient = hitRate;
             float hasteCoefficient = 1 + hasteRating;
 
             // Use the property so that haste over the haste cap will clip at the current GCD, if possible to achieve for Starfire
-            CastTime = (unhastedCastTime - naturesGraceTime * critChanceCoefficient * hitCoefficient) / hasteCoefficient + latency;
+            CastTime = (unhastedCastTime - naturesGraceTime * critChanceCoefficient * hitCoefficient) / hasteCoefficient;
+            CastTime += latency;
 
             return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / baseCastTime;
         }
@@ -283,7 +284,7 @@ namespace Rawr.Moonkin
         {
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
-            float critDamageCoefficient = 1 + baseCriticalMultiplier;
+            float critDamageCoefficient = baseCriticalMultiplier;
             float critChanceCoefficient = baseCriticalChance + critRate;
             // Nature's Grace is ignored for Moonfire, because it is an instant cast
             float hitCoefficient = hitRate;
@@ -318,7 +319,7 @@ namespace Rawr.Moonkin
 
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
-            float critDamageCoefficient = 1 + baseCriticalMultiplier;
+            float critDamageCoefficient = baseCriticalMultiplier;
             float critChanceCoefficient = baseCriticalChance + critRate;
             // Nature's Grace is ignored for Wrath, because it does not reduce the GCD
             float hitCoefficient = hitRate;
@@ -406,7 +407,7 @@ namespace Rawr.Moonkin
             {
                 if (sp.DoT == null && has1NonDot)
                 {
-                    lastSpellCastTime = (sp.CastTime / spellHaste) + latency;
+                    lastSpellCastTime = (sp.CastTime / (1 + spellHaste)) + latency;
                 }
                 if (sp.DoT == null && !has1NonDot)
                     has1NonDot = true;
@@ -778,9 +779,9 @@ namespace Rawr.Moonkin
                     break;
             }
 
-            if (baseHitRate + effectiveSpellHit / 1262.0f > 0.99f)
+            if (baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor > 0.99f)
             {
-                effectiveSpellHit = 1262.0f * (0.99f - baseHitRate);
+                effectiveSpellHit = CalculationsMoonkin.hitRatingConversionFactor * (0.99f - baseHitRate);
             }
 
             RecreateSpells(character, ref calcs);
@@ -800,19 +801,19 @@ namespace Rawr.Moonkin
                 // Trinkets
                 trinketExtraDPS = 0.0f;
                 // Do a pre-emptive call to rotation.DPS to get corrected cast times for spells
-                rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / 1262.0f, effectiveSpellCrit / 2208.0f, effectiveSpellHaste / 1576.0f, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency);
-                DoTrinketCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / 1262.0f, ref effectiveArcaneDamage, ref effectiveNatureDamage, ref effectiveSpellCrit, ref effectiveSpellHaste);
+                rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency);
+                DoTrinketCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, ref effectiveArcaneDamage, ref effectiveNatureDamage, ref effectiveSpellCrit, ref effectiveSpellHaste);
 
                 // JoW/mana restore procs
-                effectiveMana += DoManaRestoreCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / 1262.0f) * (fightLength / rotation.Duration);
+                effectiveMana += DoManaRestoreCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor) * (fightLength / rotation.Duration);
 
                 // Calculate average global cooldown based on effective haste rating (includes trinkets)
-                Spell.GlobalCooldown /= 1 + effectiveSpellHaste * (1 / 1576.0f);
+                Spell.GlobalCooldown /= 1 + effectiveSpellHaste * (1 / CalculationsMoonkin.hasteRatingConversionFactor);
                 // Reset the cast time on Insect Swarm and Moonfire, since this is affected by haste
                 insectSwarm.CastTime = Spell.GlobalCooldown;
                 moonfire.CastTime = Spell.GlobalCooldown;
 
-                float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / 1262.0f, effectiveSpellCrit / 2208.0f, effectiveSpellHaste / 1576.0f, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency) + trinketExtraDPS;
+                float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency) + trinketExtraDPS;
                 float currentRawDPS = rotation.RawDPS + trinketExtraDPS;
                 if (currentDPS > maxDPS)
                 {
@@ -888,7 +889,7 @@ namespace Rawr.Moonkin
             {
                 float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier);
                 float baseDamage = (694 + 806) / 2.0f;
-                float averageDamage = hitRate * baseDamage * (1 + 1.5f * calcs.SpellCrit) * specialDamageModifier;
+                float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
                 float timeBetweenProcs = rotation.Duration / (hitRate * (calcs.SpellCrit + rotation.AverageCritChance) * rotation.CastCount);
                 if (timeBetweenProcs < 2.5f) timeBetweenProcs = timeBetweenProcs * 3.0f + 2.5f;
                 else timeBetweenProcs *= 3.0f;
@@ -901,7 +902,7 @@ namespace Rawr.Moonkin
                 {
                     float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier);
                     float baseDamage = (333 + 367) / 2.0f;
-                    float averageDamage = hitRate * baseDamage * (1 + 1.5f * calcs.SpellCrit) * specialDamageModifier;
+                    float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
                     trinketExtraDPS += averageDamage / 45.0f;
                 }
                 else
@@ -915,7 +916,7 @@ namespace Rawr.Moonkin
             {
                 float specialDamageModifier = (1 + calcs.BasicStats.BonusShadowSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier);
                 float baseDamage = (285 + 475) / 2.0f;
-                float averageDamage = hitRate * baseDamage * (1 + 1.5f * calcs.SpellCrit) * specialDamageModifier;
+                float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
                 float timeBetweenProcs = 1 / (rotation.TotalDotTicks / rotation.Duration * 0.1f) + 15.0f;
                 trinketExtraDPS += averageDamage / timeBetweenProcs;
             }
@@ -946,7 +947,7 @@ namespace Rawr.Moonkin
             // 20% chance of spell damage on crit, 45 second cooldown.
             if (calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 > 0)
             {
-                float procsPerRotation = 0.2f * hitRate * (effectiveSpellCrit / 2208.0f) * rotation.CastCount;
+                float procsPerRotation = 0.2f * hitRate * (effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor) * rotation.CastCount;
                 float timeBetweenProcs = rotation.Duration / procsPerRotation;
                 effectiveArcaneDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_5 * 10.0f / (45.0f + timeBetweenProcs);
                 effectiveNatureDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_5 * 10.0f / (45.0f + timeBetweenProcs);

@@ -8,6 +8,9 @@ namespace Rawr.Moonkin
     [System.ComponentModel.DisplayName("Moonkin|Spell_Nature_ForceOfNature")]
     class CalculationsMoonkin : CalculationsBase
     {
+        public static float hitRatingConversionFactor = 800f * (41.0f / 26.0f);
+        public static float hasteRatingConversionFactor = 1000f * (41.0f / 26.0f);
+        public static float critRatingConversionFactor = 1400f * (41.0f / 26.0f);
         private Dictionary<string, System.Drawing.Color> subColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
@@ -168,8 +171,8 @@ namespace Rawr.Moonkin
             Stats stats = GetCharacterStats(character, additionalItem);
             calcs.BasicStats = stats;
 
-            float hitRatingMultiplier = 1.0f / 1262.0f;
-            float critRatingMultiplier = 1.0f / 2208.0f;
+            float hitRatingMultiplier = 1.0f / CalculationsMoonkin.hitRatingConversionFactor;
+            float critRatingMultiplier = 1.0f / CalculationsMoonkin.critRatingConversionFactor;
 
             calcs.SpellCrit = stats.SpellCritRating * critRatingMultiplier;
             calcs.SpellHit = stats.SpellHitRating * hitRatingMultiplier;
