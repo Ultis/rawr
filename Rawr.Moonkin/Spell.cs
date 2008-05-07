@@ -708,6 +708,12 @@ namespace Rawr.Moonkin
             starfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
             moonfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
 
+            // Level-based partial resistances
+            wrath.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 70);
+            starfire.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 70);
+            moonfire.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 70);
+            // Insect Swarm is a binary spell
+
             // Add spell-specific crit chance
             // Wrath, Starfire: Crit chance +(0.02 * Focused Starlight)
             wrath.SpecialCriticalModifier += 0.02f * calcOpts.FocusedStarlight;
