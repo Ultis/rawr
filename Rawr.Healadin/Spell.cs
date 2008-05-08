@@ -30,7 +30,9 @@ namespace Rawr.Healadin
         private static float[] HLHEAL = new float[] { 0, 1, 2, 3, 345, 537.5f, 758, 1022, 1343, 1709, 1872, 2321 };
         private static float[] HLLEVEL = new float[] { 0, 1, 2, 3, 22, 30, 38, 46, 54, 60, 62, 70 };
 
-        public Spell(string name, int rank)
+        public Spell(string name, int rank) : this(name, rank, true){ }
+
+        public Spell(string name, int rank, bool bol)
         {
             this.name = name;
             this.rank = rank;
@@ -42,7 +44,7 @@ namespace Rawr.Healadin
                 downrank = Math.Min((HLLEVEL[rank] + 11) / 70f, 1f);
                 coef = 2.5f / 3.5f;
                 baseCastTime = 2;
-                bolBonus = 580;
+                bolBonus = bol ? 580 : 0;
             }
             else
             {
@@ -52,35 +54,35 @@ namespace Rawr.Healadin
                 baseCastTime = 1.5f;
                 coef = 1.5f / 3.5f;
                 downrank = 1;
-                bolBonus = 185;
+                bolBonus = bol ? 185 : 0;
             }
         }
 
         public void Calculate(Stats stats)
         {
-            Calculate(stats, false);   
+            Calculate(stats, false);
         }
 
         public void Calculate(Stats stats, bool di)
         {
-            float bonus, multi, bol, cost;
+            float bonus, multi, bol = 0, cost;
             spellCrit = .08336f + (stats.Intellect / 8000) + (stats.SpellCritRating / 2208);
             castTime = baseCastTime / (1 + (stats.SpellHasteRating / 1570));
             
             if (name.Equals("Holy Light"))
             {
-                spellCrit += .06f + stats.HLCrit;
+                spellCrit += .11f + stats.HLCrit;
                 bonus = stats.HLHeal;
                 multi = healMultiple;
-                bol = bolBonus + stats.HLBoL;
+                if (bolBonus > 0) bol = bolBonus + stats.HLBoL;
                 cost = stats.HLCost;
             }
             else
             {
-                spellCrit += stats.FoLCrit;
+                spellCrit += .05f + stats.FoLCrit;
                 bonus = stats.FoLHeal;
                 multi = healMultiple + stats.FoLMultiplier;
-                bol = bolBonus + stats.FoLBoL;
+                if (bolBonus > 0) bol = bolBonus + stats.FoLBoL;
                 cost = 0;
             }
 

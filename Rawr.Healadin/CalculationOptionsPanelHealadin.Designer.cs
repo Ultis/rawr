@@ -45,14 +45,25 @@
             this.trkActivity = new System.Windows.Forms.TrackBar();
             this.lblActivity = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chkBoL = new System.Windows.Forms.CheckBox();
+            this.trkRatio = new System.Windows.Forms.TrackBar();
+            this.nubHL2 = new System.Windows.Forms.NumericUpDown();
+            this.nubHL1 = new System.Windows.Forms.NumericUpDown();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.labHL2 = new System.Windows.Forms.Label();
+            this.labHL1 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmbSpiritual)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbSpriest)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkRatio)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nubHL2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nubHL1)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // cmbLength
@@ -266,11 +277,11 @@
             // trkActivity
             // 
             this.trkActivity.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkActivity.Location = new System.Drawing.Point(97, 33);
+            this.trkActivity.Location = new System.Drawing.Point(94, 33);
             this.trkActivity.Maximum = 100;
             this.trkActivity.Minimum = 10;
             this.trkActivity.Name = "trkActivity";
-            this.trkActivity.Size = new System.Drawing.Size(112, 45);
+            this.trkActivity.Size = new System.Drawing.Size(118, 45);
             this.trkActivity.TabIndex = 23;
             this.trkActivity.TickFrequency = 10;
             this.trkActivity.Value = 90;
@@ -294,15 +305,6 @@
             this.label9.Text = "Activity:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Location = new System.Drawing.Point(4, 265);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(205, 100);
-            this.groupBox1.TabIndex = 28;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Downranking";
-            // 
             // chkBoL
             // 
             this.chkBoL.Appearance = System.Windows.Forms.Appearance.Button;
@@ -318,6 +320,116 @@
             this.chkBoL.UseVisualStyleBackColor = true;
             this.chkBoL.CheckedChanged += new System.EventHandler(this.chkBoL_CheckedChanged);
             // 
+            // trkRatio
+            // 
+            this.trkRatio.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trkRatio.Location = new System.Drawing.Point(47, 19);
+            this.trkRatio.Maximum = 100;
+            this.trkRatio.Name = "trkRatio";
+            this.trkRatio.Size = new System.Drawing.Size(111, 45);
+            this.trkRatio.TabIndex = 24;
+            this.trkRatio.TickFrequency = 10;
+            this.trkRatio.Value = 25;
+            this.trkRatio.Scroll += new System.EventHandler(this.trkRatio_Scroll);
+            // 
+            // nubHL2
+            // 
+            this.nubHL2.Location = new System.Drawing.Point(164, 37);
+            this.nubHL2.Maximum = new decimal(new int[] {
+            11,
+            0,
+            0,
+            0});
+            this.nubHL2.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.nubHL2.Name = "nubHL2";
+            this.nubHL2.Size = new System.Drawing.Size(35, 20);
+            this.nubHL2.TabIndex = 25;
+            this.nubHL2.Value = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.nubHL2.ValueChanged += new System.EventHandler(this.nubHL2_ValueChanged);
+            // 
+            // nubHL1
+            // 
+            this.nubHL1.Location = new System.Drawing.Point(6, 37);
+            this.nubHL1.Maximum = new decimal(new int[] {
+            11,
+            0,
+            0,
+            0});
+            this.nubHL1.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.nubHL1.Name = "nubHL1";
+            this.nubHL1.Size = new System.Drawing.Size(35, 20);
+            this.nubHL1.TabIndex = 26;
+            this.nubHL1.Value = new decimal(new int[] {
+            11,
+            0,
+            0,
+            0});
+            this.nubHL1.ValueChanged += new System.EventHandler(this.nubHL1_ValueChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.labHL2);
+            this.groupBox1.Controls.Add(this.labHL1);
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Controls.Add(this.label10);
+            this.groupBox1.Controls.Add(this.nubHL1);
+            this.groupBox1.Controls.Add(this.nubHL2);
+            this.groupBox1.Controls.Add(this.trkRatio);
+            this.groupBox1.Location = new System.Drawing.Point(4, 265);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(205, 71);
+            this.groupBox1.TabIndex = 28;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Downranking";
+            // 
+            // labHL2
+            // 
+            this.labHL2.AutoSize = true;
+            this.labHL2.Location = new System.Drawing.Point(122, 51);
+            this.labHL2.Name = "labHL2";
+            this.labHL2.Size = new System.Drawing.Size(27, 13);
+            this.labHL2.TabIndex = 30;
+            this.labHL2.Text = "25%";
+            // 
+            // labHL1
+            // 
+            this.labHL1.AutoSize = true;
+            this.labHL1.Location = new System.Drawing.Point(52, 51);
+            this.labHL1.Name = "labHL1";
+            this.labHL1.Size = new System.Drawing.Size(27, 13);
+            this.labHL1.TabIndex = 29;
+            this.labHL1.Text = "75%";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(166, 19);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(33, 13);
+            this.label11.TabIndex = 28;
+            this.label11.Text = "Rank";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 19);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(33, 13);
+            this.label10.TabIndex = 27;
+            this.label10.Text = "Rank";
+            // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -331,7 +443,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbLength);
             this.Name = "CalculationOptionsPanelHealadin";
-            this.Size = new System.Drawing.Size(212, 553);
+            this.Size = new System.Drawing.Size(212, 349);
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -339,6 +451,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbSpriest)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkRatio)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nubHL2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nubHL1)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -363,7 +480,14 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown cmbSpiritual;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox chkBoL;
+        private System.Windows.Forms.TrackBar trkRatio;
+        private System.Windows.Forms.NumericUpDown nubHL2;
+        private System.Windows.Forms.NumericUpDown nubHL1;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label labHL1;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label labHL2;
     }
 }

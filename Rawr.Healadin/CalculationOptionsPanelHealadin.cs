@@ -32,6 +32,13 @@ namespace Rawr.Healadin
 
 			trkActivity.Value = (int)calcOpts.Activity;
             lblActivity.Text = trkActivity.Value + "%";
+
+            trkRatio.Value = (int)(calcOpts.Ratio * 100);
+            labHL1.Text = (100 - trkRatio.Value).ToString() + "%";
+            labHL2.Text = trkRatio.Value.ToString() + "%";
+            if (calcOpts.Rank1 >= 4 && calcOpts.Rank1 <= 11) nubHL1.Value = (decimal)calcOpts.Rank1;
+            if (calcOpts.Rank2 >= 4 && calcOpts.Rank2 <= 11) nubHL2.Value = (decimal)calcOpts.Rank2;
+
             loading = false;
         }
  
@@ -125,6 +132,38 @@ namespace Rawr.Healadin
 
         }
 
+        private void trkRatio_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Ratio = trkRatio.Value / 100f;
+                labHL1.Text = (100 - trkRatio.Value).ToString() + "%";
+                labHL2.Text = trkRatio.Value.ToString() + "%";
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void nubHL1_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Rank1 = (int)nubHL1.Value;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void nubHL2_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Rank2 = (int)nubHL2.Value;
+                Character.OnItemsChanged();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -147,6 +186,9 @@ namespace Rawr.Healadin
 		public float Activity = 80;
 		public float Spriest = 0;
 		public float Spiritual = 0;
-        public bool BoL;
+        public bool BoL = true;
+        public float Ratio = .25f;
+        public int Rank1 = 11;
+        public int Rank2 = 9;
 	}
 }

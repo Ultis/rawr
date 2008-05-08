@@ -46,6 +46,8 @@ namespace Rawr.Healadin
         public float Healed { get; set; }
         public float TimeHL { get; set; }
         public float HealHL { get; set; }
+        public float HLHPS { get; set; }
+        public float FoLHPS { get; set; }
 
         private Stats _basicStats;
         public Stats BasicStats

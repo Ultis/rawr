@@ -145,46 +145,53 @@ namespace Rawr.Healadin
             }
             length *= activity;
 
-            calculatedStats[0] = new Spell("Flash of Light", 7);
-            calculatedStats[1] = new Spell("Holy Light", 11);
-            calculatedStats[2] = new Spell("Holy Light", 10);
-            calculatedStats[3] = new Spell("Holy Light", 9);
-            calculatedStats[4] = new Spell("Holy Light", 8);
-            calculatedStats[5] = new Spell("Holy Light", 7);
-            calculatedStats[6] = new Spell("Holy Light", 6);
-            calculatedStats[7] = new Spell("Holy Light", 5);
-            calculatedStats[8] = new Spell("Holy Light", 4);
+            calculatedStats[0] = new Spell("Flash of Light", 7, calcOpts.BoL);
+            calculatedStats[1] = new Spell("Holy Light", 11, calcOpts.BoL);
+            calculatedStats[2] = new Spell("Holy Light", 10, calcOpts.BoL);
+            calculatedStats[3] = new Spell("Holy Light", 9, calcOpts.BoL);
+            calculatedStats[4] = new Spell("Holy Light", 8, calcOpts.BoL);
+            calculatedStats[5] = new Spell("Holy Light", 7, calcOpts.BoL);
+            calculatedStats[6] = new Spell("Holy Light", 6, calcOpts.BoL);
+            calculatedStats[7] = new Spell("Holy Light", 5, calcOpts.BoL);
+            calculatedStats[8] = new Spell("Holy Light", 4, calcOpts.BoL);
             Spell FoL = calculatedStats[0];
-            Spell HL = calculatedStats[1];
-            
+            int rank1 = 12 - calcOpts.Rank1;
+            int rank2 = 12 - calcOpts.Rank2;
 
-            float time_hl = Math.Min(length, Math.Max(0, (totalMana - (length * FoL.Mps)) / (HL.Mps - FoL.Mps)));
+            float HL_Mps = calculatedStats[rank1].Mps * (1f - calcOpts.Ratio) + calculatedStats[rank2].Mps * calcOpts.Ratio;
+            float HL_Hps = calculatedStats[rank1].Hps * (1f - calcOpts.Ratio) + calculatedStats[rank2].Hps * calcOpts.Ratio;
+
+
+            float time_hl = Math.Min(length, Math.Max(0, (totalMana - (length * FoL.Mps)) / (HL_Mps - FoL.Mps)));
             float time_fol = length - time_hl;
             if (time_hl == 0)
             {
                 time_fol = Math.Min(length, totalMana / FoL.Mps);
             }
-            calculatedStats.TimeHL = time_hl / (time_fol + time_hl);
+            calculatedStats.TimeHL = time_hl / length;
 
             float healing_fol = time_fol * FoL.Hps;
-            float healing_hl = time_hl * HL.Hps;
+            float healing_hl = time_hl * HL_Hps;
+
+            calculatedStats.OverallPoints = calculatedStats.Healed = healing_fol + healing_hl;
+            calculatedStats.HLHPS = HL_Hps;
+            calculatedStats.FoLHPS = FoL.Hps;
 
             if (oldStats == null)
             {
                 calculatedStats.ThroughputPoints = FoL.Hps * length;
+                calculatedStats.LongevityPoints = calculatedStats.OverallPoints - calculatedStats.ThroughputPoints;
             }
             else
             {
-                float ohl = oldStats.TimeHL * length;
-                if (ohl > time_hl) ohl = time_hl;
-                calculatedStats.ThroughputPoints = ohl * HL.Hps + (length - ohl) * FoL.Hps;
+                float otime = Math.Max(oldStats.TimeHL * length, time_hl);
+                calculatedStats.LongevityPoints = (length-otime) * oldStats.FoLHPS + otime * oldStats.HLHPS;
+                calculatedStats.ThroughputPoints = calculatedStats.OverallPoints - calculatedStats.LongevityPoints;
             }
 
-            calculatedStats.OverallPoints = calculatedStats.Healed = healing_fol + healing_hl;
-            calculatedStats.LongevityPoints = calculatedStats.OverallPoints - calculatedStats.ThroughputPoints;
 
             calculatedStats.HealHL = healing_hl / calculatedStats.Healed;
-            calculatedStats.AvgHPS = calculatedStats.Healed / length / activity;
+            calculatedStats.AvgHPS = calculatedStats.Healed / length * activity;
             calculatedStats.AvgHPM = calculatedStats.Healed / totalMana;
 
             return calculatedStats;
@@ -205,6 +212,7 @@ namespace Rawr.Healadin
             statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (0.35f * statsTotal.Intellect) + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
             statsTotal.Mana = statsTotal.Mana + (statsTotal.Intellect * 15);
             statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
+            statsTotal.BlockValue = statsTotal.BlockValue * (1f+statsTotal.BonusBlockValueMultiplier);
             return statsTotal;
         }
 
@@ -221,15 +229,17 @@ namespace Rawr.Healadin
             ComparisonCalculationHealadin HL5 = new ComparisonCalculationHealadin("Holy Light 5");
             ComparisonCalculationHealadin HL4 = new ComparisonCalculationHealadin("Holy Light 4");
 
-            calc[0] = new Spell("Flash of Light", 7);
-            calc[1] = new Spell("Holy Light", 11);
-            calc[2] = new Spell("Holy Light", 10);
-            calc[3] = new Spell("Holy Light", 9);
-            calc[4] = new Spell("Holy Light", 8);
-            calc[5] = new Spell("Holy Light", 7);
-            calc[6] = new Spell("Holy Light", 6);
-            calc[7] = new Spell("Holy Light", 5);
-            calc[8] = new Spell("Holy Light", 4);
+            CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
+
+            calc[0] = new Spell("Flash of Light", 7, calcOpts.BoL);
+            calc[1] = new Spell("Holy Light", 11, calcOpts.BoL);
+            calc[2] = new Spell("Holy Light", 10, calcOpts.BoL);
+            calc[3] = new Spell("Holy Light", 9, calcOpts.BoL);
+            calc[4] = new Spell("Holy Light", 8, calcOpts.BoL);
+            calc[5] = new Spell("Holy Light", 7, calcOpts.BoL);
+            calc[6] = new Spell("Holy Light", 6, calcOpts.BoL);
+            calc[7] = new Spell("Holy Light", 5, calcOpts.BoL);
+            calc[8] = new Spell("Holy Light", 4, calcOpts.BoL);
 
             switch (chartName)
             {
@@ -310,7 +320,7 @@ namespace Rawr.Healadin
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
+            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.FoLMultiplier + stats.FoLHeal + stats.FoLCrit + stats.FoLBoL + stats.HLBoL + stats.HLCost
                 + stats.HLCrit + stats.HLHeal + stats.MementoProc) > 0;
