@@ -262,13 +262,17 @@ namespace Rawr.Mage
             {
                 get
                 {
-                    if (CRow[row] == -1 || CCol[col] == -1) return 0;
-                    return lp[CRow[row], CCol[col]];
+                    row = CRow[row];
+                    col = CCol[col];
+                    if (row == -1 || col == -1) return 0;
+                    return lp[row, col];
                 }
                 set
                 {
-                    if (CRow[row] == -1 || CCol[col] == -1) return;
-                    lp[CRow[row], CCol[col]] = value;
+                    row = CRow[row];
+                    col = CCol[col];
+                    if (row == -1 || col == -1) return;
+                    lp[row, col] = value;
                     compactSolution = null;
                 }
             }
@@ -1432,63 +1436,51 @@ namespace Rawr.Mage
                     solution = lp.Solve();
                     valid = true;
                     // make sure all cooldowns are tightly packed and not fragmented
-                    for (int seg = 0; seg < segments; seg++)
+                    // mf is trivially satisfied
+                    // heroism
+                    if (heroismAvailable)
                     {
-                        // mf is trivially satisfied
-                        // heroism
-                        if (heroismAvailable)
-                        {
-                            valid = ValidateCooldown(seg, Cooldown.Heroism, 40, -1);
-                            if (!valid) break;
-                        }
-                        // ap
-                        if (apAvailable)
-                        {
-                            valid = ValidateCooldown(seg, Cooldown.ArcanePower, 15, 180);
-                            if (!valid) break;
-                        }
-                        // iv
-                        if (ivAvailable)
-                        {
-                            valid = ValidateCooldown(seg, Cooldown.IcyVeins, 20 + (coldsnap ? 20 : 0), 180 + (coldsnap ? 20 : 0));
-                            if (!valid) break;
-                        }
-                        // combustion
-                        if (combustionAvailable)
-                        {
-                            valid = ValidateCooldown(seg, Cooldown.Combustion, 15, 180 + 15); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
-                            if (!valid) break;
-                        }
-                        // drums
-                        if (calculationOptions.DrumsOfBattle)
-                        {
-                            valid = ValidateCooldown(seg, Cooldown.DrumsOfBattle, 30, 120);
-                            if (!valid) break;
-                        }
-                        // flamecap
-                        if (calculationOptions.FlameCap)
-                        {
-                            valid = ValidateCooldown(seg, Cooldown.FlameCap, 60, 180);
-                            if (!valid) break;
-                        }
-                        // destruction
-                        if (calculationOptions.DestructionPotion)
-                        {
-                            valid = ValidateCooldown(seg, Cooldown.DestructionPotion, 15, 120);
-                            if (!valid) break;
-                        }
-                        // t1
-                        if (trinket1Available)
-                        {
-                            valid = ValidateCooldown(seg, Cooldown.Trinket1, trinket1duration, trinket1cooldown);
-                            if (!valid) break;
-                        }
-                        // t2
-                        if (trinket2Available)
-                        {
-                            valid = ValidateCooldown(seg, Cooldown.Trinket2, trinket2duration, trinket2cooldown);
-                            if (!valid) break;
-                        }
+                        valid = ValidateCooldown(Cooldown.Heroism, 40, -1);
+                    }
+                    // ap
+                    if (valid && apAvailable)
+                    {
+                        valid = ValidateCooldown(Cooldown.ArcanePower, 15, 180);
+                    }
+                    // iv
+                    if (valid && ivAvailable)
+                    {
+                        valid = ValidateCooldown(Cooldown.IcyVeins, 20 + (coldsnap ? 20 : 0), 180 + (coldsnap ? 20 : 0));
+                    }
+                    // combustion
+                    if (valid && combustionAvailable)
+                    {
+                        valid = ValidateCooldown(Cooldown.Combustion, 15, 180 + 15); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
+                    }
+                    // drums
+                    if (valid && calculationOptions.DrumsOfBattle)
+                    {
+                        valid = ValidateCooldown(Cooldown.DrumsOfBattle, 30, 120);
+                    }
+                    // flamecap
+                    if (valid && calculationOptions.FlameCap)
+                    {
+                        valid = ValidateCooldown(Cooldown.FlameCap, 60, 180);
+                    }
+                    // destruction
+                    if (valid && calculationOptions.DestructionPotion)
+                    {
+                        valid = ValidateCooldown(Cooldown.DestructionPotion, 15, 120);
+                    }
+                    // t1
+                    if (valid && trinket1Available)
+                    {
+                        valid = ValidateCooldown(Cooldown.Trinket1, trinket1duration, trinket1cooldown);
+                    }
+                    // t2
+                    if (valid && trinket2Available)
+                    {
+                        valid = ValidateCooldown(Cooldown.Trinket2, trinket2duration, trinket2cooldown);
                     }
                     // eliminate packing cycles
                     // example:
@@ -1627,147 +1619,133 @@ namespace Rawr.Mage
             return calculatedStats;
         }
 
-        private bool ValidateCooldown(int seg, Cooldown cooldown, double effectDuration, double cooldownDuration)
+        private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration)
         {
-            bool valid = true;
-            double inseg = 0;
-            double leftseg = 0;
-            double rightseg = 0;
-            for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+            double[] segCount = new double[segments];
+            for (int outseg = 0; outseg < segments; outseg++)
             {
-                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                if (stats != null && stats.GetCooldown(cooldown)) inseg += solution[index];
+                double s = 0.0;
+                for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                {
+                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                    if (stats != null && stats.GetCooldown(cooldown))
+                    {
+                        s += solution[index];
+                    }
+                }
+                segCount[outseg] = s;
             }
             int mindist = (int)Math.Ceiling(effectDuration / segmentDuration);
             int maxdist = (cooldownDuration < 0) ? int.MaxValue : ((int)Math.Floor((cooldownDuration - effectDuration) / segmentDuration));
-            if (inseg > 0)
+
+            bool valid = true;
+
+            for (int seg = 0; seg < segments; seg++)
             {
-                // verify that outside duration segments are 0
-                for (int outseg = 0; outseg < segments; outseg++)
+                double inseg = segCount[seg];
+                if (inseg > 0)
                 {
-                    if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
-                    {
-                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                        {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.GetCooldown(cooldown) && solution[index] > 0)
-                            {
-                                valid = false;
-                                goto breakCooldown;
-                            }
-                        }
-                    }
-                    else if (Math.Abs(outseg - seg) < maxdist && outseg != seg)
-                    {
-                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                        {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.GetCooldown(cooldown))
-                            {
-                                if (outseg < seg)
-                                {
-                                    leftseg += solution[index];
-                                }
-                                else if (outseg > seg)
-                                {
-                                    rightseg += solution[index];
-                                }
-                            }
-                        }
-                    }
-                }
-            breakCooldown:
-                if (!valid)
-                {
-                    // branch on whether cooldown is used in this segment
-                    CompactLP cooldownUsed = lp.Clone();
-                    // cooldown not used
-                    //lp.IVHash += 1 << seg;
-                    for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                    {
-                        CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                        if (stats != null && stats.GetCooldown(cooldown)) lp.EraseColumn(index);
-                    }
-                    heap.Push(lp);
-                    // cooldown used
+                    // verify that outside duration segments are 0
                     for (int outseg = 0; outseg < segments; outseg++)
                     {
                         if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
                         {
-                            //cooldownUsed.IVHash += 1 << outseg;
-                            for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                            if (segCount[outseg] > 0)
                             {
-                                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                if (stats != null && stats.GetCooldown(cooldown)) cooldownUsed.EraseColumn(index);
+                                valid = false;
+                                break;
                             }
                         }
                     }
-                    heap.Push(cooldownUsed);
+                    if (!valid)
+                    {
+                        // branch on whether cooldown is used in this segment
+                        CompactLP cooldownUsed = lp.Clone();
+                        // cooldown not used
+                        //lp.IVHash += 1 << seg;
+                        for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(cooldown)) lp.EraseColumn(index);
+                        }
+                        heap.Push(lp);
+                        // cooldown used
+                        for (int outseg = 0; outseg < segments; outseg++)
+                        {
+                            if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                            {
+                                //cooldownUsed.IVHash += 1 << outseg;
+                                for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                                {
+                                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                    if (stats != null && stats.GetCooldown(cooldown)) cooldownUsed.EraseColumn(index);
+                                }
+                            }
+                        }
+                        heap.Push(cooldownUsed);
+                        return false;
+                    }
                 }
             }
-            else
+            for (int seg = 0; seg < segments; seg++)
             {
+                double inseg = segCount[seg];
+                double leftseg = 0.0;
+                double rightseg = 0.0;
                 for (int outseg = 0; outseg < segments; outseg++)
                 {
                     if (Math.Abs(outseg - seg) <= mindist && outseg != seg)
                     {
-                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        if (outseg < seg)
                         {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.GetCooldown(cooldown))
+                            leftseg += segCount[outseg];
+                        }
+                        else if (outseg > seg)
+                        {
+                            rightseg += segCount[outseg];
+                        }
+                    }
+                }
+                if (valid && inseg < segmentDuration - 0.000001 && leftseg > 0 && rightseg > 0 && cooldown != Cooldown.IcyVeins) // coldsnapped icy veins doesn't have to be contiguous
+                {
+                    // fragmentation
+                    // either left must be disabled, right disabled, or seg to max
+                    CompactLP leftDisabled = lp.Clone();
+                    for (int outseg = 0; outseg < segments; outseg++)
+                    {
+                        if ((outseg < seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
+                        {
+                            for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                             {
-                                if (outseg < seg)
-                                {
-                                    leftseg += solution[index];
-                                }
-                                else if (outseg > seg)
-                                {
-                                    rightseg += solution[index];
-                                }
+                                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                if (stats != null && stats.GetCooldown(cooldown)) leftDisabled.EraseColumn(index);
                             }
                         }
                     }
-                }
-            }
-            if (valid && inseg < segmentDuration - 0.000001 && leftseg > 0 && rightseg > 0 && cooldown != Cooldown.IcyVeins) // coldsnapped icy veins doesn't have to be contiguous
-            {
-                // fragmentation
-                // either left must be disabled, right disabled, or seg to max
-                CompactLP leftDisabled = lp.Clone();
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if ((outseg < seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
+                    heap.Push(leftDisabled);
+                    CompactLP rightDisabled = lp.Clone();
+                    for (int outseg = 0; outseg < segments; outseg++)
                     {
-                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        if ((outseg > seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
                         {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.GetCooldown(cooldown)) leftDisabled.EraseColumn(index);
+                            for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                            {
+                                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                if (stats != null && stats.GetCooldown(cooldown)) rightDisabled.EraseColumn(index);
+                            }
                         }
                     }
-                }
-                heap.Push(leftDisabled);
-                CompactLP rightDisabled = lp.Clone();
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if ((outseg > seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
+                    heap.Push(rightDisabled);
+                    lp.AddConstraint();
+                    for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                     {
-                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                        {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.GetCooldown(cooldown)) rightDisabled.EraseColumn(index);
-                        }
+                        CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                        if (stats != null && stats.GetCooldown(cooldown)) lp.UpdateConstraintElement(index, -1);
                     }
+                    lp.UpdateConstraintRHS(-segmentDuration);
+                    heap.Push(lp);
+                    return false;
                 }
-                heap.Push(rightDisabled);
-                lp.AddConstraint();
-                for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                {
-                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                    if (stats != null && stats.GetCooldown(cooldown)) lp.UpdateConstraintElement(index, -1);
-                }
-                lp.UpdateConstraintRHS(-segmentDuration);
-                heap.Push(lp);
-                valid = false;
             }
             return valid;
         }

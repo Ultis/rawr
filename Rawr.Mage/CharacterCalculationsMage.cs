@@ -1610,8 +1610,13 @@ namespace Rawr.Mage
                             bool ycritical = y.SuperGroup.MaxTime <= sortStartTime;
                             int compare = ycritical.CompareTo(xcritical);
                             if (compare != 0) return compare;
-                            compare = CompareByMps(x.SuperGroup, y.SuperGroup);
-                            if (compare != 0) return compare;
+                            if (x.Group.Count == 0 || y.Group.Count == 0)
+                            {
+                                // only sort by mps for normal casting without cooldowns
+                                // if both are in super groups we have to sort in the way as prescribed by SortGroups solution
+                                compare = CompareByMps(x.SuperGroup, y.SuperGroup);
+                                if (compare != 0) return compare;
+                            }
                             // if two super groups have same mps make sure to group by super group
                             return x.SuperGroup.MinTime.CompareTo(y.SuperGroup.MinTime); // is min time unique???
                         }
@@ -3588,11 +3593,11 @@ namespace Rawr.Mage
                     }
                     if (reportMode == ReportMode.Listing)
                     {
-                        if (timing != null && label != null && (i == 0 || index != sequence[i - 1].Index)) timing.AppendLine(TimeFormat(time) + ": " + label + " (" + Math.Round(manabefore).ToString() + " mana)");
+                        if (timing != null && label != null && (i == 0 || (index <= 5 && index != sequence[i - 1].Index) || sequence[i].Stats != sequence[i - 1].Stats || sequence[i].Spell != sequence[i - 1].Spell)) timing.AppendLine(TimeFormat(time) + ": " + label + " (" + Math.Round(manabefore).ToString() + " mana)");
                     }
                     else if (reportMode == ReportMode.Compact)
                     {
-                        if (timing != null && label != null && (i == 0 || index != sequence[i - 1].Index))
+                        if (timing != null && label != null && (i == 0 || (index <= 5 && index != sequence[i - 1].Index) || sequence[i].Stats != sequence[i - 1].Stats || sequence[i].Spell != sequence[i - 1].Spell))
                         {
                             timing.AppendLine(TimeFormat(time) + ": " + (string.IsNullOrEmpty(stats.BuffLabel) ? "" : (stats.BuffLabel + "+")) + label + " (" + Math.Round(manabefore).ToString() + " mana)");
                         }
