@@ -401,7 +401,7 @@ namespace Rawr
 			Character = Character;
 
 			ItemCache.OnItemsChanged();
-			Character.OnItemsChanged();
+			//Character.OnItemsChanged(); already called when setting Character
 			_unsavedChanges = unsavedChanges;
 		}
 
