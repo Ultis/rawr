@@ -253,8 +253,11 @@ namespace Rawr.Moonkin
             float hitCoefficient = hitRate;
             float hasteCoefficient = 1 + hasteRating;
 
-            // Use the property so that haste over the haste cap will clip at the current GCD, if possible to achieve for Starfire
-            CastTime = (unhastedCastTime - naturesGraceTime * critChanceCoefficient * hitCoefficient) / hasteCoefficient;
+            // New cast time calculations to deal with NG and clipping
+            double castTimeNoNG = Math.Max(unhastedCastTime / hasteCoefficient, Spell.GlobalCooldown);
+            double castTimeWithNG = Math.Max(castTimeNoNG - naturesGraceTime, Spell.GlobalCooldown);
+            double NGChance = critChanceCoefficient * hitCoefficient;
+            CastTime = (float)((1 - NGChance) * castTimeNoNG + NGChance * castTimeWithNG);
             CastTime += latency;
 
             return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / baseCastTime;
@@ -321,12 +324,15 @@ namespace Rawr.Moonkin
             // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
             float critDamageCoefficient = baseCriticalMultiplier;
             float critChanceCoefficient = baseCriticalChance + critRate;
-            // Wrath is assumed not to be affected by Nature's Grace
+            float naturesGraceTime = naturesGrace ? 0.5f : 0.0f;
             float hitCoefficient = hitRate;
             float hasteCoefficient = 1 + hasteRating;
 
-            // Use the property so that haste over the haste cap will clip at the current GCD, if possible to achieve for Starfire
-            CastTime = unhastedCastTime / hasteCoefficient;
+            // New cast time calculations to deal with NG and clipping
+            double castTimeNoNG = Math.Max(unhastedCastTime / hasteCoefficient, Spell.GlobalCooldown);
+            double castTimeWithNG = Math.Max(castTimeNoNG - naturesGraceTime, Spell.GlobalCooldown);
+            double NGChance = critChanceCoefficient * hitCoefficient;
+            CastTime = (float)((1 - NGChance) * castTimeNoNG + NGChance * castTimeWithNG);
             CastTime += latency;
 
             return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / baseCastTime;
@@ -561,6 +567,11 @@ namespace Rawr.Moonkin
                 if (_duration == 0.0f)
                     CalculateRotationalVariables();
                 return _duration;
+            }
+            set
+            {
+                // Add an accessor for this property for the calculation of NG+Moonfire
+                _duration = value;
             }
         }
         public float CastCount
@@ -812,6 +823,12 @@ namespace Rawr.Moonkin
                 // Reset the cast time on Insect Swarm and Moonfire, since this is affected by haste
                 insectSwarm.CastTime = Spell.GlobalCooldown;
                 moonfire.CastTime = Spell.GlobalCooldown;
+                // Incorporate Nature's Grace with Moonfire into the rotational calculations
+                if (naturesGrace && rotation.HasMoonfire && rotation.StarfireCount > 0)
+                {
+                    float critFromGear = effectiveSpellCrit * (1 / CalculationsMoonkin.critRatingConversionFactor);
+                    rotation.Duration -= (1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f;
+                }
 
                 float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency) + trinketExtraDPS;
                 float currentRawDPS = rotation.RawDPS + trinketExtraDPS;
