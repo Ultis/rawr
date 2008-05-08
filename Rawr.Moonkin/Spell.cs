@@ -268,7 +268,7 @@ namespace Rawr.Moonkin
         {
             name = "MF";
             baseDamage = (305.0f + 357.0f) / 2.0f;
-            spellDamageMultiplier = 0.15f;
+            spellDamageMultiplier = (1.5f/3.5f) * (baseDamage / (baseDamage + 150.0f*4.0f));
             baseCastTime = Spell.GlobalCooldown;
             manaCost = 495.0f;
             dotEffect = new DotEffect()
@@ -276,7 +276,7 @@ namespace Rawr.Moonkin
                     Duration = 12.0f,
                     TickDuration = 3.0f,
                     DamagePerTick = 150.0f,
-                    SpellDamageMultiplier = 0.52f
+                    SpellDamageMultiplier = (12.0f/15.0f) * (150.0f*4.0f / (baseDamage + 150.0f*4.0f))
                 };
             school = SpellSchool.Arcane;
         }
@@ -302,7 +302,7 @@ namespace Rawr.Moonkin
         {
             name = "W";
             baseDamage = (381.0f + 429.0f) / 2.0f;
-            spellDamageMultiplier = 0.571f;
+            spellDamageMultiplier = 2.0f/3.5f;
             baseCastTime = 2.0f;
             manaCost = 255.0f;
             dotEffect = null;
