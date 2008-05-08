@@ -889,105 +889,111 @@ namespace Rawr
                         {
                             stats.BonusBlockValueMultiplier = 0.1f;
                         }
-                        try
-						{
-							int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
-							switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1).Trim())
-							{
-                                case "Resist All":
-                                    stats.AllResist = gemBonusValue;
-                                    break;
-								case "Increased Critical Damage":
-									stats.BonusCritMultiplier = (float)gemBonusValue / 100f;
-                                    stats.BonusSpellCritMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on other stats
-									break;
-								case "Agility":
-									stats.Agility = gemBonusValue;
-									break;
-								case "Stamina":
-									stats.Stamina = gemBonusValue;
-									break;
-								case "Dodge Rating":
-									stats.DodgeRating = gemBonusValue;
-									break;
-                                case "Parry Rating":
-                                    stats.ParryRating = gemBonusValue;
-                                    break;
-                                case "Block Rating":
-                                    stats.BlockRating = gemBonusValue;
-                                    break;
-								case "Defense Rating":
-									stats.DefenseRating = gemBonusValue;
-                                    break;
-                                case "Healing":
-                                case "Healing +4 Spell Damage":
-                                case "Healing +3 Spell Damage":
-                                case "Healing +2 Spell Damage":
-                                    stats.Healing = gemBonusValue;
-                                    break;
-								case "Hit Rating":
-									stats.HitRating = gemBonusValue;
-									break;
-								case "Haste Rating":
-									stats.HasteRating = gemBonusValue;
-									break;
-								case "Expertise Rating":
-									stats.ExpertiseRating = gemBonusValue;
-									break;
-								case "Armor Penetration":
-									stats.ArmorPenetration = gemBonusValue;
-									break;
-								case "Strength":
-									stats.Strength = gemBonusValue;
-									break;
-								case "Crit Rating":
-								case "Crit Strike Rating":
-								case "Critical Rating":
-								case "Critical Strike Rating":
-									stats.CritRating = gemBonusValue;
-									break;
-								case "Attack Power":
-									stats.AttackPower = gemBonusValue;
-									break;
-								case "Weapon Damage":
-									stats.WeaponDamage = gemBonusValue;
-									break;
-								case "Resilience":
-								case "Resilience Rating":
-									stats.Resilience = gemBonusValue;
-									break;
-                                case "Spell Hit Rating":
-                                    stats.SpellHitRating = gemBonusValue;
-                                    break;
-                                case "Spell Haste Rating":
-                                    stats.SpellHasteRating = gemBonusValue;
-                                    break;
-                                case "Spell Damage":
-                                    stats.SpellDamageRating = gemBonusValue;
-                                    break;
-								case "Spell Crit":
-								case "Spell Crit Rating":
-								case "Spell Critical":
-                                case "Spell Critical Rating":
-                                    stats.SpellCritRating = gemBonusValue;
-                                    break;
-                                case "Mana every 5 seconds" :
-                                case "Mana ever 5 Sec" :
-                                case "mana per 5 sec":
-                                case "mana per 5 sec.":
-                                case "Mana per 5 Seconds" :
-                                    stats.Mp5 = gemBonusValue;
-                                    break;
-                                case "Intellect" :
-                                    stats.Intellect = gemBonusValue;
-                                    break; 
-                                case "Spirit" :
-                                    stats.Spirit = gemBonusValue;
-                                    break;
+                        else if (gemBonus == "+2% Intellect")
+                        {
+                            stats.BonusIntellectMultiplier = 0.02f;
+                        }
+                        else
+                        {
+                            try
+                            {
+                                int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
+                                switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1).Trim())
+                                {
+                                    case "Resist All":
+                                        stats.AllResist = gemBonusValue;
+                                        break;
+                                    case "Increased Critical Damage":
+                                        stats.BonusCritMultiplier = (float)gemBonusValue / 100f;
+                                        stats.BonusSpellCritMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on other stats
+                                        break;
+                                    case "Agility":
+                                        stats.Agility = gemBonusValue;
+                                        break;
+                                    case "Stamina":
+                                        stats.Stamina = gemBonusValue;
+                                        break;
+                                    case "Dodge Rating":
+                                        stats.DodgeRating = gemBonusValue;
+                                        break;
+                                    case "Parry Rating":
+                                        stats.ParryRating = gemBonusValue;
+                                        break;
+                                    case "Block Rating":
+                                        stats.BlockRating = gemBonusValue;
+                                        break;
+                                    case "Defense Rating":
+                                        stats.DefenseRating = gemBonusValue;
+                                        break;
+                                    case "Healing":
+                                    case "Healing +4 Spell Damage":
+                                    case "Healing +3 Spell Damage":
+                                    case "Healing +2 Spell Damage":
+                                        stats.Healing = gemBonusValue;
+                                        break;
+                                    case "Hit Rating":
+                                        stats.HitRating = gemBonusValue;
+                                        break;
+                                    case "Haste Rating":
+                                        stats.HasteRating = gemBonusValue;
+                                        break;
+                                    case "Expertise Rating":
+                                        stats.ExpertiseRating = gemBonusValue;
+                                        break;
+                                    case "Armor Penetration":
+                                        stats.ArmorPenetration = gemBonusValue;
+                                        break;
+                                    case "Strength":
+                                        stats.Strength = gemBonusValue;
+                                        break;
+                                    case "Crit Rating":
+                                    case "Crit Strike Rating":
+                                    case "Critical Rating":
+                                    case "Critical Strike Rating":
+                                        stats.CritRating = gemBonusValue;
+                                        break;
+                                    case "Attack Power":
+                                        stats.AttackPower = gemBonusValue;
+                                        break;
+                                    case "Weapon Damage":
+                                        stats.WeaponDamage = gemBonusValue;
+                                        break;
+                                    case "Resilience":
+                                    case "Resilience Rating":
+                                        stats.Resilience = gemBonusValue;
+                                        break;
+                                    case "Spell Hit Rating":
+                                        stats.SpellHitRating = gemBonusValue;
+                                        break;
+                                    case "Spell Haste Rating":
+                                        stats.SpellHasteRating = gemBonusValue;
+                                        break;
+                                    case "Spell Damage":
+                                        stats.SpellDamageRating = gemBonusValue;
+                                        break;
+                                    case "Spell Crit":
+                                    case "Spell Crit Rating":
+                                    case "Spell Critical":
+                                    case "Spell Critical Rating":
+                                        stats.SpellCritRating = gemBonusValue;
+                                        break;
+                                    case "Mana every 5 seconds":
+                                    case "Mana ever 5 Sec":
+                                    case "mana per 5 sec":
+                                    case "mana per 5 sec.":
+                                    case "Mana per 5 Seconds":
+                                        stats.Mp5 = gemBonusValue;
+                                        break;
+                                    case "Intellect":
+                                        stats.Intellect = gemBonusValue;
+                                        break;
+                                    case "Spirit":
+                                        stats.Spirit = gemBonusValue;
+                                        break;
+                                }
                             }
-						}
-						catch { }
-					
+                            catch { }
+                        }
 					}
 				}
 				string desc = string.Empty;
