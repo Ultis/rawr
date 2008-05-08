@@ -239,14 +239,11 @@ namespace Rawr.Moonkin
         }
         public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
         {
-            // Reset base cast time
-            if (unhastedCastTime > 0.0f)
-                baseCastTime = unhastedCastTime;
-            else
+            // Save the unhasted cast time
+            if (unhastedCastTime == 0.0f)
                 unhastedCastTime = baseCastTime;
 
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
-            // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
             float critDamageCoefficient = baseCriticalMultiplier;
             float critChanceCoefficient = baseCriticalChance + critRate;
             float naturesGraceTime = naturesGrace ? 0.5f : 0.0f;
@@ -286,7 +283,6 @@ namespace Rawr.Moonkin
         public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
         {
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
-            // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
             float critDamageCoefficient = baseCriticalMultiplier;
             float critChanceCoefficient = baseCriticalChance + critRate;
             // Nature's Grace is ignored for Moonfire, because it is an instant cast
@@ -314,14 +310,11 @@ namespace Rawr.Moonkin
         }
         public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
         {
-            // Reset base cast time
-            if (unhastedCastTime > 0.0f)
-                baseCastTime = unhastedCastTime;
-            else
+            // Save the unhasted cast time
+            if (unhastedCastTime == 0.0f)
                 unhastedCastTime = baseCastTime;
 
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
-            // Adoriele's DPS calculations assume a 200% damage crit, we need to modify that
             float critDamageCoefficient = baseCriticalMultiplier;
             float critChanceCoefficient = baseCriticalChance + critRate;
             float naturesGraceTime = naturesGrace ? 0.5f : 0.0f;
@@ -827,7 +820,7 @@ namespace Rawr.Moonkin
                 if (naturesGrace && rotation.HasMoonfire && rotation.StarfireCount > 0)
                 {
                     float critFromGear = effectiveSpellCrit * (1 / CalculationsMoonkin.critRatingConversionFactor);
-                    rotation.Duration -= (1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f;
+                    starfire.CastTime -= ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f) / rotation.StarfireCount;
                 }
 
                 float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency) + trinketExtraDPS;
