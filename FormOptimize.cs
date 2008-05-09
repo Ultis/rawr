@@ -1220,6 +1220,7 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
 			character.Class = _character.Class;
 			character.Talents = _character.Talents;
+            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
 			//character.RecalculateSetBonuses();
 			return character;
 		}
@@ -1285,7 +1286,8 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
 			character.Talents = _character.Talents;
-			//character.RecalculateSetBonuses();
+            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
+            //character.RecalculateSetBonuses();
 			return character;
 		}
 
@@ -1411,6 +1413,7 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
             character.Talents = _character.Talents;
+            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
             //character.RecalculateSetBonuses();
             return character;
         }
@@ -1512,6 +1515,7 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
             character.Talents = _character.Talents;
+            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
             //character.RecalculateSetBonuses();
             return character;
         }
@@ -1581,7 +1585,8 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
 			character.Talents = _character.Talents;
-			//character.RecalculateSetBonuses();
+            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
+            //character.RecalculateSetBonuses();
 			return character;
 
 		}
@@ -1628,7 +1633,8 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
 			character.Talents = _character.Talents;
-			//character.RecalculateSetBonuses();
+            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
+            //character.RecalculateSetBonuses();
 			return character;
 		}
 
@@ -1674,7 +1680,8 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
 			character.Talents = _character.Talents;
-			//character.RecalculateSetBonuses();
+            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
+            //character.RecalculateSetBonuses();
 			return character;
 		}
 
