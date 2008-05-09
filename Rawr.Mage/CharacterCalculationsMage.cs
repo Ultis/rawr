@@ -3725,7 +3725,7 @@ namespace Rawr.Mage
             }
         }
 
-        private Dictionary<string, string> GetCharacterDisplayCalculationValuesInternal()
+        internal Dictionary<string, string> GetCharacterDisplayCalculationValuesInternal()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
@@ -3742,7 +3742,7 @@ namespace Rawr.Mage
             dictValues.Add("Fire Damage", FireDamage.ToString());
             dictValues.Add("Frost Damage", FrostDamage.ToString());
             dictValues.Add("MP5", BasicStats.Mp5.ToString());
-            dictValues.Add("Mana Regen", Math.Floor(ManaRegen * 5).ToString() + String.Format("*Mana Regen in 5SR: {0}\nMana Regen Drinking: {1}", Math.Floor(ManaRegen5SR * 5), Math.Floor(ManaRegenDrinking * 5)));
+            dictValues.Add("Mana Regen", Math.Floor(ManaRegen * 5).ToString() + String.Format("*Mana Regen in 5SR: {0}\r\nMana Regen Drinking: {1}", Math.Floor(ManaRegen5SR * 5), Math.Floor(ManaRegenDrinking * 5)));
             dictValues.Add("Health Regen", Math.Floor(HealthRegenCombat * 5).ToString() + String.Format("*Health Regen Eating: {0}", Math.Floor(HealthRegenEating * 5)));
             dictValues.Add("Arcane Resist", (BasicStats.AllResist + BasicStats.ArcaneResistance).ToString());
             dictValues.Add("Fire Resist", (BasicStats.AllResist + BasicStats.FireResistance).ToString());
@@ -3752,7 +3752,7 @@ namespace Rawr.Mage
             dictValues.Add("Physical Mitigation", String.Format("{0:F}%", 100 * MeleeMitigation));
             dictValues.Add("Resilience", BasicStats.Resilience.ToString());
             dictValues.Add("Defense", Defense.ToString());
-            dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\nPhysical Crit Reduction: {1:F}%\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
+            dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\r\nPhysical Crit Reduction: {1:F}%\r\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
             List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.ArcaneBlast33, SpellId.ABAMP, SpellId.ABAM, SpellId.AB3AMSc, SpellId.ABAM3Sc, SpellId.ABAM3Sc2, SpellId.ABAM3FrB, SpellId.ABAM3FrB2, SpellId.ABFrB3FrB, SpellId.ABFrB3FrBSc, SpellId.ABFB3FBSc, SpellId.FireballScorch, SpellId.FireballFireBlast, SpellId.FireBlast, SpellId.ABAM3ScCCAM, SpellId.ABAM3Sc2CCAM, SpellId.ABAM3FrBCCAM, SpellId.ABAM3FrBScCCAM, SpellId.ABAMCCAM, SpellId.ABAM3CCAM, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold/*, SpellId.ABAM3FrBCCAMFail*/ };
             Spell AB = GetSpell(SpellId.ArcaneBlast33);
@@ -3764,11 +3764,11 @@ namespace Rawr.Mage
                     if (s is BaseSpell)
                     {
                         BaseSpell bs = s as BaseSpell;
-                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} Tps\n{3:F} sec\n{9:F} - {10:F} Hit\n{11:F} - {12:F} Crit{13}\n{4:F}x Amplify\n{5:F}% Crit Rate\n{6:F}% Hit Rate\n{7:F} Crit Multiplier\nAB Spam Tradeoff: {8:F} Dpm", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), bs.MinHitDamage, bs.MaxHitDamage, bs.MinCritDamage, bs.MaxCritDamage, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : "")));
+                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{9:F} - {10:F} Hit\r\n{11:F} - {12:F} Crit{13}\r\n{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier\r\nAB Spam Tradeoff: {8:F} Dpm", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), bs.MinHitDamage, bs.MaxHitDamage, bs.MinCritDamage, bs.MaxCritDamage, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : "")));
                     }
                     else
                     {
-                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\n{2:F} Tps\nAB Spam Tradeoff: {3:F} Dpm\nAverage Cast Time: {4:F} sec\n{5}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), s.CastTime, s.Sequence));
+                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\nAB Spam Tradeoff: {3:F} Dpm\r\nAverage Cast Time: {4:F} sec\r\n{5}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), s.CastTime, s.Sequence));
                     }
                 }
             }
@@ -3779,6 +3779,7 @@ namespace Rawr.Mage
             StringBuilder sb = new StringBuilder("*");
             if (MageArmor != null) sb.AppendLine(MageArmor);
             Dictionary<string, double> combinedSolution = new Dictionary<string, double>();
+            Dictionary<string, int> combinedSolutionData = new Dictionary<string, int>();
             for (int i = 0; i < SolutionLabel.Length; i++)
             {
                 if (Solution[i] > 0.01)
@@ -3799,6 +3800,7 @@ namespace Rawr.Mage
                             double value;
                             combinedSolution.TryGetValue(SolutionLabel[i], out value);
                             combinedSolution[SolutionLabel[i]] = value + Solution[i];
+                            combinedSolutionData[SolutionLabel[i]] = i;
                             //sb.AppendLine(String.Format("{2}{0}: {1:F} sec", SolutionLabel[i], Solution[i], (SolutionSegments == null) ? "" : (SolutionSegments[i].ToString() + " ")));
                             break;
                     }
@@ -3806,7 +3808,15 @@ namespace Rawr.Mage
             }
             foreach (KeyValuePair<string, double> kvp in combinedSolution)
             {
-                sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
+                Spell s = SolutionSpells[combinedSolutionData[kvp.Key]];
+                if (s != null)
+                {
+                    sb.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps)", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond));
+                }
+                else
+                {
+                    sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
+                }
             }
             if (WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", WaterElementalDuration / 45f));
             dictValues.Add("Spell Cycles", sb.ToString());

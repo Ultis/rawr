@@ -154,6 +154,99 @@ namespace Rawr.Mage
             }
         }
 
+        public override string GetCharacterStatsString(Character character)
+        {
+			StringBuilder stats = new StringBuilder();
+			stats.AppendFormat("Character:\t\t{0}@{1}-{2}\r\nRace:\t\t{3}",
+				character.Name, character.Region, character.Realm, character.Race);
+
+            CalculationOptionsMage CalculationOptions = (CalculationOptionsMage)character.CalculationOptions;
+            CharacterCalculationsMage calculations;
+            if (CalculationOptions.SMPDisplay)
+            {
+                bool savedIncrementalOptimizations = CalculationOptions.IncrementalOptimizations;
+                CalculationOptions.IncrementalOptimizations = false;
+                calculations = (CharacterCalculationsMage)GetCharacterCalculations(character, null, CalculationOptions, CalculationOptions.IncrementalSetArmor, false, true);
+                CalculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
+            }
+            else
+            {
+                calculations = (CharacterCalculationsMage)GetCharacterCalculations(character);
+            }
+
+            Dictionary<string, string> dict = calculations.GetCharacterDisplayCalculationValuesInternal();
+			foreach (KeyValuePair<string, string> kvp in dict)
+			{
+                if (kvp.Key != "Sequence" && kvp.Key != "Spell Cycles")
+                {
+                    string[] value = kvp.Value.Split('*');
+                    if (value.Length == 2)
+                    {
+                        stats.AppendFormat("\r\n{0}: {1}\r\n{2}\r\n", kvp.Key, value[0], value[1]);
+                    }
+                    else
+                    {
+                        stats.AppendFormat("\r\n{0}: {1}", kvp.Key, value[0]);
+                    }
+                }
+			}
+
+            // spell cycles
+            stats.AppendFormat("\r\n\r\nSpell Cycles:\r\n\r\n");
+            if (calculations.MageArmor != null) stats.AppendLine(calculations.MageArmor);
+            Dictionary<string, double> combinedSolution = new Dictionary<string, double>();
+            Dictionary<string, int> combinedSolutionData = new Dictionary<string, int>();
+            for (int i = 0; i < calculations.SolutionLabel.Length; i++)
+            {
+                if (calculations.Solution[i] > 0.01)
+                {
+                    switch (i)
+                    {
+                        case 2:
+                            stats.AppendLine(String.Format("{0}: {1:F}x", calculations.SolutionLabel[i], calculations.Solution[i] / calculations.EvocationDuration));
+                            break;
+                        case 3:
+                        case 4:
+                            stats.AppendLine(String.Format("{0}: {1:F}x", calculations.SolutionLabel[i], calculations.Solution[i] / calculations.ManaPotionTime));
+                            break;
+                        case 5:
+                            stats.AppendLine(String.Format("{0}: {1:F}x", calculations.SolutionLabel[i], calculations.Solution[i] / calculations.GlobalCooldown));
+                            break;
+                        default:
+                            double value;
+                            combinedSolution.TryGetValue(calculations.SolutionLabel[i], out value);
+                            combinedSolution[calculations.SolutionLabel[i]] = value + calculations.Solution[i];
+                            combinedSolutionData[calculations.SolutionLabel[i]] = i;
+                            break;
+                    }
+                }
+            }
+            foreach (KeyValuePair<string, double> kvp in combinedSolution)
+            {
+                Spell s = calculations.SolutionSpells[combinedSolutionData[kvp.Key]];
+                if (s != null)
+                {
+                    stats.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps) {5}", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, s.Sequence));
+                }
+                else
+                {
+                    stats.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
+                }
+            }
+            if (calculations.WaterElemental) stats.AppendLine(String.Format("Water Elemental: {0:F}x", calculations.WaterElementalDuration / 45f));
+
+            // sequence
+            string sequence = dict["Sequence"];
+            if (sequence != "*Disabled" && sequence != "*Unavailable")
+            {
+                string[] value = sequence.Split('*');
+                stats.AppendFormat("\r\n\r\nSequence:\r\n\r\n");
+                stats.Append(value[1]);
+            }
+
+			return stats.ToString();
+        }
+
 		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Mage; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMage(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsMage(); }
@@ -388,12 +481,14 @@ namespace Rawr.Mage
                 CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calculationOptions, "Mage Armor", computeIncrementalSet);
                 CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calculationOptions, "Molten Armor", computeIncrementalSet);
                 CharacterCalculationsBase calc = (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
+                calculationOptions.IncrementalSetArmor = ((CharacterCalculationsMage)calc).MageArmor;
                 if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
                 ret = calc;
             }
             else
             {
                 CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calculationOptions, null, computeIncrementalSet);
+                if (!character.DisableBuffAutoActivation) calculationOptions.IncrementalSetArmor = ((CharacterCalculationsMage)calc).MageArmor;
                 if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
                 ret = calc;
             }
