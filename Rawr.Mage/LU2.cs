@@ -114,12 +114,15 @@ namespace Rawr.Mage
                     }
                     for (k = 0; k < size; k++)
                     {
-                        if (U[k * size + k] != 0) c[k] /= U[k * size + k];
-                        else c[k] = 0; // value underspecified
-                        for (i = k + 1; i < size; i++)
+                        if (U[k * size + k] != 0 && Math.Abs(c[k]) > 0.000001)
                         {
-                            c[i] -= c[k] * U[k * size + i];
+                            c[k] /= U[k * size + k];
+                            for (i = k + 1; i < size; i++)
+                            {
+                                c[i] -= c[k] * U[k * size + i];
+                            }
                         }
+                        else c[k] = 0; // value underspecified
                     }
                 }
             }
@@ -197,12 +200,15 @@ namespace Rawr.Mage
                     }
                     for (k = size - 1; k >= 0; k--)
                     {
-                        if (U[k * size + k] != 0) c2[k] /= U[k * size + k];
-                        else c2[k] = 0; // value underspecified
-                        for (i = 0; i < k; i++)
+                        if (U[k * size + k] != 0 && Math.Abs(c2[k]) > 0.000001)
                         {
-                            c2[i] -= c2[k] * U[i * size + k];
+                            c2[k] /= U[k * size + k];
+                            for (i = 0; i < k; i++)
+                            {
+                                c2[i] -= c2[k] * U[i * size + k];
+                            }
                         }
+                        else c2[k] = 0; // value underspecified
                     }
                     // shuffle Q
                     for (i = 0; i < size; i++)
