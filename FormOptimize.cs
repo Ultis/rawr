@@ -444,7 +444,7 @@ namespace Rawr
             if (e.Cancelled || e.Result == null)
             {
                 labelMax.Text = string.Empty;
-                buttonUpgrades.Text = "Upgrades";
+                buttonUpgrades.Text = "Build Upgrade List";
                 buttonOptimize.Enabled = buttonUpgrades.Enabled = radioButtonAllGemmings.Enabled = radioButtonKnownGemmingsOnly.Enabled =
                  trackBarThoroughness.Enabled = true;
                 progressBarAlt.Value = progressBarMain.Value = 0;
