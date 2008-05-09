@@ -339,6 +339,7 @@ namespace Rawr.Mage
 
         private void checkBoxReconstructSequence_CheckedChanged(object sender, EventArgs e)
         {
+            DisplaySMPWarning();
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.ReconstructSequence = checkBoxReconstructSequence.Checked;
             if (!loading) Character.OnItemsChanged();
@@ -379,6 +380,7 @@ namespace Rawr.Mage
 
         private void checkBoxSMP_CheckedChanged(object sender, EventArgs e)
         {
+            DisplaySMPWarning();
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.SMP = checkBoxSMP.Checked;
             if (!loading) Character.OnItemsChanged();
@@ -386,6 +388,7 @@ namespace Rawr.Mage
 
         private void checkBoxSMPDisplay_CheckedChanged(object sender, EventArgs e)
         {
+            DisplaySMPWarning();
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.SMPDisplay = checkBoxSMPDisplay.Checked;
             if (!loading) Character.OnItemsChanged();
@@ -410,6 +413,16 @@ namespace Rawr.Mage
             {
                 calculationOptions.SurvivabilityRating = value;
                 if (!loading) Character.OnItemsChanged();
+            }
+        }
+
+        private void DisplaySMPWarning()
+        {
+            if (!Properties.Mage.Default.DisplayedSMPWarning)
+            {
+                MessageBox.Show("Rawr detected that this is the first time you are using Segmented Multi-Pass (SMP) algorithm or Sequence Reconstruction." + Environment.NewLine + Environment.NewLine + "Sequence Reconstruction will perform best in combination with SMP algorithm. Since SMP algorithm can be computationally very expensive it is recommended to use SMP for display only and not for item comparisons. In some situations with many available cooldowns the SMP algorithm might have difficulties finding a solution. In such a case it will report an error and display the last working solution. Sequence Reconstruction will attempt to convert the optimum spell cycles into a timed sequence, but at the moment it will not consider timing dependencies between mana consumables and cooldowns, which means that in certain situations the reconstructions provided might be of low quality.", "Rawr.Mage", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Properties.Mage.Default.DisplayedSMPWarning = true;
+                Properties.Mage.Default.Save();
             }
         }
 	}
