@@ -421,7 +421,7 @@ you are being killed by burst damage, focus on Survival Points.",
 					CharacterCalculationsBear calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 1 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = 1 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 1 } }) as CharacterCalculationsBear;
-					CharacterCalculationsBear calcStrengthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 1 } }) as CharacterCalculationsBear;
+					//CharacterCalculationsBear calcStrengthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 1 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcAPValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 1 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcExpertiseValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 1 } }) as CharacterCalculationsBear;
 					CharacterCalculationsBear calcHitValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }) as CharacterCalculationsBear;
@@ -453,6 +453,34 @@ you are being killed by burst damage, focus on Survival Points.",
 						MitigationPoints =  (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (agiToAdd - agiToSubtract), 
                         SurvivalPoints =    (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (agiToAdd - agiToSubtract),
                         ThreatPoints =      (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (agiToAdd - agiToSubtract)};
+
+
+					//Differential Calculations for Str
+					calcAtAdd = calcBaseValue;
+					float strToAdd = 0f;
+					while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && strToAdd < 2)
+					{
+						strToAdd += 0.01f;
+						calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = strToAdd } }) as CharacterCalculationsBear;
+					}
+
+					calcAtSubtract = calcBaseValue;
+					float strToSubtract = 0f;
+					while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && strToSubtract > -2)
+					{
+						strToSubtract -= 0.01f;
+						calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = strToSubtract } }) as CharacterCalculationsBear;
+					}
+					strToSubtract += 0.01f;
+
+					ComparisonCalculationBear comparisonStr = new ComparisonCalculationBear()
+					{
+						Name = "Strength",
+						OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (strToAdd - strToSubtract),
+						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (strToAdd - strToSubtract),
+						SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (strToAdd - strToSubtract),
+						ThreatPoints = (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (strToAdd - strToSubtract)
+					};
 
 
 					//Differential Calculations for Def
@@ -538,11 +566,7 @@ you are being killed by burst damage, focus on Survival Points.",
 						comparisonAC,
 						comparisonSta,
 						comparisonDef,
-						new ComparisonCalculationBear() { Name = "Strength", 
-                            OverallPoints = (calcStrengthValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcStrengthValue.MitigationPoints - calcBaseValue.MitigationPoints), 
-                            SurvivalPoints = (calcStrengthValue.SurvivalPoints - calcBaseValue.SurvivalPoints), 
-                            ThreatPoints = (calcStrengthValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+						comparisonStr,
 						new ComparisonCalculationBear() { Name = "Attack Power", 
                             OverallPoints = (calcAPValue.OverallPoints - calcBaseValue.OverallPoints), 
 							MitigationPoints = (calcAPValue.MitigationPoints - calcBaseValue.MitigationPoints), 

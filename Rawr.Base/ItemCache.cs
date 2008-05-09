@@ -139,6 +139,7 @@ namespace Rawr
 		public Item AddItem(Item item) { return AddItem(item, true, true); }
 		public Item AddItem(Item item, bool removeOldCopy, bool raiseEvent)
 		{
+			if (item == null) return null;
 			//Chasing the lies no one believed...
 			Item[] existing;
 			Item[] newArray;
@@ -169,7 +170,7 @@ namespace Rawr
 		public void DeleteItem(Item item, bool raiseEvent)
 		{
 			Item[] existing;
-			if (Items.TryGetValue(item.GemmedId, out existing))
+			if (item != null && Items.TryGetValue(item.GemmedId, out existing))
 			{
 				if (existing.Length > 1)
 				{

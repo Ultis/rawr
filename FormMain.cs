@@ -982,7 +982,10 @@ namespace Rawr
 				{
 					character[slot] = reload[slot];
 				}
-
+				foreach (Item.ItemSlot slot in Enum.GetValues(typeof(Item.ItemSlot)))
+				{
+					character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
+				}
                 character.Talents = reload.Talents;
 			}
 			return character;

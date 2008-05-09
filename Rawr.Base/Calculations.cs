@@ -379,6 +379,7 @@ namespace Rawr
 
 		public virtual void ClearCache()
 		{
+			_cachedCharacterStatsWithSlotEmpty = null;
 			_cachedCharacter = null;
 			_cachedSlot = Character.CharacterSlot.Shirt;
 		}
@@ -434,6 +435,7 @@ namespace Rawr
 
 		public virtual List<ComparisonCalculationBase> GetEnchantCalculations(Item.ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
 		{
+			ClearCache();
 			List<ComparisonCalculationBase> enchantCalcs = new List<ComparisonCalculationBase>();
 			CharacterCalculationsBase calcsEquipped = null;
 			CharacterCalculationsBase calcsUnequipped = null;
@@ -505,6 +507,7 @@ namespace Rawr
 
 		public virtual List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, Buff.BuffType buffType, bool activeOnly)
 		{
+			ClearCache();
 			List<ComparisonCalculationBase> buffCalcs = new List<ComparisonCalculationBase>();
 			CharacterCalculationsBase calcsEquipped = null;
 			CharacterCalculationsBase calcsUnequipped = null;
