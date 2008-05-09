@@ -3711,10 +3711,12 @@ namespace Rawr.Mage
         {
             if (CalculationOptions.SMPDisplay)
             {
+                bool savedIncrementalOptimizations = CalculationOptions.IncrementalOptimizations;
                 CalculationOptions.IncrementalOptimizations = false;
                 CharacterCalculationsMage smp = (CharacterCalculationsMage)((CalculationsMage)Calculations.Instance).GetCharacterCalculations(Character, null, CalculationOptions, MageArmor, false, true);
                 Dictionary<string, string> ret = smp.GetCharacterDisplayCalculationValuesInternal();
                 ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.DpsRating, Math.Abs(DpsRating - smp.DpsRating) / DpsRating * 100);
+                CalculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
                 return ret;
             }
             else

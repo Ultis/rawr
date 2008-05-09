@@ -176,6 +176,11 @@ namespace Rawr.Mage
             //public string Log = string.Empty;
             public int[] disabledHex;
 
+            public void ForceRecalculation()
+            {
+                compactSolution = null;
+            }
+
             public CompactLP Clone()
             {
                 //if (compactSolution != null && !allowReuse) throw new InvalidOperationException();
@@ -1422,6 +1427,17 @@ namespace Rawr.Mage
                 {
                     if (heap.Head.Value > max + 0.001) // lowered instability threshold, in case it is still an issue just recompute the solution which "should" give a stable result hopefully
                     {
+                        // recovery measures first
+                        double current = heap.Head.Value;
+                        lp = heap.Pop();
+                        lp.ForceRecalculation();
+                        if (lp.Value <= max + 1.0)
+                        {
+                            // give more fudge room in case the previous max was the one that was unstable
+                            max = lp.Value;
+                            heap.Push(lp);
+                            continue;
+                        }
                         System.Windows.Forms.MessageBox.Show("Instability detected, aborting SMP algorithm");
                         // find something reasonably stable
                         while (heap.Count > 0 && (lp = heap.Pop()).Value > max + 0.000001) { }
