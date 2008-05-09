@@ -505,6 +505,7 @@ namespace Rawr.Mage
 
             int incrementalSetIndex = 0;
             int incrementalSortedIndex = 0;
+            if (calculationOptions.IncrementalOptimizations && calculationOptions.IncrementalSetSortedCooldowns.Length == 0) goto EscapeCooldownLoop;
             for (int mf = 0; mf < 2; mf++)
             for (int heroism = 0; heroism < 2; heroism++)
             for (int ap = 0; ap < 2; ap++)
@@ -514,7 +515,7 @@ namespace Rawr.Mage
             for (int flameCap = 0; flameCap < 2; flameCap++)
             for (int destructionPotion = 0; destructionPotion < 2; destructionPotion++)
             {
-                if (!calculationOptions.IncrementalOptimizations || calculationOptions.IncrementalSetSortedCooldowns[incrementalSortedIndex] == incrementalSetIndex)
+                if (!calculationOptions.IncrementalOptimizations || (calculationOptions.IncrementalSetSortedCooldowns[incrementalSortedIndex] == incrementalSetIndex))
                 {
                     for (int trinket1 = 0; trinket1 < 2; trinket1++)
                         for (int trinket2 = 0; trinket2 < 2; trinket2++)

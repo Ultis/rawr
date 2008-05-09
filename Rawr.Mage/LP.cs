@@ -181,7 +181,10 @@ namespace Rawr.Mage
             {
                 _V[j] = j;
             }
+            ColdStart = true;
         }
+
+        private bool ColdStart;
 
         public unsafe double[] SolvePrimal()
         {
@@ -306,7 +309,7 @@ namespace Rawr.Mage
                                 }
                                 else x[i] = 0;
                             }
-                            if (infis > 100.0)
+                            if (infis > 100.0 && !ColdStart)
                             {
                                 // we're so far out of feasible region we're better off starting from scratch
                                 for (i = 0; i < rows; i++)
@@ -318,6 +321,7 @@ namespace Rawr.Mage
                                     V[j] = j;
                                 }
                                 redecompose = 0;
+                                ColdStart = true;
                                 goto RESTART;
                             }
                             //lastInfis = infis;
@@ -370,6 +374,7 @@ namespace Rawr.Mage
                                 if (B[i] < cols) value += cost[B[i]] * d[i];
                             }
                             ret[cols] = value;
+                            ColdStart = false;
                             //System.Diagnostics.Debug.WriteLine("Primal solved in " + round);
                             return ret;
                         }
@@ -589,6 +594,7 @@ namespace Rawr.Mage
                                 {
                                     // this should only happen if dual is not feasible
                                     // should come here only if LU is singular
+                                    ColdStart = false;
                                     return SolvePrimal();
                                 }
                                 c[j] = costcol;
@@ -624,6 +630,7 @@ namespace Rawr.Mage
                                 if (B[i] < cols) value += cost[B[i]] * d[i];
                             }
                             ret[cols] = value;
+                            ColdStart = false;
                             //System.Diagnostics.Debug.WriteLine("Dual solved in " + round);
                             return ret;
                         }
