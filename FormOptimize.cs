@@ -315,7 +315,15 @@ namespace Rawr
                             List<ComparisonCalculationBase> comparisons = result[slot];
                             PopulateLockedItems(item);
                             lockedSlot = slot;
-                            _character = BuildSingleItemSwapCharacter(_character, slot, lockedItems[0]);
+                            if (lockedSlot == Character.CharacterSlot.Finger1 && item.Unique && _character.Finger2 != null && _character.Finger2.Id == item.Id)
+                            {
+                                lockedSlot = Character.CharacterSlot.Finger2;
+                            }
+                            if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Unique && _character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                            {
+                                lockedSlot = Character.CharacterSlot.Trinket2;
+                            }
+                            _character = BuildSingleItemSwapCharacter(_character, lockedSlot, lockedItems[0]);
                             float best;
                             CharacterCalculationsBase bestCalculations;
                             Character bestCharacter;
@@ -334,7 +342,7 @@ namespace Rawr
                             }
                             if (best > baseValue)
                             {
-                                switch (slot)
+                                switch (lockedSlot)
                                 {
                                     case Character.CharacterSlot.Back:
                                         item = bestCharacter.Back;
@@ -347,6 +355,9 @@ namespace Rawr
                                         break;
                                     case Character.CharacterSlot.Finger1:
                                         item = bestCharacter.Finger1;
+                                        break;
+                                    case Character.CharacterSlot.Finger2:
+                                        item = bestCharacter.Finger2;
                                         break;
                                     case Character.CharacterSlot.Hands:
                                         item = bestCharacter.Hands;
@@ -380,6 +391,9 @@ namespace Rawr
                                         break;
                                     case Character.CharacterSlot.Trinket1:
                                         item = bestCharacter.Trinket1;
+                                        break;
+                                    case Character.CharacterSlot.Trinket2:
+                                        item = bestCharacter.Trinket2;
                                         break;
                                     case Character.CharacterSlot.Waist:
                                         item = bestCharacter.Waist;
