@@ -2536,7 +2536,7 @@ namespace Rawr.Mage
             return new Stats()
             {
 				AllResist = stats.AllResist,
-				MageAllResist = stats.AllResist,
+				MageAllResist = stats.MageAllResist,
 				ArcaneResistance = stats.ArcaneResistance,
                 FireResistance = stats.FireResistance,
                 FrostResistance = stats.FrostResistance,
