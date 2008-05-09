@@ -130,7 +130,6 @@ namespace Rawr.Mage
             extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + cols + rows - 1] = 1;
             A.AddColumn();
             A.EndConstruction();
-            _cost[cols + rows - 1] = 0;
             int[] newB = new int[rows];
             Array.Copy(_B, newB, rows - 1);
             _B = newB;
@@ -154,10 +153,10 @@ namespace Rawr.Mage
         {
             baseRows = rows;
             //rows++; // add extra row for disabled
-            if (rows > maxRows || cols > maxCols)
+            if (rows + 10 > maxRows || cols + 10 > maxCols)
             {
-                maxRows = Math.Max(rows, maxRows);
-                maxCols = Math.Max(cols, maxCols);
+                maxRows = Math.Max(rows + 10, maxRows);
+                maxCols = Math.Max(cols + 10, maxCols);
                 RecreateArrays();
             }
             this.rows = rows;
@@ -170,7 +169,7 @@ namespace Rawr.Mage
             //extraConstraints = new double[cols + rows + 1];
             //extraConstraints[cols + rows - 1] = 1;
             //numExtraConstraints = 1;
-            Array.Clear(_cost, 0, cols + rows);
+            Array.Clear(_cost, 0, cols);
             Array.Clear(_b, 0, baseRows);
 
             for (int i = 0; i < rows; i++)

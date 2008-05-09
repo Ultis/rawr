@@ -64,10 +64,10 @@ namespace Rawr.Mage
 
         public SparseMatrix(int rows, int cols)
         {
-            if (rows > maxRows || cols > maxCols)
+            if (rows > maxRows || cols + 20 > maxCols)
             {
                 maxRows = Math.Max(rows, maxRows);
-                maxCols = Math.Max(cols, maxCols);
+                maxCols = Math.Max(cols + 20, maxCols); // give some room for AddColumn
                 RecreateArrays();
             }
             this.rows = rows;
