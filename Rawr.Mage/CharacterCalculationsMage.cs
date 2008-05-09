@@ -1441,7 +1441,7 @@ namespace Rawr.Mage
                                 }
                             }
                             kT += nextT;
-                            if (kT >= sequence[kk].Duration)
+                            if (kT >= sequence[kk].Duration - 0.000001)
                             {
                                 kT -= sequence[kk].Duration;
                                 kk++;

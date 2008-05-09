@@ -77,6 +77,7 @@ namespace Rawr.Mage
         // eta' P' = (P eta)'
 
         public bool Singular { get; set; }
+        public int Rank { get; set; }
 
         // data will be modified, if you need to retain it clean pass a clone
         public LU2(double[] data, int size)
@@ -281,6 +282,7 @@ namespace Rawr.Mage
             etaSize = 0; // reset eta file
             //Array.Clear(_L, 0, _L.Length);
             Singular = false;
+            Rank = size;
 
             int i, j, k, pivi, pivj;
             fixed (double* /*L = _L, */U = _U, sL = sparseL)
@@ -313,7 +315,7 @@ namespace Rawr.Mage
                             }
                         }
 
-                        if (max < 0.000001)
+                        if (max < 0.1)
                         {
                             // don't allow a 0 if you can help it, even if it costs more to pivot columns
                             for (k = j + 1; k < size; k++)
@@ -362,7 +364,11 @@ namespace Rawr.Mage
 
                         if (etaSize >= etaMax) throw new InvalidOperationException();
 
-                        if (Math.Abs(max) < 0.000001) Singular = true;
+                        if (!Singular && Math.Abs(max) < 0.000001)
+                        {
+                            Singular = true;
+                            Rank = j;
+                        }
 
                         sLstart[etaSize + 1] = sLstart[etaSize];
                         double a = 1 / U[j * size + j];

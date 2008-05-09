@@ -206,12 +206,14 @@ namespace Rawr.Mage
             int* sRow;
             int sCol1, sCol2;
             int redecompose = 0;
+            double lastInfis = double.PositiveInfinity;
             fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
             {
                 fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
                 {
                     do
                     {
+                    RESTART:
                         // [L U] = lu(A(:,B_indices));
                         if (redecompose <= 0)
                         {
@@ -233,8 +235,7 @@ namespace Rawr.Mage
                         if (lu.Singular)
                         {
                             //System.Diagnostics.Debug.WriteLine("Basis singular");
-                            // TODO probably good to investigate what causes basis to become singular
-                            // at least from some preliminary testing doesn't seem to have side effects
+                            // TODO deal with it
                         }
 
                         if (!feasible)
@@ -261,6 +262,7 @@ namespace Rawr.Mage
                             }
                             if (feasible)
                             {
+                                //System.Diagnostics.Debug.WriteLine("Primal feasible in " + round);
                                 // we have a feasible solution, initialize phase 2
                                 for (i = 0; i < rows; i++)
                                 {
@@ -304,6 +306,21 @@ namespace Rawr.Mage
                                 }
                                 else x[i] = 0;
                             }
+                            if (infis > 100.0)
+                            {
+                                // we're so far out of feasible region we're better off starting from scratch
+                                for (i = 0; i < rows; i++)
+                                {
+                                    B[i] = cols + i;
+                                }
+                                for (j = 0; j < cols; j++)
+                                {
+                                    V[j] = j;
+                                }
+                                redecompose = 0;
+                                goto RESTART;
+                            }
+                            //lastInfis = infis;
                             lu.BSolve(x);
                             for (j = 0; j < cols; j++)
                             {
@@ -353,6 +370,7 @@ namespace Rawr.Mage
                                 if (B[i] < cols) value += cost[B[i]] * d[i];
                             }
                             ret[cols] = value;
+                            //System.Diagnostics.Debug.WriteLine("Primal solved in " + round);
                             return ret;
                         }
 
@@ -375,7 +393,7 @@ namespace Rawr.Mage
                         int mini = -1;
                         for (i = 0; i < rows; i++)
                         {
-                            if (w[i] > eps)
+                            if (w[i] > eps && d[i] > -eps) // !!! if variable is currently unfeasible you should let it go more unfeasible as a compromise to get some others into feasible range, if you block on it you actually force entering variable to be negative which means total infeasibilities will increase
                             {
                                 double r = d[i] / w[i];
                                 if (r < minr)
@@ -485,6 +503,7 @@ namespace Rawr.Mage
                 {
                     do
                     {
+                    DECOMPOSE:
                         if (redecompose <= 0)
                         {
                             // [L U] = lu(A(:,B_indices));
@@ -507,8 +526,19 @@ namespace Rawr.Mage
                         {
                             //System.Diagnostics.Debug.WriteLine("Basis singular");
                             // when restricting constraints sometimes the basis becomes singular
-                            // restart normal primal problem from scratch
-                            for (i = 0; i < rows; i++)
+                            // try to patch the basis by replacing singular columns with corresponding slacks of singular rows
+                            redecompose = 0;
+                            for (j = lu.Rank; j < rows; j++)
+                            {
+                                int singularColumn = LU2._Q[j];
+                                int singularRow = LU2._P[j];
+                                int slackColumn = cols + singularRow;
+                                int vindex = Array.IndexOf(_V, slackColumn);
+                                V[vindex] = B[singularColumn];
+                                B[singularColumn] = slackColumn;
+                            }
+                            goto DECOMPOSE;
+                            /*for (i = 0; i < rows; i++)
                             {
                                 B[i] = cols + i;
                             }
@@ -516,7 +546,7 @@ namespace Rawr.Mage
                             {
                                 V[j] = j;
                             }
-                            return SolvePrimal();
+                            return SolvePrimal();*/
                         }
 
                         if (needsRecalc)
@@ -558,10 +588,7 @@ namespace Rawr.Mage
                                 if (costcol > eps)
                                 {
                                     // this should only happen if dual is not feasible
-                                    // should not come here unless LU is singular
-                                    // ...
-                                    // maybe it can
-                                    // at least we don't have to start from scratch
+                                    // should come here only if LU is singular
                                     return SolvePrimal();
                                 }
                                 c[j] = costcol;
@@ -642,6 +669,7 @@ namespace Rawr.Mage
                         {
                             // unfeasible, return null solution, don't pursue this branch because no solution exists here
                             double[] ret = new double[cols + 1];
+                            //System.Diagnostics.Debug.WriteLine("Dual unfeasible after " + round);
                             return ret;
                         }
 

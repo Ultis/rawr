@@ -173,10 +173,8 @@ namespace Rawr.Mage
             int[] CRow, CCol;
             double[] compactSolution = null;
             bool needsDual;
-
-            /*public int HeroismHash;
-            public int APHash;
-            public int IVHash;*/
+            //public string Log = string.Empty;
+            public int[] disabledHex;
 
             public CompactLP Clone()
             {
@@ -185,6 +183,7 @@ namespace Rawr.Mage
                 clone.compactSolution = null;
                 //clone.lp = (double[,])clone.lp.Clone();
                 clone.lp = lp.Clone();
+                if (disabledHex != null) clone.disabledHex = (int[])disabledHex.Clone();
                 return clone;
             }
 
@@ -1577,6 +1576,7 @@ namespace Rawr.Mage
                                 for (int i = 0; i < hexList.Count; i++)
                                 {
                                     CompactLP hexRemovedLP = lp.Clone();
+                                    //hexRemovedLP.Log += "Breaking cycle at boundary " + seg + ", removing " + hexList[i] + "\r\n";
                                     for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 2) * statsList.Count * spellList.Count + colOffset - 1; index++)
                                     {
                                         CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
@@ -1619,6 +1619,8 @@ namespace Rawr.Mage
             return calculatedStats;
         }
 
+        private const int CooldownMax = 10;
+
         private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration)
         {
             double[] segCount = new double[segments];
@@ -1636,7 +1638,9 @@ namespace Rawr.Mage
                 segCount[outseg] = s;
             }
             int mindist = (int)Math.Ceiling(effectDuration / segmentDuration);
-            int maxdist = (cooldownDuration < 0) ? int.MaxValue : ((int)Math.Floor((cooldownDuration - effectDuration) / segmentDuration));
+            int mindist2 = (int)Math.Floor(effectDuration / segmentDuration);
+            int maxdist = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor((cooldownDuration - effectDuration) / segmentDuration));
+            int maxdist2 = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor(cooldownDuration / segmentDuration));
 
             bool valid = true;
 
@@ -1659,10 +1663,12 @@ namespace Rawr.Mage
                     }
                     if (!valid)
                     {
+                        //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
                         // branch on whether cooldown is used in this segment
                         CompactLP cooldownUsed = lp.Clone();
                         // cooldown not used
                         //lp.IVHash += 1 << seg;
+                        //lp.Log += "Disable " + cooldown.ToString() + " at " + seg + "\r\n";
                         for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                         {
                             CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
@@ -1670,6 +1676,7 @@ namespace Rawr.Mage
                         }
                         heap.Push(lp);
                         // cooldown used
+                        //cooldownUsed.Log += "Use " + cooldown.ToString() + " at " + seg + ", disable around\r\n";
                         for (int outseg = 0; outseg < segments; outseg++)
                         {
                             if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
@@ -1683,6 +1690,39 @@ namespace Rawr.Mage
                             }
                         }
                         heap.Push(cooldownUsed);
+
+                        // alternative, branch on actual effect spans
+                        /*for (int startseg = 0; startseg < segments; startseg++)
+                        {
+                            // cooldown starts in segment startseg
+                            // starting at very start  [startseg - maxdist [startseg, startseg + mindist2] startseg + maxdist2 - 1]
+                            // starting at very end [startseg - maxdist + 1 [startseg, startseg + mindist] startseg + maxdist2]
+                            if (seg >= startseg - maxdist && seg <= startseg + maxdist2 - 1)
+                            {
+                                CompactLP restrictedLP = lp.Clone();
+                                bool trueBranch = false;
+                                for (int outseg = 0; outseg < segments; outseg++)
+                                {
+                                    if (outseg >= startseg - maxdist2 + mindist + 1 && outseg <= startseg + maxdist2 - 1 && (outseg < startseg || outseg > startseg + mindist))
+                                    {
+                                        if ((restrictedLP.disabledHex[(int)cooldown] & (1 << outseg)) == 0)
+                                        {
+                                            for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                                            {
+                                                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                                if (stats != null && stats.GetCooldown(cooldown)) restrictedLP.EraseColumn(index);
+                                            }
+                                            restrictedLP.disabledHex[(int)cooldown] |= 1 << outseg;
+                                            trueBranch = true;
+                                        }
+                                    }
+                                }
+                                if (trueBranch)
+                                {
+                                    heap.Push(restrictedLP);
+                                }
+                            }
+                        }*/
                         return false;
                     }
                 }
@@ -1710,7 +1750,9 @@ namespace Rawr.Mage
                 {
                     // fragmentation
                     // either left must be disabled, right disabled, or seg to max
+                    //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
                     CompactLP leftDisabled = lp.Clone();
+                    //leftDisabled.Log += "Disable " + cooldown.ToString() + " left of " + seg + "\r\n";
                     for (int outseg = 0; outseg < segments; outseg++)
                     {
                         if ((outseg < seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
@@ -1720,10 +1762,12 @@ namespace Rawr.Mage
                                 CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
                                 if (stats != null && stats.GetCooldown(cooldown)) leftDisabled.EraseColumn(index);
                             }
+                            //leftDisabled.disabledHex[(int)cooldown] |= 1 << outseg;
                         }
                     }
                     heap.Push(leftDisabled);
                     CompactLP rightDisabled = lp.Clone();
+                    //rightDisabled.Log += "Disable " + cooldown.ToString() + " right of " + seg + "\r\n";
                     for (int outseg = 0; outseg < segments; outseg++)
                     {
                         if ((outseg > seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
@@ -1733,9 +1777,11 @@ namespace Rawr.Mage
                                 CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
                                 if (stats != null && stats.GetCooldown(cooldown)) rightDisabled.EraseColumn(index);
                             }
+                            //rightDisabled.disabledHex[(int)cooldown] |= 1 << outseg;
                         }
                     }
                     heap.Push(rightDisabled);
+                    //lp.Log += "Force " + cooldown.ToString() + " to max at " + seg + "\r\n";
                     lp.AddConstraint();
                     for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                     {
