@@ -870,6 +870,30 @@ you are being killed by burst damage, focus on Survival Points.",
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
 			int armorCap = (int)Math.Ceiling((1402.5f * TargetLevel) - 66502.5f);
 			float levelDifference = 0.2f * (TargetLevel - 70);
+			float targetCritReduction = 2f + levelDifference;
+			float currentCritReduction = ((float)Math.Floor(BasicStats.DefenseRating / (123f / 52f)) * 0.04f) +
+				(BasicStats.Resilience / (2050f / 52f));
+			int defToCap = 0, resToCap = 0;
+			if (currentCritReduction < targetCritReduction)
+			{
+				while (((float)Math.Floor((BasicStats.DefenseRating + defToCap) / (123f / 52f)) * 0.04) +
+						(BasicStats.Resilience / (2050f / 52f)) < targetCritReduction)
+					defToCap++;
+				while (((float)Math.Floor(BasicStats.DefenseRating / (123f / 52f)) * 0.04) +
+						((BasicStats.Resilience + resToCap) / (2050f / 52f)) < targetCritReduction)
+					resToCap++;
+			}
+			else if (currentCritReduction > targetCritReduction)
+			{
+				while (((float)Math.Floor((BasicStats.DefenseRating + defToCap) / (123f / 52f)) * 0.04) +
+						(BasicStats.Resilience / (2050f / 52f)) > targetCritReduction)
+					defToCap--;
+				while (((float)Math.Floor(BasicStats.DefenseRating / (123f / 52f)) * 0.04) +
+						((BasicStats.Resilience + resToCap) / (2050f / 52f)) > targetCritReduction)
+					resToCap--;
+				defToCap++;
+				resToCap++;
+			}
 
             dictValues["Nature Resist"] = (BasicStats.NatureResistance+BasicStats.AllResist).ToString();
             dictValues["Arcane Resist"] = (BasicStats.ArcaneResistance+BasicStats.AllResist).ToString();
@@ -900,17 +924,21 @@ you are being killed by burst damage, focus on Survival Points.",
 			dictValues.Add("Dodge + Miss", DodgePlusMiss.ToString() + "%");
 			dictValues.Add("Total Mitigation", TotalMitigation.ToString() + "%");
 			dictValues.Add("Damage Taken", DamageTaken.ToString() + "%");
-			if (CritReduction == (2f + levelDifference))
+			if (defToCap == 0 && resToCap == 0)
+			{
 				dictValues.Add("Chance to be Crit", ((2f + levelDifference) - CritReduction).ToString()
 					+ "%*Exactly enough defense rating/resilience to be uncrittable by bosses.");
-			else if (CritReduction < (2f + levelDifference))
+			}
+			else if (defToCap + resToCap > 0)
+			{
 				dictValues.Add("Chance to be Crit", ((2f + levelDifference) - CritReduction).ToString()
 					+ string.Format("%*CRITTABLE! Short by {0} defense rating or {1} resilience to be uncrittable by bosses.",
-					Math.Ceiling(((2f + levelDifference) - CritReduction) * 60f), Math.Ceiling(((2f + levelDifference) - CritReduction) * 39.423f)));
+					defToCap, resToCap));
+			}
 			else
 				dictValues.Add("Chance to be Crit", ((2f + levelDifference) - CritReduction).ToString()
 					+ string.Format("%*Uncrittable by bosses. {0} defense rating or {1} resilience over the crit cap.",
-					Math.Floor(((2f + levelDifference) - CritReduction) * -60f), Math.Floor(((2f + levelDifference) - CritReduction) * -39.423f)));
+					-defToCap, -resToCap));
 			dictValues.Add("Overall Points", OverallPoints.ToString());
 			dictValues.Add("Mitigation Points", MitigationPoints.ToString());
 			dictValues.Add("Survival Points", SurvivalPoints.ToString());
