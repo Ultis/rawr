@@ -196,7 +196,6 @@ namespace Rawr.Mage
             // b = data[:,cols]
             // B = [cols:cols+rows-1]
 
-            // http://books.google.com/books?id=-afIqQSZE5AC&pg=PA313&dq=revised+simplex+FTRAN&source=gbs_toc_s&cad=1&sig=dPDCfoi0CqPh14mIfnQr-wM2AKg#PPA159,M1
             // LU = A_B
             // d = x_B <- A_B^-1*b ... primal solution
             // u = u <- c_B*A_B^-1 ... dual solution
@@ -273,14 +272,14 @@ namespace Rawr.Mage
                                 for (i = 0; i < rows; i++)
                                 {
                                     if (B[i] < cols) u[i] = cost[B[i]];
-                                    else u[i] = 0;
+                                    else u[i] = 0.0;
                                 }
                                 lu.BSolve(u);
                                 for (j = 0; j < cols; j++)
                                 {
                                     int col = V[j];
 
-                                    double costcol = ((col < cols) ? cost[col] : 0);
+                                    double costcol = ((col < cols) ? cost[col] : 0.0);
                                     sCol1 = sparseCol[col];
                                     sCol2 = sparseCol[col + 1];
                                     sRow = sparseRow + sCol1;
@@ -302,15 +301,15 @@ namespace Rawr.Mage
                         // compute max c~ = cV - cB * AV
                         if (!feasible)
                         {
-                            double infis = 0;
+                            double infis = 0.0;
                             for (i = 0; i < rows; i++)
                             {
                                 if (d[i] < -eps)
                                 {
-                                    x[i] = 1;
+                                    x[i] = 1.0;
                                     infis -= d[i];
                                 }
-                                else x[i] = 0;
+                                else x[i] = 0.0;
                             }
                             if (infis > 100.0 && !ColdStart)
                             {
@@ -358,7 +357,7 @@ namespace Rawr.Mage
                             // 1st extra constraint is the disabling constraint
                             // just ignore the disabled columns, because they can't be in the true solution
                             // and if we allowed it in it would force the extra constraint out
-                            if (costj > maxc && (V[j] >= cols || D == null || D[V[j]] == 0.0))
+                            if (costj > maxc + eps && (V[j] >= cols || D == null || D[V[j]] == 0.0)) // add eps barriers so that we stabilize pivot order
                             {
                                 maxc = costj;
                                 maxj = j;
@@ -407,7 +406,7 @@ namespace Rawr.Mage
                             if (w[i] > eps && d[i] > -eps) // !!! if variable is currently unfeasible you should let it go more unfeasible as a compromise to get some others into feasible range, if you block on it you actually force entering variable to be negative which means total infeasibilities will increase
                             {
                                 double r = d[i] / w[i];
-                                if (r < minr)
+                                if (r < minr - eps) // add eps barriers so that we stabilize pivot order
                                 {
                                     minr = r;
                                     mini = i;
@@ -526,7 +525,6 @@ namespace Rawr.Mage
             // b = data[:,cols]
             // B = [cols:cols+rows-1]
 
-            // http://books.google.com/books?id=-afIqQSZE5AC&pg=PA313&dq=revised+simplex+FTRAN&source=gbs_toc_s&cad=1&sig=dPDCfoi0CqPh14mIfnQr-wM2AKg#PPA159,M1
             // LU = A_B
             // d = x_B <- A_B^-1*b ... primal solution
             // u = u <- c_B*A_B^-1 ... dual solution
@@ -570,13 +568,15 @@ namespace Rawr.Mage
                                 }
                             }
                             lu.Decompose();
-                            redecompose = 50;
+                            redecompose = 50; // decompose each time to see where the instability comes from
                         }
+
                         if (lu.Singular)
                         {
                             //System.Diagnostics.Debug.WriteLine("Basis singular");
                             // when restricting constraints sometimes the basis becomes singular
                             // try to patch the basis by replacing singular columns with corresponding slacks of singular rows
+                            // EDIT: with the latest fixes this doesn't happen anymore, yay
                             redecompose = 0;
                             for (j = lu.Rank; j < rows; j++)
                             {
@@ -642,59 +642,38 @@ namespace Rawr.Mage
                                 }
                                 if (costcol > eps)
                                 {
-                                    // this should only happen if dual is not feasible
-                                    // should come here only if LU is singular
+                                    // I'm almost certain this happens in case of numerical instabilities
                                     ColdStart = false;
                                     double[] ret = SolvePrimal();
                                     // after we have result of primal make sure we return extra constraints to basis
                                     for (k = 0; k < numExtraConstraints; k++)
                                     {
-                                        int zeroIndex = -1;
-                                        for (i = 0; i < rows; i++)
+                                        int vindex = Array.IndexOf(_V, cols + baseRows + k);
+                                        if (vindex >= 0)
                                         {
-                                            if (B[i] == cols + baseRows + k)
+                                            for (i = 0; i < rows; i++)
                                             {
-                                                // swap it to start
-                                                B[i] = B[k];
-                                                B[k] = cols + baseRows + k;
-                                                d[i] = d[k];
-                                                d[k] = 0.0;
-                                                continue;
+                                                x[i] = ((i == baseRows + k) ? 1 : 0);
                                             }
-                                            if (d[i] <= eps && B[i] < cols + baseRows) zeroIndex = i;
-                                        }
-                                        if (zeroIndex == -1)
-                                        {
-                                            System.Diagnostics.Debug.WriteLine("No room to put extra constraint back into basis!!! Instability???");
-                                        }
-                                        else
-                                        {
-                                            int vindex = Array.IndexOf(_V, cols + baseRows + k);
-                                            V[vindex] = B[zeroIndex];
-                                            // swap it to start
-                                            B[zeroIndex] = B[k];
-                                            B[k] = cols + baseRows + k;
-                                            d[zeroIndex] = d[k];
-                                            d[k] = 0.0;
+                                            lu.FSolveL(x, w);
+                                            lu.FSolveU(w, x);
+                                            for (j = 0; j < rows; j++)
+                                            {
+                                                if (Math.Abs(x[j]) > eps && d[j] <= eps && B[j] < cols + baseRows)
+                                                {
+                                                    // do the swap
+                                                    V[vindex] = B[j];
+                                                    B[j] = cols + baseRows + k;
+                                                    // if we'll do more swaps then update the basis
+                                                    if (k < numExtraConstraints - 1)
+                                                    {
+                                                        lu.Update(w, j);
+                                                    }
+                                                    break;
+                                                }
+                                            }
                                         }
                                     }
-                                    // put degenerate columns at the end (except extras) so that they'll be more likely to be eliminated when patching the basis
-                                    // k = numExtraConstraints
-                                    /*i = rows - 1;
-                                    while (k < i)
-                                    {
-                                        while (d[k] > eps) k++;
-                                        while (d[i] <= eps) i--;
-                                        if (k < i)
-                                        {
-                                            int tmp = B[k];
-                                            B[k] = B[i];
-                                            B[i] = tmp;
-                                            k++;
-                                            i--;
-                                            // don't have to actually swap ds since we won't use them anymore
-                                        }
-                                    }*/
                                     return ret;
                                 }
                                 c[j] = costcol;
@@ -708,7 +687,7 @@ namespace Rawr.Mage
                         for (i = 0; i < rows; i++)
                         {
                             double costi = d[i];
-                            if (costi < mind)
+                            if (costi < mind - eps) // add eps barriers so that we stabilize pivot order
                             {
                                 mind = costi;
                                 mini = i;
@@ -731,55 +710,71 @@ namespace Rawr.Mage
                             }
                             ret[cols] = value;
                             ColdStart = false;
-                            // return extra constraints to basis for next iteration
+
+                            //System.Diagnostics.Debug.WriteLine("Selecting a non-extended subbasis that is non-singular.");
                             for (k = 0; k < numExtraConstraints; k++)
                             {
-                                int zeroIndex = -1;
-                                for (i = 0; i < rows; i++)
+                                // we have to compute this anyway and makes a nice test to be 100% sure we're not already in basis
+                                int vindex = Array.IndexOf(_V, cols + baseRows + k);
+                                if (vindex >= 0)
                                 {
-                                    if (B[i] == cols + baseRows + k)
+                                    //B = [b1 b2 b3 ... bn]
+                                    //B x = bx
+
+                                    //now replace column j of B with bx
+                                    //B~ = B + (bx - B * ej) * ej'
+
+                                    //let's assume that B~ is linearly dependent
+                                    //then there exists w != 0 such that B~ w = 0
+
+                                    //B~ w = (B + (bx - B * ej) * ej') w = B w + (bx - B * ej) * (ej' * w) =
+                                    //     = B w + (bx - B * ej) * w_j = 0
+                                    //B (w + (x - ej) * w_j) = 0
+
+                                    //because B is linearly independent all components have to be 0
+
+                                    //w_i + x_i * w_j = 0  for all i != j
+                                    //w_j + (x_j - 1) * w_j = 0
+                                    //w_j + (x_j - 1) * w_j = w_j + x_j * w_j - w_j = x_j * w_j = 0
+
+                                    //if w_j = 0 then w_i = 0 for all i != j -><-
+                                    //so w_j must be != 0
+                                    //this means that x_j = 0
+
+                                    //if x_j != 0 then replacing column j in B with bx creates a linearly independent system
+
+                                    // so using this brilliant math lets compute x
+                                    for (i = 0; i < rows; i++)
                                     {
-                                        // swap it to start
-                                        B[i] = B[k];
-                                        B[k] = cols + baseRows + k;
-                                        d[i] = d[k];
-                                        d[k] = 0.0;
-                                        continue;
+                                        x[i] = ((i == baseRows + k) ? 1 : 0);
                                     }
-                                    if (d[i] <= eps && B[i] < cols + baseRows) zeroIndex = i;
-                                }
-                                if (zeroIndex == -1)
-                                {
-                                    System.Diagnostics.Debug.WriteLine("No room to put extra constraint back into basis!!! Instability???");
-                                }
-                                else
-                                {
-                                    int vindex = Array.IndexOf(_V, cols + baseRows + k);
-                                    V[vindex] = B[zeroIndex];
-                                    // swap it to start
-                                    B[zeroIndex] = B[k];
-                                    B[k] = cols + baseRows + k;
-                                    d[zeroIndex] = d[k];
-                                    d[k] = 0.0;
+                                    lu.FSolveL(x, w);
+                                    lu.FSolveU(w, x);
+                                    for (j = 0; j < rows; j++)
+                                    {
+                                        if (Math.Abs(x[j]) > eps && d[j] <= eps && B[j] < cols + baseRows)
+                                        {
+                                            // do the swap
+                                            V[vindex] = B[j];
+                                            B[j] = cols + baseRows + k;
+                                            // if we'll do more swaps then update the basis
+                                            if (k < numExtraConstraints - 1)
+                                            {
+                                                lu.Update(w, j);
+                                            }
+                                            break;
+                                        }
+                                    }
+                                    if (j == rows)
+                                    {
+                                        // now this is critical, I think it can happen, but not sure exactly under what conditions
+                                        // I think the nature of extra constraints that we're using should prevent this from happening
+                                        // but you never know unless you prove it
+                                        redecompose = 0;
+                                    }
                                 }
                             }
-                            // put degenerate columns at the end (except extras) so that they'll be more likely to be eliminated when patching the basis
-                            // k = numExtraConstraints
-                            /*i = rows - 1;
-                            while (k < i)
-                            {
-                                while (d[k] > eps) k++;
-                                while (d[i] <= eps) i--;
-                                if (k < i)
-                                {
-                                    int tmp = B[k];
-                                    B[k] = B[i];
-                                    B[i] = tmp;
-                                    k++;
-                                    i--;
-                                    // don't have to actually swap ds since we won't use them anymore
-                                }
-                            }*/
+
                             //System.Diagnostics.Trace.WriteLine("Dual solved in " + round);
                             return ret;
                         }
@@ -813,7 +808,7 @@ namespace Rawr.Mage
                             if (wd[j] < -eps)
                             {
                                 double r = c[j] / wd[j];
-                                if (r < minr)
+                                if (r < minr - eps) // add eps barriers so that we stabilize pivot order
                                 {
                                     minr = r;
                                     minj = j;
@@ -865,6 +860,14 @@ namespace Rawr.Mage
                         if (redecompose > 0)
                         {
                             lu.Update(ww, mini);
+                            if (lu.Singular)
+                            {
+                                // ok adding this variable made the basis singular
+                                // consider removing it and choose something else
+                                // also possibly need a blacklist
+                                // at the very least recompute the basis to make sure we are singular
+                                redecompose = 0;
+                            }
                         }
 
                         // swap base

@@ -1546,6 +1546,11 @@ namespace Rawr.Mage
                     // if this one is valid than all others are sub-optimal
                     // validate all segments for each cooldown
                     solution = lp.Solve();
+                    /*System.Diagnostics.Trace.WriteLine("Solution basis (value = " + lp.Value + "):");
+                    for (int index = 0; index < lpCols; index++)
+                    {
+                        if (solution[index] > 0.000001) System.Diagnostics.Trace.WriteLine(index);
+                    }*/
                     if (heap.Count > maxHeap)
                     {
                         System.Windows.Forms.MessageBox.Show("SMP algorithm exceeded maximum allowed computation limit. Displaying the last working solution.");
@@ -1708,7 +1713,7 @@ namespace Rawr.Mage
                         }
                     }
                 } while (heap.Count > 0 && !valid);
-                //System.Diagnostics.Debug.WriteLine("Heap at solution " + heap.Count);
+                //System.Diagnostics.Trace.WriteLine("Heap at solution " + heap.Count);
             }
             #endregion
 

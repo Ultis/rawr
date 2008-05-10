@@ -37,7 +37,7 @@ namespace Rawr.Mage.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
         public int MaxHeapLimit {
             get {
                 return ((int)(this["MaxHeapLimit"]));

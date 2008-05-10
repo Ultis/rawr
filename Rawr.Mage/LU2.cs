@@ -516,6 +516,11 @@ namespace Rawr.Mage
                     {
                         U[lastnz * size + j] = c[j];
                     }
+
+                    if (Math.Abs(U[lastnz * size + lastnz]) < 0.000001)
+                    {
+                        Singular = true;
+                    }
                 }
             }
         }    
