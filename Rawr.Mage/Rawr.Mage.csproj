@@ -62,11 +62,6 @@
     <Compile Include="LP.cs" />
     <Compile Include="LU.cs" />
     <Compile Include="LU2.cs" />
-    <Compile Include="Properties\Mage.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Mage.settings</DependentUpon>
-    </Compile>
     <Compile Include="MageTalentsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +69,11 @@
       <DependentUpon>MageTalentsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="SparseMatrix.cs" />
     <Compile Include="Spell.cs" />
   </ItemGroup>
@@ -95,9 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Properties\Mage.settings">
+    <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Mage.Designer.cs</LastGenOutput>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

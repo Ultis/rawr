@@ -181,7 +181,7 @@ namespace Rawr.Mage
             SmartOptimization = false;
             DrumsOfBattle = false;
             AutomaticArmor = true;
-            TpsLimit = 5000;
+            TpsLimit = 0;
             IncrementalOptimizations = true;
             ReconstructSequence = false;
             Innervate = 0;

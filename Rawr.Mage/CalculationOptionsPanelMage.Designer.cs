@@ -29,7 +29,6 @@
 		private void InitializeComponent()
 		{
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelMage));
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
@@ -91,6 +90,7 @@
             this.label31 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
             this.checkBoxIncrementalOptimizations = new System.Windows.Forms.CheckBox();
             this.checkBoxReconstructSequence = new System.Windows.Forms.CheckBox();
             this.textBoxInnervate = new System.Windows.Forms.TextBox();
@@ -100,7 +100,6 @@
             this.checkBoxSMPDisplay = new System.Windows.Forms.CheckBox();
             this.textBoxEvocationSpirit = new System.Windows.Forms.TextBox();
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
-            this.label34 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -608,7 +607,7 @@
             this.label26.Size = new System.Drawing.Size(59, 13);
             this.label26.TabIndex = 54;
             this.label26.Text = "Tps Limit: *";
-            this.toolTipMage.SetToolTip(this.label26, resources.GetString("label26.ToolTip"));
+            this.toolTipMage.SetToolTip(this.label26, "Threat per second limit. Set to 0 to disable threat constraint.");
             // 
             // toolTipMage
             // 
@@ -703,6 +702,17 @@
             this.toolTipMage.SetToolTip(this.label33, "Value of spirit on weapons you swap in for evocation (main hand, off-hand, wand)." +
                     " Set to 0 to disable evocation swapping.");
             // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(3, 746);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(107, 13);
+            this.label34.TabIndex = 72;
+            this.label34.Text = "Survivability Rating: *";
+            this.toolTipMage.SetToolTip(this.label34, "Determines the weight of health in the overall rating (express in terms of dps va" +
+                    "lue per health).");
+            // 
             // checkBoxIncrementalOptimizations
             // 
             this.checkBoxIncrementalOptimizations.AutoSize = true;
@@ -782,17 +792,6 @@
             this.textBoxSurvivabilityRating.Size = new System.Drawing.Size(75, 20);
             this.textBoxSurvivabilityRating.TabIndex = 73;
             this.textBoxSurvivabilityRating.TextChanged += new System.EventHandler(this.textBoxSurvivabilityRating_TextChanged);
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(3, 746);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(107, 13);
-            this.label34.TabIndex = 72;
-            this.label34.Text = "Survivability Rating: *";
-            this.toolTipMage.SetToolTip(this.label34, "Determines the weight of health in the overall rating (express in terms of dps va" +
-                    "lue per health).");
             // 
             // CalculationOptionsPanelMage
             // 

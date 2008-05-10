@@ -111,6 +111,7 @@ namespace Rawr.Mage
             extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + cols + rows] = value;
         }
 
+        // should only add extra constraints that are tight when primal feasible
         public void AddConstraint()
         {
             if (!disableRowAdded)
@@ -133,7 +134,10 @@ namespace Rawr.Mage
             int[] newB = new int[rows];
             Array.Copy(_B, newB, rows - 1);
             _B = newB;
-            _B[rows - 1] = cols + rows - 1;
+            //_B[rows - 1] = cols + rows - 1;
+            // extra constraints should be at start so they are not eliminated when patching singular basis
+            _B[rows - 1] = _B[numExtraConstraints - 1];
+            _B[numExtraConstraints - 1] = cols + rows - 1;
             lu = new LU2(_LU, rows);
         }
 
@@ -351,7 +355,10 @@ namespace Rawr.Mage
                         for (j = 0; j < cols; j++)
                         {
                             double costj = c[j];
-                            if (costj > maxc)
+                            // 1st extra constraint is the disabling constraint
+                            // just ignore the disabled columns, because they can't be in the true solution
+                            // and if we allowed it in it would force the extra constraint out
+                            if (costj > maxc && (V[j] >= cols || D == null || D[V[j]] == 0.0))
                             {
                                 maxc = costj;
                                 maxj = j;
@@ -374,7 +381,7 @@ namespace Rawr.Mage
                             }
                             ret[cols] = value;
                             ColdStart = false;
-                            //System.Diagnostics.Debug.WriteLine("Primal solved in " + round);
+                            //System.Diagnostics.Trace.WriteLine("Primal solved in " + round);
                             return ret;
                         }
 
@@ -411,8 +418,42 @@ namespace Rawr.Mage
                         if (mini == -1)
                         {
                             // unbounded
-                            throw new InvalidOperationException();
+                            if (!ColdStart)
+                            {
+                                // something went really horrible wrong
+                                // when you have code that runs normally when debugger is attached and throws exceptions otherwise you have to employ extreme measures
+                                // so somehow there is something very horribly unstable with this basis
+                                // because by design the formulated LP can't be primary unbounded
+                                // so take a deep breath and try from scratch
+                                for (i = 0; i < rows; i++)
+                                {
+                                    B[i] = cols + i;
+                                }
+                                for (j = 0; j < cols; j++)
+                                {
+                                    V[j] = j;
+                                }
+                                redecompose = 0;
+                                ColdStart = true;
+                                goto RESTART;
+                            }
+                            // ok, so going from scratch didn't help ah
+                            // of course you knew this was going to happen
+                            // oh well, give up and collect bug reports
+                            //throw new InvalidOperationException();
+
+                            // then again, we don't like those bug reports
+                            // this is a very strange situation, so just say that solution is crap
+                            // it'll find something that works hopefully
+                            double[] ret = new double[cols + 1];
+                            return ret;
                         }
+
+                        // bah probably not that bad, just restore extra constraints into basis after primal returns
+                        /*if (B[mini] >= cols + baseRows)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Trying to remove extra constraint from basis!!! Investigate and prevent this from happening!!!");
+                        }*/
 
                         if (feasible)
                         {
@@ -501,10 +542,15 @@ namespace Rawr.Mage
             int* sRow;
             int sCol1, sCol2;
             int redecompose = 0;
+
             fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
             {
                 fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
                 {
+                    /*for (k = 0; k < numExtraConstraints; k++)
+                    {
+                        if (Array.IndexOf(_B, cols + baseRows + k) == -1) System.Diagnostics.Debug.WriteLine("WARNING!!! extra constraint not in basis at start of dual");
+                    }*/
                     do
                     {
                     DECOMPOSE:
@@ -541,6 +587,11 @@ namespace Rawr.Mage
                                 V[vindex] = B[singularColumn];
                                 B[singularColumn] = slackColumn;
                             }
+                            //System.Diagnostics.Debug.WriteLine("Patching singular basis.");
+                            /*for (k = 0; k < numExtraConstraints; k++)
+                            {
+                                if (Array.IndexOf(_B, cols + baseRows + k) == -1) System.Diagnostics.Debug.WriteLine("WARNING!!! extra constraint not in basis after basis patch");
+                            }*/
                             goto DECOMPOSE;
                             /*for (i = 0; i < rows; i++)
                             {
@@ -594,7 +645,57 @@ namespace Rawr.Mage
                                     // this should only happen if dual is not feasible
                                     // should come here only if LU is singular
                                     ColdStart = false;
-                                    return SolvePrimal();
+                                    double[] ret = SolvePrimal();
+                                    // after we have result of primal make sure we return extra constraints to basis
+                                    for (k = 0; k < numExtraConstraints; k++)
+                                    {
+                                        int zeroIndex = -1;
+                                        for (i = 0; i < rows; i++)
+                                        {
+                                            if (B[i] == cols + baseRows + k)
+                                            {
+                                                // swap it to start
+                                                B[i] = B[k];
+                                                B[k] = cols + baseRows + k;
+                                                d[i] = d[k];
+                                                d[k] = 0.0;
+                                                continue;
+                                            }
+                                            if (d[i] <= eps && B[i] < cols + baseRows) zeroIndex = i;
+                                        }
+                                        if (zeroIndex == -1)
+                                        {
+                                            System.Diagnostics.Debug.WriteLine("No room to put extra constraint back into basis!!! Instability???");
+                                        }
+                                        else
+                                        {
+                                            int vindex = Array.IndexOf(_V, cols + baseRows + k);
+                                            V[vindex] = B[zeroIndex];
+                                            // swap it to start
+                                            B[zeroIndex] = B[k];
+                                            B[k] = cols + baseRows + k;
+                                            d[zeroIndex] = d[k];
+                                            d[k] = 0.0;
+                                        }
+                                    }
+                                    // put degenerate columns at the end (except extras) so that they'll be more likely to be eliminated when patching the basis
+                                    // k = numExtraConstraints
+                                    /*i = rows - 1;
+                                    while (k < i)
+                                    {
+                                        while (d[k] > eps) k++;
+                                        while (d[i] <= eps) i--;
+                                        if (k < i)
+                                        {
+                                            int tmp = B[k];
+                                            B[k] = B[i];
+                                            B[i] = tmp;
+                                            k++;
+                                            i--;
+                                            // don't have to actually swap ds since we won't use them anymore
+                                        }
+                                    }*/
+                                    return ret;
                                 }
                                 c[j] = costcol;
                             }
@@ -630,7 +731,56 @@ namespace Rawr.Mage
                             }
                             ret[cols] = value;
                             ColdStart = false;
-                            //System.Diagnostics.Debug.WriteLine("Dual solved in " + round);
+                            // return extra constraints to basis for next iteration
+                            for (k = 0; k < numExtraConstraints; k++)
+                            {
+                                int zeroIndex = -1;
+                                for (i = 0; i < rows; i++)
+                                {
+                                    if (B[i] == cols + baseRows + k)
+                                    {
+                                        // swap it to start
+                                        B[i] = B[k];
+                                        B[k] = cols + baseRows + k;
+                                        d[i] = d[k];
+                                        d[k] = 0.0;
+                                        continue;
+                                    }
+                                    if (d[i] <= eps && B[i] < cols + baseRows) zeroIndex = i;
+                                }
+                                if (zeroIndex == -1)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("No room to put extra constraint back into basis!!! Instability???");
+                                }
+                                else
+                                {
+                                    int vindex = Array.IndexOf(_V, cols + baseRows + k);
+                                    V[vindex] = B[zeroIndex];
+                                    // swap it to start
+                                    B[zeroIndex] = B[k];
+                                    B[k] = cols + baseRows + k;
+                                    d[zeroIndex] = d[k];
+                                    d[k] = 0.0;
+                                }
+                            }
+                            // put degenerate columns at the end (except extras) so that they'll be more likely to be eliminated when patching the basis
+                            // k = numExtraConstraints
+                            /*i = rows - 1;
+                            while (k < i)
+                            {
+                                while (d[k] > eps) k++;
+                                while (d[i] <= eps) i--;
+                                if (k < i)
+                                {
+                                    int tmp = B[k];
+                                    B[k] = B[i];
+                                    B[i] = tmp;
+                                    k++;
+                                    i--;
+                                    // don't have to actually swap ds since we won't use them anymore
+                                }
+                            }*/
+                            //System.Diagnostics.Trace.WriteLine("Dual solved in " + round);
                             return ret;
                         }
 

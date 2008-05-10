@@ -998,6 +998,7 @@ namespace Rawr.Mage
             if (!(calculationOptions.DrumsOfBattle && heroismAvailable)) lp.DisableRow(36);
             if (!(calculationOptions.DrumsOfBattle && ivAvailable)) lp.DisableRow(37);
             if (!(calculationOptions.DrumsOfBattle && apAvailable)) lp.DisableRow(38);
+            if (calculationOptions.TpsLimit >= 5000 || calculationOptions.TpsLimit == 0.0) lp.DisableRow(39);
             if (!calculationOptions.DrumsOfBattle) lp.DisableRow(41);
             if (useSMP)
             {
@@ -1098,7 +1099,7 @@ namespace Rawr.Mage
                 calculatedStats.SetSpell(SpellId.Wand, wand);
                 lp[0, 1] = wand.CostPerSecond - wand.ManaRegenPerSecond;
                 lp[1, 1] = 1;
-                lp[39, 1] = wand.ThreatPerSecond;
+                lp[39, 1] = tps[1] = wand.ThreatPerSecond;
                 lp[lpRows, 1] = wand.DamagePerSecond;
             }
             // evocation
@@ -1143,7 +1144,7 @@ namespace Rawr.Mage
             lp[0, 2] = -calculatedStats.EvocationRegen;
             lp[1, 2] = 1;
             lp[2, 2] = 1;
-            lp[39, 2] = 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed * 0.5f * threatFactor; // should split among all targets if more than one, assume one only
+            lp[39, 2] = tps[2] = 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed * 0.5f * threatFactor; // should split among all targets if more than one, assume one only
             lp[lpRows, 2] = 0;
             // mana pot
             calculatedStats.SolutionLabel[3] = "Mana Potion";
@@ -1151,7 +1152,7 @@ namespace Rawr.Mage
             lp[0, 3] = -calculatedStats.ManaRegen5SR - (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime;
             lp[1, 3] = 1;
             lp[3, 3] = 1;
-            lp[39, 3] = (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime * 0.5f * threatFactor;
+            lp[39, 3] = tps[3] = (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime * 0.5f * threatFactor;
             lp[40, 3] = 40 / calculatedStats.ManaPotionTime;
             lp[lpRows, 3] = 0;
             // mana gem
@@ -1163,7 +1164,7 @@ namespace Rawr.Mage
             lp[4, 4] = 1;
             lp[14, 4] = 1;
             lp[23, 4] = - 1 / calculatedStats.ManaPotionTime;
-            lp[39, 4] = manaGemRegenRate * 0.5f * threatFactor;
+            lp[39, 4] = tps[4] = manaGemRegenRate * 0.5f * threatFactor;
             lp[40, 4] = 40 / calculatedStats.ManaPotionTime;
             lp[lpRows, 4] = 0;
             // drums
@@ -1269,7 +1270,7 @@ namespace Rawr.Mage
                                 lp[36, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].Heroism) ? 1 : 0;
                                 lp[37, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].IcyVeins) ? 1 : 0;
                                 lp[38, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].ArcanePower) ? 1 : 0;
-                                lp[39, index] = s.ThreatPerSecond;
+                                lp[39, index] = tps[index] = s.ThreatPerSecond;
                                 //lp[40, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
                                 lp[lpRows, index] = s.DamagePerSecond;
                                 if (useSMP)
@@ -1507,9 +1508,8 @@ namespace Rawr.Mage
             }
             #endregion
 
-            for (int col = 0; col < lpCols; col++) tps[col] = lp[39, col];
-
             #region SMP Branch & Bound
+            int maxHeap = Properties.Settings.Default.MaxHeapLimit;
             if (useSMP)
             {
                 lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
@@ -1527,17 +1527,18 @@ namespace Rawr.Mage
                         double current = heap.Head.Value;
                         lp = heap.Pop();
                         lp.ForceRecalculation();
-                        if (lp.Value <= max + 1.0)
-                        {
+                        // some testing indicates that the recalculated solution gives the correct result, so the previous solution is most likely to be the problematic one, since we just discarded it not a big deal
+                        //if (lp.Value <= max + 1.0)
+                        //{
                             // give more fudge room in case the previous max was the one that was unstable
                             max = lp.Value;
                             heap.Push(lp);
                             continue;
-                        }
-                        System.Windows.Forms.MessageBox.Show("Instability detected, aborting SMP algorithm");
+                        //}
+                        //System.Windows.Forms.MessageBox.Show("Instability detected, aborting SMP algorithm (max = " + max + ", value = " + lp.Value + ")");
                         // find something reasonably stable
-                        while (heap.Count > 0 && (lp = heap.Pop()).Value > max + 0.000001) { }
-                        break;
+                        //while (heap.Count > 0 && (lp = heap.Pop()).Value > max + 0.000001) { }
+                        //break;
                     }
                     lp = heap.Pop();
                     max = lp.Value;
@@ -1545,6 +1546,11 @@ namespace Rawr.Mage
                     // if this one is valid than all others are sub-optimal
                     // validate all segments for each cooldown
                     solution = lp.Solve();
+                    if (heap.Count > maxHeap)
+                    {
+                        System.Windows.Forms.MessageBox.Show("SMP algorithm exceeded maximum allowed computation limit. Displaying the last working solution.");
+                        break;
+                    }
                     valid = true;
                     // make sure all cooldowns are tightly packed and not fragmented
                     // mf is trivially satisfied
@@ -1702,6 +1708,7 @@ namespace Rawr.Mage
                         }
                     }
                 } while (heap.Count > 0 && !valid);
+                //System.Diagnostics.Debug.WriteLine("Heap at solution " + heap.Count);
             }
             #endregion
 
@@ -1898,7 +1905,14 @@ namespace Rawr.Mage
                     for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                     {
                         CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                        if (stats != null && stats.GetCooldown(cooldown)) lp.UpdateConstraintElement(index, -1);
+                        if (stats != null)
+                        {
+                            if (stats.GetCooldown(cooldown)) lp.UpdateConstraintElement(index, -1);
+                            // for some strange reason trying to help doesn't really help
+                            // end when run in release without debugger it will cause an endless loop wtf
+                            // so don't try to help
+                            //else lp.EraseColumn(index); // to make it easier on the solver also let it know that anything that doesn't have this cooldown can't be in solution
+                        }
                     }
                     lp.UpdateConstraintRHS(-segmentDuration);
                     heap.Push(lp);
