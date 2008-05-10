@@ -127,7 +127,7 @@ namespace Rawr.Healadin
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
-            _cachedCharacter = character;
+            //_cachedCharacter = character;
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsHealadin calculatedStats = new CharacterCalculationsHealadin();
             CharacterCalculationsHealadin oldStats = _cachedCharacterStatsWithSlotEmpty as CharacterCalculationsHealadin;

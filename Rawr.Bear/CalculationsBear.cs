@@ -181,13 +181,14 @@ you are being killed by burst damage, focus on Survival Points.",
 
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
-			_cachedCharacter = character;
 			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
 			int targetLevel = calcOpts.TargetLevel;
 			Stats stats = GetCharacterStats(character, additionalItem);
 			float levelDifference = (targetLevel - 70f) * 0.2f;
 			CharacterCalculationsBear calculatedStats = new CharacterCalculationsBear();
 			calculatedStats.BasicStats = stats;
+			calculatedStats.Race = character.Race;
+			calculatedStats.ActiveBuffs = new List<string>(character.ActiveBuffs);
 			calculatedStats.TargetLevel = targetLevel;
 			float defSkill = (float)Math.Floor(stats.DefenseRating / (123f / 52f));
 			calculatedStats.Miss = 5f + (defSkill * 0.04f) + stats.Miss - levelDifference;
@@ -865,6 +866,9 @@ you are being killed by burst damage, focus on Survival Points.",
         public float ShadowSurvivalPoints{get;set;}
         public float ArcaneSurvivalPoints{get;set;}
 
+		public Character.CharacterRace Race { get; set; }
+		public List<string> ActiveBuffs { get; set; }
+
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -904,7 +908,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			dictValues.Add("Agility", BasicStats.Agility.ToString());
 			dictValues.Add("Armor", BasicStats.Armor.ToString());
 			dictValues.Add("Stamina", BasicStats.Stamina.ToString());
-			if (Calculations.CachedCharacter.Race == Character.CharacterRace.NightElf)
+			if (Race == Character.CharacterRace.NightElf)
 				dictValues.Add("Dodge Rating", (BasicStats.DodgeRating - 59).ToString());
 			else
 				dictValues.Add("Dodge Rating", (BasicStats.DodgeRating - 40).ToString());
@@ -950,7 +954,7 @@ you are being killed by burst damage, focus on Survival Points.",
             dictValues["Arcane Survival"] = ArcaneSurvivalPoints.ToString(); 
 
             float critRating = BasicStats.CritRating;
-            if (Calculations.CachedCharacter.ActiveBuffs.Contains("Improved Judgement of the Crusade"))
+            if (ActiveBuffs.Contains("Improved Judgement of the Crusade"))
                 critRating -= 66.24f;
             critRating -= 264.0768f; //Base 5% + 6% from talents
 

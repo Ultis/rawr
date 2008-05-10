@@ -216,7 +216,8 @@ namespace Rawr.ProtWarr
         public float FrostSurvivalPoints { get; set; }
         public float FireSurvivalPoints { get; set; }
         public float ShadowSurvivalPoints { get; set; }
-        public float ArcaneSurvivalPoints { get; set; }
+		public float ArcaneSurvivalPoints { get; set; }
+		public List<string> ActiveBuffs { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -284,7 +285,7 @@ namespace Rawr.ProtWarr
             dictValues["Arcane Survival"] = ArcaneSurvivalPoints.ToString();
 
             float critRating = BasicStats.CritRating;
-            if (Calculations.CachedCharacter.ActiveBuffs.Contains("Improved Judgement of the Crusade"))
+            if (ActiveBuffs.Contains("Improved Judgement of the Crusade"))
                 critRating -= 66.24f;
             //critRating -= 131.4768f; //Base 5%
 

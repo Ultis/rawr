@@ -95,10 +95,10 @@ namespace Rawr
 			private set { _instance = value; }
 		}
 
-		public static Character CachedCharacter
-		{
-			get { return Instance.CachedCharacter; } 
-		}
+		//public static Character CachedCharacter
+		//{
+		//    get { return Instance.CachedCharacter; } 
+		//}
         public static bool CanUseAmmo
         {
             get { return Instance.CanUseAmmo; }

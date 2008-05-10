@@ -141,7 +141,7 @@ namespace Rawr
 
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
-			_cachedCharacter = character;
+			//_cachedCharacter = character;
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 			int targetLevel = calcOpts.TargetLevel;
 			float targetArmor = calcOpts.TargetArmor;
@@ -156,6 +156,7 @@ namespace Rawr
 			CharacterCalculationsCat calculatedStats = new CharacterCalculationsCat();
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
+			calculatedStats.ActiveBuffs = new List<string>(character.ActiveBuffs);
 
 			if (stats.ShatteredSunMightProc > 0)
 			{
@@ -832,34 +833,35 @@ namespace Rawr
 			get { return _ferociousBiteDamage; }
 			set { _ferociousBiteDamage = value; }
 		}
+		public List<string> ActiveBuffs { get; set; }
 
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
 			float critRating = BasicStats.CritRating;
-			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Improved Judgement of the Crusade"))
+			if (ActiveBuffs.Contains("Improved Judgement of the Crusade"))
 				critRating -= 66.24f;
 			critRating -= 264.0768f; //Base 5% + 6% from talents
 			
 			float hitRating = BasicStats.HitRating;
-			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Improved Faerie Fire"))
+			if (ActiveBuffs.Contains("Improved Faerie Fire"))
 				hitRating -= 47.3077f;
-			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Heroic Presence"))
+			if (ActiveBuffs.Contains("Heroic Presence"))
 				hitRating -= 15.769f;
 
 			float armorPenetration = BasicStats.ArmorPenetration;
-			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Faerie Fire"))
+			if (ActiveBuffs.Contains("Faerie Fire"))
 				armorPenetration -= 610f;
-			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Sunder Armor (x5)"))
+			if (ActiveBuffs.Contains("Sunder Armor (x5)"))
 				armorPenetration -= 2600f;
-			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Curse of Recklessness"))
+			if (ActiveBuffs.Contains("Curse of Recklessness"))
 				armorPenetration -= 800f;
-			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Expose Armor (5cp)"))
+			if (ActiveBuffs.Contains("Expose Armor (5cp)"))
 				armorPenetration -= 2000f;
-			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Improved Expose Armor (5cp)"))
+			if (ActiveBuffs.Contains("Improved Expose Armor (5cp)"))
 				armorPenetration -= 1000f;
 
 			float attackPower = BasicStats.AttackPower;
-			if (Calculations.CachedCharacter.ActiveBuffs.Contains("Improved Hunter's Mark"))
+			if (ActiveBuffs.Contains("Improved Hunter's Mark"))
 				attackPower -= 121f;
 			
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();

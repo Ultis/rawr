@@ -197,7 +197,7 @@ you are being killed by burst damage, focus on Survival Points.",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
-            _cachedCharacter = character;
+            //_cachedCharacter = character;
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
             int targetLevel = calcOpts.TargetLevel;
 
@@ -207,7 +207,8 @@ you are being killed by burst damage, focus on Survival Points.",
 
             #region Tanking Calculations
             calculatedStats.BasicStats = stats;
-            calculatedStats.TargetLevel = targetLevel;
+			calculatedStats.TargetLevel = targetLevel;
+			calculatedStats.ActiveBuffs = new List<string>(character.ActiveBuffs);
             calculatedStats.Miss = 5f + (((float)Math.Floor(stats.Defense + stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToMiss) +
                                    stats.Miss - levelDifference;
             calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss,
