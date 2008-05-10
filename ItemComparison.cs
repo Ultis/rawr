@@ -45,6 +45,7 @@ namespace Rawr
 
         public void LoadGearBySlot(Character.CharacterSlot slot)
         {
+			Calculations.ClearCache();
             List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
             if (Items != null && Character != null)
             {
