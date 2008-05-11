@@ -11,10 +11,23 @@ namespace Rawr.Retribution
 {
     public partial class CalculationOptionsPanelRetribution : CalculationOptionsPanelBase
     {
+        private Dictionary<int, string> armorBosses = new Dictionary<int, string>();
+
         public CalculationOptionsPanelRetribution()
         {
             InitializeComponent();
-           
+            armorBosses.Add(3800, ": Shade of Aran");
+            armorBosses.Add(4700, ": Roar");
+            armorBosses.Add(5500, ": Netherspite");
+            armorBosses.Add(6100, ": Julianne, Curator");
+            armorBosses.Add(6200, ": Karathress, Vashj, Solarian, Kael'thas, Winterchill, Anetheron, Kaz'rogal, Azgalor, Archimonde, Teron, Shahraz");
+            armorBosses.Add(6700, ": Maiden, Illhoof");
+            armorBosses.Add(7300, ": Strawman");
+            armorBosses.Add(7500, ": Attumen");
+            armorBosses.Add(7600, ": Romulo, Nightbane, Malchezaar, Doomwalker");
+            armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
+            armorBosses.Add(8200, ": Midnight");
+            armorBosses.Add(8800, ": Void Reaver");
         }
         protected override void LoadCalculationOptions()
         {
@@ -39,7 +52,7 @@ namespace Rawr.Retribution
 
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
-            txtArmor.Text = calcOpts.BossArmor.ToString();
+            trackBarTargetArmor.Value = calcOpts.BossArmor;
 			trackBarFightLength.Value = calcOpts.FightLength;
 			lblLength.Text = trackBarFightLength.Value.ToString();
             checkBoxExorcism.Checked = calcOpts.Exorcism;
@@ -63,7 +76,6 @@ namespace Rawr.Retribution
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.Seal = rbSoB.Checked ? 1 : 0;
             Character.OnItemsChanged();
-
         }
 
         private void checkBoxConsecration_CheckedChanged(object sender, EventArgs e)
@@ -103,17 +115,6 @@ namespace Rawr.Retribution
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.FightLength = trackBarFightLength.Value;
             lblLength.Text = trackBarFightLength.Value.ToString();
-            Character.OnItemsChanged();
-        }
-
-        private void txtArmor_TextChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-			try
-			{
-				calcOpts.BossArmor = int.Parse(txtArmor.Text);
-			}
-			catch { }
             Character.OnItemsChanged();
         }
 
@@ -327,6 +328,54 @@ namespace Rawr.Retribution
 			calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
             Character.OnItemsChanged();
         }
+
+        private void trackBarExposeWeakness_ValueChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.ExposeWeaknessAPValue = trackBarExposeWeakness.Value;
+            labelExposeWeakness.Text = trackBarExposeWeakness.Value.ToString();
+            Character.OnItemsChanged();
+        }
+
+        private void trackBarBloodlustUptime_ValueChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.BloodlustUptime = trackBarBloodlustUptime.Value;
+            labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
+            Character.OnItemsChanged();
+        }
+
+        private void trackBarDrumsOfBattleUptime_ValueChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.DrumsOfBattleUptime = trackBarDrumsOfBattleUptime.Value;
+            labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
+            Character.OnItemsChanged();
+        }
+
+        private void trackBarDrumsOfWarUptime_ValueChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.DrumsOfWarUptime = trackBarDrumsOfWarUptime.Value;
+            labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
+            Character.OnItemsChanged();
+        }
+
+        private void trackBarNumberOfFerociousInspirations_ValueChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.NumberOfFerociousInspirations = trackBarNumberOfFerociousInspirations.Value;
+            labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
+            Character.OnItemsChanged();
+        }
+
+        private void trackBarTargetArmor_ValueChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.BossArmor = trackBarTargetArmor.Value;
+            labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
+            Character.OnItemsChanged();
+        }
     }
 
 	[Serializable]
@@ -350,6 +399,11 @@ namespace Rawr.Retribution
 		public int Seal = 1;
 		public bool EnforceMetagemRequirements = false;
 		public string ShattrathFaction = "Aldor";
+        public float BloodlustUptime = 0.15f;
+        public float DrumsOfBattleUptime = 0.25f;
+        public float DrumsOfWarUptime = 0.25f;
+        public int ExposeWeaknessAPValue = 200;
+        public int NumberOfFerociousInspirations = 2;
 	
 		public int TwoHandedSpec = 0;
 		public int Conviction = 0;

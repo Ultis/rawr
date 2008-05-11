@@ -174,9 +174,9 @@ namespace Rawr.Retribution
             
             CharacterCalculationsRetribution calcs = new CharacterCalculationsRetribution();
             calcs.BasicStats = stats;
-            
 
-            float avgBaseWeaponHit = 0.0f, hastedSpeed = 1.0f, physicalCritModifier = 0.0f, chanceToBeDodged = 6.5f, chanceToMiss = 9.0f; ;
+
+            float avgBaseWeaponHit = 0.0f, hasteBonus = 0.0f, hastedSpeed = 1.0f, physicalCritModifier = 0.0f, chanceToBeDodged = 6.5f, chanceToMiss = 9.0f; ;
             float chanceToGlance = 0.25f, glancingAmount = 0.35f;
             float consDPS = 0.0f, exoDPS=0.0f, wfDPS = 0.0f, jobDPS = 0.0f,socDPS=0.0f,jocDPS = 0.0f;
             #region Mitigation
@@ -204,10 +204,9 @@ namespace Rawr.Retribution
             if (character.MainHand != null)
             {
                 avgBaseWeaponHit = twoHandedSpec*(character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage*2f) / 2.0f;
-                hastedSpeed = (stats.HasteRating == 0) ? character.MainHand.Speed : character.MainHand.Speed / (1 + stats.HasteRating /1576f);
-            }
-
-            
+                hasteBonus = stats.HasteRating / 15.76f / 100f;
+                hastedSpeed = (1f - (stats.Bloodlust * calcOpts.BloodlustUptime)) / (1f + hasteBonus);
+            }       
 
             //Add Attack Power Bonus
             avgBaseWeaponHit += twoHandedSpec*(stats.AttackPower / 14.0f) * ((character.MainHand == null) ? 1.0f : character.MainHand.Speed);
@@ -526,8 +525,10 @@ namespace Rawr.Retribution
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
+            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+
             //Add Expose Weakness since it's not listed as an AP buff
-            if(statsBuffs.ExposeWeakness > 0) statsBuffs.AttackPower += 200f;
+            if(statsBuffs.ExposeWeakness > 0) statsBuffs.AttackPower += calcOpts.ExposeWeaknessAPValue;
 
             //Mongoose
             if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
@@ -552,8 +553,19 @@ namespace Rawr.Retribution
             float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
             float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier));
+            
+            //drums of war
+            statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime;
 
-			CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            //drums of battle
+            statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime;
+
+            //ferocious inspiriation
+            if (character.ActiveBuffs.Contains("Ferocious Inspiration"))
+                statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier) *
+                    (float)Math.Pow(1.03f, calcOpts.NumberOfFerociousInspirations - 1f)) - 1f;
+
+
             Stats statsTotal = new Stats();
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
@@ -609,8 +621,6 @@ namespace Rawr.Retribution
             statsTotal.BonusSpellPowerMultiplier = statsGearEnchantsBuffs.BonusSpellPowerMultiplier;
             statsTotal.ShatteredSunMightProc = statsGearEnchantsBuffs.ShatteredSunMightProc;
             return (statsTotal);
-
-           
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
@@ -694,11 +704,12 @@ namespace Rawr.Retribution
                 ExpertiseRating = stats.ExpertiseRating,
                 WeaponDamage = stats.WeaponDamage,
                 Bloodlust = stats.Bloodlust,
-                DrumsOfBattle = stats.DrumsOfBattle,
                 SpellDamageRating = stats.SpellDamageRating,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 BonusCrusaderStrikeDamageMultiplier = stats.BonusCrusaderStrikeDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                DrumsOfBattle = stats.DrumsOfBattle,
+                DrumsOfWar = stats.DrumsOfWar,
                 WindfuryAPBonus = stats.WindfuryAPBonus
             };
         }
