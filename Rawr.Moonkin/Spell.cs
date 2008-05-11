@@ -252,7 +252,7 @@ namespace Rawr.Moonkin
 
             // New cast time calculations to deal with NG and clipping
             double castTimeNoNG = Math.Max(unhastedCastTime / hasteCoefficient, Spell.GlobalCooldown);
-            double castTimeWithNG = Math.Max(castTimeNoNG - naturesGraceTime, Spell.GlobalCooldown);
+            double castTimeWithNG = Math.Max((unhastedCastTime - naturesGraceTime) / hasteCoefficient, Spell.GlobalCooldown);
             double NGChance = critChanceCoefficient * hitCoefficient;
             CastTime = (float)((1 - NGChance) * castTimeNoNG + NGChance * castTimeWithNG);
             CastTime += latency;
@@ -288,6 +288,8 @@ namespace Rawr.Moonkin
             // Nature's Grace is ignored for Moonfire, because it is an instant cast
             float hitCoefficient = hitRate;
             // Haste rating is ignored for Moonfire, because it is an instant cast
+            // Latency
+            CastTime += latency;
             // Calculate DoT component
             float dotEffectDPS = (dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) * specialDamageModifier) / dotEffect.Duration;
             // Moonfire DPS is calculated over the duration of the DoT
@@ -323,7 +325,7 @@ namespace Rawr.Moonkin
 
             // New cast time calculations to deal with NG and clipping
             double castTimeNoNG = Math.Max(unhastedCastTime / hasteCoefficient, Spell.GlobalCooldown);
-            double castTimeWithNG = Math.Max(castTimeNoNG - naturesGraceTime, Spell.GlobalCooldown);
+            double castTimeWithNG = Math.Max((unhastedCastTime - naturesGraceTime) / hasteCoefficient, Spell.GlobalCooldown);
             double NGChance = critChanceCoefficient * hitCoefficient;
             CastTime = (float)((1 - NGChance) * castTimeNoNG + NGChance * castTimeWithNG);
             CastTime += latency;
@@ -353,6 +355,8 @@ namespace Rawr.Moonkin
         }
         public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
         {
+            // Latency
+            CastTime += latency;
             // Insect Swarm is a pure DoT, therefore the calculations are relatively uncomplicated
             float dotEffectDPS = (dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) * specialDamageModifier) / dotEffect.Duration;
             return dotEffectDPS;
@@ -444,6 +448,7 @@ namespace Rawr.Moonkin
                         timeSpentCasting += sp.CastTime;
                         ++numberOfCasts;
                     }
+                    lastSpellCastTime = 0.0f;
                 }
                 else
                 {
@@ -503,11 +508,15 @@ namespace Rawr.Moonkin
                 if (sp.DoT == null)
                 {
                     float dotDuration = sp.CastTime;
+                    float minimumDot = 20.0f;
                     foreach (KeyValuePair<float, float> pair in activeDots)
                     {
-                        if (pair.Value > dotDuration)
-                            dotDuration = pair.Value;
+                        if (pair.Value < minimumDot)
+                        {
+                            minimumDot = pair.Value;
+                        }
                     }
+                    if (minimumDot > dotDuration) dotDuration = minimumDot;
                     while (timeSpentCasting < dotDuration - lastSpellCastTime)
                     {
                         if (sp.Name == "SF")
@@ -548,7 +557,7 @@ namespace Rawr.Moonkin
         {
             get
             {
-                if (_avgCritChance == 0.0f)
+                if (_duration == 0.0f)
                     CalculateRotationalVariables();
                 return _avgCritChance;
             }
@@ -571,7 +580,7 @@ namespace Rawr.Moonkin
         {
             get
             {
-                if (_castCount == 0.0f)
+                if (_duration == 0.0f)
                     CalculateRotationalVariables();
                 return _castCount;
             }
@@ -580,7 +589,7 @@ namespace Rawr.Moonkin
         {
             get
             {
-                if (_dotTicks == 0)
+                if (_duration == 0)
                     CalculateRotationalVariables();
                 return _dotTicks;
             }
@@ -602,7 +611,7 @@ namespace Rawr.Moonkin
         {
             get
             {
-                if (_starfireCount == 0)
+                if (_duration == 0)
                     CalculateRotationalVariables();
                 return _starfireCount;
             }
@@ -611,6 +620,15 @@ namespace Rawr.Moonkin
         public float DPM { get; set; }
         public TimeSpan TimeToOOM { get; set; }
         public float RawDPS { get; set; }
+
+        public void ResetRotationalVariables()
+        {
+            _avgCritChance = 0.0f;
+            _castCount = 0.0f;
+            _dotTicks = 0;
+            _duration = 0.0f;
+            _starfireCount = 0;
+        }
     }
 
     static class MoonkinSolver
@@ -806,6 +824,7 @@ namespace Rawr.Moonkin
                 trinketExtraDPS = 0.0f;
                 // Do a pre-emptive call to rotation.DPS to get corrected cast times for spells
                 rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency);
+                rotation.ResetRotationalVariables();
                 DoTrinketCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, ref effectiveArcaneDamage, ref effectiveNatureDamage, ref effectiveSpellCrit, ref effectiveSpellHaste);
 
                 // JoW/mana restore procs
@@ -824,6 +843,12 @@ namespace Rawr.Moonkin
                 }
 
                 float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency) + trinketExtraDPS;
+                // Restore Starfire's cast time because the object is reused
+                if (naturesGrace && rotation.HasMoonfire && rotation.StarfireCount > 0)
+                {
+                    float critFromGear = effectiveSpellCrit * (1 / CalculationsMoonkin.critRatingConversionFactor);
+                    starfire.CastTime += ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f) / rotation.StarfireCount;
+                }
                 float currentRawDPS = rotation.RawDPS + trinketExtraDPS;
                 if (currentDPS > maxDPS)
                 {
