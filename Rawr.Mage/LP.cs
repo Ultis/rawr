@@ -619,8 +619,8 @@ namespace Rawr.Mage
                                 }
                             }
                             lu.Decompose();
-                            redecompose = 0; // decompose each time to see where the instability comes from
-                            needsRecalc = true; // extreme measures to determine source of instability
+                            redecompose = 50; // decompose each time to see where the instability comes from
+                            //needsRecalc = true; // extreme measures to determine source of instability
                         }
 
                         if (lu.Singular)
