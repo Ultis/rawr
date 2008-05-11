@@ -28,6 +28,7 @@ namespace Rawr.Mage
         private static double[] _c;
         private static double[] _b;
         private static double[] _cost;
+        private static bool[] _blacklist;
 
         private static int maxRows = 0;
         private static int maxCols = 0;
@@ -51,6 +52,7 @@ namespace Rawr.Mage
             _c = new double[maxCols];
             _cost = new double[maxCols];
             _b = new double[maxRows];
+            _blacklist = new bool[maxRows + maxCols];
         }
 
 
@@ -212,305 +214,354 @@ namespace Rawr.Mage
             int sCol1, sCol2;
             int redecompose = 0;
             double lastInfis = double.PositiveInfinity;
+            const int maxRedecompose = 50;
+            Array.Clear(_blacklist, 0, rows + cols);
             fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
             {
                 fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
                 {
-                    do
+                    fixed (bool* blacklist = _blacklist)
                     {
-                    RESTART:
-                        // [L U] = lu(A(:,B_indices));
-                        if (redecompose <= 0)
+                        do
                         {
-                            for (j = 0; j < rows; j++)
+                        RESTART:
+                            // [L U] = lu(A(:,B_indices));
+                            if (redecompose <= 0)
                             {
-                                int col = B[j];
+                                for (j = 0; j < rows; j++)
+                                {
+                                    int col = B[j];
+                                    for (i = 0; i < baseRows; i++)
+                                    {
+                                        LU[i * rows + j] = a[i + col * baseRows];
+                                    }
+                                    for (k = 0; k < numExtraConstraints; k++, i++)
+                                    {
+                                        LU[i * rows + j] = D[k * (cols + rows + 1) + col];
+                                    }
+                                }
+                                lu.Decompose();
+                                redecompose = maxRedecompose; // decompose every 50 iterations to maintain stability
+                            }
+                            if (lu.Singular)
+                            {
+                                //System.Diagnostics.Debug.WriteLine("Basis singular");
+                                // TODO deal with it
+                            }
+
+                            if (!feasible)
+                            {
+                                // d = U \ (L \ b);
                                 for (i = 0; i < baseRows; i++)
                                 {
-                                    LU[i * rows + j] = a[i + col * baseRows];
+                                    d[i] = b[i];
                                 }
                                 for (k = 0; k < numExtraConstraints; k++, i++)
                                 {
-                                    LU[i * rows + j] = D[k * (cols + rows + 1) + col];
+                                    d[i] = D[k * (cols + rows + 1) + cols + rows];
                                 }
-                            }
-                            lu.Decompose();
-                            redecompose = 50; // decompose every 50 iterations to maintain stability
-                        }
-                        if (lu.Singular)
-                        {
-                            //System.Diagnostics.Debug.WriteLine("Basis singular");
-                            // TODO deal with it
-                        }
+                                lu.FSolve(d);
 
-                        if (!feasible)
-                        {
-                            // d = U \ (L \ b);
-                            for (i = 0; i < baseRows; i++)
-                            {
-                                d[i] = b[i];
-                            }
-                            for (k = 0; k < numExtraConstraints; k++, i++)
-                            {
-                                d[i] = D[k * (cols + rows + 1) + cols + rows];
-                            }
-                            lu.FSolve(d);
-
-                            feasible = true;
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (d[i] < -eps)
-                                {
-                                    feasible = false;
-                                    break;
-                                }
-                            }
-                            if (feasible)
-                            {
-                                //System.Diagnostics.Debug.WriteLine("Primal feasible in " + round);
-                                // we have a feasible solution, initialize phase 2
+                                feasible = true;
                                 for (i = 0; i < rows; i++)
                                 {
-                                    if (B[i] < cols) u[i] = cost[B[i]];
-                                    else u[i] = 0.0;
+                                    if (d[i] < -eps)
+                                    {
+                                        feasible = false;
+                                        break;
+                                    }
                                 }
-                                lu.BSolve(u);
+                                if (feasible)
+                                {
+                                    //System.Diagnostics.Debug.WriteLine("Primal feasible in " + round);
+                                    // we have a feasible solution, initialize phase 2
+                                    for (i = 0; i < rows; i++)
+                                    {
+                                        if (B[i] < cols) u[i] = cost[B[i]];
+                                        else u[i] = 0.0;
+                                    }
+                                    lu.BSolve(u);
+                                    for (j = 0; j < cols; j++)
+                                    {
+                                        int col = V[j];
+
+                                        double costcol = ((col < cols) ? cost[col] : 0.0);
+                                        sCol1 = sparseCol[col];
+                                        sCol2 = sparseCol[col + 1];
+                                        sRow = sparseRow + sCol1;
+                                        sValue = sparseValue + sCol1;
+                                        for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
+                                        {
+                                            costcol -= *sValue * u[*sRow];
+                                        }
+                                        for (k = 0; k < numExtraConstraints; k++, i++)
+                                        {
+                                            costcol -= D[k * (cols + rows + 1) + col] * u[baseRows + k];
+                                        }
+                                        c[j] = costcol;
+                                    }
+                                }
+                            }
+
+                            // c_tilde(:,V_indices) = c(:,V_indices) - ((c(:,B_indices) \ U) \ L) *  A(:,V_indices);
+                            // compute max c~ = cV - cB * AV
+                            if (!feasible)
+                            {
+                                double infis = 0.0;
+                                for (i = 0; i < rows; i++)
+                                {
+                                    if (d[i] < -eps)
+                                    {
+                                        x[i] = 1.0;
+                                        infis -= d[i];
+                                    }
+                                    else x[i] = 0.0;
+                                }
+                                if (infis > 100.0 && !ColdStart)
+                                {
+                                    // we're so far out of feasible region we're better off starting from scratch
+                                    for (i = 0; i < rows; i++)
+                                    {
+                                        B[i] = cols + i;
+                                    }
+                                    for (j = 0; j < cols; j++)
+                                    {
+                                        V[j] = j;
+                                    }
+                                    redecompose = 0;
+                                    ColdStart = true;
+                                    goto RESTART;
+                                }
+                                //lastInfis = infis;
+                                lu.BSolve(x);
                                 for (j = 0; j < cols; j++)
                                 {
                                     int col = V[j];
 
-                                    double costcol = ((col < cols) ? cost[col] : 0.0);
+                                    double costcol = 0;
                                     sCol1 = sparseCol[col];
                                     sCol2 = sparseCol[col + 1];
                                     sRow = sparseRow + sCol1;
                                     sValue = sparseValue + sCol1;
                                     for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
                                     {
-                                        costcol -= *sValue * u[*sRow];
+                                        costcol -= *sValue * x[*sRow];
                                     }
                                     for (k = 0; k < numExtraConstraints; k++, i++)
                                     {
-                                        costcol -= D[k * (cols + rows + 1) + col] * u[baseRows + k];
+                                        costcol -= D[k * (cols + rows + 1) + col] * x[baseRows + k];
                                     }
                                     c[j] = costcol;
                                 }
                             }
-                        }
 
-                        // c_tilde(:,V_indices) = c(:,V_indices) - ((c(:,B_indices) \ U) \ L) *  A(:,V_indices);
-                        // compute max c~ = cV - cB * AV
-                        if (!feasible)
-                        {
-                            double infis = 0.0;
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (d[i] < -eps)
-                                {
-                                    x[i] = 1.0;
-                                    infis -= d[i];
-                                }
-                                else x[i] = 0.0;
-                            }
-                            if (infis > 100.0 && !ColdStart)
-                            {
-                                // we're so far out of feasible region we're better off starting from scratch
-                                for (i = 0; i < rows; i++)
-                                {
-                                    B[i] = cols + i;
-                                }
-                                for (j = 0; j < cols; j++)
-                                {
-                                    V[j] = j;
-                                }
-                                redecompose = 0;
-                                ColdStart = true;
-                                goto RESTART;
-                            }
-                            //lastInfis = infis;
-                            lu.BSolve(x);
+                            double maxc = eps;
+                            int maxj = -1;
                             for (j = 0; j < cols; j++)
                             {
-                                int col = V[j];
-
-                                double costcol = 0;
-                                sCol1 = sparseCol[col];
-                                sCol2 = sparseCol[col + 1];
-                                sRow = sparseRow + sCol1;
-                                sValue = sparseValue + sCol1;
-                                for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
+                                double costj = c[j];
+                                // 1st extra constraint is the disabling constraint
+                                // just ignore the disabled columns, because they can't be in the true solution
+                                // and if we allowed it in it would force the extra constraint out
+                                if (costj > maxc + eps && !blacklist[V[j]] && (V[j] >= cols || D == null || D[V[j]] == 0.0)) // add eps barriers so that we stabilize pivot order
                                 {
-                                    costcol -= *sValue * x[*sRow];
-                                }
-                                for (k = 0; k < numExtraConstraints; k++, i++)
-                                {
-                                    costcol -= D[k * (cols + rows + 1) + col] * x[baseRows + k];
-                                }
-                                c[j] = costcol;
-                            }
-                        }
-
-                        double maxc = eps;
-                        int maxj = -1;
-                        for (j = 0; j < cols; j++)
-                        {
-                            double costj = c[j];
-                            // 1st extra constraint is the disabling constraint
-                            // just ignore the disabled columns, because they can't be in the true solution
-                            // and if we allowed it in it would force the extra constraint out
-                            if (costj > maxc + eps && (V[j] >= cols || D == null || D[V[j]] == 0.0)) // add eps barriers so that we stabilize pivot order
-                            {
-                                maxc = costj;
-                                maxj = j;
-                            }
-                        }
-
-                        if (maxj == -1)
-                        {
-                            // optimum, return solution (or could be no feasible solution)
-                            // solution(B_indices,:) = d;
-                            double[] ret = new double[cols + 1];
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (B[i] < cols && d[i] > eps) ret[B[i]] = d[i];
-                            }
-                            double value = 0;
-                            for (i = 0; i < rows; i++)
-                            {
-                                if (B[i] < cols) value += cost[B[i]] * d[i];
-                            }
-                            ret[cols] = value;
-                            ColdStart = false;
-                            //System.Diagnostics.Trace.WriteLine("Primal solved in " + round);
-                            return ret;
-                        }
-
-                        // w = U \ (L \ A(:,j));
-                        int maxcol = V[maxj];
-                        for (i = 0; i < baseRows; i++)
-                        {
-                            w[i] = a[i + maxcol * baseRows];
-                        }
-                        for (k = 0; k < numExtraConstraints; k++, i++)
-                        {
-                            w[i] = D[k * (cols + rows + 1) + maxcol];
-                        }
-                        //lu.FSolve(w);
-                        lu.FSolveL(w, ww);
-                        lu.FSolveU(ww, w);
-
-                        // min over i of d[i]/w[i] where w[i]>0
-                        double minr = double.PositiveInfinity;
-                        int mini = -1;
-                        for (i = 0; i < rows; i++)
-                        {
-                            if (w[i] > eps && d[i] > -eps) // !!! if variable is currently unfeasible you should let it go more unfeasible as a compromise to get some others into feasible range, if you block on it you actually force entering variable to be negative which means total infeasibilities will increase
-                            {
-                                double r = d[i] / w[i];
-                                if (r < minr - eps) // add eps barriers so that we stabilize pivot order
-                                {
-                                    minr = r;
-                                    mini = i;
+                                    maxc = costj;
+                                    maxj = j;
                                 }
                             }
-                        }
 
-                        if (mini == -1)
-                        {
-                            // unbounded
-                            if (!ColdStart)
+                            if (maxj == -1)
                             {
-                                // something went really horrible wrong
-                                // when you have code that runs normally when debugger is attached and throws exceptions otherwise you have to employ extreme measures
-                                // so somehow there is something very horribly unstable with this basis
-                                // because by design the formulated LP can't be primary unbounded
-                                // so take a deep breath and try from scratch
+                                // optimum, return solution (or could be no feasible solution)
+                                // solution(B_indices,:) = d;
+                                double[] ret = new double[cols + 1];
                                 for (i = 0; i < rows; i++)
                                 {
-                                    B[i] = cols + i;
+                                    if (B[i] < cols && d[i] > eps) ret[B[i]] = d[i];
                                 }
-                                for (j = 0; j < cols; j++)
+                                double value = 0;
+                                for (i = 0; i < rows; i++)
                                 {
-                                    V[j] = j;
+                                    if (B[i] < cols) value += cost[B[i]] * d[i];
                                 }
-                                redecompose = 0;
-                                ColdStart = true;
-                                goto RESTART;
+                                ret[cols] = value;
+                                ColdStart = false;
+                                //System.Diagnostics.Trace.WriteLine("Primal solved in " + round);
+                                return ret;
                             }
-                            // ok, so going from scratch didn't help ah
-                            // of course you knew this was going to happen
-                            // oh well, give up and collect bug reports
-                            //throw new InvalidOperationException();
 
-                            // then again, we don't like those bug reports
-                            // this is a very strange situation, so just say that solution is crap
-                            // it'll find something that works hopefully
-                            double[] ret = new double[cols + 1];
-                            return ret;
-                        }
+                            // w = U \ (L \ A(:,j));
+                            int maxcol = V[maxj];
+                            for (i = 0; i < baseRows; i++)
+                            {
+                                w[i] = a[i + maxcol * baseRows];
+                            }
+                            for (k = 0; k < numExtraConstraints; k++, i++)
+                            {
+                                w[i] = D[k * (cols + rows + 1) + maxcol];
+                            }
+                            //lu.FSolve(w);
+                            lu.FSolveL(w, ww);
+                            lu.FSolveU(ww, w);
 
-                        // bah probably not that bad, just restore extra constraints into basis after primal returns
-                        /*if (B[mini] >= cols + baseRows)
-                        {
-                            System.Diagnostics.Debug.WriteLine("Trying to remove extra constraint from basis!!! Investigate and prevent this from happening!!!");
-                        }*/
-
-                        if (feasible)
-                        {
-                            // minr = primal step
-                            // rd = dual step
-
-                            double rd = c[maxj] / w[mini];
-
-                            // x = z <- e_mini*A_B^-1
+                            // min over i of d[i]/w[i] where w[i]>0
+                            double minr = double.PositiveInfinity;
+                            double maxnorm = 0.0;
+                            int mini = -1;
                             for (i = 0; i < rows; i++)
                             {
-                                x[i] = ((i == mini) ? 1 : 0);
-                            }
-                            lu.BSolve(x); // TODO exploit nature of x
-
-                            // update primal and dual
-                            for (i = 0; i < rows; i++)
-                            {
-                                d[i] -= minr * w[i];
-                                //u[i] -= rd * x[i];
-                            }
-                            d[mini] = minr;
-                            cc = c;
-                            for (j = 0; j < cols; j++, cc++)
-                            {
-                                int col = V[j];
-                                sCol1 = sparseCol[col];
-                                sCol2 = sparseCol[col + 1];
-                                sRow = sparseRow + sCol1;
-                                sValue = sparseValue + sCol1;
-                                for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
+                                double v = Math.Abs(w[i]);
+                                if (v > maxnorm) maxnorm = v;
+                                if (w[i] > eps && d[i] > -eps) // !!! if variable is currently unfeasible you should let it go more unfeasible as a compromise to get some others into feasible range, if you block on it you actually force entering variable to be negative which means total infeasibilities will increase
                                 {
-                                    *cc -= rd * *sValue * x[*sRow];
+                                    double r = d[i] / w[i];
+                                    if (r < minr - eps) // add eps barriers so that we stabilize pivot order
+                                    {
+                                        minr = r;
+                                        mini = i;
+                                    }
                                 }
-                                for (k = 0; k < numExtraConstraints; k++, i++)
-                                {
-                                    *cc -= rd * D[k * (cols + rows + 1) + col] * x[baseRows + k];
-                                }
-                                c[maxj] = -rd;
                             }
-                        }
 
-                        //System.Diagnostics.Debug.WriteLine(round + ": " + V[maxj] + " <=> " + B[mini]);
-                        // swap base
+                            if (mini == -1)
+                            {
+                                // unbounded
+                                if (!ColdStart)
+                                {
+                                    // something went really horrible wrong
+                                    // when you have code that runs normally when debugger is attached and throws exceptions otherwise you have to employ extreme measures
+                                    // so somehow there is something very horribly unstable with this basis
+                                    // because by design the formulated LP can't be primary unbounded
+                                    // so take a deep breath and try from scratch
+                                    for (i = 0; i < rows; i++)
+                                    {
+                                        B[i] = cols + i;
+                                    }
+                                    for (j = 0; j < cols; j++)
+                                    {
+                                        V[j] = j;
+                                    }
+                                    redecompose = 0;
+                                    ColdStart = true;
+                                    goto RESTART;
+                                }
+                                // ok, so going from scratch didn't help ah
+                                // of course you knew this was going to happen
+                                // oh well, give up and collect bug reports
+                                //throw new InvalidOperationException();
 
-                        redecompose--;
-                        if (redecompose > 0)
-                        {
-                            lu.Update(ww, mini);
-                        }
+                                // then again, we don't like those bug reports
+                                // this is a very strange situation, so just say that solution is crap
+                                // it'll find something that works hopefully
+                                double[] ret = new double[cols + 1];
+                                return ret;
+                            }
 
-                        k = B[mini];
-                        B[mini] = V[maxj];
-                        V[maxj] = k;
+                            // bah probably not that bad, just restore extra constraints into basis after primal returns
+                            /*if (B[mini] >= cols + baseRows)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Trying to remove extra constraint from basis!!! Investigate and prevent this from happening!!!");
+                            }*/
 
-                        round++;
-                        if (round == 5000) round++;
-                    } while (round < 5000);
+                            // pivot stability
+                            double pivotStability = Math.Abs(w[mini]) / maxnorm;
+                            //System.Diagnostics.Trace.WriteLine("Pivot stability " + pivotStability);
+                            if (pivotStability < 0.0001)
+                            {
+                                if (redecompose == maxRedecompose && pivotStability < 0.000001)
+                                {
+                                    // basis is stable so it must be something with the pivot
+                                    // blacklist it
+                                    blacklist[V[maxj]] = true;
+                                    continue;
+                                }
+                                else if (redecompose == maxRedecompose)
+                                {
+                                    // we just refactored and it's probably not horrible bad
+                                }
+                                else
+                                {
+                                    // try recalculating basis and variables
+                                    redecompose = 0;
+                                    feasible = false;
+                                    continue;
+                                }
+                            }
+
+                            if (feasible)
+                            {
+                                // minr = primal step
+                                // rd = dual step
+
+                                double rd = c[maxj] / w[mini];
+
+                                // x = z <- e_mini*A_B^-1
+                                for (i = 0; i < rows; i++)
+                                {
+                                    x[i] = ((i == mini) ? 1 : 0);
+                                }
+                                lu.BSolve(x); // TODO exploit nature of x
+
+                                // update primal and dual
+                                for (i = 0; i < rows; i++)
+                                {
+                                    d[i] -= minr * w[i];
+                                    //u[i] -= rd * x[i];
+                                }
+                                d[mini] = minr;
+                                cc = c;
+                                for (j = 0; j < cols; j++, cc++)
+                                {
+                                    int col = V[j];
+                                    sCol1 = sparseCol[col];
+                                    sCol2 = sparseCol[col + 1];
+                                    sRow = sparseRow + sCol1;
+                                    sValue = sparseValue + sCol1;
+                                    for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
+                                    {
+                                        *cc -= rd * *sValue * x[*sRow];
+                                    }
+                                    for (k = 0; k < numExtraConstraints; k++, i++)
+                                    {
+                                        *cc -= rd * D[k * (cols + rows + 1) + col] * x[baseRows + k];
+                                    }
+                                    c[maxj] = -rd;
+                                }
+                            }
+
+                            //System.Diagnostics.Debug.WriteLine(round + ": " + V[maxj] + " <=> " + B[mini]);
+                            // swap base
+
+                            redecompose--;
+                            if (redecompose > 0)
+                            {
+                                lu.Update(ww, mini);
+                                if (lu.Singular)
+                                {
+                                    if (redecompose == maxRedecompose - 1)
+                                    {
+                                        redecompose = 0;
+                                        feasible = false; // forces recalc
+                                        blacklist[V[maxj]] = true;
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        redecompose = 0;
+                                        feasible = false;
+                                        continue;
+                                    }
+                                }
+                            }
+
+                            k = B[mini];
+                            B[mini] = V[maxj];
+                            V[maxj] = k;
+
+                            round++;
+                            if (round == 5000) round++;
+                        } while (round < 5000);
+                    }
                 }
             }
             // just in case
@@ -569,6 +620,7 @@ namespace Rawr.Mage
                             }
                             lu.Decompose();
                             redecompose = 50; // decompose each time to see where the instability comes from
+                            //needsRecalc = true; // extreme measures to determine source of instability
                         }
 
                         if (lu.Singular)
@@ -744,19 +796,36 @@ namespace Rawr.Mage
                                     //if x_j != 0 then replacing column j in B with bx creates a linearly independent system
 
                                     // so using this brilliant math lets compute x
+
                                     for (i = 0; i < rows; i++)
                                     {
                                         x[i] = ((i == baseRows + k) ? 1 : 0);
                                     }
                                     lu.FSolveL(x, w);
                                     lu.FSolveU(w, x);
+
+                                    /*System.Diagnostics.Trace.WriteLine("Pivot options:");
                                     for (j = 0; j < rows; j++)
                                     {
+                                        if (Math.Abs(x[j]) > eps)
+                                        {
+                                            System.Diagnostics.Trace.WriteLine("B[" + j + "]=" + B[j] + ", d=" + d[j] + " orientation=" + x[j]);
+                                        }
+                                    }
+                                    System.Diagnostics.Trace.WriteLine("Entering dual variable " + c[vindex]);*/
+
+                                    for (j = 0; j < rows; j++)
+                                    {
+                                        // we want to leave the dual solution unchanged
+                                        // right now j is primal basic, therefore dual non-basic
+                                        // so the value of dual solution associated with it is 0
                                         if (Math.Abs(x[j]) > eps && d[j] <= eps && B[j] < cols + baseRows)
                                         {
                                             // do the swap
+                                            //System.Diagnostics.Trace.WriteLine("Pivoting on B[" + j + "]=" + B[j] + " x[j]=" + x[j]);
                                             V[vindex] = B[j];
                                             B[j] = cols + baseRows + k;
+                                            // d[j] doesn't change 0 => 0
                                             // if we'll do more swaps then update the basis
                                             if (k < numExtraConstraints - 1)
                                             {
@@ -771,6 +840,56 @@ namespace Rawr.Mage
                                         // I think the nature of extra constraints that we're using should prevent this from happening
                                         // but you never know unless you prove it
                                         redecompose = 0;
+                                    }
+                                    else
+                                    {
+                                        // verify we're still dual feasible
+                                        // testing so far shows that if we're not dual feasible it is because
+                                        // of problems in factorization
+                                        // refactoring the basis produced the correct result
+                                        // but in some cases even refactoring doesn't help
+                                        // investigate if basis close to singular or unstable pivot
+                                        /*for (j = 0; j < rows; j++)
+                                        {
+                                            int col = B[j];
+                                            for (i = 0; i < baseRows; i++)
+                                            {
+                                                LU[i * rows + j] = a[i + col * baseRows];
+                                            }
+                                            for (int kk = 0; kk < numExtraConstraints; kk++, i++)
+                                            {
+                                                LU[i * rows + j] = D[kk * (cols + rows + 1) + col];
+                                            }
+                                        }
+                                        lu.Decompose();
+                                        for (i = 0; i < rows; i++)
+                                        {
+                                            if (B[i] < cols) u[i] = cost[B[i]];
+                                            else u[i] = 0;
+                                        }
+                                        lu.BSolve(u);
+                                        for (j = 0; j < cols; j++)
+                                        {
+                                            int col = V[j];
+
+                                            double costcol = ((col < cols) ? cost[col] : 0);
+                                            sCol1 = sparseCol[col];
+                                            sCol2 = sparseCol[col + 1];
+                                            sRow = sparseRow + sCol1;
+                                            sValue = sparseValue + sCol1;
+                                            for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
+                                            {
+                                                costcol -= *sValue * u[*sRow];
+                                            }
+                                            for (int kk = 0; kk < numExtraConstraints; kk++, i++)
+                                            {
+                                                costcol -= D[kk * (cols + rows + 1) + col] * u[baseRows + kk];
+                                            }
+                                            if (costcol > eps)
+                                            {
+                                                ColdStart = false;
+                                            }
+                                        }*/
                                     }
                                 }
                             }
@@ -789,6 +908,7 @@ namespace Rawr.Mage
                         // min over i of d[i]/w[i] where w[i]>0
                         double minr = double.PositiveInfinity;
                         int minj = -1;
+                        double maxnorm = 0.0;
                         for (j = 0; j < cols; j++)
                         {
                             wd[j] = 0;
@@ -805,6 +925,8 @@ namespace Rawr.Mage
                             {
                                 wd[j] += D[k * (cols + rows + 1) + col] * x[baseRows + k];
                             }
+                            double v = Math.Abs(wd[j]);
+                            if (v > maxnorm) maxnorm = v;
                             if (wd[j] < -eps)
                             {
                                 double r = c[j] / wd[j];
@@ -824,6 +946,9 @@ namespace Rawr.Mage
                             return ret;
                         }
 
+                        // pivot stability
+                        //System.Diagnostics.Trace.WriteLine("Pivot stability " + Math.Abs(wd[minj]) / maxnorm);
+
                         // w = U \ (L \ A(:,j));
                         int mincol = V[minj];
                         for (i = 0; i < baseRows; i++)
@@ -841,13 +966,15 @@ namespace Rawr.Mage
                         // -minr = dual step
                         // rp = primal step
 
+                        //System.Diagnostics.Trace.WriteLine(w[mini] + " = " + wd[minj]);
+
                         double rp = d[mini] / wd[minj];
 
                         // update primal and dual
                         for (i = 0; i < rows; i++)
                         {
                             d[i] -= rp * w[i];
-                            //u[i] -= minr * x[i];
+                            u[i] -= minr * x[i];
                         }
                         d[mini] = rp;
                         for (j = 0; j < cols; j++)
