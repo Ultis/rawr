@@ -66,12 +66,12 @@ namespace Rawr.Healadin
         public void Calculate(Stats stats, bool di)
         {
             float bonus, multi, bol = 0, cost;
-            spellCrit = .08336f + (stats.Intellect / 8000) + (stats.SpellCritRating / 2208);
-            castTime = baseCastTime / (1 + (stats.SpellHasteRating / 1570));
+            spellCrit = .08336f + stats.Intellect / 8000 + stats.SpellCritRating / 2208;
+            castTime = baseCastTime / (1 + stats.SpellHasteRating / 1570);
             
             if (name.Equals("Holy Light"))
             {
-                spellCrit += .11f + stats.HLCrit;
+                spellCrit += .06f + stats.HLCrit;
                 bonus = stats.HLHeal;
                 multi = healMultiple;
                 if (bolBonus > 0) bol = bolBonus + stats.HLBoL;
@@ -79,7 +79,7 @@ namespace Rawr.Healadin
             }
             else
             {
-                spellCrit += .05f + stats.FoLCrit;
+                spellCrit += stats.FoLCrit;
                 bonus = stats.FoLHeal;
                 multi = healMultiple + stats.FoLMultiplier;
                 if (bolBonus > 0) bol = bolBonus + stats.FoLBoL;
@@ -87,14 +87,20 @@ namespace Rawr.Healadin
             }
             float plusheal = stats.Healing + stats.AverageHeal + bonus;
             avgHeal = multi * (baseHeal + ((plusheal * coef) + bol) * downrank);
-            hps = avgHeal * (1 + (.5f * spellCrit)) / castTime;
-            mps = ((baseMana * (di ? .5f : 1f)) - cost - (.6f * baseMana * spellCrit) - (stats.ManaRestorePerCast)) / castTime;
+            hps = avgHeal * (1 + .5f * spellCrit) / castTime;
+            mps = (baseMana * (di ? .5f : 1f) - cost - .6f * baseMana * spellCrit - stats.ManaRestorePerCast) / castTime;
             hpm = hps / mps;
         }
 
         public float DFMana()
         {
             return baseMana*.6f*(1 - spellCrit);
+        }
+
+
+        public float DFHeal()
+        {
+            return avgHeal * .5f * (1 - spellCrit);
         }
 
         public override string ToString()

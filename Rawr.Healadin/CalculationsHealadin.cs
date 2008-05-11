@@ -136,13 +136,13 @@ namespace Rawr.Healadin
             if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
 			float activity = calcOpts.Activity / 100f;
             float time = calcOpts.Length * 60;
-			float length = time;
-            float totalMana = stats.Mana + (length * stats.Mp5 / 5) + (calcOpts.Spriest * length / 5) +
-                ((1 + stats.BonusManaPotion) * calcOpts.ManaAmt * (float)Math.Ceiling((length / 60 - 1) / calcOpts.ManaTime))
+			float length = time * activity;
+            float totalMana = stats.Mana + (time * stats.Mp5 / 5) + (calcOpts.Spriest * time / 5) +
+                ((1 + stats.BonusManaPotion) * calcOpts.ManaAmt * (float)Math.Ceiling((time / 60 - 1) / calcOpts.ManaTime))
                 + calcOpts.Spiritual;
             if (stats.MementoProc > 0)
             {
-                totalMana += (float)Math.Ceiling(length / 60 - .25)*stats.MementoProc*3;
+                totalMana += (float)Math.Ceiling(time / 60 - .25) * stats.MementoProc * 3;
             }
 
             calculatedStats[0] = new Spell("Flash of Light", 7, calcOpts.BoL);
@@ -165,12 +165,15 @@ namespace Rawr.Healadin
             float hl1_dimana = calculatedStats[1].Mps - hl1_di.Mps;
             float hl2_dimana = calculatedStats[3].Mps - hl2_di.Mps;
             float fol_dimana = calculatedStats[0].Mps - fol_di.Mps;
-            float di_mana = (hl1_dimana * 6 + hl2_dimana * 3 + fol_dimana * 3) * activity * (float)Math.Ceiling((length - 1) / 180);
+            float di_mana = (hl1_dimana * 6 + hl2_dimana * 3 + fol_dimana * 6) * activity * (float)Math.Ceiling((time - 1) / 180);
             totalMana += di_mana;
             #endregion
             
-            length *= activity;
-            totalMana += (float)Math.Ceiling((length-30)/120f)*calculatedStats[1].DFMana();
+            #region Divine Favor
+            totalMana += (float)Math.Ceiling((time-30) / 120f) * calculatedStats[1].DFMana();
+            calculatedStats.Healed = (float)Math.Ceiling((time - 30) / 120f) * calculatedStats[1].DFHeal();
+            #endregion
+
             Spell FoL = calculatedStats[0];
             int rank1 = 12 - calcOpts.Rank1;
             int rank2 = 12 - calcOpts.Rank2;
@@ -190,7 +193,7 @@ namespace Rawr.Healadin
             float healing_fol = time_fol * FoL.Hps;
             float healing_hl = time_hl * HL_Hps;
 
-            calculatedStats.Healed = healing_fol + healing_hl;
+            calculatedStats.Healed += healing_fol + healing_hl;
             calculatedStats.HLHPS = HL_Hps;
             calculatedStats.FoLHPS = FoL.Hps;
 
