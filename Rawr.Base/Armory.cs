@@ -816,6 +816,14 @@ namespace Rawr
 								sockets.Stats.Strength = socketBonusValue;
 								break;
                             case "Healing":
+                            case "Healing +4 Spell Damage":
+                            case "Healing +3 Spell Damage":
+                            case "Healing +2 Spell Damage":
+                            case "Healing +1 Spell Damage":
+                            case "Healing and +4 Spell Damage":
+                            case "Healing and +3 Spell Damage":
+                            case "Healing and +2 Spell Damage":
+                            case "Healing and +1 Spell Damage":
                                 sockets.Stats.Healing = socketBonusValue;
                                 break;
 							case "Crit Rating":
