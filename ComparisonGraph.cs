@@ -164,6 +164,7 @@ namespace Rawr
             {
                 if (_prerenderedGraph == null)
                 {
+					if (ItemCalculations == null) return new Bitmap(1, 1);
                     _prerenderedGraph = new Bitmap(Math.Max(1, this.Width), 40 + (ItemCalculations.Length * 36), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                     Graphics g = Graphics.FromImage(_prerenderedGraph);
                     g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -385,7 +386,7 @@ namespace Rawr
                                 int barStart = 0;
                                 if (DisplayMode == GraphDisplayMode.Subpoints)
                                 {
-                                    for (int j = 0; j < item.SubPoints.Length; j++)
+                                    for (int j = 0; j < item.SubPoints.Length && j < colorSubPointsA.Length; j++)
                                     {
                                         float subPoint = item.SubPoints[j];
                                         int barWidth = (int) Math.Round((subPoint / item.OverallPoints) * overallWidth);

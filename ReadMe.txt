@@ -1,6 +1,6 @@
-Rawr Beta 13.1
---------------
- Welcome to Rawr b13. New in this beta are two major new features, the Optimizer, and the Retribution model, as well as a multitude of fixes and improvements to the app in general, and each model. You'll be able to mark items as available to your character, and then use the Optimizer to find the best possible set of gear from all available items, with a variety of additional optional requirements. The Retribute model, developed by Anarkii, will help all the Retadins out there build their gear set!
+Rawr Beta 14
+------------
+ Welcome to Rawr b14. In this beta are two new models: ProtWarr and Healadin. There's also a slew of new features, across all models, and numerous model-specific fixes/additions/changes. Some highlights are Threat for Bears, Sequence Reconstruction for Mage, a massively updated (and much more accurate) calculation model for Moonkin, and a much more intelligent Optimizer.
 
 Anyway, as usual, thanks very much for testing Rawr. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
@@ -18,51 +18,68 @@ FAQ
  Q: Can you make it, or does Rawr work for [insert class/spec here]?
  A: What you see in Rawr is what's currently developed to release quality. A few more models are in development. If you're a C# developer and would like to begin or help with another model, let me know!
 
- 
-Notes on Rawr.Cat
------------------
- More calculation options are still coming. Toskk's been very busy lately, and is still working on these. As soon as we have a working version of these, we'll release them.
+Rawr on Mac OS X
+----------------
+This is the first version where I'm officially supporting running Rawr on OSX. First, let me start by saying that I'm sorry I don't have a native OSX version of Rawr. I'm a Mac user myself, love Macs way more than PCs. Sadly, I only know how to program for PCs, so me developing a native Mac version is out of the question at the moment. If any OSX devs would like to work on *and maintain* a Mac port, let me know.
 
- 
-Notes on Rawr.Warlock
----------------------
- Rawr.Warlock is looking pretty good, but is missing several bits of functionality (all items which will be fixed in later versions). With these caveats in mind, it works though:
+That said, I'm doing what I can to make Rawr available to Mac users, and starting with this version, that means officially supporting running Rawr on OSX, via Mono. You no longer need CrossOver, nor do you need to have an intel-based Mac. First, install Mono (http://www.go-mono.com/mono-downloads/download.html) for Mac OS X. Then, download and unzip Rawr. Now open the terminal, navigate to where you unzipped Rawr, and type 'mono Rawr.exe', and hit enter. That should launch Rawr for you. Mono has some problems, so I appreciate your patience as I work to try to make Rawr stable under Mono.
 
- - It does not take into account on use or on proc effects (trinkets, etc)
- - It does not take into account any set bonus's
- - It does not take into account any source of mana regen other than lifetap
- - ISB model is simplistic - assumes all charges are used by the caster
+Known Issues:
+ - Mono doesn't look perfect. It looks kinda ugly, and you'll see some weird graphical artifacts. I'll try to work around this as best I can, but it's going to take a while.
+ - Mono has some crashing problems. Things will be running fine, then all of a sudden, the whole app'll close. I can try to work around these bugs in Mono, but it's going to take time. 
+ - Tooltips on labels don't work in Mono. I'll see if I can work around this for a later version. At least for stats, you can work around this by using the Copy Character Stats to Clipboard feature.
+ - The clipboard doesn't work under Mono. In the mean time, when running on Mono, Copy Character Stats to Clipboard will save the stats as 'stats.txt' in the folder with Rawr.
+ - More issues, I'm sure.
 
-
-Notes on Rawr.Mage
-------------------
-Rawr.Mage is an optimizer. Given the stats, buffs, talents and fight information it will optimize spell selection and cooldown stacking to maximize total damage done.
-
-When you load your character from the armory it will collect all data about gear, enchants and talents. After you do that you should open the Buffs tab and enable all the buffs that are applicable. Last go to the Options tab and set the fight parameters. At the very least select whether you're using Mage Armor or Molten Armor. You can control many characteristics of the fight, involving external mana regen from shadow priest, rate of interrupts, dps uptime, fight duration, whether there is any aoe involved and any real resistances on the boss.
-
-At that point you are ready to check the Stats tab. At the top you have general stats information which should match your in-game paper doll. The most important part is Solution. Here you will see your expected dps and suggested use of spell cycles to achieve it. If you mouse over the * next to Spell Cycles you'll get a breakdown of all spells you should use and with which cooldowns to pair them.
-
-Finally you can use the comparison charts to decide what improvements you can make. Besides the usual gear comparisons you have several mage specific charts. First is the mage armor comparison which will tell you whether to use Mage Armor or Molten Armor. Then you have per talent points comparison which shows you which talents in your build are the most essential and which you could get to improve your performance. Talent spec comparison gives you a quick glance at which talent spec is best suited to your gear and fight characteristics. You can quickly try out a different talent spec by going to Options tab and selecting a talent spec preset from the talent form. Last comparison is item budget comparison which shows you which stats you should generally be seeking on items.
-
-Features:
-
- - 5 second rule model
- - AOE model
- - Mana Potion vs Destruction Potion tradeoffs
- - Mana Gem vs Flame Cap tradeoffs
- - Evocation vs dps tradeoffs
- - Cooldown stacking optimization 
-
-Known issues:
-
- - Sometimes you might notice that the cooldowns are stacked in an impossible way. Most of the issues are either edge cases or effects of gradual tradeoffs. If you find something that looks strange let me know and I'll do my best to try to find a fix. 
-
-Notes on Rawr.Moonkin
----------------------
- You may notice some things that aren't quite right with Rawr.Moonkin, but it should be pretty close to the spreadsheets. We'll be making improvements in upcoming versions!
 
 Version History
 ---------------
+Beta 14:
+ - Added the ProtWarr and Healadin models! These are out first versions of these models, so please report any bugs you find with them!
+ - Major improvements to the intelligence of the Optimizer
+ - Added a new feature in the Optimizer: Build Upgrade List. This feature will take longer than the normal Optimizer (so you'll want to run it at a lower thoroughness, most likely), but will produce a chart of how much value you could gain if you had each item that you don't already have available.
+ - Added a Direct Upgrades chart, which shows what the biggest upgrades for you would be, considering just direct upgrades, no other gear swaps. For a comprehensive upgrades evaluation, use the new Build Upgrade List feature of the optimizer.
+ - Significantly improved performance all across Rawr, especially in the Optimizer
+ - Added a Delete Duplicates function. By right clicking on an item or using the Item Editor, you can Delete Duplicates for an item, which will delete all gemmings of the item except for the one you selected, and any that are equipped.
+ - Reworked how Rawr stores calculation options. This means that when you load your characters created with previous versions of Rawr, the Options tab will be reset to default, please be sure to fill that out again.
+ - Rawr now correctly handles mainhand and offhand enchants, as appropriate by equipped items.
+ - Improved the loading performance of the Item Editor on successive loads. The first time you open it, it should be faster than before, and the second+ time should be nearly instant.
+ - Fixed a bug that made the Fill Sockets functionality of the Item Editor not work.
+ - Fixed a bug that made the chart render as a big red X occasionally.
+ - Made some changes that may help with the UI for users of high-DPI resolutions. High DPI is still not supported (as Windows' support for it is retard and broken), but this should help somewhat.
+ - Fixed a leak of control handles in the item selector, should improve performance and prevent crashes related to this.
+ - Fixed the Armor Penetration values of Imp/Expose Armor.
+ - Reloading the current character from the armory will now load enchants and talents, in addition to items.
+ - The Item Selector should no longer extend off the screen when there's room available, on very low resolution displays.
+ - Added support for loading characters from KR and TW realms.
+ - Load Upgrades from Armory will no longer create duplicates.
+ - Added some warnings to the Optimizer to help people use it properly (such as pointing out when you've forgotten to mark any choices in a slot as available). These can be disabled in the Options.
+ - Rawr.Bear changes:
+    - Added Threat rating
+    - Made the Defense Rating to Defense Skill conversion stepwise, so that partial Defense Skill don't count. Adjusted the amount needed to be uncrittable to match (previously, Rawr.Bear may have told you that you'd need 1def rating more than you really did, that's fixed by this).
+    - Added several new relevant buffs and debuffs 
+ - Rawr.Cat changes:
+    - Made the calculations of the SSO Exalted Scryer neck accurate.
+    - Added a Survivability rating
+    - Added several new relevant buffs and debuffs 
+ - Rawr.Mage changes:
+    - Added value to labels in item budget comparison
+    - Added innervate option
+    - Added mana tide totem option
+    - Added options for optimization requirements based on stamina and resistances
+    - Fix for Arctic Winds talent
+    - Added dps fragmentation option
+    - Added Mind Quickening Gem and Wrath of Cenarius parsing
+    - Improvements in performance and stability of LP solver
+    - Added sequence reconstruction
+    - Added SMP solver
+    - Added additional information to spell tooltips and when copying stats to clipboard
+    - Added 2T4 set bonus
+    - Added survivability rating 
+ - Rawr.Retribution changes:
+    - Include more customizable buff options
+    
+
 Beta 13.1:
  - Fix for several Optimizer crashes. If you can get the Optimizer to crash still, please e-mail me your character file (cnervig@hotmail.com).
  - Fix for Rawr.Mage requiring .NET 3.5.
@@ -295,7 +312,7 @@ Now that you have your current character fairly well defined, use the item compa
 
 
 That's about it, let me know how it works (or doesn't) for you! Thanks!
-~Astrylian on Kilrogg (soon transferring to Whisperwind), cnervig@hotmail.com
+~Astrylian on Whisperwind, cnervig@hotmail.com
 
 
 LICENSE

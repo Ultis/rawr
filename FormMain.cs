@@ -774,6 +774,11 @@ namespace Rawr
             sb.AppendLine(Calculations.GetCharacterStatsString(Character));
 
 			Clipboard.SetText(sb.ToString(), TextDataFormat.Text);
+			if (Type.GetType("Mono.Runtime") != null)
+			{
+				//Clipboard isn't working
+				System.IO.File.WriteAllText("stats.txt", sb.ToString());
+			}
 		}
 
 		private void slotToolStripMenuItem_Click(object sender, EventArgs e)
