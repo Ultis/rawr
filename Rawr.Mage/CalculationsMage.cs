@@ -263,6 +263,7 @@ namespace Rawr.Mage
             private int lpCols, cCols;
             public LP lp;
             bool[] rowEnabled, colEnabled;
+            double[] rowScale, colScale;
             int[] CRow, CCol;
             double[] compactSolution = null;
             bool needsDual;
@@ -292,9 +293,26 @@ namespace Rawr.Mage
 
                 rowEnabled = new bool[rows];
                 colEnabled = new bool[cols];
+                rowScale = new double[rows + 1];
+                colScale = new double[cols + 1];
 
-                for (int i = 0; i < rows; i++) rowEnabled[i] = true;
-                for (int j = 0; j < cols; j++) colEnabled[j] = true;
+                for (int i = 0; i < rows; i++)
+                {
+                    rowEnabled[i] = true;
+                }
+                for (int j = 0; j < cols; j++)
+                {
+                    colEnabled[j] = true;
+                }
+
+                for (int i = 0; i <= rows; i++)
+                {
+                    rowScale[i] = 1.0;
+                }
+                for (int j = 0; j <= cols; j++)
+                {
+                    colScale[j] = 1.0;
+                }
 
                 CRow = new int[lpRows + 1];
                 CCol = new int[lpCols + 1];
@@ -335,6 +353,16 @@ namespace Rawr.Mage
                 lp = new LP(cRows, cCols);
             }
 
+            public void SetRowScale(int row, double value)
+            {
+                rowScale[row] = value;
+            }
+
+            public void SetColumnScale(int col, double value)
+            {
+                colScale[col] = value;
+            }
+
             public void DisableRow(int row)
             {
                 rowEnabled[row] = false;
@@ -362,14 +390,14 @@ namespace Rawr.Mage
                     row = CRow[row];
                     col = CCol[col];
                     if (row == -1 || col == -1) return 0;
-                    return lp[row, col];
+                    return lp[row, col] / rowScale[row] / colScale[col];
                 }
                 set
                 {
                     row = CRow[row];
                     col = CCol[col];
                     if (row == -1 || col == -1) return;
-                    lp[row, col] = value;
+                    lp[row, col] = value * rowScale[row] * colScale[col];
                     compactSolution = null;
                 }
             }
@@ -402,7 +430,7 @@ namespace Rawr.Mage
             {
                 col = CCol[col];
                 if (col == -1) return;
-                lp.SetConstraintElement(col, lp.GetConstraintElement(col) + value);
+                lp.SetConstraintElement(col, lp.GetConstraintElement(col) + value * colScale[col]);
             }
 
             public void UpdateConstraintRHS(double value)
@@ -434,8 +462,9 @@ namespace Rawr.Mage
 
                 for (int j = 0; j <= lpCols; j++)
                 {
-                    if (CCol[j] >= 0) expanded[j] = compactSolution[CCol[j]];
+                    if (CCol[j] >= 0) expanded[j] = compactSolution[CCol[j]] * colScale[j];
                 }
+                expanded[lpCols - 1] /= rowScale[lpRows];
                 return expanded;
             }
 
@@ -451,7 +480,7 @@ namespace Rawr.Mage
                 get
                 {
                     SolveInternal();
-                    return compactSolution[compactSolution.Length - 1];
+                    return compactSolution[compactSolution.Length - 1] / rowScale[lpRows];
                 }
             }
 
@@ -1078,6 +1107,22 @@ namespace Rawr.Mage
                     if (seg * segmentDuration + cool >= calculationOptions.FightDuration) allCovered = true;
                 }
             }
+            #endregion
+
+            #region Set LP Scaling
+            lp.SetRowScale(0, 0.1);
+            lp.SetRowScale(3, 40.0 / calculatedStats.ManaPotionTime);
+            lp.SetRowScale(4, 40.0 / calculatedStats.ManaPotionTime);
+            lp.SetRowScale(14, 40.0 / calculatedStats.ManaPotionTime);
+            lp.SetRowScale(30, 10.0);
+            lp.SetRowScale(31, 10.0);
+            lp.SetRowScale(32, 10.0);
+            lp.SetRowScale(34, 30.0);
+            lp.SetRowScale(39, 0.05);
+            lp.SetRowScale(41, 30.0);
+            lp.SetRowScale(lpRows, 0.05);
+            lp.SetColumnScale(3, calculatedStats.ManaPotionTime);
+            lp.SetColumnScale(4, calculatedStats.ManaPotionTime);
             #endregion
 
             lp.Compact();

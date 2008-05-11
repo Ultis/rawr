@@ -619,8 +619,8 @@ namespace Rawr.Mage
                                 }
                             }
                             lu.Decompose();
-                            redecompose = 50; // decompose each time to see where the instability comes from
-                            //needsRecalc = true; // extreme measures to determine source of instability
+                            redecompose = 0; // decompose each time to see where the instability comes from
+                            needsRecalc = true; // extreme measures to determine source of instability
                         }
 
                         if (lu.Singular)
@@ -821,6 +821,39 @@ namespace Rawr.Mage
                                         // so the value of dual solution associated with it is 0
                                         if (Math.Abs(x[j]) > eps && d[j] <= eps && B[j] < cols + baseRows)
                                         {
+                                            // check numerical stability
+                                            /*for (i = 0; i < rows; i++)
+                                            {
+                                                x[i] = ((i == j) ? 1 : 0);
+                                            }
+                                            lu.BSolve(x); // TODO exploit nature of x
+
+                                            // min over i of d[i]/w[i] where w[i]>0
+                                            double maxnorm2 = 0.0;
+                                            for (int jj = 0; jj < cols; jj++)
+                                            {
+                                                wd[jj] = 0;
+                                                int col = V[jj];
+                                                sCol1 = sparseCol[col];
+                                                sCol2 = sparseCol[col + 1];
+                                                sRow = sparseRow + sCol1;
+                                                sValue = sparseValue + sCol1;
+                                                for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
+                                                {
+                                                    wd[jj] += *sValue * x[*sRow];
+                                                }
+                                                for (int kk = 0; kk < numExtraConstraints; kk++, i++)
+                                                {
+                                                    wd[jj] += D[kk * (cols + rows + 1) + col] * x[baseRows + kk];
+                                                }
+                                                double v = Math.Abs(wd[jj]);
+                                                if (v > maxnorm2) maxnorm2 = v;
+                                            }
+
+                                            // pivot stability
+                                            System.Diagnostics.Trace.WriteLine("Pivot stability " + Math.Abs(wd[vindex]) / maxnorm2);*/
+
+
                                             // do the swap
                                             //System.Diagnostics.Trace.WriteLine("Pivoting on B[" + j + "]=" + B[j] + " x[j]=" + x[j]);
                                             V[vindex] = B[j];
