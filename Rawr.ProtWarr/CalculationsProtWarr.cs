@@ -891,6 +891,7 @@ you are being killed by burst damage, focus on Survival Points.",
 				DefenseRating = stats.DefenseRating,
 				Resilience = stats.Resilience,
 				BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+                BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
 				BonusArmorMultiplier = stats.BonusArmorMultiplier,
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 				Health = stats.Health,
@@ -929,7 +930,8 @@ you are being killed by burst damage, focus on Survival Points.",
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-			return (stats.Agility + stats.Armor + stats.AverageArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
+			return (stats.Agility + stats.Armor + stats.AverageArmor +
+                    stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.BonusArmorMultiplier +
 				    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.ParryRating +
                     stats.BlockRating + stats.BlockValue + stats.Health + 
 				    stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +

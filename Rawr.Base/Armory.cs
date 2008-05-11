@@ -308,6 +308,10 @@ namespace Rawr
                         {
                             stats.SpellHasteFor20SecOnUse5Min += 330;
                         }
+                        else if (spellDesc.StartsWith("Increases the block value of your shield by 200 for 20 sec."))
+                        {
+                            stats.BlockValue += (float)Math.Round(200f * (20f / 120f));
+                        }
                     }
 
 					if (isEquip)
