@@ -128,7 +128,8 @@ namespace Rawr
         WeaponDamage,
         WindfuryAPBonus,
         WrathDmg,
-        DruidAshtongueTrinket
+        DruidAshtongueTrinket,
+        AverageHeal
     }
 
     enum MultiplicativeStat : int
@@ -1215,6 +1216,16 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MementoProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.MementoProc] = value; }
+        }
+
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Average Healing")]
+        [Category("Equipment Procs")]
+        public float AverageHeal
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.AverageHeal]; }
+            set { _rawAdditiveData[(int)AdditiveStat.AverageHeal] = value; }
         }
 
 #endregion

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Rawr.Healadin
 {
@@ -80,8 +79,8 @@ namespace Rawr.Healadin
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Throughput", System.Drawing.Color.Red);
-                    _subPointNameColors.Add("Longevity", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("Fight HPS", System.Drawing.Color.Red);
+                    //_subPointNameColors.Add("Longevity", System.Drawing.Color.Blue);
                 }
                 return _subPointNameColors;
             }
@@ -130,12 +129,14 @@ namespace Rawr.Healadin
             //_cachedCharacter = character;
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsHealadin calculatedStats = new CharacterCalculationsHealadin();
-            CharacterCalculationsHealadin oldStats = _cachedCharacterStatsWithSlotEmpty as CharacterCalculationsHealadin;
+            //CharacterCalculationsHealadin oldStats = _cachedCharacterStatsWithSlotEmpty as CharacterCalculationsHealadin;
             calculatedStats.BasicStats = stats;
 
 			CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
-			float activity = (float)calcOpts.Activity / 100f;
-			float length = calcOpts.Length * 60;
+            if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
+			float activity = calcOpts.Activity / 100f;
+            float time = calcOpts.Length * 60;
+			float length = time;
             float totalMana = stats.Mana + (length * stats.Mp5 / 5) + (calcOpts.Spriest * length / 5) +
                 ((1 + stats.BonusManaPotion) * calcOpts.ManaAmt * (float)Math.Ceiling((length / 60 - 1) / calcOpts.ManaTime))
                 + calcOpts.Spiritual;
@@ -143,7 +144,6 @@ namespace Rawr.Healadin
             {
                 totalMana += (float)Math.Ceiling(length / 60 - .25)*stats.MementoProc*3;
             }
-            length *= activity;
 
             calculatedStats[0] = new Spell("Flash of Light", 7, calcOpts.BoL);
             calculatedStats[1] = new Spell("Holy Light", 11, calcOpts.BoL);
@@ -154,6 +154,23 @@ namespace Rawr.Healadin
             calculatedStats[6] = new Spell("Holy Light", 6, calcOpts.BoL);
             calculatedStats[7] = new Spell("Holy Light", 5, calcOpts.BoL);
             calculatedStats[8] = new Spell("Holy Light", 4, calcOpts.BoL);
+
+            #region Divine Illumination
+            Spell hl1_di = new Spell("Holy Light", 11, calcOpts.BoL);
+            hl1_di.Calculate(stats, true);
+            Spell hl2_di = new Spell("Holy Light", 9, calcOpts.BoL);
+            hl2_di.Calculate(stats, true);
+            Spell fol_di = new Spell("Flash of Light", 7, calcOpts.BoL);
+            fol_di.Calculate(stats, true);
+            float hl1_dimana = calculatedStats[1].Mps - hl1_di.Mps;
+            float hl2_dimana = calculatedStats[3].Mps - hl2_di.Mps;
+            float fol_dimana = calculatedStats[0].Mps - fol_di.Mps;
+            float di_mana = (hl1_dimana * 6 + hl2_dimana * 3 + fol_dimana * 3) * activity * (float)Math.Ceiling((length - 1) / 180);
+            totalMana += di_mana;
+            #endregion
+            
+            length *= activity;
+            totalMana += (float)Math.Ceiling((length-30)/120f)*calculatedStats[1].DFMana();
             Spell FoL = calculatedStats[0];
             int rank1 = 12 - calcOpts.Rank1;
             int rank2 = 12 - calcOpts.Rank2;
@@ -173,22 +190,26 @@ namespace Rawr.Healadin
             float healing_fol = time_fol * FoL.Hps;
             float healing_hl = time_hl * HL_Hps;
 
-            calculatedStats.OverallPoints = calculatedStats.Healed = healing_fol + healing_hl;
+            calculatedStats.Healed = healing_fol + healing_hl;
             calculatedStats.HLHPS = HL_Hps;
             calculatedStats.FoLHPS = FoL.Hps;
 
-            if (oldStats == null)
+            calculatedStats.ThroughputPoints = calculatedStats.Healed / time;// FoL.Hps* activity;
+            //calculatedStats.LongevityPoints = calculatedStats.Healed / time - FoL.Hps;
+
+            /*if (oldStats == null)
             {
                 calculatedStats.ThroughputPoints = FoL.Hps * length;
-                calculatedStats.LongevityPoints = calculatedStats.OverallPoints - calculatedStats.ThroughputPoints;
+                calculatedStats.LongevityPoints = calculatedStats.Healed - calculatedStats.ThroughputPoints;
             }
             else
             {
                 float otime = Math.Max(oldStats.TimeHL * length, time_hl);
                 calculatedStats.LongevityPoints = (length-otime) * oldStats.FoLHPS + otime * oldStats.HLHPS;
-                calculatedStats.ThroughputPoints = calculatedStats.OverallPoints - calculatedStats.LongevityPoints;
-            }
+                calculatedStats.ThroughputPoints = calculatedStats.Healed - calculatedStats.LongevityPoints;
+            }*/
 
+            calculatedStats.OverallPoints = calculatedStats.ThroughputPoints;// +calculatedStats.LongevityPoints;
 
             calculatedStats.HealHL = healing_hl / calculatedStats.Healed;
             calculatedStats.AvgHPS = calculatedStats.Healed / length * activity;
@@ -199,7 +220,23 @@ namespace Rawr.Healadin
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            Stats statsRace = new Stats() { Health = 3197, Mana = 2673, Stamina = 118, Intellect = 86, Spirit = 88 };
+            Stats statsRace;
+            if (character.Race == Character.CharacterRace.Draenei)
+            {
+                statsRace = new Stats() { Health = 3197, Mana = 2672, Stamina = 123, Intellect = 84, Spirit = 91 };
+            }
+            else if (character.Race == Character.CharacterRace.Dwarf)
+            {
+                statsRace = new Stats() { Health = 3197, Mana = 2672, Stamina = 129, Intellect = 82, Spirit = 88 };
+            }
+            else if (character.Race == Character.CharacterRace.Human)
+            {
+                statsRace = new Stats() { Health = 3197, Mana = 2672, Stamina = 126, Intellect = 83, Spirit = 90, BonusSpiritMultiplier = 1.1f };
+            }
+            else
+            {
+                statsRace = new Stats() { Health = 3197, Mana = 2672, Stamina = 118, Intellect = 86, Spirit = 88 };
+            }
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -212,13 +249,13 @@ namespace Rawr.Healadin
             statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (0.35f * statsTotal.Intellect) + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
             statsTotal.Mana = statsTotal.Mana + (statsTotal.Intellect * 15);
             statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
-            statsTotal.BlockValue = statsTotal.BlockValue * (1f+statsTotal.BonusBlockValueMultiplier);
             return statsTotal;
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
+            if (calc == null) calc = new CharacterCalculationsHealadin();
             ComparisonCalculationHealadin FoL = new ComparisonCalculationHealadin("Flash of Light");
             ComparisonCalculationHealadin HL11 = new ComparisonCalculationHealadin("Holy Light 11");
             ComparisonCalculationHealadin HL10 = new ComparisonCalculationHealadin("Holy Light 10");
@@ -230,6 +267,7 @@ namespace Rawr.Healadin
             ComparisonCalculationHealadin HL4 = new ComparisonCalculationHealadin("Holy Light 4");
 
             CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
+            if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
 
             calc[0] = new Spell("Flash of Light", 7, calcOpts.BoL);
             calc[1] = new Spell("Holy Light", 11, calcOpts.BoL);
@@ -314,7 +352,8 @@ namespace Rawr.Healadin
                 HLCrit = stats.HLCrit,
                 HLCost = stats.HLCost,
                 HLBoL = stats.HLBoL,
-                MementoProc = stats.MementoProc
+                MementoProc = stats.MementoProc,
+                AverageHeal = stats.AverageHeal
             };
         }
 
@@ -323,7 +362,7 @@ namespace Rawr.Healadin
             return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.FoLMultiplier + stats.FoLHeal + stats.FoLCrit + stats.FoLBoL + stats.HLBoL + stats.HLCost
-                + stats.HLCrit + stats.HLHeal + stats.MementoProc) > 0;
+                + stats.HLCrit + stats.HLHeal + stats.MementoProc + stats.AverageHeal) > 0;
         }
     }
 }

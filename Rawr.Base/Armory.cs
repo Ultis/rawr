@@ -759,6 +759,10 @@ namespace Rawr
                                     break;
                             }
                         }
+                        else if (spellDesc.StartsWith("Your healing and damage spells have a chance to increase your healing by up to 175 and damage by up to 59 for 10 secs."))
+                        {
+                            stats.AverageHeal = 29;
+                        }
                     }
 				}
 

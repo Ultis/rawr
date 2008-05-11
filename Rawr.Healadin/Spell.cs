@@ -48,7 +48,7 @@ namespace Rawr.Healadin
             }
             else
             {
-                rank = 7;
+                this.rank = 7;
                 baseMana = 180;
                 baseHeal = 485.5f;
                 baseCastTime = 1.5f;
@@ -85,11 +85,16 @@ namespace Rawr.Healadin
                 if (bolBonus > 0) bol = bolBonus + stats.FoLBoL;
                 cost = 0;
             }
-
-            avgHeal = multi * (baseHeal + ((((stats.Healing + bonus) * coef) + bol) * downrank));
+            float plusheal = stats.Healing + stats.AverageHeal + bonus;
+            avgHeal = multi * (baseHeal + ((plusheal * coef) + bol) * downrank);
             hps = avgHeal * (1 + (.5f * spellCrit)) / castTime;
             mps = ((baseMana * (di ? .5f : 1f)) - cost - (.6f * baseMana * spellCrit) - (stats.ManaRestorePerCast)) / castTime;
             hpm = hps / mps;
+        }
+
+        public float DFMana()
+        {
+            return baseMana*.6f*(1 - spellCrit);
         }
 
         public override string ToString()
