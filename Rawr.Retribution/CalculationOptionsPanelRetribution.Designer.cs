@@ -339,7 +339,7 @@
             this.labelNumberOfFerociousInspirations.Name = "labelNumberOfFerociousInspirations";
             this.labelNumberOfFerociousInspirations.Size = new System.Drawing.Size(13, 13);
             this.labelNumberOfFerociousInspirations.TabIndex = 18;
-            this.labelNumberOfFerociousInspirations.Text = "0";
+            this.labelNumberOfFerociousInspirations.Text = "2";
             // 
             // labelDrumsOfWarUptime
             // 
@@ -395,8 +395,8 @@
             this.trackBarNumberOfFerociousInspirations.Name = "trackBarNumberOfFerociousInspirations";
             this.trackBarNumberOfFerociousInspirations.Size = new System.Drawing.Size(152, 45);
             this.trackBarNumberOfFerociousInspirations.TabIndex = 21;
+            this.trackBarNumberOfFerociousInspirations.Value = 2;
             this.trackBarNumberOfFerociousInspirations.ValueChanged += new System.EventHandler(this.trackBarNumberOfFerociousInspirations_ValueChanged);
-
             // 
             // trackBarDrumsOfWarUptime
             // 
@@ -528,8 +528,7 @@
             this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarTargetArmor.LargeChange = 1000;
             this.trackBarTargetArmor.Location = new System.Drawing.Point(69, 726);
-            this.trackBarTargetArmor.Maximum = 9000;
-            this.trackBarTargetArmor.Minimum = 3000;
+            this.trackBarTargetArmor.Maximum = 10000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
             this.trackBarTargetArmor.Size = new System.Drawing.Size(139, 45);
             this.trackBarTargetArmor.SmallChange = 100;

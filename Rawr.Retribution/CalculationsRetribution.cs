@@ -203,9 +203,8 @@ namespace Rawr.Retribution
             float twoHandedSpec = 1.0f + (0.02f * (float)calcOpts.TwoHandedSpec);
             if (character.MainHand != null)
             {
-                avgBaseWeaponHit = twoHandedSpec*(character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage*2f) / 2.0f;
-                hasteBonus = stats.HasteRating / 15.76f / 100f;
-                hastedSpeed = (1f - (stats.Bloodlust * calcOpts.BloodlustUptime)) / (1f + hasteBonus);
+                avgBaseWeaponHit = twoHandedSpec * (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage * 2f) / 2.0f;
+                hastedSpeed = (stats.HasteRating == 0) ? character.MainHand.Speed : character.MainHand.Speed / (1 + stats.HasteRating / 1576f);
             }       
 
             //Add Attack Power Bonus
@@ -248,27 +247,23 @@ namespace Rawr.Retribution
             if (stats.Bloodlust > 0)
             {
                 //Bloodlust -- Calculating uptime
-                div = Math.DivRem(Convert.ToInt32(fightDuration), 600, out remainder);
-                if (remainder == 0)
-                    noOfFullBL = div;
-                else
-                    noOfFullBL = Convert.ToInt32(Math.Ceiling(Convert.ToDouble((fightDuration + 40) / 600)));
-                
-                partialUptime = fightDuration - noOfFullBL * 600;
-                if (partialUptime < 0) partialUptime = 0;
-                totalUptime = partialUptime + noOfFullBL * 40f;
+                //div = Math.DivRem(Convert.ToInt32(fightDuration), 600, out remainder);
+                //if (remainder == 0)
+                //    noOfFullBL = div;
+                //else
+                //    noOfFullBL = Convert.ToInt32(Math.Ceiling(Convert.ToDouble((fightDuration + 40) / 600)));
 
                 hastedSpeed = (character.MainHand == null) ? 1.0f : character.MainHand.Speed /
-                    (1 + stats.HasteRating / 1576f + 0.30f * totalUptime / fightDuration);
+                    (1 + stats.HasteRating / 1576f + 0.003f * calcOpts.BloodlustUptime);
             }
             #endregion
 
-            #region Drums of Battle
-            if (stats.DrumsOfBattle > 0)
-            {
-                hastedSpeed = (character.MainHand == null) ? 1.0f : hastedSpeed / (1 + (stats.DrumsOfBattle / 1576f) / 4f);
-            }
-            #endregion
+            //#region Drums of Battle
+            //if (stats.DrumsOfBattle > 0)
+            //{
+            //    hastedSpeed = (character.MainHand == null) ? 1.0f : hastedSpeed / (1 + (stats.DrumsOfBattle / 1576f) / 4f);
+            //}
+            //#endregion
             
             //Vengeance
 			float vengeance = 1f + 0.03f * (float)calcOpts.Vengeance;
@@ -555,16 +550,15 @@ namespace Rawr.Retribution
             float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier));
             
             //drums of war
-            statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime;
+            statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime / 100f;
 
             //drums of battle
-            statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime;
+            statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime / 100f;
 
             //ferocious inspiriation
             if (character.ActiveBuffs.Contains("Ferocious Inspiration"))
                 statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier) *
                     (float)Math.Pow(1.03f, calcOpts.NumberOfFerociousInspirations - 1f)) - 1f;
-
 
             Stats statsTotal = new Stats();
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;

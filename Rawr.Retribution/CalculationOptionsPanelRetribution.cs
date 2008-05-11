@@ -399,9 +399,9 @@ namespace Rawr.Retribution
 		public int Seal = 1;
 		public bool EnforceMetagemRequirements = false;
 		public string ShattrathFaction = "Aldor";
-        public float BloodlustUptime = 0.15f;
-        public float DrumsOfBattleUptime = 0.25f;
-        public float DrumsOfWarUptime = 0.25f;
+        public float BloodlustUptime = 15f;
+        public float DrumsOfBattleUptime = 25f;
+        public float DrumsOfWarUptime = 25f;
         public int ExposeWeaknessAPValue = 200;
         public int NumberOfFerociousInspirations = 2;
 	
