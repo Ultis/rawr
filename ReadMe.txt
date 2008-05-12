@@ -1,6 +1,6 @@
 Rawr Beta 14
 ------------
- Welcome to Rawr b14. In this beta are two new models: ProtWarr and Healadin. There's also a slew of new features, across all models, and numerous model-specific fixes/additions/changes. Some highlights are Threat for Bears, Sequence Reconstruction for Mage, a massively updated (and much more accurate) calculation model for Moonkin, and a much more intelligent Optimizer.
+ Welcome to Rawr b14. In this beta are two new models: ProtWarr and Healadin. There's also a slew of new features, across all models, and numerous model-specific fixes/additions/changes. Some highlights are Threat for Bears, Sequence Reconstruction for Mage, a massively updated (and much more accurate) calculation model for Moonkin, Mac support, an upgrade list builder, and a much more intelligent Optimizer.
 
 Anyway, as usual, thanks very much for testing Rawr. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
@@ -20,12 +20,21 @@ FAQ
 
 Rawr on Mac OS X
 ----------------
-This is the first version where I'm officially supporting running Rawr on OSX. First, let me start by saying that I'm sorry I don't have a native OSX version of Rawr. I'm a Mac user myself, love Macs way more than PCs. Sadly, I only know how to program for PCs, so me developing a native Mac version is out of the question at the moment. If any OSX devs would like to work on *and maintain* a Mac port, let me know.
+This is the first version where I'm officially supporting running Rawr on OSX. First, let me start by saying that I'm sorry I don't have a native OSX version of Rawr. I'm a Mac user myself, love Macs way more than Windows. Sadly, I only know how to program for Windows, so me developing a native Mac version is out of the question at the moment. If any OSX devs would like to work on *and maintain* a Mac port, let me know.
 
-That said, I'm doing what I can to make Rawr available to Mac users, and starting with this version, that means officially supporting running Rawr on OSX, via Mono. You no longer need CrossOver, nor do you need to have an intel-based Mac. First, install Mono (http://www.go-mono.com/mono-downloads/download.html) for Mac OS X. Then, download and unzip Rawr. Now open the terminal, navigate to where you unzipped Rawr, and type 'mono Rawr.exe', and hit enter. That should launch Rawr for you. Mono has some problems, so I appreciate your patience as I work to try to make Rawr stable under Mono.
+That said, I'm doing what I can to make Rawr available to Mac users, and starting with this version, that means officially supporting running Rawr on OSX, via Mono. 
+
+*>*>*> You no longer need CrossOver, nor do you need to have an intel-based Mac. <*<*<*
+
+How to Run Rawr on OSX:
+ 1) Install Mono (http://www.go-mono.com/mono-downloads/download.html) for Mac OS X. 
+ 2) Unzip Rawr. 
+ 3) Open the Terminal, navigate to where you unzipped Rawr, and type 'mono Rawr.exe', and hit enter. That should launch Rawr for you. 
+ 
+Mono has some problems, so I appreciate your patience as I work to try to make Rawr stable under Mono. I strongly suggest saving often for now.
 
 Known Issues:
- - Mono doesn't look perfect. It looks kinda ugly, and you'll see some weird graphical artifacts. I'll try to work around this as best I can, but it's going to take a while.
+ - Mono doesn't look perfect. It looks kinda ugly, and you'll see some weird graphical artifacts. I'll try to work around this as best I can, but it's going to take time.
  - Mono has some crashing problems. Things will be running fine, then all of a sudden, the whole app'll close. I can try to work around these bugs in Mono, but it's going to take time. 
  - Tooltips on labels don't work in Mono. I'll see if I can work around this for a later version. At least for stats, you can work around this by using the Copy Character Stats to Clipboard feature.
  - The clipboard doesn't work under Mono. In the mean time, when running on Mono, Copy Character Stats to Clipboard will save the stats as 'stats.txt' in the folder with Rawr.
@@ -35,7 +44,8 @@ Known Issues:
 Version History
 ---------------
 Beta 14:
- - Added the ProtWarr and Healadin models! These are out first versions of these models, so please report any bugs you find with them!
+ - Added the ProtWarr and Healadin models! These are our first versions of these models, so please report any bugs you find with them!
+ - Mac support! See the readme for details.
  - Major improvements to the intelligence of the Optimizer
  - Added a new feature in the Optimizer: Build Upgrade List. This feature will take longer than the normal Optimizer (so you'll want to run it at a lower thoroughness, most likely), but will produce a chart of how much value you could gain if you had each item that you don't already have available.
  - Added a Direct Upgrades chart, which shows what the biggest upgrades for you would be, considering just direct upgrades, no other gear swaps. For a comprehensive upgrades evaluation, use the new Build Upgrade List feature of the optimizer.
@@ -78,7 +88,8 @@ Beta 14:
     - Added survivability rating 
  - Rawr.Retribution changes:
     - Include more customizable buff options
-    
+ - Rawr.Moonkin changes:
+    - Calculation model overhauled. Should give much more accurate results now.    
 
 Beta 13.1:
  - Fix for several Optimizer crashes. If you can get the Optimizer to crash still, please e-mail me your character file (cnervig@hotmail.com).
