@@ -293,8 +293,6 @@ namespace Rawr.Mage
 
                 rowEnabled = new bool[rows];
                 colEnabled = new bool[cols];
-                rowScale = new double[rows + 1];
-                colScale = new double[cols + 1];
 
                 for (int i = 0; i < rows; i++)
                 {
@@ -303,15 +301,6 @@ namespace Rawr.Mage
                 for (int j = 0; j < cols; j++)
                 {
                     colEnabled[j] = true;
-                }
-
-                for (int i = 0; i <= rows; i++)
-                {
-                    rowScale[i] = 1.0;
-                }
-                for (int j = 0; j <= cols; j++)
-                {
-                    colScale[j] = 1.0;
                 }
 
                 CRow = new int[lpRows + 1];
@@ -350,16 +339,31 @@ namespace Rawr.Mage
                 CRow[lpRows] = cRows;
                 CCol[lpCols] = cCols;
 
+                rowScale = new double[cRows + 1];
+                colScale = new double[cCols + 1];
+                for (int i = 0; i <= cRows; i++)
+                {
+                    rowScale[i] = 1.0;
+                }
+                for (int j = 0; j <= cCols; j++)
+                {
+                    colScale[j] = 1.0;
+                }
+
                 lp = new LP(cRows, cCols);
             }
 
             public void SetRowScale(int row, double value)
             {
+                row = CRow[row];
+                if (row == -1) return;
                 rowScale[row] = value;
             }
 
             public void SetColumnScale(int col, double value)
             {
+                col = CCol[col];
+                if (col == -1) return;
                 colScale[col] = value;
             }
 
@@ -462,9 +466,9 @@ namespace Rawr.Mage
 
                 for (int j = 0; j <= lpCols; j++)
                 {
-                    if (CCol[j] >= 0) expanded[j] = compactSolution[CCol[j]] * colScale[j];
+                    if (CCol[j] >= 0) expanded[j] = compactSolution[CCol[j]] * colScale[CCol[j]];
                 }
-                expanded[lpCols] /= rowScale[lpRows];
+                expanded[lpCols] /= rowScale[cRows];
                 return expanded;
             }
 
@@ -480,7 +484,7 @@ namespace Rawr.Mage
                 get
                 {
                     SolveInternal();
-                    return compactSolution[compactSolution.Length - 1] / rowScale[lpRows];
+                    return compactSolution[compactSolution.Length - 1] / rowScale[cRows];
                 }
             }
 
@@ -1109,8 +1113,10 @@ namespace Rawr.Mage
             }
             #endregion
 
+            lp.Compact();
+
             #region Set LP Scaling
-            /*lp.SetRowScale(0, 0.1);
+            lp.SetRowScale(0, 0.1);
             lp.SetRowScale(3, 40.0 / calculatedStats.ManaPotionTime);
             lp.SetRowScale(4, 40.0 / calculatedStats.ManaPotionTime);
             lp.SetRowScale(14, 40.0 / calculatedStats.ManaPotionTime);
@@ -1122,10 +1128,8 @@ namespace Rawr.Mage
             lp.SetRowScale(41, 30.0);
             lp.SetRowScale(lpRows, 0.05);
             lp.SetColumnScale(3, calculatedStats.ManaPotionTime);
-            lp.SetColumnScale(4, calculatedStats.ManaPotionTime);*/
+            lp.SetColumnScale(4, calculatedStats.ManaPotionTime);
             #endregion
-
-            lp.Compact();
 
             float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
 
