@@ -242,6 +242,7 @@ namespace Rawr.Mage
                                 }
                                 lu.Decompose();
                                 redecompose = maxRedecompose; // decompose every 50 iterations to maintain stability
+                                //feasible = false; // when refactoring basis recompute the solution
                             }
                             if (lu.Singular)
                             {
@@ -372,6 +373,17 @@ namespace Rawr.Mage
 
                             if (maxj == -1)
                             {
+                                // rebuild solution so it's stable
+                                /*for (i = 0; i < baseRows; i++)
+                                {
+                                    d[i] = b[i];
+                                }
+                                for (k = 0; k < numExtraConstraints; k++, i++)
+                                {
+                                    d[i] = D[k * (cols + rows + 1) + cols + rows];
+                                }
+                                lu.FSolve(d);*/
+
                                 // optimum, return solution (or could be no feasible solution)
                                 // solution(B_indices,:) = d;
                                 double[] ret = new double[cols + 1];

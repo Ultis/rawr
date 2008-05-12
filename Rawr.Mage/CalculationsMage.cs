@@ -464,7 +464,7 @@ namespace Rawr.Mage
                 {
                     if (CCol[j] >= 0) expanded[j] = compactSolution[CCol[j]] * colScale[j];
                 }
-                expanded[lpCols - 1] /= rowScale[lpRows];
+                expanded[lpCols] /= rowScale[lpRows];
                 return expanded;
             }
 
@@ -1110,7 +1110,7 @@ namespace Rawr.Mage
             #endregion
 
             #region Set LP Scaling
-            lp.SetRowScale(0, 0.1);
+            /*lp.SetRowScale(0, 0.1);
             lp.SetRowScale(3, 40.0 / calculatedStats.ManaPotionTime);
             lp.SetRowScale(4, 40.0 / calculatedStats.ManaPotionTime);
             lp.SetRowScale(14, 40.0 / calculatedStats.ManaPotionTime);
@@ -1122,7 +1122,7 @@ namespace Rawr.Mage
             lp.SetRowScale(41, 30.0);
             lp.SetRowScale(lpRows, 0.05);
             lp.SetColumnScale(3, calculatedStats.ManaPotionTime);
-            lp.SetColumnScale(4, calculatedStats.ManaPotionTime);
+            lp.SetColumnScale(4, calculatedStats.ManaPotionTime);*/
             #endregion
 
             lp.Compact();
