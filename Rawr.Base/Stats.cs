@@ -146,6 +146,7 @@ namespace Rawr
         BonusFrostSpellPowerMultiplier,
         BonusIntellectMultiplier,
         BonusMageNukeMultiplier,
+        BonusWarlockNukeMultiplier, 
         BonusNatureSpellPowerMultiplier,
         BonusPhysicalDamageMultiplier,
         BonusRipDamageMultiplier,
@@ -1275,6 +1276,14 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMageNukeMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMageNukeMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Multiplicative]
+        public float BonusWarlockNukeMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

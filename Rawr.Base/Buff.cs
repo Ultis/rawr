@@ -1010,6 +1010,14 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
+                Name = "Malefic Raiment 4 Piece Bonus",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { BonusWarlockNukeMultiplier = 0.06f },
+                SetName = "Malefic Raiment",
+                SetThreshold = 4
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Spellfire 3 Piece Bonus",
                 Category = BuffCategory.SetBonuses,
                 Stats = new Stats() { SpellDamageFromIntellectPercentage = 0.07f },
