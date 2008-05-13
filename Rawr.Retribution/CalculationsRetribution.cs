@@ -285,7 +285,7 @@ namespace Rawr.Retribution
             calcs.WhiteDPSPoints = dpsWhite;
             #endregion
 
-          if (stats.ShatteredSunMightProc > 0)
+            if (stats.ShatteredSunMightProc > 0)
             {
                 switch (shattrathFaction)
                 {
@@ -309,6 +309,24 @@ namespace Rawr.Retribution
             }
             #endregion
 
+            #region Windfury
+            float avgTimeBetnWF = (hastedSpeed / (1.0f - (chanceToBeDodged + chanceToMiss) / 100f)) * 5.0f;
+            float wfAPIncrease = stats.WindfuryAPBonus;
+            float wfHitPre = avgBaseWeaponHit + (wfAPIncrease / 14f) * ((character.MainHand == null) ? 0 : character.MainHand.Speed);
+            float wfHitPost = (wfHitPre * physicalCritModifier) - (wfHitPre * (chanceToMiss + chanceToBeDodged) / 100f) -
+                (wfHitPre * glancingAmount * chanceToGlance);
+            if (wfAPIncrease > 0)
+            {
+                wfHitPost *= impSancAura * crusade * vengeance * bloodFrenzy * avWrath * mitigation;
+            }
+            else
+            {
+                wfHitPost = 0f;
+            }
+            wfDPS = wfHitPost / avgTimeBetnWF;
+            calcs.WFDPSPoints = wfDPS;
+            #endregion 
+            
             #region Seal of Command
             if (calcOpts.Seal == 0)
             {
@@ -323,6 +341,12 @@ namespace Rawr.Retribution
                 avgSoCPost *= impSancAura * vengeance * crusade * avWrath * sancAura * misery * 0.96f;
                 socDPS = avgSoCPost * socTotal / 60f;
                 calcs.SealDPSPoints = socDPS;
+
+                if (wfDPS > 0)
+                {
+                    float wfOffSoCDPS = (socTotal / 60f) * wfHitPost * 0.20f;
+                    calcs.WFDPSPoints += wfOffSoCDPS;
+                }
             }
             #endregion
 
@@ -375,24 +399,6 @@ namespace Rawr.Retribution
                 calcs.ExoDPSPoints = exoDPS;
             }
             #endregion
-
-            #region Windfury
-            float avgTimeBetnWF = (hastedSpeed / (1.0f - (chanceToBeDodged + chanceToMiss) / 100f)) * 5.0f;
-            float wfAPIncrease = stats.WindfuryAPBonus;
-            float wfHitPre = avgBaseWeaponHit + (wfAPIncrease / 14f) * ((character.MainHand == null) ? 0 : character.MainHand.Speed);
-            float wfHitPost = (wfHitPre * physicalCritModifier) - (wfHitPre * (chanceToMiss + chanceToBeDodged) / 100f) -
-                (wfHitPre * glancingAmount * chanceToGlance);
-            if (wfAPIncrease > 0)
-            {
-                wfHitPost *= impSancAura * crusade * vengeance * bloodFrenzy * avWrath * mitigation;
-            }
-            else
-            {
-                wfHitPost = 0f;
-            }
-            wfDPS = wfHitPost / avgTimeBetnWF;
-            calcs.WFDPSPoints = wfDPS;
-            #endregion 
 
             #region Judgement of Blood
             if (calcOpts.Seal == 1)
@@ -523,7 +529,16 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
 
             //Add Expose Weakness since it's not listed as an AP buff
-            if(statsBuffs.ExposeWeakness > 0) statsBuffs.AttackPower += calcOpts.ExposeWeaknessAPValue;
+            if(statsBuffs.ExposeWeakness > 0)
+            {
+                statsBuffs.AttackPower += calcOpts.ExposeWeaknessAPValue;
+            }
+
+            //Libram of Divine Judgement
+            if (character.Ranged != null && character.Ranged.Id == 33503 && calcOpts.Seal == 0)
+            {
+                statsBuffs.AttackPower += character.Ranged.Stats.JudgementOfCommandAttackPowerBonus;
+            }
 
             //Mongoose
             if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
@@ -710,7 +725,8 @@ namespace Rawr.Retribution
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return true;/* ((
+            return true 
+                /*((
                  stats.Health +
                  stats.Mana +
                  stats.Stamina +
