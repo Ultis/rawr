@@ -6,6 +6,7 @@ namespace Rawr.ProtWarr
 {
     public class CharacterCalculationsProtWarr : CharacterCalculationsBase
     {
+        #region Points
         private float _overallPoints = 0f;
         public override float OverallPoints
         {
@@ -37,13 +38,9 @@ namespace Rawr.ProtWarr
             get { return _subPoints[2]; }
             set { _subPoints[2] = value; }
         }
-        private float _threatScale;
-        public float ThreatScale
-        {
-            get { return _threatScale; }
-            set { _threatScale = value; }
-        }
+        #endregion
 
+        #region Basic Stats and Scaling
         private Stats _basicStats;
         public Stats BasicStats
         {
@@ -56,6 +53,22 @@ namespace Rawr.ProtWarr
         {
             get { return _targetLevel; }
             set { _targetLevel = value; }
+        }
+
+        private float _threatScale;
+        public float ThreatScale
+        {
+            get { return _threatScale; }
+            set { _threatScale = value; }
+        }
+        #endregion
+
+        #region Defensive Stats
+        private float _defense;
+        public float Defense
+        {
+            get { return _defense; }
+            set { _defense = value; }
         }
 
         private float _dodge;
@@ -197,6 +210,15 @@ namespace Rawr.ProtWarr
             get { return _blockedAttacks; }
             set { _blockedAttacks = value; }
         }
+        #endregion
+
+        #region Offensive Stats
+        private float _crit;
+        public float Crit
+        {
+            get { return _crit; }
+            set { _crit = value; }
+        }
 
         private float _limitedThreat;
         public float LimitedThreat
@@ -212,43 +234,158 @@ namespace Rawr.ProtWarr
             set { _unlimitedThreat = value; }
         }
 
+        private float _whiteThreat;
+        public float WhiteThreat
+        {
+            get { return _whiteThreat; }
+            set { _whiteThreat = value; }
+        }
+
+        private float _shieldSlamThreat;
+        public float ShieldSlamThreat
+        {
+            get { return _shieldSlamThreat; }
+            set { _shieldSlamThreat = value; }
+        }
+
+        private float _revengeThreat;
+        public float RevengeThreat
+        {
+            get { return _revengeThreat; }
+            set { _revengeThreat = value; }
+        }
+
+        private float _devastateThreat;
+        public float DevastateThreat
+        {
+            get { return _devastateThreat; }
+            set { _devastateThreat = value; }
+        }
+
+        private float _heroicStrikeThreat;
+        public float HeroicStrikeThreat
+        {
+            get { return _heroicStrikeThreat; }
+            set { _heroicStrikeThreat = value; }
+        }
+        #endregion
+
+        #region Resist and Buffs
         public float NatureSurvivalPoints { get; set; }
         public float FrostSurvivalPoints { get; set; }
         public float FireSurvivalPoints { get; set; }
         public float ShadowSurvivalPoints { get; set; }
 		public float ArcaneSurvivalPoints { get; set; }
 		public List<string> ActiveBuffs { get; set; }
+        #endregion
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             int armorCap = (int)Math.Ceiling((1402.5f * TargetLevel) - 66502.5f);
             float levelDifference = 0.2f * (TargetLevel - 70);
+            float targetCritReduction = 5f + levelDifference;
+            float currentCritReduction = ((float)Math.Floor(
+                (BasicStats.DefenseRating * WarriorConversions.DefenseRatingToDefense + BasicStats.Defense)) *
+                 WarriorConversions.DefenseToCritReduction) +
+                (BasicStats.Resilience * WarriorConversions.ResilienceRatingToCritReduction);
+            int defToCap = 0, resToCap = 0;
+            if (currentCritReduction < targetCritReduction)
+            {
+                while ((((float)Math.Floor(
+                ((BasicStats.DefenseRating + defToCap) * WarriorConversions.DefenseRatingToDefense + BasicStats.Defense)) *
+                 WarriorConversions.DefenseToCritReduction) +
+                (BasicStats.Resilience * WarriorConversions.ResilienceRatingToCritReduction)) < targetCritReduction)
+                    defToCap++;
+                while ((((float)Math.Floor(
+                (BasicStats.DefenseRating * WarriorConversions.DefenseRatingToDefense + BasicStats.Defense)) *
+                 WarriorConversions.DefenseToCritReduction) +
+                ((BasicStats.Resilience + resToCap) * WarriorConversions.ResilienceRatingToCritReduction)) < targetCritReduction)
+                    resToCap++;
+            }
+            else if (currentCritReduction > targetCritReduction)
+            {
+                while ((((float)Math.Floor(
+                ((BasicStats.DefenseRating + defToCap) * WarriorConversions.DefenseRatingToDefense + BasicStats.Defense)) *
+                 WarriorConversions.DefenseToCritReduction) +
+                (BasicStats.Resilience * WarriorConversions.ResilienceRatingToCritReduction)) > targetCritReduction)
+
+                    defToCap--;
+                while ((((float)Math.Floor(
+                (BasicStats.DefenseRating * WarriorConversions.DefenseRatingToDefense + BasicStats.Defense)) *
+                 WarriorConversions.DefenseToCritReduction) +
+                ((BasicStats.Resilience + resToCap) * WarriorConversions.ResilienceRatingToCritReduction)) > targetCritReduction)
+
+                    resToCap--;
+                defToCap++;
+                resToCap++;
+            }
+
+            dictValues.Add("Health", BasicStats.Health.ToString());
+            dictValues.Add("Strength", BasicStats.Strength.ToString());
+            dictValues.Add("Agility", BasicStats.Agility.ToString());
+            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
+            dictValues.Add("Armor", BasicStats.Armor.ToString());
+            dictValues.Add("Defense", Defense.ToString() +
+                string.Format("*Defense Rating {0}", BasicStats.DefenseRating));
+            dictValues.Add("Dodge", Dodge.ToString() +
+                string.Format("%*Dodge Rating {0}", BasicStats.DodgeRating));
+            dictValues.Add("Parry", Parry.ToString() +
+                string.Format("%*Parry Rating {0}", BasicStats.ParryRating));
+            if (BlockOverCap > 0f)
+                dictValues.Add("Block", (Block + BlockOverCap).ToString()
+                + string.Format("%*Block Rating {0}. Over the crush cap by {1}% block", BasicStats.BlockRating, BlockOverCap));
+            else
+                dictValues.Add("Block", Block.ToString()
+                + string.Format("%*Block Rating {0}", BasicStats.BlockRating));
+            dictValues.Add("Miss", Miss.ToString() + "%");
+            dictValues.Add("Resilience", BasicStats.Resilience.ToString() +
+                string.Format(@"*Reduces periodic damage and chance to be critically hit by {0}%.
+Reduces the effect of mana-drains and the damage of critical strikes by {1}%.",
+                BasicStats.Resilience * WarriorConversions.ResilienceRatingToCritReduction,
+                BasicStats.Resilience * WarriorConversions.ResilienceRatingToCritReduction * 2));
+            dictValues.Add("Block Value", BlockValue.ToString());
+
+            #region Offensive Stats
+            dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
+            dictValues["Hit"] = (BasicStats.HitRating * WarriorConversions.HitRatingToHit +
+                BasicStats.Hit).ToString() +
+                string.Format("%*Hit Rating {0}", BasicStats.HitRating);
+            dictValues["Expertise"] = (Math.Round(BasicStats.ExpertiseRating * WarriorConversions.ExpertiseRatingToExpertise +
+                BasicStats.Expertise)).ToString() +
+                string.Format(@"*Expertise Rating {0}
+Reduces chance to be dodged or parried by {1}%.", BasicStats.ExpertiseRating,
+                Math.Round((BasicStats.ExpertiseRating * WarriorConversions.ExpertiseRatingToExpertise +
+                BasicStats.Expertise) * WarriorConversions.ExpertiseToDodgeParryReduction));
+            dictValues["Haste"] = (BasicStats.HasteRating * WarriorConversions.HasteRatingToHaste).ToString() +
+                string.Format("%*Haste Rating {0}", BasicStats.HasteRating);
+            dictValues["Armor Penetration"] = BasicStats.ArmorPenetration.ToString();
+            dictValues["Crit"] = Crit.ToString() +
+                string.Format("%*Crit Rating {0}", BasicStats.CritRating);
+            dictValues["Weapon Damage"] = BasicStats.WeaponDamage.ToString();
+            dictValues.Add("Missed Attacks", (AvoidedAttacks / 100f).ToString() +
+                string.Format(@"%*Out of 100 attacks:
+Attacks Missed: {0}
+Attacks Dodged: {1}
+Attacks Parried: {2}", MissedAttacks, DodgedAttacks, ParriedAttacks));
+            dictValues.Add("Limited Threat", (LimitedThreat / ThreatScale).ToString() +
+                string.Format(@"*White TPS: {0}
+Shield Slam TPS: {1}
+Revenge TPS: {2}
+Devastate TPS: {3}", WhiteThreat, ShieldSlamThreat, RevengeThreat, DevastateThreat));
+            dictValues.Add("Unlimited Threat", (UnlimitedThreat / ThreatScale).ToString() +
+                string.Format(@"*White TPS: {0}
+Shield Slam TPS: {1}
+Revenge TPS: {2}
+Devastate TPS: {3}
+Heroic Strike TPS: {4}", WhiteThreat, ShieldSlamThreat, RevengeThreat, DevastateThreat, HeroicStrikeThreat));
+            #endregion
 
             dictValues["Nature Resist"] = (BasicStats.NatureResistance + BasicStats.AllResist).ToString();
             dictValues["Arcane Resist"] = (BasicStats.ArcaneResistance + BasicStats.AllResist).ToString();
             dictValues["Frost Resist"] = (BasicStats.FrostResistance + BasicStats.AllResist).ToString();
             dictValues["Fire Resist"] = (BasicStats.FireResistance + BasicStats.AllResist).ToString();
             dictValues["Shadow Resist"] = (BasicStats.ShadowResistance + BasicStats.AllResist).ToString();
-            dictValues.Add("Health", BasicStats.Health.ToString());
-            dictValues.Add("Agility", BasicStats.Agility.ToString());
-            dictValues.Add("Armor", BasicStats.Armor.ToString());
-            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
-            dictValues.Add("Dodge Rating", BasicStats.DodgeRating.ToString());
-            dictValues.Add("Parry Rating", BasicStats.ParryRating.ToString());
-            dictValues.Add("Block Rating", BasicStats.BlockRating.ToString());
-            dictValues.Add("Block Value", BlockValue.ToString());
-            dictValues.Add("Defense Rating", BasicStats.DefenseRating.ToString());
-            dictValues.Add("Resilience", BasicStats.Resilience.ToString());
-            dictValues.Add("Dodge", Dodge.ToString() + "%");
-            dictValues.Add("Parry", Parry.ToString() + "%");
-            if (BlockOverCap > 0f)
-                dictValues.Add("Block", Block.ToString()
-                + string.Format("%*Over the crush cap by {0}% block. (Total is {1}% block)", BlockOverCap, Block + BlockOverCap));
-            else
-                dictValues.Add("Block", Block.ToString()
-                + string.Format("%*(Total is {0}% block)", Block + BlockOverCap));
-            dictValues.Add("Miss", Miss.ToString() + "%");
             if (BasicStats.Armor == armorCap)
                 dictValues.Add("Mitigation", Mitigation.ToString()
                     + string.Format("%*Exactly at the armor cap against level {0} mobs.", TargetLevel));
@@ -262,46 +399,33 @@ namespace Rawr.ProtWarr
             dictValues.Add("Avoidance + Block", DodgePlusMissPlusParryPlusBlock.ToString() + "%");
             dictValues.Add("Total Mitigation", TotalMitigation.ToString() + "%");
             dictValues.Add("Damage Taken", DamageTaken.ToString() + "%");
-            if (CritReduction == (5f + levelDifference))
+            if (defToCap == 0 && resToCap == 0)
+            {
                 dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
                     + "%*Exactly enough defense rating/resilience to be uncrittable by bosses.");
-            else if (CritReduction < (5f + levelDifference))
+            }
+            else if (defToCap + resToCap > 0)
+            {
                 dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
-                    + string.Format("%*CRITTABLE! Short by {0} defense rating or {1} resilience to be uncrittable by bosses.",
-                    Math.Ceiling(((5f + levelDifference) - CritReduction) * 60f), Math.Ceiling(((5f + levelDifference) - CritReduction) * 39.423f)));
+                    + string.Format("%*CRITTABLE! Short by {0} defense rating ({1} defense) or {2} resilience to be uncrittable by bosses.",
+                    defToCap, defToCap * WarriorConversions.DefenseRatingToDefense, resToCap));
+            }
             else
                 dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
-                    + string.Format("%*Uncrittable by bosses. {0} defense rating or {1} resilience over the crit cap.",
-                    Math.Floor(((5f + levelDifference) - CritReduction) * -60f), Math.Floor(((5f + levelDifference) - CritReduction) * -39.423f)));
+                    + string.Format("%*Uncrittable by bosses. {0} defense rating ({1} defense) or {2} resilience over the crit cap.",
+                    -defToCap, -defToCap * WarriorConversions.DefenseRatingToDefense, - resToCap));
+
             dictValues.Add("Chance Crushed", CrushChance.ToString() + "%");
             dictValues.Add("Overall Points", OverallPoints.ToString());
             dictValues.Add("Mitigation Points", MitigationPoints.ToString());
             dictValues.Add("Survival Points", SurvivalPoints.ToString());
+            dictValues.Add("Threat Points", ThreatPoints.ToString());
 
             dictValues["Nature Survival"] = NatureSurvivalPoints.ToString();
             dictValues["Frost Survival"] = FrostSurvivalPoints.ToString();
             dictValues["Fire Survival"] = FireSurvivalPoints.ToString();
             dictValues["Shadow Survival"] = ShadowSurvivalPoints.ToString();
             dictValues["Arcane Survival"] = ArcaneSurvivalPoints.ToString();
-
-            float critRating = BasicStats.CritRating;
-            if (ActiveBuffs.Contains("Improved Judgement of the Crusade"))
-                critRating -= 66.24f;
-            //critRating -= 131.4768f; //Base 5%
-
-            dictValues["Strength"] = BasicStats.Strength.ToString();
-            dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
-            dictValues["Hit Rating"] = BasicStats.HitRating.ToString();
-            dictValues["Expertise Rating"] = BasicStats.ExpertiseRating.ToString();
-            dictValues["Haste Rating"] = BasicStats.HasteRating.ToString();
-            dictValues["Armor Penetration"] = BasicStats.ArmorPenetration.ToString();
-            dictValues["Crit Rating"] = critRating.ToString();
-            dictValues["Weapon Damage"] = BasicStats.WeaponDamage.ToString();
-
-
-            dictValues["Limited Threat"] = (ThreatPoints / ThreatScale).ToString();
-            dictValues["Unlimited Threat"] = (UnlimitedThreat / ThreatScale).ToString();
-            dictValues["Missed Attacks"] = AvoidedAttacks.ToString();
 
             return dictValues;
         }
