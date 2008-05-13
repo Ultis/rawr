@@ -914,6 +914,12 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
+                Name = "Shadow Weaving", 
+                Category = BuffCategory.Debuffs, 
+                Stats = new Stats() { BonusShadowSpellPowerMultiplier = 0.1f }, 
+            }
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Judgement of Wisdom",
                 Category = BuffCategory.Debuffs,
                 Stats = new Stats() { ManaRestorePerHit = 74f / 2f },
