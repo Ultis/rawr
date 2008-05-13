@@ -363,11 +363,11 @@ Reduces chance to be dodged or parried by {1}%.", BasicStats.ExpertiseRating,
             dictValues["Crit"] = Crit.ToString() +
                 string.Format("%*Crit Rating {0}", BasicStats.CritRating);
             dictValues["Weapon Damage"] = BasicStats.WeaponDamage.ToString();
-            dictValues.Add("Missed Attacks", (AvoidedAttacks / 100f).ToString() +
+            dictValues.Add("Missed Attacks", AvoidedAttacks.ToString() +
                 string.Format(@"%*Out of 100 attacks:
-Attacks Missed: {0}
-Attacks Dodged: {1}
-Attacks Parried: {2}", MissedAttacks, DodgedAttacks, ParriedAttacks));
+Attacks Missed: {0}%
+Attacks Dodged: {1}%
+Attacks Parried: {2}%", MissedAttacks, DodgedAttacks, ParriedAttacks));
             dictValues.Add("Limited Threat", (LimitedThreat / ThreatScale).ToString() +
                 string.Format(@"*White TPS: {0}
 Shield Slam TPS: {1}
