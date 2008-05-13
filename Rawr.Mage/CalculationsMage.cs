@@ -1335,7 +1335,7 @@ namespace Rawr.Mage
                                         for (int ss = 0; ss < segments; ss++)
                                         {
                                             double cool = 180;
-                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                                             if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                                             if (seg >= ss && seg <= maxs) lp[rowOffset + 2 * segments + ss, index] = 1;
                                         }
@@ -1345,7 +1345,7 @@ namespace Rawr.Mage
                                         for (int ss = 0; ss < segments; ss++)
                                         {
                                             double cool = 180 + (coldsnap ? 20 : 0);
-                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                                             if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                                             if (seg >= ss && seg <= maxs) lp[rowOffset + 3 * segments + ss, index] = 1;
                                         }
@@ -1355,7 +1355,7 @@ namespace Rawr.Mage
                                         for (int ss = 0; ss < segments; ss++)
                                         {
                                             double cool = 180 + 15;
-                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                                             if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                                             if (seg >= ss && seg <= maxs) lp[rowOffset + 4 * segments + ss, index] = 1 / (statsList[buffset].CombustionDuration * s.CastTime / s.CastProcs);
                                         }
@@ -1365,7 +1365,7 @@ namespace Rawr.Mage
                                         for (int ss = 0; ss < segments; ss++)
                                         {
                                             double cool = 120;
-                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                                             if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                                             if (seg >= ss && seg <= maxs) lp[rowOffset + 5 * segments + ss, index] = 1;
                                         }
@@ -1375,7 +1375,7 @@ namespace Rawr.Mage
                                         for (int ss = 0; ss < segments; ss++)
                                         {
                                             double cool = 180;
-                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                                             if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                                             if (seg >= ss && seg <= maxs) lp[rowOffset + 6 * segments + ss, index] = 1;
                                         }
@@ -1385,7 +1385,7 @@ namespace Rawr.Mage
                                         for (int ss = 0; ss < segments; ss++)
                                         {
                                             double cool = 120;
-                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                                             if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                                             if (seg >= ss && seg <= maxs) lp[rowOffset + 7 * segments + ss, index] = 1;
                                         }
@@ -1395,7 +1395,7 @@ namespace Rawr.Mage
                                         for (int ss = 0; ss < segments; ss++)
                                         {
                                             double cool = trinket1cooldown;
-                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                                             if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                                             if (seg >= ss && seg <= maxs) lp[rowOffset + 8 * segments + ss, index] = 1;
                                         }
@@ -1405,7 +1405,7 @@ namespace Rawr.Mage
                                         for (int ss = 0; ss < segments; ss++)
                                         {
                                             double cool = trinket2cooldown;
-                                            int maxs = (int)Math.Ceiling(ss + cool / segmentDuration);
+                                            int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                                             if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                                             if (seg >= ss && seg <= maxs) lp[rowOffset + 9 * segments + ss, index] = 1;
                                         }
