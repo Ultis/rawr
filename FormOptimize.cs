@@ -261,6 +261,7 @@ namespace Rawr
         {
             ItemCacheInstance itemCacheMain = ItemCache.Instance;
             Character saveCharacter = _character;
+            bool savedAllGemmings = _allGemmings;
             try
             {
                 ItemCacheInstance itemCacheOptimize = new ItemCacheInstance(itemCacheMain);
@@ -295,7 +296,6 @@ namespace Rawr
                 }
 
                 items = new List<Item>(itemById.Values).ToArray();
-                _allGemmings = true; // for the new added items check all gemmings
 
                 for (int i = 0; i < items.Length; i++)
                 {
@@ -313,7 +313,9 @@ namespace Rawr
                         if (item.FitsInSlot(slot))
                         {
                             List<ComparisonCalculationBase> comparisons = result[slot];
+                            _allGemmings = true; // for the new added items check all gemmings
                             PopulateLockedItems(item);
+                            _allGemmings = savedAllGemmings;
                             lockedSlot = slot;
                             if (lockedSlot == Character.CharacterSlot.Finger1 && item.Unique && _character.Finger2 != null && _character.Finger2.Id == item.Id)
                             {
@@ -976,7 +978,7 @@ namespace Rawr
 								sum += share[i1];
 								if (sum >= s) break;
 							}
-                            if (rand.NextDouble() < 0.8)
+                            if (rand.NextDouble() < 0.8 || !_allGemmings)
                             {
                                 population[i] = BuildMutantCharacter(popCopy[i1]);
                             }
