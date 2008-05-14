@@ -2044,7 +2044,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                if (valid && inseg < segmentDuration - 0.000001 && leftseg > 0 && rightseg > 0 && cooldown != Cooldown.IcyVeins) // coldsnapped icy veins doesn't have to be contiguous
+                if (valid && inseg < segmentDuration - 0.000001 && leftseg > 0 && rightseg > 0 /*&& cooldown != Cooldown.IcyVeins*/) // coldsnapped icy veins doesn't have to be contiguous, but getting better results assuming it is
                 {
                     // fragmentation
                     // either left must be disabled, right disabled, or seg to max
