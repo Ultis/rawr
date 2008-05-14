@@ -717,9 +717,12 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) *
                                                   (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier) *
                                                   (1 + statsTalents.BonusStrengthMultiplier)) - 1;
+            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) *
+                                                    (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier) *
+                                                    (1 + statsTalents.BonusAttackPowerMultiplier)) - 1;
             statsTotal.ThreatIncreaseMultiplier = ((1 + statsRace.ThreatIncreaseMultiplier) *
                                                    (1 + statsGearEnchantsBuffs.ThreatIncreaseMultiplier) *
-                                                    (1 + statsTalents.ThreatIncreaseMultiplier)) - 1;
+                                                   (1 + statsTalents.ThreatIncreaseMultiplier)) - 1;
             statsTotal.Agility = statsRace.Agility + statsGearEnchantsBuffs.Agility + statsTalents.Agility; ;
             statsTotal.Strength = strength;
  
@@ -1002,6 +1005,7 @@ threat and limited threat scaled by the threat scale.",
 				Resilience = stats.Resilience,
 				BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
+                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 				BonusArmorMultiplier = stats.BonusArmorMultiplier,
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 				Health = stats.Health,
@@ -1042,7 +1046,8 @@ threat and limited threat scaled by the threat scale.",
 		public override bool HasRelevantStats(Stats stats)
 		{
 			return (stats.Agility + stats.Armor + stats.AverageArmor +
-                    stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.BonusArmorMultiplier +
+                    stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier +
+                    stats.BonusAttackPowerMultiplier + stats.BonusArmorMultiplier +
 				    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.ParryRating +
                     stats.BlockRating + stats.BlockValue + stats.Health + 
 				    stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
