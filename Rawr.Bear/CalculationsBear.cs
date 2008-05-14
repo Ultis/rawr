@@ -688,7 +688,8 @@ you are being killed by burst damage, focus on Survival Points.",
                 BonusLacerateDamage = stats.BonusLacerateDamage,
                 BonusSwipeDamageMultiplier = stats.BonusSwipeDamageMultiplier,
                 BloodlustProc = stats.BloodlustProc,
-                BonusMangleBearDamage = stats.BonusMangleBearDamage
+                BonusMangleBearDamage = stats.BonusMangleBearDamage,
+                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier
 
 			};
 		}
@@ -703,7 +704,7 @@ you are being killed by burst damage, focus on Survival Points.",
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
                  + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamage + stats.BonusSwipeDamageMultiplier
-                 + stats.BloodlustProc + stats.BonusMangleBearDamage
+                 + stats.BloodlustProc + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier
                 ) != 0;
 		}
     }
