@@ -577,6 +577,94 @@ namespace Rawr.Mage
         private double[] solution;
         private CharacterCalculationsMage calculatedStats;
 
+        private double MaximizeColdsnapDuration(double fightDuration, double coldsnapCooldown, double effectDuration, double effectCooldown, out int coldsnapCount)
+        {
+            int bestColdsnap = 0;
+            double bestEffect = 0.0;
+            List<int> coldsnap = new List<int>();
+            List<double> startTime = new List<double>();
+            List<double> coldsnapTime = new List<double>();
+            int index = 0;
+            coldsnap.Add(2);
+            startTime.Add(0.0);
+            coldsnapTime.Add(0.0);
+            do
+            {
+                if (index > 0 && startTime[index - 1] + effectDuration >= fightDuration)
+                {
+                    double effect = (index - 1) * effectDuration + Math.Max(fightDuration - startTime[index - 1], 0.0);
+                    if (effect > bestEffect)
+                    {
+                        bestEffect = effect;
+                        bestColdsnap = 0;
+                        for (int i = 0; i < index; i++)
+                        {
+                            if (startTime[i] < fightDuration - 20.0) bestColdsnap += coldsnap[i]; // if it is a coldsnap for a very short elemental, don't count it for IV
+                        }
+                    }
+                    index--;
+                }
+                coldsnap[index]--;
+                if (coldsnap[index] < 0)
+                {
+                    index--;
+                }
+                else
+                {
+                    double time = 0.0;
+                    if (index > 0)
+                    {
+                        time = startTime[index - 1] + effectDuration;
+                        int lastColdsnap = -1;
+                        for (int j = 0; j < index; j++)
+                        {
+                            if (coldsnap[j] == 1) lastColdsnap = j;
+                        }
+                        if (coldsnap[index] == 1)
+                        {
+                            // use coldsnap
+                            double normalTime = Math.Max(time, startTime[index - 1] + effectCooldown);
+                            double coldsnapReady = 0.0;
+                            if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + coldsnapCooldown;
+                            if (coldsnapReady >= normalTime)
+                            {
+                                // coldsnap won't be ready until effect will be back anyway, so we don't actually need it
+                                coldsnap[index] = 0;
+                                time = normalTime;
+                            }
+                            else
+                            {
+                                // go now or when coldsnap is ready
+                                time = Math.Max(coldsnapReady, time);
+                                coldsnapTime[index] = Math.Max(coldsnapReady, startTime[index - 1]);
+                            }
+                        }
+                        else
+                        {
+                            // we are not allowed to use coldsnap even if we could
+                            // make sure to adjust by coldsnap constraints
+                            time = Math.Max(time, startTime[index - 1] + effectCooldown);
+                        }
+                    }
+                    else
+                    {
+                        coldsnap[index] = 0;
+                    }
+                    startTime[index] = time;
+                    index++;
+                    if (index >= coldsnap.Count)
+                    {
+                        coldsnap.Add(0);
+                        coldsnapTime.Add(0.0);
+                        startTime.Add(0.0);
+                    }
+                    coldsnap[index] = 2;
+                }
+            } while (index >= 0);
+            coldsnapCount = bestColdsnap;
+            return bestEffect;
+        }
+
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool computeIncrementalSet, bool useSMP)
         {
             List<string> autoActivatedBuffs = new List<string>();
@@ -836,6 +924,7 @@ namespace Rawr.Mage
 
             combustionCount = combustionAvailable ? (1 + (int)((calculatedStats.FightDuration - 15f) / 195f)) : 0;
 
+            #region Water Elemental
             int coldsnapCount = coldsnap ? (1 + (int)((calculatedStats.FightDuration - 45f) / coldsnapCooldown)) : 0;
             double coldsnapDelay = 0;
             if (ivAvailable) coldsnapDelay = 20;
@@ -849,6 +938,7 @@ namespace Rawr.Mage
                 // 45 sec, 3 min cooldown + cold snap
                 // 2.5 sec Waterbolt, affected by heroism, totems, 0.4x frost damage from character
                 // TODO consider adding water elemental as part of optimization for stacking with cooldowns
+                // TODO add GCD for summoning and mana cost
                 float spellHit = 0;
                 if (character.ActiveBuffs.Contains("Totem of Wrath")) spellHit += 0.03f;
                 if (character.ActiveBuffs.Contains("Inspiring Presence")) spellHit += 0.01f;
@@ -863,16 +953,41 @@ namespace Rawr.Mage
                 float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > 70) ? ((targetLevel - 70) * 0.02f) : 0f));
                 multiplier *= partialResistFactor;
                 calculatedStats.WaterElementalDps = (521.5f + (0.4f * calculatedStats.FrostDamage + (character.ActiveBuffs.Contains("Wrath of Air") ? 101 : 0)) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f;
-                calculatedStats.WaterElementalDuration = (float)(1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 45f) / 180f)) * 45;
+                calculatedStats.WaterElementalDuration = (float)(1 + (int)((calculatedStats.FightDuration - 45f) / 180f)) * 45;
+                if (coldsnap) calculatedStats.WaterElementalDuration = (float)MaximizeColdsnapDuration(calculationOptions.FightDuration, coldsnapCooldown, 45.0, 180.0, out coldsnapCount);
+                /*calculatedStats.WaterElementalDuration = (float)(1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 45f) / 180f)) * 45;
+                float nextElementalEnd = (float)((calculatedStats.WaterElementalDuration / 45f - coldsnapCount) * 180f + coldsnapCount * coldsnapDelay + 45f);
+                if (nextElementalEnd - 45.0f < calculationOptions.FightDuration) calculatedStats.WaterElementalDuration += calculationOptions.FightDuration - nextElementalEnd + 45.0f;
+                calculatedStats.WaterElementalDuration = Math.Min(calculatedStats.WaterElementalDuration, calculationOptions.FightDuration);*/
                 if (heroismAvailable)
-                    calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDps * ((calculatedStats.WaterElementalDuration - 40) + 40 * 1.3f);
+                {
+                    float heroTime = Math.Min(40.0f, calculatedStats.WaterElementalDuration);
+                    calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDps * ((calculatedStats.WaterElementalDuration - heroTime) + heroTime * 1.3f);
+                }
                 else
                     calculatedStats.WaterElementalDamage = calculatedStats.WaterElementalDuration * calculatedStats.WaterElementalDps;
             }
+            #endregion
 
             // fill model [mana regen, time limit, evocation limit, mana pot limit, heroism cooldown, ap cooldown, ap+heroism cooldown, iv cooldown, mf cooldown, mf+dp cooldown, mf+iv cooldown, dp+heroism cooldown, dp+iv cooldown, flame cap cooldown, molten+flame, dp+flame, trinket1, trinket2, trinket1+mf, trinket2+mf, trinket1+heroism, trinket2+heroism, mana gem > scb, dps time, aoe duration, flamestrike, cone of cold, blast wave, dragon's breath, combustion, combustion+mf, heroism+iv, drums, drums+mf, drums+heroism, drums+iv, drums+ap, threat, pot+gem, drumsmax]
             double aplength = (1 + (int)((calculatedStats.FightDuration - 30f) / 180f)) * 15;
-            double ivlength = (1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 30f) / 180f)) * 20;
+            double ivlength = 0.0;
+            if (calculationOptions.SummonWaterElemental == 0 && coldsnap)
+            {
+                ivlength = Math.Floor(MaximizeColdsnapDuration(calculationOptions.FightDuration, coldsnapCooldown, 20.0, 180.0, out coldsnapCount));
+            }
+            else if (calculationOptions.SummonWaterElemental == 1 && coldsnap)
+            {
+                double wecount = (calculatedStats.WaterElementalDuration / 45.0);
+                if (wecount >= Math.Floor(wecount) + 20.0 / 45.0)
+                    ivlength = Math.Ceiling(wecount) * 20.0;
+                else
+                    ivlength = Math.Floor(wecount) * 20.0;
+            }
+            else
+            {
+                ivlength = (1 + (int)((calculatedStats.FightDuration - 20f) / 180f)) * 20;
+            }
             double mflength = calculationOptions.MoltenFuryPercentage * calculatedStats.FightDuration;
             double dpivstackArea = calculatedStats.FightDuration;
             //if (mfAvailable && heroismAvailable) dpivstackArea -= 120; // only applies if heroism and iv cannot stack
