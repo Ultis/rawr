@@ -63,6 +63,7 @@ namespace Rawr
         IdolCritRating,
         InnervateCooldownReduction,
         Intellect,
+        JudgementOfCommandAttackPowerBonus,
         LightningCapacitorProc,
         LotPCritRating,
         MageAllResist,
@@ -241,6 +242,14 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AttackPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.AttackPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        public float JudgementOfCommandAttackPowerBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.JudgementOfCommandAttackPowerBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.JudgementOfCommandAttackPowerBonus] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
