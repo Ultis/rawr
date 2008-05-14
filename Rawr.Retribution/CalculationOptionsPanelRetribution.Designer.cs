@@ -61,12 +61,12 @@
             this.trackBarBloodlustUptime = new System.Windows.Forms.TrackBar();
             this.label9 = new System.Windows.Forms.Label();
             this.trackBarExposeWeakness = new System.Windows.Forms.TrackBar();
-            this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.labelTargetArmorDescription = new System.Windows.Forms.Label();
             this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.groupBoxSealChoice.SuspendLayout();
             this.groupBoxSkillUsage.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -348,9 +348,9 @@
             this.labelDrumsOfWarUptime.AutoSize = true;
             this.labelDrumsOfWarUptime.Location = new System.Drawing.Point(67, 651);
             this.labelDrumsOfWarUptime.Name = "labelDrumsOfWarUptime";
-            this.labelDrumsOfWarUptime.Size = new System.Drawing.Size(27, 13);
+            this.labelDrumsOfWarUptime.Size = new System.Drawing.Size(13, 13);
             this.labelDrumsOfWarUptime.TabIndex = 15;
-            this.labelDrumsOfWarUptime.Text = "25%";
+            this.labelDrumsOfWarUptime.Text = "1";
             // 
             // labelDrumsOfBattleUptime
             // 
@@ -359,9 +359,9 @@
             this.labelDrumsOfBattleUptime.AutoSize = true;
             this.labelDrumsOfBattleUptime.Location = new System.Drawing.Point(67, 600);
             this.labelDrumsOfBattleUptime.Name = "labelDrumsOfBattleUptime";
-            this.labelDrumsOfBattleUptime.Size = new System.Drawing.Size(27, 13);
+            this.labelDrumsOfBattleUptime.Size = new System.Drawing.Size(13, 13);
             this.labelDrumsOfBattleUptime.TabIndex = 16;
-            this.labelDrumsOfBattleUptime.Text = "25%";
+            this.labelDrumsOfBattleUptime.Text = "1";
             // 
             // labelBloodlustUptime
             // 
@@ -370,9 +370,9 @@
             this.labelBloodlustUptime.AutoSize = true;
             this.labelBloodlustUptime.Location = new System.Drawing.Point(67, 549);
             this.labelBloodlustUptime.Name = "labelBloodlustUptime";
-            this.labelBloodlustUptime.Size = new System.Drawing.Size(27, 13);
+            this.labelBloodlustUptime.Size = new System.Drawing.Size(13, 13);
             this.labelBloodlustUptime.TabIndex = 14;
-            this.labelBloodlustUptime.Text = "15%";
+            this.labelBloodlustUptime.Text = "1";
             // 
             // labelExposeWeakness
             // 
@@ -404,13 +404,12 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarDrumsOfWarUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarDrumsOfWarUptime.Location = new System.Drawing.Point(62, 619);
-            this.trackBarDrumsOfWarUptime.Maximum = 100;
-            this.trackBarDrumsOfWarUptime.Minimum = 20;
+            this.trackBarDrumsOfWarUptime.Maximum = 5;
+            this.trackBarDrumsOfWarUptime.Minimum = 1;
             this.trackBarDrumsOfWarUptime.Name = "trackBarDrumsOfWarUptime";
             this.trackBarDrumsOfWarUptime.Size = new System.Drawing.Size(152, 45);
             this.trackBarDrumsOfWarUptime.TabIndex = 22;
-            this.trackBarDrumsOfWarUptime.TickFrequency = 5;
-            this.trackBarDrumsOfWarUptime.Value = 25;
+            this.trackBarDrumsOfWarUptime.Value = 1;
             this.trackBarDrumsOfWarUptime.ValueChanged += new System.EventHandler(this.trackBarDrumsOfWarUptime_ValueChanged);
             // 
             // trackBarDrumsOfBattleUptime
@@ -419,13 +418,12 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarDrumsOfBattleUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarDrumsOfBattleUptime.Location = new System.Drawing.Point(62, 568);
-            this.trackBarDrumsOfBattleUptime.Maximum = 100;
-            this.trackBarDrumsOfBattleUptime.Minimum = 20;
+            this.trackBarDrumsOfBattleUptime.Maximum = 5;
+            this.trackBarDrumsOfBattleUptime.Minimum = 1;
             this.trackBarDrumsOfBattleUptime.Name = "trackBarDrumsOfBattleUptime";
             this.trackBarDrumsOfBattleUptime.Size = new System.Drawing.Size(152, 45);
             this.trackBarDrumsOfBattleUptime.TabIndex = 19;
-            this.trackBarDrumsOfBattleUptime.TickFrequency = 5;
-            this.trackBarDrumsOfBattleUptime.Value = 25;
+            this.trackBarDrumsOfBattleUptime.Value = 1;
             this.trackBarDrumsOfBattleUptime.ValueChanged += new System.EventHandler(this.trackBarDrumsOfBattleUptime_ValueChanged);
             // 
             // label6
@@ -444,13 +442,11 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarBloodlustUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarBloodlustUptime.Location = new System.Drawing.Point(62, 517);
-            this.trackBarBloodlustUptime.Maximum = 100;
-            this.trackBarBloodlustUptime.Minimum = 5;
+            this.trackBarBloodlustUptime.Minimum = 1;
             this.trackBarBloodlustUptime.Name = "trackBarBloodlustUptime";
             this.trackBarBloodlustUptime.Size = new System.Drawing.Size(152, 45);
             this.trackBarBloodlustUptime.TabIndex = 23;
-            this.trackBarBloodlustUptime.TickFrequency = 5;
-            this.trackBarBloodlustUptime.Value = 15;
+            this.trackBarBloodlustUptime.Value = 1;
             this.trackBarBloodlustUptime.ValueChanged += new System.EventHandler(this.trackBarBloodlustUptime_ValueChanged);
             // 
             // label9
@@ -458,9 +454,9 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(3, 622);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(54, 39);
+            this.label9.Size = new System.Drawing.Size(48, 39);
             this.label9.TabIndex = 11;
-            this.label9.Text = "Drums\r\nof War\r\nUptime %:";
+            this.label9.Text = "Drums\r\nof War\r\nCount #:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // trackBarExposeWeakness
@@ -480,24 +476,14 @@
             this.trackBarExposeWeakness.Value = 200;
             this.trackBarExposeWeakness.ValueChanged += new System.EventHandler(this.trackBarExposeWeakness_ValueChanged);
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 571);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(54, 39);
-            this.label7.TabIndex = 13;
-            this.label7.Text = "Drums\r\nof Battle\r\nUptime %:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(3, 520);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(54, 26);
+            this.label5.Size = new System.Drawing.Size(50, 26);
             this.label5.TabIndex = 12;
-            this.label5.Text = "Bloodlust\r\nUptime %:";
+            this.label5.Text = "Bloodlust\r\nCount #:";
             this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label4
@@ -533,7 +519,7 @@
             this.trackBarTargetArmor.Size = new System.Drawing.Size(139, 45);
             this.trackBarTargetArmor.SmallChange = 100;
             this.trackBarTargetArmor.TabIndex = 26;
-            this.trackBarTargetArmor.TickFrequency = 300;
+            this.trackBarTargetArmor.TickFrequency = 1000;
             this.trackBarTargetArmor.Value = 7700;
             this.trackBarTargetArmor.ValueChanged += new System.EventHandler(this.trackBarTargetArmor_ValueChanged);
             // 
@@ -546,11 +532,22 @@
             this.label2.TabIndex = 24;
             this.label2.Text = "Target Armor: ";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 574);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(48, 39);
+            this.label7.TabIndex = 27;
+            this.label7.Text = "Drums\r\nof Battle\r\nCount #:";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.labelTargetArmorDescription);
             this.Controls.Add(this.trackBarTargetArmor);
             this.Controls.Add(this.label2);
@@ -566,7 +563,6 @@
             this.Controls.Add(this.trackBarBloodlustUptime);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.trackBarExposeWeakness);
-            this.Controls.Add(this.label7);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.Faction);
@@ -633,11 +629,11 @@
         private System.Windows.Forms.TrackBar trackBarBloodlustUptime;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TrackBar trackBarExposeWeakness;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label labelTargetArmorDescription;
         private System.Windows.Forms.TrackBar trackBarTargetArmor;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label7;
     }
 }

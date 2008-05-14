@@ -340,24 +340,24 @@ namespace Rawr.Retribution
         private void trackBarBloodlustUptime_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.BloodlustUptime = trackBarBloodlustUptime.Value;
-            labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
+            calcOpts.BloodlustUptime = trackBarBloodlustUptime.Value * (40f/60f) / calcOpts.FightLength * 100f;
+            labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString();
             Character.OnItemsChanged();
         }
 
         private void trackBarDrumsOfBattleUptime_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.DrumsOfBattleUptime = trackBarDrumsOfBattleUptime.Value;
-            labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
+            calcOpts.DrumsOfBattleUptime = trackBarDrumsOfBattleUptime.Value * 25f;
+            labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString();
             Character.OnItemsChanged();
         }
 
         private void trackBarDrumsOfWarUptime_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.DrumsOfWarUptime = trackBarDrumsOfWarUptime.Value;
-            labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
+            calcOpts.DrumsOfWarUptime = trackBarDrumsOfWarUptime.Value * 25f;
+            labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString();
             Character.OnItemsChanged();
         }
 
@@ -399,7 +399,7 @@ namespace Rawr.Retribution
 		public int Seal = 1;
 		public bool EnforceMetagemRequirements = false;
 		public string ShattrathFaction = "Aldor";
-        public float BloodlustUptime = 15f;
+        public float BloodlustUptime = (40f / 60f) * 10f;
         public float DrumsOfBattleUptime = 25f;
         public float DrumsOfWarUptime = 25f;
         public int ExposeWeaknessAPValue = 200;
