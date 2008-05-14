@@ -43,10 +43,10 @@ namespace Rawr.ProtWarr
             this.labelBossAttack = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.trackBarBossAttackValue = new System.Windows.Forms.TrackBar();
             this.labelBossAttackValue = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.labelThreatScaleText = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.trackBarThreatScale = new System.Windows.Forms.TrackBar();
             this.labelThreatScale = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this.labelMitigationScaleText = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.trackBarMitigationScale = new System.Windows.Forms.TrackBar();
             this.labelMitigationScale = new System.Windows.Forms.Label();
             this.radioButtonAldor = new System.Windows.Forms.RadioButton();
@@ -73,7 +73,6 @@ namespace Rawr.ProtWarr
             this.comboBoxTargetLevel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTargetLevel.Enabled = false;
             this.comboBoxTargetLevel.FormattingEnabled = true;
             this.comboBoxTargetLevel.Items.AddRange(new object[] {
             "70",
@@ -213,7 +212,7 @@ namespace Rawr.ProtWarr
             this.labelBossAttack.Name = "labelBossAttack";
             this.labelBossAttack.Size = new System.Drawing.Size(64, 45);
             this.labelBossAttack.TabIndex = 0;
-            this.labelBossAttack.Text = "Boss Attack*:";
+            this.labelBossAttack.Text = "Boss Attack: *";
             this.labelBossAttack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelBossAttack.ToolTipText = "Boss attack value before armor. Used to determine the value of Block Value.";
             // 
@@ -245,14 +244,16 @@ namespace Rawr.ProtWarr
             this.labelBossAttackValue.TabIndex = 0;
             this.labelBossAttackValue.Text = "20000";
             // 
-            // label5
+            // labelThreatScaleText
             // 
-            this.label5.Location = new System.Drawing.Point(6, 81);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(64, 45);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "Threat Scale:";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelThreatScaleText.Location = new System.Drawing.Point(6, 81);
+            this.labelThreatScaleText.Name = "labelThreatScaleText";
+            this.labelThreatScaleText.Size = new System.Drawing.Size(64, 45);
+            this.labelThreatScaleText.TabIndex = 0;
+            this.labelThreatScaleText.Text = "Threat Scale: *";
+            this.labelThreatScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelThreatScaleText.ToolTipText = "Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurat" +
+                "e changes";
             // 
             // trackBarThreatScale
             // 
@@ -281,14 +282,16 @@ namespace Rawr.ProtWarr
             this.labelThreatScale.TabIndex = 0;
             this.labelThreatScale.Text = "1";
             // 
-            // label7
+            // labelMitigationScaleText
             // 
-            this.label7.Location = new System.Drawing.Point(9, 132);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(61, 45);
-            this.label7.TabIndex = 0;
-            this.label7.Text = "Mitigation Scale:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelMitigationScaleText.Location = new System.Drawing.Point(9, 132);
+            this.labelMitigationScaleText.Name = "labelMitigationScaleText";
+            this.labelMitigationScaleText.Size = new System.Drawing.Size(61, 45);
+            this.labelMitigationScaleText.TabIndex = 0;
+            this.labelMitigationScaleText.Text = "Mitigation Scale: *";
+            this.labelMitigationScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelMitigationScaleText.ToolTipText = "Mitigation Points scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows m" +
+                "ore accurate changes";
             // 
             // trackBarMitigationScale
             // 
@@ -368,9 +371,9 @@ namespace Rawr.ProtWarr
             this.Controls.Add(this.trackBarMitigationScale);
             this.Controls.Add(this.trackBarThreatScale);
             this.Controls.Add(this.trackBarBossAttackValue);
-            this.Controls.Add(this.label7);
+            this.Controls.Add(this.labelMitigationScaleText);
             this.Controls.Add(this.trackBarTargetArmor);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.labelThreatScaleText);
             this.Controls.Add(this.labelBossAttack);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBoxTargetLevel);
@@ -401,10 +404,10 @@ namespace Rawr.ProtWarr
         private Rawr.CustomControls.ExtendedToolTipLabel labelBossAttack;
 		private System.Windows.Forms.TrackBar trackBarBossAttackValue;
 		private System.Windows.Forms.Label labelBossAttackValue;
-		private System.Windows.Forms.Label label5;
+        private Rawr.CustomControls.ExtendedToolTipLabel labelThreatScaleText;
 		private System.Windows.Forms.TrackBar trackBarThreatScale;
 		private System.Windows.Forms.Label labelThreatScale;
-		private System.Windows.Forms.Label label7;
+        private Rawr.CustomControls.ExtendedToolTipLabel labelMitigationScaleText;
 		private System.Windows.Forms.TrackBar trackBarMitigationScale;
 		private System.Windows.Forms.Label labelMitigationScale;
         private System.Windows.Forms.Label label9;

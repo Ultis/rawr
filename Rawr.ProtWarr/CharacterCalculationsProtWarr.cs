@@ -268,6 +268,13 @@ namespace Rawr.ProtWarr
             get { return _heroicStrikeThreat; }
             set { _heroicStrikeThreat = value; }
         }
+
+        private float _windfuryThreat;
+        public float WindfuryThreat
+        {
+            get { return _windfuryThreat; }
+            set { _windfuryThreat = value; }
+        }
         #endregion
 
         #region Resist and Buffs
@@ -372,13 +379,14 @@ Attacks Parried: {2}%", MissedAttacks, DodgedAttacks, ParriedAttacks));
                 string.Format(@"*White TPS: {0}
 Shield Slam TPS: {1}
 Revenge TPS: {2}
-Devastate TPS: {3}", WhiteThreat, ShieldSlamThreat, RevengeThreat, DevastateThreat));
+Devastate TPS: {3}
+Windfury TPS: {4}", WhiteThreat, ShieldSlamThreat, RevengeThreat, DevastateThreat, WindfuryThreat));
             dictValues.Add("Unlimited Threat", (UnlimitedThreat / ThreatScale).ToString() +
-                string.Format(@"*White TPS: {0}
+                string.Format(@"*Heroic Strike TPS: {0}
 Shield Slam TPS: {1}
 Revenge TPS: {2}
 Devastate TPS: {3}
-Heroic Strike TPS: {4}", WhiteThreat, ShieldSlamThreat, RevengeThreat, DevastateThreat, HeroicStrikeThreat));
+Windfury TPS: {4}", HeroicStrikeThreat, ShieldSlamThreat, RevengeThreat, DevastateThreat, WindfuryThreat));
             #endregion
 
             dictValues["Nature Resist"] = (BasicStats.NatureResistance + BasicStats.AllResist).ToString();
