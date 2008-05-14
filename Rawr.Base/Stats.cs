@@ -99,6 +99,7 @@ namespace Rawr
         SpellDamageFor15SecOnCrit_20_45,
         SpellDamageFor15SecOnManaGem,
         SpellDamageFor15SecOnUse90Sec,
+        SpellDamageFor15SecOnUse2Min,
         SpellDamageFor20SecOnUse2Min,
         SpellDamageFor6SecOnCrit,
         SpellDamageFromIntellectPercentage,
@@ -851,6 +852,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor20SecOnUse2Min]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor20SecOnUse2Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spell Damage (15 sec/2 min)")]
+        [Category("Equipment Procs")]
+        public float SpellDamageFor15SecOnUse2Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor15SecOnUse2Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor15SecOnUse2Min] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

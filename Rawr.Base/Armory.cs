@@ -290,6 +290,11 @@ namespace Rawr
                             stats.SpellDamageFor15SecOnUse90Sec += 150;
                             // TODO healing effect
                         }
+                        else if (spellDesc.StartsWith("Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains up to 320 spell damage and healing."))
+                        {
+                            // Shifting Naaru Sliver
+                            stats.SpellDamageFor15SecOnUse2Min += 320;
+                        }
                         else if (spellDesc.StartsWith("Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec."))
                         {
                             stats.SpellHasteFor20SecOnUse2Min += 175;
