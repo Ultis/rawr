@@ -191,7 +191,7 @@
             this.textBoxLatency.Name = "textBoxLatency";
             this.textBoxLatency.Size = new System.Drawing.Size(75, 20);
             this.textBoxLatency.TabIndex = 7;
-            this.textBoxLatency.TextChanged += new System.EventHandler(this.textBoxLatency_TextChanged);
+            this.textBoxLatency.Validated += new System.EventHandler(this.textBoxLatency_Validated);
             // 
             // textBoxAoeTargets
             // 
@@ -199,7 +199,7 @@
             this.textBoxAoeTargets.Name = "textBoxAoeTargets";
             this.textBoxAoeTargets.Size = new System.Drawing.Size(75, 20);
             this.textBoxAoeTargets.TabIndex = 11;
-            this.textBoxAoeTargets.TextChanged += new System.EventHandler(this.textBoxAoeTargets_TextChanged);
+            this.textBoxAoeTargets.Validated += new System.EventHandler(this.textBoxAoeTargets_Validated);
             // 
             // label5
             // 
@@ -217,7 +217,7 @@
             this.textBoxArcaneResist.Name = "textBoxArcaneResist";
             this.textBoxArcaneResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxArcaneResist.TabIndex = 13;
-            this.textBoxArcaneResist.TextChanged += new System.EventHandler(this.textBoxArcaneResist_TextChanged);
+            this.textBoxArcaneResist.Validated += new System.EventHandler(this.textBoxArcaneResist_Validated);
             // 
             // label6
             // 
@@ -234,7 +234,7 @@
             this.textBoxFireResist.Name = "textBoxFireResist";
             this.textBoxFireResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxFireResist.TabIndex = 15;
-            this.textBoxFireResist.TextChanged += new System.EventHandler(this.textBoxFireResist_TextChanged);
+            this.textBoxFireResist.Validated += new System.EventHandler(this.textBoxFireResist_Validated);
             // 
             // label7
             // 
@@ -251,7 +251,7 @@
             this.textBoxFrostResist.Name = "textBoxFrostResist";
             this.textBoxFrostResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxFrostResist.TabIndex = 17;
-            this.textBoxFrostResist.TextChanged += new System.EventHandler(this.textBoxFrostResist_TextChanged);
+            this.textBoxFrostResist.Validated += new System.EventHandler(this.textBoxFrostResist_Validated);
             // 
             // label8
             // 
@@ -268,7 +268,7 @@
             this.textBoxNatureResist.Name = "textBoxNatureResist";
             this.textBoxNatureResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxNatureResist.TabIndex = 19;
-            this.textBoxNatureResist.TextChanged += new System.EventHandler(this.textBoxNatureResist_TextChanged);
+            this.textBoxNatureResist.Validated += new System.EventHandler(this.textBoxNatureResist_Validated);
             // 
             // label9
             // 
@@ -285,7 +285,7 @@
             this.textBoxFightDuration.Name = "textBoxFightDuration";
             this.textBoxFightDuration.Size = new System.Drawing.Size(75, 20);
             this.textBoxFightDuration.TabIndex = 21;
-            this.textBoxFightDuration.TextChanged += new System.EventHandler(this.textBoxFightDuration_TextChanged);
+            this.textBoxFightDuration.Validated += new System.EventHandler(this.textBoxFightDuration_Validated);
             // 
             // label10
             // 
@@ -302,7 +302,7 @@
             this.textBoxShadowPriest.Name = "textBoxShadowPriest";
             this.textBoxShadowPriest.Size = new System.Drawing.Size(75, 20);
             this.textBoxShadowPriest.TabIndex = 23;
-            this.textBoxShadowPriest.TextChanged += new System.EventHandler(this.textBoxShadowPriest_TextChanged);
+            this.textBoxShadowPriest.Validated += new System.EventHandler(this.textBoxShadowPriest_Validated);
             // 
             // label11
             // 
@@ -330,7 +330,7 @@
             this.textBoxMoltenFuryPercentage.Name = "textBoxMoltenFuryPercentage";
             this.textBoxMoltenFuryPercentage.Size = new System.Drawing.Size(75, 20);
             this.textBoxMoltenFuryPercentage.TabIndex = 26;
-            this.textBoxMoltenFuryPercentage.TextChanged += new System.EventHandler(this.textBoxMoltenFuryPercentage_TextChanged);
+            this.textBoxMoltenFuryPercentage.Validated += new System.EventHandler(this.textBoxMoltenFuryPercentage_Validated);
             // 
             // label12
             // 
@@ -421,7 +421,7 @@
             this.textBoxDpsTime.Name = "textBoxDpsTime";
             this.textBoxDpsTime.Size = new System.Drawing.Size(75, 20);
             this.textBoxDpsTime.TabIndex = 35;
-            this.textBoxDpsTime.TextChanged += new System.EventHandler(this.textBoxDpsTime_TextChanged);
+            this.textBoxDpsTime.Validated += new System.EventHandler(this.textBoxDpsTime_Validated);
             // 
             // label17
             // 
@@ -463,7 +463,7 @@
             this.textBoxInterruptFrequency.Name = "textBoxInterruptFrequency";
             this.textBoxInterruptFrequency.Size = new System.Drawing.Size(75, 20);
             this.textBoxInterruptFrequency.TabIndex = 39;
-            this.textBoxInterruptFrequency.TextChanged += new System.EventHandler(this.textBoxInterruptFrequency_TextChanged);
+            this.textBoxInterruptFrequency.Validated += new System.EventHandler(this.textBoxInterruptFrequency_Validated);
             // 
             // label19
             // 
@@ -482,7 +482,7 @@
             this.textBoxShadowResist.Name = "textBoxShadowResist";
             this.textBoxShadowResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxShadowResist.TabIndex = 41;
-            this.textBoxShadowResist.TextChanged += new System.EventHandler(this.textBoxShadowResist_TextChanged);
+            this.textBoxShadowResist.Validated += new System.EventHandler(this.textBoxShadowResist_Validated);
             // 
             // label20
             // 
@@ -499,7 +499,7 @@
             this.textBoxEvocationWeapon.Name = "textBoxEvocationWeapon";
             this.textBoxEvocationWeapon.Size = new System.Drawing.Size(75, 20);
             this.textBoxEvocationWeapon.TabIndex = 43;
-            this.textBoxEvocationWeapon.TextChanged += new System.EventHandler(this.textBoxEvocationWeapon_TextChanged);
+            this.textBoxEvocationWeapon.Validated += new System.EventHandler(this.textBoxEvocationWeapon_Validated);
             // 
             // label21
             // 
@@ -518,7 +518,7 @@
             this.textBoxAoeDuration.Name = "textBoxAoeDuration";
             this.textBoxAoeDuration.Size = new System.Drawing.Size(75, 20);
             this.textBoxAoeDuration.TabIndex = 45;
-            this.textBoxAoeDuration.TextChanged += new System.EventHandler(this.textBoxAoeDuration_TextChanged);
+            this.textBoxAoeDuration.Validated += new System.EventHandler(this.textBoxAoeDuration_Validated);
             // 
             // label22
             // 
@@ -599,7 +599,7 @@
             this.textBoxTpsLimit.Name = "textBoxTpsLimit";
             this.textBoxTpsLimit.Size = new System.Drawing.Size(75, 20);
             this.textBoxTpsLimit.TabIndex = 55;
-            this.textBoxTpsLimit.TextChanged += new System.EventHandler(this.textBoxTpsLimit_TextChanged);
+            this.textBoxTpsLimit.Validated += new System.EventHandler(this.textBoxTpsLimit_Validated);
             // 
             // label26
             // 
@@ -741,7 +741,7 @@
             this.textBoxInnervate.Name = "textBoxInnervate";
             this.textBoxInnervate.Size = new System.Drawing.Size(75, 20);
             this.textBoxInnervate.TabIndex = 61;
-            this.textBoxInnervate.TextChanged += new System.EventHandler(this.textBoxInnervate_TextChanged);
+            this.textBoxInnervate.Validated += new System.EventHandler(this.textBoxInnervate_Validated);
             // 
             // textBoxManaTide
             // 
@@ -749,7 +749,7 @@
             this.textBoxManaTide.Name = "textBoxManaTide";
             this.textBoxManaTide.Size = new System.Drawing.Size(75, 20);
             this.textBoxManaTide.TabIndex = 63;
-            this.textBoxManaTide.TextChanged += new System.EventHandler(this.textBoxManaTide_TextChanged);
+            this.textBoxManaTide.Validated += new System.EventHandler(this.textBoxManaTide_Validated);
             // 
             // textBoxFragmentation
             // 
@@ -757,7 +757,7 @@
             this.textBoxFragmentation.Name = "textBoxFragmentation";
             this.textBoxFragmentation.Size = new System.Drawing.Size(75, 20);
             this.textBoxFragmentation.TabIndex = 65;
-            this.textBoxFragmentation.TextChanged += new System.EventHandler(this.textBoxFragmentation_TextChanged);
+            this.textBoxFragmentation.Validated += new System.EventHandler(this.textBoxFragmentation_Validated);
             // 
             // checkBoxSMP
             // 
@@ -785,7 +785,7 @@
             this.textBoxEvocationSpirit.Name = "textBoxEvocationSpirit";
             this.textBoxEvocationSpirit.Size = new System.Drawing.Size(75, 20);
             this.textBoxEvocationSpirit.TabIndex = 71;
-            this.textBoxEvocationSpirit.TextChanged += new System.EventHandler(this.textBoxEvocationSpirit_TextChanged);
+            this.textBoxEvocationSpirit.Validated += new System.EventHandler(this.textBoxEvocationSpirit_Validated);
             // 
             // textBoxSurvivabilityRating
             // 
@@ -793,7 +793,7 @@
             this.textBoxSurvivabilityRating.Name = "textBoxSurvivabilityRating";
             this.textBoxSurvivabilityRating.Size = new System.Drawing.Size(75, 20);
             this.textBoxSurvivabilityRating.TabIndex = 73;
-            this.textBoxSurvivabilityRating.TextChanged += new System.EventHandler(this.textBoxSurvivabilityRating_TextChanged);
+            this.textBoxSurvivabilityRating.Validated += new System.EventHandler(this.textBoxSurvivabilityRating_Validated);
             // 
             // comboBoxFaction
             // 

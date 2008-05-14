@@ -105,7 +105,7 @@ namespace Rawr.Mage
             if (!loading) Character.OnItemsChanged();
         }
 
-        private void textBoxLatency_TextChanged(object sender, EventArgs e)
+        private void textBoxLatency_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -121,7 +121,7 @@ namespace Rawr.Mage
             talents.Show();
         }
 
-        private void textBoxAoeTargets_TextChanged(object sender, EventArgs e)
+        private void textBoxAoeTargets_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             int value;
@@ -132,7 +132,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxArcaneResist_TextChanged(object sender, EventArgs e)
+        private void textBoxArcaneResist_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -143,7 +143,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxFireResist_TextChanged(object sender, EventArgs e)
+        private void textBoxFireResist_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -154,7 +154,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxFrostResist_TextChanged(object sender, EventArgs e)
+        private void textBoxFrostResist_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -165,7 +165,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxNatureResist_TextChanged(object sender, EventArgs e)
+        private void textBoxNatureResist_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -176,7 +176,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxFightDuration_TextChanged(object sender, EventArgs e)
+        private void textBoxFightDuration_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -187,7 +187,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxShadowPriest_TextChanged(object sender, EventArgs e)
+        private void textBoxShadowPriest_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -205,7 +205,7 @@ namespace Rawr.Mage
             if (!loading) Character.OnItemsChanged();
         }
 
-        private void textBoxMoltenFuryPercentage_TextChanged(object sender, EventArgs e)
+        private void textBoxMoltenFuryPercentage_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -237,7 +237,7 @@ namespace Rawr.Mage
             if (!loading) Character.OnItemsChanged();
         }
 
-        private void textBoxDpsTime_TextChanged(object sender, EventArgs e)
+        private void textBoxDpsTime_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -255,7 +255,7 @@ namespace Rawr.Mage
             if (!loading) Character.OnItemsChanged();
         }
 
-        private void textBoxInterruptFrequency_TextChanged(object sender, EventArgs e)
+        private void textBoxInterruptFrequency_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -266,7 +266,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxShadowResist_TextChanged(object sender, EventArgs e)
+        private void textBoxShadowResist_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -277,7 +277,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxEvocationWeapon_TextChanged(object sender, EventArgs e)
+        private void textBoxEvocationWeapon_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             int value;
@@ -288,7 +288,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxAoeDuration_TextChanged(object sender, EventArgs e)
+        private void textBoxAoeDuration_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -320,7 +320,7 @@ namespace Rawr.Mage
             if (!loading) Character.OnItemsChanged();
         }
 
-        private void textBoxTpsLimit_TextChanged(object sender, EventArgs e)
+        private void textBoxTpsLimit_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -346,7 +346,7 @@ namespace Rawr.Mage
             if (!loading) Character.OnItemsChanged();
         }
 
-        private void textBoxInnervate_TextChanged(object sender, EventArgs e)
+        private void textBoxInnervate_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -357,7 +357,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxManaTide_TextChanged(object sender, EventArgs e)
+        private void textBoxManaTide_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -368,7 +368,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxFragmentation_TextChanged(object sender, EventArgs e)
+        private void textBoxFragmentation_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -395,7 +395,7 @@ namespace Rawr.Mage
             if (!loading) Character.OnItemsChanged();
         }
 
-        private void textBoxEvocationSpirit_TextChanged(object sender, EventArgs e)
+        private void textBoxEvocationSpirit_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
@@ -406,7 +406,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void textBoxSurvivabilityRating_TextChanged(object sender, EventArgs e)
+        private void textBoxSurvivabilityRating_Validated(object sender, EventArgs e)
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             float value;
