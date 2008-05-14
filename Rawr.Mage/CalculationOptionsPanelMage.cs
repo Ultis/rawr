@@ -68,6 +68,7 @@ namespace Rawr.Mage
             checkBoxSMPDisplay.Checked = calculationOptions.SMPDisplay;
             textBoxEvocationSpirit.Text = calculationOptions.EvocationSpirit.ToString();
             textBoxSurvivabilityRating.Text = calculationOptions.SurvivabilityRating.ToString();
+            comboBoxFaction.SelectedItem = calculationOptions.Aldor ? "Aldor" : "Scryers";
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -424,6 +425,13 @@ namespace Rawr.Mage
                 Properties.Settings.Default.DisplayedSMPWarning = true;
                 Properties.Settings.Default.Save();
             }
+        }
+
+        private void comboBoxFaction_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            calculationOptions.Aldor = comboBoxFaction.SelectedItem.ToString() == "Aldor";
+            if (!loading) Character.OnItemsChanged();
         }
 	}
 }

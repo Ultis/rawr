@@ -18,6 +18,7 @@ namespace Rawr.Mage
         None,
         Wand,
         LightningBolt,
+        ArcaneBolt,
         ArcaneMissiles,
         ArcaneMissilesCC,
         ArcaneMissilesNoProc,
@@ -171,6 +172,7 @@ namespace Rawr.Mage
         public bool ClearcastingActive;
         public bool ClearcastingProccing;
         public float InterruptProtection;
+        public bool EffectProc;
 
         public float Cooldown;
         public float Cost;
@@ -407,6 +409,7 @@ namespace Rawr.Mage
             if (calculations.BasicStats.SpellDamageFor10SecOnResist > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnResist * ProcBuffUp(1 - (float)Math.Pow(HitRate, HitProcs), 10, CastTime);
             if (calculations.BasicStats.SpellDamageFor15SecOnCrit_20_45 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor15SecOnCrit_20_45 * 15f / (45f + CastTime / HitProcs / 0.2f / CritRate);
             if (calculations.BasicStats.SpellDamageFor10SecOnCrit_20_45 > 0) RawSpellDamage += calculations.BasicStats.SpellDamageFor10SecOnCrit_20_45 * 10f / (45f + CastTime / HitProcs / 0.2f / CritRate);
+            if (calculations.BasicStats.ShatteredSunAcumenProc > 0 && calculations.CalculationOptions.Aldor) RawSpellDamage += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
 
             SpellDamage = RawSpellDamage * SpellDamageCoefficient;
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f + SpellDamage;
@@ -428,7 +431,7 @@ namespace Rawr.Mage
             DamagePerSecond = AverageDamage / CastTime;
             ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
 
-            if (Name != "Lightning Bolt" && calculations.BasicStats.LightningCapacitorProc > 0)
+            if (!EffectProc && calculations.BasicStats.LightningCapacitorProc > 0)
             {
                 BaseSpell LightningBolt = (BaseSpell)calculations.GetSpell(SpellId.LightningBolt);
                 //discrete model
@@ -441,6 +444,13 @@ namespace Rawr.Mage
                 ThreatPerSecond += boltDps * calculations.NatureThreatMultiplier;
                 //continuous model
                 //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
+            }
+            if (!EffectProc && calculations.BasicStats.ShatteredSunAcumenProc > 0 && !calculations.CalculationOptions.Aldor)
+            {
+                BaseSpell ArcaneBolt = (BaseSpell)calculations.GetSpell(SpellId.ArcaneBolt);
+                float boltDps = ArcaneBolt.AverageDamage / (45f + CastTime / HitProcs / 0.1f);
+                DamagePerSecond += boltDps;
+                ThreatPerSecond += boltDps * calculations.ArcaneThreatMultiplier;
             }
 
             /*float casttimeHash = calculations.ClearcastingChance * 100 + CastTime;
@@ -805,11 +815,31 @@ namespace Rawr.Mage
         }
     }
 
+    // lightning capacitor
     class LightningBolt : BaseSpell
     {
         public LightningBolt(Character character, CharacterCalculationsMage calculations)
             : base("Lightning Bolt", false, false, true, false, 0, 30, 0, 0, MagicSchool.Nature, 694, 806, 0, 0, 0, 0, 0, 0, false)
         {
+            EffectProc = true;
+            Calculate(character, calculations);
+        }
+
+        public override void Calculate(Character character, CharacterCalculationsMage calculations)
+        {
+            base.Calculate(character, calculations);
+            CritBonus = (1 + (1.5f * (1 + calculations.BasicStats.BonusSpellCritMultiplier) - 1)) * calculations.ResilienceCritDamageReduction;
+            CalculateDerivedStats(character, calculations);
+        }
+    }
+
+    // Shattered Sun Pendant of Acumen
+    class ArcaneBolt : BaseSpell
+    {
+        public ArcaneBolt(Character character, CharacterCalculationsMage calculations)
+            : base("Arcane Bolt", false, false, true, false, 0, 50, 0, 0, MagicSchool.Arcane, 333, 367, 0, 0, 0, 0, 0, 0, false)
+        {
+            EffectProc = true;
             Calculate(character, calculations);
         }
 

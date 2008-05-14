@@ -58,6 +58,7 @@ namespace Rawr.Mage
         public bool SMP { get; set; }
         public bool SMPDisplay { get; set; }
         public float SurvivabilityRating { get; set; }
+        public bool Aldor { get; set; }
 
         public CalculationOptionsMage Clone()
         {
@@ -191,6 +192,7 @@ namespace Rawr.Mage
             SMPDisplay = false;
             EvocationSpirit = 0;
             SurvivabilityRating = 0.0001f;
+            Aldor = true;
 
             // pull talents
             #region Mage Talents Import
@@ -536,6 +538,9 @@ namespace Rawr.Mage
 
             switch (spellId)
             {
+                case SpellId.ArcaneBolt:
+                    s = new ArcaneBolt(Character, this);
+                    break;
                 case SpellId.LightningBolt:
                     s = new LightningBolt(Character, this);
                     break;
