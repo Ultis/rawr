@@ -18,7 +18,7 @@ namespace Rawr
 		{
 			get
 			{
-				if (_formItemSelection == null)
+				if (_formItemSelection == null || _formItemSelection.IsDisposed)
 				{
 					_formItemSelection = new FormItemSelection();
 					_formItemSelection.Character = FormMain.Instance.FormItemSelection.Character;

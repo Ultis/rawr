@@ -15,7 +15,7 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-        private FormSplash _spash = new FormSplash();
+        private FormSplash _splash = new FormSplash();
 		private string _characterPath = "";
 		private bool _unsavedChanges = false;
 		private CharacterCalculationsBase _calculatedStats = null;
@@ -32,7 +32,7 @@ namespace Rawr
 		{
 			get
 			{
-				if (_formItemSelection == null)
+				if (_formItemSelection == null || _formItemSelection.IsDisposed)
 					_formItemSelection = new FormItemSelection();
 				return _formItemSelection;
 			}
@@ -43,7 +43,7 @@ namespace Rawr
 		public FormMain()
 		{
 			_instance = this;
-			_spash.Show();
+			_splash.Show();
 			_statusForm = new Status();
 			Application.DoEvents();
 
@@ -407,8 +407,8 @@ namespace Rawr
 
 		void FormMain_Shown(object sender, EventArgs e)
 		{
-			_spash.Close();
-			_spash.Dispose();
+			_splash.Close();
+			_splash.Dispose();
             SetTitle();
 		}
 

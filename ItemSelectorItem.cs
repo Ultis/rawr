@@ -460,6 +460,7 @@ namespace Rawr
 				if (_maxRating != value)
 				{
 					_maxRating = value;
+					if (_maxRating == 0) _maxRating = 1;
 					this.Invalidate();
 				}
 			}
