@@ -437,11 +437,11 @@ namespace Rawr.Moonkin
                         if (pair.Value > dotDuration)
                             dotDuration = pair.Value;
                     }
-                    while (timeSpentCasting < dotDuration - lastSpellCastTime)
+                    while (timeSpentCasting < dotDuration - lastSpellCastTime - latency)
                     {
                         // Nordrassil Regalia (4T5 bonus)
                         // This should handle the case where a DoT tick falls off before the last cast completes (I hope)
-                        if (T54pcBonus > 0.0f && sp.Name == "SF" && dotDuration - timeSpentCasting - lastSpellCastTime >= sp.CastTime)
+                        if (T54pcBonus > 0.0f && sp.Name == "SF" && activeDots.Count != 0 && dotDuration - timeSpentCasting - lastSpellCastTime >= sp.CastTime)
                         {
                             timeSpentCastingIn4T5 += sp.CastTime;
                         }
