@@ -81,6 +81,7 @@ namespace Rawr.Mage
                     "Spell Info:ABAM3FrBCC*AM when AM procs clearcast",
                     //"Spell Info:ABAM3FrBCCFail*AM when AM procs clearcast",
                     "Spell Info:ABAM3FrBScCC*AM when AM procs clearcast",
+                    "Spell Info:ABFrB*Prefer pause over longer filler",
                     "Spell Info:ABFrB3FrB*Prefer pause over longer filler",
                     "Spell Info:ABFrB3FrBSc*Fill until debuff almost out, Scorch used at specific haste levels where adding another Frostbolt results in drop of AB debuff and alternative results in relatively large pause",
                     //"Spell Info:AB3Sc*Fill until debuff almost out",

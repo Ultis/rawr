@@ -51,6 +51,7 @@ namespace Rawr.Mage
         ABAM3Sc2,
         ABAM3FrB,
         ABAM3FrB2,
+        ABFrB,
         AB3FrB,
         ABFrB3FrB,
         ABFrB3FrB2,
@@ -1132,6 +1133,30 @@ namespace Rawr.Mage
                 gap -= FrB.CastTime;
             }
             if (AB30.CastTime < gap) AddPause(gap - AB30.CastTime + calculations.Latency);
+
+            Calculate(character, calculations);
+        }
+    }
+
+    class ABFrB : SpellCycle
+    {
+        public ABFrB(Character character, CharacterCalculationsMage calculations)
+            : base(13)
+        {
+            Name = "ABFrB";
+            ABCycle = true;
+
+            Spell AB10 = calculations.GetSpell(SpellId.ArcaneBlast10);
+            Spell FrB = calculations.GetSpell(SpellId.Frostbolt);
+
+            AddSpell(AB10, calculations);
+            float gap = 8;
+            while (gap - AB10.CastTime >= FrB.CastTime)
+            {
+                AddSpell(FrB, calculations);
+                gap -= FrB.CastTime;
+            }
+            if (AB10.CastTime < gap) AddPause(gap - AB10.CastTime + calculations.Latency);
 
             Calculate(character, calculations);
         }
