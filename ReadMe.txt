@@ -67,7 +67,22 @@ Beta 14.1:
    - Options should now only cause refreshes when you leave the field, not on every keypress
    - Improved calculations for partial water elementals
  - Rawr.ProtWarr:
-   - 
+   - Added Unleashed Rage as a buff.
+   - Fixed Eternal Earthstorm Diamond gem requirements.
+   - Added weapon damage to white attacks and devastates and fixed a bug where white attacks were normalized and fixed so white damage can crit and glance.
+   - Added Windfury as a buff and calculate the TPS from windfury (only from the damage, since Rage Per Second isn't being used yet).
+   - Renamed Relative Stat Value chart to Item Budget, since thats what it really was doing, and added strength, haste rating, expertise rating, and hit rating to it.
+   - Removed the limitation on level 73 targets only, probably still some issues with hit/expertise caps on trash mobs/bosses.
+   - Fixed Improved Def Stance for the resist survival points.
+   - Changed the default Mitigation Scale to 3750.
+   - Changed the order of stats on the character tab, and removed a lot of the useless ones or moved them to tooltips (Ex. Added hit % and moved hit rating to the tooltip for hit %). Now they are: Base Stats, Defensive Stats, Offensive Stats, Resistance, Complex Stats (for the Survival Points, Mitigation Points, Threat Points, and all the Resistance Points)
+   - Added a breakdown on threat values for: white tps, shield slam tps, revenge tps, devastate tps, and heroic strike tps to the threat tooltips.
+   - Changed the default threat points to be an average of the unlimited and limited threat values.
+   - Fixed crit reduction not taking talents into account.
+   - Fixed bug where Vitality was being counted twice for the strength bonus in the threat section.
+   - Fixed devastate as a normalized attack.
+   - Fixed base crit chance, this should match the in game values (except the 0.6% crit you lose because it's a boss).
+   - Corrected chance to be parried and dodged to match the values discussed on the EJ forum. Still need testing to confirm boss parry values and to add support for trash mobs. 
  - Rawr.Warlock:
    - Added 4T6 set bonus
    - Added Shadow Weaving buff
