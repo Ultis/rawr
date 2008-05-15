@@ -248,7 +248,7 @@ namespace Rawr
 		/// </summary>
 		private WebClient CreateWebClient()
 		{
-			WebClient client = new WebClient();
+			WebClient client = new WebClient() { Encoding = Encoding.UTF8 };
 			client.Headers.Add("user-agent", Properties.NetworkSettings.Default.UserAgent);
 			if (Properties.NetworkSettings.Default.ProxyType == "Http")
 			{
