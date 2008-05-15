@@ -382,13 +382,19 @@ namespace Rawr
                 Name = "Blessing of Kings",
                 Category = BuffCategory.ClassBuffs,
                 Stats = new Stats() { BonusStrengthMultiplier = 0.1f, BonusAgilityMultiplier = 0.1f, BonusStaminaMultiplier = 0.1f, BonusIntellectMultiplier = 0.1f, BonusSpiritMultiplier = 0.1f }
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Unleashed Rage",
-                Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { BonusAttackPowerMultiplier = 0.1f }
-            });
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Unleashed Rage",
+				Category = BuffCategory.ClassBuffs,
+				Stats = new Stats() { BonusAttackPowerMultiplier = 0.1f }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Trueshot Aura",
+				Category = BuffCategory.ClassBuffs,
+				Stats = new Stats() { AttackPower = 125 }
+			});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Heroic Presence",
@@ -862,12 +868,12 @@ namespace Rawr
                 Category = BuffCategory.Debuffs,
                 Stats = new Stats() { ExposeWeakness = 1 }
             });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Improved Judgement of the Crusade",
-                Category = BuffCategory.Debuffs,
-                Stats = new Stats() { CritRating = 66.24f }
-            });
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Improved Judgement of the Crusade",
+				Category = BuffCategory.Debuffs,
+				Stats = new Stats() { CritRating = 3444f / 52f, SpellCritRating = 3444f / 52f }
+			});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Improved Scorch",
@@ -878,7 +884,7 @@ namespace Rawr
             {
                 Name = "Winter's Chill",
                 Category = BuffCategory.Debuffs,
-                Stats = new Stats() { SpellFrostCritRating = 22.08f * 10f }
+                Stats = new Stats() { SpellFrostCritRating = 11480f / 52f }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -1140,7 +1146,31 @@ namespace Rawr
                 SetName = "Onslaught Armor",
                 SetThreshold = 4
             });
-
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Primalstrike 3 Piece Bonus",
+				Category = BuffCategory.SetBonuses,
+				Stats = new Stats() { AttackPower = 40 },
+				SetName = "Primal Intent",
+				SetThreshold = 3
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Fel Leather 3 Piece Bonus",
+				Category = BuffCategory.SetBonuses,
+				Stats = new Stats() { DodgeRating = 20 },
+				SetName = "Fel Skin",
+				SetThreshold = 3
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Heavy Clefthoof 3 Piece Bonus",
+				Category = BuffCategory.SetBonuses,
+				Stats = new Stats() { Strength = 20 },
+				SetName = "Strength of the Clefthoof",
+				SetThreshold = 3
+			});
+            
             //i think you're slipping
             defaultBuffs.Add(new Buff()
             {
@@ -1173,7 +1203,21 @@ namespace Rawr
                 Category = BuffCategory.TemporaryBuffs,
                 Stats = new Stats() { DodgeRating = 152 },
                 Type = BuffType.ShortDurationDW
-            });
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Shattered Sun Pendant of Resolve Proc (Aldor)",
+				Category = BuffCategory.TemporaryBuffs,
+				Stats = new Stats() { DodgeRating = 100 },
+				Type = BuffType.ShortDurationDW
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Shattered Sun Pendant of Resolve Proc (Scryer)",
+				Category = BuffCategory.TemporaryBuffs,
+				Stats = new Stats() { ExpertiseRating = 100 },
+				Type = BuffType.ShortDurationDW
+			});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Figurine - Empyrean Tortoise",

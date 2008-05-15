@@ -512,7 +512,7 @@ namespace Rawr.Warlock
                 stats.Mana +
                 stats.Stamina +
                 stats.Intellect +
-                stats.Spirit +
+                //stats.Spirit +
                 stats.Mp5 +
                 stats.SpellCritRating +
                 stats.SpellDamageRating +

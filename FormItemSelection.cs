@@ -243,7 +243,7 @@ namespace Rawr
 			}
 			panelItems.ResumeLayout(true);
 			foreach (ItemSelectorItem ctrl in panelItems.Controls)
-				ctrl.SetMaxRating(maxRating);
+				ctrl.MaxRating = maxRating;
 		}
 
 		private void toolStripTextBoxFilter_TextChanged(object sender, EventArgs e)

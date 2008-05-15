@@ -70,7 +70,12 @@ namespace Rawr
 				if (_optimizableCalculationLabels == null)
 					_optimizableCalculationLabels = new string[] {
 					"Health",
-					"Avoided Attacks %"
+					"Avoided Attacks %",
+                    "Nature Resist",
+                    "Fire Resist",
+                    "Frost Resist",
+                    "Shadow Resist",
+                    "Arcane Resist",
 					};
 				return _optimizableCalculationLabels;
 			}
@@ -624,8 +629,10 @@ namespace Rawr
 
 		public override bool IsItemRelevant(Item item)
 		{
-			if (item.Slot == Item.ItemSlot.OffHand) return false;
-			if (item.Slot == Item.ItemSlot.TwoHand && item.Stats.AttackPower < 300) return false;
+			if (item.Slot == Item.ItemSlot.OffHand || 
+				(item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Idol) ||
+				(item.Slot == Item.ItemSlot.TwoHand && item.Stats.AttackPower < 300)) 
+				return false;
 			return base.IsItemRelevant(item);
 		}
 
@@ -676,7 +683,7 @@ namespace Rawr
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
 				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc +
-                stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier) > 0;
+                stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier) > 0 || (stats.Stamina > 0 && stats.SpellDamageRating == 0);
 		}
 	}
 
@@ -902,6 +909,11 @@ namespace Rawr
 			{
 				case "Health": return BasicStats.Health;
 				case "Avoided Attacks %": return AvoidedAttacks;
+				case "Nature Resist": return BasicStats.NatureResistance;
+				case "Fire Resist": return BasicStats.FireResistance;
+				case "Frost Resist": return BasicStats.FrostResistance;
+				case "Shadow Resist": return BasicStats.ShadowResistance;
+				case "Arcane Resist": return BasicStats.ArcaneResistance;
 			}
 			return 0f;
 		}

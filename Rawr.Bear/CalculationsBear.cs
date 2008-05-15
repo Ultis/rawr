@@ -110,6 +110,11 @@ you are being killed by burst damage, focus on Survival Points.",
                     "Frost Survival",
                     "Shadow Survival",
                     "Arcane Survival",
+                    "Nature Resist",
+                    "Fire Resist",
+                    "Frost Resist",
+                    "Shadow Resist",
+                    "Arcane Resist",
 					};
 				return _optimizableCalculationLabels;
 			}
@@ -647,7 +652,10 @@ you are being killed by burst damage, focus on Survival Points.",
 
 		public override bool IsItemRelevant(Item item)
 		{
-			if (item.Slot == Item.ItemSlot.OffHand) return false;
+			if (item.Slot == Item.ItemSlot.OffHand ||
+				(item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Idol) ||
+				(item.Slot == Item.ItemSlot.TwoHand && item.Stats.AttackPower < 300))
+				return false;
 			return base.IsItemRelevant(item);
 		}
 
@@ -989,6 +997,11 @@ you are being killed by burst damage, focus on Survival Points.",
 				case "Frost Survival": return FrostSurvivalPoints;
 				case "Shadow Survival": return ShadowSurvivalPoints;
 				case "Arcane Survival": return ArcaneSurvivalPoints;
+				case "Nature Resist": return BasicStats.NatureResistance;
+				case "Fire Resist": return BasicStats.FireResistance;
+				case "Frost Resist": return BasicStats.FrostResistance;
+				case "Shadow Resist": return BasicStats.ShadowResistance;
+				case "Arcane Resist": return BasicStats.ArcaneResistance;
 			}
 			return 0f;
 		}
