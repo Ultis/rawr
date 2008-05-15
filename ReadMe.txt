@@ -43,6 +43,38 @@ Known Issues:
 
 Version History
 ---------------
+Beta 14.1:
+ - Possible fix for the 'Unable to access a disposed object' error. I still haven't been able to reproduce this, so am not sure if this will solve it; please let me know asap if you still encounter this issue.
+ - Fix for the optimizer swapping gems around inappropriately when using Known Gemmings Only.
+ - Fixed the tab order on the Load Character From Armory dialog.
+ - Added temporary buffs for the SSO Tanking neck
+ - Fixed the lack of spellcrit on Improved Judgement of the Crusader
+ - Added Trueshot Aura, and setbonuses for Primalstrike, Clefthoof, and Fel Leather sets.
+ - Made the item selection dropdown perform much better.
+ - Rawr.Bear:
+   - Fix for crossbows showing up
+   - Fix for Unleashed Rage not showing up
+   - Added Resists as optimizable values
+ - Rawr.Cat:
+   - Fix for crossbows showing up
+   - Non-caster items/gems/enchants with stamina will now show up as well (ie, stam gems, stam enchants, etc)
+   - Added Resists as optimizable values
+ - Rawr.Mage:
+   - Fix for display issue in spell cycle solution
+   - Fix for a bug that would make your dps skyrocket under certain specific circumstances
+   - Fix for SMP overrestricting cooldowns
+   - Added parsing for Shifting Naaru Sliver and Shattered Sun Pendant of Acumen
+   - Options should now only cause refreshes when you leave the field, not on every keypress
+   - Improved calculations for partial water elementals
+ - Rawr.ProtWarr:
+   - 
+ - Rawr.Warlock:
+   - Added 4T6 set bonus
+   - Added Shadow Weaving buff
+ - Rawr.Retribution:
+   - Updated with new WF+SoC interaction logic
+   - Uptime fields on the Options tab have been replaced with fields for # of uses
+
 Beta 14:
  - Added the ProtWarr and Healadin models! These are our first versions of these models, so please report any bugs you find with them!
  - Mac support! See the readme for details.
