@@ -206,7 +206,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			//Out of 100 attacks, you'll take...
 			float crits = 2f + (0.2f * levelDifference) - calculatedStats.CappedCritReduction;
 			float crushes = targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (calculatedStats.DodgePlusMiss)), 15f) - stats.CrushChanceReduction, 0f) : 0f;
-			float hits = Math.Max(100f - (crits + crushes + (calculatedStats.DodgePlusMiss)), 0f);
+			float hits = Math.Max(100f - (Math.Max(0f, crits) + Math.Max(crushes, 0) + (calculatedStats.DodgePlusMiss)), 0f);
 			//Apply armor and multipliers for each attack type...
 			crits *= (100f - calculatedStats.CappedMitigation) * .02f;
 			crushes *= (100f - calculatedStats.CappedMitigation) * .015f;
@@ -407,9 +407,9 @@ you are being killed by burst damage, focus on Survival Points.",
 						calcHit.Name = "Hit";
 
 						float crits = 2f + (0.2f * (currentCalculationsBear.TargetLevel - 70)) - currentCalculationsBear.CappedCritReduction;
-						float crushes = currentCalculationsBear.TargetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (currentCalculationsBear.DodgePlusMiss)), 15f), 0f) : 0f;
-						float hits = Math.Max(100f - (crits + crushes + (currentCalculationsBear.DodgePlusMiss)), 0f);
-
+						float crushes = currentCalculationsBear.TargetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (currentCalculationsBear.DodgePlusMiss)), 15f) - currentCalculationsBear.BasicStats.CrushChanceReduction, 0f) : 0f;
+						float hits = Math.Max(100f - (Math.Max(0f, crits) + Math.Max(crushes, 0) + (currentCalculationsBear.DodgePlusMiss)), 0f);
+						
 						calcMiss.OverallPoints = calcMiss.MitigationPoints = currentCalculationsBear.Miss;
 						calcDodge.OverallPoints = calcDodge.MitigationPoints = currentCalculationsBear.Dodge;
 						calcCrit.OverallPoints = calcCrit.SurvivalPoints = crits;

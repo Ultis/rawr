@@ -851,10 +851,15 @@ namespace Rawr
 							case "Resilience Rating":
 								sockets.Stats.Resilience = socketBonusValue;
 								break;
-                            case "Spell Damage":
-                                sockets.Stats.SpellDamageRating = socketBonusValue;
-                                break;
-                            case "Spell Hit Rating":
+							case "Spell Damage":
+								sockets.Stats.SpellDamageRating = socketBonusValue;
+								sockets.Stats.Healing = socketBonusValue;
+								break;
+							case "Spell Damage and Healing":
+								sockets.Stats.SpellDamageRating = socketBonusValue;
+								sockets.Stats.Healing = socketBonusValue;
+								break;
+							case "Spell Hit Rating":
                                 sockets.Stats.SpellHitRating = socketBonusValue;
                                 break;
                             case "Intellect":
