@@ -1389,8 +1389,9 @@ namespace Rawr.Mage
                             tjj -= sequence[jj].Duration;
                         }
                     }
-                    double maxPush = 0;
-                    if (jj < sequence.Count) maxPush = sequence[jj].MaxTime - tjj; // you can assume jj won't be split
+                    double maxPush = double.PositiveInfinity;
+                    // if jj > lastHigh then jj actually won't be pushed back as the swap will occur before it (it might actually be moving toward start)
+                    if (jj < sequence.Count && jj <= lastHigh) maxPush = sequence[jj].MaxTime - tjj; // you can assume jj won't be split
                     if (lastHigh <= j && j < sequence.Count - 1)
                     {
                         if (sequence[j].Group.Count == 0) lastHigh = j;
@@ -1454,67 +1455,70 @@ namespace Rawr.Mage
                                 kT -= sequence[kk].Duration;
                                 kk++;
                             }
-                            if ((mana <= maxMana && (extraMana <= 0 || mana <= minMana)) || overflowLimit <= 0)
+                            if (((mana <= maxMana && (extraMana <= 0 || mana <= minMana)) || overflowLimit <= 0) && (kk >= sequence.Count || sequence[kk].Group.Count == 0 || (kT < 0.000001 && (kk == 0 || sequence[kk].SuperGroup != sequence[kk - 1].SuperGroup)))) // make sure not to force a split of super group, if you actually have a low mps super then you have to move it as a whole
                             {
                                 break;
                             }
                         } while (jj >= i && kk < sequence.Count && MinTime(k, jj) <= tjj + jT && MinTime(kk, jj) <= tjj + jT + currentPush - kT && currentPush < maxPush);
                         // [i..[k..||jj..j]XXXkk.]
-                        if (kT > 0)
+                        if (kk >= sequence.Count || sequence[kk].Group.Count == 0 || (kT < 0.000001 && (kk == 0 || sequence[kk].SuperGroup != sequence[kk - 1].SuperGroup))) // if require super split, then abort, consider restarting at higher lastHigh
                         {
-                            SplitAt(kk, kT);
-                            kk++;
-                        }
-                        // if k has negative mps, then just placing it at the end won't work
-                        // we're breaking max mana constraint, this means we're most likely oom
-                        // placing -mps at the end won't help us get from negative
-                        // we have to place it before it gets to that point
-                        // when we're filling with extra mana this does not apply
-                        List<SequenceItem> copy = sequence.GetRange(k, kk - k);
-						double totalmana = 0;
-						foreach (SequenceItem item in copy)
-							totalmana += item.Mps * item.Duration;
-                        while (jj >= i && currentPush <= maxPush && !extraMode && totalmana < 0)
-                        {
-                            if (sequence[jj].Mps * jT > -totalmana)
+                            if (kT > 0)
                             {
-                                jT += totalmana / sequence[jj].Mps;
-                                break;
-                            }
-                            totalmana += sequence[jj].Mps * jT;
-                            jj--;
-                            jT = sequence[jj].Duration;
-                        }
-                        if (jT >= sequence[jj].Duration)
-                        {
-                            jT -= sequence[jj].Duration;
-                            jj++;
-                        }
-                        // don't split into supergroup, make a clean cut
-                        if (jT > 0 && sequence[jj].Group.Count > 0 && currentPush <= maxPush) // if we're mid super group, and we can push the end we can push the whole super group
-                        {
-                            // move to start of super group
-                            jT = 0;
-                            SequenceGroup super = sequence[jj].SuperGroup;
-                            while (jj >= 0 && sequence[jj].SuperGroup == super)
-                            {
-                                jj--;
-                            }
-                            jj++;
-                        }
-                        // final split and reinsert
-                        if (jj >= i)
-                        {
-                            sequence.RemoveRange(k, kk - k);
-                            if (jT > 0)
-                            {
-                                SplitAt(jj, jT);
-                                jj++;
+                                SplitAt(kk, kT);
                                 kk++;
                             }
-                            sequence.InsertRange(jj, copy);
+                            // if k has negative mps, then just placing it at the end won't work
+                            // we're breaking max mana constraint, this means we're most likely oom
+                            // placing -mps at the end won't help us get from negative
+                            // we have to place it before it gets to that point
+                            // when we're filling with extra mana this does not apply
+                            List<SequenceItem> copy = sequence.GetRange(k, kk - k);
+                            double totalmana = 0;
+                            foreach (SequenceItem item in copy)
+                                totalmana += item.Mps * item.Duration;
+                            while (jj >= i && currentPush <= maxPush && !extraMode && totalmana < 0)
+                            {
+                                if (sequence[jj].Mps * jT > -totalmana)
+                                {
+                                    jT += totalmana / sequence[jj].Mps;
+                                    break;
+                                }
+                                totalmana += sequence[jj].Mps * jT;
+                                jj--;
+                                jT = sequence[jj].Duration;
+                            }
+                            if (jT >= sequence[jj].Duration)
+                            {
+                                jT -= sequence[jj].Duration;
+                                jj++;
+                            }
+                            // don't split into supergroup, make a clean cut
+                            if (jT > 0 && sequence[jj].Group.Count > 0 && currentPush <= maxPush) // if we're mid super group, and we can push the end we can push the whole super group
+                            {
+                                // move to start of super group
+                                jT = 0;
+                                SequenceGroup super = sequence[jj].SuperGroup;
+                                while (jj >= 0 && sequence[jj].SuperGroup == super)
+                                {
+                                    jj--;
+                                }
+                                jj++;
+                            }
+                            // final split and reinsert
+                            if (jj >= i)
+                            {
+                                sequence.RemoveRange(k, kk - k);
+                                if (jT > 0)
+                                {
+                                    SplitAt(jj, jT);
+                                    jj++;
+                                    kk++;
+                                }
+                                sequence.InsertRange(jj, copy);
+                            }
+                            ComputeTimestamps();
                         }
-                        ComputeTimestamps();
                     }
                 }
                 else if (mana < minMana)
