@@ -769,7 +769,7 @@ threat and limited threat scaled by the threat scale.",
 						calcHit.Name = "Hit";
 
 						float crits = 5f + (0.2f * (currentCalculationsProtWarr.TargetLevel - 70)) - currentCalculationsProtWarr.CappedCritReduction;
-                        float crushes = currentCalculationsProtWarr.TargetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (currentCalculationsProtWarr.DodgePlusMissPlusParry) + (currentCalculationsProtWarr.Block)), 15f), 0f) : 0f;
+                        float crushes = currentCalculationsProtWarr.CrushChance;
                         float hits = Math.Max(100f - (crits + crushes + (currentCalculationsProtWarr.DodgePlusMissPlusParry) + (currentCalculationsProtWarr.Block)), 0f);
 
 						calcMiss.OverallPoints = calcMiss.MitigationPoints = currentCalculationsProtWarr.Miss;
