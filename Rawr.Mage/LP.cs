@@ -387,6 +387,7 @@ namespace Rawr.Mage
                                 // optimum, return solution (or could be no feasible solution)
                                 // solution(B_indices,:) = d;
                                 double[] ret = new double[cols + 1];
+                                if (!feasible) return ret; // if it's not feasible then return null solution
                                 for (i = 0; i < rows; i++)
                                 {
                                     if (B[i] < cols && d[i] > eps) ret[B[i]] = d[i];

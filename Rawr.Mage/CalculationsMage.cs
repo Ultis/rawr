@@ -269,7 +269,7 @@ namespace Rawr.Mage
             double[] compactSolution = null;
             bool needsDual;
             //public string Log = string.Empty;
-            public int[] disabledHex;
+            //public int[] disabledHex;
 
             public void ForceRecalculation()
             {
@@ -283,7 +283,7 @@ namespace Rawr.Mage
                 clone.compactSolution = null;
                 //clone.lp = (double[,])clone.lp.Clone();
                 clone.lp = lp.Clone();
-                if (disabledHex != null) clone.disabledHex = (int[])disabledHex.Clone();
+                //if (disabledHex != null) clone.disabledHex = (int[])disabledHex.Clone();
                 return clone;
             }
 
@@ -707,6 +707,71 @@ namespace Rawr.Mage
                 }
             }
 
+            #region Setup Trinkets
+            if (trinket1Available)
+            {
+                Stats s = character.Trinket1.Stats;
+                if (s.SpellDamageFor20SecOnUse2Min + s.SpellHasteFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
+                {
+                    trinket1duration = 20;
+                    trinket1cooldown = 120;
+                }
+                if (s.SpellDamageFor15SecOnManaGem > 0)
+                {
+                    trinket1duration = 15;
+                    trinket1cooldown = 120;
+                    t1ismg = true;
+                }
+                if (s.SpellDamageFor15SecOnUse90Sec > 0)
+                {
+                    trinket1duration = 15;
+                    trinket1cooldown = 90;
+                }
+                if (s.SpellHasteFor20SecOnUse5Min > 0)
+                {
+                    trinket1duration = 20;
+                    trinket1cooldown = 300;
+                }
+                if (s.SpellDamageFor15SecOnUse2Min > 0)
+                {
+                    trinket1duration = 15;
+                    trinket1cooldown = 120;
+                }
+                t1length = (1 + (int)((calculatedStats.FightDuration - trinket1duration) / trinket1cooldown)) * trinket1duration;
+            }
+            if (trinket2Available)
+            {
+                Stats s = character.Trinket2.Stats;
+                if (s.SpellDamageFor20SecOnUse2Min + s.SpellHasteFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
+                {
+                    trinket2duration = 20;
+                    trinket2cooldown = 120;
+                }
+                if (s.SpellDamageFor15SecOnManaGem > 0)
+                {
+                    trinket2duration = 15;
+                    trinket2cooldown = 120;
+                    t2ismg = true;
+                }
+                if (s.SpellDamageFor15SecOnUse90Sec > 0)
+                {
+                    trinket2duration = 15;
+                    trinket2cooldown = 90;
+                }
+                if (s.SpellHasteFor20SecOnUse5Min > 0)
+                {
+                    trinket2duration = 20;
+                    trinket2cooldown = 300;
+                }
+                if (s.SpellDamageFor15SecOnUse2Min > 0)
+                {
+                    trinket2duration = 15;
+                    trinket2cooldown = 120;
+                }
+                t2length = (1 + (int)((calculatedStats.FightDuration - trinket2duration) / trinket2cooldown)) * trinket2duration;
+            }
+            #endregion
+
             if (armor == null)
             {
                 if (character.ActiveBuffs.Contains("Mage Armor")) armor = "Mage Armor";
@@ -740,10 +805,13 @@ namespace Rawr.Mage
                             {
                                 if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
                                 {
-                                    statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, armor, character, additionalItem, ap == 0, mf == 0, iv == 0, heroism == 0, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0, drums == 0, incrementalSetIndex));
-                                    if (ap != 0 && mf != 0 && iv != 0 && heroism != 0 && destructionPotion != 0 && flameCap != 0 && trinket1 != 0 && trinket2 != 0 && combustion != 0 && drums != 0)
+                                    if (!((trinket1 == 0 && t1ismg && flameCap == 0) || (trinket2 == 0 && t2ismg && flameCap == 0))) // do not allow SCB together with flame cap
                                     {
-                                        calculatedStats = statsList[statsList.Count - 1];
+                                        statsList.Add(GetTemporaryCharacterCalculations(characterStats, calculationOptions, armor, character, additionalItem, ap == 0, mf == 0, iv == 0, heroism == 0, destructionPotion == 0, flameCap == 0, trinket1 == 0, trinket2 == 0, combustion == 0, drums == 0, incrementalSetIndex));
+                                        if (ap != 0 && mf != 0 && iv != 0 && heroism != 0 && destructionPotion != 0 && flameCap != 0 && trinket1 != 0 && trinket2 != 0 && combustion != 0 && drums != 0)
+                                        {
+                                            calculatedStats = statsList[statsList.Count - 1];
+                                        }
                                     }
                                 }
                             }
@@ -861,77 +929,12 @@ namespace Rawr.Mage
                 if (useSMP) incrementalSetSegment = new int[lpCols];
             }
 
-            #region Setup Trinkets
-            if (trinket1Available)
-            {
-                Stats s = character.Trinket1.Stats;
-                if (s.SpellDamageFor20SecOnUse2Min + s.SpellHasteFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
-                {
-                    trinket1duration = 20;
-                    trinket1cooldown = 120;
-                }
-                if (s.SpellDamageFor15SecOnManaGem > 0)
-                {
-                    trinket1duration = 15;
-                    trinket1cooldown = 120;
-                    t1ismg = true;
-                }
-                if (s.SpellDamageFor15SecOnUse90Sec > 0)
-                {
-                    trinket1duration = 15;
-                    trinket1cooldown = 90;
-                }
-                if (s.SpellHasteFor20SecOnUse5Min > 0)
-                {
-                    trinket1duration = 20;
-                    trinket1cooldown = 300;
-                }
-                if (s.SpellDamageFor15SecOnUse2Min > 0)
-                {
-                    trinket1duration = 15;
-                    trinket1cooldown = 120;
-                }
-                t1length = (1 + (int)((calculatedStats.FightDuration - trinket1duration) / trinket1cooldown)) * trinket1duration;
-                calculatedStats.Trinket1Name = character.Trinket1.Name;
-            }
-            if (trinket2Available)
-            {
-                Stats s = character.Trinket2.Stats;
-                if (s.SpellDamageFor20SecOnUse2Min + s.SpellHasteFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
-                {
-                    trinket2duration = 20;
-                    trinket2cooldown = 120;
-                }
-                if (s.SpellDamageFor15SecOnManaGem > 0)
-                {
-                    trinket2duration = 15;
-                    trinket2cooldown = 120;
-                    t2ismg = true;
-                }
-                if (s.SpellDamageFor15SecOnUse90Sec > 0)
-                {
-                    trinket2duration = 15;
-                    trinket2cooldown = 90;
-                }
-                if (s.SpellHasteFor20SecOnUse5Min > 0)
-                {
-                    trinket2duration = 20;
-                    trinket2cooldown = 300;
-                }
-                if (s.SpellDamageFor15SecOnUse2Min > 0)
-                {
-                    trinket2duration = 15;
-                    trinket2cooldown = 120;
-                }
-                t2length = (1 + (int)((calculatedStats.FightDuration - trinket2duration) / trinket2cooldown)) * trinket2duration;
-                calculatedStats.Trinket2Name = character.Trinket2.Name;
-            }
-
+            if (character.Trinket1 != null) calculatedStats.Trinket1Name = character.Trinket1.Name;
+            if (character.Trinket2 != null) calculatedStats.Trinket2Name = character.Trinket2.Name;
             calculatedStats.Trinket1Duration = trinket1duration;
             calculatedStats.Trinket1Cooldown = trinket1cooldown;
             calculatedStats.Trinket2Duration = trinket2duration;
             calculatedStats.Trinket2Cooldown = trinket2cooldown;
-            #endregion
 
             combustionCount = combustionAvailable ? (1 + (int)((calculatedStats.FightDuration - 15f) / 195f)) : 0;
 
@@ -1620,7 +1623,9 @@ namespace Rawr.Mage
             lp[37, lpCols] = drumsivlength;
             lp[38, lpCols] = drumsaplength;
             lp[39, lpCols] = calculationOptions.TpsLimit * calculationOptions.FightDuration;
-            lp[40, lpCols] = ((int)((calculatedStats.FightDuration - 7800 / manaBurn) / 60f + 2)) * 40;
+            int manaConsum = ((int)((calculatedStats.FightDuration - 7800 / manaBurn) / 60f + 2));
+            if ((t1ismg || t2ismg) && manaConsum < calculatedStats.MaxManaGem) manaConsum = calculatedStats.MaxManaGem;
+            lp[40, lpCols] = manaConsum * 40;
             lp[41, lpCols] = (1 + (int)((calculatedStats.FightDuration - 30) / 120));
 
             if (useSMP)
@@ -1683,7 +1688,7 @@ namespace Rawr.Mage
             }
             #endregion
 
-            #region SMP Branch & Bound
+            #region SMP Branch & Cut
             int maxHeap = Properties.Settings.Default.MaxHeapLimit;
             if (useSMP)
             {
@@ -1778,6 +1783,14 @@ namespace Rawr.Mage
                     if (valid && trinket2Available)
                     {
                         valid = ValidateCooldown(Cooldown.Trinket2, trinket2duration, trinket2cooldown);
+                    }
+                    if (valid && t1ismg && calculationOptions.FlameCap)
+                    {
+                        valid = ValidateSCB(Cooldown.Trinket1);
+                    }
+                    if (valid && t2ismg && calculationOptions.FlameCap)
+                    {
+                        valid = ValidateSCB(Cooldown.Trinket2);
                     }
                     // eliminate packing cycles
                     // example:
@@ -1922,6 +1935,7 @@ namespace Rawr.Mage
 
         private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration)
         {
+            const double eps = 0.000001;
             double[] segCount = new double[segments];
             for (int outseg = 0; outseg < segments; outseg++)
             {
@@ -1942,89 +1956,104 @@ namespace Rawr.Mage
             int maxdist2 = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor(cooldownDuration / segmentDuration));
 
             bool valid = true;
+            double t1 = 0.0;
+            double t2 = 0.0;
+            double bestCoverage = 0.0;
+
+            if (cooldownDuration < 0) cooldownDuration = 3 * segments * segmentDuration;
 
             for (int seg = 0; seg < segments; seg++)
             {
                 double inseg = segCount[seg];
-                if (inseg > 0)
+                if (inseg > 0 && (seg == 0 || segCount[seg - 1] == 0.0))
                 {
+                    double t = seg;
+                    if (seg < segments - 1 && segCount[seg + 1] > 0.0) t = seg + 1 - inseg / segmentDuration;
+                    double max = t + cooldownDuration / segmentDuration;
                     // verify that outside duration segments are 0
-                    for (int outseg = 0; outseg < segments; outseg++)
+                    for (int outseg = seg + 1; outseg < segments; outseg++)
                     {
-                        if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                        if (segCount[outseg] > 0)
                         {
-                            if (segCount[outseg] > 0)
+                            double tt = outseg + 1 - segCount[outseg] / segmentDuration;
+                            if ((outseg >= t + effectDuration / segmentDuration + eps) && (tt < max - eps))                            
                             {
                                 valid = false;
-                                break;
+                                // make sure that we pairwise invalidate
+                                // (outseg >= tin + effectDuration / segmentDuration && outseg < (int)(tin + cooldownDuration / segmentDuration)
+                                // outseg + 1 <= tin + cooldownDuration / segmentDuration
+                                // outseg - effectDuration / segmentDuration >= tin >= outseg + 1 - cooldownDuration / segmentDuration
+                                // cooldownDuration >= effectDuration + 2 * segmentDuration !!! if this isn't true then we have problems, means segmentDuration has to be small enough, 30 sec = good
+                                // (seg >= tout + (effectDuration - cooldownDuration) / segmentDuration && seg < (int)tout)
+                                // seg + 1 <= tout <= seg + (cooldownDuration - effectDuration) / segmentDuration
+                                double tin = t;
+                                double tout = tt;
+                                if (tin < outseg + 1 - cooldownDuration / segmentDuration) tin = outseg + 1 - cooldownDuration / segmentDuration;
+                                if (tout > seg + (cooldownDuration - effectDuration) / segmentDuration) tout = seg + (cooldownDuration - effectDuration) / segmentDuration;
+                                double c1 = 0.0;
+                                double c2 = 0.0;
+                                for (int s = 0; s < segments; s++)
+                                {
+                                    if ((s >= tin + (effectDuration - cooldownDuration) / segmentDuration - eps && s + 1 < tin - eps) || (s >= tin + effectDuration / segmentDuration + eps && s + 1 < tin + cooldownDuration / segmentDuration + eps))
+                                    {
+                                        c1 += segCount[s];
+                                    }
+                                    if ((s >= tout + (effectDuration - cooldownDuration) / segmentDuration - eps && s + 1 < tout - eps) || (s >= tout + effectDuration / segmentDuration + eps && s + 1 < tout + cooldownDuration / segmentDuration + eps))
+                                    {
+                                        c2 += segCount[s];
+                                    }
+                                }
+                                double coverage = Math.Min(c1, c2);
+                                if (coverage < eps)
+                                {
+                                    coverage = 0.0; // troubles
+                                }
+                                if (coverage > bestCoverage)
+                                {
+                                    t1 = tin;
+                                    t2 = tout;
+                                    bestCoverage = coverage;
+                                }
                             }
                         }
                     }
-                    if (!valid)
+                }
+            }
+            if (!valid)
+            {
+                //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
+                // branch on whether t1 or t2 is active, they can't be both
+                CompactLP t1active = lp.Clone();
+                // cooldown used
+                //t1active.Log += "Use " + cooldown.ToString() + " at " + t1 + ", disable around\r\n";
+                for (int outseg = 0; outseg < segments; outseg++)
+                {
+                    if ((outseg >= t1 + (effectDuration - cooldownDuration) / segmentDuration - eps && outseg + 1 < t1 - eps) || (outseg >= t1 + effectDuration / segmentDuration + eps && outseg + 1 < t1 + cooldownDuration / segmentDuration + eps))
                     {
-                        //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
-                        // branch on whether cooldown is used in this segment
-                        CompactLP cooldownUsed = lp.Clone();
-                        // cooldown not used
-                        //lp.IVHash += 1 << seg;
-                        //lp.Log += "Disable " + cooldown.ToString() + " at " + seg + "\r\n";
-                        for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(cooldown)) t1active.EraseColumn(index);
+                        }
+                    }
+                }
+                heap.Push(t1active);
+                // cooldown not used
+                //lp.Log += "Use " + cooldown.ToString() + " at " + t2 + ", disable around\r\n";
+                for (int outseg = 0; outseg < segments; outseg++)
+                {
+                    if ((outseg >= t2 + (effectDuration - cooldownDuration) / segmentDuration - eps && outseg + 1 < t2 - eps) || (outseg >= t2 + effectDuration / segmentDuration + eps && outseg + 1 < t2 + cooldownDuration / segmentDuration + eps))
+                    {
+                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                         {
                             CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
                             if (stats != null && stats.GetCooldown(cooldown)) lp.EraseColumn(index);
                         }
-                        heap.Push(lp);
-                        // cooldown used
-                        //cooldownUsed.Log += "Use " + cooldown.ToString() + " at " + seg + ", disable around\r\n";
-                        for (int outseg = 0; outseg < segments; outseg++)
-                        {
-                            if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
-                            {
-                                //cooldownUsed.IVHash += 1 << outseg;
-                                for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                                {
-                                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                    if (stats != null && stats.GetCooldown(cooldown)) cooldownUsed.EraseColumn(index);
-                                }
-                            }
-                        }
-                        heap.Push(cooldownUsed);
-
-                        // alternative, branch on actual effect spans
-                        /*for (int startseg = 0; startseg < segments; startseg++)
-                        {
-                            // cooldown starts in segment startseg
-                            // starting at very start  [startseg - maxdist [startseg, startseg + mindist2] startseg + maxdist2 - 1]
-                            // starting at very end [startseg - maxdist + 1 [startseg, startseg + mindist] startseg + maxdist2]
-                            if (seg >= startseg - maxdist && seg <= startseg + maxdist2 - 1)
-                            {
-                                CompactLP restrictedLP = lp.Clone();
-                                bool trueBranch = false;
-                                for (int outseg = 0; outseg < segments; outseg++)
-                                {
-                                    if (outseg >= startseg - maxdist2 + mindist + 1 && outseg <= startseg + maxdist2 - 1 && (outseg < startseg || outseg > startseg + mindist))
-                                    {
-                                        if ((restrictedLP.disabledHex[(int)cooldown] & (1 << outseg)) == 0)
-                                        {
-                                            for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                                            {
-                                                CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                                                if (stats != null && stats.GetCooldown(cooldown)) restrictedLP.EraseColumn(index);
-                                            }
-                                            restrictedLP.disabledHex[(int)cooldown] |= 1 << outseg;
-                                            trueBranch = true;
-                                        }
-                                    }
-                                }
-                                if (trueBranch)
-                                {
-                                    heap.Push(restrictedLP);
-                                }
-                            }
-                        }*/
-                        return false;
                     }
                 }
+                heap.Push(lp);
+
+                return false;
             }
             for (int seg = 0; seg < segments; seg++)
             {
@@ -2049,7 +2078,6 @@ namespace Rawr.Mage
                 {
                     // fragmentation
                     // either left must be disabled, right disabled, or seg to max
-                    //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
                     CompactLP leftDisabled = lp.Clone();
                     //leftDisabled.Log += "Disable " + cooldown.ToString() + " left of " + seg + "\r\n";
                     for (int outseg = 0; outseg < segments; outseg++)
@@ -2061,7 +2089,6 @@ namespace Rawr.Mage
                                 CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
                                 if (stats != null && stats.GetCooldown(cooldown)) leftDisabled.EraseColumn(index);
                             }
-                            //leftDisabled.disabledHex[(int)cooldown] |= 1 << outseg;
                         }
                     }
                     heap.Push(leftDisabled);
@@ -2076,7 +2103,6 @@ namespace Rawr.Mage
                                 CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
                                 if (stats != null && stats.GetCooldown(cooldown)) rightDisabled.EraseColumn(index);
                             }
-                            //rightDisabled.disabledHex[(int)cooldown] |= 1 << outseg;
                         }
                     }
                     heap.Push(rightDisabled);
@@ -2089,7 +2115,6 @@ namespace Rawr.Mage
                         {
                             if (stats.GetCooldown(cooldown)) lp.UpdateConstraintElement(index, -1);
                             // for some strange reason trying to help doesn't really help
-                            // end when run in release without debugger it will cause an endless loop wtf
                             // so don't try to help
                             //else lp.EraseColumn(index); // to make it easier on the solver also let it know that anything that doesn't have this cooldown can't be in solution
                         }
@@ -2098,6 +2123,104 @@ namespace Rawr.Mage
                     heap.Push(lp);
                     return false;
                 }
+            }
+            return valid;
+        }
+
+        private bool ValidateSCB(Cooldown trinket)
+        {
+            double[] trinketCount = new double[segments];
+            double[] flamecapCount = new double[segments];
+            for (int outseg = 0; outseg < segments; outseg++)
+            {
+                double s = 0.0;
+                for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                {
+                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                    if (stats != null && stats.GetCooldown(trinket))
+                    {
+                        s += solution[index];
+                    }
+                }
+                trinketCount[outseg] = s;
+            }
+            for (int outseg = 0; outseg < segments; outseg++)
+            {
+                double s = 0.0;
+                for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                {
+                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                    if (stats != null && stats.FlameCap)
+                    {
+                        s += solution[index];
+                    }
+                }
+                flamecapCount[outseg] = s;
+            }
+            int rightdist = ((int)Math.Floor((120.0 - 15.0) / segmentDuration));
+            int leftdist = ((int)Math.Floor((180.0 - 60.0) / segmentDuration));
+
+            bool valid = true;
+            int flamecapSeg = 0;
+            int trinketSeg = 0;
+            int minDist = int.MaxValue;
+
+            for (int seg = 0; seg < segments; seg++) // trinket
+            {
+                double inseg = trinketCount[seg];
+                if (inseg > 0)
+                {
+                    for (int outseg = 0; outseg < segments; outseg++) // flamecap
+                    {
+                        if ((outseg > seg - leftdist) || (outseg < seg + rightdist))
+                        {
+                            if (flamecapCount[outseg] > 0)
+                            {
+                                valid = false;
+                                if (Math.Abs(seg - outseg) < minDist)
+                                {
+                                    trinketSeg = seg;
+                                    flamecapSeg = outseg;
+                                    minDist = Math.Abs(seg - outseg);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (!valid)
+            {
+                // branch on whether trinket is used or flame cap is used
+                CompactLP trinketUsed = lp.Clone();
+                // flame cap used
+                //lp.Log += "Disable " + trinket.ToString() + " close to " + flamecapSeg + "\r\n";
+                for (int inseg = 0; inseg < segments; inseg++)
+                {
+                    if ((inseg > flamecapSeg - rightdist) || (inseg < flamecapSeg + leftdist))
+                    {
+                        for (int index = inseg * statsList.Count * spellList.Count + colOffset - 1; index < (inseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(trinket)) lp.EraseColumn(index);
+                        }
+                    }
+                }
+                heap.Push(lp);
+                // trinket used
+                //trinketUsed.Log += "Disable Flame Cap close to " + trinketSeg + "\r\n";
+                for (int outseg = 0; outseg < segments; outseg++)
+                {
+                    if ((outseg > trinketSeg - leftdist) || (outseg < trinketSeg + rightdist))
+                    {
+                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.FlameCap) trinketUsed.EraseColumn(index);
+                        }
+                    }
+                }
+                heap.Push(trinketUsed);
+                return false;
             }
             return valid;
         }

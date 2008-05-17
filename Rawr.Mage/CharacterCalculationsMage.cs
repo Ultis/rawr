@@ -904,12 +904,15 @@ namespace Rawr.Mage
             {
                 get
                 {
-                    double t = 0;
+                    int mini = int.MaxValue;
                     double min = 0;
                     foreach (SequenceItem item in Item)
                     {
-                        min = Math.Max(min, item.MinTime - t);
-                        t += item.Duration;
+                        if (item.SuperIndex < mini)
+                        {
+                            mini = item.SuperIndex;
+                            min = item.MinTime;
+                        }
                     }
                     return min;
                 }
@@ -1198,14 +1201,15 @@ namespace Rawr.Mage
                     if (sequence[j].Index == 3 || sequence[j].Index == 4) d = 0;
                     if (lastSuper != sequence[j].SuperGroup)
                     {
-                        if (sequence[j].Group.Count > 0)
+                        /*if (sequence[j].Group.Count > 0)
                         {
                             overflowLimit = BasicStats.Mana - overflowMana;
                         }
                         else
                         {
                             overflowLimit = BasicStats.Mana; // this too
-                        }
+                        }*/
+                        overflowLimit = Math.Min(BasicStats.Mana, BasicStats.Mana - overflowMana);
                         lastSuper = sequence[j].SuperGroup;
                     }
                     if (t < MinTime(j, j - 1) - 0.000001)
@@ -1217,7 +1221,7 @@ namespace Rawr.Mage
                         double minbuffer = MinTime(j, j - 1) - t;
                         double buffer = sequence[j].MaxTime - t;
                         int k;
-                        for (k = j + 1; k < sequence.Count && minbuffer > 0 && buffer > 0; k++)
+                        for (k = j + 1; k < sequence.Count && minbuffer > 0.000001 && buffer > 0.000001; k++)
                         {
                             if (sequence[k].SuperGroup != lastSuper) // intra super ordering not allowed
                             {
@@ -1385,6 +1389,7 @@ namespace Rawr.Mage
                         jj--;
                         if (jj >= 0 && jj < sequence.Count)
                         {
+                            if (jj < sequence.Count - 1 && sequence[jj].SuperGroup != sequence[jj + 1].SuperGroup) overflowLimit -= sequence[jj].SuperGroup.Mana;
                             jT += sequence[jj].Duration;
                             tjj -= sequence[jj].Duration;
                         }
@@ -1439,6 +1444,7 @@ namespace Rawr.Mage
                                     jT += sequence[jj].Duration;
                                     tjj -= sequence[jj].Duration;
                                     maxPush = Math.Min(maxPush, sequence[jj].MaxTime - tjj);
+                                    if (sequence[jj].SuperGroup != sequence[jj + 1].SuperGroup) overflowLimit -= sequence[jj].SuperGroup.Mana;
                                     // seems like this never really applies
                                     // if we don't have enough mana for long sequence then pushing it out
                                     // won't create new opportunities for mana consumables
@@ -1455,7 +1461,7 @@ namespace Rawr.Mage
                                 kT -= sequence[kk].Duration;
                                 kk++;
                             }
-                            if (((mana <= maxMana && (extraMana <= 0 || mana <= minMana)) || overflowLimit <= 0) && (kk >= sequence.Count || sequence[kk].Group.Count == 0 || (kT < 0.000001 && (kk == 0 || sequence[kk].SuperGroup != sequence[kk - 1].SuperGroup)))) // make sure not to force a split of super group, if you actually have a low mps super then you have to move it as a whole
+                            if (((mana <= maxMana && (extraMana <= 0.000001 || mana <= minMana)) || overflowLimit <= 0) && (kk >= sequence.Count || sequence[kk].Group.Count == 0 || (kT < 0.000001 && (kk == 0 || sequence[kk].SuperGroup != sequence[kk - 1].SuperGroup)))) // make sure not to force a split of super group, if you actually have a low mps super then you have to move it as a whole
                             {
                                 break;
                             }
@@ -1882,7 +1888,7 @@ namespace Rawr.Mage
                 {
                     if (item.Stats.Combustion) list.Add(item);
                 }
-                GroupCooldown(list, 0, 180, true, false);
+                GroupCooldown(list, 0, 180.0 + 15.0, true, false);
             }
 
             public void GroupArcanePower()
@@ -1990,6 +1996,7 @@ namespace Rawr.Mage
 
             private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool combustionMode, bool coldSnapMode)
             {
+                const double eps = 0.00001;
                 List<SequenceGroup> existingGroup = new List<SequenceGroup>();
                 List<SequenceGroup> unresolvedGroup = new List<SequenceGroup>();
                 foreach (SequenceItem item in cooldownItems)
@@ -2073,11 +2080,11 @@ namespace Rawr.Mage
                 int maxChains = 0;
                 if (combustionMode)
                 {
-                    maxChains = (int)Math.Ceiling(combustionCount - 0.000001);
+                    maxChains = (int)Math.Ceiling(combustionCount - eps);
                 }
                 else
                 {
-                    maxChains = (int)Math.Ceiling(totalDuration / maxDuration);
+                    maxChains = (int)Math.Ceiling((totalDuration - eps) / maxDuration);
                 }
                 List<SequenceGroup> partialGroups = new List<SequenceGroup>();
                 foreach (List<SequenceItem> chain in chains)
@@ -2111,7 +2118,7 @@ namespace Rawr.Mage
                     {
                         gap = maxDuration - group.Duration;
                     }
-                    if (gap > 0.000001)
+                    if (gap > eps)
                     {
                         int maxSegDistance = (int)Math.Ceiling(maxDuration / 30) + 1;
                         for (int j = i + 1; j < partialGroups.Count; j++)
@@ -2135,43 +2142,48 @@ namespace Rawr.Mage
                                 group.AddRange(subgroup.Item);
                                 partialGroups.RemoveAt(j);
                                 j--;
+                                if (gap < eps) break;
                             }
                         }
-                        for (int j = 0; j < unchained.Count; j++)
+                        if (gap > eps)
                         {
-                            SequenceItem item = unchained[j];
-                            if (group.Segment == -1 || Math.Abs(group.Segment - item.Segment) < maxSegDistance)
+                            for (int j = 0; j < unchained.Count; j++)
                             {
-                                double gapReduction = 0;
-                                if (combustionMode)
+                                SequenceItem item = unchained[j];
+                                if (group.Segment == -1 || Math.Abs(group.Segment - item.Segment) < maxSegDistance)
                                 {
-                                    gapReduction = item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
-                                }
-                                else
-                                {
-                                    gapReduction = item.Duration;
-                                }
-                                if (gapReduction <= gap + 0.000001)
-                                {
-                                    gap -= gapReduction;
-                                    group.Add(item);
-                                    unchained.RemoveAt(j);
-                                    j--;
-                                }
-                                else
-                                {
-                                    double split = 0;
+                                    double gapReduction = 0;
                                     if (combustionMode)
                                     {
-                                        split = gap * (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                                        gapReduction = item.Duration / (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
                                     }
                                     else
                                     {
-                                        split = gap;
+                                        gapReduction = item.Duration;
                                     }
-                                    group.Add(Split(item, split));
-                                    gap = 0;
-                                    break;
+                                    if (gapReduction <= gap + eps)
+                                    {
+                                        gap -= gapReduction;
+                                        group.Add(item);
+                                        unchained.RemoveAt(j);
+                                        j--;
+                                        if (gap < eps) break;
+                                    }
+                                    else
+                                    {
+                                        double split = 0;
+                                        if (combustionMode)
+                                        {
+                                            split = gap * (item.Stats.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                                        }
+                                        else
+                                        {
+                                            split = gap;
+                                        }
+                                        group.Add(Split(item, split));
+                                        gap = 0;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -2329,6 +2341,7 @@ namespace Rawr.Mage
                 bool[] used = new bool[N];
                 int[] index = new int[N];
                 int[] coldsnap = new int[N];
+                double[] coldsnapTime = new double[N];
                 int[] maxIntersect = new int[N];
                 for (int j = 0; j < N; j++) itemList[j].SuperIndex = -1;
                 int super = -1;
@@ -2516,6 +2529,7 @@ namespace Rawr.Mage
                                         time = Math.Max(time, item.MinTime);
                                         // check constraints
                                         List<int> coldsnapStarts = new List<int>();
+                                        SequenceGroup coldsnapGroup = null;
                                         foreach (SequenceGroup group in item.Group)
                                         {
                                             foreach (CooldownConstraint constraint in group.Constraint)
@@ -2533,6 +2547,7 @@ namespace Rawr.Mage
                                                 }
                                                 else
                                                 {
+                                                    coldsnapGroup = group;
                                                     // if we're in group with already placed item then no need to redo all this
                                                     if (i > 0 && itemList[index[i - 1]].Group.Contains(group)) continue;
                                                     int minIndex = i;
@@ -2550,6 +2565,7 @@ namespace Rawr.Mage
                                                 }
                                             }
                                         }
+                                        bool valid = true;
                                         // we absolutely can't come faster than time
                                         // now check coldsnap constraints
                                         // the constraints should link to all the other icy veins groups
@@ -2561,14 +2577,29 @@ namespace Rawr.Mage
                                             // this is only called for first coldsnap item in group
                                             coldsnapStarts.Sort();
                                             int lastColdsnap = -1;
-                                            for (int j = 0; j < coldsnapStarts.Count - 1; j++)
+                                            for (int j = 0; j < i; j++)
                                             {
-                                                if (constructionTime[coldsnapStarts[j + 1]] - constructionTime[coldsnapStarts[j]] < 180 - 0.000001)
+                                                if (coldsnap[j] == 1) lastColdsnap = j;
+                                            }
+                                            if (coldsnapGroup.Duration > 20.0 + 0.000001)
+                                            {
+                                                // we need internal coldsnap
+                                                if (coldsnap[i] == 1)
                                                 {
-                                                    lastColdsnap = j;
+                                                    double normalTime = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + 180);
+                                                    double coldsnapReady = 0;
+                                                    if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + 8 * 60 * (1 - 0.1 * SequenceItem.Calculations.CalculationOptions.IceFloes);
+                                                    // we have to do first one on normal time and have coldsnap ready in the middle
+                                                    time = Math.Max(normalTime, coldsnapReady - 20.0);
+                                                    coldsnapTime[i] = Math.Max(time, coldsnapReady);
+                                                }
+                                                else
+                                                {
+                                                    // can't do without coldsnap
+                                                    valid = false;
                                                 }
                                             }
-                                            if (time - constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] >= 180 - 0.000001)
+                                            else if (time - constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] >= 180 - 0.000001)
                                             {
                                                 // don't need coldsnap and can start right at time
                                                 coldsnap[i] = 0;
@@ -2577,9 +2608,9 @@ namespace Rawr.Mage
                                             {
                                                 // use coldsnap
                                                 double normalTime = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + 180);
-                                                double coldsnapTime = 0;
-                                                if (lastColdsnap >= 0) coldsnapTime = constructionTime[coldsnapStarts[lastColdsnap]] + 8 * 60 * (1 - 0.1 * SequenceItem.Calculations.CalculationOptions.IceFloes);
-                                                if (coldsnapTime >= normalTime)
+                                                double coldsnapReady = 0;
+                                                if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + 8 * 60 * (1 - 0.1 * SequenceItem.Calculations.CalculationOptions.IceFloes);
+                                                if (coldsnapReady >= normalTime)
                                                 {
                                                     // coldsnap won't be ready until IV will be back anyway, so we don't actually need it
                                                     coldsnap[i] = 0;
@@ -2588,7 +2619,8 @@ namespace Rawr.Mage
                                                 else
                                                 {
                                                     // go now or when coldsnap is ready
-                                                    time = Math.Max(coldsnapTime, time);
+                                                    time = Math.Max(coldsnapReady, time);
+                                                    coldsnapTime[i] = Math.Max(coldsnapReady, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]]);
                                                 }
                                             }
                                             else
@@ -2598,27 +2630,49 @@ namespace Rawr.Mage
                                                 time = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + 180); 
                                             }
                                         }
+                                        else if (coldsnapGroup != null && coldsnapGroup.Duration > 20.0 + 0.000001)
+                                        {
+                                            // need internal coldsnap, this is first IV item being placed so all cooldowns are ready
+                                            // but we need to use coldsnap
+                                            if (coldsnap[i] == 1)
+                                            {
+                                                coldsnapTime[i] = time;
+                                            }
+                                            else
+                                            {
+                                                // can't do without coldsnap
+                                                valid = false;
+                                            }
+                                        }
                                         else
                                         {
                                             // no coldsnap constraints active
                                             coldsnap[i] = 0;
                                         }
-                                        List<double> adjustedConstructionTime = new List<double>(constructionTime);
-                                        adjustedConstructionTime.Add(time);
-                                        // adjust min time of items in same super group
-                                        for (int j = adjustedConstructionTime.Count - 2; j >= 0 && itemList[index[j]].SuperIndex == item.SuperIndex; j--)
+                                        if (valid)
                                         {
-                                            time -= itemList[index[j]].Duration;
-                                            adjustedConstructionTime[j] = time;
+                                            List<double> adjustedConstructionTime = new List<double>(constructionTime);
+                                            adjustedConstructionTime.Add(time);
+                                            // adjust min time of items in same super group
+                                            for (int j = adjustedConstructionTime.Count - 2; j >= 0 && itemList[index[j]].SuperIndex == item.SuperIndex; j--)
+                                            {
+                                                time -= itemList[index[j]].Duration;
+                                                adjustedConstructionTime[j] = time;
+                                            }
+                                            constructionTimeHistory[i] = constructionTime;
+                                            constructionTime = adjustedConstructionTime;
+                                            i++;
+                                            if (i < N)
+                                            {
+                                                index[i] = 0;
+                                                maxIntersect[i] = 0;
+                                                coldsnap[i] = 2;
+                                            }
                                         }
-                                        constructionTimeHistory[i] = constructionTime;
-                                        constructionTime = adjustedConstructionTime;
-                                        i++;
-                                        if (i < N)
+                                        else
                                         {
-                                            index[i] = 0;
-                                            maxIntersect[i] = 0;
-                                            coldsnap[i] = 2;
+                                            used[index[i]] = false;
+                                            superLeft[itemList[index[i]].SuperIndex]++;
                                         }
                                     }
                                     else
@@ -2747,7 +2801,7 @@ namespace Rawr.Mage
                 do
                 {
                     // verify we're not leaking mana
-                    double verifyDeficit = -ManaCheck();
+                    /*double verifyDeficit = -ManaCheck();
                     for (double _potTime = potTime; _potTime > 0.000001; _potTime -= ManaPotionTime)
                     {
                         verifyDeficit -= (1 + BasicStats.BonusManaPotion) * 2400;
@@ -2758,10 +2812,11 @@ namespace Rawr.Mage
                         verifyDeficit -= (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
                     }
                     verifyDeficit -= EvocationRegen * evoTime;
+                    if (verifyDeficit < 0.0) verifyDeficit = 0.0;
                     if (Math.Abs(verifyDeficit - ghostMana) > 0.000001)
                     {
                         verifyDeficit = 0.0;
-                    }
+                    }*/
                     double mana = Evaluate(null, EvaluationMode.ManaAtTime, time);
                     double maxMps = double.PositiveInfinity;
                     if (!((potTime > 0 && nextPot == 0) || (gemTime > 0 && nextGem == 0) || (evoTime > 0 && nextEvo == 0)))
@@ -2920,14 +2975,23 @@ namespace Rawr.Mage
                             }
                             // account for to be used consumables (don't assume evo during super group unless we haven't placed the first one, in that case it will actually be placed before the super group)
                             double manaUsed = mana;
-                            if (potTime > 0 && nextPot < t)
+                            for (double _potTime = potTime, _nextPot = nextPot; _potTime > 0.000001 && _nextPot < t; _potTime -= ManaPotionTime, _nextPot += 120.0)
+                            {
+                                targetmana += (1 + BasicStats.BonusManaPotion) * 2400;
+                            }
+                            int _gemCount = gemCount;
+                            for (double _gemTime = gemTime, _nextGem = nextGem; _gemTime > 0.000001 && _nextGem < t; _gemTime -= ManaPotionTime, _nextGem += 120.0, _gemCount++)
+                            {
+                                targetmana += (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
+                            }
+                            /*if (potTime > 0 && nextPot < t)
                             {
                                 targetmana += (1 + BasicStats.BonusManaPotion) * 2400;
                             }
                             if (gemTime > 0 && nextGem < t)
                             {
                                 targetmana += (1 + BasicStats.BonusManaGem) * gemValue[gemCount];
-                            }
+                            }*/
                             if (evoTime > 0 && nextEvo == 0.0)
                             {
                                 targetmana += EvocationRegen * Math.Min(evoTime, EvocationDuration);
@@ -3020,6 +3084,7 @@ namespace Rawr.Mage
                             }
                         }
                     }
+                    if (lowestMpsIndex == -1) goto Abort;
                     mana = Evaluate(null, EvaluationMode.ManaAtTime, time);
                     goto VerifyOOM;
                 Abort:
@@ -3125,6 +3190,7 @@ namespace Rawr.Mage
 
             public double Evaluate(StringBuilder timing, EvaluationMode mode, params double[] data)
             {
+                const double eps = 0.00001;
                 double time = 0;
                 double mana = SequenceItem.Calculations.BasicStats.Mana;
                 float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
@@ -3206,10 +3272,10 @@ namespace Rawr.Mage
                     if (mps > 0)
                     {
                         double maxtime = mana / mps;
-                        if (duration > maxtime)
+                        if (duration > maxtime + eps)
                         {
                             // allow some leeway due to rounding errors from LP solver
-                            if (!(i == sequence.Count - 1 && mps * duration < mana + 100))
+                            if (!(i == sequence.Count - 1 && mps * duration < mana + 200))
                             {
                                 unexplained += duration - maxtime;
                                 if (timing != null && !manaWarning) timing.AppendLine("WARNING: Will run out of mana!");
@@ -3254,7 +3320,7 @@ namespace Rawr.Mage
                     // Mana Potion
                     if (index == 3)
                     {
-                        if (potionCooldown > 0.000001)
+                        if (potionCooldown > eps)
                         {
                             unexplained += sequence[i].Duration;
                             if (timing != null) timing.AppendLine("WARNING: Potion cooldown not ready!");
@@ -3275,7 +3341,7 @@ namespace Rawr.Mage
                     // Mana Gem
                     if (index == 4)
                     {
-                        if (gemCooldown > 0.000001)
+                        if (gemCooldown > eps)
                         {
                             unexplained += sequence[i].Duration;
                             if (timing != null) timing.AppendLine("WARNING: Gem cooldown not ready!");
@@ -3297,7 +3363,7 @@ namespace Rawr.Mage
                     // Evocation
                     if (index == 2)
                     {
-                        if (evocationCooldown > 0.000001)
+                        if (evocationCooldown > eps)
                         {
                             unexplained += duration;
                             if (timing != null) timing.AppendLine("WARNING: Evocation cooldown not ready!");
@@ -3315,7 +3381,7 @@ namespace Rawr.Mage
                         }
                     }
                     if (mana < 0) mana = 0;
-                    if (mana > BasicStats.Mana + 0.000001)
+                    if (mana > BasicStats.Mana + eps)
                     {
                         if (timing != null) timing.AppendLine("INFO: Mana overflow!");
                         mana = BasicStats.Mana;
@@ -3324,7 +3390,7 @@ namespace Rawr.Mage
                     // Drums of Battle
                     if (index == 5)
                     {
-                        if (drumsCooldown > 0.000001)
+                        if (drumsCooldown > eps)
                         {
                             unexplained += duration;
                             if (timing != null && !drumsWarning) timing.AppendLine("WARNING: Drums of Battle cooldown not ready!");
@@ -3342,13 +3408,13 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.DrumsOfBattle)
                         {
-                            if (time + duration > drumsTime + 30 + 0.000001)
+                            if (time + duration > drumsTime + 30 + eps)
                             {
                                 unexplained += time + duration - drumsTime - 30;
                                 if (timing != null) timing.AppendLine("WARNING: Drums of Battle duration too long!");
                             }
                         }
-                        else if (duration > 0 && 30 - (time - drumsTime) > 0.000001)
+                        else if (duration > 0 && 30 - (time - drumsTime) > eps)
                         {
                             //unexplained += Math.Min(duration, 30 - (time - drumsTime));
                             if (timing != null) timing.AppendLine("INFO: Drums of Battle is still up!");
@@ -3367,13 +3433,13 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.FlameCap)
                         {
-                            if (time + duration > flameCapTime + 60 + 0.000001)
+                            if (time + duration > flameCapTime + 60 + eps)
                             {
                                 unexplained += time + duration - flameCapTime - 60;
                                 if (timing != null) timing.AppendLine("WARNING: Flame Cap duration too long!");
                             }
                         }
-                        else if (duration > 0 && 60 - (time - flameCapTime) > 0.000001)
+                        else if (duration > 0 && 60 - (time - flameCapTime) > eps)
                         {
                             //unexplained += Math.Min(duration, 15 - (time - apTime));
                             if (timing != null) timing.AppendLine("INFO: Flame Cap is still up!");
@@ -3383,7 +3449,7 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.FlameCap)
                         {
-                            if (gemCooldown > 0.000001)
+                            if (gemCooldown > eps)
                             {
                                 unexplained += duration;
                                 if (timing != null && !gemWarning) timing.AppendLine("WARNING: Flame Cap cooldown not ready!");
@@ -3403,13 +3469,13 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.DestructionPotion)
                         {
-                            if (time + duration > destructionTime + 15 + 0.000001)
+                            if (time + duration > destructionTime + 15 + eps)
                             {
                                 unexplained += time + duration - destructionTime - 15;
                                 if (timing != null) timing.AppendLine("WARNING: Destruction Potion duration too long!");
                             }
                         }
-                        else if (duration > 0 && 15 - (time - destructionTime) > 0.000001)
+                        else if (duration > 0 && 15 - (time - destructionTime) > eps)
                         {
                             //unexplained += Math.Min(duration, 15 - (time - apTime));
                             if (timing != null) timing.AppendLine("INFO: Destruction Potion is still up!");
@@ -3419,7 +3485,7 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.DestructionPotion)
                         {
-                            if (potionCooldown > 0.000001)
+                            if (potionCooldown > eps)
                             {
                                 unexplained += duration;
                                 if (timing != null && !potionWarning) timing.AppendLine("WARNING: Destruction Potion cooldown not ready!");
@@ -3439,13 +3505,13 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.Trinket1)
                         {
-                            if (time + duration > trinket1time + Trinket1Duration + 0.000001)
+                            if (time + duration > trinket1time + Trinket1Duration + eps)
                             {
                                 unexplained += time + duration - trinket1time - Trinket1Duration;
                                 if (timing != null) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket1Name + " duration too long!");
                             }
                         }
-                        else if (duration > 0 && Trinket1Duration - (time - trinket1time) > 0.000001)
+                        else if (duration > 0 && Trinket1Duration - (time - trinket1time) > eps)
                         {
                             //unexplained += Math.Min(duration, Trinket1Duration - (time - trinket1time));
                             if (timing != null) timing.AppendLine("INFO: " + SequenceItem.Calculations.Trinket1Name + " is still up!");
@@ -3455,7 +3521,7 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.Trinket1)
                         {
-                            if (trinket1Cooldown > 0.000001)
+                            if (trinket1Cooldown > eps)
                             {
                                 unexplained += duration;
                                 if (timing != null && !trinket1warning) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket1Name + " cooldown not ready!");
@@ -3475,13 +3541,13 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.Trinket2)
                         {
-                            if (time + duration > trinket2time + Trinket2Duration + 0.000001)
+                            if (time + duration > trinket2time + Trinket2Duration + eps)
                             {
                                 unexplained += time + duration - trinket2time - Trinket2Duration;
                                 if (timing != null) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket2Name + " duration too long!");
                             }
                         }
-                        else if (duration > 0 && Trinket2Duration - (time - trinket2time) > 0.000001)
+                        else if (duration > 0 && Trinket2Duration - (time - trinket2time) > eps)
                         {
                             //unexplained += Math.Min(duration, Trinket2Duration - (time - trinket2time));
                             if (timing != null) timing.AppendLine("INFO: " + SequenceItem.Calculations.Trinket2Name + " is still up!");
@@ -3491,7 +3557,7 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.Trinket2)
                         {
-                            if (trinket2Cooldown > 0.000001)
+                            if (trinket2Cooldown > eps)
                             {
                                 unexplained += duration;
                                 if (timing != null && !trinket2warning) timing.AppendLine("WARNING: " + SequenceItem.Calculations.Trinket2Name + " cooldown not ready!");
@@ -3511,13 +3577,13 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.Heroism)
                         {
-                            if (time + duration > heroismTime + 40 + 0.000001)
+                            if (time + duration > heroismTime + 40 + eps)
                             {
                                 unexplained += time + duration - heroismTime - 40;
                                 if (timing != null) timing.AppendLine("WARNING: Heroism duration too long!");
                             }
                         }
-                        else if (duration > 0 && 40 - (time - heroismTime) > 0.000001)
+                        else if (duration > 0 && 40 - (time - heroismTime) > eps)
                         {
                             //unexplained += Math.Min(duration, 40 - (time - heroismTime));
                             if (timing != null) timing.AppendLine("INFO: Heroism is still up!");
@@ -3553,7 +3619,7 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.MoltenFury)
                         {
-                            if (time < moltenFuryStart - 0.000001)
+                            if (time < moltenFuryStart - eps)
                             {
                                 unexplained += Math.Min(duration, moltenFuryStart - time);
                                 if (timing != null) timing.AppendLine("WARNING: Molten Fury is not available yet!");
@@ -3570,14 +3636,14 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.Combustion)
                         {
-                            if (duration / (stats.CombustionDuration * spell.CastTime / spell.CastProcs) >= combustionLeft + 0.000001)
+                            if (duration / (stats.CombustionDuration * spell.CastTime / spell.CastProcs) >= combustionLeft + eps)
                             {
                                 unexplained += time + duration - combustionTime - (stats.CombustionDuration * spell.CastTime / spell.CastProcs);
                                 if (timing != null) timing.AppendLine("WARNING: Combustion duration too long!");
                             }
                             combustionLeft -= duration / (stats.CombustionDuration * spell.CastTime / spell.CastProcs);
                         }
-                        else if (spell != null && duration > 0 && combustionLeft > 0.000001)
+                        else if (spell != null && duration > 0 && combustionLeft > eps)
                         {
                             //unexplained += Math.Min(duration, 15 - (time - apTime));
                             combustionTime = -1;
@@ -3594,7 +3660,7 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.Combustion)
                         {
-                            if (combustionCooldown > 0.000001)
+                            if (combustionCooldown > eps)
                             {
                                 unexplained += duration;
                                 if (timing != null && !combustionWarning) timing.AppendLine("WARNING: Combustion cooldown not ready!");
@@ -3616,13 +3682,13 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.ArcanePower)
                         {
-                            if (time + duration > apTime + 15 + 0.000001)
+                            if (time + duration > apTime + 15 + eps)
                             {
                                 unexplained += time + duration - apTime - 15;
                                 if (timing != null) timing.AppendLine("WARNING: Arcane Power duration too long!");
                             }
                         }
-                        else if (duration > 0 && 15 - (time - apTime) > 0.000001)
+                        else if (duration > 0 && 15 - (time - apTime) > eps)
                         {
                             //unexplained += Math.Min(duration, 15 - (time - apTime));
                             if (timing != null) timing.AppendLine("INFO: Arcane Power is still up!");
@@ -3632,7 +3698,7 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.ArcanePower)
                         {
-                            if (apCooldown > 0.000001)
+                            if (apCooldown > eps)
                             {
                                 unexplained += duration;
                                 if (timing != null && !apWarning) timing.AppendLine("WARNING: Arcane Power cooldown not ready!");
@@ -3652,22 +3718,22 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.IcyVeins)
                         {
-                            if (time + duration > ivTime + 20 + 0.000001)
+                            if (time + duration > ivTime + 20 + eps)
                             {
-                                if (coldsnapCooldown <= (ivTime + 20 - time) + 0.000001)
+                                if (coldsnapCooldown <= (ivTime + 20 - time) + eps)
                                 {
                                     ivTime += 20;
                                     ivCooldown += 20;
                                     coldsnapCooldown = coldsnapCooldownDuration - (ivTime + 20 - time);
                                 }
-                                if (time + duration > ivTime + 20 + 0.000001)
+                                if (time + duration > ivTime + 20 + eps)
                                 {
                                     unexplained += time + duration - ivTime - 20;
                                     if (timing != null) timing.AppendLine("WARNING: Icy Veins duration too long!");
                                 }
                             }
                         }
-                        else if (duration > 0 && 20 - (time - ivTime) > 0.000001)
+                        else if (duration > 0 && 20 - (time - ivTime) > eps)
                         {
                             //unexplained += Math.Min(duration, 20 - (time - ivTime));
                             if (timing != null) timing.AppendLine("INFO: Icy Veins is still up!");
@@ -3677,7 +3743,7 @@ namespace Rawr.Mage
                     {
                         if (stats != null && stats.IcyVeins)
                         {
-                            if (ivCooldown > 0.000001 && coldsnapCooldown > 0.000001)
+                            if (ivCooldown > eps && coldsnapCooldown > eps)
                             {
                                 unexplained += duration;
                                 if (timing != null && !ivWarning) timing.AppendLine("WARNING: Icy Veins cooldown not ready!");
@@ -3685,7 +3751,7 @@ namespace Rawr.Mage
                             }
                             else
                             {
-                                if (ivCooldown > 0.000001 && coldsnapCooldown <= 0.000001)
+                                if (ivCooldown > eps && coldsnapCooldown <= eps)
                                 {
                                     coldsnapCooldown = coldsnapCooldownDuration - (time - Math.Max(time + coldsnapCooldown, lastIVstart));
                                 }
@@ -3754,13 +3820,13 @@ namespace Rawr.Mage
                     combustionCooldown -= duration;
                     drumsCooldown -= duration;
                     coldsnapCooldown -= duration;
-                    if (apTime >= 0 && 15 - (time - apTime) <= 0.000001) apTime = -1;
-                    if (ivTime >= 0 && 20 - (time - ivTime) <= 0.000001) ivTime = -1;
-                    if (heroismTime >= 0 && 40 - (time - heroismTime) <= 0.000001) heroismTime = -1;
-                    if (destructionTime >= 0 && 15 - (time - destructionTime) <= 0.000001) destructionTime = -1;
-                    if (flameCapTime >= 0 && 60 - (time - flameCapTime) <= 0.000001) flameCapTime = -1;
-                    if (trinket1time >= 0 && Trinket1Duration - (time - trinket1time) <= 0.000001) trinket1time = -1;
-                    if (trinket2time >= 0 && Trinket2Duration - (time - trinket2time) <= 0.000001) trinket2time = -1;
+                    if (apTime >= 0 && 15 - (time - apTime) <= eps) apTime = -1;
+                    if (ivTime >= 0 && 20 - (time - ivTime) <= eps) ivTime = -1;
+                    if (heroismTime >= 0 && 40 - (time - heroismTime) <= eps) heroismTime = -1;
+                    if (destructionTime >= 0 && 15 - (time - destructionTime) <= eps) destructionTime = -1;
+                    if (flameCapTime >= 0 && 60 - (time - flameCapTime) <= eps) flameCapTime = -1;
+                    if (trinket1time >= 0 && Trinket1Duration - (time - trinket1time) <= eps) trinket1time = -1;
+                    if (trinket2time >= 0 && Trinket2Duration - (time - trinket2time) <= eps) trinket2time = -1;
                     if (drumsTime >= 0 && 30 - (time - drumsTime) <= 0) drumsTime = -1;
                 }
                 if (timing != null && unexplained > 0)
