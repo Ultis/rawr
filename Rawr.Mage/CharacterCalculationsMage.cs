@@ -1718,8 +1718,13 @@ namespace Rawr.Mage
 
             private double RemoveIndex(int index)
             {
+                return RemoveIndex(index, 0);
+            }
+
+            private double RemoveIndex(int index, int startAt)
+            {
                 double ret = 0;
-                for (int i = 0; i < sequence.Count; i++)
+                for (int i = startAt; i < sequence.Count; i++)
                 {
                     if (sequence[i].Index == index)
                     {
@@ -2741,6 +2746,22 @@ namespace Rawr.Mage
                 double nextEvo = 0;
                 do
                 {
+                    // verify we're not leaking mana
+                    double verifyDeficit = -ManaCheck();
+                    for (double _potTime = potTime; _potTime > 0.000001; _potTime -= ManaPotionTime)
+                    {
+                        verifyDeficit -= (1 + BasicStats.BonusManaPotion) * 2400;
+                    }
+                    int _gemCount = gemCount;
+                    for (double _gemTime = gemTime; _gemTime > 0.000001; _gemTime -= ManaPotionTime, _gemCount++)
+                    {
+                        verifyDeficit -= (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
+                    }
+                    verifyDeficit -= EvocationRegen * evoTime;
+                    if (Math.Abs(verifyDeficit - ghostMana) > 0.000001)
+                    {
+                        verifyDeficit = 0.0;
+                    }
                     double mana = Evaluate(null, EvaluationMode.ManaAtTime, time);
                     double maxMps = double.PositiveInfinity;
                     if (!((potTime > 0 && nextPot == 0) || (gemTime > 0 && nextGem == 0) || (evoTime > 0 && nextEvo == 0)))
@@ -2750,10 +2771,10 @@ namespace Rawr.Mage
                         {
                             m += (1 + BasicStats.BonusManaPotion) * 2400;
                         }
-                        int _gemCount = gemCount;
-                        for (double _gemTime = gemTime; _gemTime > 0; _gemTime -= ManaPotionTime, _gemCount++)
+                        int __gemCount = gemCount;
+                        for (double _gemTime = gemTime; _gemTime > 0; _gemTime -= ManaPotionTime, __gemCount++)
                         {
-                            m += (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
+                            m += (1 + BasicStats.BonusManaGem) * gemValue[__gemCount];
                         }
                         m += EvocationRegen * evoTime;
                         maxMps = m / (fight - time);
@@ -2840,29 +2861,54 @@ namespace Rawr.Mage
                     if (maxMps < minMps) maxMps = minMps; // if we have min mps constraint then at that point we'll be full on mana, whatever max mana has to be handled will have to deal with it later
                     double lastTargetMana = -1;
                     double extraMana = 0;
+                    double oomtime = targetTime;
                 Retry:
-                    SortByMps(true, minMps, maxMps, time, targetTime, extraMana, mana);
-                    // guard against trailing oom
-                    double targetmana = Evaluate(null, EvaluationMode.ManaAtTime, targetTime);
-                    if (targetmana != lastTargetMana)
+                    SortByMps(true, minMps, maxMps, time, Math.Min(oomtime, targetTime), extraMana, mana);
+                VerifyOOM:
+                    // guard against oom
+                    //double targetmana = Evaluate(null, EvaluationMode.ManaAtTime, targetTime);
+                    double targetmana = mana;
+                    double t = 0;
+                    int i;
+                    for (i = 0; i < sequence.Count; i++)
                     {
-                        double tmana = targetmana;
-                        double t = 0;
-                        int i;
-                        for (i = 0; i < sequence.Count; i++)
+                        double d = sequence[i].Duration;
+                        if (sequence[i].Index == 3 || sequence[i].Index == 4) d = 0;
+                        if (d > 0 && t + d > targetTime)
                         {
-                            double d = sequence[i].Duration;
-                            if (sequence[i].Index == 3 || sequence[i].Index == 4) d = 0;
-                            if (d > 0 && t + d > targetTime)
-                            {
-                                break;
-                            }
-                            t += d;
+                            targetmana -= sequence[i].Mps * (targetTime - t);
+                            break;
                         }
-                        if (!(i >= sequence.Count || sequence[i].Group.Count == 0 || (targetTime <= t && (i == 0 || sequence[i - 1].SuperGroup != sequence[i].SuperGroup))))
+                        else if (d > 0 && t + d > time)
+                        {
+                            targetmana -= sequence[i].Mps * sequence[i].Duration;
+                            if (i < sequence.Count - 1 && targetmana < -0.000001 && !((nextPot == 0.0 && potTime > 0) || (nextGem == 0.0 && gemTime > 0) || (nextEvo == 0.0 && evoTime > 0))) // only worry if we already started all mana cooldowns and we're not at last item (at which point we can't do anything and it's only ghost mana left)
+                            {
+                                // we run oom during construction
+                                if (oomtime < targetTime && Math.Abs(t + d - oomtime) < 0.000001 && lastTargetMana == targetmana)
+                                {
+                                    // we were not successful in recovering from oom
+                                    // go into swap mode
+                                    goto SwapRecovery;
+                                }
+                                oomtime = t + d;
+                                minMps = -(BasicStats.Mana - mana) / (oomtime - time);
+                                extraMana = -targetmana;
+                                lastTargetMana = targetmana;
+                                goto Retry;
+                            }
+                        }
+                        t += d;
+                    }
+                    if (oomtime < targetTime) lastTargetMana = -1;
+                    double tmana = targetmana;
+                    oomtime = targetTime;
+                    if (!(i >= sequence.Count - 1 || sequence[i].Group.Count == 0 || (targetTime <= t && (i == 0 || sequence[i - 1].SuperGroup != sequence[i].SuperGroup))))
+                    {
+                        SequenceGroup super = sequence[i].SuperGroup;
+                        if (targetmana != lastTargetMana)
                         {
                             // count mana till end of super group
-                            SequenceGroup super = sequence[i].SuperGroup;
                             targetmana -= sequence[i].Mps * (sequence[i].Duration - (targetTime - t));
                             t += sequence[i].Duration;
                             i++;
@@ -2872,7 +2918,7 @@ namespace Rawr.Mage
                                 t += sequence[i].Duration;
                                 i++;
                             }
-                            // account for to be used consumables (don't assume evo during super group)
+                            // account for to be used consumables (don't assume evo during super group unless we haven't placed the first one, in that case it will actually be placed before the super group)
                             double manaUsed = mana;
                             if (potTime > 0 && nextPot < t)
                             {
@@ -2882,8 +2928,12 @@ namespace Rawr.Mage
                             {
                                 targetmana += (1 + BasicStats.BonusManaGem) * gemValue[gemCount];
                             }
+                            if (evoTime > 0 && nextEvo == 0.0)
+                            {
+                                targetmana += EvocationRegen * Math.Min(evoTime, EvocationDuration);
+                            }
                             if (t >= fight) targetmana += ghostMana;
-                            if (targetmana < 0)
+                            if (targetmana < -0.000001)
                             {
                                 //maxMps = (mana - (tmana - targetmana)) / (targetTime - time);
                                 minMps = -(BasicStats.Mana - mana) / (targetTime - time);
@@ -2892,7 +2942,87 @@ namespace Rawr.Mage
                                 goto Retry;
                             }
                         }
+                        else
+                        {
+                            goto SwapRecovery;
+                        }
                     }
+                    goto Abort;
+                SwapRecovery:
+                    // we run out of mana in a long super group and most likely we've placed
+                    // some mana consumables inside the group already or the group is at its
+                    // minimum allowed time, preventing us to move things in front of it
+                    // resort to finding a non-cooldown high mps item before group and low mps
+                    // item after group and swap to gain extraMana mana
+                    // evaluate how much space we have with already placed mana consumables
+                    // if gap is less than extraMana then the super group is probably too expensive
+                    // for our mana pool, consider starting with full mana before super group
+                    // and delaying mana consumables to be used inside the super group
+                    int superIndex = i;
+                    double superTime = t;
+                    int lowestMpsIndex = 0;
+                    while (extraMana > 0.000001 && lowestMpsIndex >= 0)
+                    {
+                        i = superIndex;
+                        t = superTime;
+                        lowestMpsIndex = -1;
+                        for (; i < sequence.Count; i++)
+                        {
+                            if (sequence[i].Group.Count == 0 && (lowestMpsIndex == -1 || sequence[i].Mps < sequence[lowestMpsIndex].Mps))
+                            {
+                                lowestMpsIndex = i;
+                            }
+                        }
+                        if (lowestMpsIndex > -1)
+                        {
+                            // we've found a suitable candidate for swap
+                            // find first suitable non-cooldown with higher mps to perform swap
+                            // and validate mana gap as we go over items
+                            for (i = superIndex; i >= 0; i--)
+                            {
+                                double mpsdiff = sequence[i].Mps - sequence[lowestMpsIndex].Mps;
+                                if (sequence[i].Group.Count == 0 && (sequence[i].Index < 2 || sequence[i].Index > 4) && mpsdiff > 0)
+                                {
+                                    // we can do the swap, this will happen at i < superIndex
+                                    double neededSwap = extraMana / mpsdiff;
+                                    if (neededSwap > sequence[i].Duration) neededSwap = sequence[i].Duration;
+                                    if (neededSwap > sequence[lowestMpsIndex].Duration) neededSwap = sequence[lowestMpsIndex].Duration;
+                                    if (neededSwap < sequence[i].Duration - 0.000001)
+                                    {
+                                        SplitAt(i, sequence[i].Duration - neededSwap);
+                                        i++;
+                                        superIndex++;
+                                        lowestMpsIndex++;
+                                    }
+                                    if (neededSwap < sequence[lowestMpsIndex].Duration - 0.000001)
+                                    {
+                                        SplitAt(lowestMpsIndex, neededSwap);
+                                    }
+                                    // make the swap and recalc timestamps
+                                    SequenceItem tmp = sequence[i];
+                                    sequence[i] = sequence[lowestMpsIndex];
+                                    sequence[lowestMpsIndex] = tmp;
+                                    ComputeTimestamps();
+                                    extraMana -= neededSwap * mpsdiff;
+                                    break;
+                                }
+                                else
+                                {
+                                    double imana = Evaluate(null, EvaluationMode.ManaAtTime, t);
+                                    if (BasicStats.Mana - imana < extraMana) goto Abort; // we cannot perform the swap
+                                    if (i > 0)
+                                    {
+                                        double d = sequence[i - 1].Duration;
+                                        if (sequence[i - 1].Index == 3 || sequence[i - 1].Index == 4) d = 0;
+                                        t -= d;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    mana = Evaluate(null, EvaluationMode.ManaAtTime, time);
+                    goto VerifyOOM;
+                Abort:
                     Compact();
                     double gem = nextGem;
                     double pot = nextPot;
@@ -2962,7 +3092,7 @@ namespace Rawr.Mage
                     double mps = sequence[i].Mps;
                     if (index == 3)
                     {
-                        for (double _potTime = duration; _potTime > 0; _potTime -= ManaPotionTime)
+                        for (double _potTime = duration; _potTime > 0.000001; _potTime -= ManaPotionTime)
                         {
                             mana += (1 + BasicStats.BonusManaPotion) * 2400;
                         }
@@ -2970,7 +3100,7 @@ namespace Rawr.Mage
                     else if (index == 4)
                     {
                         int _gemCount = 0;
-                        for (double _gemTime = duration; _gemTime > 0; _gemTime -= ManaPotionTime, _gemCount++)
+                        for (double _gemTime = duration; _gemTime > 0.000001; _gemTime -= ManaPotionTime, _gemCount++)
                         {
                             mana += (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
                         }
