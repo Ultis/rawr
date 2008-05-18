@@ -1254,15 +1254,15 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float BonusWarlockSchoolDamageOnCast
         {
-            get { return _rawadditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast]; }
-            set { _rawadditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float BonusWarlockDotExtension
         {
-            get { return _rawadditiveData[(int)AdditiveStat.BonusWarlockDotExtension]; }
-            set { _rawadditiveData[(int)AdditiveStat.BonusWarlockDotExtension] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarlockDotExtension]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusWarlockDotExtension] = value; }
         }
 
 #endregion
