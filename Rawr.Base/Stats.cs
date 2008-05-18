@@ -131,7 +131,9 @@ namespace Rawr
         WindfuryAPBonus,
         WrathDmg,
         DruidAshtongueTrinket,
-        AverageHeal
+        AverageHeal, 
+        BonusWarlockSchoolDamageOnCast, 
+        BonusWarlockDotExtension
     }
 
     enum MultiplicativeStat : int
@@ -163,6 +165,7 @@ namespace Rawr
         BonusShadowSpellPowerMultiplier,
         FoLMultiplier,
         ThreatIncreaseMultiplier,
+        BonusWarlockDotDamageMultiplier
     }
 
     enum InverseMultiplicativeStat : int
@@ -1248,6 +1251,20 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.AverageHeal] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusWarlockSchoolDamageOnCast
+        {
+            get { return _rawadditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast]; }
+            set { _rawadditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusWarlockDotExtension
+        {
+            get { return _rawadditiveData[(int)AdditiveStat.BonusWarlockDotExtension]; }
+            set { _rawadditiveData[(int)AdditiveStat.BonusWarlockDotExtension] = value; }
+        }
+
 #endregion
 
         #region MultiplicativeStats
@@ -1303,6 +1320,14 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Multiplicative]
+        public float BonusWarlockDotDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockDotDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockDotDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
