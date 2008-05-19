@@ -60,6 +60,7 @@ namespace Rawr.Mage
                     "Spell Info:Wand",
                     "Spell Info:Arcane Missiles",
                     "Spell Info:Arcane Blast*Spammed",
+                    "Spell Info:Arcane Blast(0)*Non-debuffed",
                     "Spell Info:Scorch",
                     "Spell Info:Fire Blast",
                     "Spell Info:Pyroblast*Requires talent points",

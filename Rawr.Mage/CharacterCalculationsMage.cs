@@ -3964,6 +3964,7 @@ namespace Rawr.Mage
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
             List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.ArcaneBlast33, SpellId.ABAMP, SpellId.ABAM, SpellId.AB3AMSc, SpellId.ABAM3Sc, SpellId.ABAM3Sc2, SpellId.ABAM3FrB, SpellId.ABAM3FrB2, SpellId.ABFrB3FrB, SpellId.ABFrB3FrBSc, SpellId.ABFB3FBSc, SpellId.FireballScorch, SpellId.FireballFireBlast, SpellId.FireBlast, SpellId.ABAM3ScCCAM, SpellId.ABAM3Sc2CCAM, SpellId.ABAM3FrBCCAM, SpellId.ABAM3FrBScCCAM, SpellId.ABAMCCAM, SpellId.ABAM3CCAM, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold/*, SpellId.ABAM3FrBCCAMFail*/, SpellId.ABFrB };
             Spell AB = GetSpell(SpellId.ArcaneBlast33);
+            BaseSpell bs;
             foreach (SpellId spell in spellList)
             {
                 Spell s = GetSpell(spell);
@@ -3971,7 +3972,7 @@ namespace Rawr.Mage
                 {
                     if (s is BaseSpell)
                     {
-                        BaseSpell bs = s as BaseSpell;
+                        bs = s as BaseSpell;
                         dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{9:F} - {10:F} Hit\r\n{11:F} - {12:F} Crit{13}\r\n{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier\r\nAB Spam Tradeoff: {8:F} Dpm", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), bs.MinHitDamage, bs.MaxHitDamage, bs.MinCritDamage, bs.MaxCritDamage, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : "")));
                     }
                     else
@@ -3980,6 +3981,8 @@ namespace Rawr.Mage
                     }
                 }
             }
+            bs = GetSpell(SpellId.ArcaneBlast00) as BaseSpell;
+            dictValues.Add("Arcane Blast(0)", String.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{9:F} - {10:F} Hit\r\n{11:F} - {12:F} Crit{13}\r\n{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier\r\nAB Spam Tradeoff: {8:F} Dpm", bs.DamagePerSecond, bs.CostPerSecond - bs.ManaRegenPerSecond, bs.ThreatPerSecond, bs.CastTime - Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - bs.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - bs.CostPerSecond + bs.ManaRegenPerSecond), bs.MinHitDamage, bs.MaxHitDamage, bs.MinCritDamage, bs.MaxCritDamage, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : "")));
             dictValues.Add("Total Damage", String.Format("{0:F}", DpsRating * FightDuration));
             dictValues.Add("Dps", String.Format("{0:F}", DpsRating));
             dictValues.Add("Tps", String.Format("{0:F}", Tps));
