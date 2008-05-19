@@ -1785,14 +1785,14 @@ namespace Rawr.Mage
                     {
                         valid = ValidateCooldown(Cooldown.Trinket2, trinket2duration, trinket2cooldown);
                     }
-                    if (valid && t1ismg && calculationOptions.FlameCap)
+                    /*if (valid && t1ismg && calculationOptions.FlameCap)
                     {
                         valid = ValidateSCB(Cooldown.Trinket1);
                     }
                     if (valid && t2ismg && calculationOptions.FlameCap)
                     {
                         valid = ValidateSCB(Cooldown.Trinket2);
-                    }
+                    }*/
                     // eliminate packing cycles
                     // example:
                     // H+IV:10
@@ -1957,7 +1957,59 @@ namespace Rawr.Mage
             int maxdist2 = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor(cooldownDuration / segmentDuration));
 
             bool valid = true;
-            double t1 = 0.0;
+
+            for (int seg = 0; seg < segments; seg++)
+            {
+                double inseg = segCount[seg];
+                if (inseg > 0)
+                {
+                    // verify that outside duration segments are 0
+                    for (int outseg = 0; outseg < segments; outseg++)
+                    {
+                        if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                        {
+                            if (segCount[outseg] > 0)
+                            {
+                                valid = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (!valid)
+                    {
+                        //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
+                        // branch on whether cooldown is used in this segment
+                        CompactLP cooldownUsed = lp.Clone();
+                        // cooldown not used
+                        //lp.IVHash += 1 << seg;
+                        //lp.Log += "Disable " + cooldown.ToString() + " at " + seg + "\r\n";
+                        for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(cooldown)) lp.EraseColumn(index);
+                        }
+                        heap.Push(lp);
+                        // cooldown used
+                        //cooldownUsed.Log += "Use " + cooldown.ToString() + " at " + seg + ", disable around\r\n";
+                        for (int outseg = 0; outseg < segments; outseg++)
+                        {
+                            if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                            {
+                                //cooldownUsed.IVHash += 1 << outseg;
+                                for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                                {
+                                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                                    if (stats != null && stats.GetCooldown(cooldown)) cooldownUsed.EraseColumn(index);
+                                }
+                            }
+                        }
+                        heap.Push(cooldownUsed);
+                        return false;
+                    }
+                }
+            }
+
+            /*double t1 = 0.0;
             double t2 = 0.0;
             double bestCoverage = 0.0;
 
@@ -2055,7 +2107,7 @@ namespace Rawr.Mage
                 heap.Push(lp);
 
                 return false;
-            }
+            }*/
             for (int seg = 0; seg < segments; seg++)
             {
                 double inseg = segCount[seg];
