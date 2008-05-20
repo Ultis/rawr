@@ -631,7 +631,7 @@ namespace Rawr
 		{
 			if (item.Slot == Item.ItemSlot.OffHand || 
 				(item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Idol) ||
-				(item.Slot == Item.ItemSlot.TwoHand && item.Stats.AttackPower < 300)) 
+				(item.Slot == Item.ItemSlot.TwoHand && item.Stats.AttackPower < 100)) 
 				return false;
 			return base.IsItemRelevant(item);
 		}

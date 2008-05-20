@@ -142,7 +142,6 @@ namespace Rawr
 		public int Powershift = 4;
 		public string PrimaryAttack = "Both";
 		public string Finisher = "Rip";
-		public bool EnforceMetagemRequirements = false;
 		public float BloodlustUptime = 0.15f;
 		public float DrumsOfBattleUptime = 0.25f;
 		public float DrumsOfWarUptime = 0.25f;
