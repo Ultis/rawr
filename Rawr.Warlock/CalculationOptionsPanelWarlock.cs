@@ -15,199 +15,30 @@ namespace Rawr.Warlock
 			InitializeComponent();
         }
 
-		//private void setDefaultOption(string option, string value)
-		//{
-		//    if (!Character.CalculationOptions.ContainsKey(option))
-		//        Character.CalculationOptions.Add(option, value);
-		//}
-
 		protected override void LoadCalculationOptions()
 		{
 			if (Character.CalculationOptions == null)
 				Character.CalculationOptions = new CalculationOptionsWarlock();
-			//setDefaultOption("TargetLevel", "73");
-			//setDefaultOption("EnforceMetagemRequirements", "T");
-			//setDefaultOption("Latency", "0.05");
-			//setDefaultOption("Duration", "600");
-			//setDefaultOption("Misery", "T");
-			//setDefaultOption("ShadowWeaving", "T");
-			//setDefaultOption("ShadowsBonus", "1.10");
-			//setDefaultOption("ElementsBonus", "1.10");
-			//setDefaultOption("SacraficedPet", "Succubus");
-			//setDefaultOption("Curse", "CurseOfAgony");
-			//setDefaultOption("Corruption", "F");
-			//setDefaultOption("UnstableAffliction", "F");
-			//setDefaultOption("SiphonLife", "F");
-			//setDefaultOption("Immolate", "F");
-			//setDefaultOption("FillerSpell", "Shadowbolt");
-			//setDefaultOption("Pet", "Succubus");
 
+			CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
 
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
-			checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
-            textBoxLatency.Text = calcOpts.Latency.ToString();
-            textBoxDuration.Text = calcOpts.Duration.ToString();
-            comboBoxPetSelection.SelectedItem = calcOpts.SacrificedPet;
-            comboBoxCastCurse.SelectedItem = "CurseOfAgony";
-            checkCorruption.Checked = false;
-            checkUnstable.Checked = false;
-            checkSiphonLife.Checked = false;
-            checkSacraficed.Checked = true;
-            checkImmolate.Checked = false;
-            comboBoxFilterSpell.SelectedItem = "Shadowbolt";
-        }
-	
-		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
-			Character.OnItemsChanged();
-		}
-
-		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
-		{
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
-			Character.OnItemsChanged();
-		}
-
-        
-
-        private void textBoxLatency_TextChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			try
-			{
-			calcOpts.Latency = float.Parse(textBoxLatency.Text);
-			}catch{}
-            Character.OnItemsChanged();
+            checkBoxEnforceMetagemRequirements.Checked = options.EnforceMetagemRequirements;
+            textBoxLatency.Text = options.Latency.ToString();
+            comboBoxTargetLevel.SelectedItem = options.TargetLevel.ToString();
+            textBoxFightDuration.Text = options.FightDuration.ToString();
+            comboBoxFillerSpell.SelectedIndex = (int)options.FillerSpell;
+            comboBoxCastedCurse.SelectedIndex = (int)options.CastedCurse;
+            checkBoxCastImmolate.Checked = options.CastImmolate;
+            checkBoxCastCorruption.Checked = options.CastCorruption;
+            checkBoxCastUnstableAffliction.Checked = options.CastUnstableAffliction;
+            checkBoxCastSiphonLife.Checked = options.CastSiphonLife;
+            comboBoxPet.SelectedIndex = (int)options.Pet;
+            checkBoxPetSacrificed.Checked = options.PetSacrificed;
+            textBoxDotGap.Text = options.DotGap.ToString();
+            textBoxAfflictionDebuffs.Text = options.AfflictionDebuffs.ToString();
         }
 
-        private void comboBoxFilterSpell_SelectedIndexChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.FillerSpell = (sender as ComboBox).SelectedItem.ToString();
-            if (calcOpts.FillerSpell.ToUpper() == "INCINERATE")
-                checkImmolate.Checked = true;
-            Character.OnItemsChanged();
-        }
-
-        private void comboBoxCastCurse_SelectedIndexChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.Curse = (sender as ComboBox).SelectedItem.ToString();
-            Character.OnItemsChanged();
-        }
-
-        private void checkImmolate_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.Immolate = (sender as CheckBox).Checked;
-            Character.OnItemsChanged();
-        }
-
-        private void checkCorruption_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.Corruption = (sender as CheckBox).Checked;
-            Character.OnItemsChanged();
-        }
-
-        private void checkSiphonLife_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.SiphonLife = (sender as CheckBox).Checked;
-            Character.OnItemsChanged();
-        }
-
-        private void checkUnstable_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.UnstableAffliction = (sender as CheckBox).Checked;
-            Character.OnItemsChanged();
-        }
-
-        private void comboBoxPetSelection_SelectedIndexChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.Pet = (sender as ComboBox).SelectedItem.ToString();
-            Character.OnItemsChanged();
-        }
-
-        private void checkSacraficed_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.SacrificedPet = (sender as CheckBox).Checked ? calcOpts.Pet : "";
-            Character.OnItemsChanged();
-        }
-
-        private void checkScorch_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.Scorch = (sender as CheckBox).Checked;
-            Character.OnItemsChanged();
-        }
-
-        private void checkShadowWeaving_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.ShadowWeaving = (sender as CheckBox).Checked;
-            Character.OnItemsChanged();
-        }
-
-        private void checkMisery_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			calcOpts.Misery = (sender as CheckBox).Checked;
-            Character.OnItemsChanged();
-        }
-
-        private void comboBoxElements_SelectedIndexChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			try
-			{
-				calcOpts.ElementsBonus = float.Parse((sender as ComboBox).SelectedItem.ToString());
-			}
-			catch { }
-            Character.OnItemsChanged();
-        }
-
-        private void comboBoxShadows_SelectedIndexChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			try
-			{
-			calcOpts.ShadowsBonus = float.Parse((sender as ComboBox).SelectedItem.ToString());
-            }
-			catch { }
-            Character.OnItemsChanged();
-        }
-
-        private void textBoxISBUptime_TextChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			try
-			{
-				calcOpts.ISBUptime = float.Parse((sender as TextBox).Text);
-			}
-			catch { }
-            Character.OnItemsChanged();
-        }
-
-        private void textBoxDuration_TextChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-			try
-			{
-				calcOpts.Duration = float.Parse((sender as TextBox).Text);
-            }
-			catch { }
-            Character.OnItemsChanged();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonTalents_Click(object sender, EventArgs e)
         {
             if (Character.Talents != null)
             {
@@ -221,43 +52,97 @@ namespace Rawr.Warlock
             }
         }
 
-       
+        private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+            Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
+            Character.OnItemsChanged();
+        }
 
-        
-
-        
-	}
-
-	[Serializable]
-	public class CalculationOptionsWarlock : ICalculationOptionBase
-	{
-		public string GetXml()
+        private void textBoxLatency_Leave(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            float value;
+            if (float.TryParse(textBoxLatency.Text, out value))
+            {
+                options.Latency = value;
+                Character.OnItemsChanged();
+            }
+        }   
+	
+		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsWarlock));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
+			CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            options.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
+			Character.OnItemsChanged();
 		}
 
-		public int TargetLevel = 73;
-		public bool EnforceMetagemRequirements = false;
-		public float Latency = 0.05f;
-		public float Duration = 600;
-		public bool Misery = true;
-		public bool ShadowWeaving = true;
-		public float ShadowsBonus = 1.1f;
-		public float ElementsBonus = 1.1f;
-		public string SacrificedPet = "Succubus";
-		public string Curse = "CurseOfAgony";
-		public bool Corruption = false;
-		public bool UnstableAffliction = false;
-		public bool SiphonLife = false;
-		public bool Scorch = false;
-		public bool Immolate = false;
-		public float ISBUptime = 0f;
-		public string FillerSpell = "Shadowbolt";
-		public string Pet = "Succubus";
+        private void textBoxFightDuration_Leave(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            float value;
+            if (float.TryParse(textBoxLatency.Text, out value))
+            {
+                options.FightDuration = value;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void comboBoxFillerSpell_SelectedIndexChanged(object sender, EventArgs e)
+        {
+			CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            options.FillerSpell = (FillerSpell)(comboBoxFillerSpell.SelectedIndex);
+            Character.OnItemsChanged();
+        }
+
+        private void comboBoxCastedCurse_SelectedIndexChanged(object sender, EventArgs e)
+        {
+			CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            options.CastedCurse = (CastedCurse)(comboBoxCastedCurse.SelectedIndex);
+            Character.OnItemsChanged();
+        }
+
+        private void checkBoxCastImmolate_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            options.CastImmolate = checkBoxCastImmolate.Checked;
+            Character.OnItemsChanged();
+        }
+
+        private void checkBoxCastCorruption_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            options.CastCorruption = checkBoxCastCorruption.Checked;
+            Character.OnItemsChanged();
+        }
+
+        private void checkBoxCastUnstableAffliction_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            options.CastUnstableAffliction = checkBoxCastUnstableAffliction.Checked;
+            Character.OnItemsChanged();
+        }
+
+        private void checkBoxCastSiphonLife_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            options.CastSiphonLife = checkBoxCastSiphonLife.Checked;
+            Character.OnItemsChanged();
+        }   
+
+        private void comboBoxPet_SelectedIndexChanged(object sender, EventArgs e)
+        {
+			CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            options.Pet = (Pet)(comboBoxPet.SelectedIndex);
+            Character.OnItemsChanged();
+        }
+
+        private void checkBoxPetSacrificed_CheckedChanged(object sender, EventArgs e)
+        {
+			CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            options.PetSacrificed = checkBoxPetSacrificed.Checked;
+            Character.OnItemsChanged();
+        }
 	}
+
 }

@@ -7,216 +7,249 @@ namespace Rawr.Warlock
 {
     internal class WarlockSpellRotation
     {
-        private Dictionary<int, Spell> _spellPriority = new Dictionary<int, Spell>();
-        private int _duration;
-        private Stats _stats;
-        private int _lifetap;
-        private Character _character;
+        private CharacterCalculationsWarlock calculations;
+        private List<Spell> spellList;
+        private Spell fillerSpell;
+        private LifeTap lifeTap;
 
-        private int _lifetapBase = 582;
-        private float _lifetapCoeffecient = 0.8f;
+        public float ShadowSpellsPerSecond { get; set; }
+        public float FireSpellsPerSecond { get; set; }
+        public float SpellsPerSecond { get; set; }
+        public float AfflictionSpellsPerSecond { get; set; }
+        public float NonAfflictionSpellsPerSecond { get; set; }
+        public float ShadowBoltsPerSecond { get; set; }
+        public float IncineratesPerSecond { get; set; }
 
-
-
-        public WarlockSpellRotation(Stats totalStats, Character character, int duration)
+        public WarlockSpellRotation(CharacterCalculationsWarlock ccw)
         {
-            stats = totalStats;
-            _character = character;
-            _duration = duration;
-            calcLifeTap();
-        }
+            calculations = ccw;
+            spellList = new List<Spell>();
 
-     
-
-        private void calcLifeTap()
-        {
-            float damage = _stats.SpellShadowDamageRating + _stats.SpellDamageRating;
-            _lifetap = (int)(_lifetapBase + (damage * _lifetapCoeffecient));
-            if (_character != null && _stats != null)
-                _lifetap *= (int)Math.Floor(_character.Talents.GetTalent("Improved Lifetap").PointsInvested * 0.1f + 1);
-        }
-
-        public Stats stats
-        {
-            set {_stats = value;
-                  calcLifeTap();
-            }
-        }
-
-        public int ManaPerLifetap
-        {
-            get { return _lifetap; }
-        }
-
-        public Dictionary<int, Spell> Spells
-        {
-            get { return _spellPriority; }
-            set { _spellPriority = value; }
-        }
-
-        public int Duration
-        {
-            get { return _duration; }
-            set { _duration = value; }
-        }
-        public void AddSpell(Spell spell, int priority)
-        {
-            _spellPriority.Add(priority, spell);
-        }
-
-
-        public Dictionary<Spell, int> NumCasts
-        {
-            get;
-            set;
-        }
-
-        public int NumLifetaps
-        {
-            get;
-            set;
-        }
-
-        public float[] GetDPS
-        {
-            get
+            if (calculations.CalculationOptions.CastImmolate)
+                spellList.Add(new Immolate(calculations));
+            switch (calculations.CalculationOptions.CastedCurse)
             {
-                NumCasts = new Dictionary<Spell, int>();
-                NumLifetaps = 0;
-                float gcd = 1.5f;
-                float gainedMana = _stats.Mana;
-                float lifetap = _lifetap;
-                float durationLeft = Duration;
-                Spell filler = null;
+                case CastedCurse.CurseOfAgony:
+                    spellList.Add(new CurseOfAgony(calculations));
+                    break;
+                case CastedCurse.CurseOfDoom:
+                    spellList.Add(new CurseOfDoom(calculations));
+                    break;
+                case CastedCurse.CurseOfRecklessness:
+                    spellList.Add(new CurseOfRecklessness(calculations));
+                    break;
+                case CastedCurse.CurseOfShadow:
+                    spellList.Add(new CurseOfShadow(calculations));
+                    break;
+                case CastedCurse.CurseOfTheElements:
+                    spellList.Add(new CurseOfTheElements(calculations));
+                    break;
+                case CastedCurse.CurseOfTongues:
+                    spellList.Add(new CurseOfTongues(calculations));
+                    break;
+                case CastedCurse.CurseOfWeakness:
+                    spellList.Add(new CurseOfWeakness(calculations));
+                    break;
+            }
+            if (calculations.CalculationOptions.CastCorruption)
+                spellList.Add(new Corruption(calculations));
+            if (calculations.CalculationOptions.CastSiphonLife)
+                spellList.Add(new SiphonLife(calculations));
+            if (calculations.CalculationOptions.CastUnstableAffliction)
+                spellList.Add(new UnstableAffliction(calculations));
 
+            switch (calculations.CalculationOptions.FillerSpell)
+            {
+                case FillerSpell.Shadowbolt:
+                    fillerSpell = new ShadowBolt(calculations);
+                    break;
+                case FillerSpell.Incinerate:
+                    fillerSpell = new Incinerate(calculations);
+                    break;
+            }
 
-                //calc all dots
-                foreach (Spell currSpell in _spellPriority.Values) 
+            ShadowSpellsPerSecond = 0;
+            FireSpellsPerSecond = 0;
+            SpellsPerSecond = 0;
+            AfflictionSpellsPerSecond = 0;
+            NonAfflictionSpellsPerSecond = 0;
+            ShadowBoltsPerSecond = 0;
+            IncineratesPerSecond = 0;
+        }
+
+        public void Calculate(bool calcDps)
+        {
+            float durationLeft = calculations.CalculationOptions.FightDuration;
+            float manaLeft = calculations.BasicStats.Mana + calculations.BasicStats.Mp5 / 5 * durationLeft;
+            float totalDamage = 0;
+
+            foreach (Spell s in spellList)
+            {
+                s.CalculateDerivedStats(calculations);
+                float numCasts = (float)Math.Ceiling(calculations.CalculationOptions.FightDuration / s.Frequency);
+
+                durationLeft -= numCasts * s.CastTime;
+                manaLeft -= numCasts * s.ManaCost;
+
+                if (calcDps)
                 {
-                    //Spell currSpell = _spellPriority[x];
-                    if (!NumCasts.ContainsKey(currSpell))
-                        NumCasts.Add(currSpell, 0);
-                    if (currSpell.PeriodicDuration > 0)
+                    s.CalculateDamage(calculations);
+                    totalDamage += numCasts * s.Damage;
+                }
+                else
+                {
+                    float castsPerSecond = 1 / s.Frequency;
+
+                    //TODO: Find out if damaging curses should count
+                    if (s.BaseMinDamage > 0 || s.BasePeriodicDamage > 0)
                     {
-                        NumCasts[currSpell] = Convert.ToInt32(Math.Floor(Duration / currSpell.PeriodicDuration));
-                        durationLeft -= NumCasts[currSpell] * (currSpell.CastTime < gcd ? gcd : currSpell.CastTime);
+                        if (s.MagicSchool == MagicSchool.Shadow)
+                            ShadowSpellsPerSecond += castsPerSecond;
+                        else if (s.MagicSchool == MagicSchool.Fire)
+                            FireSpellsPerSecond += castsPerSecond;
                     }
+
+                    SpellsPerSecond += castsPerSecond;
+                    if (s.SpellTree == SpellTree.Affliction)
+                        AfflictionSpellsPerSecond += castsPerSecond;
                     else
-                    {
-                        if (filler != null)
-                            throw new Exception("Error, multiple filler spells");
-                        filler = currSpell;
-                    }
+                        NonAfflictionSpellsPerSecond += castsPerSecond;
                 }
+            }
 
+            fillerSpell.CalculateDerivedStats(calculations);
+            float lifeTapCastTime = calculations.GlobalCooldown + calculations.CalculationOptions.Latency;
+            float lifeTapMana = (float)Math.Round((580 + calculations.ShadowDamage * 0.8f) * (1 + 0.1f * calculations.CalculationOptions.ImprovedLifeTap));
+            //float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
+            //float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
+            float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - fillerSpell.CastTime * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
+            float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
 
-                //calc filler
-                NumCasts[filler] = Convert.ToInt32(Math.Floor(durationLeft / (filler.CastTime < gcd ? gcd : filler.CastTime) ));
-
-                List<Spell> daSpells = new List<Spell>(NumCasts.Keys);
-
-                //calc Lifetaps
-                float manaSpent = 0;
-                daSpells.ForEach(delegate(Spell s) { manaSpent += NumCasts[s] * s.Cost; });
-
-                while (gainedMana < manaSpent)
+            manaLeft -= numFillers * fillerSpell.ManaCost;
+            manaLeft += numLifeTaps * lifeTapMana;
+            
+            if (calcDps)
+            {
+                fillerSpell.CalculateDamage(calculations);
+                totalDamage += numFillers * fillerSpell.Damage;
+                calculations.TotalDamage = totalDamage;
+                float dps = (float)Math.Round(calculations.TotalDamage / calculations.CalculationOptions.FightDuration);
+                calculations.SubPoints = new float[] { dps };
+                calculations.OverallPoints = dps;
+            }
+            else
+            {
+                float fillerHitsPerSecond = fillerSpell.ChanceToHit(calculations.CalculationOptions.TargetLevel, calculations.HitPercent) * numFillers / calculations.CalculationOptions.FightDuration;
+                if (fillerSpell is ShadowBolt)
                 {
-                    durationLeft -= gcd;
-                    gainedMana += lifetap;
-                    NumLifetaps++;
-                    NumCasts[filler] = Convert.ToInt32(Math.Floor(durationLeft / (filler.CastTime < gcd ? gcd : filler.CastTime)));
-                    manaSpent = 0;
-                    daSpells.ForEach(delegate(Spell s) { manaSpent += NumCasts[s] * s.Cost; });
+                    ShadowSpellsPerSecond += fillerHitsPerSecond;
+                    SpellsPerSecond += fillerHitsPerSecond;
+                    NonAfflictionSpellsPerSecond += fillerHitsPerSecond;
+                    ShadowBoltsPerSecond = fillerHitsPerSecond;
+                    IncineratesPerSecond = 0;
                 }
-
-                //calcTotalDamage
-                float totalDamage = 0;
-                daSpells.ForEach(delegate(Spell s) { totalDamage += NumCasts[s] * s.AverageDamage; });
-                return new float[] { totalDamage / Duration };
-
-                //wierd bug with this model (on trinkets would sometimes report battlemasters audacity > hex shrunken head (47sd > 53sd) - wierd
-                /*
-                NumCasts = new Dictionary<Spell, int>();
-                NumLifetaps = 0;
-                List<int> daSpells = new List<int>(_spellPriority.Keys);
-                daSpells.Sort();
-                float gcdDuration = 1.5f;
-                Dictionary<Spell, float> currCasting = new Dictionary<Spell, float>();
-                Dictionary<Spell, float> currDuration = new Dictionary<Spell, float>();
-                float totalDamage = 0;
-                float currMana = _stats.Mana;
-                bool gcd = false;
-                float gcdstart = 0;
-                for (float currTime = 0;currTime <= _duration;currTime += 0.05f)
+                else if (fillerSpell is Incinerate)
                 {
-                    //check gcd over
-                    if (gcd && (currTime - gcdstart) >= gcdDuration)
-                    {
-                        gcd = false;
-                        gcdstart = 0;
-                    }
-
-                    //check if spell casting finished
-                    List<Spell> toRemove = new List<Spell>();
-                    foreach (Spell s in currCasting.Keys)
-                    {
-                        if ((currTime - currCasting[s]) >= s.CastTime)
-                            toRemove.Add(s);
-                    }
-
-                    foreach (Spell s in toRemove)
-                        currCasting.Remove(s);
-
-                    toRemove.Clear();
-
-
-                    //check if spell duration elapsed
-                    foreach (Spell s in currDuration.Keys)
-                    {
-                        if ((currTime - currDuration[s]) >= s.PeriodicDuration)
-                            toRemove.Add(s);
-                    }
-
-                    foreach (Spell s in toRemove)
-                        currDuration.Remove(s);
-
-                    if (!gcd)
-                    {
-                        foreach (int priority in daSpells)
-                        {
-                            Spell currSpell = _spellPriority[priority];
-                            if (!currCasting.ContainsKey(currSpell) && !currDuration.ContainsKey(currSpell))
-                            {
-                                if (currMana >= currSpell.Cost)
-                                {
-                                    if (!NumCasts.ContainsKey(currSpell))
-                                        NumCasts.Add(currSpell, 0);
-                                    NumCasts[currSpell]++;
-                                    totalDamage += currSpell.AverageDamage;
-                                    currMana -= currSpell.Cost;
-                                    currCasting.Add(currSpell, currTime);
-                                    currDuration.Add(currSpell, currTime);
-                                    gcd = true;
-                                    break;
-                                }
-                                else
-                                {
-                                    currMana += _lifetap;
-                                    NumLifetaps++;
-                                    gcd = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (gcd & gcdstart == 0) gcdstart = currTime;
+                    FireSpellsPerSecond += fillerHitsPerSecond;
+                    SpellsPerSecond += fillerHitsPerSecond;
+                    NonAfflictionSpellsPerSecond += fillerHitsPerSecond;
+                    IncineratesPerSecond = fillerHitsPerSecond;
+                    ShadowBoltsPerSecond = 0;
                 }
-                return new float[] { (totalDamage) / Duration };
-                 */
-              }
-
             }
         }
-        
+
+        public void CalculateAdvancedInfo()
+        {
+            float durationLeft = calculations.CalculationOptions.FightDuration;
+            float manaLeft = calculations.BasicStats.Mana + calculations.BasicStats.Mp5 / 5 * durationLeft;
+
+            foreach (Spell s in spellList)
+            {
+                s.CalculateDerivedStats(calculations);
+                float numCasts = (float)Math.Ceiling(calculations.CalculationOptions.FightDuration / s.Frequency);
+
+                durationLeft -= numCasts * s.CastTime;
+                manaLeft -= numCasts * s.ManaCost;
+
+                float castsPerSecond = 1 / s.Frequency;
+
+                //TODO: Find out if damaging curses should count
+                if (s.BaseMinDamage > 0 || s.BasePeriodicDamage > 0)
+                {
+                    if (s.MagicSchool == MagicSchool.Shadow)
+                        ShadowSpellsPerSecond += castsPerSecond;
+                    else if (s.MagicSchool == MagicSchool.Fire)
+                        FireSpellsPerSecond += castsPerSecond;
+                }
+
+                SpellsPerSecond += castsPerSecond;
+                if (s.SpellTree == SpellTree.Affliction)
+                    AfflictionSpellsPerSecond += castsPerSecond;
+                else
+                    NonAfflictionSpellsPerSecond += castsPerSecond;
+            }
+
+            fillerSpell.CalculateDerivedStats(calculations);
+            float lifeTapCastTime = calculations.GlobalCooldown + calculations.CalculationOptions.Latency;
+            float lifeTapMana = (float)Math.Round((580 + calculations.ShadowDamage * 0.8f) * (1 + 0.1f * calculations.CalculationOptions.ImprovedLifeTap));
+            float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
+            float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
+
+            float fillerHitsPerSecond = fillerSpell.ChanceToHit(calculations.CalculationOptions.TargetLevel, calculations.HitPercent) * numFillers / calculations.CalculationOptions.FightDuration;
+            if (fillerSpell is ShadowBolt)
+            {
+                ShadowSpellsPerSecond += fillerHitsPerSecond;
+                SpellsPerSecond += fillerHitsPerSecond;
+                NonAfflictionSpellsPerSecond += fillerHitsPerSecond;
+                ShadowBoltsPerSecond = fillerHitsPerSecond;
+                IncineratesPerSecond = 0;
+            }
+            else if (fillerSpell is Incinerate)
+            {
+                FireSpellsPerSecond += fillerHitsPerSecond;
+                SpellsPerSecond += fillerHitsPerSecond;
+                NonAfflictionSpellsPerSecond += fillerHitsPerSecond;
+                IncineratesPerSecond = fillerHitsPerSecond;
+                ShadowBoltsPerSecond = 0;
+            }
+        }
+
+        public void CalculateDps()
+        {
+            float durationLeft = calculations.CalculationOptions.FightDuration;
+            float manaLeft = calculations.BasicStats.Mana + calculations.BasicStats.Mp5 / 5 * durationLeft;
+            float totalDamage = 0;
+
+            foreach (Spell s in spellList)
+            {
+                s.CalculateDerivedStats(calculations);
+                s.CalculateDamage(calculations);
+                float numCasts = (float)Math.Ceiling(calculations.CalculationOptions.FightDuration / s.Frequency);
+
+                durationLeft -= numCasts * s.CastTime;
+                manaLeft -= numCasts * s.ManaCost;
+                totalDamage += numCasts * s.Damage;
+            }
+
+            fillerSpell.CalculateDerivedStats(calculations);
+            fillerSpell.CalculateDamage(calculations);
+            float lifeTapCastTime = calculations.GlobalCooldown + calculations.CalculationOptions.Latency;
+            float lifeTapMana = (580 + calculations.ShadowDamage * 0.8f) * (1 + 0.1f * calculations.CalculationOptions.ImprovedLifeTap);
+            float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
+            float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
+            //float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - fillerSpell.CastTime * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
+            //float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime - 1);
+
+            manaLeft -= numFillers * fillerSpell.ManaCost;
+            manaLeft += numLifeTaps * lifeTapMana;
+            totalDamage += numFillers * fillerSpell.Damage;
+
+            calculations.TotalDamage = totalDamage;
+            float dps = (float)Math.Round(calculations.TotalDamage / calculations.CalculationOptions.FightDuration);
+            calculations.SubPoints = new float[] { dps };
+            calculations.OverallPoints = dps;
+        }
     }
+}
 
