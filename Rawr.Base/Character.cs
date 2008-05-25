@@ -1115,10 +1115,22 @@ namespace Rawr //O O . .
             }
         }
 
+        private int GetItemGemColorCount(Item item, Item.ItemSlot slotColor)
+        {
+            int count = 0;
+            if (item != null)
+            {
+                if (item.Gem1 != null && Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
+                if (item.Gem2 != null && Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
+                if (item.Gem3 != null && Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
+            }
+            return count;
+        }
+
         public int GetGemColorCount(Item.ItemSlot slotColor)
         {
             int count = 0;
-            foreach (CharacterSlot slot in CharacterSlots)
+            /*foreach (CharacterSlot slot in CharacterSlots)
 			{
 				Item item = this[slot];
 				if (item == null) continue;
@@ -1126,7 +1138,30 @@ namespace Rawr //O O . .
 				if (Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
 				if (Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
 				if (Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
-			}
+			}*/
+            // unroll loop because the switch in this[slot] is very expensive
+            count += GetItemGemColorCount(Head, slotColor);
+            count += GetItemGemColorCount(Neck, slotColor);
+            count += GetItemGemColorCount(Shoulders, slotColor);
+            count += GetItemGemColorCount(Back, slotColor);
+            count += GetItemGemColorCount(Chest, slotColor);
+            count += GetItemGemColorCount(Shirt, slotColor);
+            count += GetItemGemColorCount(Tabard, slotColor);
+            count += GetItemGemColorCount(Wrist, slotColor);
+            count += GetItemGemColorCount(Hands, slotColor);
+            count += GetItemGemColorCount(Waist, slotColor);
+            count += GetItemGemColorCount(Legs, slotColor);
+            count += GetItemGemColorCount(Feet, slotColor);
+            count += GetItemGemColorCount(Finger1, slotColor);
+            count += GetItemGemColorCount(Finger2, slotColor);
+            count += GetItemGemColorCount(Trinket1, slotColor);
+            count += GetItemGemColorCount(Trinket2, slotColor);
+            count += GetItemGemColorCount(MainHand, slotColor);
+            count += GetItemGemColorCount(OffHand, slotColor);
+            count += GetItemGemColorCount(Ranged, slotColor);
+            count += GetItemGemColorCount(Projectile, slotColor);
+            count += GetItemGemColorCount(ProjectileBag, slotColor);
+
             return count;
         }
 		
