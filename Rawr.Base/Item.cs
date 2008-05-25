@@ -793,9 +793,12 @@ namespace Rawr
             int redGems = 0, yellowGems = 0, blueGems = 0;
             if (character != null)
             {
-                redGems = character.GetGemColorCount(ItemSlot.Red);
+                /*redGems = character.GetGemColorCount(ItemSlot.Red);
                 yellowGems = character.GetGemColorCount(ItemSlot.Yellow);
-                blueGems = character.GetGemColorCount(ItemSlot.Blue);
+                blueGems = character.GetGemColorCount(ItemSlot.Blue);*/
+                redGems = character.RedGemCount;
+                yellowGems = character.YellowGemCount;
+                blueGems = character.BlueGemCount;
             }
             bool meetsRequirements = false;
 

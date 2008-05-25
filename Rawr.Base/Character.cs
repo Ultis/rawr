@@ -1067,6 +1067,54 @@ namespace Rawr //O O . .
             }
         }
 
+        // cache gem counts as this takes the most time of accumulating item stats
+        // this becomes invalid when items on character change or when item id changes by editing gems in the equipped item
+        // when item is edited in item editor it listens for id changed event and sets the item to the slot again
+        // so it is enough to just invalidate this when items on character are set
+        // it would be possible that this becomes out of sync if someone edits the color of gems, for now assumed not to be an issue
+        private bool gemCountValid;
+        private int redGemCount;
+        private int yellowGemCount;
+        private int blueGemCount;
+
+        public int RedGemCount
+        {
+            get
+            {
+                ComputeGemCount();
+                return redGemCount;
+            }
+        }
+
+        public int YellowGemCount
+        {
+            get
+            {
+                ComputeGemCount();
+                return yellowGemCount;
+            }
+        }
+
+        public int BlueGemCount
+        {
+            get
+            {
+                ComputeGemCount();
+                return blueGemCount;
+            }
+        }
+
+        private void ComputeGemCount()
+        {
+            if (!gemCountValid)
+            {
+                redGemCount = GetGemColorCount(Item.ItemSlot.Red);
+                yellowGemCount = GetGemColorCount(Item.ItemSlot.Yellow);
+                blueGemCount = GetGemColorCount(Item.ItemSlot.Blue);
+                gemCountValid = true;
+            }
+        }
+
         public int GetGemColorCount(Item.ItemSlot slotColor)
         {
             int count = 0;
@@ -1092,6 +1140,7 @@ namespace Rawr //O O . .
 		public event EventHandler ItemsChanged;
 		public void OnItemsChanged()
 		{
+            gemCountValid = false; // invalidate gem counts
             if (IsLoading) return;
 			RecalculateSetBonuses();
 
