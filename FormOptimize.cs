@@ -1230,7 +1230,7 @@ namespace Rawr
 						legsEnchants[rand.Next(legsEnchants.Length)], feetEnchants[rand.Next(feetEnchants.Length)],
 						fingerEnchants[rand.Next(fingerEnchants.Length)], fingerEnchants[rand.Next(fingerEnchants.Length)],
 						mainHandEnchants[rand.Next(mainHandEnchants.Length)], offHandEnchants[rand.Next(offHandEnchants.Length)],
-                        rangedEnchants[rand.Next(rangedEnchants.Length)], _character.ActiveBuffs);
+                        rangedEnchants[rand.Next(rangedEnchants.Length)], _character.ActiveBuffs, false);
 			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
 			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -1296,7 +1296,7 @@ namespace Rawr
 				rand.NextDouble() < 0.5d ? father.MainHandEnchant : mother.MainHandEnchant,
 				rand.NextDouble() < 0.5d ? father.OffHandEnchant : mother.OffHandEnchant,
 				rand.NextDouble() < 0.5d ? father.RangedEnchant : mother.RangedEnchant,
-                _character.ActiveBuffs);
+                _character.ActiveBuffs, false);
 			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
 			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -1423,7 +1423,7 @@ namespace Rawr
                 parent.MainHandEnchant,
                 parent.OffHandEnchant,
                 parent.RangedEnchant,
-                _character.ActiveBuffs);
+                _character.ActiveBuffs, false);
             //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
             //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -1525,7 +1525,7 @@ namespace Rawr
                 parent.MainHandEnchant,
                 parent.OffHandEnchant,
                 parent.RangedEnchant,
-                _character.ActiveBuffs);
+                _character.ActiveBuffs, false);
             //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
             //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -1595,7 +1595,7 @@ namespace Rawr
 				rand.NextDouble() < mutationChance ? mainHandEnchants[rand.Next(mainHandEnchants.Length)] : parent.MainHandEnchant,
 				rand.NextDouble() < mutationChance ? offHandEnchants[rand.Next(offHandEnchants.Length)] : parent.OffHandEnchant,
 				rand.NextDouble() < mutationChance ? rangedEnchants[rand.Next(rangedEnchants.Length)] : parent.RangedEnchant,
-                _character.ActiveBuffs);
+                _character.ActiveBuffs, false);
 			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
 			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -1643,7 +1643,7 @@ namespace Rawr
 				baseCharacter.MainHandEnchant,
 				baseCharacter.OffHandEnchant,
 				baseCharacter.RangedEnchant,
-                _character.ActiveBuffs);
+                _character.ActiveBuffs, false);
 			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
 			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -1690,7 +1690,7 @@ namespace Rawr
 				slot == Character.CharacterSlot.MainHand ? enchant : baseCharacter.MainHandEnchant,
 				slot == Character.CharacterSlot.OffHand ? enchant : baseCharacter.OffHandEnchant,
 				slot == Character.CharacterSlot.Ranged ? enchant : baseCharacter.RangedEnchant,
-                _character.ActiveBuffs);
+                _character.ActiveBuffs, false);
 			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
 			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;

@@ -164,10 +164,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_headCached == null || _headCached.GemmedId != _head)
+				if (_headCached == null)
 				{
 					_headCached = Item.LoadFromId(_head, "Equipped Head");
-				}
+                    if (_headCached != null && _trackEquippedItemChanges) _headCached.IdsChanged += new EventHandler(_headCached_IdsChanged);
+                }
 				return _headCached;
 			}
             set
@@ -175,7 +176,9 @@ namespace Rawr //O O . .
                 if (value == null || _head != value.GemmedId)
                 {
                     _head = value != null ? value.GemmedId : null;
+                    if (_headCached != null && _trackEquippedItemChanges) _headCached.IdsChanged -= new EventHandler(_headCached_IdsChanged);
                     _headCached = value;
+                    if (_headCached != null && _trackEquippedItemChanges) _headCached.IdsChanged += new EventHandler(_headCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -187,10 +190,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_neckCached == null || _neckCached.GemmedId != _neck)
+				if (_neckCached == null)
 				{
 					_neckCached = Item.LoadFromId(_neck, "Equipped Neck");
-				}
+                    if (_neckCached != null && _trackEquippedItemChanges) _neckCached.IdsChanged += new EventHandler(_neckCached_IdsChanged);
+                }
 				return _neckCached;
 			}
             set
@@ -198,7 +202,9 @@ namespace Rawr //O O . .
                 if (value == null || _neck != value.GemmedId)
                 {
                     _neck = value != null ? value.GemmedId : null;
+                    if (_neckCached != null && _trackEquippedItemChanges) _neckCached.IdsChanged -= new EventHandler(_neckCached_IdsChanged);
                     _neckCached = value;
+                    if (_neckCached != null && _trackEquippedItemChanges) _neckCached.IdsChanged += new EventHandler(_neckCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -210,10 +216,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_shouldersCached == null || _shouldersCached.GemmedId != _shoulders)
+				if (_shouldersCached == null)
 				{
 					_shouldersCached = Item.LoadFromId(_shoulders, "Equipped Shoulders");
-				}
+                    if (_shouldersCached != null && _trackEquippedItemChanges) _shouldersCached.IdsChanged += new EventHandler(_shouldersCached_IdsChanged);
+                }
 				return _shouldersCached;
 			}
             set
@@ -221,7 +228,9 @@ namespace Rawr //O O . .
                 if (value == null || _shoulders != value.GemmedId)
                 {
                     _shoulders = value != null ? value.GemmedId : null;
+                    if (_shouldersCached != null && _trackEquippedItemChanges) _shouldersCached.IdsChanged -= new EventHandler(_shouldersCached_IdsChanged);
                     _shouldersCached = value;
+                    if (_shouldersCached != null && _trackEquippedItemChanges) _shouldersCached.IdsChanged += new EventHandler(_shouldersCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -233,10 +242,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_backCached == null || _backCached.GemmedId != _back)
+				if (_backCached == null)
 				{
 					_backCached = Item.LoadFromId(_back, "Equipped Back");
-				}
+                    if (_backCached != null && _trackEquippedItemChanges) _backCached.IdsChanged += new EventHandler(_backCached_IdsChanged);
+                }
 				return _backCached;
 			}
             set
@@ -244,7 +254,9 @@ namespace Rawr //O O . .
                 if (value == null || _back != value.GemmedId)
                 {
                     _back = value != null ? value.GemmedId : null;
+                    if (_backCached != null && _trackEquippedItemChanges) _backCached.IdsChanged -= new EventHandler(_backCached_IdsChanged);
                     _backCached = value;
+                    if (_backCached != null && _trackEquippedItemChanges) _backCached.IdsChanged += new EventHandler(_backCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -256,10 +268,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_chestCached == null || _chestCached.GemmedId != _chest)
+				if (_chestCached == null)
 				{
 					_chestCached = Item.LoadFromId(_chest, "Equipped Chest");
-				}
+                    if (_chestCached != null && _trackEquippedItemChanges) _chestCached.IdsChanged += new EventHandler(_chestCached_IdsChanged);
+                }
 				return _chestCached;
 			}
             set
@@ -267,7 +280,9 @@ namespace Rawr //O O . .
                 if (value == null || _chest != value.GemmedId)
                 {
                     _chest = value != null ? value.GemmedId : null;
+                    if (_chestCached != null && _trackEquippedItemChanges) _chestCached.IdsChanged -= new EventHandler(_chestCached_IdsChanged);
                     _chestCached = value;
+                    if (_chestCached != null && _trackEquippedItemChanges) _chestCached.IdsChanged += new EventHandler(_chestCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -279,10 +294,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_shirtCached == null || _shirtCached.GemmedId != _shirt)
+				if (_shirtCached == null)
 				{
 					_shirtCached = Item.LoadFromId(_shirt, "Equipped Shirt");
-				}
+                    if (_shirtCached != null && _trackEquippedItemChanges) _shirtCached.IdsChanged += new EventHandler(_shirtCached_IdsChanged);
+                }
 				return _shirtCached;
 			}
             set
@@ -290,7 +306,9 @@ namespace Rawr //O O . .
                 if (value == null || _shirt != value.GemmedId)
                 {
                     _shirt = value != null ? value.GemmedId : null;
+                    if (_shirtCached != null && _trackEquippedItemChanges) _shirtCached.IdsChanged -= new EventHandler(_shirtCached_IdsChanged);
                     _shirtCached = value;
+                    if (_shirtCached != null && _trackEquippedItemChanges) _shirtCached.IdsChanged += new EventHandler(_shirtCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -302,10 +320,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_tabardCached == null || _tabardCached.GemmedId != _tabard)
+				if (_tabardCached == null)
 				{
 					_tabardCached = Item.LoadFromId(_tabard, "Equipped Tabard");
-				}
+                    if (_tabardCached != null && _trackEquippedItemChanges) _tabardCached.IdsChanged += new EventHandler(_tabardCached_IdsChanged);
+                }
 				return _tabardCached;
 			}
             set
@@ -313,7 +332,9 @@ namespace Rawr //O O . .
                 if (value == null || _tabard != value.GemmedId)
                 {
                     _tabard = value != null ? value.GemmedId : null;
+                    if (_tabardCached != null && _trackEquippedItemChanges) _tabardCached.IdsChanged -= new EventHandler(_tabardCached_IdsChanged);
                     _tabardCached = value;
+                    if (_tabardCached != null && _trackEquippedItemChanges) _tabardCached.IdsChanged += new EventHandler(_tabardCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -325,10 +346,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_wristCached == null || _wristCached.GemmedId != _wrist)
+				if (_wristCached == null)
 				{
 					_wristCached = Item.LoadFromId(_wrist, "Equipped Wrist");
-				}
+                    if (_wristCached != null && _trackEquippedItemChanges) _wristCached.IdsChanged += new EventHandler(_wristCached_IdsChanged);
+                }
 				return _wristCached;
 			} 
             set
@@ -336,7 +358,9 @@ namespace Rawr //O O . .
                 if (value == null || _wrist != value.GemmedId)
                 {
                     _wrist = value != null ? value.GemmedId : null;
+                    if (_wristCached != null && _trackEquippedItemChanges) _wristCached.IdsChanged -= new EventHandler(_wristCached_IdsChanged);
                     _wristCached = value;
+                    if (_wristCached != null && _trackEquippedItemChanges) _wristCached.IdsChanged += new EventHandler(_wristCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -348,10 +372,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_handsCached == null || _handsCached.GemmedId != _hands)
+				if (_handsCached == null)
 				{
 					_handsCached = Item.LoadFromId(_hands, "Equipped Hands");
-				}
+                    if (_handsCached != null && _trackEquippedItemChanges) _handsCached.IdsChanged += new EventHandler(_handsCached_IdsChanged);
+                }
 				return _handsCached;
 			} 
             set
@@ -359,7 +384,9 @@ namespace Rawr //O O . .
                 if (value == null || _hands != value.GemmedId)
                 {
                     _hands = value != null ? value.GemmedId : null;
+                    if (_handsCached != null && _trackEquippedItemChanges) _handsCached.IdsChanged -= new EventHandler(_handsCached_IdsChanged);
                     _handsCached = value;
+                    if (_handsCached != null && _trackEquippedItemChanges) _handsCached.IdsChanged += new EventHandler(_handsCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -371,10 +398,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_waistCached == null || _waistCached.GemmedId != _waist)
+				if (_waistCached == null)
 				{
 					_waistCached = Item.LoadFromId(_waist, "Equipped Waist");
-				}
+                    if (_waistCached != null && _trackEquippedItemChanges) _waistCached.IdsChanged += new EventHandler(_waistCached_IdsChanged);
+                }
 				return _waistCached;
 			}
             set
@@ -382,7 +410,9 @@ namespace Rawr //O O . .
                 if (value == null || _waist != value.GemmedId)
                 {
                     _waist = value != null ? value.GemmedId : null;
+                    if (_waistCached != null && _trackEquippedItemChanges) _waistCached.IdsChanged -= new EventHandler(_waistCached_IdsChanged);
                     _waistCached = value;
+                    if (_waistCached != null && _trackEquippedItemChanges) _waistCached.IdsChanged += new EventHandler(_waistCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -394,10 +424,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_legsCached == null || _legsCached.GemmedId != _legs)
+				if (_legsCached == null)
 				{
 					_legsCached = Item.LoadFromId(_legs, "Equipped Legs");
-				}
+                    if (_legsCached != null && _trackEquippedItemChanges) _legsCached.IdsChanged += new EventHandler(_legsCached_IdsChanged);
+                }
 				return _legsCached;
 			}
             set
@@ -405,7 +436,9 @@ namespace Rawr //O O . .
                 if (value == null || _legs != value.GemmedId)
                 {
                     _legs = value != null ? value.GemmedId : null;
+                    if (_legsCached != null && _trackEquippedItemChanges) _legsCached.IdsChanged -= new EventHandler(_legsCached_IdsChanged);
                     _legsCached = value;
+                    if (_legsCached != null && _trackEquippedItemChanges) _legsCached.IdsChanged += new EventHandler(_legsCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -417,10 +450,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_feetCached == null || _feetCached.GemmedId != _feet)
+				if (_feetCached == null)
 				{
 					_feetCached = Item.LoadFromId(_feet, "Equipped Feet");
-				}
+                    if (_feetCached != null && _trackEquippedItemChanges) _feetCached.IdsChanged += new EventHandler(_feetCached_IdsChanged);
+                }
 				return _feetCached;
 			} 
             set
@@ -428,7 +462,9 @@ namespace Rawr //O O . .
                 if (value == null || _feet != value.GemmedId)
                 {
                     _feet = value != null ? value.GemmedId : null;
+                    if (_feetCached != null && _trackEquippedItemChanges) _feetCached.IdsChanged -= new EventHandler(_feetCached_IdsChanged);
                     _feetCached = value;
+                    if (_feetCached != null && _trackEquippedItemChanges) _feetCached.IdsChanged += new EventHandler(_feetCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -440,10 +476,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_finger1Cached == null || _finger1Cached.GemmedId != _finger1)
+				if (_finger1Cached == null)
 				{
 					_finger1Cached = Item.LoadFromId(_finger1, "Equipped Finger1");
-				}
+                    if (_finger1Cached != null && _trackEquippedItemChanges) _finger1Cached.IdsChanged += new EventHandler(_finger1Cached_IdsChanged);
+                }
 				return _finger1Cached;
 			}
             set
@@ -451,7 +488,9 @@ namespace Rawr //O O . .
                 if (value == null || _finger1 != value.GemmedId)
                 {
                     _finger1 = value != null ? value.GemmedId : null;
+                    if (_finger1Cached != null && _trackEquippedItemChanges) _finger1Cached.IdsChanged -= new EventHandler(_finger1Cached_IdsChanged);
                     _finger1Cached = value;
+                    if (_finger1Cached != null && _trackEquippedItemChanges) _finger1Cached.IdsChanged += new EventHandler(_finger1Cached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -463,10 +502,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_finger2Cached == null || _finger2Cached.GemmedId != _finger2)
+				if (_finger2Cached == null)
 				{
 					_finger2Cached = Item.LoadFromId(_finger2, "Equipped Finger2");
-				}
+                    if (_finger2Cached != null && _trackEquippedItemChanges) _finger2Cached.IdsChanged += new EventHandler(_finger2Cached_IdsChanged);
+                }
 				return _finger2Cached;
 			}
             set
@@ -474,7 +514,9 @@ namespace Rawr //O O . .
                 if (value == null || _finger2 != value.GemmedId)
                 {
                     _finger2 = value != null ? value.GemmedId : null;
+                    if (_finger2Cached != null && _trackEquippedItemChanges) _finger2Cached.IdsChanged -= new EventHandler(_finger2Cached_IdsChanged);
                     _finger2Cached = value;
+                    if (_finger2Cached != null && _trackEquippedItemChanges) _finger2Cached.IdsChanged += new EventHandler(_finger2Cached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -486,10 +528,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_trinket1Cached == null || _trinket1Cached.GemmedId != _trinket1)
+				if (_trinket1Cached == null)
 				{
 					_trinket1Cached = Item.LoadFromId(_trinket1, "Equipped Trinket1");
-				}
+                    if (_trinket1Cached != null && _trackEquippedItemChanges) _trinket1Cached.IdsChanged += new EventHandler(_trinket1Cached_IdsChanged);
+                }
 				return _trinket1Cached;
 			}
             set
@@ -497,7 +540,9 @@ namespace Rawr //O O . .
                 if (value == null || _trinket1 != value.GemmedId)
                 {
                     _trinket1 = value != null ? value.GemmedId : null;
+                    if (_trinket1Cached != null && _trackEquippedItemChanges) _trinket1Cached.IdsChanged -= new EventHandler(_trinket1Cached_IdsChanged);
                     _trinket1Cached = value;
+                    if (_trinket1Cached != null && _trackEquippedItemChanges) _trinket1Cached.IdsChanged += new EventHandler(_trinket1Cached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -509,10 +554,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_trinket2Cached == null || _trinket2Cached.GemmedId != _trinket2)
+				if (_trinket2Cached == null)
 				{
 					_trinket2Cached = Item.LoadFromId(_trinket2, "Equipped Trinket2");
-				}
+                    if (_trinket2Cached != null && _trackEquippedItemChanges) _trinket2Cached.IdsChanged += new EventHandler(_trinket2Cached_IdsChanged);
+                }
 				return _trinket2Cached;
 			}
             set
@@ -520,7 +566,9 @@ namespace Rawr //O O . .
                 if (value == null || _trinket2 != value.GemmedId)
                 {
                     _trinket2 = value != null ? value.GemmedId : null;
+                    if (_trinket2Cached != null && _trackEquippedItemChanges) _trinket2Cached.IdsChanged -= new EventHandler(_trinket2Cached_IdsChanged);
                     _trinket2Cached = value;
+                    if (_trinket2Cached != null && _trackEquippedItemChanges) _trinket2Cached.IdsChanged += new EventHandler(_trinket2Cached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -532,10 +580,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_mainHandCached == null || _mainHandCached.GemmedId != _mainHand)
+				if (_mainHandCached == null)
 				{
 					_mainHandCached = Item.LoadFromId(_mainHand, "Equipped MainHand");
-				}
+                    if (_mainHandCached != null && _trackEquippedItemChanges) _mainHandCached.IdsChanged += new EventHandler(_mainHandCached_IdsChanged);
+                }
 				return _mainHandCached;
 			}
             set
@@ -545,7 +594,9 @@ namespace Rawr //O O . .
 					_mainHand = value != null ? value.GemmedId : null;
 					//if (MainHand != null && MainHand.Slot == Item.ItemSlot.TwoHand)
 					//    OffHand = null;
+                    if (_mainHandCached != null && _trackEquippedItemChanges) _mainHandCached.IdsChanged -= new EventHandler(_mainHandCached_IdsChanged);
                     _mainHandCached = value;
+                    if (_mainHandCached != null && _trackEquippedItemChanges) _mainHandCached.IdsChanged += new EventHandler(_mainHandCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -557,10 +608,11 @@ namespace Rawr //O O . .
 		{
 			get
 			{
-				if (_offHandCached == null || _offHandCached.GemmedId != _offHand)
+				if (_offHandCached == null)
 				{
 					_offHandCached = Item.LoadFromId(_offHand, "Equipped OffHand");
-				}
+                    if (_offHandCached != null && _trackEquippedItemChanges) _offHandCached.IdsChanged += new EventHandler(_offHandCached_IdsChanged);
+                }
 				return _offHandCached;
 			}
 			set
@@ -568,8 +620,10 @@ namespace Rawr //O O . .
 				if (value == null || _offHand != value.GemmedId)
 				{
 					_offHand = value != null ? value.GemmedId : null;
+                    if (_offHandCached != null && _trackEquippedItemChanges) _offHandCached.IdsChanged -= new EventHandler(_offHandCached_IdsChanged);
                     _offHandCached = value;
-					OnItemsChanged();
+                    if (_offHandCached != null && _trackEquippedItemChanges) _offHandCached.IdsChanged += new EventHandler(_offHandCached_IdsChanged);
+                    OnItemsChanged();
 				}
 			}
 		}
@@ -580,10 +634,11 @@ namespace Rawr //O O . .
         {
 			get
 			{
-				if (_rangedCached == null || _rangedCached.GemmedId != _ranged)
+				if (_rangedCached == null)
 				{
 					_rangedCached = Item.LoadFromId(_ranged, "Equipped Ranged");
-				}
+                    if (_rangedCached != null && _trackEquippedItemChanges) _rangedCached.IdsChanged += new EventHandler(_rangedCached_IdsChanged);
+                }
 				return _rangedCached;
 			} 
             set
@@ -591,7 +646,9 @@ namespace Rawr //O O . .
 				if (value == null || _ranged != value.GemmedId)
                 {
 					_ranged = value != null ? value.GemmedId : null;
+                    if (_rangedCached != null && _trackEquippedItemChanges) _rangedCached.IdsChanged -= new EventHandler(_rangedCached_IdsChanged);
                     _rangedCached = value;
+                    if (_rangedCached != null && _trackEquippedItemChanges) _rangedCached.IdsChanged += new EventHandler(_rangedCached_IdsChanged);
                     OnItemsChanged();
                 }
             }
@@ -603,10 +660,11 @@ namespace Rawr //O O . .
 		{
 			get
 			{
-				if (_projectileCached == null || _projectileCached.GemmedId != _projectile)
+				if (_projectileCached == null)
 				{
 					_projectileCached = Item.LoadFromId(_projectile, "Equipped Projectile");
-				}
+                    if (_projectileCached != null && _trackEquippedItemChanges) _projectileCached.IdsChanged += new EventHandler(_projectileCached_IdsChanged);
+                }
 				return _projectileCached;
 			} 
 			set
@@ -614,8 +672,10 @@ namespace Rawr //O O . .
 				if (value == null || _projectile != value.GemmedId)
 				{
 					_projectile = value != null ? value.GemmedId : null;
+                    if (_projectileCached != null && _trackEquippedItemChanges) _projectileCached.IdsChanged -= new EventHandler(_projectileCached_IdsChanged);
                     _projectileCached = value;
-					OnItemsChanged();
+                    if (_projectileCached != null && _trackEquippedItemChanges) _projectileCached.IdsChanged += new EventHandler(_projectileCached_IdsChanged);
+                    OnItemsChanged();
 				}
 			}
 		}
@@ -626,10 +686,11 @@ namespace Rawr //O O . .
 		{
 			get
 			{
-				if (_projectileBagCached == null || _projectileBagCached.GemmedId != _projectileBag)
+				if (_projectileBagCached == null)
 				{
 					_projectileBagCached = Item.LoadFromId(_projectileBag, "Equipped ProjectileBag");
-				}
+                    if (_projectileBagCached != null && _trackEquippedItemChanges) _projectileBagCached.IdsChanged += new EventHandler(_projectileBagCached_IdsChanged);
+                }
 				return _projectileBagCached;
 			} 
 			set
@@ -637,8 +698,10 @@ namespace Rawr //O O . .
 				if (value == null || _projectileBag != value.GemmedId)
 				{
 					_projectileBag = value != null ? value.GemmedId : null;
+                    if (_projectileBagCached != null && _trackEquippedItemChanges) _projectileBagCached.IdsChanged -= new EventHandler(_projectileBagCached_IdsChanged);
                     _projectileBagCached = value;
-					OnItemsChanged();
+                    if (_projectileBagCached != null && _trackEquippedItemChanges) _projectileBagCached.IdsChanged += new EventHandler(_projectileBagCached_IdsChanged);
+                    OnItemsChanged();
 				}
 			}
 		}
@@ -1067,11 +1130,185 @@ namespace Rawr //O O . .
             }
         }
 
+        #region Cached item tracking and invalidation
+        // hook idschanged event on equipped items, only hook this for main character, clones and optimization instances are short lived and don't need to track these changes
+        [XmlIgnore]
+        private bool _trackEquippedItemChanges = true;
+        [XmlIgnore]
+        private bool TrackEquippedItemChanges
+        {
+            get
+            {
+                return _trackEquippedItemChanges;
+            }
+            set
+            {
+                if (_trackEquippedItemChanges != value)
+                {
+                    _trackEquippedItemChanges = value;
+                    if (_trackEquippedItemChanges)
+                    {
+                        // hook events
+                        if (_headCached != null) _headCached.IdsChanged += new EventHandler(_headCached_IdsChanged);
+                        if (_neckCached != null) _neckCached.IdsChanged += new EventHandler(_neckCached_IdsChanged);
+                        if (_shouldersCached != null) _shouldersCached.IdsChanged += new EventHandler(_shouldersCached_IdsChanged);
+                        if (_backCached != null) _backCached.IdsChanged += new EventHandler(_backCached_IdsChanged);
+                        if (_chestCached != null) _chestCached.IdsChanged += new EventHandler(_chestCached_IdsChanged);
+                        if (_shirtCached != null) _shirtCached.IdsChanged += new EventHandler(_shirtCached_IdsChanged);
+                        if (_tabardCached != null) _tabardCached.IdsChanged += new EventHandler(_tabardCached_IdsChanged);
+                        if (_wristCached != null) _wristCached.IdsChanged += new EventHandler(_wristCached_IdsChanged);
+                        if (_handsCached != null) _handsCached.IdsChanged += new EventHandler(_handsCached_IdsChanged);
+                        if (_waistCached != null) _waistCached.IdsChanged += new EventHandler(_waistCached_IdsChanged);
+                        if (_legsCached != null) _legsCached.IdsChanged += new EventHandler(_legsCached_IdsChanged);
+                        if (_feetCached != null) _feetCached.IdsChanged += new EventHandler(_feetCached_IdsChanged);
+                        if (_finger1Cached != null) _finger1Cached.IdsChanged += new EventHandler(_finger1Cached_IdsChanged);
+                        if (_finger2Cached != null) _finger2Cached.IdsChanged += new EventHandler(_finger2Cached_IdsChanged);
+                        if (_trinket1Cached != null) _trinket1Cached.IdsChanged += new EventHandler(_trinket1Cached_IdsChanged);
+                        if (_trinket2Cached != null) _trinket2Cached.IdsChanged += new EventHandler(_trinket2Cached_IdsChanged);
+                        if (_mainHandCached != null) _mainHandCached.IdsChanged += new EventHandler(_mainHandCached_IdsChanged);
+                        if (_offHandCached != null) _offHandCached.IdsChanged += new EventHandler(_offHandCached_IdsChanged);
+                        if (_rangedCached != null) _rangedCached.IdsChanged += new EventHandler(_rangedCached_IdsChanged);
+                        if (_projectileCached != null) _projectileCached.IdsChanged += new EventHandler(_projectileCached_IdsChanged);
+                        if (_projectileBagCached != null) _projectileBagCached.IdsChanged += new EventHandler(_projectileBagCached_IdsChanged);
+                    }
+                    else
+                    {
+                        // unhook events
+                        if (_headCached != null) _headCached.IdsChanged -= new EventHandler(_headCached_IdsChanged);
+                        if (_neckCached != null) _neckCached.IdsChanged -= new EventHandler(_neckCached_IdsChanged);
+                        if (_shouldersCached != null) _shouldersCached.IdsChanged -= new EventHandler(_shouldersCached_IdsChanged);
+                        if (_backCached != null) _backCached.IdsChanged -= new EventHandler(_backCached_IdsChanged);
+                        if (_chestCached != null) _chestCached.IdsChanged -= new EventHandler(_chestCached_IdsChanged);
+                        if (_shirtCached != null) _shirtCached.IdsChanged -= new EventHandler(_shirtCached_IdsChanged);
+                        if (_tabardCached != null) _tabardCached.IdsChanged -= new EventHandler(_tabardCached_IdsChanged);
+                        if (_wristCached != null) _wristCached.IdsChanged -= new EventHandler(_wristCached_IdsChanged);
+                        if (_handsCached != null) _handsCached.IdsChanged -= new EventHandler(_handsCached_IdsChanged);
+                        if (_waistCached != null) _waistCached.IdsChanged -= new EventHandler(_waistCached_IdsChanged);
+                        if (_legsCached != null) _legsCached.IdsChanged -= new EventHandler(_legsCached_IdsChanged);
+                        if (_feetCached != null) _feetCached.IdsChanged -= new EventHandler(_feetCached_IdsChanged);
+                        if (_finger1Cached != null) _finger1Cached.IdsChanged -= new EventHandler(_finger1Cached_IdsChanged);
+                        if (_finger2Cached != null) _finger2Cached.IdsChanged -= new EventHandler(_finger2Cached_IdsChanged);
+                        if (_trinket1Cached != null) _trinket1Cached.IdsChanged -= new EventHandler(_trinket1Cached_IdsChanged);
+                        if (_trinket2Cached != null) _trinket2Cached.IdsChanged -= new EventHandler(_trinket2Cached_IdsChanged);
+                        if (_mainHandCached != null) _mainHandCached.IdsChanged -= new EventHandler(_mainHandCached_IdsChanged);
+                        if (_offHandCached != null) _offHandCached.IdsChanged -= new EventHandler(_offHandCached_IdsChanged);
+                        if (_rangedCached != null) _rangedCached.IdsChanged -= new EventHandler(_rangedCached_IdsChanged);
+                        if (_projectileCached != null) _projectileCached.IdsChanged -= new EventHandler(_projectileCached_IdsChanged);
+                        if (_projectileBagCached != null) _projectileBagCached.IdsChanged -= new EventHandler(_projectileBagCached_IdsChanged);
+                    }
+                }
+            }
+        }
+
+        void _headCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_headCached_IdsChanged);
+            _headCached = null;
+        }
+        void _neckCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_neckCached_IdsChanged);
+            _neckCached = null;
+        }
+        void _shouldersCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_shouldersCached_IdsChanged);
+            _shouldersCached = null;
+        }
+        void _backCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_backCached_IdsChanged);
+            _backCached = null;
+        }
+        void _chestCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_chestCached_IdsChanged);
+            _chestCached = null;
+        }
+        void _shirtCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_shirtCached_IdsChanged);
+            _shirtCached = null;
+        }
+        void _tabardCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_tabardCached_IdsChanged);
+            _tabardCached = null;
+        }
+        void _wristCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_wristCached_IdsChanged);
+            _wristCached = null;
+        }
+        void _handsCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_handsCached_IdsChanged);
+            _handsCached = null;
+        }
+        void _waistCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_waistCached_IdsChanged);
+            _waistCached = null;
+        }
+        void _legsCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_legsCached_IdsChanged);
+            _legsCached = null;
+        }
+        void _feetCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_feetCached_IdsChanged);
+            _feetCached = null;
+        }
+        void _finger1Cached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_finger1Cached_IdsChanged);
+            _finger1Cached = null;
+        }
+        void _finger2Cached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_finger2Cached_IdsChanged);
+            _finger2Cached = null;
+        }
+        void _trinket1Cached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_trinket1Cached_IdsChanged);
+            _trinket1Cached = null;
+        }
+        void _trinket2Cached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_trinket2Cached_IdsChanged);
+            _trinket2Cached = null;
+        }
+        void _mainHandCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_mainHandCached_IdsChanged);
+            _mainHandCached = null;
+        }
+        void _offHandCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_offHandCached_IdsChanged);
+            _offHandCached = null;
+        }
+        void _rangedCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_rangedCached_IdsChanged);
+            _rangedCached = null;
+        }
+        void _projectileCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_projectileCached_IdsChanged);
+            _projectileCached = null;
+        }
+        void _projectileBagCached_IdsChanged(object sender, EventArgs e)
+        {
+            ((Item)sender).IdsChanged -= new EventHandler(_projectileBagCached_IdsChanged);
+            _projectileBagCached = null;
+        }
+        #endregion
+
         // cache gem counts as this takes the most time of accumulating item stats
-        // this becomes invalid when items on character change or when item id changes by editing gems in the equipped item
-        // when item is edited in item editor it listens for id changed event and sets the item to the slot again
-        // so it is enough to just invalidate this when items on character are set
-        // it would be possible that this becomes out of sync if someone edits the color of gems, for now assumed not to be an issue
+        // this becomes invalid when items on character change, invalidate in OnItemsChanged
         private bool gemCountValid;
         private int redGemCount;
         private int yellowGemCount;
@@ -1508,8 +1745,9 @@ namespace Rawr //O O . .
 
         public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
                 Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile, Item projectileBag,
-            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged)
+            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, bool trackEquippedItemChanges)
         {
+            _trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
             _name = name;
             _realm = realm;
@@ -1556,8 +1794,9 @@ namespace Rawr //O O . .
 
         public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
                 Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile, Item projectileBag,
-            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, List<string> activeBuffs)
+            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, List<string> activeBuffs, bool trackEquippedItemChanges)
         {
+            _trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
             _name = name;
             _realm = realm;
@@ -1629,7 +1868,7 @@ namespace Rawr //O O . .
                         this.Finger2Enchant,
                         this.MainHandEnchant,
                         this.OffHandEnchant,
-                        this.RangedEnchant);
+                        this.RangedEnchant, false);
 			foreach (string buff in this.ActiveBuffs) 
 				if (!clone.ActiveBuffs.Contains(buff))
 					clone.ActiveBuffs.Add(buff);
