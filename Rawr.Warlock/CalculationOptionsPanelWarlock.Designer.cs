@@ -43,6 +43,8 @@
             this.checkBoxPetSacrificed = new System.Windows.Forms.CheckBox();
             this.buttonTalents = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBoxCastConflagrate = new System.Windows.Forms.CheckBox();
+            this.checkBoxCastShadowburn = new System.Windows.Forms.CheckBox();
             this.checkBoxCastImmolate = new System.Windows.Forms.CheckBox();
             this.checkBoxCastCorruption = new System.Windows.Forms.CheckBox();
             this.checkBoxCastSiphonLife = new System.Windows.Forms.CheckBox();
@@ -51,14 +53,12 @@
             this.textBoxFightDuration = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.toolTipWarlock = new System.Windows.Forms.ToolTip(this.components);
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.comboBoxBloodlust = new System.Windows.Forms.ComboBox();
-            this.comboBoxDrums = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.textBoxDotGap = new System.Windows.Forms.TextBox();
             this.textBoxAfflictionDebuffs = new System.Windows.Forms.TextBox();
+            this.textBoxShadowPriestDps = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
@@ -177,7 +177,6 @@
             this.comboBoxPet.Items.AddRange(new object[] {
             "Succubus",
             "Felhunter",
-            "Felguard",
             "Imp",
             "Voidwalker"});
             this.comboBoxPet.Location = new System.Drawing.Point(114, 19);
@@ -218,6 +217,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkBoxCastConflagrate);
+            this.groupBox2.Controls.Add(this.checkBoxCastShadowburn);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.comboBoxFillerSpell);
             this.groupBox2.Controls.Add(this.label4);
@@ -226,12 +227,34 @@
             this.groupBox2.Controls.Add(this.checkBoxCastCorruption);
             this.groupBox2.Controls.Add(this.checkBoxCastSiphonLife);
             this.groupBox2.Controls.Add(this.checkBoxCastUnstableAffliction);
-            this.groupBox2.Location = new System.Drawing.Point(3, 184);
+            this.groupBox2.Location = new System.Drawing.Point(3, 220);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(208, 169);
+            this.groupBox2.Size = new System.Drawing.Size(208, 212);
             this.groupBox2.TabIndex = 16;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Spell Choice";
+            // 
+            // checkBoxCastConflagrate
+            // 
+            this.checkBoxCastConflagrate.AutoSize = true;
+            this.checkBoxCastConflagrate.Location = new System.Drawing.Point(10, 189);
+            this.checkBoxCastConflagrate.Name = "checkBoxCastConflagrate";
+            this.checkBoxCastConflagrate.Size = new System.Drawing.Size(80, 17);
+            this.checkBoxCastConflagrate.TabIndex = 17;
+            this.checkBoxCastConflagrate.Text = "Conflagrate";
+            this.checkBoxCastConflagrate.UseVisualStyleBackColor = true;
+            this.checkBoxCastConflagrate.CheckedChanged += new System.EventHandler(this.checkBoxCastConflagrate_CheckedChanged);
+            // 
+            // checkBoxCastShadowburn
+            // 
+            this.checkBoxCastShadowburn.AutoSize = true;
+            this.checkBoxCastShadowburn.Location = new System.Drawing.Point(10, 166);
+            this.checkBoxCastShadowburn.Name = "checkBoxCastShadowburn";
+            this.checkBoxCastShadowburn.Size = new System.Drawing.Size(86, 17);
+            this.checkBoxCastShadowburn.TabIndex = 16;
+            this.checkBoxCastShadowburn.Text = "Shadowburn";
+            this.checkBoxCastShadowburn.UseVisualStyleBackColor = true;
+            this.checkBoxCastShadowburn.CheckedChanged += new System.EventHandler(this.checkBoxCastShadowburn_CheckedChanged);
             // 
             // checkBoxCastImmolate
             // 
@@ -247,7 +270,7 @@
             // checkBoxCastCorruption
             // 
             this.checkBoxCastCorruption.AutoSize = true;
-            this.checkBoxCastCorruption.Location = new System.Drawing.Point(9, 97);
+            this.checkBoxCastCorruption.Location = new System.Drawing.Point(10, 97);
             this.checkBoxCastCorruption.Name = "checkBoxCastCorruption";
             this.checkBoxCastCorruption.Size = new System.Drawing.Size(74, 17);
             this.checkBoxCastCorruption.TabIndex = 13;
@@ -282,7 +305,7 @@
             this.groupBox3.Controls.Add(this.comboBoxPet);
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.checkBoxPetSacrificed);
-            this.groupBox3.Location = new System.Drawing.Point(3, 359);
+            this.groupBox3.Location = new System.Drawing.Point(3, 438);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(208, 68);
             this.groupBox3.TabIndex = 17;
@@ -306,28 +329,6 @@
             this.label9.TabIndex = 18;
             this.label9.Text = "Fight Duration (s):";
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(10, 436);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(103, 13);
-            this.label6.TabIndex = 21;
-            this.label6.Text = "Heroism/Bloodlust: *";
-            this.toolTipWarlock.SetToolTip(this.label6, "Number of Heroisms/Bloodlusts available");
-            this.label6.Visible = false;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 463);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(89, 13);
-            this.label7.TabIndex = 23;
-            this.label7.Text = "Drums of Battle: *";
-            this.toolTipWarlock.SetToolTip(this.label7, "Number of Drums of Battle available");
-            this.label7.Visible = false;
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -348,39 +349,15 @@
             this.label10.Text = "Affliction Debuffs: *";
             this.toolTipWarlock.SetToolTip(this.label10, "Number of Affliction debuffs on the target (for Soul Siphon)");
             // 
-            // comboBoxBloodlust
+            // label6
             // 
-            this.comboBoxBloodlust.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.comboBoxBloodlust.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxBloodlust.FormattingEnabled = true;
-            this.comboBoxBloodlust.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4"});
-            this.comboBoxBloodlust.Location = new System.Drawing.Point(117, 433);
-            this.comboBoxBloodlust.Name = "comboBoxBloodlust";
-            this.comboBoxBloodlust.Size = new System.Drawing.Size(88, 21);
-            this.comboBoxBloodlust.TabIndex = 22;
-            this.comboBoxBloodlust.Visible = false;
-            // 
-            // comboBoxDrums
-            // 
-            this.comboBoxDrums.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.comboBoxDrums.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxDrums.FormattingEnabled = true;
-            this.comboBoxDrums.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4"});
-            this.comboBoxDrums.Location = new System.Drawing.Point(117, 460);
-            this.comboBoxDrums.Name = "comboBoxDrums";
-            this.comboBoxDrums.Size = new System.Drawing.Size(88, 21);
-            this.comboBoxDrums.TabIndex = 24;
-            this.comboBoxDrums.Visible = false;
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(10, 187);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(110, 13);
+            this.label6.TabIndex = 30;
+            this.label6.Text = "Shadow Priest DPS: *";
+            this.toolTipWarlock.SetToolTip(this.label6, "SP DPS for Vampiric Touch");
             // 
             // textBoxDotGap
             // 
@@ -388,6 +365,7 @@
             this.textBoxDotGap.Name = "textBoxDotGap";
             this.textBoxDotGap.Size = new System.Drawing.Size(88, 20);
             this.textBoxDotGap.TabIndex = 25;
+            this.textBoxDotGap.Leave += new System.EventHandler(this.textBoxDotGap_Leave);
             // 
             // textBoxAfflictionDebuffs
             // 
@@ -395,18 +373,25 @@
             this.textBoxAfflictionDebuffs.Name = "textBoxAfflictionDebuffs";
             this.textBoxAfflictionDebuffs.Size = new System.Drawing.Size(88, 20);
             this.textBoxAfflictionDebuffs.TabIndex = 26;
+            this.textBoxAfflictionDebuffs.Leave += new System.EventHandler(this.textBoxAfflictionDebuffs_Leave);
+            // 
+            // textBoxShadowPriestDps
+            // 
+            this.textBoxShadowPriestDps.Location = new System.Drawing.Point(117, 184);
+            this.textBoxShadowPriestDps.Name = "textBoxShadowPriestDps";
+            this.textBoxShadowPriestDps.Size = new System.Drawing.Size(88, 20);
+            this.textBoxShadowPriestDps.TabIndex = 29;
+            this.textBoxShadowPriestDps.Leave += new System.EventHandler(this.textBoxShadowPriestDps_Leave);
             // 
             // CalculationOptionsPanelWarlock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.textBoxShadowPriestDps);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.comboBoxDrums);
-            this.Controls.Add(this.label7);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.textBoxAfflictionDebuffs);
-            this.Controls.Add(this.comboBoxBloodlust);
-            this.Controls.Add(this.label6);
             this.Controls.Add(this.textBoxDotGap);
             this.Controls.Add(this.buttonTalents);
             this.Controls.Add(this.textBoxFightDuration);
@@ -453,13 +438,13 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button buttonTalents;
         private System.Windows.Forms.ToolTip toolTipWarlock;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox comboBoxBloodlust;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ComboBox comboBoxDrums;
         private System.Windows.Forms.TextBox textBoxDotGap;
         private System.Windows.Forms.TextBox textBoxAfflictionDebuffs;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.CheckBox checkBoxCastShadowburn;
+        private System.Windows.Forms.CheckBox checkBoxCastConflagrate;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox textBoxShadowPriestDps;
 	}
 }

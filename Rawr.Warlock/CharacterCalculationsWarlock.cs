@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
+using System.Reflection;
 
 namespace Rawr.Warlock
 {
@@ -25,9 +27,9 @@ namespace Rawr.Warlock
     {
         Succubus,
         Felhunter, 
-        Felguard, 
         Imp, 
-        Voidwalker
+        Voidwalker,
+        Felguard
     }
 
     [Serializable]
@@ -43,7 +45,6 @@ namespace Rawr.Warlock
             return xml.ToString();
         }
 
-        public bool EnforceMetagemRequirements { get; set; }
         public float Latency { get; set; }
         public int TargetLevel { get; set; }
         public float FightDuration { get; set; }
@@ -53,13 +54,15 @@ namespace Rawr.Warlock
         public bool PetSacrificed { get; set; }
         public float DotGap { get; set; }
         public int AfflictionDebuffs { get; set; }
+        public float ShadowPriestDps { get; set; }
         public bool CastImmolate { get; set; }
         public bool CastCorruption { get; set; }
         public bool CastUnstableAffliction { get; set; }
         public bool CastSiphonLife { get; set; }
+        public bool CastShadowburn { get; set; }
+        public bool CastConflagrate { get; set; }
 
-        //talents
-        public bool TalentsSaved { get; set; }
+        //affliction talents
         public int Suppression { get; set; }
         public int ImprovedCorruption { get; set; }
         public int ImprovedDrainSoul { get; set; }
@@ -69,11 +72,17 @@ namespace Rawr.Warlock
         public int AmplifyCurse { get; set; }
         public int Nightfall { get; set; }
         public int EmpoweredCorruption { get; set; }
+        public int SiphonLife { get; set; }
         public int ShadowMastery { get; set; }
         public int Contagion { get; set; }
+        public int DarkPact { get; set; }
+        public int UnstableAffliction { get; set; }
+
+        //demonology talents
         public int ImprovedImp { get; set; }
         public int DemonicEmbrace { get; set; }
         public int FelIntellect { get; set; }
+        public int ImprovedSuccubus { get; set; }
         public int FelStamina { get; set; }
         public int DemonicAegis { get; set; }
         public int UnholyPower { get; set; }
@@ -83,77 +92,170 @@ namespace Rawr.Warlock
         public int SoulLink { get; set; }
         public int DemonicKnowledge { get; set; }
         public int DemonicTactics { get; set; }
-        public int ImprovedShadowbolt { get; set; }
+        public int SummonFelguard { get; set; }
+
+        //destruction talents
+        public int ImprovedShadowBolt { get; set; }
         public int Cataclysm { get; set; }
         public int Bane { get; set; }
         public int ImprovedFirebolt { get; set; }
         public int ImprovedLashOfPain { get; set; }
         public int Devastation { get; set; }
+        public int Shadowburn { get; set; }
         public int ImprovedSearingPain { get; set; }
-        public int DestructiveReach { get; set; }
         public int ImprovedImmolate { get; set; }
         public int Ruin { get; set; }
         public int Emberstorm { get; set; }
         public int Backlash { get; set; }
+        public int Conflagrate { get; set; }
         public int SoulLeech { get; set; }
         public int ShadowAndFlame { get; set; }
 
-        public CalculationOptionsWarlock()
+        //not implemented
+        public int ImprovedCurseOfWeakness { get; set; }
+        public int FelConcentration { get; set; }
+        public int GrimReach { get; set; }
+        public int ShadowEmbrace { get; set; }
+        public int CurseOfExhaustion { get; set; }
+        public int ImprovedHowlOfTerror { get; set; }
+        public int Malediction { get; set; }
+        public int ImprovedHealthstone { get; set; }
+        public int ImprovedHealthFunnel { get; set; }
+        public int ImprovedVoidwalker { get; set; }
+        public int FelDomination { get; set; }
+        public int MasterSummoner { get; set; }
+        public int ImprovedEnslaveDemon { get; set; }
+        public int MasterConjuror { get; set; }
+        public int DemonicResilience { get; set; }
+        public int Aftermath { get; set; }
+        public int Intensity { get; set; }
+        public int DestructiveReach { get; set; }
+        public int Pyroclasm { get; set; }
+        public int NetherProtection { get; set; }
+        public int Shadowfury { get; set; }
+
+        private CalculationOptionsWarlock() 
         {
-            EnforceMetagemRequirements = false;
+        }
+
+        public CalculationOptionsWarlock(Character character)
+        {
+            ImportTalents(character);
+
             Latency = 0.05f;
             TargetLevel = 73;
             FightDuration = 360;
+            DotGap = 1;
+            AfflictionDebuffs = 12;
+            ShadowPriestDps = 1200;
             FillerSpell = FillerSpell.Shadowbolt;
             CastedCurse = CastedCurse.CurseOfShadow;
             CastImmolate = false;
             CastCorruption = false;
             CastUnstableAffliction = false;
             CastSiphonLife = false;
+            CastShadowburn = false;
+            CastConflagrate = false;
             Pet = Pet.Succubus;
             PetSacrificed = true;
-            DotGap = 1;
-            AfflictionDebuffs = 12;
-
-            TalentsSaved = false;
-            Suppression = 0;
-            ImprovedCorruption = 0;
-            ImprovedDrainSoul = 0;
-            ImprovedLifeTap = 0;
-            SoulSiphon = 0;
-            ImprovedCurseOfAgony = 0;
-            AmplifyCurse = 0;
-            Nightfall = 0;
-            EmpoweredCorruption = 0;
-            ShadowMastery = 0;
-            Contagion = 0;
-            ImprovedImp = 0;
-            DemonicEmbrace = 0;
-            FelIntellect = 0;
-            FelStamina = 0;
-            DemonicAegis = 0;
-            UnholyPower = 0;
-            DemonicSacrifice = 0;
-            ManaFeed = 0;
-            MasterDemonologist = 0;
-            SoulLink = 0;
-            DemonicKnowledge = 0;
-            DemonicTactics = 0;
-            ImprovedShadowbolt = 0;
-            Cataclysm = 0;
-            Bane = 0;
-            ImprovedFirebolt = 0;
-            ImprovedLashOfPain = 0;
-            Devastation = 0;
-            ImprovedSearingPain = 0;
-            DestructiveReach = 0;
-            ImprovedImmolate = 0;
-            Ruin = 0;
-            Emberstorm = 0;
-            Backlash = 0;
-            SoulLeech = 0;
-            ShadowAndFlame = 0;
         }
+
+        private void ImportTalents(Character character)
+        {
+            try
+            {
+                WebRequestWrapper wrw = new WebRequestWrapper();
+
+                if (character.Class == Character.CharacterClass.Warlock && character.Name != null && character.Realm != null)
+                {
+                    XmlDocument docTalents = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm);
+
+                    if (docTalents != null)
+                    {
+                        string talentCode = docTalents.SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
+                        Suppression = int.Parse(talentCode.Substring(0, 1));
+                        ImprovedCorruption = int.Parse(talentCode.Substring(1, 1));
+                        ImprovedCurseOfWeakness = int.Parse(talentCode.Substring(2, 1));
+                        ImprovedDrainSoul = int.Parse(talentCode.Substring(3, 1));
+                        ImprovedLifeTap = int.Parse(talentCode.Substring(4, 1));
+                        SoulSiphon = int.Parse(talentCode.Substring(5, 1));
+                        ImprovedCurseOfAgony = int.Parse(talentCode.Substring(6, 1));
+                        FelConcentration = int.Parse(talentCode.Substring(7, 1));
+                        AmplifyCurse = int.Parse(talentCode.Substring(8, 1));
+                        GrimReach = int.Parse(talentCode.Substring(9, 1));
+                        Nightfall = int.Parse(talentCode.Substring(10, 1));
+                        EmpoweredCorruption = int.Parse(talentCode.Substring(11, 1));
+                        ShadowEmbrace = int.Parse(talentCode.Substring(12, 1));
+                        SiphonLife = int.Parse(talentCode.Substring(13, 1));
+                        CurseOfExhaustion = int.Parse(talentCode.Substring(14, 1));
+                        ShadowMastery = int.Parse(talentCode.Substring(15, 1));
+                        Contagion = int.Parse(talentCode.Substring(16, 1));
+                        DarkPact = int.Parse(talentCode.Substring(17, 1));
+                        ImprovedHowlOfTerror = int.Parse(talentCode.Substring(18, 1));
+                        Malediction = int.Parse(talentCode.Substring(19, 1));
+                        UnstableAffliction = int.Parse(talentCode.Substring(20, 1));
+                        ImprovedHealthstone = int.Parse(talentCode.Substring(21, 1));
+                        ImprovedImp = int.Parse(talentCode.Substring(22, 1));
+                        DemonicEmbrace = int.Parse(talentCode.Substring(23, 1));
+                        ImprovedHealthFunnel = int.Parse(talentCode.Substring(24, 1));
+                        ImprovedVoidwalker = int.Parse(talentCode.Substring(25, 1));
+                        FelIntellect = int.Parse(talentCode.Substring(26, 1));
+                        ImprovedSuccubus = int.Parse(talentCode.Substring(27, 1));
+                        FelDomination = int.Parse(talentCode.Substring(28, 1));
+                        FelStamina = int.Parse(talentCode.Substring(29, 1));
+                        DemonicAegis = int.Parse(talentCode.Substring(30, 1));
+                        MasterSummoner = int.Parse(talentCode.Substring(31, 1));
+                        UnholyPower = int.Parse(talentCode.Substring(32, 1));
+                        ImprovedEnslaveDemon = int.Parse(talentCode.Substring(33, 1));
+                        DemonicSacrifice = int.Parse(talentCode.Substring(34, 1));
+                        MasterConjuror = int.Parse(talentCode.Substring(35, 1));
+                        ManaFeed = int.Parse(talentCode.Substring(36, 1));
+                        MasterDemonologist = int.Parse(talentCode.Substring(37, 1));
+                        DemonicResilience = int.Parse(talentCode.Substring(38, 1));
+                        SoulLink = int.Parse(talentCode.Substring(39, 1));
+                        DemonicKnowledge = int.Parse(talentCode.Substring(40, 1));
+                        DemonicTactics = int.Parse(talentCode.Substring(41, 1));
+                        SummonFelguard = int.Parse(talentCode.Substring(42, 1));
+                        ImprovedShadowBolt = int.Parse(talentCode.Substring(43, 1));
+                        Cataclysm = int.Parse(talentCode.Substring(44, 1));
+                        Bane = int.Parse(talentCode.Substring(45, 1));
+                        Aftermath = int.Parse(talentCode.Substring(46, 1));
+                        ImprovedFirebolt = int.Parse(talentCode.Substring(47, 1));
+                        ImprovedLashOfPain = int.Parse(talentCode.Substring(48, 1));
+                        Devastation = int.Parse(talentCode.Substring(49, 1));
+                        Shadowburn = int.Parse(talentCode.Substring(50, 1));
+                        Intensity = int.Parse(talentCode.Substring(51, 1));
+                        DestructiveReach = int.Parse(talentCode.Substring(52, 1));
+                        ImprovedSearingPain = int.Parse(talentCode.Substring(53, 1));
+                        Pyroclasm = int.Parse(talentCode.Substring(54, 1));
+                        ImprovedImmolate = int.Parse(talentCode.Substring(55, 1));
+                        Ruin = int.Parse(talentCode.Substring(56, 1));
+                        NetherProtection = int.Parse(talentCode.Substring(57, 1));
+                        Emberstorm = int.Parse(talentCode.Substring(58, 1));
+                        Backlash = int.Parse(talentCode.Substring(59, 1));
+                        Conflagrate = int.Parse(talentCode.Substring(60, 1));
+                        SoulLeech = int.Parse(talentCode.Substring(61, 1));
+                        ShadowAndFlame = int.Parse(talentCode.Substring(62, 1));
+                        Shadowfury = int.Parse(talentCode.Substring(63, 1));
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public int GetTalentByName(string name)
+        {
+            Type t = typeof(CalculationOptionsWarlock);
+            return (int)t.GetProperty(name).GetValue(this, null);
+        }
+
+        public void SetTalentByName(string name, int value)
+        {
+            Type t = typeof(CalculationOptionsWarlock);
+            t.GetProperty(name).SetValue(this, value, null);
+        } 
     }
 
     class CharacterCalculationsWarlock : CharacterCalculationsBase

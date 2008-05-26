@@ -171,54 +171,127 @@ namespace Rawr.Warlock
 			return calcOpts;
 		}
 
-        public Character GetTalents(Character character)
+        public static void LoadTalentCode(Character character, string talentCode)
         {
-            CalculationOptionsWarlock options = character.CalculationOptions as CalculationOptionsWarlock;
+            //http://www.worldofwarcraft.com/info/classes/warlock/talents.html?tal=0000000000000000000000000000000000000000000000000000000000000000
+            if (talentCode == null || talentCode.Length < 64)
+                return;
 
-            if (!options.TalentsSaved)
-            {
-                TalentTree tree = character.Talents;
-                options.Suppression = tree.GetTalent("Suppression").PointsInvested;
-                options.ImprovedCorruption = tree.GetTalent("ImprovedCorruption").PointsInvested;
-                options.ImprovedDrainSoul = tree.GetTalent("ImprovedDrainSoul").PointsInvested;
-                options.ImprovedLifeTap = tree.GetTalent("ImprovedLifeTap").PointsInvested;
-                options.SoulSiphon = tree.GetTalent("SoulSiphon").PointsInvested;
-                options.ImprovedCurseOfAgony = tree.GetTalent("ImprovedCurseOfAgony").PointsInvested;
-                options.AmplifyCurse = tree.GetTalent("AmplifyCurse").PointsInvested;
-                options.Nightfall = tree.GetTalent("Nightfall").PointsInvested;
-                options.EmpoweredCorruption = tree.GetTalent("EmpoweredCorruption").PointsInvested;
-                options.ShadowMastery = tree.GetTalent("ShadowMastery").PointsInvested;
-                options.Contagion = tree.GetTalent("Contagion").PointsInvested;
-                options.ImprovedImp = tree.GetTalent("ImprovedImp").PointsInvested;
-                options.DemonicEmbrace = tree.GetTalent("DemonicEmbrace").PointsInvested;
-                options.FelIntellect = tree.GetTalent("FelIntellect").PointsInvested;
-                options.FelStamina = tree.GetTalent("FelStamina").PointsInvested;
-                options.DemonicAegis = tree.GetTalent("DemonicAegis").PointsInvested;
-                options.UnholyPower = tree.GetTalent("UnholyPower").PointsInvested;
-                options.DemonicSacrifice = tree.GetTalent("DemonicSacrifice").PointsInvested;
-                options.ManaFeed = tree.GetTalent("ManaFeed").PointsInvested;
-                options.MasterDemonologist = tree.GetTalent("MasterDemonologist").PointsInvested;
-                options.SoulLink = tree.GetTalent("SoulLink").PointsInvested;
-                options.DemonicKnowledge = tree.GetTalent("DemonicKnowledge").PointsInvested;
-                options.DemonicTactics = tree.GetTalent("DemonicTactics").PointsInvested;
-                options.ImprovedShadowbolt = tree.GetTalent("ImprovedShadowBolt").PointsInvested;
-                options.Cataclysm = tree.GetTalent("Cataclysm").PointsInvested;
-                options.Bane = tree.GetTalent("Bane").PointsInvested;
-                options.ImprovedFirebolt = tree.GetTalent("ImprovedFirebolt").PointsInvested;
-                options.ImprovedLashOfPain = tree.GetTalent("ImprovedLashOfPain").PointsInvested;
-                options.Devastation = tree.GetTalent("Devastation").PointsInvested;
-                options.ImprovedSearingPain = tree.GetTalent("ImprovedSearingPain").PointsInvested;
-                options.DestructiveReach = tree.GetTalent("DestructiveReach").PointsInvested;
-                options.ImprovedImmolate = tree.GetTalent("ImprovedImmolate").PointsInvested;
-                options.Ruin = tree.GetTalent("Ruin").PointsInvested;
-                options.Emberstorm = tree.GetTalent("Emberstorm").PointsInvested;
-                options.Backlash = tree.GetTalent("Backlash").PointsInvested;
-                options.SoulLeech = tree.GetTalent("SoulLeech").PointsInvested;
-                options.ShadowAndFlame = tree.GetTalent("ShadowAndFlame").PointsInvested;
-            }
+            CalculationOptionsWarlock calculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
 
-            return character;
+            calculationOptions.Suppression = int.Parse(talentCode.Substring(0, 1));
+            calculationOptions.ImprovedCorruption = int.Parse(talentCode.Substring(1, 1));
+            calculationOptions.ImprovedCurseOfWeakness = int.Parse(talentCode.Substring(2, 1));
+            calculationOptions.ImprovedDrainSoul = int.Parse(talentCode.Substring(3, 1));
+            calculationOptions.ImprovedLifeTap = int.Parse(talentCode.Substring(4, 1));
+            calculationOptions.SoulSiphon = int.Parse(talentCode.Substring(5, 1));
+            calculationOptions.ImprovedCurseOfAgony = int.Parse(talentCode.Substring(6, 1));
+            calculationOptions.FelConcentration = int.Parse(talentCode.Substring(7, 1));
+            calculationOptions.AmplifyCurse = int.Parse(talentCode.Substring(8, 1));
+            calculationOptions.GrimReach = int.Parse(talentCode.Substring(9, 1));
+            calculationOptions.Nightfall = int.Parse(talentCode.Substring(10, 1));
+            calculationOptions.EmpoweredCorruption = int.Parse(talentCode.Substring(11, 1));
+            calculationOptions.ShadowEmbrace = int.Parse(talentCode.Substring(12, 1));
+            calculationOptions.SiphonLife = int.Parse(talentCode.Substring(13, 1));
+            calculationOptions.CurseOfExhaustion = int.Parse(talentCode.Substring(14, 1));
+            calculationOptions.ShadowMastery = int.Parse(talentCode.Substring(15, 1));
+            calculationOptions.Contagion = int.Parse(talentCode.Substring(16, 1));
+            calculationOptions.DarkPact = int.Parse(talentCode.Substring(17, 1));
+            calculationOptions.ImprovedHowlOfTerror = int.Parse(talentCode.Substring(18, 1));
+            calculationOptions.Malediction = int.Parse(talentCode.Substring(19, 1));
+            calculationOptions.UnstableAffliction = int.Parse(talentCode.Substring(20, 1));
+            calculationOptions.ImprovedHealthstone = int.Parse(talentCode.Substring(21, 1));
+            calculationOptions.ImprovedImp = int.Parse(talentCode.Substring(22, 1));
+            calculationOptions.DemonicEmbrace = int.Parse(talentCode.Substring(23, 1));
+            calculationOptions.ImprovedHealthFunnel = int.Parse(talentCode.Substring(24, 1));
+            calculationOptions.ImprovedVoidwalker = int.Parse(talentCode.Substring(25, 1));
+            calculationOptions.FelIntellect = int.Parse(talentCode.Substring(26, 1));
+            calculationOptions.ImprovedSuccubus = int.Parse(talentCode.Substring(27, 1));
+            calculationOptions.FelDomination = int.Parse(talentCode.Substring(28, 1));
+            calculationOptions.FelStamina = int.Parse(talentCode.Substring(29, 1));
+            calculationOptions.DemonicAegis = int.Parse(talentCode.Substring(30, 1));
+            calculationOptions.MasterSummoner = int.Parse(talentCode.Substring(31, 1));
+            calculationOptions.UnholyPower = int.Parse(talentCode.Substring(32, 1));
+            calculationOptions.ImprovedEnslaveDemon = int.Parse(talentCode.Substring(33, 1));
+            calculationOptions.DemonicSacrifice = int.Parse(talentCode.Substring(34, 1));
+            calculationOptions.MasterConjuror = int.Parse(talentCode.Substring(35, 1));
+            calculationOptions.ManaFeed = int.Parse(talentCode.Substring(36, 1));
+            calculationOptions.MasterDemonologist = int.Parse(talentCode.Substring(37, 1));
+            calculationOptions.DemonicResilience = int.Parse(talentCode.Substring(38, 1));
+            calculationOptions.SoulLink = int.Parse(talentCode.Substring(39, 1));
+            calculationOptions.DemonicKnowledge = int.Parse(talentCode.Substring(40, 1));
+            calculationOptions.DemonicTactics = int.Parse(talentCode.Substring(41, 1));
+            calculationOptions.SummonFelguard = int.Parse(talentCode.Substring(42, 1));
+            calculationOptions.ImprovedShadowBolt = int.Parse(talentCode.Substring(43, 1));
+            calculationOptions.Cataclysm = int.Parse(talentCode.Substring(44, 1));
+            calculationOptions.Bane = int.Parse(talentCode.Substring(45, 1));
+            calculationOptions.Aftermath = int.Parse(talentCode.Substring(46, 1));
+            calculationOptions.ImprovedFirebolt = int.Parse(talentCode.Substring(47, 1));
+            calculationOptions.ImprovedLashOfPain = int.Parse(talentCode.Substring(48, 1));
+            calculationOptions.Devastation = int.Parse(talentCode.Substring(49, 1));
+            calculationOptions.Shadowburn = int.Parse(talentCode.Substring(50, 1));
+            calculationOptions.Intensity = int.Parse(talentCode.Substring(51, 1));
+            calculationOptions.DestructiveReach = int.Parse(talentCode.Substring(52, 1));
+            calculationOptions.ImprovedSearingPain = int.Parse(talentCode.Substring(53, 1));
+            calculationOptions.Pyroclasm = int.Parse(talentCode.Substring(54, 1));
+            calculationOptions.ImprovedImmolate = int.Parse(talentCode.Substring(55, 1));
+            calculationOptions.Ruin = int.Parse(talentCode.Substring(56, 1));
+            calculationOptions.NetherProtection = int.Parse(talentCode.Substring(57, 1));
+            calculationOptions.Emberstorm = int.Parse(talentCode.Substring(58, 1));
+            calculationOptions.Backlash = int.Parse(talentCode.Substring(59, 1));
+            calculationOptions.Conflagrate = int.Parse(talentCode.Substring(60, 1));
+            calculationOptions.SoulLeech = int.Parse(talentCode.Substring(61, 1));
+            calculationOptions.ShadowAndFlame = int.Parse(talentCode.Substring(62, 1));
+            calculationOptions.Shadowfury = int.Parse(talentCode.Substring(63, 1));
         }
+
+        //public Character GetTalents(Character character)
+        //{
+        //    CalculationOptionsWarlock options = character.CalculationOptions as CalculationOptionsWarlock;
+
+        //    //if (!options.TalentsSaved)
+        //    //{
+        //        TalentTree tree = character.Talents;
+        //        options.Suppression = tree.GetTalent("Suppression").PointsInvested;
+        //        options.ImprovedCorruption = tree.GetTalent("ImprovedCorruption").PointsInvested;
+        //        options.ImprovedDrainSoul = tree.GetTalent("ImprovedDrainSoul").PointsInvested;
+        //        options.ImprovedLifeTap = tree.GetTalent("ImprovedLifeTap").PointsInvested;
+        //        options.SoulSiphon = tree.GetTalent("SoulSiphon").PointsInvested;
+        //        options.ImprovedCurseOfAgony = tree.GetTalent("ImprovedCurseOfAgony").PointsInvested;
+        //        options.AmplifyCurse = tree.GetTalent("AmplifyCurse").PointsInvested;
+        //        options.Nightfall = tree.GetTalent("Nightfall").PointsInvested;
+        //        options.EmpoweredCorruption = tree.GetTalent("EmpoweredCorruption").PointsInvested;
+        //        options.ShadowMastery = tree.GetTalent("ShadowMastery").PointsInvested;
+        //        options.Contagion = tree.GetTalent("Contagion").PointsInvested;
+        //        options.ImprovedImp = tree.GetTalent("ImprovedImp").PointsInvested;
+        //        options.DemonicEmbrace = tree.GetTalent("DemonicEmbrace").PointsInvested;
+        //        options.FelIntellect = tree.GetTalent("FelIntellect").PointsInvested;
+        //        options.FelStamina = tree.GetTalent("FelStamina").PointsInvested;
+        //        options.DemonicAegis = tree.GetTalent("DemonicAegis").PointsInvested;
+        //        options.UnholyPower = tree.GetTalent("UnholyPower").PointsInvested;
+        //        options.DemonicSacrifice = tree.GetTalent("DemonicSacrifice").PointsInvested;
+        //        options.ManaFeed = tree.GetTalent("ManaFeed").PointsInvested;
+        //        options.MasterDemonologist = tree.GetTalent("MasterDemonologist").PointsInvested;
+        //        options.SoulLink = tree.GetTalent("SoulLink").PointsInvested;
+        //        options.DemonicKnowledge = tree.GetTalent("DemonicKnowledge").PointsInvested;
+        //        options.DemonicTactics = tree.GetTalent("DemonicTactics").PointsInvested;
+        //        options.ImprovedShadowBolt = tree.GetTalent("ImprovedShadowBolt").PointsInvested;
+        //        options.Cataclysm = tree.GetTalent("Cataclysm").PointsInvested;
+        //        options.Bane = tree.GetTalent("Bane").PointsInvested;
+        //        options.ImprovedFirebolt = tree.GetTalent("ImprovedFirebolt").PointsInvested;
+        //        options.ImprovedLashOfPain = tree.GetTalent("ImprovedLashOfPain").PointsInvested;
+        //        options.Devastation = tree.GetTalent("Devastation").PointsInvested;
+        //        options.ImprovedSearingPain = tree.GetTalent("ImprovedSearingPain").PointsInvested;
+        //        options.ImprovedImmolate = tree.GetTalent("ImprovedImmolate").PointsInvested;
+        //        options.Ruin = tree.GetTalent("Ruin").PointsInvested;
+        //        options.Emberstorm = tree.GetTalent("Emberstorm").PointsInvested;
+        //        options.Backlash = tree.GetTalent("Backlash").PointsInvested;
+        //        options.SoulLeech = tree.GetTalent("SoulLeech").PointsInvested;
+        //        options.ShadowAndFlame = tree.GetTalent("ShadowAndFlame").PointsInvested;
+        //    //}
+
+        //    return character;
+        //}
 
         
         /// <summary>
@@ -239,7 +312,6 @@ namespace Rawr.Warlock
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CharacterCalculationsWarlock calculations = new CharacterCalculationsWarlock();
-            character = GetTalents(character);
             calculations.BasicStats = GetCharacterStats(character, additionalItem);
 			calculations.CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
 
@@ -427,6 +499,7 @@ namespace Rawr.Warlock
 
             //mp5
             statsTotal.Mp5 += 100; //Assume Super Mana Potions (TODO: Add some kind of potion selector)
+            statsTotal.Mp5 += options.ShadowPriestDps * 0.05f * 5 * 0.95f;
 
             //health
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
@@ -482,11 +555,10 @@ namespace Rawr.Warlock
             }
 
             //Emberstorm
-            //have to find some way to represent the reduction in cast time for Incinerate
-            statsTotal.BonusFireSpellPowerMultiplier *= 1 + (character.Talents.GetTalent("Emberstorm").PointsInvested * 0.02f);
+            statsTotal.BonusFireSpellPowerMultiplier *= 1 + 0.02f * options.Emberstorm;
 
             //Shadow Mastery
-            statsTotal.BonusShadowSpellPowerMultiplier *= 1 + (character.Talents.GetTalent("ShadowMastery").PointsInvested * 0.02f);
+            statsTotal.BonusShadowSpellPowerMultiplier *= 1 + 0.02f * options.ShadowMastery;
 
             //Soul Link
             statsTotal.BonusSpellPowerMultiplier *= 1 + options.SoulLink * 0.05f;

@@ -120,13 +120,28 @@ namespace Rawr.Warlock
             fillerSpell.CalculateDerivedStats(calculations);
             float lifeTapCastTime = calculations.GlobalCooldown + calculations.CalculationOptions.Latency;
             float lifeTapMana = (float)Math.Round((580 + calculations.ShadowDamage * 0.8f) * (1 + 0.1f * calculations.CalculationOptions.ImprovedLifeTap));
-            //float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
+            float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
             //float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
-            float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - fillerSpell.CastTime * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
+            //float numLifeTaps2 = (durationLeft * fillerSpell.ManaCost - fillerSpell.CastTime * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime);
             float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
 
             manaLeft -= numFillers * fillerSpell.ManaCost;
             manaLeft += numLifeTaps * lifeTapMana;
+            while (manaLeft < 0)
+            {
+                numLifeTaps++;
+                manaLeft += lifeTapMana;
+            }
+            while (manaLeft > lifeTapMana)
+            {
+                numLifeTaps--;
+                manaLeft -= lifeTapMana;
+            }
+            numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
+            durationLeft -= numFillers * fillerSpell.CastTime + numLifeTaps * lifeTapCastTime;
+
+            if (calcDps && (manaLeft < 0 || manaLeft > lifeTapMana || durationLeft > fillerSpell.CastTime))
+                Console.WriteLine("sigh");
             
             if (calcDps)
             {
