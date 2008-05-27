@@ -93,24 +93,37 @@ namespace Rawr.Mage
             }
         }
 
-        public double GetConstraintElement(int col)
+        public void EnsureExtraConstraints(int count)
         {
-            return extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + col];
+            while (numExtraConstraints < count) AddConstraint();
         }
 
-        public void SetConstraintElement(int col, double value)
+        public double GetConstraintElement(int index, int col)
         {
-            extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + col] = value;
+            return extraConstraints[index * (cols + rows + 1) + col];
         }
 
-        public double GetConstraintRHS()
+        public void SetConstraintElement(int index, int col, double value)
         {
-            return extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + cols + rows];
+            extraConstraints[index * (cols + rows + 1) + col] = value;
         }
 
-        public void SetConstraintRHS(double value)
+        public double GetConstraintRHS(int index)
         {
-            extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + cols + rows] = value;
+            return extraConstraints[index * (cols + rows + 1) + cols + rows];
+        }
+
+        public void SetConstraintRHS(int index, double value)
+        {
+            extraConstraints[index * (cols + rows + 1) + cols + rows] = value;
+        }
+
+        public int ExtraConstraintCount
+        {
+            get
+            {
+                return numExtraConstraints;
+            }
         }
 
         // should only add extra constraints that are tight when primal feasible

@@ -213,10 +213,10 @@ namespace Rawr.Mage
                             stats.AppendLine(String.Format("{0}: {1:F}x", "Evocation", calculations.Solution[i] / calculations.EvocationDuration));
                             break;
                         case 3:
-                            stats.AppendLine(String.Format("{0}: {1:F}x", "Mana Potion", calculations.Solution[i] / calculations.ManaPotionTime));
+                            stats.AppendLine(String.Format("{0}: {1:F}x", "Mana Potion", calculations.Solution[i]));
                             break;
                         case 4:
-                            stats.AppendLine(String.Format("{0}: {1:F}x", "Mana Gem", calculations.Solution[i] / calculations.ManaPotionTime));
+                            stats.AppendLine(String.Format("{0}: {1:F}x", "Mana Gem", calculations.Solution[i]));
                             break;
                         case 5:
                             stats.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", calculations.Solution[i] / calculations.GlobalCooldown));
@@ -430,27 +430,57 @@ namespace Rawr.Mage
                 needsDual = true;
             }
 
-            bool constraintAdded;
+            public void UpdateMaximizeSegmentColumn(int col)
+            {
+                lp.EnsureExtraConstraints(2);
+                compactSolution = null;
+                needsDual = true;
+                col = CCol[col];
+                if (col == -1) return;
+                lp.SetConstraintElement(1, col, lp.GetConstraintElement(1, col) - colScale[col]);
+            }
 
-            public void AddConstraint()
+            public void UpdateMaximizeSegmentDuration(double value)
+            {
+                lp.EnsureExtraConstraints(2);
+                compactSolution = null;
+                needsDual = true;
+                lp.SetConstraintRHS(1, lp.GetConstraintRHS(1) - value);
+            }
+
+            private bool hasColdsnapConstraints = false;
+
+            public bool HasColdsnapConstraints
+            {
+                get
+                {
+                    return hasColdsnapConstraints;
+                }
+            }
+
+            public void AddColdsnapConstraints(int segments)
+            {
+                if (!hasColdsnapConstraints)
+                {
+                    lp.EnsureExtraConstraints(2 + segments);
+                    hasColdsnapConstraints = true;
+                }
+            }
+
+            public void UpdateColdsnapColumn(int index, int col)
             {
                 compactSolution = null;
                 needsDual = true;
-                if (constraintAdded) return;
-                lp.AddConstraint();
-                constraintAdded = true;
-            }
-
-            public void UpdateConstraintElement(int col, double value)
-            {
                 col = CCol[col];
                 if (col == -1) return;
-                lp.SetConstraintElement(col, lp.GetConstraintElement(col) + value * colScale[col]);
+                lp.SetConstraintElement(2 + index, col, 1);
             }
 
-            public void UpdateConstraintRHS(double value)
+            public void UpdateColdsnapDuration(int index, double value)
             {
-                lp.SetConstraintRHS(lp.GetConstraintRHS() + value);
+                compactSolution = null;
+                needsDual = true;
+                lp.SetConstraintRHS(2 + index, value);
             }
 
             private void SolveInternal()
@@ -698,7 +728,7 @@ namespace Rawr.Mage
             bool trinket1Available = IsItemActivatable(character.Trinket1);
             bool trinket2Available = IsItemActivatable(character.Trinket2);
             bool coldsnap = calculationOptions.ColdSnap == 1;
-            float coldsnapCooldown = 8 * 60 * (1 - 0.1f * calculationOptions.IceFloes);
+            double coldsnapCooldown = 8 * 60 * (1 - 0.1f * calculationOptions.IceFloes);
             float combustionCount = 0;
 
             double trinket1cooldown = 0, trinket1duration = 0, trinket2cooldown = 0, trinket2duration = 0, t1length = 0, t2length = 0;
@@ -1254,9 +1284,9 @@ namespace Rawr.Mage
 
             #region Set LP Scaling
             lp.SetRowScale(0, 0.1);
-            lp.SetRowScale(3, 40.0 / calculatedStats.ManaPotionTime);
-            lp.SetRowScale(4, 40.0 / calculatedStats.ManaPotionTime);
-            lp.SetRowScale(14, 40.0 / calculatedStats.ManaPotionTime);
+            lp.SetRowScale(3, 40.0);
+            lp.SetRowScale(4, 40.0);
+            lp.SetRowScale(14, 40.0);
             lp.SetRowScale(30, 10.0);
             lp.SetRowScale(31, 10.0);
             lp.SetRowScale(32, 10.0);
@@ -1264,8 +1294,6 @@ namespace Rawr.Mage
             lp.SetRowScale(39, 0.05);
             lp.SetRowScale(41, 30.0);
             lp.SetRowScale(lpRows, 0.05);
-            lp.SetColumnScale(3, calculatedStats.ManaPotionTime);
-            lp.SetColumnScale(4, calculatedStats.ManaPotionTime);
             #endregion
 
             float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
@@ -1335,29 +1363,27 @@ namespace Rawr.Mage
             // mana pot
             //calculatedStats.SolutionLabel[3] = "Mana Potion";
             calculatedStats.MaxManaPotion = 1 + (int)((calculatedStats.FightDuration - 30f) / 120f);
-            lp[0, 3] = -calculatedStats.ManaRegen5SR - (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime;
-            lp[1, 3] = 1;
+            lp[0, 3] = - (1 + characterStats.BonusManaPotion) * 2400f;
             lp[3, 3] = 1;
-            lp[39, 3] = tps[3] = (1 + characterStats.BonusManaPotion) * 2400f / calculatedStats.ManaPotionTime * 0.5f * threatFactor;
-            lp[40, 3] = 40 / calculatedStats.ManaPotionTime;
+            lp[39, 3] = tps[3] = (1 + characterStats.BonusManaPotion) * 2400f * 0.5f * threatFactor;
+            lp[40, 3] = 40;
             lp[lpRows, 3] = 0;
             // mana gem
             //calculatedStats.SolutionLabel[4] = "Mana Gem";
             calculatedStats.MaxManaGem = Math.Min(5, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f));
-            double manaGemRegenRate = (1 + characterStats.BonusManaGem) * (-Math.Min(3, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f)) * 2400f - ((calculatedStats.FightDuration >= 390) ? 1100f : 0f) - ((calculatedStats.FightDuration >= 510) ? 850 : 0)) / (calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime);
-            lp[0, 4] = -calculatedStats.ManaRegen5SR + manaGemRegenRate;
-            lp[1, 4] = 1;
+            double manaGemRegenAvg = (1 + characterStats.BonusManaGem) * (-Math.Min(3, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f)) * 2400f - ((calculatedStats.FightDuration >= 390) ? 1100f : 0f) - ((calculatedStats.FightDuration >= 510) ? 850 : 0)) / (calculatedStats.MaxManaGem);
+            lp[0, 4] = manaGemRegenAvg;
             lp[4, 4] = 1;
             lp[14, 4] = 1;
-            lp[23, 4] = - 1 / calculatedStats.ManaPotionTime;
-            lp[39, 4] = tps[4] = manaGemRegenRate * 0.5f * threatFactor;
-            lp[40, 4] = 40 / calculatedStats.ManaPotionTime;
+            lp[23, 4] = -1;
+            lp[39, 4] = tps[4] = -manaGemRegenAvg * 0.5f * threatFactor;
+            lp[40, 4] = 40;
             lp[lpRows, 4] = 0;
             // drums
             //calculatedStats.SolutionLabel[5] = "Drums of Battle";
             lp[0, 5] = -calculatedStats.ManaRegen5SR;
             lp[1, 5] = 1;
-            lp[34, 5] = - 1 / calculatedStats.GlobalCooldown;
+            lp[34, 5] = -1 / calculatedStats.GlobalCooldown;
             lp[41, 5] = 1 / calculatedStats.GlobalCooldown;
             lp[lpRows, 5] = 0;
             // spells
@@ -1385,7 +1411,7 @@ namespace Rawr.Mage
                                 }
                                 lp[0, index] = s.CostPerSecond - s.ManaRegenPerSecond;
                                 lp[1, index] = 1;
-                                if (statsList[buffset].DestructionPotion) lp[3, index] = calculatedStats.ManaPotionTime / 15f;
+                                if (statsList[buffset].DestructionPotion) lp[3, index] = 1.0 / 15.0;
                                 lp[5, index] = (statsList[buffset].Heroism ? 1 : 0);
                                 lp[6, index] = (statsList[buffset].ArcanePower ? 1 : 0);
                                 lp[7, index] = ((statsList[buffset].Heroism && statsList[buffset].ArcanePower) ? 1 : 0);
@@ -1395,7 +1421,7 @@ namespace Rawr.Mage
                                 lp[11, index] = ((statsList[buffset].MoltenFury && statsList[buffset].IcyVeins) ? 1 : 0);
                                 lp[12, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].Heroism) ? 1 : 0);
                                 lp[13, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].IcyVeins) ? 1 : 0);
-                                lp[14, index] = (statsList[buffset].FlameCap ? (calculatedStats.ManaPotionTime / 40f) : 0); ;
+                                lp[14, index] = (statsList[buffset].FlameCap ? (1.0 / 40.0) : 0); ;
                                 lp[15, index] = ((statsList[buffset].MoltenFury && statsList[buffset].FlameCap) ? 1 : 0); ;
                                 lp[16, index] = ((statsList[buffset].DestructionPotion && statsList[buffset].FlameCap) ? 1 : 0);
                                 lp[17, index] = (statsList[buffset].Trinket1 ? 1 : 0);
@@ -1593,8 +1619,8 @@ namespace Rawr.Mage
             lp[0, lpCols] = characterStats.Mana;
             lp[1, lpCols] = calculatedStats.FightDuration;
             lp[2, lpCols] = evocationDuration * Math.Max(1, (1 + Math.Floor((calculatedStats.FightDuration - 200f) / 480f)));
-            lp[3, lpCols] = calculatedStats.MaxManaPotion * calculatedStats.ManaPotionTime;
-            lp[4, lpCols] = calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime;
+            lp[3, lpCols] = calculatedStats.MaxManaPotion;
+            lp[4, lpCols] = calculatedStats.MaxManaGem;
             if (heroismAvailable) lp[5, lpCols] = 40;
             if (apAvailable) lp[6, lpCols] = aplength;
             if (heroismAvailable && apAvailable) lp[7, lpCols] = 15;
@@ -1606,11 +1632,11 @@ namespace Rawr.Mage
             if (ivAvailable) lp[13, lpCols] = dpivlength;
             if (calculationOptions.FlameCap && !(!calculationOptions.SmartOptimization && calculationOptions.SpellPower > 0))
             {
-                lp[14, lpCols] = ((int)(calculatedStats.FightDuration / 180f + 2f / 3f)) * calculatedStats.ManaPotionTime * 3f / 2f;
+                lp[14, lpCols] = ((int)(calculatedStats.FightDuration / 180.0 + 2.0 / 3.0)) * 3.0 / 2.0;
             }
             else
             {
-                lp[14, lpCols] = calculatedStats.MaxManaGem * calculatedStats.ManaPotionTime;
+                lp[14, lpCols] = calculatedStats.MaxManaGem;
             }
             if (mfAvailable) lp[15, lpCols] = 60;
             lp[16, lpCols] = dpflamelength;
@@ -1908,6 +1934,10 @@ namespace Rawr.Mage
                             }
                         }
                     }
+                    if (valid && ivAvailable && coldsnap)
+                    {
+                        valid = ValidateColdsnap(coldsnapCooldown, ivlength);
+                    }
                 } while (heap.Count > 0 && !valid);
                 //System.Diagnostics.Trace.WriteLine("Heap at solution " + heap.Count);
             }
@@ -1941,9 +1971,191 @@ namespace Rawr.Mage
 
         private const int CooldownMax = 10;
 
+        private void EnsureColdsnapConstraints()
+        {
+            if (!lp.HasColdsnapConstraints)
+            {
+                lp.AddColdsnapConstraints(segments + (int)(180.0 / segmentDuration) - 1);
+                for (int seg = 0; seg < segments + (int)(180.0 / segmentDuration) - 1; seg++)
+                {
+                    for (int outseg = Math.Max(0, (int)Math.Ceiling(seg + 1 - 180.0 / segmentDuration - 0.000001)); outseg <= Math.Min(seg, segments - 1); outseg++)
+                    {
+                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(Cooldown.IcyVeins))
+                            {
+                                lp.UpdateColdsnapColumn(seg, index);
+                            }
+                        }
+                    }
+                    lp.UpdateColdsnapDuration(seg, 40.0);
+                }
+            }
+        }
+
+        private bool ValidateColdsnap(double coldsnapCooldownDuration, double ivlength)
+        {
+            const double eps = 0.000001;
+            double[] segCount = new double[segments];
+            for (int outseg = 0; outseg < segments; outseg++)
+            {
+                double s = 0.0;
+                for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                {
+                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                    if (stats != null && stats.GetCooldown(Cooldown.IcyVeins))
+                    {
+                        s += solution[index];
+                    }
+                }
+                segCount[outseg] = s;
+            }
+            // everything is valid, except possibly coldsnap so we can assume the effects are nicely packed
+            // check where coldsnaps are needed, similar to evaluation in sequence reconstruction
+            bool ivActive = false;
+            double lastIVstart = 0.0;
+            double coldsnapCooldown = 0.0;
+            double ivCooldown = 0.0;
+            bool valid = true;
+            double coldsnapActivation = 0.0;
+            for (int seg = 0; seg < segments; seg++)
+            {
+                if (ivActive)
+                {
+                    if (segCount[seg] > 0.0)
+                    {
+                        if (seg * segmentDuration + segCount[seg] > lastIVstart + 20.0 + eps)
+                        {
+                            if (coldsnapCooldown <= (lastIVstart + 20.0 - seg * segmentDuration) + eps)
+                            {
+                                coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapCooldown, lastIVstart);
+                                lastIVstart += 20.0;
+                                ivCooldown += 20.0;
+                                coldsnapCooldown = coldsnapCooldownDuration - (seg * segmentDuration - coldsnapActivation);
+                            }
+                            if (seg * segmentDuration + segCount[seg] > lastIVstart + 20.0 + eps)
+                            {
+                                // we need to coldsnap iv, but it is on cooldown
+                                valid = false;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ivActive = false;
+                    }
+                }
+                else
+                {
+                    if (segCount[seg] > 0.0)
+                    {
+                        if (ivCooldown + segCount[seg] > segmentDuration + eps && coldsnapCooldown + segCount[seg] > segmentDuration + eps)
+                        {
+                            // iv cooldown not ready and coldsnap won't be ready in time
+                            valid = false;
+                            break;
+                        }
+                        else
+                        {
+                            if (ivCooldown + segCount[seg] > segmentDuration + eps && coldsnapCooldown + segCount[seg] <= segmentDuration + eps)
+                            {
+                                // iv not ready, but we can coldsnap
+                                coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapCooldown, lastIVstart);
+                                coldsnapCooldown = coldsnapCooldownDuration - (seg * segmentDuration - coldsnapActivation);
+                                double ivActivation = Math.Max(coldsnapActivation, seg * segmentDuration);
+                                ivCooldown = 180.0 + ivActivation - seg * segmentDuration;
+                                ivActive = true;
+                                lastIVstart = ivActivation;
+                            }
+                            else
+                            {
+                                // start as soon as possible
+                                double ivActivation = Math.Max(seg * segmentDuration + ivCooldown, seg * segmentDuration);
+                                if (seg + 1 < segments && segCount[seg + 1] > 0) ivActivation = (seg + 1) * segmentDuration - segCount[seg];
+                                ivCooldown = 180.0 + ivActivation - seg * segmentDuration;
+                                ivActive = true;
+                                lastIVstart = ivActivation;
+                            }
+                            if (segCount[seg] > 20.0 + eps)
+                            {
+                                if (coldsnapCooldown <= (lastIVstart + 20.0 - seg * segmentDuration) + eps)
+                                {
+                                    coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapCooldown, lastIVstart);
+                                    lastIVstart += 20.0;
+                                    ivCooldown += 20.0;
+                                    coldsnapCooldown = coldsnapCooldownDuration - (seg * segmentDuration - coldsnapActivation);
+                                }
+                                if (seg * segmentDuration + segCount[seg] > lastIVstart + 20.0 + eps)
+                                {
+                                    // we need to coldsnap iv, but it is on cooldown
+                                    valid = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ivActive = false;
+                    }
+                }
+                coldsnapCooldown -= segmentDuration;
+                ivCooldown -= segmentDuration;
+            }
+            if (!valid)
+            {
+                EnsureColdsnapConstraints();
+                int coldsnapSegment = (int)(coldsnapActivation / segmentDuration);
+                // branch on whether we have coldsnap in this segment or not
+                CompactLP coldsnapUsedIntra = lp.Clone();
+                CompactLP coldsnapUsedExtra = lp.Clone();
+                CompactLP zerolp = lp.Clone();
+                // if we don't use coldsnap then this segment should be either zeroed or we have to restrict the segments until next iv (I think (tm))
+                for (int seg = coldsnapSegment; seg < Math.Min(coldsnapSegment + (int)Math.Ceiling(180.0 / segmentDuration) + 1, segments + (int)(180.0 / segmentDuration) - 1); seg++) // it's possible we're overrestricting here, might have to add another branch where we go to one less but zero out seg+1
+                {
+                    lp.UpdateColdsnapDuration(seg, 20.0);
+                }
+                heap.Push(lp);
+                for (int index = coldsnapSegment * statsList.Count * spellList.Count + colOffset - 1; index < (coldsnapSegment + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                {
+                    CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                    if (stats != null && stats.GetCooldown(Cooldown.IcyVeins)) zerolp.EraseColumn(index);
+                }
+                heap.Push(zerolp);
+                // coldsnap used extra
+                // the segments for the duration of one IV can be loose, but all after that have to be restricted until coldsnap is ready
+                coldsnapUsedExtra.UpdateColdsnapDuration(coldsnapSegment, 20.0);
+                int firstRestrictedSeg = coldsnapSegment + 1 + (int)Math.Ceiling(180.0 / segmentDuration);
+                int nextPossibleColdsnap = coldsnapSegment + (int)(coldsnapCooldownDuration / segmentDuration);
+                int segLimit = Math.Min(segments + (int)(180.0 / segmentDuration) - 1, nextPossibleColdsnap);
+                for (int seg = firstRestrictedSeg; seg < segLimit; seg++)
+                {
+                    coldsnapUsedExtra.UpdateColdsnapDuration(seg, 20.0);
+                }
+                heap.Push(coldsnapUsedExtra);
+                for (int seg = Math.Min(coldsnapSegment + 2, segments - 1); seg < coldsnapSegment + (int)(180.0 / segmentDuration); seg++)
+                {
+                    for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                    {
+                        CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                        if (stats != null && stats.GetCooldown(Cooldown.IcyVeins)) coldsnapUsedIntra.EraseColumn(index);
+                    }
+                }
+                for (int seg = firstRestrictedSeg; seg < segLimit; seg++)
+                {
+                    coldsnapUsedIntra.UpdateColdsnapDuration(seg, 20.0);
+                }
+                heap.Push(coldsnapUsedIntra);
+                return false;
+            }
+            return valid;
+        }
+
         private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration)
         {
-            //const double eps = 0.000001;
+            const double eps = 0.000001;
             double[] segCount = new double[segments];
             for (int outseg = 0; outseg < segments; outseg++)
             {
@@ -1968,12 +2180,13 @@ namespace Rawr.Mage
             for (int seg = 0; seg < segments; seg++)
             {
                 double inseg = segCount[seg];
+                double mxdist = (seg == 0 ? maxdist2 : maxdist); // effect started in first segment couldn't be started earlier
                 if (inseg > 0)
                 {
                     // verify that outside duration segments are 0
                     for (int outseg = 0; outseg < segments; outseg++)
                     {
-                        if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                        if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < mxdist)
                         {
                             if (segCount[outseg] > 0)
                             {
@@ -2000,7 +2213,7 @@ namespace Rawr.Mage
                         //cooldownUsed.Log += "Use " + cooldown.ToString() + " at " + seg + ", disable around\r\n";
                         for (int outseg = 0; outseg < segments; outseg++)
                         {
-                            if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < maxdist)
+                            if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < mxdist)
                             {
                                 //cooldownUsed.IVHash += 1 << outseg;
                                 for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
@@ -2016,105 +2229,6 @@ namespace Rawr.Mage
                 }
             }
 
-            /*double t1 = 0.0;
-            double t2 = 0.0;
-            double bestCoverage = 0.0;
-
-            if (cooldownDuration < 0) cooldownDuration = 3 * segments * segmentDuration;
-
-            for (int seg = 0; seg < segments; seg++)
-            {
-                double inseg = segCount[seg];
-                if (inseg > 0 && (seg == 0 || segCount[seg - 1] == 0.0))
-                {
-                    double t = seg;
-                    if (seg < segments - 1 && segCount[seg + 1] > 0.0) t = seg + 1 - inseg / segmentDuration;
-                    double max = t + cooldownDuration / segmentDuration;
-                    // verify that outside duration segments are 0
-                    for (int outseg = seg + 1; outseg < segments; outseg++)
-                    {
-                        if (segCount[outseg] > 0)
-                        {
-                            double tt = outseg + 1 - segCount[outseg] / segmentDuration;
-                            if ((outseg >= t + effectDuration / segmentDuration + eps) && (tt < max - eps))                            
-                            {
-                                valid = false;
-                                // make sure that we pairwise invalidate
-                                // (outseg >= tin + effectDuration / segmentDuration && outseg < (int)(tin + cooldownDuration / segmentDuration)
-                                // outseg + 1 <= tin + cooldownDuration / segmentDuration
-                                // outseg - effectDuration / segmentDuration >= tin >= outseg + 1 - cooldownDuration / segmentDuration
-                                // cooldownDuration >= effectDuration + 2 * segmentDuration !!! if this isn't true then we have problems, means segmentDuration has to be small enough, 30 sec = good
-                                // (seg >= tout + (effectDuration - cooldownDuration) / segmentDuration && seg < (int)tout)
-                                // seg + 1 <= tout <= seg + (cooldownDuration - effectDuration) / segmentDuration
-                                double tin = t;
-                                double tout = tt;
-                                if (tin < outseg + 1 - cooldownDuration / segmentDuration) tin = outseg + 1 - cooldownDuration / segmentDuration;
-                                if (tout > seg + (cooldownDuration - effectDuration) / segmentDuration) tout = seg + (cooldownDuration - effectDuration) / segmentDuration;
-                                double c1 = 0.0;
-                                double c2 = 0.0;
-                                for (int s = 0; s < segments; s++)
-                                {
-                                    if ((s >= tin + (effectDuration - cooldownDuration) / segmentDuration - eps && s + 1 < tin - eps) || (s >= tin + effectDuration / segmentDuration + eps && s + 1 < tin + cooldownDuration / segmentDuration + eps))
-                                    {
-                                        c1 += segCount[s];
-                                    }
-                                    if ((s >= tout + (effectDuration - cooldownDuration) / segmentDuration - eps && s + 1 < tout - eps) || (s >= tout + effectDuration / segmentDuration + eps && s + 1 < tout + cooldownDuration / segmentDuration + eps))
-                                    {
-                                        c2 += segCount[s];
-                                    }
-                                }
-                                double coverage = Math.Min(c1, c2);
-                                if (coverage < eps)
-                                {
-                                    coverage = 0.0; // troubles
-                                }
-                                if (coverage > bestCoverage)
-                                {
-                                    t1 = tin;
-                                    t2 = tout;
-                                    bestCoverage = coverage;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (!valid)
-            {
-                //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
-                // branch on whether t1 or t2 is active, they can't be both
-                CompactLP t1active = lp.Clone();
-                // cooldown used
-                //t1active.Log += "Use " + cooldown.ToString() + " at " + t1 + ", disable around\r\n";
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if ((outseg >= t1 + (effectDuration - cooldownDuration) / segmentDuration - eps && outseg + 1 < t1 - eps) || (outseg >= t1 + effectDuration / segmentDuration + eps && outseg + 1 < t1 + cooldownDuration / segmentDuration + eps))
-                    {
-                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                        {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.GetCooldown(cooldown)) t1active.EraseColumn(index);
-                        }
-                    }
-                }
-                heap.Push(t1active);
-                // cooldown not used
-                //lp.Log += "Use " + cooldown.ToString() + " at " + t2 + ", disable around\r\n";
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if ((outseg >= t2 + (effectDuration - cooldownDuration) / segmentDuration - eps && outseg + 1 < t2 - eps) || (outseg >= t2 + effectDuration / segmentDuration + eps && outseg + 1 < t2 + cooldownDuration / segmentDuration + eps))
-                    {
-                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                        {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.GetCooldown(cooldown)) lp.EraseColumn(index);
-                        }
-                    }
-                }
-                heap.Push(lp);
-
-                return false;
-            }*/
             for (int seg = 0; seg < segments; seg++)
             {
                 double inseg = segCount[seg];
@@ -2167,23 +2281,124 @@ namespace Rawr.Mage
                     }
                     heap.Push(rightDisabled);
                     //lp.Log += "Force " + cooldown.ToString() + " to max at " + seg + "\r\n";
-                    lp.AddConstraint();
                     for (int index = seg * statsList.Count * spellList.Count + colOffset - 1; index < (seg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
                     {
                         CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
                         if (stats != null)
                         {
-                            if (stats.GetCooldown(cooldown)) lp.UpdateConstraintElement(index, -1);
+                            if (stats.GetCooldown(cooldown)) lp.UpdateMaximizeSegmentColumn(index);
                             // for some strange reason trying to help doesn't really help
                             // so don't try to help
                             //else lp.EraseColumn(index); // to make it easier on the solver also let it know that anything that doesn't have this cooldown can't be in solution
                         }
                     }
-                    lp.UpdateConstraintRHS(-segmentDuration);
+                    lp.UpdateMaximizeSegmentDuration(segmentDuration);
                     heap.Push(lp);
                     return false;
                 }
             }
+
+            /*double t1 = 0.0;
+            double t2 = 0.0;
+            double bestCoverage = 0.0;
+
+            if (cooldownDuration < 0) cooldownDuration = 3 * segments * segmentDuration;
+
+            for (int seg = 0; seg < segments; seg++)
+            {
+                double inseg = segCount[seg];
+                if (inseg > 0 && (seg == 0 || segCount[seg - 1] == 0.0))
+                {
+                    double t = seg;
+                    if (seg < segments - 1 && segCount[seg + 1] > 0.0) t = seg + 1 - inseg / segmentDuration;
+                    double max = t + cooldownDuration / segmentDuration;
+                    // verify that outside duration segments are 0
+                    for (int outseg = seg + 1; outseg < segments; outseg++)
+                    {
+                        if (segCount[outseg] > 0)
+                        {
+                            double tt = outseg + 1 - segCount[outseg] / segmentDuration;
+                            if ((outseg >= t + effectDuration / segmentDuration + eps) && (tt < max - eps))
+                            {
+                                // detected invalid placement undetected by original method
+                                valid = false;
+                                // make sure that we pairwise invalidate
+                                // (outseg >= tin + effectDuration / segmentDuration && outseg < (int)(tin + cooldownDuration / segmentDuration)
+                                // outseg + 1 <= tin + cooldownDuration / segmentDuration
+                                // outseg - effectDuration / segmentDuration >= tin >= outseg + 1 - cooldownDuration / segmentDuration
+                                // cooldownDuration >= effectDuration + 2 * segmentDuration !!! if this isn't true then we have problems, means segmentDuration has to be small enough, 30 sec = good
+                                // (seg >= tout + (effectDuration - cooldownDuration) / segmentDuration && seg < (int)tout)
+                                // seg + 1 <= tout <= seg + (cooldownDuration - effectDuration) / segmentDuration
+                                double tin = t;
+                                double tout = tt;
+                                if (tin < outseg + 1 - cooldownDuration / segmentDuration) tin = outseg + 1 - cooldownDuration / segmentDuration;
+                                if (tout > seg + (cooldownDuration - effectDuration) / segmentDuration) tout = seg + (cooldownDuration - effectDuration) / segmentDuration;
+                                double c1 = 0.0;
+                                double c2 = 0.0;
+                                for (int s = 0; s < segments; s++)
+                                {
+                                    if ((s >= tin + (effectDuration - cooldownDuration) / segmentDuration - eps && s + 1 < tin - eps) || (s >= tin + effectDuration / segmentDuration + eps && s + 1 < tin + cooldownDuration / segmentDuration + eps))
+                                    {
+                                        c1 += segCount[s];
+                                    }
+                                    if ((s >= tout + (effectDuration - cooldownDuration) / segmentDuration - eps && s + 1 < tout - eps) || (s >= tout + effectDuration / segmentDuration + eps && s + 1 < tout + cooldownDuration / segmentDuration + eps))
+                                    {
+                                        c2 += segCount[s];
+                                    }
+                                }
+                                double coverage = Math.Min(c1, c2);
+                                if (coverage < eps)
+                                {
+                                    coverage = 0.0; // troubles
+                                }
+                                if (coverage > bestCoverage)
+                                {
+                                    t1 = tin;
+                                    t2 = tout;
+                                    bestCoverage = coverage;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            /*if (!valid)
+            {
+                //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
+                // branch on whether t1 or t2 is active, they can't be both
+                CompactLP t1active = lp.Clone();
+                // cooldown used
+                //t1active.Log += "Use " + cooldown.ToString() + " at " + t1 + ", disable around\r\n";
+                for (int outseg = 0; outseg < segments; outseg++)
+                {
+                    if ((outseg >= t1 + (effectDuration - cooldownDuration) / segmentDuration - eps && outseg + 1 < t1 - eps) || (outseg >= t1 + effectDuration / segmentDuration + eps && outseg + 1 < t1 + cooldownDuration / segmentDuration + eps))
+                    {
+                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(cooldown)) t1active.EraseColumn(index);
+                        }
+                    }
+                }
+                heap.Push(t1active);
+                // cooldown not used
+                //lp.Log += "Use " + cooldown.ToString() + " at " + t2 + ", disable around\r\n";
+                for (int outseg = 0; outseg < segments; outseg++)
+                {
+                    if ((outseg >= t2 + (effectDuration - cooldownDuration) / segmentDuration - eps && outseg + 1 < t2 - eps) || (outseg >= t2 + effectDuration / segmentDuration + eps && outseg + 1 < t2 + cooldownDuration / segmentDuration + eps))
+                    {
+                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
+                        {
+                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
+                            if (stats != null && stats.GetCooldown(cooldown)) lp.EraseColumn(index);
+                        }
+                    }
+                }
+                heap.Push(lp);
+
+                return false;
+            }*/
+
             return valid;
         }
 

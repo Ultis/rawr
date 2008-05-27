@@ -524,7 +524,7 @@ namespace Rawr.Mage
 
         public double EvocationDuration;
         public double EvocationRegen;
-        public double ManaPotionTime = 0.1f;
+        //public double ManaPotionTime = 0.1f;
         public double Trinket1Duration;
         public double Trinket1Cooldown;
         public double Trinket2Duration;
@@ -539,14 +539,6 @@ namespace Rawr.Mage
         public Spell[] SolutionSpells;
         public int[] SolutionSegments;
         public float Tps;
-
-        public double RealFightDuration
-        {
-            get
-            {
-                return FightDuration - Solution[3] - Solution[4];
-            }
-        }
 
         /*private static int SpellIdCount;
 
@@ -813,7 +805,7 @@ namespace Rawr.Mage
                         break;
                 }
                 minTime = 0;
-                maxTime = Calculations.RealFightDuration;
+                maxTime = Calculations.FightDuration;
             }
 
             private int index;
@@ -982,7 +974,7 @@ namespace Rawr.Mage
                 get
                 {
                     double t = 0;
-                    double max = SequenceItem.Calculations.RealFightDuration;
+                    double max = SequenceItem.Calculations.FightDuration;
                     foreach (SequenceItem item in Item)
                     {
                         max = Math.Min(max, item.MaxTime - t);
@@ -1868,22 +1860,6 @@ namespace Rawr.Mage
                 }
             }
 
-            private double RealFightDuration
-            {
-                get
-                {
-                    return SequenceItem.Calculations.RealFightDuration;
-                }
-            }
-
-            private double ManaPotionTime
-            {
-                get
-                {
-                    return SequenceItem.Calculations.ManaPotionTime;
-                }
-            }
-
             private double Trinket1Duration
             {
                 get
@@ -2290,7 +2266,7 @@ namespace Rawr.Mage
                         item.Group.Add(group);
                     }
                 }
-                moltenFuryStart = SequenceItem.Calculations.RealFightDuration - group.Duration;
+                moltenFuryStart = SequenceItem.Calculations.FightDuration - group.Duration;
                 group.MinTime = moltenFuryStart;
             }
 
@@ -2318,7 +2294,7 @@ namespace Rawr.Mage
                 }
 
                 // compute max time
-                double time = RealFightDuration;
+                double time = FightDuration;
                 for (int i = compactItems.Count - 1; i >= 0; i--)
                 {
                     SequenceItem item = compactItems[i];
@@ -2839,7 +2815,7 @@ namespace Rawr.Mage
             public void RepositionManaConsumption()
             {
                 double ghostMana = Math.Max(0, -ManaCheck());
-                double fight = RealFightDuration;
+                double fight = FightDuration;
                 double potTime = RemoveIndex(3);
                 double gemTime = RemoveIndex(4);
                 double evoTime = RemoveIndex(2);
@@ -2874,12 +2850,12 @@ namespace Rawr.Mage
                     if (!((potTime > 0 && nextPot == 0) || (gemTime > 0 && nextGem == 0) || (evoTime > 0 && nextEvo == 0)))
                     {
                         double m = mana + ghostMana;
-                        for (double _potTime = potTime; _potTime > 0; _potTime -= ManaPotionTime)
+                        for (double _potTime = potTime; _potTime > 0; _potTime -= 1.0)
                         {
                             m += (1 + BasicStats.BonusManaPotion) * 2400;
                         }
                         int __gemCount = gemCount;
-                        for (double _gemTime = gemTime; _gemTime > 0; _gemTime -= ManaPotionTime, __gemCount++)
+                        for (double _gemTime = gemTime; _gemTime > 0; _gemTime -= 1.0, __gemCount++)
                         {
                             m += (1 + BasicStats.BonusManaGem) * gemValue[__gemCount];
                         }
@@ -3027,12 +3003,12 @@ namespace Rawr.Mage
                             }
                             // account for to be used consumables (don't assume evo during super group unless we haven't placed the first one, in that case it will actually be placed before the super group)
                             double manaUsed = mana;
-                            for (double _potTime = potTime, _nextPot = nextPot; _potTime > 0.000001 && _nextPot < t; _potTime -= ManaPotionTime, _nextPot += 120.0)
+                            for (double _potTime = potTime, _nextPot = nextPot; _potTime > 0.000001 && _nextPot < t; _potTime -= 1.0, _nextPot += 120.0)
                             {
                                 targetmana += (1 + BasicStats.BonusManaPotion) * 2400;
                             }
                             int _gemCount = gemCount;
-                            for (double _gemTime = gemTime, _nextGem = nextGem; _gemTime > 0.000001 && _nextGem < t; _gemTime -= ManaPotionTime, _nextGem += 120.0, _gemCount++)
+                            for (double _gemTime = gemTime, _nextGem = nextGem; _gemTime > 0.000001 && _nextGem < t; _gemTime -= 1.0, _nextGem += 120.0, _gemCount++)
                             {
                                 targetmana += (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
                             }
@@ -3156,10 +3132,10 @@ namespace Rawr.Mage
                     // always start with pot because pot needs more buffer than gem, unless
                     if (potTime > 0 && (pot <= gem || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (pot <= evo || nextPot == 0 || evoTime <= 0))
                     {
-                        InsertIndex(3, Math.Min(ManaPotionTime, potTime), pot);
+                        InsertIndex(3, Math.Min(1.0, potTime), pot);
                         time = pot;
                         nextPot = pot + 120;
-                        potTime -= ManaPotionTime;
+                        potTime -= 1.0;
                         if (potTime <= 0.000001)
                         {
                             nextPot = fight;
@@ -3168,11 +3144,11 @@ namespace Rawr.Mage
                     }
                     else if (gemTime > 0 && gem <= pot && (gem <= evo || nextGem == 0 || evoTime <= 0))
                     {
-                        InsertIndex(4, Math.Min(ManaPotionTime, gemTime), gem);
+                        InsertIndex(4, Math.Min(1.0, gemTime), gem);
                         time = gem;
                         nextGem = gem + 120;
                         gemCount++;
-                        gemTime -= ManaPotionTime;
+                        gemTime -= 1.0;
                         if (gemTime <= 0.000001)
                         {
                             nextGem = fight;
@@ -3209,7 +3185,7 @@ namespace Rawr.Mage
                     double mps = sequence[i].Mps;
                     if (index == 3)
                     {
-                        for (double _potTime = duration; _potTime > 0.000001; _potTime -= ManaPotionTime)
+                        for (double _potTime = duration; _potTime > 0.000001; _potTime -= 1.0)
                         {
                             mana += (1 + BasicStats.BonusManaPotion) * 2400;
                         }
@@ -3217,7 +3193,7 @@ namespace Rawr.Mage
                     else if (index == 4)
                     {
                         int _gemCount = 0;
-                        for (double _gemTime = duration; _gemTime > 0.000001; _gemTime -= ManaPotionTime, _gemCount++)
+                        for (double _gemTime = duration; _gemTime > 0.000001; _gemTime -= 1.0, _gemCount++)
                         {
                             mana += (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
                         }
@@ -3356,7 +3332,7 @@ namespace Rawr.Mage
                             if (time + duration > aftertime)
                             {
                                 if (time >= aftertime && mana < limit) return time;
-                                if (mana - mps * (aftertime - time) < limit) return aftertime;
+                                if (aftertime > time && mana - mps * (aftertime - time) < limit) return aftertime;
                             }
                         }
                     }
@@ -3379,9 +3355,9 @@ namespace Rawr.Mage
                         }
                         else
                         {
-                            if (sequence[i].Duration > ManaPotionTime)
+                            if (sequence[i].Duration > 1.0)
                             {
-                                unexplained += sequence[i].Duration - ManaPotionTime;
+                                unexplained += sequence[i].Duration - 1.0;
                                 if (timing != null) timing.AppendLine("WARNING: Potion ammount too big!");
                             }
                             if (timing != null) timing.AppendLine(TimeFormat(time) + ": Mana Potion (" + Math.Round(mana).ToString() + " mana)");
@@ -3400,9 +3376,9 @@ namespace Rawr.Mage
                         }
                         else
                         {
-                            if (sequence[i].Duration > ManaPotionTime)
+                            if (sequence[i].Duration > 1.0)
                             {
-                                unexplained += sequence[i].Duration - ManaPotionTime;
+                                unexplained += sequence[i].Duration - 1.0;
                                 if (timing != null) timing.AppendLine("WARNING: Gem ammount too big!");
                             }
                             if (timing != null) timing.AppendLine(TimeFormat(time) + ": Mana Gem (" + Math.Round(mana).ToString() + " mana)");
@@ -3774,9 +3750,10 @@ namespace Rawr.Mage
                             {
                                 if (coldsnapCooldown <= (ivTime + 20 - time) + eps)
                                 {
+                                    double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVstart);
                                     ivTime += 20;
                                     ivCooldown += 20;
-                                    coldsnapCooldown = coldsnapCooldownDuration - (ivTime + 20 - time);
+                                    coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
                                 }
                                 if (time + duration > ivTime + 20 + eps)
                                 {
@@ -3805,13 +3782,29 @@ namespace Rawr.Mage
                             {
                                 if (ivCooldown > eps && coldsnapCooldown <= eps)
                                 {
-                                    coldsnapCooldown = coldsnapCooldownDuration - (time - Math.Max(time + coldsnapCooldown, lastIVstart));
+                                    double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVstart);
+                                    coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
                                 }
                                 if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Icy Veins (" + Math.Round(manabefore).ToString() + " mana)");
                                 ivCooldown = 180;
                                 ivTime = time;
                                 ivWarning = false;
                                 lastIVstart = time;
+                                if (duration > 20.0)
+                                {
+                                    if (coldsnapCooldown <= 20.0 + eps)
+                                    {
+                                        double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVstart);
+                                        ivTime += 20;
+                                        ivCooldown += 20;
+                                        coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
+                                    }
+                                    if (time + duration > ivTime + 20.0 + eps)
+                                    {
+                                        unexplained += time + duration - ivTime - 20;
+                                        if (timing != null) timing.AppendLine("WARNING: Icy Veins duration too long!");
+                                    }
+                                }
                             }
                         }
                     }
@@ -4058,10 +4051,10 @@ namespace Rawr.Mage
                             sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration));
                             break;
                         case 3:
-                            sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Potion", Solution[i] / ManaPotionTime));
+                            sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Potion", Solution[i]));
                             break;
                         case 4:
-                            sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Gem", Solution[i] / ManaPotionTime));
+                            sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Gem", Solution[i]));
                             break;
                         case 5:
                             sb.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", Solution[i] / GlobalCooldown));
@@ -4073,7 +4066,7 @@ namespace Rawr.Mage
                             combinedSolution.TryGetValue(label, out value);
                             combinedSolution[label] = value + Solution[i];
                             combinedSolutionData[label] = i;
-                            //sb.AppendLine(String.Format("{2}{0}: {1:F} sec", SolutionLabel[i], Solution[i], (SolutionSegments == null) ? "" : (SolutionSegments[i].ToString() + " ")));
+                            sb.AppendLine(String.Format("{2}{0}: {1:F} sec", label, Solution[i], (SolutionSegments == null) ? "" : (SolutionSegments[i].ToString() + " ")));
                             break;
                     }
                 }
@@ -4083,11 +4076,11 @@ namespace Rawr.Mage
                 Spell s = SolutionSpells[combinedSolutionData[kvp.Key]];
                 if (s != null)
                 {
-                    sb.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps)", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond));
+                    //sb.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps)", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond));
                 }
                 else
                 {
-                    sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
+                    //sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
                 }
             }
             if (WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", WaterElementalDuration / 45f));
