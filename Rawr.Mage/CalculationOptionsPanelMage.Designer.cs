@@ -1031,7 +1031,7 @@
             this.label38.Size = new System.Drawing.Size(126, 13);
             this.label38.TabIndex = 166;
             this.label38.Text = "SMP Computation Limit: *";
-            this.toolTipMage.SetToolTip(this.label38, "Threat per second limit. Set to 0 to disable threat constraint.");
+            this.toolTipMage.SetToolTip(this.label38, "Limits the number of iterations taken by SMP algorithm.");
             // 
             // CalculationOptionsPanelMage
             // 
