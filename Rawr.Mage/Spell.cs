@@ -18,15 +18,19 @@ namespace Rawr.Mage
         None,
         Wand,
         LightningBolt,
+        ArcaneBarrage,
         ArcaneBolt,
         ArcaneMissiles,
         ArcaneMissilesCC,
         ArcaneMissilesNoProc,
+        ArcaneMissilesNetherwind,
         //ArcaneMissilesFTF,
         //ArcaneMissilesFTT,
         Frostbolt,
+        FrostboltPOM,
         FrostboltNoCC,
         Fireball,
+        FireballPOM,
         Pyroblast,
         FireBlast,
         Scorch,
@@ -35,6 +39,7 @@ namespace Rawr.Mage
         ArcaneBlast33NoCC,
         ArcaneBlast00,
         ArcaneBlast00NoCC,
+        ArcaneBlast0POM,
         ArcaneBlast10,
         ArcaneBlast01,
         ArcaneBlast11,
@@ -187,6 +192,7 @@ namespace Rawr.Mage
             if (MagicSchool == MagicSchool.Fire) CostModifier -= 0.01f * calculations.CalculationOptions.Pyromaniac;
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost) CostModifier -= 0.01f * calculations.CalculationOptions.ElementalPrecision;
             if (MagicSchool == MagicSchool.Frost) CostModifier -= 0.05f * calculations.CalculationOptions.FrostChanneling;
+            if (calculations.CalculationOptions.WotLK && MagicSchool == MagicSchool.Arcane) CostModifier -= 0.01f * calculations.CalculationOptions.ArcaneFocus;
             if (calculations.ArcanePower) CostModifier += 0.3f;
             if (MagicSchool == MagicSchool.Fire) AffectedByFlameCap = true;
             if (MagicSchool == MagicSchool.Fire) InterruptProtection += 0.35f * calculations.CalculationOptions.BurningSoul;
@@ -258,7 +264,7 @@ namespace Rawr.Mage
                 if (MagicSchool == MagicSchool.Fire) SpellModifier *= (1 + 0.02f * calculations.CalculationOptions.FirePower);
                 if (MagicSchool == MagicSchool.Frost) SpellModifier *= (1 + 0.02f * calculations.CalculationOptions.PiercingIce);
 
-                if (MagicSchool == MagicSchool.Arcane) HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit + 0.02f * calculations.CalculationOptions.ArcaneFocus);
+                if (MagicSchool == MagicSchool.Arcane) HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit + (calculations.CalculationOptions.WotLK ? 0.01f : 0.02f) * calculations.CalculationOptions.ArcaneFocus);
                 if (MagicSchool == MagicSchool.Fire) HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit + 0.01f * calculations.CalculationOptions.ElementalPrecision);
                 if (MagicSchool == MagicSchool.Frost) HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit + 0.01f * calculations.CalculationOptions.ElementalPrecision);
                 if (MagicSchool == MagicSchool.Nature) HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + calculations.SpellHit);
@@ -290,7 +296,7 @@ namespace Rawr.Mage
             if (calculations.IcyVeins) InterruptProtection = 1;
             float InterruptFactor = calculations.CalculationOptions.InterruptFrequency * Math.Max(0, 1 - InterruptProtection);
 
-            float Haste = calculations.BasicStats.SpellHasteRating;
+            float Haste = calculations.SpellHasteRating;
             float levelScalingFactor = (1 - (70 - 60) / 82f * 3);
 
             // TODO consider converting to discrete model for procs
@@ -486,6 +492,7 @@ namespace Rawr.Mage
         }
     }
 
+    #region Base Spells
     class Wand : BaseSpell
     {
         public Wand(Character character, CharacterCalculationsMage calculations, MagicSchool school, int minDamage, int maxDamage, float speed)
@@ -597,12 +604,20 @@ namespace Rawr.Mage
 
     class Frostbolt : BaseSpell
     {
-        public Frostbolt(Character character, CharacterCalculationsMage calculations, bool clearcastingActive)
+        public Frostbolt(Character character, CharacterCalculationsMage calculations, bool manualClearcasting, bool clearcastingActive, bool pom)
             : base("Frostbolt", false, true, false, false, 330, 30, 3, 0, MagicSchool.Frost, 600, 647, 0, 0.95f * 3f / 3.5f)
         {
-            ManualClearcasting = true;
-            ClearcastingActive = clearcastingActive;
-            ClearcastingAveraged = false;
+            if (pom)
+            {
+                this.Instant = true;
+                this.BaseCastTime = 0.0f;
+            }
+            if (manualClearcasting)
+            {
+                ManualClearcasting = true;
+                ClearcastingActive = clearcastingActive;
+                ClearcastingAveraged = false;
+            }
             Calculate(character, calculations);
         }
 
@@ -629,9 +644,14 @@ namespace Rawr.Mage
 
     class Fireball : BaseSpell
     {
-        public Fireball(Character character, CharacterCalculationsMage calculations)
+        public Fireball(Character character, CharacterCalculationsMage calculations, bool pom)
             : base("Fireball", false, false, false, false, 425, 35, 3.5f, 0, MagicSchool.Fire, 649, 821, 84)
         {
+            if (pom)
+            {
+                this.Instant = true;
+                this.BaseCastTime = 0.0f;
+            }
             Calculate(character, calculations);
             SpammedDot = true;
             DotDuration = 8;
@@ -670,14 +690,32 @@ namespace Rawr.Mage
         }
     }
 
+    class ArcaneBarrage : BaseSpell
+    {
+        public ArcaneBarrage(Character character, CharacterCalculationsMage calculations)
+            : base("Arcane Barrage", false, false, true, false, 405, 30, 0, 3, MagicSchool.Arcane, 709, 865, 0)
+        {
+            Calculate(character, calculations);
+            CalculateDerivedStats(character, calculations);
+        }
+    }
+
     class ArcaneBlast : BaseSpell
     {
-        public ArcaneBlast(Character character, CharacterCalculationsMage calculations, int timeDebuff, int costDebuff, bool clearcastingActive)
+        public ArcaneBlast(Character character, CharacterCalculationsMage calculations, int timeDebuff, int costDebuff, bool manualClearcasting, bool clearcastingActive, bool pom)
             : base("Arcane Blast", false, false, false, false, 195, 30, 2.5f, 0, MagicSchool.Arcane, 668, 772, 0)
         {
-            ManualClearcasting = true;
-            ClearcastingActive = clearcastingActive;
-            ClearcastingAveraged = false;
+            if (manualClearcasting)
+            {
+                ManualClearcasting = true;
+                ClearcastingActive = clearcastingActive;
+                ClearcastingAveraged = false;
+            }
+            if (pom)
+            {
+                this.Instant = true;
+                this.BaseCastTime = 0.0f;
+            }
             this.timeDebuff = timeDebuff;
             this.costDebuff = costDebuff;
             Calculate(character, calculations);
@@ -764,7 +802,7 @@ namespace Rawr.Mage
             CostPerSecond = (AMc1.CostPerSecond + AM10.CostPerSecond + CC / (1 - CC) * AM11.CostPerSecond) / (1 + 1 / (1 - CC));
             DamagePerSecond = (AMc1.DamagePerSecond + AM10.DamagePerSecond + CC / (1 - CC) * AM11.DamagePerSecond) / (1 + 1 / (1 - CC));
             ThreatPerSecond = (AMc1.ThreatPerSecond + AM10.ThreatPerSecond + CC / (1 - CC) * AM11.ThreatPerSecond) / (1 + 1 / (1 - CC));
-            ManaRegenPerSecond = 0;
+            //ManaRegenPerSecond = (AMc1.ManaRegenPerSecond + AM10.ManaRegenPerSecond + CC / (1 - CC) * AM11.ManaRegenPerSecond) / (1 + 1 / (1 - CC)); // we only use it indirectly in spell cycles that recompute oo5sr
         }
     }
 
@@ -851,6 +889,7 @@ namespace Rawr.Mage
             CalculateDerivedStats(character, calculations);
         }
     }
+    #endregion
 
     class SpellCycle : Spell
     {
@@ -919,6 +958,56 @@ namespace Rawr.Mage
                 float averageCastTime = fsr.Duration / SpellCount;
                 float totalMana = calculations.Mp5OnCastFor20Sec / 5f / averageCastTime * 0.5f * (20 - averageCastTime / HitProcs / 2f) * (20 - averageCastTime / HitProcs / 2f);
                 ManaRegenPerSecond += totalMana / 20f;
+            }
+        }
+    }
+
+    #region Spell Cycles
+
+    class ArcaneMissilesNetherwind : Spell
+    {
+        public ArcaneMissilesNetherwind(Character character, CharacterCalculationsMage calculations)
+        {
+            Name = "AM?";
+            ABCycle = true;
+
+            Spell AB = calculations.GetSpell(SpellId.ArcaneBlast0POM);
+            Spell FB = calculations.GetSpell(SpellId.FireballPOM);
+            Spell FrB = calculations.GetSpell(SpellId.FrostboltPOM);
+            Spell ABarr = calculations.GetSpell(SpellId.ArcaneBarrage);
+            Spell AM = calculations.GetSpell(SpellId.ArcaneMissiles);
+
+            Spell maxProc = AB;
+            if (FB.DamagePerSecond > maxProc.DamagePerSecond) maxProc = FB;
+            if (FrB.DamagePerSecond > maxProc.DamagePerSecond) maxProc = FrB;
+
+            if (calculations.CalculationOptions.NetherwindPresence == 0)
+            {
+                CastTime = AM.CastTime;
+                CostPerSecond = AM.CostPerSecond;
+                DamagePerSecond = AM.DamagePerSecond;
+                ThreatPerSecond = AM.ThreatPerSecond;
+                ManaRegenPerSecond = AM.ManaRegenPerSecond;
+                sequence = AM.Sequence;
+            }
+            else
+            {
+                float procRate = calculations.CalculationOptions.NetherwindPresence * 0.01f;
+                // chance that at least one procs = 1 - chance that nothing procs
+                // 1 - (1 - procRate)^N
+
+                // lim n->inf [x - x^(n+1) + nx^(n+1)(x-1)] / (x-1)^2 = x / (x-1)^2
+                // sum_N N(1 - procRate)^N procRate = procRate sum_N  N(1 - procRate)^N = (1 - procRate) / procRate = 1 / procRate - 1
+
+                // assume {1,5,6} cast procs per AM
+                float averageAMs = (1 / procRate - 1) / 6;
+
+                CastTime = (averageAMs * AM.CastTime + maxProc.CastTime) / (averageAMs + 1);
+                CostPerSecond = (averageAMs * AM.CastTime * AM.CostPerSecond + maxProc.CastTime * maxProc.CostPerSecond) / (averageAMs + 1) / CastTime;
+                DamagePerSecond = (averageAMs * AM.CastTime * AM.DamagePerSecond + maxProc.CastTime * maxProc.DamagePerSecond) / (averageAMs + 1) / CastTime;
+                ThreatPerSecond = (averageAMs * AM.CastTime * AM.ThreatPerSecond + maxProc.CastTime * maxProc.ThreatPerSecond) / (averageAMs + 1) / CastTime;
+                ManaRegenPerSecond = (averageAMs * AM.CastTime * AM.ManaRegenPerSecond + maxProc.CastTime * maxProc.ManaRegenPerSecond) / (averageAMs + 1) / CastTime;
+                sequence = AM.Name + "=>" + maxProc.Name;
             }
         }
     }
@@ -2071,4 +2160,5 @@ namespace Rawr.Mage
             }
         }
     }
+    #endregion
 }

@@ -169,6 +169,16 @@ namespace Rawr.Mage
             this.buttonImportBlizzardCode = new System.Windows.Forms.Button();
             this.comboBoxTalentPreset = new System.Windows.Forms.ComboBox();
             this.buttonImportTalentPreset = new System.Windows.Forms.Button();
+            this.comboBoxPotentSpirit = new System.Windows.Forms.ComboBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.comboBoxStudentOfTheMind = new System.Windows.Forms.ComboBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.comboBoxIncantersAbsorption = new System.Windows.Forms.ComboBox();
+            this.label70 = new System.Windows.Forms.Label();
+            this.comboBoxNetherwindPresence = new System.Windows.Forms.ComboBox();
+            this.label71 = new System.Windows.Forms.Label();
+            this.comboBoxArcaneBarrage = new System.Windows.Forms.ComboBox();
+            this.label72 = new System.Windows.Forms.Label();
             this.groupBoxArcane.SuspendLayout();
             this.groupBoxFire.SuspendLayout();
             this.groupBoxFrost.SuspendLayout();
@@ -176,6 +186,16 @@ namespace Rawr.Mage
             // 
             // groupBoxArcane
             // 
+            this.groupBoxArcane.Controls.Add(this.comboBoxArcaneBarrage);
+            this.groupBoxArcane.Controls.Add(this.label72);
+            this.groupBoxArcane.Controls.Add(this.comboBoxNetherwindPresence);
+            this.groupBoxArcane.Controls.Add(this.label71);
+            this.groupBoxArcane.Controls.Add(this.comboBoxIncantersAbsorption);
+            this.groupBoxArcane.Controls.Add(this.label70);
+            this.groupBoxArcane.Controls.Add(this.comboBoxStudentOfTheMind);
+            this.groupBoxArcane.Controls.Add(this.label47);
+            this.groupBoxArcane.Controls.Add(this.comboBoxPotentSpirit);
+            this.groupBoxArcane.Controls.Add(this.label24);
             this.groupBoxArcane.Controls.Add(this.comboBoxSlow);
             this.groupBoxArcane.Controls.Add(this.label23);
             this.groupBoxArcane.Controls.Add(this.comboBoxMindMastery);
@@ -224,7 +244,7 @@ namespace Rawr.Mage
             this.groupBoxArcane.Controls.Add(this.label3);
             this.groupBoxArcane.Location = new System.Drawing.Point(12, 40);
             this.groupBoxArcane.Name = "groupBoxArcane";
-            this.groupBoxArcane.Size = new System.Drawing.Size(211, 673);
+            this.groupBoxArcane.Size = new System.Drawing.Size(211, 816);
             this.groupBoxArcane.TabIndex = 0;
             this.groupBoxArcane.TabStop = false;
             this.groupBoxArcane.Text = "Arcane";
@@ -825,7 +845,7 @@ namespace Rawr.Mage
             this.groupBoxFire.Controls.Add(this.label46);
             this.groupBoxFire.Location = new System.Drawing.Point(229, 40);
             this.groupBoxFire.Name = "groupBoxFire";
-            this.groupBoxFire.Size = new System.Drawing.Size(211, 673);
+            this.groupBoxFire.Size = new System.Drawing.Size(211, 816);
             this.groupBoxFire.TabIndex = 1;
             this.groupBoxFire.TabStop = false;
             this.groupBoxFire.Text = "Fire";
@@ -1402,7 +1422,7 @@ namespace Rawr.Mage
             this.groupBoxFrost.Controls.Add(this.label69);
             this.groupBoxFrost.Location = new System.Drawing.Point(446, 40);
             this.groupBoxFrost.Name = "groupBoxFrost";
-            this.groupBoxFrost.Size = new System.Drawing.Size(211, 673);
+            this.groupBoxFrost.Size = new System.Drawing.Size(211, 816);
             this.groupBoxFrost.TabIndex = 2;
             this.groupBoxFrost.TabStop = false;
             this.groupBoxFrost.Text = "Frost";
@@ -1981,11 +2001,130 @@ namespace Rawr.Mage
             this.buttonImportTalentPreset.UseVisualStyleBackColor = true;
             this.buttonImportTalentPreset.Click += new System.EventHandler(this.buttonImportTalentPreset_Click);
             // 
+            // comboBoxPotentSpirit
+            // 
+            this.comboBoxPotentSpirit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPotentSpirit.FormattingEnabled = true;
+            this.comboBoxPotentSpirit.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2"});
+            this.comboBoxPotentSpirit.Location = new System.Drawing.Point(155, 678);
+            this.comboBoxPotentSpirit.Name = "comboBoxPotentSpirit";
+            this.comboBoxPotentSpirit.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxPotentSpirit.TabIndex = 55;
+            this.comboBoxPotentSpirit.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(6, 681);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(67, 13);
+            this.label24.TabIndex = 54;
+            this.label24.Text = "Potent Spirit:";
+            // 
+            // comboBoxStudentOfTheMind
+            // 
+            this.comboBoxStudentOfTheMind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxStudentOfTheMind.FormattingEnabled = true;
+            this.comboBoxStudentOfTheMind.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.comboBoxStudentOfTheMind.Location = new System.Drawing.Point(155, 705);
+            this.comboBoxStudentOfTheMind.Name = "comboBoxStudentOfTheMind";
+            this.comboBoxStudentOfTheMind.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxStudentOfTheMind.TabIndex = 57;
+            this.comboBoxStudentOfTheMind.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(6, 708);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(103, 13);
+            this.label47.TabIndex = 56;
+            this.label47.Text = "Student of the Mind:";
+            // 
+            // comboBoxIncantersAbsorption
+            // 
+            this.comboBoxIncantersAbsorption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxIncantersAbsorption.FormattingEnabled = true;
+            this.comboBoxIncantersAbsorption.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.comboBoxIncantersAbsorption.Location = new System.Drawing.Point(155, 732);
+            this.comboBoxIncantersAbsorption.Name = "comboBoxIncantersAbsorption";
+            this.comboBoxIncantersAbsorption.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxIncantersAbsorption.TabIndex = 59;
+            this.comboBoxIncantersAbsorption.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Location = new System.Drawing.Point(6, 735);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(109, 13);
+            this.label70.TabIndex = 58;
+            this.label70.Text = "Incanter\'s Absorption:";
+            // 
+            // comboBoxNetherwindPresence
+            // 
+            this.comboBoxNetherwindPresence.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxNetherwindPresence.FormattingEnabled = true;
+            this.comboBoxNetherwindPresence.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.comboBoxNetherwindPresence.Location = new System.Drawing.Point(155, 759);
+            this.comboBoxNetherwindPresence.Name = "comboBoxNetherwindPresence";
+            this.comboBoxNetherwindPresence.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxNetherwindPresence.TabIndex = 61;
+            this.comboBoxNetherwindPresence.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Location = new System.Drawing.Point(6, 762);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(112, 13);
+            this.label71.TabIndex = 60;
+            this.label71.Text = "Netherwind Presence:";
+            // 
+            // comboBoxArcaneBarrage
+            // 
+            this.comboBoxArcaneBarrage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxArcaneBarrage.FormattingEnabled = true;
+            this.comboBoxArcaneBarrage.Items.AddRange(new object[] {
+            "0",
+            "1"});
+            this.comboBoxArcaneBarrage.Location = new System.Drawing.Point(155, 786);
+            this.comboBoxArcaneBarrage.Name = "comboBoxArcaneBarrage";
+            this.comboBoxArcaneBarrage.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxArcaneBarrage.TabIndex = 63;
+            this.comboBoxArcaneBarrage.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
+            // 
+            // label72
+            // 
+            this.label72.AutoSize = true;
+            this.label72.Location = new System.Drawing.Point(6, 789);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(84, 13);
+            this.label72.TabIndex = 62;
+            this.label72.Text = "Arcane Barrage:";
+            // 
             // MageTalentsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(669, 723);
+            this.ClientSize = new System.Drawing.Size(669, 867);
             this.Controls.Add(this.buttonImportTalentPreset);
             this.Controls.Add(this.comboBoxTalentPreset);
             this.Controls.Add(this.buttonImportBlizzardCode);
@@ -2152,5 +2291,15 @@ namespace Rawr.Mage
         private System.Windows.Forms.Button buttonImportBlizzardCode;
         private System.Windows.Forms.ComboBox comboBoxTalentPreset;
         private System.Windows.Forms.Button buttonImportTalentPreset;
+        private System.Windows.Forms.ComboBox comboBoxIncantersAbsorption;
+        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.ComboBox comboBoxStudentOfTheMind;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.ComboBox comboBoxPotentSpirit;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.ComboBox comboBoxArcaneBarrage;
+        private System.Windows.Forms.Label label72;
+        private System.Windows.Forms.ComboBox comboBoxNetherwindPresence;
+        private System.Windows.Forms.Label label71;
     }
 }

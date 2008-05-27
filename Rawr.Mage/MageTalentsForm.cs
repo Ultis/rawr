@@ -54,8 +54,32 @@ namespace Rawr.Mage
                     }
                 }
             }
+            UpdateWotLK();
             calculationSuspended = false;
             ComputeTalentTotals();
+        }
+
+        public void UpdateWotLK()
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            SuspendLayout();
+            if (calculationOptions.WotLK)
+            {
+                Height = 891;
+                groupBoxArcane.Height = 816;
+                groupBoxFire.Height = 816;
+                groupBoxFrost.Height = 816;
+                if (comboBoxArcaneFocus.Items.Count == 6) { comboBoxArcaneFocus.Items.RemoveAt(4); comboBoxArcaneFocus.Items.RemoveAt(4); }
+            }
+            else
+            {
+                Height = 747;
+                groupBoxArcane.Height = 673;
+                groupBoxFire.Height = 673;
+                groupBoxFrost.Height = 673;
+                if (comboBoxArcaneFocus.Items.Count == 4) comboBoxArcaneFocus.Items.AddRange(new string[] { "4", "5" });
+            }
+            ResumeLayout();
         }
 
         private void ComputeTalentTotals()

@@ -59,6 +59,8 @@ namespace Rawr.Mage
         public bool SMPDisplay { get; set; }
         public float SurvivabilityRating { get; set; }
         public bool Aldor { get; set; }
+        public bool WotLK { get; set; }
+        public int HeroismControl { get; set; }
 
         public CalculationOptionsMage Clone()
         {
@@ -151,6 +153,13 @@ namespace Rawr.Mage
         public int ImprovedCounterspell { get; set; }
         public int ImprovedManaShield { get; set; }
         public int MagicAttunement { get; set; }
+
+        // WotLK
+        public int PotentSpirit { get; set; }
+        public int StudentOfTheMind { get; set; }
+        public int IncantersAbsorption { get; set; }
+        public int NetherwindPresence { get; set; }
+        public int ArcaneBarrage { get; set; }
 
         private CalculationOptionsMage()
         {
@@ -478,13 +487,39 @@ namespace Rawr.Mage
         public bool WaterElemental { get; set; }
         public bool Combustion { get; set; }
         public float CombustionDuration { get; set; }
+
+        public float SpellDamageRating { get; set; }
+        public float SpellHasteRating { get; set; }
         public float Mp5OnCastFor20Sec { get; set; }
 
         public float WaterElementalDps { get; set; }
         public float WaterElementalDuration { get; set; }
         public float WaterElementalDamage { get; set; }
 
-        public string BuffLabel { get; set; }
+        private string buffLabel;
+        public string BuffLabel 
+        {
+            get
+            {
+                if (buffLabel == null)
+                {
+                    List<String> buffList = new List<string>();
+                    if (MoltenFury) buffList.Add("Molten Fury");
+                    if (Heroism) buffList.Add("Heroism");
+                    if (IcyVeins) buffList.Add("Icy Veins");
+                    if (ArcanePower) buffList.Add("Arcane Power");
+                    if (Combustion) buffList.Add("Combustion");
+                    if (DrumsOfBattle) buffList.Add("Drums of Battle");
+                    if (FlameCap) buffList.Add("Flame Cap");
+                    if (Trinket1) buffList.Add(Trinket1Name);
+                    if (Trinket2) buffList.Add(Trinket2Name);
+                    if (DestructionPotion) buffList.Add("Destruction Potion");
+
+                    buffLabel = string.Join("+", buffList.ToArray());
+                }
+                return buffLabel;
+            }
+        }
         public string MageArmor { get; set; }
 
         public double EvocationDuration;
@@ -498,7 +533,7 @@ namespace Rawr.Mage
         public string Trinket2Name;
         public int MaxManaPotion;
         public int MaxManaGem;
-        public string[] SolutionLabel;
+        //public string[] SolutionLabel;
         public double[] Solution;
         public CharacterCalculationsMage[] SolutionStats;
         public Spell[] SolutionSpells;
@@ -553,6 +588,9 @@ namespace Rawr.Mage
                 case SpellId.ArcaneMissilesNoProc:
                     s = new ArcaneMissiles(Character, this, true, false, false);
                     break;
+                case SpellId.ArcaneMissilesNetherwind:
+                    s = new ArcaneMissilesNetherwind(Character, this);
+                    break;
                 /*case SpellId.ArcaneMissilesFTF:
                     s = new ArcaneMissiles(Character, this);
                     break;
@@ -563,10 +601,10 @@ namespace Rawr.Mage
                     s = new Frostbolt(Character, this);
                     break;
                 case SpellId.FrostboltNoCC:
-                    s = new Frostbolt(Character, this, false);
+                    s = new Frostbolt(Character, this, true, false, false);
                     break;
                 case SpellId.Fireball:
-                    s = new Fireball(Character, this);
+                    s = new Fireball(Character, this, false);
                     break;
                 case SpellId.Pyroblast:
                     s = new Pyroblast(Character, this);
@@ -580,17 +618,20 @@ namespace Rawr.Mage
                 case SpellId.ScorchNoCC:
                     s = new Scorch(Character, this, false);
                     break;
+                case SpellId.ArcaneBarrage:
+                    s = new ArcaneBarrage(Character, this);
+                    break;
                 case SpellId.ArcaneBlast33:
                     s = new ArcaneBlast(Character, this, 3, 3);
                     break;
                 case SpellId.ArcaneBlast33NoCC:
-                    s = new ArcaneBlast(Character, this, 3, 3, false);
+                    s = new ArcaneBlast(Character, this, 3, 3, true, false, false);
                     break;
                 case SpellId.ArcaneBlast00:
                     s = new ArcaneBlast(Character, this, 0, 0);
                     break;
                 case SpellId.ArcaneBlast00NoCC:
-                    s = new ArcaneBlast(Character, this, 0, 0, false);
+                    s = new ArcaneBlast(Character, this, 0, 0, true, false, false);
                     break;
                 case SpellId.ArcaneBlast10:
                     s = new ArcaneBlast(Character, this, 1, 0);
@@ -602,13 +643,13 @@ namespace Rawr.Mage
                     s = new ArcaneBlast(Character, this, 1, 1);
                     break;
                 case SpellId.ArcaneBlast11NoCC:
-                    s = new ArcaneBlast(Character, this, 1, 1, false);
+                    s = new ArcaneBlast(Character, this, 1, 1, true, false, false);
                     break;
                 case SpellId.ArcaneBlast22:
                     s = new ArcaneBlast(Character, this, 2, 2);
                     break;
                 case SpellId.ArcaneBlast22NoCC:
-                    s = new ArcaneBlast(Character, this, 2, 2, false);
+                    s = new ArcaneBlast(Character, this, 2, 2, true, false, false);
                     break;
                 case SpellId.ArcaneBlast12:
                     s = new ArcaneBlast(Character, this, 1, 2);
@@ -709,11 +750,22 @@ namespace Rawr.Mage
                 case SpellId.ConeOfCold:
                     s = new ConeOfCold(Character, this);
                     break;
+                case SpellId.ArcaneBlast0POM:
+                    s = new ArcaneBlast(Character, this, 0, 0, false, false, true);
+                    break;
+                case SpellId.FireballPOM:
+                    s = new Fireball(Character, this, true);
+                    break;
+                case SpellId.FrostboltPOM:
+                    s = new Frostbolt(Character, this, false, false, true);
+                    break;
             }
             if (s != null) Spells[(int)spellId] = s;
 
             return s;
         }
+
+        #region Sequence Reconstruction
 
         private static string TimeFormat(double time)
         {
@@ -3854,7 +3906,7 @@ namespace Rawr.Mage
             if (FightDuration > 900) return "*Unavailable";
             List<int> validIndex = new List<int>();
             double fight = FightDuration;
-            for (int i = 0; i < SolutionLabel.Length; i++)
+            for (int i = 0; i < SolutionStats.Length; i++)
             {
                 if (Solution[i] > 0.01)
                 {
@@ -3915,6 +3967,8 @@ namespace Rawr.Mage
             return bestTiming;
         }
 
+        #endregion
+
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             if (CalculationOptions.SMPDisplay)
@@ -3945,7 +3999,7 @@ namespace Rawr.Mage
             dictValues.Add("Spell Crit Rate", String.Format("{0:F}%*{1} Spell Crit Rating", 100 * SpellCrit, BasicStats.SpellCritRating));
             dictValues.Add("Spell Hit Rate", String.Format("{0:F}%*{1} Spell Hit Rating", 100 * SpellHit, BasicStats.SpellHitRating));
             dictValues.Add("Spell Penetration", BasicStats.SpellPenetration.ToString());
-            dictValues.Add("Casting Speed", String.Format("{0}*{1} Spell Haste Rating", CastingSpeed, BasicStats.SpellHasteRating));
+            dictValues.Add("Casting Speed", String.Format("{0}*{1} Spell Haste Rating", CastingSpeed, SpellHasteRating));
             dictValues.Add("Arcane Damage", ArcaneDamage.ToString());
             dictValues.Add("Fire Damage", FireDamage.ToString());
             dictValues.Add("Frost Damage", FrostDamage.ToString());
@@ -3962,7 +4016,7 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\r\nPhysical Crit Reduction: {1:F}%\r\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
-            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.ArcaneBlast33, SpellId.ABAMP, SpellId.ABAM, SpellId.AB3AMSc, SpellId.ABAM3Sc, SpellId.ABAM3Sc2, SpellId.ABAM3FrB, SpellId.ABAM3FrB2, SpellId.ABFrB3FrB, SpellId.ABFrB3FrBSc, SpellId.ABFB3FBSc, SpellId.FireballScorch, SpellId.FireballFireBlast, SpellId.FireBlast, SpellId.ABAM3ScCCAM, SpellId.ABAM3Sc2CCAM, SpellId.ABAM3FrBCCAM, SpellId.ABAM3FrBScCCAM, SpellId.ABAMCCAM, SpellId.ABAM3CCAM, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold/*, SpellId.ABAM3FrBCCAMFail*/, SpellId.ABFrB };
+            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.ArcaneBlast33, SpellId.ABAMP, SpellId.ABAM, SpellId.AB3AMSc, SpellId.ABAM3Sc, SpellId.ABAM3Sc2, SpellId.ABAM3FrB, SpellId.ABAM3FrB2, SpellId.ABFrB3FrB, SpellId.ABFrB3FrBSc, SpellId.ABFB3FBSc, SpellId.FireballScorch, SpellId.FireballFireBlast, SpellId.FireBlast, SpellId.ABAM3ScCCAM, SpellId.ABAM3Sc2CCAM, SpellId.ABAM3FrBCCAM, SpellId.ABAM3FrBScCCAM, SpellId.ABAMCCAM, SpellId.ABAM3CCAM, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold/*, SpellId.ABAM3FrBCCAMFail*/, SpellId.ABFrB/*, SpellId.ArcaneBarrage, SpellId.ArcaneMissilesNetherwind*/ };
             Spell AB = GetSpell(SpellId.ArcaneBlast33);
             BaseSpell bs;
             foreach (SpellId spell in spellList)
@@ -3991,27 +4045,34 @@ namespace Rawr.Mage
             if (MageArmor != null) sb.AppendLine(MageArmor);
             Dictionary<string, double> combinedSolution = new Dictionary<string, double>();
             Dictionary<string, int> combinedSolutionData = new Dictionary<string, int>();
-            for (int i = 0; i < SolutionLabel.Length; i++)
+            for (int i = 0; i < SolutionStats.Length; i++)
             {
                 if (Solution[i] > 0.01)
                 {
                     switch (i)
                     {
+                        case 0:
+                            sb.AppendLine(String.Format("{0}: {1:F} sec", "Idle Regen", Solution[0]));
+                            break;
                         case 2:
-                            sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i] / EvocationDuration));
+                            sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration));
                             break;
                         case 3:
+                            sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Potion", Solution[i] / ManaPotionTime));
+                            break;
                         case 4:
-                            sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i] / ManaPotionTime));
+                            sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Gem", Solution[i] / ManaPotionTime));
                             break;
                         case 5:
-                            sb.AppendLine(String.Format("{0}: {1:F}x", SolutionLabel[i], Solution[i] / GlobalCooldown));
+                            sb.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", Solution[i] / GlobalCooldown));
                             break;
                         default:
                             double value;
-                            combinedSolution.TryGetValue(SolutionLabel[i], out value);
-                            combinedSolution[SolutionLabel[i]] = value + Solution[i];
-                            combinedSolutionData[SolutionLabel[i]] = i;
+                            Spell s = SolutionSpells[i];
+                            string label = ((SolutionStats[i].BuffLabel.Length > 0) ? (SolutionStats[i].BuffLabel + "+") : "") + s.Name;
+                            combinedSolution.TryGetValue(label, out value);
+                            combinedSolution[label] = value + Solution[i];
+                            combinedSolutionData[label] = i;
                             //sb.AppendLine(String.Format("{2}{0}: {1:F} sec", SolutionLabel[i], Solution[i], (SolutionSegments == null) ? "" : (SolutionSegments[i].ToString() + " ")));
                             break;
                     }

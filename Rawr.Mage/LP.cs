@@ -213,7 +213,7 @@ namespace Rawr.Mage
             int* sRow;
             int sCol1, sCol2;
             int redecompose = 0;
-            double lastInfis = double.PositiveInfinity;
+            //double lastInfis = double.PositiveInfinity;
             const int maxRedecompose = 50;
             Array.Clear(_blacklist, 0, rows + cols);
             fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)

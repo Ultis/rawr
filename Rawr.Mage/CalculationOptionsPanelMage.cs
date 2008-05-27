@@ -69,6 +69,8 @@ namespace Rawr.Mage
             textBoxEvocationSpirit.Text = calculationOptions.EvocationSpirit.ToString();
             textBoxSurvivabilityRating.Text = calculationOptions.SurvivabilityRating.ToString();
             comboBoxFaction.SelectedItem = calculationOptions.Aldor ? "Aldor" : "Scryers";
+            checkBoxWotLK.Checked = calculationOptions.WotLK;
+            comboBoxHeroismControl.SelectedIndex = calculationOptions.HeroismControl;
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -431,6 +433,21 @@ namespace Rawr.Mage
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.Aldor = comboBoxFaction.SelectedItem.ToString() == "Aldor";
+            if (!loading) Character.OnItemsChanged();
+        }
+
+        private void checkBoxWotLK_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            calculationOptions.WotLK = checkBoxWotLK.Checked;
+            if (talents != null) talents.UpdateWotLK();
+            if (!loading) Character.OnItemsChanged();
+        }
+
+        private void comboBoxHeroismControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            calculationOptions.HeroismControl = comboBoxHeroismControl.SelectedIndex;
             if (!loading) Character.OnItemsChanged();
         }
 	}
