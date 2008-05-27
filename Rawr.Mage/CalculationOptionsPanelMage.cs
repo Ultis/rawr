@@ -71,6 +71,7 @@ namespace Rawr.Mage
             comboBoxFaction.SelectedItem = calculationOptions.Aldor ? "Aldor" : "Scryers";
             checkBoxWotLK.Checked = calculationOptions.WotLK;
             comboBoxHeroismControl.SelectedIndex = calculationOptions.HeroismControl;
+            textBoxSMPComputationLimit.Text = Properties.Settings.Default.MaxHeapLimit.ToString();
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -449,6 +450,17 @@ namespace Rawr.Mage
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.HeroismControl = comboBoxHeroismControl.SelectedIndex;
             if (!loading) Character.OnItemsChanged();
+        }
+
+        private void textBoxSMPComputationLimit_Validated(object sender, EventArgs e)
+        {
+            int value;
+            if (int.TryParse(textBoxSMPComputationLimit.Text, out value))
+            {
+                Properties.Settings.Default.MaxHeapLimit = value;
+                Properties.Settings.Default.Save();
+                if (!loading) Character.OnItemsChanged();
+            }
         }
 	}
 }

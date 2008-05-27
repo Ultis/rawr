@@ -111,6 +111,8 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.textBoxSMPComputationLimit = new System.Windows.Forms.TextBox();
+            this.label38 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -858,6 +860,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.textBoxSMPComputationLimit);
+            this.tabPage4.Controls.Add(this.label38);
             this.tabPage4.Controls.Add(this.label36);
             this.tabPage4.Controls.Add(this.checkBoxWotLK);
             this.tabPage4.Controls.Add(this.label32);
@@ -893,7 +897,7 @@
             // 
             this.checkBoxWotLK.AutoSize = true;
             this.checkBoxWotLK.Enabled = false;
-            this.checkBoxWotLK.Location = new System.Drawing.Point(174, 107);
+            this.checkBoxWotLK.Location = new System.Drawing.Point(185, 107);
             this.checkBoxWotLK.Name = "checkBoxWotLK";
             this.checkBoxWotLK.Size = new System.Drawing.Size(15, 14);
             this.checkBoxWotLK.TabIndex = 164;
@@ -913,7 +917,7 @@
             // checkBoxSMPDisplay
             // 
             this.checkBoxSMPDisplay.AutoSize = true;
-            this.checkBoxSMPDisplay.Location = new System.Drawing.Point(174, 87);
+            this.checkBoxSMPDisplay.Location = new System.Drawing.Point(185, 87);
             this.checkBoxSMPDisplay.Name = "checkBoxSMPDisplay";
             this.checkBoxSMPDisplay.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSMPDisplay.TabIndex = 162;
@@ -934,7 +938,7 @@
             // checkBoxSMP
             // 
             this.checkBoxSMP.AutoSize = true;
-            this.checkBoxSMP.Location = new System.Drawing.Point(174, 67);
+            this.checkBoxSMP.Location = new System.Drawing.Point(185, 67);
             this.checkBoxSMP.Name = "checkBoxSMP";
             this.checkBoxSMP.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSMP.TabIndex = 160;
@@ -955,7 +959,7 @@
             // checkBoxReconstructSequence
             // 
             this.checkBoxReconstructSequence.AutoSize = true;
-            this.checkBoxReconstructSequence.Location = new System.Drawing.Point(174, 47);
+            this.checkBoxReconstructSequence.Location = new System.Drawing.Point(185, 47);
             this.checkBoxReconstructSequence.Name = "checkBoxReconstructSequence";
             this.checkBoxReconstructSequence.Size = new System.Drawing.Size(15, 14);
             this.checkBoxReconstructSequence.TabIndex = 158;
@@ -976,7 +980,7 @@
             // checkBoxIncrementalOptimizations
             // 
             this.checkBoxIncrementalOptimizations.AutoSize = true;
-            this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(174, 27);
+            this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(185, 27);
             this.checkBoxIncrementalOptimizations.Name = "checkBoxIncrementalOptimizations";
             this.checkBoxIncrementalOptimizations.Size = new System.Drawing.Size(15, 14);
             this.checkBoxIncrementalOptimizations.TabIndex = 156;
@@ -998,7 +1002,7 @@
             // checkBoxSmartOptimization
             // 
             this.checkBoxSmartOptimization.AutoSize = true;
-            this.checkBoxSmartOptimization.Location = new System.Drawing.Point(174, 7);
+            this.checkBoxSmartOptimization.Location = new System.Drawing.Point(185, 7);
             this.checkBoxSmartOptimization.Name = "checkBoxSmartOptimization";
             this.checkBoxSmartOptimization.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSmartOptimization.TabIndex = 154;
@@ -1010,6 +1014,24 @@
             this.toolTipMage.AutoPopDelay = 15000;
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
+            // 
+            // textBoxSMPComputationLimit
+            // 
+            this.textBoxSMPComputationLimit.Location = new System.Drawing.Point(132, 127);
+            this.textBoxSMPComputationLimit.Name = "textBoxSMPComputationLimit";
+            this.textBoxSMPComputationLimit.Size = new System.Drawing.Size(68, 20);
+            this.textBoxSMPComputationLimit.TabIndex = 167;
+            this.textBoxSMPComputationLimit.Validated += new System.EventHandler(this.textBoxSMPComputationLimit_Validated);
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(0, 130);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(126, 13);
+            this.label38.TabIndex = 166;
+            this.label38.Text = "SMP Computation Limit: *";
+            this.toolTipMage.SetToolTip(this.label38, "Threat per second limit. Set to 0 to disable threat constraint.");
             // 
             // CalculationOptionsPanelMage
             // 
@@ -1116,6 +1138,8 @@
         private System.Windows.Forms.CheckBox checkBoxIncrementalOptimizations;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.CheckBox checkBoxSmartOptimization;
+        private System.Windows.Forms.TextBox textBoxSMPComputationLimit;
+        private System.Windows.Forms.Label label38;
 
     }
 }

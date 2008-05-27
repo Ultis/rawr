@@ -4066,7 +4066,7 @@ namespace Rawr.Mage
                             combinedSolution.TryGetValue(label, out value);
                             combinedSolution[label] = value + Solution[i];
                             combinedSolutionData[label] = i;
-                            sb.AppendLine(String.Format("{2}{0}: {1:F} sec", label, Solution[i], (SolutionSegments == null) ? "" : (SolutionSegments[i].ToString() + " ")));
+                            //sb.AppendLine(String.Format("{2}{0}: {1:F} sec", label, Solution[i], (SolutionSegments == null) ? "" : (SolutionSegments[i].ToString() + " ")));
                             break;
                     }
                 }
@@ -4076,11 +4076,11 @@ namespace Rawr.Mage
                 Spell s = SolutionSpells[combinedSolutionData[kvp.Key]];
                 if (s != null)
                 {
-                    //sb.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps)", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond));
+                    sb.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps)", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond));
                 }
                 else
                 {
-                    //sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
+                    sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
                 }
             }
             if (WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", WaterElementalDuration / 45f));
