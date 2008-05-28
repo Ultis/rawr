@@ -91,6 +91,7 @@ namespace Rawr
         ShatteredSunMightProc,
         SpellArcaneDamageRating,
         SpellCombatManaRegeneration,
+        SpellCrit,
         SpellCritRating,
         SpellDamageFor10SecOnCrit_20_45,
         SpellDamageFor10SecOnHit_10_45,
@@ -365,6 +366,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MageAllResist]; }
             set { _rawAdditiveData[(int)AdditiveStat.MageAllResist] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Spell Combat Ratings")]
+        [DisplayName("Spell Crit")]
+        public float SpellCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
