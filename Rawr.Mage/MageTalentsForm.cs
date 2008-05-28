@@ -131,9 +131,9 @@ namespace Rawr.Mage
 
         private void buttonImportBlizzardCode_Click(object sender, EventArgs e)
         {
-            // http://www.worldofwarcraft.com/info/classes/mage/talents.html?2550050300230151333125100000000000000000000002030302010000000000000
+            // http://www.worldofwarcraft.com/info/classes/mage/talents.html?tal=2550050300230151333125100000000000000000000002030302010000000000000
             string talentCode = textBoxBlizzardCode.Text;
-            int index = talentCode.IndexOf('?');
+            int index = talentCode.IndexOf('=');
             if (index >= 0) talentCode = talentCode.Substring(index + 1);
 
             CalculationsMage.LoadTalentCode(Character, talentCode);
