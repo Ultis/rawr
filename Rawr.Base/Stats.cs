@@ -70,6 +70,7 @@ namespace Rawr
         MageSpellCrit,
         Mana,
         ManaRestorePerCast,
+        ManaRestorePerCast_5_15,
         ManaRestorePerHit,
         MangleCostReduction,
         MementoProc,
@@ -753,6 +754,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCast]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCast] = value; }
+        }
+
+        // 5% proc rate, 15 sec internal cooldown
+        [DisplayName("Mana Restore Per Cast (5%)")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ManaRestorePerCast_5_15
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCast_5_15]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCast_5_15] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
