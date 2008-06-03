@@ -406,6 +406,7 @@ namespace Rawr
                                 }
                                 ComparisonCalculationBase itemCalc = Calculations.CreateNewComparisonCalculation();
                                 itemCalc.Item = item;
+                                itemCalc.Character = bestCharacter;
                                 itemCalc.Name = item.Name;
                                 itemCalc.Equipped = false;
                                 /*itemCalc.OverallPoints = bestCalculations.OverallPoints - baseCalculations.OverallPoints;

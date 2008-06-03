@@ -1072,6 +1072,41 @@ namespace Rawr //O O . .
 			}
 		}
 
+        public Enchant GetEnchantBySlot(Character.CharacterSlot slot)
+        {
+            switch (slot)
+            {
+                case Character.CharacterSlot.Head:
+                    return HeadEnchant;
+                case Character.CharacterSlot.Shoulders:
+                    return ShouldersEnchant;
+                case Character.CharacterSlot.Back:
+                    return BackEnchant;
+                case Character.CharacterSlot.Chest:
+                    return ChestEnchant;
+                case Character.CharacterSlot.Wrist:
+                    return WristEnchant;
+                case Character.CharacterSlot.Hands:
+                    return HandsEnchant;
+                case Character.CharacterSlot.Legs:
+                    return LegsEnchant;
+                case Character.CharacterSlot.Feet:
+                    return FeetEnchant;
+                case Character.CharacterSlot.Finger1:
+                    return Finger1Enchant;
+                case Character.CharacterSlot.Finger2:
+                    return Finger2Enchant;
+                case Character.CharacterSlot.MainHand:
+                    return MainHandEnchant;
+                case Character.CharacterSlot.OffHand:
+                    return OffHandEnchant;
+                case Character.CharacterSlot.Ranged:
+                    return RangedEnchant;
+                default:
+                    return null;
+            }
+        }
+
 		public void SetEnchantBySlot(Item.ItemSlot slot, Enchant enchant)
 		{
 			switch (slot)

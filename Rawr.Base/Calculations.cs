@@ -785,6 +785,12 @@ namespace Rawr
 		/// the item's label is highlighted in light blue on the charts.
 		/// </summary>
 		public abstract bool Equipped { get; set; }
+
+        /// <summary>
+        /// Complete gear set that includes item in Item based on which the OverallPoints and SubPoints
+        /// are based. Used by optimizer upgrade calculations.
+        /// </summary>
+        public Character Character { get; set; }
 	}
 
 	/// <summary>

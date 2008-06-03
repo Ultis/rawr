@@ -570,7 +570,7 @@ namespace Rawr
                             }
                         }
 
-                        ItemContextualMenu.Instance.Show(showItem, slot, true);
+                        ItemContextualMenu.Instance.Show(showItem, slot, ItemCalculations[itemIndex].Character, true);
 
                     }
                 }
@@ -596,6 +596,7 @@ namespace Rawr
                     if (itemIndex >= 0 && itemIndex < ItemCalculations.Length)
                     {
                         Item item = ItemCalculations[itemIndex].Item;
+                        Character itemCharacter = ItemCalculations[itemIndex].Character;
                         if (e.X < 10 && item != null && item.Id != 0)
                             cursor = Cursors.Hand;
 
@@ -605,7 +606,7 @@ namespace Rawr
                             if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
                                 tipX = -249;
 
-                            ShowTooltip(item, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
+                            ShowTooltip(item, itemCharacter, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
                         }
                     }
                     else
@@ -623,11 +624,12 @@ namespace Rawr
             }
         }
 
-        private void ShowTooltip(Item item, Point location)
+        private void ShowTooltip(Item item, Character itemCharacter, Point location)
         {
             if (_tooltipItem != item || _tooltipLocation != location)
             {
                 _tooltipItem = item;
+                _tooltipItemCharacter = itemCharacter;
                 _tooltipLocation = location;
                 ShowHideTooltip();
             }
@@ -638,17 +640,19 @@ namespace Rawr
             if (_tooltipItem != null)
             {
                 _tooltipItem = null;
+                _tooltipItemCharacter = null;
                 ShowHideTooltip();
             }
         }
 
         private Item _tooltipItem = null;
+        private Character _tooltipItemCharacter = null;
         private Point _tooltipLocation = Point.Empty;
         private void ShowHideTooltip()
         {
             if (_tooltipItem != null && _tooltipLocation != Point.Empty)
             {
-                ItemToolTip.Instance.Show(_tooltipItem, this, _tooltipLocation);
+                ItemToolTip.Instance.Show(_tooltipItem, _tooltipItemCharacter, this, _tooltipLocation);
             }
             else
             {

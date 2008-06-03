@@ -28,13 +28,15 @@ namespace Rawr
 		}
 
 		private Item _item;
+        private Character _itemCharacter;
 		private Character.CharacterSlot _equipSlot;
 		private ToolStripMenuItem _menuItemName;
 		private ToolStripMenuItem _menuItemEdit;
 		private ToolStripMenuItem _menuItemWowhead;
 		private ToolStripMenuItem _menuItemRefresh;
 		private ToolStripMenuItem _menuItemEquip;
-		private ToolStripMenuItem _menuItemDelete;
+        private ToolStripMenuItem _menuItemEquipAll;
+        private ToolStripMenuItem _menuItemDelete;
 		private ToolStripMenuItem _menuItemDeleteDuplicates;
 		private ToolStripMenuItem _menuItemCreateBearGemmings;
 		private ToolStripMenuItem _menuItemCreateCatGemmings;
@@ -55,6 +57,9 @@ namespace Rawr
 			_menuItemEquip = new ToolStripMenuItem("Equip");
 			_menuItemEquip.Click += new EventHandler(_menuItemEquip_Click);
 
+            _menuItemEquipAll = new ToolStripMenuItem("Equip All");
+            _menuItemEquipAll.Click += new EventHandler(_menuItemEquipAll_Click);
+
 			_menuItemDelete = new ToolStripMenuItem("Delete");
 			_menuItemDelete.Click += new EventHandler(_menuItemDelete_Click);
 
@@ -73,16 +78,24 @@ namespace Rawr
 			this.Items.Add(_menuItemWowhead);
 			this.Items.Add(_menuItemRefresh);
 			this.Items.Add(_menuItemEquip);
-			this.Items.Add(_menuItemDelete);
+            this.Items.Add(_menuItemEquipAll);
+            this.Items.Add(_menuItemDelete);
 			this.Items.Add(_menuItemDeleteDuplicates);
 
 			//this.Items.Add(_menuItemCreateBearGemmings);
 			//this.Items.Add(_menuItemCreateCatGemmings);
 		}
 
-		public void Show(Item item, Character.CharacterSlot equipSlot, bool allowDelete)
+        public void Show(Item item, Character.CharacterSlot equipSlot, bool allowDelete)
+        {
+            Show(item, equipSlot, null, allowDelete);
+        }
+
+		public void Show(Item item, Character.CharacterSlot equipSlot, Character itemCharacter, bool allowDelete)
 		{
 			_item = item;
+            _itemCharacter = itemCharacter;
+            _menuItemEquipAll.Visible = (_itemCharacter != null);
 			_equipSlot = equipSlot;
 			_menuItemEquip.Enabled = (this.Character[equipSlot] != item);
 			_menuItemEquip.Visible = equipSlot != Character.CharacterSlot.None;
@@ -211,6 +224,45 @@ namespace Rawr
 		{
 			this.Character[_equipSlot] = _item;
 		}
+
+        void _menuItemEquipAll_Click(object sender, EventArgs e)
+        {
+            _character.IsLoading = true;
+            _character.Back = _itemCharacter.Back == null ? null : ItemCache.FindItemById(_itemCharacter.Back.GemmedId);
+            _character.Chest = _itemCharacter.Chest == null ? null : ItemCache.FindItemById(_itemCharacter.Chest.GemmedId);
+            _character.Feet = _itemCharacter.Feet == null ? null : ItemCache.FindItemById(_itemCharacter.Feet.GemmedId);
+            _character.Finger1 = _itemCharacter.Finger1 == null ? null : ItemCache.FindItemById(_itemCharacter.Finger1.GemmedId);
+            _character.Finger2 = _itemCharacter.Finger2 == null ? null : ItemCache.FindItemById(_itemCharacter.Finger2.GemmedId);
+            _character.Hands = _itemCharacter.Hands == null ? null : ItemCache.FindItemById(_itemCharacter.Hands.GemmedId);
+            _character.Head = _itemCharacter.Head == null ? null : ItemCache.FindItemById(_itemCharacter.Head.GemmedId);
+            _character.Legs = _itemCharacter.Legs == null ? null : ItemCache.FindItemById(_itemCharacter.Legs.GemmedId);
+            _character.MainHand = _itemCharacter.MainHand == null ? null : ItemCache.FindItemById(_itemCharacter.MainHand.GemmedId);
+            _character.Neck = _itemCharacter.Neck == null ? null : ItemCache.FindItemById(_itemCharacter.Neck.GemmedId);
+            _character.OffHand = _itemCharacter.OffHand == null ? null : ItemCache.FindItemById(_itemCharacter.OffHand.GemmedId);
+            _character.Projectile = _itemCharacter.Projectile == null ? null : ItemCache.FindItemById(_itemCharacter.Projectile.GemmedId);
+            _character.ProjectileBag = _itemCharacter.ProjectileBag == null ? null : ItemCache.FindItemById(_itemCharacter.ProjectileBag.GemmedId);
+            _character.Ranged = _itemCharacter.Ranged == null ? null : ItemCache.FindItemById(_itemCharacter.Ranged.GemmedId);
+            _character.Shoulders = _itemCharacter.Shoulders == null ? null : ItemCache.FindItemById(_itemCharacter.Shoulders.GemmedId);
+            _character.Trinket1 = _itemCharacter.Trinket1 == null ? null : ItemCache.FindItemById(_itemCharacter.Trinket1.GemmedId);
+            _character.Trinket2 = _itemCharacter.Trinket2 == null ? null : ItemCache.FindItemById(_itemCharacter.Trinket2.GemmedId);
+            _character.Waist = _itemCharacter.Waist == null ? null : ItemCache.FindItemById(_itemCharacter.Waist.GemmedId);
+            _character.Wrist = _itemCharacter.Wrist == null ? null : ItemCache.FindItemById(_itemCharacter.Wrist.GemmedId);
+            _character.BackEnchant = _itemCharacter.BackEnchant;
+            _character.ChestEnchant = _itemCharacter.ChestEnchant;
+            _character.FeetEnchant = _itemCharacter.FeetEnchant;
+            _character.Finger1Enchant = _itemCharacter.Finger1Enchant;
+            _character.Finger2Enchant = _itemCharacter.Finger2Enchant;
+            _character.HandsEnchant = _itemCharacter.HandsEnchant;
+            _character.HeadEnchant = _itemCharacter.HeadEnchant;
+            _character.LegsEnchant = _itemCharacter.LegsEnchant;
+            _character.MainHandEnchant = _itemCharacter.MainHandEnchant;
+            _character.OffHandEnchant = _itemCharacter.OffHandEnchant;
+            _character.RangedEnchant = _itemCharacter.RangedEnchant;
+            _character.ShouldersEnchant = _itemCharacter.ShouldersEnchant;
+            _character.WristEnchant = _itemCharacter.WristEnchant;
+            _character.IsLoading = false;
+            _character.OnItemsChanged();
+        }
 
 		void _menuItemRefresh_Click(object sender, EventArgs e)
 		{

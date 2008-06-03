@@ -32,6 +32,7 @@ namespace Rawr
 
         public void LoadData(Character character, Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> calculations)
         {
+            comparisonGraph1.EquipSlot = Character.CharacterSlot.AutoSelect;
             comparisonGraph1.Character = character;
             /*toolStripDropDownButtonSort.DropDownItems.Clear();
             toolStripDropDownButtonSort.DropDownItems.Add(overallToolStripMenuItem);

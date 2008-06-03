@@ -89,12 +89,16 @@ namespace Rawr
             }
         }
 
+        private Character CurrentItemCharacter { get; set; }
+
         private Font _fontName;
         private Font _fontStats;
+        private Font _fontTinyName;
 
         private void LoadGraphicsObjects()
         {
             _fontName = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, ((0)));
+            _fontTinyName = new Font("Microsoft Sans Serif", 6.00F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
             _fontStats = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
         }
 
@@ -130,7 +134,16 @@ namespace Rawr
                             {
                                 extraLocation = (int)locationSize.Height;
                             }
-                            _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + extraLocation, PixelFormat.Format32bppArgb);
+                            int numTinyItems = 0;
+                            int tinyItemSize = 18;
+                            if (CurrentItemCharacter != null)
+                            {
+                                foreach (Character.CharacterSlot slot in Character.CharacterSlots)
+                                {
+                                    if (CurrentItemCharacter[slot] != null && CurrentItemCharacter[slot].GemmedId != _currentItem.GemmedId) numTinyItems++;
+                                }
+                            }
+                            _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + extraLocation + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
 
                             Graphics g = Graphics.FromImage(_cachedToolTipImage);
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -279,9 +292,73 @@ namespace Rawr
                             }
                             if (_currentItem.Quality != Item.ItemQuality.Temp)
                             {
-                                Rectangle textRec = new Rectangle(2, (hasSockets ? 78 : 18) + statHeight + 4, _cachedToolTipImage.Width - 4, _cachedToolTipImage.Height - 2 - (hasSockets ? 78 : 18) + statHeight);
+                                Rectangle textRec = new Rectangle(2, (hasSockets ? 76 : 18) + statHeight + 4, _cachedToolTipImage.Width - 4, (int)locationSize.Height + extraLocation);
                                 g.DrawString(location, _fontStats, SystemBrushes.InfoText, textRec);
                             }
+                            xPos = 2;
+                            yPos = (hasSockets ? 76 : 18) + statHeight + 4 + (int)locationSize.Height + extraLocation + 2;
+                            if (CurrentItemCharacter != null)
+                            {
+                                foreach (Character.CharacterSlot slot in Character.CharacterSlots)
+                                {
+                                    Item tinyItem = CurrentItemCharacter[slot];
+                                    if (tinyItem != null && tinyItem.GemmedId != _currentItem.GemmedId)
+                                    {
+                                        Image icon = ItemIcons.GetItemIcon(tinyItem, true);
+                                        if (icon != null)
+                                        {
+                                            g.DrawImage(icon, xPos + 1, yPos + 1, 16, 16);
+                                            icon.Dispose();
+                                            xPos += tinyItemSize;
+                                        }
+                                        for (int i = 1; i <= 3; i++)
+                                        {
+                                            Item gem = tinyItem.GetGem(i);
+                                            if (gem != null)
+                                            {
+                                                icon = ItemIcons.GetItemIcon(gem, true);
+                                                if (icon != null)
+                                                {
+                                                    g.DrawImage(icon, xPos + 1, yPos + 1, 16, 16);
+                                                    icon.Dispose();
+                                                    xPos += tinyItemSize;
+                                                }
+                                            }
+                                        }
+
+                                        xPos = 2;
+                                        nameBrush = null;
+                                        switch (tinyItem.Quality)
+                                        {
+                                            case Item.ItemQuality.Common:
+                                            case Item.ItemQuality.Temp:
+                                                nameBrush = SystemBrushes.InfoText;
+                                                break;
+                                            case Item.ItemQuality.Epic:
+                                                nameBrush = Brushes.Purple;
+                                                break;
+                                            case Item.ItemQuality.Legendary:
+                                                nameBrush = Brushes.Orange;
+                                                break;
+                                            case Item.ItemQuality.Poor:
+                                                nameBrush = Brushes.Gray;
+                                                break;
+                                            case Item.ItemQuality.Rare:
+                                                nameBrush = Brushes.Blue;
+                                                break;
+                                            case Item.ItemQuality.Uncommon:
+                                                nameBrush = Brushes.Gray;
+                                                break;
+                                        }
+                                        string label = tinyItem.Name;
+                                        Enchant tinyEnchant = CurrentItemCharacter.GetEnchantBySlot(slot);
+                                        if (tinyEnchant != null && tinyEnchant.Id != 0) label = label + " (" + tinyEnchant.ToString() + ")";
+                                        g.DrawString(label, _fontTinyName, nameBrush, xPos + 76, yPos + 1);
+                                        yPos += tinyItemSize;
+                                    }
+                                }
+                            }
+
                             g.Dispose();
                         }
                     }
@@ -295,9 +372,15 @@ namespace Rawr
             }
         }
 
-		public void Show(Item item, IWin32Window window, Point point)
+        public void Show(Item item, IWin32Window window, Point point)
+        {
+            Show(item, null, window, point);
+        }
+
+		public void Show(Item item, Character itemCharacter, IWin32Window window, Point point)
 		{
 			CurrentItem = item;
+            CurrentItemCharacter = itemCharacter;
             if (CachedToolTipImage != null)
             {
                 base.Show(item.Name, window, point);
