@@ -1462,6 +1462,10 @@ namespace Rawr.Mage
                         {
                             double nextT = Math.Min(jT, sequence[kk].Duration - kT);
                             double mpsdiff = sequence[jj].Mps - sequence[kk].Mps;
+                            if (mpsdiff < -0.000001)
+                            {
+                                break; // if we go on we'll actually make it worse, so stop here and hope that we can do some swapping
+                            }
                             if (mana - mpsdiff * nextT <= minMana)
                             {
                                 nextT = (mana - minMana) / mpsdiff;
