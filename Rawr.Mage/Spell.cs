@@ -742,10 +742,17 @@ namespace Rawr.Mage
         }
     }
 
+    // 582 arcane, 500-501, 1.03 amp
+    // 982 arcane, 655-656 , 1.03 amp
+    // 1274 arcane, 768-769, 1.03 amp
+    // 1269 arcane, 805-806, 1.03 * 1.05 amp
+    // 1275 arcane, 807-808 , 1.03 * 1.05 amp
+    //
+    // 267.55514100785945446139620896945 <= base <= 267.7420527045769764216366158113
     class ArcaneMissiles : BaseSpell
     {
         public ArcaneMissiles(Character character, CharacterCalculationsMage calculations, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing)
-            : base("Arcane Missiles", true, false, false, false, 740, 30, 5, 0, MagicSchool.Arcane, 264 * 5, 265 * 5, 0, 5, 6)
+            : base("Arcane Missiles", true, false, false, false, 740, 30, 5, 0, MagicSchool.Arcane, 267.6f * 5, 267.6f * 5, 0, 5, 6)
         {
             ManualClearcasting = true;
             ClearcastingActive = clearcastingActive;
@@ -755,7 +762,7 @@ namespace Rawr.Mage
         }
 
         public ArcaneMissiles(Character character, CharacterCalculationsMage calculations)
-            : base("Arcane Missiles", true, false, false, false, 740, 30, 5, 0, MagicSchool.Arcane, 264 * 5, 265 * 5, 0, 5, 1)
+            : base("Arcane Missiles", true, false, false, false, 740, 30, 5, 0, MagicSchool.Arcane, 267.6f * 5, 267.6f * 5, 0, 5, 1)
         {
             Calculate(character, calculations);
         }
