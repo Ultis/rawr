@@ -208,7 +208,7 @@ threat and limited threat scaled by the threat scale.",
             #region Tanking Calculations
             calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
-			calculatedStats.ActiveBuffs = new List<string>(character.ActiveBuffs);
+			calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             calculatedStats.Miss = 5f + (((float)Math.Floor(stats.Defense + stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToMiss) +
                                    stats.Miss - levelDifference;
             calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss,
@@ -626,7 +626,7 @@ threat and limited threat scaled by the threat scale.",
                 statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
             }
 
-            if (character.ActiveBuffs.Contains("Commanding Shout"))
+            if (character.ActiveBuffsContains("Commanding Shout"))
             {
                 statsBuffs.Health += statsBuffs.BonusCommandingShoutHP;
             }

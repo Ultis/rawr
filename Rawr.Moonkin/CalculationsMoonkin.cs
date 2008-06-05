@@ -309,7 +309,7 @@ namespace Rawr.Moonkin
             // All spells: Crit% + (0.01 * Natural Perfection)
             statsTotal.SpellCritRating += 0.01f * calcOpts.NaturalPerfection * 2208f;
             // Add the crit bonus from the idol, if present
-            if (character.ActiveBuffs.Contains("Moonkin Aura"))
+            if (character.ActiveBuffsContains("Moonkin Aura"))
                 statsTotal.SpellCritRating += statsTotal.IdolCritRating;
 
             return statsTotal;

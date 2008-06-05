@@ -283,7 +283,7 @@ namespace Rawr.ProtWarr
         public float FireSurvivalPoints { get; set; }
         public float ShadowSurvivalPoints { get; set; }
 		public float ArcaneSurvivalPoints { get; set; }
-		public List<string> ActiveBuffs { get; set; }
+		public List<Buff> ActiveBuffs { get; set; }
         #endregion
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()

@@ -159,13 +159,12 @@ namespace Rawr
 			_loadingBuffsFromCharacter = true;
 			foreach (CheckBox checkBox in CheckBoxes.Values)
 				checkBox.Checked = false;
-			foreach (string buffName in Character.ActiveBuffs)
+			foreach (Buff buff in Character.ActiveBuffs)
 			{
-				Buff activeBuff = Buff.GetBuffByName(buffName);
-                if (activeBuff != null)
+                if (buff != null)
                 {
-                    if (CheckBoxes.ContainsKey(activeBuff))
-                        CheckBoxes[activeBuff].Checked = true;
+                    if (CheckBoxes.ContainsKey(buff))
+                        CheckBoxes[buff].Checked = true;
                 }
 			}
 			_loadingBuffsFromCharacter = false;
@@ -196,10 +195,10 @@ namespace Rawr
 		//that when we bleed
 		private void UpdateCharacterBuffs()
 		{
-			List<string> activeBuffs = new List<string>();
+			List<Buff> activeBuffs = new List<Buff>();
 			foreach (CheckBox checkBox in CheckBoxes.Values)
 				if (checkBox.Checked && checkBox.Enabled)
-					activeBuffs.Add((checkBox.Tag as Buff).Name);
+					activeBuffs.Add((checkBox.Tag as Buff));
 			Character.ActiveBuffs = activeBuffs;
 		}
 

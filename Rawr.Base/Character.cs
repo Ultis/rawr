@@ -22,8 +22,10 @@ namespace Rawr //O O . .
         public CharacterRace _race = CharacterRace.NightElf;
         [XmlElement("Class")]
         public CharacterClass _class = CharacterClass.Druid;
+        [XmlIgnore()]
+        public List<Buff> _activeBuffs = new List<Buff>();
         [XmlElement("ActiveBuffs")]
-		public List<string> _activeBuffs = new List<string>();
+        public List<string> _activeBuffsXml = new List<string>();
         [XmlElement("Head")]
         public string _head;
         [XmlElement("Neck")]
@@ -151,10 +153,15 @@ namespace Rawr //O O . .
 
 
         [XmlIgnore]
-        public List<string> ActiveBuffs
+        public List<Buff> ActiveBuffs
         {
             get { return _activeBuffs; }
 			set { _activeBuffs = value; }
+        }
+
+        public bool ActiveBuffsContains(string buff)
+        {
+            return _activeBuffs.FindIndex(x => x.Name == buff) >= 0;
         }
 
 		[XmlIgnore]
@@ -1670,22 +1677,33 @@ namespace Rawr //O O . .
 				}
 			}
 
-			foreach (Buff buff in Buff.GetBuffsByType(Buff.BuffType.All))
-			{
-				if (!string.IsNullOrEmpty(buff.SetName))
-				{
-					if (setCounts.ContainsKey(buff.SetName) && setCounts[buff.SetName] >= buff.SetThreshold)
-					{
-						if (!ActiveBuffs.Contains(buff.Name))
-							ActiveBuffs.Add(buff.Name);
-					}
-					else
-					{
-						if (ActiveBuffs.Contains(buff.Name))
-							ActiveBuffs.Remove(buff.Name);
-					}
-				}
-			}
+            // eliminate searching in active buffs: first remove all set bonuses, then add active ones
+            ActiveBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
+            foreach (Buff buff in Buff.GetSetBonuses())
+            {
+                int setCount;
+                if (setCounts.TryGetValue(buff.SetName, out setCount) && setCount >= buff.SetThreshold)
+                {
+                    ActiveBuffs.Add(buff);
+                }
+            }
+
+            //foreach (Buff buff in Buff.GetBuffsByType(Buff.BuffType.All))
+            //{
+            //    if (!string.IsNullOrEmpty(buff.SetName))
+            //    {
+            //        if (setCounts.ContainsKey(buff.SetName) && setCounts[buff.SetName] >= buff.SetThreshold)
+            //        {
+            //            if (!ActiveBuffs.Contains(buff.Name))
+            //                ActiveBuffs.Add(buff.Name);
+            //        }
+            //        else
+            //        {
+            //            if (ActiveBuffs.Contains(buff.Name))
+            //                ActiveBuffs.Remove(buff.Name);
+            //        }
+            //    }
+            //}
 		}
 
         [XmlIgnore]
@@ -2113,7 +2131,7 @@ namespace Rawr //O O . .
 
         public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
                 Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile, Item projectileBag,
-            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, List<string> activeBuffs, bool trackEquippedItemChanges)
+            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, List<Buff> activeBuffs, bool trackEquippedItemChanges)
         {
             _trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
@@ -2188,7 +2206,7 @@ namespace Rawr //O O . .
                         this.MainHandEnchant,
                         this.OffHandEnchant,
                         this.RangedEnchant, false);
-			foreach (string buff in this.ActiveBuffs) 
+			foreach (Buff buff in this.ActiveBuffs) 
 				if (!clone.ActiveBuffs.Contains(buff))
 					clone.ActiveBuffs.Add(buff);
 			clone.CalculationOptions = this.CalculationOptions;
@@ -2201,6 +2219,8 @@ namespace Rawr //O O . .
         public void Save(string path)
         {
 			SerializeCalculationOptions();
+            _activeBuffsXml = _activeBuffs.ConvertAll(buff => buff.Name);
+
 			using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
             {
                 System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
@@ -2227,19 +2247,9 @@ namespace Rawr //O O . .
 					System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
 					System.IO.StringReader reader = new System.IO.StringReader(xml);
 					character = (Character)serializer.Deserialize(reader);
+                    character._activeBuffs = character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff));
+                    character._activeBuffs.RemoveAll(buff => buff == null);
 					reader.Close();
-                    if (character != null)
-                    {
-                        for (int i = 0; i < character._activeBuffs.Count; i++)
-                        {
-                            Buff buff = Buff.GetBuffByName(character._activeBuffs[i]);
-                            if (buff == null)
-                            {
-                                character._activeBuffs.RemoveAt(i);
-                                i--;
-                            }
-                        }
-                    }
 				}
 				catch (Exception)
 				{

@@ -480,20 +480,21 @@ namespace Rawr
 			return enchantCalcs;
 		}
 
-        public static void RemoveConflictingBuffs(List<string> activeBuffs, string buff)
+        public static void RemoveConflictingBuffs(List<Buff> activeBuffs, Buff buff)
         {
-            Buff b = Buff.GetBuffByName(buff);
+            //Buff b = Buff.GetBuffByName(buff);
 
-			if (b != null)
+			if (buff != null)
 			{
 				for (int i = 0; i < activeBuffs.Count; i++)
 				{
 					if (activeBuffs[i] != buff)
 					{
-						Buff b2 = Buff.GetBuffByName(activeBuffs[i]);
-						foreach (string buffName in b2.ConflictingBuffs)
+						//Buff b2 = Buff.GetBuffByName(activeBuffs[i]);
+                        Buff b2 = activeBuffs[i];
+                        foreach (string buffName in b2.ConflictingBuffs)
 						{
-							if (Array.IndexOf<string>(b.ConflictingBuffs, buffName) >= 0)
+							if (Array.IndexOf<string>(buff.ConflictingBuffs, buffName) >= 0)
 							{
 								activeBuffs.RemoveAt(i);
 								i--;
@@ -512,7 +513,7 @@ namespace Rawr
 			CharacterCalculationsBase calcsEquipped = null;
 			CharacterCalculationsBase calcsUnequipped = null;
             Character charAutoActivated = character.Clone();
-            foreach (string autoBuff in currentCalcs.AutoActivatedBuffs)
+            foreach (Buff autoBuff in currentCalcs.AutoActivatedBuffs)
             {
                 if (!charAutoActivated.ActiveBuffs.Contains(autoBuff))
                 {
@@ -523,36 +524,44 @@ namespace Rawr
             charAutoActivated.DisableBuffAutoActivation = true;
             foreach (Buff buff in Buff.GetBuffsByType(buffType))
 			{
-                if (!activeOnly || charAutoActivated.ActiveBuffs.Contains(buff.Name))
+                if (!activeOnly || charAutoActivated.ActiveBuffs.Contains(buff))
 				{
                     Character charUnequipped = charAutoActivated.Clone();
                     Character charEquipped = charAutoActivated.Clone();
                     charUnequipped.DisableBuffAutoActivation = true;
                     charEquipped.DisableBuffAutoActivation = true;
-					if (charUnequipped.ActiveBuffs.Contains(buff.Name))
-						charUnequipped.ActiveBuffs.Remove(buff.Name);
+					if (charUnequipped.ActiveBuffs.Contains(buff))
+						charUnequipped.ActiveBuffs.Remove(buff);
 					if (string.IsNullOrEmpty(buff.RequiredBuff))
 					{
-						if (charUnequipped.ActiveBuffs.Contains("Improved " + buff.Name))
-							charUnequipped.ActiveBuffs.Remove("Improved " + buff.Name);
+						//if (charUnequipped.ActiveBuffs.Contains("Improved " + buff.Name))
+						//	charUnequipped.ActiveBuffs.Remove("Improved " + buff.Name);
+                        charUnequipped.ActiveBuffs.RemoveAll(x => x.Name == "Improved " + buff.Name);
 					}
 					else
-						if (charUnequipped.ActiveBuffs.Contains(buff.RequiredBuff))
-							charUnequipped.ActiveBuffs.Remove(buff.RequiredBuff);
+						//if (charUnequipped.ActiveBuffs.Contains(buff.RequiredBuff))
+						//	charUnequipped.ActiveBuffs.Remove(buff.RequiredBuff);
+                        charUnequipped.ActiveBuffs.RemoveAll(x => x.Name == buff.RequiredBuff);
 
-					if (!charEquipped.ActiveBuffs.Contains(buff.Name))
-						charEquipped.ActiveBuffs.Add(buff.Name);
-					if (string.IsNullOrEmpty(buff.RequiredBuff))
-					{
-						if (charEquipped.ActiveBuffs.Contains("Improved " + buff.Name))
-							charEquipped.ActiveBuffs.Remove("Improved " + buff.Name);
-					}
-					else
-						if (!charEquipped.ActiveBuffs.Contains(buff.RequiredBuff))
-							charEquipped.ActiveBuffs.Add(buff.RequiredBuff);
+					if (!charEquipped.ActiveBuffs.Contains(buff))
+						charEquipped.ActiveBuffs.Add(buff);
+                    if (string.IsNullOrEmpty(buff.RequiredBuff))
+                    {
+                        //if (charEquipped.ActiveBuffs.Contains("Improved " + buff.Name))
+                        //	charEquipped.ActiveBuffs.Remove("Improved " + buff.Name);
+                        charEquipped.ActiveBuffs.RemoveAll(x => x.Name == "Improved " + buff.Name);
+                    }
+                    else
+                    {
+                        //if (!charEquipped.ActiveBuffs.Contains(buff.RequiredBuff))
+                        //	charEquipped.ActiveBuffs.Add(buff.RequiredBuff);
+                        Buff requiredBuff = Buff.GetBuffByName(buff.RequiredBuff);
+                        if (!charEquipped.ActiveBuffs.Contains(requiredBuff))
+                        	charEquipped.ActiveBuffs.Add(requiredBuff);
+                    }
 
-                    RemoveConflictingBuffs(charEquipped.ActiveBuffs, buff.Name);
-                    RemoveConflictingBuffs(charUnequipped.ActiveBuffs, buff.Name);
+                    RemoveConflictingBuffs(charEquipped.ActiveBuffs, buff);
+                    RemoveConflictingBuffs(charUnequipped.ActiveBuffs, buff);
 
 					calcsUnequipped = GetCharacterCalculations(charUnequipped);
 					calcsEquipped = GetCharacterCalculations(charEquipped);
@@ -560,7 +569,7 @@ namespace Rawr
 					ComparisonCalculationBase buffCalc = CreateNewComparisonCalculation();
 					buffCalc.Name = buff.Name;
                     buffCalc.Item = new Item() { Name = buff.Name, Stats = buff.Stats, Quality = Item.ItemQuality.Temp };
-                    buffCalc.Equipped = charAutoActivated.ActiveBuffs.Contains(buff.Name);
+                    buffCalc.Equipped = charAutoActivated.ActiveBuffs.Contains(buff);
 					buffCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
 					float[] subPoints = new float[calcsEquipped.SubPoints.Length];
 					for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
@@ -655,8 +664,17 @@ namespace Rawr
                     Buff buff = Buff.GetBuffByName(buffName);
                     if (buff != null)
                     {
-                        stats.Accumulate(Buff.GetBuffByName(buffName).Stats);
+                        stats.Accumulate(buff.Stats);
                     }
+                }
+        }
+
+        public virtual void AccumulateBuffsStats(Stats stats, IEnumerable<Buff> buffs)
+        {
+            foreach (Buff buff in buffs)
+                if (buff != null)
+                {
+                    stats.Accumulate(buff.Stats);
                 }
         }
 
@@ -666,6 +684,13 @@ namespace Rawr
             AccumulateBuffsStats(stats, buffs);
             return stats;
 		}
+
+        public virtual Stats GetBuffsStats(IEnumerable<Buff> buffs)
+        {
+            Stats stats = new Stats();
+            AccumulateBuffsStats(stats, buffs);
+            return stats;
+        }
 
 		public virtual string GetCharacterStatsString(Character character)
 		{
@@ -737,8 +762,8 @@ namespace Rawr
         /// <summary>
         /// List of buffs that were automatically activated by the model during GetCharacterCalculations().
         /// </summary>
-        private List<string> _autoActivatedBuffs = new List<string>();
-        public List<string> AutoActivatedBuffs
+        private List<Buff> _autoActivatedBuffs = new List<Buff>();
+        public List<Buff> AutoActivatedBuffs
         {
             get
             {

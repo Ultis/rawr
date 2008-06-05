@@ -708,7 +708,7 @@ namespace Rawr.Mage
 
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool computeIncrementalSet, bool useSMP)
         {
-            List<string> autoActivatedBuffs = new List<string>();
+            List<Buff> autoActivatedBuffs = new List<Buff>();
             Stats rawStats = GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
             Stats characterStats = GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
 
@@ -814,8 +814,8 @@ namespace Rawr.Mage
 
             if (armor == null)
             {
-                if (character.ActiveBuffs.Contains("Mage Armor")) armor = "Mage Armor";
-                if (character.ActiveBuffs.Contains("Molten Armor")) armor = "Molten Armor";
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Mage Armor"))) armor = "Mage Armor";
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Molten Armor"))) armor = "Molten Armor";
             }
 
             #region Load Stats
@@ -992,19 +992,19 @@ namespace Rawr.Mage
                 // TODO consider adding water elemental as part of optimization for stacking with cooldowns
                 // TODO add GCD for summoning and mana cost
                 float spellHit = 0;
-                if (character.ActiveBuffs.Contains("Totem of Wrath")) spellHit += 0.03f;
-                if (character.ActiveBuffs.Contains("Inspiring Presence")) spellHit += 0.01f;
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Totem of Wrath"))) spellHit += 0.03f;
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Inspiring Presence"))) spellHit += 0.01f;
                 float hitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + spellHit);
                 float spellCrit = 0.05f;
-                if (character.ActiveBuffs.Contains("Winter's Chill") || calculationOptions.WintersChill == 1) spellHit += 0.1f;
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Winter's Chill")) || calculationOptions.WintersChill == 1) spellHit += 0.1f;
                 float multiplier = hitRate;
-                if (character.ActiveBuffs.Contains("Curse of the Elements")) multiplier *= 1.1f;
-                if (character.ActiveBuffs.Contains("Improved Curse of the Elements")) multiplier *= 1.13f / 1.1f;
-                if (character.ActiveBuffs.Contains("Misery")) multiplier *= 1.05f;
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Curse of the Elements"))) multiplier *= 1.1f;
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Curse of the Elements"))) multiplier *= 1.13f / 1.1f;
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Misery"))) multiplier *= 1.05f;
                 float realResistance = calculationOptions.FrostResist;
                 float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > 70) ? ((targetLevel - 70) * 0.02f) : 0f));
                 multiplier *= partialResistFactor;
-                calculatedStats.WaterElementalDps = (521.5f + (0.4f * calculatedStats.FrostDamage + (character.ActiveBuffs.Contains("Wrath of Air") ? 101 : 0)) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f;
+                calculatedStats.WaterElementalDps = (521.5f + (0.4f * calculatedStats.FrostDamage + (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath of Air")) ? 101 : 0)) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f;
                 calculatedStats.WaterElementalDuration = (float)(1 + (int)((calculatedStats.FightDuration - 45f) / 180f)) * 45;
                 if (coldsnap) calculatedStats.WaterElementalDuration = (float)MaximizeColdsnapDuration(calculationOptions.FightDuration, coldsnapCooldown, 45.0, 180.0, out coldsnapCount);
                 /*calculatedStats.WaterElementalDuration = (float)(1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 45f) / 180f)) * 45;
@@ -2666,12 +2666,12 @@ namespace Rawr.Mage
             return calculatedStats;
         }
 
-        private Stats GetRawStats(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<string> autoActivatedBuffs, string armor)
+        private Stats GetRawStats(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<Buff> autoActivatedBuffs, string armor)
         {
             Stats stats = new Stats();
             AccumulateItemStats(stats, character, additionalItem);
             AccumulateEnchantsStats(stats, character);
-            List<string> activeBuffs = new List<string>();
+            List<Buff> activeBuffs = new List<Buff>();
             activeBuffs.AddRange(character.ActiveBuffs);
 
             if (!character.DisableBuffAutoActivation)
@@ -2680,28 +2680,31 @@ namespace Rawr.Mage
                 {
                     if (calculationOptions.ImprovedScorch > 0)
                     {
-                        if (!character.ActiveBuffs.Contains("Improved Scorch"))
+                        Buff improvedScorch = Buff.GetBuffByName("Improved Scorch");
+                        if (!character.ActiveBuffs.Contains(improvedScorch))
                         {
-                            activeBuffs.Add("Improved Scorch");
-                            autoActivatedBuffs.Add("Improved Scorch");
+                            activeBuffs.Add(improvedScorch);
+                            autoActivatedBuffs.Add(improvedScorch);
                         }
                     }
                 }
                 if (calculationOptions.WintersChill > 0)
                 {
-                    if (!character.ActiveBuffs.Contains("Winter's Chill"))
+                    Buff wintersChill = Buff.GetBuffByName("Winter's Chill");
+                    if (!character.ActiveBuffs.Contains(wintersChill))
                     {
-                        activeBuffs.Add("Winter's Chill");
-                        autoActivatedBuffs.Add("Winter's Chill");
+                        activeBuffs.Add(wintersChill);
+                        autoActivatedBuffs.Add(wintersChill);
                     }
                 }
                 if (armor != null)
                 {
-                    if (!character.ActiveBuffs.Contains(armor))
+                    Buff armorBuff = Buff.GetBuffByName(armor);
+                    if (!character.ActiveBuffs.Contains(armorBuff))
                     {
-                        activeBuffs.Add(armor);
-                        autoActivatedBuffs.Add(armor);
-                        RemoveConflictingBuffs(activeBuffs, armor);
+                        activeBuffs.Add(armorBuff);
+                        autoActivatedBuffs.Add(armorBuff);
+                        RemoveConflictingBuffs(activeBuffs, armorBuff);
                     }
                 }
             }
@@ -2715,7 +2718,7 @@ namespace Rawr.Mage
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions, new List<string>(), null), calculationOptions);
+            return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions, new List<Buff>(), null), calculationOptions);
         }
 
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats, CalculationOptionsMage calculationOptions)

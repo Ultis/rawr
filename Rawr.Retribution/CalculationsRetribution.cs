@@ -571,7 +571,7 @@ namespace Rawr.Retribution
             statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime / 100f;
 
             //ferocious inspiriation
-            if (character.ActiveBuffs.Contains("Ferocious Inspiration"))
+            if (character.ActiveBuffsContains("Ferocious Inspiration"))
                 statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier) *
                     (float)Math.Pow(1.03f, calcOpts.NumberOfFerociousInspirations - 1f)) - 1f;
 

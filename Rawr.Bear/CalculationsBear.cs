@@ -198,7 +198,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			CharacterCalculationsBear calculatedStats = new CharacterCalculationsBear();
 			calculatedStats.BasicStats = stats;
 			calculatedStats.Race = character.Race;
-			calculatedStats.ActiveBuffs = new List<string>(character.ActiveBuffs);
+			calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
 			calculatedStats.TargetLevel = targetLevel;
 			float defSkill = (float)Math.Floor(stats.DefenseRating / (123f / 52f));
 			calculatedStats.Miss = 5f + (defSkill * 0.04f) + stats.Miss - levelDifference;
@@ -943,7 +943,7 @@ you are being killed by burst damage, focus on Survival Points.",
         public float ArcaneSurvivalPoints{get;set;}
 
 		public Character.CharacterRace Race { get; set; }
-		public List<string> ActiveBuffs { get; set; }
+		public List<Buff> ActiveBuffs { get; set; }
 
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
@@ -1030,7 +1030,7 @@ you are being killed by burst damage, focus on Survival Points.",
             dictValues["Arcane Survival"] = ArcaneSurvivalPoints.ToString(); 
 
             float critRating = BasicStats.CritRating;
-            if (ActiveBuffs.Contains("Improved Judgement of the Crusade"))
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Judgement of the Crusade")))
                 critRating -= 66.24f;
             critRating -= 264.0768f; //Base 5% + 6% from talents
 
