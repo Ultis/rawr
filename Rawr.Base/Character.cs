@@ -97,7 +97,7 @@ namespace Rawr //O O . .
         [XmlElement("Talents")]
         public TalentTree _talents = new TalentTree();
 		[XmlElement("AvailableItems")]
-		public List<int> _availableItems = new List<int>();
+		public List<string> _availableItems = new List<string>();
 		[XmlElement("CurrentModel")]
 		public string _currentModel;
 		[XmlElement("EnforceMetagemRequirements")]
@@ -1024,12 +1024,165 @@ namespace Rawr //O O . .
             get { return _talents; }
             set { _talents = value; }
         }
+
+        // list of 5-tuples itemid.gem1id.gem2id.gem3id.enchantid, itemid is required, others can use * for wildcard
+        // for backward compatibility use just itemid instead of itemid.*.*.*.*
+        // -id represents enchants
 		[XmlIgnore]
-		public List<int> AvailableItems
+		public List<string> AvailableItems
 		{
 			get { return _availableItems; }
 			set { _availableItems = value; }
 		}
+
+        public ItemAvailability GetItemAvailability(Item item)
+        {
+            string id = item.Id.ToString();
+            string anyGem = id + ".*.*.*";
+            List<string> list = _availableItems.FindAll(x => x.StartsWith(id));
+            if (list.Contains(item.GemmedId + ".*"))
+            {
+                return ItemAvailability.Available;
+            }
+            else if (list.FindIndex(x => x.StartsWith(item.GemmedId)) >= 0)
+            {
+                return ItemAvailability.AvailableWithEnchantRestrictions;
+            }
+            if (list.Contains(id))
+            {
+                return ItemAvailability.RegemmingAllowed;
+            }
+            else if (list.FindIndex(x => x.StartsWith(anyGem)) >= 0)
+            {
+                return ItemAvailability.RegemmingAllowedWithEnchantRestrictions;
+            }
+            else
+            {
+                return ItemAvailability.NotAvailabe;
+            }
+        }
+
+        public void ToggleItemAvailability(Item item, bool regemmingAllowed)
+        {
+            string id = item.Id.ToString();
+            string anyGem = id + ".*.*.*";
+
+            if (id.StartsWith("-") || regemmingAllowed || item.IsGem)
+            {
+                // all enabled toggle
+                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem)) >= 0)
+                {
+                    _availableItems.Remove(id);
+                    _availableItems.RemoveAll(x => x.StartsWith(anyGem));
+                }
+                else
+                {
+                    _availableItems.Add(id);
+                }
+            }
+            else
+            {
+                // enabled toggle
+                if (_availableItems.FindIndex(x => x.StartsWith(item.GemmedId)) >= 0)
+                {
+                    _availableItems.RemoveAll(x => x.StartsWith(item.GemmedId));
+                }
+                else
+                {
+                    _availableItems.Add(item.GemmedId + ".*");
+                }
+            }
+            OnAvailableItemsChanged();
+        }
+
+        public void ToggleAvailableItemEnchantRestriction(Item item, Enchant enchant)
+        {
+            string id = item.Id.ToString();
+            string anyGem = id + ".*.*.*";
+            ItemAvailability availability = GetItemAvailability(item);
+            switch (availability)
+            {
+                case ItemAvailability.Available:
+                    if (enchant != null)
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(item.GemmedId));
+                        _availableItems.Add(item.GemmedId + "." + enchant.Id.ToString());
+                    }
+                    else
+                    {
+                        // any => all
+                        _availableItems.RemoveAll(x => x.StartsWith(item.GemmedId));
+                        foreach (Enchant e in Enchant.FindEnchants(item.Slot))
+                        {
+                            _availableItems.Add(item.GemmedId + "." + e.Id.ToString());
+                        }
+                    }
+                    break;
+                case ItemAvailability.AvailableWithEnchantRestrictions:
+                    if (enchant != null)
+                    {
+                        if (_availableItems.Contains(item.GemmedId + "." + enchant.Id.ToString()))
+                        {
+                            _availableItems.Remove(item.GemmedId + "." + enchant.Id.ToString());
+                        }
+                        else
+                        {
+                            _availableItems.Add(item.GemmedId + "." + enchant.Id.ToString());
+                        }
+                    }
+                    else
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(item.GemmedId));
+                        _availableItems.Add(item.GemmedId + ".*");
+                    }
+                    break;
+                case ItemAvailability.RegemmingAllowed:
+                    if (enchant != null)
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(id));
+                        _availableItems.Add(anyGem + "." + enchant.Id.ToString());
+                    }
+                    else
+                    {
+                        // any => all
+                        _availableItems.RemoveAll(x => x.StartsWith(id));
+                        foreach (Enchant e in Enchant.FindEnchants(item.Slot))
+                        {
+                            _availableItems.Add(anyGem + "." + e.Id.ToString());
+                        }
+                    }
+                    break;
+                case ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
+                    if (enchant != null)
+                    {
+                        if (_availableItems.Contains(anyGem + "." + enchant.Id.ToString()))
+                        {
+                            _availableItems.Remove(anyGem + "." + enchant.Id.ToString());
+                        }
+                        else
+                        {
+                            _availableItems.Add(anyGem + "." + enchant.Id.ToString());
+                        }
+                    }
+                    else
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(id));
+                        _availableItems.Add(id);
+                    }
+                    break;
+                case ItemAvailability.NotAvailabe:
+                    if (enchant != null)
+                    {
+                        _availableItems.Add(anyGem + "." + enchant.Id.ToString());
+                    }
+                    else
+                    {
+                        _availableItems.Add(id);
+                    }
+                    break;
+            }
+            OnAvailableItemsChanged();
+        }
 
 		public void SerializeCalculationOptions()
 		{
@@ -1104,6 +1257,53 @@ namespace Rawr //O O . .
                     return RangedEnchant;
                 default:
                     return null;
+            }
+        }
+
+        public bool IsEnchantable(Character.CharacterSlot slot)
+        {
+            switch (slot)
+            {
+                case Character.CharacterSlot.Head:
+                case Character.CharacterSlot.Shoulders:
+                case Character.CharacterSlot.Back:
+                case Character.CharacterSlot.Chest:
+                case Character.CharacterSlot.Wrist:
+                case Character.CharacterSlot.Hands:
+                case Character.CharacterSlot.Legs:
+                case Character.CharacterSlot.Feet:
+                case Character.CharacterSlot.Finger1:
+                case Character.CharacterSlot.Finger2:
+                case Character.CharacterSlot.MainHand:
+                case Character.CharacterSlot.OffHand:
+                case Character.CharacterSlot.Ranged:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public bool IsEnchantable(Item.ItemSlot slot)
+        {
+            switch (slot)
+            {
+                case Item.ItemSlot.Head:
+                case Item.ItemSlot.Shoulders:
+                case Item.ItemSlot.Back:
+                case Item.ItemSlot.Chest:
+                case Item.ItemSlot.Wrist:
+                case Item.ItemSlot.Hands:
+                case Item.ItemSlot.Legs:
+                case Item.ItemSlot.Feet:
+                case Item.ItemSlot.Finger:
+                case Item.ItemSlot.TwoHand:
+                case Item.ItemSlot.MainHand:
+                case Item.ItemSlot.OneHand:
+                case Item.ItemSlot.OffHand:
+                case Item.ItemSlot.Ranged:
+                    return true;
+                default:
+                    return false;
             }
         }
 
@@ -1686,31 +1886,106 @@ namespace Rawr //O O . .
         public enum CharacterSlot
         {
 			None = -1,
-			Head = 1,
+            Projectile = 0,
+            Head = 1,
             Neck = 2,
             Shoulders = 3,
-            Back = 15,
-            Chest = 5,
-            Shirt = 4,
+            Chest = 4,
+            Waist = 5,
+            Legs = 6,
+            Feet = 7,
+            Wrist = 8,
+            Hands = 9,
+            Finger1 = 10,
+            Finger2 = 11,
+            Trinket1 = 12,
+            Trinket2 = 13,
+            Back = 14,
+            MainHand = 15,
+			OffHand = 16,
+            Ranged = 17,
+            ProjectileBag = 18,
             Tabard = 19,
-            Wrist = 9,
-            Hands = 10,
-            Waist = 6,
-            Legs = 7,
-            Feet = 8,
-            Finger1 = 11,
-            Finger2 = 12,
-            Trinket1 = 13,
-            Trinket2 = 14,
-            MainHand = 16,
-			OffHand = 17,
-            Ranged = 18,
-			Projectile = 0,
+            Shirt = 20,
 			
 			Gems = 100,
 			Metas = 101,
-			ProjectileBag = 102,
             AutoSelect = 1000,
+        }
+
+        public static CharacterSlot GetCharacterSlotFromId(int slotId)
+        {
+            Character.CharacterSlot cslot = CharacterSlot.None;
+            switch (slotId)
+            {
+                case -1:
+                    cslot = Character.CharacterSlot.None;
+                    break;
+                case 1:
+                    cslot = Character.CharacterSlot.Head;
+                    break;
+                case 2:
+                    cslot = Character.CharacterSlot.Neck;
+                    break;
+                case 3:
+                    cslot = Character.CharacterSlot.Shoulders;
+                    break;
+                case 15:
+                    cslot = Character.CharacterSlot.Back;
+                    break;
+                case 5:
+                    cslot = Character.CharacterSlot.Chest;
+                    break;
+                case 4:
+                    cslot = Character.CharacterSlot.Shirt;
+                    break;
+                case 19:
+                    cslot = Character.CharacterSlot.Tabard;
+                    break;
+                case 9:
+                    cslot = Character.CharacterSlot.Wrist;
+                    break;
+                case 10:
+                    cslot = Character.CharacterSlot.Hands;
+                    break;
+                case 6:
+                    cslot = Character.CharacterSlot.Waist;
+                    break;
+                case 7:
+                    cslot = Character.CharacterSlot.Legs;
+                    break;
+                case 8:
+                    cslot = Character.CharacterSlot.Feet;
+                    break;
+                case 11:
+                    cslot = Character.CharacterSlot.Finger1;
+                    break;
+                case 12:
+                    cslot = Character.CharacterSlot.Finger2;
+                    break;
+                case 13:
+                    cslot = Character.CharacterSlot.Trinket1;
+                    break;
+                case 14:
+                    cslot = Character.CharacterSlot.Trinket2;
+                    break;
+                case 16:
+                    cslot = Character.CharacterSlot.MainHand;
+                    break;
+                case 17:
+                    cslot = Character.CharacterSlot.OffHand;
+                    break;
+                case 18:
+                    cslot = Character.CharacterSlot.Ranged;
+                    break;
+                case 0:
+                    cslot = Character.CharacterSlot.Projectile;
+                    break;
+                case 102:
+                    cslot = Character.CharacterSlot.ProjectileBag;
+                    break;
+            }
+            return cslot;
         }
 
         public enum CharacterClass
@@ -1724,6 +1999,15 @@ namespace Rawr //O O . .
             Mage = 8,
             Warlock = 9,
             Druid = 11
+        }
+
+        public enum ItemAvailability
+        {
+            NotAvailabe,
+            Available,
+            AvailableWithEnchantRestrictions,
+            RegemmingAllowed,
+            RegemmingAllowedWithEnchantRestrictions
         }
 
         public Character() { }

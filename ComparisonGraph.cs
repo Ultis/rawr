@@ -46,12 +46,34 @@ namespace Rawr
             }
             set
             {
+                if (_character != null)
+                {
+                    _character.AvailableItemsChanged -= new EventHandler(_character_AvailableItemsChanged);
+                }
                 _character = value;
+                if (_character != null)
+                {
+                    _character.AvailableItemsChanged += new EventHandler(_character_AvailableItemsChanged);
+                }
                 if (_prerenderedGraph != null)
                     _prerenderedGraph.Dispose();
                 _prerenderedGraph = null;
                 this.Invalidate();
             }
+        }
+
+        void _character_AvailableItemsChanged(object sender, EventArgs e)
+        {
+            int scrollValue = -1;
+            if (_scrollBar != null)
+                scrollValue = _scrollBar.Value;
+            if (_prerenderedGraph != null)
+                _prerenderedGraph.Dispose();
+            _prerenderedGraph = null;
+            this.Invalidate();
+            PrerenderedGraph.ToString(); //render it, so we can scroll back to the previous spot
+            if (scrollValue > 0)
+                _scrollBar.Value = scrollValue;
         }
 
         private bool _roundValues = true;
@@ -261,6 +283,9 @@ namespace Rawr
 
                         legendX += 16;
                         Bitmap bmpDiamond = Rawr.Properties.Resources.Diamond;
+                        Bitmap bmpDiamond2 = Rawr.Properties.Resources.Diamond2;
+                        Bitmap bmpDiamond3 = Rawr.Properties.Resources.Diamond3;
+                        Bitmap bmpDiamond4 = Rawr.Properties.Resources.Diamond4;
                         Bitmap bmpDiamondOutline = Rawr.Properties.Resources.DiamondOutline;
 
                         g.DrawImageUnscaled(bmpDiamond, legendX, 2);
@@ -368,10 +393,24 @@ namespace Rawr
                             }
                             if (item.Item != null && item.Item.Id != 0)
                             {
-                                if (Character.AvailableItems.Contains(item.Item.Id))
-                                    g.DrawImageUnscaled(bmpDiamond, 0, 55 + (i * 36));
-                                else
-                                    g.DrawImageUnscaled(bmpDiamondOutline, 0, 55 + (i * 36));
+                                switch (Character.GetItemAvailability(item.Item))
+                                {
+                                    case Character.ItemAvailability.RegemmingAllowed:
+                                        g.DrawImageUnscaled(bmpDiamond, 0, 55 + (i * 36));
+                                        break;
+                                    case Character.ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
+                                        g.DrawImageUnscaled(bmpDiamond3, 0, 55 + (i * 36));
+                                        break;
+                                    case Character.ItemAvailability.Available:
+                                        g.DrawImageUnscaled(bmpDiamond2, 0, 55 + (i * 36));
+                                        break;
+                                    case Character.ItemAvailability.AvailableWithEnchantRestrictions:
+                                        g.DrawImageUnscaled(bmpDiamond4, 0, 55 + (i * 36));
+                                        break;
+                                    case Character.ItemAvailability.NotAvailabe:
+                                        g.DrawImageUnscaled(bmpDiamondOutline, 0, 55 + (i * 36));
+                                        break;
+                                }
                             }
 
                             g.DrawString(item.Name, this.Font, brushItemNames, rectItemName, formatItemNames);
@@ -536,22 +575,14 @@ namespace Rawr
                     {
                         if (item != null && item.Id != 0)
                         {
-                            if (Character.AvailableItems.Contains(item.Id))
-                                Character.AvailableItems.Remove(item.Id);
+                            if ((e.Button & MouseButtons.Right) != 0)
+                            {
+                                if (item.Id > 0 && !item.IsGem) ItemEnchantContextualMenu.Instance.Show(item);
+                            }
                             else
-                                Character.AvailableItems.Add(item.Id);
-                            Character.OnAvailableItemsChanged();
-
-                            int scrollValue = -1;
-                            if (_scrollBar != null)
-                                scrollValue = _scrollBar.Value;
-                            if (_prerenderedGraph != null)
-                                _prerenderedGraph.Dispose();
-                            _prerenderedGraph = null;
-                            this.Invalidate();
-                            PrerenderedGraph.ToString(); //render it, so we can scroll back to the previous spot
-                            if (scrollValue > 0)
-                                _scrollBar.Value = scrollValue;
+                            {
+                                Character.ToggleItemAvailability(item, (Control.ModifierKeys & Keys.Control) == 0);
+                            }
                         }
                     }
                     else if (item.Id > 0)

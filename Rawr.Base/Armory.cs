@@ -39,9 +39,10 @@ namespace Rawr
 				foreach (XmlNode itemNode in docCharacter.SelectNodes("page/characterInfo/characterTab/items/item"))
 				{
 					int slot = int.Parse(itemNode.Attributes["slot"].Value) + 1;
-					items[(Character.CharacterSlot)slot] = string.Format("{0}.{1}.{2}.{3}", itemNode.Attributes["id"].Value,
+                    Character.CharacterSlot cslot = Character.GetCharacterSlotFromId(slot);
+					items[cslot] = string.Format("{0}.{1}.{2}.{3}", itemNode.Attributes["id"].Value,
 						itemNode.Attributes["gem0Id"].Value, itemNode.Attributes["gem1Id"].Value, itemNode.Attributes["gem2Id"].Value);
-					enchants[(Character.CharacterSlot)slot] = int.Parse(itemNode.Attributes["permanentenchant"].Value);
+					enchants[cslot] = int.Parse(itemNode.Attributes["permanentenchant"].Value);
 				}
                 itemsOnCharacter = new string[items.Values.Count];
                 items.Values.CopyTo(itemsOnCharacter, 0);

@@ -113,7 +113,7 @@ namespace Rawr
 			List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
 			if (slot != Item.ItemSlot.MainHand)
 				validSlots.Add(slot);
-			if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand)
+            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
 				validSlots.Add(Item.ItemSlot.OneHand);
 			if (slot == Item.ItemSlot.MainHand)
 				validSlots.Add(Item.ItemSlot.TwoHand);
@@ -125,7 +125,7 @@ namespace Rawr
 			List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
 			if (slot != Item.ItemSlot.MainHand)
 				validSlots.Add(slot);
-			if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand)
+            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
 				validSlots.Add(Item.ItemSlot.OneHand);
 			if (slot == Item.ItemSlot.MainHand)
 				validSlots.Add(Item.ItemSlot.TwoHand);
@@ -140,7 +140,7 @@ namespace Rawr
 		}
 
 
-		public static List<Enchant> FindEnchants(Item.ItemSlot slot, List<int> availableIds)
+		public static List<Enchant> FindEnchants(Item.ItemSlot slot, List<string> availableIds)
 		{
             List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
             if (slot != Item.ItemSlot.MainHand)
@@ -154,7 +154,7 @@ namespace Rawr
 				{
                     return ((Calculations.HasRelevantStats(enchant.Stats) &&
                         (validSlots.Contains(enchant.Slot) || slot == Item.ItemSlot.None) || enchant.Slot == Item.ItemSlot.None)
-                        && availableIds.Contains(-1 * (enchant.Id + (10000 * (int)enchant.Slot))))
+                        && availableIds.Contains((-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString()))
                         || enchant.Id == 0;
 				}
 			));

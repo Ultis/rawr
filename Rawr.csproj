@@ -102,6 +102,9 @@
     <Compile Include="CalculationDisplay.Designer.cs">
       <DependentUpon>CalculationDisplay.cs</DependentUpon>
     </Compile>
+    <Compile Include="ItemEnchantContextualMenu.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FormEnterId.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -342,6 +345,9 @@
   <ItemGroup>
     <Content Include="RawrIcon.ico" />
     <Content Include="ReadMe.txt" />
+    <Content Include="Resources\Diamond2.png" />
+    <Content Include="Resources\Diamond3.png" />
+    <Content Include="Resources\Diamond4.png" />
     <None Include="Properties\Optimizer.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Optimizer.Designer.cs</LastGenOutput>

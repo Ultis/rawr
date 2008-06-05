@@ -116,7 +116,7 @@ namespace Rawr
 					
 					Calculations.CalculationOptionsPanel.Character = _character;
 					ItemToolTip.Instance.Character = FormItemSelection.Character = 
-						ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
+						ItemEnchantContextualMenu.Instance.Character = ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
 						itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
 						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
 						itemButtonHead.Character = itemButtonRanged.Character = itemButtonLegs.Character =

@@ -222,7 +222,7 @@ namespace Rawr
 
 		void _menuItemEquip_Click(object sender, EventArgs e)
 		{
-			this.Character[_equipSlot] = _item;
+            this.Character[_equipSlot] = _item == null ? null : ItemCache.FindItemById(_item.GemmedId);
 		}
 
         void _menuItemEquipAll_Click(object sender, EventArgs e)

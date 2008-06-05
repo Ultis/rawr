@@ -67,6 +67,27 @@ namespace Rawr.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Diamond2 {
+            get {
+                object obj = ResourceManager.GetObject("Diamond2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Diamond3 {
+            get {
+                object obj = ResourceManager.GetObject("Diamond3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Diamond4 {
+            get {
+                object obj = ResourceManager.GetObject("Diamond4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap DiamondOutline {
             get {
                 object obj = ResourceManager.GetObject("DiamondOutline", resourceCulture);
