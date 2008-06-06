@@ -370,6 +370,12 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.OneHand, new Stats() { }));
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Hands, new Stats() { FrostResistance = 8 }));
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Feet, new Stats() { FrostResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Chest, new Stats() { FrostResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Legs, new Stats() { FrostResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Hands, new Stats() { ShadowResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Feet, new Stats() { ShadowResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Chest, new Stats() { ShadowResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Legs, new Stats() { ShadowResistance = 8 }));
 
             //Need to fix the enchant class to know offhand only enchants, either that or add a shield ItemSlot
             defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.OffHand, new Stats() { Stamina = 18 }));
@@ -392,8 +398,6 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2667, "Savagery", Item.ItemSlot.MainHand, null));
 			defaultEnchants.Add(new Enchant(2670, "Major Agility", Item.ItemSlot.MainHand, null));
 			defaultEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Chest, null));
-			defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Legs, null));
 			defaultEnchants.Add(new Enchant(9001, "Major Defense", Item.ItemSlot.Chest, null));
 			defaultEnchants.Add(new Enchant(2660, "Exceptional Mana", Item.ItemSlot.Chest, null));
 			#endregion
