@@ -25,6 +25,7 @@ namespace Rawr
 		public static Item FindItemById(string gemmedId) { return _instance.FindItemById(gemmedId); }
 		public static Item FindItemById(int id, bool createIfCorrectGemmingNotFound) { return _instance.FindItemById(id, createIfCorrectGemmingNotFound); }
 		public static Item FindItemById(string gemmedId, bool createIfCorrectGemmingNotFound, bool raiseEvent) { return _instance.FindItemById(gemmedId, createIfCorrectGemmingNotFound,raiseEvent); }
+        public static bool ContainsItemId(int id) { return _instance.ContainsItemId(id); }
 
 		public static Item AddItem(Item item) { return _instance.AddItem(item); }
 		public static Item AddItem(Item item, bool removeOldCopy, bool raiseEvent) { return _instance.AddItem(item, removeOldCopy, raiseEvent); }
@@ -135,6 +136,20 @@ namespace Rawr
 			}
 			return null;
 		}
+
+        public bool ContainsItemId(int id)
+        {
+            if (id > 0)
+            {
+                string keyStartsWith = id.ToString() + ".";
+                foreach (string key in Items.Keys)
+                    if (key.StartsWith(keyStartsWith))
+                    {
+                        return true;
+                    }
+            }
+            return false;
+        }
 
 		public Item AddItem(Item item) { return AddItem(item, true, true); }
 		public Item AddItem(Item item, bool removeOldCopy, bool raiseEvent)

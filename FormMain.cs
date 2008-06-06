@@ -511,7 +511,7 @@ namespace Rawr
             StatusMessaging.UpdateStatusFinished("Loading Character");
             if (character != null)
             {
-                this.EnsureItemsLoaded(character.GetAllEquipedGearIds());
+                this.EnsureItemsLoaded(character.GetAllEquipedAndAvailableGearIds());
                 _characterPath = e.Argument as string;
                 InvokeHelper.Invoke(this, "AddRecentCharacter", new object[] { e.Argument});
                 e.Result = character;
@@ -1024,10 +1024,15 @@ namespace Rawr
             for (int i = 0; i < ids.Length; i++)
             {
                 StatusMessaging.UpdateStatus("Update Item Cache", string.Format("Checking Item Cache for Definitions - {0} of {1}", i, ids.Length));
-                Item newItem = Item.LoadFromId(ids[i], false, "Character from Armory", false);
-                if (newItem != null)
+                string id = ids[i];
+                if (id != null)
                 {
-                    items.Add(newItem);
+                    if (id.IndexOf('.') < 0 && ItemCache.ContainsItemId(int.Parse(id))) continue;
+                    Item newItem = Item.LoadFromId(id, false, "Character from Armory", false);
+                    if (newItem != null)
+                    {
+                        items.Add(newItem);
+                    }
                 }
             }
             StatusMessaging.UpdateStatusFinished("Update Item Cache");
