@@ -721,13 +721,13 @@ namespace Rawr.Mage
             segments = useSMP ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
 
             bool heroismAvailable = calculationOptions.HeroismAvailable;
-            bool apAvailable = calculationOptions.ArcanePower == 1;
-            bool ivAvailable = calculationOptions.IcyVeins == 1;
-            bool combustionAvailable = calculationOptions.Combustion == 1;
+            bool apAvailable = !calculationOptions.DisableCooldowns && (calculationOptions.ArcanePower == 1);
+            bool ivAvailable = !calculationOptions.DisableCooldowns && (calculationOptions.IcyVeins == 1);
+            bool combustionAvailable = !calculationOptions.DisableCooldowns && (calculationOptions.Combustion == 1);
             bool mfAvailable = calculationOptions.MoltenFury > 0;
-            bool trinket1Available = IsItemActivatable(character.Trinket1);
-            bool trinket2Available = IsItemActivatable(character.Trinket2);
-            bool coldsnap = calculationOptions.ColdSnap == 1;
+            bool trinket1Available = !calculationOptions.DisableCooldowns && IsItemActivatable(character.Trinket1);
+            bool trinket2Available = !calculationOptions.DisableCooldowns && IsItemActivatable(character.Trinket2);
+            bool coldsnap = !calculationOptions.DisableCooldowns && (calculationOptions.ColdSnap == 1);
             double coldsnapCooldown = 8 * 60 * (1 - 0.1f * calculationOptions.IceFloes);
             float combustionCount = 0;
 
@@ -1086,6 +1086,10 @@ namespace Rawr.Mage
             int lastCooldownSet = -1;
             int lastCooldownSetSortedIndex = 0;
             if (character.Ranged == null || character.Ranged.Type != Item.ItemType.Wand) lp.DisableColumn(1);
+            if (!calculationOptions.EvocationEnabled) lp.DisableColumn(2);
+            if (!calculationOptions.ManaPotionEnabled) lp.DisableColumn(3);
+            if (!calculationOptions.ManaGemEnabled) lp.DisableColumn(4);
+            if (!calculationOptions.DrumsOfBattle) lp.DisableColumn(5);
             for (int seg = 0; seg < segments; seg++)
             {
                 if (calculationOptions.IncrementalOptimizations)
@@ -1619,12 +1623,12 @@ namespace Rawr.Mage
             lp[0, lpCols] = characterStats.Mana;
             lp[1, lpCols] = calculatedStats.FightDuration;
             lp[2, lpCols] = evocationDuration * Math.Max(1, (1 + Math.Floor((calculatedStats.FightDuration - 200f) / 480f)));
-            lp[3, lpCols] = calculatedStats.MaxManaPotion;
-            lp[4, lpCols] = calculatedStats.MaxManaGem;
+            lp[3, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 120.0 : calculatedStats.MaxManaPotion;
+            lp[4, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 120.0 : calculatedStats.MaxManaGem;
             if (heroismAvailable) lp[5, lpCols] = 40;
-            if (apAvailable) lp[6, lpCols] = aplength;
+            if (apAvailable) lp[6, lpCols] = calculationOptions.AverageCooldowns ? 15.0 / 180.0 * calculatedStats.FightDuration : aplength;
             if (heroismAvailable && apAvailable) lp[7, lpCols] = 15;
-            if (ivAvailable) lp[8, lpCols] = ivlength;
+            if (ivAvailable) lp[8, lpCols] = calculationOptions.AverageCooldowns ? (20.0 / 180.0 +  (coldsnap ? 20.0 / coldsnapCooldown : 0.0)) * calculatedStats.FightDuration : ivlength;
             if (mfAvailable) lp[9, lpCols] = mflength;
             if (mfAvailable) lp[10, lpCols] = 15;
             if (mfAvailable && ivAvailable) lp[11, lpCols] = coldsnap ? 40 : 20;
@@ -1632,11 +1636,11 @@ namespace Rawr.Mage
             if (ivAvailable) lp[13, lpCols] = dpivlength;
             if (calculationOptions.FlameCap && !(!calculationOptions.SmartOptimization && calculationOptions.SpellPower > 0))
             {
-                lp[14, lpCols] = ((int)(calculatedStats.FightDuration / 180.0 + 2.0 / 3.0)) * 3.0 / 2.0;
+                lp[14, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 120.0 : ((int)(calculatedStats.FightDuration / 180.0 + 2.0 / 3.0)) * 3.0 / 2.0;
             }
             else
             {
-                lp[14, lpCols] = calculatedStats.MaxManaGem;
+                lp[14, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 120.0 : calculatedStats.MaxManaGem;
             }
             if (mfAvailable) lp[15, lpCols] = 60;
             lp[16, lpCols] = dpflamelength;
@@ -1648,7 +1652,7 @@ namespace Rawr.Mage
             if (heroismAvailable && trinket2Available) lp[22, lpCols] = trinket2duration;
             lp[24, lpCols] = - (1 - calculationOptions.DpsTime) * calculationOptions.FightDuration;
             lp[25, lpCols] = calculationOptions.AoeDuration * calculationOptions.FightDuration;
-            lp[30, lpCols] = combustionCount;
+            lp[30, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 180.0 : combustionCount;
             lp[31, lpCols] = 1;
             lp[32, lpCols] = 1;
             lp[33, lpCols] = coldsnap ? 40 : 20;
@@ -1660,7 +1664,7 @@ namespace Rawr.Mage
             int manaConsum = ((int)((calculatedStats.FightDuration - 7800 / manaBurn) / 60f + 2));
             if ((t1ismg || t2ismg) && manaConsum < calculatedStats.MaxManaGem) manaConsum = calculatedStats.MaxManaGem;
             lp[40, lpCols] = manaConsum * 40;
-            lp[41, lpCols] = (1 + (int)((calculatedStats.FightDuration - 30) / 120));
+            lp[41, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 120.0 : (1 + (int)((calculatedStats.FightDuration - 30) / 120));
 
             if (useSMP)
             {

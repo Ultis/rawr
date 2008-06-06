@@ -61,6 +61,11 @@ namespace Rawr.Mage
         public bool Aldor { get; set; }
         public bool WotLK { get; set; }
         public int HeroismControl { get; set; }
+        public bool AverageCooldowns { get; set; }
+        public bool EvocationEnabled { get; set; }
+        public bool ManaPotionEnabled { get; set; }
+        public bool ManaGemEnabled { get; set; }
+        public bool DisableCooldowns { get; set; }
 
         public CalculationOptionsMage Clone()
         {
@@ -163,10 +168,6 @@ namespace Rawr.Mage
 
         private CalculationOptionsMage()
         {
-        }
-
-        public CalculationOptionsMage(Character character)
-        {
             TargetLevel = 73;
             AoeTargetLevel = 70;
             Latency = 0.05f;
@@ -202,7 +203,13 @@ namespace Rawr.Mage
             EvocationSpirit = 0;
             SurvivabilityRating = 0.0001f;
             Aldor = true;
+            EvocationEnabled = true;
+            ManaPotionEnabled = true;
+            ManaGemEnabled = true;
+        }
 
+        public CalculationOptionsMage(Character character) : this()
+        {
             // pull talents
             #region Mage Talents Import
             try
@@ -1253,7 +1260,7 @@ namespace Rawr.Mage
                         {
                             overflowLimit = BasicStats.Mana; // this too
                         }*/
-                        overflowLimit = Math.Min(BasicStats.Mana, BasicStats.Mana - overflowMana);
+                        overflowLimit = BasicStats.Mana - overflowMana;
                         lastSuper = sequence[j].SuperGroup;
                     }
                     if (t < MinTime(j, j - 1) - 0.000001)
@@ -1470,9 +1477,19 @@ namespace Rawr.Mage
                             {
                                 nextT = (mana - minMana) / mpsdiff;
                             }
-                            if (overflowLimit + sequence[kk].Mps * nextT < 0)
+                            if (sequence[jj].Group.Count > 0)
                             {
-                                nextT = -overflowLimit / sequence[kk].Mps;
+                                if (overflowLimit + sequence[kk].Mps * nextT < 0)
+                                {
+                                    nextT = -overflowLimit / sequence[kk].Mps;
+                                }
+                            }
+                            else
+                            {
+                                if (mpsdiff > 0 && overflowLimit + sequence[jj].Mps * jT - mpsdiff * nextT < 0)
+                                {
+                                    nextT = (overflowLimit + sequence[jj].Mps * jT) / mpsdiff;
+                                }
                             }
                             if (currentPush + nextT > maxPush)
                             {
@@ -1509,7 +1526,7 @@ namespace Rawr.Mage
                                 kT -= sequence[kk].Duration;
                                 kk++;
                             }
-                            if (((mana <= maxMana && (extraMana <= 0.000001 || mana <= minMana)) || overflowLimit <= 0) && (kk >= sequence.Count || sequence[kk].Group.Count == 0 || (kT < 0.000001 && (kk == 0 || sequence[kk].SuperGroup != sequence[kk - 1].SuperGroup)))) // make sure not to force a split of super group, if you actually have a low mps super then you have to move it as a whole
+                            if (((mana <= maxMana && (extraMana <= 0.000001 || mana <= minMana)) || (sequence[jj].Group.Count > 0 && overflowLimit <= 0)) && (kk >= sequence.Count || sequence[kk].Group.Count == 0 || (kT < 0.000001 && (kk == 0 || sequence[kk].SuperGroup != sequence[kk - 1].SuperGroup)))) // make sure not to force a split of super group, if you actually have a low mps super then you have to move it as a whole
                             {
                                 break;
                             }

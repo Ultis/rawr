@@ -98,6 +98,8 @@
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.textBoxSMPComputationLimit = new System.Windows.Forms.TextBox();
+            this.label38 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
             this.checkBoxWotLK = new System.Windows.Forms.CheckBox();
             this.label32 = new System.Windows.Forms.Label();
@@ -111,8 +113,16 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxSMPComputationLimit = new System.Windows.Forms.TextBox();
-            this.label38 = new System.Windows.Forms.Label();
+            this.label39 = new System.Windows.Forms.Label();
+            this.checkBoxAverageCooldowns = new System.Windows.Forms.CheckBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.checkBoxEvocationEnabled = new System.Windows.Forms.CheckBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.checkBoxManaPotionEnabled = new System.Windows.Forms.CheckBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.checkBoxManaGemEnabled = new System.Windows.Forms.CheckBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.checkBoxDisableCooldowns = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -239,6 +249,16 @@
             // tabPage2
             // 
             this.tabPage2.AutoScroll = true;
+            this.tabPage2.Controls.Add(this.label43);
+            this.tabPage2.Controls.Add(this.checkBoxDisableCooldowns);
+            this.tabPage2.Controls.Add(this.label42);
+            this.tabPage2.Controls.Add(this.checkBoxManaGemEnabled);
+            this.tabPage2.Controls.Add(this.label41);
+            this.tabPage2.Controls.Add(this.checkBoxManaPotionEnabled);
+            this.tabPage2.Controls.Add(this.label40);
+            this.tabPage2.Controls.Add(this.checkBoxEvocationEnabled);
+            this.tabPage2.Controls.Add(this.label39);
+            this.tabPage2.Controls.Add(this.checkBoxAverageCooldowns);
             this.tabPage2.Controls.Add(this.textBoxManaTide);
             this.tabPage2.Controls.Add(this.label29);
             this.tabPage2.Controls.Add(this.textBoxInnervate);
@@ -882,6 +902,24 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // textBoxSMPComputationLimit
+            // 
+            this.textBoxSMPComputationLimit.Location = new System.Drawing.Point(132, 127);
+            this.textBoxSMPComputationLimit.Name = "textBoxSMPComputationLimit";
+            this.textBoxSMPComputationLimit.Size = new System.Drawing.Size(68, 20);
+            this.textBoxSMPComputationLimit.TabIndex = 167;
+            this.textBoxSMPComputationLimit.Validated += new System.EventHandler(this.textBoxSMPComputationLimit_Validated);
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(0, 130);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(126, 13);
+            this.label38.TabIndex = 166;
+            this.label38.Text = "SMP Computation Limit: *";
+            this.toolTipMage.SetToolTip(this.label38, "Limits the number of iterations taken by SMP algorithm.");
+            // 
             // label36
             // 
             this.label36.AutoSize = true;
@@ -1015,23 +1053,106 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // textBoxSMPComputationLimit
+            // label39
             // 
-            this.textBoxSMPComputationLimit.Location = new System.Drawing.Point(132, 127);
-            this.textBoxSMPComputationLimit.Name = "textBoxSMPComputationLimit";
-            this.textBoxSMPComputationLimit.Size = new System.Drawing.Size(68, 20);
-            this.textBoxSMPComputationLimit.TabIndex = 167;
-            this.textBoxSMPComputationLimit.Validated += new System.EventHandler(this.textBoxSMPComputationLimit_Validated);
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(0, 248);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(112, 13);
+            this.label39.TabIndex = 177;
+            this.label39.Text = "Average Cooldowns: *";
+            this.toolTipMage.SetToolTip(this.label39, "Enable to make cooldown maximum usage gradually increases with fight duration (i." +
+                    "e. max 1.66 Arcane Power activations on a 5 minute fight).");
             // 
-            // label38
+            // checkBoxAverageCooldowns
             // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(0, 130);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(126, 13);
-            this.label38.TabIndex = 166;
-            this.label38.Text = "SMP Computation Limit: *";
-            this.toolTipMage.SetToolTip(this.label38, "Limits the number of iterations taken by SMP algorithm.");
+            this.checkBoxAverageCooldowns.AutoSize = true;
+            this.checkBoxAverageCooldowns.Location = new System.Drawing.Point(112, 248);
+            this.checkBoxAverageCooldowns.Name = "checkBoxAverageCooldowns";
+            this.checkBoxAverageCooldowns.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxAverageCooldowns.TabIndex = 176;
+            this.checkBoxAverageCooldowns.UseVisualStyleBackColor = true;
+            this.checkBoxAverageCooldowns.CheckedChanged += new System.EventHandler(this.checkBoxAverageCooldowns_CheckedChanged);
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(0, 288);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(65, 13);
+            this.label40.TabIndex = 179;
+            this.label40.Text = "Evocation: *";
+            this.toolTipMage.SetToolTip(this.label40, "You can uncheck this to disable use of Evocation.");
+            // 
+            // checkBoxEvocationEnabled
+            // 
+            this.checkBoxEvocationEnabled.AutoSize = true;
+            this.checkBoxEvocationEnabled.Location = new System.Drawing.Point(112, 288);
+            this.checkBoxEvocationEnabled.Name = "checkBoxEvocationEnabled";
+            this.checkBoxEvocationEnabled.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxEvocationEnabled.TabIndex = 178;
+            this.checkBoxEvocationEnabled.UseVisualStyleBackColor = true;
+            this.checkBoxEvocationEnabled.CheckedChanged += new System.EventHandler(this.checkBoxEvocationEnabled_CheckedChanged);
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(0, 308);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(77, 13);
+            this.label41.TabIndex = 181;
+            this.label41.Text = "Mana Potion: *";
+            this.toolTipMage.SetToolTip(this.label41, "You can uncheck this to disable use of Mana Potions.");
+            // 
+            // checkBoxManaPotionEnabled
+            // 
+            this.checkBoxManaPotionEnabled.AutoSize = true;
+            this.checkBoxManaPotionEnabled.Location = new System.Drawing.Point(112, 308);
+            this.checkBoxManaPotionEnabled.Name = "checkBoxManaPotionEnabled";
+            this.checkBoxManaPotionEnabled.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxManaPotionEnabled.TabIndex = 180;
+            this.checkBoxManaPotionEnabled.UseVisualStyleBackColor = true;
+            this.checkBoxManaPotionEnabled.CheckedChanged += new System.EventHandler(this.checkBoxManaPotionEnabled_CheckedChanged);
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(0, 328);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(69, 13);
+            this.label42.TabIndex = 183;
+            this.label42.Text = "Mana Gem: *";
+            this.toolTipMage.SetToolTip(this.label42, "You can uncheck this to disable use of Mana Gems.");
+            // 
+            // checkBoxManaGemEnabled
+            // 
+            this.checkBoxManaGemEnabled.AutoSize = true;
+            this.checkBoxManaGemEnabled.Location = new System.Drawing.Point(112, 328);
+            this.checkBoxManaGemEnabled.Name = "checkBoxManaGemEnabled";
+            this.checkBoxManaGemEnabled.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxManaGemEnabled.TabIndex = 182;
+            this.checkBoxManaGemEnabled.UseVisualStyleBackColor = true;
+            this.checkBoxManaGemEnabled.CheckedChanged += new System.EventHandler(this.checkBoxManaGemEnabled_CheckedChanged);
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(0, 268);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(107, 13);
+            this.label43.TabIndex = 185;
+            this.label43.Text = "Disable Cooldowns: *";
+            this.toolTipMage.SetToolTip(this.label43, "Disables other activatable cooldowns (talents and trinkets).");
+            // 
+            // checkBoxDisableCooldowns
+            // 
+            this.checkBoxDisableCooldowns.AutoSize = true;
+            this.checkBoxDisableCooldowns.Location = new System.Drawing.Point(112, 268);
+            this.checkBoxDisableCooldowns.Name = "checkBoxDisableCooldowns";
+            this.checkBoxDisableCooldowns.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxDisableCooldowns.TabIndex = 184;
+            this.checkBoxDisableCooldowns.UseVisualStyleBackColor = true;
+            this.checkBoxDisableCooldowns.CheckedChanged += new System.EventHandler(this.checkBoxDisableCooldowns_CheckedChanged);
             // 
             // CalculationOptionsPanelMage
             // 
@@ -1140,6 +1261,16 @@
         private System.Windows.Forms.CheckBox checkBoxSmartOptimization;
         private System.Windows.Forms.TextBox textBoxSMPComputationLimit;
         private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.CheckBox checkBoxAverageCooldowns;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.CheckBox checkBoxEvocationEnabled;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.CheckBox checkBoxManaGemEnabled;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.CheckBox checkBoxManaPotionEnabled;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.CheckBox checkBoxDisableCooldowns;
 
     }
 }

@@ -72,6 +72,11 @@ namespace Rawr.Mage
             checkBoxWotLK.Checked = calculationOptions.WotLK;
             comboBoxHeroismControl.SelectedIndex = calculationOptions.HeroismControl;
             textBoxSMPComputationLimit.Text = Properties.Settings.Default.MaxHeapLimit.ToString();
+            checkBoxAverageCooldowns.Checked = calculationOptions.AverageCooldowns;
+            checkBoxEvocationEnabled.Checked = calculationOptions.EvocationEnabled;
+            checkBoxManaPotionEnabled.Checked = calculationOptions.ManaPotionEnabled;
+            checkBoxManaGemEnabled.Checked = calculationOptions.ManaGemEnabled;
+            checkBoxDisableCooldowns.Checked = calculationOptions.DisableCooldowns;
 
             if (talents != null) talents.LoadCalculationOptions();
 
@@ -461,6 +466,41 @@ namespace Rawr.Mage
                 Properties.Settings.Default.Save();
                 if (!loading) Character.OnItemsChanged();
             }
+        }
+
+        private void checkBoxAverageCooldowns_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            calculationOptions.AverageCooldowns = checkBoxAverageCooldowns.Checked;
+            if (!loading) Character.OnItemsChanged();
+        }
+
+        private void checkBoxEvocationEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            calculationOptions.EvocationEnabled = checkBoxEvocationEnabled.Checked;
+            if (!loading) Character.OnItemsChanged();
+        }
+
+        private void checkBoxManaPotionEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            calculationOptions.ManaPotionEnabled = checkBoxManaPotionEnabled.Checked;
+            if (!loading) Character.OnItemsChanged();
+        }
+
+        private void checkBoxManaGemEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            calculationOptions.ManaGemEnabled = checkBoxManaGemEnabled.Checked;
+            if (!loading) Character.OnItemsChanged();
+        }
+
+        private void checkBoxDisableCooldowns_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            calculationOptions.DisableCooldowns = checkBoxDisableCooldowns.Checked;
+            if (!loading) Character.OnItemsChanged();
         }
 	}
 }
