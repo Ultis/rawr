@@ -425,6 +425,7 @@ namespace Rawr
 
 			Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
             statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
+			statsGearEnchantsBuffs.Strength += statsGearEnchantsBuffs.CatFormStrength;
 
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 			statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime;
@@ -642,6 +643,7 @@ namespace Rawr
 				{
 					Agility = stats.Agility,
 					Strength = stats.Strength,
+					CatFormStrength = stats.CatFormStrength,
 					AttackPower = stats.AttackPower,
 					CritRating = stats.CritRating,
 					HitRating = stats.HitRating,
@@ -681,7 +683,7 @@ namespace Rawr
 				stats.BonusMangleCatDamage + stats.BonusPhysicalDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
-				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
+				stats.Strength + stats.CatFormStrength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
 				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc +
                 stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier) > 0 || (stats.Stamina > 0 && stats.SpellDamageRating == 0);
 		}

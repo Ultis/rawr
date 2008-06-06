@@ -209,7 +209,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			calculatedStats.CritReduction = (defSkill * 0.04f) + stats.Resilience / (2050f / 52f);
 			calculatedStats.CappedCritReduction = Math.Min(2f + levelDifference, calculatedStats.CritReduction);
 			//Out of 100 attacks, you'll take...
-			float crits = 2f + (0.2f * levelDifference) - calculatedStats.CappedCritReduction;
+			float crits = Math.Min(100f - calculatedStats.DodgePlusMiss, 2f + (0.2f * levelDifference) - calculatedStats.CappedCritReduction);
 			float crushes = targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (calculatedStats.DodgePlusMiss)), 15f) - stats.CrushChanceReduction, 0f) : 0f;
 			float hits = Math.Max(100f - (Math.Max(0f, crits) + Math.Max(crushes, 0) + (calculatedStats.DodgePlusMiss)), 0f);
 			//Apply armor and multipliers for each attack type...

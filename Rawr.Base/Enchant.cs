@@ -358,7 +358,7 @@ namespace Rawr
 
             defaultEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.OneHand, new Stats() { Healing = 81, SpellDamageRating = 27 }));
 
-            defaultEnchants.Add(new Enchant(2654, "Intellect", Item.ItemSlot.OneHand, new Stats() { Intellect = 12 }));
+            defaultEnchants.Add(new Enchant(2654, "Intellect", Item.ItemSlot.OffHand, new Stats() { Intellect = 12 }));
 
             defaultEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { Healing = 30, SpellDamageRating = 10 }));
 
