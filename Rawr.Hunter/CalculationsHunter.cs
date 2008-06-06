@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Hunter
 {
-    [System.ComponentModel.DisplayName("Hunter|temp")]
+    [System.ComponentModel.DisplayName("Hunter|Ability_Hunter_BeastTaming")]
     public class CalculationsHunter : CalculationsBase
     {
   
