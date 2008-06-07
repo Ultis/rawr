@@ -85,6 +85,7 @@ namespace Rawr
         NatureResistance,
         Parry,
         ParryRating,
+		RangedAttackPower,
         Resilience,
         ScopeDamage, 
         ShadowResistance,
@@ -134,6 +135,7 @@ namespace Rawr
         WrathDmg,
         DruidAshtongueTrinket,
         AverageHeal, 
+		BonusPetCritChance,
         BonusWarlockSchoolDamageOnCast, 
         BonusWarlockDotExtension
     }
@@ -154,6 +156,7 @@ namespace Rawr
         BonusMageNukeMultiplier,
         BonusWarlockNukeMultiplier, 
         BonusNatureSpellPowerMultiplier,
+		BonusPetDamageMultiplier,
         BonusPhysicalDamageMultiplier,
         BonusRipDamageMultiplier,
         BonusShieldSlamDamage,
@@ -167,7 +170,8 @@ namespace Rawr
         BonusShadowSpellPowerMultiplier,
         FoLMultiplier,
         ThreatIncreaseMultiplier,
-        BonusWarlockDotDamageMultiplier
+        BonusWarlockDotDamageMultiplier,
+		BonusRangedAttackPowerMultiplier
     }
 
     enum InverseMultiplicativeStat : int
@@ -1285,6 +1289,21 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.BonusWarlockDotExtension] = value; }
         }
 
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Category("Base Stats")]
+		public float RangedAttackPower
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.RangedAttackPower]; }
+			set { _rawAdditiveData[(int)AdditiveStat.RangedAttackPower] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Category("Base Stats")]
+		public float BonusPetCritChance
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance] = value; }
+		}
 #endregion
 
         #region MultiplicativeStats
@@ -1539,8 +1558,21 @@ namespace Rawr
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.FoLMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.FoLMultiplier] = value; }
         }
-
-
+		
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Multiplicative]
+		public float BonusRangedAttackPowerMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier] = value; }
+		}
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Multiplicative]
+		public float BonusPetDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier] = value; }
+		}
         #endregion
 
         #region InverseMultiplicativeStats
