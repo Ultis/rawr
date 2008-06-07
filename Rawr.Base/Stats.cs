@@ -1298,7 +1298,9 @@ namespace Rawr
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
-		[Category("Base Stats")]
+		[Multiplicative] /*its not really multiplicative, but it is stored as .02 instead of 2 because crit is % based 0-1, so this attribute makes it display correctly 
+						  Need to determine if there are any side effects*/ 
+		[DisplayName("% Extra Pet Crit Chance")]
 		public float BonusPetCritChance
 		{
 			get { return _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance]; }
@@ -1568,6 +1570,7 @@ namespace Rawr
 		}
 		[System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
+		[DisplayName("% Bonus Pet Damage")]
 		public float BonusPetDamageMultiplier
 		{
 			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier]; }

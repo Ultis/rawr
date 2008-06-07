@@ -27,6 +27,19 @@ namespace Rawr.Hunter
             set { _subPoints = value; }
         }
 
+		public float HunterDpsPoints
+		{
+			get { return _subPoints[0]; }
+			set { _subPoints[0] = value; }
+		}
+
+		public float PetDpsPoints
+		{
+			get { return _subPoints[1]; }
+			set { _subPoints[1] = value; }
+
+		}
+
         private Item _item = null;
         public override Item Item
         {
