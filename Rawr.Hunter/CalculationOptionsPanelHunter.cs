@@ -32,8 +32,8 @@ namespace Rawr.Hunter
 
         private void calculationOptionControl_Changed(object sender, EventArgs e)
         {
-            if (!Running)
-            {
+            if (!Running) 
+            { 
                 CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
 
                 Character.OnItemsChanged();

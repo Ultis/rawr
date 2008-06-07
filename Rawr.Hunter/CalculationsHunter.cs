@@ -29,22 +29,31 @@ namespace Rawr.Hunter
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[]
                     {
-					    "Basic Stats:Agility",
-					    "Basic Stats:Attack Power",
-					    "Basic Stats:Crit Rating",
-				        "Basic Stats:Hit Rating",
-                        "Basic Stats:Intellect",
-					    "Basic Stats:Haste Rating",
-					    "Basic Stats:Armor Penetration",
-                        "Basic Stats:Health",
-                        "Basic Stats:Armor",
-                        "Basic Stats:Mana",
-					    "Not Basic Stats:Attack Speed",
-                        "Not Basic Stats:% Chance to Hit*% Chance to hit vs. level 73",
-                        "Not Basic Stats:% Chance to Crit*% Chance to crit vs. level 73",
-                        "Not Basic Stats:% Chance to Dodge",
-					    "Not Basic Stats:Hunter DPS",
-					    "Not Basic Stats:Pet DPS",
+					    "DPS Stats:Agility",
+					    "DPS Stats:Attack Power",
+					    "DPS Stats:Crit Rating",
+				        "DPS Stats:Hit Rating",
+                        "DPS Stats:Haste Rating",
+					    "DPS Stats:Armor Penetration",
+                        "DPS Stats:% Chance to Hit*% Chance to hit vs. level 73",
+                        "DPS Stats:% Chance to Crit*% Chance to crit vs. level 73",
+                        "Endurance Stats:Intellect",
+                        "Endurance Stats:Mana",
+                        "Endurance Stats:Mp5",
+                        "Survival Stats:Health",
+                        "Survival Stats:Armor",
+                        "Survival Stats:% Chance to Dodge",
+					    "Rotation:Attack Speed",
+                        "Rotation:Mp5 Used",
+                        "Rotation:Mp5 Regen",
+                        "Rotation:Time until OOM*Time until out of mana",
+					    "Hunter DPS:Auto Shot DPS",
+                        "Hunter DPS:Special Shot DPS",
+                        "Hunter DPS:Total Hunter DPS",
+					    "Pet DPS:Melee DPS",
+                        "Pet DPS:Special DPS",
+                        "Pet DPS:Killing Command DPS",
+                        "Pet DPS:Total Pet DPS",
 					    "Not Basic Stats:Total DPS*Your DPS and your pet's DPS combined"
 				    };
                 return _characterDisplayCalculationLabels;
@@ -70,8 +79,7 @@ namespace Rawr.Hunter
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Hunter DPS", System.Drawing.Color.Red);
-                    _subPointNameColors.Add("Total DPS", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("Total DPS", System.Drawing.Color.Red);
                 }
                 return _subPointNameColors;
             }
@@ -126,15 +134,26 @@ namespace Rawr.Hunter
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
-
-            //_cachedCharacter = character;
             int targetLevel = calcOpts.TargetLevel;
+            float targetArmor = calcOpts.TargetArmor;
+            string shattrathFaction = calcOpts.ShattrathFaction;
             Stats stats = GetCharacterStats(character, additionalItem);
-            // Talents talents = new Talents();
-            float targetDefense = targetLevel * 5;
+
             CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
             calculatedStats.BasicStats = stats;
             calculatedStats.TargetLevel = targetLevel;
+
+            if (stats.ShatteredSunMightProc > 0)
+            {
+                switch (shattrathFaction)
+                {
+                    case "Aldor":
+                        stats.AttackPower += 39.13f;
+                        break;
+                }
+            }
+
+            calculatedStats.DPSPoints = 0.0f;
 
             return calculatedStats;
         }
@@ -166,7 +185,6 @@ namespace Rawr.Hunter
 					HasteRating = stats.HasteRating,
                     ArmorPenetration = stats.ArmorPenetration,
 					BloodlustProc = stats.BloodlustProc,
-					TerrorProc = stats.TerrorProc,
 					WeaponDamage = stats.WeaponDamage,
 					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
