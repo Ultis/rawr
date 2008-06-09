@@ -32,6 +32,8 @@ namespace Rawr
         BonusRipDamagePerCPPerTick,
         BonusShredDamage,
         CatFormStrength,
+        CHHealIncrease,
+        CHManaReduction,
         Crit,
         CritRating,
         CrushChanceReduction,
@@ -64,11 +66,13 @@ namespace Rawr
         InnervateCooldownReduction,
         Intellect,
         JudgementOfCommandAttackPowerBonus,
+        LHWManaReduction,
         LightningCapacitorProc,
         LotPCritRating,
         MageAllResist,
         MageSpellCrit,
         Mana,
+        ManaSpringMp5Increase,
         ManaRestorePerCast,
         ManaRestorePerCast_5_15,
         ManaRestorePerHit,
@@ -91,6 +95,7 @@ namespace Rawr
         ShadowResistance,
         ShatteredSunAcumenProc,
         ShatteredSunMightProc,
+        ShatteredSunRestoProc,
         SpellArcaneDamageRating,
         SpellCombatManaRegeneration,
         SpellCrit,
@@ -1104,6 +1109,13 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.ShatteredSunMightProc] = value; }
         }
 
+        [System.ComponentModel.DefaultValue(0f)]
+        public float ShatteredSunRestoProc
+        {
+          get { return _rawAdditiveData[(int)AdditiveStat.ShatteredSunRestoProc]; }
+          set { _rawAdditiveData[(int)AdditiveStat.ShatteredSunRestoProc] = value; }
+        }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float CrushChanceReduction
         {
@@ -1287,6 +1299,38 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusWarlockDotExtension]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusWarlockDotExtension] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mp5 increase for Mana Spring")]
+        public float ManaSpringMp5Increase
+        {
+          get { return _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase]; }
+          set { _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Reduce Lesser Healing Wave mana cost by 5%")]
+        public float LHWManaReduction
+        {
+          get { return _rawAdditiveData[(int)AdditiveStat.LHWManaReduction]; }
+          set { _rawAdditiveData[(int)AdditiveStat.LHWManaReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Reduce Chain Heal mana cost by 10%")]
+        public float CHManaReduction
+        {
+          get { return _rawAdditiveData[(int)AdditiveStat.CHManaReduction]; }
+          set { _rawAdditiveData[(int)AdditiveStat.CHManaReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Increase healing done by Chain Heal by 5%")]
+        public float CHHealIncrease
+        {
+          get { return _rawAdditiveData[(int)AdditiveStat.CHHealIncrease]; }
+          set { _rawAdditiveData[(int)AdditiveStat.CHHealIncrease] = value; }
         }
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
