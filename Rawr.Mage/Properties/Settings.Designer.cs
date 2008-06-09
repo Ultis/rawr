@@ -34,17 +34,5 @@ namespace Rawr.Mage.Properties {
                 this["DisplayedSMPWarning"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("300")]
-        public int MaxHeapLimit {
-            get {
-                return ((int)(this["MaxHeapLimit"]));
-            }
-            set {
-                this["MaxHeapLimit"] = value;
-            }
-        }
     }
 }

@@ -2240,11 +2240,32 @@ namespace Rawr //O O . .
         public static Character Load(string path)
         {
             Character character;
-			if (File.Exists(path))
+            if (File.Exists(path))
+            {
+                try
+                {
+                    character = LoadFromXml(System.IO.File.ReadAllText(path));
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("There was an error attempting to open this character.");
+                    character = new Character();
+                }
+            }
+            else
+                character = new Character();
+
+            return character;
+        }
+
+        public static Character LoadFromXml(string xml)
+        {
+            Character character;
+			if (!string.IsNullOrEmpty(xml))
             {
 				try
 				{
-					string xml = System.IO.File.ReadAllText(path).Replace("<Region>en", "<Region>US").Replace("<Weapon>", "<MainHand>").Replace("</Weapon>", "</MainHand>").Replace("<Idol>", "<Ranged>").Replace("</Idol>", "</Ranged>").Replace("<WeaponEnchant>", "<MainHandEnchant>").Replace("</WeaponEnchant>", "</MainHandEnchant>");
+					xml = xml.Replace("<Region>en", "<Region>US").Replace("<Weapon>", "<MainHand>").Replace("</Weapon>", "</MainHand>").Replace("<Idol>", "<Ranged>").Replace("</Idol>", "</Ranged>").Replace("<WeaponEnchant>", "<MainHandEnchant>").Replace("</WeaponEnchant>", "</MainHandEnchant>");
 
 					if (xml.IndexOf("<CalculationOptions>") != xml.LastIndexOf("<CalculationOptions>"))
 					{

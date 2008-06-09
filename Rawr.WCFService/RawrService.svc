@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="Rawr.WCFService.RawrService" CodeBehind="RawrService.svc.cs" %>

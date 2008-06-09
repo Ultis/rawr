@@ -32,12 +32,15 @@ namespace Rawr
 					_models = new SortedList<string, Type>();
 					_modelIcons = new Dictionary<string, string>();
 
-					DirectoryInfo info = new DirectoryInfo(System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath));
+                    string dir = AppDomain.CurrentDomain.BaseDirectory;
+                    // when running in service the dlls are in relative search path
+                    if (AppDomain.CurrentDomain.RelativeSearchPath != null) dir = AppDomain.CurrentDomain.RelativeSearchPath;
+					DirectoryInfo info = new DirectoryInfo(dir);
 					foreach (FileInfo file in info.GetFiles("*.dll"))
 					{
 						try
 						{
-							Assembly assembly = Assembly.LoadFile(file.FullName);
+							Assembly assembly = Assembly.LoadFrom(file.FullName);
 
 							foreach (Type type in assembly.GetTypes())
 							{

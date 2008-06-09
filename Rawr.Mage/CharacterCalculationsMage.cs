@@ -66,6 +66,7 @@ namespace Rawr.Mage
         public bool ManaPotionEnabled { get; set; }
         public bool ManaGemEnabled { get; set; }
         public bool DisableCooldowns { get; set; }
+        public int MaxHeapLimit { get; set; }
 
         public CalculationOptionsMage Clone()
         {
@@ -206,6 +207,7 @@ namespace Rawr.Mage
             EvocationEnabled = true;
             ManaPotionEnabled = true;
             ManaGemEnabled = true;
+            MaxHeapLimit = 300;
         }
 
         public CalculationOptionsMage(Character character) : this()

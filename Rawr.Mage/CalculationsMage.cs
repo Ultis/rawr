@@ -545,7 +545,7 @@ namespace Rawr.Mage
             CharacterCalculationsBase ret;
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             bool savedIncrementalOptimizations = calculationOptions.IncrementalOptimizations;
-            if (computeIncrementalSet) calculationOptions.IncrementalOptimizations = false;
+            if (computeIncrementalSet || calculationOptions.IncrementalSetCooldowns == null) calculationOptions.IncrementalOptimizations = false;
             if (calculationOptions.IncrementalOptimizations && !character.DisableBuffAutoActivation)
             {
                 ret = GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, computeIncrementalSet);
@@ -777,7 +777,7 @@ namespace Rawr.Mage
                     trinket1duration = 15;
                     trinket1cooldown = 120;
                 }
-                t1length = (1 + (int)((calculatedStats.FightDuration - trinket1duration) / trinket1cooldown)) * trinket1duration;
+                t1length = (1 + (int)((calculationOptions.FightDuration - trinket1duration) / trinket1cooldown)) * trinket1duration;
             }
             if (trinket2Available)
             {
@@ -808,7 +808,7 @@ namespace Rawr.Mage
                     trinket2duration = 15;
                     trinket2cooldown = 120;
                 }
-                t2length = (1 + (int)((calculatedStats.FightDuration - trinket2duration) / trinket2cooldown)) * trinket2duration;
+                t2length = (1 + (int)((calculationOptions.FightDuration - trinket2duration) / trinket2cooldown)) * trinket2duration;
             }
             #endregion
 
@@ -1727,7 +1727,7 @@ namespace Rawr.Mage
             #endregion
 
             #region SMP Branch & Bound
-            int maxHeap = Properties.Settings.Default.MaxHeapLimit;
+            int maxHeap = calculationOptions.MaxHeapLimit;
             if (useSMP)
             {
                 lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point

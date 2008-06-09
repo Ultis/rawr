@@ -39,19 +39,194 @@ namespace Rawr
 		private static Exception _fatalError = null;
 		private Dictionary<Character.CharacterRegion, string> _domains = new Dictionary<Character.CharacterRegion,string>();
 
+        public interface INetworkSettingsProvider
+        {
+            int MaxHttpRequests { get; }
+            bool UseDefaultProxySettings { get; }
+            string ProxyServer { get; }
+            int ProxyPort { get; }
+            string ProxyUserName { get; }
+            string ProxyPassword { get; }
+            string ProxyDomain { get; }
+            string ProxyType { get; }
+            string UserAgent { get; }
+            bool DownloadItemInfo { get; }
+            bool ProxyRequiresAuthentication { get; }
+            bool UseDefaultAuthenticationForProxy { get; }
+            string WoWItemIconURI { get; }
+            string UserAgent_IE7 { get; }
+            string UserAgent_IE6 { get; }
+            string UserAgent_FireFox2 { get; }
+            string ClassTalentURI { get; }
+            string CharacterTalentURI { get; }
+            string CharacterSheetURI { get; }
+            string ItemToolTipSheetURI { get; }
+            string ItemUpgradeURI { get; }
+            string WoWTalentIconURI { get; }
+            string ItemInfoURI { get; }
+        }
+
+        public interface ICacheSettingsProvider
+        {
+            string RelativeItemImageCache { get; }
+            string RelativeTalentImageCache { get; }
+        }
+
+        private class DefaultNetworkSettingsProvider : INetworkSettingsProvider
+        {
+            #region INetworkSettingsProvider Members
+
+            public int MaxHttpRequests
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.MaxHttpRequests; }
+            }
+
+            public bool UseDefaultProxySettings
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.UseDefaultProxySettings; }
+            }
+
+            public string ProxyServer
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ProxyServer; }
+            }
+
+            public int ProxyPort
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ProxyPort; }
+            }
+
+            public string ProxyUserName
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ProxyUserName; }
+            }
+
+            public string ProxyPassword
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ProxyPassword; }
+            }
+
+            public string ProxyDomain
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ProxyDomain; }
+            }
+
+            public string ProxyType
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ProxyType; }
+            }
+
+            public string UserAgent
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.UserAgent; }
+            }
+
+            public bool DownloadItemInfo
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.DownloadItemInfo; }
+            }
+
+            public bool ProxyRequiresAuthentication
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ProxyRequiresAuthentication; }
+            }
+
+            public bool UseDefaultAuthenticationForProxy
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.UseDefaultAuthenticationForProxy; }
+            }
+
+            public string WoWItemIconURI
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.WoWItemIconURI; }
+            }
+
+            public string UserAgent_IE7
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.UserAgent_IE7; }
+            }
+
+            public string UserAgent_IE6
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.UserAgent_IE6; }
+            }
+
+            public string UserAgent_FireFox2
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.UserAgent_FireFox2; }
+            }
+
+            public string ClassTalentURI
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ClassTalentURI; }
+            }
+
+            public string CharacterTalentURI
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.CharacterTalentURI; }
+            }
+
+            public string CharacterSheetURI
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.CharacterSheetURI; }
+            }
+
+            public string ItemToolTipSheetURI
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ItemToolTipSheetURI; }
+            }
+
+            public string ItemUpgradeURI
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ItemUpgradeURI; }
+            }
+
+            public string WoWTalentIconURI
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.WoWTalentIconURI; }
+            }
+
+            public string ItemInfoURI
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ItemInfoURI; }
+            }
+
+            #endregion
+        }
+
+        private class DefaultCacheSettingsProvider : ICacheSettingsProvider
+        {
+            #region ICacheSettingsProvider Members
+
+            public string RelativeItemImageCache
+            {
+                get { return Rawr.Properties.CacheSettings.Default.RelativeItemImageCache; }
+            }
+
+            public string RelativeTalentImageCache
+            {
+                get { return Rawr.Properties.CacheSettings.Default.RelativeTalentImageCache; }
+            }
+
+            #endregion
+        }
+
+        public static INetworkSettingsProvider NetworkSettingsProvider = new DefaultNetworkSettingsProvider();
+        public static ICacheSettingsProvider CacheSettingsProvider = new DefaultCacheSettingsProvider();
+
 		public WebRequestWrapper()
 		{
-			int maxConnections = Rawr.Properties.NetworkSettings.Default.MaxHttpRequests;
+            int maxConnections = NetworkSettingsProvider.MaxHttpRequests;
 			_failedRequests = new List<DownloadRequest>();
 			_webRequestThreads = new Thread[maxConnections];
 			_downloadRequests = new Queue<DownloadRequest>();
-			_useDefaultProxy = Rawr.Properties.NetworkSettings.Default.UseDefaultProxySettings;
-            
-			_proxyServer = Rawr.Properties.NetworkSettings.Default.ProxyServer;
-			_proxyPort = Rawr.Properties.NetworkSettings.Default.ProxyPort;
-			_proxyUserName = Rawr.Properties.NetworkSettings.Default.ProxyUserName;
-			_proxyPassword = Rawr.Properties.NetworkSettings.Default.ProxyPassword;
-            _proxyDomain = Rawr.Properties.NetworkSettings.Default.ProxyDomain;
+            _useDefaultProxy = NetworkSettingsProvider.UseDefaultProxySettings;
+
+            _proxyServer = NetworkSettingsProvider.ProxyServer;
+            _proxyPort = NetworkSettingsProvider.ProxyPort;
+            _proxyUserName = NetworkSettingsProvider.ProxyUserName;
+            _proxyPassword = NetworkSettingsProvider.ProxyPassword;
+            _proxyDomain = NetworkSettingsProvider.ProxyDomain;
 			_domains.Add(Character.CharacterRegion.US, "www");
 			_domains.Add(Character.CharacterRegion.EU, "eu");
 			_domains.Add(Character.CharacterRegion.KR, "kr");
@@ -62,7 +237,7 @@ namespace Rawr
 		public string DownloadClassTalentTree(Character.CharacterClass characterClass)
 		{
 			//http://www.worldofwarcraft.com/shared/global/talents/{0}/data.js
-			return DownloadText(string.Format(Properties.NetworkSettings.Default.ClassTalentURI, characterClass.ToString().ToLower()));
+            return DownloadText(string.Format(NetworkSettingsProvider.ClassTalentURI, characterClass.ToString().ToLower()));
 		}
 
 		public XmlDocument DownloadCharacterTalentTree(string characterName, Character.CharacterRegion region, string realm)
@@ -72,7 +247,7 @@ namespace Rawr
 			XmlDocument doc = null;
 			if (!String.IsNullOrEmpty(characterName))
 			{
-				doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.CharacterTalentURI,
+                doc = DownloadXml(string.Format(NetworkSettingsProvider.CharacterTalentURI,
 													domain, realm, characterName));
 			}
 			return doc;
@@ -85,7 +260,7 @@ namespace Rawr
 			XmlDocument doc = null;
 			if (!String.IsNullOrEmpty(characterName))
 			{
-				doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.CharacterSheetURI,
+                doc = DownloadXml(string.Format(NetworkSettingsProvider.CharacterSheetURI,
 													domain, realm, characterName));
 			}
 			return doc;
@@ -98,7 +273,7 @@ namespace Rawr
 			XmlDocument doc = null;
 			if (!String.IsNullOrEmpty(characterName))
 			{
-				doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemUpgradeURI,
+                doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemUpgradeURI,
 													domain, realm, characterName, itemId.ToString()));
 			}
 			return doc;
@@ -106,7 +281,7 @@ namespace Rawr
 
         public XmlDocument DownloadItemInformation(int id)
         {
-          return DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemInfoURI, id.ToString()));
+            return DownloadXml(string.Format(NetworkSettingsProvider.ItemInfoURI, id.ToString()));
         }
 
 		public XmlDocument DownloadItemToolTipSheet(string id)
@@ -114,7 +289,7 @@ namespace Rawr
 			XmlDocument doc = null;
 			if (!string.IsNullOrEmpty(id))
 			{
-                doc = DownloadXml(string.Format(Properties.NetworkSettings.Default.ItemToolTipSheetURI, id));
+                doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemToolTipSheetURI, id));
             }
 			return doc;
 		}
@@ -127,7 +302,7 @@ namespace Rawr
 		public string DownloadItemIcon(string iconName)
 		{
 			string filePath = Path.Combine(ItemImageCachePath, iconName + ".jpg");
-			DownloadFile(Properties.NetworkSettings.Default.WoWItemIconURI + iconName + ".jpg",
+            DownloadFile(NetworkSettingsProvider.WoWItemIconURI + iconName + ".jpg",
 							filePath);
 			if (!File.Exists(filePath))
 			{
@@ -152,7 +327,7 @@ namespace Rawr
 			{
 				//0 = class, 1=tree, 2=talentname - all lowercase
 				//@"http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
-				string uri = string.Format(Properties.NetworkSettings.Default.WoWTalentIconURI, charClass.ToString().ToLower(),
+                string uri = string.Format(NetworkSettingsProvider.WoWTalentIconURI, charClass.ToString().ToLower(),
 												talentTree.ToLower(),talentName.ToLower());
 				DownloadFile(uri, fullPathToSave);
 			}
@@ -218,7 +393,7 @@ namespace Rawr
 			if (!File.Exists(localPath))
 			{
 				DownloadRequest dl = new DownloadRequest();
-				dl.serverPath = Properties.NetworkSettings.Default.WoWItemIconURI + iconName + ".jpg";
+                dl.serverPath = NetworkSettingsProvider.WoWItemIconURI + iconName + ".jpg";
 				dl.localPath = localPath;
 				InitiateRequest(dl);
 			}
@@ -230,7 +405,7 @@ namespace Rawr
 			get
 			{
 				return (Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-									Properties.CacheSettings.Default.RelativeItemImageCache));
+                                    CacheSettingsProvider.RelativeItemImageCache));
 			}
 		}
 
@@ -239,7 +414,7 @@ namespace Rawr
 			get
 			{
 				return (Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-								Properties.CacheSettings.Default.RelativeTalentImageCache));
+                                CacheSettingsProvider.RelativeTalentImageCache));
 			}
 		}
 
@@ -249,8 +424,8 @@ namespace Rawr
 		private WebClient CreateWebClient()
 		{
 			WebClient client = new WebClient() { Encoding = Encoding.UTF8 };
-			client.Headers.Add("user-agent", Properties.NetworkSettings.Default.UserAgent);
-			if (Properties.NetworkSettings.Default.ProxyType == "Http")
+			client.Headers.Add("user-agent", NetworkSettingsProvider.UserAgent);
+            if (NetworkSettingsProvider.ProxyType == "Http")
 			{
 				if (_useDefaultProxy)
 				{
@@ -260,9 +435,9 @@ namespace Rawr
 				{
 					client.Proxy = new WebProxy(_proxyServer, _proxyPort);
 				}
-				if (client.Proxy != null && Rawr.Properties.NetworkSettings.Default.ProxyRequiresAuthentication)
+                if (client.Proxy != null && NetworkSettingsProvider.ProxyRequiresAuthentication)
 				{
-					if (Rawr.Properties.NetworkSettings.Default.UseDefaultAuthenticationForProxy)
+                    if (NetworkSettingsProvider.UseDefaultAuthenticationForProxy)
 					{
 						client.Proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
 					}
