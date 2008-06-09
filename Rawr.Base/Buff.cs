@@ -1212,6 +1212,44 @@ namespace Rawr
 				SetName = "Strength of the Clefthoof",
 				SetThreshold = 3
 			});
+
+      // Resto Shammy set bonuses:
+
+      defaultBuffs.Add(new Buff()
+      {
+        Name = "Cyclone Raiment 2 Piece Bonus",
+        Category = BuffCategory.SetBonuses,
+        SetName = "Cyclone Raiment",
+        Stats = new Stats() { ManaSpringMp5Increase = 7.5f },
+        SetThreshold = 2
+      });
+
+      defaultBuffs.Add(new Buff()
+      {
+        Name = "Cataclysm Raiment 2 Piece Bonus",
+        Category = BuffCategory.SetBonuses,
+        SetName = "Cataclysm Raiment",
+        Stats = new Stats() { LHWManaReduction = .05f },
+        SetThreshold = 2
+      });
+
+      defaultBuffs.Add(new Buff()
+      {
+        Name = "Skyshatter Raiment 2 Piece Bonus",
+        Category = BuffCategory.SetBonuses,
+        SetName = "Skyshatter Raiment",
+        Stats = new Stats() { CHManaReduction = .1f },
+        SetThreshold = 2
+      });
+
+      defaultBuffs.Add(new Buff()
+      {
+        Name = "Skyshatter Raiment 4 Piece Bonus",
+        Category = BuffCategory.SetBonuses,
+        SetName = "Skyshatter Raiment",
+        Stats = new Stats() { CHHealIncrease = .05f },
+        SetThreshold = 4
+      });
             
             //i think you're slipping
             defaultBuffs.Add(new Buff()
