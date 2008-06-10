@@ -88,7 +88,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.RestoSham", "Rawr.Rest
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 21
+		SccNumberOfProjects = 22
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -141,6 +141,7 @@ Global
 		SccLocalPath16 = Rawr.Silverlight
 		SccWebProject17 = true
 		SccProjectUniqueName17 = Rawr.Silverlight.Web
+		SccProjectName17 = Rawr.Silverlight.Web
 		SccLocalPath17 = .
 		SccProjectFilePathRelativizedFromConnection17 = Rawr.Silverlight.Web\\
 		SccProjectEnlistmentChoice17 = 2
@@ -153,6 +154,9 @@ Global
 		SccProjectUniqueName20 = Rawr.RestoSham\\Rawr.RestoSham.csproj
 		SccProjectName20 = Rawr.RestoSham
 		SccLocalPath20 = Rawr.RestoSham
+		SccProjectUniqueName21 = Rawr.Test\\Rawr.Test.csproj
+		SccProjectName21 = Rawr.Test
+		SccLocalPath21 = Rawr.Test
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -355,13 +359,11 @@ Global
 		{748DD530-B2A7-4459-9BE8-58BDB52C6183}.Release|x86.ActiveCfg = Release|Any CPU
 		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Debug|.NET.ActiveCfg = Debug|Any CPU
 		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Debug|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Debug|Mixed Platforms.Build.0 = Release|Any CPU
 		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Release|.NET.ActiveCfg = Release|Any CPU
 		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Release|x86.ActiveCfg = Release|Any CPU
@@ -379,25 +381,21 @@ Global
 		{625E6639-8278-471F-99C3-01A8CB2E60F0}.Release|x86.ActiveCfg = Debug|.NET
 		{35A74646-694E-42A1-8541-1E3363CCB851}.Debug|.NET.ActiveCfg = Debug|Any CPU
 		{35A74646-694E-42A1-8541-1E3363CCB851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35A74646-694E-42A1-8541-1E3363CCB851}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35A74646-694E-42A1-8541-1E3363CCB851}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{35A74646-694E-42A1-8541-1E3363CCB851}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{35A74646-694E-42A1-8541-1E3363CCB851}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{35A74646-694E-42A1-8541-1E3363CCB851}.Release|.NET.ActiveCfg = Release|Any CPU
 		{35A74646-694E-42A1-8541-1E3363CCB851}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35A74646-694E-42A1-8541-1E3363CCB851}.Release|Any CPU.Build.0 = Release|Any CPU
 		{35A74646-694E-42A1-8541-1E3363CCB851}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{35A74646-694E-42A1-8541-1E3363CCB851}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{35A74646-694E-42A1-8541-1E3363CCB851}.Release|x86.ActiveCfg = Release|Any CPU
 		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Debug|.NET.ActiveCfg = Debug|Any CPU
 		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Release|.NET.ActiveCfg = Release|Any CPU
 		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Release|x86.ActiveCfg = Release|Any CPU

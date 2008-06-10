@@ -1031,6 +1031,11 @@ namespace Rawr
                     Item newItem = Item.LoadFromId(id, false, "Character from Armory", false);
                     if (newItem != null)
                     {
+                        // force load all gems also
+                        Item gem;
+                        gem = newItem.Gem1;
+                        gem =newItem.Gem2;
+                        gem = newItem.Gem3;
                         items.Add(newItem);
                     }
                 }
