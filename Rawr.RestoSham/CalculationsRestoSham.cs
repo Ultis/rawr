@@ -65,7 +65,8 @@ namespace Rawr.RestoSham
         //
         public override string[] CustomChartNames
           {
-            get { return new string[]{"Healing Spell Ranks"}; }
+            get { return new string[]{"Healing Spell Ranks",
+                                      "Stat Relative Weights"}; }
           }
 
 
@@ -137,7 +138,13 @@ namespace Rawr.RestoSham
         //
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
           {
-            Stats stats = GetCharacterStats(character, additionalItem);    
+            return GetCharacterCalculations(character, additionalItem, null);
+          }
+        
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem,
+                                                                  Stats statModifier)
+          {
+            Stats stats = GetCharacterStats(character, additionalItem, statModifier); 
             CharacterCalculationsRestoSham calcStats = new CharacterCalculationsRestoSham();
             calcStats.BasicStats = stats;
             
@@ -303,6 +310,11 @@ namespace Rawr.RestoSham
         //
         public override Stats GetCharacterStats(Character character, Item additionalItem)
           {
+            return GetCharacterStats(character, additionalItem, null);
+          }
+        
+        public Stats GetCharacterStats(Character character, Item additionalItem, Stats statModifier)
+          {
             Stats  statsRace;
             switch (character.Race)
               {
@@ -332,6 +344,8 @@ namespace Rawr.RestoSham
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace;
+            if (statModifier != null)
+              statsTotal += statModifier;
 
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect)) * (1 + statsTotal.BonusIntellectMultiplier);
@@ -399,6 +413,23 @@ namespace Rawr.RestoSham
 
 
         //
+        // Class used by stat relative weights custom chart.
+        //
+        class StatRelativeWeight
+          {
+            public StatRelativeWeight(string name, Stats stat)
+              {
+                this.Stat = stat;
+                this.Name = name;
+              }
+            
+            public Stats  Stat;
+            public string Name;
+            public float  PctChange;
+          }
+
+
+        //
         // Data for custom charts:
         //
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
@@ -414,6 +445,37 @@ namespace Rawr.RestoSham
             List<ComparisonCalculationBase> list = new List<ComparisonCalculationBase>();
             switch (chartName)
               {
+                case "Stat Relative Weights":
+                  StatRelativeWeight[] stats = new StatRelativeWeight[] {
+                      new StatRelativeWeight("Int", new Stats() { Intellect = 1f }),
+                      new StatRelativeWeight("Spirit", new Stats() { Spirit = 1f }),
+                      new StatRelativeWeight("+Heal", new Stats() { Healing = 1f }),
+                      new StatRelativeWeight("Mp5", new Stats() { Mp5 = 1f }),
+                      new StatRelativeWeight("Spell Crit", new Stats() { SpellCritRating = 1f })};
+                      
+                  // Get the percentage total healing is changed by a change in a single stat:
+                  
+                  float healPct = 0f;
+                  foreach (StatRelativeWeight weight in stats)
+                    {
+                      CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)GetCharacterCalculations(character, null, weight.Stat);
+                      weight.PctChange = (statCalc.TotalHealed - calc.TotalHealed) / calc.TotalHealed;
+                      if (weight.Name == "+Heal")
+                        healPct = weight.PctChange;
+                    }
+                      
+                  // Create the chart data points:
+                  
+                  foreach (StatRelativeWeight weight in stats)
+                    {
+                      ComparisonCalculationRestoSham comp = new ComparisonCalculationRestoSham(weight.Name);
+                      comp.OverallPoints = weight.PctChange / healPct;
+                      comp.SubPoints[0] = comp.OverallPoints;
+                      list.Add(comp);
+                    }
+                      
+                  break;
+                
                 case "Healing Spell Ranks":
                   // Healing Wave ranks:
                   
