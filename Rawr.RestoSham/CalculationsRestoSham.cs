@@ -170,6 +170,8 @@ namespace Rawr.RestoSham
               {
                 int points = GetTalentPoints("Restorative Totems", "Restoration", character.Talents);
                 mp5 += 50f * (points * .05f);
+                
+                mp5 += stats.ManaSpringMp5Increase;
               }
             
             calcStats.TotalManaPool = stats.Mana + onUse + (mp5 * (60f / 5f) * options.FightLength);

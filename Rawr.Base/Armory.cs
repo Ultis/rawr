@@ -338,6 +338,10 @@ namespace Rawr
                         { //Shattered Sun Pendant of Acumen
                             stats.ShatteredSunAcumenProc += 1f;
                         }
+                        if (spellDesc.StartsWith("Your heals have a chance to call on the power"))
+                        { //Shattered Sun Pendant of Restoration
+                          stats.ShatteredSunRestoProc += 1f;
+                        }
                         else if (spellDesc.StartsWith("Chance on hit to increase your attack power by 230"))
                         { //Special handling for Shard of Contempt due to higher uptime
                             stats.AttackPower += 90f;
@@ -514,6 +518,7 @@ namespace Rawr
                             spellDesc = spellDesc.Substring("Increases damage and healing done by magical spells and effects by up to".Length);
                             spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                             stats.SpellDamageRating += int.Parse(spellDesc);
+                            stats.Healing += int.Parse(spellDesc);
                         }
                         // Increases healing done by up to 375 and damage done by up to 125 for all magical spells and effects.
                         else if (spellDesc.StartsWith("Increases healing done by up to "))
