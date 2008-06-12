@@ -337,7 +337,20 @@ namespace Rawr
                 Stats = new Stats() { Armor = (float)Math.Floor(861f * 0.4f) },
                 RequiredBuff = "Devotion Aura"
 			});
-			defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Concentration Aura",
+                Category = BuffCategory.ClassBuffs,
+                Stats = new Stats() { InterruptProtection = 0.35f }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Improved Concentration Aura",
+                Category = BuffCategory.ClassBuffs,
+                Stats = new Stats() { InterruptProtection = 0.15f },
+                RequiredBuff = "Concentration Aura"
+            });
+            defaultBuffs.Add(new Buff()
 			{
 				Name = "Ferocious Inspiration",
 				Category = BuffCategory.ClassBuffs,

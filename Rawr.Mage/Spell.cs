@@ -196,6 +196,7 @@ namespace Rawr.Mage
             if (calculations.ArcanePower) CostModifier += 0.3f;
             if (MagicSchool == MagicSchool.Fire) AffectedByFlameCap = true;
             if (MagicSchool == MagicSchool.Fire) InterruptProtection += 0.35f * calculations.CalculationOptions.BurningSoul;
+            InterruptProtection += calculations.BasicStats.InterruptProtection;
 
             switch (MagicSchool)
             {

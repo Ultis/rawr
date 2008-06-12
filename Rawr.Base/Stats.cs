@@ -66,6 +66,7 @@ namespace Rawr
         IdolCritRating,
         InnervateCooldownReduction,
         Intellect,
+        InterruptProtection,
         JudgementOfCommandAttackPowerBonus,
         LHWManaReduction,
         LightningCapacitorProc,
@@ -698,6 +699,13 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AldorRegaliaInterruptProtection]; }
             set { _rawAdditiveData[(int)AdditiveStat.AldorRegaliaInterruptProtection] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float InterruptProtection
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.InterruptProtection]; }
+            set { _rawAdditiveData[(int)AdditiveStat.InterruptProtection] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
