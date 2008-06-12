@@ -221,6 +221,9 @@ namespace Rawr.Mage
                         case 5:
                             stats.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", calculations.Solution[i] / calculations.GlobalCooldown));
                             break;
+                        case 6:
+                            stats.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", calculations.Solution[i]));
+                            break;
                         default:
                             double value;
                             Spell s = calculations.SolutionSpells[i];
@@ -612,7 +615,7 @@ namespace Rawr.Mage
         private int segments;
         private List<CharacterCalculationsMage> statsList;
         private List<SpellId> spellList;
-        private const int colOffset = 7;
+        private const int colOffset = 8;
         private CompactLP lp;
         private Heap<CompactLP> heap;
         private double[] solution;
@@ -841,7 +844,7 @@ namespace Rawr.Mage
                 {
                     for (int trinket1 = 0; trinket1 < 2; trinket1++)
                         for (int trinket2 = 0; trinket2 < 2; trinket2++)
-                            if ((mfAvailable || mf == 1) && (heroismAvailable || heroism == 1) && (apAvailable || ap == 1) && (ivAvailable || iv == 1) && (calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1) && (combustion == 1 || calculationOptions.Combustion == 1) && (drums == 1 || calculationOptions.DrumsOfBattle))
+                            if ((mfAvailable || mf == 1) && (heroismAvailable || heroism == 1) && (apAvailable || ap == 1) && (ivAvailable || iv == 1) && (calculationOptions.DestructionPotion || destructionPotion == 1) && (calculationOptions.FlameCap || flameCap == 1) && (trinket1Available || trinket1 == 1) && (trinket2Available || trinket2 == 1) && (combustion == 1 || combustionAvailable) && (drums == 1 || calculationOptions.DrumsOfBattle))
                             {
                                 if (!(trinket1 == 0 && trinket2 == 0) || (character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0 || character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)) // only leave through trinkets that can stack
                                 {
@@ -952,7 +955,7 @@ namespace Rawr.Mage
             }
             #endregion
 
-            int rowOffset = 42;
+            int rowOffset = 43;
             int lpRows = rowOffset + (useSMP ? 11 * segments : 0); // packing constraints for each of 10 cooldowns + timing for each segment
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count * segments;
             lp = new CompactLP(lpRows, lpCols);
@@ -1080,6 +1083,10 @@ namespace Rawr.Mage
                 drumsaplength += 30;
             }
 
+            calculatedStats.StartingMana = Math.Min(characterStats.Mana, calculatedStats.ManaRegenDrinking * calculationOptions.DrinkingTime);
+            double maxDrinkingTime = Math.Min(30, (characterStats.Mana - calculatedStats.StartingMana) / calculatedStats.ManaRegenDrinking);
+            bool drinkingEnabled = (maxDrinkingTime > 0.000001);
+
             #region Disable Constraints/Variables
             // disable unused constraints and variables
             incrementalSortedIndex = 0;
@@ -1090,6 +1097,7 @@ namespace Rawr.Mage
             if (!calculationOptions.ManaPotionEnabled) lp.DisableColumn(3);
             if (!calculationOptions.ManaGemEnabled) lp.DisableColumn(4);
             if (!calculationOptions.DrumsOfBattle) lp.DisableColumn(5);
+            if (!drinkingEnabled) lp.DisableColumn(6);
             for (int seg = 0; seg < segments; seg++)
             {
                 if (calculationOptions.IncrementalOptimizations)
@@ -1204,6 +1212,7 @@ namespace Rawr.Mage
             if (!(calculationOptions.DrumsOfBattle && apAvailable)) lp.DisableRow(38);
             if (calculationOptions.TpsLimit >= 5000 || calculationOptions.TpsLimit == 0.0) lp.DisableRow(39);
             if (!calculationOptions.DrumsOfBattle) lp.DisableRow(41);
+            if (!drinkingEnabled) lp.DisableRow(42);
             if (useSMP)
             {
                 // mf, heroism, ap, iv, combustion, drums, flamecap, destruction, t1, t2
@@ -1390,6 +1399,10 @@ namespace Rawr.Mage
             lp[34, 5] = -1 / calculatedStats.GlobalCooldown;
             lp[41, 5] = 1 / calculatedStats.GlobalCooldown;
             lp[lpRows, 5] = 0;
+            // drinking
+            lp[0, 6] = -calculatedStats.ManaRegenDrinking;
+            lp[1, 6] = 1;
+            lp[42, 6] = 1;
             // spells
             for (int seg = 0; seg < segments; seg++)
             {
@@ -1620,7 +1633,7 @@ namespace Rawr.Mage
                 manaBurn = 7800 / calculatedStats.FightDuration;
             }
 
-            lp[0, lpCols] = characterStats.Mana;
+            lp[0, lpCols] = calculatedStats.StartingMana;
             lp[1, lpCols] = calculatedStats.FightDuration;
             lp[2, lpCols] = evocationDuration * Math.Max(1, (1 + Math.Floor((calculatedStats.FightDuration - 200f) / 480f)));
             lp[3, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 120.0 : calculatedStats.MaxManaPotion;
@@ -1665,6 +1678,7 @@ namespace Rawr.Mage
             if ((t1ismg || t2ismg) && manaConsum < calculatedStats.MaxManaGem) manaConsum = calculatedStats.MaxManaGem;
             lp[40, lpCols] = manaConsum * 40;
             lp[41, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 120.0 : (1 + (int)((calculatedStats.FightDuration - 30) / 120));
+            lp[42, lpCols] = maxDrinkingTime;
 
             if (useSMP)
             {

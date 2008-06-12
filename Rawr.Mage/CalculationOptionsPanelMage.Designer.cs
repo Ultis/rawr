@@ -29,10 +29,10 @@
 		private void InitializeComponent()
 		{
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelMage));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label35 = new System.Windows.Forms.Label();
             this.textBoxEvocationSpirit = new System.Windows.Forms.TextBox();
             this.label33 = new System.Windows.Forms.Label();
@@ -124,12 +124,15 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.textBoxDrinkingTime = new System.Windows.Forms.TextBox();
+            this.label44 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -179,11 +182,6 @@
             this.comboBoxFaction.Name = "comboBoxFaction";
             this.comboBoxFaction.Size = new System.Drawing.Size(75, 21);
             this.comboBoxFaction.TabIndex = 151;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label35
             // 
@@ -622,6 +620,8 @@
             // tabPage3
             // 
             this.tabPage3.AutoScroll = true;
+            this.tabPage3.Controls.Add(this.textBoxDrinkingTime);
+            this.tabPage3.Controls.Add(this.label44);
             this.tabPage3.Controls.Add(this.textBoxSurvivabilityRating);
             this.tabPage3.Controls.Add(this.label34);
             this.tabPage3.Controls.Add(this.textBoxShadowResist);
@@ -1164,6 +1164,29 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            // 
+            // textBoxDrinkingTime
+            // 
+            this.textBoxDrinkingTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "DrinkingTime", true));
+            this.textBoxDrinkingTime.Location = new System.Drawing.Point(112, 447);
+            this.textBoxDrinkingTime.Name = "textBoxDrinkingTime";
+            this.textBoxDrinkingTime.Size = new System.Drawing.Size(75, 20);
+            this.textBoxDrinkingTime.TabIndex = 177;
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(0, 450);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(82, 13);
+            this.label44.TabIndex = 176;
+            this.label44.Text = "Drinking Time: *";
+            this.toolTipMage.SetToolTip(this.label44, resources.GetString("label44.ToolTip"));
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1175,13 +1198,13 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -1283,6 +1306,8 @@
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.CheckBox checkBoxDisableCooldowns;
         private System.Windows.Forms.BindingSource calculationOptionsMageBindingSource;
+        private System.Windows.Forms.TextBox textBoxDrinkingTime;
+        private System.Windows.Forms.Label label44;
 
     }
 }
