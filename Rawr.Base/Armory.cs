@@ -203,7 +203,10 @@ namespace Rawr
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpirit")) { stats.Spirit = int.Parse(node.InnerText); }
                 
 
-                
+                if (name.StartsWith("Ashtongue Talisman"))
+				{
+					stats.AshtongueTrinketProc = 1;
+				}
 				
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/spellData/spell"))
 				{

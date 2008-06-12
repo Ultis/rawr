@@ -16,6 +16,7 @@ namespace Rawr
         ArcaneResistance,
         Armor,
         ArmorPenetration,
+		AshtongueTrinketProc,
         AttackPower,
         AverageAgility,
         AverageArmor,
@@ -1349,6 +1350,13 @@ namespace Rawr
 		{
 			get { return _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance]; }
 			set { _rawAdditiveData[(int)AdditiveStat.BonusPetCritChance] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		public float AshtongueTrinketProc
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc]; }
+			set { _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc] = value; }
 		}
 #endregion
 
