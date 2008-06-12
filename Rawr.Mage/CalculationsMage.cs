@@ -224,6 +224,11 @@ namespace Rawr.Mage
                         case 6:
                             stats.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", calculations.Solution[i]));
                             break;
+                        case 7:
+                            continue;
+                        case 8:
+                            stats.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", calculations.Solution[i]));
+                            break;
                         default:
                             double value;
                             Spell s = calculations.SolutionSpells[i];
@@ -615,7 +620,7 @@ namespace Rawr.Mage
         private int segments;
         private List<CharacterCalculationsMage> statsList;
         private List<SpellId> spellList;
-        private const int colOffset = 8;
+        private const int colOffset = 10;
         private CompactLP lp;
         private Heap<CompactLP> heap;
         private double[] solution;
@@ -955,7 +960,7 @@ namespace Rawr.Mage
             }
             #endregion
 
-            int rowOffset = 43;
+            int rowOffset = 47;
             int lpRows = rowOffset + (useSMP ? 11 * segments : 0); // packing constraints for each of 10 cooldowns + timing for each segment
             int lpCols = colOffset - 1 + spellList.Count * statsList.Count * segments;
             lp = new CompactLP(lpRows, lpCols);
@@ -1087,6 +1092,18 @@ namespace Rawr.Mage
             double maxDrinkingTime = Math.Min(30, (characterStats.Mana - calculatedStats.StartingMana) / calculatedStats.ManaRegenDrinking);
             bool drinkingEnabled = (maxDrinkingTime > 0.000001);
 
+            bool needsTimeExtension = false;
+            bool afterFightRegen = calculationOptions.FarmingMode;
+
+            bool minimizeTime = false;
+            double targetDamage = 0;
+            if (calculationOptions.TargetDamage > 0)
+            {
+                minimizeTime = true;
+                targetDamage = calculationOptions.TargetDamage;
+            }
+            if (minimizeTime) needsTimeExtension = true;
+
             #region Disable Constraints/Variables
             // disable unused constraints and variables
             incrementalSortedIndex = 0;
@@ -1098,6 +1115,8 @@ namespace Rawr.Mage
             if (!calculationOptions.ManaGemEnabled) lp.DisableColumn(4);
             if (!calculationOptions.DrumsOfBattle) lp.DisableColumn(5);
             if (!drinkingEnabled) lp.DisableColumn(6);
+            if (!needsTimeExtension) lp.DisableColumn(7);
+            if (!afterFightRegen) lp.DisableColumn(8);
             for (int seg = 0; seg < segments; seg++)
             {
                 if (calculationOptions.IncrementalOptimizations)
@@ -1171,6 +1190,9 @@ namespace Rawr.Mage
                     }
                 }
             }
+            if (!calculationOptions.EvocationEnabled) lp.DisableRow(2);
+            if (!calculationOptions.ManaPotionEnabled) lp.DisableRow(3);
+            if (!calculationOptions.ManaGemEnabled) lp.DisableRow(4);
             if (!heroismAvailable) lp.DisableRow(5);
             if (!apAvailable) lp.DisableRow(6);
             if (!heroismAvailable || !apAvailable) lp.DisableRow(7);
@@ -1213,6 +1235,10 @@ namespace Rawr.Mage
             if (calculationOptions.TpsLimit >= 5000 || calculationOptions.TpsLimit == 0.0) lp.DisableRow(39);
             if (!calculationOptions.DrumsOfBattle) lp.DisableRow(41);
             if (!drinkingEnabled) lp.DisableRow(42);
+            if (!needsTimeExtension) lp.DisableRow(43);
+            if (!afterFightRegen) lp.DisableRow(44);
+            if (!afterFightRegen) lp.DisableRow(45);
+            if (!minimizeTime) lp.DisableRow(46);
             if (useSMP)
             {
                 // mf, heroism, ap, iv, combustion, drums, flamecap, destruction, t1, t2
@@ -1314,20 +1340,23 @@ namespace Rawr.Mage
             #region Formulate LP
             // idle regen
             //calculatedStats.SolutionLabel[0] = "Idle Regen";
-            lp[0, 0] = -(calculatedStats.ManaRegen * (1 - calculationOptions.Fragmentation) + calculatedStats.ManaRegen5SR * calculationOptions.Fragmentation);
+            lp[44, 0] = lp[0, 0] = -(calculatedStats.ManaRegen * (1 - calculationOptions.Fragmentation) + calculatedStats.ManaRegen5SR * calculationOptions.Fragmentation);
             lp[1, 0] = 1;
+            lp[43, 0] = -1;
             lp[24, 0] = -1;
-            lp[lpRows, 0] = 0;
+            lp[lpRows, 0] = minimizeTime ? -1 : 0;
             // wand
             //calculatedStats.SolutionLabel[1] = "Wand";
             if (character.Ranged != null && character.Ranged.Type == Item.ItemType.Wand)
             {
                 Spell wand = new Wand(character, calculatedStats, (MagicSchool)character.Ranged.DamageType, character.Ranged.MinDamage, character.Ranged.MaxDamage, character.Ranged.Speed);
                 calculatedStats.SetSpell(SpellId.Wand, wand);
-                lp[0, 1] = wand.CostPerSecond - wand.ManaRegenPerSecond;
+                lp[44, 1] = lp[0, 1] = wand.CostPerSecond - wand.ManaRegenPerSecond;
                 lp[1, 1] = 1;
+                lp[43, 1] = -1;
                 lp[39, 1] = tps[1] = wand.ThreatPerSecond;
-                lp[lpRows, 1] = wand.DamagePerSecond;
+                lp[46, 1] = -wand.DamagePerSecond;
+                lp[lpRows, 1] = minimizeTime ? -1 : wand.DamagePerSecond;
             }
             // evocation
             double evocationDuration = (8f + characterStats.EvocationExtension) / calculatedStats.CastingSpeed;
@@ -1368,15 +1397,16 @@ namespace Rawr.Mage
                     calculatedStats.EvocationRegen = evocationRegen;
                 }
             }
-            lp[0, 2] = -calculatedStats.EvocationRegen;
+            lp[44, 2] = lp[0, 2] = -calculatedStats.EvocationRegen;
             lp[1, 2] = 1;
+            lp[43, 2] = -1;
             lp[2, 2] = 1;
             lp[39, 2] = tps[2] = 0.15f * evocationMana / 2f * calculatedStats.CastingSpeed * 0.5f * threatFactor; // should split among all targets if more than one, assume one only
-            lp[lpRows, 2] = 0;
+            lp[lpRows, 2] = minimizeTime ? -1 : 0;
             // mana pot
             //calculatedStats.SolutionLabel[3] = "Mana Potion";
             calculatedStats.MaxManaPotion = 1 + (int)((calculatedStats.FightDuration - 30f) / 120f);
-            lp[0, 3] = - (1 + characterStats.BonusManaPotion) * 2400f;
+            lp[44, 3] = lp[0, 3] = -(1 + characterStats.BonusManaPotion) * 2400f;
             lp[3, 3] = 1;
             lp[39, 3] = tps[3] = (1 + characterStats.BonusManaPotion) * 2400f * 0.5f * threatFactor;
             lp[40, 3] = 40;
@@ -1385,7 +1415,7 @@ namespace Rawr.Mage
             //calculatedStats.SolutionLabel[4] = "Mana Gem";
             calculatedStats.MaxManaGem = Math.Min(5, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f));
             double manaGemRegenAvg = (1 + characterStats.BonusManaGem) * (-Math.Min(3, 1 + (int)((calculatedStats.FightDuration - 30f) / 120f)) * 2400f - ((calculatedStats.FightDuration >= 390) ? 1100f : 0f) - ((calculatedStats.FightDuration >= 510) ? 850 : 0)) / (calculatedStats.MaxManaGem);
-            lp[0, 4] = manaGemRegenAvg;
+            lp[44, 4] = lp[0, 4] = manaGemRegenAvg;
             lp[4, 4] = 1;
             lp[14, 4] = 1;
             lp[23, 4] = -1;
@@ -1394,15 +1424,39 @@ namespace Rawr.Mage
             lp[lpRows, 4] = 0;
             // drums
             //calculatedStats.SolutionLabel[5] = "Drums of Battle";
-            lp[0, 5] = -calculatedStats.ManaRegen5SR;
+            lp[44, 5] = lp[0, 5] = -calculatedStats.ManaRegen5SR;
             lp[1, 5] = 1;
+            lp[43, 5] = -1;
             lp[34, 5] = -1 / calculatedStats.GlobalCooldown;
             lp[41, 5] = 1 / calculatedStats.GlobalCooldown;
-            lp[lpRows, 5] = 0;
+            lp[lpRows, 5] = minimizeTime ? -1 : 0;
             // drinking
-            lp[0, 6] = -calculatedStats.ManaRegenDrinking;
+            lp[44, 6] = lp[0, 6] = -calculatedStats.ManaRegenDrinking;
             lp[1, 6] = 1;
+            lp[43, 6] = -1;
             lp[42, 6] = 1;
+            lp[lpRows, 6] = minimizeTime ? -1 : 0;
+            // time extension
+            lp[1, 7] = 1;
+            lp[43, 7] = -1;
+            lp[2, 7] = evocationDuration / 480f;
+            lp[3, 7] = 1f / 120f;
+            lp[4, 7] = 1f / 120f;
+            lp[6, 7] = 15.0 / 180.0;
+            lp[8, 7] = 20.0 / 180.0 + (coldsnap ? 20.0 / coldsnapCooldown : 0.0);
+            lp[9, 7] = calculationOptions.MoltenFuryPercentage;
+            lp[14, 7] = 1f / 120f;
+            lp[17, 7] = trinket1duration / trinket1cooldown;
+            lp[18, 7] = trinket2duration / trinket2cooldown;
+            lp[24, 7] = -(1 - calculationOptions.DpsTime);
+            lp[25, 7] = calculationOptions.AoeDuration;
+            lp[30, 7] = 1.0 / 180.0;
+            lp[41, 7] = 1f / 120f;
+            // after fight regen
+            lp[1, 8] = 1;
+            lp[43, 8] = -1;
+            lp[44, 8] = -calculatedStats.ManaRegenDrinking;
+            lp[lpRows, 8] = minimizeTime ? -1 : 0;
             // spells
             for (int seg = 0; seg < segments; seg++)
             {
@@ -1426,8 +1480,9 @@ namespace Rawr.Mage
                                     incrementalSetSpell[index] = spellList[spell];
                                     if (useSMP) incrementalSetSegment[index] = seg;
                                 }
-                                lp[0, index] = s.CostPerSecond - s.ManaRegenPerSecond;
+                                lp[44, index] = lp[0, index] = s.CostPerSecond - s.ManaRegenPerSecond;
                                 lp[1, index] = 1;
+                                lp[43, index] = -1;
                                 if (statsList[buffset].DestructionPotion) lp[3, index] = 1.0 / 15.0;
                                 lp[5, index] = (statsList[buffset].Heroism ? 1 : 0);
                                 lp[6, index] = (statsList[buffset].ArcanePower ? 1 : 0);
@@ -1501,7 +1556,8 @@ namespace Rawr.Mage
                                 lp[38, index] = (statsList[buffset].DrumsOfBattle && statsList[buffset].ArcanePower) ? 1 : 0;
                                 lp[39, index] = tps[index] = s.ThreatPerSecond;
                                 //lp[40, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
-                                lp[lpRows, index] = s.DamagePerSecond;
+                                lp[46, index] = -s.DamagePerSecond;
+                                lp[lpRows, index] = minimizeTime ? -1 : s.DamagePerSecond;
                                 if (useSMP)
                                 {
                                     // mf, heroism, ap, iv, combustion, drums, flamecap, destro, t1, t2
@@ -1635,6 +1691,7 @@ namespace Rawr.Mage
 
             lp[0, lpCols] = calculatedStats.StartingMana;
             lp[1, lpCols] = calculatedStats.FightDuration;
+            lp[43, lpCols] = -calculatedStats.FightDuration;
             lp[2, lpCols] = evocationDuration * Math.Max(1, (1 + Math.Floor((calculatedStats.FightDuration - 200f) / 480f)));
             lp[3, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 120.0 : calculatedStats.MaxManaPotion;
             lp[4, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 120.0 : calculatedStats.MaxManaGem;
@@ -1657,8 +1714,8 @@ namespace Rawr.Mage
             }
             if (mfAvailable) lp[15, lpCols] = 60;
             lp[16, lpCols] = dpflamelength;
-            if (trinket1Available) lp[17, lpCols] = t1length;
-            if (trinket2Available) lp[18, lpCols] = t2length;
+            if (trinket1Available) lp[17, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration * trinket1duration / trinket1cooldown : t1length;
+            if (trinket2Available) lp[18, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration * trinket2duration / trinket2cooldown : t2length;
             if (mfAvailable && trinket1Available) lp[19, lpCols] = trinket1duration;
             if (mfAvailable && trinket2Available) lp[20, lpCols] = trinket2duration;
             if (heroismAvailable && trinket1Available) lp[21, lpCols] = trinket1duration;
@@ -1679,6 +1736,7 @@ namespace Rawr.Mage
             lp[40, lpCols] = manaConsum * 40;
             lp[41, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 120.0 : (1 + (int)((calculatedStats.FightDuration - 30) / 120));
             lp[42, lpCols] = maxDrinkingTime;
+            lp[46, lpCols] = -targetDamage;
 
             if (useSMP)
             {
@@ -1969,7 +2027,14 @@ namespace Rawr.Mage
                 if (useSMP) calculatedStats.IncrementalSetSegment = incrementalSetSegment;
             }
 
-            calculatedStats.SubPoints[0] = ((float)calculatedStats.Solution[lpCols] + calculatedStats.WaterElementalDamage) / calculationOptions.FightDuration;
+            if (minimizeTime)
+            {
+                calculatedStats.SubPoints[0] = -(float)(targetDamage / calculatedStats.Solution[lpCols]);
+            }
+            else
+            {
+                calculatedStats.SubPoints[0] = ((float)calculatedStats.Solution[lpCols] + calculatedStats.WaterElementalDamage) / calculationOptions.FightDuration;
+            }
             calculatedStats.SubPoints[1] = calculatedStats.BasicStats.Health * calculationOptions.SurvivabilityRating;
             calculatedStats.OverallPoints = calculatedStats.SubPoints[0] + calculatedStats.SubPoints[1];
             float threat = 0;

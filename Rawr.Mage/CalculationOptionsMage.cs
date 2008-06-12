@@ -66,6 +66,8 @@ namespace Rawr.Mage
         public bool DisableCooldowns { get; set; }
         public int MaxHeapLimit { get; set; }
         public float DrinkingTime { get; set; }
+        public float TargetDamage { get; set; }
+        public bool FarmingMode { get; set; }
 
         [XmlIgnore]
         public string ShattrathFaction

@@ -511,6 +511,13 @@ namespace Rawr.Mage
                         maxTime = 0;
                         mps = -Calculations.ManaRegenDrinking;
                         break;
+                    case 7:
+                        minTime = maxTime;
+                        break;
+                    case 8:
+                        mps = -Calculations.ManaRegenDrinking;
+                        minTime = maxTime;
+                        break;
                     default:
                         mps = spell.CostPerSecond - spell.ManaRegenPerSecond;
                         break;
@@ -1489,7 +1496,7 @@ namespace Rawr.Mage
                 return sequence[index];
             }
 
-            private double RemoveIndex(int index)
+            public double RemoveIndex(int index)
             {
                 return RemoveIndex(index, 0);
             }
@@ -3572,6 +3579,12 @@ namespace Rawr.Mage
                         case 6:
                             label = "Drink";
                             break;
+                        case 7:
+                            label = "End";
+                            break;
+                        case 8:
+                            label = "Drink";
+                            break;
                         default:
                             label = spell.Name;
                             break;
@@ -3682,6 +3695,7 @@ namespace Rawr.Mage
             // mana gem/pot/evo positioning
             sequence.RepositionManaConsumption();
 
+            sequence.RemoveIndex(7);
             sequence.Compact(true);
 
             // evaluate sequence
@@ -3796,6 +3810,11 @@ namespace Rawr.Mage
                             break;
                         case 6:
                             sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", Solution[i]));
+                            break;
+                        case 7:
+                            continue;
+                        case 8:
+                            sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", Solution[i]));
                             break;
                         default:
                             double value;

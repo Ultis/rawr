@@ -74,6 +74,8 @@
             this.textBoxLatency = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.textBoxDrinkingTime = new System.Windows.Forms.TextBox();
+            this.label44 = new System.Windows.Forms.Label();
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.textBoxShadowResist = new System.Windows.Forms.TextBox();
@@ -124,9 +126,11 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.textBoxTargetDamage = new System.Windows.Forms.TextBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
+            this.checkBoxFarmingMode = new System.Windows.Forms.CheckBox();
             this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.textBoxDrinkingTime = new System.Windows.Forms.TextBox();
-            this.label44 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -620,6 +624,10 @@
             // tabPage3
             // 
             this.tabPage3.AutoScroll = true;
+            this.tabPage3.Controls.Add(this.label46);
+            this.tabPage3.Controls.Add(this.checkBoxFarmingMode);
+            this.tabPage3.Controls.Add(this.textBoxTargetDamage);
+            this.tabPage3.Controls.Add(this.label45);
             this.tabPage3.Controls.Add(this.textBoxDrinkingTime);
             this.tabPage3.Controls.Add(this.label44);
             this.tabPage3.Controls.Add(this.textBoxSurvivabilityRating);
@@ -663,6 +671,24 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Fight";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // textBoxDrinkingTime
+            // 
+            this.textBoxDrinkingTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "DrinkingTime", true));
+            this.textBoxDrinkingTime.Location = new System.Drawing.Point(112, 447);
+            this.textBoxDrinkingTime.Name = "textBoxDrinkingTime";
+            this.textBoxDrinkingTime.Size = new System.Drawing.Size(75, 20);
+            this.textBoxDrinkingTime.TabIndex = 177;
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(0, 450);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(82, 13);
+            this.label44.TabIndex = 176;
+            this.label44.Text = "Drinking Time: *";
+            this.toolTipMage.SetToolTip(this.label44, resources.GetString("label44.ToolTip"));
             // 
             // textBoxSurvivabilityRating
             // 
@@ -1164,28 +1190,51 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
+            // textBoxTargetDamage
+            // 
+            this.textBoxTargetDamage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "TargetDamage", true));
+            this.textBoxTargetDamage.Location = new System.Drawing.Point(112, 473);
+            this.textBoxTargetDamage.Name = "textBoxTargetDamage";
+            this.textBoxTargetDamage.Size = new System.Drawing.Size(75, 20);
+            this.textBoxTargetDamage.TabIndex = 179;
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(0, 476);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(91, 13);
+            this.label45.TabIndex = 178;
+            this.label45.Text = "Target Damage: *";
+            this.toolTipMage.SetToolTip(this.label45, "Instead of maximizing damage done this minimizes time it takes to deal the specif" +
+                    "ied damage if value is greater than 0 (for best results enable Average Cooldowns" +
+                    ").");
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(0, 499);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(84, 13);
+            this.label46.TabIndex = 181;
+            this.label46.Text = "Farming Mode: *";
+            this.toolTipMage.SetToolTip(this.label46, "Includes time it takes to regen mana/health after encounter, use in combination w" +
+                    "ith target damage.");
+            // 
+            // checkBoxFarmingMode
+            // 
+            this.checkBoxFarmingMode.AutoSize = true;
+            this.checkBoxFarmingMode.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "FarmingMode", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxFarmingMode.Location = new System.Drawing.Point(112, 499);
+            this.checkBoxFarmingMode.Name = "checkBoxFarmingMode";
+            this.checkBoxFarmingMode.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxFarmingMode.TabIndex = 180;
+            this.checkBoxFarmingMode.UseVisualStyleBackColor = true;
+            // 
             // calculationOptionsMageBindingSource
             // 
             this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
             this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
-            // 
-            // textBoxDrinkingTime
-            // 
-            this.textBoxDrinkingTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "DrinkingTime", true));
-            this.textBoxDrinkingTime.Location = new System.Drawing.Point(112, 447);
-            this.textBoxDrinkingTime.Name = "textBoxDrinkingTime";
-            this.textBoxDrinkingTime.Size = new System.Drawing.Size(75, 20);
-            this.textBoxDrinkingTime.TabIndex = 177;
-            // 
-            // label44
-            // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(0, 450);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(82, 13);
-            this.label44.TabIndex = 176;
-            this.label44.Text = "Drinking Time: *";
-            this.toolTipMage.SetToolTip(this.label44, resources.GetString("label44.ToolTip"));
             // 
             // CalculationOptionsPanelMage
             // 
@@ -1308,6 +1357,10 @@
         private System.Windows.Forms.BindingSource calculationOptionsMageBindingSource;
         private System.Windows.Forms.TextBox textBoxDrinkingTime;
         private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.TextBox textBoxTargetDamage;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.CheckBox checkBoxFarmingMode;
 
     }
 }
