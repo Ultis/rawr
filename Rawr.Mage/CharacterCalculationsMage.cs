@@ -68,6 +68,19 @@ namespace Rawr.Mage
         public bool DisableCooldowns { get; set; }
         public int MaxHeapLimit { get; set; }
 
+        [XmlIgnore]
+        public string ShattrathFaction
+        {
+            get
+            {
+                return Aldor ? "Aldor" : "Scryers";
+            }
+            set
+            {
+                Aldor = (value == "Aldor");
+            }
+        }
+
         public CalculationOptionsMage Clone()
         {
             CalculationOptionsMage clone = (CalculationOptionsMage)MemberwiseClone();

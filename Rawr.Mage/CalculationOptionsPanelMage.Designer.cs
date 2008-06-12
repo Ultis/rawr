@@ -32,6 +32,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label35 = new System.Windows.Forms.Label();
             this.textBoxEvocationSpirit = new System.Windows.Forms.TextBox();
             this.label33 = new System.Windows.Forms.Label();
@@ -40,6 +41,16 @@
             this.buttonTalents = new System.Windows.Forms.Button();
             this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label43 = new System.Windows.Forms.Label();
+            this.checkBoxDisableCooldowns = new System.Windows.Forms.CheckBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.checkBoxManaGemEnabled = new System.Windows.Forms.CheckBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.checkBoxManaPotionEnabled = new System.Windows.Forms.CheckBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.checkBoxEvocationEnabled = new System.Windows.Forms.CheckBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.checkBoxAverageCooldowns = new System.Windows.Forms.CheckBox();
             this.textBoxManaTide = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
             this.textBoxInnervate = new System.Windows.Forms.TextBox();
@@ -113,18 +124,9 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label39 = new System.Windows.Forms.Label();
-            this.checkBoxAverageCooldowns = new System.Windows.Forms.CheckBox();
-            this.label40 = new System.Windows.Forms.Label();
-            this.checkBoxEvocationEnabled = new System.Windows.Forms.CheckBox();
-            this.label41 = new System.Windows.Forms.Label();
-            this.checkBoxManaPotionEnabled = new System.Windows.Forms.CheckBox();
-            this.label42 = new System.Windows.Forms.Label();
-            this.checkBoxManaGemEnabled = new System.Windows.Forms.CheckBox();
-            this.label43 = new System.Windows.Forms.Label();
-            this.checkBoxDisableCooldowns = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -167,6 +169,7 @@
             // 
             // comboBoxFaction
             // 
+            this.comboBoxFaction.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.calculationOptionsMageBindingSource, "ShattrathFaction", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.comboBoxFaction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFaction.FormattingEnabled = true;
             this.comboBoxFaction.Items.AddRange(new object[] {
@@ -176,7 +179,11 @@
             this.comboBoxFaction.Name = "comboBoxFaction";
             this.comboBoxFaction.Size = new System.Drawing.Size(75, 21);
             this.comboBoxFaction.TabIndex = 151;
-            this.comboBoxFaction.SelectedIndexChanged += new System.EventHandler(this.comboBoxFaction_SelectedIndexChanged);
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label35
             // 
@@ -189,11 +196,11 @@
             // 
             // textBoxEvocationSpirit
             // 
+            this.textBoxEvocationSpirit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EvocationSpirit", true));
             this.textBoxEvocationSpirit.Location = new System.Drawing.Point(112, 108);
             this.textBoxEvocationSpirit.Name = "textBoxEvocationSpirit";
             this.textBoxEvocationSpirit.Size = new System.Drawing.Size(75, 20);
             this.textBoxEvocationSpirit.TabIndex = 147;
-            this.textBoxEvocationSpirit.Validated += new System.EventHandler(this.textBoxEvocationSpirit_Validated);
             // 
             // label33
             // 
@@ -208,11 +215,11 @@
             // 
             // textBoxEvocationWeapon
             // 
+            this.textBoxEvocationWeapon.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EvocationWeapon", true));
             this.textBoxEvocationWeapon.Location = new System.Drawing.Point(112, 82);
             this.textBoxEvocationWeapon.Name = "textBoxEvocationWeapon";
             this.textBoxEvocationWeapon.Size = new System.Drawing.Size(75, 20);
             this.textBoxEvocationWeapon.TabIndex = 121;
-            this.textBoxEvocationWeapon.Validated += new System.EventHandler(this.textBoxEvocationWeapon_Validated);
             // 
             // label21
             // 
@@ -289,13 +296,114 @@
             this.tabPage2.Text = "Casting";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(0, 268);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(107, 13);
+            this.label43.TabIndex = 185;
+            this.label43.Text = "Disable Cooldowns: *";
+            this.toolTipMage.SetToolTip(this.label43, "Disables other activatable cooldowns (talents and trinkets).");
+            // 
+            // checkBoxDisableCooldowns
+            // 
+            this.checkBoxDisableCooldowns.AutoSize = true;
+            this.checkBoxDisableCooldowns.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "DisableCooldowns", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxDisableCooldowns.Location = new System.Drawing.Point(112, 268);
+            this.checkBoxDisableCooldowns.Name = "checkBoxDisableCooldowns";
+            this.checkBoxDisableCooldowns.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxDisableCooldowns.TabIndex = 184;
+            this.checkBoxDisableCooldowns.UseVisualStyleBackColor = true;
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(0, 328);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(69, 13);
+            this.label42.TabIndex = 183;
+            this.label42.Text = "Mana Gem: *";
+            this.toolTipMage.SetToolTip(this.label42, "You can uncheck this to disable use of Mana Gems.");
+            // 
+            // checkBoxManaGemEnabled
+            // 
+            this.checkBoxManaGemEnabled.AutoSize = true;
+            this.checkBoxManaGemEnabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ManaGemEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxManaGemEnabled.Location = new System.Drawing.Point(112, 328);
+            this.checkBoxManaGemEnabled.Name = "checkBoxManaGemEnabled";
+            this.checkBoxManaGemEnabled.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxManaGemEnabled.TabIndex = 182;
+            this.checkBoxManaGemEnabled.UseVisualStyleBackColor = true;
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(0, 308);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(77, 13);
+            this.label41.TabIndex = 181;
+            this.label41.Text = "Mana Potion: *";
+            this.toolTipMage.SetToolTip(this.label41, "You can uncheck this to disable use of Mana Potions.");
+            // 
+            // checkBoxManaPotionEnabled
+            // 
+            this.checkBoxManaPotionEnabled.AutoSize = true;
+            this.checkBoxManaPotionEnabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ManaPotionEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxManaPotionEnabled.Location = new System.Drawing.Point(112, 308);
+            this.checkBoxManaPotionEnabled.Name = "checkBoxManaPotionEnabled";
+            this.checkBoxManaPotionEnabled.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxManaPotionEnabled.TabIndex = 180;
+            this.checkBoxManaPotionEnabled.UseVisualStyleBackColor = true;
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(0, 288);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(65, 13);
+            this.label40.TabIndex = 179;
+            this.label40.Text = "Evocation: *";
+            this.toolTipMage.SetToolTip(this.label40, "You can uncheck this to disable use of Evocation.");
+            // 
+            // checkBoxEvocationEnabled
+            // 
+            this.checkBoxEvocationEnabled.AutoSize = true;
+            this.checkBoxEvocationEnabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "EvocationEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxEvocationEnabled.Location = new System.Drawing.Point(112, 288);
+            this.checkBoxEvocationEnabled.Name = "checkBoxEvocationEnabled";
+            this.checkBoxEvocationEnabled.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxEvocationEnabled.TabIndex = 178;
+            this.checkBoxEvocationEnabled.UseVisualStyleBackColor = true;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(0, 248);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(112, 13);
+            this.label39.TabIndex = 177;
+            this.label39.Text = "Average Cooldowns: *";
+            this.toolTipMage.SetToolTip(this.label39, "Enable to make cooldown maximum usage gradually increases with fight duration (i." +
+                    "e. max 1.66 Arcane Power activations on a 5 minute fight).");
+            // 
+            // checkBoxAverageCooldowns
+            // 
+            this.checkBoxAverageCooldowns.AutoSize = true;
+            this.checkBoxAverageCooldowns.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "AverageCooldowns", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxAverageCooldowns.Location = new System.Drawing.Point(112, 248);
+            this.checkBoxAverageCooldowns.Name = "checkBoxAverageCooldowns";
+            this.checkBoxAverageCooldowns.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxAverageCooldowns.TabIndex = 176;
+            this.checkBoxAverageCooldowns.UseVisualStyleBackColor = true;
+            // 
             // textBoxManaTide
             // 
+            this.textBoxManaTide.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ManaTide", true));
             this.textBoxManaTide.Location = new System.Drawing.Point(112, 222);
             this.textBoxManaTide.Name = "textBoxManaTide";
             this.textBoxManaTide.Size = new System.Drawing.Size(75, 20);
             this.textBoxManaTide.TabIndex = 175;
-            this.textBoxManaTide.Validated += new System.EventHandler(this.textBoxManaTide_Validated);
             // 
             // label29
             // 
@@ -310,11 +418,11 @@
             // 
             // textBoxInnervate
             // 
+            this.textBoxInnervate.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "Innervate", true));
             this.textBoxInnervate.Location = new System.Drawing.Point(112, 196);
             this.textBoxInnervate.Name = "textBoxInnervate";
             this.textBoxInnervate.Size = new System.Drawing.Size(75, 20);
             this.textBoxInnervate.TabIndex = 173;
-            this.textBoxInnervate.Validated += new System.EventHandler(this.textBoxInnervate_Validated);
             // 
             // label28
             // 
@@ -328,6 +436,7 @@
             // 
             // comboBoxHeroismControl
             // 
+            this.comboBoxHeroismControl.DataBindings.Add(new System.Windows.Forms.Binding("SelectedIndex", this.calculationOptionsMageBindingSource, "HeroismControl", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.comboBoxHeroismControl.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxHeroismControl.FormattingEnabled = true;
             this.comboBoxHeroismControl.Items.AddRange(new object[] {
@@ -338,7 +447,6 @@
             this.comboBoxHeroismControl.Name = "comboBoxHeroismControl";
             this.comboBoxHeroismControl.Size = new System.Drawing.Size(75, 21);
             this.comboBoxHeroismControl.TabIndex = 171;
-            this.comboBoxHeroismControl.SelectedIndexChanged += new System.EventHandler(this.comboBoxHeroismControl_SelectedIndexChanged);
             // 
             // label37
             // 
@@ -362,12 +470,12 @@
             // checkBoxAutomaticArmor
             // 
             this.checkBoxAutomaticArmor.AutoSize = true;
+            this.checkBoxAutomaticArmor.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "AutomaticArmor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxAutomaticArmor.Location = new System.Drawing.Point(112, 29);
             this.checkBoxAutomaticArmor.Name = "checkBoxAutomaticArmor";
             this.checkBoxAutomaticArmor.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAutomaticArmor.TabIndex = 168;
             this.checkBoxAutomaticArmor.UseVisualStyleBackColor = true;
-            this.checkBoxAutomaticArmor.CheckedChanged += new System.EventHandler(this.checkBoxAutomaticArmor_CheckedChanged);
             // 
             // label24
             // 
@@ -382,12 +490,12 @@
             // checkBoxDrumsOfBattle
             // 
             this.checkBoxDrumsOfBattle.AutoSize = true;
+            this.checkBoxDrumsOfBattle.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "DrumsOfBattle", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxDrumsOfBattle.Location = new System.Drawing.Point(112, 109);
             this.checkBoxDrumsOfBattle.Name = "checkBoxDrumsOfBattle";
             this.checkBoxDrumsOfBattle.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDrumsOfBattle.TabIndex = 166;
             this.checkBoxDrumsOfBattle.UseVisualStyleBackColor = true;
-            this.checkBoxDrumsOfBattle.CheckedChanged += new System.EventHandler(this.checkBoxDrumsOfBattle_CheckedChanged);
             // 
             // label18
             // 
@@ -404,12 +512,12 @@
             // checkBoxMaintainScorch
             // 
             this.checkBoxMaintainScorch.AutoSize = true;
+            this.checkBoxMaintainScorch.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "MaintainScorch", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxMaintainScorch.Location = new System.Drawing.Point(112, 149);
             this.checkBoxMaintainScorch.Name = "checkBoxMaintainScorch";
             this.checkBoxMaintainScorch.Size = new System.Drawing.Size(15, 14);
             this.checkBoxMaintainScorch.TabIndex = 164;
             this.checkBoxMaintainScorch.UseVisualStyleBackColor = true;
-            this.checkBoxMaintainScorch.CheckedChanged += new System.EventHandler(this.checkBoxMaintainScorch_CheckedChanged);
             // 
             // label16
             // 
@@ -425,12 +533,12 @@
             // checkBoxABCycles
             // 
             this.checkBoxABCycles.AutoSize = true;
+            this.checkBoxABCycles.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ABCycles", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxABCycles.Location = new System.Drawing.Point(112, 129);
             this.checkBoxABCycles.Name = "checkBoxABCycles";
             this.checkBoxABCycles.Size = new System.Drawing.Size(15, 14);
             this.checkBoxABCycles.TabIndex = 162;
             this.checkBoxABCycles.UseVisualStyleBackColor = true;
-            this.checkBoxABCycles.CheckedChanged += new System.EventHandler(this.checkBoxABCycles_CheckedChanged);
             // 
             // label15
             // 
@@ -445,12 +553,12 @@
             // checkBoxFlameCap
             // 
             this.checkBoxFlameCap.AutoSize = true;
+            this.checkBoxFlameCap.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "FlameCap", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxFlameCap.Location = new System.Drawing.Point(112, 89);
             this.checkBoxFlameCap.Name = "checkBoxFlameCap";
             this.checkBoxFlameCap.Size = new System.Drawing.Size(15, 14);
             this.checkBoxFlameCap.TabIndex = 160;
             this.checkBoxFlameCap.UseVisualStyleBackColor = true;
-            this.checkBoxFlameCap.CheckedChanged += new System.EventHandler(this.checkBoxFlameCap_CheckedChanged);
             // 
             // label14
             // 
@@ -465,12 +573,12 @@
             // checkBoxDestructionPotion
             // 
             this.checkBoxDestructionPotion.AutoSize = true;
+            this.checkBoxDestructionPotion.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "DestructionPotion", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxDestructionPotion.Location = new System.Drawing.Point(112, 69);
             this.checkBoxDestructionPotion.Name = "checkBoxDestructionPotion";
             this.checkBoxDestructionPotion.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDestructionPotion.TabIndex = 158;
             this.checkBoxDestructionPotion.UseVisualStyleBackColor = true;
-            this.checkBoxDestructionPotion.CheckedChanged += new System.EventHandler(this.checkBoxDestructionPotion_CheckedChanged);
             // 
             // label13
             // 
@@ -485,20 +593,20 @@
             // checkBoxHeroism
             // 
             this.checkBoxHeroism.AutoSize = true;
+            this.checkBoxHeroism.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "HeroismAvailable", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxHeroism.Location = new System.Drawing.Point(112, 49);
             this.checkBoxHeroism.Name = "checkBoxHeroism";
             this.checkBoxHeroism.Size = new System.Drawing.Size(15, 14);
             this.checkBoxHeroism.TabIndex = 156;
             this.checkBoxHeroism.UseVisualStyleBackColor = true;
-            this.checkBoxHeroism.CheckedChanged += new System.EventHandler(this.checkBoxHeroism_CheckedChanged);
             // 
             // textBoxLatency
             // 
+            this.textBoxLatency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "Latency", true));
             this.textBoxLatency.Location = new System.Drawing.Point(112, 3);
             this.textBoxLatency.Name = "textBoxLatency";
             this.textBoxLatency.Size = new System.Drawing.Size(75, 20);
             this.textBoxLatency.TabIndex = 89;
-            this.textBoxLatency.Validated += new System.EventHandler(this.textBoxLatency_Validated);
             // 
             // label3
             // 
@@ -558,11 +666,11 @@
             // 
             // textBoxSurvivabilityRating
             // 
+            this.textBoxSurvivabilityRating.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "SurvivabilityRating", true));
             this.textBoxSurvivabilityRating.Location = new System.Drawing.Point(112, 421);
             this.textBoxSurvivabilityRating.Name = "textBoxSurvivabilityRating";
             this.textBoxSurvivabilityRating.Size = new System.Drawing.Size(75, 20);
             this.textBoxSurvivabilityRating.TabIndex = 175;
-            this.textBoxSurvivabilityRating.Validated += new System.EventHandler(this.textBoxSurvivabilityRating_Validated);
             // 
             // label34
             // 
@@ -577,11 +685,11 @@
             // 
             // textBoxShadowResist
             // 
+            this.textBoxShadowResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ShadowResist", true));
             this.textBoxShadowResist.Location = new System.Drawing.Point(112, 395);
             this.textBoxShadowResist.Name = "textBoxShadowResist";
             this.textBoxShadowResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxShadowResist.TabIndex = 173;
-            this.textBoxShadowResist.Validated += new System.EventHandler(this.textBoxShadowPriest_Validated);
             // 
             // label20
             // 
@@ -594,11 +702,11 @@
             // 
             // textBoxNatureResist
             // 
+            this.textBoxNatureResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "NatureResist", true));
             this.textBoxNatureResist.Location = new System.Drawing.Point(112, 369);
             this.textBoxNatureResist.Name = "textBoxNatureResist";
             this.textBoxNatureResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxNatureResist.TabIndex = 171;
-            this.textBoxNatureResist.Validated += new System.EventHandler(this.textBoxNatureResist_Validated);
             // 
             // label9
             // 
@@ -611,11 +719,11 @@
             // 
             // textBoxFrostResist
             // 
+            this.textBoxFrostResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FrostResist", true));
             this.textBoxFrostResist.Location = new System.Drawing.Point(112, 343);
             this.textBoxFrostResist.Name = "textBoxFrostResist";
             this.textBoxFrostResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxFrostResist.TabIndex = 169;
-            this.textBoxFrostResist.Validated += new System.EventHandler(this.textBoxFrostResist_Validated);
             // 
             // label8
             // 
@@ -628,11 +736,11 @@
             // 
             // textBoxFireResist
             // 
+            this.textBoxFireResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FireResist", true));
             this.textBoxFireResist.Location = new System.Drawing.Point(112, 317);
             this.textBoxFireResist.Name = "textBoxFireResist";
             this.textBoxFireResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxFireResist.TabIndex = 167;
-            this.textBoxFireResist.Validated += new System.EventHandler(this.textBoxFireResist_Validated);
             // 
             // label7
             // 
@@ -645,11 +753,11 @@
             // 
             // textBoxArcaneResist
             // 
+            this.textBoxArcaneResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ArcaneResist", true));
             this.textBoxArcaneResist.Location = new System.Drawing.Point(112, 291);
             this.textBoxArcaneResist.Name = "textBoxArcaneResist";
             this.textBoxArcaneResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxArcaneResist.TabIndex = 165;
-            this.textBoxArcaneResist.Validated += new System.EventHandler(this.textBoxArcaneResist_Validated);
             // 
             // label6
             // 
@@ -662,11 +770,11 @@
             // 
             // textBoxAoeDuration
             // 
+            this.textBoxAoeDuration.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AoeDuration", true));
             this.textBoxAoeDuration.Location = new System.Drawing.Point(112, 265);
             this.textBoxAoeDuration.Name = "textBoxAoeDuration";
             this.textBoxAoeDuration.Size = new System.Drawing.Size(75, 20);
             this.textBoxAoeDuration.TabIndex = 163;
-            this.textBoxAoeDuration.Validated += new System.EventHandler(this.textBoxAoeDuration_Validated);
             // 
             // label22
             // 
@@ -681,11 +789,11 @@
             // 
             // textBoxAoeTargets
             // 
+            this.textBoxAoeTargets.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AoeTargets", true));
             this.textBoxAoeTargets.Location = new System.Drawing.Point(112, 239);
             this.textBoxAoeTargets.Name = "textBoxAoeTargets";
             this.textBoxAoeTargets.Size = new System.Drawing.Size(75, 20);
             this.textBoxAoeTargets.TabIndex = 161;
-            this.textBoxAoeTargets.Validated += new System.EventHandler(this.textBoxAoeTargets_Validated);
             // 
             // label5
             // 
@@ -699,6 +807,7 @@
             // 
             // comboBoxAoeTargetLevel
             // 
+            this.comboBoxAoeTargetLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AoeTargetLevel", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.comboBoxAoeTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAoeTargetLevel.FormattingEnabled = true;
             this.comboBoxAoeTargetLevel.Items.AddRange(new object[] {
@@ -710,7 +819,6 @@
             this.comboBoxAoeTargetLevel.Name = "comboBoxAoeTargetLevel";
             this.comboBoxAoeTargetLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxAoeTargetLevel.TabIndex = 159;
-            this.comboBoxAoeTargetLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxAoeTargetLevel_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -724,59 +832,59 @@
             // 
             // textBoxFragmentation
             // 
+            this.textBoxFragmentation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "Fragmentation", true));
             this.textBoxFragmentation.Location = new System.Drawing.Point(112, 108);
             this.textBoxFragmentation.Name = "textBoxFragmentation";
             this.textBoxFragmentation.Size = new System.Drawing.Size(75, 20);
             this.textBoxFragmentation.TabIndex = 157;
-            this.textBoxFragmentation.Validated += new System.EventHandler(this.textBoxFragmentation_Validated);
             // 
             // textBoxTpsLimit
             // 
+            this.textBoxTpsLimit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "TpsLimit", true));
             this.textBoxTpsLimit.Location = new System.Drawing.Point(112, 56);
             this.textBoxTpsLimit.Name = "textBoxTpsLimit";
             this.textBoxTpsLimit.Size = new System.Drawing.Size(75, 20);
             this.textBoxTpsLimit.TabIndex = 155;
-            this.textBoxTpsLimit.Validated += new System.EventHandler(this.textBoxTpsLimit_Validated);
             // 
             // textBoxInterruptFrequency
             // 
+            this.textBoxInterruptFrequency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "InterruptFrequency", true));
             this.textBoxInterruptFrequency.Location = new System.Drawing.Point(112, 134);
             this.textBoxInterruptFrequency.Name = "textBoxInterruptFrequency";
             this.textBoxInterruptFrequency.Size = new System.Drawing.Size(75, 20);
             this.textBoxInterruptFrequency.TabIndex = 153;
-            this.textBoxInterruptFrequency.Validated += new System.EventHandler(this.textBoxInterruptFrequency_Validated);
             // 
             // textBoxDpsTime
             // 
+            this.textBoxDpsTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "DpsTime", true));
             this.textBoxDpsTime.Location = new System.Drawing.Point(112, 82);
             this.textBoxDpsTime.Name = "textBoxDpsTime";
             this.textBoxDpsTime.Size = new System.Drawing.Size(75, 20);
             this.textBoxDpsTime.TabIndex = 151;
-            this.textBoxDpsTime.Validated += new System.EventHandler(this.textBoxDpsTime_Validated);
             // 
             // textBoxMoltenFuryPercentage
             // 
+            this.textBoxMoltenFuryPercentage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MoltenFuryPercentage", true));
             this.textBoxMoltenFuryPercentage.Location = new System.Drawing.Point(112, 160);
             this.textBoxMoltenFuryPercentage.Name = "textBoxMoltenFuryPercentage";
             this.textBoxMoltenFuryPercentage.Size = new System.Drawing.Size(75, 20);
             this.textBoxMoltenFuryPercentage.TabIndex = 149;
-            this.textBoxMoltenFuryPercentage.Validated += new System.EventHandler(this.textBoxMoltenFuryPercentage_Validated);
             // 
             // textBoxShadowPriest
             // 
+            this.textBoxShadowPriest.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ShadowPriest", true));
             this.textBoxShadowPriest.Location = new System.Drawing.Point(112, 186);
             this.textBoxShadowPriest.Name = "textBoxShadowPriest";
             this.textBoxShadowPriest.Size = new System.Drawing.Size(75, 20);
             this.textBoxShadowPriest.TabIndex = 147;
-            this.textBoxShadowPriest.Validated += new System.EventHandler(this.textBoxShadowPriest_Validated);
             // 
             // textBoxFightDuration
             // 
+            this.textBoxFightDuration.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FightDuration", true));
             this.textBoxFightDuration.Location = new System.Drawing.Point(112, 30);
             this.textBoxFightDuration.Name = "textBoxFightDuration";
             this.textBoxFightDuration.Size = new System.Drawing.Size(75, 20);
             this.textBoxFightDuration.TabIndex = 145;
-            this.textBoxFightDuration.Validated += new System.EventHandler(this.textBoxFightDuration_Validated);
             // 
             // label30
             // 
@@ -856,6 +964,7 @@
             // 
             // comboBoxTargetLevel
             // 
+            this.comboBoxTargetLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "TargetLevel", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTargetLevel.FormattingEnabled = true;
             this.comboBoxTargetLevel.Items.AddRange(new object[] {
@@ -867,7 +976,6 @@
             this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
             this.comboBoxTargetLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxTargetLevel.TabIndex = 143;
-            this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetLevel_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -904,11 +1012,11 @@
             // 
             // textBoxSMPComputationLimit
             // 
+            this.textBoxSMPComputationLimit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MaxHeapLimit", true));
             this.textBoxSMPComputationLimit.Location = new System.Drawing.Point(132, 127);
             this.textBoxSMPComputationLimit.Name = "textBoxSMPComputationLimit";
             this.textBoxSMPComputationLimit.Size = new System.Drawing.Size(68, 20);
             this.textBoxSMPComputationLimit.TabIndex = 167;
-            this.textBoxSMPComputationLimit.Validated += new System.EventHandler(this.textBoxSMPComputationLimit_Validated);
             // 
             // label38
             // 
@@ -934,6 +1042,7 @@
             // checkBoxWotLK
             // 
             this.checkBoxWotLK.AutoSize = true;
+            this.checkBoxWotLK.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "WotLK", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxWotLK.Enabled = false;
             this.checkBoxWotLK.Location = new System.Drawing.Point(185, 107);
             this.checkBoxWotLK.Name = "checkBoxWotLK";
@@ -955,6 +1064,7 @@
             // checkBoxSMPDisplay
             // 
             this.checkBoxSMPDisplay.AutoSize = true;
+            this.checkBoxSMPDisplay.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "SMPDisplay", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxSMPDisplay.Location = new System.Drawing.Point(185, 87);
             this.checkBoxSMPDisplay.Name = "checkBoxSMPDisplay";
             this.checkBoxSMPDisplay.Size = new System.Drawing.Size(15, 14);
@@ -976,6 +1086,7 @@
             // checkBoxSMP
             // 
             this.checkBoxSMP.AutoSize = true;
+            this.checkBoxSMP.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "SMP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxSMP.Location = new System.Drawing.Point(185, 67);
             this.checkBoxSMP.Name = "checkBoxSMP";
             this.checkBoxSMP.Size = new System.Drawing.Size(15, 14);
@@ -997,12 +1108,12 @@
             // checkBoxReconstructSequence
             // 
             this.checkBoxReconstructSequence.AutoSize = true;
+            this.checkBoxReconstructSequence.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ReconstructSequence", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxReconstructSequence.Location = new System.Drawing.Point(185, 47);
             this.checkBoxReconstructSequence.Name = "checkBoxReconstructSequence";
             this.checkBoxReconstructSequence.Size = new System.Drawing.Size(15, 14);
             this.checkBoxReconstructSequence.TabIndex = 158;
             this.checkBoxReconstructSequence.UseVisualStyleBackColor = true;
-            this.checkBoxReconstructSequence.CheckedChanged += new System.EventHandler(this.checkBoxReconstructSequence_CheckedChanged);
             // 
             // label27
             // 
@@ -1018,12 +1129,12 @@
             // checkBoxIncrementalOptimizations
             // 
             this.checkBoxIncrementalOptimizations.AutoSize = true;
+            this.checkBoxIncrementalOptimizations.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "IncrementalOptimizations", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxIncrementalOptimizations.Location = new System.Drawing.Point(185, 27);
             this.checkBoxIncrementalOptimizations.Name = "checkBoxIncrementalOptimizations";
             this.checkBoxIncrementalOptimizations.Size = new System.Drawing.Size(15, 14);
             this.checkBoxIncrementalOptimizations.TabIndex = 156;
             this.checkBoxIncrementalOptimizations.UseVisualStyleBackColor = true;
-            this.checkBoxIncrementalOptimizations.CheckedChanged += new System.EventHandler(this.checkBoxIncrementalOptimizations_CheckedChanged);
             // 
             // label23
             // 
@@ -1040,119 +1151,18 @@
             // checkBoxSmartOptimization
             // 
             this.checkBoxSmartOptimization.AutoSize = true;
+            this.checkBoxSmartOptimization.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "SmartOptimization", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.checkBoxSmartOptimization.Location = new System.Drawing.Point(185, 7);
             this.checkBoxSmartOptimization.Name = "checkBoxSmartOptimization";
             this.checkBoxSmartOptimization.Size = new System.Drawing.Size(15, 14);
             this.checkBoxSmartOptimization.TabIndex = 154;
             this.checkBoxSmartOptimization.UseVisualStyleBackColor = true;
-            this.checkBoxSmartOptimization.CheckedChanged += new System.EventHandler(this.checkBoxSmartOptimization_CheckedChanged);
             // 
             // toolTipMage
             // 
             this.toolTipMage.AutoPopDelay = 15000;
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(0, 248);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(112, 13);
-            this.label39.TabIndex = 177;
-            this.label39.Text = "Average Cooldowns: *";
-            this.toolTipMage.SetToolTip(this.label39, "Enable to make cooldown maximum usage gradually increases with fight duration (i." +
-                    "e. max 1.66 Arcane Power activations on a 5 minute fight).");
-            // 
-            // checkBoxAverageCooldowns
-            // 
-            this.checkBoxAverageCooldowns.AutoSize = true;
-            this.checkBoxAverageCooldowns.Location = new System.Drawing.Point(112, 248);
-            this.checkBoxAverageCooldowns.Name = "checkBoxAverageCooldowns";
-            this.checkBoxAverageCooldowns.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxAverageCooldowns.TabIndex = 176;
-            this.checkBoxAverageCooldowns.UseVisualStyleBackColor = true;
-            this.checkBoxAverageCooldowns.CheckedChanged += new System.EventHandler(this.checkBoxAverageCooldowns_CheckedChanged);
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(0, 288);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(65, 13);
-            this.label40.TabIndex = 179;
-            this.label40.Text = "Evocation: *";
-            this.toolTipMage.SetToolTip(this.label40, "You can uncheck this to disable use of Evocation.");
-            // 
-            // checkBoxEvocationEnabled
-            // 
-            this.checkBoxEvocationEnabled.AutoSize = true;
-            this.checkBoxEvocationEnabled.Location = new System.Drawing.Point(112, 288);
-            this.checkBoxEvocationEnabled.Name = "checkBoxEvocationEnabled";
-            this.checkBoxEvocationEnabled.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxEvocationEnabled.TabIndex = 178;
-            this.checkBoxEvocationEnabled.UseVisualStyleBackColor = true;
-            this.checkBoxEvocationEnabled.CheckedChanged += new System.EventHandler(this.checkBoxEvocationEnabled_CheckedChanged);
-            // 
-            // label41
-            // 
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(0, 308);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(77, 13);
-            this.label41.TabIndex = 181;
-            this.label41.Text = "Mana Potion: *";
-            this.toolTipMage.SetToolTip(this.label41, "You can uncheck this to disable use of Mana Potions.");
-            // 
-            // checkBoxManaPotionEnabled
-            // 
-            this.checkBoxManaPotionEnabled.AutoSize = true;
-            this.checkBoxManaPotionEnabled.Location = new System.Drawing.Point(112, 308);
-            this.checkBoxManaPotionEnabled.Name = "checkBoxManaPotionEnabled";
-            this.checkBoxManaPotionEnabled.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxManaPotionEnabled.TabIndex = 180;
-            this.checkBoxManaPotionEnabled.UseVisualStyleBackColor = true;
-            this.checkBoxManaPotionEnabled.CheckedChanged += new System.EventHandler(this.checkBoxManaPotionEnabled_CheckedChanged);
-            // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(0, 328);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(69, 13);
-            this.label42.TabIndex = 183;
-            this.label42.Text = "Mana Gem: *";
-            this.toolTipMage.SetToolTip(this.label42, "You can uncheck this to disable use of Mana Gems.");
-            // 
-            // checkBoxManaGemEnabled
-            // 
-            this.checkBoxManaGemEnabled.AutoSize = true;
-            this.checkBoxManaGemEnabled.Location = new System.Drawing.Point(112, 328);
-            this.checkBoxManaGemEnabled.Name = "checkBoxManaGemEnabled";
-            this.checkBoxManaGemEnabled.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxManaGemEnabled.TabIndex = 182;
-            this.checkBoxManaGemEnabled.UseVisualStyleBackColor = true;
-            this.checkBoxManaGemEnabled.CheckedChanged += new System.EventHandler(this.checkBoxManaGemEnabled_CheckedChanged);
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(0, 268);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(107, 13);
-            this.label43.TabIndex = 185;
-            this.label43.Text = "Disable Cooldowns: *";
-            this.toolTipMage.SetToolTip(this.label43, "Disables other activatable cooldowns (talents and trinkets).");
-            // 
-            // checkBoxDisableCooldowns
-            // 
-            this.checkBoxDisableCooldowns.AutoSize = true;
-            this.checkBoxDisableCooldowns.Location = new System.Drawing.Point(112, 268);
-            this.checkBoxDisableCooldowns.Name = "checkBoxDisableCooldowns";
-            this.checkBoxDisableCooldowns.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxDisableCooldowns.TabIndex = 184;
-            this.checkBoxDisableCooldowns.UseVisualStyleBackColor = true;
-            this.checkBoxDisableCooldowns.CheckedChanged += new System.EventHandler(this.checkBoxDisableCooldowns_CheckedChanged);
             // 
             // CalculationOptionsPanelMage
             // 
@@ -1165,6 +1175,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -1271,6 +1282,7 @@
         private System.Windows.Forms.CheckBox checkBoxManaPotionEnabled;
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.CheckBox checkBoxDisableCooldowns;
+        private System.Windows.Forms.BindingSource calculationOptionsMageBindingSource;
 
     }
 }
