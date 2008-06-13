@@ -174,7 +174,8 @@ namespace Rawr.Hunter
 				Mp5 = stats.Mp5,
 				ScopeDamage = stats.ScopeDamage,
 				ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
-				ShatteredSunMightProc = stats.ShatteredSunMightProc,				
+				ShatteredSunMightProc = stats.ShatteredSunMightProc,
+				AshtongueTrinketProc = stats.AshtongueTrinketProc
 			};
         }
 
@@ -209,6 +210,7 @@ namespace Rawr.Hunter
 			stats.ScopeDamage +
 			stats.ShatteredSunAcumenProc +
 			stats.ShatteredSunMightProc +
+			stats.AshtongueTrinketProc +
 			stats.Stamina) > 0;
         }
        
@@ -320,10 +322,29 @@ namespace Rawr.Hunter
 
 
 			double weightedTotalShotsPerSecond = 0;
+			double weightedTotalSteadyShotsPerSecond = 0;
 			if (normalShotsPerSecond != null && quickShotShotsPerSecond != null)
 			{
 				weightedTotalShotsPerSecond = normalShotsPerSecond.totalShotsPerSecond * (1 - quickShotsUpTime) + quickShotShotsPerSecond.totalShotsPerSecond * quickShotsUpTime;
+				weightedTotalSteadyShotsPerSecond = normalShotsPerSecond.steadyShotsPerSecond * (1 - quickShotsUpTime) + quickShotShotsPerSecond.steadyShotsPerSecond * quickShotsUpTime;
 			}
+
+			#region OnProc Modelling +Stats
+
+			double addtionalAPFromProcs = 0;
+
+			if (calculatedStats.BasicStats.ShatteredSunMightProc > 0 && options.ScryerAldor == Faction.Aldor)
+			{
+				//AP * (Duration / (cooldown + (1/duration * weightedShotsPerSecond)))
+				addtionalAPFromProcs += (200 * (10 / (45 + ((1 / .10) * weightedTotalShotsPerSecond))));
+			}
+
+			if (calculatedStats.BasicStats.AshtongueTrinketProc > 0)
+			{
+				//AP Boost * ((1 - chance to proc)^(uptime / steady shots per sec))
+				addtionalAPFromProcs += (275 * (1 - Math.Pow(.85, 8 / weightedTotalSteadyShotsPerSecond)));
+			}
+			#endregion
 
 			#region Pet
 			double petFocusPerSecond = 0;
@@ -475,7 +496,7 @@ namespace Rawr.Hunter
 				//From WOWWiki DR% = Armor / (Armor + (467.5 * AttackerLevel - 22167.5)
 				double petArmorDamageReductionPercentage = petEffectiveArmor / (petEffectiveArmor + (467.5 * 70 - 22167.5));
 
-				double APDamage = calculatedStats.PetStats.AttackPower / 7;
+				double APDamage = (calculatedStats.PetStats.AttackPower + (addtionalAPFromProcs * .22)) / 7;
 				//(average damage + ap damage) * pet damage adjustment * cobra reflexes reduction * (1 - armor mit) * glancing blows modifier
 				double petTotalDamage = (60 + APDamage) * petDamageAdjustment * cobraReflexesDamageReduction * (1 - petArmorDamageReductionPercentage) * glancingBlowDamage;
 				petDPS = petTotalDamage / petEffectiveAttackSpeed;
@@ -523,19 +544,6 @@ namespace Rawr.Hunter
 
 			#endregion
 
-
-			#region OnProc Modelling +Stats
-
-			double addtionalAPFromProcs = 0;
-
-			if (calculatedStats.BasicStats.ShatteredSunMightProc > 0 && options.ScryerAldor == Faction.Aldor)
-			{
-				//AP * (Duration / (cooldown + (1/duration * weightedShotsPerSecond)))
-				addtionalAPFromProcs += (200 * (10 / (45 + ((1 / .10) * weightedTotalShotsPerSecond))));
-			}
-
-			#endregion
-
 			#region Armor Penetration
 			//stats aromor penetration includes sunders
 			double effectiveArmor = options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration;
@@ -547,12 +555,10 @@ namespace Rawr.Hunter
 			#endregion
 
 			#region RAP Against Target
-			double effectiveRAP = calculatedStats.BasicStats.RangedAttackPower + addtionalAPFromProcs;
+			double effectiveRAPAgainstMob = calculatedStats.BasicStats.RangedAttackPower + addtionalAPFromProcs;
 			//hunters mark (just assume max AP)
 			//TODO: Add expose weakness buff
-			effectiveRAP += (440 * (1 + calculatedStats.BasicStats.BonusRangedAttackPowerMultiplier));
-
-
+			effectiveRAPAgainstMob += (440 * (1 + calculatedStats.BasicStats.BonusRangedAttackPowerMultiplier));
 
 			#endregion
 
@@ -612,7 +618,7 @@ namespace Rawr.Hunter
 			{
 				baseAutoShotDamage = weaponDamageAverage + ammoDamage
 									+ calculatedStats.BasicStats.WeaponDamage
-									+ (effectiveRAP / 14 * character.Ranged.Speed);
+									+ (effectiveRAPAgainstMob / 14 * character.Ranged.Speed);
 
 			}
 			double averageAutoShotDamage = baseAutoShotDamage * totalDamageAdjustment;
@@ -621,7 +627,7 @@ namespace Rawr.Hunter
 
 			#region Steady Shot
 			//weapon damage might be wrong, might include too much damage for ss
-			double baseSteadyShotDamage = STEADYSHOT_BASE_DAMAGE + calculatedStats.BasicStats.WeaponDamage + (effectiveRAP * .2) + (weaponDPS * 2.8);
+			double baseSteadyShotDamage = STEADYSHOT_BASE_DAMAGE + calculatedStats.BasicStats.WeaponDamage + (effectiveRAPAgainstMob * .2) + (weaponDPS * 2.8);
 
 			//TODO: T5/T6 bonus
 			double averageSteadyShotDamage = baseSteadyShotDamage * totalDamageAdjustment;
@@ -709,7 +715,9 @@ namespace Rawr.Hunter
 			statsTotal.ShatteredSunMightProc = statsRace.ShatteredSunMightProc + statsGearEnchantsBuffs.ShatteredSunMightProc;
 			statsTotal.Mp5 = statsRace.Mp5 + statsGearEnchantsBuffs.Mp5;
 			statsTotal.BonusPetCritChance = statsGearEnchantsBuffs.BonusPetCritChance;
-			
+
+			statsTotal.AshtongueTrinketProc = statsGearEnchantsBuffs.AshtongueTrinketProc;
+
 			if (options.Aspect == Aspect.Viper)
 			{
 				statsTotal.Mp5 += (statsTotal.Intellect / 4f);
@@ -1041,8 +1049,6 @@ namespace Rawr.Hunter
 			petStats.AttackPower = (petStats.Strength - 10f) * 2f;
 			petStats.AttackPower += (hunterStats.RangedAttackPower * .22f);
 
-			//TODO: any pet specific stats from hunter gear goes here
-
 			//TODO: AP Buffs go here, (e.g. Might, TSA)
 
 			//TODO: TargetDebuffs to here (e.g. Imp. Hunters Mark, sunders, etc.)
@@ -1077,8 +1083,6 @@ namespace Rawr.Hunter
 			petStats.Crit -= ((options.TargetLevel * 5f - 350f) * .0004f);
 			petStats.Crit += hunterStats.BonusPetCritChance;
 			return petStats;
-
-            //TODO: Pet damage bonus based on pet family
 		}
 
 		//TODO: Make attacks ranks and damage configurable
