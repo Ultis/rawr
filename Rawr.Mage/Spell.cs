@@ -361,22 +361,13 @@ namespace Rawr.Mage
             {
                 float rawHaste = Haste;
 
-                // 1st order approximation
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
-                int chancesToProc = (int)Math.Floor(5f / (CastTime / HitProcs));
-                if (!Instant) chancesToProc -= 1;
-                chancesToProc *= (int)(TargetProcs / HitProcs);
-                Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * (1 - (float)Math.Pow(1 - 0.5f * CritRate, chancesToProc));
-                //Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
-                CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
-                GlobalCooldown = Math.Max(calculations.GlobalCooldownLimit, 1.5f / CastingSpeed);
-                CastTime = BaseCastTime / CastingSpeed + calculations.Latency;
-                CastTime = CastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
-                if (CastTime < GlobalCooldown + calculations.Latency) CastTime = GlobalCooldown + calculations.Latency;
-
-                // 2nd order approximation
-                CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
-                chancesToProc = (int)Math.Floor(5f / (CastTime / HitProcs));
+                float proccedSpeed = CastingSpeed * (1 + (rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50) / 995f * levelScalingFactor);
+                float proccedGcd = Math.Max(calculations.GlobalCooldownLimit, 1.5f / proccedSpeed);
+                float proccedCastTime = BaseCastTime / proccedSpeed + calculations.Latency;
+                proccedCastTime = proccedCastTime * (1 + InterruptFactor) - (0.5f + calculations.Latency) * InterruptFactor;
+                if (proccedCastTime < proccedGcd + calculations.Latency) proccedCastTime = proccedGcd + calculations.Latency;
+                int chancesToProc = (int)(((int)Math.Floor(5f / proccedCastTime) + 1) * HitProcs);
                 if (!Instant) chancesToProc -= 1;
                 chancesToProc *= (int)(TargetProcs / HitProcs);
                 Haste = rawHaste + calculations.BasicStats.SpellHasteFor5SecOnCrit_50 * (1 - (float)Math.Pow(1 - 0.5f * CritRate, chancesToProc));
