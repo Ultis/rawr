@@ -12,6 +12,10 @@ namespace Rawr.Hunter
 		private bool _EnforceMetaGem = true;
 		private Aspect _Aspect = Aspect.Hawk;
 		private ShotRotation _shotRotation = ShotRotation.OneToOne;
+        private PetFamily _petFamily = PetFamily.Ravager;
+        private PetPriority1 _petPriority1 = PetPriority1.Growl;
+        private PetPriority2 _petPriority2 = PetPriority2.Gore;
+        private PetPriority3 _petPriority3 = PetPriority3.None;
 		private Faction _ScryerAldor = Faction.Aldor;
 		private float _latency = .2f;
 		private PetAttacks[] _PetAttacks;
@@ -35,7 +39,31 @@ namespace Rawr.Hunter
 			set { _Aspect = value; }
 		}
 
-		public int TargetLevel
+		public PetFamily PetFamily
+		{
+			get { return _petFamily; }
+			set { _petFamily = value; }
+		}
+	
+        public PetPriority1 PetPriority1
+		{
+			get { return _petPriority1; }
+			set { _petPriority1 = value; }
+		}
+
+        public PetPriority2 PetPriority2
+		{
+			get { return _petPriority2; }
+			set { _petPriority2 = value; }
+		}
+
+        public PetPriority3 PetPriority3
+		{
+			get { return _petPriority3; }
+			set { _petPriority3 = value; }
+		}
+        
+        public int TargetLevel
 		{
 			get { return _TargetLevel; }
 			set { _TargetLevel = value; }

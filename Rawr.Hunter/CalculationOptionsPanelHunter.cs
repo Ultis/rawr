@@ -31,6 +31,22 @@ namespace Rawr.Hunter
 			{
 				comboShotRotation.Items.Add(e);
 			}
+            foreach (Enum e in Enum.GetValues(typeof(PetFamily)))
+            {
+                comboPetFamily.Items.Add(e);
+            }
+            foreach (Enum e in Enum.GetValues(typeof(PetPriority1)))
+            {
+                comboPetPriority1.Items.Add(e);
+            }
+            foreach (Enum e in Enum.GetValues(typeof(PetPriority2)))
+            {
+                comboPetPriority2.Items.Add(e);
+            }
+            foreach (Enum e in Enum.GetValues(typeof(PetPriority3)))
+            {
+                comboPetPriority3.Items.Add(e);
+            }
         }
 
         #endregion
@@ -57,6 +73,10 @@ namespace Rawr.Hunter
             chkEnforceMetaGemRequirements.Checked = options.EnforceMetaGem;
 			comboActiveAspect.SelectedItem = options.Aspect;
 			comboShotRotation.SelectedItem = options.ShotRotation;
+            comboPetFamily.SelectedItem = options.PetFamily;
+            comboPetPriority1.SelectedItem = options.PetPriority1;
+            comboPetPriority2.SelectedItem = options.PetPriority2;
+            comboPetPriority3.SelectedItem = options.PetPriority3;
             loadingOptions = false;
         }
 
@@ -105,6 +125,42 @@ namespace Rawr.Hunter
 				Character.OnItemsChanged();
 			}
 		}
+
+        private void comboPetFamily_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions && comboPetFamily.SelectedItem != null)
+            {
+                options.PetFamily = (PetFamily)comboPetFamily.SelectedItem;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void comboPetPriority1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions && comboPetPriority1.SelectedItem != null)
+            {
+                options.PetPriority1 = (PetPriority1)comboPetPriority1.SelectedItem;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void comboPetPriority2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions && comboPetPriority2.SelectedItem != null)
+            {
+                options.PetPriority2 = (PetPriority2)comboPetPriority2.SelectedItem;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void comboPetPriority3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions && comboPetPriority3.SelectedItem != null)
+            {
+                options.PetPriority3 = (PetPriority3)comboPetPriority3.SelectedItem;
+                Character.OnItemsChanged();
+            }
+        }
 
         #endregion
 
