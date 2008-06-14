@@ -43,60 +43,6 @@ namespace Rawr.Hunter
         Wolf
     }
 
-	public enum PetPriority1
-    {
-        Bite,
-        Claw,
-        FireBreath,
-        FuriousHowl,
-        Gore,
-        Growl,
-        LightningBreath,
-        None,
-        PoisonSpit,
-        ScorpidPoison,
-        Screech,
-        ShellShield,
-        Thunderstomp,
-        Warp
-    }
-
-    public enum PetPriority2
-    {
-        Bite,
-        Claw,
-        FireBreath,
-        FuriousHowl,
-        Gore,
-        Growl,
-        LightningBreath,
-        None,
-        PoisonSpit,
-        ScorpidPoison,
-        Screech,
-        ShellShield,
-        Thunderstomp,
-        Warp
-    }
-
-    public enum PetPriority3
-    {
-        Bite,
-        Claw,
-        FireBreath,
-        FuriousHowl,
-        Gore,
-        Growl,
-        LightningBreath,
-        None,
-        PoisonSpit,
-        ScorpidPoison,
-        Screech,
-        ShellShield,
-        Thunderstomp,
-        Warp
-    }
-
     public enum Faction
 	{
 		None,
@@ -106,12 +52,19 @@ namespace Rawr.Hunter
 
 	public enum PetAttacks
 	{
-		Bite,
-		Claw,
-        Charge,
-        Gore,
+        Bite,
+        Claw,
         FireBreath,
+        FuriousHowl,
+        Gore,
+        Growl,
         LightningBreath,
+        None,
+        PoisonSpit,
+        ScorpidPoison,
+        Screech,
+        ShellShield,
         Thunderstomp,
+        Warp
     }
 }
