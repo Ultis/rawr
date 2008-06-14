@@ -1198,32 +1198,68 @@ namespace Rawr.Hunter
 		private double CalculatePetSpecialAttackDPS(PetSpecialAttackData petSpecialAttackData, double damageAdjustment, double armorMitigation)
 		{
 			double petAttackDamage = 0;
+            double petAttackSpellDamage = 0;
 
 			switch (petSpecialAttackData.petAttack)
 			{
 				case PetAttacks.Bite:
 					petAttackDamage = 120;
+                    petAttackSpellDamage = 0;
 					break;
 				case PetAttacks.Claw:
 					petAttackDamage = 65;
+                    petAttackSpellDamage = 0;
 					break;
-                case PetAttacks.Gore:
-                    petAttackDamage = 73.5;
-                    break;
                 case PetAttacks.FireBreath:
-                    petAttackDamage = 111;
+                    petAttackDamage = 0;
+                    petAttackSpellDamage = 111;
                     break;
                 case PetAttacks.LightningBreath:
-                    petAttackDamage = 106;
+                    petAttackDamage = 0;
+                    petAttackSpellDamage = 106;
                     break;
                 case PetAttacks.Thunderstomp:
-                    petAttackDamage = 124;
+                    petAttackDamage = 0;
+                    petAttackSpellDamage = 165;
                     break;
                 case PetAttacks.None:
                     petAttackDamage = 0;
+                    petAttackSpellDamage = 0;
                     break;
-                }
-			return (petAttackDamage * damageAdjustment * (1 - armorMitigation)) / petSpecialAttackData.AttackRate;
+                case PetAttacks.Growl:
+                    petAttackDamage = 0;
+                    petAttackSpellDamage = 0;
+                    break;
+                case PetAttacks.Cower:
+                    petAttackDamage = 0;
+                    petAttackSpellDamage = 0;
+                    break;
+                // Current Damage set to avg added to pet and hunter's next attacks.
+                case PetAttacks.FuriousHowl:
+                    petAttackDamage = 102;
+                    petAttackSpellDamage = 0;
+                    break;
+                // Gore has 50% chance to do double damage.  Already added in average below.
+                case PetAttacks.Gore:
+                    petAttackDamage = 73.5;
+                    petAttackSpellDamage = 0;
+                    break;
+                case PetAttacks.PoisonSpit:
+                    petAttackDamage = 0;
+                    petAttackSpellDamage = 96;
+                    break;
+                // Scorpid poison is a DoT that stacks to 5... more calculations needed.
+                // Current SpeelDamage set to one application for full duration
+                case PetAttacks.ScorpidPoison:
+                    petAttackDamage = 0;
+                    petAttackSpellDamage = 55;
+                    break;
+                case PetAttacks.Screech:
+                    petAttackDamage = 47;
+                    petAttackSpellDamage = 0;
+                    break;
+            }
+			return ((petAttackDamage * damageAdjustment * (1 - armorMitigation)) + (petAttackSpellDamage * damageAdjustment)) / petSpecialAttackData.AttackRate;
 		}
 
 		private SimulationResults CalculateShotsPerSecond(CalculationOptionsHunter options, double weaponSpeed, double steadyShotCastTime)
