@@ -151,30 +151,6 @@
             // comboPetFamily
             // 
             this.comboPetFamily.FormattingEnabled = true;
-            this.comboPetFamily.Items.AddRange(new object[] {
-            "Bat ",
-            "Bear ",
-            "Boar ",
-            "Carrion Bird ",
-            "Cat ",
-            "Crab ",
-            "Crocolisk ",
-            "Dragonhawk ",
-            "Gorilla ",
-            "Hyena ",
-            "Nether Ray ",
-            "Owl ",
-            "Raptor ",
-            "Ravager ",
-            "Scorpid ",
-            "Serpent ",
-            "Spider ",
-            "Spore Bat ",
-            "Tallstrider ",
-            "Turtle ",
-            "Warp Stalker ",
-            "Wind Serpent ",
-            "Wolf"});
             this.comboPetFamily.Location = new System.Drawing.Point(73, 20);
             this.comboPetFamily.Name = "comboPetFamily";
             this.comboPetFamily.Size = new System.Drawing.Size(114, 21);
@@ -192,20 +168,6 @@
             // comboPetPriority1
             // 
             this.comboPetPriority1.FormattingEnabled = true;
-            this.comboPetPriority1.Items.AddRange(new object[] {
-            "Bite",
-            "Claw",
-            "Fire Breath",
-            "Furious Howl",
-            "Gore",
-            "Lightning Breath",
-            "None",
-            "Poison Spit",
-            "Scorpid Poison",
-            "Screech",
-            "Shell Shield",
-            "Thunderstomp",
-            "Warp"});
             this.comboPetPriority1.Location = new System.Drawing.Point(86, 57);
             this.comboPetPriority1.Name = "comboPetPriority1";
             this.comboPetPriority1.Size = new System.Drawing.Size(101, 21);
@@ -214,20 +176,6 @@
             // comboPetPriority2
             // 
             this.comboPetPriority2.FormattingEnabled = true;
-            this.comboPetPriority2.Items.AddRange(new object[] {
-            "Bite",
-            "Claw",
-            "Fire Breath",
-            "Furious Howl",
-            "Gore",
-            "Lightning Breath",
-            "None",
-            "Poison Spit",
-            "Scorpid Poison",
-            "Screech",
-            "Shell Shield",
-            "Thunderstomp",
-            "Warp"});
             this.comboPetPriority2.Location = new System.Drawing.Point(86, 85);
             this.comboPetPriority2.Name = "comboPetPriority2";
             this.comboPetPriority2.Size = new System.Drawing.Size(101, 21);
@@ -254,20 +202,6 @@
             // comboPetPriority3
             // 
             this.comboPetPriority3.FormattingEnabled = true;
-            this.comboPetPriority3.Items.AddRange(new object[] {
-            "Bite",
-            "Claw",
-            "Fire Breath",
-            "Furious Howl",
-            "Gore",
-            "Lightning Breath",
-            "None",
-            "Poison Spit",
-            "Scorpid Poison",
-            "Screech",
-            "Shell Shield",
-            "Thunderstomp",
-            "Warp"});
             this.comboPetPriority3.Location = new System.Drawing.Point(86, 113);
             this.comboPetPriority3.Name = "comboPetPriority3";
             this.comboPetPriority3.Size = new System.Drawing.Size(101, 21);

@@ -35,15 +35,15 @@ namespace Rawr.Hunter
             {
                 comboPetFamily.Items.Add(e);
             }
-            foreach (Enum e in Enum.GetValues(typeof(PetPriority1)))
+            foreach (Enum e in Enum.GetValues(typeof(PetAttacks)))
             {
                 comboPetPriority1.Items.Add(e);
             }
-            foreach (Enum e in Enum.GetValues(typeof(PetPriority2)))
+            foreach (Enum e in Enum.GetValues(typeof(PetAttacks)))
             {
                 comboPetPriority2.Items.Add(e);
             }
-            foreach (Enum e in Enum.GetValues(typeof(PetPriority3)))
+            foreach (Enum e in Enum.GetValues(typeof(PetAttacks)))
             {
                 comboPetPriority3.Items.Add(e);
             }
@@ -139,7 +139,7 @@ namespace Rawr.Hunter
         {
             if (!loadingOptions && comboPetPriority1.SelectedItem != null)
             {
-                options.PetPriority1 = (PetPriority1)comboPetPriority1.SelectedItem;
+                options.PetPriority1 = (PetAttacks)comboPetPriority1.SelectedItem;
                 Character.OnItemsChanged();
             }
         }
@@ -148,7 +148,7 @@ namespace Rawr.Hunter
         {
             if (!loadingOptions && comboPetPriority2.SelectedItem != null)
             {
-                options.PetPriority2 = (PetPriority2)comboPetPriority2.SelectedItem;
+                options.PetPriority2 = (PetAttacks)comboPetPriority2.SelectedItem;
                 Character.OnItemsChanged();
             }
         }
@@ -157,7 +157,7 @@ namespace Rawr.Hunter
         {
             if (!loadingOptions && comboPetPriority3.SelectedItem != null)
             {
-                options.PetPriority3 = (PetPriority3)comboPetPriority3.SelectedItem;
+                options.PetPriority3 = (PetAttacks)comboPetPriority3.SelectedItem;
                 Character.OnItemsChanged();
             }
         }
