@@ -54,6 +54,7 @@ namespace Rawr.Hunter
 	{
         Bite,
         Claw,
+        Cower,
         FireBreath,
         FuriousHowl,
         Gore,
@@ -63,7 +64,6 @@ namespace Rawr.Hunter
         PoisonSpit,
         ScorpidPoison,
         Screech,
-        ShellShield,
         Thunderstomp,
         Warp
     }

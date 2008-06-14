@@ -408,7 +408,73 @@ namespace Rawr.Hunter
 							data.FocusPerSecond = 16.67;
 							data.CoolDown = 1.5;
 							break;
-					}
+
+                        case PetAttacks.None:
+                            data.FocusUsed = 0;
+                            data.FocusPerSecond = 0;
+                            data.CoolDown = 0;
+                            break;
+
+                        case PetAttacks.FireBreath:
+                            data.FocusUsed = 50;
+                            data.FocusPerSecond = 5;
+                            data.CoolDown = 10;
+                            break;
+
+                        case PetAttacks.FuriousHowl:
+                            data.FocusUsed = 60;
+                            data.FocusPerSecond = 6;
+                            data.CoolDown = 10;
+                            break;
+
+                        case PetAttacks.Gore:
+                            data.FocusUsed = 25;
+                            data.FocusPerSecond = 16.67;
+                            data.CoolDown = 1.5;
+                            break;
+
+                        case PetAttacks.Growl:
+                            data.FocusUsed = 15;
+                            data.FocusPerSecond = 3;
+                            data.CoolDown = 5;
+                            break;
+
+                        case PetAttacks.LightningBreath:
+                            data.FocusUsed = 50;
+                            data.FocusUsed = 33.33;
+                            data.CoolDown = 1.5;
+                            break;
+
+                        case PetAttacks.PoisonSpit:
+                            data.FocusUsed = 35;
+                            data.FocusUsed = 3.5;
+                            data.CoolDown = 10;
+                            break;
+
+                        case PetAttacks.ScorpidPoison:
+                            data.FocusUsed = 30;
+                            data.FocusPerSecond = 7.5;
+                            data.CoolDown = 4;
+                            break;
+
+                        case PetAttacks.Screech:
+                            data.FocusUsed = 20;
+                            data.FocusPerSecond = 13.33;
+                            data.CoolDown = 1.5;
+                            break;
+
+                        case PetAttacks.Thunderstomp:
+                            data.FocusUsed = 60;
+                            data.FocusPerSecond = 1;
+                            data.CoolDown = 60;
+                            break;
+
+                        case PetAttacks.Cower:
+                            data.FocusUsed = 15;
+                            data.FocusPerSecond = 10;
+                            data.CoolDown = 1.5;
+                            break;
+                    }
 					if (i == 0)
 					{
 						data.AttackRate = petFocusPerSecondLeft >= (data.FocusPerSecond) ? data.CoolDown : data.FocusUsed / petFocusPerSecondLeft;
@@ -1152,6 +1218,9 @@ namespace Rawr.Hunter
                     break;
                 case PetAttacks.Thunderstomp:
                     petAttackDamage = 124;
+                    break;
+                case PetAttacks.None:
+                    petAttackDamage = 0;
                     break;
                 }
 			return (petAttackDamage * damageAdjustment * (1 - armorMitigation)) / petSpecialAttackData.AttackRate;

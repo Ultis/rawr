@@ -12,9 +12,9 @@ namespace Rawr.Hunter
 		private bool _EnforceMetaGem = true;
 		private Aspect _Aspect = Aspect.Hawk;
 		private ShotRotation _shotRotation = ShotRotation.OneToOne;
-        private PetFamily _petFamily = PetFamily.Ravager;
-        private PetAttacks _petPriority1 = PetAttacks.Growl;
-        private PetAttacks _petPriority2 = PetAttacks.Gore;
+        private PetFamily _petFamily = PetFamily.Cat;
+        private PetAttacks _petPriority1 = PetAttacks.Bite;
+        private PetAttacks _petPriority2 = PetAttacks.Claw;
         private PetAttacks _petPriority3 = PetAttacks.None;
 		private Faction _ScryerAldor = Faction.Aldor;
 		private float _latency = .2f;
@@ -22,9 +22,10 @@ namespace Rawr.Hunter
 
 		public CalculationOptionsHunter()
 		{
-			_PetAttacks = new PetAttacks[2];
-			_PetAttacks[0] = PetAttacks.Bite;
-			_PetAttacks[1] = PetAttacks.Claw;
+            _PetAttacks = new PetAttacks[3];
+			_PetAttacks[0] = _petPriority1;
+			_PetAttacks[1] = _petPriority2;
+            _PetAttacks[2] = _petPriority3;
 		}
 
 		public ShotRotation ShotRotation
