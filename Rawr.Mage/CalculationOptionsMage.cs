@@ -7,6 +7,13 @@ using System.Xml;
 namespace Rawr.Mage
 {
     [Serializable]
+    public class SpellWeight
+    {
+        public SpellId Spell { get; set; }
+        public float Weight { get; set; }
+    }
+
+    [Serializable]
     public class CalculationOptionsMage : ICalculationOptionBase
     {
         public int TargetLevel { get; set; }
@@ -68,6 +75,10 @@ namespace Rawr.Mage
         public float DrinkingTime { get; set; }
         public float TargetDamage { get; set; }
         public bool FarmingMode { get; set; }
+
+        public List<SpellWeight> CustomSpellMix { get; set; }
+        public bool CustomSpellMixEnabled { get; set; }
+        public bool CustomSpellMixOnly { get; set; }
 
         [XmlIgnore]
         public string ShattrathFaction

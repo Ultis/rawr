@@ -41,6 +41,8 @@
             this.buttonTalents = new System.Windows.Forms.Button();
             this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label47 = new System.Windows.Forms.Label();
+            this.checkBoxCustomSpellMixEnabled = new System.Windows.Forms.CheckBox();
             this.label43 = new System.Windows.Forms.Label();
             this.checkBoxDisableCooldowns = new System.Windows.Forms.CheckBox();
             this.label42 = new System.Windows.Forms.Label();
@@ -74,6 +76,10 @@
             this.textBoxLatency = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label46 = new System.Windows.Forms.Label();
+            this.checkBoxFarmingMode = new System.Windows.Forms.CheckBox();
+            this.textBoxTargetDamage = new System.Windows.Forms.TextBox();
+            this.label45 = new System.Windows.Forms.Label();
             this.textBoxDrinkingTime = new System.Windows.Forms.TextBox();
             this.label44 = new System.Windows.Forms.Label();
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
@@ -126,10 +132,9 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxTargetDamage = new System.Windows.Forms.TextBox();
-            this.label45 = new System.Windows.Forms.Label();
-            this.label46 = new System.Windows.Forms.Label();
-            this.checkBoxFarmingMode = new System.Windows.Forms.CheckBox();
+            this.label48 = new System.Windows.Forms.Label();
+            this.checkBoxCustomSpellMixOnly = new System.Windows.Forms.CheckBox();
+            this.buttonCustomSpellMix = new System.Windows.Forms.Button();
             this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -258,6 +263,11 @@
             // tabPage2
             // 
             this.tabPage2.AutoScroll = true;
+            this.tabPage2.Controls.Add(this.buttonCustomSpellMix);
+            this.tabPage2.Controls.Add(this.label48);
+            this.tabPage2.Controls.Add(this.checkBoxCustomSpellMixOnly);
+            this.tabPage2.Controls.Add(this.label47);
+            this.tabPage2.Controls.Add(this.checkBoxCustomSpellMixEnabled);
             this.tabPage2.Controls.Add(this.label43);
             this.tabPage2.Controls.Add(this.checkBoxDisableCooldowns);
             this.tabPage2.Controls.Add(this.label42);
@@ -297,6 +307,26 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Casting";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(0, 348);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(97, 13);
+            this.label47.TabIndex = 187;
+            this.label47.Text = "Custom Spell Mix: *";
+            this.toolTipMage.SetToolTip(this.label47, "Enable and configure a special custom mix of spells.");
+            // 
+            // checkBoxCustomSpellMixEnabled
+            // 
+            this.checkBoxCustomSpellMixEnabled.AutoSize = true;
+            this.checkBoxCustomSpellMixEnabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "CustomSpellMixEnabled", true));
+            this.checkBoxCustomSpellMixEnabled.Location = new System.Drawing.Point(112, 348);
+            this.checkBoxCustomSpellMixEnabled.Name = "checkBoxCustomSpellMixEnabled";
+            this.checkBoxCustomSpellMixEnabled.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxCustomSpellMixEnabled.TabIndex = 186;
+            this.checkBoxCustomSpellMixEnabled.UseVisualStyleBackColor = true;
             // 
             // label43
             // 
@@ -671,6 +701,47 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Fight";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(0, 499);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(84, 13);
+            this.label46.TabIndex = 181;
+            this.label46.Text = "Farming Mode: *";
+            this.toolTipMage.SetToolTip(this.label46, "Includes time it takes to regen mana/health after encounter, use in combination w" +
+                    "ith target damage.");
+            // 
+            // checkBoxFarmingMode
+            // 
+            this.checkBoxFarmingMode.AutoSize = true;
+            this.checkBoxFarmingMode.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "FarmingMode", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxFarmingMode.Location = new System.Drawing.Point(112, 499);
+            this.checkBoxFarmingMode.Name = "checkBoxFarmingMode";
+            this.checkBoxFarmingMode.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxFarmingMode.TabIndex = 180;
+            this.checkBoxFarmingMode.UseVisualStyleBackColor = true;
+            // 
+            // textBoxTargetDamage
+            // 
+            this.textBoxTargetDamage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "TargetDamage", true));
+            this.textBoxTargetDamage.Location = new System.Drawing.Point(112, 473);
+            this.textBoxTargetDamage.Name = "textBoxTargetDamage";
+            this.textBoxTargetDamage.Size = new System.Drawing.Size(75, 20);
+            this.textBoxTargetDamage.TabIndex = 179;
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(0, 476);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(91, 13);
+            this.label45.TabIndex = 178;
+            this.label45.Text = "Target Damage: *";
+            this.toolTipMage.SetToolTip(this.label45, "Instead of maximizing damage done this minimizes time it takes to deal the specif" +
+                    "ied damage if value is greater than 0 (for best results enable Average Cooldowns" +
+                    ").");
             // 
             // textBoxDrinkingTime
             // 
@@ -1190,46 +1261,35 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // textBoxTargetDamage
+            // label48
             // 
-            this.textBoxTargetDamage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "TargetDamage", true));
-            this.textBoxTargetDamage.Location = new System.Drawing.Point(112, 473);
-            this.textBoxTargetDamage.Name = "textBoxTargetDamage";
-            this.textBoxTargetDamage.Size = new System.Drawing.Size(75, 20);
-            this.textBoxTargetDamage.TabIndex = 179;
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(0, 368);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(95, 13);
+            this.label48.TabIndex = 189;
+            this.label48.Text = "Custom Mix Only: *";
+            this.toolTipMage.SetToolTip(this.label48, "Disable all spell cycles except custom mix.");
             // 
-            // label45
+            // checkBoxCustomSpellMixOnly
             // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(0, 476);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(91, 13);
-            this.label45.TabIndex = 178;
-            this.label45.Text = "Target Damage: *";
-            this.toolTipMage.SetToolTip(this.label45, "Instead of maximizing damage done this minimizes time it takes to deal the specif" +
-                    "ied damage if value is greater than 0 (for best results enable Average Cooldowns" +
-                    ").");
+            this.checkBoxCustomSpellMixOnly.AutoSize = true;
+            this.checkBoxCustomSpellMixOnly.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "CustomSpellMixOnly", true));
+            this.checkBoxCustomSpellMixOnly.Location = new System.Drawing.Point(112, 368);
+            this.checkBoxCustomSpellMixOnly.Name = "checkBoxCustomSpellMixOnly";
+            this.checkBoxCustomSpellMixOnly.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxCustomSpellMixOnly.TabIndex = 188;
+            this.checkBoxCustomSpellMixOnly.UseVisualStyleBackColor = true;
             // 
-            // label46
+            // buttonCustomSpellMix
             // 
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(0, 499);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(84, 13);
-            this.label46.TabIndex = 181;
-            this.label46.Text = "Farming Mode: *";
-            this.toolTipMage.SetToolTip(this.label46, "Includes time it takes to regen mana/health after encounter, use in combination w" +
-                    "ith target damage.");
-            // 
-            // checkBoxFarmingMode
-            // 
-            this.checkBoxFarmingMode.AutoSize = true;
-            this.checkBoxFarmingMode.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "FarmingMode", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxFarmingMode.Location = new System.Drawing.Point(112, 499);
-            this.checkBoxFarmingMode.Name = "checkBoxFarmingMode";
-            this.checkBoxFarmingMode.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxFarmingMode.TabIndex = 180;
-            this.checkBoxFarmingMode.UseVisualStyleBackColor = true;
+            this.buttonCustomSpellMix.Location = new System.Drawing.Point(133, 344);
+            this.buttonCustomSpellMix.Name = "buttonCustomSpellMix";
+            this.buttonCustomSpellMix.Size = new System.Drawing.Size(54, 20);
+            this.buttonCustomSpellMix.TabIndex = 190;
+            this.buttonCustomSpellMix.Text = "...";
+            this.buttonCustomSpellMix.UseVisualStyleBackColor = true;
+            this.buttonCustomSpellMix.Click += new System.EventHandler(this.buttonCustomSpellMix_Click);
             // 
             // calculationOptionsMageBindingSource
             // 
@@ -1361,6 +1421,11 @@
         private System.Windows.Forms.Label label45;
         private System.Windows.Forms.Label label46;
         private System.Windows.Forms.CheckBox checkBoxFarmingMode;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.CheckBox checkBoxCustomSpellMixEnabled;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.CheckBox checkBoxCustomSpellMixOnly;
+        private System.Windows.Forms.Button buttonCustomSpellMix;
 
     }
 }

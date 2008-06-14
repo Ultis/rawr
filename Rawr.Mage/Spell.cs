@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.ComponentModel;
 
 namespace Rawr.Mage
 {
@@ -20,21 +21,32 @@ namespace Rawr.Mage
         LightningBolt,
         ArcaneBarrage,
         ArcaneBolt,
+        [Description("Arcane Missiles")]
         ArcaneMissiles,
         ArcaneMissilesCC,
         ArcaneMissilesNoProc,
         ArcaneMissilesNetherwind,
         //ArcaneMissilesFTF,
         //ArcaneMissilesFTT,
+        [Description("Frostbolt")]
         Frostbolt,
+        [Description("POM+Frostbolt")]
         FrostboltPOM,
         FrostboltNoCC,
+        [Description("Fireball")]
         Fireball,
+        [Description("POM+Fireball")]
         FireballPOM,
+        [Description("Pyroblast")]
         Pyroblast,
+        [Description("POM+Pyroblast")]
+        PyroblastPOM,
+        [Description("Fire Blast")]
         FireBlast,
+        [Description("Scorch")]
         Scorch,
         ScorchNoCC,
+        [Description("Arcane Blast")]
         ArcaneBlast33,
         ArcaneBlast33NoCC,
         ArcaneBlast00,
@@ -72,13 +84,20 @@ namespace Rawr.Mage
         ABAM3FrBScCCAM,
         ABAMCCAM,
         ABAM3CCAM,
+        [Description("Arcane Explosion")]
         ArcaneExplosion,
         FlamestrikeSpammed,
+        [Description("Flamestrike")]
         FlamestrikeSingle,
+        [Description("Blizzard")]
         Blizzard,
+        [Description("Blast Wave")]
         BlastWave,
+        [Description("Dragon's Breath")]
         DragonsBreath,
+        [Description("Cone of Cold")]
         ConeOfCold,
+        CustomSpellMix
     }
 
     public abstract class Spell
@@ -107,6 +126,32 @@ namespace Rawr.Mage
         public float HitProcs;
         public float CastProcs;
         public float CastTime;
+    }
+
+    public class SpellCustomMix : Spell
+    {
+        public SpellCustomMix(Character character, CharacterCalculationsMage calculations)
+        {
+            sequence = "Custom Mix";
+            Name = "Custom Mix";
+            if (calculations.CalculationOptions.CustomSpellMix == null) return;
+            float weightTotal = 0f;
+            foreach (SpellWeight spellWeight in calculations.CalculationOptions.CustomSpellMix)
+            {
+                Spell spell = calculations.GetSpell(spellWeight.Spell);
+                weightTotal += spellWeight.Weight;
+                CastTime += spellWeight.Weight * spell.CastTime;
+                CostPerSecond += spellWeight.Weight * spell.CostPerSecond;
+                DamagePerSecond += spellWeight.Weight * spell.DamagePerSecond;
+                ThreatPerSecond += spellWeight.Weight * spell.ThreatPerSecond;
+                ManaRegenPerSecond += spellWeight.Weight * spell.ManaRegenPerSecond;
+            }
+            CastTime /= weightTotal;
+            CostPerSecond /= weightTotal;
+            DamagePerSecond /= weightTotal;
+            ThreatPerSecond /= weightTotal;
+            ManaRegenPerSecond /= weightTotal;
+        }
     }
 
     abstract class BaseSpell : Spell
@@ -657,9 +702,14 @@ namespace Rawr.Mage
 
     class Pyroblast : BaseSpell
     {
-        public Pyroblast(Character character, CharacterCalculationsMage calculations)
+        public Pyroblast(Character character, CharacterCalculationsMage calculations, bool pom)
             : base("Pyroblast", false, false, false, false, 500, 35, 6f, 0, MagicSchool.Fire, 939, 1191, 356)
         {
+            if (pom)
+            {
+                this.Instant = true;
+                this.BaseCastTime = 0.0f;
+            }
             Calculate(character, calculations);
             SpammedDot = false;
             DotDuration = 12;

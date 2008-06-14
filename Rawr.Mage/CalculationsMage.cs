@@ -884,79 +884,86 @@ namespace Rawr.Mage
             #region Load Spells
             spellList = new List<SpellId>();
 
-            if (calculationOptions.SmartOptimization)
+            if (calculationOptions.CustomSpellMixEnabled || calculationOptions.CustomSpellMixOnly)
             {
-                if (calculationOptions.EmpoweredFireball > 0)
+                spellList.Add(SpellId.CustomSpellMix);
+            }
+            if (!calculationOptions.CustomSpellMixOnly)
+            {
+                if (calculationOptions.SmartOptimization)
                 {
-                    spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
-                }
-                else if (calculationOptions.EmpoweredFrostbolt > 0)
-                {
-                    spellList.Add(SpellId.Frostbolt);
-                }
-                else if (calculationOptions.SpellPower > 0)
-                {
-                    spellList.Add(SpellId.ArcaneBlast33);
-                    if (calculationOptions.ImprovedFrostbolt > 0) spellList.Add(SpellId.Frostbolt);
-                    if (calculationOptions.ImprovedFireball > 0) spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
-                    if (calculationOptions.ImprovedArcaneMissiles + calculationOptions.EmpoweredArcaneMissiles > 0) spellList.Add(SpellId.ArcaneMissiles);
+                    if (calculationOptions.EmpoweredFireball > 0)
+                    {
+                        spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                    }
+                    else if (calculationOptions.EmpoweredFrostbolt > 0)
+                    {
+                        spellList.Add(SpellId.Frostbolt);
+                    }
+                    else if (calculationOptions.SpellPower > 0)
+                    {
+                        spellList.Add(SpellId.ArcaneBlast33);
+                        if (calculationOptions.ImprovedFrostbolt > 0) spellList.Add(SpellId.Frostbolt);
+                        if (calculationOptions.ImprovedFireball > 0) spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                        if (calculationOptions.ImprovedArcaneMissiles + calculationOptions.EmpoweredArcaneMissiles > 0) spellList.Add(SpellId.ArcaneMissiles);
+                    }
+                    else
+                    {
+                        spellList.Add(SpellId.ArcaneMissiles);
+                        spellList.Add(SpellId.Scorch);
+                        spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                        spellList.Add(SpellId.Frostbolt);
+                        spellList.Add(SpellId.ArcaneBlast33);
+                    }
                 }
                 else
                 {
                     spellList.Add(SpellId.ArcaneMissiles);
                     spellList.Add(SpellId.Scorch);
                     spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                    spellList.Add(SpellId.FireballFireBlast);
                     spellList.Add(SpellId.Frostbolt);
                     spellList.Add(SpellId.ArcaneBlast33);
                 }
-            }
-            else
-            {
-                spellList.Add(SpellId.ArcaneMissiles);
-                spellList.Add(SpellId.Scorch);
-                spellList.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
-                spellList.Add(SpellId.FireballFireBlast);
-                spellList.Add(SpellId.Frostbolt);
-                spellList.Add(SpellId.ArcaneBlast33);
-            }
-            if (calculationOptions.ABCycles)
-            {
-                if (calculationOptions.EmpoweredArcaneMissiles > 0)
+                if (calculationOptions.ABCycles)
                 {
-                    spellList.Add(SpellId.ABAMP);
-                    spellList.Add(SpellId.ABAM);
-                    spellList.Add(SpellId.AB3AMSc);
-                    spellList.Add(SpellId.ABAM3Sc);
-                    spellList.Add(SpellId.ABAM3Sc2);
-                    spellList.Add(SpellId.ABAM3FrB);
-                    spellList.Add(SpellId.ABAM3FrB2);
-                    spellList.Add(SpellId.ABAM3ScCCAM);
-                    spellList.Add(SpellId.ABAM3Sc2CCAM);
-                    spellList.Add(SpellId.ABAM3FrBCCAM);
-                    spellList.Add(SpellId.ABAM3FrBScCCAM);
-                    spellList.Add(SpellId.ABAMCCAM);
-                    spellList.Add(SpellId.ABAM3CCAM);
+                    if (calculationOptions.EmpoweredArcaneMissiles > 0)
+                    {
+                        spellList.Add(SpellId.ABAMP);
+                        spellList.Add(SpellId.ABAM);
+                        spellList.Add(SpellId.AB3AMSc);
+                        spellList.Add(SpellId.ABAM3Sc);
+                        spellList.Add(SpellId.ABAM3Sc2);
+                        spellList.Add(SpellId.ABAM3FrB);
+                        spellList.Add(SpellId.ABAM3FrB2);
+                        spellList.Add(SpellId.ABAM3ScCCAM);
+                        spellList.Add(SpellId.ABAM3Sc2CCAM);
+                        spellList.Add(SpellId.ABAM3FrBCCAM);
+                        spellList.Add(SpellId.ABAM3FrBScCCAM);
+                        spellList.Add(SpellId.ABAMCCAM);
+                        spellList.Add(SpellId.ABAM3CCAM);
+                    }
+                    if (calculationOptions.ImprovedFrostbolt > 0)
+                    {
+                        spellList.Add(SpellId.ABFrB3FrB);
+                        spellList.Add(SpellId.ABFrB3FrBSc);
+                    }
+                    if (calculationOptions.ImprovedFireball > 0)
+                    {
+                        spellList.Add(SpellId.ABFB3FBSc);
+                        //spellList.Add(SpellId.AB3Sc);
+                    }
                 }
-                if (calculationOptions.ImprovedFrostbolt > 0)
+                if (calculationOptions.AoeDuration > 0)
                 {
-                    spellList.Add(SpellId.ABFrB3FrB);
-                    spellList.Add(SpellId.ABFrB3FrBSc);
+                    spellList.Add(SpellId.ArcaneExplosion);
+                    spellList.Add(SpellId.FlamestrikeSpammed);
+                    spellList.Add(SpellId.FlamestrikeSingle);
+                    spellList.Add(SpellId.Blizzard);
+                    spellList.Add(SpellId.ConeOfCold);
+                    if (calculationOptions.BlastWave == 1) spellList.Add(SpellId.BlastWave);
+                    if (calculationOptions.DragonsBreath == 1) spellList.Add(SpellId.DragonsBreath);
                 }
-                if (calculationOptions.ImprovedFireball > 0)
-                {
-                    spellList.Add(SpellId.ABFB3FBSc);
-                    //spellList.Add(SpellId.AB3Sc);
-                }
-            }
-            if (calculationOptions.AoeDuration > 0)
-            {
-                spellList.Add(SpellId.ArcaneExplosion);
-                spellList.Add(SpellId.FlamestrikeSpammed);
-                spellList.Add(SpellId.FlamestrikeSingle);
-                spellList.Add(SpellId.Blizzard);
-                spellList.Add(SpellId.ConeOfCold);
-                if (calculationOptions.BlastWave == 1) spellList.Add(SpellId.BlastWave);
-                if (calculationOptions.DragonsBreath == 1) spellList.Add(SpellId.DragonsBreath);
             }
             #endregion
 

@@ -90,5 +90,13 @@ namespace Rawr.Mage
         {
             if (!loading) Character.OnItemsChanged();
         }
+
+        private void buttonCustomSpellMix_Click(object sender, EventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            if (calculationOptions.CustomSpellMix == null) calculationOptions.CustomSpellMix = new List<SpellWeight>();
+            CustomSpellMixForm form = new CustomSpellMixForm(calculationOptions.CustomSpellMix);
+            form.ShowDialog();
+        }
 	}
 }

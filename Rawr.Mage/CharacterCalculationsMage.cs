@@ -303,7 +303,7 @@ namespace Rawr.Mage
                     s = new Fireball(Character, this, false);
                     break;
                 case SpellId.Pyroblast:
-                    s = new Pyroblast(Character, this);
+                    s = new Pyroblast(Character, this, false);
                     break;
                 case SpellId.FireBlast:
                     s = new FireBlast(Character, this);
@@ -454,6 +454,12 @@ namespace Rawr.Mage
                     break;
                 case SpellId.FrostboltPOM:
                     s = new Frostbolt(Character, this, false, false, true);
+                    break;
+                case SpellId.PyroblastPOM:
+                    s = new Pyroblast(Character, this, true);
+                    break;
+                case SpellId.CustomSpellMix:
+                    s = new SpellCustomMix(Character, this);
                     break;
             }
             if (s != null) Spells[(int)spellId] = s;
