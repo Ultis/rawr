@@ -175,7 +175,8 @@ namespace Rawr.Hunter
 				ScopeDamage = stats.ScopeDamage,
 				ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
 				ShatteredSunMightProc = stats.ShatteredSunMightProc,
-				AshtongueTrinketProc = stats.AshtongueTrinketProc
+				AshtongueTrinketProc = stats.AshtongueTrinketProc,
+				BonusSteadyShotCrit = stats.BonusSteadyShotCrit
 			};
         }
 
@@ -211,6 +212,7 @@ namespace Rawr.Hunter
 			stats.ShatteredSunAcumenProc +
 			stats.ShatteredSunMightProc +
 			stats.AshtongueTrinketProc +
+			stats.BonusSteadyShotCrit + 
 			stats.Stamina) > 0;
         }
        
@@ -259,7 +261,8 @@ namespace Rawr.Hunter
 		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
-			if (character == null) {
+			if (character == null)
+			{
 				return calculatedStats;
 			}
 
@@ -333,6 +336,24 @@ namespace Rawr.Hunter
 
 			double addtionalAPFromProcs = 0;
 
+			//Fix AP given, won't fix in display but calculations will be correct
+			{
+				double rawrHourglassAP = 0;
+				if (character.Trinket1 != null && character.Trinket1.Name == "Hourglass of the Unraveller")
+				{
+					rawrHourglassAP = character.Trinket1.Stats.AttackPower;
+				}
+				else if (character.Trinket2 != null && character.Trinket2.Name == "Hourglass of the Unraveller")
+				{
+					rawrHourglassAP = character.Trinket2.Stats.AttackPower;
+				}
+				if (rawrHourglassAP > 0)
+				{
+					//AP Boost * Uptime
+					double trueAPGain = 300 * (10 / ((45 + (1 / (calculatedStats.BasicStats.Crit * .1)) * weightedTotalShotsPerSecond) + 10));
+					addtionalAPFromProcs += (trueAPGain - rawrHourglassAP);
+				}
+			}
 			if (calculatedStats.BasicStats.ShatteredSunMightProc > 0 && options.ScryerAldor == Faction.Aldor)
 			{
 				//AP * (Duration / (cooldown + (1/duration * weightedShotsPerSecond)))
@@ -478,7 +499,7 @@ namespace Rawr.Hunter
 					}
 				}
 				//Pet Mood
-				petDamageAdjustment = petDamageAdjustment * 1.25f * (1+calculatedStats.BasicStats.BonusPetDamageMultiplier);
+				petDamageAdjustment = petDamageAdjustment * 1.25f * (1 + calculatedStats.BasicStats.BonusPetDamageMultiplier);
 
 				petDamageAdjustment = petDamageAdjustment * (1 + ferociousInspirtationEffectBenefit);
 
@@ -533,7 +554,8 @@ namespace Rawr.Hunter
 					totalKillCommandDamage = totalKillCommandDamage * totalKillCommandBaseDamage;
 					petDPS += (totalKillCommandDamage / (1 / petKillCommandFrequency));
 				}
-				if (petSpecialAttackData != null){
+				if (petSpecialAttackData != null)
+				{
 					for (int i = 0; i < petSpecialAttackData.Length; i++)
 					{
 						petDPS += CalculatePetSpecialAttackDPS(petSpecialAttackData[i], petDamageAdjustment, petArmorDamageReductionPercentage);
@@ -585,8 +607,9 @@ namespace Rawr.Hunter
 
 			#endregion
 
-			#region Shot Damage Adjustments (crit / hit / miss)
-			double critMissAdj = (calculatedStats.BasicStats.Crit * criticalHitDamage + 1) * calculatedStats.BasicStats.Hit;
+
+			#region TalentAdjustment
+
 			double talentAdjustment = 1;
 			{
 				//TODO: Slaying, Ferocious Inspiration actual cals;
@@ -609,29 +632,48 @@ namespace Rawr.Hunter
 
 				talentAdjustment = rws * ff * bw * fi * slaying;
 			}
-			double totalDamageAdjustment = critMissAdj * talentAdjustment;
+
 			#endregion
 
 			#region Auto Shot
 			double baseAutoShotDamage = 0;
+			double averageAutoShotDamage = 0;
+
 			if (character.Ranged != null)
 			{
+				#region Shot Damage Adjustments (crit / hit / miss)
+				double critMissAdj = (calculatedStats.BasicStats.Crit * criticalHitDamage + 1) * calculatedStats.BasicStats.Hit;
+
+				double totalDamageAdjustmentAutoShot = critMissAdj * talentAdjustment;
+				#endregion
+
 				baseAutoShotDamage = weaponDamageAverage + ammoDamage
 									+ calculatedStats.BasicStats.WeaponDamage
 									+ (effectiveRAPAgainstMob / 14 * character.Ranged.Speed);
 
+				averageAutoShotDamage = baseAutoShotDamage * totalDamageAdjustmentAutoShot;
 			}
-			double averageAutoShotDamage = baseAutoShotDamage * totalDamageAdjustment;
+
 
 			#endregion
 
 			#region Steady Shot
-			//weapon damage might be wrong, might include too much damage for ss
-			double baseSteadyShotDamage = STEADYSHOT_BASE_DAMAGE + calculatedStats.BasicStats.WeaponDamage + (effectiveRAPAgainstMob * .2) + (weaponDPS * 2.8);
+			double baseSteadyShotDamage = 0;
+			double averageSteadyShotDamage = 0;
+			if (weaponDPS > 0)
+			{
+				//weapon damage might be wrong, might include too much damage for ss
+				baseSteadyShotDamage = STEADYSHOT_BASE_DAMAGE + calculatedStats.BasicStats.WeaponDamage + (effectiveRAPAgainstMob * .2) + (weaponDPS * 2.8);
 
-			//TODO: T5/T6 bonus
-			double averageSteadyShotDamage = baseSteadyShotDamage * totalDamageAdjustment;
+				#region Shot Damage Adjustments (crit / hit / miss)
+				double critMissAdj = ((calculatedStats.BasicStats.Crit + calculatedStats.BasicStats.BonusSteadyShotCrit) * criticalHitDamage + 1) * calculatedStats.BasicStats.Hit;
 
+				double totalDamageAdjustmentStreadyShot = critMissAdj * talentAdjustment;
+				#endregion
+
+				//TODO: T5/T6 bonus
+				averageSteadyShotDamage = baseSteadyShotDamage * totalDamageAdjustmentStreadyShot;
+			}
 			#endregion
 
 			SimulationResults normalShotRotation = CalculateShotRotationDPS(options, calculatedStats.BaseAttackSpeed,
@@ -717,6 +759,7 @@ namespace Rawr.Hunter
 			statsTotal.BonusPetCritChance = statsGearEnchantsBuffs.BonusPetCritChance;
 
 			statsTotal.AshtongueTrinketProc = statsGearEnchantsBuffs.AshtongueTrinketProc;
+			statsTotal.BonusSteadyShotCrit = statsGearEnchantsBuffs.BonusSteadyShotCrit;
 
 			if (options.Aspect == Aspect.Viper)
 			{

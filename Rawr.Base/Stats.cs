@@ -32,6 +32,7 @@ namespace Rawr
         BonusMangleCatDamage,
         BonusRipDamagePerCPPerTick,
         BonusShredDamage,
+		BonusStreadyShotCrit,
         CatFormStrength,
         CHHealIncrease,
         CHManaReduction,
@@ -1351,8 +1352,7 @@ namespace Rawr
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
-		[Multiplicative] /*its not really multiplicative, but it is stored as .02 instead of 2 because crit is % based 0-1, so this attribute makes it display correctly 
-						  Need to determine if there are any side effects*/ 
+		[Multiplicative] /*its not really multiplicative, but it is stored as .02 instead of 2 because crit is % based 0-1, so this attribute makes it display correctly */ 
 		[DisplayName("% Extra Pet Crit Chance")]
 		public float BonusPetCritChance
 		{
@@ -1361,11 +1361,22 @@ namespace Rawr
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Multiplicative] /*Same as above*/
+		[DisplayName("% Extra Steady Shot Crit")]
+		public float BonusSteadyShotCrit
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusStreadyShotCrit] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
 		public float AshtongueTrinketProc
 		{
 			get { return _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc]; }
 			set { _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc] = value; }
 		}
+
+
 #endregion
 
         #region MultiplicativeStats
