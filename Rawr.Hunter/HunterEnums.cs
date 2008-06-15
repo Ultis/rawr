@@ -13,7 +13,8 @@ namespace Rawr.Hunter
 	public enum ShotRotation
 	{
 		AutoShotOnly,
-		OneToOne
+		OneToOne,
+		ThreeToTwo
 	}
 
     public enum PetFamily

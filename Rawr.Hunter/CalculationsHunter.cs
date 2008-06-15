@@ -1008,7 +1008,102 @@ namespace Rawr.Hunter
 			ret.steadyShotsPerSecond = currentTime / steadyShotsFired;
 			return ret;
 		}
+		/// <summary>Based on this macro which is the current spammable BM 3:2 macro. 
+		/// With enough haste, and a quick shots proc, this transforms into a 1:1 macro (add kill command and other effects as needed obviously
+		/* #showtooltip Steady Shot
+			/cast !Auto shot
+			/cast Steady shot
+		**/  
+		/// </summary>
+		/// <param name="weaponSpeed"></param>
+		/// <param name="autoShotDamage"></param>
+		/// <param name="steadyShotDamage"></param>
+		/// <param name="steadyShotCastTime"></param>
+		/// <param name="latency"></param>
+		/// <returns></returns>
+		private SimulationResults CalculateThreeToTwoDPS(double weaponSpeed, double autoShotDamage, double steadyShotDamage, double steadyShotCastTime, float latency)
+		{
+			StreamWriter sw = new StreamWriter("ShotTable"+weaponSpeed.ToString("N2")+".txt");
+			double totalDamage = 0;
+			double currentTime = 0;
+			double lastAutoShotTime = 0;
+			double autoShotsFired = 0;
+			double steadyShotsFired = 0;
+			double timeLeftTillNextAutoShot = 0;
+			double timeLeftTillNextSteadyShot = 0;
+			double gcdTimer = 0;
+			bool lastWasAuto = true;
+			//start off with an autoshot.
+			totalDamage += autoShotDamage;
+			autoShotsFired++;
+			currentTime += AUTO_SHOT_CAST_TIME;
+			sw.WriteLine("Auto\t" + autoShotDamage.ToString("N2") + "\t0.00\t" + currentTime.ToString("N2"));
+			for (int i = 1; i < MAX_SHOT_TABLE_LOOPS; i++)
+			{
+				timeLeftTillNextAutoShot = weaponSpeed - (currentTime - lastAutoShotTime);
+				timeLeftTillNextSteadyShot = gcdTimer - currentTime;
+				if (timeLeftTillNextAutoShot < 0 || timeLeftTillNextAutoShot < timeLeftTillNextSteadyShot)
+				{
+					totalDamage += autoShotDamage;
+					if (timeLeftTillNextAutoShot > 0)
+					{
+						currentTime += timeLeftTillNextAutoShot;
+					}
+					sw.Write("Auto\t" + autoShotDamage.ToString("N2") + "\t" + currentTime.ToString("N2") + "\t");
+					lastAutoShotTime = currentTime;
+					currentTime += AUTO_SHOT_CAST_TIME;
+					sw.WriteLine(currentTime.ToString("N2"));
+					autoShotsFired++;
+					lastWasAuto = true;
+				}
+				else
+				{
+					totalDamage += steadyShotDamage;
+					if (currentTime < gcdTimer)
+					{
+						currentTime = gcdTimer;
+					}
+					sw.Write("Steady\t" + steadyShotDamage.ToString("N2") + "\t" + currentTime.ToString("N2")+"\t");
+					///GCD logic from spreadsheet given autoshot's wierdness given a handweaved or spammed macro.  
+					if (lastWasAuto)
+					{
+						if (gcdTimer < lastAutoShotTime)
+						{
+							gcdTimer = lastAutoShotTime + 1.5;
+						}
+						else
+						{
+							gcdTimer += (1.5 + latency);
+						}
+					}
+					else
+					{
+						gcdTimer = currentTime + 1.5;
+					}
 
+					currentTime += steadyShotCastTime;
+					sw.WriteLine(currentTime.ToString("N2"));
+
+					steadyShotsFired++;
+					lastWasAuto = false;
+				}
+			}
+
+			timeLeftTillNextAutoShot = weaponSpeed - (currentTime - lastAutoShotTime);
+			if (timeLeftTillNextAutoShot > 0)
+			{
+				currentTime += timeLeftTillNextAutoShot;
+			}
+			sw.WriteLine("Auto\t" + autoShotDamage.ToString("N2") + "\t" + currentTime.ToString("N2"));
+			sw.Flush();
+			sw.Close();
+			SimulationResults ret = new SimulationResults();
+			ret.dps = totalDamage / currentTime; ;
+			ret.totalShotsPerSecond = MAX_SHOT_TABLE_LOOPS / currentTime;
+			ret.autoShotsPerSecond = currentTime / autoShotsFired;
+			ret.steadyShotsPerSecond = currentTime / steadyShotsFired;
+			return ret;
+		}
 		#endregion
 
 		private Stats GetBaseTalentStats(TalentTree talentTree)
@@ -1276,6 +1371,8 @@ namespace Rawr.Hunter
 					return CalculateOneToOneDPS(weaponSpeed, 0, 0, steadyShotCastTime, options.Latency);
 				case ShotRotation.AutoShotOnly:
 					return CalculateAutoShotOnlyDPS(weaponSpeed, 0);
+				case ShotRotation.ThreeToTwo:
+					return CalculateThreeToTwoDPS(weaponSpeed, 0, 0, steadyShotCastTime, options.Latency);
 				default:
 					return new SimulationResults();
 			}
@@ -1290,6 +1387,8 @@ namespace Rawr.Hunter
 					return CalculateOneToOneDPS(weaponSpeed, autoShotDamage, steadyShotDamage, steadyShotCastTime, options.Latency);
 				case ShotRotation.AutoShotOnly:
 					return CalculateAutoShotOnlyDPS(weaponSpeed, autoShotDamage);
+				case ShotRotation.ThreeToTwo:
+					return CalculateThreeToTwoDPS(weaponSpeed, autoShotDamage, steadyShotDamage, steadyShotCastTime, options.Latency);
 				default:
 					return new SimulationResults();
 			}
