@@ -1023,7 +1023,7 @@ namespace Rawr.Hunter
 		/// <returns></returns>
 		private SimulationResults CalculateThreeToTwoDPS(double weaponSpeed, double autoShotDamage, double steadyShotDamage, double steadyShotCastTime, float latency)
 		{
-			StreamWriter sw = new StreamWriter("ShotTable"+weaponSpeed.ToString("N2")+".txt");
+			//StreamWriter sw = new StreamWriter("ShotTable"+weaponSpeed.ToString("N2")+".txt");
 			double totalDamage = 0;
 			double currentTime = 0;
 			double lastAutoShotTime = 0;
@@ -1037,7 +1037,7 @@ namespace Rawr.Hunter
 			totalDamage += autoShotDamage;
 			autoShotsFired++;
 			currentTime += AUTO_SHOT_CAST_TIME;
-			sw.WriteLine("Auto\t" + autoShotDamage.ToString("N2") + "\t0.00\t" + currentTime.ToString("N2"));
+			//sw.WriteLine("Auto\t" + autoShotDamage.ToString("N2") + "\t0.00\t" + currentTime.ToString("N2"));
 			for (int i = 1; i < MAX_SHOT_TABLE_LOOPS; i++)
 			{
 				timeLeftTillNextAutoShot = weaponSpeed - (currentTime - lastAutoShotTime);
@@ -1049,10 +1049,10 @@ namespace Rawr.Hunter
 					{
 						currentTime += timeLeftTillNextAutoShot;
 					}
-					sw.Write("Auto\t" + autoShotDamage.ToString("N2") + "\t" + currentTime.ToString("N2") + "\t");
+					//sw.Write("Auto\t" + autoShotDamage.ToString("N2") + "\t" + currentTime.ToString("N2") + "\t");
 					lastAutoShotTime = currentTime;
 					currentTime += AUTO_SHOT_CAST_TIME;
-					sw.WriteLine(currentTime.ToString("N2"));
+					//sw.WriteLine(currentTime.ToString("N2"));
 					autoShotsFired++;
 					lastWasAuto = true;
 				}
@@ -1063,7 +1063,7 @@ namespace Rawr.Hunter
 					{
 						currentTime = gcdTimer;
 					}
-					sw.Write("Steady\t" + steadyShotDamage.ToString("N2") + "\t" + currentTime.ToString("N2")+"\t");
+					//sw.Write("Steady\t" + steadyShotDamage.ToString("N2") + "\t" + currentTime.ToString("N2")+"\t");
 					///GCD logic from spreadsheet given autoshot's wierdness given a handweaved or spammed macro.  
 					if (lastWasAuto)
 					{
@@ -1082,7 +1082,7 @@ namespace Rawr.Hunter
 					}
 
 					currentTime += steadyShotCastTime;
-					sw.WriteLine(currentTime.ToString("N2"));
+					//sw.WriteLine(currentTime.ToString("N2"));
 
 					steadyShotsFired++;
 					lastWasAuto = false;
@@ -1094,9 +1094,9 @@ namespace Rawr.Hunter
 			{
 				currentTime += timeLeftTillNextAutoShot;
 			}
-			sw.WriteLine("Auto\t" + autoShotDamage.ToString("N2") + "\t" + currentTime.ToString("N2"));
-			sw.Flush();
-			sw.Close();
+			//sw.WriteLine("Auto\t" + autoShotDamage.ToString("N2") + "\t" + currentTime.ToString("N2"));
+			//sw.Flush();
+			//sw.Close();
 			SimulationResults ret = new SimulationResults();
 			ret.dps = totalDamage / currentTime; ;
 			ret.totalShotsPerSecond = MAX_SHOT_TABLE_LOOPS / currentTime;
