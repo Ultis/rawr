@@ -1273,7 +1273,14 @@ namespace Rawr
 				  Stats = new Stats() {BonusSteadyShotCrit = .05f},
 				  SetThreshold = 4
 			  });
-
+			  defaultBuffs.Add(new Buff()
+			  {
+				  Name = "Gronnstalker's Armor 4 Piece Bonus",
+				  Category = BuffCategory.SetBonuses,
+				  SetName = "Gronnstalker's Armor",
+				  Stats = new Stats() { BonusSteadyShotDamageMultiplier = .1f },
+				  SetThreshold = 4
+			  });
 
 
 

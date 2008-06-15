@@ -179,7 +179,8 @@ namespace Rawr
         FoLMultiplier,
         ThreatIncreaseMultiplier,
         BonusWarlockDotDamageMultiplier,
-		BonusRangedAttackPowerMultiplier
+		BonusRangedAttackPowerMultiplier,
+		BonusSteadyShotDamageMultiplier
     }
 
     enum InverseMultiplicativeStat : int
@@ -1639,6 +1640,16 @@ namespace Rawr
 			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier]; }
 			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier] = value; }
 		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Multiplicative]
+		[DisplayName("% Bonus Steady Shot Damage")]
+		public float BonusSteadyShotDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSteadyShotDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSteadyShotDamageMultiplier] = value; }
+		}
+
 		[System.ComponentModel.DefaultValueAttribute(0f)]
 		[Multiplicative]
 		[DisplayName("% Bonus Pet Damage")]

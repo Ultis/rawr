@@ -176,7 +176,8 @@ namespace Rawr.Hunter
 				ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
 				ShatteredSunMightProc = stats.ShatteredSunMightProc,
 				AshtongueTrinketProc = stats.AshtongueTrinketProc,
-				BonusSteadyShotCrit = stats.BonusSteadyShotCrit
+				BonusSteadyShotCrit = stats.BonusSteadyShotCrit,
+				BonusSteadyShotDamageMultiplier = stats.BonusSteadyShotDamageMultiplier
 			};
         }
 
@@ -213,6 +214,7 @@ namespace Rawr.Hunter
 			stats.ShatteredSunMightProc +
 			stats.AshtongueTrinketProc +
 			stats.BonusSteadyShotCrit + 
+			stats.BonusSteadyShotDamageMultiplier +
 			stats.Stamina) > 0;
         }
        
@@ -734,10 +736,9 @@ namespace Rawr.Hunter
 				#region Shot Damage Adjustments (crit / hit / miss)
 				double critMissAdj = ((calculatedStats.BasicStats.Crit + calculatedStats.BasicStats.BonusSteadyShotCrit) * criticalHitDamage + 1) * calculatedStats.BasicStats.Hit;
 
-				double totalDamageAdjustmentStreadyShot = critMissAdj * talentAdjustment;
+				double totalDamageAdjustmentStreadyShot = critMissAdj * talentAdjustment * (1+calculatedStats.BasicStats.BonusSteadyShotDamageMultiplier);
 				#endregion
 
-				//TODO: T5/T6 bonus
 				averageSteadyShotDamage = baseSteadyShotDamage * totalDamageAdjustmentStreadyShot;
 			}
 			#endregion
@@ -804,6 +805,7 @@ namespace Rawr.Hunter
 			statsTotal.BonusSpellPowerMultiplier = ((1 + statsRace.BonusSpellPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellPowerMultiplier)) - 1;
 			statsTotal.BonusArcaneSpellPowerMultiplier = ((1 + statsRace.BonusArcaneSpellPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusArcaneSpellPowerMultiplier)) - 1;
 			statsTotal.BonusPetDamageMultiplier = ((1 + statsGearEnchantsBuffs.BonusPetDamageMultiplier) * (1 + statsRace.BonusPetDamageMultiplier)) - 1;
+			statsTotal.BonusSteadyShotDamageMultiplier = ((1 + statsGearEnchantsBuffs.BonusSteadyShotDamageMultiplier) * (1 + statsRace.BonusSteadyShotDamageMultiplier) * (1 + statsTalents.BonusSteadyShotDamageMultiplier)) - 1;
 
 			statsTotal.Agility = (statsRace.Agility + statsGearEnchantsBuffs.Agility) * (1 + statsTotal.BonusAgilityMultiplier);
 			statsTotal.Intellect = (statsRace.Intellect + statsGearEnchantsBuffs.Intellect) * (1 + statsTotal.BonusIntellectMultiplier);
@@ -826,6 +828,7 @@ namespace Rawr.Hunter
 			statsTotal.ScopeDamage = statsGearEnchantsBuffs.ScopeDamage;
 			statsTotal.AshtongueTrinketProc = statsGearEnchantsBuffs.AshtongueTrinketProc;
 			statsTotal.BonusSteadyShotCrit = statsGearEnchantsBuffs.BonusSteadyShotCrit;
+			
 
 			if (options.Aspect == Aspect.Viper)
 			{
