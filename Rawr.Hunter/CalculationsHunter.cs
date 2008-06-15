@@ -25,11 +25,11 @@ namespace Rawr.Hunter
 		
 		#region Rating Constants
 		private const double BASE_HIT_PERCENT = .95;
-		private const double HIT_RATING_PER_PERCENT = 15.77;
+		private const double HIT_RATING_PER_PERCENT = 15.76;
 
 		private const double AGILITY_PER_CRIT = 40;
 		private const double BASE_CRIT_PERCENT = -.0153;
-		private const double CRIT_RATING_PER_PERCENT = 22.08;
+		private const double CRIT_RATING_PER_PERCENT = 22.0765;
 
 		private const double HASTE_RATING_PER_PERCENT = 15.70;
 
@@ -656,9 +656,9 @@ namespace Rawr.Hunter
 			double ammoDamage = 0;
 			if (character.Ranged != null && character.Projectile != null)
 			{
-				weaponDamageAverage = (character.Ranged.MinDamage + character.Ranged.MaxDamage) / 2;
+				weaponDamageAverage = (float)(character.Ranged.MinDamage + character.Ranged.MaxDamage) / 2f;
 				weaponDPS = weaponDamageAverage / character.Ranged.Speed;
-				ammoDamage = character.Ranged.Speed * ((character.Projectile.MaxDamage + character.Projectile.MinDamage) / 2);
+				ammoDamage = character.Ranged.Speed * ((float)(character.Projectile.MaxDamage + character.Projectile.MinDamage) / 2f);
 			}
 			#endregion
 
@@ -714,7 +714,7 @@ namespace Rawr.Hunter
 				#endregion
 
 				baseAutoShotDamage = weaponDamageAverage + ammoDamage
-									+ calculatedStats.BasicStats.WeaponDamage
+									+ calculatedStats.BasicStats.ScopeDamage
 									+ (effectiveRAPAgainstMob / 14 * character.Ranged.Speed);
 
 				averageAutoShotDamage = baseAutoShotDamage * totalDamageAdjustmentAutoShot;
@@ -815,15 +815,15 @@ namespace Rawr.Hunter
 			statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
 			statsTotal.BloodlustProc = statsRace.BloodlustProc + statsGearEnchantsBuffs.BloodlustProc;
 			statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
-			statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
+			statsTotal.CritRating = (float)Math.Floor((decimal)statsRace.CritRating + (decimal)statsGearEnchantsBuffs.CritRating);
 			statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
-			statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
+			statsTotal.HitRating = (float)Math.Floor((decimal)statsRace.HitRating + (decimal)statsGearEnchantsBuffs.HitRating);
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
 			statsTotal.ShatteredSunMightProc = statsRace.ShatteredSunMightProc + statsGearEnchantsBuffs.ShatteredSunMightProc;
 			statsTotal.Mp5 = statsRace.Mp5 + statsGearEnchantsBuffs.Mp5;
 			statsTotal.BonusPetCritChance = statsGearEnchantsBuffs.BonusPetCritChance;
-
+			statsTotal.ScopeDamage = statsGearEnchantsBuffs.ScopeDamage;
 			statsTotal.AshtongueTrinketProc = statsGearEnchantsBuffs.AshtongueTrinketProc;
 			statsTotal.BonusSteadyShotCrit = statsGearEnchantsBuffs.BonusSteadyShotCrit;
 
@@ -865,17 +865,20 @@ namespace Rawr.Hunter
 			{
 				statsTotal.Hit = 1;
 			}
+
+			if (character.Ranged != null &&
+				((character.Race == Character.CharacterRace.Dwarf && character.Ranged.Type == Item.ItemType.Gun) ||
+				(character.Race == Character.CharacterRace.Troll && character.Ranged.Type == Item.ItemType.Bow)))
+			{
+				statsTotal.CritRating += (float)Math.Floor(CRIT_RATING_PER_PERCENT);
+			}
 			
 			statsTotal.Crit = (float)(BASE_CRIT_PERCENT + (statsTotal.Agility / AGILITY_PER_CRIT / 100) 
-								+ (statsTotal.CritRating / CRIT_RATING_PER_PERCENT / 100) 
+								+ (statsTotal.CritRating / CRIT_RATING_PER_PERCENT / 100)
 								+ ((350 - targetDefence) * 0.04 / 100)
 								+ statsTalents.Crit);
 
-			if ((character.Race == Character.CharacterRace.Dwarf && character.Ranged.Type == Item.ItemType.Gun) ||
-				(character.Race == Character.CharacterRace.Troll && character.Ranged.Type == Item.ItemType.Bow))
-			{
-				statsTotal.Crit += .1f;
-			}
+		
 			
 			//TODO:Target Resilience
 			//TODO:Darkmoon Card: Wrath

@@ -69,16 +69,16 @@ namespace Rawr.Hunter
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
 			
 			dictValues.Add("Agility", BasicStats.Agility.ToString("F0"));
-			dictValues.Add("Crit Rating", BasicStats.CritRating.ToString());
-			dictValues.Add("Hit Rating", BasicStats.HitRating.ToString());
+			dictValues.Add("Crit Rating", BasicStats.CritRating.ToString("F0"));
+			dictValues.Add("Hit Rating", BasicStats.HitRating.ToString("F0"));
 			dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0"));
 			dictValues.Add("Stamina", BasicStats.Stamina.ToString("F0"));
-			dictValues.Add("Armor", BasicStats.Armor.ToString());
+			dictValues.Add("Armor", BasicStats.Armor.ToString("F0"));
 			dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("F0"));
 			dictValues.Add("Armor Penetration", BasicStats.ArmorPenetration.ToString());
-			dictValues.Add("MP5", BasicStats.Mp5.ToString());
-			dictValues.Add("Mana", BasicStats.Mana.ToString());
-			dictValues.Add("Health", BasicStats.Health.ToString());
+			dictValues.Add("MP5", BasicStats.Mp5.ToString("F0"));
+			dictValues.Add("Mana", BasicStats.Mana.ToString("F0"));
+			dictValues.Add("Health", BasicStats.Health.ToString("F0"));
 			dictValues.Add("Hit Percentage", BasicStats.Hit.ToString("P2"));
 			dictValues.Add("Crit Percentage", BasicStats.Crit.ToString("P2"));
 			dictValues.Add("Pet Attack Power", PetStats.AttackPower.ToString("F0"));
