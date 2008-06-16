@@ -175,8 +175,6 @@
             this.label60 = new System.Windows.Forms.Label();
             this.textBoxBurstImpacts = new System.Windows.Forms.TextBox();
             this.label61 = new System.Windows.Forms.Label();
-            this.textBoxChanceToLiveLimit = new System.Windows.Forms.TextBox();
-            this.label62 = new System.Windows.Forms.Label();
             this.textBoxChanceToLiveScore = new System.Windows.Forms.TextBox();
             this.label63 = new System.Windows.Forms.Label();
             this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -1320,8 +1318,6 @@
             // 
             this.tabPage5.Controls.Add(this.textBoxChanceToLiveScore);
             this.tabPage5.Controls.Add(this.label63);
-            this.tabPage5.Controls.Add(this.textBoxChanceToLiveLimit);
-            this.tabPage5.Controls.Add(this.label62);
             this.tabPage5.Controls.Add(this.textBoxBurstImpacts);
             this.tabPage5.Controls.Add(this.label61);
             this.tabPage5.Controls.Add(this.textBoxBurstWindow);
@@ -1721,29 +1717,10 @@
             this.toolTipMage.SetToolTip(this.label61, "Defines the number of impacts that the above damage profile consists of, higher v" +
                     "alues result in lower crit variance.");
             // 
-            // textBoxChanceToLiveLimit
-            // 
-            this.textBoxChanceToLiveLimit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ChanceToLiveLimit", true));
-            this.textBoxChanceToLiveLimit.Location = new System.Drawing.Point(112, 323);
-            this.textBoxChanceToLiveLimit.Name = "textBoxChanceToLiveLimit";
-            this.textBoxChanceToLiveLimit.Size = new System.Drawing.Size(75, 20);
-            this.textBoxChanceToLiveLimit.TabIndex = 218;
-            // 
-            // label62
-            // 
-            this.label62.AutoSize = true;
-            this.label62.Location = new System.Drawing.Point(0, 323);
-            this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(112, 13);
-            this.label62.TabIndex = 217;
-            this.label62.Text = "Max Chance to Live: *";
-            this.toolTipMage.SetToolTip(this.label62, "Defines the maximum chance to live, any higher value will give maximum possible s" +
-                    "ruvivability score.");
-            // 
             // textBoxChanceToLiveScore
             // 
             this.textBoxChanceToLiveScore.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ChanceToLiveScore", true));
-            this.textBoxChanceToLiveScore.Location = new System.Drawing.Point(112, 349);
+            this.textBoxChanceToLiveScore.Location = new System.Drawing.Point(112, 323);
             this.textBoxChanceToLiveScore.Name = "textBoxChanceToLiveScore";
             this.textBoxChanceToLiveScore.Size = new System.Drawing.Size(75, 20);
             this.textBoxChanceToLiveScore.TabIndex = 220;
@@ -1751,7 +1728,7 @@
             // label63
             // 
             this.label63.AutoSize = true;
-            this.label63.Location = new System.Drawing.Point(0, 349);
+            this.label63.Location = new System.Drawing.Point(0, 323);
             this.label63.Name = "label63";
             this.label63.Size = new System.Drawing.Size(104, 13);
             this.label63.TabIndex = 219;
@@ -1937,8 +1914,6 @@
         private System.Windows.Forms.Label label61;
         private System.Windows.Forms.TextBox textBoxChanceToLiveScore;
         private System.Windows.Forms.Label label63;
-        private System.Windows.Forms.TextBox textBoxChanceToLiveLimit;
-        private System.Windows.Forms.Label label62;
 
     }
 }

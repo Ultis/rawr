@@ -107,7 +107,7 @@ namespace Rawr.Mage
 
         public float BurstWindow { get; set; }
         public float BurstImpacts { get; set; }
-        public float ChanceToLiveLimit { get; set; }
+        //public float ChanceToLiveLimit { get; set; }
         public float ChanceToLiveScore { get; set; }
 
         [XmlIgnore]
@@ -266,7 +266,7 @@ namespace Rawr.Mage
             DrinkingTime = 300;
             BurstWindow = 5f;
             BurstImpacts = 5f;
-            ChanceToLiveLimit = 99f;
+            //ChanceToLiveLimit = 99f;
         }
 
         public CalculationOptionsMage(Character character)
