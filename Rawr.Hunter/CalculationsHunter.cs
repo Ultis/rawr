@@ -271,7 +271,7 @@ namespace Rawr.Hunter
 			CalculationOptionsHunter options = character.CalculationOptions as CalculationOptionsHunter;
 			calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
 			calculatedStats.PetStats = GetPetStats(options, calculatedStats.BasicStats, character);
-			if (character.Ranged == null || (character.Ranged.Type != Item.ItemType.Bow && character.Ranged.Type == Item.ItemType.Gun
+			if (character.Ranged == null || (character.Ranged.Type != Item.ItemType.Bow && character.Ranged.Type != Item.ItemType.Gun
 											&& character.Ranged.Type != Item.ItemType.Crossbow))
 			{
 				//skip all the calculations if there is no ranged weapon
@@ -789,6 +789,11 @@ namespace Rawr.Hunter
 			statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
 			CalculationOptionsHunter options = character.CalculationOptions as CalculationOptionsHunter;
+			if (options == null)
+			{
+				options = new CalculationOptionsHunter();
+				character.CalculationOptions = options;
+			}
 			int targetDefence = 5*options.TargetLevel;
 			//statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime;
 			//statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime;
@@ -854,7 +859,7 @@ namespace Rawr.Hunter
 			
 			statsTotal.Hit = (float)(BASE_HIT_PERCENT + (statsTotal.HitRating / (HIT_RATING_PER_PERCENT*100)) 
 								- (statsTotal.Miss / 100) 
-								+ (character.Race == Character.CharacterRace.Draenei ? .1 : 0)
+								+ (character.Race == Character.CharacterRace.Draenei ? .01 : 0)
 								+ statsTalents.Hit);
 
 			//=IF((B54-B53) - 10 > 0,  ((B54-B53) -10) * -0.004 - 0.02, (B54-B53) * -0.001)
