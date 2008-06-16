@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="SparseMatrix.cs" />
     <Compile Include="Spell.cs" />
+    <Compile Include="XMath.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

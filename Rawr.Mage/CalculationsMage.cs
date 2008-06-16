@@ -108,6 +108,8 @@ namespace Rawr.Mage
                     "Survivability:Defense",
                     "Survivability:Crit Reduction",
                     "Survivability:Dodge",
+                    "Survivability:Mean Incoming Dps",
+                    "Survivability:Chance to Die",
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -2042,7 +2044,70 @@ namespace Rawr.Mage
             {
                 calculatedStats.SubPoints[0] = ((float)calculatedStats.Solution[lpCols] + calculatedStats.WaterElementalDamage) / calculationOptions.FightDuration;
             }
-            calculatedStats.SubPoints[1] = calculatedStats.BasicStats.Health * calculationOptions.SurvivabilityRating;
+            // survivability
+            double ampMelee = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 - 0.01 * calculationOptions.ArcticWinds) * (1 - calculatedStats.MeleeMitigation) * (1 - calculatedStats.Dodge);
+            double ampPhysical = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 - 0.01 * calculationOptions.ArcticWinds) * (1 - calculatedStats.MeleeMitigation);
+            double ampArcane = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * Math.Max(1 - (characterStats.AllResist + characterStats.ArcaneResistance) / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampFire = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * (1 - 0.02 * calculationOptions.FrozenCore) * Math.Max(1 - (characterStats.AllResist + characterStats.FireResistance) / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampFrost = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * (1 - 0.02 * calculationOptions.FrozenCore) * Math.Max(1 - (characterStats.AllResist + characterStats.FrostResistance) / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampNature = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * Math.Max(1 - (characterStats.AllResist + characterStats.NatureResistance) / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampShadow = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * Math.Max(1 - (characterStats.AllResist + characterStats.ShadowResistance) / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampHoly = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire);
+
+            double melee = ampMelee * (calculationOptions.MeleeDps * (1 + Math.Max(0, calculationOptions.MeleeCrit / 100.0 - calculatedStats.PhysicalCritReduction) * (2 * (1 - calculatedStats.CritDamageReduction) - 1)) + calculationOptions.MeleeDot * (1 - 0.5f * calculatedStats.CritDamageReduction));
+            double physical = ampPhysical * (calculationOptions.PhysicalDps * (1 + Math.Max(0, calculationOptions.PhysicalCrit / 100.0- calculatedStats.PhysicalCritReduction) * (2 * (1 - calculatedStats.CritDamageReduction) - 1)) + calculationOptions.PhysicalDot * (1 - 0.5f * calculatedStats.CritDamageReduction));
+            double arcane = ampArcane * (calculationOptions.ArcaneDps * (1 + Math.Max(0, calculationOptions.ArcaneCrit / 100.0- calculatedStats.SpellCritReduction) * (1.75 * (1 - calculatedStats.CritDamageReduction) - 1)) + calculationOptions.ArcaneDot * (1 - 0.5f * calculatedStats.CritDamageReduction));
+            double fire = ampFire * (calculationOptions.FireDps * (1 + Math.Max(0, calculationOptions.FireCrit / 100.0- calculatedStats.SpellCritReduction) * (2.1 * (1 - calculatedStats.CritDamageReduction) - 1)) + calculationOptions.FireDot * (1 - 0.5f * calculatedStats.CritDamageReduction));
+            double frost = ampFrost * (calculationOptions.FrostDps * (1 + Math.Max(0, calculationOptions.FrostCrit / 100.0- calculatedStats.SpellCritReduction) * (2 * (1 - calculatedStats.CritDamageReduction) - 1)) + calculationOptions.FrostDot * (1 - 0.5f * calculatedStats.CritDamageReduction));
+            double holy = ampHoly * (calculationOptions.HolyDps * (1 + Math.Max(0, calculationOptions.HolyCrit / 100.0- calculatedStats.SpellCritReduction) * (1.5 * (1 - calculatedStats.CritDamageReduction) - 1)) + calculationOptions.HolyDot * (1 - 0.5f * calculatedStats.CritDamageReduction));
+            double nature = ampNature * (calculationOptions.NatureDps * (1 + Math.Max(0, calculationOptions.NatureCrit / 100.0- calculatedStats.SpellCritReduction) * (2 * (1 - calculatedStats.CritDamageReduction) - 1)) + calculationOptions.NatureDot * (1 - 0.5f * calculatedStats.CritDamageReduction));
+            double shadow = ampShadow * (calculationOptions.ShadowDps * (1 + Math.Max(0, calculationOptions.ShadowCrit / 100.0- calculatedStats.SpellCritReduction) * (2 * (1 - calculatedStats.CritDamageReduction) - 1)) + calculationOptions.ShadowDot * (1 - 0.5f * calculatedStats.CritDamageReduction));
+
+            double burstWindow = calculationOptions.BurstWindow;
+            double burstImpacts = calculationOptions.BurstImpacts;
+
+            // B(n, p) ~ N(np, np(1-p))
+            // n = burstImpacts
+            // Xi ~ ampi * (dpsi * (1 + B(n, criti) / n * critMulti) + doti)
+            //    ~ ampi * (dpsi * (1 + N(n * criti, n * criti * (1 - criti)) / n * critMulti) + doti)
+            //    ~ N(ampi * (doti + dpsi * (1 + critMulti * criti)), ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti))
+            // X = sum Xi ~ N(sum ampi * (doti + dpsi * (1 + critMulti * criti)), sum ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti))
+            // H = Health + hp5 / 5 * burstWindow
+            // P(burstWindow * sum Xi >= H) = 1 - P(burstWindow * sum Xi <= H) = 1 / 2 * (1 - Erf((H - mu) / (sigma * sqrt(2)))) =
+            //                = 1 / 2 * (1 - Erf((H / burstWindow - [sum ampi * (doti + dpsi * (1 + critMulti * criti))]) / sqrt(2 * [sum ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti)])))
+
+            double meleeVar = Math.Pow(ampMelee * calculationOptions.MeleeDps * (2 * (1 - calculatedStats.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, calculationOptions.MeleeCrit / 100.0- calculatedStats.PhysicalCritReduction) * (1 - Math.Max(0, calculationOptions.MeleeCrit / 100.0- calculatedStats.PhysicalCritReduction));
+            double physicalVar = Math.Pow(ampPhysical * calculationOptions.PhysicalDps * (2 * (1 - calculatedStats.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, calculationOptions.PhysicalCrit / 100.0- calculatedStats.PhysicalCritReduction) * (1 - Math.Max(0, calculationOptions.PhysicalCrit / 100.0- calculatedStats.PhysicalCritReduction));
+            double arcaneVar = Math.Pow(ampArcane * calculationOptions.ArcaneDps * (1.75 * (1 - calculatedStats.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, calculationOptions.ArcaneCrit / 100.0- calculatedStats.SpellCritReduction) * (1 - Math.Max(0, calculationOptions.ArcaneCrit / 100.0- calculatedStats.SpellCritReduction));
+            double fireVar = Math.Pow(ampFire * calculationOptions.FireDps * (2.1 * (1 - calculatedStats.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, calculationOptions.FireCrit / 100.0- calculatedStats.SpellCritReduction) * (1 - Math.Max(0, calculationOptions.FireCrit / 100.0- calculatedStats.SpellCritReduction));
+            double frostVar = Math.Pow(ampFrost * calculationOptions.FrostDps * (2 * (1 - calculatedStats.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, calculationOptions.FrostCrit / 100.0- calculatedStats.SpellCritReduction) * (1 - Math.Max(0, calculationOptions.FrostCrit / 100.0- calculatedStats.SpellCritReduction));
+            double holyVar = Math.Pow(ampHoly * calculationOptions.HolyDps * (1.5 * (1 - calculatedStats.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, calculationOptions.HolyCrit / 100.0- calculatedStats.SpellCritReduction) * (1 - Math.Max(0, calculationOptions.HolyCrit / 100.0- calculatedStats.SpellCritReduction));
+            double natureVar = Math.Pow(ampNature * calculationOptions.NatureDps * (2 * (1 - calculatedStats.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, calculationOptions.NatureCrit / 100.0- calculatedStats.SpellCritReduction) * (1 - Math.Max(0, calculationOptions.NatureCrit / 100.0- calculatedStats.SpellCritReduction));
+            double shadowVar = Math.Pow(ampShadow * calculationOptions.ShadowDps * (2 * (1 - calculatedStats.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, calculationOptions.ShadowCrit / 100.0- calculatedStats.SpellCritReduction) * (1 - Math.Max(0, calculationOptions.ShadowCrit / 100.0- calculatedStats.SpellCritReduction));
+
+            double Xmean = melee + physical + arcane + fire + frost + holy + nature + shadow;
+            double Xvar = meleeVar + physicalVar + arcaneVar + fireVar + frostVar + holyVar + natureVar + shadowVar;
+
+            // T = healing response time ~ N(Tmean, Tvar)
+            // T * X ~ N(Tmean * Xmean, Tvar * Xvar + Tmean^2 * Xvar + Xmean^2 * Tvar)   // approximation reasonable for high Tmean / sqrt(Tvar)
+            // P(T * X >= H) = 1 / 2 * (1 - Erf((H - mean) / (sigma * sqrt(2)))) =
+            //               = 1 / 2 * (1 - Erf((H - mean) / sqrt(2 * var)))
+            //               = 1 / 2 * (1 - Erf((H - Tmean * Xmean) / sqrt(2 * (Tvar * Xvar + Tmean^2 * Xvar + Xmean^2 * Tvar))))
+
+            // Tvar := Tk * Tmean^2,   Tk <<< 1
+
+            // P(T * X >= H) = 1 / 2 * (1 - Erf((H / Tmean - Xmean) / sqrt(2 * (Xvar * (Tk + 1) + Xmean^2 * Tk))))
+
+            double Tk = 0.01;
+
+            calculatedStats.ChanceToDie = (float)(0.5f * (1f - XMath.Erf((characterStats.Health / burstWindow + characterStats.Hp5 / 5 - Xmean) / Math.Sqrt(2 * (Xvar * (1 + Tk) + Xmean * Xmean * Tk)))));
+            calculatedStats.MeanIncomingDps = (float)Xmean;
+
+            double maxTimeToDie = 1.0 / (1 - calculationOptions.ChanceToLiveLimit / 100.0) - 1;
+            double timeToDie = Math.Min(1.0 / calculatedStats.ChanceToDie - 1, maxTimeToDie);
+                        
+            //calculatedStats.SubPoints[1] = calculatedStats.BasicStats.Health * calculationOptions.SurvivabilityRating + (float)(calculationOptions.ChanceToLiveScore * timeToDie / maxTimeToDie);
+            calculatedStats.SubPoints[1] = calculatedStats.BasicStats.Health * calculationOptions.SurvivabilityRating + (float)(calculationOptions.ChanceToLiveScore * Math.Pow(1 - calculatedStats.ChanceToDie, 0.1));
             calculatedStats.OverallPoints = calculatedStats.SubPoints[0] + calculatedStats.SubPoints[1];
             float threat = 0;
             for (int i = 0; i < lpCols; i++)
@@ -3191,6 +3256,7 @@ namespace Rawr.Mage
                     "Frost Resistance",
                     "Shadow Resistance",
                     "Arcane Resistance",
+                    "Chance to Die",
 					};
                 return _optimizableCalculationLabels;
             }

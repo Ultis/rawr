@@ -80,6 +80,36 @@ namespace Rawr.Mage
         public bool CustomSpellMixEnabled { get; set; }
         public bool CustomSpellMixOnly { get; set; }
 
+        public float MeleeDps { get; set; }
+        public float MeleeCrit { get; set; }
+        public float MeleeDot { get; set; }
+        public float PhysicalDps { get; set; }
+        public float PhysicalCrit { get; set; }
+        public float PhysicalDot { get; set; }
+        public float FireDps { get; set; }
+        public float FireCrit { get; set; }
+        public float FireDot { get; set; }
+        public float FrostDps { get; set; }
+        public float FrostCrit { get; set; }
+        public float FrostDot { get; set; }
+        public float ArcaneDps { get; set; }
+        public float ArcaneCrit { get; set; }
+        public float ArcaneDot { get; set; }
+        public float ShadowDps { get; set; }
+        public float ShadowCrit { get; set; }
+        public float ShadowDot { get; set; }
+        public float NatureDps { get; set; }
+        public float NatureCrit { get; set; }
+        public float NatureDot { get; set; }
+        public float HolyDps { get; set; }
+        public float HolyCrit { get; set; }
+        public float HolyDot { get; set; }
+
+        public float BurstWindow { get; set; }
+        public float BurstImpacts { get; set; }
+        public float ChanceToLiveLimit { get; set; }
+        public float ChanceToLiveScore { get; set; }
+
         [XmlIgnore]
         public string ShattrathFaction
         {
@@ -163,10 +193,12 @@ namespace Rawr.Mage
         public int ImprovedFrostNova { get; set; }
         public int ImprovedConeOfCold { get; set; }
         public int ArcticWinds { get; set; }
+        public int FrozenCore { get; set; }
+        public int Pyroblast { get; set; }
+        public int PrismaticCloak { get; set; }
 
         // not implemented
         public int IceBarrier { get; set; }
-        public int FrozenCore { get; set; }
         public int Shatter { get; set; }
         public int ArcticReach { get; set; }
         public int ImprovedBlizzard { get; set; }
@@ -174,11 +206,9 @@ namespace Rawr.Mage
         public int Frostbite { get; set; }
         public int BlazingSpeed { get; set; }
         public int ImprovedFireWard { get; set; }
-        public int Pyroblast { get; set; }
         public int FlameThrowing { get; set; }
         public int Impact { get; set; }
         public int Slow { get; set; }
-        public int PrismaticCloak { get; set; }
         public int PresenceOfMind { get; set; }
         public int ImprovedBlink { get; set; }
         public int ImprovedCounterspell { get; set; }
@@ -234,6 +264,9 @@ namespace Rawr.Mage
             ManaGemEnabled = true;
             MaxHeapLimit = 300;
             DrinkingTime = 300;
+            BurstWindow = 5f;
+            BurstImpacts = 5f;
+            ChanceToLiveLimit = 99f;
         }
 
         public CalculationOptionsMage(Character character)

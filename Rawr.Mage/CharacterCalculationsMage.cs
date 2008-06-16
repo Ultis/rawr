@@ -95,6 +95,8 @@ namespace Rawr.Mage
         public float SpellCritReduction { get; set; }
         public float CritDamageReduction { get; set; }
         public float Dodge { get; set; }
+        public float ChanceToDie { get; set; }
+        public float MeanIncomingDps { get; set; }
 
         public float ArcaneSpellModifier { get; set; }
         public float FireSpellModifier { get; set; }
@@ -3764,6 +3766,8 @@ namespace Rawr.Mage
             dictValues.Add("Defense", Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\r\nPhysical Crit Reduction: {1:F}%\r\nCrit Damage Reduction: {2:F}%", SpellCritReduction * 100, PhysicalCritReduction * 100, CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * Dodge));
+            dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
+            dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
             List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.ArcaneBlast33, SpellId.ABAMP, SpellId.ABAM, SpellId.AB3AMSc, SpellId.ABAM3Sc, SpellId.ABAM3Sc2, SpellId.ABAM3FrB, SpellId.ABAM3FrB2, SpellId.ABFrB3FrB, SpellId.ABFrB3FrBSc, SpellId.ABFB3FBSc, SpellId.FireballScorch, SpellId.FireballFireBlast, SpellId.FireBlast, SpellId.ABAM3ScCCAM, SpellId.ABAM3Sc2CCAM, SpellId.ABAM3FrBCCAM, SpellId.ABAM3FrBScCCAM, SpellId.ABAMCCAM, SpellId.ABAM3CCAM, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold/*, SpellId.ABAM3FrBCCAMFail*/, SpellId.ABFrB/*, SpellId.ArcaneBarrage, SpellId.ArcaneMissilesNetherwind*/ };
             Spell AB = GetSpell(SpellId.ArcaneBlast33);
             BaseSpell bs;
@@ -3867,6 +3871,8 @@ namespace Rawr.Mage
                     return BasicStats.AllResist + BasicStats.ShadowResistance;
                 case "Arcane Resistance":
                     return BasicStats.AllResist + BasicStats.ArcaneResistance;
+                case "Chance to Die":
+                    return ChanceToDie;
             }
             return 0;
         }
