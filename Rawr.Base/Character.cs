@@ -105,7 +105,8 @@ namespace Rawr //O O . .
 		[XmlElement("EnforceMetagemRequirements")]
 		public bool _enforceMetagemRequirements = false;
 
-
+        public string CalculationToOptimize { get; set; }
+        public List<OptimizationRequirement> OptimizationRequirements { get; set; }
 
         // set to true to suppress ItemsChanged event
         [XmlIgnore]

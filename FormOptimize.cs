@@ -33,7 +33,8 @@ namespace Rawr
             checkBoxOverrideRegem.Checked = Properties.Optimizer.Default.OverrideRegem;
             checkBoxOverrideReenchant.Checked = Properties.Optimizer.Default.OverrideReenchant;
             trackBarThoroughness.Value = Properties.Optimizer.Default.Thoroughness;
-            string calculationString = Properties.Optimizer.Default.CalculationToOptimize;
+            string calculationString = character.CalculationToOptimize;
+            if (string.IsNullOrEmpty(calculationString)) calculationString = Properties.Optimizer.Default.CalculationToOptimize;
             if (calculationString != null)
             {
                 if (calculationString.StartsWith("[Overall]"))
@@ -57,6 +58,57 @@ namespace Rawr
                     }
                 }
             }
+            if (character.OptimizationRequirements != null)
+            {
+                for (int i = 0; i < character.OptimizationRequirements.Count; i++) buttonAddRequirement_Click(null, null);
+                int reqIndex = 0;
+                foreach (Control ctrl in groupBoxRequirements.Controls)
+                {
+                    if (ctrl is Panel)
+                    {
+                        foreach (Control reqCtrl in ctrl.Controls)
+                        {
+                            switch (reqCtrl.Name)
+                            {
+                                case "comboBoxRequirementCalculation":
+                                    ComboBox reqComboBox = (ComboBox)reqCtrl;
+                                    calculationString = character.OptimizationRequirements[reqIndex].Calculation;
+                                    if (calculationString.StartsWith("[Overall]"))
+                                    {
+                                        reqComboBox.SelectedIndex = 0;
+                                    }
+                                    else if (calculationString.StartsWith("[SubPoint "))
+                                    {
+                                        calculationString = calculationString.Substring(10).TrimEnd(']');
+                                        int index = int.Parse(calculationString);
+                                        if (index < Calculations.SubPointNameColors.Count)
+                                        {
+                                            reqComboBox.SelectedIndex = index + 1;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Array.IndexOf(Calculations.OptimizableCalculationLabels, calculationString) >= 0)
+                                        {
+                                            reqComboBox.SelectedItem = calculationString;
+                                        }
+                                    }
+                                    break;
+
+                                case "comboBoxRequirementGreaterLessThan":
+                                    (reqCtrl as ComboBox).SelectedIndex = character.OptimizationRequirements[reqIndex].LessThan ? 1 : 0;
+                                    break;
+
+                                case "numericUpDownRequirementValue":
+                                    (reqCtrl as NumericUpDown).Value = (decimal)character.OptimizationRequirements[reqIndex].Value;
+                                    break;
+                            }
+                        }
+                        reqIndex++;
+                    }
+                }
+            }
+            Invalidate();
 		}
 
 		private void FormOptimize_FormClosing(object sender, FormClosingEventArgs e)
@@ -332,7 +384,9 @@ namespace Rawr
 			
 			comboBoxRequirementCalculation.SelectedIndex = comboBoxRequirementGreaterLessThan.SelectedIndex = 0;
 			groupBoxRequirements.Controls.Add(panelRequirement);
-			panelRequirement.BringToFront();
+            ((System.ComponentModel.ISupportInitialize)(numericUpDownRequirementValue)).EndInit();
+            panelRequirement.ResumeLayout();
+            panelRequirement.BringToFront();
 		}
 
 		void buttonRemoveRequirement_Click(object sender, EventArgs e)
@@ -408,6 +462,35 @@ namespace Rawr
             Properties.Optimizer.Default.Thoroughness = trackBarThoroughness.Value;
             Properties.Optimizer.Default.CalculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize);
             Properties.Optimizer.Default.Save();
+
+            _character.CalculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize);
+            List<OptimizationRequirement> requirements = new List<OptimizationRequirement>();
+            foreach (Control ctrl in groupBoxRequirements.Controls)
+            {
+                if (ctrl is Panel)
+                {
+                    OptimizationRequirement requirement = new OptimizationRequirement();
+                    foreach (Control reqCtrl in ctrl.Controls)
+                    {
+                        switch (reqCtrl.Name)
+                        {
+                            case "comboBoxRequirementCalculation":
+                                requirement.Calculation = GetCalculationStringFromComboBox(reqCtrl as ComboBox);
+                                break;
+
+                            case "comboBoxRequirementGreaterLessThan":
+                                requirement.LessThan = (reqCtrl as ComboBox).SelectedIndex == 1;
+                                break;
+
+                            case "numericUpDownRequirementValue":
+                                requirement.Value = (float)((reqCtrl as NumericUpDown).Value);
+                                break;
+                        }
+                    }
+                    requirements.Add(requirement);
+                }
+            }
+            _character.OptimizationRequirements = requirements;
         }
 	}
 }

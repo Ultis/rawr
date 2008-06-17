@@ -40,13 +40,13 @@
             this.groupBoxRequirements = new System.Windows.Forms.GroupBox();
             this.labelInfo = new System.Windows.Forms.Label();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
+            this.checkBoxOverrideReenchant = new System.Windows.Forms.CheckBox();
+            this.checkBoxOverrideRegem = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.trackBarThoroughness = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonUpgrades = new System.Windows.Forms.Button();
-            this.checkBoxOverrideRegem = new System.Windows.Forms.CheckBox();
-            this.checkBoxOverrideReenchant = new System.Windows.Forms.CheckBox();
             this.groupBoxRequirements.SuspendLayout();
             this.groupBoxOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThoroughness)).BeginInit();
@@ -165,6 +165,26 @@
             this.groupBoxOptions.TabStop = false;
             this.groupBoxOptions.Text = "Options";
             // 
+            // checkBoxOverrideReenchant
+            // 
+            this.checkBoxOverrideReenchant.AutoSize = true;
+            this.checkBoxOverrideReenchant.Location = new System.Drawing.Point(117, 208);
+            this.checkBoxOverrideReenchant.Name = "checkBoxOverrideReenchant";
+            this.checkBoxOverrideReenchant.Size = new System.Drawing.Size(122, 17);
+            this.checkBoxOverrideReenchant.TabIndex = 7;
+            this.checkBoxOverrideReenchant.Text = "Override Reenchant";
+            this.checkBoxOverrideReenchant.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxOverrideRegem
+            // 
+            this.checkBoxOverrideRegem.AutoSize = true;
+            this.checkBoxOverrideRegem.Location = new System.Drawing.Point(9, 208);
+            this.checkBoxOverrideRegem.Name = "checkBoxOverrideRegem";
+            this.checkBoxOverrideRegem.Size = new System.Drawing.Size(103, 17);
+            this.checkBoxOverrideRegem.TabIndex = 6;
+            this.checkBoxOverrideRegem.Text = "Override Regem";
+            this.checkBoxOverrideRegem.UseVisualStyleBackColor = true;
+            // 
             // label3
             // 
             this.label3.Location = new System.Drawing.Point(6, 172);
@@ -212,26 +232,6 @@
             this.buttonUpgrades.Text = "Build Upgrade List";
             this.buttonUpgrades.UseVisualStyleBackColor = true;
             this.buttonUpgrades.Click += new System.EventHandler(this.buttonUpgrades_Click);
-            // 
-            // checkBoxOverrideRegem
-            // 
-            this.checkBoxOverrideRegem.AutoSize = true;
-            this.checkBoxOverrideRegem.Location = new System.Drawing.Point(9, 208);
-            this.checkBoxOverrideRegem.Name = "checkBoxOverrideRegem";
-            this.checkBoxOverrideRegem.Size = new System.Drawing.Size(103, 17);
-            this.checkBoxOverrideRegem.TabIndex = 6;
-            this.checkBoxOverrideRegem.Text = "Override Regem";
-            this.checkBoxOverrideRegem.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxOverrideReenchant
-            // 
-            this.checkBoxOverrideReenchant.AutoSize = true;
-            this.checkBoxOverrideReenchant.Location = new System.Drawing.Point(117, 208);
-            this.checkBoxOverrideReenchant.Name = "checkBoxOverrideReenchant";
-            this.checkBoxOverrideReenchant.Size = new System.Drawing.Size(122, 17);
-            this.checkBoxOverrideReenchant.TabIndex = 7;
-            this.checkBoxOverrideReenchant.Text = "Override Reenchant";
-            this.checkBoxOverrideReenchant.UseVisualStyleBackColor = true;
             // 
             // FormOptimize
             // 

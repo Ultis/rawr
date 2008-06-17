@@ -3256,7 +3256,9 @@ namespace Rawr.Mage
                     "Frost Resistance",
                     "Shadow Resistance",
                     "Arcane Resistance",
-                    "Chance to Die",
+                    "Chance to Live",
+                    "Spell Hit Rating",
+                    "Spell Haste Rating",
 					};
                 return _optimizableCalculationLabels;
             }

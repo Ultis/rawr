@@ -2691,6 +2691,7 @@ namespace Rawr.Mage
                     double oomtime = targetTime;
                 Retry:
                     SortByMps(true, minMps, maxMps, time, Math.Min(oomtime, targetTime), extraMana, mana);
+                    Compact(false);
                 VerifyOOM:
                     // guard against oom
                     //double targetmana = Evaluate(null, EvaluationMode.ManaAtTime, targetTime);
@@ -2709,10 +2710,10 @@ namespace Rawr.Mage
                         else if (d > 0 && t + d > time)
                         {
                             targetmana -= sequence[i].Mps * sequence[i].Duration;
-                            if (i < sequence.Count - 1 && targetmana < -0.000001 && !((nextPot == 0.0 && potTime > 0) || (nextGem == 0.0 && gemTime > 0) || (nextEvo == 0.0 && evoTime > 0))) // only worry if we already started all mana cooldowns and we're not at last item (at which point we can't do anything and it's only ghost mana left)
+                            if (i < sequence.Count - 1 && targetmana < -0.000001 && !((nextPot <= time && potTime > 0) || (nextGem <= time && gemTime > 0) || (nextEvo <= time && evoTime > 0))) // only worry if we already started all mana cooldowns and we're not at last item (at which point we can't do anything and it's only ghost mana left)
                             {
                                 // we run oom during construction
-                                if (oomtime < targetTime && Math.Abs(t + d - oomtime) < 0.000001 && lastTargetMana == targetmana)
+                                if (oomtime < targetTime && Math.Abs(t + d - oomtime) < 0.000001 && Math.Abs(lastTargetMana - targetmana) < 0.000001)
                                 {
                                     // we were not successful in recovering from oom
                                     // go into swap mode
@@ -2860,7 +2861,6 @@ namespace Rawr.Mage
                     mana = Evaluate(null, EvaluationMode.ManaAtTime, time);
                     goto VerifyOOM;
                 Abort:
-                    Compact(false);
                     double gem = nextGem;
                     double pot = nextPot;
                     double evo = nextEvo;
@@ -3871,8 +3871,12 @@ namespace Rawr.Mage
                     return BasicStats.AllResist + BasicStats.ShadowResistance;
                 case "Arcane Resistance":
                     return BasicStats.AllResist + BasicStats.ArcaneResistance;
-                case "Chance to Die":
-                    return ChanceToDie;
+                case "Chance to Live":
+                    return 100 * (1 - ChanceToDie);
+                case "Spell Hit Rating":
+                    return BasicStats.SpellHitRating;
+                case "Spell Haste Rating":
+                    return BasicStats.SpellHasteRating;
             }
             return 0;
         }
