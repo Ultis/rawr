@@ -1,109 +1,919 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace Rawr.HolyPriest
 {
+    public class BaseSpell
+    {
+        public float MinHeal { get; protected set; }
+        public float MaxHeal { get; protected set; }
+        public float RankCoef { get; protected set; }
+        public int ManaCost { get; protected set; }
+        public float CastTime { get; protected set; }
+        public int Rank { get; protected set; }
+        public float HotDuration { get; protected set; }
 
-	public class Spell
-	{
-		private string name;
-		private int rank;
+        public BaseSpell(int rank, float minHeal, float maxHeal, int manaCost, float castTime, float rankCoef, float hotDuration)
+        {
+            MinHeal = minHeal;
+            MaxHeal = maxHeal;
+            RankCoef = rankCoef;
+            ManaCost = manaCost;
+            CastTime = castTime;
+            HotDuration = hotDuration;
+            Rank = rank;
+        }
 
-		private float baseHeal;
-		private float baseMana;
-		private float baseCastTime;
-		private float coef;
-		private float downrank;
-		private float healMultiple;
+        public BaseSpell(int rank, float minHeal, float maxHeal, int manaCost, float castTime, float rankCoef):
+            this(rank, minHeal, maxHeal, manaCost, castTime, rankCoef, 0)
+        {}
 
-		private float hps;
-		private float mps;
-		private float hpm;
-		private float spellCrit;
-		private float castTime;
-		private float avgHeal;
+        public BaseSpell(BaseSpell baseSpell):
+            this(baseSpell.Rank, baseSpell.MinHeal, baseSpell.MaxHeal, baseSpell.ManaCost, baseSpell.CastTime, baseSpell.RankCoef, baseSpell.HotDuration) { }
+    }
 
-		private static float[] RENEWMANA = new float[] { 0, 30, 65, 105, 140, 170, 205, 250, 305, 365, 410, 430, 450 };
-		private static float[] RENEWHEAL = new float[] { 0, 45, 100, 175, 245, 315, 400, 510, 650, 810, 970, 1010, 1110 };
-		private static float[] RENEWLEVEL = new float[] { 0, 8, 14, 20, 26, 32, 38, 44, 50, 56, 60, 65, 70 };
+    public class Spell: BaseSpell
+    {
+        public string Name { get; protected set; }
 
-		private static float[] FLASHMANA = new float[] { 0, 125, 155, 185, 215, 268, 315, 380, 400, 470 };
-		private static float[] FLASHHEAL = new float[] { 0, 139, 253, 327, 400, 518, 644, 812, 913, 1101 };
-		private static float[] FLASHLEVEL = new float[] { 0, 20, 26, 32, 38, 44, 50, 56, 61, 67 };
+        public float HealingCoef { get; protected set; }
+        public int Range { get; protected set; }
+        public int Targets { get; protected set; }
 
-		public Spell(string name, int rank)
-		{
-			this.name = name;
-			this.rank = rank;
-			healMultiple = 1.15f; // Spiritual Healing 5/5
+        public float GlobalCooldown { get; protected set; }
+        public Color GraphColor { get; protected set; }
 
-			if (name.Equals("Renew") && rank > 0 && rank < 13)
+        #region Properties
+
+        public bool IsHot
+        {
+            get { return HotDuration > 0; }
+        }
+
+        public float AvgHeal
+        {
+            get
             {
-                hotCoef = 1;
-                directCoef = 0;
-                hotBaseHeal = RENEWHEAL[rank];
-                directBaseHeal = 0;
-				baseCastTime = 0;
-                baseManaCost = RENEWMANA[rank] - 0.10f * RENEWMANA[rank]; // Mental Agility 3/3
-				downrank = Math.Min((RENEWLEVEL[rank] + 12) / 70f, 1f);
-				healMultiple = healMultiple * 1.10f; // Improved renew 3/3
-            }
-			else if (name.Equals("Flash Heal") && rank > 0 && rank < 10)
-            {
-                hotCoef = 0;
-                directCoef = 0.4286f;
-                hotBaseHeal = 0;
-                directBaseHeal = FLASHHEAL[rank];
-				baseCastTime = 1.5f;
-                baseManaCost = FLASHMANA[rank]
-				downrank = Math.Min((FLASHLEVEL[rank] + 9) / 70f, 1f);
-				healMultiple = healMultiple;
+                return (MinHeal + MaxHeal) / 2;
             }
         }
 
-		public void Calculate(Stats stats)
-		{
-			float bonus, multi = 0, cost;
-			spellCrit = .08336f + stats.Intellect / 8000 + stats.SpellCritRating / 2208;
-			castTime = baseCastTime / (1 + stats.SpellHasteRating / 1570);
+        public virtual float HpS
+        {
+            get
+            {
+                if (IsHot)
+                    return AvgHeal/HotDuration;
 
-			if (name.Equals("Renew"))
-			{
-				spellCrit = 0;
-				bonus = stats.RenweHeal;
-				multi = healMultiple + stats.Spirit * 0.25; // Spiritual Guidance 5/5
-				cost = stats.RenwewCost;
+                return AvgHeal / CastTime;
             }
-			else if (name.Equals("Flash Heal"))
-			{
-				spellCrit = 0;
-				bonus = stats.FlashHeal;
-				multi = healMultiple + stats.Spirit * 0.25; // Spiritual Guidance 5/5
-				cost = stats.FlashCost;			
-			}
-
-			float plusheal = stats.Healing + stats.AverageHeal + bonus;
-			avgHeal = multi * (baseHeal + (plusheal * coef) * downrank);
-			hps = avgHeal * (1 + .5f * spellCrit) / castTime;
-			mps = (baseMana - cost - stats.ManaRestorePerCast) / castTime;
-			hpm = hps / mps;
         }
 
-		public override string ToString()
-		{
-			return name + " " + rank;
-		}
+        public virtual float HpM
+        {
+            get
+            {
+                return AvgHeal / ManaCost;
+            }
+        }
 
-		public string Name { get { return name; } }
-		public int Rank { get { return rank; } }
+        public float AvgCrit
+        {
+            get
+            {
+                return (MinHeal * 1.5f + MaxCrit)/2;
+            }
+        }
 
-		public float Hps { get { return hps; } }
-		public float Mps { get { return mps; } }
-		public float Hpm { get { return hpm; } }
-		public float SpellCrit { get { return spellCrit; } }
-		public float CastTime { get { return castTime; } }
-		public float AverageHeal { get { return avgHeal; } }
+        public float MaxCrit
+        {
+            get
+            {
+                return MaxHeal * 1.5f;
+            }
+        }
 
-	}
+        #endregion
+
+        protected Spell(Stats stats, BaseSpell baseSpell, string name, float coef, float hotDuration, Color col)
+            : base(baseSpell)
+        {
+            Name = name;
+            CastTime = baseSpell.CastTime;
+            HealingCoef = coef;
+            HotDuration = hotDuration;
+            GlobalCooldown = 1.5f * (1 - stats.SpellHasteRating / 15.7f / 100f);
+            GraphColor = col;
+        }
+
+        protected Spell(Stats stats, BaseSpell baseSpell, string name, float coef, Color col)
+            : this(stats, baseSpell, name, coef, 0, col)
+        {}
+        
+        public override string ToString()
+        {
+            return String.Format("{0} *HpS: {1}\r\nHpM: {2}\r\nMin Heal: {3}\r\nMax Heal: {4}\r\nAvg Crit: {5}\r\nMax Crit: {6}\r\nCast: {7}\r\nCost: {8}",
+                AvgHeal.ToString("0"),
+                HpS.ToString("0.00"),
+                HpM.ToString("0.00"),
+                MinHeal.ToString("0"),
+                MaxHeal.ToString("0"),
+                AvgCrit.ToString("0"),
+                MaxCrit.ToString("0"),
+                CastTime.ToString("0.00"),
+                ManaCost.ToString("0"));
+        }
+    }
+
+    public class Renew : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell> (){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef HotDuration    */
+            new BaseSpell(1,      45,     45,     30,     0,      0.851f, 15f),
+            new BaseSpell(2,      100,    100,    65,     0,      0.723f, 15f),
+            new BaseSpell(3,      175,    175,    105,    0,      0.557f, 15f),
+            new BaseSpell(4,      245,    245,    140,    0,      0.471f, 15f),
+            new BaseSpell(5,      315,    315,    170,    0,      0.386f, 15f),
+            new BaseSpell(6,      400,    400,    205,    0,      0.300f, 15f),
+            new BaseSpell(7,      510,    510,    250,    0,      0.214f, 15f),
+            new BaseSpell(8,      650,    650,    305,    0,      0.129f, 15f),
+            new BaseSpell(9,      810,    810,    365,    0,      0.043f, 15f),
+            new BaseSpell(10,     970,    970,    410,    0,      0,      15f),
+            new BaseSpell(11,     1010,   1010,   430,    0,      0,      15f),
+            new BaseSpell(12,     1110,   1110,   450,    0,      0,      15f)
+            };
+        
+        public Renew(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count){}
+
+        public Renew(Stats stats, TalentTree talents, int rank)
+            : base(stats, baseSpellTable[rank - 1], "Renew", 1f, 15f, Color.Green)
+        {
+            Calculate(stats, talents, rank);
+        }
+
+        public static List<Spell> GetAllRanks(Stats stats, TalentTree talents)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new Renew(stats, talents, i));
+
+            return list;
+        }
+
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            Rank = rank;
+            MinHeal = MaxHeal = (baseSpellTable[Rank - 1].MinHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef))
+                * (1 + talents.GetTalent("Improved Renew").PointsInvested * 0.05f) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+
+            ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCost 
+                * (1 - talents.GetTalent("Mental Agility").PointsInvested * 0.02f));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *HpS: {1}\r\nHpM: {2}\r\nTick: {3}\r\nCost: {4}",
+                          MinHeal.ToString("0"),
+                          HpS.ToString("0.00"),
+                          HpM.ToString("0.00"),
+                          (MinHeal/HotDuration*3).ToString("0"),
+                          ManaCost.ToString("0"));
+        }
+    }
+
+    public class FlashHeal : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef    */
+            new BaseSpell(1,    139,    237,    125,    1.5f,   0.557f),
+            new BaseSpell(2,    253,    314,    155,    1.5f,   0.471f),
+            new BaseSpell(3,    327,    393,    185,    1.5f,   0.386f),
+            new BaseSpell(4,    400,    478,    215,    1.5f,   0.300f),
+            new BaseSpell(5,    518,    616,    265,    1.5f,   0.214f),
+            new BaseSpell(6,    644,    764,    315,    1.5f,   0.129f),
+            new BaseSpell(7,    812,    958,    380,    1.5f,   0.057f),
+            new BaseSpell(8,    913,    1059,   400,    1.5f,   0),
+            new BaseSpell(9,    1101,   1279,   470,    1.5f,   0)
+            };
+
+        public FlashHeal(Stats stats, TalentTree talents, int rank)
+            : base(stats, baseSpellTable[rank - 1], "Flash Heal", 0.4286f, Color.YellowGreen)
+        {
+            Calculate(stats, talents, rank);
+        }
+
+        public FlashHeal(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count){}
+
+        public static List<Spell> GetAllRanks(Stats stats, TalentTree talents)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new FlashHeal(stats, talents, i));
+
+            return list;
+        }
+
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            Rank = rank;
+            MinHeal = (baseSpellTable[Rank - 1].MinHeal +
+                stats.Healing * (1 - baseSpellTable[Rank - 1].RankCoef) 
+                * (talents.GetTalent("Empowered Healing").PointsInvested * 0.02f + HealingCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+
+            MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
+                stats.Healing * (1 - baseSpellTable[Rank - 1].RankCoef) 
+                * (talents.GetTalent("Empowered Healing").PointsInvested * 0.02f + HealingCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+
+            CastTime = baseSpellTable[Rank - 1].CastTime * (1 - stats.SpellHasteRating / 15.7f / 100f);
+        }
+    }
+
+    public class Heal : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef    */
+            new BaseSpell(1,    307,    353,    155,    3f,   0.672f),
+            new BaseSpell(2,    445,    507,    205,    3f,   0.529f),
+            new BaseSpell(3,    586,    662,    255,    3f,   0.443f),
+            new BaseSpell(4,    734,    827,    305,    3f,   0.357f)
+            };
+
+        public Heal(Stats stats, TalentTree talents, int rank)
+            : base(stats, baseSpellTable[rank - 1], "Heal", 0.8571f, Color.DarkGreen)
+        {
+            Calculate(stats, talents, rank);
+        }
+
+        public Heal(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count)
+        {}
+
+        public static List<Spell> GetAllRanks(Stats stats, TalentTree talents)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new Heal(stats, talents, i));
+
+            return list;
+        }
+
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            Rank = rank;
+            MinHeal = (baseSpellTable[Rank - 1].MinHeal + 
+                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+            MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+
+            ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCost 
+                * (1 - talents.GetTalent("Improved Healing").PointsInvested * 0.05f));
+
+            CastTime = (baseSpellTable[Rank - 1].CastTime - talents.GetTalent("Divine Fury").PointsInvested * 0.1f)
+                * (1 - stats.SpellHasteRating / 15.7f / 100f);
+        }
+    }
+
+    public class GreaterHeal : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef    */
+            new BaseSpell(1,    924,    1039,    370,    3f,   0.271f),
+            new BaseSpell(2,    1178,   1318,    455,    3f,   0.186f),
+            new BaseSpell(3,    1470,   1642,    545,    3f,   0.100f),
+            new BaseSpell(4,    1835,   2044,    655,    3f,   0.071f),
+            new BaseSpell(5,    2006,   2235,    710,    3f,   0.029f),
+            new BaseSpell(6,    2107,   2444,    750,    3f,   0),
+            new BaseSpell(7,    2414,   2803,    825,    3f,   0)
+            };
+
+        public GreaterHeal(Stats stats, TalentTree talents, int rank)
+            : base(stats, baseSpellTable[rank - 1], "Greater Heal", 0.8571f, Color.DarkSeaGreen)
+        {
+            Calculate(stats, talents, rank);
+        }
+
+        public GreaterHeal(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count)
+        {}
+
+        public static List<Spell> GetAllRanks(Stats stats, TalentTree talents)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new GreaterHeal(stats, talents, i));
+
+            return list;
+        }
+
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            Rank = rank;
+            MinHeal = (baseSpellTable[Rank - 1].MinHeal + 
+                stats.Healing * (1 - baseSpellTable[Rank - 1].RankCoef) 
+                * (talents.GetTalent("Empowered Healing").PointsInvested * 0.04f + HealingCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f) 
+                * (1 + stats.BonusGHHealingMultiplier);
+
+            MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
+                stats.Healing * (1 - baseSpellTable[Rank - 1].RankCoef) 
+                * (talents.GetTalent("Empowered Healing").PointsInvested * 0.04f + HealingCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f) 
+                * (1 + stats.BonusGHHealingMultiplier);
+
+            ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCost 
+                * (1 - talents.GetTalent("Improved Healing").PointsInvested * 0.05f));
+
+            CastTime = (baseSpellTable[Rank - 1].CastTime - talents.GetTalent("Divine Fury").PointsInvested * 0.1f) 
+                * (1 - stats.SpellHasteRating / 15.7f / 100f);
+        }
+    }
+
+    public class PrayerOfHealing : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef    */
+            new BaseSpell(1,    312,    333,    410,    3f,   0.357f),
+            new BaseSpell(2,    458,    487,    560,    3f,   0.214f),
+            new BaseSpell(3,    675,    713,    770,    3f,   0.071f),
+            new BaseSpell(4,    960,    1013,   1030,   3f,   0.071f),
+            new BaseSpell(5,    1019,   1076,   1070,   3f,   0),
+            new BaseSpell(6,    1251,   1322,   1225,   3f,   0)
+            };
+
+        private static readonly Color[] targetColors = new Color[]
+                                           {
+                                               Color.Orange,
+                                               Color.Orange,
+                                               Color.Orange,
+                                               Color.OrangeRed,
+                                               Color.DarkOrange
+                                           };
+
+        public override float HpS
+        {
+            get
+            {
+                return AvgHeal * Targets / CastTime;
+            }
+        }
+
+        public override float HpM
+        {
+            get
+            {
+                return AvgHeal * Targets / ManaCost;
+            }
+        }
+
+        public PrayerOfHealing(Stats stats, TalentTree talents, int rank, int targets)
+            : base(stats, baseSpellTable[rank - 1], "Prayer of Healing (" + targets + " targets)", 0.2857f, targetColors[targets - 1])
+        {
+            Targets = targets;
+            Calculate(stats, talents, rank);
+        }
+
+        public PrayerOfHealing(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count, 3)
+        {}
+
+        public static List<Spell> GetAllRanks(Stats stats, TalentTree talents, int targets)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new PrayerOfHealing(stats, talents, i, targets));
+
+            return list;
+        }
+        
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            Rank = rank;
+            Range = 30;
+
+            MinHeal = (baseSpellTable[rank - 1].MinHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+            MaxHeal = (baseSpellTable[rank - 1].MaxHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+
+            ManaCost = (int)Math.Round(baseSpellTable[rank - 1].ManaCost 
+                * (1 - talents.GetTalent("Healing Prayers").PointsInvested * 0.1f) 
+                * (1 - stats.BonusPoHManaCostReductionMultiplier));
+
+            Range = (int)Math.Round(Range * (1 + talents.GetTalent("Holy Reach").PointsInvested * 0.1f));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *HpS(3): {1}\r\nHpS(4): {10}\r\nHpS(5): {12}\r\nHpM(3): {2}\r\nHpM(4): {11}\r\nHpM(5): {13}\r\nMin Heal: {3}\r\nMax Heal: {4}\r\nAvg Crit: {5}\r\nMax Crit: {6}\r\nCast: {7}\r\nCost: {8}\r\nRange: {9}",
+                AvgHeal.ToString("0"),
+                (AvgHeal * 3 / CastTime).ToString("0.00"),
+                (AvgHeal * 3 / ManaCost).ToString("0.00"),
+                MinHeal.ToString("0"),
+                MaxHeal.ToString("0"),
+                AvgCrit.ToString("0"),
+                MaxCrit.ToString("0"),
+                CastTime.ToString("0.00"),
+                ManaCost.ToString("0"),
+                Range,
+                (AvgHeal * 4 / CastTime).ToString("0.00"),
+                (AvgHeal * 4 / ManaCost).ToString("0.00"),
+                (AvgHeal * 5 / CastTime).ToString("0.00"),
+                (AvgHeal * 5 / ManaCost).ToString("0.00"));
+        }
+    }
+
+    public class CircleOfHealing : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef    */
+            new BaseSpell(1,    250,    274,    300,    0,   0.129f),
+            new BaseSpell(2,    292,    323,    337,    0,   0.071f),
+            new BaseSpell(3,    332,    367,    375,    0,   0),
+            new BaseSpell(4,    376,    415,    412,    0,   0),
+            new BaseSpell(5,    409,    451,    450,    0,   0)
+            };
+
+        private static readonly Color[] targetColors = new Color[]
+                                           {
+                                               Color.Yellow,
+                                               Color.Yellow,
+                                               Color.Yellow,
+                                               Color.Gold,
+                                               Color.Goldenrod
+                                           };
+
+        public override float HpS
+        {
+            get
+            {
+                return (AvgHeal / GlobalCooldown) * Targets;
+            }
+        }
+
+        public override float HpM
+        {
+            get
+            {
+                return AvgHeal * Targets / ManaCost;
+            }
+        }
+
+        public CircleOfHealing(Stats stats, TalentTree talents, int rank, int targets)
+            : base(stats, baseSpellTable[rank - 1], "Circle of Healing (" + targets + " targets)", 0.2143f, targetColors[targets - 1])
+        {
+            Targets = targets;
+            Calculate(stats, talents, rank);
+        }
+
+        public CircleOfHealing(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count, 3)
+        {}
+
+        public static List<Spell> GetAllRanks(Stats stats, TalentTree talents, int targets)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new CircleOfHealing(stats, talents, i, targets));
+
+            return list;
+        }
+
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            if (talents.GetTalent("Circle of Healing").PointsInvested == 0)
+            {
+                MinHeal = MaxHeal = 0;
+                return;
+            }
+
+            Rank = rank;
+            Range = 15;
+            MinHeal = (baseSpellTable[Rank - 1].MinHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+            MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+
+            ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCost * (1 - talents.GetTalent("Mental Agility").PointsInvested * 0.02f));
+            Range = (int)Math.Round(Range * (1 + talents.GetTalent("Holy Reach").PointsInvested * 0.1f));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *HpS(3): {1}\r\nHpS(4): {9}\r\nHpS(5): {11}\r\nHpM(3): {2}\r\nHpM(4): {10}\r\nHpM(5): {12}\r\nMin Heal: {3}\r\nMax Heal: {4}\r\nAvg Crit: {5}\r\nMax Crit: {6}\r\nCost: {7}\r\nRange: {8}",
+                AvgHeal.ToString("0"),
+                (AvgHeal * 3 / GlobalCooldown).ToString("0.00"),
+                (AvgHeal * 3 / ManaCost).ToString("0.00"),
+                MinHeal.ToString("0"),
+                MaxHeal.ToString("0"),
+                AvgCrit.ToString("0"),
+                MaxCrit.ToString("0"),
+                ManaCost.ToString("0"),
+                Range,
+                (AvgHeal * 4 / GlobalCooldown).ToString("0.00"),
+                (AvgHeal * 4 / ManaCost).ToString("0.00"),
+                (AvgHeal * 5 / GlobalCooldown).ToString("0.00"),
+                (AvgHeal * 5 / ManaCost).ToString("0.00"));
+        }
+    }
+
+    public class HolyNova : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef    */
+            new BaseSpell(1,    52,    60,    185,    0,   0.529f),
+            new BaseSpell(2,    86,    98,    290,    0,   0.414f),
+            new BaseSpell(3,    121,   139,   400,    0,   0.300f),
+            new BaseSpell(4,    161,   188,   520,    0,   0.186f),
+            new BaseSpell(5,    235,   272,   635,    0,   0.071f),
+            new BaseSpell(6,    302,   450,   750,    0,   0),
+            new BaseSpell(7,    384,   446,   875,    0,   0)
+            };
+
+        private static readonly Color[] targetColors = new Color[]
+                                           {
+                                               Color.Coral,
+                                               Color.Coral,
+                                               Color.Coral,
+                                               Color.BurlyWood,
+                                               Color.Brown
+                                           };
+
+        public override float HpS
+        {
+            get
+            {
+                return (AvgHeal / GlobalCooldown) * Targets;
+            }
+        }
+
+        public override float HpM
+        {
+            get
+            {
+                return (AvgHeal / ManaCost) * Targets;
+            }
+        }
+
+        public HolyNova(Stats stats, TalentTree talents, int rank, int targets)
+            : base(stats, baseSpellTable[rank - 1], "Holy Nova (" + targets + " targets)", 0.16f, targetColors[targets - 1])
+        {
+            Targets = 3;
+            Calculate(stats, talents, rank);
+        }
+
+        public HolyNova(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count, 3)
+        {}
+
+        public static List<Spell> GetAllRanks(Stats stats, TalentTree talents, int targets)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new HolyNova(stats, talents, i, targets));
+
+            return list;
+        }
+
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            if (talents.GetTalent("Holy Nova").PointsInvested == 0)
+            {
+                MinHeal = MaxHeal = 0;
+                return;
+            }
+
+            Rank = rank;
+            Range = 10;
+            
+            MinHeal = (baseSpellTable[Rank - 1].MinHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+            MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+
+            ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCost * (1 - talents.GetTalent("Mental Agility").PointsInvested * 0.02f));
+            Range = (int)Math.Round(Range * (1 + talents.GetTalent("Holy Reach").PointsInvested * 0.1f));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *HpS(3): {1}\r\nHpS(4): {9}\r\nHpS(5): {11}\r\nHpM(3): {2}\r\nHpM(4): {10}\r\nHpM(5): {12}\r\nMin Heal: {3}\r\nMax Heal: {4}\r\nAvg Crit: {5}\r\nMax Crit: {6}\r\nCost: {7}\r\nRange: {8}",
+                AvgHeal.ToString("0"),
+                (AvgHeal * 3 / GlobalCooldown).ToString("0.00"),
+                (AvgHeal * 3 / ManaCost).ToString("0.00"),
+                MinHeal.ToString("0"),
+                MaxHeal.ToString("0"),
+                AvgCrit.ToString("0"),
+                MaxCrit.ToString("0"),
+                ManaCost.ToString("0"),
+                Range,
+                (AvgHeal * 4 / GlobalCooldown).ToString("0.00"),
+                (AvgHeal * 4 / ManaCost).ToString("0.00"),
+                (AvgHeal * 5 / GlobalCooldown).ToString("0.00"),
+                (AvgHeal * 5 / ManaCost).ToString("0.00"));
+        }
+    }
+
+    public class BindingHeal : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef    */
+            new BaseSpell(1,    1042,   1338,   705,    1.5f,   0)
+            };
+
+        public override float HpS
+        {
+            get
+            {
+                return AvgHeal * 2/CastTime;
+            }
+        }
+
+        public override float HpM
+        {
+            get
+            {
+                return (AvgHeal / ManaCost) * 2;
+            }
+        }
+
+        public BindingHeal(Stats stats, TalentTree talents, int rank)
+            : base(stats, baseSpellTable[rank - 1], "Binding Heal", 0.4286f, Color.Purple)
+        {
+            Calculate(stats, talents, rank);
+        }
+
+        public BindingHeal(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count)
+        {}
+
+        public static List<Spell> GetAllRanks(Stats stats, TalentTree talents)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new BindingHeal(stats, talents, i));
+
+            return list;
+        }
+
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            Rank = rank;
+
+            MinHeal = (baseSpellTable[Rank - 1].MinHeal +
+                stats.Healing * (1 - baseSpellTable[Rank - 1].RankCoef) 
+                * (talents.GetTalent("Empowered Healing").PointsInvested * 0.02f + HealingCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+
+            MaxHeal = (baseSpellTable[Rank - 1].MaxHeal + stats.Healing
+                * (1 - baseSpellTable[Rank - 1].RankCoef) 
+                * (talents.GetTalent("Empowered Healing").PointsInvested * 0.02f + HealingCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+
+            CastTime = baseSpellTable[Rank - 1].CastTime * (1 - stats.SpellHasteRating / 15.7f / 100f);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *HpS(2): {1}\r\nHpM (2): {2}\r\nMin Heal: {3}\r\nMax Heal: {4}\r\nAvg Crit: {5}\r\nMax Crit: {6}\r\nCost: {7}",
+                AvgHeal.ToString("0"),
+                HpS.ToString("0.00"),
+                HpM.ToString("0.00"),
+                MinHeal.ToString("0"),
+                MaxHeal.ToString("0"),
+                AvgCrit.ToString("0"),
+                MaxCrit.ToString("0"),
+                ManaCost.ToString("0"));
+        }
+    }
+
+    public class PrayerOfMending : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef    */
+            new BaseSpell(1,    800,   800,   390,    0,   0)
+            };
+
+        private static readonly Color[] targetColors = new Color[]
+                                           {
+                                               Color.Cyan,
+                                               Color.Cyan,
+                                               Color.Cyan,
+                                               Color.DarkCyan,
+                                               Color.DeepSkyBlue
+                                           };
+
+        public override float HpS
+        {
+            get
+            {
+                return AvgHeal;
+            }
+        }
+
+        public override float HpM
+        {
+            get
+            {
+                return (AvgHeal / ManaCost) * Targets;
+            }
+        }
+
+        public PrayerOfMending(Stats stats, TalentTree talents, int rank, int targets)
+            : base(stats, baseSpellTable[rank - 1], "Prayer of Mending (" + targets + " targets)", 0.4286f, targetColors[targets - 1])
+        {
+            Targets = targets;
+            Calculate(stats, talents, rank);
+        }
+        
+        public PrayerOfMending(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count, 3)
+        {}
+
+        public static List<Spell> GetAllRanks(Stats stats, TalentTree talents, int targets)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new PrayerOfMending(stats, talents, i, targets));
+
+            return list;
+        }
+
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            Range = 15;
+            Rank = rank;
+
+            MinHeal = (baseSpellTable[Rank - 1].MinHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+            MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+
+            ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCost 
+                * (1 - talents.GetTalent("Healing Prayers").PointsInvested * 0.1f) 
+                * (1 - talents.GetTalent("Mental Agility").PointsInvested * 0.02f));
+            Range = (int)Math.Round(Range * (1 + talents.GetTalent("Holy Reach").PointsInvested * 0.1f));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *HpM(1): {1}\r\nHpM(2): {2}\r\nHpM 3): {3}\r\nHpM(4): {4}\r\nHpM(5): {5}\r\nCrit: {6}\r\nCost: {7}\r\nRange: {8}",
+                AvgHeal.ToString("0"),
+                (AvgHeal / ManaCost).ToString("0.00"),
+                (AvgHeal * 2 / ManaCost).ToString("0.00"),
+                (AvgHeal * 3 / ManaCost).ToString("0.00"),
+                (AvgHeal * 4 / ManaCost).ToString("0.00"),
+                (AvgHeal * 5 / ManaCost).ToString("0.00"),
+                AvgCrit.ToString("0"),
+                ManaCost.ToString("0"),
+                Range);
+        }
+    }
+
+    public class PowerWordShield : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef    */
+            new BaseSpell(1,    44,    44,     45,      0,    0.885f),
+            new BaseSpell(2,    88,    88,     80,      0,    0.770f),
+            new BaseSpell(3,    158,   158,    130,     0,    0.617f),
+            new BaseSpell(4,    234,   234,    175,     0,    0.500f),
+            new BaseSpell(5,    301,   301,    210,     0,    0.414f),
+            new BaseSpell(6,    381,   381,    250,     0,    0.329f),
+            new BaseSpell(7,    484,   484,    300,     0,    0.243f),
+            new BaseSpell(8,    605,   605,    355,     0,    0.157f),
+            new BaseSpell(9,    763,   763,    425,     0,    0.071f),
+            new BaseSpell(10,   942,   942,    500,     0,    0),
+            new BaseSpell(11,   1147,  1147,   540,     0,    0),
+            new BaseSpell(12,   1315,  1315,   600,     0,    0)
+            };
+
+        public override float HpS
+        {
+            get
+            {
+                return AvgHeal/GlobalCooldown;
+            }
+        }
+
+        public PowerWordShield(Stats stats, TalentTree talents, int rank)
+            : base(stats, baseSpellTable[rank - 1], "Power Word Shield", 0.3f, Color.SlateGray)
+        {
+            Calculate(stats, talents, rank);
+        }
+
+        public PowerWordShield(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count)
+        {}
+
+        public static List<Spell> GetAllRanks(Stats stats, TalentTree talents)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new PowerWordShield(stats, talents, i));
+
+            return list;
+        }
+
+
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            Rank = rank;
+            MinHeal = (baseSpellTable[Rank - 1].MinHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Improved Power Word: Shield").PointsInvested * 0.05f);
+            MaxHeal = MinHeal;
+
+            ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCost 
+                * (1 - talents.GetTalent("Mental Agility").PointsInvested * 0.02f));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *HpM: {1}\r\nCost: {2}",
+                MinHeal.ToString("0"),
+                HpM.ToString("0.00"),
+                ManaCost.ToString("0"));
+        }
+    }
+
+    public class Lightwell : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef    */
+            new BaseSpell(1,    800,    800,    225,    1.5f,   0.214f),
+            new BaseSpell(2,    1165,   1165,   295,    1.5f,   0.071f),
+            new BaseSpell(3,    1600,   1600,   365,    1.5f,   0),
+            new BaseSpell(4,    2361,   2361,   445,    1.5f,   0)
+            };
+
+        public override float HpS
+        {
+            get
+            {
+                return AvgHeal / HotDuration;
+            }
+        }
+
+        public Lightwell(Stats stats, TalentTree talents, int rank)
+            : base(stats, baseSpellTable[rank - 1], "Lightwell", 1f, 6, Color.Gray)
+        {
+            Calculate(stats, talents, rank);
+        }
+
+        public Lightwell(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count)
+        {}
+
+        public static List<Spell> GetAllRanks(Stats stats, TalentTree talents)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new Lightwell(stats, talents, i));
+
+            return list;
+        }
+
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            if (talents.GetTalent("Lightwell").PointsInvested == 0)
+            {
+                MinHeal = MaxHeal = 0;
+                return;
+            }
+
+            Rank = rank;
+            MinHeal = (baseSpellTable[Rank - 1].MinHeal +
+                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+            MaxHeal = MinHeal;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *HpS: {1}\r\nHpM: {2}\r\nTick: {3}\r\nCost: {4}",
+                          MinHeal.ToString("0"),
+                          HpS.ToString("0.00"),
+                          HpM.ToString("0.00"),
+                          (MinHeal / HotDuration * 2).ToString("0"),
+                          ManaCost.ToString("0"));
+        }
+    }
 }

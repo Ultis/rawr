@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.HolyPriest
+namespace Rawr.ShadowPriest
 {
-    public class ComparisonCalculationHolyPriest : ComparisonCalculationBase
+    public class ComparisonCalculationShadowPriest : ComparisonCalculationBase
     {
 
-        public ComparisonCalculationHolyPriest()
+        public ComparisonCalculationShadowPriest()
             : base()
         { }
 
-        public ComparisonCalculationHolyPriest(string name)
+        public ComparisonCalculationShadowPriest(string name)
             : base()
         {
             _name = name;
@@ -37,13 +37,13 @@ namespace Rawr.HolyPriest
             set { _subPoints = value; }
         }
 
-        public float HealPoints
+        public float DpsPoints
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float RegenPoints
+        public float SurvivalPoints
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }

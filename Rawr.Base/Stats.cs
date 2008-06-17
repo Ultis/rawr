@@ -180,7 +180,10 @@ namespace Rawr
         ThreatIncreaseMultiplier,
         BonusWarlockDotDamageMultiplier,
 		BonusRangedAttackPowerMultiplier,
-		BonusSteadyShotDamageMultiplier
+		BonusSteadyShotDamageMultiplier,
+        BonusManaregenWhileCastingMultiplier,
+        BonusPoHManaCostReductionMultiplier,
+        BonusGHHealingMultiplier
     }
 
     enum InverseMultiplicativeStat : int
@@ -1658,6 +1661,35 @@ namespace Rawr
 			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier]; }
 			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier] = value; }
 		}
+
+        // Holy Priest set bonuses
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Multiplicative]
+        [DisplayName("% Bonus Manaregen While Casting")]
+        public float BonusManaregenWhileCastingMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusManaregenWhileCastingMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusManaregenWhileCastingMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Multiplicative]
+        [DisplayName("% reduce the mana cost of PoH")]
+        public float BonusPoHManaCostReductionMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPoHManaCostReductionMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPoHManaCostReductionMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Multiplicative]
+        [DisplayName("% increases the healing from Greater Heal")]
+        public float BonusGHHealingMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusGHHealingMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusGHHealingMultiplier] = value; }
+        }
+
         #endregion
 
         #region InverseMultiplicativeStats

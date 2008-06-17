@@ -51,12 +51,6 @@
   <ItemGroup>
     <Content Include="AuthoringTests.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Rawr.Mage\Rawr.Mage.csproj">
-      <Project>{3CBA225F-E45A-48D3-B039-980473FD8774}</Project>
-      <Name>Rawr.Mage</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

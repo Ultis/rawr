@@ -9,6 +9,8 @@ namespace Rawr.HolyPriest
 {
     public partial class CalculationOptionsPanelHolyPriest : CalculationOptionsPanelBase
     {
+        public CharacterCalculationsHolyPriest Calculations;
+
         public CalculationOptionsPanelHolyPriest()
         {
             InitializeComponent();
@@ -20,117 +22,83 @@ namespace Rawr.HolyPriest
         {
             loading = true;
             if (Character.CalculationOptions == null)
-                Character.CalculationOptions = new CalculationOptionsHolyPriest();
+                Character.CalculationOptions = new CalculationOptionsPriest();
 
-			CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
+            CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
             cmbLength.Value = (decimal)calcOpts.Length;
-            cmbManaAmt.Text = calcOpts.ManaAmt.ToString();
-            cmbManaTime.Value = (decimal)calcOpts.ManaTime;
-            cmbSpriest.Value = (decimal)calcOpts.Spriest;
-            cmbSpiritual.Value = (decimal)calcOpts.Spiritual;
-
-			trkActivity.Value = (int)calcOpts.Activity;
+            
+            trkActivity.Value = (int)calcOpts.TimeInFSR;
             lblActivity.Text = trkActivity.Value + "%";
-
-            trkRatio.Value = (int)(calcOpts.Ratio * 100);
-            labHL1.Text = (100 - trkRatio.Value).ToString() + "%";
-            labHL2.Text = trkRatio.Value.ToString() + "%";
-            if (calcOpts.Rank1 >= 4 && calcOpts.Rank1 <= 11) nubHL1.Value = (decimal)calcOpts.Rank1;
-            if (calcOpts.Rank2 >= 4 && calcOpts.Rank2 <= 11) nubHL2.Value = (decimal)calcOpts.Rank2;
 
             loading = false;
         }
- 
+
         private void cmbLength_ValueChanged(object sender, EventArgs e)
         {
             if (!loading)
             {
-                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
                 calcOpts.Length = (float)cmbLength.Value;
                 Character.OnItemsChanged();
             }
         }
-
-        private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
-                try
-                {
-                    calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
-                }
-                catch { }
-                Character.OnItemsChanged();
-            }
-        }
-
-        private void cmbManaTime_ValueChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
-                calcOpts.ManaTime = (float)cmbManaTime.Value;
-                Character.OnItemsChanged();
-            }
-        }
-
-        private void cmbManaAmt_TextUpdate(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
-                try
-                {
-                    calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
-                }
-                catch { }
-                Character.OnItemsChanged();
-            }
-        }
-
+        
         private void trkActivity_Scroll(object sender, EventArgs e)
         {
             if (!loading)
             {
-                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
                 lblActivity.Text = trkActivity.Value + "%";
-                calcOpts.Activity = trkActivity.Value;
+                calcOpts.TimeInFSR = trkActivity.Value;
                 Character.OnItemsChanged();
             }
         }
+        
 
-        private void cmbSpriest_ValueChanged(object sender, EventArgs e)
+        private void btnRenew_Click(object sender, EventArgs e)
         {
-            if (!loading)
-            {
-                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
-                calcOpts.Spriest = (float)cmbSpriest.Value;
-                Character.OnItemsChanged();
-            }
+            CalculationsHolyPriest retCalc = new CalculationsHolyPriest();
+            CharacterCalculationsHolyPriest p = retCalc.GetCharacterCalculations(Character) as CharacterCalculationsHolyPriest;
+
+            List<Spell>[] spellList = new List<Spell>[] {
+                                                Renew.GetAllRanks(p.BasicStats, Character.Talents),
+                                                FlashHeal.GetAllRanks(p.BasicStats, Character.Talents), 
+                                                GreaterHeal.GetAllRanks(p.BasicStats, Character.Talents),
+                                                Heal.GetAllRanks(p.BasicStats, Character.Talents),
+                                                PrayerOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 3),
+                                                PrayerOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 4),
+                                                PrayerOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 5),
+                                                BindingHeal.GetAllRanks(p.BasicStats, Character.Talents),
+                                                PrayerOfMending.GetAllRanks(p.BasicStats, Character.Talents, 3),
+                                                PrayerOfMending.GetAllRanks(p.BasicStats, Character.Talents, 4),
+                                                PrayerOfMending.GetAllRanks(p.BasicStats, Character.Talents, 5),
+                                                CircleOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 3),
+                                                CircleOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 4),
+                                                CircleOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 5),
+                                                HolyNova.GetAllRanks(p.BasicStats, Character.Talents, 3),
+                                                HolyNova.GetAllRanks(p.BasicStats, Character.Talents, 4),
+                                                HolyNova.GetAllRanks(p.BasicStats, Character.Talents, 5),
+                                                Lightwell.GetAllRanks(p.BasicStats, Character.Talents) 
+                                            };
+            Graph graph = new Graph(spellList);
+            graph.Show();
         }
 
-        private void trkRatio_Scroll(object sender, EventArgs e)
+        private void tbnTalents_Click(object sender, EventArgs e)
         {
-            if (!loading)
-            {
-                CalculationOptionsHolyPriest calcOpts = Character.CalculationOptions as CalculationOptionsHolyPriest;
-                calcOpts.Ratio = trkRatio.Value / 100f;
-                labHL1.Text = (100 - trkRatio.Value).ToString() + "%";
-                labHL2.Text = trkRatio.Value.ToString() + "%";
-                Character.OnItemsChanged();
-            }
+            TalentForm talents = new TalentForm(this);
+            talents.SetParameters(Character.Talents, Character.CharacterClass.Priest);
+            talents.Show();
         }
-
     }
 
-	[Serializable]
-	public class CalculationOptionsHolyPriest : ICalculationOptionBase
+    [Serializable]
+	public class CalculationOptionsPriest : ICalculationOptionBase
 	{
 		public string GetXml()
 		{
 			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHolyPriest));
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsPriest));
 			StringBuilder xml = new StringBuilder();
 			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
 			serializer.Serialize(writer, this);
@@ -141,8 +109,7 @@ namespace Rawr.HolyPriest
 		public float Length = 5;
 		public float ManaAmt = 2400;
 		public float ManaTime = 2.5f;
-		public float Activity = 80;
+		public float TimeInFSR = 80;
 		public float Spriest = 0;
-        public float Ratio = .25f;
 	}
 }

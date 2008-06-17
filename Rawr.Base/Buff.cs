@@ -1282,7 +1282,33 @@ namespace Rawr
 				  SetThreshold = 4
 			  });
 
+              // Holy Priest bonuses
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Primal Mooncloth 3 Piece Bonus",
+                  Category = BuffCategory.SetBonuses,
+                  Stats = new Stats() { BonusManaregenWhileCastingMultiplier = 0.05f },
+                  SetName = "Primal Mooncloth",
+                  SetThreshold = 3
+              });
 
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Vestments of Absolution 2 Piece Bonus",
+                  Category = BuffCategory.SetBonuses,
+                  Stats = new Stats() { BonusPoHManaCostReductionMultiplier = 0.1f },
+                  SetName = "Vestments of Absolution",
+                  SetThreshold = 2
+              });
+
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Vestments of Absolution 4 Piece Bonus",
+                  Category = BuffCategory.SetBonuses,
+                  Stats = new Stats() { BonusGHHealingMultiplier = 0.05f },
+                  SetName = "Vestments of Absolution",
+                  SetThreshold = 2
+              });
 
             //i think you're slipping
             defaultBuffs.Add(new Buff()

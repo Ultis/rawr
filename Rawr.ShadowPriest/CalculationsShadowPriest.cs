@@ -3,35 +3,24 @@ using System.Collections.Generic;
 
 using Rawr;
 
-namespace Rawr.HolyPriest
+namespace Rawr.ShadowPriest
 {
-    [System.ComponentModel.DisplayName("HolyPriest|Spell_Holy_Renew")]
-    public class CalculationsHolyPriest : CalculationsBase 
+    [System.ComponentModel.DisplayName("ShadowPriest|Spell_Shadow_ShadowForm")]
+    public class CalculationsShadowPriest : CalculationsBase 
     {
         public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Priest; } }
 
-        private string _currentChartName = null;
-        
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
             get
             {
-                _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                switch (_currentChartName)
+                if (_subPointNameColors == null)
                 {
-                    case "Spell HpS":
-                        _subPointNameColors.Add("HpS", System.Drawing.Color.Red);
-                        break;
-                    case "Spell HpM":
-                        _subPointNameColors.Add("HpM", System.Drawing.Color.Red);
-                        break;
-                    default:
-                        _subPointNameColors.Add("Healing", System.Drawing.Color.Red);
-                        _subPointNameColors.Add("Regen", System.Drawing.Color.Blue);
-                        break;
+                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+                    _subPointNameColors.Add("Dps", System.Drawing.Color.FromArgb(0, 128, 255));
+                    _subPointNameColors.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
                 }
-               
                 return _subPointNameColors;
             }
         }
@@ -48,23 +37,19 @@ namespace Rawr.HolyPriest
 					"Basic Stats:Stamina",
 					"Basic Stats:Intellect",
 					"Basic Stats:Spirit",
-					"Basic Stats:Healing",
-					"Basic Stats:Mp5",
-					"Basic Stats:Regen InFSR",
-					"Basic Stats:Regen OutFSR",
+					"Basic Stats:Shadow Damage",
+					"Basic Stats:Regen",
 					"Basic Stats:Spell Crit",
+					"Basic Stats:Spell Hit",
 					"Basic Stats:Spell Haste",
-                    "Spells:Renew",
-                    "Spells:Greater Heal",
-                    "Spells:Flash Heal",
-				    "Spells:Binding Heal",
-                    "Spells:Prayer of Mending",
-                    "Spells:PoH",
-				    "Spells:CoH",
-                    "Spells:Power Word Shield",
-                    "Spells:Heal",
-				    "Spells:Holy Nova",
-                    "Spells:Lightwell"
+                    "Basic Stats:Global Cooldown",
+                    "Spells:Vampiric Touch",
+                    "Spells:Shadow Word Pain",
+				    "Spells:Shadow Word Death",
+                    "Spells:Mind Blast",
+                    "Spells:Mind Flay",
+                    "Spells:Vampiric Embrace",
+                    "Spells:Power Word Shield"
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -76,7 +61,7 @@ namespace Rawr.HolyPriest
             get {
                 if (_calculationOptionsPanel == null)
                 {
-                    _calculationOptionsPanel = new CalculationOptionsPanelHolyPriest();
+                    _calculationOptionsPanel = new CalculationOptionsPanelShadowPriest();
                 }
                 return _calculationOptionsPanel;
             }
@@ -88,13 +73,13 @@ namespace Rawr.HolyPriest
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Spell HpS", "Spell HpM" };
+                    _customChartNames = new string[] {};
                 return _customChartNames;
             }
         }
 
-        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHolyPriest(); }
-        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHolyPriest(); }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationShadowPriest(); }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsShadowPriest(); }
 
         private List<Item.ItemType> _relevantItemTypes = null;
         public override List<Item.ItemType> RelevantItemTypes
@@ -114,12 +99,16 @@ namespace Rawr.HolyPriest
             }
         }
 
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+        {
+            throw new NotImplementedException();
+        }
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = GetRaceStats(character);
-            CharacterCalculationsHolyPriest calculatedStats = new CharacterCalculationsHolyPriest();
-            CalculationOptionsPriest calculationOptions = character.CalculationOptions as CalculationOptionsPriest;
+            CharacterCalculationsShadowPriest calculatedStats = new CharacterCalculationsShadowPriest();
             
             calculatedStats.BasicStats = stats;
             calculatedStats.Talents = character.Talents;
@@ -129,18 +118,29 @@ namespace Rawr.HolyPriest
             calculatedStats.SpiritRegen = (float)Math.Floor(5 * 0.0093271 * calculatedStats.BasicStats.Spirit * Math.Sqrt(calculatedStats.BasicStats.Intellect));
             calculatedStats.RegenInFSR = (float)Math.Floor((calculatedStats.BasicStats.Mp5 + character.Talents.GetTalent("Meditation").PointsInvested * 0.1f * calculatedStats.SpiritRegen * (1 + calculatedStats.BasicStats.BonusManaregenWhileCastingMultiplier)));
             calculatedStats.RegenOutFSR = calculatedStats.BasicStats.Mp5 + calculatedStats.SpiritRegen;
-            
+           
             calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect / 80) +
-                (calculatedStats.BasicStats.SpellCritRating / 22.08) + 1.85 + character.Talents.GetTalent("Holy Specialization").PointsInvested, 2);
+                (calculatedStats.BasicStats.SpellCritRating / 22.08) + 1.85, 2);
 
-            calculatedStats.BasicStats.Healing += calculatedStats.BasicStats.Spirit * character.Talents.GetTalent("Spiritual Guidance").PointsInvested * 0.05f;
-            
-            calculatedStats.HealPoints = calculatedStats.BasicStats.Healing;
-            calculatedStats.RegenPoints = (calculatedStats.RegenInFSR * calculationOptions.TimeInFSR*0.01f +
-                                           calculatedStats.RegenOutFSR * (100 - calculationOptions.TimeInFSR) * 0.01f);
-            calculatedStats.OverallPoints = calculatedStats.HealPoints + calculatedStats.RegenPoints;
+            calculatedStats.BasicStats.SpellDamageRating += calculatedStats.BasicStats.Spirit * character.Talents.GetTalent("Spiritual Guidance").PointsInvested * 0.05f;
+
+            int hitcap = GetSpellHitCap(character.Talents);
+            calculatedStats.DpsPoints = calculatedStats.BasicStats.SpellDamageRating + calculatedStats.BasicStats.SpellShadowDamageRating
+                + (calculatedStats.BasicStats.SpellHasteRating)
+                + (calculatedStats.BasicStats.SpellCritRating / 5.57f)
+                + (calculatedStats.BasicStats.Spirit * 0.11f)
+                + (calculatedStats.BasicStats.Intellect * 0.055f)
+                + (calculatedStats.BasicStats.SpellHitRating < hitcap ? (hitcap - calculatedStats.BasicStats.SpellHitRating) * 1.364f: 0);
+
+            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Stamina / 10;
+            calculatedStats.OverallPoints = calculatedStats.DpsPoints + calculatedStats.SurvivalPoints;
 
             return calculatedStats;
+        }
+
+        public static int GetSpellHitCap(TalentTree talents)
+        {
+            return (int)Math.Round(202 - talents.GetTalent("Shadow Focus").PointsInvested * 12.6f * 2);
         }
 
         public Stats GetRaceStats(Character character)
@@ -235,84 +235,11 @@ namespace Rawr.HolyPriest
             statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
             statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
-            statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
+            statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f * statsTotal.BonusHealthMultiplier);
 
             return statsTotal;
         }
-
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-        {
-            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-            ComparisonCalculationBase comparison;
-            CharacterCalculationsHolyPriest p;
-            Spell[] spellList;
-
-            switch (chartName)
-            {
-                case "Spell HpS":
-                    _currentChartName = "Spell HpS";
-                    p = GetCharacterCalculations(character) as CharacterCalculationsHolyPriest;
-                    spellList = new Spell[] {
-                                                new Renew(p.BasicStats, character.Talents), 
-                                                new FlashHeal(p.BasicStats, character.Talents), 
-                                                new GreaterHeal(p.BasicStats, character.Talents),
-                                                new Heal(p.BasicStats, character.Talents),
-                                                new PrayerOfHealing(p.BasicStats, character.Talents),
-                                                new BindingHeal(p.BasicStats, character.Talents),
-                                                new PrayerOfMending(p.BasicStats, character.Talents),
-                                                new CircleOfHealing(p.BasicStats, character.Talents),
-                                                new HolyNova(p.BasicStats, character.Talents),
-                                                new Lightwell(p.BasicStats, character.Talents)
-                                            };
-                    foreach (Spell spell in spellList)
-                    {
-                        if(spell.AvgHeal == 0)
-                            continue;
-
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = spell.Name;
-                        comparison.Equipped = false;
-                        comparison.SubPoints[0] = spell.HpS;
-                        comparison.OverallPoints = comparison.SubPoints[0];
-                        comparisonList.Add(comparison);
-                    }
-
-                    return comparisonList.ToArray();
-                case "Spell HpM":
-                    _currentChartName = "Spell HpM";
-                    p = GetCharacterCalculations(character) as CharacterCalculationsHolyPriest;
-                    spellList = new Spell[] {
-                                                new Renew(p.BasicStats, character.Talents), 
-                                                new FlashHeal(p.BasicStats, character.Talents), 
-                                                new GreaterHeal(p.BasicStats, character.Talents),
-                                                new Heal(p.BasicStats, character.Talents),
-                                                new PrayerOfHealing(p.BasicStats, character.Talents),
-                                                new BindingHeal(p.BasicStats, character.Talents),
-                                                new PrayerOfMending(p.BasicStats, character.Talents),
-                                                new CircleOfHealing(p.BasicStats, character.Talents),
-                                                new PowerWordShield(p.BasicStats, character.Talents),
-                                                new HolyNova(p.BasicStats, character.Talents),
-                                                new Lightwell(p.BasicStats, character.Talents)
-                                            };
-                    foreach (Spell spell in spellList)
-                    {
-                        if (spell.AvgHeal == 0)
-                            continue;
-
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = spell.Name;
-                        comparison.Equipped = false;
-                        comparison.OverallPoints = spell.HpM;
-                        comparison.SubPoints[0] = comparison.OverallPoints;
-                        comparisonList.Add(comparison);
-                    }
-                    return comparisonList.ToArray();
-                default:
-                    _currentChartName = null;
-                    return new ComparisonCalculationBase[0];
-            }
-        }
-
+       
         public override Stats GetRelevantStats(Stats stats)
         {
             return new Stats()
@@ -320,34 +247,32 @@ namespace Rawr.HolyPriest
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
                 Mp5 = stats.Mp5,
-                Healing = stats.Healing,
+                SpellDamageRating = stats.SpellDamageRating,
+                SpellShadowDamageRating = stats.SpellShadowDamageRating,
+                SpellHitRating = stats.SpellHitRating,
                 SpellCritRating = stats.SpellCritRating,
                 SpellHasteRating = stats.SpellHasteRating,
                 Health = stats.Health,
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
                 BonusManaPotion = stats.BonusManaPotion,
-                MementoProc = stats.MementoProc,
-                BonusManaregenWhileCastingMultiplier = stats.BonusManaregenWhileCastingMultiplier,
-                BonusPoHManaCostReductionMultiplier = stats.BonusPoHManaCostReductionMultiplier,
-                BonusGHHealingMultiplier = stats.BonusGHHealingMultiplier
+                ThreatReductionMultiplier = stats.ThreatReductionMultiplier
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
+            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellDamageRating + stats.SpellShadowDamageRating+ stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
-                + stats.BonusManaPotion + stats.MementoProc + stats.BonusManaregenWhileCastingMultiplier
-                + stats.BonusPoHManaCostReductionMultiplier + stats.BonusManaregenWhileCastingMultiplier) > 0;
+                + stats.BonusManaPotion + stats.SpellHitRating + stats.ThreatReductionMultiplier) > 0;
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
             System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsPriest));
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsShadowPriest));
             System.IO.StringReader reader = new System.IO.StringReader(xml);
-            CalculationOptionsPriest calcOpts = serializer.Deserialize(reader) as CalculationOptionsPriest;
+            CalculationOptionsShadowPriest calcOpts = serializer.Deserialize(reader) as CalculationOptionsShadowPriest;
             return calcOpts;
         }
     }

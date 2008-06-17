@@ -84,10 +84,6 @@
       <Project>{20DCE3DB-4074-449C-BC62-DDF7AEBF81A3}</Project>
       <Name>Rawr.Cat</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.Mage\Rawr.Mage.csproj">
-      <Project>{3CBA225F-E45A-48D3-B039-980473FD8774}</Project>
-      <Name>Rawr.Mage</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
