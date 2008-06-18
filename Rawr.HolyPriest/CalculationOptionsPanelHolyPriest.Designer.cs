@@ -33,7 +33,6 @@
             this.trkActivity = new System.Windows.Forms.TrackBar();
             this.lblActivity = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.btnRenew = new System.Windows.Forms.Button();
             this.tbnTalents = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).BeginInit();
@@ -84,7 +83,7 @@
             this.trkActivity.Maximum = 100;
             this.trkActivity.Minimum = 1;
             this.trkActivity.Name = "trkActivity";
-            this.trkActivity.Size = new System.Drawing.Size(118, 42);
+            this.trkActivity.Size = new System.Drawing.Size(118, 45);
             this.trkActivity.TabIndex = 23;
             this.trkActivity.TickFrequency = 10;
             this.trkActivity.Value = 90;
@@ -108,16 +107,6 @@
             this.label9.Text = "Time in FSR:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // btnRenew
-            // 
-            this.btnRenew.Location = new System.Drawing.Point(8, 138);
-            this.btnRenew.Name = "btnRenew";
-            this.btnRenew.Size = new System.Drawing.Size(194, 23);
-            this.btnRenew.TabIndex = 26;
-            this.btnRenew.Text = "HpS/Hpm by Ranks";
-            this.btnRenew.UseVisualStyleBackColor = true;
-            this.btnRenew.Click += new System.EventHandler(this.btnRenew_Click);
-            // 
             // tbnTalents
             // 
             this.tbnTalents.Location = new System.Drawing.Point(8, 8);
@@ -133,7 +122,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tbnTalents);
-            this.Controls.Add(this.btnRenew);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.lblActivity);
             this.Controls.Add(this.trkActivity);
@@ -155,7 +143,6 @@
         private System.Windows.Forms.TrackBar trkActivity;
         private System.Windows.Forms.Label lblActivity;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Button btnRenew;
         private System.Windows.Forms.Button tbnTalents;
     }
 }

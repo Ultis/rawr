@@ -163,6 +163,12 @@ namespace Rawr.HolyPriest
             return list;
         }
 
+        public static List<Spell> GetAllCommonRanks(Stats stats, TalentTree talents)
+        {
+            return new List<Spell> { new Renew(stats, talents)};
+        }
+
+
         protected void Calculate(Stats stats, TalentTree talents, int rank)
         {
             Rank = rank;
@@ -219,6 +225,11 @@ namespace Rawr.HolyPriest
             return list;
         }
 
+        public static List<Spell> GetAllCommonRanks(Stats stats, TalentTree talents)
+        {
+            return new List<Spell> { new FlashHeal(stats, talents) };
+        }
+
         protected void Calculate(Stats stats, TalentTree talents, int rank)
         {
             Rank = rank;
@@ -263,6 +274,11 @@ namespace Rawr.HolyPriest
                 list.Add(new Heal(stats, talents, i));
 
             return list;
+        }
+
+        public static List<Spell> GetAllCommonRanks(Stats stats, TalentTree talents)
+        {
+            return new List<Spell> { new Heal(stats, talents) };
         }
 
         protected void Calculate(Stats stats, TalentTree talents, int rank)
@@ -313,6 +329,11 @@ namespace Rawr.HolyPriest
                 list.Add(new GreaterHeal(stats, talents, i));
 
             return list;
+        }
+
+        public static List<Spell> GetAllCommonRanks(Stats stats, TalentTree talents)
+        {
+            return new List<Spell> { new GreaterHeal(stats, talents, 7), new GreaterHeal(stats, talents, 2), new GreaterHeal(stats, talents, 1) };
         }
 
         protected void Calculate(Stats stats, TalentTree talents, int rank)
@@ -394,7 +415,12 @@ namespace Rawr.HolyPriest
 
             return list;
         }
-        
+
+        public static List<Spell> GetAllCommonRanks(Stats stats, TalentTree talents, int targets)
+        {
+            return new List<Spell> { new PrayerOfHealing(stats, talents, baseSpellTable.Count, targets) };
+        }
+
         protected void Calculate(Stats stats, TalentTree talents, int rank)
         {
             Rank = rank;
@@ -488,6 +514,11 @@ namespace Rawr.HolyPriest
                 list.Add(new CircleOfHealing(stats, talents, i, targets));
 
             return list;
+        }
+
+        public static List<Spell> GetAllCommonRanks(Stats stats, TalentTree talents, int targets)
+        {
+            return new List<Spell> { new CircleOfHealing(stats, talents, baseSpellTable.Count, targets) };
         }
 
         protected void Calculate(Stats stats, TalentTree talents, int rank)
@@ -588,6 +619,11 @@ namespace Rawr.HolyPriest
             return list;
         }
 
+        public static List<Spell> GetAllCommonRanks(Stats stats, TalentTree talents, int targets)
+        {
+            return new List<Spell> { new HolyNova(stats, talents, baseSpellTable.Count, targets) };
+        }
+
         protected void Calculate(Stats stats, TalentTree talents, int rank)
         {
             if (talents.GetTalent("Holy Nova").PointsInvested == 0)
@@ -669,6 +705,11 @@ namespace Rawr.HolyPriest
                 list.Add(new BindingHeal(stats, talents, i));
 
             return list;
+        }
+
+        public static List<Spell> GetAllCommonRanks(Stats stats, TalentTree talents)
+        {
+            return new List<Spell> { new BindingHeal(stats, talents) };
         }
 
         protected void Calculate(Stats stats, TalentTree talents, int rank)
@@ -754,6 +795,11 @@ namespace Rawr.HolyPriest
             return list;
         }
 
+        public static List<Spell> GetAllCommonRanks(Stats stats, TalentTree talents, int targets)
+        {
+            return new List<Spell> { new PrayerOfMending(stats, talents, 1, targets) };
+        }
+
         protected void Calculate(Stats stats, TalentTree talents, int rank)
         {
             Range = 15;
@@ -832,6 +878,10 @@ namespace Rawr.HolyPriest
             return list;
         }
 
+        public static List<Spell> GetAllCommonRanks(Stats stats, TalentTree talents)
+        {
+            return new List<Spell> { new PowerWordShield(stats, talents) };
+        }
 
         protected void Calculate(Stats stats, TalentTree talents, int rank)
         {
@@ -889,6 +939,11 @@ namespace Rawr.HolyPriest
                 list.Add(new Lightwell(stats, talents, i));
 
             return list;
+        }
+
+        public static List<Spell> GetAllCommonRanks(Stats stats, TalentTree talents)
+        {
+            return new List<Spell> { new Lightwell(stats, talents) };
         }
 
         protected void Calculate(Stats stats, TalentTree talents, int rank)

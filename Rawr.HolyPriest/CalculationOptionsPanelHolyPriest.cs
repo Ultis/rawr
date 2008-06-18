@@ -54,36 +54,6 @@ namespace Rawr.HolyPriest
             }
         }
         
-
-        private void btnRenew_Click(object sender, EventArgs e)
-        {
-            CalculationsHolyPriest retCalc = new CalculationsHolyPriest();
-            CharacterCalculationsHolyPriest p = retCalc.GetCharacterCalculations(Character) as CharacterCalculationsHolyPriest;
-
-            List<Spell>[] spellList = new List<Spell>[] {
-                                                Renew.GetAllRanks(p.BasicStats, Character.Talents),
-                                                FlashHeal.GetAllRanks(p.BasicStats, Character.Talents), 
-                                                GreaterHeal.GetAllRanks(p.BasicStats, Character.Talents),
-                                                Heal.GetAllRanks(p.BasicStats, Character.Talents),
-                                                PrayerOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 3),
-                                                PrayerOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 4),
-                                                PrayerOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 5),
-                                                BindingHeal.GetAllRanks(p.BasicStats, Character.Talents),
-                                                PrayerOfMending.GetAllRanks(p.BasicStats, Character.Talents, 3),
-                                                PrayerOfMending.GetAllRanks(p.BasicStats, Character.Talents, 4),
-                                                PrayerOfMending.GetAllRanks(p.BasicStats, Character.Talents, 5),
-                                                CircleOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 3),
-                                                CircleOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 4),
-                                                CircleOfHealing.GetAllRanks(p.BasicStats, Character.Talents, 5),
-                                                HolyNova.GetAllRanks(p.BasicStats, Character.Talents, 3),
-                                                HolyNova.GetAllRanks(p.BasicStats, Character.Talents, 4),
-                                                HolyNova.GetAllRanks(p.BasicStats, Character.Talents, 5),
-                                                Lightwell.GetAllRanks(p.BasicStats, Character.Talents) 
-                                            };
-            Graph graph = new Graph(spellList);
-            graph.Show();
-        }
-
         private void tbnTalents_Click(object sender, EventArgs e)
         {
             TalentForm talents = new TalentForm(this);
