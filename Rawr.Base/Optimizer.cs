@@ -66,14 +66,16 @@ namespace Rawr
         private float optimizedCharacterValue;
         private Character currentCharacter;
         private float currentCharacterValue;
+        private bool injected;
 
-        public OptimizeCharacterCompletedEventArgs(Character optimizedCharacter, float optimizedCharacterValue, Character currentCharacter, float currentCharacterValue, Exception error, bool cancelled)
+        public OptimizeCharacterCompletedEventArgs(Character optimizedCharacter, float optimizedCharacterValue, Character currentCharacter, float currentCharacterValue, bool injected, Exception error, bool cancelled)
             : base(error, cancelled, null)
         {
             this.optimizedCharacter = optimizedCharacter;
             this.optimizedCharacterValue = optimizedCharacterValue;
             this.currentCharacter = currentCharacter;
             this.currentCharacterValue = currentCharacterValue;
+            this.injected = injected;
         }
 
         public Character OptimizedCharacter
@@ -109,6 +111,15 @@ namespace Rawr
             {
                 RaiseExceptionIfNecessary();
                 return currentCharacterValue;
+            }
+        }
+
+        public bool CurrentCharacterInjected
+        {
+            get
+            {
+                RaiseExceptionIfNecessary();
+                return injected;
             }
         }
     }
@@ -261,7 +272,7 @@ namespace Rawr
 
         private bool cancellationPending;
         private AsyncOperation asyncOperation;
-        private delegate void OptimizeCharacterThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness);
+        private delegate void OptimizeCharacterThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter);
         private delegate void ComputeUpgradesThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness);
 
         public event OptimizeCharacterCompletedEventHandler OptimizeCharacterCompleted;
@@ -276,24 +287,25 @@ namespace Rawr
         private SendOrPostCallback computeUpgradesCompletedDelegate;
         private ComputeUpgradesThreadStartDelegate computeUpgradesThreadStartDelegate;
 
-        public void OptimizeCharacterAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness)
+        public void OptimizeCharacterAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            optimizeCharacterThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, null, null);
+            optimizeCharacterThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, injectCharacter, null, null);
         }
 
-        private void OptimizeCharacterThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness)
+        private void OptimizeCharacterThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
         {
             Exception error = null;
             Character optimizedCharacter = null;
             float optimizedCharacterValue = 0.0f;
             float currentCharacterValue = 0.0f;
+            bool injected = false;
             try
             {
-                optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, out error);
+                optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, injectCharacter, out injected, out error);
 				optimizedCharacterValue = GetCalculationsValue(Calculations.GetCharacterCalculations(optimizedCharacter));
 				currentCharacterValue =	GetCalculationsValue(Calculations.GetCharacterCalculations(character));
             }
@@ -301,7 +313,7 @@ namespace Rawr
             {
                 error = ex;
             }
-            asyncOperation.PostOperationCompleted(optimizeCharacterCompletedDelegate, new OptimizeCharacterCompletedEventArgs(optimizedCharacter, optimizedCharacterValue, character, currentCharacterValue, error, cancellationPending));
+            asyncOperation.PostOperationCompleted(optimizeCharacterCompletedDelegate, new OptimizeCharacterCompletedEventArgs(optimizedCharacter, optimizedCharacterValue, character, currentCharacterValue, injected, error, cancellationPending));
         }
 
         public void ComputeUpgradesAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness)
@@ -345,20 +357,21 @@ namespace Rawr
             }
         }
 
-        public Character OptimizeCharacter(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness)
+        public Character OptimizeCharacter(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            Character optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, out error);
+            bool injected;
+            Character optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, injectCharacter, out injected, out error);
             if (error != null) throw error;
             isBusy = false;
             return optimizedCharacter;
         }
 
-        private Character PrivateOptimizeCharacter(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, out Exception error)
+        private Character PrivateOptimizeCharacter(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter, out bool injected, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -370,10 +383,18 @@ namespace Rawr
             currentOperation = OptimizationOperation.OptimizeCharacter;
             Character optimizedCharacter = null;
             float bestValue = 0.0f;
+            injected = false;
             try
             {
                 ItemCache.Instance = optimizerItemCache;
-                optimizedCharacter = Optimize(out bestValue);
+                if (injectCharacter)
+                {
+                    optimizedCharacter = Optimize(character, out bestValue, out injected);
+                }
+                else
+                {
+                    optimizedCharacter = Optimize(out bestValue);
+                }
             }
             catch (Exception ex)
             {
@@ -471,13 +492,15 @@ namespace Rawr
                                 int saveThoroughness = _thoroughness;
                                 _thoroughness = 1;
                                 float injectValue;
-                                Character inject = Optimize(null, 0, out injectValue, out bestCalculations);
+                                bool injected;
+                                Character inject = Optimize(null, 0, out injectValue, out bestCalculations, out injected);
                                 _thoroughness = saveThoroughness;
-                                bestCharacter = Optimize(inject, injectValue, out best, out bestCalculations);
+                                bestCharacter = Optimize(inject, injectValue, out best, out bestCalculations, out injected);
                             }
                             else
                             {
-                                bestCharacter = Optimize(null, 0, out best, out bestCalculations);
+                                bool injected;
+                                bestCharacter = Optimize(null, 0, out best, out bestCalculations, out injected);
                             }
                             if (best > baseValue)
                             {
@@ -964,16 +987,23 @@ namespace Rawr
         private Character Optimize(out float bestValue)
         {
             CharacterCalculationsBase bestCalc;
-            return Optimize(null, 0, out bestValue, out bestCalc);
+            bool injected;
+            return Optimize(null, 0, out bestValue, out bestCalc, out injected);
         }
 
-		private Character Optimize(Character injectCharacter, float injectValue, out float best, out CharacterCalculationsBase bestCalculations)
+        private Character Optimize(Character injectCharacter, out float bestValue, out bool injected)
+        {
+            CharacterCalculationsBase bestCalc;
+            return Optimize(injectCharacter, GetOptimizationValue(injectCharacter), out bestValue, out bestCalc, out injected);
+        }
+
+		private Character Optimize(Character injectCharacter, float injectValue, out float best, out CharacterCalculationsBase bestCalculations, out bool injected)
 		{
 			//Begin Genetic
 			int noImprove, i1, i2;
 			best = -10000000;
             bestCalculations = null;
-            bool injected = false;
+            injected = false;
 
 			int popSize = _thoroughness;
 			int cycleLimit = _thoroughness;
@@ -1030,7 +1060,7 @@ namespace Rawr
 
 				noImprove++;
 
-				if (_thoroughness > 1 && noImprove == 0 || noImprove % Math.Max(1, cycleLimit / 2) != 0)
+                if (_thoroughness > 1 && noImprove < cycleLimit)
 				{
 					population.CopyTo(popCopy, 0);
 					if (bestCharacter == null)
@@ -1207,10 +1237,20 @@ namespace Rawr
 			return new KeyValuePair<float,Character>(0, null);
 		}
 
-		private float GetCalculationsValue(CharacterCalculationsBase calcs)
+        public static float GetOptimizationValue(Character character)
+        {
+            return GetCalculationsValue(Calculations.GetCharacterCalculations(character), character.CalculationToOptimize, character.OptimizationRequirements.ToArray());
+        }
+
+        private float GetCalculationsValue(CharacterCalculationsBase calcs)
+        {
+            return Optimizer.GetCalculationsValue(calcs, _calculationToOptimize, _requirements);
+        }
+
+        private static float GetCalculationsValue(CharacterCalculationsBase calcs, string calculation, OptimizationRequirement[] requirements)
 		{
 			float ret = 0;
-			foreach (OptimizationRequirement requirement in _requirements)
+			foreach (OptimizationRequirement requirement in requirements)
 			{
 				float calcValue = GetCalculationValue(calcs, requirement.Calculation);
 				if (requirement.LessThan)
@@ -1226,12 +1266,12 @@ namespace Rawr
 			}
 
 			if (ret < 0) return ret;
-			else return GetCalculationValue(calcs, _calculationToOptimize);
+			else return GetCalculationValue(calcs, calculation);
 		}
 
-		private float GetCalculationValue(CharacterCalculationsBase calcs, string calculation)
+		private static float GetCalculationValue(CharacterCalculationsBase calcs, string calculation)
 		{
-			if (calculation == "[Overall]")
+			if (calculation == null || calculation == "[Overall]")
 				return calcs.OverallPoints;
 			else if (calculation.StartsWith("[SubPoint "))
 				return calcs.SubPoints[int.Parse(calculation.Substring(10).TrimEnd(']'))];

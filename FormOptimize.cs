@@ -108,7 +108,6 @@ namespace Rawr
                     }
                 }
             }
-            Invalidate();
 		}
 
 		private void FormOptimize_FormClosing(object sender, FormClosingEventArgs e)
@@ -165,7 +164,7 @@ namespace Rawr
                 trackBarThoroughness.Enabled = false;
             buttonCancel.DialogResult = DialogResult.None;
 
-            _optimizer.OptimizeCharacterAsync(_character, _calculationToOptimize, _requirements, _thoroughness);
+            _optimizer.OptimizeCharacterAsync(_character, _calculationToOptimize, _requirements, _thoroughness, false);
 		}
 
 		private string GetCalculationStringFromComboBox(ComboBox comboBox)

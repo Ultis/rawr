@@ -1040,7 +1040,11 @@ namespace Rawr //O O . .
 		public List<string> AvailableItems
 		{
 			get { return _availableItems; }
-			set { _availableItems = value; }
+            set
+            {
+                _availableItems = value;
+                OnAvailableItemsChanged();
+            }
 		}
 
         public ItemAvailability GetItemAvailability(Item item)

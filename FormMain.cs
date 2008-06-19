@@ -15,6 +15,11 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
+        private string _storedCharacterPath;
+        private bool _storedUnsavedChanged;
+        private Character _storedCharacter;
+        private BatchCharacter _batchCharacter;
+
         private FormSplash _splash = new FormSplash();
 		private string _characterPath = "";
 		private bool _unsavedChanges = false;
@@ -487,9 +492,46 @@ namespace Rawr
 
         private void LoadCharacterIntoForm(Character character)
         {
+            LoadCharacterIntoForm(character, false);
+        }
+
+        private void LoadCharacterIntoForm(Character character, bool unsavedChanges)
+        {
             Character = character;
-            _unsavedChanges = false;
+            _unsavedChanges = unsavedChanges;
             SetTitle();
+        }
+
+        public void LoadBatchCharacter(BatchCharacter character)
+        {
+            if (character.Character != null)
+            {
+                if (_batchCharacter == null)
+                {
+                    _storedCharacter = _character;
+                    _storedCharacterPath = _characterPath;
+                    _storedUnsavedChanged = _unsavedChanges;
+                }
+                else
+                {
+                    _batchCharacter.UnsavedChanges = _unsavedChanges;
+                }
+                _batchCharacter = character;
+                _characterPath = character.AbsulutePath;
+                LoadCharacterIntoForm(character.Character, character.UnsavedChanges);
+            }
+        }
+
+        public void UnloadBatchCharacter()
+        {
+            if (_batchCharacter != null)
+            {
+                _batchCharacter.UnsavedChanges = _unsavedChanges;
+                _batchCharacter = null;
+                _characterPath = _storedCharacterPath;
+                LoadCharacterIntoForm(_storedCharacter, _storedUnsavedChanged);
+                _storedCharacter = null;
+            }
         }
 
         private void LoadSavedCharacter(string path)
@@ -1043,6 +1085,12 @@ namespace Rawr
             StatusMessaging.UpdateStatusFinished("Update Item Cache");
             ItemIcons.CacheAllIcons(items.ToArray());
             ItemCache.OnItemsChanged();
+        }
+
+        private void BatchToolsToolStripMenuItem6_Click(object sender, EventArgs e)
+        {
+            FormBatchTools form = new FormBatchTools(this);
+            form.Show();            
         }
 
 		//private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
