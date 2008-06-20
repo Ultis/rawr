@@ -555,7 +555,8 @@ namespace Rawr.Mage
             CharacterCalculationsBase ret;
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             bool savedIncrementalOptimizations = calculationOptions.IncrementalOptimizations;
-            if (computeIncrementalSet || calculationOptions.IncrementalSetCooldowns == null) calculationOptions.IncrementalOptimizations = false;
+            if (calculationOptions.IncrementalOptimizations && calculationOptions.IncrementalSetCooldowns == null) computeIncrementalSet = true;
+            if (computeIncrementalSet) calculationOptions.IncrementalOptimizations = false;
             if (calculationOptions.IncrementalOptimizations && !character.DisableBuffAutoActivation)
             {
                 ret = GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, computeIncrementalSet);

@@ -55,6 +55,22 @@ namespace Rawr.Mage
         public SpellId[] IncrementalSetSpells;
         [XmlIgnore]
         public string IncrementalSetArmor;
+        [XmlIgnore]
+        public Character Character
+        {
+            set
+            {
+                value.ItemsChanged += new EventHandler(Character_ItemsChanged);
+            }
+        }
+
+        private void Character_ItemsChanged(object sender, EventArgs e)
+        {
+            IncrementalSetCooldowns = null;
+            IncrementalSetSegments = null;
+            IncrementalSetSortedCooldowns = null;
+            IncrementalSetSpells = null;
+        }
 
         public bool ReconstructSequence { get; set; }
         public float Innervate { get; set; }
@@ -272,6 +288,7 @@ namespace Rawr.Mage
         public CalculationOptionsMage(Character character)
             : this()
         {
+            character.ItemsChanged += new EventHandler(Character_ItemsChanged);
             // pull talents
             #region Mage Talents Import
             try

@@ -819,7 +819,12 @@ namespace Rawr
         /// are based. Used by optimizer upgrade calculations.
         /// </summary>
         public Character Character { get; set; }
-	}
+
+        /// <summary>
+        /// Enchant associated with the Item. Used by optimizer upgrade calculations.
+        /// </summary>
+        public Enchant Enchant { get; set; }
+    }
 
 	/// <summary>
 	/// Base CalculationOptionsPanel class which should be inherited by a custom user control for the model.

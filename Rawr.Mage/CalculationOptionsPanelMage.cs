@@ -20,15 +20,9 @@ namespace Rawr.Mage
         private MageTalentsForm talents;
         private bool loading = false;
 
-        private Character character;
-
 		protected override void LoadCalculationOptions()
 		{
-            if (character != null) character.ItemsChanged -= new EventHandler(character_ItemsChanged);
-            character = Character;
-            if (character != null) character.ItemsChanged += new EventHandler(character_ItemsChanged);
-
-            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsMage(character);
+            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsMage(Character);
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
 
             loading = true;
@@ -38,16 +32,6 @@ namespace Rawr.Mage
             if (talents != null) talents.LoadCalculationOptions();
 
             loading = false;
-        }
-
-        void character_ItemsChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
-            if (calculationOptions != null && calculationOptions.IncrementalOptimizations)
-            {
-                // compute restricted stacking & spell combinations for incremental optimizations
-                ((CalculationsMage)Calculations.Instance).GetCharacterCalculations(Character, null, true);
-            }
         }
 
 		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)

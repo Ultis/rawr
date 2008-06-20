@@ -986,6 +986,9 @@ namespace Rawr //O O . .
                 if (ret == null && _serializedCalculationOptions.ContainsKey(CurrentModel))
                 {
                     ret = Calculations.DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
+                    // set parent Character for models that need backward link
+                    System.Reflection.PropertyInfo propertyInfo = ret.GetType().GetProperty("Character", typeof(Character));
+                    if (propertyInfo != null) propertyInfo.SetValue(ret, this, null);
                     _calculationOptions[CurrentModel] = ret;
                 }
                 return ret;

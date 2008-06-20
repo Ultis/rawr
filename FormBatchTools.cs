@@ -23,11 +23,36 @@ namespace Rawr
         {
             None,
             Optimize,
+            BuildUpgradeList
         }
 
         AsyncOperation currentOperation;
         int batchIndex;
+
+        // optimize state
         int optimizerRound;
+
+        // build upgrade list state
+        int upgradeListPhase;
+        private class UpgradeEntry
+        {
+            public Item Item { get; set; }
+            public Enchant Enchant { get; set; }
+            public float Value { get; set; }
+        }
+        Dictionary<Character.CharacterSlot, Dictionary<string, UpgradeEntry>> upgradeList;
+        IEnumerator<UpgradeEntry> upgradeListEnumerator;
+
+        IEnumerator<UpgradeEntry> GetUpgradeListEnumerator()
+        {
+            foreach (KeyValuePair<Character.CharacterSlot, Dictionary<string, UpgradeEntry>> kvp in upgradeList)
+            {
+                foreach (UpgradeEntry entry in kvp.Value.Values)
+                {
+                    yield return entry;
+                }
+            }
+        }
 
         private BatchCharacterList BatchCharacterList
         {
@@ -72,6 +97,8 @@ namespace Rawr
             _optimizer.OptimizeCharacterCompleted += new OptimizeCharacterCompletedEventHandler(_optimizer_OptimizeCharacterCompleted);
             _optimizer.ComputeUpgradesProgressChanged += new ComputeUpgradesProgressChangedEventHandler(_optimizer_ComputeUpgradesProgressChanged);
             _optimizer.ComputeUpgradesCompleted += new ComputeUpgradesCompletedEventHandler(_optimizer_ComputeUpgradesCompleted);
+            _optimizer.EvaluateUpgradeProgressChanged += new ProgressChangedEventHandler(_optimizer_EvaluateUpgradeProgressChanged);
+            _optimizer.EvaluateUpgradeCompleted += new EvaluateUpgradeCompletedEventHandler(_optimizer_EvaluateUpgradeCompleted);
 
             checkBoxOverrideRegem.Checked = Properties.Optimizer.Default.OverrideRegem;
             checkBoxOverrideReenchant.Checked = Properties.Optimizer.Default.OverrideReenchant;
@@ -144,7 +171,8 @@ namespace Rawr
                         _character.OnItemsChanged();
 
                         CurrentBatchCharacter.UnsavedChanges = true;
-                        CurrentBatchCharacter.NewScore = e.OptimizedCharacterValue;
+                        //CurrentBatchCharacter.NewScore = e.OptimizedCharacterValue;
+                        CurrentBatchCharacter.NewScore = Optimizer.GetOptimizationValue(_character); // on item change always evaluate with equipped gear first (needed by mage module to store incremental data)
 
                         optimizerRound = 0;
                     }
@@ -158,7 +186,10 @@ namespace Rawr
                     }
                     if (optimizerRound >= maxRounds)
                     {
-                        batchIndex++;
+                        do
+                        {
+                            batchIndex++;
+                        } while (batchIndex < BatchCharacterList.Count && CurrentBatchCharacter.Character == null);
                         optimizerRound = 0;
                     }
 
@@ -179,17 +210,173 @@ namespace Rawr
 
         void _optimizer_ComputeUpgradesProgressChanged(object sender, ComputeUpgradesProgressChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            switch (currentOperation)
+            {
+                case AsyncOperation.BuildUpgradeList:
+                    statusLabel.Text = string.Format("[{2}/{3}] {0}: {1}", CurrentBatchCharacter.Name, e.CurrentItem, batchIndex + 1, BatchCharacterList.Count);
+                    statusProgressBar.Value = e.ProgressPercentage;
+                    break;
+            }
         }
 
         void _optimizer_ComputeUpgradesCompleted(object sender, ComputeUpgradesCompletedEventArgs e)
         {
-            throw new NotImplementedException();
+            switch (currentOperation)
+            {
+                case AsyncOperation.BuildUpgradeList:
+                    if (e.Cancelled || e.Error != null)
+                    {
+                        currentOperation = AsyncOperation.None;
+                        buttonCancel.Enabled = false;
+                        statusLabel.Text = "";
+                        statusProgressBar.Value = 0;
+                        break;
+                    }
+                    if (upgradeListPhase == 0)
+                    {
+                        foreach (KeyValuePair<Character.CharacterSlot, List<ComparisonCalculationBase>> kvp in e.Upgrades)
+                        {
+                            Dictionary<string, UpgradeEntry> map;
+                            if (!upgradeList.TryGetValue(kvp.Key, out map))
+                            {
+                                map = new Dictionary<string, UpgradeEntry>();
+                                upgradeList[kvp.Key] = map;
+                            }
+                            foreach (ComparisonCalculationBase comp in kvp.Value)
+                            {
+                                string key = comp.Item.GemmedId + "." + ((comp.Enchant == null) ? "0" : comp.Enchant.Id.ToString());
+                                UpgradeEntry upgradeEntry;
+                                if (!map.TryGetValue(key, out upgradeEntry))
+                                {
+                                    upgradeEntry = new UpgradeEntry();
+                                    upgradeEntry.Item = comp.Item;
+                                    upgradeEntry.Enchant = comp.Enchant;
+                                    map[key] = upgradeEntry;
+                                }
+                            }
+                        }
+                        do
+                        {
+                            batchIndex++;
+                        } while (batchIndex < BatchCharacterList.Count && CurrentBatchCharacter.Character == null);
+                        if (batchIndex < BatchCharacterList.Count)
+                        {
+                            ComputeUpgradesCurrentBatchCharacter();
+                        }
+                        else
+                        {
+                            upgradeListPhase = 1;
+                            batchIndex = 0;
+                            upgradeListEnumerator = GetUpgradeListEnumerator();
+                            if (upgradeListEnumerator.MoveNext())
+                            {
+                                EvaluateUpgradeCurrentBatchCharacter(true);
+                            }
+                            else
+                            {
+                                // upgrade list is empty, abort
+                                currentOperation = AsyncOperation.None;
+                                buttonCancel.Enabled = false;
+                                statusLabel.Text = "";
+                                statusProgressBar.Value = 0;
+                                break;
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+
+        void _optimizer_EvaluateUpgradeProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            switch (currentOperation)
+            {
+                case AsyncOperation.BuildUpgradeList:
+                    statusLabel.Text = string.Format("[{2}/{3}] {0}: {1}", CurrentBatchCharacter.Name, upgradeListEnumerator.Current.Item.Name, batchIndex + 1, BatchCharacterList.Count);
+                    statusProgressBar.Value = e.ProgressPercentage;
+                    break;
+            }
+        }
+
+        void _optimizer_EvaluateUpgradeCompleted(object sender, EvaluateUpgradeCompletedEventArgs e)
+        {
+            switch (currentOperation)
+            {
+                case AsyncOperation.BuildUpgradeList:
+                    upgradeListEnumerator.Current.Value += e.UpgradeValue * CurrentBatchCharacter.Weight;
+                    if (upgradeListEnumerator.MoveNext())
+                    {
+                        EvaluateUpgradeCurrentBatchCharacter(false);
+                    }
+                    else
+                    {
+                        do
+                        {
+                            batchIndex++;
+                        } while (batchIndex < BatchCharacterList.Count && CurrentBatchCharacter.Character == null);
+                        if (batchIndex < BatchCharacterList.Count)
+                        {
+                            upgradeListEnumerator = GetUpgradeListEnumerator();
+                            upgradeListEnumerator.MoveNext();
+                            EvaluateUpgradeCurrentBatchCharacter(true);
+                        }
+                        else
+                        {
+                            currentOperation = AsyncOperation.None;
+                            buttonCancel.Enabled = false;
+                            statusLabel.Text = "";
+                            statusProgressBar.Value = 0;
+
+                            float totalValue = 0f;
+                            foreach (BatchCharacter batchCharacter in BatchCharacterList)
+                            {
+                                if (batchCharacter.Character != null)
+                                {
+                                    totalValue += batchCharacter.Weight;
+                                }
+                            }
+
+                            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = new Dictionary<Character.CharacterSlot,List<ComparisonCalculationBase>>();
+
+                            foreach (var kvp in upgradeList)
+                            {
+                                Dictionary<int, UpgradeEntry> filtered = new Dictionary<int, UpgradeEntry>();
+                                foreach (UpgradeEntry entry in kvp.Value.Values)
+                                {
+                                    UpgradeEntry existingEntry;
+                                    filtered.TryGetValue(entry.Item.Id, out existingEntry);
+                                    if (entry.Value > 0 && (existingEntry == null || entry.Value > existingEntry.Value))
+                                    {
+                                        filtered[entry.Item.Id] = entry;
+                                    }
+                                }
+
+                                upgrades[kvp.Key] = new List<ComparisonCalculationBase>();
+                                foreach (UpgradeEntry entry in filtered.Values)
+                                {
+                                    ComparisonCalculationBase itemCalc = Calculations.CreateNewComparisonCalculation();
+                                    itemCalc.Item = entry.Item;
+                                    itemCalc.Enchant = entry.Enchant;
+                                    itemCalc.Character = null;
+                                    itemCalc.Name = entry.Item.Name;
+                                    itemCalc.Equipped = false;
+                                    itemCalc.OverallPoints = entry.Value / totalValue;
+
+                                    upgrades[kvp.Key].Add(itemCalc);                                    
+                                }
+                            }
+
+                            FormUpgradeComparison.Instance.LoadData(formMain.Character, upgrades);
+                            FormUpgradeComparison.Instance.Show();
+                        }
+                    }
+                    break;
+            }
         }
 
         private void FormBatchTools_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = !PromptToSaveBeforeClosing();
+            e.Cancel = _optimizer.IsBusy || !PromptToSaveBeforeClosing();
         }
 
         private void FormBatchTools_FormClosed(object sender, FormClosedEventArgs e)
@@ -516,6 +703,37 @@ namespace Rawr
         {
             //if (e.ListChangedType == ListChangedType.ItemAdded || e.ListChangedType == ListChangedType.ItemDeleted) _unsavedChanges = true;
         }
+
+        private void buildUpgradeListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (currentOperation != AsyncOperation.None) return;
+
+            currentOperation = AsyncOperation.BuildUpgradeList;
+            buttonCancel.Enabled = true;
+
+            batchIndex = 0;
+            upgradeListPhase = 0;
+            upgradeList = new Dictionary<Character.CharacterSlot, Dictionary<string, UpgradeEntry>>();
+            ComputeUpgradesCurrentBatchCharacter();
+        }
+
+        private void ComputeUpgradesCurrentBatchCharacter()
+        {
+            int _thoroughness = trackBarThoroughness.Value;
+            bool _overrideRegem = checkBoxOverrideRegem.Checked;
+            bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
+            _optimizer.InitializeItemCache(CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant);
+            _optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness);
+        }
+
+        private void EvaluateUpgradeCurrentBatchCharacter(bool initializeCache)
+        {
+            int _thoroughness = trackBarThoroughness.Value;
+            bool _overrideRegem = checkBoxOverrideRegem.Checked;
+            bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
+            if (initializeCache) _optimizer.InitializeItemCache(CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant);
+            _optimizer.EvaluateUpgradeAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, upgradeListEnumerator.Current.Item, upgradeListEnumerator.Current.Enchant);
+        }
     }
 
     [Serializable]
@@ -612,7 +830,21 @@ namespace Rawr
             }
         }
 
-        public float Weight { get; set; }
+        private float weight = 1f;
+        public float Weight
+        {
+            get
+            {
+                return weight;
+            }
+            set
+            {
+                if (weight != value)
+                {
+                    weight = value;
+                }
+            }
+        }
 
         private float score;
         [XmlIgnore]

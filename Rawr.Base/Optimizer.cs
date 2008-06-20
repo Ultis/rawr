@@ -146,6 +146,28 @@ namespace Rawr
         }
     }
 
+    public delegate void EvaluateUpgradeCompletedEventHandler(object sender, EvaluateUpgradeCompletedEventArgs e);
+
+    public class EvaluateUpgradeCompletedEventArgs : AsyncCompletedEventArgs
+    {
+        private float upgradeValue;
+
+        public EvaluateUpgradeCompletedEventArgs(float upgradeValue, Exception error, bool cancelled)
+            : base(error, cancelled, null)
+        {
+            this.upgradeValue = upgradeValue;
+        }
+
+        public float UpgradeValue
+        {
+            get
+            {
+                RaiseExceptionIfNecessary();
+                return upgradeValue;
+            }
+        }
+    }
+
     [Serializable()]
     public class OptimizationRequirement
     {
@@ -172,6 +194,9 @@ namespace Rawr
             computeUpgradesProgressChangedDelegate = new SendOrPostCallback(PrivateComputeUpgradesProgressChanged);
             computeUpgradesCompletedDelegate = new SendOrPostCallback(PrivateComputeUpgradesCompleted);
             computeUpgradesThreadStartDelegate = new ComputeUpgradesThreadStartDelegate(ComputeUpgradesThreadStart);
+            evaluateUpgradeProgressChangedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeProgressChanged);
+            evaluateUpgradeCompletedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeCompleted);
+            evaluateUpgradeThreadStartDelegate = new EvaluateUpgradeThreadStartDelegate(EvaluateUpgradeThreadStart);
         }
 
         public void InitializeItemCache(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
@@ -193,7 +218,8 @@ namespace Rawr
         private enum OptimizationOperation
         {
             OptimizeCharacter,
-            ComputeUpgrades
+            ComputeUpgrades,
+            EvaluateUpgrade
         }
 
         private OptimizationOperation currentOperation;
@@ -255,6 +281,34 @@ namespace Rawr
             }
         }
 
+        private void PrivateEvaluateUpgradeProgressChanged(object state)
+        {
+            OnEvaluateUpgradeProgressChanged(state as ProgressChangedEventArgs);
+        }
+
+        protected void OnEvaluateUpgradeProgressChanged(ProgressChangedEventArgs e)
+        {
+            if (EvaluateUpgradeProgressChanged != null)
+            {
+                EvaluateUpgradeProgressChanged(this, e);
+            }
+        }
+
+        private void PrivateEvaluateUpgradeCompleted(object state)
+        {
+            isBusy = false;
+            cancellationPending = false;
+            OnEvaluateUpgradeCompleted(state as EvaluateUpgradeCompletedEventArgs);
+        }
+
+        protected void OnEvaluateUpgradeCompleted(EvaluateUpgradeCompletedEventArgs e)
+        {
+            if (EvaluateUpgradeCompleted != null)
+            {
+                EvaluateUpgradeCompleted(this, e);
+            }
+        }
+
         private bool isBusy;
 
         public bool IsBusy
@@ -274,11 +328,14 @@ namespace Rawr
         private AsyncOperation asyncOperation;
         private delegate void OptimizeCharacterThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter);
         private delegate void ComputeUpgradesThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness);
+        private delegate void EvaluateUpgradeThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item upgrade, Enchant upgradeEnchant);
 
         public event OptimizeCharacterCompletedEventHandler OptimizeCharacterCompleted;
         public event OptimizeCharacterProgressChangedEventHandler OptimizeCharacterProgressChanged;
         public event ComputeUpgradesProgressChangedEventHandler ComputeUpgradesProgressChanged;
         public event ComputeUpgradesCompletedEventHandler ComputeUpgradesCompleted;
+        public event ProgressChangedEventHandler EvaluateUpgradeProgressChanged;
+        public event EvaluateUpgradeCompletedEventHandler EvaluateUpgradeCompleted;
 
         private SendOrPostCallback optimizeCharacterProgressChangedDelegate;
         private SendOrPostCallback optimizeCharacterCompletedDelegate;
@@ -286,6 +343,9 @@ namespace Rawr
         private SendOrPostCallback computeUpgradesProgressChangedDelegate;
         private SendOrPostCallback computeUpgradesCompletedDelegate;
         private ComputeUpgradesThreadStartDelegate computeUpgradesThreadStartDelegate;
+        private SendOrPostCallback evaluateUpgradeProgressChangedDelegate;
+        private SendOrPostCallback evaluateUpgradeCompletedDelegate;
+        private EvaluateUpgradeThreadStartDelegate evaluateUpgradeThreadStartDelegate;
 
         public void OptimizeCharacterAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
         {
@@ -339,6 +399,30 @@ namespace Rawr
             }
             asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
         }
+
+        public void EvaluateUpgradeAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item upgrade, Enchant upgradeEnchant)
+        {
+            if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
+            isBusy = true;
+            cancellationPending = false;
+            asyncOperation = AsyncOperationManager.CreateOperation(null);
+            evaluateUpgradeThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, upgrade, upgradeEnchant, null, null);
+        }
+
+        private void EvaluateUpgradeThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item upgrade, Enchant upgradeEnchant)
+        {
+            Exception error = null;
+            float upgradeValue = 0f;
+            try
+            {
+                upgradeValue = PrivateEvaluateUpgrade(character, calculationToOptimize, requirements, thoroughness, upgrade, upgradeEnchant, out error);
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+            asyncOperation.PostOperationCompleted(evaluateUpgradeCompletedDelegate, new EvaluateUpgradeCompletedEventArgs(upgradeValue, error, cancellationPending));
+        }
         #endregion
 
         private void ReportProgress(int progressPercentage, float bestValue)
@@ -352,6 +436,9 @@ namespace Rawr
                         break;
                     case OptimizationOperation.ComputeUpgrades:
                         asyncOperation.Post(computeUpgradesProgressChangedDelegate, new ComputeUpgradesProgressChangedEventArgs(itemProgressPercentage, progressPercentage, currentItem));
+                        break;
+                    case OptimizationOperation.EvaluateUpgrade:
+                        asyncOperation.Post(evaluateUpgradeProgressChangedDelegate, new ProgressChangedEventArgs(progressPercentage, null));
                         break;
                 }
             }
@@ -507,6 +594,7 @@ namespace Rawr
                                 item = bestCharacter[lockedSlot];
                                 ComparisonCalculationBase itemCalc = Calculations.CreateNewComparisonCalculation();
                                 itemCalc.Item = item;
+                                itemCalc.Enchant = bestCharacter.GetEnchantBySlot(lockedSlot);
                                 itemCalc.Character = bestCharacter;
                                 itemCalc.Name = item.Name;
                                 itemCalc.Equipped = false;
@@ -540,6 +628,102 @@ namespace Rawr
             return upgrades;
         }
 
+        public float EvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item upgrade, Enchant upgradeEnchant)
+        {
+            if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
+            isBusy = true;
+            cancellationPending = false;
+            asyncOperation = null;
+            Exception error;
+            float upgradeValue = PrivateEvaluateUpgrade(character, calculationToOptimize, requirements, thoroughness, upgrade, upgradeEnchant, out error);
+            if (error != null) throw error;
+            isBusy = false;
+            return upgradeValue;
+        }
+
+        private float PrivateEvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item upgrade, Enchant upgradeEnchant, out Exception error)
+        {
+            if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
+            error = null;
+            _character = character;
+            _calculationToOptimize = calculationToOptimize;
+            _requirements = requirements;
+            _thoroughness = thoroughness;
+
+            currentOperation = OptimizationOperation.EvaluateUpgrade;
+            Character saveCharacter = _character;
+            float upgradeValue = 0f;
+            try
+            {
+                ItemCache.Instance = optimizerItemCache;
+
+                Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
+                CharacterCalculationsBase baseCalculations = Calculations.GetCharacterCalculations(_character);
+                float baseValue = GetCalculationsValue(baseCalculations);
+
+                Item item = upgrade;                
+                foreach (Character.CharacterSlot slot in slots)
+                {
+                    if (item.FitsInSlot(slot))
+                    {
+                        lockedItems = new Item[] { item };
+                        if (upgradeEnchant == null)
+                        {
+                            lockedEnchants = null;
+                        }
+                        else
+                        {
+                            lockedEnchants = new Enchant[] { upgradeEnchant };
+                        }
+                        lockedSlot = slot;
+                        if (lockedSlot == Character.CharacterSlot.Finger1 && item.Unique && _character.Finger2 != null && _character.Finger2.Id == item.Id)
+                        {
+                            lockedSlot = Character.CharacterSlot.Finger2;
+                        }
+                        if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Unique && _character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                        {
+                            lockedSlot = Character.CharacterSlot.Trinket2;
+                        }
+                        _character = BuildSingleItemEnchantSwapCharacter(_character, lockedSlot, upgrade, upgradeEnchant);
+                        float best;
+                        CharacterCalculationsBase bestCalculations;
+                        Character bestCharacter;
+                        if (_thoroughness > 1)
+                        {
+                            int saveThoroughness = _thoroughness;
+                            _thoroughness = 1;
+                            float injectValue;
+                            bool injected;
+                            Character inject = Optimize(null, 0, out injectValue, out bestCalculations, out injected);
+                            _thoroughness = saveThoroughness;
+                            bestCharacter = Optimize(inject, injectValue, out best, out bestCalculations, out injected);
+                        }
+                        else
+                        {
+                            bool injected;
+                            bestCharacter = Optimize(null, 0, out best, out bestCalculations, out injected);
+                        }
+                        if (bestCharacter[lockedSlot] == null || bestCharacter[lockedSlot].Id != item.Id || bestCharacter.GetEnchantBySlot(lockedSlot) != upgradeEnchant) throw new Exception("There was an internal error in Optimizer when evaluating upgrade.");
+                        upgradeValue = best - baseValue;
+                        if (upgradeValue < 0 && saveCharacter[lockedSlot] != null && saveCharacter[lockedSlot].Id == item.Id) upgradeValue = 0f;
+                        _character = saveCharacter;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+            finally
+            {
+                _character = saveCharacter;
+                ItemCache.Instance = mainItemCache;
+            }
+
+            ReportProgress(100, 0f);
+            return upgradeValue;
+        }
+
         private bool itemCacheInitialized;
 
         Item[] metaGemItems;
@@ -556,6 +740,7 @@ namespace Rawr
         Item[][] slotItems = new Item[slotCount][];
         Enchant[][] slotEnchants = new Enchant[slotCount][];
         Item[] lockedItems;
+        Enchant[] lockedEnchants;
         Dictionary<string, Dictionary<int, bool>> itemEnchantValid;
         Character.CharacterSlot lockedSlot = Character.CharacterSlot.None;
 		Random rand;
@@ -565,6 +750,7 @@ namespace Rawr
             lockedItems = GetPossibleGemmedItemsForItem(item, item.Id.ToString(), gemItems, metaGemItems);
             //foreach (Item possibleGemmedItem in lockedItems)
             //    uniqueItems[possibleGemmedItem] = item.Unique;
+            lockedEnchants = null;
         }
 
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
@@ -1184,21 +1370,38 @@ namespace Rawr
 			foreach (Item item in items)
 			{
                 int pairSlot = pairSlotMap[(int)slot];
-				if (item != null && !(pairSlot >= 0 && bestCharacter[(Character.CharacterSlot)pairSlot] != null && bestCharacter[(Character.CharacterSlot)pairSlot].Id == item.Id && item.Unique))
+                if (item != null && bestCharacter[slot].GemmedId != item.GemmedId && !(pairSlot >= 0 && bestCharacter[(Character.CharacterSlot)pairSlot] != null && bestCharacter[(Character.CharacterSlot)pairSlot].Id == item.Id && item.Unique))
 				{
                     Enchant enchant = bestCharacter.GetEnchantBySlot(slot);
-                    if (slot == lockedSlot || enchant == null || itemEnchantValid[item.GemmedId][enchant.Id])
+                    // replace enchant with a valid enchant
+                    if (slot == lockedSlot && lockedEnchants != null && Array.IndexOf(lockedEnchants, enchant) == -1)
                     {
-                        charSwap = BuildSingleItemSwapCharacter(bestCharacter, slot, item);
-                        CharacterCalculationsBase calculations;
-                        value = GetCalculationsValue(calculations = Calculations.GetCharacterCalculations(charSwap));
-                        if (value > best)
+                        enchant = lockedEnchants[0];
+                    }
+                    if (slot != lockedSlot && enchant != null)
+                    {
+                        Dictionary<int, bool> dict = itemEnchantValid[item.GemmedId];
+                        if (!dict[enchant.Id])
                         {
-                            best = value;
-                            bestCalculations = calculations;
-                            bestCharacter = charSwap;
-                            foundUpgrade = true;
+                            foreach (Enchant e in slotEnchants[(int)slot])
+                            {
+                                if (dict[e.Id])
+                                {
+                                    enchant = e;
+                                    break;
+                                }
+                            }
                         }
+                    }
+                    charSwap = BuildSingleItemEnchantSwapCharacter(bestCharacter, slot, item, enchant);
+                    CharacterCalculationsBase calculations;
+                    value = GetCalculationsValue(calculations = Calculations.GetCharacterCalculations(charSwap));
+                    if (value > best)
+                    {
+                        best = value;
+                        bestCalculations = calculations;
+                        bestCharacter = charSwap;
+                        foundUpgrade = true;
                     }
 				}
 			}
@@ -1214,11 +1417,12 @@ namespace Rawr
 			float value;
 			float newBest = best;
 			Character newBestCharacter = null;
+            Enchant currentEnchant = bestCharacter.GetEnchantBySlot(slot);
             if (bestCharacter[slot] != null)
             {
                 foreach (Enchant enchant in enchants)
                 {
-                    if (slot == lockedSlot || itemEnchantValid[bestCharacter[slot].GemmedId][enchant.Id])
+                    if (currentEnchant != enchant && ((slot == lockedSlot && (lockedEnchants == null || Array.IndexOf(lockedEnchants, enchant) >= 0)) || (slot != lockedSlot && itemEnchantValid[bestCharacter[slot].GemmedId][enchant.Id])))
                     {
                         charSwap = BuildSingleEnchantSwapCharacter(bestCharacter, slot, enchant);
                         CharacterCalculationsBase calculations;
@@ -1356,7 +1560,7 @@ namespace Rawr
                 },
                 delegate(int slot)
                 {
-                    return slotEnchants[slot][rand.Next(slotEnchants[slot].Length)];
+                    return (lockedSlot == (Character.CharacterSlot)slot && lockedEnchants != null) ? lockedEnchants[rand.Next(lockedEnchants.Length)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)];
                 });
         }
 
@@ -1459,7 +1663,7 @@ namespace Rawr
                     Dictionary<int, bool> dict;
                     // make sure the item and item-enchant combo is allowed
                     Enchant enchant = parent.GetEnchantBySlot(mutation.Slot);
-                    if (itemEnchantValid.TryGetValue(newItem.GemmedId, out dict) && (enchant == null || dict[enchant.Id]))
+                    if ((lockedSlot != mutation.Slot || lockedItems == null || lockedItems.Length > 1) && itemEnchantValid.TryGetValue(newItem.GemmedId, out dict) && (enchant == null || dict[enchant.Id]))
                     {
                         items[mutation.Slot] = newItem;
                         successful = true;
@@ -1572,7 +1776,7 @@ namespace Rawr
                 Enchant enchant1, enchant2;
                 enchant1 = parent.GetEnchantBySlot(mutation1.Slot);
                 enchant2 = parent.GetEnchantBySlot(mutation2.Slot);
-                if (itemEnchantValid.TryGetValue(item1.GemmedId, out dict1) && (enchant1 == null || dict1[enchant1.Id]) && itemEnchantValid.TryGetValue(item2.GemmedId, out dict2) && (enchant2 == null || dict2[enchant2.Id]))
+                if ((lockedSlot != mutation1.Slot || lockedItems == null || lockedItems.Length > 1) && (lockedSlot != mutation2.Slot || lockedItems == null || lockedItems.Length > 1) && itemEnchantValid.TryGetValue(item1.GemmedId, out dict1) && (enchant1 == null || dict1[enchant1.Id]) && itemEnchantValid.TryGetValue(item2.GemmedId, out dict2) && (enchant2 == null || dict2[enchant2.Id]))
                 {
                     successful = true;
                     items[mutation1.Slot] = item1;
@@ -1635,9 +1839,56 @@ namespace Rawr
                 },
                 delegate(int slot)
                 {
-                    return rand.NextDouble() < mutationChance ? slotEnchants[slot][rand.Next(slotEnchants[slot].Length)] : parent.GetEnchantBySlot((Character.CharacterSlot)slot);
+                    return rand.NextDouble() < mutationChance ? ((lockedSlot == (Character.CharacterSlot)slot && lockedEnchants != null) ? lockedEnchants[rand.Next(lockedEnchants.Length)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)]) : parent.GetEnchantBySlot((Character.CharacterSlot)slot);
                 });
 		}
+
+        private Character BuildSingleItemEnchantSwapCharacter(Character baseCharacter, Character.CharacterSlot slot, Item item, Enchant enchant)
+        {
+            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race,
+                slot == Character.CharacterSlot.Head ? item : baseCharacter.Head,
+                slot == Character.CharacterSlot.Neck ? item : baseCharacter.Neck,
+                slot == Character.CharacterSlot.Shoulders ? item : baseCharacter.Shoulders,
+                slot == Character.CharacterSlot.Back ? item : baseCharacter.Back,
+                slot == Character.CharacterSlot.Chest ? item : baseCharacter.Chest,
+                null, null,
+                slot == Character.CharacterSlot.Wrist ? item : baseCharacter.Wrist,
+                slot == Character.CharacterSlot.Hands ? item : baseCharacter.Hands,
+                slot == Character.CharacterSlot.Waist ? item : baseCharacter.Waist,
+                slot == Character.CharacterSlot.Legs ? item : baseCharacter.Legs,
+                slot == Character.CharacterSlot.Feet ? item : baseCharacter.Feet,
+                slot == Character.CharacterSlot.Finger1 ? item : baseCharacter.Finger1,
+                slot == Character.CharacterSlot.Finger2 ? item : baseCharacter.Finger2,
+                slot == Character.CharacterSlot.Trinket1 ? item : baseCharacter.Trinket1,
+                slot == Character.CharacterSlot.Trinket2 ? item : baseCharacter.Trinket2,
+                slot == Character.CharacterSlot.MainHand ? item : baseCharacter.MainHand,
+                slot == Character.CharacterSlot.OffHand ? item : baseCharacter.OffHand,
+                slot == Character.CharacterSlot.Ranged ? item : baseCharacter.Ranged,
+                slot == Character.CharacterSlot.Projectile ? item : baseCharacter.Projectile,
+                slot == Character.CharacterSlot.ProjectileBag ? item : baseCharacter.ProjectileBag,
+                slot == Character.CharacterSlot.Head ? enchant : baseCharacter.HeadEnchant,
+                slot == Character.CharacterSlot.Shoulders ? enchant : baseCharacter.ShouldersEnchant,
+                slot == Character.CharacterSlot.Back ? enchant : baseCharacter.BackEnchant,
+                slot == Character.CharacterSlot.Chest ? enchant : baseCharacter.ChestEnchant,
+                slot == Character.CharacterSlot.Wrist ? enchant : baseCharacter.WristEnchant,
+                slot == Character.CharacterSlot.Hands ? enchant : baseCharacter.HandsEnchant,
+                slot == Character.CharacterSlot.Legs ? enchant : baseCharacter.LegsEnchant,
+                slot == Character.CharacterSlot.Feet ? enchant : baseCharacter.FeetEnchant,
+                slot == Character.CharacterSlot.Finger1 ? enchant : baseCharacter.Finger1Enchant,
+                slot == Character.CharacterSlot.Finger2 ? enchant : baseCharacter.Finger2Enchant,
+                slot == Character.CharacterSlot.MainHand ? enchant : baseCharacter.MainHandEnchant,
+                slot == Character.CharacterSlot.OffHand ? enchant : baseCharacter.OffHandEnchant,
+                slot == Character.CharacterSlot.Ranged ? enchant : baseCharacter.RangedEnchant,
+                _character.ActiveBuffs, false);
+            //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
+            //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
+            character.CalculationOptions = _character.CalculationOptions;
+            character.Class = _character.Class;
+            character.Talents = _character.Talents;
+            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
+            //character.RecalculateSetBonuses();
+            return character;
+        }
 
 		private Character BuildSingleItemSwapCharacter(Character baseCharacter, Character.CharacterSlot slot, Item item)
 		{
