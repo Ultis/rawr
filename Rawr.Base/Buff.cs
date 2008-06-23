@@ -280,7 +280,7 @@ namespace Rawr
             {
                 Name = "Mark of the Wild",
                 Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { Armor = 340, Strength = 14, Agility = 14, Stamina = 14, Intellect = 14, Spirit = 14, AllResist = 25 }
+                Stats = new Stats() { Armor = 340, Strength = 14, Agility = 14, Stamina = 14, Intellect = 14, Spirit = 14, ArcaneResistanceBuff = 25, FireResistanceBuff = 25, FrostResistanceBuff = 25, NatureResistanceBuff = 25, ShadowResistanceBuff = 25 }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -294,9 +294,37 @@ namespace Rawr
                     Stamina = (float)Math.Floor(14f * 0.35f),
                     Intellect = (float)Math.Floor(14f * 0.35f),
                     Spirit = (float)Math.Floor(14f * 0.35f),
-                    AllResist = (float)Math.Floor(25f * 0.35f)
+                    ArcaneResistanceBuff = (float)Math.Floor(25f * 1.35f), // it is 1.35 because it's non stacking buff, it takes max
+                    FireResistanceBuff = (float)Math.Floor(25f * 1.35f),
+                    FrostResistanceBuff = (float)Math.Floor(25f * 1.35f),
+                    NatureResistanceBuff = (float)Math.Floor(25f * 1.35f),
+                    ShadowResistanceBuff = (float)Math.Floor(25f * 1.35f)
                 },
                 RequiredBuff = "Mark of the Wild"
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Shadow Protection",
+                Category = BuffCategory.ClassBuffs,
+                Stats = new Stats() { ShadowResistanceBuff = 70 }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aspect of the Wild",
+                Category = BuffCategory.ClassBuffs,
+                Stats = new Stats() { NatureResistanceBuff = 70 }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Frost Resistance Aura",
+                Category = BuffCategory.ClassBuffs,
+                Stats = new Stats() { FrostResistanceBuff = 70 }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Fire Resistance Aura",
+                Category = BuffCategory.ClassBuffs,
+                Stats = new Stats() { FireResistanceBuff = 70 }
             });
             defaultBuffs.Add(new Buff()
             {

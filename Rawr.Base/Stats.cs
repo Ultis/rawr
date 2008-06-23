@@ -194,6 +194,11 @@ namespace Rawr
     enum NonStackingStat : int
     {
         BonusManaPotion,
+        ArcaneResistanceBuff,
+        FireResistanceBuff,
+        FrostResistanceBuff,
+        NatureResistanceBuff,
+        ShadowResistanceBuff
     }
 
     /// <summary>
@@ -1714,6 +1719,45 @@ namespace Rawr
             set { _rawNoStackData[(int)NonStackingStat.BonusManaPotion] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Frost Res")]
+        public float FrostResistanceBuff
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.FrostResistanceBuff]; }
+            set { _rawNoStackData[(int)NonStackingStat.FrostResistanceBuff] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Nature Res")]
+        public float NatureResistanceBuff
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.NatureResistanceBuff]; }
+            set { _rawNoStackData[(int)NonStackingStat.NatureResistanceBuff] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Fire Res")]
+        public float FireResistanceBuff
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.FireResistanceBuff]; }
+            set { _rawNoStackData[(int)NonStackingStat.FireResistanceBuff] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Shadow Res")]
+        public float ShadowResistanceBuff
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.ShadowResistanceBuff]; }
+            set { _rawNoStackData[(int)NonStackingStat.ShadowResistanceBuff] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Arcane Res")]
+        public float ArcaneResistanceBuff
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.ArcaneResistanceBuff]; }
+            set { _rawNoStackData[(int)NonStackingStat.ArcaneResistanceBuff] = value; }
+        }
 
 #endregion
 	
