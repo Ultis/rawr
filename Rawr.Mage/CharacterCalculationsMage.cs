@@ -2800,7 +2800,7 @@ namespace Rawr.Mage
                     int lowestMpsIndex = 0;
                     while (extraMana > 0.000001 && lowestMpsIndex >= 0)
                     {
-                        i = superIndex;
+                        i = superIndex + 1;
                         t = superTime;
                         lowestMpsIndex = -1;
                         for (; i < sequence.Count; i++)
@@ -2821,14 +2821,15 @@ namespace Rawr.Mage
                                 if (sequence[i].Group.Count == 0 && (sequence[i].Index < 2 || sequence[i].Index > 4) && mpsdiff > 0)
                                 {
                                     // we can do the swap, this will happen at i < superIndex
+                                    // this can happen at i == superIndex also if there are items later that can't be pushed back
                                     double neededSwap = extraMana / mpsdiff;
                                     if (neededSwap > sequence[i].Duration) neededSwap = sequence[i].Duration;
                                     if (neededSwap > sequence[lowestMpsIndex].Duration) neededSwap = sequence[lowestMpsIndex].Duration;
                                     if (neededSwap < sequence[i].Duration - 0.000001)
                                     {
                                         SplitAt(i, sequence[i].Duration - neededSwap);
-                                        i++;
                                         superIndex++;
+                                        i++;
                                         lowestMpsIndex++;
                                     }
                                     if (neededSwap < sequence[lowestMpsIndex].Duration - 0.000001)
@@ -3756,11 +3757,11 @@ namespace Rawr.Mage
             dictValues.Add("MP5", BasicStats.Mp5.ToString());
             dictValues.Add("Mana Regen", Math.Floor(ManaRegen * 5).ToString() + String.Format("*Mana Regen in 5SR: {0}\r\nMana Regen Drinking: {1}", Math.Floor(ManaRegen5SR * 5), Math.Floor(ManaRegenDrinking * 5)));
             dictValues.Add("Health Regen", Math.Floor(HealthRegenCombat * 5).ToString() + String.Format("*Health Regen Eating: {0}", Math.Floor(HealthRegenEating * 5)));
-            dictValues.Add("Arcane Resist", (BasicStats.AllResist + BasicStats.ArcaneResistance).ToString());
-            dictValues.Add("Fire Resist", (BasicStats.AllResist + BasicStats.FireResistance).ToString());
-            dictValues.Add("Nature Resist", (BasicStats.AllResist + BasicStats.NatureResistance).ToString());
-            dictValues.Add("Frost Resist", (BasicStats.AllResist + BasicStats.FrostResistance).ToString());
-            dictValues.Add("Shadow Resist", (BasicStats.AllResist + BasicStats.ShadowResistance).ToString());
+            dictValues.Add("Arcane Resist", (BasicStats.ArcaneResistance).ToString());
+            dictValues.Add("Fire Resist", (BasicStats.FireResistance).ToString());
+            dictValues.Add("Nature Resist", (BasicStats.NatureResistance).ToString());
+            dictValues.Add("Frost Resist", (BasicStats.FrostResistance).ToString());
+            dictValues.Add("Shadow Resist", (BasicStats.ShadowResistance).ToString());
             dictValues.Add("Physical Mitigation", String.Format("{0:F}%", 100 * MeleeMitigation));
             dictValues.Add("Resilience", BasicStats.Resilience.ToString());
             dictValues.Add("Defense", Defense.ToString());
@@ -3862,21 +3863,25 @@ namespace Rawr.Mage
                 case "Health":
                     return BasicStats.Health;
                 case "Nature Resistance":
-                    return BasicStats.AllResist + BasicStats.NatureResistance;
+                    return BasicStats.NatureResistance;
                 case "Fire Resistance":
-                    return BasicStats.AllResist + BasicStats.FireResistance;
+                    return BasicStats.FireResistance;
                 case "Frost Resistance":
-                    return BasicStats.AllResist + BasicStats.FrostResistance;
+                    return BasicStats.FrostResistance;
                 case "Shadow Resistance":
-                    return BasicStats.AllResist + BasicStats.ShadowResistance;
+                    return BasicStats.ShadowResistance;
                 case "Arcane Resistance":
-                    return BasicStats.AllResist + BasicStats.ArcaneResistance;
+                    return BasicStats.ArcaneResistance;
                 case "Chance to Live":
                     return 100 * (1 - ChanceToDie);
                 case "Spell Hit Rating":
                     return BasicStats.SpellHitRating;
                 case "Spell Haste Rating":
                     return BasicStats.SpellHasteRating;
+                case "PVP Trinket":
+                    return BasicStats.PVPTrinket;
+                case "Movement Speed":
+                    return BasicStats.MovementSpeed;
             }
             return 0;
         }

@@ -1321,7 +1321,7 @@ namespace Rawr
                     for (int slot = 0; slot < slotCount; slot++)
                     {
                         results = LookForDirectItemUpgrades(slotItems[slot], (Character.CharacterSlot)slot, best, bestCharacter, out calculations);
-                        if (results.Key > 0) { best = results.Key; bestCalculations = calculations; bestCharacter = results.Value; noImprove = 0; }
+                        if (results.Key > best) { best = results.Key; bestCalculations = calculations; bestCharacter = results.Value; noImprove = 0; }
                     }
 
                     for (int slot = 0; slot < slotCount; slot++)
@@ -1329,7 +1329,7 @@ namespace Rawr
                         if (slotEnchants[slot] != null)
                         {
                             results = LookForDirectEnchantUpgrades(slotEnchants[slot], (Character.CharacterSlot)slot, best, bestCharacter, out calculations);
-                            if (results.Key > 0) { best = results.Key; bestCalculations = calculations; bestCharacter = results.Value; noImprove = 0; }
+                            if (results.Key > best) { best = results.Key; bestCalculations = calculations; bestCharacter = results.Value; noImprove = 0; }
                         }
                     }
                 }
@@ -1407,7 +1407,7 @@ namespace Rawr
 			}
 			if (foundUpgrade)
 				return new KeyValuePair<float, Character>(best, bestCharacter);
-			return new KeyValuePair<float, Character>(0, null);
+			return new KeyValuePair<float, Character>(float.NegativeInfinity, null);
 		}
 
 		private KeyValuePair<float, Character> LookForDirectEnchantUpgrades(Enchant[] enchants, Character.CharacterSlot slot, float best, Character bestCharacter, out CharacterCalculationsBase bestCalculations)
@@ -1438,7 +1438,7 @@ namespace Rawr
             }
 			if (newBest > best)
 				return new KeyValuePair<float, Character>(newBest, newBestCharacter);
-			return new KeyValuePair<float,Character>(0, null);
+			return new KeyValuePair<float,Character>(float.NegativeInfinity, null);
 		}
 
         public static float GetOptimizationValue(Character character)

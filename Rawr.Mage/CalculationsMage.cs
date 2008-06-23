@@ -1350,6 +1350,9 @@ namespace Rawr.Mage
                 #endregion
 
                 float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
+                float dpsTime = calculationOptions.DpsTime;
+                float silenceTime = calculationOptions.EffectShadowSilenceFrequency * calculationOptions.EffectShadowSilenceDuration * Math.Max(1 - characterStats.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+                if (1 - silenceTime < dpsTime) dpsTime = 1 - silenceTime;
 
                 #region Formulate LP
                 // idle regen
@@ -1462,7 +1465,7 @@ namespace Rawr.Mage
                 lp[14, 7] = 1f / 120f;
                 lp[17, 7] = trinket1duration / trinket1cooldown;
                 lp[18, 7] = trinket2duration / trinket2cooldown;
-                lp[24, 7] = -(1 - calculationOptions.DpsTime);
+                lp[24, 7] = -(1 - dpsTime);
                 lp[25, 7] = calculationOptions.AoeDuration;
                 lp[30, 7] = 1.0 / 180.0;
                 lp[41, 7] = 1f / 120f;
@@ -1734,7 +1737,7 @@ namespace Rawr.Mage
                 if (mfAvailable && trinket2Available) lp[20, lpCols] = trinket2duration;
                 if (heroismAvailable && trinket1Available) lp[21, lpCols] = trinket1duration;
                 if (heroismAvailable && trinket2Available) lp[22, lpCols] = trinket2duration;
-                lp[24, lpCols] = -(1 - calculationOptions.DpsTime) * calculationOptions.FightDuration;
+                lp[24, lpCols] = -(1 - dpsTime) * calculationOptions.FightDuration;
                 lp[25, lpCols] = calculationOptions.AoeDuration * calculationOptions.FightDuration;
                 lp[30, lpCols] = calculationOptions.AverageCooldowns ? calculatedStats.FightDuration / 180.0 : combustionCount;
                 lp[31, lpCols] = 1;
@@ -2052,11 +2055,11 @@ namespace Rawr.Mage
                 // survivability
                 double ampMelee = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 - 0.01 * calculationOptions.ArcticWinds) * (1 - calculatedStats.MeleeMitigation) * (1 - calculatedStats.Dodge);
                 double ampPhysical = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 - 0.01 * calculationOptions.ArcticWinds) * (1 - calculatedStats.MeleeMitigation);
-                double ampArcane = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * Math.Max(1 - (characterStats.AllResist + characterStats.ArcaneResistance) / calculationOptions.TargetLevel * 0.15f, 0.25f);
-                double ampFire = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * (1 - 0.02 * calculationOptions.FrozenCore) * Math.Max(1 - (characterStats.AllResist + characterStats.FireResistance) / calculationOptions.TargetLevel * 0.15f, 0.25f);
-                double ampFrost = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * (1 - 0.02 * calculationOptions.FrozenCore) * Math.Max(1 - (characterStats.AllResist + characterStats.FrostResistance) / calculationOptions.TargetLevel * 0.15f, 0.25f);
-                double ampNature = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * Math.Max(1 - (characterStats.AllResist + characterStats.NatureResistance) / calculationOptions.TargetLevel * 0.15f, 0.25f);
-                double ampShadow = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * Math.Max(1 - (characterStats.AllResist + characterStats.ShadowResistance) / calculationOptions.TargetLevel * 0.15f, 0.25f);
+                double ampArcane = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * Math.Max(1 - characterStats.ArcaneResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+                double ampFire = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * (1 - 0.02 * calculationOptions.FrozenCore) * Math.Max(1 - characterStats.FireResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+                double ampFrost = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * (1 - 0.02 * calculationOptions.FrozenCore) * Math.Max(1 - characterStats.FrostResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+                double ampNature = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * Math.Max(1 - characterStats.NatureResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+                double ampShadow = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire) * Math.Max(1 - characterStats.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
                 double ampHoly = (1 - 0.02 * calculationOptions.PrismaticCloak) * (1 + 0.01 * calculationOptions.PlayingWithFire);
 
                 double melee = ampMelee * (calculationOptions.MeleeDps * (1 + Math.Max(0, calculationOptions.MeleeCrit / 100.0 - calculatedStats.PhysicalCritReduction) * (2 * (1 - calculatedStats.CritDamageReduction) - 1)) + calculationOptions.MeleeDot * (1 - 0.5f * calculatedStats.CritDamageReduction));
@@ -2978,6 +2981,10 @@ namespace Rawr.Mage
             {
                 statsGearEnchantsBuffs.BonusSpiritMultiplier = (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier) * (1.01f + 0.03f * calculationOptions.StudentOfTheMind) - 1;
             }
+            if (calculationOptions.EffectSpiritBonus > 0)
+            {
+                statsGearEnchantsBuffs.BonusSpiritMultiplier = (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier) * (1f + calculationOptions.EffectSpiritBonus / 100f) - 1;
+            }
             Stats statsTotal = statsGearEnchantsBuffs + statsRace;
             statsTotal.Strength = (float)Math.Floor((Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier)) + statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
             statsTotal.Agility = (float)Math.Floor((Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier)) + statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier)) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
@@ -3019,6 +3026,32 @@ namespace Rawr.Mage
 
             statsTotal.SpellDamageRating += statsTotal.SpellDamageFromIntellectPercentage * statsTotal.Intellect;
             statsTotal.SpellDamageRating += statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit;
+
+            statsTotal.ArcaneResistance += statsTotal.AllResist + statsTotal.ArcaneResistanceBuff;
+            statsTotal.FireResistance += statsTotal.AllResist + statsTotal.FireResistanceBuff;
+            statsTotal.FrostResistance += statsTotal.AllResist + statsTotal.FrostResistanceBuff;
+            statsTotal.NatureResistance += statsTotal.AllResist + statsTotal.NatureResistanceBuff;
+            statsTotal.ShadowResistance += statsTotal.AllResist + statsTotal.ShadowResistanceBuff;
+
+            int playerLevel = 70;
+            float bossHitRate = Math.Min(0.99f, ((playerLevel <= calculationOptions.TargetLevel + 2) ? (0.96f - (playerLevel - calculationOptions.TargetLevel) * 0.01f) : (0.94f - (playerLevel - calculationOptions.TargetLevel - 2) * 0.11f)));
+            statsTotal.Mp5 -= 5 * calculationOptions.EffectShadowManaDrain * calculationOptions.EffectShadowManaDrainFrequency * bossHitRate * Math.Max(1 - statsTotal.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+
+            float fullResistRate = calculationOptions.EffectArcaneOtherBinary * (1 - bossHitRate * Math.Max(1 - statsTotal.ArcaneResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
+            fullResistRate += calculationOptions.EffectFireOtherBinary * (1 - bossHitRate * Math.Max(1 - statsTotal.FireResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
+            fullResistRate += calculationOptions.EffectFrostOtherBinary * (1 - bossHitRate * Math.Max(1 - statsTotal.FrostResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
+            fullResistRate += calculationOptions.EffectShadowOtherBinary * (1 - bossHitRate * Math.Max(1 - statsTotal.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
+            fullResistRate += calculationOptions.EffectNatureOtherBinary * (1 - bossHitRate * Math.Max(1 - statsTotal.NatureResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
+            fullResistRate += calculationOptions.EffectHolyOtherBinary * (1 - bossHitRate);
+            fullResistRate += calculationOptions.EffectArcaneOther * (1 - bossHitRate);
+            fullResistRate += calculationOptions.EffectFireOther * (1 - bossHitRate);
+            fullResistRate += calculationOptions.EffectFrostOther * (1 - bossHitRate);
+            fullResistRate += calculationOptions.EffectShadowOther * (1 - bossHitRate);
+            fullResistRate += calculationOptions.EffectNatureOther * (1 - bossHitRate);
+            fullResistRate += calculationOptions.EffectHolyOther * (1 - bossHitRate);
+            fullResistRate += calculationOptions.EffectShadowManaDrainFrequency * (1 - bossHitRate);
+            fullResistRate += calculationOptions.EffectShadowSilenceFrequency * (1 - bossHitRate * Math.Max(1 - statsTotal.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
+            statsTotal.Mp5 += 5 * Math.Min(1f, fullResistRate) * 0.01f * calculationOptions.MagicAbsorption * statsTotal.Mana;
 
             return statsTotal;
         }
@@ -3265,6 +3298,8 @@ namespace Rawr.Mage
                     "Chance to Live",
                     "Spell Hit Rating",
                     "Spell Haste Rating",
+                    "PVP Trinket",
+                    "Movement Speed",
 					};
                 return _optimizableCalculationLabels;
             }
@@ -3453,13 +3488,20 @@ namespace Rawr.Mage
                 SpellDamageFor15SecOnUse2Min = stats.SpellDamageFor15SecOnUse2Min,
                 ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
                 ManaRestorePerCast_5_15 = stats.ManaRestorePerCast_5_15,
-                InterruptProtection = stats.InterruptProtection
+                InterruptProtection = stats.InterruptProtection,
+                ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
+                FireResistanceBuff = stats.FireResistanceBuff,
+                FrostResistanceBuff = stats.FrostResistanceBuff,
+                ShadowResistanceBuff = stats.ShadowResistanceBuff,
+                NatureResistanceBuff = stats.NatureResistanceBuff,
+                PVPTrinket = stats.PVPTrinket,
+                MovementSpeed = stats.MovementSpeed,
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.MageSpellCrit + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.SpellHasteFor20SecOnUse5Min + stats.AldorRegaliaInterruptProtection + stats.SpellDamageFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.ManaRestorePerCast_5_15 + stats.InterruptProtection;
+            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.MageSpellCrit + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.SpellHasteFor20SecOnUse5Min + stats.AldorRegaliaInterruptProtection + stats.SpellDamageFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.ManaRestorePerCast_5_15 + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed;
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + stats.Healing + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.Hit + stats.HitRating + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating;
             return (mageStats > 0 || ((stats.Health + stats.Stamina) > 0 && ignoreStats == 0.0f));
         }

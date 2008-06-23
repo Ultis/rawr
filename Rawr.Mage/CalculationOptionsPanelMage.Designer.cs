@@ -117,6 +117,50 @@
             this.label10 = new System.Windows.Forms.Label();
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.textBoxChanceToLiveScore = new System.Windows.Forms.TextBox();
+            this.label63 = new System.Windows.Forms.Label();
+            this.textBoxBurstImpacts = new System.Windows.Forms.TextBox();
+            this.label61 = new System.Windows.Forms.Label();
+            this.textBoxBurstWindow = new System.Windows.Forms.TextBox();
+            this.label60 = new System.Windows.Forms.Label();
+            this.textBoxShadowDot = new System.Windows.Forms.TextBox();
+            this.textBoxShadowCrit = new System.Windows.Forms.TextBox();
+            this.textBoxShadowDps = new System.Windows.Forms.TextBox();
+            this.label59 = new System.Windows.Forms.Label();
+            this.textBoxNatureDot = new System.Windows.Forms.TextBox();
+            this.textBoxNatureCrit = new System.Windows.Forms.TextBox();
+            this.textBoxNatureDps = new System.Windows.Forms.TextBox();
+            this.label58 = new System.Windows.Forms.Label();
+            this.textBoxHolyDot = new System.Windows.Forms.TextBox();
+            this.textBoxHolyCrit = new System.Windows.Forms.TextBox();
+            this.textBoxHolyDps = new System.Windows.Forms.TextBox();
+            this.label57 = new System.Windows.Forms.Label();
+            this.textBoxFrostDot = new System.Windows.Forms.TextBox();
+            this.textBoxFrostCrit = new System.Windows.Forms.TextBox();
+            this.textBoxFrostDps = new System.Windows.Forms.TextBox();
+            this.label56 = new System.Windows.Forms.Label();
+            this.textBoxFireDot = new System.Windows.Forms.TextBox();
+            this.textBoxFireCrit = new System.Windows.Forms.TextBox();
+            this.textBoxFireDps = new System.Windows.Forms.TextBox();
+            this.label55 = new System.Windows.Forms.Label();
+            this.textBoxArcaneDot = new System.Windows.Forms.TextBox();
+            this.textBoxArcaneCrit = new System.Windows.Forms.TextBox();
+            this.textBoxArcaneDps = new System.Windows.Forms.TextBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.textBoxPhysicalDot = new System.Windows.Forms.TextBox();
+            this.textBoxPhysicalCrit = new System.Windows.Forms.TextBox();
+            this.textBoxPhysicalDps = new System.Windows.Forms.TextBox();
+            this.label53 = new System.Windows.Forms.Label();
+            this.textBoxMeleeDot = new System.Windows.Forms.TextBox();
+            this.textBoxMeleeCrit = new System.Windows.Forms.TextBox();
+            this.textBoxMeleeDps = new System.Windows.Forms.TextBox();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label51 = new System.Windows.Forms.Label();
+            this.label50 = new System.Windows.Forms.Label();
+            this.label49 = new System.Windows.Forms.Label();
+            this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.textBoxSMPComputationLimit = new System.Windows.Forms.TextBox();
             this.label38 = new System.Windows.Forms.Label();
@@ -133,57 +177,46 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
-            this.label34 = new System.Windows.Forms.Label();
-            this.label49 = new System.Windows.Forms.Label();
-            this.label50 = new System.Windows.Forms.Label();
-            this.label51 = new System.Windows.Forms.Label();
-            this.label52 = new System.Windows.Forms.Label();
-            this.textBoxMeleeDps = new System.Windows.Forms.TextBox();
-            this.textBoxMeleeCrit = new System.Windows.Forms.TextBox();
-            this.textBoxMeleeDot = new System.Windows.Forms.TextBox();
-            this.textBoxPhysicalDot = new System.Windows.Forms.TextBox();
-            this.textBoxPhysicalCrit = new System.Windows.Forms.TextBox();
-            this.textBoxPhysicalDps = new System.Windows.Forms.TextBox();
-            this.label53 = new System.Windows.Forms.Label();
-            this.textBoxArcaneDot = new System.Windows.Forms.TextBox();
-            this.textBoxArcaneCrit = new System.Windows.Forms.TextBox();
-            this.textBoxArcaneDps = new System.Windows.Forms.TextBox();
-            this.label54 = new System.Windows.Forms.Label();
-            this.textBoxFireDot = new System.Windows.Forms.TextBox();
-            this.textBoxFireCrit = new System.Windows.Forms.TextBox();
-            this.textBoxFireDps = new System.Windows.Forms.TextBox();
-            this.label55 = new System.Windows.Forms.Label();
-            this.textBoxFrostDot = new System.Windows.Forms.TextBox();
-            this.textBoxFrostCrit = new System.Windows.Forms.TextBox();
-            this.textBoxFrostDps = new System.Windows.Forms.TextBox();
-            this.label56 = new System.Windows.Forms.Label();
-            this.textBoxHolyDot = new System.Windows.Forms.TextBox();
-            this.textBoxHolyCrit = new System.Windows.Forms.TextBox();
-            this.textBoxHolyDps = new System.Windows.Forms.TextBox();
-            this.label57 = new System.Windows.Forms.Label();
-            this.textBoxNatureDot = new System.Windows.Forms.TextBox();
-            this.textBoxNatureCrit = new System.Windows.Forms.TextBox();
-            this.textBoxNatureDps = new System.Windows.Forms.TextBox();
-            this.label58 = new System.Windows.Forms.Label();
-            this.textBoxShadowDot = new System.Windows.Forms.TextBox();
-            this.textBoxShadowCrit = new System.Windows.Forms.TextBox();
-            this.textBoxShadowDps = new System.Windows.Forms.TextBox();
-            this.label59 = new System.Windows.Forms.Label();
-            this.textBoxBurstWindow = new System.Windows.Forms.TextBox();
-            this.label60 = new System.Windows.Forms.Label();
-            this.textBoxBurstImpacts = new System.Windows.Forms.TextBox();
-            this.label61 = new System.Windows.Forms.Label();
-            this.textBoxChanceToLiveScore = new System.Windows.Forms.TextBox();
-            this.label63 = new System.Windows.Forms.Label();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.textBoxEffectBonusSpirit = new System.Windows.Forms.TextBox();
+            this.label62 = new System.Windows.Forms.Label();
+            this.textBoxEffectSilenceFrequency = new System.Windows.Forms.TextBox();
+            this.label64 = new System.Windows.Forms.Label();
+            this.textBoxSilenceDuration = new System.Windows.Forms.TextBox();
+            this.label65 = new System.Windows.Forms.Label();
+            this.textBoxManaDrain = new System.Windows.Forms.TextBox();
+            this.label66 = new System.Windows.Forms.Label();
+            this.textBoxManaDrainFrequency = new System.Windows.Forms.TextBox();
+            this.label67 = new System.Windows.Forms.Label();
             this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.textBoxEffectShadowBinary = new System.Windows.Forms.TextBox();
+            this.textBoxEffectShadow = new System.Windows.Forms.TextBox();
+            this.label68 = new System.Windows.Forms.Label();
+            this.textBoxEffectNatureBinary = new System.Windows.Forms.TextBox();
+            this.textBoxEffectNature = new System.Windows.Forms.TextBox();
+            this.label69 = new System.Windows.Forms.Label();
+            this.textBoxEffectHolyBinary = new System.Windows.Forms.TextBox();
+            this.textBoxEffectHoly = new System.Windows.Forms.TextBox();
+            this.label70 = new System.Windows.Forms.Label();
+            this.textBoxEffectFrostBinary = new System.Windows.Forms.TextBox();
+            this.textBoxEffectFrost = new System.Windows.Forms.TextBox();
+            this.label71 = new System.Windows.Forms.Label();
+            this.textBoxEffectFireBinary = new System.Windows.Forms.TextBox();
+            this.textBoxEffectFire = new System.Windows.Forms.TextBox();
+            this.label72 = new System.Windows.Forms.Label();
+            this.textBoxEffectArcaneBinary = new System.Windows.Forms.TextBox();
+            this.textBoxEffectArcane = new System.Windows.Forms.TextBox();
+            this.label73 = new System.Windows.Forms.Label();
+            this.label74 = new System.Windows.Forms.Label();
+            this.label75 = new System.Windows.Forms.Label();
+            this.label76 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -192,6 +225,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1136,6 +1170,427 @@
             this.label1.TabIndex = 142;
             this.label1.Text = "Target Level: ";
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.textBoxChanceToLiveScore);
+            this.tabPage5.Controls.Add(this.label63);
+            this.tabPage5.Controls.Add(this.textBoxBurstImpacts);
+            this.tabPage5.Controls.Add(this.label61);
+            this.tabPage5.Controls.Add(this.textBoxBurstWindow);
+            this.tabPage5.Controls.Add(this.label60);
+            this.tabPage5.Controls.Add(this.textBoxShadowDot);
+            this.tabPage5.Controls.Add(this.textBoxShadowCrit);
+            this.tabPage5.Controls.Add(this.textBoxShadowDps);
+            this.tabPage5.Controls.Add(this.label59);
+            this.tabPage5.Controls.Add(this.textBoxNatureDot);
+            this.tabPage5.Controls.Add(this.textBoxNatureCrit);
+            this.tabPage5.Controls.Add(this.textBoxNatureDps);
+            this.tabPage5.Controls.Add(this.label58);
+            this.tabPage5.Controls.Add(this.textBoxHolyDot);
+            this.tabPage5.Controls.Add(this.textBoxHolyCrit);
+            this.tabPage5.Controls.Add(this.textBoxHolyDps);
+            this.tabPage5.Controls.Add(this.label57);
+            this.tabPage5.Controls.Add(this.textBoxFrostDot);
+            this.tabPage5.Controls.Add(this.textBoxFrostCrit);
+            this.tabPage5.Controls.Add(this.textBoxFrostDps);
+            this.tabPage5.Controls.Add(this.label56);
+            this.tabPage5.Controls.Add(this.textBoxFireDot);
+            this.tabPage5.Controls.Add(this.textBoxFireCrit);
+            this.tabPage5.Controls.Add(this.textBoxFireDps);
+            this.tabPage5.Controls.Add(this.label55);
+            this.tabPage5.Controls.Add(this.textBoxArcaneDot);
+            this.tabPage5.Controls.Add(this.textBoxArcaneCrit);
+            this.tabPage5.Controls.Add(this.textBoxArcaneDps);
+            this.tabPage5.Controls.Add(this.label54);
+            this.tabPage5.Controls.Add(this.textBoxPhysicalDot);
+            this.tabPage5.Controls.Add(this.textBoxPhysicalCrit);
+            this.tabPage5.Controls.Add(this.textBoxPhysicalDps);
+            this.tabPage5.Controls.Add(this.label53);
+            this.tabPage5.Controls.Add(this.textBoxMeleeDot);
+            this.tabPage5.Controls.Add(this.textBoxMeleeCrit);
+            this.tabPage5.Controls.Add(this.textBoxMeleeDps);
+            this.tabPage5.Controls.Add(this.label52);
+            this.tabPage5.Controls.Add(this.label51);
+            this.tabPage5.Controls.Add(this.label50);
+            this.tabPage5.Controls.Add(this.label49);
+            this.tabPage5.Controls.Add(this.textBoxSurvivabilityRating);
+            this.tabPage5.Controls.Add(this.label34);
+            this.tabPage5.Location = new System.Drawing.Point(4, 40);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(206, 507);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Survivability";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // textBoxChanceToLiveScore
+            // 
+            this.textBoxChanceToLiveScore.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ChanceToLiveScore", true));
+            this.textBoxChanceToLiveScore.Location = new System.Drawing.Point(112, 323);
+            this.textBoxChanceToLiveScore.Name = "textBoxChanceToLiveScore";
+            this.textBoxChanceToLiveScore.Size = new System.Drawing.Size(75, 20);
+            this.textBoxChanceToLiveScore.TabIndex = 220;
+            // 
+            // label63
+            // 
+            this.label63.AutoSize = true;
+            this.label63.Location = new System.Drawing.Point(0, 323);
+            this.label63.Name = "label63";
+            this.label63.Size = new System.Drawing.Size(104, 13);
+            this.label63.TabIndex = 219;
+            this.label63.Text = "Survivability Score: *";
+            this.toolTipMage.SetToolTip(this.label63, "Survivability rating that results from maximum chance to live.");
+            // 
+            // textBoxBurstImpacts
+            // 
+            this.textBoxBurstImpacts.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "BurstImpacts", true));
+            this.textBoxBurstImpacts.Location = new System.Drawing.Point(112, 297);
+            this.textBoxBurstImpacts.Name = "textBoxBurstImpacts";
+            this.textBoxBurstImpacts.Size = new System.Drawing.Size(75, 20);
+            this.textBoxBurstImpacts.TabIndex = 216;
+            // 
+            // label61
+            // 
+            this.label61.AutoSize = true;
+            this.label61.Location = new System.Drawing.Point(0, 297);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(110, 13);
+            this.label61.TabIndex = 215;
+            this.label61.Text = "Damage Granularity: *";
+            this.toolTipMage.SetToolTip(this.label61, "Defines the number of impacts that the above damage profile consists of, higher v" +
+                    "alues result in lower crit variance.");
+            // 
+            // textBoxBurstWindow
+            // 
+            this.textBoxBurstWindow.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "BurstWindow", true));
+            this.textBoxBurstWindow.Location = new System.Drawing.Point(112, 271);
+            this.textBoxBurstWindow.Name = "textBoxBurstWindow";
+            this.textBoxBurstWindow.Size = new System.Drawing.Size(75, 20);
+            this.textBoxBurstWindow.TabIndex = 214;
+            // 
+            // label60
+            // 
+            this.label60.AutoSize = true;
+            this.label60.Location = new System.Drawing.Point(0, 271);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(104, 13);
+            this.label60.TabIndex = 213;
+            this.label60.Text = "Healing Response: *";
+            this.toolTipMage.SetToolTip(this.label60, "Average time in seconds needed for healing to respond to the burst damage defined" +
+                    " above.");
+            // 
+            // textBoxShadowDot
+            // 
+            this.textBoxShadowDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ShadowDot", true));
+            this.textBoxShadowDot.Location = new System.Drawing.Point(155, 235);
+            this.textBoxShadowDot.Name = "textBoxShadowDot";
+            this.textBoxShadowDot.Size = new System.Drawing.Size(45, 20);
+            this.textBoxShadowDot.TabIndex = 212;
+            // 
+            // textBoxShadowCrit
+            // 
+            this.textBoxShadowCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ShadowCrit", true));
+            this.textBoxShadowCrit.Location = new System.Drawing.Point(104, 235);
+            this.textBoxShadowCrit.Name = "textBoxShadowCrit";
+            this.textBoxShadowCrit.Size = new System.Drawing.Size(45, 20);
+            this.textBoxShadowCrit.TabIndex = 211;
+            // 
+            // textBoxShadowDps
+            // 
+            this.textBoxShadowDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ShadowDps", true));
+            this.textBoxShadowDps.Location = new System.Drawing.Point(53, 235);
+            this.textBoxShadowDps.Name = "textBoxShadowDps";
+            this.textBoxShadowDps.Size = new System.Drawing.Size(45, 20);
+            this.textBoxShadowDps.TabIndex = 210;
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(3, 238);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(49, 13);
+            this.label59.TabIndex = 209;
+            this.label59.Text = "Shadow:";
+            // 
+            // textBoxNatureDot
+            // 
+            this.textBoxNatureDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "NatureDot", true));
+            this.textBoxNatureDot.Location = new System.Drawing.Point(155, 209);
+            this.textBoxNatureDot.Name = "textBoxNatureDot";
+            this.textBoxNatureDot.Size = new System.Drawing.Size(45, 20);
+            this.textBoxNatureDot.TabIndex = 208;
+            // 
+            // textBoxNatureCrit
+            // 
+            this.textBoxNatureCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "NatureCrit", true));
+            this.textBoxNatureCrit.Location = new System.Drawing.Point(104, 209);
+            this.textBoxNatureCrit.Name = "textBoxNatureCrit";
+            this.textBoxNatureCrit.Size = new System.Drawing.Size(45, 20);
+            this.textBoxNatureCrit.TabIndex = 207;
+            // 
+            // textBoxNatureDps
+            // 
+            this.textBoxNatureDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "NatureDps", true));
+            this.textBoxNatureDps.Location = new System.Drawing.Point(53, 209);
+            this.textBoxNatureDps.Name = "textBoxNatureDps";
+            this.textBoxNatureDps.Size = new System.Drawing.Size(45, 20);
+            this.textBoxNatureDps.TabIndex = 206;
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.Location = new System.Drawing.Point(3, 212);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(42, 13);
+            this.label58.TabIndex = 205;
+            this.label58.Text = "Nature:";
+            // 
+            // textBoxHolyDot
+            // 
+            this.textBoxHolyDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HolyDot", true));
+            this.textBoxHolyDot.Location = new System.Drawing.Point(155, 183);
+            this.textBoxHolyDot.Name = "textBoxHolyDot";
+            this.textBoxHolyDot.Size = new System.Drawing.Size(45, 20);
+            this.textBoxHolyDot.TabIndex = 204;
+            // 
+            // textBoxHolyCrit
+            // 
+            this.textBoxHolyCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HolyCrit", true));
+            this.textBoxHolyCrit.Location = new System.Drawing.Point(104, 183);
+            this.textBoxHolyCrit.Name = "textBoxHolyCrit";
+            this.textBoxHolyCrit.Size = new System.Drawing.Size(45, 20);
+            this.textBoxHolyCrit.TabIndex = 203;
+            // 
+            // textBoxHolyDps
+            // 
+            this.textBoxHolyDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HolyDps", true));
+            this.textBoxHolyDps.Location = new System.Drawing.Point(53, 183);
+            this.textBoxHolyDps.Name = "textBoxHolyDps";
+            this.textBoxHolyDps.Size = new System.Drawing.Size(45, 20);
+            this.textBoxHolyDps.TabIndex = 202;
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.Location = new System.Drawing.Point(3, 186);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(31, 13);
+            this.label57.TabIndex = 201;
+            this.label57.Text = "Holy:";
+            // 
+            // textBoxFrostDot
+            // 
+            this.textBoxFrostDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FrostDot", true));
+            this.textBoxFrostDot.Location = new System.Drawing.Point(155, 157);
+            this.textBoxFrostDot.Name = "textBoxFrostDot";
+            this.textBoxFrostDot.Size = new System.Drawing.Size(45, 20);
+            this.textBoxFrostDot.TabIndex = 200;
+            // 
+            // textBoxFrostCrit
+            // 
+            this.textBoxFrostCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FrostCrit", true));
+            this.textBoxFrostCrit.Location = new System.Drawing.Point(104, 157);
+            this.textBoxFrostCrit.Name = "textBoxFrostCrit";
+            this.textBoxFrostCrit.Size = new System.Drawing.Size(45, 20);
+            this.textBoxFrostCrit.TabIndex = 199;
+            // 
+            // textBoxFrostDps
+            // 
+            this.textBoxFrostDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FrostDps", true));
+            this.textBoxFrostDps.Location = new System.Drawing.Point(53, 157);
+            this.textBoxFrostDps.Name = "textBoxFrostDps";
+            this.textBoxFrostDps.Size = new System.Drawing.Size(45, 20);
+            this.textBoxFrostDps.TabIndex = 198;
+            // 
+            // label56
+            // 
+            this.label56.AutoSize = true;
+            this.label56.Location = new System.Drawing.Point(3, 160);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(33, 13);
+            this.label56.TabIndex = 197;
+            this.label56.Text = "Frost:";
+            // 
+            // textBoxFireDot
+            // 
+            this.textBoxFireDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FireDot", true));
+            this.textBoxFireDot.Location = new System.Drawing.Point(155, 131);
+            this.textBoxFireDot.Name = "textBoxFireDot";
+            this.textBoxFireDot.Size = new System.Drawing.Size(45, 20);
+            this.textBoxFireDot.TabIndex = 196;
+            // 
+            // textBoxFireCrit
+            // 
+            this.textBoxFireCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FireCrit", true));
+            this.textBoxFireCrit.Location = new System.Drawing.Point(104, 131);
+            this.textBoxFireCrit.Name = "textBoxFireCrit";
+            this.textBoxFireCrit.Size = new System.Drawing.Size(45, 20);
+            this.textBoxFireCrit.TabIndex = 195;
+            // 
+            // textBoxFireDps
+            // 
+            this.textBoxFireDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FireDps", true));
+            this.textBoxFireDps.Location = new System.Drawing.Point(53, 131);
+            this.textBoxFireDps.Name = "textBoxFireDps";
+            this.textBoxFireDps.Size = new System.Drawing.Size(45, 20);
+            this.textBoxFireDps.TabIndex = 194;
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Location = new System.Drawing.Point(3, 134);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(27, 13);
+            this.label55.TabIndex = 193;
+            this.label55.Text = "Fire:";
+            // 
+            // textBoxArcaneDot
+            // 
+            this.textBoxArcaneDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ArcaneDot", true));
+            this.textBoxArcaneDot.Location = new System.Drawing.Point(155, 105);
+            this.textBoxArcaneDot.Name = "textBoxArcaneDot";
+            this.textBoxArcaneDot.Size = new System.Drawing.Size(45, 20);
+            this.textBoxArcaneDot.TabIndex = 192;
+            // 
+            // textBoxArcaneCrit
+            // 
+            this.textBoxArcaneCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ArcaneCrit", true));
+            this.textBoxArcaneCrit.Location = new System.Drawing.Point(104, 105);
+            this.textBoxArcaneCrit.Name = "textBoxArcaneCrit";
+            this.textBoxArcaneCrit.Size = new System.Drawing.Size(45, 20);
+            this.textBoxArcaneCrit.TabIndex = 191;
+            // 
+            // textBoxArcaneDps
+            // 
+            this.textBoxArcaneDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ArcaneDps", true));
+            this.textBoxArcaneDps.Location = new System.Drawing.Point(53, 105);
+            this.textBoxArcaneDps.Name = "textBoxArcaneDps";
+            this.textBoxArcaneDps.Size = new System.Drawing.Size(45, 20);
+            this.textBoxArcaneDps.TabIndex = 190;
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Location = new System.Drawing.Point(3, 108);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(44, 13);
+            this.label54.TabIndex = 189;
+            this.label54.Text = "Arcane:";
+            // 
+            // textBoxPhysicalDot
+            // 
+            this.textBoxPhysicalDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "PhysicalDot", true));
+            this.textBoxPhysicalDot.Location = new System.Drawing.Point(155, 79);
+            this.textBoxPhysicalDot.Name = "textBoxPhysicalDot";
+            this.textBoxPhysicalDot.Size = new System.Drawing.Size(45, 20);
+            this.textBoxPhysicalDot.TabIndex = 188;
+            // 
+            // textBoxPhysicalCrit
+            // 
+            this.textBoxPhysicalCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "PhysicalCrit", true));
+            this.textBoxPhysicalCrit.Location = new System.Drawing.Point(104, 79);
+            this.textBoxPhysicalCrit.Name = "textBoxPhysicalCrit";
+            this.textBoxPhysicalCrit.Size = new System.Drawing.Size(45, 20);
+            this.textBoxPhysicalCrit.TabIndex = 187;
+            // 
+            // textBoxPhysicalDps
+            // 
+            this.textBoxPhysicalDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "PhysicalDps", true));
+            this.textBoxPhysicalDps.Location = new System.Drawing.Point(53, 79);
+            this.textBoxPhysicalDps.Name = "textBoxPhysicalDps";
+            this.textBoxPhysicalDps.Size = new System.Drawing.Size(45, 20);
+            this.textBoxPhysicalDps.TabIndex = 186;
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Location = new System.Drawing.Point(3, 82);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(49, 13);
+            this.label53.TabIndex = 185;
+            this.label53.Text = "Physical:";
+            // 
+            // textBoxMeleeDot
+            // 
+            this.textBoxMeleeDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MeleeDot", true));
+            this.textBoxMeleeDot.Location = new System.Drawing.Point(155, 53);
+            this.textBoxMeleeDot.Name = "textBoxMeleeDot";
+            this.textBoxMeleeDot.Size = new System.Drawing.Size(45, 20);
+            this.textBoxMeleeDot.TabIndex = 184;
+            // 
+            // textBoxMeleeCrit
+            // 
+            this.textBoxMeleeCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MeleeCrit", true));
+            this.textBoxMeleeCrit.Location = new System.Drawing.Point(104, 53);
+            this.textBoxMeleeCrit.Name = "textBoxMeleeCrit";
+            this.textBoxMeleeCrit.Size = new System.Drawing.Size(45, 20);
+            this.textBoxMeleeCrit.TabIndex = 183;
+            // 
+            // textBoxMeleeDps
+            // 
+            this.textBoxMeleeDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MeleeDps", true));
+            this.textBoxMeleeDps.Location = new System.Drawing.Point(53, 53);
+            this.textBoxMeleeDps.Name = "textBoxMeleeDps";
+            this.textBoxMeleeDps.Size = new System.Drawing.Size(45, 20);
+            this.textBoxMeleeDps.TabIndex = 182;
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Location = new System.Drawing.Point(3, 56);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(39, 13);
+            this.label52.TabIndex = 181;
+            this.label52.Text = "Melee:";
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(152, 37);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(34, 13);
+            this.label51.TabIndex = 180;
+            this.label51.Text = "Dot: *";
+            this.toolTipMage.SetToolTip(this.label51, "Dot damage per second.");
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(101, 37);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(32, 13);
+            this.label50.TabIndex = 179;
+            this.label50.Text = "Crit: *";
+            this.toolTipMage.SetToolTip(this.label50, "Crit rate of direct damage.");
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(50, 37);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(36, 13);
+            this.label49.TabIndex = 178;
+            this.label49.Text = "Dps: *";
+            this.toolTipMage.SetToolTip(this.label49, "Raw direct damage per second (before crit and mitigation).");
+            // 
+            // textBoxSurvivabilityRating
+            // 
+            this.textBoxSurvivabilityRating.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "SurvivabilityRating", true));
+            this.textBoxSurvivabilityRating.Location = new System.Drawing.Point(112, 3);
+            this.textBoxSurvivabilityRating.Name = "textBoxSurvivabilityRating";
+            this.textBoxSurvivabilityRating.Size = new System.Drawing.Size(75, 20);
+            this.textBoxSurvivabilityRating.TabIndex = 177;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(0, 3);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(107, 13);
+            this.label34.TabIndex = 176;
+            this.label34.Text = "Survivability Rating: *";
+            this.toolTipMage.SetToolTip(this.label34, "Determines the weight of health in the overall rating (express in terms of dps va" +
+                    "lue per health).");
+            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.textBoxSMPComputationLimit);
@@ -1314,431 +1769,321 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // tabPage5
-            // 
-            this.tabPage5.Controls.Add(this.textBoxChanceToLiveScore);
-            this.tabPage5.Controls.Add(this.label63);
-            this.tabPage5.Controls.Add(this.textBoxBurstImpacts);
-            this.tabPage5.Controls.Add(this.label61);
-            this.tabPage5.Controls.Add(this.textBoxBurstWindow);
-            this.tabPage5.Controls.Add(this.label60);
-            this.tabPage5.Controls.Add(this.textBoxShadowDot);
-            this.tabPage5.Controls.Add(this.textBoxShadowCrit);
-            this.tabPage5.Controls.Add(this.textBoxShadowDps);
-            this.tabPage5.Controls.Add(this.label59);
-            this.tabPage5.Controls.Add(this.textBoxNatureDot);
-            this.tabPage5.Controls.Add(this.textBoxNatureCrit);
-            this.tabPage5.Controls.Add(this.textBoxNatureDps);
-            this.tabPage5.Controls.Add(this.label58);
-            this.tabPage5.Controls.Add(this.textBoxHolyDot);
-            this.tabPage5.Controls.Add(this.textBoxHolyCrit);
-            this.tabPage5.Controls.Add(this.textBoxHolyDps);
-            this.tabPage5.Controls.Add(this.label57);
-            this.tabPage5.Controls.Add(this.textBoxFrostDot);
-            this.tabPage5.Controls.Add(this.textBoxFrostCrit);
-            this.tabPage5.Controls.Add(this.textBoxFrostDps);
-            this.tabPage5.Controls.Add(this.label56);
-            this.tabPage5.Controls.Add(this.textBoxFireDot);
-            this.tabPage5.Controls.Add(this.textBoxFireCrit);
-            this.tabPage5.Controls.Add(this.textBoxFireDps);
-            this.tabPage5.Controls.Add(this.label55);
-            this.tabPage5.Controls.Add(this.textBoxArcaneDot);
-            this.tabPage5.Controls.Add(this.textBoxArcaneCrit);
-            this.tabPage5.Controls.Add(this.textBoxArcaneDps);
-            this.tabPage5.Controls.Add(this.label54);
-            this.tabPage5.Controls.Add(this.textBoxPhysicalDot);
-            this.tabPage5.Controls.Add(this.textBoxPhysicalCrit);
-            this.tabPage5.Controls.Add(this.textBoxPhysicalDps);
-            this.tabPage5.Controls.Add(this.label53);
-            this.tabPage5.Controls.Add(this.textBoxMeleeDot);
-            this.tabPage5.Controls.Add(this.textBoxMeleeCrit);
-            this.tabPage5.Controls.Add(this.textBoxMeleeDps);
-            this.tabPage5.Controls.Add(this.label52);
-            this.tabPage5.Controls.Add(this.label51);
-            this.tabPage5.Controls.Add(this.label50);
-            this.tabPage5.Controls.Add(this.label49);
-            this.tabPage5.Controls.Add(this.textBoxSurvivabilityRating);
-            this.tabPage5.Controls.Add(this.label34);
-            this.tabPage5.Location = new System.Drawing.Point(4, 40);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(206, 507);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Survivability";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // textBoxSurvivabilityRating
-            // 
-            this.textBoxSurvivabilityRating.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "SurvivabilityRating", true));
-            this.textBoxSurvivabilityRating.Location = new System.Drawing.Point(112, 3);
-            this.textBoxSurvivabilityRating.Name = "textBoxSurvivabilityRating";
-            this.textBoxSurvivabilityRating.Size = new System.Drawing.Size(75, 20);
-            this.textBoxSurvivabilityRating.TabIndex = 177;
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(0, 3);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(107, 13);
-            this.label34.TabIndex = 176;
-            this.label34.Text = "Survivability Rating: *";
-            this.toolTipMage.SetToolTip(this.label34, "Determines the weight of health in the overall rating (express in terms of dps va" +
-                    "lue per health).");
-            // 
-            // label49
-            // 
-            this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(50, 37);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(36, 13);
-            this.label49.TabIndex = 178;
-            this.label49.Text = "Dps: *";
-            this.toolTipMage.SetToolTip(this.label49, "Raw direct damage per second (before crit and mitigation).");
-            // 
-            // label50
-            // 
-            this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(101, 37);
-            this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(32, 13);
-            this.label50.TabIndex = 179;
-            this.label50.Text = "Crit: *";
-            this.toolTipMage.SetToolTip(this.label50, "Crit rate of direct damage.");
-            // 
-            // label51
-            // 
-            this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(152, 37);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(34, 13);
-            this.label51.TabIndex = 180;
-            this.label51.Text = "Dot: *";
-            this.toolTipMage.SetToolTip(this.label51, "Dot damage per second.");
-            // 
-            // label52
-            // 
-            this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(3, 56);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(39, 13);
-            this.label52.TabIndex = 181;
-            this.label52.Text = "Melee:";
-            // 
-            // textBoxMeleeDps
-            // 
-            this.textBoxMeleeDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MeleeDps", true));
-            this.textBoxMeleeDps.Location = new System.Drawing.Point(53, 53);
-            this.textBoxMeleeDps.Name = "textBoxMeleeDps";
-            this.textBoxMeleeDps.Size = new System.Drawing.Size(45, 20);
-            this.textBoxMeleeDps.TabIndex = 182;
-            // 
-            // textBoxMeleeCrit
-            // 
-            this.textBoxMeleeCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MeleeCrit", true));
-            this.textBoxMeleeCrit.Location = new System.Drawing.Point(104, 53);
-            this.textBoxMeleeCrit.Name = "textBoxMeleeCrit";
-            this.textBoxMeleeCrit.Size = new System.Drawing.Size(45, 20);
-            this.textBoxMeleeCrit.TabIndex = 183;
-            // 
-            // textBoxMeleeDot
-            // 
-            this.textBoxMeleeDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MeleeDot", true));
-            this.textBoxMeleeDot.Location = new System.Drawing.Point(155, 53);
-            this.textBoxMeleeDot.Name = "textBoxMeleeDot";
-            this.textBoxMeleeDot.Size = new System.Drawing.Size(45, 20);
-            this.textBoxMeleeDot.TabIndex = 184;
-            // 
-            // textBoxPhysicalDot
-            // 
-            this.textBoxPhysicalDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "PhysicalDot", true));
-            this.textBoxPhysicalDot.Location = new System.Drawing.Point(155, 79);
-            this.textBoxPhysicalDot.Name = "textBoxPhysicalDot";
-            this.textBoxPhysicalDot.Size = new System.Drawing.Size(45, 20);
-            this.textBoxPhysicalDot.TabIndex = 188;
-            // 
-            // textBoxPhysicalCrit
-            // 
-            this.textBoxPhysicalCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "PhysicalCrit", true));
-            this.textBoxPhysicalCrit.Location = new System.Drawing.Point(104, 79);
-            this.textBoxPhysicalCrit.Name = "textBoxPhysicalCrit";
-            this.textBoxPhysicalCrit.Size = new System.Drawing.Size(45, 20);
-            this.textBoxPhysicalCrit.TabIndex = 187;
-            // 
-            // textBoxPhysicalDps
-            // 
-            this.textBoxPhysicalDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "PhysicalDps", true));
-            this.textBoxPhysicalDps.Location = new System.Drawing.Point(53, 79);
-            this.textBoxPhysicalDps.Name = "textBoxPhysicalDps";
-            this.textBoxPhysicalDps.Size = new System.Drawing.Size(45, 20);
-            this.textBoxPhysicalDps.TabIndex = 186;
-            // 
-            // label53
-            // 
-            this.label53.AutoSize = true;
-            this.label53.Location = new System.Drawing.Point(3, 82);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(49, 13);
-            this.label53.TabIndex = 185;
-            this.label53.Text = "Physical:";
-            // 
-            // textBoxArcaneDot
-            // 
-            this.textBoxArcaneDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ArcaneDot", true));
-            this.textBoxArcaneDot.Location = new System.Drawing.Point(155, 105);
-            this.textBoxArcaneDot.Name = "textBoxArcaneDot";
-            this.textBoxArcaneDot.Size = new System.Drawing.Size(45, 20);
-            this.textBoxArcaneDot.TabIndex = 192;
-            // 
-            // textBoxArcaneCrit
-            // 
-            this.textBoxArcaneCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ArcaneCrit", true));
-            this.textBoxArcaneCrit.Location = new System.Drawing.Point(104, 105);
-            this.textBoxArcaneCrit.Name = "textBoxArcaneCrit";
-            this.textBoxArcaneCrit.Size = new System.Drawing.Size(45, 20);
-            this.textBoxArcaneCrit.TabIndex = 191;
-            // 
-            // textBoxArcaneDps
-            // 
-            this.textBoxArcaneDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ArcaneDps", true));
-            this.textBoxArcaneDps.Location = new System.Drawing.Point(53, 105);
-            this.textBoxArcaneDps.Name = "textBoxArcaneDps";
-            this.textBoxArcaneDps.Size = new System.Drawing.Size(45, 20);
-            this.textBoxArcaneDps.TabIndex = 190;
-            // 
-            // label54
-            // 
-            this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(3, 108);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(44, 13);
-            this.label54.TabIndex = 189;
-            this.label54.Text = "Arcane:";
-            // 
-            // textBoxFireDot
-            // 
-            this.textBoxFireDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FireDot", true));
-            this.textBoxFireDot.Location = new System.Drawing.Point(155, 131);
-            this.textBoxFireDot.Name = "textBoxFireDot";
-            this.textBoxFireDot.Size = new System.Drawing.Size(45, 20);
-            this.textBoxFireDot.TabIndex = 196;
-            // 
-            // textBoxFireCrit
-            // 
-            this.textBoxFireCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FireCrit", true));
-            this.textBoxFireCrit.Location = new System.Drawing.Point(104, 131);
-            this.textBoxFireCrit.Name = "textBoxFireCrit";
-            this.textBoxFireCrit.Size = new System.Drawing.Size(45, 20);
-            this.textBoxFireCrit.TabIndex = 195;
-            // 
-            // textBoxFireDps
-            // 
-            this.textBoxFireDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FireDps", true));
-            this.textBoxFireDps.Location = new System.Drawing.Point(53, 131);
-            this.textBoxFireDps.Name = "textBoxFireDps";
-            this.textBoxFireDps.Size = new System.Drawing.Size(45, 20);
-            this.textBoxFireDps.TabIndex = 194;
-            // 
-            // label55
-            // 
-            this.label55.AutoSize = true;
-            this.label55.Location = new System.Drawing.Point(3, 134);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(27, 13);
-            this.label55.TabIndex = 193;
-            this.label55.Text = "Fire:";
-            // 
-            // textBoxFrostDot
-            // 
-            this.textBoxFrostDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FrostDot", true));
-            this.textBoxFrostDot.Location = new System.Drawing.Point(155, 157);
-            this.textBoxFrostDot.Name = "textBoxFrostDot";
-            this.textBoxFrostDot.Size = new System.Drawing.Size(45, 20);
-            this.textBoxFrostDot.TabIndex = 200;
-            // 
-            // textBoxFrostCrit
-            // 
-            this.textBoxFrostCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FrostCrit", true));
-            this.textBoxFrostCrit.Location = new System.Drawing.Point(104, 157);
-            this.textBoxFrostCrit.Name = "textBoxFrostCrit";
-            this.textBoxFrostCrit.Size = new System.Drawing.Size(45, 20);
-            this.textBoxFrostCrit.TabIndex = 199;
-            // 
-            // textBoxFrostDps
-            // 
-            this.textBoxFrostDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FrostDps", true));
-            this.textBoxFrostDps.Location = new System.Drawing.Point(53, 157);
-            this.textBoxFrostDps.Name = "textBoxFrostDps";
-            this.textBoxFrostDps.Size = new System.Drawing.Size(45, 20);
-            this.textBoxFrostDps.TabIndex = 198;
-            // 
-            // label56
-            // 
-            this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(3, 160);
-            this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(33, 13);
-            this.label56.TabIndex = 197;
-            this.label56.Text = "Frost:";
-            // 
-            // textBoxHolyDot
-            // 
-            this.textBoxHolyDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HolyDot", true));
-            this.textBoxHolyDot.Location = new System.Drawing.Point(155, 183);
-            this.textBoxHolyDot.Name = "textBoxHolyDot";
-            this.textBoxHolyDot.Size = new System.Drawing.Size(45, 20);
-            this.textBoxHolyDot.TabIndex = 204;
-            // 
-            // textBoxHolyCrit
-            // 
-            this.textBoxHolyCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HolyCrit", true));
-            this.textBoxHolyCrit.Location = new System.Drawing.Point(104, 183);
-            this.textBoxHolyCrit.Name = "textBoxHolyCrit";
-            this.textBoxHolyCrit.Size = new System.Drawing.Size(45, 20);
-            this.textBoxHolyCrit.TabIndex = 203;
-            // 
-            // textBoxHolyDps
-            // 
-            this.textBoxHolyDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HolyDps", true));
-            this.textBoxHolyDps.Location = new System.Drawing.Point(53, 183);
-            this.textBoxHolyDps.Name = "textBoxHolyDps";
-            this.textBoxHolyDps.Size = new System.Drawing.Size(45, 20);
-            this.textBoxHolyDps.TabIndex = 202;
-            // 
-            // label57
-            // 
-            this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(3, 186);
-            this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(31, 13);
-            this.label57.TabIndex = 201;
-            this.label57.Text = "Holy:";
-            // 
-            // textBoxNatureDot
-            // 
-            this.textBoxNatureDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "NatureDot", true));
-            this.textBoxNatureDot.Location = new System.Drawing.Point(155, 209);
-            this.textBoxNatureDot.Name = "textBoxNatureDot";
-            this.textBoxNatureDot.Size = new System.Drawing.Size(45, 20);
-            this.textBoxNatureDot.TabIndex = 208;
-            // 
-            // textBoxNatureCrit
-            // 
-            this.textBoxNatureCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "NatureCrit", true));
-            this.textBoxNatureCrit.Location = new System.Drawing.Point(104, 209);
-            this.textBoxNatureCrit.Name = "textBoxNatureCrit";
-            this.textBoxNatureCrit.Size = new System.Drawing.Size(45, 20);
-            this.textBoxNatureCrit.TabIndex = 207;
-            // 
-            // textBoxNatureDps
-            // 
-            this.textBoxNatureDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "NatureDps", true));
-            this.textBoxNatureDps.Location = new System.Drawing.Point(53, 209);
-            this.textBoxNatureDps.Name = "textBoxNatureDps";
-            this.textBoxNatureDps.Size = new System.Drawing.Size(45, 20);
-            this.textBoxNatureDps.TabIndex = 206;
-            // 
-            // label58
-            // 
-            this.label58.AutoSize = true;
-            this.label58.Location = new System.Drawing.Point(3, 212);
-            this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(42, 13);
-            this.label58.TabIndex = 205;
-            this.label58.Text = "Nature:";
-            // 
-            // textBoxShadowDot
-            // 
-            this.textBoxShadowDot.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ShadowDot", true));
-            this.textBoxShadowDot.Location = new System.Drawing.Point(155, 235);
-            this.textBoxShadowDot.Name = "textBoxShadowDot";
-            this.textBoxShadowDot.Size = new System.Drawing.Size(45, 20);
-            this.textBoxShadowDot.TabIndex = 212;
-            // 
-            // textBoxShadowCrit
-            // 
-            this.textBoxShadowCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ShadowCrit", true));
-            this.textBoxShadowCrit.Location = new System.Drawing.Point(104, 235);
-            this.textBoxShadowCrit.Name = "textBoxShadowCrit";
-            this.textBoxShadowCrit.Size = new System.Drawing.Size(45, 20);
-            this.textBoxShadowCrit.TabIndex = 211;
-            // 
-            // textBoxShadowDps
-            // 
-            this.textBoxShadowDps.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ShadowDps", true));
-            this.textBoxShadowDps.Location = new System.Drawing.Point(53, 235);
-            this.textBoxShadowDps.Name = "textBoxShadowDps";
-            this.textBoxShadowDps.Size = new System.Drawing.Size(45, 20);
-            this.textBoxShadowDps.TabIndex = 210;
-            // 
-            // label59
-            // 
-            this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(3, 238);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(49, 13);
-            this.label59.TabIndex = 209;
-            this.label59.Text = "Shadow:";
-            // 
-            // textBoxBurstWindow
-            // 
-            this.textBoxBurstWindow.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "BurstWindow", true));
-            this.textBoxBurstWindow.Location = new System.Drawing.Point(112, 271);
-            this.textBoxBurstWindow.Name = "textBoxBurstWindow";
-            this.textBoxBurstWindow.Size = new System.Drawing.Size(75, 20);
-            this.textBoxBurstWindow.TabIndex = 214;
-            // 
-            // label60
-            // 
-            this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(0, 271);
-            this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(104, 13);
-            this.label60.TabIndex = 213;
-            this.label60.Text = "Healing Response: *";
-            this.toolTipMage.SetToolTip(this.label60, "Average time in seconds needed for healing to respond to the burst damage defined" +
-                    " above.");
-            // 
-            // textBoxBurstImpacts
-            // 
-            this.textBoxBurstImpacts.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "BurstImpacts", true));
-            this.textBoxBurstImpacts.Location = new System.Drawing.Point(112, 297);
-            this.textBoxBurstImpacts.Name = "textBoxBurstImpacts";
-            this.textBoxBurstImpacts.Size = new System.Drawing.Size(75, 20);
-            this.textBoxBurstImpacts.TabIndex = 216;
-            // 
-            // label61
-            // 
-            this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(0, 297);
-            this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(110, 13);
-            this.label61.TabIndex = 215;
-            this.label61.Text = "Damage Granularity: *";
-            this.toolTipMage.SetToolTip(this.label61, "Defines the number of impacts that the above damage profile consists of, higher v" +
-                    "alues result in lower crit variance.");
-            // 
-            // textBoxChanceToLiveScore
-            // 
-            this.textBoxChanceToLiveScore.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ChanceToLiveScore", true));
-            this.textBoxChanceToLiveScore.Location = new System.Drawing.Point(112, 323);
-            this.textBoxChanceToLiveScore.Name = "textBoxChanceToLiveScore";
-            this.textBoxChanceToLiveScore.Size = new System.Drawing.Size(75, 20);
-            this.textBoxChanceToLiveScore.TabIndex = 220;
-            // 
-            // label63
-            // 
-            this.label63.AutoSize = true;
-            this.label63.Location = new System.Drawing.Point(0, 323);
-            this.label63.Name = "label63";
-            this.label63.Size = new System.Drawing.Size(104, 13);
-            this.label63.TabIndex = 219;
-            this.label63.Text = "Survivability Score: *";
-            this.toolTipMage.SetToolTip(this.label63, "Survivability rating that results from maximum chance to live.");
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.label76);
+            this.tabPage6.Controls.Add(this.textBoxEffectShadowBinary);
+            this.tabPage6.Controls.Add(this.textBoxEffectShadow);
+            this.tabPage6.Controls.Add(this.label68);
+            this.tabPage6.Controls.Add(this.textBoxEffectNatureBinary);
+            this.tabPage6.Controls.Add(this.textBoxEffectNature);
+            this.tabPage6.Controls.Add(this.label69);
+            this.tabPage6.Controls.Add(this.textBoxEffectHolyBinary);
+            this.tabPage6.Controls.Add(this.textBoxEffectHoly);
+            this.tabPage6.Controls.Add(this.label70);
+            this.tabPage6.Controls.Add(this.textBoxEffectFrostBinary);
+            this.tabPage6.Controls.Add(this.textBoxEffectFrost);
+            this.tabPage6.Controls.Add(this.label71);
+            this.tabPage6.Controls.Add(this.textBoxEffectFireBinary);
+            this.tabPage6.Controls.Add(this.textBoxEffectFire);
+            this.tabPage6.Controls.Add(this.label72);
+            this.tabPage6.Controls.Add(this.textBoxEffectArcaneBinary);
+            this.tabPage6.Controls.Add(this.textBoxEffectArcane);
+            this.tabPage6.Controls.Add(this.label73);
+            this.tabPage6.Controls.Add(this.label74);
+            this.tabPage6.Controls.Add(this.label75);
+            this.tabPage6.Controls.Add(this.textBoxManaDrainFrequency);
+            this.tabPage6.Controls.Add(this.label67);
+            this.tabPage6.Controls.Add(this.textBoxManaDrain);
+            this.tabPage6.Controls.Add(this.label66);
+            this.tabPage6.Controls.Add(this.textBoxSilenceDuration);
+            this.tabPage6.Controls.Add(this.label65);
+            this.tabPage6.Controls.Add(this.textBoxEffectSilenceFrequency);
+            this.tabPage6.Controls.Add(this.label64);
+            this.tabPage6.Controls.Add(this.textBoxEffectBonusSpirit);
+            this.tabPage6.Controls.Add(this.label62);
+            this.tabPage6.Location = new System.Drawing.Point(4, 40);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(206, 507);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Effects";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // textBoxEffectBonusSpirit
+            // 
+            this.textBoxEffectBonusSpirit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectSpiritBonus", true));
+            this.textBoxEffectBonusSpirit.Location = new System.Drawing.Point(112, 3);
+            this.textBoxEffectBonusSpirit.Name = "textBoxEffectBonusSpirit";
+            this.textBoxEffectBonusSpirit.Size = new System.Drawing.Size(75, 20);
+            this.textBoxEffectBonusSpirit.TabIndex = 157;
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Location = new System.Drawing.Point(0, 6);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(81, 13);
+            this.label62.TabIndex = 156;
+            this.label62.Text = "Bonus Spirit%: *";
+            this.toolTipMage.SetToolTip(this.label62, "Percent increase of spirit.");
+            // 
+            // textBoxEffectSilenceFrequency
+            // 
+            this.textBoxEffectSilenceFrequency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowSilenceFrequency", true));
+            this.textBoxEffectSilenceFrequency.Location = new System.Drawing.Point(112, 29);
+            this.textBoxEffectSilenceFrequency.Name = "textBoxEffectSilenceFrequency";
+            this.textBoxEffectSilenceFrequency.Size = new System.Drawing.Size(75, 20);
+            this.textBoxEffectSilenceFrequency.TabIndex = 159;
+            // 
+            // label64
+            // 
+            this.label64.AutoSize = true;
+            this.label64.Location = new System.Drawing.Point(0, 32);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(105, 13);
+            this.label64.TabIndex = 158;
+            this.label64.Text = "Silence Frequency: *";
+            this.toolTipMage.SetToolTip(this.label64, "Frequency of shadow based silences (number/second).");
+            // 
+            // textBoxSilenceDuration
+            // 
+            this.textBoxSilenceDuration.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowSilenceDuration", true));
+            this.textBoxSilenceDuration.Location = new System.Drawing.Point(112, 55);
+            this.textBoxSilenceDuration.Name = "textBoxSilenceDuration";
+            this.textBoxSilenceDuration.Size = new System.Drawing.Size(75, 20);
+            this.textBoxSilenceDuration.TabIndex = 161;
+            // 
+            // label65
+            // 
+            this.label65.AutoSize = true;
+            this.label65.Location = new System.Drawing.Point(0, 58);
+            this.label65.Name = "label65";
+            this.label65.Size = new System.Drawing.Size(95, 13);
+            this.label65.TabIndex = 160;
+            this.label65.Text = "Silence Duration: *";
+            this.toolTipMage.SetToolTip(this.label65, "Duration of shadow based silences in seconds.");
+            // 
+            // textBoxManaDrain
+            // 
+            this.textBoxManaDrain.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowManaDrain", true));
+            this.textBoxManaDrain.Location = new System.Drawing.Point(112, 81);
+            this.textBoxManaDrain.Name = "textBoxManaDrain";
+            this.textBoxManaDrain.Size = new System.Drawing.Size(75, 20);
+            this.textBoxManaDrain.TabIndex = 163;
+            // 
+            // label66
+            // 
+            this.label66.AutoSize = true;
+            this.label66.Location = new System.Drawing.Point(0, 84);
+            this.label66.Name = "label66";
+            this.label66.Size = new System.Drawing.Size(72, 13);
+            this.label66.TabIndex = 162;
+            this.label66.Text = "Mana Drain: *";
+            this.toolTipMage.SetToolTip(this.label66, "Amount of shadow based mana drained.");
+            // 
+            // textBoxManaDrainFrequency
+            // 
+            this.textBoxManaDrainFrequency.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowManaDrainFrequency", true));
+            this.textBoxManaDrainFrequency.Location = new System.Drawing.Point(112, 107);
+            this.textBoxManaDrainFrequency.Name = "textBoxManaDrainFrequency";
+            this.textBoxManaDrainFrequency.Size = new System.Drawing.Size(75, 20);
+            this.textBoxManaDrainFrequency.TabIndex = 165;
+            // 
+            // label67
+            // 
+            this.label67.AutoSize = true;
+            this.label67.Location = new System.Drawing.Point(0, 110);
+            this.label67.Name = "label67";
+            this.label67.Size = new System.Drawing.Size(95, 13);
+            this.label67.TabIndex = 164;
+            this.label67.Text = "Drain Frequency: *";
+            this.toolTipMage.SetToolTip(this.label67, "Frequency of shadow based mana drains (number/second).");
             // 
             // calculationOptionsMageBindingSource
             // 
             this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
             this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            // 
+            // textBoxEffectShadowBinary
+            // 
+            this.textBoxEffectShadowBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowOtherBinary", true));
+            this.textBoxEffectShadowBinary.Location = new System.Drawing.Point(142, 285);
+            this.textBoxEffectShadowBinary.Name = "textBoxEffectShadowBinary";
+            this.textBoxEffectShadowBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectShadowBinary.TabIndex = 231;
+            // 
+            // textBoxEffectShadow
+            // 
+            this.textBoxEffectShadow.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectShadowOther", true));
+            this.textBoxEffectShadow.Location = new System.Drawing.Point(78, 285);
+            this.textBoxEffectShadow.Name = "textBoxEffectShadow";
+            this.textBoxEffectShadow.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectShadow.TabIndex = 230;
+            // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Location = new System.Drawing.Point(3, 288);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(49, 13);
+            this.label68.TabIndex = 229;
+            this.label68.Text = "Shadow:";
+            // 
+            // textBoxEffectNatureBinary
+            // 
+            this.textBoxEffectNatureBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectNatureOtherBinary", true));
+            this.textBoxEffectNatureBinary.Location = new System.Drawing.Point(142, 259);
+            this.textBoxEffectNatureBinary.Name = "textBoxEffectNatureBinary";
+            this.textBoxEffectNatureBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectNatureBinary.TabIndex = 228;
+            // 
+            // textBoxEffectNature
+            // 
+            this.textBoxEffectNature.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectNatureOther", true));
+            this.textBoxEffectNature.Location = new System.Drawing.Point(78, 259);
+            this.textBoxEffectNature.Name = "textBoxEffectNature";
+            this.textBoxEffectNature.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectNature.TabIndex = 227;
+            // 
+            // label69
+            // 
+            this.label69.AutoSize = true;
+            this.label69.Location = new System.Drawing.Point(3, 262);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(42, 13);
+            this.label69.TabIndex = 226;
+            this.label69.Text = "Nature:";
+            // 
+            // textBoxEffectHolyBinary
+            // 
+            this.textBoxEffectHolyBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectHolyOtherBinary", true));
+            this.textBoxEffectHolyBinary.Location = new System.Drawing.Point(142, 233);
+            this.textBoxEffectHolyBinary.Name = "textBoxEffectHolyBinary";
+            this.textBoxEffectHolyBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectHolyBinary.TabIndex = 225;
+            // 
+            // textBoxEffectHoly
+            // 
+            this.textBoxEffectHoly.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectHolyOther", true));
+            this.textBoxEffectHoly.Location = new System.Drawing.Point(78, 233);
+            this.textBoxEffectHoly.Name = "textBoxEffectHoly";
+            this.textBoxEffectHoly.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectHoly.TabIndex = 224;
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Location = new System.Drawing.Point(3, 236);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(31, 13);
+            this.label70.TabIndex = 223;
+            this.label70.Text = "Holy:";
+            // 
+            // textBoxEffectFrostBinary
+            // 
+            this.textBoxEffectFrostBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFrostOtherBinary", true));
+            this.textBoxEffectFrostBinary.Location = new System.Drawing.Point(142, 207);
+            this.textBoxEffectFrostBinary.Name = "textBoxEffectFrostBinary";
+            this.textBoxEffectFrostBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectFrostBinary.TabIndex = 222;
+            // 
+            // textBoxEffectFrost
+            // 
+            this.textBoxEffectFrost.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFrostOther", true));
+            this.textBoxEffectFrost.Location = new System.Drawing.Point(78, 207);
+            this.textBoxEffectFrost.Name = "textBoxEffectFrost";
+            this.textBoxEffectFrost.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectFrost.TabIndex = 221;
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Location = new System.Drawing.Point(3, 210);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(33, 13);
+            this.label71.TabIndex = 220;
+            this.label71.Text = "Frost:";
+            // 
+            // textBoxEffectFireBinary
+            // 
+            this.textBoxEffectFireBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFireOtherBinary", true));
+            this.textBoxEffectFireBinary.Location = new System.Drawing.Point(142, 181);
+            this.textBoxEffectFireBinary.Name = "textBoxEffectFireBinary";
+            this.textBoxEffectFireBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectFireBinary.TabIndex = 219;
+            // 
+            // textBoxEffectFire
+            // 
+            this.textBoxEffectFire.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectFireOther", true));
+            this.textBoxEffectFire.Location = new System.Drawing.Point(78, 181);
+            this.textBoxEffectFire.Name = "textBoxEffectFire";
+            this.textBoxEffectFire.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectFire.TabIndex = 218;
+            // 
+            // label72
+            // 
+            this.label72.AutoSize = true;
+            this.label72.Location = new System.Drawing.Point(3, 184);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(27, 13);
+            this.label72.TabIndex = 217;
+            this.label72.Text = "Fire:";
+            // 
+            // textBoxEffectArcaneBinary
+            // 
+            this.textBoxEffectArcaneBinary.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectArcaneOtherBinary", true));
+            this.textBoxEffectArcaneBinary.Location = new System.Drawing.Point(142, 155);
+            this.textBoxEffectArcaneBinary.Name = "textBoxEffectArcaneBinary";
+            this.textBoxEffectArcaneBinary.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectArcaneBinary.TabIndex = 216;
+            // 
+            // textBoxEffectArcane
+            // 
+            this.textBoxEffectArcane.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectArcaneOther", true));
+            this.textBoxEffectArcane.Location = new System.Drawing.Point(78, 155);
+            this.textBoxEffectArcane.Name = "textBoxEffectArcane";
+            this.textBoxEffectArcane.Size = new System.Drawing.Size(45, 20);
+            this.textBoxEffectArcane.TabIndex = 215;
+            // 
+            // label73
+            // 
+            this.label73.AutoSize = true;
+            this.label73.Location = new System.Drawing.Point(3, 158);
+            this.label73.Name = "label73";
+            this.label73.Size = new System.Drawing.Size(44, 13);
+            this.label73.TabIndex = 214;
+            this.label73.Text = "Arcane:";
+            // 
+            // label74
+            // 
+            this.label74.AutoSize = true;
+            this.label74.Location = new System.Drawing.Point(138, 139);
+            this.label74.Name = "label74";
+            this.label74.Size = new System.Drawing.Size(46, 13);
+            this.label74.TabIndex = 213;
+            this.label74.Text = "Binary: *";
+            this.toolTipMage.SetToolTip(this.label74, "Frequency of binary effects (number/second).");
+            // 
+            // label75
+            // 
+            this.label75.AutoSize = true;
+            this.label75.Location = new System.Drawing.Point(75, 139);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(57, 13);
+            this.label75.TabIndex = 212;
+            this.label75.Text = "Damage: *";
+            this.toolTipMage.SetToolTip(this.label75, "Frequency of partially resistable effects (number/second).");
+            // 
+            // label76
+            // 
+            this.label76.AutoSize = true;
+            this.label76.Location = new System.Drawing.Point(0, 139);
+            this.label76.Name = "label76";
+            this.label76.Size = new System.Drawing.Size(72, 13);
+            this.label76.TabIndex = 232;
+            this.label76.Text = "Other Effects:";
+            this.toolTipMage.SetToolTip(this.label76, "Raw direct damage per second (before crit and mitigation).");
             // 
             // CalculationOptionsPanelMage
             // 
@@ -1755,10 +2100,12 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
@@ -1914,6 +2261,38 @@
         private System.Windows.Forms.Label label61;
         private System.Windows.Forms.TextBox textBoxChanceToLiveScore;
         private System.Windows.Forms.Label label63;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.TextBox textBoxEffectBonusSpirit;
+        private System.Windows.Forms.Label label62;
+        private System.Windows.Forms.TextBox textBoxManaDrainFrequency;
+        private System.Windows.Forms.Label label67;
+        private System.Windows.Forms.TextBox textBoxManaDrain;
+        private System.Windows.Forms.Label label66;
+        private System.Windows.Forms.TextBox textBoxSilenceDuration;
+        private System.Windows.Forms.Label label65;
+        private System.Windows.Forms.TextBox textBoxEffectSilenceFrequency;
+        private System.Windows.Forms.Label label64;
+        private System.Windows.Forms.Label label76;
+        private System.Windows.Forms.TextBox textBoxEffectShadowBinary;
+        private System.Windows.Forms.TextBox textBoxEffectShadow;
+        private System.Windows.Forms.Label label68;
+        private System.Windows.Forms.TextBox textBoxEffectNatureBinary;
+        private System.Windows.Forms.TextBox textBoxEffectNature;
+        private System.Windows.Forms.Label label69;
+        private System.Windows.Forms.TextBox textBoxEffectHolyBinary;
+        private System.Windows.Forms.TextBox textBoxEffectHoly;
+        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.TextBox textBoxEffectFrostBinary;
+        private System.Windows.Forms.TextBox textBoxEffectFrost;
+        private System.Windows.Forms.Label label71;
+        private System.Windows.Forms.TextBox textBoxEffectFireBinary;
+        private System.Windows.Forms.TextBox textBoxEffectFire;
+        private System.Windows.Forms.Label label72;
+        private System.Windows.Forms.TextBox textBoxEffectArcaneBinary;
+        private System.Windows.Forms.TextBox textBoxEffectArcane;
+        private System.Windows.Forms.Label label73;
+        private System.Windows.Forms.Label label74;
+        private System.Windows.Forms.Label label75;
 
     }
 }

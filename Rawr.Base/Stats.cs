@@ -92,6 +92,7 @@ namespace Rawr
         NatureResistance,
         Parry,
         ParryRating,
+        PVPTrinket,
 		RangedAttackPower,
         Resilience,
         ScopeDamage, 
@@ -198,7 +199,8 @@ namespace Rawr
         FireResistanceBuff,
         FrostResistanceBuff,
         NatureResistanceBuff,
-        ShadowResistanceBuff
+        ShadowResistanceBuff,
+        MovementSpeed,
     }
 
     /// <summary>
@@ -1009,6 +1011,14 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor10SecOnCrit_20_45] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("PVP Trinket")]
+        public float PVPTrinket
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PVPTrinket]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PVPTrinket] = value; }
+        }
+
         // Starfire idol
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Starfire damage bonus")]
@@ -1385,7 +1395,6 @@ namespace Rawr
 			set { _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc] = value; }
 		}
 
-
 #endregion
 
         #region MultiplicativeStats
@@ -1757,6 +1766,13 @@ namespace Rawr
         {
             get { return _rawNoStackData[(int)NonStackingStat.ArcaneResistanceBuff]; }
             set { _rawNoStackData[(int)NonStackingStat.ArcaneResistanceBuff] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MovementSpeed
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.MovementSpeed]; }
+            set { _rawNoStackData[(int)NonStackingStat.MovementSpeed] = value; }
         }
 
 #endregion

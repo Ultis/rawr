@@ -321,6 +321,10 @@ namespace Rawr
                         {
                             stats.BlockValue += (float)Math.Round(200f * (20f / 120f));
                         }
+                        else if (spellDesc.StartsWith("Removes all movement impairing effects and all effects which cause loss of control of your character."))
+                        {
+                            stats.PVPTrinket += 1f;
+                        }
                     }
 
 					if (isEquip)
@@ -781,21 +785,22 @@ namespace Rawr
                         {
                             stats.AverageHeal = 29;
                         }
-						else if (spellDesc.StartsWith("Increases your pet's critical strike chance by "))
-						{
-							string critChance = spellDesc.Substring("Increases your pet's critical strike chance by ".Length).Trim();
-							if (critChance.EndsWith("%.")){
-								stats.BonusPetCritChance = float.Parse(critChance.Substring(0,critChance.Length-2)) / 100f;
-							}
-						}
-						else if (spellDesc.StartsWith("Increases damage dealt by your pet by "))
-						{
-							string critChance = spellDesc.Substring("Increases damage dealt by your pet by ".Length).Trim();
-							if (critChance.EndsWith("%."))
-							{
-								stats.BonusPetDamageMultiplier = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
-							}
-						}
+                        else if (spellDesc.StartsWith("Increases your pet's critical strike chance by "))
+                        {
+                            string critChance = spellDesc.Substring("Increases your pet's critical strike chance by ".Length).Trim();
+                            if (critChance.EndsWith("%."))
+                            {
+                                stats.BonusPetCritChance = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
+                            }
+                        }
+                        else if (spellDesc.StartsWith("Increases damage dealt by your pet by "))
+                        {
+                            string critChance = spellDesc.Substring("Increases damage dealt by your pet by ".Length).Trim();
+                            if (critChance.EndsWith("%."))
+                            {
+                                stats.BonusPetDamageMultiplier = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
+                            }
+                        }
                     }
 				}
 

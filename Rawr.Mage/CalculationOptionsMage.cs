@@ -126,6 +126,24 @@ namespace Rawr.Mage
         //public float ChanceToLiveLimit { get; set; }
         public float ChanceToLiveScore { get; set; }
 
+        public float EffectSpiritBonus { get; set; }
+        public float EffectShadowSilenceFrequency { get; set; }
+        public float EffectShadowSilenceDuration { get; set; }
+        public float EffectShadowManaDrainFrequency { get; set; }
+        public float EffectShadowManaDrain { get; set; }
+        public float EffectArcaneOtherBinary { get; set; }
+        public float EffectFireOtherBinary { get; set; }
+        public float EffectFrostOtherBinary { get; set; }
+        public float EffectShadowOtherBinary { get; set; }
+        public float EffectNatureOtherBinary { get; set; }
+        public float EffectHolyOtherBinary { get; set; }
+        public float EffectArcaneOther { get; set; }
+        public float EffectFireOther { get; set; }
+        public float EffectFrostOther { get; set; }
+        public float EffectShadowOther { get; set; }
+        public float EffectNatureOther { get; set; }
+        public float EffectHolyOther { get; set; }
+
         [XmlIgnore]
         public string ShattrathFaction
         {
