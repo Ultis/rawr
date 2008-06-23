@@ -705,7 +705,7 @@ namespace Rawr
                         }
                         if (bestCharacter[lockedSlot] == null || bestCharacter[lockedSlot].Id != item.Id || bestCharacter.GetEnchantBySlot(lockedSlot) != upgradeEnchant) throw new Exception("There was an internal error in Optimizer when evaluating upgrade.");
                         upgradeValue = best - baseValue;
-                        if (upgradeValue < 0 && saveCharacter[lockedSlot] != null && saveCharacter[lockedSlot].Id == item.Id) upgradeValue = 0f;
+                        if (upgradeValue < 0 && (saveCharacter[lockedSlot] == null || saveCharacter[lockedSlot].Id != item.Id)) upgradeValue = 0f;
                         _character = saveCharacter;
                     }
                 }
