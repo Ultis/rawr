@@ -30,7 +30,7 @@ namespace Rawr.HolyPriest
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
@@ -48,7 +48,13 @@ namespace Rawr.HolyPriest
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
         }
-        
+
+        public float HastePoints
+        {
+            get { return _subPoints[2]; }
+            set { _subPoints[2] = value; }
+        }
+
         private Item _item = null;
         public override Item Item
         {

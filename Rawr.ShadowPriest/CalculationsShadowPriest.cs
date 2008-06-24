@@ -130,7 +130,7 @@ namespace Rawr.ShadowPriest
                 + (calculatedStats.BasicStats.SpellCritRating / 5.57f)
                 + (calculatedStats.BasicStats.Spirit * 0.11f)
                 + (calculatedStats.BasicStats.Intellect * 0.055f)
-                + (calculatedStats.BasicStats.SpellHitRating < hitcap ? (hitcap - calculatedStats.BasicStats.SpellHitRating) * 1.364f: 0);
+                - (calculatedStats.BasicStats.SpellHitRating < hitcap ? (hitcap - calculatedStats.BasicStats.SpellHitRating) * 1.364f: 0);
 
             calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Stamina / 10;
             calculatedStats.OverallPoints = calculatedStats.DpsPoints + calculatedStats.SurvivalPoints;
@@ -235,7 +235,7 @@ namespace Rawr.ShadowPriest
             statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
             statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
-            statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f * statsTotal.BonusHealthMultiplier);
+            statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
 
             return statsTotal;
         }

@@ -12,7 +12,8 @@ namespace Rawr.HolyPriest
         public float SpiritRegen { get; set; }
         public float RegenInFSR { get; set; }
         public float RegenOutFSR { get; set; }
-        
+        public Character.CharacterRace Race { get; set; }
+       
         public TalentTree Talents
         {
             get { return talents; }
@@ -32,7 +33,7 @@ namespace Rawr.HolyPriest
             set { overallPoints = value; }
         }
 
-        private float[] subPoints = new float[] { 0f, 0f };
+        private float[] subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
             get { return subPoints; }
@@ -49,6 +50,12 @@ namespace Rawr.HolyPriest
         {
             get { return subPoints[1]; }
             set { subPoints[1] = value; }
+        }
+
+        public float HastePoints
+        {
+            get { return subPoints[2]; }
+            set { subPoints[2] = value; }
         }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -70,6 +77,7 @@ namespace Rawr.HolyPriest
             
             dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\n", 
                 Math.Round(BasicStats.SpellHasteRating / 15.7, 2), BasicStats.SpellHasteRating.ToString()));
+            dictValues.Add("Global Cooldown", Spell.GetGlobalCooldown(BasicStats).ToString("0.00"));
 
             dictValues.Add("Renew", new Renew(BasicStats, talents).ToString());
             dictValues.Add("Flash Heal", new FlashHeal(BasicStats, talents).ToString());
@@ -95,6 +103,11 @@ namespace Rawr.HolyPriest
             else
                 dictValues.Add("Lightwell", "- *No required talents");
             
+            if(Race == Character.CharacterRace.Draenei)
+                dictValues.Add("Gift of the Naaru", new GiftOfTheNaaru(BasicStats, talents).ToString());
+            else
+                dictValues.Add("Gift of the Naaru", "-");
+
             return dictValues;
         }
     }

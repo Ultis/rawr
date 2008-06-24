@@ -29,6 +29,7 @@ namespace Rawr.HolyPriest
                     default:
                         _subPointNameColors.Add("Healing", System.Drawing.Color.Red);
                         _subPointNameColors.Add("Regen", System.Drawing.Color.Blue);
+                        _subPointNameColors.Add("Haste", System.Drawing.Color.Gold);
                         break;
                 }
                
@@ -54,6 +55,7 @@ namespace Rawr.HolyPriest
 					"Basic Stats:Regen OutFSR",
 					"Basic Stats:Spell Crit",
 					"Basic Stats:Spell Haste",
+                    "Basic Stats:Global Cooldown",
                     "Spells:Renew",
                     "Spells:Greater Heal",
                     "Spells:Flash Heal",
@@ -64,7 +66,8 @@ namespace Rawr.HolyPriest
                     "Spells:Power Word Shield",
                     "Spells:Heal",
 				    "Spells:Holy Nova",
-                    "Spells:Lightwell"
+                    "Spells:Lightwell",
+                    "Spells:Gift of the Naaru"
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -120,7 +123,8 @@ namespace Rawr.HolyPriest
             Stats statsRace = GetRaceStats(character);
             CharacterCalculationsHolyPriest calculatedStats = new CharacterCalculationsHolyPriest();
             CalculationOptionsPriest calculationOptions = character.CalculationOptions as CalculationOptionsPriest;
-            
+
+            calculatedStats.Race = character.Race;
             calculatedStats.BasicStats = stats;
             calculatedStats.Talents = character.Talents;
 
@@ -138,7 +142,8 @@ namespace Rawr.HolyPriest
             calculatedStats.HealPoints = calculatedStats.BasicStats.Healing;
             calculatedStats.RegenPoints = (calculatedStats.RegenInFSR * calculationOptions.TimeInFSR*0.01f +
                                            calculatedStats.RegenOutFSR * (100 - calculationOptions.TimeInFSR) * 0.01f);
-            calculatedStats.OverallPoints = calculatedStats.HealPoints + calculatedStats.RegenPoints;
+            calculatedStats.HastePoints = calculatedStats.BasicStats.SpellHasteRating / 2f;
+            calculatedStats.OverallPoints = calculatedStats.HealPoints + calculatedStats.RegenPoints + calculatedStats.HastePoints;
 
             return calculatedStats;
         }

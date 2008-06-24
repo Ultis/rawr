@@ -111,7 +111,12 @@ namespace Rawr.HolyPriest
         protected Spell(Stats stats, BaseSpell baseSpell, string name, float coef, Color col)
             : this(stats, baseSpell, name, coef, 0, col)
         {}
-        
+
+        public static float GetGlobalCooldown(Stats stats)
+        {
+            return 1.5f * (1 - stats.SpellHasteRating / 15.7f / 100f);
+        }
+
         public override string ToString()
         {
             return String.Format("{0} *HpS: {1}\r\nHpM: {2}\r\nMin Heal: {3}\r\nMax Heal: {4}\r\nAvg Crit: {5}\r\nMax Crit: {6}\r\nCast: {7}\r\nCost: {8}",
@@ -971,4 +976,39 @@ namespace Rawr.HolyPriest
                           ManaCost.ToString("0"));
         }
     }
+
+    public class GiftOfTheNaaru : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef HotDuration    */
+            new BaseSpell(1,     1085,   1085,   0,    1.5f,      1f,      15f)
+            };
+
+        public GiftOfTheNaaru(Stats stats, TalentTree talents)
+            : this(stats, talents, baseSpellTable.Count) { }
+
+        public GiftOfTheNaaru(Stats stats, TalentTree talents, int rank)
+            : base(stats, baseSpellTable[rank - 1], "Gift of the Naaru", 1f, 15f, Color.Green)
+        {
+            Calculate(stats, talents, rank);
+        }
+        
+        protected void Calculate(Stats stats, TalentTree talents, int rank)
+        {
+            Rank = rank;
+            MinHeal = MaxHeal = (baseSpellTable[Rank - 1].MinHeal +
+                stats.Healing * HealingCoef)
+                * (1 + talents.GetTalent("Spiritual Healing").PointsInvested * 0.02f);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *HpS: {1}\r\nHpM: {2}\r\nTick: {3}",
+                          MinHeal.ToString("0"),
+                          HpS.ToString("0.00"),
+                          HpM.ToString("0.00"),
+                          (MinHeal / HotDuration * 3).ToString("0"));
+        }
+    }
+
 }
