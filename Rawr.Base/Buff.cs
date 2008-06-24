@@ -535,6 +535,13 @@ namespace Rawr
                 Stats = new Stats() { MageSpellCrit = 0.03f },
                 ConflictingBuffs = new string[] { "Armor" }
             });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Ice Armor",
+                Category = BuffCategory.ClassBuffs,
+                Stats = new Stats() { MageIceArmor = 1f },
+                ConflictingBuffs = new string[] { "Armor" }
+            });
 
 
             //what can i say... you're crazy

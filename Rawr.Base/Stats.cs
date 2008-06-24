@@ -73,6 +73,7 @@ namespace Rawr
         LightningCapacitorProc,
         LotPCritRating,
         MageAllResist,
+        MageIceArmor,
         MageSpellCrit,
         Mana,
         ManaSpringMp5Increase,
@@ -393,7 +394,6 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Spell Combat Ratings")]
         [DisplayName("Spell Crit")]
         public float SpellCrit
         {
@@ -1119,6 +1119,13 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MageSpellCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.MageSpellCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MageIceArmor
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MageIceArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MageIceArmor] = value; }
         }
 
         // Unseen Moon idol
