@@ -625,14 +625,115 @@ namespace Rawr
 
         private void setAvailableGearToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BatchCharacterList list = (BatchCharacterList)batchCharacterListBindingSource.DataSource;
-
-            foreach (BatchCharacter character in list)
+            foreach (BatchCharacter character in BatchCharacterList)
             {
                 if (character.Character != null)
                 {
                     character.Character.AvailableItems = new List<string>(formMain.Character.AvailableItems);
                     character.UnsavedChanges = true;
+                }
+            }
+        }
+
+        private void replaceUnavailableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (BatchCharacter character in BatchCharacterList)
+            {
+                if (character.Character != null)
+                {
+                    for (int slot = 0; slot < 19; slot++)
+                    {
+                        Item item = character.Character[(Character.CharacterSlot)slot];
+                        Enchant enchant = character.Character.GetEnchantBySlot((Character.CharacterSlot)slot);
+                        if (item != null)
+                        {
+                            string id = item.Id.ToString();
+                            string anyGem = id + ".*.*.*";
+                            List<string> list = character.Character.AvailableItems.FindAll(x => x.StartsWith(id));
+                            List<string> sublist;
+                            if (list.Contains(item.GemmedId + ".*"))
+                            {
+                                // available
+                            }
+                            else if ((sublist = list.FindAll(x => x.StartsWith(item.GemmedId))).Count > 0)
+                            {
+                                if (sublist.Contains(item.GemmedId + "." + (enchant != null ? enchant.Id.ToString() : "0")))
+                                {
+                                    // available
+                                }
+                                else
+                                {
+                                    // have to replace enchant
+                                    string s = sublist[0];
+                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(s.Substring(s.LastIndexOf('.') + 1)), item.Slot));
+                                    character.UnsavedChanges = true;
+                                }
+                            }
+                            else if (list.Contains(id))
+                            {
+                                // available
+                            }
+                            else if ((sublist = list.FindAll(x => x.StartsWith(anyGem))).Count > 0)
+                            {
+                                if (sublist.Contains(anyGem + "." + (enchant != null ? enchant.Id.ToString() : "0")))
+                                {
+                                    // available
+                                }
+                                else
+                                {
+                                    // have to replace enchant
+                                    string s = sublist[0];
+                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(s.Substring(s.LastIndexOf('.') + 1)), item.Slot));
+                                    character.UnsavedChanges = true;
+                                }
+                            }
+                            else if (list.Count > 0)
+                            {
+                                string s = list[0];
+                                item = ItemCache.FindItemById(s.Substring(0, s.LastIndexOf('.')));
+                                character.Character[(Character.CharacterSlot)slot] = item;
+                                string se = s.Substring(s.LastIndexOf('.') + 1);
+                                if (se != "*")
+                                {
+                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(se), item.Slot));
+                                }
+                                character.UnsavedChanges = true;
+                            }
+                            else
+                            {
+                                foreach (string s in character.Character.AvailableItems)
+                                {
+                                    if (s.IndexOf('.') < 0)
+                                    {
+                                        item = ItemCache.FindItemById(int.Parse(s));
+                                    }
+                                    else
+                                    {
+                                        string[] slist = s.Split('.');
+                                        if (slist[1] == "*")
+                                        {
+                                            item = ItemCache.FindItemById(int.Parse(slist[0]));
+                                        }
+                                        else
+                                        {
+                                            item = ItemCache.FindItemById(s.Substring(0, s.LastIndexOf('.')));
+                                        }
+                                    }
+                                    if (item != null && item.FitsInSlot((Character.CharacterSlot)slot))
+                                    {
+                                        character.Character[(Character.CharacterSlot)slot] = item;
+                                        string se = s.Substring(s.LastIndexOf('.') + 1);
+                                        if (se != "*")
+                                        {
+                                            character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(se), item.Slot));
+                                        }
+                                        character.UnsavedChanges = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -1367,6 +1367,52 @@ namespace Rawr //O O . .
 			}
 		}
 
+        public void SetEnchantBySlot(Character.CharacterSlot slot, Enchant enchant)
+        {
+            switch (slot)
+            {
+                case Character.CharacterSlot.Head:
+                    HeadEnchant = enchant;
+                    break;
+                case Character.CharacterSlot.Shoulders:
+                    ShouldersEnchant = enchant;
+                    break;
+                case Character.CharacterSlot.Back:
+                    BackEnchant = enchant;
+                    break;
+                case Character.CharacterSlot.Chest:
+                    ChestEnchant = enchant;
+                    break;
+                case Character.CharacterSlot.Wrist:
+                    WristEnchant = enchant;
+                    break;
+                case Character.CharacterSlot.Hands:
+                    HandsEnchant = enchant;
+                    break;
+                case Character.CharacterSlot.Legs:
+                    LegsEnchant = enchant;
+                    break;
+                case Character.CharacterSlot.Feet:
+                    FeetEnchant = enchant;
+                    break;
+                case Character.CharacterSlot.Finger1:
+                    Finger1Enchant = enchant;
+                    break;
+                case Character.CharacterSlot.Finger2:
+                    Finger2Enchant = enchant;
+                    break;
+                case Character.CharacterSlot.MainHand:
+                    MainHandEnchant = enchant;
+                    break;
+                case Character.CharacterSlot.OffHand:
+                    OffHandEnchant = enchant;
+                    break;
+                case Character.CharacterSlot.Ranged:
+                    RangedEnchant = enchant;
+                    break;
+            }
+        }
+
         private static CharacterSlot[] _characterSlots;
         public static CharacterSlot[] CharacterSlots
         {
