@@ -1211,6 +1211,7 @@ namespace Rawr
 			else
 			{
 				bestCharacter = _character;
+                best = GetCalculationsValue(Calculations.GetCharacterCalculations(_character));
 			}
 
 			noImprove = 0;
