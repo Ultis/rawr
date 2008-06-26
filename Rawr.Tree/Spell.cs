@@ -207,6 +207,10 @@ namespace Rawr.Tree
             BaseRange = 40;
 
             ParseTalents(character, stats);
+
+            // TODO: Get a PvP idol to check if this heal bonus is affected by talents or not - let's assume it is even though that probably isn't true
+            DirectHealingBonus = stats.LifebloomFinalHealBonus;
+
             if (character.Ranged != null && character.Ranged.Id == 27886)
             { // Idol of the Emerald Queeen
                 HoTHealingBonus += 88 / HoTMultiplier / HealMultiplier; // This bonus heal does not benefit from talents
@@ -276,7 +280,7 @@ namespace Rawr.Tree
             BaseCastTime = 2f;
 
             BasePeriodicTick = 182;
-            BasePeriodicTicks = 7;
+            BasePeriodicTicks = 7 + stats.RegrowthExtraTicks;
             BaseHoTCoefficient = 0.7f / 7;
 
             BaseMinHeal = 1215;
@@ -342,7 +346,8 @@ namespace Rawr.Tree
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
             BaseCastTime -= 0.1f * calcOpts.Naturalist;
             Cost = (int)(Cost * (1f - 0.02f * calcOpts.TranquilSpirit));
-            DirectHealingBonusMultiplier += 0.1f * calcOpts.EmpoweredTouch;
+            // TODO: See if the T6 4-piece bonus applies here or if it needs to be modeled in a different way
+            DirectHealingBonusMultiplier += 0.1f * calcOpts.EmpoweredTouch + stats.BonusHealingTouchMultiplier;
         }
     }
 }

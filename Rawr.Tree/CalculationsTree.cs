@@ -40,6 +40,8 @@ namespace Rawr.Tree
 					"Basic Stats:Mp5",
 					"Basic Stats:Spell Crit",
 					"Basic Stats:Spell Haste",
+
+                    "Extended Stats:Mana per Cast (5%)",
             	    
                     "Lifebloom:LB Tick","Lifebloom:LB Heal","Lifebloom:LB HPS","Lifebloom:LB HPM",
                     "Lifebloom Stack:LBS Tick","Lifebloom Stack:LBS HPS","Lifebloom Stack:LBS HPM",
@@ -204,7 +206,11 @@ namespace Rawr.Tree
                 Spirit = stats.Spirit,
                 BonusManaPotion = stats.BonusManaPotion,
                 MementoProc = stats.MementoProc,
-                AverageHeal = stats.AverageHeal
+                AverageHeal = stats.AverageHeal,
+                ManaRestorePerCast_5_15 = stats.ManaRestorePerCast_5_15,
+                LifebloomFinalHealBonus = stats.LifebloomFinalHealBonus,
+                RegrowthExtraTicks = stats.RegrowthExtraTicks,
+                BonusHealingTouchMultiplier = stats.BonusHealingTouchMultiplier,
             };
         }
 
@@ -212,7 +218,8 @@ namespace Rawr.Tree
         {
             return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
-                + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal) > 0;
+                + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal
+                + stats.ManaRestorePerCast_5_15 + stats.LifebloomFinalHealBonus + stats.RegrowthExtraTicks + stats.BonusHealingTouchMultiplier) > 0;
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)

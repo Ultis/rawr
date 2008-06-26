@@ -73,6 +73,8 @@ namespace Rawr.Tree
                 BasicStats.SpellHasteRating.ToString(),
                 Math.Round((1.5f * 1570f) / (1570f + BasicStats.SpellHasteRating), 2)));
 
+            dictValues.Add("Mana per Cast (5%)", BasicStats.ManaRestorePerCast_5_15.ToString());
+
             addSpellValues(dictValues);
 
             return dictValues;
@@ -82,9 +84,9 @@ namespace Rawr.Tree
             Spell spell;
             if ((spell = Spells.Find(delegate(Spell s) { return s is Lifebloom && !(s is LifebloomStack); })) != null)
 			{
-				dictValues.Add("LB Tick", Math.Round(spell.PeriodicTick, 2).ToString());
+				dictValues.Add("LB Tick", string.Format("{0}*{1} ticks",Math.Round(spell.PeriodicTick, 2),spell.PeriodicTicks));
                 dictValues.Add("LB Heal", string.Format("{0}*{1}", spell.AverageTotalHeal.ToString(), spell.HealInterval));
-                dictValues.Add("LB HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell", spell.HPS));
+                dictValues.Add("LB HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell", Math.Round(spell.HPS)));
                 dictValues.Add("LB HPM", string.Format("{0}*{1} mana", spell.HPM, spell.Cost));
 			}
 			else
@@ -97,11 +99,9 @@ namespace Rawr.Tree
 
             if ((spell = Spells.Find(delegate(Spell s) { return s is LifebloomStack; })) != null)
             {
-                dictValues.Add("LBS Tick", Math.Round(spell.PeriodicTick, 2).ToString());
-				dictValues.Add("LBS HPS", string.Format("{0}*Assumes on average {1} ticks per renewed Lifebloom",
-                    spell.HPS, spell.PeriodicTicks));
-				dictValues.Add("LBS HPM", string.Format("{0}*Assumes on average {1} ticks per renewed Lifebloom",
-                    spell.HPM, spell.PeriodicTicks));
+                dictValues.Add("LBS Tick", string.Format("{0}*{1} ticks",Math.Round(spell.PeriodicTick, 2),spell.PeriodicTicks));
+                dictValues.Add("LBS HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell", Math.Round(spell.HPS)));
+                dictValues.Add("LBS HPM", string.Format("{0}*{1} mana", spell.HPM, spell.Cost));
 			}
 			else
 			{
@@ -112,8 +112,8 @@ namespace Rawr.Tree
 
             if ((spell = Spells.Find(delegate(Spell s) { return s is Rejuvenation; })) != null)
 			{
-                dictValues.Add("RJ Tick", Math.Round(spell.PeriodicTick, 2).ToString());
-                dictValues.Add("RJ HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell", spell.HPS));
+                dictValues.Add("RJ Tick", string.Format("{0}*{1} ticks",Math.Round(spell.PeriodicTick, 2),spell.PeriodicTicks));
+                dictValues.Add("RJ HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell", Math.Round(spell.HPS)));
                 dictValues.Add("RJ HPM", string.Format("{0}*{1} mana", spell.HPM, spell.Cost));
 			}
 			else
@@ -125,9 +125,9 @@ namespace Rawr.Tree
 
             if ((spell = Spells.Find(delegate(Spell s) { return s is Regrowth; })) != null)
             {
-                dictValues.Add("RG Tick", Math.Round(spell.PeriodicTick, 2).ToString());
+                dictValues.Add("RG Tick", string.Format("{0}*{1} ticks",Math.Round(spell.PeriodicTick, 2),spell.PeriodicTicks));
                 dictValues.Add("RG Heal", String.Format("{0}*{1}", spell.AverageTotalHeal, spell.HealInterval));
-                dictValues.Add("RG HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell", spell.HPS));
+                dictValues.Add("RG HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell\nCasttime: {1}", Math.Round(spell.HPS), Math.Round(spell.CastTime, 2)));
                 dictValues.Add("RG HPM", string.Format("{0}*{1} mana", spell.HPM, spell.Cost));
 			}
 			else
@@ -141,7 +141,7 @@ namespace Rawr.Tree
             if ((spell = Spells.Find(delegate(Spell s) { return s is HealingTouch; })) != null)
             {
                 dictValues.Add("HT Heal", String.Format("{0}*{1}", spell.AverageTotalHeal, spell.HealInterval));
-                dictValues.Add("HT HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell\nCasttime: {1}", spell.HPS, Math.Round(spell.CastTime,2)));
+                dictValues.Add("HT HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell\nCasttime: {1}", Math.Round(spell.HPS), Math.Round(spell.CastTime, 2)));
                 dictValues.Add("HT HPM", string.Format("{0}*{1} mana", spell.HPM, spell.Cost));
 			}
 			else
