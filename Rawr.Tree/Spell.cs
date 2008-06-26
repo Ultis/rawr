@@ -4,7 +4,20 @@ using System.Text;
 
 namespace Rawr.Tree
 {
-    abstract class Spell
+    /*
+     * 
+     * The model used for spells currently checks for Idols by itemID
+     * This is not the preferred way to do it, but will work for now
+     * 
+     * Missing Idols to model: 
+     * xxx Gladiator's Idol of Tenacity (do talents affect these?)
+     * Harold's Rejuvenating Broach / Idol of Rejuvenation
+     * Idol of Budding Life
+     * Idol of Longevity
+     * Idol of Health (same as Avian Heart, so once one can be parsed the other should, too)
+     */
+
+    public abstract class Spell
     {
         public string Name;
 
@@ -53,7 +66,7 @@ namespace Rawr.Tree
         {
             get
             {
-                return (int)MinHeal + "~" + (int)MaxHeal + " (" + (int)MinCrit + "~" + (int)MaxCrit + " crit)";
+                return (int)MinHeal + "~" + (int)MaxHeal + " hit (" + (int)MinCrit + "~" + (int)MaxCrit + " crit)";
             }
         }
 
@@ -293,6 +306,7 @@ namespace Rawr.Tree
 
     /*
      * Healing Touch has nothing to do in a Tree of Life model, but is provided in case somebody wants to include it anyway
+     */
     internal class HealingTouch : Spell
     {
         public HealingTouch(Character character, Stats stats)
@@ -331,5 +345,4 @@ namespace Rawr.Tree
             DirectHealingBonusMultiplier += 0.1f * calcOpts.EmpoweredTouch;
         }
     }
-    */
 }
