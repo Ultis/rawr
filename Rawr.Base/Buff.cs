@@ -1150,6 +1150,41 @@ namespace Rawr
                 SetName = "Lightbringer Raiment",
                 SetThreshold = 4
             });
+            // Resto druid tier 4/5/6 sets
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Malorne Raiment 2 Piece",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { ManaRestorePerCast_5_15 = 120 },
+                SetName = "Malorne Raiment",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nordrassil Raiment 2 Piece",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { RegrowthExtraTicks = 2 },
+                SetName = "Nordrassil Raiment",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Nordrassil Raiment 4 Piece",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { LifebloomFinalHealBonus = 150 },
+                SetName = "Nordrassil Raiment",
+                SetThreshold = 4
+            }); 
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Thunderheart Raiment 4 Piece",
+                Category = BuffCategory.SetBonuses,
+                Stats = new Stats() { BonusHealingTouchMultiplier = 0.05f },
+                SetName = "Thunderheart Raiment",
+                SetThreshold = 2
+            });
+            
+
             // Windhawk (epic leather caster) set
             defaultBuffs.Add(new Buff()
             {

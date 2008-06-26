@@ -147,7 +147,10 @@ namespace Rawr
         AverageHeal, 
 		BonusPetCritChance,
         BonusWarlockSchoolDamageOnCast, 
-        BonusWarlockDotExtension
+        BonusWarlockDotExtension,
+        RegrowthExtraTicks,
+        LifebloomFinalHealBonus,
+        BonusHealingTouchMultiplier
     }
 
     enum MultiplicativeStat : int
@@ -1088,6 +1091,30 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.StarfireCritChance]; }
             set { _rawAdditiveData[(int)AdditiveStat.StarfireCritChance] = value; }
+        }
+
+        // Tree 2-piece T5
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float RegrowthExtraTicks
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RegrowthExtraTicks]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RegrowthExtraTicks] = value; }
+        }
+
+        // Tree PvP Idols and 4-piece T5
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float LifebloomFinalHealBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LifebloomFinalHealBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LifebloomFinalHealBonus] = value; }
+        }
+
+        // Tree 4-piece T6
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusHealingTouchMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHealingTouchMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHealingTouchMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
