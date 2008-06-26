@@ -33,6 +33,18 @@ namespace Rawr.Tree
             set { subPoints[0] = value; }
         }
 
+        public float OS5SRRegen
+        {
+            get;
+            set;
+        }
+
+        public float IS5SRRegen
+        {
+            get;
+            set;
+        }
+
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -43,13 +55,17 @@ namespace Rawr.Tree
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", BasicStats.Spirit.ToString());
             dictValues.Add("Healing", BasicStats.Healing.ToString());
-            dictValues.Add("Mp5", BasicStats.Mp5.ToString());
+            dictValues.Add("Mp5", string.Format("{0}*{1} mp5 outside the 5-second rule",
+                (int) Math.Round(5*IS5SRRegen),
+                (int) Math.Round(5 * OS5SRRegen)));
 
             dictValues.Add("Spell Crit", string.Format("{0}%*{1} Spell Crit rating\n",
                 BasicStats.SpellCrit, BasicStats.SpellCritRating.ToString()));
             
-            dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\n", 
-                Math.Round(BasicStats.SpellHasteRating / 15.7, 2), BasicStats.SpellHasteRating.ToString()));
+            dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\nGlobal cooldown is {2} seconds", 
+                Math.Round(BasicStats.SpellHasteRating / 15.7, 2),
+                BasicStats.SpellHasteRating.ToString(),
+                Math.Round((1.5f * 1570f) / (1570f + BasicStats.SpellHasteRating), 2)));
             return dictValues;
         }
     }

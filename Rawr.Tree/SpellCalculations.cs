@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Tree
 {
-    public enum Spell : int
+    /*public enum Spell : int
     {
         Lifebloom,
         LifebloomStack,
@@ -95,5 +95,5 @@ namespace Rawr.Tree
         { }
 
         public float CastTime { get { return castTime; } }
-    }
+    }*/
 }

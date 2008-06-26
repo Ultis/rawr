@@ -62,6 +62,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Spell.cs" />
     <Compile Include="SpellCalculations.cs" />
   </ItemGroup>
   <ItemGroup>

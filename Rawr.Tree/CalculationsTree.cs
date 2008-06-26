@@ -93,12 +93,21 @@ namespace Rawr.Tree
             CharacterCalculationsTree calculatedStats = new CharacterCalculationsTree();
             calculatedStats.BasicStats = stats;
 
-            calculatedStats.BasicStats.Mp5 += (float)Math.Round(5 * 0.3f * calculatedStats.BasicStats.Spirit * 
-                Math.Sqrt(calculatedStats.BasicStats.Intellect) * 0.0093271f, 2);
+            calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect / 80) +
+                (calculatedStats.BasicStats.SpellCritRating / 22.08) + 1.85 + calcOpts.NaturalPerfection, 2);
 
-            int natPerfection = character.Talents.GetTalent("Natural Perfection").PointsInvested;
-            calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect / 80) + 
-                (calculatedStats.BasicStats.SpellCritRating / 22.08) + 1.85 + natPerfection, 2);
+            calculatedStats.BasicStats.SpellCombatManaRegeneration += 0.1f * calcOpts.Intensity;
+
+
+            float baseRegenConstant = 0.00932715221261f;
+            float spiritRegen = 0.001f + baseRegenConstant * (float)Math.Sqrt(stats.Intellect) * stats.Spirit;
+				
+            calculatedStats.OS5SRRegen = spiritRegen + stats.Mp5 / 5f;
+            calculatedStats.IS5SRRegen = spiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
+
+            // If we add spirit-based regen here, we cannot show how much of the regen comes from spirit later
+            // calculatedStats.BasicStats.Mp5 += (float)Math.Round(5 * 0.3f * calculatedStats.BasicStats.Spirit * 
+            //    Math.Sqrt(calculatedStats.BasicStats.Intellect) * 0.0093271f, 2);
 
             calculatedStats.HealPoints = calculatedStats.BasicStats.Healing;
             calculatedStats.OverallPoints = calculatedStats.HealPoints;
@@ -127,7 +136,7 @@ namespace Rawr.Tree
             statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
             statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
-            statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f * statsTotal.BonusHealthMultiplier);
+            statsTotal.Health = statsTotal.Health + (float) Math.Round(statsTotal.Stamina * 10f * (1 + statsTotal.BonusHealthMultiplier));
 
             return statsTotal;
         }
