@@ -471,6 +471,8 @@ namespace Rawr
             Character optimizedCharacter = null;
             float bestValue = 0.0f;
             injected = false;
+            lockedSlot = Character.CharacterSlot.None;
+
             try
             {
                 ItemCache.Instance = optimizerItemCache;
@@ -527,6 +529,32 @@ namespace Rawr
             try
             {
                 ItemCache.Instance = optimizerItemCache;
+
+                // make equipped gear/enchant valid
+                for (int i = 0; i < 19; i++)
+                {
+                    Item item = _character[(Character.CharacterSlot)i];
+                    if (item != null)
+                    {
+                        Enchant itemEnchant = _character.GetEnchantBySlot((Character.CharacterSlot)i);
+                        Dictionary<int, bool> dict;
+                        if (!itemEnchantValid.TryGetValue(item.GemmedId, out dict))
+                        {
+                            dict = new Dictionary<int, bool>();
+                            itemEnchantValid[item.GemmedId] = dict;
+                        }
+                        item.EnchantValid = dict;
+                        foreach (Enchant enchant in Enchant.FindEnchants(item.Slot))
+                        {
+                            bool valid;
+                            if (!dict.TryGetValue(enchant.Id, out valid)) dict[enchant.Id] = false;
+                        }
+                        if (itemEnchant != null)
+                        {
+                            dict[itemEnchant.Id] = true;
+                        }
+                    }
+                }                    
 
                 upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>>();
 
@@ -744,6 +772,11 @@ namespace Rawr
         Dictionary<string, Dictionary<int, bool>> itemEnchantValid;
         Character.CharacterSlot lockedSlot = Character.CharacterSlot.None;
 		Random rand;
+
+        private bool ItemEnchantValid(Character.CharacterSlot slot, Item item, Enchant enchant)
+        {
+            return ((slot == lockedSlot && (lockedEnchants == null || Array.IndexOf(lockedEnchants, enchant) >= 0)) || (slot != lockedSlot && (item.EnchantValid ?? itemEnchantValid[item.GemmedId])[enchant.Id]));
+        }
 
         private void PopulateLockedItems(Item item)
         {
@@ -994,7 +1027,7 @@ namespace Rawr
                             if (e != null && !validEnchants.Contains(e)) validEnchants.Add(e);
                         }
                     }
-                    List<Enchant> allEnchants = Enchant.FindEnchants(item.Slot);                    
+                    List<Enchant> allEnchants = Enchant.FindEnchants(item.Slot);
                     foreach (Item possibleGemmedItem in possibleGemmedItems)
                     {
                         Dictionary<int, bool> dict;
@@ -1003,6 +1036,7 @@ namespace Rawr
                             dict = new Dictionary<int, bool>();
                             itemEnchantValid[possibleGemmedItem.GemmedId] = dict;
                         }
+                        possibleGemmedItem.EnchantValid = dict;
                         foreach (Enchant enchant in allEnchants)
                         {
                             bool valid;
@@ -1381,7 +1415,7 @@ namespace Rawr
                     }
                     if (slot != lockedSlot && enchant != null)
                     {
-                        Dictionary<int, bool> dict = itemEnchantValid[item.GemmedId];
+                        Dictionary<int, bool> dict = item.EnchantValid ?? itemEnchantValid[item.GemmedId];
                         if (!dict[enchant.Id])
                         {
                             foreach (Enchant e in slotEnchants[(int)slot])
@@ -1423,7 +1457,7 @@ namespace Rawr
             {
                 foreach (Enchant enchant in enchants)
                 {
-                    if (currentEnchant != enchant && ((slot == lockedSlot && (lockedEnchants == null || Array.IndexOf(lockedEnchants, enchant) >= 0)) || (slot != lockedSlot && itemEnchantValid[bestCharacter[slot].GemmedId][enchant.Id])))
+                    if (currentEnchant != enchant && ItemEnchantValid(slot, bestCharacter[slot], enchant))
                     {
                         charSwap = BuildSingleEnchantSwapCharacter(bestCharacter, slot, enchant);
                         CharacterCalculationsBase calculations;
@@ -1495,7 +1529,7 @@ namespace Rawr
                 do
                 {
                     enchant[slot] = enchantSelector(slot);
-                } while (!itemEnchantValid[item[slot].GemmedId][enchant[slot].Id]);
+                } while (!ItemEnchantValid((Character.CharacterSlot)slot, item[slot], enchant[slot]));
             }
         }
 

@@ -893,6 +893,11 @@ namespace Rawr
 			}
 		}
 
+        /// <summary>
+        /// Used by optimizer to cache dictionary search result
+        /// </summary>
+        [XmlIgnore]
+        internal Dictionary<int, bool> EnchantValid;
 
         #region IComparable<Item> Members
 
