@@ -382,6 +382,7 @@ namespace Rawr
                         else if (spellDesc.Contains(" critical strike rating to the Leader of the Pack aura"))
                         {
                             string moonkinSpellDesc = spellDesc;
+                            string treeSpellDesc = spellDesc;
                             // Bear/Cat form
                             spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" critical strike rating to the Leader of the Pack aura"));
                             spellDesc = spellDesc.Substring(spellDesc.LastIndexOf(' ') + 1);
@@ -394,6 +395,12 @@ namespace Rawr
                             if (moonkinSpellDesc.Contains(".")) moonkinSpellDesc = moonkinSpellDesc.Substring(0, moonkinSpellDesc.IndexOf("."));
                             if (moonkinSpellDesc.Contains(" ")) moonkinSpellDesc = moonkinSpellDesc.Substring(0, moonkinSpellDesc.IndexOf(" "));
                             stats.IdolCritRating += (float)int.Parse(moonkinSpellDesc);
+                            // Tree of Life form
+                            treeSpellDesc = treeSpellDesc.Substring("Increases the healing granted by the Tree of Life form aura by ".Length);
+                            if (treeSpellDesc.Contains(",")) treeSpellDesc = treeSpellDesc.Substring(0, treeSpellDesc.IndexOf(","));
+                            if (treeSpellDesc.Contains(".")) treeSpellDesc = treeSpellDesc.Substring(0, treeSpellDesc.IndexOf("."));
+                            if (treeSpellDesc.Contains(" ")) treeSpellDesc = treeSpellDesc.Substring(0, treeSpellDesc.IndexOf(" "));
+                            stats.TreeOfLifeAura += (float)int.Parse(treeSpellDesc);
                         }
                         else if (spellDesc.StartsWith("Your Mangle ability also increases your attack power by "))
                         {
@@ -716,6 +723,46 @@ namespace Rawr
                             spellDesc = spellDesc.Substring("Your Moonfire ability has a chance to grant up to ".Length);
                             spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" spell damage and healing for 10 sec."));
                             stats.UnseenMoonDamageBonus += (float)int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("Increases the final healing value of your Lifebloom by "))
+                        {
+                            spellDesc = spellDesc.Substring("Increases the final healing value of your Lifebloom by ".Length);
+                            spellDesc = spellDesc.Replace(".", "");
+                            stats.LifebloomFinalHealBonus += (float)int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("Reduces the mana cost of Rejuvenation by "))
+                        {
+                            spellDesc = spellDesc.Substring("Reduces the mana cost of Rejuvenation by ".Length);
+                            spellDesc = spellDesc.Replace(".", "");
+                            stats.ReduceRejuvenationCost += (float)int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("Reduces the mana cost of Regrowth by "))
+                        {
+                            spellDesc = spellDesc.Substring("Reduces the mana cost of Regrowth by ".Length);
+                            spellDesc = spellDesc.Replace(".", "");
+                            stats.ReduceRegrowthCost += (float)int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("Gain up to 25 mana each time you cast Healing Touch."))
+                        {
+                            stats.ReduceHealingTouchCost += 25;
+                        }
+                        else if (spellDesc.StartsWith("Increases healing done by Rejuvenation by up to "))
+                        {
+                            spellDesc = spellDesc.Substring("Increases healing done by Rejuvenation by up to ".Length);
+                            spellDesc = spellDesc.Replace(".", "");
+                            stats.RejuvenationHealBonus += (float)int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
+                        {
+                            spellDesc = spellDesc.Substring("Increases the periodic healing of your Lifebloom by up to ".Length);
+                            spellDesc = spellDesc.Replace(".", "");
+                            stats.LifebloomTickHealBonus += (float)int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("Increases the amount healed by Healing Touch by "))
+                        {
+                            spellDesc = spellDesc.Substring("Increases the amount healed by Healing Touch by ".Length);
+                            spellDesc = spellDesc.Replace(".", "");
+                            stats.HealingTouchFinalHealBonus += (float)int.Parse(spellDesc);
                         }
                         else if (spellDesc.StartsWith("Your Judgement of Command ability has a chance to grant "))
                         {

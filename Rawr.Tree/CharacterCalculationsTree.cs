@@ -20,7 +20,7 @@ namespace Rawr.Tree
             set { overallPoints = value; }
         }
 
-        private float[] subPoints = new float[] { 0f };
+        private float[] subPoints = new float[] { 0f, 0f };
         public override float[] SubPoints
         {
             get { return subPoints; }
@@ -31,6 +31,12 @@ namespace Rawr.Tree
         {
             get { return subPoints[0]; }
             set { subPoints[0] = value; }
+        }
+
+        public float ToLPoints
+        {
+            get { return subPoints[1]; }
+            set { subPoints[1] = value; }
         }
 
         public float OS5SRRegen
@@ -74,6 +80,8 @@ namespace Rawr.Tree
                 Math.Round((1.5f * 1570f) / (1570f + BasicStats.SpellHasteRating), 2)));
 
             dictValues.Add("Mana per Cast (5%)", BasicStats.ManaRestorePerCast_5_15.ToString());
+            dictValues.Add("Tree of Life Aura", String.Format("{0:0}",
+                BasicStats.TreeOfLifeAura));
 
             addSpellValues(dictValues);
 

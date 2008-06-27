@@ -4,19 +4,6 @@ using System.Text;
 
 namespace Rawr.Tree
 {
-    /*
-     * 
-     * The model used for spells currently checks for Idols by itemID
-     * This is not the preferred way to do it, but will work for now
-     * 
-     * Missing Idols to model: 
-     * xxx Gladiator's Idol of Tenacity (do talents affect these?)
-     * Harold's Rejuvenating Broach / Idol of Rejuvenation
-     * Idol of Budding Life
-     * Idol of Longevity
-     * Idol of Health (same as Avian Heart, so once one can be parsed the other should, too)
-     */
-
     public abstract class Spell
     {
         public string Name;
@@ -155,21 +142,14 @@ namespace Rawr.Tree
             HoTMultiplier += 0.04f * calcOpts.EmpoweredRejuvenation;
             HealMultiplier += 0.02f * calcOpts.GiftOfNature;
 
-            if (BasePeriodicTicks > 0)
+            if (ToLAura)
             {
-                if (calcOpts.TreeOfLife == 1)
-                {
-                    Cost = Convert.ToInt32(Cost * 0.8f);
-                    if (ToLAura)
-                    {
-                        // TODO: Stats class should contain values for these sort of buffs... fix later
-                        if (character.Ranged != null && character.Ranged.Id == 32387)
-                        { // Idol of the Raven Goddess
-                            Healing += 44;
-                        }
-                        Healing += ((int)stats.Spirit) / 4;
-                    }
-                }
+                Healing += stats.TreeOfLifeAura;
+            }
+
+            if (BasePeriodicTicks > 0 && calcOpts.TreeOfLife == 1)
+            {
+                Cost = Convert.ToInt32(Cost * 0.8f);
             }
 
             CastTime = BaseCastTime;
@@ -208,13 +188,12 @@ namespace Rawr.Tree
 
             ParseTalents(character, stats);
 
-            // TODO: Get a PvP idol to check if this heal bonus is affected by talents or not - let's assume it is even though that probably isn't true
-            DirectHealingBonus = stats.LifebloomFinalHealBonus;
-
-            if (character.Ranged != null && character.Ranged.Id == 27886)
-            { // Idol of the Emerald Queeen
-                HoTHealingBonus += 88 / HoTMultiplier / HealMultiplier; // This bonus heal does not benefit from talents
-            }
+            // TODO: Get a PvP idol to check if this heal bonus is affected by talents or not - let's assume not
+            BaseMinHeal += stats.LifebloomFinalHealBonus / HealMultiplier;
+            BaseMaxHeal += stats.LifebloomFinalHealBonus / HealMultiplier;
+            // This bonus heal does not benefit from talents
+            HoTHealingBonus += stats.LifebloomTickHealBonus / HoTMultiplier / HealMultiplier;
+            
             Calculate(character, stats);
         }
     }
@@ -258,6 +237,9 @@ namespace Rawr.Tree
             Healing = stats.Healing;
             BaseRange = 40;
 
+            HoTHealingBonus += stats.RejuvenationHealBonus;
+            Cost -= (int) stats.ReduceRejuvenationCost;
+
             ParseTalents(character, stats);
             ParseTalentsRejuvenation(character, stats);
             Calculate(character, stats);
@@ -291,10 +273,7 @@ namespace Rawr.Tree
             Healing = stats.Healing;
             BaseRange = 40;
 
-            if (character.Ranged != null && character.Ranged.Id == 30051)
-            { // Idol of the Crescent Goddess
-                Cost -= 65;
-            }
+            Cost -= (int) stats.ReduceRegrowthCost;
 
             ParseTalents(character, stats);
             ParseTalentsRegrowth(character, stats);
@@ -331,13 +310,14 @@ namespace Rawr.Tree
             Healing = stats.Healing;
             BaseRange = 40;
 
+            Cost -= (int) stats.ReduceHealingTouchCost;
+
             ParseTalentsHT(character, stats);
             ParseTalents(character, stats);
-            if (character.Ranged != null && character.Ranged.Id == 28568)
-            { // Idol of the Avian Heart
-                BaseMinHeal += 136 / HealMultiplier;
-                BaseMaxHeal += 136 / HealMultiplier;
-            }
+            
+            BaseMinHeal += stats.HealingTouchFinalHealBonus / HealMultiplier; // Don't know if talents apply or not
+            BaseMaxHeal += stats.HealingTouchFinalHealBonus / HealMultiplier;
+
             Calculate(character, stats);
         }
 

@@ -19,6 +19,7 @@ namespace Rawr.Tree
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
                     _subPointNameColors.Add("Healing", System.Drawing.Color.Red);
+                    _subPointNameColors.Add("ToL", System.Drawing.Color.Yellow);
                 }
                 return _subPointNameColors;
             }
@@ -42,6 +43,7 @@ namespace Rawr.Tree
 					"Basic Stats:Spell Haste",
 
                     "Extended Stats:Mana per Cast (5%)",
+                    "Extended Stats:Tree of Life Aura",
             	    
                     "Lifebloom:LB Tick","Lifebloom:LB Heal","Lifebloom:LB HPS","Lifebloom:LB HPM",
                     "Lifebloom Stack:LBS Tick","Lifebloom Stack:LBS HPS","Lifebloom Stack:LBS HPM",
@@ -108,6 +110,8 @@ namespace Rawr.Tree
 
             calculatedStats.BasicStats.SpellCombatManaRegeneration += 0.1f * calcOpts.Intensity;
 
+            calculatedStats.BasicStats.TreeOfLifeAura += (calculatedStats.BasicStats.Spirit / 4f);
+            calculatedStats.BasicStats.TreeOfLifeAura *= calcOpts.TreeOfLife;
 
             float baseRegenConstant = 0.00932715221261f;
             float spiritRegen = 0.001f + baseRegenConstant * (float)Math.Sqrt(calculatedStats.BasicStats.Intellect) * calculatedStats.BasicStats.Spirit;
@@ -133,12 +137,11 @@ namespace Rawr.Tree
             calculatedStats.Spells.Add(rg);
             calculatedStats.Spells.Add(ht);
 
-            // If we add spirit-based regen here, we cannot show how much of the regen comes from spirit later
-            // calculatedStats.BasicStats.Mp5 += (float)Math.Round(5 * 0.3f * calculatedStats.BasicStats.Spirit * 
-            //    Math.Sqrt(calculatedStats.BasicStats.Intellect) * 0.0093271f, 2);
+            // Calculate scores in another function later to reduce clutter
 
             calculatedStats.HealPoints = calculatedStats.BasicStats.Healing;
-            calculatedStats.OverallPoints = calculatedStats.HealPoints;
+            calculatedStats.ToLPoints = calculatedStats.BasicStats.TreeOfLifeAura;
+            calculatedStats.OverallPoints = calculatedStats.HealPoints + calculatedStats.BasicStats.TreeOfLifeAura;
 
             return calculatedStats;
         }
@@ -176,9 +179,9 @@ namespace Rawr.Tree
 
             Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace;
 
-            statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect) * (1 + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
+            statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
             statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
             statsTotal.Health = statsTotal.Health + (float)Math.Round(statsTotal.Stamina * 10f * (1 + statsTotal.BonusHealthMultiplier));
@@ -211,6 +214,13 @@ namespace Rawr.Tree
                 LifebloomFinalHealBonus = stats.LifebloomFinalHealBonus,
                 RegrowthExtraTicks = stats.RegrowthExtraTicks,
                 BonusHealingTouchMultiplier = stats.BonusHealingTouchMultiplier,
+                TreeOfLifeAura = stats.TreeOfLifeAura,
+                ReduceRejuvenationCost = stats.ReduceRejuvenationCost,
+                ReduceRegrowthCost = stats.ReduceRegrowthCost,
+                ReduceHealingTouchCost = stats.ReduceHealingTouchCost,
+                RejuvenationHealBonus = stats.RejuvenationHealBonus,
+                LifebloomTickHealBonus = stats.LifebloomTickHealBonus,
+                HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus
             };
         }
 
@@ -219,7 +229,11 @@ namespace Rawr.Tree
             return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal
-                + stats.ManaRestorePerCast_5_15 + stats.LifebloomFinalHealBonus + stats.RegrowthExtraTicks + stats.BonusHealingTouchMultiplier) > 0;
+                + stats.ManaRestorePerCast_5_15 + stats.LifebloomFinalHealBonus + stats.RegrowthExtraTicks
+                + stats.BonusHealingTouchMultiplier + stats.TreeOfLifeAura
+                + stats.ReduceRejuvenationCost + stats.ReduceRegrowthCost + stats.ReduceHealingTouchCost
+                + stats.RejuvenationHealBonus + stats.LifebloomTickHealBonus + stats.HealingTouchFinalHealBonus
+                ) > 0;
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)

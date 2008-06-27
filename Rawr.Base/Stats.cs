@@ -150,7 +150,14 @@ namespace Rawr
         BonusWarlockDotExtension,
         RegrowthExtraTicks,
         LifebloomFinalHealBonus,
-        BonusHealingTouchMultiplier
+        BonusHealingTouchMultiplier,
+        TreeOfLifeAura,
+        ReduceRejuvenationCost,
+        ReduceRegrowthCost,
+        ReduceHealingTouchCost,
+        RejuvenationHealBonus,
+        LifebloomTickHealBonus,
+        HealingTouchFinalHealBonus
     }
 
     enum MultiplicativeStat : int
@@ -1103,6 +1110,7 @@ namespace Rawr
 
         // Tree PvP Idols and 4-piece T5
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Lifebloom Final Heal")]
         public float LifebloomFinalHealBonus
         {
             get { return _rawAdditiveData[(int)AdditiveStat.LifebloomFinalHealBonus]; }
@@ -1115,6 +1123,62 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusHealingTouchMultiplier]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusHealingTouchMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Tree of Life Aura")]
+        public float TreeOfLifeAura
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TreeOfLifeAura]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TreeOfLifeAura] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Reduced Rejuvenation Mana Cost")]
+        public float ReduceRejuvenationCost
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ReduceRejuvenationCost]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ReduceRejuvenationCost] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Reduced Regrowth Mana Cost")]
+        public float ReduceRegrowthCost
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ReduceRegrowthCost]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ReduceRegrowthCost] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Reduced Healing Touch Mana Cost")]
+        public float ReduceHealingTouchCost
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ReduceHealingTouchCost]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ReduceHealingTouchCost] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Healing by Rejuvenation")]
+        public float RejuvenationHealBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RejuvenationHealBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RejuvenationHealBonus] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Healing by Lifebloom Ticks")]
+        public float LifebloomTickHealBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LifebloomTickHealBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LifebloomTickHealBonus] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Healing Touch Final Heal")]
+        public float HealingTouchFinalHealBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HealingTouchFinalHealBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HealingTouchFinalHealBonus] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
