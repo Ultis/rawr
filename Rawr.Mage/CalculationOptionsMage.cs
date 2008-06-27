@@ -14,7 +14,7 @@ namespace Rawr.Mage
     }
 
     [Serializable]
-    public class CalculationOptionsMage : ICalculationOptionBase
+    public sealed class CalculationOptionsMage : ICalculationOptionBase
     {
         public int TargetLevel { get; set; }
         public int AoeTargetLevel { get; set; }
@@ -46,7 +46,7 @@ namespace Rawr.Mage
         public bool IncrementalOptimizations { get; set; }
 
         [XmlIgnore]
-        public int[] IncrementalSetCooldowns;
+        public int[] IncrementalSetStateIndexes;
         [XmlIgnore]
         public int[] IncrementalSetSortedCooldowns;
         [XmlIgnore]
@@ -66,7 +66,7 @@ namespace Rawr.Mage
 
         private void Character_ItemsChanged(object sender, EventArgs e)
         {
-            IncrementalSetCooldowns = null;
+            IncrementalSetStateIndexes = null;
             IncrementalSetSegments = null;
             IncrementalSetSortedCooldowns = null;
             IncrementalSetSpells = null;
@@ -161,7 +161,7 @@ namespace Rawr.Mage
         {
             CalculationOptionsMage clone = (CalculationOptionsMage)MemberwiseClone();
             clone.IncrementalSetArmor = null;
-            clone.IncrementalSetCooldowns = null;
+            clone.IncrementalSetStateIndexes = null;
             clone.IncrementalSetSegments = null;
             clone.IncrementalSetSpells = null;
             return clone;

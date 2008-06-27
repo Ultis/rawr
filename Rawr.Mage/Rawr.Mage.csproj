@@ -55,6 +55,7 @@
       <DependentUpon>CalculationOptionsPanelMage.cs</DependentUpon>
     </Compile>
     <Compile Include="CalculationsMage.cs" />
+    <Compile Include="CastingState.cs" />
     <Compile Include="CharacterCalculationsMage.cs" />
     <Compile Include="ComparisonCalculationMage.cs" />
     <Compile Include="CustomSpellMixForm.cs">
@@ -69,6 +70,7 @@
     <Compile Include="LP.cs" />
     <Compile Include="LU.cs" />
     <Compile Include="LU2.cs" />
+    <Compile Include="Solver.cs" />
     <Compile Include="MageTalentsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -81,6 +83,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Sequence.cs" />
+    <Compile Include="SequenceGroup.cs" />
+    <Compile Include="SequenceItem.cs" />
+    <Compile Include="SolverLP.cs" />
     <Compile Include="SparseMatrix.cs" />
     <Compile Include="Spell.cs" />
     <Compile Include="XMath.cs" />

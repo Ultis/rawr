@@ -5,7 +5,7 @@ using System.Text;
 namespace Rawr.Mage
 {
     // only one should exist at a time, otherwise behavior unspecified
-    public class SparseMatrix
+    public unsafe class SparseMatrix
     {
         internal static double[] value;
         internal static int[] row;
@@ -14,6 +14,27 @@ namespace Rawr.Mage
         private static int maxRows = 0;
         private static int maxCols = 0;
         private static int sparseSize;
+
+        private double* pData;
+        internal double* pValue;
+        private int* pRow;
+        private int* pCol;
+
+        public void BeginUnsafe(double* pData, double* pValue, int* pRow, int* pCol)
+        {
+            this.pData = pData;
+            this.pValue = pValue;
+            this.pRow = pRow;
+            this.pCol = pCol;
+        }
+
+        public void EndUnsafe()
+        {
+            pData = null;
+            pValue = null;
+            pRow = null;
+            pCol = null;
+        }
 
         static SparseMatrix()
         {
@@ -62,17 +83,17 @@ namespace Rawr.Mage
             }
         }
 
-        public SparseMatrix(int rows, int cols)
+        public SparseMatrix(int rows, int maxCols)
         {
-            if (rows > maxRows || cols + 20 > maxCols)
+            if (rows > maxRows || maxCols + 20 > SparseMatrix.maxCols)
             {
                 maxRows = Math.Max(rows, maxRows);
-                maxCols = Math.Max(cols + 20, maxCols); // give some room for AddColumn
+                SparseMatrix.maxCols = Math.Max(maxCols + 20, SparseMatrix.maxCols); // give some room for AddColumn
                 RecreateArrays();
             }
             this.rows = rows;
-            this.cols = cols;
-            Array.Clear(data, 0, rows * cols); // only need to clear what will be used
+            this.cols = 0;
+            //Array.Clear(data, 0, rows * cols); // only need to clear what will be used
         }
 
         public double this[int row, int col]
@@ -111,15 +132,56 @@ namespace Rawr.Mage
             }
         }
 
-        public void AddColumn()
+        public void SetElementUnsafe(int row, int col, double value)
+        {
+            if (pValue == null)
+            {
+                this[row, col] = value;
+                return;
+            }
+            if (value == 0.0) return;
+            if (col > lastCol)
+            {
+                for (int c = lastCol + 1; c <= col; c++)
+                {
+                    pCol[c] = sparseIndex;
+                }
+            }
+            if (sparseIndex >= sparseSize)
+            {
+                // C# does not allow to change a pinned reference, if we have to recreate arrays we have to move to safe code
+                EndUnsafe();
+                sparseSize += (int)(rows * cols * 0.1);
+                int[] newRow = new int[sparseSize];
+                Array.Copy(SparseMatrix.row, newRow, SparseMatrix.row.Length);
+                SparseMatrix.row = newRow;
+                double[] newValue = new double[sparseSize];
+                Array.Copy(SparseMatrix.value, newValue, SparseMatrix.value.Length);
+                SparseMatrix.value = newValue;
+                SparseMatrix.row[sparseIndex] = row;
+                SparseMatrix.value[sparseIndex] = value;
+                data[col * rows + row] = value; // store data by columns, we always access by column so it will have better locality, we also never increase number of rows, only columns, that way we don't have to reposition data
+                lastCol = col;
+                sparseIndex++;
+                return;
+            }
+            pRow[sparseIndex] = row;
+            pValue[sparseIndex] = value;
+            pData[col * rows + row] = value; // store data by columns, we always access by column so it will have better locality, we also never increase number of rows, only columns, that way we don't have to reposition data
+            lastCol = col;
+            sparseIndex++;
+        }
+
+        public int AddColumn()
         {
             finalized = false;
             cols++;
-            if (rows > maxRows || cols > maxCols)
+            if (cols > maxCols)
             {
-                throw new InvalidCastException();
+                throw new InvalidOperationException();
             }
             Array.Clear(data, rows * (cols - 1), rows); // only need to clear what will be used
+            return cols - 1;
         }
 
         public void EndConstruction()

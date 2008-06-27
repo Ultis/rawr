@@ -775,7 +775,12 @@ namespace Rawr
 
         private bool ItemEnchantValid(Character.CharacterSlot slot, Item item, Enchant enchant)
         {
-            return ((slot == lockedSlot && (lockedEnchants == null || Array.IndexOf(lockedEnchants, enchant) >= 0)) || (slot != lockedSlot && (item.EnchantValid ?? itemEnchantValid[item.GemmedId])[enchant.Id]));
+            if (slot == lockedSlot)
+            {
+                if (lockedEnchants == null || Array.IndexOf<Enchant>(lockedEnchants, enchant) >= 0) return true;
+                return false;
+            }
+            return (item.EnchantValid ?? itemEnchantValid[item.GemmedId])[enchant.Id];
         }
 
         private void PopulateLockedItems(Item item)
