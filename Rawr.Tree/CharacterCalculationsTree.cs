@@ -20,7 +20,7 @@ namespace Rawr.Tree
             set { overallPoints = value; }
         }
 
-        private float[] subPoints = new float[] { 0f, 0f };
+        private float[] subPoints = new float[] { 0f, 0f, 0f, 0f };
         public override float[] SubPoints
         {
             get { return subPoints; }
@@ -33,10 +33,34 @@ namespace Rawr.Tree
             set { subPoints[0] = value; }
         }
 
-        public float ToLPoints
+        public float Mp5Points
         {
             get { return subPoints[1]; }
-            set { subPoints[1] = value; }
+        }
+
+        public void AddMp5Points(float value, String source)
+        {
+            _Mp5PointsBreakdown += String.Format("\n{0:0.0} mp5 ({1})", value, source);
+            subPoints[1] += value;
+        }
+        
+        private String _Mp5PointsBreakdown = "Breakdown:";
+
+        public String Mp5PointsBreakdown
+        {
+            get { return _Mp5PointsBreakdown; }
+        }
+
+        public float SurvivalPoints
+        {
+            get { return subPoints[2]; }
+            set { subPoints[2] = value; }
+        }
+
+        public float ToLPoints
+        {
+            get { return subPoints[3]; }
+            set { subPoints[3] = value; }
         }
 
         public float OS5SRRegen
@@ -80,8 +104,11 @@ namespace Rawr.Tree
                 Math.Round((1.5f * 1570f) / (1570f + BasicStats.SpellHasteRating), 2)));
 
             dictValues.Add("Mana per Cast (5%)", BasicStats.ManaRestorePerCast_5_15.ToString());
-            dictValues.Add("Tree of Life Aura", String.Format("{0:0}",
-                BasicStats.TreeOfLifeAura));
+
+            dictValues.Add("Mp5 Points", String.Format("{0:0}*{1}", Mp5Points, Mp5PointsBreakdown));
+            dictValues.Add("Survival Points", String.Format("{0:0}*Survival points are based on separate scaling above/below a target health", SurvivalPoints));
+            dictValues.Add("ToL Points", String.Format("{0:0}*Tree of Life points is the strength of your aura", ToLPoints));
+            dictValues.Add("Overall Points", String.Format("{0:0}", OverallPoints));
 
             addSpellValues(dictValues);
 

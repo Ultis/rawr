@@ -28,6 +28,7 @@ namespace Rawr.Tree
             cmbManaAmt.Text = calcOpts.ManaAmt.ToString();
             cmbManaTime.Value = (decimal)calcOpts.ManaTime;
             cmbSpriest.Value = (decimal)calcOpts.Spriest;
+            upDownInnervate.Value = (decimal) calcOpts.InnervateDelay;
 
             cmbIntensity.Text = calcOpts.Intensity.ToString();
             cmbLivingSpirit.Text = calcOpts.LivingSpirit.ToString();
@@ -38,8 +39,10 @@ namespace Rawr.Tree
             cmbImprovedRegrowth.Text = calcOpts.ImprovedRegrowth.ToString();
             cmbTreeOfLife.Text = calcOpts.TreeOfLife.ToString();
 
-            trkActivity.Value = (int)calcOpts.Activity;
-            lblActivity.Text = trkActivity.Value + "%";
+            trkMinHealth.Value = (int)calcOpts.TargetHealth;
+            lblMinHealth.Text = trkMinHealth.Value.ToString();
+            upDownSurvScalingAbove.Value = (decimal) calcOpts.SurvScalingAbove;
+            upDownSurvScalingBelow.Value = (decimal)calcOpts.SurvScalingBelow;
 
             loading = false;
         }
@@ -88,17 +91,6 @@ namespace Rawr.Tree
                     calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
-            }
-        }
-
-        private void trkActivity_Scroll(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-                lblActivity.Text = trkActivity.Value + "%";
-                calcOpts.Activity = trkActivity.Value;
                 Character.OnItemsChanged();
             }
         }
@@ -224,6 +216,47 @@ namespace Rawr.Tree
                 Character.OnItemsChanged();
             }
         }
+
+        private void upDownSurvScalingAbove_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                calcOpts.SurvScalingAbove = (float)upDownSurvScalingAbove.Value;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void upDownSurvScalingBelow_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                calcOpts.SurvScalingBelow = (float)upDownSurvScalingBelow.Value;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void upDownInnervate_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                calcOpts.InnervateDelay = (float)upDownInnervate.Value;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void trkMinHealth_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                lblMinHealth.Text = trkMinHealth.Value.ToString();
+                calcOpts.TargetHealth = trkMinHealth.Value;
+                Character.OnItemsChanged();
+            }
+        }
     }
     [Serializable]
     public class CalculationOptionsTree : ICalculationOptionBase
@@ -242,8 +275,11 @@ namespace Rawr.Tree
         public float Length = 5;
         public float ManaAmt = 2400;
         public float ManaTime = 2.5f;
-        public float Activity = 80;
+        public float TargetHealth = 8750;
+        public float SurvScalingAbove = 500;
+        public float SurvScalingBelow = 20;
         public float Spriest = 0;
+        public float InnervateDelay = 6.5f;
 
         public CalculationOptionsTree()
         {

@@ -19,6 +19,8 @@ namespace Rawr.Tree
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
                     _subPointNameColors.Add("Healing", System.Drawing.Color.Red);
+                    _subPointNameColors.Add("Mp5", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("Survival", System.Drawing.Color.Green);
                     _subPointNameColors.Add("ToL", System.Drawing.Color.Yellow);
                 }
                 return _subPointNameColors;
@@ -43,7 +45,10 @@ namespace Rawr.Tree
 					"Basic Stats:Spell Haste",
 
                     "Extended Stats:Mana per Cast (5%)",
-                    "Extended Stats:Tree of Life Aura",
+                    "Extended Stats:Mp5 Points",
+                    "Extended Stats:Survival Points",
+                    "Extended Stats:ToL Points",
+                    "Extended Stats:Overall Points",
             	    
                     "Lifebloom:LB Tick","Lifebloom:LB Heal","Lifebloom:LB HPS","Lifebloom:LB HPM",
                     "Lifebloom Stack:LBS Tick","Lifebloom Stack:LBS HPS","Lifebloom Stack:LBS HPM",
@@ -138,10 +143,16 @@ namespace Rawr.Tree
             calculatedStats.Spells.Add(ht);
 
             // Calculate scores in another function later to reduce clutter
+            int health = (int)calculatedStats.BasicStats.Health;
+            int healthBelow = (int) (health < calcOpts.TargetHealth ? health : calcOpts.TargetHealth);
+            int healthAbove = health - healthBelow;
 
+            calculatedStats.AddMp5Points(calculatedStats.IS5SRRegen * 5f, "Regen");
             calculatedStats.HealPoints = calculatedStats.BasicStats.Healing;
+            calculatedStats.SurvivalPoints = healthBelow / calcOpts.SurvScalingBelow + healthAbove / calcOpts.SurvScalingAbove;
             calculatedStats.ToLPoints = calculatedStats.BasicStats.TreeOfLifeAura;
-            calculatedStats.OverallPoints = calculatedStats.HealPoints + calculatedStats.BasicStats.TreeOfLifeAura;
+
+            calculatedStats.OverallPoints = calculatedStats.HealPoints + calculatedStats.Mp5Points + calculatedStats.SurvivalPoints + calculatedStats.ToLPoints;
 
             return calculatedStats;
         }
@@ -226,7 +237,7 @@ namespace Rawr.Tree
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
+            return (stats.Stamina + stats.Health + stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal
                 + stats.ManaRestorePerCast_5_15 + stats.LifebloomFinalHealBonus + stats.RegrowthExtraTicks
