@@ -27,7 +27,7 @@ namespace Rawr.Tree
             set { subPoints = value; }
         }
 
-        public float HealPoints
+        public float HpSPoints
         {
             get { return subPoints[0]; }
             set { subPoints[0] = value; }
@@ -40,6 +40,8 @@ namespace Rawr.Tree
 
         public void AddMp5Points(float value, String source)
         {
+            if (value == 0)
+                return;
             _Mp5PointsBreakdown += String.Format("\n{0:0.0} mp5 ({1})", value, source);
             subPoints[1] += value;
         }
@@ -75,7 +77,25 @@ namespace Rawr.Tree
             set;
         }
 
+        public float FightFraction
+        {
+            get;
+            set;
+        }
+
+        public float FightLength
+        {
+            get;
+            set;
+        }
+
         public List<Spell> Spells
+        {
+            get;
+            set;
+        }
+
+        public SpellRotation BestSpellRotation
         {
             get;
             set;
@@ -105,10 +125,34 @@ namespace Rawr.Tree
 
             dictValues.Add("Mana per Cast (5%)", BasicStats.ManaRestorePerCast_5_15.ToString());
 
+            dictValues.Add("HPS Points", String.Format("{0:0}", HpSPoints));
             dictValues.Add("Mp5 Points", String.Format("{0:0}*{1}", Mp5Points, Mp5PointsBreakdown));
             dictValues.Add("Survival Points", String.Format("{0:0}*Survival points are based on separate scaling above/below a target health", SurvivalPoints));
             dictValues.Add("ToL Points", String.Format("{0:0}*Tree of Life points is the strength of your aura", ToLPoints));
             dictValues.Add("Overall Points", String.Format("{0:0}", OverallPoints));
+
+            dictValues.Add("Rotation duration", String.Format("{0:0.0}*{1}", BestSpellRotation.bestCycleDuration, BestSpellRotation.cycleSpells));
+            dictValues.Add("Rotation heal", BestSpellRotation.healPerCycle.ToString());
+
+            float netCost = BestSpellRotation.manaPerCycle - Mp5Points * BestSpellRotation.bestCycleDuration / 5;
+            if (netCost < 0)
+                netCost = 0;
+            dictValues.Add("Rotation cost", String.Format("{0:0}*{1:0}-{2:0}",
+                netCost, BestSpellRotation.manaPerCycle, Mp5Points * BestSpellRotation.bestCycleDuration / 5));
+            dictValues.Add("Rotation HPS", String.Format("{0:0}", BestSpellRotation.healPerCycle / BestSpellRotation.bestCycleDuration));
+            dictValues.Add("Rotation HPM", String.Format("{0:0}", BestSpellRotation.HPM));
+
+            if (netCost > 0)
+            {
+                float maxLength = (BasicStats.Mana / netCost * BestSpellRotation.bestCycleDuration);
+
+                dictValues.Add("Max fight duration", String.Format("{0}m{1}s*{2:0}% of the target length",
+                    (int) maxLength / 60, (int) maxLength % 60, FightFraction*100)); //maxLength / (FightLength*60) * 100));
+            }
+            else
+            {
+                dictValues.Add("Max fight duration", "Infinity");
+            }
 
             addSpellValues(dictValues);
 
@@ -117,7 +161,7 @@ namespace Rawr.Tree
 
         private void addSpellValues(Dictionary<string, string> dictValues) {
             Spell spell;
-            if ((spell = Spells.Find(delegate(Spell s) { return s is Lifebloom && !(s is LifebloomStack); })) != null)
+            if ((spell = Spells.Find(delegate(Spell s) { return s.Name.Equals("Lifebloom"); })) != null)
 			{
 				dictValues.Add("LB Tick", string.Format("{0}*{1} ticks",Math.Round(spell.PeriodicTick, 2),spell.PeriodicTicks));
                 dictValues.Add("LB Heal", string.Format("{0}*{1}", spell.AverageTotalHeal.ToString(), spell.HealInterval));
@@ -132,7 +176,7 @@ namespace Rawr.Tree
 				dictValues.Add("LB HPM", "--");
 			}
 
-            if ((spell = Spells.Find(delegate(Spell s) { return s is LifebloomStack; })) != null)
+            if ((spell = Spells.Find(delegate(Spell s) { return s.Name.Equals("Lifebloom Stack"); })) != null)
             {
                 dictValues.Add("LBS Tick", string.Format("{0}*{1} ticks",Math.Round(spell.PeriodicTick, 2),spell.PeriodicTicks));
                 dictValues.Add("LBS HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell", Math.Round(spell.HPS)));
@@ -145,7 +189,7 @@ namespace Rawr.Tree
 				dictValues.Add("LBS HPM", "--");
 			}
 
-            if ((spell = Spells.Find(delegate(Spell s) { return s is Rejuvenation; })) != null)
+            if ((spell = Spells.Find(delegate(Spell s) { return s.Name.Equals("Rejuvenation"); })) != null)
 			{
                 dictValues.Add("RJ Tick", string.Format("{0}*{1} ticks",Math.Round(spell.PeriodicTick, 2),spell.PeriodicTicks));
                 dictValues.Add("RJ HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell", Math.Round(spell.HPS)));
@@ -158,7 +202,7 @@ namespace Rawr.Tree
 				dictValues.Add("RJ HPM", "--");
 			}
 
-            if ((spell = Spells.Find(delegate(Spell s) { return s is Regrowth; })) != null)
+            if ((spell = Spells.Find(delegate(Spell s) { return s.Name.Equals("Regrowth"); })) != null)
             {
                 dictValues.Add("RG Tick", string.Format("{0}*{1} ticks",Math.Round(spell.PeriodicTick, 2),spell.PeriodicTicks));
                 dictValues.Add("RG Heal", String.Format("{0}*{1}", spell.AverageTotalHeal, spell.HealInterval));
@@ -173,7 +217,7 @@ namespace Rawr.Tree
 				dictValues.Add("Regrowth HPM", "--");
 			}
 
-            if ((spell = Spells.Find(delegate(Spell s) { return s is HealingTouch; })) != null)
+            if ((spell = Spells.Find(delegate(Spell s) { return s.Name.Equals("Healing Touch"); })) != null)
             {
                 dictValues.Add("HT Heal", String.Format("{0}*{1}", spell.AverageTotalHeal, spell.HealInterval));
                 dictValues.Add("HT HPS", string.Format("{0}*HPS is the average amount healed divided by the time to cast the spell\nCasttime: {1}", Math.Round(spell.HPS), Math.Round(spell.CastTime, 2)));

@@ -18,7 +18,7 @@ namespace Rawr.Tree
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Healing", System.Drawing.Color.Red);
+                    _subPointNameColors.Add("HpS", System.Drawing.Color.Red);
                     _subPointNameColors.Add("Mp5", System.Drawing.Color.Blue);
                     _subPointNameColors.Add("Survival", System.Drawing.Color.Green);
                     _subPointNameColors.Add("ToL", System.Drawing.Color.Yellow);
@@ -45,10 +45,19 @@ namespace Rawr.Tree
 					"Basic Stats:Spell Haste",
 
                     "Extended Stats:Mana per Cast (5%)",
+                    "Extended Stats:HPS Points",
                     "Extended Stats:Mp5 Points",
                     "Extended Stats:Survival Points",
                     "Extended Stats:ToL Points",
                     "Extended Stats:Overall Points",
+
+                    
+					"Rotation:Rotation duration",
+					"Rotation:Rotation heal",
+					"Rotation:Rotation cost",
+					"Rotation:Rotation HPS",
+					"Rotation:Rotation HPM",
+					"Rotation:Max fight duration",
             	    
                     "Lifebloom:LB Tick","Lifebloom:LB Heal","Lifebloom:LB HPS","Lifebloom:LB HPM",
                     "Lifebloom Stack:LBS Tick","Lifebloom Stack:LBS HPS","Lifebloom Stack:LBS HPM",
@@ -130,9 +139,11 @@ namespace Rawr.Tree
             Spell rg = new Regrowth(character, calculatedStats.BasicStats, true);
 
             Spell ht = new HealingTouch(character, calculatedStats.BasicStats);
+            Spell lbsrh = new LifebloomStack(character, calculatedStats.BasicStats, false);
             Spell lbrh = new Lifebloom(character, calculatedStats.BasicStats, false);
             Spell rjrh = new Rejuvenation(character, calculatedStats.BasicStats, false);
             Spell rgrh = new Regrowth(character, calculatedStats.BasicStats, false);
+            Spell nothing = new Nothing(character, calculatedStats.BasicStats);
 
 
             calculatedStats.Spells = new List<Spell>();
@@ -141,6 +152,13 @@ namespace Rawr.Tree
             calculatedStats.Spells.Add(rj);
             calculatedStats.Spells.Add(rg);
             calculatedStats.Spells.Add(ht);
+            calculatedStats.Spells.Add(lbrh);
+            calculatedStats.Spells.Add(rjrh);
+            calculatedStats.Spells.Add(rgrh);
+            calculatedStats.Spells.Add(lbsrh);
+            calculatedStats.Spells.Add(nothing);
+
+            calculatedStats.FightLength = calcOpts.FightLength;
 
             // Calculate scores in another function later to reduce clutter
             int health = (int)calculatedStats.BasicStats.Health;
@@ -148,13 +166,133 @@ namespace Rawr.Tree
             int healthAbove = health - healthBelow;
 
             calculatedStats.AddMp5Points(calculatedStats.IS5SRRegen * 5f, "Regen");
-            calculatedStats.HealPoints = calculatedStats.BasicStats.Healing;
+            calculatedStats.AddMp5Points(calcOpts.Spriest, "Shadow Priest");
+            calculatedStats.AddMp5Points((calcOpts.ManaPotAmt * (1 + calculatedStats.BasicStats.BonusManaPotion)) / (calcOpts.ManaPotDelay * 12), "Potion");
+
+            if (calcOpts.InnervateSelf)
+            {
+                float manaGain = calculatedStats.OS5SRRegen * 5 * 20 - calculatedStats.IS5SRRegen * 20;
+                float manaUsed = 0; // Currently, we do not model how much mana we use during the 20 seconds of innervate MySpellRotation.manaPerCycle / MySpellRotation.cycleDuration * 20;
+                if (manaGain > calculatedStats.BasicStats.Mana + manaUsed)
+                    manaGain = calculatedStats.BasicStats.Mana + manaUsed;
+                // The model does not try to calculate if you can use a different cycle during innervate in order to spam more regrowth (since your mana would fill up to 100% anyway)
+                calculatedStats.AddMp5Points(manaGain / (calcOpts.InnervateDelay * 12), "Innervate");
+            }
+
+            calculatedStats.BestSpellRotation = getBestSpellRotation(calcOpts, calculatedStats);
+            calculatedStats.FightFraction = rotationMultiplier(calculatedStats.BestSpellRotation, calcOpts, calculatedStats);
+
+            calculatedStats.HpSPoints = calculatedStats.BestSpellRotation.healPerCycle / calculatedStats.BestSpellRotation.bestCycleDuration * calculatedStats.FightFraction;
+
+            calculatedStats.AddMp5Points(5*calculatedStats.BestSpellRotation.numberOfSpells * calculatedStats.BasicStats.ManaRestorePerCast_5_15 * 0.05f / calculatedStats.BestSpellRotation.currentCycleDuration, "Mana per Cast (5%)");
+            calculatedStats.AddMp5Points(5*calculatedStats.BasicStats.MementoProc * 3 / (45 + calculatedStats.BestSpellRotation.currentCycleDuration / calculatedStats.BestSpellRotation.numberOfSpells * 5), "Memento of Tyrande");
+
             calculatedStats.SurvivalPoints = healthBelow / calcOpts.SurvScalingBelow + healthAbove / calcOpts.SurvScalingAbove;
             calculatedStats.ToLPoints = calculatedStats.BasicStats.TreeOfLifeAura;
 
-            calculatedStats.OverallPoints = calculatedStats.HealPoints + calculatedStats.Mp5Points + calculatedStats.SurvivalPoints + calculatedStats.ToLPoints;
+            calculatedStats.OverallPoints = calculatedStats.HpSPoints + calculatedStats.Mp5Points + calculatedStats.SurvivalPoints + calculatedStats.ToLPoints;
 
             return calculatedStats;
+        }
+
+        private List<List<Spell>> allCombinations(Spell[][] spellList)
+        {
+            List<List<Spell>> cur = new List<List<Spell>>();
+
+            for (int j = 0; j < spellList[0].GetLength(0); j++)
+            {
+                List<Spell> l = new List<Spell>();
+                l.Add(spellList[0][j]);
+                cur.Add(l);
+            }
+
+            for (int i = 1; i < spellList.GetLength(0); i++)
+            {
+                List<List<Spell>> newList = new List<List<Spell>>();
+
+                for (int j = 0; j < spellList[i].GetLength(0); j++)
+                {
+                    foreach (List<Spell> l in cur)
+                    {
+                        List<Spell> nl = new List<Spell>(l);
+                        nl.Add(spellList[i][j]);
+                        newList.Add(nl);
+                    }
+                }
+                cur = newList;
+            }
+
+            return cur;
+        }
+
+        private float rotationMultiplier(SpellRotation rot, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats)
+        {
+            if (rot == null)
+                return 0;
+            float manaCostPerCycle = rot.manaPerCycle -
+                       (calculatedStats.Mp5Points * rot.currentCycleDuration / 5 +
+                       rot.numberOfSpells * calculatedStats.BasicStats.ManaRestorePerCast_5_15 * 0.05f +
+                       rot.currentCycleDuration * calculatedStats.BasicStats.MementoProc * 3 / (45 + rot.currentCycleDuration / rot.numberOfSpells * 5));
+            
+            float HPSMultiplier = 1.0f;
+
+            if (manaCostPerCycle > 0)
+            {
+                HPSMultiplier = (rot.currentCycleDuration * calculatedStats.BasicStats.Mana / manaCostPerCycle) / (calcOpts.FightLength * 60);
+                if (HPSMultiplier > 1.0f)
+                    HPSMultiplier = 1.0f;
+            }
+
+            return HPSMultiplier;
+        }
+
+        private SpellRotation getBestSpellRotation(CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats)
+        {
+            Spell[][] spellList = new Spell[calcOpts.availableSpells.GetLength(0)][];
+
+            for (int i=0; i<calcOpts.availableSpells.GetLength(0); i++)
+            {
+                spellList[i] = new Spell[calcOpts.availableSpells[i].GetLength(0)];
+                for (int j = 0; j < calcOpts.availableSpells[i].GetLength(0); j++)
+                {
+                    spellList[i][j] = calculatedStats.Spells.Find(delegate(Spell s) { return s.Name.Equals(calcOpts.availableSpells[i][j]); });
+                }
+            }
+
+            float bestScore = 0f;
+            SpellRotation bestRotation = null;
+
+            foreach (List<Spell> spells in allCombinations(spellList))
+            {
+                float bestLocalScore = 0f;
+
+                float maxLength = calcOpts.MaxCycleDuration;
+                float granularity = 0.1f;
+                SpellRotation rot = new SpellRotation(spells, maxLength);
+
+                rot.currentCycleDuration = ((float) Math.Ceiling(rot.tightCycleDuration*10)) / 10f;
+
+                do
+                {
+                    float score = rot.healPerCycle / rot.currentCycleDuration * rotationMultiplier(rot, calcOpts, calculatedStats);
+
+                    if (score > bestLocalScore)
+                    {
+                        bestLocalScore = score;
+                        rot.bestCycleDuration = rot.currentCycleDuration;
+                    }
+
+                    rot.currentCycleDuration += granularity;
+                } while (rot.currentCycleDuration < maxLength);
+
+                if (bestLocalScore > bestScore)
+                {
+                    bestRotation = rot;
+                    bestScore = bestLocalScore;
+                }
+            }
+            bestRotation.currentCycleDuration = bestRotation.bestCycleDuration;
+            return bestRotation;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -231,7 +369,7 @@ namespace Rawr.Tree
                 ReduceHealingTouchCost = stats.ReduceHealingTouchCost,
                 RejuvenationHealBonus = stats.RejuvenationHealBonus,
                 LifebloomTickHealBonus = stats.LifebloomTickHealBonus,
-                HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus
+                HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus,
             };
         }
 

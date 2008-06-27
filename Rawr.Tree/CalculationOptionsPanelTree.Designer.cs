@@ -31,10 +31,9 @@
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label18 = new System.Windows.Forms.Label();
+            this.chkInnervate = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
             this.upDownInnervate = new System.Windows.Forms.NumericUpDown();
-            this.label16 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.cmbSpriest = new System.Windows.Forms.NumericUpDown();
@@ -43,8 +42,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.cmbManaTime = new System.Windows.Forms.NumericUpDown();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
-            this.trkMinHealth = new System.Windows.Forms.TrackBar();
-            this.lblMinHealth = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -64,6 +61,7 @@
             this.cmbIntensity = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.upDownTargetHealth = new System.Windows.Forms.NumericUpDown();
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.upDownSurvScalingAbove = new System.Windows.Forms.NumericUpDown();
@@ -72,16 +70,27 @@
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.cmbSpellNum = new System.Windows.Forms.ComboBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.spellList = new System.Windows.Forms.ListBox();
+            this.cmbNumCyclesPerRotation = new System.Windows.Forms.ComboBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.upDownMaxCycleDuration = new System.Windows.Forms.NumericUpDown();
+            this.label25 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.upDownInnervate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbSpriest)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkMinHealth)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownTargetHealth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownSurvScalingAbove)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownSurvScalingBelow)).BeginInit();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownMaxCycleDuration)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbLength
@@ -124,10 +133,9 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.label18);
+            this.groupBox2.Controls.Add(this.chkInnervate);
             this.groupBox2.Controls.Add(this.label17);
             this.groupBox2.Controls.Add(this.upDownInnervate);
-            this.groupBox2.Controls.Add(this.label16);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.cmbSpriest);
@@ -136,30 +144,32 @@
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmbManaTime);
             this.groupBox2.Controls.Add(this.cmbManaAmt);
-            this.groupBox2.Location = new System.Drawing.Point(3, 234);
+            this.groupBox2.Location = new System.Drawing.Point(3, 439);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(205, 153);
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Mana Buffs";
             // 
-            // label18
+            // chkInnervate
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(86, 109);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(33, 13);
-            this.label18.TabIndex = 14;
-            this.label18.Text = "every";
+            this.chkInnervate.AutoSize = true;
+            this.chkInnervate.Location = new System.Drawing.Point(15, 108);
+            this.chkInnervate.Name = "chkInnervate";
+            this.chkInnervate.Size = new System.Drawing.Size(100, 17);
+            this.chkInnervate.TabIndex = 15;
+            this.chkInnervate.Text = "Innervate every";
+            this.chkInnervate.UseVisualStyleBackColor = true;
+            this.chkInnervate.CheckedChanged += new System.EventHandler(this.chkInnervate_CheckedChanged);
             // 
             // label17
             // 
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(171, 109);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(28, 13);
+            this.label17.Size = new System.Drawing.Size(23, 13);
             this.label17.TabIndex = 13;
-            this.label17.Text = "mins";
+            this.label17.Text = "min";
             // 
             // upDownInnervate
             // 
@@ -190,23 +200,14 @@
             65536});
             this.upDownInnervate.ValueChanged += new System.EventHandler(this.upDownInnervate_ValueChanged);
             // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(6, 109);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(55, 13);
-            this.label16.TabIndex = 11;
-            this.label16.Text = "Innervate:";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(171, 40);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(28, 13);
+            this.label6.Size = new System.Drawing.Size(23, 13);
             this.label6.TabIndex = 10;
-            this.label6.Text = "mins";
+            this.label6.Text = "min";
             // 
             // label2
             // 
@@ -224,7 +225,7 @@
             0,
             0,
             0});
-            this.cmbSpriest.Location = new System.Drawing.Point(19, 77);
+            this.cmbSpriest.Location = new System.Drawing.Point(15, 77);
             this.cmbSpriest.Maximum = new decimal(new int[] {
             500,
             0,
@@ -299,7 +300,7 @@
             "1800",
             "2200",
             "2400"});
-            this.cmbManaAmt.Location = new System.Drawing.Point(19, 37);
+            this.cmbManaAmt.Location = new System.Drawing.Point(15, 37);
             this.cmbManaAmt.Name = "cmbManaAmt";
             this.cmbManaAmt.Size = new System.Drawing.Size(61, 21);
             this.cmbManaAmt.TabIndex = 0;
@@ -307,30 +308,6 @@
             this.cmbManaAmt.ValueMember = "2400";
             this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
             this.cmbManaAmt.TextUpdate += new System.EventHandler(this.cmbManaAmt_TextUpdate);
-            // 
-            // trkMinHealth
-            // 
-            this.trkMinHealth.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkMinHealth.LargeChange = 1000;
-            this.trkMinHealth.Location = new System.Drawing.Point(103, 48);
-            this.trkMinHealth.Maximum = 13000;
-            this.trkMinHealth.Minimum = 7500;
-            this.trkMinHealth.Name = "trkMinHealth";
-            this.trkMinHealth.Size = new System.Drawing.Size(90, 42);
-            this.trkMinHealth.SmallChange = 250;
-            this.trkMinHealth.TabIndex = 23;
-            this.trkMinHealth.TickFrequency = 500;
-            this.trkMinHealth.Value = 8750;
-            this.trkMinHealth.Scroll += new System.EventHandler(this.trkMinHealth_Scroll);
-            // 
-            // lblMinHealth
-            // 
-            this.lblMinHealth.AutoSize = true;
-            this.lblMinHealth.Location = new System.Drawing.Point(151, 93);
-            this.lblMinHealth.Name = "lblMinHealth";
-            this.lblMinHealth.Size = new System.Drawing.Size(31, 13);
-            this.lblMinHealth.TabIndex = 24;
-            this.lblMinHealth.Text = "8750";
             // 
             // groupBox1
             // 
@@ -350,7 +327,7 @@
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.cmbIntensity);
-            this.groupBox1.Location = new System.Drawing.Point(3, 393);
+            this.groupBox1.Location = new System.Drawing.Point(3, 598);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(205, 238);
             this.groupBox1.TabIndex = 26;
@@ -555,6 +532,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.upDownTargetHealth);
             this.groupBox3.Controls.Add(this.label24);
             this.groupBox3.Controls.Add(this.label23);
             this.groupBox3.Controls.Add(this.upDownSurvScalingAbove);
@@ -563,22 +541,48 @@
             this.groupBox3.Controls.Add(this.label21);
             this.groupBox3.Controls.Add(this.label20);
             this.groupBox3.Controls.Add(this.label9);
-            this.groupBox3.Controls.Add(this.lblMinHealth);
             this.groupBox3.Controls.Add(this.label19);
             this.groupBox3.Controls.Add(this.label3);
-            this.groupBox3.Controls.Add(this.trkMinHealth);
             this.groupBox3.Controls.Add(this.cmbLength);
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(205, 225);
+            this.groupBox3.Size = new System.Drawing.Size(205, 161);
             this.groupBox3.TabIndex = 28;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Fight Parameters";
             // 
+            // upDownTargetHealth
+            // 
+            this.upDownTargetHealth.Increment = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            this.upDownTargetHealth.Location = new System.Drawing.Point(105, 56);
+            this.upDownTargetHealth.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+            this.upDownTargetHealth.Minimum = new decimal(new int[] {
+            7500,
+            0,
+            0,
+            0});
+            this.upDownTargetHealth.Name = "upDownTargetHealth";
+            this.upDownTargetHealth.Size = new System.Drawing.Size(57, 20);
+            this.upDownTargetHealth.TabIndex = 31;
+            this.upDownTargetHealth.Value = new decimal(new int[] {
+            8750,
+            0,
+            0,
+            0});
+            this.upDownTargetHealth.ValueChanged += new System.EventHandler(this.upDownTargetHealth_ValueChanged);
+            // 
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(131, 136);
+            this.label24.Location = new System.Drawing.Point(131, 101);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(64, 13);
             this.label24.TabIndex = 30;
@@ -587,7 +591,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(131, 162);
+            this.label23.Location = new System.Drawing.Point(131, 127);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(64, 13);
             this.label23.TabIndex = 29;
@@ -595,7 +599,7 @@
             // 
             // upDownSurvScalingAbove
             // 
-            this.upDownSurvScalingAbove.Location = new System.Drawing.Point(81, 160);
+            this.upDownSurvScalingAbove.Location = new System.Drawing.Point(81, 125);
             this.upDownSurvScalingAbove.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -623,7 +627,7 @@
             0,
             0,
             65536});
-            this.upDownSurvScalingBelow.Location = new System.Drawing.Point(81, 134);
+            this.upDownSurvScalingBelow.Location = new System.Drawing.Point(81, 99);
             this.upDownSurvScalingBelow.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -647,7 +651,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(14, 136);
+            this.label22.Location = new System.Drawing.Point(14, 101);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(69, 13);
             this.label22.TabIndex = 27;
@@ -656,7 +660,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(13, 162);
+            this.label21.Location = new System.Drawing.Point(13, 127);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(71, 13);
             this.label21.TabIndex = 26;
@@ -665,7 +669,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(12, 114);
+            this.label20.Location = new System.Drawing.Point(12, 79);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(102, 13);
             this.label20.TabIndex = 25;
@@ -680,28 +684,164 @@
             this.label9.TabIndex = 15;
             this.label9.Text = "mins";
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.cmbSpellNum);
+            this.groupBox4.Controls.Add(this.label28);
+            this.groupBox4.Controls.Add(this.spellList);
+            this.groupBox4.Controls.Add(this.cmbNumCyclesPerRotation);
+            this.groupBox4.Controls.Add(this.label27);
+            this.groupBox4.Controls.Add(this.label26);
+            this.groupBox4.Controls.Add(this.upDownMaxCycleDuration);
+            this.groupBox4.Controls.Add(this.label25);
+            this.groupBox4.Location = new System.Drawing.Point(5, 170);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(204, 263);
+            this.groupBox4.TabIndex = 29;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Spell Rotation";
+            // 
+            // cmbSpellNum
+            // 
+            this.cmbSpellNum.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"});
+            this.cmbSpellNum.Location = new System.Drawing.Point(118, 70);
+            this.cmbSpellNum.Name = "cmbSpellNum";
+            this.cmbSpellNum.Size = new System.Drawing.Size(40, 21);
+            this.cmbSpellNum.TabIndex = 36;
+            this.cmbSpellNum.Text = "1";
+            this.cmbSpellNum.SelectedIndexChanged += new System.EventHandler(this.cmbSpellNum_SelectedIndexChanged);
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(10, 76);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(102, 13);
+            this.label28.TabIndex = 35;
+            this.label28.Text = "Available for spell #:";
+            // 
+            // spellList
+            // 
+            this.spellList.FormattingEnabled = true;
+            this.spellList.Items.AddRange(new object[] {
+            "Lifebloom Stack",
+            "Lifebloom Stack (no aura)",
+            "Lifebloom",
+            "Rejuvenation",
+            "Regrowth",
+            "Lifebloom (no aura)",
+            "Rejuvenation (no aura)",
+            "Regrowth (no aura)",
+            "Nothing"});
+            this.spellList.Location = new System.Drawing.Point(13, 123);
+            this.spellList.Name = "spellList";
+            this.spellList.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.spellList.Size = new System.Drawing.Size(180, 134);
+            this.spellList.TabIndex = 34;
+            this.spellList.SelectedIndexChanged += new System.EventHandler(this.spellList_SelectedIndexChanged);
+            // 
+            // cmbNumCyclesPerRotation
+            // 
+            this.cmbNumCyclesPerRotation.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.cmbNumCyclesPerRotation.Location = new System.Drawing.Point(118, 43);
+            this.cmbNumCyclesPerRotation.Name = "cmbNumCyclesPerRotation";
+            this.cmbNumCyclesPerRotation.Size = new System.Drawing.Size(40, 21);
+            this.cmbNumCyclesPerRotation.TabIndex = 15;
+            this.cmbNumCyclesPerRotation.Text = "3";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(10, 46);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(97, 13);
+            this.label27.TabIndex = 32;
+            this.label27.Text = "Cycles per rotation:";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(163, 19);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(24, 13);
+            this.label26.TabIndex = 15;
+            this.label26.Text = "sec";
+            // 
+            // upDownMaxCycleDuration
+            // 
+            this.upDownMaxCycleDuration.DecimalPlaces = 1;
+            this.upDownMaxCycleDuration.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.upDownMaxCycleDuration.Location = new System.Drawing.Point(117, 17);
+            this.upDownMaxCycleDuration.Maximum = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+            this.upDownMaxCycleDuration.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.upDownMaxCycleDuration.Name = "upDownMaxCycleDuration";
+            this.upDownMaxCycleDuration.Size = new System.Drawing.Size(40, 20);
+            this.upDownMaxCycleDuration.TabIndex = 15;
+            this.upDownMaxCycleDuration.Value = new decimal(new int[] {
+            68,
+            0,
+            0,
+            65536});
+            this.upDownMaxCycleDuration.ValueChanged += new System.EventHandler(this.upDownMaxCycleDuration_ValueChanged);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(12, 19);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(99, 13);
+            this.label25.TabIndex = 31;
+            this.label25.Text = "Max cycle duration:";
+            // 
             // CalculationOptionsPanelTree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Name = "CalculationOptionsPanelTree";
-            this.Size = new System.Drawing.Size(212, 794);
+            this.Size = new System.Drawing.Size(212, 839);
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.upDownInnervate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbSpriest)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkMinHealth)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownTargetHealth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownSurvScalingAbove)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownSurvScalingBelow)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownMaxCycleDuration)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -716,8 +856,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TrackBar trkMinHealth;
-        private System.Windows.Forms.Label lblMinHealth;
         private System.Windows.Forms.NumericUpDown cmbSpriest;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label2;
@@ -738,10 +876,8 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.NumericUpDown upDownInnervate;
-        private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label9;
@@ -752,5 +888,16 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.NumericUpDown upDownTargetHealth;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.NumericUpDown upDownMaxCycleDuration;
+        private System.Windows.Forms.ComboBox cmbNumCyclesPerRotation;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.ListBox spellList;
+        private System.Windows.Forms.ComboBox cmbSpellNum;
+        private System.Windows.Forms.CheckBox chkInnervate;
     }
 }

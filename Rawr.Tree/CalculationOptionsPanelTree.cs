@@ -24,10 +24,11 @@ namespace Rawr.Tree
                 Character.CalculationOptions = new CalculationOptionsTree(Character);
 
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            cmbLength.Value = (decimal)calcOpts.Length;
-            cmbManaAmt.Text = calcOpts.ManaAmt.ToString();
-            cmbManaTime.Value = (decimal)calcOpts.ManaTime;
+            cmbLength.Value = (decimal)calcOpts.FightLength;
+            cmbManaAmt.Text = calcOpts.ManaPotAmt.ToString();
+            cmbManaTime.Value = (decimal)calcOpts.ManaPotDelay;
             cmbSpriest.Value = (decimal)calcOpts.Spriest;
+            chkInnervate.Checked = calcOpts.InnervateSelf;
             upDownInnervate.Value = (decimal) calcOpts.InnervateDelay;
 
             cmbIntensity.Text = calcOpts.Intensity.ToString();
@@ -39,12 +40,18 @@ namespace Rawr.Tree
             cmbImprovedRegrowth.Text = calcOpts.ImprovedRegrowth.ToString();
             cmbTreeOfLife.Text = calcOpts.TreeOfLife.ToString();
 
-            trkMinHealth.Value = (int)calcOpts.TargetHealth;
-            lblMinHealth.Text = trkMinHealth.Value.ToString();
+            upDownTargetHealth.Value = (decimal)calcOpts.TargetHealth;
             upDownSurvScalingAbove.Value = (decimal) calcOpts.SurvScalingAbove;
             upDownSurvScalingBelow.Value = (decimal)calcOpts.SurvScalingBelow;
 
+            cmbNumCyclesPerRotation.Text = calcOpts.NumCyclesPerRotation.ToString();
+            cmbSpellNum.Text = "1";
+
+            upDownMaxCycleDuration.Value = (decimal) calcOpts.MaxCycleDuration;
+
             loading = false;
+
+            cmbSpellNum_SelectedIndexChanged(null, null);
         }
 
         private void cmbLength_ValueChanged(object sender, EventArgs e)
@@ -52,7 +59,7 @@ namespace Rawr.Tree
             if (!loading)
             {
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-                calcOpts.Length = (float)cmbLength.Value;
+                calcOpts.FightLength = (float)cmbLength.Value;
                 Character.OnItemsChanged();
             }
         }
@@ -64,7 +71,7 @@ namespace Rawr.Tree
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
                 try
                 {
-                    calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
+                    calcOpts.ManaPotAmt = float.Parse(cmbManaAmt.Text);
                 }
                 catch { }
                 Character.OnItemsChanged();
@@ -76,7 +83,7 @@ namespace Rawr.Tree
             if (!loading)
             {
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-                calcOpts.ManaTime = (float)cmbManaTime.Value;
+                calcOpts.ManaPotDelay = (float)cmbManaTime.Value;
                 Character.OnItemsChanged();
             }
         }
@@ -88,7 +95,7 @@ namespace Rawr.Tree
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
                 try
                 {
-                    calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
+                    calcOpts.ManaPotAmt = float.Parse(cmbManaAmt.Text);
                 }
                 catch { }
                 Character.OnItemsChanged();
@@ -247,13 +254,85 @@ namespace Rawr.Tree
             }
         }
 
-        private void trkMinHealth_Scroll(object sender, EventArgs e)
+        private void upDownTargetHealth_ValueChanged(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-                lblMinHealth.Text = trkMinHealth.Value.ToString();
-                calcOpts.TargetHealth = trkMinHealth.Value;
+                calcOpts.TargetHealth = (float) upDownTargetHealth.Value;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbSpellNum_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                int selIx = int.Parse(cmbSpellNum.Text) - 1; // arrays are zero-based
+
+                loading = true; // disable updates while changing the spell listBox
+
+                spellList.ClearSelected();
+
+                if (calcOpts.availableSpells[selIx] != null)
+                {
+
+                    foreach (String s in calcOpts.availableSpells[selIx])
+                    {
+                        int ix = spellList.FindStringExact(s);
+                        if (ix != -1)
+                            spellList.SetSelected(ix, true);
+                    }
+                }
+
+                loading = false;
+            }
+        }
+
+        private void spellList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+                int selIx = int.Parse(cmbSpellNum.Text) - 1; // arrays are zero-based
+
+                if (spellList.SelectedItems.Count == 0)
+                    return;
+
+                String[] spells = new String[spellList.SelectedItems.Count];
+
+                for(int i=0; i<spells.Length; i++) {
+                    spells[i] = spellList.SelectedItems[i].ToString();
+                }
+
+                calcOpts.availableSpells[selIx] = spells;
+                
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void chkInnervate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+                calcOpts.InnervateSelf = chkInnervate.Checked;
+
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void upDownMaxCycleDuration_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+                calcOpts.MaxCycleDuration = (float) upDownMaxCycleDuration.Value;
+
                 Character.OnItemsChanged();
             }
         }
@@ -272,14 +351,25 @@ namespace Rawr.Tree
         }
 
         public bool EnforceMetagemRequirements = false;
-        public float Length = 5;
-        public float ManaAmt = 2400;
-        public float ManaTime = 2.5f;
+        public float FightLength = 5;
+        public float ManaPotAmt = 2400;
+        public float ManaPotDelay = 2.5f;
         public float TargetHealth = 8750;
         public float SurvScalingAbove = 500;
         public float SurvScalingBelow = 20;
         public float Spriest = 0;
         public float InnervateDelay = 6.5f;
+        public float MaxCycleDuration = 6.5f;
+        public int   NumCyclesPerRotation = 3;
+        public String[][] availableSpells = new String[][] {
+            new String[] {"Lifebloom Stack"},
+            new String[] {"Rejuvenation", "Regrowth"},
+            new String[] {"Regrowth", "Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)"},
+            new String[] {"Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)"},
+            new String[] {"Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)"},
+            new String[] {"Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)"},
+        };
+        public Boolean InnervateSelf = true;
 
         public CalculationOptionsTree()
         {

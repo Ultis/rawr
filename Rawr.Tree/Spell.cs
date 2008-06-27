@@ -165,6 +165,32 @@ namespace Rawr.Tree
         }
     }
 
+    // Needed to let the character get an activity lower than 100% (very important for lower-tier gear)
+    internal class Nothing : Spell
+    {
+        public Nothing(Character character, Stats stats)
+        {
+            ToLAura = false;
+            Name = "Nothing";
+            Cost = 0;
+            BaseCastTime = 0f;
+
+            BasePeriodicTick = 0;
+            BasePeriodicTicks = 0;
+            BaseHoTCoefficient = 0;
+
+            BaseMinHeal = 0;
+            BaseMaxHeal = 0;
+            BaseHealCoefficient = 0;
+
+            BaseCritPercent = 0;
+            Healing = 0;
+
+            ParseTalents(character, stats);
+            Calculate(character, stats);
+        }
+    }
+    
     internal class Lifebloom : Spell
     {
         public Lifebloom(Character character, Stats stats, Boolean AddToLAura)
