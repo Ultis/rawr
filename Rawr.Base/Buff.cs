@@ -794,7 +794,7 @@ namespace Rawr
             {
                 Name = "Superior Wizard Oil",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { SpellDamageRating = 42 },
+                Stats = new Stats() { Healing = 42, SpellDamageRating = 42 },
                 ConflictingBuffs = new string[] { "Temporary Weapon Enchantment" }
             });
             defaultBuffs.Add(new Buff()
