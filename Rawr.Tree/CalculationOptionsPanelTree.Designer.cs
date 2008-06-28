@@ -769,6 +769,7 @@
             this.cmbNumCyclesPerRotation.Size = new System.Drawing.Size(40, 21);
             this.cmbNumCyclesPerRotation.TabIndex = 15;
             this.cmbNumCyclesPerRotation.Text = "3";
+            this.cmbNumCyclesPerRotation.SelectedIndexChanged += new System.EventHandler(this.cmbNumCyclesPerRotation_SelectedIndexChanged);
             // 
             // label27
             // 
@@ -844,7 +845,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(197, 354);
+            this.tabPage1.Size = new System.Drawing.Size(197, 266);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Fight";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -875,7 +876,7 @@
             this.tabPage4.Controls.Add(this.groupBox1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(197, 354);
+            this.tabPage4.Size = new System.Drawing.Size(197, 266);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Talents";
             this.tabPage4.UseVisualStyleBackColor = true;

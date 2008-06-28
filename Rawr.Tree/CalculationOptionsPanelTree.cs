@@ -336,6 +336,18 @@ namespace Rawr.Tree
                 Character.OnItemsChanged();
             }
         }
+
+        private void cmbNumCyclesPerRotation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+                calcOpts.NumCyclesPerRotation = int.Parse(cmbNumCyclesPerRotation.Text);
+
+                Character.OnItemsChanged();
+            }
+        }
     }
     [Serializable]
     public class CalculationOptionsTree : ICalculationOptionBase
@@ -360,14 +372,14 @@ namespace Rawr.Tree
         public float Spriest = 0;
         public float InnervateDelay = 6.5f;
         public float MaxCycleDuration = 6.5f;
-        public int   NumCyclesPerRotation = 3;
+        public int   NumCyclesPerRotation = 2;
         public String[][] availableSpells = new String[][] {
             new String[] {"Lifebloom Stack"},
             new String[] {"Rejuvenation", "Regrowth"},
             new String[] {"Regrowth", "Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)"},
-            new String[] {"Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)"},
-            new String[] {"Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)"},
-            new String[] {"Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)"},
+            new String[] {"Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)", "Nothing"},
+            new String[] {"Nothing"},
+            new String[] {"Nothing"},
         };
         public Boolean InnervateSelf = true;
 

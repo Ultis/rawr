@@ -89,6 +89,36 @@ namespace Rawr.Tree
             set;
         }
 
+        public int NumCycles
+        {
+            get;
+            set;
+        }
+
+        public int NumCyclesAfterFilter
+        {
+            get;
+            set;
+        }
+
+        public int NumCyclesPerRotation
+        {
+            get;
+            set;
+        }
+
+        public long NumRotations
+        {
+            get;
+            set;
+        }
+
+        public String DebugText
+        {
+            get;
+            set;
+        }
+
         public List<Spell> Spells
         {
             get;
@@ -131,27 +161,43 @@ namespace Rawr.Tree
             dictValues.Add("ToL Points", String.Format("{0:0}*Tree of Life points is the strength of your aura", ToLPoints));
             dictValues.Add("Overall Points", String.Format("{0:0}", OverallPoints));
 
-            dictValues.Add("Rotation duration", String.Format("{0:0.0}*{1}", BestSpellRotation.bestCycleDuration, BestSpellRotation.cycleSpells));
-            dictValues.Add("Rotation heal", BestSpellRotation.healPerCycle.ToString());
-
-            float netCost = BestSpellRotation.manaPerCycle - Mp5Points * BestSpellRotation.bestCycleDuration / 5;
-            if (netCost < 0)
-                netCost = 0;
-            dictValues.Add("Rotation cost", String.Format("{0:0}*{1:0}-{2:0}",
-                netCost, BestSpellRotation.manaPerCycle, Mp5Points * BestSpellRotation.bestCycleDuration / 5));
-            dictValues.Add("Rotation HPS", String.Format("{0:0}", BestSpellRotation.healPerCycle / BestSpellRotation.bestCycleDuration));
-            dictValues.Add("Rotation HPM", String.Format("{0:0}", BestSpellRotation.HPM));
-
-            if (netCost > 0)
+            if (BestSpellRotation == null)
             {
-                float maxLength = (BasicStats.Mana / netCost * BestSpellRotation.bestCycleDuration);
-
-                dictValues.Add("Max fight duration", String.Format("{0}m{1}s*{2:0}% of the target length",
-                    (int) maxLength / 60, (int) maxLength % 60, FightFraction*100)); //maxLength / (FightLength*60) * 100));
+                dictValues.Add("Rotation duration", "--");
+                dictValues.Add("Rotation heal", "--");
+                dictValues.Add("Rotation cost", "--");
+                dictValues.Add("Rotation HPS", "--");
+                dictValues.Add("Rotation HPM", "--");
+                dictValues.Add("Max fight duration", "--");
             }
             else
             {
-                dictValues.Add("Max fight duration", "Infinity");
+                dictValues.Add("Rotation duration", String.Format("{0:0.0}*{1}{2} different cycles filtered down to {3}\n{4} cycles per rotation means {5} rotations had to be enumerated\n{6}",
+                    BestSpellRotation.bestCycleDuration, BestSpellRotation.cycleSpells,
+                    NumCycles, NumCyclesAfterFilter,
+                    NumCyclesPerRotation, NumRotations,
+                    DebugText));
+                dictValues.Add("Rotation heal", BestSpellRotation.healPerCycle.ToString());
+
+                float netCost = BestSpellRotation.manaPerCycle - Mp5Points * BestSpellRotation.bestCycleDuration / 5;
+                if (netCost < 0)
+                    netCost = 0;
+                dictValues.Add("Rotation cost", String.Format("{0:0}*{1:0}-{2:0}",
+                    netCost, BestSpellRotation.manaPerCycle, Mp5Points * BestSpellRotation.bestCycleDuration / 5));
+                dictValues.Add("Rotation HPS", String.Format("{0:0}", BestSpellRotation.healPerCycle / BestSpellRotation.bestCycleDuration));
+                dictValues.Add("Rotation HPM", String.Format("{0:0}", BestSpellRotation.HPM));
+
+                if (netCost > 0)
+                {
+                    float maxLength = (BasicStats.Mana / netCost * BestSpellRotation.bestCycleDuration);
+
+                    dictValues.Add("Max fight duration", String.Format("{0}m{1}s*{2:0}% of the target length",
+                        (int)maxLength / 60, (int)maxLength % 60, FightFraction * 100)); //maxLength / (FightLength*60) * 100));
+                }
+                else
+                {
+                    dictValues.Add("Max fight duration", "Infinity");
+                }
             }
 
             addSpellValues(dictValues);

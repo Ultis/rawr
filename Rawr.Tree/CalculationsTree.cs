@@ -162,30 +162,34 @@ namespace Rawr.Tree
 
             // Calculate scores in another function later to reduce clutter
             int health = (int)calculatedStats.BasicStats.Health;
-            int healthBelow = (int) (health < calcOpts.TargetHealth ? health : calcOpts.TargetHealth);
+            int healthBelow = (int)(health < calcOpts.TargetHealth ? health : calcOpts.TargetHealth);
             int healthAbove = health - healthBelow;
 
             calculatedStats.AddMp5Points(calculatedStats.IS5SRRegen * 5f, "Regen");
             calculatedStats.AddMp5Points(calcOpts.Spriest, "Shadow Priest");
             calculatedStats.AddMp5Points((calcOpts.ManaPotAmt * (1 + calculatedStats.BasicStats.BonusManaPotion)) / (calcOpts.ManaPotDelay * 12), "Potion");
 
-            if (calcOpts.InnervateSelf)
+            getBestSpellRotation(calcOpts, calculatedStats);
+
+            if (calculatedStats.BestSpellRotation != null)
             {
-                float manaGain = calculatedStats.OS5SRRegen * 5 * 20 - calculatedStats.IS5SRRegen * 20;
-                float manaUsed = 0; // Currently, we do not model how much mana we use during the 20 seconds of innervate MySpellRotation.manaPerCycle / MySpellRotation.cycleDuration * 20;
-                if (manaGain > calculatedStats.BasicStats.Mana + manaUsed)
-                    manaGain = calculatedStats.BasicStats.Mana + manaUsed;
-                // The model does not try to calculate if you can use a different cycle during innervate in order to spam more regrowth (since your mana would fill up to 100% anyway)
-                calculatedStats.AddMp5Points(manaGain / (calcOpts.InnervateDelay * 12), "Innervate");
+                calculatedStats.HpSPoints = calculatedStats.BestSpellRotation.healPerCycle / calculatedStats.BestSpellRotation.bestCycleDuration * calculatedStats.FightFraction;
+                if (calcOpts.InnervateSelf)
+                {
+                    float manaGain = calculatedStats.OS5SRRegen * 5 * 20 - calculatedStats.IS5SRRegen * 20;
+                    float manaUsed = calculatedStats.BestSpellRotation.manaPerCycle / calculatedStats.BestSpellRotation.bestCycleDuration * 20;
+                    if (manaGain > calculatedStats.BasicStats.Mana + manaUsed)
+                        manaGain = calculatedStats.BasicStats.Mana + manaUsed;
+                    // The model does not try to calculate if you can use a different cycle during innervate in order to spam more regrowth (since your mana would fill up to 100% anyway)
+                    calculatedStats.AddMp5Points(manaGain / (calcOpts.InnervateDelay * 12), "Innervate");
+                }
+                calculatedStats.AddMp5Points(5 * calculatedStats.BestSpellRotation.numberOfSpells * calculatedStats.BasicStats.ManaRestorePerCast_5_15 * 0.05f / calculatedStats.BestSpellRotation.currentCycleDuration, "Mana per Cast (5%)");
+                calculatedStats.AddMp5Points(5 * calculatedStats.BasicStats.MementoProc * 3 / (45 + calculatedStats.BestSpellRotation.currentCycleDuration / calculatedStats.BestSpellRotation.numberOfSpells * 5), "Memento of Tyrande");
             }
-
-            calculatedStats.BestSpellRotation = getBestSpellRotation(calcOpts, calculatedStats);
-            calculatedStats.FightFraction = rotationMultiplier(calculatedStats.BestSpellRotation, calcOpts, calculatedStats);
-
-            calculatedStats.HpSPoints = calculatedStats.BestSpellRotation.healPerCycle / calculatedStats.BestSpellRotation.bestCycleDuration * calculatedStats.FightFraction;
-
-            calculatedStats.AddMp5Points(5*calculatedStats.BestSpellRotation.numberOfSpells * calculatedStats.BasicStats.ManaRestorePerCast_5_15 * 0.05f / calculatedStats.BestSpellRotation.currentCycleDuration, "Mana per Cast (5%)");
-            calculatedStats.AddMp5Points(5*calculatedStats.BasicStats.MementoProc * 3 / (45 + calculatedStats.BestSpellRotation.currentCycleDuration / calculatedStats.BestSpellRotation.numberOfSpells * 5), "Memento of Tyrande");
+            else
+            {
+                calculatedStats.HpSPoints = 0;
+            }
 
             calculatedStats.SurvivalPoints = healthBelow / calcOpts.SurvScalingBelow + healthAbove / calcOpts.SurvScalingAbove;
             calculatedStats.ToLPoints = calculatedStats.BasicStats.TreeOfLifeAura;
@@ -195,7 +199,22 @@ namespace Rawr.Tree
             return calculatedStats;
         }
 
-        private List<List<Spell>> allCombinations(Spell[][] spellList)
+        /*
+        // rotationIndex is a number 0 <= rotationIndex <= spellCycles^numCyclesPerRotation
+        private SpellRotation GetRotationNumber(List<SpellRotation> spellCycles, long rotationIndex, int numCyclesPerRotation, float maxCycleDuration)
+        {
+            List<SpellRotation> cyclesInRotation = new List<SpellRotation>();
+
+            for (int i = 0; i < numCyclesPerRotation; i++)
+            {
+                cyclesInRotation.Add(spellCycles[(int)(rotationIndex % spellCycles.Count)]);
+                rotationIndex /= spellCycles.Count;
+            }
+
+            return new SpellRotation(cyclesInRotation, numCyclesPerRotation * maxCycleDuration, numCyclesPerRotation);
+        }*/
+
+        private List<List<Spell>> allCombinations(Spell[][] spellList, float maxCycleDuration)
         {
             List<List<Spell>> cur = new List<List<Spell>>();
 
@@ -214,9 +233,9 @@ namespace Rawr.Tree
                 {
                     foreach (List<Spell> l in cur)
                     {
-                        List<Spell> nl = new List<Spell>(l);
-                        nl.Add(spellList[i][j]);
-                        newList.Add(nl);
+                       List<Spell> nl = new List<Spell>(l);
+                       nl.Add(spellList[i][j]);
+                       newList.Add(nl);
                     }
                 }
                 cur = newList;
@@ -229,11 +248,23 @@ namespace Rawr.Tree
         {
             if (rot == null)
                 return 0;
+
+            float innervateMana = 0f;
+            if (calcOpts.InnervateSelf)
+            {
+                float manaGain = calculatedStats.OS5SRRegen * 5 * 20 - calculatedStats.IS5SRRegen * 20;
+                float manaUsed = rot.manaPerCycle / rot.currentCycleDuration * 20;
+                if (manaGain > calculatedStats.BasicStats.Mana + manaUsed)
+                    manaGain = calculatedStats.BasicStats.Mana + manaUsed;
+                innervateMana = manaGain / (calcOpts.InnervateDelay * 60) * rot.currentCycleDuration;
+            }
+
             float manaCostPerCycle = rot.manaPerCycle -
                        (calculatedStats.Mp5Points * rot.currentCycleDuration / 5 +
+                       innervateMana +
                        rot.numberOfSpells * calculatedStats.BasicStats.ManaRestorePerCast_5_15 * 0.05f +
                        rot.currentCycleDuration * calculatedStats.BasicStats.MementoProc * 3 / (45 + rot.currentCycleDuration / rot.numberOfSpells * 5));
-            
+
             float HPSMultiplier = 1.0f;
 
             if (manaCostPerCycle > 0)
@@ -246,11 +277,52 @@ namespace Rawr.Tree
             return HPSMultiplier;
         }
 
-        private SpellRotation getBestSpellRotation(CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats)
+        public static long LongPower(long a, long b)
+        {
+            long f = 1;
+            for (int i = 1; i <= b; i++)
+                f *= a;
+            return f;
+        }
+
+
+        private List<SpellRotation> filterSpellRotations(List<SpellRotation> spellRotations, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats)
+        {
+            spellRotations.RemoveAll(delegate(SpellRotation sr)
+            {
+                sr.currentCycleDuration = sr.maxCycleDuration;
+                return rotationMultiplier(sr, calcOpts, calculatedStats) < 0.6f;
+            });
+
+            spellRotations.RemoveAll(delegate(SpellRotation sr2)
+            {
+                return spellRotations.Exists(delegate(SpellRotation sr)
+                {
+                    return sr2.manaPerCycle > sr.manaPerCycle && sr.healPerCycle > sr2.healPerCycle;
+                });
+            });
+
+            List<SpellRotation> res = new List<SpellRotation>();
+
+            foreach (SpellRotation cycle in spellRotations)
+            {
+                if (!res.Exists(delegate(SpellRotation sr)
+                {
+                    return cycle.manaPerCycle == sr.manaPerCycle && cycle.healPerCycle == sr.healPerCycle;
+                }))
+                {
+                    res.Add(cycle);
+                }
+            }
+
+            return res;
+        }
+
+        private void getBestSpellRotation(CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats)
         {
             Spell[][] spellList = new Spell[calcOpts.availableSpells.GetLength(0)][];
 
-            for (int i=0; i<calcOpts.availableSpells.GetLength(0); i++)
+            for (int i = 0; i < calcOpts.availableSpells.GetLength(0); i++)
             {
                 spellList[i] = new Spell[calcOpts.availableSpells[i].GetLength(0)];
                 for (int j = 0; j < calcOpts.availableSpells[i].GetLength(0); j++)
@@ -262,19 +334,81 @@ namespace Rawr.Tree
             float bestScore = 0f;
             SpellRotation bestRotation = null;
 
-            foreach (List<Spell> spells in allCombinations(spellList))
+            List<SpellRotation> spellCyclesBeforeFilter = new List<SpellRotation>();
+
+            foreach (List<Spell> spells in allCombinations(spellList, calcOpts.MaxCycleDuration))
             {
+                spellCyclesBeforeFilter.Add(new SpellRotation(spells, calcOpts.MaxCycleDuration));
+            }
+
+            calculatedStats.NumCycles = spellCyclesBeforeFilter.Count;
+
+            List<SpellRotation> spellCycles = filterSpellRotations(spellCyclesBeforeFilter, calcOpts, calculatedStats);
+
+            calculatedStats.NumCyclesAfterFilter = spellCycles.Count;
+            calculatedStats.DebugText = "";
+
+            if (calculatedStats.NumCyclesAfterFilter == 0)
+            {
+                calculatedStats.BestSpellRotation = null;
+                calculatedStats.FightFraction = 0f;
+                calculatedStats.NumCyclesPerRotation = 0;
+                calculatedStats.NumRotations = 0;
+                return;
+            }
+
+            foreach (SpellRotation cycle in spellCycles)
+            {
+                calculatedStats.DebugText += cycle.HPM + "," + cycle.healPerCycle / cycle.tightCycleDuration + "\n";
+            }
+
+            List<SpellRotation> possibleRotations = new List<SpellRotation>();
+            possibleRotations.Add(new SpellRotation(new List<Spell>(), 0f));
+
+            calculatedStats.DebugText += "Filtering brought down the combinations to: ";
+            for (int i = 0; i < calcOpts.NumCyclesPerRotation; i++)
+            {
+                List<SpellRotation> tmpPossibleRotations = new List<SpellRotation>();
+                foreach (SpellRotation sr in possibleRotations)
+                {
+                    foreach (SpellRotation cycle in spellCycles)
+                    {
+                        List<SpellRotation> tmpList = new List<SpellRotation>();
+                        tmpList.Add(sr);
+                        tmpList.Add(cycle);
+                        tmpPossibleRotations.Add(new SpellRotation(tmpList, calcOpts.MaxCycleDuration*(i+1), i+1));
+                    }
+                }
+
+                possibleRotations = filterSpellRotations(tmpPossibleRotations, calcOpts, calculatedStats);
+                calculatedStats.DebugText += possibleRotations.Count + (i == calcOpts.NumCyclesPerRotation - 1 ? "..." : "=");
+            }
+            
+            calculatedStats.DebugText += possibleRotations.Count;
+
+            /*
+            long numberOfRotations = LongPower(spellCycles.Count, calcOpts.NumCyclesPerRotation);
+
+            for (long i = 0; i < numberOfRotations; i++)*/
+            foreach (SpellRotation rot in possibleRotations)
+            {
+                float maxLength = calcOpts.MaxCycleDuration * calcOpts.NumCyclesPerRotation;
                 float bestLocalScore = 0f;
-
-                float maxLength = calcOpts.MaxCycleDuration;
                 float granularity = 0.1f;
-                SpellRotation rot = new SpellRotation(spells, maxLength);
 
-                rot.currentCycleDuration = ((float) Math.Ceiling(rot.tightCycleDuration*10)) / 10f;
+                // SpellRotation rot = GetRotationNumber(spellCycles, i, calcOpts.NumCyclesPerRotation, calcOpts.MaxCycleDuration);
 
+                rot.currentCycleDuration = ((float)Math.Ceiling(rot.tightCycleDuration * 10)) / 10f;
+
+                // No use trying all combinations if we already have a better score
+                if (bestLocalScore > rot.healPerCycle / rot.tightCycleDuration)
+                    continue;
+
+                float multiplier;
                 do
                 {
-                    float score = rot.healPerCycle / rot.currentCycleDuration * rotationMultiplier(rot, calcOpts, calculatedStats);
+                    multiplier = rotationMultiplier(rot, calcOpts, calculatedStats);
+                    float score = rot.healPerCycle / rot.currentCycleDuration * multiplier;
 
                     if (score > bestLocalScore)
                     {
@@ -283,7 +417,7 @@ namespace Rawr.Tree
                     }
 
                     rot.currentCycleDuration += granularity;
-                } while (rot.currentCycleDuration < maxLength);
+                } while (rot.currentCycleDuration < maxLength && multiplier < 1f);
 
                 if (bestLocalScore > bestScore)
                 {
@@ -292,7 +426,11 @@ namespace Rawr.Tree
                 }
             }
             bestRotation.currentCycleDuration = bestRotation.bestCycleDuration;
-            return bestRotation;
+
+            calculatedStats.BestSpellRotation = bestRotation;
+            calculatedStats.FightFraction = rotationMultiplier(calculatedStats.BestSpellRotation, calcOpts, calculatedStats);
+            calculatedStats.NumCyclesPerRotation = calcOpts.NumCyclesPerRotation;
+            calculatedStats.NumRotations = LongPower(spellCycles.Count, calcOpts.NumCyclesPerRotation);
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
