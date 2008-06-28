@@ -175,109 +175,24 @@ namespace Rawr.Retribution
             CharacterCalculationsRetribution calcs = new CharacterCalculationsRetribution();
             calcs.BasicStats = stats;
 
-            float consDPS = 0.0f, exoDPS = 0.0f, wfDPS = 0.0f, jobDPS = 0.0f, socDPS = 0.0f, jocDPS = 0.0f;
-            float baseSpeed = 1.0f, hastedSpeed = 1.0f, baseDamage = 10.0f, mitigation = 1.0f;
-            float avgBaseWeaponHit = 0.0f, physicalCritModifier = 0.0f, chanceToBeDodged = 6.5f, chanceToMiss = 9.0f;
+            float dpsWhite = 0f, dpsCrusader = 0f, dpsConsecration = 0f, dpsExorcism = 0f, dpsJudge = 0f, wfDPS = 0.0f, dpsSeal = 0.0f;
+            float baseSpeed = 1f, hastedSpeed = 1f, baseDamage = 0f, mitigation = 1f;
+            float whiteHit = 0f, physHitsCrits = 1f, totalMiss = 0f;
             float chanceToGlance = 0.25f, glancingAmount = 0.35f;
 
-            if (character.MainHand != null)
-            {
-                baseSpeed = character.MainHand.Speed;
-                baseDamage = (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2 + stats.WeaponDamage;
-            }
-
-
-            #region Attack Speed
-            {
-                hastedSpeed = baseSpeed / (1 + (stats.HasteRating / 1576f));
-
-                // Mongoose Enchat grants 2% haste
-                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
-                    hastedSpeed /= 1 + 0.02f * 0.4f;  // ASSUMPTION: Mongoose has a 40% uptime
-                if (stats.Bloodlust > 0)
-                {
-                    //Bloodlust -- Calculating uptime
-                    //div = Math.DivRem(Convert.ToInt32(fightDuration), 600, out remainder);
-                    //if (remainder == 0)
-                    //    noOfFullBL = div;
-                    //else
-                    //    noOfFullBL = Convert.ToInt32(Math.Ceiling(Convert.ToDouble((fightDuration + 40) / 600)));
-
-                    hastedSpeed /= (1 + 0.003f * calcOpts.BloodlustUptime);
-                }
-            }
-            #endregion
-
-
-            #region Mitigation
-            {
-                float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
-
-                // Effective armor after ArP
-                targetArmor -= totalArP;
-                if (targetArmor < 0.0f) targetArmor = 0.0f;
-
-                // Convert armor to mitigation
-                mitigation = 1.0f - (targetArmor / (targetArmor + 10557.5f));
-
-                // Executioner enchant.  ASSUMPTION: Executioner has a 40% uptime.
-                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
-                {
-                    float exeArmor = targetArmor, exeMitigation = 1.0f, exeUptime = 0.4f, exeArmorPen = 840f;
-
-                    // Find mitigation while Executioner is up
-                    exeArmor = targetArmor - exeArmorPen;
-                    if (exeArmor < 0.0f) exeArmor = 0.0f;
-                    exeMitigation = 1.0f - (exeArmor / (exeArmor + 10557.5f));
-
-                    // Weighted average of mitigation with and without Executioner, based on Executioner uptime
-                    mitigation = (exeMitigation * exeUptime) + (mitigation * (1 - exeUptime));
-                }
-            }
-            #endregion
-
-
-            string shattrathFaction = calcOpts.ShattrathFaction;
-            if (stats.ShatteredSunMightProc > 0)
-            {
-                switch (shattrathFaction)
-                {
-                    case "Aldor":
-                        stats.AttackPower += 39.13f;
-                        break;
-                }
-            }
-
-
-            #region White Damage and Multipliers
-            //2 Handed Spec
-            float twoHandedSpec = 1.0f + (0.02f * (float)calcOpts.TwoHandedSpec);
-
-            avgBaseWeaponHit = twoHandedSpec * baseDamage;
-
-            //Add Attack Power Bonus
-            avgBaseWeaponHit += twoHandedSpec * (stats.AttackPower / 14.0f) * baseSpeed;
-
-
-            //Take Non-Stat Buffs into account
-
-            physicalCritModifier = 1.0f + ((stats.CritRating / 22.08f) / 100.0f) * (1f + stats.BonusCritMultiplier * 2f);
-
-            chanceToBeDodged -= stats.ExpertiseRating / 15.76f;
-            if (chanceToBeDodged < 0.0f) chanceToBeDodged = 0.0f;
-
-            chanceToMiss -= stats.HitRating / 15.76f;
-            if (chanceToMiss < 0.0f) chanceToMiss = 0.0f;
-
-            float avgBaseWeaponHitPost = (avgBaseWeaponHit * physicalCritModifier - avgBaseWeaponHit * (chanceToMiss + chanceToBeDodged) / 100.0f
-                - avgBaseWeaponHit * chanceToGlance * glancingAmount);
-            //Fight duration
-            float fightDuration = calcOpts.FightLength * 60;
-            //Improved Sanctity Aura
+            // Damage Multipliers
+            float twoHandedSpec = 1f + (0.02f * (float)calcOpts.TwoHandedSpec);
             float impSancAura = 1f + 0.01f * (float)calcOpts.ImprovedSanctityAura;
-            //Crusade
             float crusade = 1f + 0.01f * (float)calcOpts.Crusade;
-            //Avenging Wrath -- Calculating uptime
+            float vengeance = 1f + 0.03f * (float)calcOpts.Vengeance;
+            float sancAura = 1f + 0.1f * (float)calcOpts.SanctityAura;
+            float misery = 1f + stats.BonusSpellPowerMultiplier;
+            float bloodFrenzy = 1f + stats.BonusPhysicalDamageMultiplier;
+            float partialResist = 0.953f; // Average of 4.7% damage lost to partial resists on spells
+            float jotc = 219f;
+
+            // Avenging Wrath -- Calculating uptime
+            float fightDuration = calcOpts.FightLength * 60;
             int remainder = 0, noOfFullAW = 0;
             int div = Math.DivRem(Convert.ToInt32(fightDuration), 180, out remainder);
             if (remainder == 0)
@@ -289,42 +204,127 @@ namespace Rawr.Retribution
             float totalUptime = partialUptime + noOfFullAW * 20f;
             float avWrath = 1f + 0.30f * totalUptime / fightDuration;
 
-            //Vengeance
-            float vengeance = 1f + 0.03f * (float)calcOpts.Vengeance;
-            //Sanctity Aura
-            float sancAura = 1f + 0.1f * (float)calcOpts.SanctityAura;
-            //Misery 
-            float misery = 1f + stats.BonusSpellPowerMultiplier;
-            //SpellCrit Mod
-            float judgementCrit = 1.0f + (0.03f * (float)calcOpts.Fanaticism)
-                + (stats.CritRating / 22.08f) / 100f;
-            //Blood Frenzy : TODO Take from Debuff List
-            float bloodFrenzy = 1.0f + stats.BonusPhysicalDamageMultiplier;
-            float ssoNeckProcDPS = 0f;
+            // Combined damage multipliers
+            float allDamMult = avWrath * crusade * impSancAura;
+            float holyDamMult = allDamMult * misery * sancAura * vengeance;
+            float physDamMult = allDamMult * bloodFrenzy * twoHandedSpec * vengeance;
 
 
-            //TODO: Add Mitigation
-            avgBaseWeaponHitPost *= impSancAura * crusade * avWrath * vengeance * bloodFrenzy * mitigation;
-            float dpsWhite = avgBaseWeaponHitPost / hastedSpeed;
-            calcs.WhiteDPSPoints = dpsWhite;
-            #endregion
-
-            if (stats.ShatteredSunMightProc > 0)
+            if (character.MainHand != null)
             {
-                switch (shattrathFaction)
+                baseSpeed = character.MainHand.Speed;
+                baseDamage = (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f + stats.WeaponDamage;
+            }
+
+
+            #region Attack Speed
+            {
+                hastedSpeed = baseSpeed / (1f + (stats.HasteRating / 1576f));
+
+                // Mongoose Enchat grants 2% haste
+                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
+                    hastedSpeed /= 1f + 0.02f * 0.4f;  // ASSUMPTION: Mongoose has a 40% uptime
+                if (stats.Bloodlust > 0)
                 {
-                    case "Scryer":
-                        ssoNeckProcDPS = 350f * avWrath * misery * impSancAura * physicalCritModifier / 50f;
-                        break;
+                    //Bloodlust -- Calculating uptime
+                    //div = Math.DivRem(Convert.ToInt32(fightDuration), 600, out remainder);
+                    //if (remainder == 0)
+                    //    noOfFullBL = div;
+                    //else
+                    //    noOfFullBL = Convert.ToInt32(Math.Ceiling(Convert.ToDouble((fightDuration + 40) / 600)));
+
+                    hastedSpeed /= (1f + 0.003f * calcOpts.BloodlustUptime);
                 }
             }
+            #endregion
+
+
+            #region Mitigation
+            {
+                float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
+
+                // Effective armor after ArP
+                targetArmor -= totalArP;
+                if (targetArmor < 0) targetArmor = 0f;
+
+                // Convert armor to mitigation
+                mitigation = 1.0f - (targetArmor / (targetArmor + 10557.5f));
+
+                // Executioner enchant.  ASSUMPTION: Executioner has a 40% uptime.
+                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
+                {
+                    float exeArmor = targetArmor, exeMitigation = 1.0f, exeUptime = 0.4f, exeArmorPen = 840f;
+
+                    // Find mitigation while Executioner is up
+                    exeArmor = targetArmor - exeArmorPen;
+                    if (exeArmor < 0) exeArmor = 0f;
+                    exeMitigation = 1.0f - (exeArmor / (exeArmor + 10557.5f));
+
+                    // Weighted average of mitigation with and without Executioner, based on Executioner uptime
+                    mitigation = (exeMitigation * exeUptime) + (mitigation * (1 - exeUptime));
+                }
+            }
+            #endregion
+
+
+            #region Crits and Misses
+            {
+                float chanceDodged = 6.5f, chanceMiss = 9.0f;
+
+                // Crit, dodge, and miss rates.  Crit includes hits, before dodge/miss are subtracted out.
+                physHitsCrits = 1f + ((stats.CritRating / 22.08f) / 100.0f) * (1f + stats.BonusCritMultiplier * 2f);
+                chanceDodged -= stats.ExpertiseRating / 15.76f;
+                chanceMiss -= stats.HitRating / 15.76f;
+
+                if (chanceDodged < 0f) chanceDodged = 0f;
+                if (chanceMiss < 0f) chanceMiss = 0f;
+                totalMiss = (chanceDodged + chanceMiss) / 100f;
+            }
+            #endregion
+
+
+            #region White Damage
+            {
+                float whiteAvgDam = 0f, dpsSSO = 0.0f;
+
+                #region SSO Neck Procs
+                if (stats.ShatteredSunMightProc > 0)
+                {
+                    string shattrathFaction = calcOpts.ShattrathFaction;
+                    switch (shattrathFaction)
+                    {
+                        case "Aldor":
+                            stats.AttackPower += 39.13f;
+                            break;
+                        case "Scryer":
+                            dpsSSO = 350f * allDamMult * misery;
+                            dpsSSO *= (physHitsCrits - totalMiss);
+                            dpsSSO /= 50;  // 50 seconds between procs
+                            break;
+                    }
+                }
+                #endregion
+
+                // White damage per hit.  Basic white hits are use elsewhere.
+                whiteHit = baseDamage + (stats.AttackPower / 14.0f) * baseSpeed;
+                whiteAvgDam = whiteHit * physDamMult;
+
+                // Average white damage per swing
+                whiteAvgDam *= (physHitsCrits - totalMiss - chanceToGlance * glancingAmount) * mitigation;
+
+                // Total white DPS.  Scryer SSO neck added as "white"
+                dpsWhite = whiteAvgDam / hastedSpeed;
+                dpsWhite += dpsSSO;
+            }
+            #endregion
+
 
             #region Seal of Blood
             if (calcOpts.Seal == 1)
             {
-                float ppmSoB = (60f / hastedSpeed * (1 - (chanceToBeDodged + chanceToMiss) / 100.0f)) * (1 + 0.2f * (1 - (chanceToMiss + chanceToBeDodged) / 100.0f));
-                float avgSoBHitPre = 0.35f * avgBaseWeaponHit;
-                float avgSoBHitPost = avgSoBHitPre * physicalCritModifier - avgSoBHitPre * (chanceToBeDodged + chanceToMiss) / 100.0f;
+                float ppmSoB = (60f / hastedSpeed * (1 - totalMiss)) * (1 + 0.2f * (1 - totalMiss));
+                float avgSoBHitPre = 0.35f * whiteHit;
+                float avgSoBHitPost = avgSoBHitPre * physHitsCrits - avgSoBHitPre * totalMiss;
 
                 //TODO: Add Partial Resists
                 avgSoBHitPost *= impSancAura * crusade * avWrath * vengeance * sancAura * misery * 0.96f;
@@ -333,12 +333,12 @@ namespace Rawr.Retribution
             }
             #endregion
 
+
             #region Windfury
-            float avgTimeBetnWF = (hastedSpeed / (1.0f - (chanceToBeDodged + chanceToMiss) / 100f)) * 5.0f;
+            float avgTimeBetnWF = (hastedSpeed / (1.0f - totalMiss)) * 5.0f;
             float wfAPIncrease = stats.WindfuryAPBonus;
-            float wfHitPre = avgBaseWeaponHit + (wfAPIncrease / 14f) * baseSpeed;
-            float wfHitPost = (wfHitPre * physicalCritModifier) - (wfHitPre * (chanceToMiss + chanceToBeDodged) / 100f) -
-                (wfHitPre * glancingAmount * chanceToGlance);
+            float wfHitPre = whiteHit + (wfAPIncrease / 14f) * baseSpeed;
+            float wfHitPost = (wfHitPre * physHitsCrits) - (wfHitPre * totalMiss) - (wfHitPre * glancingAmount * chanceToGlance);
             if (wfAPIncrease > 0)
             {
                 wfHitPost *= impSancAura * crusade * vengeance * bloodFrenzy * avWrath * mitigation;
@@ -351,20 +351,21 @@ namespace Rawr.Retribution
             calcs.WFDPSPoints = wfDPS;
             #endregion
 
+
             #region Seal of Command
             if (calcOpts.Seal == 0)
             {
                 float socProcChance = 7.0f / (60f / hastedSpeed);
-                float whiteHits = (60f / hastedSpeed) * (1f - (chanceToBeDodged + chanceToMiss) / 100f);
+                float whiteHits = (60f / hastedSpeed) * (1f - totalMiss);
                 float socHitsOffWhite = whiteHits * socProcChance;
-                float wfHits = whiteHits * 0.2f * (1f - (chanceToBeDodged + chanceToMiss) / 100f);
+                float wfHits = whiteHits * 0.2f * (1f - totalMiss);
                 float socHitsOffWF = wfHits * (1f - socProcChance) * socProcChance;
                 float socTotal = socHitsOffWhite + socHitsOffWF;
-                float avgSoCPre = (0.7f * avgBaseWeaponHit + 0.2f * stats.SpellDamageRating + 0.29f * 219f);
-                float avgSoCPost = (avgSoCPre * physicalCritModifier - avgSoCPre * (chanceToBeDodged + chanceToMiss) / 100f);
+                float avgSoCPre = (0.7f * whiteHit + 0.2f * stats.SpellDamageRating + 0.29f * 219f);
+                float avgSoCPost = (avgSoCPre * physHitsCrits - avgSoCPre * totalMiss);
                 avgSoCPost *= impSancAura * vengeance * crusade * avWrath * sancAura * misery * 0.96f;
-                socDPS = avgSoCPost * socTotal / 60f;
-                calcs.SealDPSPoints = socDPS;
+                dpsSeal = avgSoCPost * socTotal / 60f;
+                calcs.SealDPSPoints = dpsSeal;
 
                 if (wfDPS > 0)
                 {
@@ -374,83 +375,98 @@ namespace Rawr.Retribution
             }
             #endregion
 
-            #region Crusader Strike
-            float csCooldown = 6.0f;
-            float avgCSHitPre = twoHandedSpec * baseDamage + 3.30f * (stats.AttackPower / 14f) * 1.10f;
-            float avgCSHitPost = avgCSHitPre * physicalCritModifier - avgCSHitPre * (chanceToBeDodged + chanceToMiss) / 100f;
 
-            //TODO: Add Mitigation
-            avgCSHitPost *= impSancAura * crusade * avWrath * vengeance * mitigation * (1f + stats.BonusCrusaderStrikeDamageMultiplier) * bloodFrenzy;
-            float dpsCS = avgCSHitPost / csCooldown;
-            calcs.CSDPSPoints = dpsCS;
+            #region Crusader Strike
+            {
+                float crusCD = 6f, crusCoeff = 1.1f, crusAvgDam = 0f;
+
+                // Crusader Strike damage per hit
+                crusAvgDam = baseDamage + 3.3f * (stats.AttackPower / 14f);
+                crusAvgDam *= crusCoeff * physDamMult * (1f + stats.BonusCrusaderStrikeDamageMultiplier);
+
+                // Crusader Strike average damage per swing
+                crusAvgDam *= (physHitsCrits - totalMiss) * mitigation;
+
+                // Total Crusader Strike DPS
+                dpsCrusader = crusAvgDam / crusCD;
+            }
             #endregion
+
 
             #region Consecration
             if (calcOpts.ConsecRank != 0)
             {
-                //Rank 1
-                float cooldownCons = 8.0f, avgConsPre = 0.0f;
+                float consCD = 9f, consCoeff = 0.952f, consAvgDam = 0f;
                 int consRank = calcOpts.ConsecRank;
-                if (consRank == 1)
+
+                // Consecration damage pre-resists
+                switch (consRank) // Rank damage + coeff * level reduction * spelldamage
                 {
-                    avgConsPre = 64f + 0.46f * stats.SpellDamageRating + 0.97f * 219f;
+                    case 1: consAvgDam = 64f + consCoeff * (35f / 70f) * stats.SpellDamageRating; break;
+                    case 2: consAvgDam = 120f + consCoeff * (45f / 70f) * stats.SpellDamageRating; break;
+                    case 3: consAvgDam = 184f + consCoeff * (55f / 70f) * stats.SpellDamageRating; break;
+                    case 4: consAvgDam = 280f + consCoeff * (65f / 70f) * stats.SpellDamageRating; break;
+                    case 5: consAvgDam = 384f + consCoeff * stats.SpellDamageRating; break;
+                    case 6: consAvgDam = 512f + consCoeff * stats.SpellDamageRating; break;
                 }
-                else if (consRank == 6)
-                {
-                    avgConsPre = 512f + 0.95f * stats.SpellDamageRating + 0.97f * 219f;
-                }
-                else if (consRank == 4)
-                {
-                    avgConsPre = 280 + 0.95f * stats.SpellDamageRating + 0.97f * 219f;
-                }
-                float avgConsPost = avgConsPre * (1.0f - 0.14f / 8.0f) * impSancAura * crusade * avWrath * vengeance * sancAura * misery * 0.96f;
-                consDPS = avgConsPost / cooldownCons;
-                calcs.ConsDPSPoints = consDPS;
+                consAvgDam = consAvgDam * holyDamMult + consCoeff * jotc;
+
+                // Consecration average damage post-resists.  Only first tick can be fully resisted.  **ADD spell hit rating
+                consAvgDam *= (1f - 0.13f / 8f) * partialResist;
+
+                // Total Consecration DPS
+                dpsConsecration = consAvgDam / consCD;
             }
 
             #endregion
+
 
             #region Exorcism
             if (calcOpts.Exorcism)
             {
-                float cooldownExo = 15.0f, avgExoPre = 0.0f;
+                float exorCD = 18f, exorCoeff = 0.429f, exorAvgDmg = 0f;
 
-                avgExoPre = 665f + 0.43f * (stats.SpellDamageRating + 219f);
+                // Exorcism damage per spell hit
+                exorAvgDmg = 665f + exorCoeff * stats.SpellDamageRating;
+                exorAvgDmg = exorAvgDmg * holyDamMult + exorCoeff * jotc;
 
-                float avgExoPost = avgExoPre * (1.0f - 0.14f) * impSancAura * crusade * avWrath * vengeance * sancAura * misery * 0.96f;
-                exoDPS = avgExoPost / cooldownExo;
-                calcs.ExoDPSPoints = exoDPS;
+                // Exorcism average damage per cast  **ADD spell crit, dynamic spell hit
+                exorAvgDmg *= (1f - 0.13f) * partialResist;
+
+                // Total Exorcism DPS
+                dpsExorcism = exorAvgDmg / exorCD;
             }
             #endregion
 
-            #region Judgement of Blood
-            if (calcOpts.Seal == 1)
+
+            #region Judgement
             {
-                float cooldownJoB = 9.0f;
-                float avgJoBPre = 310f + 0.43f * (stats.SpellDamageRating + 219f);
-                float avgJoBPost = (avgJoBPre * judgementCrit) - (avgJoBPre * 0.14f);
-                avgJoBPost *= impSancAura * vengeance * misery * avWrath * crusade * sancAura * 0.96f;
-                jobDPS = avgJoBPost / cooldownJoB;
-                calcs.JudgementDPSPoints = jobDPS;
+                float judgeCD = 9.0f, judgeCoeff = 0.429f, judgeAvgDam = 0.0f;
+                float judgeCrit = 1f + (0.03f * (float)calcOpts.Fanaticism) + (stats.CritRating / 22.08f) / 100f;
+
+                if (calcOpts.Seal == 0) judgeAvgDam = 240f;
+                else judgeAvgDam = 310f;
+                judgeAvgDam = (judgeAvgDam + judgeCoeff * stats.SpellDamageRating) * holyDamMult + judgeCoeff * jotc;
+
+                // Judgement average damage per cast  **ADD dynamic spell hit
+                judgeAvgDam *= (judgeCrit - 0.13f) * partialResist;
+
+                // Total Judgement DPS
+                dpsJudge = judgeAvgDam / judgeCD;
             }
             #endregion
 
-            #region Judgement of Command
-            if (calcOpts.Seal == 0)
-            {
-                float cooldownJoC = 9.0f;
-                float avgJoCPre = 240f + 0.43f * (stats.SpellDamageRating + 219f);
-                float avgJoCPost = (avgJoCPre * judgementCrit) - (avgJoCPre * 0.14f);
-                avgJoCPost *= impSancAura * vengeance * misery * avWrath * crusade * sancAura * 0.96f;
-                jocDPS = avgJoCPost / cooldownJoC;
-                calcs.JudgementDPSPoints = jocDPS;
-            }
-            #endregion
 
-            calcs.DPSPoints = dpsCS + dpsWhite + calcs.SealDPSPoints + consDPS + exoDPS + wfDPS + calcs.JudgementDPSPoints + ssoNeckProcDPS;
+            calcs.WhiteDPSPoints = dpsWhite;
+            calcs.CSDPSPoints = dpsCrusader;
+            calcs.ConsDPSPoints = dpsConsecration;
+            calcs.ExoDPSPoints = dpsExorcism;
+            calcs.JudgementDPSPoints = dpsJudge;
+
+            calcs.DPSPoints = dpsCrusader + dpsWhite + calcs.SealDPSPoints + dpsConsecration + dpsExorcism + wfDPS + calcs.JudgementDPSPoints;
             calcs.SubPoints = new float[] { calcs.DPSPoints };
             calcs.OverallPoints = calcs.DPSPoints;
-            calcs.BasicStats.WeaponDamage = avgBaseWeaponHit * impSancAura;
+            calcs.BasicStats.WeaponDamage = whiteHit * impSancAura * twoHandedSpec;
             return calcs;
         }
 

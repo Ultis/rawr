@@ -83,17 +83,17 @@
             // lblTargetLevel
             // 
             this.lblTargetLevel.AutoSize = true;
-            this.lblTargetLevel.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTargetLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTargetLevel.Location = new System.Drawing.Point(6, 16);
             this.lblTargetLevel.Name = "lblTargetLevel";
-            this.lblTargetLevel.Size = new System.Drawing.Size(74, 14);
+            this.lblTargetLevel.Size = new System.Drawing.Size(77, 15);
             this.lblTargetLevel.TabIndex = 0;
             this.lblTargetLevel.Text = "Target Level:";
             // 
             // comboBoxTargetLevel
             // 
             this.comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTargetLevel.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxTargetLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxTargetLevel.FormattingEnabled = true;
             this.comboBoxTargetLevel.Items.AddRange(new object[] {
             "70",
@@ -102,17 +102,17 @@
             "73"});
             this.comboBoxTargetLevel.Location = new System.Drawing.Point(87, 13);
             this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-            this.comboBoxTargetLevel.Size = new System.Drawing.Size(49, 22);
+            this.comboBoxTargetLevel.Size = new System.Drawing.Size(49, 23);
             this.comboBoxTargetLevel.TabIndex = 1;
             this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetLevel_SelectedIndexChanged);
             // 
             // rbSoC
             // 
             this.rbSoC.AutoSize = true;
-            this.rbSoC.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbSoC.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbSoC.Location = new System.Drawing.Point(7, 19);
             this.rbSoC.Name = "rbSoC";
-            this.rbSoC.Size = new System.Drawing.Size(120, 18);
+            this.rbSoC.Size = new System.Drawing.Size(124, 19);
             this.rbSoC.TabIndex = 2;
             this.rbSoC.TabStop = true;
             this.rbSoC.Text = "Seal of Command";
@@ -122,10 +122,10 @@
             // rbSoB
             // 
             this.rbSoB.AutoSize = true;
-            this.rbSoB.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbSoB.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbSoB.Location = new System.Drawing.Point(7, 47);
             this.rbSoB.Name = "rbSoB";
-            this.rbSoB.Size = new System.Drawing.Size(98, 18);
+            this.rbSoB.Size = new System.Drawing.Size(98, 19);
             this.rbSoB.TabIndex = 2;
             this.rbSoB.TabStop = true;
             this.rbSoB.Text = "Seal of Blood";
@@ -136,7 +136,7 @@
             // 
             this.groupBoxSealChoice.Controls.Add(this.rbSoC);
             this.groupBoxSealChoice.Controls.Add(this.rbSoB);
-            this.groupBoxSealChoice.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBoxSealChoice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBoxSealChoice.Location = new System.Drawing.Point(8, 15);
             this.groupBoxSealChoice.Name = "groupBoxSealChoice";
             this.groupBoxSealChoice.Size = new System.Drawing.Size(185, 73);
@@ -149,7 +149,7 @@
             this.groupBoxSkillUsage.Controls.Add(this.checkBoxExorcism);
             this.groupBoxSkillUsage.Controls.Add(this.checkBoxConsecration);
             this.groupBoxSkillUsage.Controls.Add(this.comboBoxConsRank);
-            this.groupBoxSkillUsage.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBoxSkillUsage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBoxSkillUsage.Location = new System.Drawing.Point(8, 103);
             this.groupBoxSkillUsage.Name = "groupBoxSkillUsage";
             this.groupBoxSkillUsage.Size = new System.Drawing.Size(185, 89);
@@ -162,7 +162,7 @@
             this.checkBoxExorcism.AutoSize = true;
             this.checkBoxExorcism.Location = new System.Drawing.Point(7, 54);
             this.checkBoxExorcism.Name = "checkBoxExorcism";
-            this.checkBoxExorcism.Size = new System.Drawing.Size(73, 18);
+            this.checkBoxExorcism.Size = new System.Drawing.Size(77, 19);
             this.checkBoxExorcism.TabIndex = 0;
             this.checkBoxExorcism.Text = "Exorcism";
             this.checkBoxExorcism.UseVisualStyleBackColor = true;
@@ -173,7 +173,7 @@
             this.checkBoxConsecration.AutoSize = true;
             this.checkBoxConsecration.Location = new System.Drawing.Point(7, 30);
             this.checkBoxConsecration.Name = "checkBoxConsecration";
-            this.checkBoxConsecration.Size = new System.Drawing.Size(96, 18);
+            this.checkBoxConsecration.Size = new System.Drawing.Size(98, 19);
             this.checkBoxConsecration.TabIndex = 0;
             this.checkBoxConsecration.Text = "Consecration";
             this.checkBoxConsecration.UseVisualStyleBackColor = true;
@@ -182,15 +182,18 @@
             // comboBoxConsRank
             // 
             this.comboBoxConsRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxConsRank.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxConsRank.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxConsRank.FormattingEnabled = true;
             this.comboBoxConsRank.Items.AddRange(new object[] {
             "Rank 1",
+            "Rank 2",
+            "Rank 3",
             "Rank 4",
+            "Rank 5",
             "Rank 6"});
             this.comboBoxConsRank.Location = new System.Drawing.Point(110, 26);
             this.comboBoxConsRank.Name = "comboBoxConsRank";
-            this.comboBoxConsRank.Size = new System.Drawing.Size(66, 22);
+            this.comboBoxConsRank.Size = new System.Drawing.Size(66, 23);
             this.comboBoxConsRank.TabIndex = 1;
             this.comboBoxConsRank.SelectedIndexChanged += new System.EventHandler(this.comboBoxConsRank_SelectedIndexChanged);
             // 
@@ -203,7 +206,7 @@
             this.groupBox1.Controls.Add(this.lblFightLength);
             this.groupBox1.Controls.Add(this.lblTargetLevel);
             this.groupBox1.Controls.Add(this.comboBoxTargetLevel);
-            this.groupBox1.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(8, 211);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(185, 96);
@@ -216,7 +219,7 @@
             this.lblLength.AutoSize = true;
             this.lblLength.Location = new System.Drawing.Point(76, 48);
             this.lblLength.Name = "lblLength";
-            this.lblLength.Size = new System.Drawing.Size(19, 14);
+            this.lblLength.Size = new System.Drawing.Size(21, 15);
             this.lblLength.TabIndex = 2;
             this.lblLength.Text = "10";
             // 
@@ -226,7 +229,7 @@
             this.label3.BackColor = System.Drawing.SystemColors.Control;
             this.label3.Location = new System.Drawing.Point(154, 72);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(19, 14);
+            this.label3.Size = new System.Drawing.Size(21, 15);
             this.label3.TabIndex = 2;
             this.label3.Text = "10";
             // 
@@ -235,7 +238,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(94, 70);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(13, 14);
+            this.label1.Size = new System.Drawing.Size(14, 15);
             this.label1.TabIndex = 4;
             this.label1.Text = "0";
             // 
@@ -251,16 +254,16 @@
             // lblFightLength
             // 
             this.lblFightLength.AutoSize = true;
-            this.lblFightLength.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFightLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFightLength.Location = new System.Drawing.Point(5, 48);
             this.lblFightLength.Name = "lblFightLength";
-            this.lblFightLength.Size = new System.Drawing.Size(76, 14);
+            this.lblFightLength.Size = new System.Drawing.Size(78, 15);
             this.lblFightLength.TabIndex = 0;
             this.lblFightLength.Text = "Fight Length:";
             // 
             // btnTalents
             // 
-            this.btnTalents.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTalents.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnTalents.Location = new System.Drawing.Point(8, 434);
             this.btnTalents.Name = "btnTalents";
             this.btnTalents.Size = new System.Drawing.Size(75, 23);
@@ -271,7 +274,7 @@
             // 
             // btnGraph
             // 
-            this.btnGraph.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGraph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGraph.Location = new System.Drawing.Point(118, 434);
             this.btnGraph.Name = "btnGraph";
             this.btnGraph.Size = new System.Drawing.Size(75, 23);
@@ -283,10 +286,10 @@
             // checkBoxMeta
             // 
             this.checkBoxMeta.AutoSize = true;
-            this.checkBoxMeta.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxMeta.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxMeta.Location = new System.Drawing.Point(8, 390);
             this.checkBoxMeta.Name = "checkBoxMeta";
-            this.checkBoxMeta.Size = new System.Drawing.Size(177, 18);
+            this.checkBoxMeta.Size = new System.Drawing.Size(180, 19);
             this.checkBoxMeta.TabIndex = 6;
             this.checkBoxMeta.Text = "Enforce Meta Requirements";
             this.checkBoxMeta.UseVisualStyleBackColor = true;
@@ -295,10 +298,10 @@
             // radioButtonAldor
             // 
             this.radioButtonAldor.AutoSize = true;
-            this.radioButtonAldor.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButtonAldor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioButtonAldor.Location = new System.Drawing.Point(12, 19);
             this.radioButtonAldor.Name = "radioButtonAldor";
-            this.radioButtonAldor.Size = new System.Drawing.Size(54, 18);
+            this.radioButtonAldor.Size = new System.Drawing.Size(53, 19);
             this.radioButtonAldor.TabIndex = 7;
             this.radioButtonAldor.TabStop = true;
             this.radioButtonAldor.Text = "Aldor";
@@ -308,10 +311,10 @@
             // radioButtonScryer
             // 
             this.radioButtonScryer.AutoSize = true;
-            this.radioButtonScryer.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radioButtonScryer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioButtonScryer.Location = new System.Drawing.Point(88, 19);
             this.radioButtonScryer.Name = "radioButtonScryer";
-            this.radioButtonScryer.Size = new System.Drawing.Size(56, 18);
+            this.radioButtonScryer.Size = new System.Drawing.Size(59, 19);
             this.radioButtonScryer.TabIndex = 7;
             this.radioButtonScryer.TabStop = true;
             this.radioButtonScryer.Text = "Scryer";
@@ -322,7 +325,7 @@
             // 
             this.Faction.Controls.Add(this.radioButtonAldor);
             this.Faction.Controls.Add(this.radioButtonScryer);
-            this.Faction.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Faction.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Faction.Location = new System.Drawing.Point(8, 313);
             this.Faction.Name = "Faction";
             this.Faction.Size = new System.Drawing.Size(188, 52);
@@ -392,6 +395,7 @@
             this.trackBarNumberOfFerociousInspirations.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarNumberOfFerociousInspirations.Location = new System.Drawing.Point(62, 670);
             this.trackBarNumberOfFerociousInspirations.Maximum = 4;
+            this.trackBarNumberOfFerociousInspirations.Minimum = 1;
             this.trackBarNumberOfFerociousInspirations.Name = "trackBarNumberOfFerociousInspirations";
             this.trackBarNumberOfFerociousInspirations.Size = new System.Drawing.Size(152, 45);
             this.trackBarNumberOfFerociousInspirations.TabIndex = 21;
@@ -404,7 +408,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarDrumsOfWarUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarDrumsOfWarUptime.Location = new System.Drawing.Point(62, 619);
-            this.trackBarDrumsOfWarUptime.Maximum = 5;
+            this.trackBarDrumsOfWarUptime.Maximum = 4;
             this.trackBarDrumsOfWarUptime.Minimum = 1;
             this.trackBarDrumsOfWarUptime.Name = "trackBarDrumsOfWarUptime";
             this.trackBarDrumsOfWarUptime.Size = new System.Drawing.Size(152, 45);
@@ -418,7 +422,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarDrumsOfBattleUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarDrumsOfBattleUptime.Location = new System.Drawing.Point(62, 568);
-            this.trackBarDrumsOfBattleUptime.Maximum = 5;
+            this.trackBarDrumsOfBattleUptime.Maximum = 4;
             this.trackBarDrumsOfBattleUptime.Minimum = 1;
             this.trackBarDrumsOfBattleUptime.Name = "trackBarDrumsOfBattleUptime";
             this.trackBarDrumsOfBattleUptime.Size = new System.Drawing.Size(152, 45);
@@ -442,6 +446,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarBloodlustUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarBloodlustUptime.Location = new System.Drawing.Point(62, 517);
+            this.trackBarBloodlustUptime.Maximum = 8;
             this.trackBarBloodlustUptime.Minimum = 1;
             this.trackBarBloodlustUptime.Name = "trackBarBloodlustUptime";
             this.trackBarBloodlustUptime.Size = new System.Drawing.Size(152, 45);
@@ -466,13 +471,13 @@
             this.trackBarExposeWeakness.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarExposeWeakness.LargeChange = 50;
             this.trackBarExposeWeakness.Location = new System.Drawing.Point(62, 466);
-            this.trackBarExposeWeakness.Maximum = 500;
+            this.trackBarExposeWeakness.Maximum = 400;
             this.trackBarExposeWeakness.Minimum = 50;
             this.trackBarExposeWeakness.Name = "trackBarExposeWeakness";
             this.trackBarExposeWeakness.Size = new System.Drawing.Size(152, 45);
             this.trackBarExposeWeakness.SmallChange = 10;
             this.trackBarExposeWeakness.TabIndex = 20;
-            this.trackBarExposeWeakness.TickFrequency = 25;
+            this.trackBarExposeWeakness.TickFrequency = 50;
             this.trackBarExposeWeakness.Value = 200;
             this.trackBarExposeWeakness.ValueChanged += new System.EventHandler(this.trackBarExposeWeakness_ValueChanged);
             // 

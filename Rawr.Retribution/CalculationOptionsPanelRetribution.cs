@@ -340,7 +340,7 @@ namespace Rawr.Retribution
         private void trackBarBloodlustUptime_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.BloodlustUptime = trackBarBloodlustUptime.Value * (40f/60f) / calcOpts.FightLength * 100f;
+            calcOpts.BloodlustUptime = trackBarBloodlustUptime.Value * (40f / (60 * calcOpts.FightLength)) * 100f;
             labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString();
             Character.OnItemsChanged();
         }
