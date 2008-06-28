@@ -454,9 +454,9 @@ namespace Rawr.Mage.SequenceReconstruction
                             kk++;
                         }
                         // if k has negative mps, then just placing it at the end won't work
-                        // we're breaking max mana constraint, this means we're most likely oom
+                        // we're breaking max mana constraint, this means we're most likely (but not necessarily) oom
                         // placing -mps at the end won't help us get from negative
-                        // we have to place it before it gets to that point
+                        // we have to place it before it gets to that point (but don't go breaking maxtime constraints)
                         // when we're filling with extra mana this does not apply
                         List<SequenceItem> copy = sequence.GetRange(k, kk - k);
                         double totalmana = 0;
@@ -472,6 +472,8 @@ namespace Rawr.Mage.SequenceReconstruction
                             totalmana += sequence[jj].Mps * jT;
                             jj--;
                             jT = sequence[jj].Duration;
+                            tjj -= sequence[jj].Duration;
+                            maxPush = Math.Min(maxPush, sequence[jj].MaxTime - tjj);
                         }
                         if (jT >= sequence[jj].Duration)
                         {
@@ -1889,8 +1891,8 @@ namespace Rawr.Mage.SequenceReconstruction
                 double oomtime = targetTime;
             Retry:
                 SortByMps(true, minMps, maxMps, time, Math.Min(oomtime, targetTime), extraMana, mana);
-                Compact(false);
             VerifyOOM:
+                Compact(false);
                 // guard against oom
                 //double targetmana = Evaluate(null, EvaluationMode.ManaAtTime, targetTime);
                 double targetmana = mana;
@@ -1903,6 +1905,20 @@ namespace Rawr.Mage.SequenceReconstruction
                     if (d > 0 && t + d > targetTime)
                     {
                         targetmana -= sequence[i].Mps * (targetTime - t);
+                        // if we are not in super group and we run out of mana this means that Sort ran into boundaries
+                        // resort to swapping in this case
+                        // the other handler takes care only of trailing oom, we have to make sure here that we
+                        // get to the point where the pot/gem can be used (targetTime is always for next consumable or end of fight)
+                        if (targetmana < -0.000001 && !((nextPot <= time && potTime > 0) || (nextGem <= time && gemTime > 0) || (nextEvo <= time && evoTime > 0)))
+                        {
+                            // only split if it is splittable
+                            if (sequence[i].Group.Count == 0)
+                            {
+                                SplitAt(i, targetTime - t);
+                            }
+                            extraMana = -targetmana;
+                            goto SwapRecovery;
+                        }
                         break;
                     }
                     else if (d > 0 && t + d > time)
@@ -2045,7 +2061,20 @@ namespace Rawr.Mage.SequenceReconstruction
                             else
                             {
                                 double imana = Evaluate(null, EvaluationMode.ManaAtTime, t);
-                                if (BasicStats.Mana - imana < extraMana) goto Abort; // we cannot perform the swap
+                                if (BasicStats.Mana - imana < extraMana)
+                                {
+                                    // we cannot perform the swap, but let's at least do a partial swap if possible
+                                    // so that it is clear in the output that even starting from full mana our mana
+                                    // pool is too shallow to go through this sequence
+                                    if (BasicStats.Mana - imana > 0.000001)
+                                    {
+                                        extraMana = BasicStats.Mana - imana;
+                                    }
+                                    else
+                                    {
+                                        goto Abort;
+                                    }
+                                }
                                 if (i > 0)
                                 {
                                     double d = sequence[i - 1].Duration;

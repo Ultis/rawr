@@ -12,7 +12,6 @@ namespace Rawr.Mage
         private int baseRows;
         private int rows;
         internal int cols;
-        private bool disableRowAdded;
 
         private int[] _B;
         private int[] _V;
@@ -63,16 +62,6 @@ namespace Rawr.Mage
             clone._V = (int[])_V.Clone();
             if (numExtraConstraints > 0) clone.extraConstraints = (double[])extraConstraints.Clone();
             return clone;
-        }
-
-        public void DisableColumn(int col)
-        {
-            if (!disableRowAdded)
-            {
-                disableRowAdded = true;
-                AddConstraint();
-            }
-            extraConstraints[col] = 1;
         }
 
         public double this[int row, int col]
@@ -141,13 +130,8 @@ namespace Rawr.Mage
         }
 
         // should only add extra constraints that are tight when primal feasible
-        public void AddConstraint()
+        public int AddConstraint()
         {
-            if (!disableRowAdded)
-            {
-                disableRowAdded = true;
-                AddConstraint();
-            }
             numExtraConstraints++;
             rows++;
             double[] newArray = new double[(cols + rows + 1) * numExtraConstraints];
@@ -168,6 +152,7 @@ namespace Rawr.Mage
             _B[rows - 1] = _B[numExtraConstraints - 1];
             _B[numExtraConstraints - 1] = cols + rows - 1;
             lu = new LU2(_LU, rows);
+            return numExtraConstraints - 1;
         }
 
         private bool constructed;

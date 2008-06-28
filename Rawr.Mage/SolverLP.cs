@@ -142,47 +142,50 @@ namespace Rawr.Mage
             pCost[col] = value * pRowScale[cRows];
         }
 
+        private int rowDisableColumn = -1;
+        private int rowMaximizeSegment = -1;
+        private int rowColdsnap = -1;
+
         public void EraseColumn(int col)
         {
             if (col == -1) return;
-            lp.DisableColumn(col);
+            if (rowDisableColumn == -1) rowDisableColumn = lp.AddConstraint();
+            lp.SetConstraintElement(rowDisableColumn, col, 1.0);
             compactSolution = null;
             needsDual = true;
         }
 
         public void UpdateMaximizeSegmentColumn(int col)
         {
-            lp.EnsureExtraConstraints(2);
+            if (col == -1) return;
+            if (rowMaximizeSegment == -1) rowMaximizeSegment = lp.AddConstraint();
+            lp.SetConstraintElement(rowMaximizeSegment, col, lp.GetConstraintElement(rowMaximizeSegment, col) - 1.0);
             compactSolution = null;
             needsDual = true;
-            if (col == -1) return;
-            lp.SetConstraintElement(1, col, lp.GetConstraintElement(1, col) - 1.0);
         }
 
         public void UpdateMaximizeSegmentDuration(double value)
         {
-            lp.EnsureExtraConstraints(2);
+            if (rowMaximizeSegment == -1) rowMaximizeSegment = lp.AddConstraint();
+            lp.SetConstraintRHS(rowMaximizeSegment, lp.GetConstraintRHS(rowMaximizeSegment) - value);
             compactSolution = null;
             needsDual = true;
-            lp.SetConstraintRHS(1, lp.GetConstraintRHS(1) - value);
         }
-
-        private bool hasColdsnapConstraints = false;
 
         public bool HasColdsnapConstraints
         {
             get
             {
-                return hasColdsnapConstraints;
+                return rowColdsnap != -1;
             }
         }
 
         public void AddColdsnapConstraints(int segments)
         {
-            if (!hasColdsnapConstraints)
+            if (rowColdsnap == -1)
             {
-                lp.EnsureExtraConstraints(2 + segments);
-                hasColdsnapConstraints = true;
+                rowColdsnap = lp.AddConstraint();
+                for (int i = 1; i < segments; i++) lp.AddConstraint();
             }
         }
 
@@ -191,14 +194,14 @@ namespace Rawr.Mage
             compactSolution = null;
             needsDual = true;
             if (col == -1) return;
-            lp.SetConstraintElement(2 + index, col, 1);
+            lp.SetConstraintElement(rowColdsnap + index, col, 1.0);
         }
 
         public void UpdateColdsnapDuration(int index, double value)
         {
             compactSolution = null;
             needsDual = true;
-            lp.SetConstraintRHS(2 + index, value);
+            lp.SetConstraintRHS(rowColdsnap + index, value);
         }
 
         private void SolveInternal()

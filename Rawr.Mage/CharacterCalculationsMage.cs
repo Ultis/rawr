@@ -138,7 +138,7 @@ namespace Rawr.Mage
             // mana gem/pot/evo positioning
             sequence.RepositionManaConsumption();
 
-            sequence.RemoveIndex(7);
+            sequence.RemoveIndex(ColumnTimeExtension);
             sequence.Compact(true);
 
             // evaluate sequence
@@ -273,7 +273,7 @@ namespace Rawr.Mage
                         combinedSolution.TryGetValue(label, out value);
                         combinedSolution[label] = value + Solution[i];
                         combinedSolutionData[label] = i;
-                        //sb.AppendLine(String.Format("{2}{0}: {1:F} sec", label, Solution[i], (SolutionSegments == null) ? "" : (SolutionSegments[i].ToString() + " ")));                            
+                        //sb.AppendLine(String.Format("{2}{0}: {1:F} sec", label, Solution[i], SolutionVariable[i].Segment.ToString() + " "));                            
                     }
                 }
             }
