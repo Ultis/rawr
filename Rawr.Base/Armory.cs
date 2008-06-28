@@ -1223,7 +1223,7 @@ namespace Rawr
 				case "Bow":
 					return Item.ItemType.Bow;
 
-				case "Crowssbow":
+				case "Crossbow":
 					return Item.ItemType.Crossbow;
 
 				case "Gun":
