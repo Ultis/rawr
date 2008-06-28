@@ -167,25 +167,76 @@ namespace Rawr.Retribution
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
-			CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             int sealChoice = calcOpts.Seal;
             character = GetTalents(character);
-            Stats stats = GetCharacterStats( character, additionalItem );
-            
+            Stats stats = GetCharacterStats(character, additionalItem);
+
             CharacterCalculationsRetribution calcs = new CharacterCalculationsRetribution();
             calcs.BasicStats = stats;
 
-
-            float avgBaseWeaponHit = 0.0f, hasteBonus = 0.0f, hastedSpeed = 1.0f, physicalCritModifier = 0.0f, chanceToBeDodged = 6.5f, chanceToMiss = 9.0f; ;
+            float consDPS = 0.0f, exoDPS = 0.0f, wfDPS = 0.0f, jobDPS = 0.0f, socDPS = 0.0f, jocDPS = 0.0f;
+            float baseSpeed = 1.0f, hastedSpeed = 1.0f, baseDamage = 10.0f, mitigation = 1.0f;
+            float avgBaseWeaponHit = 0.0f, physicalCritModifier = 0.0f, chanceToBeDodged = 6.5f, chanceToMiss = 9.0f;
             float chanceToGlance = 0.25f, glancingAmount = 0.35f;
-            float consDPS = 0.0f, exoDPS=0.0f, wfDPS = 0.0f, jobDPS = 0.0f,socDPS=0.0f,jocDPS = 0.0f;
-            #region Mitigation
-            //Default Boss Armor
-            float bossArmor = calcOpts.BossArmor;
-            float totalArP = stats.ArmorPenetration;
-            float modifiedTargetArmor = bossArmor - totalArP;
-            float mitigation = 1 - modifiedTargetArmor / (modifiedTargetArmor + 10557.5f);
+
+            if (character.MainHand != null)
+            {
+                baseSpeed = character.MainHand.Speed;
+                baseDamage = (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2 + stats.WeaponDamage;
+            }
+
+
+            #region Attack Speed
+            {
+                hastedSpeed = baseSpeed / (1 + (stats.HasteRating / 1576f));
+
+                // Mongoose Enchat grants 2% haste
+                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
+                    hastedSpeed /= 1 + 0.02f * 0.4f;  // ASSUMPTION: Mongoose has a 40% uptime
+                if (stats.Bloodlust > 0)
+                {
+                    //Bloodlust -- Calculating uptime
+                    //div = Math.DivRem(Convert.ToInt32(fightDuration), 600, out remainder);
+                    //if (remainder == 0)
+                    //    noOfFullBL = div;
+                    //else
+                    //    noOfFullBL = Convert.ToInt32(Math.Ceiling(Convert.ToDouble((fightDuration + 40) / 600)));
+
+                    hastedSpeed /= (1 + 0.003f * calcOpts.BloodlustUptime);
+                }
+            }
             #endregion
+
+
+            #region Mitigation
+            {
+                float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
+
+                // Effective armor after ArP
+                targetArmor -= totalArP;
+                if (targetArmor < 0.0f) targetArmor = 0.0f;
+
+                // Convert armor to mitigation
+                mitigation = 1.0f - (targetArmor / (targetArmor + 10557.5f));
+
+                // Executioner enchant.  ASSUMPTION: Executioner has a 40% uptime.
+                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
+                {
+                    float exeArmor = targetArmor, exeMitigation = 1.0f, exeUptime = 0.4f, exeArmorPen = 840f;
+
+                    // Find mitigation while Executioner is up
+                    exeArmor = targetArmor - exeArmorPen;
+                    if (exeArmor < 0.0f) exeArmor = 0.0f;
+                    exeMitigation = 1.0f - (exeArmor / (exeArmor + 10557.5f));
+
+                    // Weighted average of mitigation with and without Executioner, based on Executioner uptime
+                    mitigation = (exeMitigation * exeUptime) + (mitigation * (1 - exeUptime));
+                }
+            }
+            #endregion
+
+
             string shattrathFaction = calcOpts.ShattrathFaction;
             if (stats.ShatteredSunMightProc > 0)
             {
@@ -201,16 +252,13 @@ namespace Rawr.Retribution
             #region White Damage and Multipliers
             //2 Handed Spec
             float twoHandedSpec = 1.0f + (0.02f * (float)calcOpts.TwoHandedSpec);
-            if (character.MainHand != null)
-            {
-                avgBaseWeaponHit = twoHandedSpec * (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage * 2f) / 2.0f;
-                hastedSpeed = (stats.HasteRating == 0) ? character.MainHand.Speed : character.MainHand.Speed / (1 + stats.HasteRating / 1576f);
-            }       
+
+            avgBaseWeaponHit = twoHandedSpec * baseDamage;
 
             //Add Attack Power Bonus
-            avgBaseWeaponHit += twoHandedSpec*(stats.AttackPower / 14.0f) * ((character.MainHand == null) ? 1.0f : character.MainHand.Speed);
+            avgBaseWeaponHit += twoHandedSpec * (stats.AttackPower / 14.0f) * baseSpeed;
 
-            
+
             //Take Non-Stat Buffs into account
 
             physicalCritModifier = 1.0f + ((stats.CritRating / 22.08f) / 100.0f) * (1f + stats.BonusCritMultiplier * 2f);
@@ -226,49 +274,25 @@ namespace Rawr.Retribution
             //Fight duration
             float fightDuration = calcOpts.FightLength * 60;
             //Improved Sanctity Aura
-			float impSancAura = 1f + 0.01f * (float)calcOpts.ImprovedSanctityAura;
+            float impSancAura = 1f + 0.01f * (float)calcOpts.ImprovedSanctityAura;
             //Crusade
-			float crusade = 1f + 0.01f * (float)calcOpts.Crusade;
+            float crusade = 1f + 0.01f * (float)calcOpts.Crusade;
             //Avenging Wrath -- Calculating uptime
-            int remainder = 0, noOfFullAW = 0, noOfFullBL;
-            int div = Math.DivRem(Convert.ToInt32(fightDuration), 180,out remainder);
-            if (remainder == 0) 
+            int remainder = 0, noOfFullAW = 0;
+            int div = Math.DivRem(Convert.ToInt32(fightDuration), 180, out remainder);
+            if (remainder == 0)
                 noOfFullAW = div;
             else
-            noOfFullAW = Convert.ToInt32(Math.Ceiling(Convert.ToDouble((fightDuration + 20) / 180)));
+                noOfFullAW = Convert.ToInt32(Math.Ceiling(Convert.ToDouble((fightDuration + 20) / 180)));
             float partialUptime = fightDuration - noOfFullAW * 180;
             if (partialUptime < 0) partialUptime = 0;
             float totalUptime = partialUptime + noOfFullAW * 20f;
             float avWrath = 1f + 0.30f * totalUptime / fightDuration;
 
-            
-
-            #region Bloodlust
-            if (stats.Bloodlust > 0)
-            {
-                //Bloodlust -- Calculating uptime
-                //div = Math.DivRem(Convert.ToInt32(fightDuration), 600, out remainder);
-                //if (remainder == 0)
-                //    noOfFullBL = div;
-                //else
-                //    noOfFullBL = Convert.ToInt32(Math.Ceiling(Convert.ToDouble((fightDuration + 40) / 600)));
-
-                hastedSpeed = (character.MainHand == null) ? 1.0f : character.MainHand.Speed /
-                    (1 + stats.HasteRating / 1576f + 0.003f * calcOpts.BloodlustUptime);
-            }
-            #endregion
-
-            //#region Drums of Battle
-            //if (stats.DrumsOfBattle > 0)
-            //{
-            //    hastedSpeed = (character.MainHand == null) ? 1.0f : hastedSpeed / (1 + (stats.DrumsOfBattle / 1576f) / 4f);
-            //}
-            //#endregion
-            
             //Vengeance
-			float vengeance = 1f + 0.03f * (float)calcOpts.Vengeance;
+            float vengeance = 1f + 0.03f * (float)calcOpts.Vengeance;
             //Sanctity Aura
-			float sancAura = 1f + 0.1f * (float)calcOpts.SanctityAura;
+            float sancAura = 1f + 0.1f * (float)calcOpts.SanctityAura;
             //Misery 
             float misery = 1f + stats.BonusSpellPowerMultiplier;
             //SpellCrit Mod
@@ -277,7 +301,7 @@ namespace Rawr.Retribution
             //Blood Frenzy : TODO Take from Debuff List
             float bloodFrenzy = 1.0f + stats.BonusPhysicalDamageMultiplier;
             float ssoNeckProcDPS = 0f;
-           
+
 
             //TODO: Add Mitigation
             avgBaseWeaponHitPost *= impSancAura * crusade * avWrath * vengeance * bloodFrenzy * mitigation;
@@ -312,7 +336,7 @@ namespace Rawr.Retribution
             #region Windfury
             float avgTimeBetnWF = (hastedSpeed / (1.0f - (chanceToBeDodged + chanceToMiss) / 100f)) * 5.0f;
             float wfAPIncrease = stats.WindfuryAPBonus;
-            float wfHitPre = avgBaseWeaponHit + (wfAPIncrease / 14f) * ((character.MainHand == null) ? 0 : character.MainHand.Speed);
+            float wfHitPre = avgBaseWeaponHit + (wfAPIncrease / 14f) * baseSpeed;
             float wfHitPost = (wfHitPre * physicalCritModifier) - (wfHitPre * (chanceToMiss + chanceToBeDodged) / 100f) -
                 (wfHitPre * glancingAmount * chanceToGlance);
             if (wfAPIncrease > 0)
@@ -325,8 +349,8 @@ namespace Rawr.Retribution
             }
             wfDPS = wfHitPost / avgTimeBetnWF;
             calcs.WFDPSPoints = wfDPS;
-            #endregion 
-            
+            #endregion
+
             #region Seal of Command
             if (calcOpts.Seal == 0)
             {
@@ -352,13 +376,12 @@ namespace Rawr.Retribution
 
             #region Crusader Strike
             float csCooldown = 6.0f;
-            float avgCSHitPre = twoHandedSpec*(((character.MainHand != null) ? (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage*2f) / 2.0f : 0.0f)+
-                3.30f * (stats.AttackPower / 14f)) * 1.10f;
-            float avgCSHitPost = avgCSHitPre* physicalCritModifier - avgCSHitPre*(chanceToBeDodged+chanceToMiss)/100f;
-            
+            float avgCSHitPre = twoHandedSpec * baseDamage + 3.30f * (stats.AttackPower / 14f) * 1.10f;
+            float avgCSHitPost = avgCSHitPre * physicalCritModifier - avgCSHitPre * (chanceToBeDodged + chanceToMiss) / 100f;
+
             //TODO: Add Mitigation
-            avgCSHitPost *= impSancAura * crusade * avWrath * vengeance * mitigation*(1f+stats.BonusCrusaderStrikeDamageMultiplier)*bloodFrenzy;
-            float dpsCS = avgCSHitPost/ csCooldown;
+            avgCSHitPost *= impSancAura * crusade * avWrath * vengeance * mitigation * (1f + stats.BonusCrusaderStrikeDamageMultiplier) * bloodFrenzy;
+            float dpsCS = avgCSHitPost / csCooldown;
             calcs.CSDPSPoints = dpsCS;
             #endregion
 
@@ -366,13 +389,13 @@ namespace Rawr.Retribution
             if (calcOpts.ConsecRank != 0)
             {
                 //Rank 1
-                float cooldownCons = 8.0f, avgConsPre= 0.0f;
+                float cooldownCons = 8.0f, avgConsPre = 0.0f;
                 int consRank = calcOpts.ConsecRank;
                 if (consRank == 1)
                 {
                     avgConsPre = 64f + 0.46f * stats.SpellDamageRating + 0.97f * 219f;
                 }
-                else if(consRank ==6)
+                else if (consRank == 6)
                 {
                     avgConsPre = 512f + 0.95f * stats.SpellDamageRating + 0.97f * 219f;
                 }
@@ -384,12 +407,12 @@ namespace Rawr.Retribution
                 consDPS = avgConsPost / cooldownCons;
                 calcs.ConsDPSPoints = consDPS;
             }
-              
+
             #endregion
 
             #region Exorcism
             if (calcOpts.Exorcism)
-            {               
+            {
                 float cooldownExo = 15.0f, avgExoPre = 0.0f;
 
                 avgExoPre = 665f + 0.43f * (stats.SpellDamageRating + 219f);
@@ -410,7 +433,7 @@ namespace Rawr.Retribution
                 jobDPS = avgJoBPost / cooldownJoB;
                 calcs.JudgementDPSPoints = jobDPS;
             }
-            #endregion                       
+            #endregion
 
             #region Judgement of Command
             if (calcOpts.Seal == 0)
@@ -540,18 +563,19 @@ namespace Rawr.Retribution
                 statsBuffs.AttackPower += character.Ranged.Stats.JudgementOfCommandAttackPowerBonus;
             }
 
+            // Executioner and Mongoose Haste% moved to GetCharacterCalculations
             //Mongoose
             if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
             {
-                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
-                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+                statsBuffs.Agility += 120f * 0.4f;  // ASSUMPTION: Mongoose has a 40% uptime
+//                statsBuffs.HasteRating += (15.76f * 2f) * 0.4f;
             }
 
             //Executioner
-            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
-            {
-                statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));                
-            }
+            //if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
+            //{
+            //    statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));                
+            //}
 
             //base
             
