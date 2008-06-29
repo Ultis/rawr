@@ -90,6 +90,7 @@ namespace Rawr
         }
 
         private Character CurrentItemCharacter { get; set; }
+        private Enchant CurrentItemEnchant { get; set; }
 
         private Font _fontName;
         private Font _fontStats;
@@ -134,6 +135,13 @@ namespace Rawr
                             {
                                 extraLocation = (int)locationSize.Height;
                             }
+
+                            int enchantSize = 0;
+                            if (CurrentItemEnchant != null)
+                            {
+                                enchantSize = 17;
+                            }
+
                             int numTinyItems = 0;
                             int tinyItemSize = 18;
                             if (CurrentItemCharacter != null)
@@ -143,7 +151,8 @@ namespace Rawr
                                     if (CurrentItemCharacter[slot] != null && CurrentItemCharacter[slot].GemmedId != _currentItem.GemmedId) numTinyItems++;
                                 }
                             }
-                            _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + extraLocation + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
+
+                            _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + extraLocation + enchantSize + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
 
                             Graphics g = Graphics.FromImage(_cachedToolTipImage);
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -297,6 +306,13 @@ namespace Rawr
                             }
                             xPos = 2;
                             yPos = (hasSockets ? 76 : 18) + statHeight + 4 + (int)locationSize.Height + extraLocation + 2;
+
+                            if (CurrentItemEnchant != null)
+                            {
+                                g.DrawString(CurrentItemEnchant.ToString(), _fontStats, SystemBrushes.InfoText, xPos, yPos + 1);
+                                yPos += enchantSize;
+                            }
+
                             if (CurrentItemCharacter != null)
                             {
                                 foreach (Character.CharacterSlot slot in Character.CharacterSlots)
@@ -374,13 +390,14 @@ namespace Rawr
 
         public void Show(Item item, IWin32Window window, Point point)
         {
-            Show(item, null, window, point);
+            Show(item, null, null, window, point);
         }
 
-		public void Show(Item item, Character itemCharacter, IWin32Window window, Point point)
+		public void Show(Item item, Character itemCharacter, Enchant itemEnchant, IWin32Window window, Point point)
 		{
 			CurrentItem = item;
             CurrentItemCharacter = itemCharacter;
+            CurrentItemEnchant = itemEnchant;
             if (CachedToolTipImage != null)
             {
                 base.Show(item.Name, window, point);

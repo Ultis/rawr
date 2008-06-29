@@ -767,6 +767,7 @@ namespace Rawr
 			legsEnchants, shouldersEnchants, mainHandEnchants, offHandEnchants, rangedEnchants, wristEnchants;
         Item[][] slotItems = new Item[slotCount][];
         Enchant[][] slotEnchants = new Enchant[slotCount][];
+        Dictionary<int, bool>[] slotAvailableEnchants = new Dictionary<int,bool>[slotCount];
         Item[] lockedItems;
         Enchant[] lockedEnchants;
         Dictionary<string, Dictionary<int, bool>> itemEnchantValid;
@@ -777,8 +778,14 @@ namespace Rawr
         {
             if (slot == lockedSlot)
             {
-                if (lockedEnchants == null || Array.IndexOf<Enchant>(lockedEnchants, enchant) >= 0) return true;
-                return false;
+                if (lockedEnchants == null)
+                {
+                    return slotAvailableEnchants[(int)slot][enchant.Id];
+                }
+                else
+                {
+                    return Array.IndexOf<Enchant>(lockedEnchants, enchant) >= 0;
+                }
             }
             return (item.EnchantValid ?? itemEnchantValid[item.GemmedId])[enchant.Id];
         }
@@ -1054,7 +1061,78 @@ namespace Rawr
                     }                    
                 }
             }
-            //uniqueItems = new SortedList<Item, bool>(uniqueDict);
+            // store dictionaries for available enchants for locked slots
+            for (int slot = 0; slot < slotCount; slot++)
+            {
+                Enchant[] validEnchants = null;
+                Item.ItemSlot itemSlot = Item.ItemSlot.None;
+                switch ((Character.CharacterSlot)slot)
+                {
+                    case Character.CharacterSlot.Back:
+                        itemSlot = Item.ItemSlot.Back;
+                        validEnchants = backEnchants;
+                        break;
+                    case Character.CharacterSlot.Chest:
+                        itemSlot = Item.ItemSlot.Chest;
+                        validEnchants = chestEnchants;
+                        break;
+                    case Character.CharacterSlot.Feet:
+                        itemSlot = Item.ItemSlot.Feet;
+                        validEnchants = feetEnchants;
+                        break;
+                    case Character.CharacterSlot.Finger1:
+                    case Character.CharacterSlot.Finger2:
+                        itemSlot = Item.ItemSlot.Finger;
+                        validEnchants = fingerEnchants;
+                        break;
+                    case Character.CharacterSlot.Hands:
+                        itemSlot = Item.ItemSlot.Hands;
+                        validEnchants = handsEnchants;
+                        break;
+                    case Character.CharacterSlot.Head:
+                        itemSlot = Item.ItemSlot.Head;
+                        validEnchants = headEnchants;
+                        break;
+                    case Character.CharacterSlot.Legs:
+                        itemSlot = Item.ItemSlot.Legs;
+                        validEnchants = legsEnchants;
+                        break;
+                    case Character.CharacterSlot.MainHand:
+                        itemSlot = Item.ItemSlot.MainHand;
+                        validEnchants = mainHandEnchants;
+                        break;
+                    case Character.CharacterSlot.OffHand:
+                        itemSlot = Item.ItemSlot.OffHand;
+                        validEnchants = offHandEnchants;
+                        break;
+                    case Character.CharacterSlot.Ranged:
+                        itemSlot = Item.ItemSlot.Ranged;
+                        validEnchants = rangedEnchants;
+                        break;
+                    case Character.CharacterSlot.Shoulders:
+                        itemSlot = Item.ItemSlot.Shoulders;
+                        validEnchants = shouldersEnchants;
+                        break;
+                    case Character.CharacterSlot.Wrist:
+                        itemSlot = Item.ItemSlot.Wrist;
+                        validEnchants = wristEnchants;
+                        break;
+                }
+                if (validEnchants != null)
+                {
+                    List<Enchant> allEnchants = Enchant.FindEnchants(itemSlot);
+                    Dictionary<int, bool> dict = slotAvailableEnchants[slot] = new Dictionary<int, bool>();
+                    foreach (Enchant enchant in allEnchants)
+                    {
+                        bool valid;
+                        if (!dict.TryGetValue(enchant.Id, out valid)) dict[enchant.Id] = false;
+                    }
+                    foreach (Enchant enchant in validEnchants)
+                    {
+                        dict[enchant.Id] = true;
+                    }
+                }
+            }
 
             // set to all enchants, restrictions will be applied per item
             slotEnchants[(int)Character.CharacterSlot.Back] = backEnchants = Enchant.FindEnchants(Item.ItemSlot.Back).ToArray();
