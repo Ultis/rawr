@@ -1911,39 +1911,27 @@ namespace Rawr
             return c;
         }
 
-        public unsafe void Accumulate(Stats data)
+        public void Accumulate(Stats data)
         {
-            int i = _rawAdditiveData.Length;
-            fixed (float* rawAdditiveData = _rawAdditiveData, rawAdditiveData2 = data._rawAdditiveData)
+            float[] add = data._rawAdditiveData;
+            for (int i = 0; i < _rawAdditiveData.Length; i++)
             {
-                while (--i >= 0)
-                {
-                    rawAdditiveData[i] += rawAdditiveData2[i];
-                }
+                _rawAdditiveData[i] += add[i];
             }
-            i = _rawMultiplicativeData.Length;
-            fixed (float* rawMultiplicativeData = _rawMultiplicativeData, rawMultiplicativeData2 = data._rawMultiplicativeData)
+            add = data._rawMultiplicativeData;
+            for (int i = 0; i < _rawMultiplicativeData.Length; i++)
             {
-                while (--i >= 0)
-                {
-                    rawMultiplicativeData[i] = (1 + rawMultiplicativeData[i]) * (1 + rawMultiplicativeData2[i]) - 1;
-                }
+                _rawMultiplicativeData[i] = (1 + _rawMultiplicativeData[i]) * (1 + add[i]) - 1;
             }
-            i = _rawInverseMultiplicativeData.Length;
-            fixed (float* rawInverseMultiplicativeData = _rawInverseMultiplicativeData, rawInverseMultiplicativeData2 = data._rawInverseMultiplicativeData)
+            add = data._rawInverseMultiplicativeData;
+            for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
             {
-                while (--i >= 0)
-                {
-                    rawInverseMultiplicativeData[i] = 1 - (1 - rawInverseMultiplicativeData[i]) * (1 - rawInverseMultiplicativeData2[i]);
-                }
+                _rawInverseMultiplicativeData[i] = 1 - (1 - _rawInverseMultiplicativeData[i]) * (1 - add[i]);
             }
-            i = _rawNoStackData.Length;
-            fixed (float* rawNoStackData = _rawNoStackData, rawNoStackData2 = data._rawNoStackData)
+            add = data._rawNoStackData;
+            for (int i = 0; i < _rawNoStackData.Length; i++)
             {
-                while (--i >= 0)
-                {
-                    rawNoStackData[i] = Math.Max(rawNoStackData[i], rawNoStackData2[i]);
-                }
+                 if (add[i] > _rawNoStackData[i]) _rawNoStackData[i] = add[i];
             }
         }
       
