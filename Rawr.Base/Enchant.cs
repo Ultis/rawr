@@ -308,7 +308,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2621, "Subtlety", Item.ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f }));
             defaultEnchants.Add(new Enchant(2613, "Threat", Item.ItemSlot.Hands, new Stats() { ThreatIncreaseMultiplier = 0.02f }));
 
-            //spell stufff
+            //spell stuff
             defaultEnchants.Add(new Enchant(2650, "Spellpower", Item.ItemSlot.Wrist, new Stats() { SpellDamageRating = 15 }));
             defaultEnchants.Add(new Enchant(2937, "Major Spellpower", Item.ItemSlot.Hands, new Stats() { SpellDamageRating = 20 }));
             defaultEnchants.Add(new Enchant(2935, "Spell Strike", Item.ItemSlot.Hands, new Stats() { SpellHitRating = 15 }));
@@ -332,13 +332,13 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(851, "Spirit", Item.ItemSlot.Feet, new Stats() { Spirit = 5 }));
 
             // Healing enchants (add spell damage too)
-            defaultEnchants.Add(new Enchant(3001, "Glyph of Renewal", Item.ItemSlot.Head, new Stats() { Healing = 35, Mp5 = 7 }));
+            defaultEnchants.Add(new Enchant(3001, "Glyph of Renewal", Item.ItemSlot.Head, new Stats() { Healing = 35, SpellDamageRating = 12, Mp5 = 7 }));
 
             defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", Item.ItemSlot.Chest, new Stats() { Mp5 = 6 }));
 
-            defaultEnchants.Add(new Enchant(2980, "Greater Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { Healing = 33, Mp5 = 4 }));
-            defaultEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { Healing = 22, Mp5 = 6 }));
-            defaultEnchants.Add(new Enchant(2979, "Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { Healing = 29 }));
+            defaultEnchants.Add(new Enchant(2980, "Greater Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { Healing = 33, SpellDamageRating = 11, Mp5 = 4 }));
+            defaultEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { Healing = 22, SpellDamageRating = 8, Mp5 = 6 }));
+            defaultEnchants.Add(new Enchant(2979, "Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { Healing = 29, SpellDamageRating = 10 }));
             defaultEnchants.Add(new Enchant(2992, "Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { Mp5 = 5 }));
             defaultEnchants.Add(new Enchant(2715, "Resilience of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Healing = 31, Mp5 = 5 }));
             defaultEnchants.Add(new Enchant(2604, "Zandalar Signet of Serenity", Item.ItemSlot.Shoulders, new Stats() { Healing = 33 }));

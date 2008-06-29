@@ -901,15 +901,39 @@ namespace Rawr
 								sockets.Stats.Strength = socketBonusValue;
 								break;
                             case "Healing":
+                                sockets.Stats.Healing = socketBonusValue;
+                                break;
                             case "Healing +4 Spell Damage":
+                                sockets.Stats.Healing = socketBonusValue;
+                                sockets.Stats.SpellDamageRating = 4f;
+                                break;
                             case "Healing +3 Spell Damage":
+                                sockets.Stats.Healing = socketBonusValue;
+                                sockets.Stats.SpellDamageRating = 3f;
+                                break;
                             case "Healing +2 Spell Damage":
+                                sockets.Stats.Healing = socketBonusValue;
+                                sockets.Stats.SpellDamageRating = 2f;
+                                break;
                             case "Healing +1 Spell Damage":
+                                sockets.Stats.Healing = socketBonusValue;
+                                sockets.Stats.SpellDamageRating = 1f;
+                                break;
                             case "Healing and +4 Spell Damage":
+                                sockets.Stats.Healing = socketBonusValue;
+                                sockets.Stats.SpellDamageRating = 4f;
+                                break;
                             case "Healing and +3 Spell Damage":
+                                sockets.Stats.Healing = socketBonusValue;
+                                sockets.Stats.SpellDamageRating = 3f;
+                                break;
                             case "Healing and +2 Spell Damage":
+                                sockets.Stats.Healing = socketBonusValue;
+                                sockets.Stats.SpellDamageRating = 2f;
+                                break;
                             case "Healing and +1 Spell Damage":
                                 sockets.Stats.Healing = socketBonusValue;
+                                sockets.Stats.SpellDamageRating = 1f;
                                 break;
 							case "Crit Rating":
 							case "Crit Strike Rating":
@@ -995,6 +1019,10 @@ namespace Rawr
                         {
                             stats.BonusIntellectMultiplier = 0.02f;
                         }
+                        else if (gemBonus == "2% Reduced Threat")
+                        {
+                            stats.ThreatReductionMultiplier = 0.02f;
+                        }
                         else
                         {
                             try
@@ -1028,10 +1056,23 @@ namespace Rawr
                                         stats.DefenseRating = gemBonusValue;
                                         break;
                                     case "Healing":
+                                        stats.Healing = gemBonusValue;
+                                        break;
+                                    case "Healing +9 Spell Damage":
+                                        stats.Healing = gemBonusValue;
+                                        stats.SpellDamageRating = 9f;
+                                        break;
                                     case "Healing +4 Spell Damage":
+                                        stats.Healing = gemBonusValue;
+                                        stats.SpellDamageRating = 4f;
+                                        break;
                                     case "Healing +3 Spell Damage":
+                                        stats.Healing = gemBonusValue;
+                                        stats.SpellDamageRating = 3f;
+                                        break;
                                     case "Healing +2 Spell Damage":
                                         stats.Healing = gemBonusValue;
+                                        stats.SpellDamageRating = 2f;
                                         break;
                                     case "Hit Rating":
                                         stats.HitRating = gemBonusValue;
@@ -1069,10 +1110,14 @@ namespace Rawr
                                         break;
                                     case "Spell Haste Rating":
                                         stats.SpellHasteRating = gemBonusValue;
-										break;
-									case "Spell Damage":
-									case "Spell Damage and Healing":
+                                        break;
+                                    case "Spell Damage":
+                                    case "Spell Damage and Healing":
                                         stats.SpellDamageRating = gemBonusValue;
+                                        // Because Spell Damage is parsed on Teardrop (Red Gem), but not on Runed (Red Gem)
+                                        // We need to add Healing from Spell Damage if and only if we have not already parsed a healing bonus
+                                        if (stats.Healing == 0)
+                                            stats.Healing = gemBonusValue;
                                         break;
                                     case "Spell Crit":
                                     case "Spell Crit Rating":

@@ -140,7 +140,7 @@ namespace Rawr.Tree
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", BasicStats.Spirit.ToString());
-            dictValues.Add("Healing", BasicStats.Healing.ToString());
+            dictValues.Add("Healing", String.Format("{0}*{1} Spell Damage", BasicStats.Healing, BasicStats.SpellDamageRating));
             dictValues.Add("Mp5", string.Format("{0}*{1} mp5 outside the 5-second rule",
                 (int) (5*IS5SRRegen),
                 (int) (5*OS5SRRegen)));
