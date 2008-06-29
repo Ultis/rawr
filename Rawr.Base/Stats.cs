@@ -220,12 +220,12 @@ namespace Rawr
     /// 
 
     [Serializable]
-    public class Stats
+    public unsafe class Stats
     {
-        private float[] _rawAdditiveData = new float[AdditiveStatCount];
-        private float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
-        private float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
-        private float[] _rawNoStackData = new float[NonStackingStatCount];
+        internal float[] _rawAdditiveData = new float[AdditiveStatCount];
+        internal float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
+        internal float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
+        internal float[] _rawNoStackData = new float[NonStackingStatCount];
         /// <summary>
         /// The properties for each stat. In order to add additional stats for Rawr to track,
         /// first add properties here, for each stat. Apply a Category attribute to assign it to
@@ -1932,6 +1932,63 @@ namespace Rawr
             for (int i = 0; i < _rawNoStackData.Length; i++)
             {
                  if (add[i] > _rawNoStackData[i]) _rawNoStackData[i] = add[i];
+            }
+        }
+
+        private float* pRawAdditiveData;
+        private float* pRawMultiplicativeData;
+        private float* pRawNoStackData;
+
+        public void BeginUnsafe(float* pRawAdditiveData, float* pRawMultiplicativeData, float* pRawNoStackData)
+        {
+            this.pRawAdditiveData = pRawAdditiveData;
+            this.pRawMultiplicativeData = pRawMultiplicativeData;
+            this.pRawNoStackData = pRawNoStackData;
+        }
+
+        public void EndUnsafe()
+        {
+            pRawAdditiveData = null;
+            pRawMultiplicativeData = null;
+            pRawNoStackData = null;
+        }
+
+        public void AccumulateUnsafe(Stats data)
+        {
+            fixed (float* add = data._rawAdditiveData)
+            {
+                float* pa = pRawAdditiveData;
+                float* paend = pa + AdditiveStatCount;
+                float* pa2 = add;
+                for (; pa < paend; pa++, pa2++)
+                {
+                    *pa += *pa2;
+                }
+            }
+            fixed (float* add = data._rawMultiplicativeData)
+            {
+                float* pa = pRawMultiplicativeData;
+                float* paend = pa + MultiplicativeStatCount;
+                float* pa2 = add;
+                for (; pa < paend; pa++, pa2++)
+                {
+                    *pa = (1 + *pa) * (1 + *pa2) - 1;
+                }
+            }
+            float[] arr = data._rawInverseMultiplicativeData;
+            for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
+            {
+                _rawInverseMultiplicativeData[i] = 1 - (1 - _rawInverseMultiplicativeData[i]) * (1 - arr[i]);
+            }
+            fixed (float* add = data._rawNoStackData)
+            {
+                float* pa = pRawNoStackData;
+                float* paend = pa + NonStackingStatCount;
+                float* pa2 = add;
+                for (; pa < paend; pa++, pa2++)
+                {
+                    if (*pa2 > *pa) *pa = *pa2;
+                }
             }
         }
       

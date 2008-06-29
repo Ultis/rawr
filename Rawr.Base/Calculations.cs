@@ -586,7 +586,7 @@ namespace Rawr
 			return buffCalcs;
 		}
 
-        public virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
+        public unsafe virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
 		{
 			List<Item> items = new List<Item>(new Item[] {character.Back, character.Chest, character.Feet, character.Finger1,
 				character.Finger2, character.Hands, character.Head, character.Legs, character.Neck,
@@ -598,9 +598,14 @@ namespace Rawr
 			if (character.MainHand == null || character.MainHand.Slot != Item.ItemSlot.TwoHand)
 				items.Add(character.OffHand);
 
-			foreach (Item item in items)
-				if (item != null)
-                    stats.Accumulate(item.GetTotalStats(character));
+            fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
+            {
+                stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+                foreach (Item item in items)
+                    if (item != null)
+                        stats.AccumulateUnsafe(item.GetTotalStats(character));
+                stats.EndUnsafe();
+            }
 		}
 
         public virtual Stats GetItemStats(Character character, Item additionalItem)
@@ -610,46 +615,51 @@ namespace Rawr
             return stats;
         }
 
-        public virtual void AccumulateEnchantsStats(Stats stats, Character character)
+        public unsafe virtual void AccumulateEnchantsStats(Stats stats, Character character)
         {
-            stats.Accumulate(character.BackEnchant.Stats);
-            stats.Accumulate(character.ChestEnchant.Stats);
-            stats.Accumulate(character.FeetEnchant.Stats);
-            stats.Accumulate(character.Finger1Enchant.Stats);
-            stats.Accumulate(character.Finger2Enchant.Stats);
-            stats.Accumulate(character.HandsEnchant.Stats);
-            stats.Accumulate(character.HeadEnchant.Stats);
-            stats.Accumulate(character.LegsEnchant.Stats);
-            stats.Accumulate(character.ShouldersEnchant.Stats);
-			if (character.MainHand != null &&
-				(character.MainHandEnchant.Slot == Item.ItemSlot.OneHand ||
-				(character.MainHandEnchant.Slot == Item.ItemSlot.TwoHand &&
-				character.MainHand.Slot == Item.ItemSlot.TwoHand)))
-			{
-				stats.Accumulate(character.MainHandEnchant.Stats);
-			}
-			if (character.OffHand != null &&
-				(
-					(
-						character.OffHandEnchant.Slot == Item.ItemSlot.OneHand &&
-						(character.OffHand.Slot == Item.ItemSlot.OneHand ||
-						character.OffHand.Slot == Item.ItemSlot.OffHand) &&
-						character.OffHand.Type != Item.ItemType.None &&
-						character.OffHand.Type != Item.ItemType.Shield
-					) 
-					||
-					(
-						character.OffHandEnchant.Slot == Item.ItemSlot.OffHand &&
-						character.OffHand.Slot == Item.ItemSlot.OffHand &&
-						character.OffHand.Type == Item.ItemType.Shield
-					)
-				)
-			   )
-			{
-				stats.Accumulate(character.OffHandEnchant.Stats);
-			}
-            stats.Accumulate(character.RangedEnchant.Stats);
-            stats.Accumulate(character.WristEnchant.Stats);
+            fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
+            {
+                stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+                stats.AccumulateUnsafe(character.BackEnchant.Stats);
+                stats.AccumulateUnsafe(character.ChestEnchant.Stats);
+                stats.AccumulateUnsafe(character.FeetEnchant.Stats);
+                stats.AccumulateUnsafe(character.Finger1Enchant.Stats);
+                stats.AccumulateUnsafe(character.Finger2Enchant.Stats);
+                stats.AccumulateUnsafe(character.HandsEnchant.Stats);
+                stats.AccumulateUnsafe(character.HeadEnchant.Stats);
+                stats.AccumulateUnsafe(character.LegsEnchant.Stats);
+                stats.AccumulateUnsafe(character.ShouldersEnchant.Stats);
+                if (character.MainHand != null &&
+                    (character.MainHandEnchant.Slot == Item.ItemSlot.OneHand ||
+                    (character.MainHandEnchant.Slot == Item.ItemSlot.TwoHand &&
+                    character.MainHand.Slot == Item.ItemSlot.TwoHand)))
+                {
+                    stats.AccumulateUnsafe(character.MainHandEnchant.Stats);
+                }
+                if (character.OffHand != null &&
+                    (
+                        (
+                            character.OffHandEnchant.Slot == Item.ItemSlot.OneHand &&
+                            (character.OffHand.Slot == Item.ItemSlot.OneHand ||
+                            character.OffHand.Slot == Item.ItemSlot.OffHand) &&
+                            character.OffHand.Type != Item.ItemType.None &&
+                            character.OffHand.Type != Item.ItemType.Shield
+                        )
+                        ||
+                        (
+                            character.OffHandEnchant.Slot == Item.ItemSlot.OffHand &&
+                            character.OffHand.Slot == Item.ItemSlot.OffHand &&
+                            character.OffHand.Type == Item.ItemType.Shield
+                        )
+                    )
+                   )
+                {
+                    stats.AccumulateUnsafe(character.OffHandEnchant.Stats);
+                }
+                stats.AccumulateUnsafe(character.RangedEnchant.Stats);
+                stats.AccumulateUnsafe(character.WristEnchant.Stats);
+                stats.EndUnsafe();
+            }
         }
 
 		public virtual Stats GetEnchantsStats(Character character)
@@ -672,13 +682,18 @@ namespace Rawr
                 }
         }
 
-        public virtual void AccumulateBuffsStats(Stats stats, IEnumerable<Buff> buffs)
+        public unsafe virtual void AccumulateBuffsStats(Stats stats, IEnumerable<Buff> buffs)
         {
-            foreach (Buff buff in buffs)
-                if (buff != null)
-                {
-                    stats.Accumulate(buff.Stats);
-                }
+            fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
+            {
+                stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+                foreach (Buff buff in buffs)
+                    if (buff != null)
+                    {
+                        stats.AccumulateUnsafe(buff.Stats);
+                    }
+                stats.EndUnsafe();
+            }
         }
 
 		public virtual Stats GetBuffsStats(IEnumerable<string> buffs)
