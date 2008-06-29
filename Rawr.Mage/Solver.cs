@@ -4,6 +4,12 @@ using System.Text;
 
 namespace Rawr.Mage
 {
+    public enum ManaConsumable
+    {
+        ManaPotion,
+        ManaGem
+    }
+
     public sealed class Solver
     {
         private const double segmentDuration = 30;
@@ -19,7 +25,10 @@ namespace Rawr.Mage
         private CharacterCalculationsMage calculationResult;
         private Character character;
         private CalculationOptionsMage calculationOptions;
-        private bool useSMP;
+
+        private bool segmentCooldowns;
+        private bool integralMana;
+        private bool requiresMIP;
 
         private bool heroismAvailable;
         private bool arcanePowerAvailable;
@@ -103,11 +112,13 @@ namespace Rawr.Mage
         private int rowSegment = -1;
         #endregion
 
-        private Solver(Character character, CalculationOptionsMage calculationOptions, bool useSMP)
+        private Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana)
         {
             this.character = character;
             this.calculationOptions = calculationOptions;
-            this.useSMP = useSMP;
+            this.segmentCooldowns = segmentCooldowns;
+            this.integralMana = integralMana;
+            requiresMIP = segmentCooldowns || integralMana;
         }
 
         private static bool IsItemActivatable(Item item)
@@ -206,9 +217,9 @@ namespace Rawr.Mage
 
         private static object calculationLock = new object();
 
-        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool useSMP)
+        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana)
         {
-            Solver solver = new Solver(character, calculationOptions, useSMP);
+            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana);
             return solver.PrivateGetCharacterCalculations(additionalItem, calculations, armor);
         }
 
@@ -225,8 +236,8 @@ namespace Rawr.Mage
                 bool savedDestructionPotion = calculationOptions.DestructionPotion;
                 bool savedFlameCap = calculationOptions.FlameCap;
 
-                if (useSMP) calculationOptions.SmartOptimization = true;
-                segments = useSMP ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
+                //if (useSMP) calculationOptions.SmartOptimization = true;
+                segments = (segmentCooldowns) ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
                 segmentColumn = new int[segments + 1];
 
                 heroismAvailable = calculationOptions.HeroismAvailable;
@@ -351,7 +362,7 @@ namespace Rawr.Mage
 
                 ConstructProblem(additionalItem, calculations, rawStats, characterStats, out minimizeTime, out tpsList);
 
-                if (useSMP)
+                if (requiresMIP)
                 {
                     RestrictSolution();
                 }
@@ -502,175 +513,220 @@ namespace Rawr.Mage
                     break;
                 }
                 valid = true;
-                // make sure all cooldowns are tightly packed and not fragmented
-                // mf is trivially satisfied
-                // heroism
-                if (heroismAvailable)
+
+                if (integralMana)
                 {
-                    valid = ValidateCooldown(Cooldown.Heroism, 40, -1);
-                }
-                // ap
-                if (valid && arcanePowerAvailable)
-                {
-                    valid = ValidateCooldown(Cooldown.ArcanePower, 15, 180);
-                }
-                // iv
-                if (valid && icyVeinsAvailable)
-                {
-                    valid = ValidateCooldown(Cooldown.IcyVeins, 20 + (coldsnapAvailable ? 20 : 0), 180 + (coldsnapAvailable ? 20 : 0));
-                }
-                // combustion
-                if (valid && combustionAvailable)
-                {
-                    valid = ValidateCooldown(Cooldown.Combustion, 15, 180 + 15); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
-                }
-                // drums
-                if (valid && calculationOptions.DrumsOfBattle)
-                {
-                    valid = ValidateCooldown(Cooldown.DrumsOfBattle, 30, 120);
-                }
-                // flamecap
-                if (valid && calculationOptions.FlameCap)
-                {
-                    valid = ValidateCooldown(Cooldown.FlameCap, 60, 180);
-                }
-                // destruction
-                if (valid && calculationOptions.DestructionPotion)
-                {
-                    valid = ValidateCooldown(Cooldown.DestructionPotion, 15, 120);
-                }
-                // t1
-                if (valid && trinket1Available)
-                {
-                    valid = ValidateCooldown(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown);
-                }
-                // t2
-                if (valid && trinket2Available)
-                {
-                    valid = ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown);
-                }
-                /*if (valid && t1ismg && calculationOptions.FlameCap)
-                {
-                    valid = ValidateSCB(Cooldown.Trinket1);
-                }
-                if (valid && t2ismg && calculationOptions.FlameCap)
-                {
-                    valid = ValidateSCB(Cooldown.Trinket2);
-                }*/
-                // eliminate packing cycles
-                // example:
-                // H+IV:10
-                // IV+Icon:10
-                // H+Icon:10
-                if (valid)
-                {
-                    for (int seg = 0; seg < segments - 1; seg++)
+                    if (valid && calculationOptions.ManaPotionEnabled)
                     {
-                        // collect all cooldowns on the boundary seg...(seg+1)
-                        // assume one instance of cooldown max (coldsnap theoretically doesn't satisfy this, but I think it should still work)
-                        // calculate hex values for boolean arithmetic
-                        // verify if there are cycles
+                        valid = ValidateIntegralMana(ManaConsumable.ManaPotion);
+                    }
+                    if (valid && calculationOptions.ManaGemEnabled)
+                    {
+                        valid = ValidateIntegralMana(ManaConsumable.ManaGem);
+                    }
+                }
 
-                        // ###   ###
-                        // ######
-                        //    ######
-
-                        // ##
-                        //  ##
-                        //   ##
-                        //    ##
-                        //     ##
-                        // #    #
-
-                        // cycle = no element can be placed at the start, all have two tails that intersect to 0
-                        // inside the boundary we can have more than one cycle and several nice packings
-                        // find elements that can be placed at the start, those are the ones with nice packing
-                        // for each one you find remove the corresponding group
-                        // if we remove everything then there are no cycles
-
-                        List<int> hexList = new List<int>();
-                        for (int index = segmentColumn[seg]; index < segmentColumn[seg + 2]; index++)
+                if (segmentCooldowns)
+                {
+                    // make sure all cooldowns are tightly packed and not fragmented
+                    // mf is trivially satisfied
+                    // heroism
+                    if (valid && heroismAvailable)
+                    {
+                        valid = ValidateCooldown(Cooldown.Heroism, 40, -1);
+                    }
+                    // ap
+                    if (valid && arcanePowerAvailable)
+                    {
+                        valid = ValidateCooldown(Cooldown.ArcanePower, 15, 180);
+                    }
+                    // iv
+                    if (valid && icyVeinsAvailable)
+                    {
+                        valid = ValidateCooldown(Cooldown.IcyVeins, 20 + (coldsnapAvailable ? 20 : 0), 180 + (coldsnapAvailable ? 20 : 0));
+                    }
+                    // combustion
+                    if (valid && combustionAvailable)
+                    {
+                        valid = ValidateCooldown(Cooldown.Combustion, 15, 180 + 15); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
+                    }
+                    // drums
+                    if (valid && calculationOptions.DrumsOfBattle)
+                    {
+                        valid = ValidateCooldown(Cooldown.DrumsOfBattle, 30, 120);
+                    }
+                    // flamecap
+                    if (valid && calculationOptions.FlameCap)
+                    {
+                        valid = ValidateCooldown(Cooldown.FlameCap, 60, 180);
+                    }
+                    // destruction
+                    if (valid && calculationOptions.DestructionPotion)
+                    {
+                        valid = ValidateCooldown(Cooldown.DestructionPotion, 15, 120);
+                    }
+                    // t1
+                    if (valid && trinket1Available)
+                    {
+                        valid = ValidateCooldown(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown);
+                    }
+                    // t2
+                    if (valid && trinket2Available)
+                    {
+                        valid = ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown);
+                    }
+                    /*if (valid && t1ismg && calculationOptions.FlameCap)
+                    {
+                        valid = ValidateSCB(Cooldown.Trinket1);
+                    }
+                    if (valid && t2ismg && calculationOptions.FlameCap)
+                    {
+                        valid = ValidateSCB(Cooldown.Trinket2);
+                    }*/
+                    // eliminate packing cycles
+                    // example:
+                    // H+IV:10
+                    // IV+Icon:10
+                    // H+Icon:10
+                    if (valid)
+                    {
+                        for (int seg = 0; seg < segments - 1; seg++)
                         {
-                            CastingState state = calculationResult.SolutionVariable[index].State;
-                            if (state != null && solution[index] > 0)
+                            // collect all cooldowns on the boundary seg...(seg+1)
+                            // assume one instance of cooldown max (coldsnap theoretically doesn't satisfy this, but I think it should still work)
+                            // calculate hex values for boolean arithmetic
+                            // verify if there are cycles
+
+                            // ###   ###
+                            // ######
+                            //    ######
+
+                            // ##
+                            //  ##
+                            //   ##
+                            //    ##
+                            //     ##
+                            // #    #
+
+                            // cycle = no element can be placed at the start, all have two tails that intersect to 0
+                            // inside the boundary we can have more than one cycle and several nice packings
+                            // find elements that can be placed at the start, those are the ones with nice packing
+                            // for each one you find remove the corresponding group
+                            // if we remove everything then there are no cycles
+
+                            List<int> hexList = new List<int>();
+                            for (int index = segmentColumn[seg]; index < segmentColumn[seg + 2]; index++)
                             {
-                                int hex = state.GetHex();
-                                if (hex != 0 && !hexList.Contains(hex)) hexList.Add(hex);
-                            }
-                        }
-
-                        // placed  ## ### ## #
-                        //         .. ...  
-                        //          .   . .. .
-                        // active   #   #    #
-                        //
-                        // future   #   ##      <= ok
-                        //          #   #  #    <= not ok
-
-                        // take newHex = (future - future & active)
-                        // if newHex & placed > 0 then we have cycle
-
-                        bool ok = true;
-                        int placed = 0;
-                        while (ok && hexList.Count > 0)
-                        {
-                            ok = false;
-                            // check if any can be at the start
-                            for (int i = 0; i < hexList.Count; i++)
-                            {
-                                int tail = hexList[i];
-                                for (int j = 0; j < hexList.Count; j++)
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (state != null && solution[index] > 0)
                                 {
-                                    int intersect = hexList[i] & hexList[j];
-                                    if (i != j && intersect > 0)
+                                    int hex = state.GetHex();
+                                    if (hex != 0 && !hexList.Contains(hex)) hexList.Add(hex);
+                                }
+                            }
+
+                            // placed  ## ### ## #
+                            //         .. ...  
+                            //          .   . .. .
+                            // active   #   #    #
+                            //
+                            // future   #   ##      <= ok
+                            //          #   #  #    <= not ok
+
+                            // take newHex = (future - future & active)
+                            // if newHex & placed > 0 then we have cycle
+
+                            bool ok = true;
+                            int placed = 0;
+                            while (ok && hexList.Count > 0)
+                            {
+                                ok = false;
+                                // check if any can be at the start
+                                for (int i = 0; i < hexList.Count; i++)
+                                {
+                                    int tail = hexList[i];
+                                    for (int j = 0; j < hexList.Count; j++)
                                     {
-                                        tail &= hexList[j];
-                                        if (tail == 0) break;
+                                        int intersect = hexList[i] & hexList[j];
+                                        if (i != j && intersect > 0)
+                                        {
+                                            tail &= hexList[j];
+                                            if (tail == 0) break;
+                                        }
+                                        int newHex = hexList[j] - intersect;
+                                        if ((newHex & placed) > 0)
+                                        {
+                                            tail = 0;
+                                            break;
+                                        }
                                     }
-                                    int newHex = hexList[j] - intersect;
-                                    if ((newHex & placed) > 0)
+                                    if (tail != 0)
                                     {
-                                        tail = 0;
+                                        // i is good
+                                        ok = true;
+                                        placed |= hexList[i];
+                                        hexList.RemoveAt(i);
                                         break;
                                     }
                                 }
-                                if (tail != 0)
-                                {
-                                    // i is good
-                                    ok = true;
-                                    placed |= hexList[i];
-                                    hexList.RemoveAt(i);
-                                    break;
-                                }
                             }
-                        }
-                        if (hexList.Count > 0)
-                        {
-                            // we have a cycle
-                            // to break the cycle we have to remove one of the elements
-                            // if all are present then obviously we have a cycle, so the true solution must have one of them missing
-                            for (int i = 0; i < hexList.Count; i++)
+                            if (hexList.Count > 0)
                             {
-                                SolverLP hexRemovedLP = lp.Clone();
-                                //hexRemovedLP.Log += "Breaking cycle at boundary " + seg + ", removing " + hexList[i] + "\r\n";
-                                for (int index = segmentColumn[seg]; index < segmentColumn[seg + 2]; index++)
+                                // we have a cycle
+                                // to break the cycle we have to remove one of the elements
+                                // if all are present then obviously we have a cycle, so the true solution must have one of them missing
+                                for (int i = 0; i < hexList.Count; i++)
                                 {
-                                    CastingState state = calculationResult.SolutionVariable[index].State;
-                                    if (state != null && state.GetHex() == hexList[i]) hexRemovedLP.EraseColumn(index);
+                                    SolverLP hexRemovedLP = lp.Clone();
+                                    //hexRemovedLP.Log += "Breaking cycle at boundary " + seg + ", removing " + hexList[i] + "\r\n";
+                                    for (int index = segmentColumn[seg]; index < segmentColumn[seg + 2]; index++)
+                                    {
+                                        CastingState state = calculationResult.SolutionVariable[index].State;
+                                        if (state != null && state.GetHex() == hexList[i]) hexRemovedLP.EraseColumn(index);
+                                    }
+                                    heap.Push(hexRemovedLP);
                                 }
-                                heap.Push(hexRemovedLP);
+                                valid = false;
+                                break;
                             }
-                            valid = false;
-                            break;
                         }
                     }
-                }
-                if (valid && icyVeinsAvailable && coldsnapAvailable)
-                {
-                    valid = ValidateColdsnap();
+                    if (valid && icyVeinsAvailable && coldsnapAvailable)
+                    {
+                        valid = ValidateColdsnap();
+                    }
                 }
             } while (heap.Count > 0 && !valid);
             //System.Diagnostics.Trace.WriteLine("Heap at solution " + heap.Count);
+        }
+
+        private bool ValidateIntegralMana(ManaConsumable manaConsumable)
+        {
+            int column = 0;
+            switch (manaConsumable)
+            {
+                case ManaConsumable.ManaGem:
+                    column = calculationResult.ColumnManaGem;
+                    break;
+                case ManaConsumable.ManaPotion:
+                    column = calculationResult.ColumnManaPotion;
+                    break;
+            }
+            double value = solution[column];
+            int count = (int)Math.Round(value);
+            bool valid = (Math.Abs(value - count) < 0.000001);
+
+            if (!valid)
+            {
+                SolverLP maxCount = lp.Clone();
+                // count <= floor(value)
+                maxCount.SetMaxManaConsumable(manaConsumable, Math.Floor(value));
+                heap.Push(lp);
+                // count >= ceiling(value)
+                lp.SetMinManaConsumable(manaConsumable, Math.Ceiling(value));
+                heap.Push(lp);
+            }
+            return valid;
         }
 
         private unsafe void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats characterStats, out bool minimizeTime, out List<double> tpsList)
@@ -691,7 +747,7 @@ namespace Rawr.Mage
 
             int rowCount = ConstructRows(minimizeTime, drinkingEnabled, needsTimeExtension, afterFightRegen);
 
-            lp = new SolverLP(rowCount, 9 + spellList.Count * stateList.Count * segments);
+            lp = new SolverLP(rowCount, 9 + spellList.Count * stateList.Count * segments, calculationResult);
             tpsList = new List<double>();
             double tps;
             calculationResult.SolutionVariable = new List<SolutionVariable>();
@@ -914,8 +970,7 @@ namespace Rawr.Mage
                             {
                                 column = lp.AddColumnUnsafe();
                                 Spell s = stateList[buffset].GetSpell(calculationOptions.IncrementalSetSpells[index]);
-                                int seg = 0;
-                                if (useSMP) seg = calculationOptions.IncrementalSetSegments[index];
+                                int seg = calculationOptions.IncrementalSetSegments[index];
                                 if (seg != lastSegment)
                                 {
                                     for (; lastSegment < seg; )
@@ -924,7 +979,7 @@ namespace Rawr.Mage
                                     }
                                 }
                                 calculationResult.SolutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg });
-                                SetSpellColumn(useSMP, minimizeTime, tpsList, seg, stateList[buffset], column, s);
+                                SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, s);
                             }
                         }
                     }
@@ -944,14 +999,14 @@ namespace Rawr.Mage
                         {
                             for (int spell = 0; spell < spellList.Count; spell++)
                             {
-                                if (useSMP && stateList[buffset].MoltenFury && seg < firstMoltenFurySegment) continue;
-                                if (stateList[buffset] == calculationResult.BaseState && seg < segments - 1) continue;
+                                if (segmentCooldowns && stateList[buffset].MoltenFury && seg < firstMoltenFurySegment) continue;
+                                if (stateList[buffset] == calculationResult.BaseState && seg != 0) continue;
                                 Spell s = stateList[buffset].GetSpell(spellList[spell]);
                                 if (s.AffectedByFlameCap || !stateList[buffset].FlameCap)
                                 {
                                     column = lp.AddColumnUnsafe();
                                     calculationResult.SolutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg });
-                                    SetSpellColumn(useSMP, minimizeTime, tpsList, seg, stateList[buffset], column, s);
+                                    SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, s);
                                 }
                             }
                         }
@@ -1156,7 +1211,7 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowDrinking, maxDrinkingTime);
             lp.SetRHSUnsafe(rowTargetDamage, -calculationOptions.TargetDamage);
 
-            if (useSMP)
+            if (segmentCooldowns)
             {
                 if (moltenFuryAvailable)
                 {
@@ -1312,7 +1367,7 @@ namespace Rawr.Mage
             if (minimizeTime) rowTargetDamage = rowCount++;
             rowDpsTime = rowCount++;
             rowManaPotionManaGem = rowCount++;
-            if (useSMP)
+            if (segmentCooldowns)
             {
                 // mf, heroism, ap, iv, combustion, drums, flamecap, destruction, t1, t2
                 // mf
@@ -1431,7 +1486,7 @@ namespace Rawr.Mage
             return rowCount;
         }
 
-        private void SetSpellColumn(bool useSMP, bool minimizeTime, List<double> tpsList, int segment, CastingState state, int column, Spell spell)
+        private void SetSpellColumn(bool minimizeTime, List<double> tpsList, int segment, CastingState state, int column, Spell spell)
         {
             double manaRegen = spell.CostPerSecond - spell.ManaRegenPerSecond;
             lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
@@ -1512,7 +1567,7 @@ namespace Rawr.Mage
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
             lp.SetElementUnsafe(rowTargetDamage, column, -spell.DamagePerSecond);
             lp.SetCostUnsafe(column, minimizeTime ? -1 : spell.DamagePerSecond);
-            if (useSMP)
+            if (segmentCooldowns)
             {
                 // mf, heroism, ap, iv, combustion, drums, flamecap, destro, t1, t2
                 if (state.MoltenFury)

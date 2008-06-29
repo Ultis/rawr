@@ -168,17 +168,10 @@ namespace Rawr.Mage
 
             CalculationOptionsMage CalculationOptions = (CalculationOptionsMage)character.CalculationOptions;
             CharacterCalculationsMage calculations;
-            if (CalculationOptions.SMPDisplay)
-            {
-                bool savedIncrementalOptimizations = CalculationOptions.IncrementalOptimizations;
-                CalculationOptions.IncrementalOptimizations = false;
-                calculations = Solver.GetCharacterCalculations(character, null, CalculationOptions, this, CalculationOptions.IncrementalSetArmor, true);
-                CalculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
-            }
-            else
-            {
-                calculations = (CharacterCalculationsMage)GetCharacterCalculations(character);
-            }
+            bool savedIncrementalOptimizations = CalculationOptions.IncrementalOptimizations;
+            CalculationOptions.IncrementalOptimizations = false;
+            calculations = Solver.GetCharacterCalculations(character, null, CalculationOptions, this, CalculationOptions.IncrementalSetArmor, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana);
+            CalculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
 
             Dictionary<string, string> dict = calculations.GetCharacterDisplayCalculationValuesInternal();
 			foreach (KeyValuePair<string, string> kvp in dict)
@@ -332,7 +325,7 @@ namespace Rawr.Mage
                 {
                     cooldownList.Add(calculations.SolutionVariable[i].State.IncrementalSetIndex);
                     spellList.Add(calculations.SolutionVariable[i].Spell.SpellId);
-                    if (calculationOptions.SMP) segmentList.Add(calculations.SolutionVariable[i].Segment);
+                    segmentList.Add(calculations.SolutionVariable[i].Segment);
                 }
             }
             calculationOptions.IncrementalSetStateIndexes = cooldownList.ToArray();
@@ -347,14 +340,7 @@ namespace Rawr.Mage
 
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor)
         {
-            if (calculationOptions.SMP && !calculationOptions.SMPDisplay)
-            {
-                return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, true);
-            }
-            else
-            {
-                return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, false);
-            }
+            return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonIntegralMana);
         }
 
         public Stats GetRawStats(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<Buff> autoActivatedBuffs, string armor)
@@ -408,7 +394,8 @@ namespace Rawr.Mage
         // required by base class, but never used
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            throw new NotImplementedException();
+            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+            return GetCharacterStats(character, additionalItem, GetRawStats(character, additionalItem, calculationOptions, new List<Buff>(), null), calculationOptions);
         }
 
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats rawStats, CalculationOptionsMage calculationOptions)

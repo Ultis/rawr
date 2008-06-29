@@ -154,11 +154,11 @@ namespace Rawr.Mage
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
-            if (CalculationOptions.SMPDisplay)
+            if (CalculationOptions.DisplaySegmentCooldowns != CalculationOptions.ComparisonSegmentCooldowns || CalculationOptions.DisplayIntegralMana != CalculationOptions.ComparisonIntegralMana)
             {
                 bool savedIncrementalOptimizations = CalculationOptions.IncrementalOptimizations;
                 CalculationOptions.IncrementalOptimizations = false;
-                CharacterCalculationsMage smp = Solver.GetCharacterCalculations(Character, null, CalculationOptions, Calculations, MageArmor, true);
+                CharacterCalculationsMage smp = Solver.GetCharacterCalculations(Character, null, CalculationOptions, Calculations, MageArmor, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana);
                 Dictionary<string, string> ret = smp.GetCharacterDisplayCalculationValuesInternal();
                 ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.DpsRating, Math.Abs(DpsRating - smp.DpsRating) / DpsRating * 100);
                 CalculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;

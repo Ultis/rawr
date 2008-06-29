@@ -73,11 +73,16 @@ namespace Rawr.Mage
         }
 
         public bool ReconstructSequence { get; set; }
+
+        public bool ComparisonSegmentCooldowns { get; set; }
+        public bool DisplaySegmentCooldowns { get; set; }
+
+        public bool ComparisonIntegralMana { get; set; }
+        public bool DisplayIntegralMana { get; set; }
+
         public float Innervate { get; set; }
         public float ManaTide { get; set; }
         public float Fragmentation { get; set; }
-        public bool SMP { get; set; }
-        public bool SMPDisplay { get; set; }
         public float SurvivabilityRating { get; set; }
         public bool Aldor { get; set; }
         public bool WotLK { get; set; }
@@ -288,8 +293,6 @@ namespace Rawr.Mage
             Innervate = 0;
             ManaTide = 0;
             Fragmentation = 0;
-            SMP = false;
-            SMPDisplay = false;
             EvocationSpirit = 0;
             SurvivabilityRating = 0.0001f;
             Aldor = true;

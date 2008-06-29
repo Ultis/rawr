@@ -8,6 +8,7 @@ namespace Rawr.Mage
     {
         private int cRows;
         private int cCols;
+        private CharacterCalculationsMage calculations;
         public LP lp;
         internal double[] rowScale;
         double[] compactSolution = null;
@@ -54,8 +55,9 @@ namespace Rawr.Mage
             return clone;
         }
 
-        public SolverLP(int commonRows, int maximumColumns)
+        public SolverLP(int commonRows, int maximumColumns, CharacterCalculationsMage calculations)
         {
+            this.calculations = calculations;
             cRows = commonRows;
             cCols = 0;
 
@@ -145,6 +147,52 @@ namespace Rawr.Mage
         private int rowDisableColumn = -1;
         private int rowMaximizeSegment = -1;
         private int rowColdsnap = -1;
+        private int[] rowMinManaConsumable = new int[] { -1, -1 };
+        private int[] rowMaxManaConsumable = new int[] { -1, -1 };
+
+        public void SetMinManaConsumable(ManaConsumable manaConsumable, double value)
+        {
+            int column = 0;
+            switch (manaConsumable)
+            {
+                case ManaConsumable.ManaGem:
+                    column = calculations.ColumnManaGem;
+                    break;
+                case ManaConsumable.ManaPotion:
+                    column = calculations.ColumnManaPotion;
+                    break;
+            }
+            if (rowMinManaConsumable[(int)manaConsumable] == -1)
+            {
+                rowMinManaConsumable[(int)manaConsumable] = lp.AddConstraint();
+                lp.SetConstraintElement(rowMinManaConsumable[(int)manaConsumable], column, -1.0);
+            }
+            lp.SetConstraintRHS(rowMinManaConsumable[(int)manaConsumable], -value);
+            compactSolution = null;
+            needsDual = true;
+        }
+
+        public void SetMaxManaConsumable(ManaConsumable manaConsumable, double value)
+        {
+            int column = 0;
+            switch (manaConsumable)
+            {
+                case ManaConsumable.ManaGem:
+                    column = calculations.ColumnManaGem;
+                    break;
+                case ManaConsumable.ManaPotion:
+                    column = calculations.ColumnManaPotion;
+                    break;
+            }
+            if (rowMaxManaConsumable[(int)manaConsumable] == -1)
+            {
+                rowMaxManaConsumable[(int)manaConsumable] = lp.AddConstraint();
+                lp.SetConstraintElement(rowMaxManaConsumable[(int)manaConsumable], column, 1.0);
+            }
+            lp.SetConstraintRHS(rowMaxManaConsumable[(int)manaConsumable], value);
+            compactSolution = null;
+            needsDual = true;
+        }
 
         public void EraseColumn(int col)
         {
@@ -218,7 +266,7 @@ namespace Rawr.Mage
                 {
                     compactSolution = lp.SolvePrimal();
                 }
-                compactSolution[cCols] /= rowScale[cRows];
+                compactSolution[compactSolution.Length - 1] /= rowScale[cRows];
             }
         }
 
@@ -233,6 +281,7 @@ namespace Rawr.Mage
             lp.EndConstruction();
             lp.SolvePrimal();
             compactSolution = lp.SolveDual();
+            compactSolution[compactSolution.Length - 1] /= rowScale[cRows];
         }
 
         public double Value
