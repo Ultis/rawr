@@ -157,7 +157,7 @@ namespace Rawr.Tree
                     netCost = 0;
                 dictValues.Add("Rotation cost", String.Format("{0:0}*{1:0}-{2:0}",
                     netCost, solver.bestRotation.manaPerCycle, Mp5Points * solver.bestRotation.bestCycleDuration / 5));
-                dictValues.Add("Rotation HPS", String.Format("{0:0}*{1:0}% of {2:0}",
+                dictValues.Add("Rotation HPS", String.Format("{0:0}*{1:0.0}% of {2:0}",
                     solver.HpS, solver.FightFraction * 100f, solver.HpS / solver.FightFraction));
                 dictValues.Add("Rotation HPM", String.Format("{0:0.00}", solver.bestRotation.HPM));
 
@@ -165,7 +165,7 @@ namespace Rawr.Tree
                 {
                     float maxLength = (BasicStats.Mana / netCost * solver.bestRotation.bestCycleDuration);
 
-                    dictValues.Add("Max fight duration", String.Format("{0}m{1}s*{2:0}% of the target length",
+                    dictValues.Add("Max fight duration", String.Format("{0}m{1}s*{2:0.0}% of the target length",
                         (int)maxLength / 60, (int)maxLength % 60, solver.FightFraction * 100));
                 }
                 else

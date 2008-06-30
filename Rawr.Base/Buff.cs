@@ -713,42 +713,42 @@ namespace Rawr
             {
                 Name = "20 Stamina Food",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { Stamina = 20 },
+                Stats = new Stats() { Stamina = 20, Spirit = 20 },
                 ConflictingBuffs = new string[] { "Food" }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "30 Stamina Food",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { Stamina = 30 },
+                Stats = new Stats() { Stamina = 30, Spirit = 20 },
                 ConflictingBuffs = new string[] { "Food" }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "20 Agility Food",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { Agility = 20 },
+                Stats = new Stats() { Agility = 20, Spirit = 20 },
                 ConflictingBuffs = new string[] { "Food" }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "20 Strength Food",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { Strength = 20 },
+                Stats = new Stats() { Strength = 20, Spirit = 20 },
                 ConflictingBuffs = new string[] { "Food" }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "40 Attack Power Food",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { AttackPower = 40 },
+                Stats = new Stats() { AttackPower = 40, Spirit = 20 },
                 ConflictingBuffs = new string[] { "Food" }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "20 Hit Rating Food",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { HitRating = 20 },
+                Stats = new Stats() { HitRating = 20, Spirit = 20 },
                 ConflictingBuffs = new string[] { "Food" }
             });
             defaultBuffs.Add(new Buff()

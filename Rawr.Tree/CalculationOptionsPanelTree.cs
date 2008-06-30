@@ -366,9 +366,9 @@ namespace Rawr.Tree
         public float FightLength = 5;
         public float ManaPotAmt = 2400;
         public float ManaPotDelay = 2.5f;
-        public float TargetHealth = 8750;
-        public float SurvScalingAbove = 500;
-        public float SurvScalingBelow = 20;
+        public float TargetHealth = 8500;
+        public float SurvScalingAbove = 1000;
+        public float SurvScalingBelow = 100;
         public float Spriest = 0;
         public float InnervateDelay = 6.5f;
         public float MaxCycleDuration = 6.5f;
@@ -376,7 +376,7 @@ namespace Rawr.Tree
         public String[][] availableSpells = new String[][] {
             new String[] {"Lifebloom Stack"},
             new String[] {"Rejuvenation", "Regrowth"},
-            new String[] {"Regrowth", "Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)"},
+            new String[] {"Regrowth", "Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)", "Nothing"},
             new String[] {"Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)", "Nothing"},
             new String[] {"Nothing"},
             new String[] {"Nothing"},
