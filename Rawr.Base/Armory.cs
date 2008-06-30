@@ -855,144 +855,150 @@ namespace Rawr
 				if (socketNodes.Count > 0) sockets.Color1String = socketNodes[0].Attributes["color"].Value;
 				if (socketNodes.Count > 1) sockets.Color2String = socketNodes[1].Attributes["color"].Value;
 				if (socketNodes.Count > 2) sockets.Color3String = socketNodes[2].Attributes["color"].Value;
-				string socketBonus = string.Empty;
-				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socketMatchEnchant")) { socketBonus = node.InnerText.Trim('+'); }
-				if (!string.IsNullOrEmpty(socketBonus))
+				string socketBonusesString = string.Empty;
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socketMatchEnchant")) { socketBonusesString = node.InnerText.Trim('+'); }
+				if (!string.IsNullOrEmpty(socketBonusesString))
 				{
 					try
 					{
-						int socketBonusValue = int.Parse(socketBonus.Substring(0, socketBonus.IndexOf(' ')));
-						switch (socketBonus.Substring(socketBonus.IndexOf(' ') + 1))
+						List<string> socketBonuses = new List<string>();
+						string[] socketBonusStrings = socketBonusesString.Split(new string[] { " and ", " & ", ", " }, StringSplitOptions.None);
+						foreach (string socketBonusString in socketBonusStrings)
 						{
-							case "Agility":
-								sockets.Stats.Agility = socketBonusValue;
-								break;
-							case "Stamina":
-								sockets.Stats.Stamina = socketBonusValue;
-								break;
-							case "Dodge Rating":
-								sockets.Stats.DodgeRating = socketBonusValue;
-								break;
-                            case "Parry Rating":
-                                sockets.Stats.ParryRating = socketBonusValue;
-                                break;
-                            case "Block Rating":
-                                sockets.Stats.BlockRating = socketBonusValue;
-                                break;
-                            case "Block Value":
-                                sockets.Stats.BlockValue = socketBonusValue;
-                                break;
-							case "Defense Rating":
-								sockets.Stats.DefenseRating = socketBonusValue;
-								break;
-							case "Hit Rating":
-								sockets.Stats.HitRating = socketBonusValue;
-								break;
-							case "Haste Rating":
-								sockets.Stats.HasteRating = socketBonusValue;
-								break;
-							case "Expertise Rating":
-								sockets.Stats.ExpertiseRating = socketBonusValue;
-								break;
-							case "Armor Penetration":
-								sockets.Stats.ArmorPenetration = socketBonusValue;
-								break;
-							case "Strength":
-								sockets.Stats.Strength = socketBonusValue;
-								break;
-                            case "Healing":
-                                sockets.Stats.Healing = socketBonusValue;
-                                break;
-                            case "Healing +4 Spell Damage":
-                                sockets.Stats.Healing = socketBonusValue;
-                                sockets.Stats.SpellDamageRating = 4f;
-                                break;
-                            case "Healing +3 Spell Damage":
-                                sockets.Stats.Healing = socketBonusValue;
-                                sockets.Stats.SpellDamageRating = 3f;
-                                break;
-                            case "Healing +2 Spell Damage":
-                                sockets.Stats.Healing = socketBonusValue;
-                                sockets.Stats.SpellDamageRating = 2f;
-                                break;
-                            case "Healing +1 Spell Damage":
-                                sockets.Stats.Healing = socketBonusValue;
-                                sockets.Stats.SpellDamageRating = 1f;
-                                break;
-                            case "Healing and +4 Spell Damage":
-                                sockets.Stats.Healing = socketBonusValue;
-                                sockets.Stats.SpellDamageRating = 4f;
-                                break;
-                            case "Healing and +3 Spell Damage":
-                                sockets.Stats.Healing = socketBonusValue;
-                                sockets.Stats.SpellDamageRating = 3f;
-                                break;
-                            case "Healing and +2 Spell Damage":
-                                sockets.Stats.Healing = socketBonusValue;
-                                sockets.Stats.SpellDamageRating = 2f;
-                                break;
-                            case "Healing and +1 Spell Damage":
-                                sockets.Stats.Healing = socketBonusValue;
-                                sockets.Stats.SpellDamageRating = 1f;
-                                break;
-							case "Crit Rating":
-							case "Crit Strike Rating":
-							case "Critical Rating":
-							case "Critical Strike Rating":
-								sockets.Stats.CritRating = socketBonusValue;
-								break;
-							case "Attack Power":
-								sockets.Stats.AttackPower = socketBonusValue;
-								break;
-							case "Weapon Damage":
-								sockets.Stats.WeaponDamage = socketBonusValue;
-								break;
-							case "Resilience":
-							case "Resilience Rating":
-								sockets.Stats.Resilience = socketBonusValue;
-								break;
-							case "Spell Damage":
-								sockets.Stats.SpellDamageRating = socketBonusValue;
-								sockets.Stats.Healing = socketBonusValue;
-								break;
-							case "Spell Damage and Healing":
-								sockets.Stats.SpellDamageRating = socketBonusValue;
-								sockets.Stats.Healing = socketBonusValue;
-								break;
-							case "Spell Hit Rating":
-                                sockets.Stats.SpellHitRating = socketBonusValue;
-                                break;
-                            case "Intellect":
-                                sockets.Stats.Intellect = socketBonusValue;
-                                break;
-							case "Spell Crit":
-							case "Spell Crit Rating":
-							case "Spell Critical":
-							case "Spell Critical Rating":
-                            case "Spell Critical Strike Rating":
-								sockets.Stats.SpellCritRating = socketBonusValue;
-                                break;
-                            case "Spell Haste Rating":
-                                sockets.Stats.SpellHasteRating = socketBonusValue;
-                                break;
-                            case "Spirit":
-                                sockets.Stats.Spirit = socketBonusValue;
-                                break;
-                            case "Mana every 5 seconds":
-                            case "Mana ever 5 Sec":
-                            case "mana per 5 sec":
-                            case "mana per 5 sec.":
-                            case "Mana per 5 sec.":
-                            case "Mana per 5 Seconds":
-                                sockets.Stats.Mp5 = socketBonusValue;
-                                break;
+							if (socketBonusString.LastIndexOf('+') > 2 && socketBonusString.LastIndexOf('+') < socketBonusString.Length - 3)
+							{
+								socketBonuses.Add(socketBonusString.Substring(0, socketBonusString.IndexOf(" +")));
+								socketBonuses.Add(socketBonusString.Substring(socketBonusString.IndexOf(" +") + 1));
+							}
+							else
+								socketBonuses.Add(socketBonusString);
+						}
+						foreach (string socketBonus in socketBonuses)
+						{
+							int socketBonusValue = 0;
+							if (socketBonus.IndexOf(' ') > 0) socketBonusValue = int.Parse(socketBonus.Substring(0, socketBonus.IndexOf(' ')));
+							switch (socketBonus.Substring(socketBonus.IndexOf(' ') + 1))
+							{
+								case "Agility":
+									sockets.Stats.Agility = socketBonusValue;
+									break;
+								case "Stamina":
+									sockets.Stats.Stamina = socketBonusValue;
+									break;
+								case "Dodge Rating":
+									sockets.Stats.DodgeRating = socketBonusValue;
+									break;
+								case "Parry Rating":
+									sockets.Stats.ParryRating = socketBonusValue;
+									break;
+								case "Block Rating":
+									sockets.Stats.BlockRating = socketBonusValue;
+									break;
+								case "Block Value":
+									sockets.Stats.BlockValue = socketBonusValue;
+									break;
+								case "Defense Rating":
+									sockets.Stats.DefenseRating = socketBonusValue;
+									break;
+								case "Hit Rating":
+									sockets.Stats.HitRating = socketBonusValue;
+									break;
+								case "Haste Rating":
+									sockets.Stats.HasteRating = socketBonusValue;
+									break;
+								case "Expertise Rating":
+									sockets.Stats.ExpertiseRating = socketBonusValue;
+									break;
+								case "Armor Penetration":
+									sockets.Stats.ArmorPenetration = socketBonusValue;
+									break;
+								case "Strength":
+									sockets.Stats.Strength = socketBonusValue;
+									break;
+								case "Healing":
+								//case "Healing +4 Spell Damage":
+								//case "Healing +3 Spell Damage":
+								//case "Healing +2 Spell Damage":
+								//case "Healing +1 Spell Damage":
+								//case "Healing and +4 Spell Damage":
+								//case "Healing and +3 Spell Damage":
+								//case "Healing and +2 Spell Damage":
+								//case "Healing and +1 Spell Damage":
+									if (socketBonusValue == 0)
+										sockets.Stats.Healing = int.Parse(socketBonuses[0].Substring(0, socketBonuses[0].IndexOf(' ')));
+									else
+										sockets.Stats.Healing = socketBonusValue;
+									break;
+								case "Crit Rating":
+								case "Crit Strike Rating":
+								case "Critical Rating":
+								case "Critical Strike Rating":
+									sockets.Stats.CritRating = socketBonusValue;
+									break;
+								case "Attack Power":
+									sockets.Stats.AttackPower = socketBonusValue;
+									break;
+								case "Weapon Damage":
+									sockets.Stats.WeaponDamage = socketBonusValue;
+									break;
+								case "Resilience":
+								case "Resilience Rating":
+									sockets.Stats.Resilience = socketBonusValue;
+									break;
+								case "Spell Damage":
+									sockets.Stats.SpellDamageRating = socketBonusValue;
+									//sockets.Stats.Healing = socketBonusValue;
+									break;
+								//case "Spell Damage and Healing":
+								//    sockets.Stats.SpellDamageRating = socketBonusValue;
+								//    sockets.Stats.Healing = socketBonusValue;
+								//    break;
+								case "Spell Hit Rating":
+									sockets.Stats.SpellHitRating = socketBonusValue;
+									break;
+								case "Intellect":
+									sockets.Stats.Intellect = socketBonusValue;
+									break;
+								case "Spell Crit":
+								case "Spell Crit Rating":
+								case "Spell Critical":
+								case "Spell Critical Rating":
+								case "Spell Critical Strike Rating":
+									sockets.Stats.SpellCritRating = socketBonusValue;
+									break;
+								case "Spell Haste Rating":
+									sockets.Stats.SpellHasteRating = socketBonusValue;
+									break;
+								case "Spirit":
+									sockets.Stats.Spirit = socketBonusValue;
+									break;
+								case "Mana every 5 seconds":
+								case "Mana ever 5 Sec":
+								case "mana per 5 sec":
+								case "mana per 5 sec.":
+								case "Mana per 5 sec.":
+								case "Mana per 5 Seconds":
+									sockets.Stats.Mp5 = socketBonusValue;
+									break;
+							}
 						}
 					}
 					catch { }
 				}
 				foreach (XmlNode nodeGemProperties in docItem.SelectNodes("page/itemTooltips/itemTooltip/gemProperties"))
 				{
-					string[] gemBonuses = nodeGemProperties.InnerText.Split(new string[] { " and ", " & ", ", " }, StringSplitOptions.None);
+					List<string> gemBonuses = new List<string>();
+					string[] gemBonusStrings = nodeGemProperties.InnerText.Split(new string[] { " and ", " & ", ", " }, StringSplitOptions.None);
+					foreach (string gemBonusString in gemBonusStrings)
+					{
+						if (gemBonusString.IndexOf('+') != gemBonusString.LastIndexOf('+'))
+						{
+							gemBonuses.Add(gemBonusString.Substring(0, gemBonusString.IndexOf(" +")));
+							gemBonuses.Add(gemBonusString.Substring(gemBonusString.IndexOf(" +") + 1));
+						}
+						else
+							gemBonuses.Add(gemBonusString);
+					}
 					foreach (string gemBonus in gemBonuses)
 					{
                         if (gemBonus == "Spell Damage +6")
@@ -1055,25 +1061,21 @@ namespace Rawr
                                     case "Defense Rating":
                                         stats.DefenseRating = gemBonusValue;
                                         break;
-                                    case "Healing":
-                                        stats.Healing = gemBonusValue;
-                                        break;
-                                    case "Healing +9 Spell Damage":
-                                        stats.Healing = gemBonusValue;
-                                        stats.SpellDamageRating = 9f;
-                                        break;
-                                    case "Healing +4 Spell Damage":
-                                        stats.Healing = gemBonusValue;
-                                        stats.SpellDamageRating = 4f;
-                                        break;
-                                    case "Healing +3 Spell Damage":
-                                        stats.Healing = gemBonusValue;
-                                        stats.SpellDamageRating = 3f;
-                                        break;
-                                    case "Healing +2 Spell Damage":
-                                        stats.Healing = gemBonusValue;
-                                        stats.SpellDamageRating = 2f;
-                                        break;
+									case "Healing":
+										stats.Healing = gemBonusValue;
+										break;
+									//case "Healing +4 Spell Damage":
+									//    stats.Healing = gemBonusValue;
+									//    stats.SpellDamageRating = 4;
+									//    break;
+									//case "Healing +3 Spell Damage":
+									//    stats.Healing = gemBonusValue;
+									//    stats.SpellDamageRating = 3;
+									//    break;
+									//case "Healing +2 Spell Damage":
+									//    stats.Healing = gemBonusValue;
+									//    stats.SpellDamageRating = 2;
+									//    break;
                                     case "Hit Rating":
                                         stats.HitRating = gemBonusValue;
                                         break;

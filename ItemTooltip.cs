@@ -93,15 +93,17 @@ namespace Rawr
         private Enchant CurrentItemEnchant { get; set; }
 
         private Font _fontName;
-        private Font _fontStats;
+		private Font _fontStats;
+		private Font _fontStatsSmall;
         private Font _fontTinyName;
 
         private void LoadGraphicsObjects()
         {
             _fontName = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, ((0)));
             _fontTinyName = new Font("Microsoft Sans Serif", 6.00F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
-            _fontStats = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
-        }
+			_fontStats = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
+			_fontStatsSmall = new Font("Microsoft Sans Serif", 7.25F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
+		}
 
         protected Image _cachedToolTipImage = null;
 
@@ -268,13 +270,30 @@ namespace Rawr
                                             bool active = gem.MeetsRequirements(characterWithItemEquipped);
 
                                             string[] stats = gem.Stats.ToString().Split(',');
-                                            if (stats.Length > 0)
-                                                g.DrawString(stats[0].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
-                                                             rectGemBorder.X + 39, rectGemBorder.Y + 3);
 
-                                            if (stats.Length > 1)
-                                                g.DrawString(stats[1].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
-                                                             rectGemBorder.X + 39, rectGemBorder.Y + 20);
+											switch (stats.Length)
+											{
+												case 1:
+													g.DrawString(stats[0].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+														rectGemBorder.X + 39, rectGemBorder.Y + 3);
+													break;
+
+												case 2:
+													g.DrawString(stats[0].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+														rectGemBorder.X + 39, rectGemBorder.Y + 3);
+													g.DrawString(stats[1].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+														rectGemBorder.X + 39, rectGemBorder.Y + 20);
+													break;
+
+												case 3:
+													g.DrawString(stats[0].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+														rectGemBorder.X + 39, rectGemBorder.Y + 0);
+													g.DrawString(stats[1].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+														rectGemBorder.X + 39, rectGemBorder.Y + 12);
+													g.DrawString(stats[2].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+														rectGemBorder.X + 39, rectGemBorder.Y + 24);
+													break;
+											}
 
                                             if (!active)
                                             {
