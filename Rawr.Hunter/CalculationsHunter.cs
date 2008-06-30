@@ -72,6 +72,9 @@ namespace Rawr.Hunter
 				"Pet Stats:Pet Attack Power",
 				"Pet Stats:Pet Hit Percentage",
 				"Pet Stats:Pet Crit Percentage",
+				"Pet Stats:Pet Base DPS",
+				"Pet Stats:Pet Special DPS",
+				"Pet Stats:Pet KC DPS",
 				"Complex Calculated Stats:Hunter Total DPS",
 				"Complex Calculated Stats:Pet DPS",
 				"Complex Calculated Stats:Overall DPS"
@@ -206,16 +209,13 @@ namespace Rawr.Hunter
 			stats.Hit +
 			stats.HitRating +
 			stats.Intellect +
-			stats.Mana +
 			stats.Miss +
-			stats.Mp5 +
 			stats.ScopeDamage +
 			stats.ShatteredSunAcumenProc +
 			stats.ShatteredSunMightProc +
 			stats.AshtongueTrinketProc +
 			stats.BonusSteadyShotCrit + 
-			stats.BonusSteadyShotDamageMultiplier +
-			stats.Stamina) > 0;
+			stats.BonusSteadyShotDamageMultiplier) > 0;
         }
        
         public override List<Item.ItemType> RelevantItemTypes
@@ -280,6 +280,19 @@ namespace Rawr.Hunter
 
 			character.EnforceMetagemRequirements = options.EnforceMetaGem;
 
+			#region Remove Any Incorrect Modelling
+			bool hasDST = false;
+			if (character.Trinket1 != null && character.Trinket1.Name == "Dragonspine Trophy")
+			{
+				calculatedStats.BasicStats.HasteRating -= character.Trinket1.Stats.HasteRating;
+				hasDST = true;
+			}
+			else if (character.Trinket2 != null && character.Trinket2.Name == "Dragonspine Trophy")
+			{
+				calculatedStats.BasicStats.HasteRating -= character.Trinket2.Stats.HasteRating;
+				hasDST = true;
+			}
+			#endregion
 
 			#region Base Attack Speed
 			//Hasted Speed = Weapon Speed / ( (1+(Haste1 %)) * (1+(Haste2 %)) * (1+(((Haste Rating 1 + Haste Rating 2 + ... )/100)/15.7)) )
@@ -322,17 +335,54 @@ namespace Rawr.Hunter
 				double avgQuickShotChain = shotsInProc * (1 - reprocChanceInitial) + reprocChanceInitial * (1 - reprocChanceSub) * (AvgShotBeforeNthReProc * reprocChanceSub / Math.Pow((1 - reprocChanceSub), 2) + (AvgShotBeforeFirstReProc + shotsInReProc) / (1 - reprocChanceSub));
 				quickShotsUpTime = avgQuickShotChain / (avgQuickShotChain + 10);
 			}
+			else
+			{
+				quickShotShotsPerSecond = new SimulationResults();
+			}
 
 			#endregion
 
-
-			double weightedTotalShotsPerSecond = 0;
-			double weightedTotalSteadyShotsPerSecond = 0;
-			if (normalShotsPerSecond != null && quickShotShotsPerSecond != null)
+			#region DST
+			double dstUptime = 0;
+			double dstQuickShotsUpTime = 0;
+			double dstHaste = (325 / HASTE_RATING_PER_PERCENT / 100);
+			double dstQuickShotsHaste = 0;
+			SimulationResults dstShotsPerSecond = new SimulationResults();
+			SimulationResults dstQuickShotsPerSecond = new SimulationResults();
+			if (hasDST)
 			{
-				weightedTotalShotsPerSecond = normalShotsPerSecond.totalShotsPerSecond * (1 - quickShotsUpTime) + quickShotShotsPerSecond.totalShotsPerSecond * quickShotsUpTime;
-				weightedTotalSteadyShotsPerSecond = normalShotsPerSecond.steadyShotsPerSecond * (1 - quickShotsUpTime) + quickShotShotsPerSecond.steadyShotsPerSecond * quickShotsUpTime;
+				//assumes a 1PPM for now
+				double DSTPPM = 1;
+				double DSTDuration = 10;
+				double DSTCooldown = 20;
+				double timeForAuto = (1 / (normalShotsPerSecond.autoShotsPerSecond / (60 / DSTPPM))) * normalShotsPerSecond.autoShotsPerSecond;
+				double timeForSpecial = (1 / (character.Ranged.Speed / (60 / DSTPPM))) * normalShotsPerSecond.steadyShotsPerSecond;
+				double normalUptimeWeightedAverage = 1 / ((1 / timeForAuto) + (1 / timeForSpecial));
+				dstUptime = DSTDuration / (normalUptimeWeightedAverage + DSTCooldown);
+
+				dstShotsPerSecond = CalculateShotsPerSecond(options, calculatedStats.BaseAttackSpeed / (1 + dstHaste), steadyShotCastTime / (1 + dstHaste));
+
+				if (options.Aspect == Aspect.Hawk)
+				{
+					double timeForQSAuto = (1 / (quickShotShotsPerSecond.autoShotsPerSecond / (60 / DSTPPM))) * quickShotShotsPerSecond.autoShotsPerSecond;
+					double timeForQSSpecial = (1 / (character.Ranged.Speed / (60 / DSTPPM))) * quickShotShotsPerSecond.steadyShotsPerSecond;
+					double qsWeightedAverage = 1 / ((1 / timeForQSAuto) + (1 / timeForQSSpecial));
+					dstQuickShotsUpTime = DSTDuration / (DSTCooldown + qsWeightedAverage);
+					dstQuickShotsPerSecond = CalculateShotsPerSecond(options, calculatedStats.BaseAttackSpeed / (1 + dstHaste) / (1 + quickShotHaste), steadyShotCastTime / (1 + dstHaste) / (1 + quickShotHaste));
+				}
 			}
+			#endregion [DST]
+
+			double weightedTotalShotsPerSecond = normalShotsPerSecond.totalShotsPerSecond * (1 - quickShotsUpTime) * (1 - dstUptime) + 
+										  quickShotShotsPerSecond.totalShotsPerSecond * quickShotsUpTime * (1 - dstQuickShotsUpTime) +
+										  dstShotsPerSecond.totalShotsPerSecond * dstUptime * (1 - quickShotsUpTime) + 
+										  dstQuickShotsPerSecond.totalShotsPerSecond *  quickShotsUpTime * dstQuickShotsUpTime;
+
+			double weightedTotalSteadyShotsPerSecond = normalShotsPerSecond.steadyShotsPerSecond * (1 - quickShotsUpTime) * (1 - dstUptime) +
+										  quickShotShotsPerSecond.steadyShotsPerSecond * quickShotsUpTime * (1 - dstQuickShotsUpTime) +
+										  dstShotsPerSecond.steadyShotsPerSecond * dstUptime * (1 - quickShotsUpTime) +
+										  dstQuickShotsPerSecond.steadyShotsPerSecond * quickShotsUpTime * dstQuickShotsUpTime;
+
 
 			#region OnProc Modelling +Stats
 
@@ -589,7 +639,7 @@ namespace Rawr.Hunter
 				//(average damage + ap damage) * pet damage adjustment * cobra reflexes reduction * (1 - armor mit) * glancing blows modifier
 				double petTotalDamage = (60 + APDamage) * petDamageAdjustment * cobraReflexesDamageReduction * (1 - petArmorDamageReductionPercentage) * glancingBlowDamage;
 				petDPS = petTotalDamage / petEffectiveAttackSpeed;
-
+				calculatedStats.PetBaseDPS = petDPS;
 				//Kill Command
 				//TODO: Option to not use Kill Command
 				if (true)
@@ -620,13 +670,15 @@ namespace Rawr.Hunter
 						}
 					}
 					totalKillCommandDamage = totalKillCommandDamage * totalKillCommandBaseDamage;
-					petDPS += (totalKillCommandDamage / (1 / petKillCommandFrequency));
+					calculatedStats.PetKillCommandDPS = (totalKillCommandDamage / (1 / petKillCommandFrequency));
+					petDPS += calculatedStats.PetKillCommandDPS;
 				}
 				if (petSpecialAttackData != null)
 				{
 					for (int i = 0; i < petSpecialAttackData.Length; i++)
 					{
-						petDPS += CalculatePetSpecialAttackDPS(petSpecialAttackData[i], petDamageAdjustment, petArmorDamageReductionPercentage);
+						calculatedStats.PetSpecialDPS = CalculatePetSpecialAttackDPS(petSpecialAttackData[i], petDamageAdjustment, petArmorDamageReductionPercentage);
+						petDPS += calculatedStats.PetSpecialDPS;
 					}
 				}
 			}
@@ -748,16 +800,42 @@ namespace Rawr.Hunter
 																averageSteadyShotDamage * (1 - armorDamageReductionPercentage),
 																steadyShotCastTime);
 
-			double quickShotDps = 0;
-			if (quickShotsUpTime > 0)
+			//create empty dps simulations with all zeros
+			SimulationResults dstDPS = new SimulationResults();
+			SimulationResults dstQuickShotsDPS = new SimulationResults();
+			SimulationResults quickShotRotation = new SimulationResults();
+			if (hasDST)
 			{
-				SimulationResults quickShotRotation = CalculateShotRotationDPS(options, calculatedStats.BaseAttackSpeed / (1 + quickShotHaste),
+
+				dstDPS = CalculateShotRotationDPS(options, calculatedStats.BaseAttackSpeed / (1 + dstHaste),
+																averageAutoShotDamage * (1 - armorDamageReductionPercentage),
+																averageSteadyShotDamage * (1 - armorDamageReductionPercentage),
+																steadyShotCastTime / (1 + dstHaste));
+
+				if (options.Aspect == Aspect.Hawk)
+				{
+					dstQuickShotsDPS = CalculateShotRotationDPS(options, calculatedStats.BaseAttackSpeed / (1 + dstHaste) / (1 + quickShotHaste),
+																averageAutoShotDamage * (1 - armorDamageReductionPercentage),
+																averageSteadyShotDamage * (1 - armorDamageReductionPercentage),
+																steadyShotCastTime / (1 + dstHaste) / (1 + quickShotHaste));
+				}
+			}
+
+			if (options.Aspect == Aspect.Hawk)
+			{
+				quickShotRotation = CalculateShotRotationDPS(options, calculatedStats.BaseAttackSpeed / (1 + quickShotHaste),
 																	averageAutoShotDamage * (1 - armorDamageReductionPercentage),
 																	averageSteadyShotDamage * (1 - armorDamageReductionPercentage),
 																	steadyShotCastTime / (1 + quickShotHaste));
-				quickShotDps = quickShotRotation.dps;
 			}
-			double totalHunterDPS = normalShotRotation.dps * (1 - quickShotsUpTime) + quickShotDps * quickShotsUpTime;
+
+			double totalHunterDPS = normalShotRotation.dps * (1 - quickShotsUpTime) * (1 - dstUptime) + 
+										  quickShotRotation.dps * quickShotsUpTime * (1 - dstQuickShotsUpTime) +
+										  dstDPS.dps * dstUptime * (1 - quickShotsUpTime) + 
+										  dstQuickShotsDPS.dps *  quickShotsUpTime * dstQuickShotsUpTime;
+
+			
+
 
 			#region OnProc +DPS
 			if (calculatedStats.BasicStats.ShatteredSunMightProc > 0 && options.ScryerAldor == Faction.Scryer)
@@ -795,12 +873,7 @@ namespace Rawr.Hunter
 				character.CalculationOptions = options;
 			}
 			int targetDefence = 5*options.TargetLevel;
-			//statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime;
-			//statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime;
 			
-			//if (character.ActiveBuffs.Contains("Ferocious Inspiration"))
-			//    statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier) *
-			//        (float)Math.Pow(1.03f, calcOpts.NumberOfFerociousInspirations - 1f)) - 1f;
 
 			Stats statsTotal = new Stats();
 			statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
@@ -1015,10 +1088,10 @@ namespace Rawr.Hunter
 		}
 		/// <summary>Based on this macro which is the current spammable BM 3:2 macro. 
 		/// With enough haste, and a quick shots proc, this transforms into a 1:1 macro (add kill command and other effects as needed obviously
-		/* #showtooltip Steady Shot
-			/cast !Auto shot
-			/cast Steady shot
-		**/  
+		/// #showtooltip Steady Shot
+		///	/cast !Auto shot
+		///	/cast Steady shot
+		///  
 		/// </summary>
 		/// <param name="weaponSpeed"></param>
 		/// <param name="autoShotDamage"></param>

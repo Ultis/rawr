@@ -14,6 +14,9 @@ namespace Rawr.Hunter
 		private Stats _petStats;
 		private float _RAP;
 		private float _baseAttackSpeed;
+		private double _PetBaseDPS;
+		private double _PetSpecialDPS;
+		private double _PetKillCommandDPS;
 
 		public float BaseAttackSpeed
 		{
@@ -64,6 +67,24 @@ namespace Rawr.Hunter
 			set { _RAP = value; }
 		}
 
+		public double PetBaseDPS
+		{
+			get { return _PetBaseDPS; }
+			set { _PetBaseDPS = value; }
+		}
+
+		public double PetSpecialDPS
+		{
+			get { return _PetSpecialDPS; }
+			set { _PetSpecialDPS = value; }
+		}
+
+		public double PetKillCommandDPS
+		{
+			get { return _PetKillCommandDPS; }
+			set { _PetKillCommandDPS = value; }
+		}
+
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -84,6 +105,9 @@ namespace Rawr.Hunter
 			dictValues.Add("Pet Attack Power", PetStats.AttackPower.ToString("F0"));
 			dictValues.Add("Pet Hit Percentage", PetStats.Hit.ToString("P2"));
 			dictValues.Add("Pet Crit Percentage", PetStats.Crit.ToString("P2"));
+			dictValues.Add("Pet Base DPS", PetBaseDPS.ToString("F2"));
+			dictValues.Add("Pet Special DPS", PetSpecialDPS.ToString("F2"));
+			dictValues.Add("Pet KC DPS", PetKillCommandDPS.ToString("F2"));
 			dictValues.Add("Ranged AP", BasicStats.RangedAttackPower.ToString("F0"));
 			dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
 			dictValues.Add("Hunter Total DPS", HunterDpsPoints.ToString("F2"));
