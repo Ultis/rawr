@@ -31,19 +31,20 @@ namespace Rawr.Retribution
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             if (calcOpts.TalentsSaved)
             {
-				comboBoxTwoHandedSpec.SelectedItem = calcOpts.TwoHandedSpec;
-				comboBoxConviction.SelectedItem = calcOpts.Conviction;
-                comboBoxCrusade.SelectedItem = calcOpts.Crusade;
-                comboBoxDivineStrength.SelectedItem = calcOpts.DivineStrength;
-                comboBoxFanaticism.SelectedItem = calcOpts.Fanaticism;
-                comboBoxImprovedSanctityAura.SelectedItem = calcOpts.ImprovedSanctityAura;
-                comboBoxPrecision.SelectedItem = calcOpts.Precision;
-                comboBoxSanctityAura.SelectedItem = calcOpts.SanctityAura;
-                comboBoxSanctifiedSeals.SelectedItem = calcOpts.SanctifiedSeals;
-                comboBoxVengeance.SelectedItem = calcOpts.Vengeance;
+				comboBoxTwoHandedSpec.SelectedItem = calcOpts.TwoHandedSpec.ToString();
+                comboBoxConviction.SelectedItem = calcOpts.Conviction.ToString();
+                comboBoxCrusade.SelectedItem = calcOpts.Crusade.ToString();
+                comboBoxDivineStrength.SelectedItem = calcOpts.DivineStrength.ToString();
+                comboBoxFanaticism.SelectedItem = calcOpts.Fanaticism.ToString();
+                comboBoxImprovedSanctityAura.SelectedItem = calcOpts.ImprovedSanctityAura.ToString();
+                comboBoxPrecision.SelectedItem = calcOpts.Precision.ToString();
+                comboBoxSanctityAura.SelectedItem = calcOpts.SanctityAura.ToString();
+                comboBoxSanctifiedSeals.SelectedItem = calcOpts.SanctifiedSeals.ToString();
+                comboBoxVengeance.SelectedItem = calcOpts.Vengeance.ToString();
                                
             }
         }
+
         private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox cb = (ComboBox)sender;
@@ -51,20 +52,19 @@ namespace Rawr.Retribution
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             switch (talent)
 			{
-				case "TwoHandedSpec": calcOpts.TwoHandedSpec = int.Parse(cb.SelectedItem.ToString()); break;
-				case "Conviction": calcOpts.Conviction = int.Parse(cb.SelectedItem.ToString()); break;
-				case "Crusade": calcOpts.Crusade = int.Parse(cb.SelectedItem.ToString()); break;
-				case "DivineStrength": calcOpts.DivineStrength = int.Parse(cb.SelectedItem.ToString()); break;
-				case "Fanaticism": calcOpts.Fanaticism = int.Parse(cb.SelectedItem.ToString()); break;
-				case "ImprovedSanctityAura": calcOpts.ImprovedSanctityAura = int.Parse(cb.SelectedItem.ToString()); break;
-				case "Precision": calcOpts.Precision = int.Parse(cb.SelectedItem.ToString()); break;
-				case "SanctityAura": calcOpts.SanctityAura = int.Parse(cb.SelectedItem.ToString()); break;
-				case "SanctifiedSeals": calcOpts.SanctifiedSeals = int.Parse(cb.SelectedItem.ToString()); break;
-				case "Vengeance": calcOpts.Vengeance = int.Parse(cb.SelectedItem.ToString()); break;
+                case "TwoHandedSpec": calcOpts.TwoHandedSpec = cb.SelectedIndex; break;// int.Parse(cb.SelectedItem.ToString()); break;
+                case "Conviction": calcOpts.Conviction = cb.SelectedIndex; break;
+                case "Crusade": calcOpts.Crusade = cb.SelectedIndex; break;
+                case "DivineStrength": calcOpts.DivineStrength = cb.SelectedIndex; break;
+                case "Fanaticism": calcOpts.Fanaticism = cb.SelectedIndex; break;
+                case "ImprovedSanctityAura": calcOpts.ImprovedSanctityAura = cb.SelectedIndex; break;
+                case "Precision": calcOpts.Precision = cb.SelectedIndex; break;
+                case "SanctityAura": calcOpts.SanctityAura = cb.SelectedIndex; break;
+                case "SanctifiedSeals": calcOpts.SanctifiedSeals = cb.SelectedIndex; break;
+                case "Vengeance": calcOpts.Vengeance = cb.SelectedIndex; break;
 			}
             Character.OnItemsChanged();
 			calcOpts.TalentsSaved = true;
         }
-        
     }
 }
