@@ -147,6 +147,10 @@ namespace Rawr.Tree
                 Healing += stats.TreeOfLifeAura;
             }
 
+            // The value of average healing for a tree can be debated - passive healing is generally a lot better
+            // since you won't have any trouble refreshing HoTs when the buff runs out
+            Healing += stats.AverageHeal;
+
             if (BasePeriodicTicks > 0 && calcOpts.TreeOfLife == 1)
             {
                 Cost = Convert.ToInt32(Cost * 0.8f);
@@ -201,7 +205,7 @@ namespace Rawr.Tree
             BaseCastTime = 0f;
 
             BasePeriodicTick = 39;
-            BasePeriodicTicks = 6;
+            BasePeriodicTicks = 7;
             BaseHoTCoefficient = 0.5180f / 7f;
 
             BaseMinHeal = 600;
@@ -239,6 +243,8 @@ namespace Rawr.Tree
             BaseHealCoefficient = 0; // http://www.wowwiki.com/Spell_Damage_Coefficients
 
             BaseCritPercent = 0;
+
+            PeriodicTicks = 6; // We assume you never get the optimal 7 ticks
         }
     }
 

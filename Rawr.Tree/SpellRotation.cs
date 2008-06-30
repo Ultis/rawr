@@ -30,15 +30,11 @@ namespace Rawr.Tree
 
             foreach (SpellRotation sr in spellCycles)
             {
-                String line = "";
                 foreach (Spell s in sr.spells)
                 {
                     if (sum + s.CastTime <= maxCycleDuration)
                     {
                         sum += s.CastTime;
-                        if (line.Length != 0)
-                            line += ", ";
-                        line += s.Name;
                         this.spells.Add(s);
                     }
                     else
@@ -46,8 +42,11 @@ namespace Rawr.Tree
                         throw new OverflowException("Could not add all cycles to the rotation");
                     }
                 }
-                cycleSpells += sr.tightCycleDuration + "s: " + line + "\n";
+                
+                cycleSpells += sr.cycleSpells;
             }
+
+            this.tightCycleDuration = sum;
         }
 
         public SpellRotation(List<Spell> spells, float maxCycleDuration)
@@ -69,6 +68,10 @@ namespace Rawr.Tree
             }
 
             this.maxCycleDuration = maxCycleDuration;
+            this.tightCycleDuration = sum; 
+            
+            if (cycleSpells.Length != 0)
+                cycleSpells = String.Format("{0:0.0}s: {1}\n", tightCycleDuration, cycleSpells);
         }
 
         public float currentCycleDuration
@@ -99,15 +102,8 @@ namespace Rawr.Tree
 
         public float tightCycleDuration
         {
-            get
-            {
-                float sum = 0f;
-                foreach (Spell s in spells)
-                {
-                    sum += s.CastTime;
-                }
-                return sum;
-            }
+            get;
+            private set;
         }
 
         public float manaPerCycle

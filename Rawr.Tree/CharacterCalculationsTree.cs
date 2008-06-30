@@ -77,43 +77,7 @@ namespace Rawr.Tree
             set;
         }
 
-        public float FightFraction
-        {
-            get;
-            set;
-        }
-
-        public float FightLength
-        {
-            get;
-            set;
-        }
-
-        public int NumCycles
-        {
-            get;
-            set;
-        }
-
-        public int NumCyclesAfterFilter
-        {
-            get;
-            set;
-        }
-
-        public int NumCyclesPerRotation
-        {
-            get;
-            set;
-        }
-
-        public long NumRotations
-        {
-            get;
-            set;
-        }
-
-        public String DebugText
+       public float FightLength
         {
             get;
             set;
@@ -125,11 +89,24 @@ namespace Rawr.Tree
             set;
         }
 
-        public SpellRotation BestSpellRotation
+        public Solver solver
         {
             get;
             set;
         }
+
+        /*
+        public float FightFraction
+        {
+            get;
+            set;
+        }
+
+        public SpellRotation BestSpellRotation
+        {
+            get;
+            set;
+        }*/
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -161,10 +138,9 @@ namespace Rawr.Tree
             dictValues.Add("ToL Points", String.Format("{0:0}*Tree of Life points is the strength of your aura", ToLPoints));
             dictValues.Add("Overall Points", String.Format("{0:0}", OverallPoints));
 
-            if (BestSpellRotation == null)
+            if (solver.bestRotation == null)
             {
                 dictValues.Add("Rotation duration", "--");
-                dictValues.Add("Rotation heal", "--");
                 dictValues.Add("Rotation cost", "--");
                 dictValues.Add("Rotation HPS", "--");
                 dictValues.Add("Rotation HPM", "--");
@@ -172,27 +148,25 @@ namespace Rawr.Tree
             }
             else
             {
-                dictValues.Add("Rotation duration", String.Format("{0:0.0}*{1}{2} different cycles filtered down to {3}\n{4} cycles per rotation means {5} rotations had to be enumerated\n{6}",
-                    BestSpellRotation.bestCycleDuration, BestSpellRotation.cycleSpells,
-                    NumCycles, NumCyclesAfterFilter,
-                    NumCyclesPerRotation, NumRotations,
-                    DebugText));
-                dictValues.Add("Rotation heal", BestSpellRotation.healPerCycle.ToString());
-
-                float netCost = BestSpellRotation.manaPerCycle - Mp5Points * BestSpellRotation.bestCycleDuration / 5;
+                dictValues.Add("Rotation duration", String.Format("{0:0.0}*{1}{2:0.0}s dead time in the rotation",
+                    solver.bestRotation.bestCycleDuration, solver.bestRotation.cycleSpells,
+                    solver.bestRotation.bestCycleDuration-solver.bestRotation.tightCycleDuration));
+                
+                float netCost = solver.bestRotation.manaPerCycle - Mp5Points * solver.bestRotation.bestCycleDuration / 5;
                 if (netCost < 0)
                     netCost = 0;
                 dictValues.Add("Rotation cost", String.Format("{0:0}*{1:0}-{2:0}",
-                    netCost, BestSpellRotation.manaPerCycle, Mp5Points * BestSpellRotation.bestCycleDuration / 5));
-                dictValues.Add("Rotation HPS", String.Format("{0:0}", BestSpellRotation.healPerCycle / BestSpellRotation.bestCycleDuration));
-                dictValues.Add("Rotation HPM", String.Format("{0:0}", BestSpellRotation.HPM));
+                    netCost, solver.bestRotation.manaPerCycle, Mp5Points * solver.bestRotation.bestCycleDuration / 5));
+                dictValues.Add("Rotation HPS", String.Format("{0:0}*{1:0}% of {2:0}",
+                    solver.HpS, solver.FightFraction * 100f, solver.HpS / solver.FightFraction));
+                dictValues.Add("Rotation HPM", String.Format("{0:0.00}", solver.bestRotation.HPM));
 
                 if (netCost > 0)
                 {
-                    float maxLength = (BasicStats.Mana / netCost * BestSpellRotation.bestCycleDuration);
+                    float maxLength = (BasicStats.Mana / netCost * solver.bestRotation.bestCycleDuration);
 
                     dictValues.Add("Max fight duration", String.Format("{0}m{1}s*{2:0}% of the target length",
-                        (int)maxLength / 60, (int)maxLength % 60, FightFraction * 100)); //maxLength / (FightLength*60) * 100));
+                        (int)maxLength / 60, (int)maxLength % 60, solver.FightFraction * 100));
                 }
                 else
                 {
