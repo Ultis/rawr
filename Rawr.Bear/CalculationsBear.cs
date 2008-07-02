@@ -49,12 +49,17 @@ namespace Rawr
 					"Basic Stats:Frost Resist",
 					"Basic Stats:Shadow Resist",
 					"Basic Stats:Arcane Resist",
-                    "Complex Stats:Limited Threat*Normal single target roation of 3 lacerates every 6 second Mangle cooldown.",
+                    "Complex Stats:Limited Threat",
                     "Complex Stats:Unlimited Threat*Limited threat with Maul threat added in.",
-                    "Complex Stats:Lacerate Max TPS*Normal single target roation of 3 lacerates every 6 second Mangle cooldown.  Assumes a 5 stack.",
-                    "Complex Stats:Lacerate Min TPS*Minimal Lacerates to maintain a 5 stack.  Does not take into account losing the 5 stack due to a miss",
-                    "Complex Stats:Swipe TPS*Swipe TPS on a single target, 3 swipes every 6 second Mangle cooldown",
-                    "Complex Stats:Mangle TPS",
+                    "Complex Stats:1-3-0*1 Mangle, 3 Lacerate rotation.",
+                    "Complex Stats:1-0-3*1 Mangle, 3 Swipe rotation.",
+                    "Complex Stats:1-1-2*1 Mangle, 1 Lacerate, 2 Swipe rotation.",
+                    "Complex Stats:2-1-5*2 Mangle, 1 Lacerate, 5 Swipe rotation.",
+                    "Complex Stats:Lacerate Max TPS*3 lacerates every 6 second Mangle cooldown.  Assumes a 5 stack.",
+                    "Complex Stats:Lacerate Min TPS*Minimal Lacerates to maintain a 5 stack",
+                    "Complex Stats:Swipe Threat*Swipe threat on a single target",
+                    "Complex Stats:Mangle Threat",
+                    "Complex Stats:Maul TPS",
                     "Complex Stats:White TPS",
                     "Complex Stats:Missed Attacks",
 					"Complex Stats:Dodge",
@@ -230,6 +235,151 @@ you are being killed by burst damage, focus on Survival Points.",
             calculatedStats.ShadowSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ShadowResistance + stats.AllResist) / cappedResist) * .75)));
             calculatedStats.ArcaneSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ArcaneResistance + stats.AllResist) / cappedResist) * .75)));
 
+            CalculateThreat(stats, targetLevel, calculatedStats, calcOpts);
+
+
+            return calculatedStats;
+        }
+        
+#if !OLD_THREAT
+        private void CalculateThreat(Stats stats, int targetLevel, CharacterCalculationsBear calculatedStats, CalculationOptionsBear calcOpts)
+        {
+            float targetArmor = 7700;
+            float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
+            float modArmor = 1 - (baseArmor / (baseArmor + 10557.5f));
+
+            float critMultiplier = 2 * (1 + stats.BonusCritMultiplier);
+            float attackPower = stats.AttackPower + ((1 + stats.BonusAttackPowerMultiplier));
+
+
+            float hasteBonus = stats.HasteRating / 15.76f / 100f;
+            float attackSpeed = (2.5f) / (1f + hasteBonus);
+
+            float hitBonus = stats.HitRating * 52f / 82f / 1000f;
+            float expertiseBonus = stats.ExpertiseRating * 52f / 82f / 2.5f * 0.0025f;
+
+            float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 73) - expertiseBonus);
+            float chanceParry = Math.Max(0f, 0.1425f - expertiseBonus); // Parry for lower levels?
+            float chanceBlock = 0;//ha!
+            float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
+            if ((targetLevel - 70f) < 3)
+            {
+                chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 70f) - hitBonus);
+            }
+            
+            float glancingRate = 0.2335774f;
+            float glancingReduction = .3f;
+            float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+
+            float chanceCrit = Math.Min(0.75f, (stats.CritRating / 22.08f + ((stats.Agility + (1 - chanceAvoided) * stats.TerrorProc * 2.0f / 3.0f) / 25f)) / 100f);
+
+            calculatedStats.EnemyBlockedAttacks = chanceBlock * 100;
+            calculatedStats.EnemyDodgedAttacks = chanceDodge * 100;
+            calculatedStats.EnemyParriedAttacks = chanceParry * 100;
+            calculatedStats.EnemyMissedAttacks = chanceMiss * 100;
+
+            calculatedStats.DodgedAttacks = chanceDodge * 100f;
+            calculatedStats.MissedAttacks = calculatedStats.EnemyAvoidedAttacks - calculatedStats.DodgedAttacks;
+
+            
+            float BloodlustThreat= (1 - chanceAvoided) * stats.BloodlustProc / 4.0f * 5;
+
+            float averageDamage = 1 - chanceAvoided - chanceCrit + critMultiplier * chanceCrit;
+            float weaponDamage = (1 + stats.BonusPhysicalDamageMultiplier) * (stats.WeaponDamage + (2.5f * +(768f + attackPower) / 14f));
+            float mangleUptime = 1 - (chanceAvoided * chanceAvoided);
+            float mangleMultipler = mangleUptime * 1.3f;
+            
+            float MangleDamage=1.1f*1.15f * (weaponDamage + 155f + stats.BonusMangleBearDamage)*averageDamage*modArmor;
+            float MangleThreat = 1.45f *( 25 * chanceCrit+(1+stats.BonusMangleBearThreat)* MangleDamage+BloodlustThreat);
+            float SwipeDamage = 1.1f * (1 + stats.BonusSwipeDamageMultiplier) * (1 + stats.BonusPhysicalDamageMultiplier) * ((.077f * stats.AttackPower + 92))*averageDamage*modArmor;
+            float SwipeThreat = 1.45f * ( 25 * chanceCrit+SwipeDamage+BloodlustThreat);
+            float LacerateDamage = 1.1f*(1+stats.BonusPhysicalDamageMultiplier)*mangleMultipler*(31+stats.AttackPower/100+stats.BonusLacerateDamage)*averageDamage*modArmor ;
+            float LacerateThreat = 1.45f * ((285) * (1 - chanceAvoided) + 25 * chanceCrit + LacerateDamage+BloodlustThreat);
+            float LacerateDotDPS = 1.1f * (1 + stats.BonusPhysicalDamageMultiplier) * (mangleMultipler * (155 + 5 * (stats.AttackPower / 100) + stats.BonusLacerateDamage))/3 ;
+            float LacerateDotTPS = 1.45f * (.2f * LacerateDotDPS);
+
+
+            float whiteDamage = 1.1f * weaponDamage*modArmor* (averageDamage - glancingRate * glancingReduction);
+            float whiteThreat = 1.45f * (25 * chanceCrit+whiteDamage) +BloodlustThreat;
+
+            calculatedStats.MLS1_3_0DPS = (MangleDamage * 1  + LacerateDamage * 3  + SwipeDamage*0)/6+LacerateDotDPS + whiteDamage / attackSpeed;
+            calculatedStats.MLS1_3_0TPS = (MangleThreat * 1  + LacerateThreat * 3  + SwipeThreat*0)/6+LacerateDotTPS + whiteThreat / attackSpeed ;
+
+            calculatedStats.MLS1_0_3DPS = (MangleDamage * 1  + LacerateDamage * 0  + SwipeDamage*3)/6+LacerateDotDPS + whiteDamage / attackSpeed;
+            calculatedStats.MLS1_0_3TPS = (MangleThreat * 1  + LacerateThreat * 0  + SwipeThreat*3)/6+LacerateDotTPS + whiteThreat / attackSpeed ;
+
+            //Missed lacerates are repeated until hit, removing some swipes
+            calculatedStats.MLS1_1_2DPS = (MangleDamage * 1  + LacerateDamage * 1/(1-chanceAvoided)  + SwipeDamage*2*(1-chanceAvoided))/6+LacerateDotDPS + whiteDamage / attackSpeed;
+            calculatedStats.MLS1_1_2TPS = (MangleThreat * 1  + LacerateThreat * 1/(1-chanceAvoided)  + SwipeThreat*2*(1-chanceAvoided))/6+LacerateDotTPS + whiteThreat / attackSpeed ;
+
+            //This rotation will drop stacks if you miss
+            //Calculate the average damage over time, given the probability of n stacks applied
+            float lacerateUptime = (chanceAvoided)*(
+                    (1-chanceAvoided)*1/5+
+                    (1-chanceAvoided)*(1-chanceAvoided)*2/5+
+                    (1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided)*3/5+
+                    (1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided)*4/5)+
+                    (1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided);
+
+            calculatedStats.MLS2_1_5DPS = (MangleDamage * 2  + LacerateDamage * 1  + SwipeDamage*5)/12+LacerateDotDPS*lacerateUptime + whiteDamage / attackSpeed;
+            calculatedStats.MLS2_1_5TPS = (MangleThreat * 2  + LacerateThreat * 1  + SwipeThreat*5)/12+LacerateDotTPS*lacerateUptime + whiteThreat / attackSpeed ;
+
+            //get convert the glancing white attacks to maul hits
+            calculatedStats.MaulDPS = 1.1f* (179 * averageDamage*modArmor+glancingRate * glancingReduction)/attackSpeed;
+            calculatedStats.MaulTPS = 1.45f*(calculatedStats.MaulDPS+ 322 / attackSpeed);
+
+            calculatedStats.MaxLacerate = (LacerateThreat) / 2 + LacerateDotTPS;
+            calculatedStats.MaxLacerateDPS = LacerateDamage / 2 + LacerateDotDPS;
+
+            calculatedStats.MinLacerate = (LacerateThreat) / 15 + LacerateDotTPS;
+            calculatedStats.MinLacerateDPS = LacerateDamage / 15 + LacerateDotDPS;
+
+            calculatedStats.SwipeDamage = SwipeDamage ;
+            calculatedStats.SwipeThreat = SwipeThreat ;
+
+            calculatedStats.MangleDamage = MangleDamage ;
+            calculatedStats.MangleThreat = MangleThreat ;
+
+            calculatedStats.WhiteDPS = whiteDamage / attackSpeed;
+            calculatedStats.WhiteTPS = (whiteThreat+BloodlustThreat) / attackSpeed;
+                
+            calculatedStats.ThreatPoints = Math.Max(calculatedStats.MLS1_3_0TPS, 
+                Math.Max(calculatedStats.MLS1_0_3TPS, Math.Max(calculatedStats.MLS1_1_2TPS,calculatedStats.MLS2_1_5TPS))) ;
+
+            if(calculatedStats.ThreatPoints == calculatedStats.MLS1_3_0TPS)
+            {
+                calculatedStats.LimitedDPS = calculatedStats.MLS1_3_0DPS;
+            }
+            else if(calculatedStats.ThreatPoints == calculatedStats.MLS1_0_3TPS)
+            {
+                calculatedStats.LimitedDPS = calculatedStats.MLS1_0_3DPS;
+            }
+            else if(calculatedStats.ThreatPoints == calculatedStats.MLS1_1_2TPS)
+            {
+                calculatedStats.LimitedDPS = calculatedStats.MLS1_1_2DPS;
+            }
+            else
+            {
+                calculatedStats.LimitedDPS = calculatedStats.MLS2_1_5DPS;
+            }
+            calculatedStats.UnlimitedDPS=calculatedStats.LimitedDPS+calculatedStats.MaulDPS;
+
+            calculatedStats.UnlimitedThreat = calculatedStats.ThreatPoints + calculatedStats.MaulTPS;
+
+            calculatedStats.ThreatScale = calcOpts.ThreatScale;
+            calculatedStats.ThreatPoints *= calculatedStats.ThreatScale;
+            
+
+            calculatedStats.UnlimitedThreat *= calculatedStats.ThreatScale;
+
+
+            calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
+            
+
+        }
+#else
+       private void CalculateThreat(Stats stats, int targetLevel, CharacterCalculationsBear calculatedStats, CalculationOptionsBear calcOpts)
+        {
             float targetArmor = 7700;
             float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
             float modArmor = 1-(baseArmor / (baseArmor + 10557.5f));
@@ -275,8 +425,15 @@ you are being killed by burst damage, focus on Survival Points.",
             float whiteDPS = weaponDamage / attackSpeed ;
 
             float mangleDPS =  1.15f * (weaponDamage + 155f + stats.BonusMangleBearDamage) / 6;
-
-            float LacerateDPS = (1+stats.BonusPhysicalDamageMultiplier)*1.3f *(31+stats.AttackPower/100+stats.BonusLacerateDamage) /2;
+            /*            
+                        float MangleDamage=1.1f*1.15f * (weaponDamage + 155f + stats.BonusMangleBearDamage);
+                        float SwipeDamage = ((1 + stats.BonusSwipeDamageMultiplier) * (1 + stats.BonusPhysicalDamageMultiplier) * (1.1f * (.077f * stats.AttackPower + 92) * averageDamage * modArmor) );
+                        float LacerateDamage = 1.1*(1+stats.BonusPhysicalDamageMultiplier)*1.3f *(31+stats.AttackPower/100+stats.BonusLacerateDamage) ;
+ 
+                        float MangleThreat = MangleDamage * 1.45f + 25 * chanceCrit;
+                        float SwipeThreat = SwipeDamage * 1.45f + 25 * chanceCrit;
+             */
+            float LacerateDD = (1 + stats.BonusPhysicalDamageMultiplier) * 1.3f * (31 + stats.AttackPower / 100 + stats.BonusLacerateDamage);
             float LacerateBaseTPS = (285) * (1 - chanceAvoided)*.5f;
             float lacerateDotDPS = (1+stats.BonusPhysicalDamageMultiplier) *(1.3f*(155 + 5*(stats.AttackPower / 100) + stats.BonusLacerateDamage))/3;
 
@@ -285,45 +442,51 @@ you are being killed by burst damage, focus on Survival Points.",
             calculatedStats.ThreatScale = calcOpts.ThreatScale;
    
 
-            float averageDamage = 1 - chanceAvoided +  (1 + stats.BonusCritMultiplier) * chanceCrit;
+            float averageDamage = 1 - chanceAvoided - chanceCrit + critMultiplier * chanceCrit;
 
             calculatedStats.MaxLacerateDPS =(
-                1.1f * ((LacerateDPS) * modArmor * averageDamage + lacerateDotDPS));
+                1.1f * ((LacerateDD / 2) * modArmor * averageDamage + lacerateDotDPS));
             calculatedStats.MaxLacerate = 1.45f * (LacerateBaseTPS +  (5*chanceCrit*(3 / 6.0f))*5 +
                 calculatedStats.MaxLacerateDPS - 1.1f* 0.8f * lacerateDotDPS);
 
 
-            calculatedStats.MinLacerateDPS = (1.1f * ((2 * LacerateDPS / 15.0f) * averageDamage + lacerateDotDPS));
+            calculatedStats.MinLacerateDPS = (1.1f * ((LacerateDD / 15.0f) * averageDamage + lacerateDotDPS));
 
             calculatedStats.MinLacerate = 1.45f * (2*LacerateBaseTPS/15 + (5 * chanceCrit * (1 / 15.0f)) * 5 +
                 calculatedStats.MinLacerateDPS - 1.1f * 0.8f * lacerateDotDPS);
 
             calculatedStats.SwipeDPS = ((1 + stats.BonusSwipeDamageMultiplier) * (1 + stats.BonusPhysicalDamageMultiplier) * (1.1f * (.077f * stats.AttackPower + 92) * averageDamage * modArmor) + 5 * chanceCrit * 5) / 2.0f;
-            calculatedStats.SwipeTPS = (1.45f * calculatedStats.SwipeDPS);
+            calculatedStats.SwipeThreat = (1.45f * calculatedStats.SwipeDPS);
 
-            calculatedStats.MangleDPS = (
+            calculatedStats.MangleDamage = (
                 1.1f * (((mangleDPS) * modArmor) * averageDamage));
-            calculatedStats.MangleTPS = 1.45f * ((5 * chanceCrit * (1 / 6.0f)) * 5 +
-                calculatedStats.MangleDPS*(1+stats.BonusMangleBearThreat));
+            calculatedStats.MangleThreat = 1.45f * ((5 * chanceCrit * (1 / 6.0f)) * 5 +
+                calculatedStats.MangleDamage * (1 + stats.BonusMangleBearThreat));
 
+            float glancingRate = 0.2335774f;
+            float glancingReduction = .3f;
             // add in glancing
             calculatedStats.WhiteDPS = 
-               1.1f * (((whiteDPS) * modArmor) * averageDamage); 
+               1.1f * (((whiteDPS) * modArmor) * (averageDamage - glancingRate * glancingReduction));
             
             calculatedStats.WhiteTPS = 1.45f * (5 * chanceCrit * (1 / attackSpeed) * 5 + BloodlustTPS +
                 calculatedStats.WhiteDPS);
 
-            calculatedStats.LimitedDPS = calculatedStats.MaxLacerateDPS + calculatedStats.MangleDPS + calculatedStats.WhiteDPS;
+            calculatedStats.LimitedDPS = calculatedStats.MaxLacerateDPS + calculatedStats.MangleDamage + calculatedStats.WhiteDPS;
             calculatedStats.UnlimitedDPS = calculatedStats.LimitedDPS + (179 / attackSpeed )* modArmor* averageDamage;
 
+            float MangleDamage = 1.1f * 1.15f * (weaponDamage + 155f + stats.BonusMangleBearDamage);
+            float SwipeDamage = ((1 + stats.BonusSwipeDamageMultiplier) * (1 + stats.BonusPhysicalDamageMultiplier) * (1.1f * (.077f * stats.AttackPower + 92) * averageDamage * modArmor));
+
+
             calculatedStats.ThreatPoints    = calculatedStats.ThreatScale * 1.45f * (LacerateBaseTPS + critRageTPS + BloodlustTPS +
-                1.1f * (((whiteDPS + LacerateDPS + mangleDPS ) * modArmor) * averageDamage + 0.2f*lacerateDotDPS));
+                1.1f * (((whiteDPS + LacerateDD / 2 + mangleDPS) * modArmor) * averageDamage + 0.2f * lacerateDotDPS));
             calculatedStats.UnlimitedThreat = calculatedStats.ThreatScale * 1.45f * (LacerateBaseTPS + critRageTPS + BloodlustTPS + 322 / attackSpeed +
-                1.1f * (((whiteDPS + LacerateDPS + 179 / attackSpeed + mangleDPS ) * modArmor) * averageDamage + 0.2f*lacerateDotDPS));
+                1.1f * (((whiteDPS + LacerateDD / 2 + 179 / attackSpeed + mangleDPS) * modArmor) * averageDamage + 0.2f * lacerateDotDPS));
 
             calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
-			return calculatedStats;
 		}
+#endif
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
@@ -640,6 +803,11 @@ you are being killed by burst damage, focus on Survival Points.",
 							MitigationPoints = (calcDamageValue.MitigationPoints - calcBaseValue.MitigationPoints), 
                             SurvivalPoints = (calcDamageValue.SurvivalPoints - calcBaseValue.SurvivalPoints), 
                             ThreatPoints = (calcDamageValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationBear() { Name = "Haste Rating", 
+                            OverallPoints = (calcHasteValue.OverallPoints - calcBaseValue.OverallPoints), 
+							MitigationPoints = (calcHasteValue.MitigationPoints - calcBaseValue.MitigationPoints), 
+                            SurvivalPoints = (calcHasteValue.SurvivalPoints - calcBaseValue.SurvivalPoints), 
+                            ThreatPoints = (calcHasteValue.ThreatPoints - calcBaseValue.ThreatPoints)},
 						new ComparisonCalculationBear() { Name = "Expertise Rating", 
                             OverallPoints = (calcExpertiseValue.OverallPoints - calcBaseValue.OverallPoints), 
 							MitigationPoints = (calcExpertiseValue.MitigationPoints - calcBaseValue.MitigationPoints), 
@@ -909,19 +1077,32 @@ you are being killed by burst damage, focus on Survival Points.",
 	        get { return _unlimitedThreat; }
 	        set { _unlimitedThreat = value; }
         }
-        public float MangleTPS {get;set;}
+        public float MangleThreat {get;set;}
         public float WhiteTPS {get;set;}
-        public float SwipeTPS {get;set;}
+        public float SwipeThreat {get;set;}
         public float MaxLacerate {get;set;}
         public float MinLacerate {get;set;}
 
         public float LimitedDPS { get; set; }
         public float UnlimitedDPS { get; set; }
-        public float MangleDPS { get; set; }
+        public float MangleDamage { get; set; }
         public float WhiteDPS { get; set; }
-        public float SwipeDPS { get; set; }
+        public float SwipeDamage { get; set; }
         public float MaxLacerateDPS { get; set; }
         public float MinLacerateDPS { get; set; }
+
+        public float MLS1_3_0TPS{get;set;}
+        public float MLS1_1_2TPS{get;set;}
+        public float MLS2_1_5TPS{get;set;}
+        public float MLS1_0_3TPS{get;set;}
+        public float MaulTPS{get;set;}
+
+        public float MLS1_3_0DPS{get;set;}
+        public float MLS1_1_2DPS{get;set;}
+        public float MLS2_1_5DPS{get;set;}
+        public float MLS1_0_3DPS{get;set;}
+        public float MaulDPS{get;set;}
+
 
 
         public float EnemyAvoidedAttacks
@@ -1047,10 +1228,16 @@ you are being killed by burst damage, focus on Survival Points.",
             dictValues["Limited Threat"] = String.Format("{0}*{1} DPS", (ThreatPoints / ThreatScale).ToString(), LimitedDPS);//;
             dictValues["Unlimited Threat"] = String.Format("{0}*{1} DPS", (UnlimitedThreat / ThreatScale).ToString(), UnlimitedDPS);//;
 
+            dictValues["1-3-0"] = String.Format("{0}*{1} DPS", MLS1_3_0TPS, MLS1_3_0DPS);
+            dictValues["2-1-5"] = String.Format("{0}*{1} DPS", MLS2_1_5TPS, MLS2_1_5DPS);
+            dictValues["1-0-3"] = String.Format("{0}*{1} DPS", MLS1_0_3TPS, MLS1_0_3DPS);
+            dictValues["1-1-2"] = String.Format("{0}*{1} DPS", MLS1_1_2TPS, MLS1_1_2DPS);
+
             dictValues["Lacerate Max TPS"] = String.Format("{0}*{1} DPS", MaxLacerate, MaxLacerateDPS);
             dictValues["Lacerate Min TPS"] = String.Format("{0}*{1} DPS", MinLacerate, MinLacerateDPS);//
-            dictValues["Swipe TPS"] = String.Format("{0}*{1} DPS", SwipeTPS, SwipeDPS);//SwipeTPS.ToString();
-            dictValues["Mangle TPS"] = String.Format("{0}*{1} DPS", MangleTPS, MangleDPS);//MangleTPS.ToString();
+            dictValues["Swipe Threat"] = String.Format("{0}*{1} Damage", SwipeThreat, SwipeDamage);
+            dictValues["Mangle Threat"] = String.Format("{0}*{1} Damage", MangleThreat, MangleDamage);
+            dictValues["Maul TPS"] = String.Format("{0}*{1} DPS", MaulTPS, MaulDPS);
             dictValues["White TPS"] = String.Format("{0}*{1} DPS", WhiteTPS, WhiteDPS);//WhiteTPS.ToString();
 
 
