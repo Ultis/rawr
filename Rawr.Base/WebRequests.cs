@@ -19,11 +19,15 @@ namespace Rawr
         //5 seems to be the magic number when the armory is acting up.
         private const int RETRY_MAX = 5;
 
+        public const string CONTENT_XML = "application/xml";
+        public const string CONTENT_JPG = "image/jpeg";
+
 		private class DownloadRequest
 		{
 		    public string serverPath;
 		    public string localPath;
 			public string error;
+            public string contentType = CONTENT_XML;
 		}
 		private Queue<DownloadRequest> _downloadRequests;
 		private List<DownloadRequest> _failedRequests;
@@ -303,7 +307,7 @@ namespace Rawr
 		{
 			string filePath = Path.Combine(ItemImageCachePath, iconName + ".jpg");
             DownloadFile(NetworkSettingsProvider.WoWItemIconURI + iconName + ".jpg",
-							filePath);
+							filePath, CONTENT_JPG);
 			if (!File.Exists(filePath))
 			{
 				filePath = null;
@@ -329,7 +333,7 @@ namespace Rawr
 				//@"http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
                 string uri = string.Format(NetworkSettingsProvider.WoWTalentIconURI, charClass.ToString().ToLower(),
 												talentTree.ToLower(),talentName.ToLower());
-				DownloadFile(uri, fullPathToSave);
+				DownloadFile(uri, fullPathToSave, CONTENT_JPG);
 			}
 			if (!File.Exists(fullPathToSave))
 			{
@@ -395,6 +399,7 @@ namespace Rawr
 				DownloadRequest dl = new DownloadRequest();
                 dl.serverPath = NetworkSettingsProvider.WoWItemIconURI + iconName + ".jpg";
 				dl.localPath = localPath;
+                dl.contentType = CONTENT_JPG;
 				InitiateRequest(dl);
 			}
 		}
@@ -450,12 +455,17 @@ namespace Rawr
 			return client;
 		}
 
+        private void DownloadFile(string URI, string localPath)
+        {
+            DownloadFile(URI, localPath, CONTENT_XML);
+        }
+
 		/// <summary>
 		/// Download a given file with the appropriote configuration information
 		/// </summary>
 		/// <param name="serverPath">URI to download</param>
 		/// <param name="localPath">local path, including file name,  where the downloaded file will be saved</param>
-		private void DownloadFile(string URI, string localPath)
+		private void DownloadFile(string URI, string localPath, string contentType)
 		{
 			int retry = 0;
 			bool success = false;
@@ -475,6 +485,10 @@ namespace Rawr
 							try
 							{
 								client.DownloadFile(URI, localPath);
+                                if(!client.ResponseHeaders[HttpResponseHeader.ContentType].StartsWith(contentType))
+                                {
+                                    throw new Exception("invalid content type");
+                                }
                                 success = true;
 							}
 							catch (Exception ex)
@@ -510,6 +524,7 @@ namespace Rawr
 			if (ex.Message.Contains("407") /*proxy auth required */
 				|| ex.Message.Contains("403") /*proxy info probably wrong, if we keep issuing requests, they will probably get locked out*/
 				|| ex.Message.Contains("timed out") /*either proxy required and firewall dropped the request, or armory is down*/
+				|| ex.Message.Contains("invalid content type") /*unexpected content type returned*/
 				|| ex.Message.Contains("The remote name could not be resolved") /* DNS problems*/
                 )
 			{
@@ -624,7 +639,7 @@ namespace Rawr
                     {
                         try
                         {
-                            DownloadFile(dl.serverPath, dl.localPath);
+                            DownloadFile(dl.serverPath, dl.localPath, dl.contentType);
                         }
                         catch (Exception ex)
                         {
