@@ -51,18 +51,44 @@ namespace Rawr.Retribution
 			//    Character.CalculationOptions["ShattrathFaction"] = "Aldor";
 
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
-            trackBarTargetArmor.Value = calcOpts.BossArmor;
-			trackBarFightLength.Value = calcOpts.FightLength;
-			lblLength.Text = trackBarFightLength.Value.ToString();
-            checkBoxExorcism.Checked = calcOpts.Exorcism;
-            checkBoxConsecration.Checked = calcOpts.ConsecRank > 0;
-            comboBoxConsRank.SelectedItem = "Rank " + calcOpts.ConsecRank.ToString();
-            
-            rbSoB.Checked = calcOpts.Seal == 1;
+
             rbSoC.Checked = calcOpts.Seal == 0;
+            rbSoB.Checked = calcOpts.Seal == 1;
+
+            cbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
+			tbFightLength.Value = calcOpts.FightLength;
+			lblFightLengthNum.Text = tbFightLength.Value.ToString();
+
+            checkBoxConsecration.Checked = calcOpts.ConsecRank > 0;
+            cbConsRank.SelectedItem = "Rank " + calcOpts.ConsecRank.ToString();
+            checkBoxExorcism.Checked = calcOpts.Exorcism;
+
+            checkBoxMeta.Checked = calcOpts.EnforceMetagemRequirements;
+
+            rbAldor.Checked = calcOpts.ShattrathFaction == "Aldor";
+            rbScryer.Checked = calcOpts.ShattrathFaction == "Scryer";
+
+            tbExposeWeakness.Value = calcOpts.ExposeWeaknessAPValue;
+            lblExposeWeaknessNum.Text = tbExposeWeakness.Value.ToString();
+
+            tbBloodlust.Value = calcOpts.Bloodlust;
+            lblBloodlustNum.Text = tbBloodlust.Value.ToString();
+
+            tbDrumsOfBattle.Value = calcOpts.DrumsOfBattle;
+            lblDrumsOfBattleNum.Text = tbDrumsOfBattle.Value.ToString();
+
+            tbDrumsOfWar.Value = calcOpts.DrumsOfWar;
+            lblDrumsOfWarNum.Text = tbDrumsOfWar.Value.ToString();
+
+            tbFerociousInspiration.Value = calcOpts.FerociousInspiration;
+            lblFerociousInspirationNum.Text = tbFerociousInspiration.Value.ToString();
+
+            tbTargetArmor.Value = calcOpts.BossArmor;
+            lblTargetArmorDescription.Text = tbTargetArmor.Value.ToString()
+                + (armorBosses.ContainsKey(tbTargetArmor.Value) ? armorBosses[tbTargetArmor.Value] : "");
+
         }
-        
+
 
         private void rbSoC_CheckedChanged(object sender, EventArgs e)
         {
@@ -83,14 +109,14 @@ namespace Rawr.Retribution
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			if (checkBoxConsecration.Checked)
             {
-                comboBoxConsRank.Enabled = true;
-                comboBoxConsRank.SelectedItem = "Rank 1";
+                cbConsRank.Enabled = true;
+                cbConsRank.SelectedItem = "Rank 1";
                 calcOpts.ConsecRank = 1;
                 
             }
             else
             {
-                comboBoxConsRank.Enabled = false;
+                cbConsRank.Enabled = false;
                 calcOpts.ConsecRank = 0;
             }
             Character.OnItemsChanged();
@@ -99,22 +125,22 @@ namespace Rawr.Retribution
         private void comboBoxConsRank_SelectedIndexChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-			calcOpts.ConsecRank = int.Parse(comboBoxConsRank.SelectedItem.ToString().Substring(5, 1));
+			calcOpts.ConsecRank = int.Parse(cbConsRank.SelectedItem.ToString().Substring(5, 1));
             Character.OnItemsChanged();
         }
 
         private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-			calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
+			calcOpts.TargetLevel = int.Parse(cbTargetLevel.SelectedItem.ToString());
             Character.OnItemsChanged();
         }
 
         private void trackBarFightLength_Scroll(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-			calcOpts.FightLength = trackBarFightLength.Value;
-            lblLength.Text = trackBarFightLength.Value.ToString();
+			calcOpts.FightLength = tbFightLength.Value;
+            lblFightLengthNum.Text = tbFightLength.Value.ToString();
             Character.OnItemsChanged();
         }
 
@@ -318,62 +344,62 @@ namespace Rawr.Retribution
         private void radioButtonAldor_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-			calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
+			calcOpts.ShattrathFaction = rbAldor.Checked ? "Aldor" : "Scryer";
             Character.OnItemsChanged();
         }
 
         private void radioButtonScryer_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-			calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
+			calcOpts.ShattrathFaction = rbAldor.Checked ? "Aldor" : "Scryer";
             Character.OnItemsChanged();
         }
 
         private void trackBarExposeWeakness_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.ExposeWeaknessAPValue = trackBarExposeWeakness.Value;
-            labelExposeWeakness.Text = trackBarExposeWeakness.Value.ToString();
+            calcOpts.ExposeWeaknessAPValue = tbExposeWeakness.Value;
+            lblExposeWeaknessNum.Text = tbExposeWeakness.Value.ToString();
             Character.OnItemsChanged();
         }
 
         private void trackBarBloodlustUptime_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.BloodlustUptime = trackBarBloodlustUptime.Value * (40f / (60 * calcOpts.FightLength)) * 100f;
-            labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString();
+            calcOpts.Bloodlust = tbBloodlust.Value;
+            lblBloodlustNum.Text = tbBloodlust.Value.ToString();
             Character.OnItemsChanged();
         }
 
         private void trackBarDrumsOfBattleUptime_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.DrumsOfBattleUptime = trackBarDrumsOfBattleUptime.Value * 25f;
-            labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString();
+            calcOpts.DrumsOfBattle = tbDrumsOfBattle.Value;
+            lblDrumsOfBattleNum.Text = tbDrumsOfBattle.Value.ToString();
             Character.OnItemsChanged();
         }
 
         private void trackBarDrumsOfWarUptime_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.DrumsOfWarUptime = trackBarDrumsOfWarUptime.Value * 25f;
-            labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString();
+            calcOpts.DrumsOfWar = tbDrumsOfWar.Value;
+            lblDrumsOfWarNum.Text = tbDrumsOfWar.Value.ToString();
             Character.OnItemsChanged();
         }
 
         private void trackBarNumberOfFerociousInspirations_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.NumberOfFerociousInspirations = trackBarNumberOfFerociousInspirations.Value;
-            labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
+            calcOpts.FerociousInspiration = tbFerociousInspiration.Value;
+            lblFerociousInspirationNum.Text = tbFerociousInspiration.Value.ToString();
             Character.OnItemsChanged();
         }
 
         private void trackBarTargetArmor_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.BossArmor = trackBarTargetArmor.Value;
-            labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
+            calcOpts.BossArmor = tbTargetArmor.Value;
+            lblTargetArmorDescription.Text = tbTargetArmor.Value.ToString() + (armorBosses.ContainsKey(tbTargetArmor.Value) ? armorBosses[tbTargetArmor.Value] : "");
             Character.OnItemsChanged();
         }
     }
@@ -396,14 +422,14 @@ namespace Rawr.Retribution
 		public int FightLength = 10;
 		public bool Exorcism = false;
 		public int ConsecRank = 0;
-		public int Seal = 1;
+		public int Seal = 0;
 		public bool EnforceMetagemRequirements = false;
 		public string ShattrathFaction = "Aldor";
-        public float BloodlustUptime = (40f / 60f) * 10f;
-        public float DrumsOfBattleUptime = 25f;
-        public float DrumsOfWarUptime = 25f;
+        public int Bloodlust = 1;
+        public int DrumsOfBattle = 1;
+        public int DrumsOfWar = 1;
         public int ExposeWeaknessAPValue = 200;
-        public int NumberOfFerociousInspirations = 2;
+        public int FerociousInspiration = 2;
 	
 		public int TwoHandedSpec = 0;
 		public int Conviction = 0;

@@ -29,88 +29,86 @@
         private void InitializeComponent()
         {
             this.lblTargetLevel = new System.Windows.Forms.Label();
-            this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
+            this.cbTargetLevel = new System.Windows.Forms.ComboBox();
             this.rbSoC = new System.Windows.Forms.RadioButton();
             this.rbSoB = new System.Windows.Forms.RadioButton();
-            this.groupBoxSealChoice = new System.Windows.Forms.GroupBox();
-            this.groupBoxSkillUsage = new System.Windows.Forms.GroupBox();
+            this.gbSealChoice = new System.Windows.Forms.GroupBox();
+            this.gbSkillUsage = new System.Windows.Forms.GroupBox();
             this.checkBoxExorcism = new System.Windows.Forms.CheckBox();
             this.checkBoxConsecration = new System.Windows.Forms.CheckBox();
-            this.comboBoxConsRank = new System.Windows.Forms.ComboBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblLength = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.trackBarFightLength = new System.Windows.Forms.TrackBar();
+            this.cbConsRank = new System.Windows.Forms.ComboBox();
+            this.gbFightInfo = new System.Windows.Forms.GroupBox();
+            this.lblFightLengthNum = new System.Windows.Forms.Label();
+            this.tbFightLength = new System.Windows.Forms.TrackBar();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.btnTalents = new System.Windows.Forms.Button();
             this.btnGraph = new System.Windows.Forms.Button();
             this.checkBoxMeta = new System.Windows.Forms.CheckBox();
-            this.radioButtonAldor = new System.Windows.Forms.RadioButton();
-            this.radioButtonScryer = new System.Windows.Forms.RadioButton();
-            this.Faction = new System.Windows.Forms.GroupBox();
-            this.labelNumberOfFerociousInspirations = new System.Windows.Forms.Label();
-            this.labelDrumsOfWarUptime = new System.Windows.Forms.Label();
-            this.labelDrumsOfBattleUptime = new System.Windows.Forms.Label();
-            this.labelBloodlustUptime = new System.Windows.Forms.Label();
-            this.labelExposeWeakness = new System.Windows.Forms.Label();
-            this.trackBarNumberOfFerociousInspirations = new System.Windows.Forms.TrackBar();
-            this.trackBarDrumsOfWarUptime = new System.Windows.Forms.TrackBar();
-            this.trackBarDrumsOfBattleUptime = new System.Windows.Forms.TrackBar();
-            this.label6 = new System.Windows.Forms.Label();
-            this.trackBarBloodlustUptime = new System.Windows.Forms.TrackBar();
-            this.label9 = new System.Windows.Forms.Label();
-            this.trackBarExposeWeakness = new System.Windows.Forms.TrackBar();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.labelTargetArmorDescription = new System.Windows.Forms.Label();
-            this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.groupBoxSealChoice.SuspendLayout();
-            this.groupBoxSkillUsage.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarFightLength)).BeginInit();
-            this.Faction.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfWarUptime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfBattleUptime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarExposeWeakness)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
+            this.rbAldor = new System.Windows.Forms.RadioButton();
+            this.rbScryer = new System.Windows.Forms.RadioButton();
+            this.gbFaction = new System.Windows.Forms.GroupBox();
+            this.lblFerociousInspirationNum = new System.Windows.Forms.Label();
+            this.lblDrumsOfWarNum = new System.Windows.Forms.Label();
+            this.lblDrumsOfBattleNum = new System.Windows.Forms.Label();
+            this.lblBloodlustNum = new System.Windows.Forms.Label();
+            this.lblExposeWeaknessNum = new System.Windows.Forms.Label();
+            this.tbFerociousInspiration = new System.Windows.Forms.TrackBar();
+            this.tbDrumsOfWar = new System.Windows.Forms.TrackBar();
+            this.tbDrumsOfBattle = new System.Windows.Forms.TrackBar();
+            this.lblFerociousInspiration = new System.Windows.Forms.Label();
+            this.tbBloodlust = new System.Windows.Forms.TrackBar();
+            this.lblDrumsOfWar = new System.Windows.Forms.Label();
+            this.tbExposeWeakness = new System.Windows.Forms.TrackBar();
+            this.lblBloodlust = new System.Windows.Forms.Label();
+            this.lblExposeWeakness = new System.Windows.Forms.Label();
+            this.lblTargetArmorDescription = new System.Windows.Forms.Label();
+            this.tbTargetArmor = new System.Windows.Forms.TrackBar();
+            this.lblTargetArmor = new System.Windows.Forms.Label();
+            this.lblDrumsOfBattle = new System.Windows.Forms.Label();
+            this.gbSealChoice.SuspendLayout();
+            this.gbSkillUsage.SuspendLayout();
+            this.gbFightInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).BeginInit();
+            this.gbFaction.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbFerociousInspiration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbDrumsOfWar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbDrumsOfBattle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBloodlust)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbExposeWeakness)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbTargetArmor)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTargetLevel
             // 
             this.lblTargetLevel.AutoSize = true;
             this.lblTargetLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTargetLevel.Location = new System.Drawing.Point(6, 16);
+            this.lblTargetLevel.Location = new System.Drawing.Point(3, 17);
             this.lblTargetLevel.Name = "lblTargetLevel";
             this.lblTargetLevel.Size = new System.Drawing.Size(77, 15);
             this.lblTargetLevel.TabIndex = 0;
             this.lblTargetLevel.Text = "Target Level:";
             // 
-            // comboBoxTargetLevel
+            // cbTargetLevel
             // 
-            this.comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTargetLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBoxTargetLevel.FormattingEnabled = true;
-            this.comboBoxTargetLevel.Items.AddRange(new object[] {
+            this.cbTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTargetLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbTargetLevel.FormattingEnabled = true;
+            this.cbTargetLevel.Items.AddRange(new object[] {
             "70",
             "71",
             "72",
             "73"});
-            this.comboBoxTargetLevel.Location = new System.Drawing.Point(87, 13);
-            this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-            this.comboBoxTargetLevel.Size = new System.Drawing.Size(49, 23);
-            this.comboBoxTargetLevel.TabIndex = 1;
-            this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetLevel_SelectedIndexChanged);
+            this.cbTargetLevel.Location = new System.Drawing.Point(87, 13);
+            this.cbTargetLevel.Name = "cbTargetLevel";
+            this.cbTargetLevel.Size = new System.Drawing.Size(49, 23);
+            this.cbTargetLevel.TabIndex = 1;
+            this.cbTargetLevel.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetLevel_SelectedIndexChanged);
             // 
             // rbSoC
             // 
             this.rbSoC.AutoSize = true;
             this.rbSoC.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbSoC.Location = new System.Drawing.Point(7, 19);
+            this.rbSoC.Location = new System.Drawing.Point(6, 20);
             this.rbSoC.Name = "rbSoC";
             this.rbSoC.Size = new System.Drawing.Size(124, 19);
             this.rbSoC.TabIndex = 2;
@@ -123,7 +121,7 @@
             // 
             this.rbSoB.AutoSize = true;
             this.rbSoB.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbSoB.Location = new System.Drawing.Point(7, 47);
+            this.rbSoB.Location = new System.Drawing.Point(6, 45);
             this.rbSoB.Name = "rbSoB";
             this.rbSoB.Size = new System.Drawing.Size(98, 19);
             this.rbSoB.TabIndex = 2;
@@ -132,35 +130,35 @@
             this.rbSoB.UseVisualStyleBackColor = true;
             this.rbSoB.CheckedChanged += new System.EventHandler(this.rbSoB_CheckedChanged);
             // 
-            // groupBoxSealChoice
+            // gbSealChoice
             // 
-            this.groupBoxSealChoice.Controls.Add(this.rbSoC);
-            this.groupBoxSealChoice.Controls.Add(this.rbSoB);
-            this.groupBoxSealChoice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxSealChoice.Location = new System.Drawing.Point(8, 15);
-            this.groupBoxSealChoice.Name = "groupBoxSealChoice";
-            this.groupBoxSealChoice.Size = new System.Drawing.Size(185, 73);
-            this.groupBoxSealChoice.TabIndex = 3;
-            this.groupBoxSealChoice.TabStop = false;
-            this.groupBoxSealChoice.Text = "Seal";
+            this.gbSealChoice.Controls.Add(this.rbSoC);
+            this.gbSealChoice.Controls.Add(this.rbSoB);
+            this.gbSealChoice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbSealChoice.Location = new System.Drawing.Point(8, 15);
+            this.gbSealChoice.Name = "gbSealChoice";
+            this.gbSealChoice.Size = new System.Drawing.Size(185, 73);
+            this.gbSealChoice.TabIndex = 3;
+            this.gbSealChoice.TabStop = false;
+            this.gbSealChoice.Text = "Seal";
             // 
-            // groupBoxSkillUsage
+            // gbSkillUsage
             // 
-            this.groupBoxSkillUsage.Controls.Add(this.checkBoxExorcism);
-            this.groupBoxSkillUsage.Controls.Add(this.checkBoxConsecration);
-            this.groupBoxSkillUsage.Controls.Add(this.comboBoxConsRank);
-            this.groupBoxSkillUsage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxSkillUsage.Location = new System.Drawing.Point(8, 103);
-            this.groupBoxSkillUsage.Name = "groupBoxSkillUsage";
-            this.groupBoxSkillUsage.Size = new System.Drawing.Size(185, 89);
-            this.groupBoxSkillUsage.TabIndex = 4;
-            this.groupBoxSkillUsage.TabStop = false;
-            this.groupBoxSkillUsage.Text = "Skill Usage";
+            this.gbSkillUsage.Controls.Add(this.checkBoxExorcism);
+            this.gbSkillUsage.Controls.Add(this.checkBoxConsecration);
+            this.gbSkillUsage.Controls.Add(this.cbConsRank);
+            this.gbSkillUsage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbSkillUsage.Location = new System.Drawing.Point(8, 196);
+            this.gbSkillUsage.Name = "gbSkillUsage";
+            this.gbSkillUsage.Size = new System.Drawing.Size(185, 71);
+            this.gbSkillUsage.TabIndex = 4;
+            this.gbSkillUsage.TabStop = false;
+            this.gbSkillUsage.Text = "Skill Usage";
             // 
             // checkBoxExorcism
             // 
             this.checkBoxExorcism.AutoSize = true;
-            this.checkBoxExorcism.Location = new System.Drawing.Point(7, 54);
+            this.checkBoxExorcism.Location = new System.Drawing.Point(6, 45);
             this.checkBoxExorcism.Name = "checkBoxExorcism";
             this.checkBoxExorcism.Size = new System.Drawing.Size(77, 19);
             this.checkBoxExorcism.TabIndex = 0;
@@ -171,7 +169,7 @@
             // checkBoxConsecration
             // 
             this.checkBoxConsecration.AutoSize = true;
-            this.checkBoxConsecration.Location = new System.Drawing.Point(7, 30);
+            this.checkBoxConsecration.Location = new System.Drawing.Point(6, 20);
             this.checkBoxConsecration.Name = "checkBoxConsecration";
             this.checkBoxConsecration.Size = new System.Drawing.Size(98, 19);
             this.checkBoxConsecration.TabIndex = 0;
@@ -179,83 +177,63 @@
             this.checkBoxConsecration.UseVisualStyleBackColor = true;
             this.checkBoxConsecration.CheckedChanged += new System.EventHandler(this.checkBoxConsecration_CheckedChanged);
             // 
-            // comboBoxConsRank
+            // cbConsRank
             // 
-            this.comboBoxConsRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxConsRank.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBoxConsRank.FormattingEnabled = true;
-            this.comboBoxConsRank.Items.AddRange(new object[] {
+            this.cbConsRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbConsRank.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbConsRank.FormattingEnabled = true;
+            this.cbConsRank.Items.AddRange(new object[] {
             "Rank 1",
             "Rank 2",
             "Rank 3",
             "Rank 4",
             "Rank 5",
             "Rank 6"});
-            this.comboBoxConsRank.Location = new System.Drawing.Point(110, 26);
-            this.comboBoxConsRank.Name = "comboBoxConsRank";
-            this.comboBoxConsRank.Size = new System.Drawing.Size(66, 23);
-            this.comboBoxConsRank.TabIndex = 1;
-            this.comboBoxConsRank.SelectedIndexChanged += new System.EventHandler(this.comboBoxConsRank_SelectedIndexChanged);
+            this.cbConsRank.Location = new System.Drawing.Point(110, 18);
+            this.cbConsRank.Name = "cbConsRank";
+            this.cbConsRank.Size = new System.Drawing.Size(66, 23);
+            this.cbConsRank.TabIndex = 1;
+            this.cbConsRank.SelectedIndexChanged += new System.EventHandler(this.comboBoxConsRank_SelectedIndexChanged);
             // 
-            // groupBox1
+            // gbFightInfo
             // 
-            this.groupBox1.Controls.Add(this.lblLength);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.trackBarFightLength);
-            this.groupBox1.Controls.Add(this.lblFightLength);
-            this.groupBox1.Controls.Add(this.lblTargetLevel);
-            this.groupBox1.Controls.Add(this.comboBoxTargetLevel);
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(8, 211);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(185, 96);
-            this.groupBox1.TabIndex = 4;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Fight Info";
+            this.gbFightInfo.Controls.Add(this.lblFightLengthNum);
+            this.gbFightInfo.Controls.Add(this.tbFightLength);
+            this.gbFightInfo.Controls.Add(this.lblFightLength);
+            this.gbFightInfo.Controls.Add(this.lblTargetLevel);
+            this.gbFightInfo.Controls.Add(this.cbTargetLevel);
+            this.gbFightInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbFightInfo.Location = new System.Drawing.Point(8, 94);
+            this.gbFightInfo.Name = "gbFightInfo";
+            this.gbFightInfo.Size = new System.Drawing.Size(185, 96);
+            this.gbFightInfo.TabIndex = 4;
+            this.gbFightInfo.TabStop = false;
+            this.gbFightInfo.Text = "Fight Info";
             // 
-            // lblLength
+            // lblFightLengthNum
             // 
-            this.lblLength.AutoSize = true;
-            this.lblLength.Location = new System.Drawing.Point(76, 48);
-            this.lblLength.Name = "lblLength";
-            this.lblLength.Size = new System.Drawing.Size(21, 15);
-            this.lblLength.TabIndex = 2;
-            this.lblLength.Text = "10";
+            this.lblFightLengthNum.AutoSize = true;
+            this.lblFightLengthNum.Location = new System.Drawing.Point(92, 71);
+            this.lblFightLengthNum.Name = "lblFightLengthNum";
+            this.lblFightLengthNum.Size = new System.Drawing.Size(21, 15);
+            this.lblFightLengthNum.TabIndex = 2;
+            this.lblFightLengthNum.Text = "10";
             // 
-            // label3
+            // tbFightLength
             // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.SystemColors.Control;
-            this.label3.Location = new System.Drawing.Point(154, 72);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(21, 15);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "10";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(94, 70);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(14, 15);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "0";
-            // 
-            // trackBarFightLength
-            // 
-            this.trackBarFightLength.Location = new System.Drawing.Point(95, 41);
-            this.trackBarFightLength.Name = "trackBarFightLength";
-            this.trackBarFightLength.Size = new System.Drawing.Size(86, 45);
-            this.trackBarFightLength.TabIndex = 2;
-            this.trackBarFightLength.Value = 10;
-            this.trackBarFightLength.Scroll += new System.EventHandler(this.trackBarFightLength_Scroll);
+            this.tbFightLength.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbFightLength.Location = new System.Drawing.Point(95, 41);
+            this.tbFightLength.Name = "tbFightLength";
+            this.tbFightLength.Size = new System.Drawing.Size(86, 45);
+            this.tbFightLength.TabIndex = 2;
+            this.tbFightLength.Value = 10;
+            this.tbFightLength.Scroll += new System.EventHandler(this.trackBarFightLength_Scroll);
             // 
             // lblFightLength
             // 
             this.lblFightLength.AutoSize = true;
             this.lblFightLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFightLength.Location = new System.Drawing.Point(5, 48);
+            this.lblFightLength.Location = new System.Drawing.Point(3, 48);
             this.lblFightLength.Name = "lblFightLength";
             this.lblFightLength.Size = new System.Drawing.Size(78, 15);
             this.lblFightLength.TabIndex = 0;
@@ -264,7 +242,7 @@
             // btnTalents
             // 
             this.btnTalents.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTalents.Location = new System.Drawing.Point(8, 434);
+            this.btnTalents.Location = new System.Drawing.Point(8, 298);
             this.btnTalents.Name = "btnTalents";
             this.btnTalents.Size = new System.Drawing.Size(75, 23);
             this.btnTalents.TabIndex = 5;
@@ -275,7 +253,7 @@
             // btnGraph
             // 
             this.btnGraph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGraph.Location = new System.Drawing.Point(118, 434);
+            this.btnGraph.Location = new System.Drawing.Point(118, 298);
             this.btnGraph.Name = "btnGraph";
             this.btnGraph.Size = new System.Drawing.Size(75, 23);
             this.btnGraph.TabIndex = 5;
@@ -287,7 +265,7 @@
             // 
             this.checkBoxMeta.AutoSize = true;
             this.checkBoxMeta.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxMeta.Location = new System.Drawing.Point(8, 390);
+            this.checkBoxMeta.Location = new System.Drawing.Point(14, 273);
             this.checkBoxMeta.Name = "checkBoxMeta";
             this.checkBoxMeta.Size = new System.Drawing.Size(180, 19);
             this.checkBoxMeta.TabIndex = 6;
@@ -295,305 +273,305 @@
             this.checkBoxMeta.UseVisualStyleBackColor = true;
             this.checkBoxMeta.CheckedChanged += new System.EventHandler(this.checkBoxMeta_CheckedChanged);
             // 
-            // radioButtonAldor
+            // rbAldor
             // 
-            this.radioButtonAldor.AutoSize = true;
-            this.radioButtonAldor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButtonAldor.Location = new System.Drawing.Point(12, 19);
-            this.radioButtonAldor.Name = "radioButtonAldor";
-            this.radioButtonAldor.Size = new System.Drawing.Size(53, 19);
-            this.radioButtonAldor.TabIndex = 7;
-            this.radioButtonAldor.TabStop = true;
-            this.radioButtonAldor.Text = "Aldor";
-            this.radioButtonAldor.UseVisualStyleBackColor = true;
-            this.radioButtonAldor.CheckedChanged += new System.EventHandler(this.radioButtonAldor_CheckedChanged);
+            this.rbAldor.AutoSize = true;
+            this.rbAldor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbAldor.Location = new System.Drawing.Point(12, 19);
+            this.rbAldor.Name = "rbAldor";
+            this.rbAldor.Size = new System.Drawing.Size(53, 19);
+            this.rbAldor.TabIndex = 7;
+            this.rbAldor.TabStop = true;
+            this.rbAldor.Text = "Aldor";
+            this.rbAldor.UseVisualStyleBackColor = true;
+            this.rbAldor.CheckedChanged += new System.EventHandler(this.radioButtonAldor_CheckedChanged);
             // 
-            // radioButtonScryer
+            // rbScryer
             // 
-            this.radioButtonScryer.AutoSize = true;
-            this.radioButtonScryer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButtonScryer.Location = new System.Drawing.Point(88, 19);
-            this.radioButtonScryer.Name = "radioButtonScryer";
-            this.radioButtonScryer.Size = new System.Drawing.Size(59, 19);
-            this.radioButtonScryer.TabIndex = 7;
-            this.radioButtonScryer.TabStop = true;
-            this.radioButtonScryer.Text = "Scryer";
-            this.radioButtonScryer.UseVisualStyleBackColor = true;
-            this.radioButtonScryer.CheckedChanged += new System.EventHandler(this.radioButtonScryer_CheckedChanged);
+            this.rbScryer.AutoSize = true;
+            this.rbScryer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbScryer.Location = new System.Drawing.Point(88, 19);
+            this.rbScryer.Name = "rbScryer";
+            this.rbScryer.Size = new System.Drawing.Size(59, 19);
+            this.rbScryer.TabIndex = 7;
+            this.rbScryer.TabStop = true;
+            this.rbScryer.Text = "Scryer";
+            this.rbScryer.UseVisualStyleBackColor = true;
+            this.rbScryer.CheckedChanged += new System.EventHandler(this.radioButtonScryer_CheckedChanged);
             // 
-            // Faction
+            // gbFaction
             // 
-            this.Faction.Controls.Add(this.radioButtonAldor);
-            this.Faction.Controls.Add(this.radioButtonScryer);
-            this.Faction.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Faction.Location = new System.Drawing.Point(8, 313);
-            this.Faction.Name = "Faction";
-            this.Faction.Size = new System.Drawing.Size(188, 52);
-            this.Faction.TabIndex = 8;
-            this.Faction.TabStop = false;
-            this.Faction.Text = "Faction";
+            this.gbFaction.Controls.Add(this.rbAldor);
+            this.gbFaction.Controls.Add(this.rbScryer);
+            this.gbFaction.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbFaction.Location = new System.Drawing.Point(8, 327);
+            this.gbFaction.Name = "gbFaction";
+            this.gbFaction.Size = new System.Drawing.Size(185, 52);
+            this.gbFaction.TabIndex = 8;
+            this.gbFaction.TabStop = false;
+            this.gbFaction.Text = "Faction";
             // 
-            // labelNumberOfFerociousInspirations
+            // lblFerociousInspirationNum
             // 
-            this.labelNumberOfFerociousInspirations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.lblFerociousInspirationNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelNumberOfFerociousInspirations.AutoSize = true;
-            this.labelNumberOfFerociousInspirations.Location = new System.Drawing.Point(67, 702);
-            this.labelNumberOfFerociousInspirations.Name = "labelNumberOfFerociousInspirations";
-            this.labelNumberOfFerociousInspirations.Size = new System.Drawing.Size(13, 13);
-            this.labelNumberOfFerociousInspirations.TabIndex = 18;
-            this.labelNumberOfFerociousInspirations.Text = "2";
+            this.lblFerociousInspirationNum.AutoSize = true;
+            this.lblFerociousInspirationNum.Location = new System.Drawing.Point(54, 621);
+            this.lblFerociousInspirationNum.Name = "lblFerociousInspirationNum";
+            this.lblFerociousInspirationNum.Size = new System.Drawing.Size(13, 13);
+            this.lblFerociousInspirationNum.TabIndex = 18;
+            this.lblFerociousInspirationNum.Text = "2";
             // 
-            // labelDrumsOfWarUptime
+            // lblDrumsOfWarNum
             // 
-            this.labelDrumsOfWarUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.lblDrumsOfWarNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelDrumsOfWarUptime.AutoSize = true;
-            this.labelDrumsOfWarUptime.Location = new System.Drawing.Point(67, 651);
-            this.labelDrumsOfWarUptime.Name = "labelDrumsOfWarUptime";
-            this.labelDrumsOfWarUptime.Size = new System.Drawing.Size(13, 13);
-            this.labelDrumsOfWarUptime.TabIndex = 15;
-            this.labelDrumsOfWarUptime.Text = "1";
+            this.lblDrumsOfWarNum.AutoSize = true;
+            this.lblDrumsOfWarNum.Location = new System.Drawing.Point(54, 570);
+            this.lblDrumsOfWarNum.Name = "lblDrumsOfWarNum";
+            this.lblDrumsOfWarNum.Size = new System.Drawing.Size(13, 13);
+            this.lblDrumsOfWarNum.TabIndex = 15;
+            this.lblDrumsOfWarNum.Text = "1";
             // 
-            // labelDrumsOfBattleUptime
+            // lblDrumsOfBattleNum
             // 
-            this.labelDrumsOfBattleUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.lblDrumsOfBattleNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelDrumsOfBattleUptime.AutoSize = true;
-            this.labelDrumsOfBattleUptime.Location = new System.Drawing.Point(67, 600);
-            this.labelDrumsOfBattleUptime.Name = "labelDrumsOfBattleUptime";
-            this.labelDrumsOfBattleUptime.Size = new System.Drawing.Size(13, 13);
-            this.labelDrumsOfBattleUptime.TabIndex = 16;
-            this.labelDrumsOfBattleUptime.Text = "1";
+            this.lblDrumsOfBattleNum.AutoSize = true;
+            this.lblDrumsOfBattleNum.Location = new System.Drawing.Point(54, 519);
+            this.lblDrumsOfBattleNum.Name = "lblDrumsOfBattleNum";
+            this.lblDrumsOfBattleNum.Size = new System.Drawing.Size(13, 13);
+            this.lblDrumsOfBattleNum.TabIndex = 16;
+            this.lblDrumsOfBattleNum.Text = "1";
             // 
-            // labelBloodlustUptime
+            // lblBloodlustNum
             // 
-            this.labelBloodlustUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.lblBloodlustNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelBloodlustUptime.AutoSize = true;
-            this.labelBloodlustUptime.Location = new System.Drawing.Point(67, 549);
-            this.labelBloodlustUptime.Name = "labelBloodlustUptime";
-            this.labelBloodlustUptime.Size = new System.Drawing.Size(13, 13);
-            this.labelBloodlustUptime.TabIndex = 14;
-            this.labelBloodlustUptime.Text = "1";
+            this.lblBloodlustNum.AutoSize = true;
+            this.lblBloodlustNum.Location = new System.Drawing.Point(54, 468);
+            this.lblBloodlustNum.Name = "lblBloodlustNum";
+            this.lblBloodlustNum.Size = new System.Drawing.Size(13, 13);
+            this.lblBloodlustNum.TabIndex = 14;
+            this.lblBloodlustNum.Text = "1";
             // 
-            // labelExposeWeakness
+            // lblExposeWeaknessNum
             // 
-            this.labelExposeWeakness.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.lblExposeWeaknessNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelExposeWeakness.AutoSize = true;
-            this.labelExposeWeakness.Location = new System.Drawing.Point(67, 498);
-            this.labelExposeWeakness.Name = "labelExposeWeakness";
-            this.labelExposeWeakness.Size = new System.Drawing.Size(25, 13);
-            this.labelExposeWeakness.TabIndex = 17;
-            this.labelExposeWeakness.Text = "200";
+            this.lblExposeWeaknessNum.AutoSize = true;
+            this.lblExposeWeaknessNum.Location = new System.Drawing.Point(54, 417);
+            this.lblExposeWeaknessNum.Name = "lblExposeWeaknessNum";
+            this.lblExposeWeaknessNum.Size = new System.Drawing.Size(25, 13);
+            this.lblExposeWeaknessNum.TabIndex = 17;
+            this.lblExposeWeaknessNum.Text = "200";
             // 
-            // trackBarNumberOfFerociousInspirations
+            // tbFerociousInspiration
             // 
-            this.trackBarNumberOfFerociousInspirations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.tbFerociousInspiration.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarNumberOfFerociousInspirations.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarNumberOfFerociousInspirations.Location = new System.Drawing.Point(62, 670);
-            this.trackBarNumberOfFerociousInspirations.Maximum = 4;
-            this.trackBarNumberOfFerociousInspirations.Minimum = 1;
-            this.trackBarNumberOfFerociousInspirations.Name = "trackBarNumberOfFerociousInspirations";
-            this.trackBarNumberOfFerociousInspirations.Size = new System.Drawing.Size(152, 45);
-            this.trackBarNumberOfFerociousInspirations.TabIndex = 21;
-            this.trackBarNumberOfFerociousInspirations.Value = 2;
-            this.trackBarNumberOfFerociousInspirations.ValueChanged += new System.EventHandler(this.trackBarNumberOfFerociousInspirations_ValueChanged);
+            this.tbFerociousInspiration.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbFerociousInspiration.Location = new System.Drawing.Point(57, 589);
+            this.tbFerociousInspiration.Maximum = 4;
+            this.tbFerociousInspiration.Minimum = 1;
+            this.tbFerociousInspiration.Name = "tbFerociousInspiration";
+            this.tbFerociousInspiration.Size = new System.Drawing.Size(152, 45);
+            this.tbFerociousInspiration.TabIndex = 21;
+            this.tbFerociousInspiration.Value = 2;
+            this.tbFerociousInspiration.ValueChanged += new System.EventHandler(this.trackBarNumberOfFerociousInspirations_ValueChanged);
             // 
-            // trackBarDrumsOfWarUptime
+            // tbDrumsOfWar
             // 
-            this.trackBarDrumsOfWarUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.tbDrumsOfWar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarDrumsOfWarUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarDrumsOfWarUptime.Location = new System.Drawing.Point(62, 619);
-            this.trackBarDrumsOfWarUptime.Maximum = 4;
-            this.trackBarDrumsOfWarUptime.Minimum = 1;
-            this.trackBarDrumsOfWarUptime.Name = "trackBarDrumsOfWarUptime";
-            this.trackBarDrumsOfWarUptime.Size = new System.Drawing.Size(152, 45);
-            this.trackBarDrumsOfWarUptime.TabIndex = 22;
-            this.trackBarDrumsOfWarUptime.Value = 1;
-            this.trackBarDrumsOfWarUptime.ValueChanged += new System.EventHandler(this.trackBarDrumsOfWarUptime_ValueChanged);
+            this.tbDrumsOfWar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbDrumsOfWar.Location = new System.Drawing.Point(57, 538);
+            this.tbDrumsOfWar.Maximum = 4;
+            this.tbDrumsOfWar.Minimum = 1;
+            this.tbDrumsOfWar.Name = "tbDrumsOfWar";
+            this.tbDrumsOfWar.Size = new System.Drawing.Size(152, 45);
+            this.tbDrumsOfWar.TabIndex = 22;
+            this.tbDrumsOfWar.Value = 1;
+            this.tbDrumsOfWar.ValueChanged += new System.EventHandler(this.trackBarDrumsOfWarUptime_ValueChanged);
             // 
-            // trackBarDrumsOfBattleUptime
+            // tbDrumsOfBattle
             // 
-            this.trackBarDrumsOfBattleUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.tbDrumsOfBattle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarDrumsOfBattleUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarDrumsOfBattleUptime.Location = new System.Drawing.Point(62, 568);
-            this.trackBarDrumsOfBattleUptime.Maximum = 4;
-            this.trackBarDrumsOfBattleUptime.Minimum = 1;
-            this.trackBarDrumsOfBattleUptime.Name = "trackBarDrumsOfBattleUptime";
-            this.trackBarDrumsOfBattleUptime.Size = new System.Drawing.Size(152, 45);
-            this.trackBarDrumsOfBattleUptime.TabIndex = 19;
-            this.trackBarDrumsOfBattleUptime.Value = 1;
-            this.trackBarDrumsOfBattleUptime.ValueChanged += new System.EventHandler(this.trackBarDrumsOfBattleUptime_ValueChanged);
+            this.tbDrumsOfBattle.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbDrumsOfBattle.Location = new System.Drawing.Point(57, 487);
+            this.tbDrumsOfBattle.Maximum = 4;
+            this.tbDrumsOfBattle.Minimum = 1;
+            this.tbDrumsOfBattle.Name = "tbDrumsOfBattle";
+            this.tbDrumsOfBattle.Size = new System.Drawing.Size(152, 45);
+            this.tbDrumsOfBattle.TabIndex = 19;
+            this.tbDrumsOfBattle.Value = 1;
+            this.tbDrumsOfBattle.ValueChanged += new System.EventHandler(this.trackBarDrumsOfBattleUptime_ValueChanged);
             // 
-            // label6
+            // lblFerociousInspiration
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 673);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(60, 39);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "Number of\r\nFerocious\r\nInspirations";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblFerociousInspiration.AutoSize = true;
+            this.lblFerociousInspiration.Location = new System.Drawing.Point(1, 589);
+            this.lblFerociousInspiration.Name = "lblFerociousInspiration";
+            this.lblFerociousInspiration.Size = new System.Drawing.Size(55, 39);
+            this.lblFerociousInspiration.TabIndex = 9;
+            this.lblFerociousInspiration.Text = "Ferocious\r\nInspiration\r\nCount:";
+            this.lblFerociousInspiration.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // trackBarBloodlustUptime
+            // tbBloodlust
             // 
-            this.trackBarBloodlustUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.tbBloodlust.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarBloodlustUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarBloodlustUptime.Location = new System.Drawing.Point(62, 517);
-            this.trackBarBloodlustUptime.Maximum = 8;
-            this.trackBarBloodlustUptime.Minimum = 1;
-            this.trackBarBloodlustUptime.Name = "trackBarBloodlustUptime";
-            this.trackBarBloodlustUptime.Size = new System.Drawing.Size(152, 45);
-            this.trackBarBloodlustUptime.TabIndex = 23;
-            this.trackBarBloodlustUptime.Value = 1;
-            this.trackBarBloodlustUptime.ValueChanged += new System.EventHandler(this.trackBarBloodlustUptime_ValueChanged);
+            this.tbBloodlust.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbBloodlust.Location = new System.Drawing.Point(57, 436);
+            this.tbBloodlust.Maximum = 8;
+            this.tbBloodlust.Minimum = 1;
+            this.tbBloodlust.Name = "tbBloodlust";
+            this.tbBloodlust.Size = new System.Drawing.Size(152, 45);
+            this.tbBloodlust.TabIndex = 23;
+            this.tbBloodlust.Value = 1;
+            this.tbBloodlust.ValueChanged += new System.EventHandler(this.trackBarBloodlustUptime_ValueChanged);
             // 
-            // label9
+            // lblDrumsOfWar
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 622);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(48, 39);
-            this.label9.TabIndex = 11;
-            this.label9.Text = "Drums\r\nof War\r\nCount #:";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblDrumsOfWar.AutoSize = true;
+            this.lblDrumsOfWar.Location = new System.Drawing.Point(17, 538);
+            this.lblDrumsOfWar.Name = "lblDrumsOfWar";
+            this.lblDrumsOfWar.Size = new System.Drawing.Size(39, 39);
+            this.lblDrumsOfWar.TabIndex = 11;
+            this.lblDrumsOfWar.Text = "Drums\r\nof War\r\nCount:";
+            this.lblDrumsOfWar.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // trackBarExposeWeakness
+            // tbExposeWeakness
             // 
-            this.trackBarExposeWeakness.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.tbExposeWeakness.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarExposeWeakness.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarExposeWeakness.LargeChange = 50;
-            this.trackBarExposeWeakness.Location = new System.Drawing.Point(62, 466);
-            this.trackBarExposeWeakness.Maximum = 400;
-            this.trackBarExposeWeakness.Minimum = 50;
-            this.trackBarExposeWeakness.Name = "trackBarExposeWeakness";
-            this.trackBarExposeWeakness.Size = new System.Drawing.Size(152, 45);
-            this.trackBarExposeWeakness.SmallChange = 10;
-            this.trackBarExposeWeakness.TabIndex = 20;
-            this.trackBarExposeWeakness.TickFrequency = 50;
-            this.trackBarExposeWeakness.Value = 200;
-            this.trackBarExposeWeakness.ValueChanged += new System.EventHandler(this.trackBarExposeWeakness_ValueChanged);
+            this.tbExposeWeakness.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbExposeWeakness.LargeChange = 50;
+            this.tbExposeWeakness.Location = new System.Drawing.Point(57, 385);
+            this.tbExposeWeakness.Maximum = 400;
+            this.tbExposeWeakness.Minimum = 50;
+            this.tbExposeWeakness.Name = "tbExposeWeakness";
+            this.tbExposeWeakness.Size = new System.Drawing.Size(152, 45);
+            this.tbExposeWeakness.SmallChange = 10;
+            this.tbExposeWeakness.TabIndex = 20;
+            this.tbExposeWeakness.TickFrequency = 50;
+            this.tbExposeWeakness.Value = 200;
+            this.tbExposeWeakness.ValueChanged += new System.EventHandler(this.trackBarExposeWeakness_ValueChanged);
             // 
-            // label5
+            // lblBloodlust
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 520);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(50, 26);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Bloodlust\r\nCount #:";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblBloodlust.AutoSize = true;
+            this.lblBloodlust.Location = new System.Drawing.Point(6, 436);
+            this.lblBloodlust.Name = "lblBloodlust";
+            this.lblBloodlust.Size = new System.Drawing.Size(50, 26);
+            this.lblBloodlust.TabIndex = 12;
+            this.lblBloodlust.Text = "Bloodlust\r\nCount:";
+            this.lblBloodlust.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // label4
+            // lblExposeWeakness
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 469);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(58, 39);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Expose\r\nWeakness\r\nAP Bonus:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblExposeWeakness.AutoSize = true;
+            this.lblExposeWeakness.Location = new System.Drawing.Point(-2, 385);
+            this.lblExposeWeakness.Name = "lblExposeWeakness";
+            this.lblExposeWeakness.Size = new System.Drawing.Size(58, 39);
+            this.lblExposeWeakness.TabIndex = 10;
+            this.lblExposeWeakness.Text = "Expose\r\nWeakness\r\nAP Bonus:";
+            this.lblExposeWeakness.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // labelTargetArmorDescription
+            // lblTargetArmorDescription
             // 
-            this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.lblTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTargetArmorDescription.Location = new System.Drawing.Point(0, 774);
-            this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
-            this.labelTargetArmorDescription.Size = new System.Drawing.Size(200, 40);
-            this.labelTargetArmorDescription.TabIndex = 25;
-            this.labelTargetArmorDescription.Text = "7700 Armor: Hydross, Lurker, Leotheras, Tidewalker, Al\'ar, Naj\'entus, Supremus, A" +
+            this.lblTargetArmorDescription.Location = new System.Drawing.Point(9, 688);
+            this.lblTargetArmorDescription.Name = "lblTargetArmorDescription";
+            this.lblTargetArmorDescription.Size = new System.Drawing.Size(200, 40);
+            this.lblTargetArmorDescription.TabIndex = 25;
+            this.lblTargetArmorDescription.Text = "7700 Armor: Hydross, Lurker, Leotheras, Tidewalker, Al\'ar, Naj\'entus, Supremus, A" +
                 "kama, Gurtogg";
             // 
-            // trackBarTargetArmor
+            // tbTargetArmor
             // 
-            this.trackBarTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.tbTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarTargetArmor.LargeChange = 1000;
-            this.trackBarTargetArmor.Location = new System.Drawing.Point(69, 726);
-            this.trackBarTargetArmor.Maximum = 10000;
-            this.trackBarTargetArmor.Name = "trackBarTargetArmor";
-            this.trackBarTargetArmor.Size = new System.Drawing.Size(139, 45);
-            this.trackBarTargetArmor.SmallChange = 100;
-            this.trackBarTargetArmor.TabIndex = 26;
-            this.trackBarTargetArmor.TickFrequency = 1000;
-            this.trackBarTargetArmor.Value = 7700;
-            this.trackBarTargetArmor.ValueChanged += new System.EventHandler(this.trackBarTargetArmor_ValueChanged);
+            this.tbTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbTargetArmor.LargeChange = 1000;
+            this.tbTargetArmor.Location = new System.Drawing.Point(57, 640);
+            this.tbTargetArmor.Maximum = 10000;
+            this.tbTargetArmor.Name = "tbTargetArmor";
+            this.tbTargetArmor.Size = new System.Drawing.Size(152, 45);
+            this.tbTargetArmor.SmallChange = 100;
+            this.tbTargetArmor.TabIndex = 26;
+            this.tbTargetArmor.TickFrequency = 1000;
+            this.tbTargetArmor.Value = 7700;
+            this.tbTargetArmor.ValueChanged += new System.EventHandler(this.trackBarTargetArmor_ValueChanged);
             // 
-            // label2
+            // lblTargetArmor
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-3, 729);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 13);
-            this.label2.TabIndex = 24;
-            this.label2.Text = "Target Armor: ";
+            this.lblTargetArmor.AutoSize = true;
+            this.lblTargetArmor.Location = new System.Drawing.Point(18, 637);
+            this.lblTargetArmor.Name = "lblTargetArmor";
+            this.lblTargetArmor.Size = new System.Drawing.Size(38, 26);
+            this.lblTargetArmor.TabIndex = 24;
+            this.lblTargetArmor.Text = "Target\r\nArmor:";
             // 
-            // label7
+            // lblDrumsOfBattle
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 574);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(48, 39);
-            this.label7.TabIndex = 27;
-            this.label7.Text = "Drums\r\nof Battle\r\nCount #:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblDrumsOfBattle.AutoSize = true;
+            this.lblDrumsOfBattle.Location = new System.Drawing.Point(10, 487);
+            this.lblDrumsOfBattle.Name = "lblDrumsOfBattle";
+            this.lblDrumsOfBattle.Size = new System.Drawing.Size(46, 39);
+            this.lblDrumsOfBattle.TabIndex = 27;
+            this.lblDrumsOfBattle.Text = "Drums\r\nof Battle\r\nCount:";
+            this.lblDrumsOfBattle.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.labelTargetArmorDescription);
-            this.Controls.Add(this.trackBarTargetArmor);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.labelNumberOfFerociousInspirations);
-            this.Controls.Add(this.labelDrumsOfWarUptime);
-            this.Controls.Add(this.labelDrumsOfBattleUptime);
-            this.Controls.Add(this.labelBloodlustUptime);
-            this.Controls.Add(this.labelExposeWeakness);
-            this.Controls.Add(this.trackBarNumberOfFerociousInspirations);
-            this.Controls.Add(this.trackBarDrumsOfWarUptime);
-            this.Controls.Add(this.trackBarDrumsOfBattleUptime);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.trackBarBloodlustUptime);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.trackBarExposeWeakness);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.Faction);
+            this.Controls.Add(this.lblDrumsOfBattle);
+            this.Controls.Add(this.lblTargetArmorDescription);
+            this.Controls.Add(this.tbTargetArmor);
+            this.Controls.Add(this.lblTargetArmor);
+            this.Controls.Add(this.lblFerociousInspirationNum);
+            this.Controls.Add(this.lblDrumsOfWarNum);
+            this.Controls.Add(this.lblDrumsOfBattleNum);
+            this.Controls.Add(this.lblBloodlustNum);
+            this.Controls.Add(this.lblExposeWeaknessNum);
+            this.Controls.Add(this.tbFerociousInspiration);
+            this.Controls.Add(this.tbDrumsOfWar);
+            this.Controls.Add(this.tbDrumsOfBattle);
+            this.Controls.Add(this.lblFerociousInspiration);
+            this.Controls.Add(this.tbBloodlust);
+            this.Controls.Add(this.lblDrumsOfWar);
+            this.Controls.Add(this.tbExposeWeakness);
+            this.Controls.Add(this.lblBloodlust);
+            this.Controls.Add(this.lblExposeWeakness);
+            this.Controls.Add(this.gbFaction);
             this.Controls.Add(this.checkBoxMeta);
             this.Controls.Add(this.btnGraph);
             this.Controls.Add(this.btnTalents);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.groupBoxSkillUsage);
-            this.Controls.Add(this.groupBoxSealChoice);
+            this.Controls.Add(this.gbFightInfo);
+            this.Controls.Add(this.gbSkillUsage);
+            this.Controls.Add(this.gbSealChoice);
             this.Name = "CalculationOptionsPanelRetribution";
-            this.Size = new System.Drawing.Size(209, 840);
-            this.groupBoxSealChoice.ResumeLayout(false);
-            this.groupBoxSealChoice.PerformLayout();
-            this.groupBoxSkillUsage.ResumeLayout(false);
-            this.groupBoxSkillUsage.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarFightLength)).EndInit();
-            this.Faction.ResumeLayout(false);
-            this.Faction.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfWarUptime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfBattleUptime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarExposeWeakness)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
+            this.Size = new System.Drawing.Size(209, 737);
+            this.gbSealChoice.ResumeLayout(false);
+            this.gbSealChoice.PerformLayout();
+            this.gbSkillUsage.ResumeLayout(false);
+            this.gbSkillUsage.PerformLayout();
+            this.gbFightInfo.ResumeLayout(false);
+            this.gbFightInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).EndInit();
+            this.gbFaction.ResumeLayout(false);
+            this.gbFaction.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbFerociousInspiration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbDrumsOfWar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbDrumsOfBattle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBloodlust)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbExposeWeakness)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbTargetArmor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -602,43 +580,41 @@
         #endregion
 
         private System.Windows.Forms.Label lblTargetLevel;
-        private System.Windows.Forms.ComboBox comboBoxTargetLevel;
+        private System.Windows.Forms.ComboBox cbTargetLevel;
         private System.Windows.Forms.RadioButton rbSoC;
         private System.Windows.Forms.RadioButton rbSoB;
-        private System.Windows.Forms.GroupBox groupBoxSealChoice;
-        private System.Windows.Forms.GroupBox groupBoxSkillUsage;
+        private System.Windows.Forms.GroupBox gbSealChoice;
+        private System.Windows.Forms.GroupBox gbSkillUsage;
         private System.Windows.Forms.CheckBox checkBoxConsecration;
-        private System.Windows.Forms.ComboBox comboBoxConsRank;
+        private System.Windows.Forms.ComboBox cbConsRank;
         private System.Windows.Forms.CheckBox checkBoxExorcism;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TrackBar trackBarFightLength;
+        private System.Windows.Forms.GroupBox gbFightInfo;
+        private System.Windows.Forms.TrackBar tbFightLength;
         private System.Windows.Forms.Label lblFightLength;
         private System.Windows.Forms.Button btnTalents;
         private System.Windows.Forms.Button btnGraph;
-        private System.Windows.Forms.Label lblLength;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblFightLengthNum;
         private System.Windows.Forms.CheckBox checkBoxMeta;
-        private System.Windows.Forms.RadioButton radioButtonAldor;
-        private System.Windows.Forms.RadioButton radioButtonScryer;
-        private System.Windows.Forms.GroupBox Faction;
-        private System.Windows.Forms.Label labelNumberOfFerociousInspirations;
-        private System.Windows.Forms.Label labelDrumsOfWarUptime;
-        private System.Windows.Forms.Label labelDrumsOfBattleUptime;
-        private System.Windows.Forms.Label labelBloodlustUptime;
-        private System.Windows.Forms.Label labelExposeWeakness;
-        private System.Windows.Forms.TrackBar trackBarNumberOfFerociousInspirations;
-        private System.Windows.Forms.TrackBar trackBarDrumsOfWarUptime;
-        private System.Windows.Forms.TrackBar trackBarDrumsOfBattleUptime;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TrackBar trackBarBloodlustUptime;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TrackBar trackBarExposeWeakness;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label labelTargetArmorDescription;
-        private System.Windows.Forms.TrackBar trackBarTargetArmor;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.RadioButton rbAldor;
+        private System.Windows.Forms.RadioButton rbScryer;
+        private System.Windows.Forms.GroupBox gbFaction;
+        private System.Windows.Forms.Label lblFerociousInspirationNum;
+        private System.Windows.Forms.Label lblDrumsOfWarNum;
+        private System.Windows.Forms.Label lblDrumsOfBattleNum;
+        private System.Windows.Forms.Label lblBloodlustNum;
+        private System.Windows.Forms.Label lblExposeWeaknessNum;
+        private System.Windows.Forms.TrackBar tbFerociousInspiration;
+        private System.Windows.Forms.TrackBar tbDrumsOfWar;
+        private System.Windows.Forms.TrackBar tbDrumsOfBattle;
+        private System.Windows.Forms.Label lblFerociousInspiration;
+        private System.Windows.Forms.TrackBar tbBloodlust;
+        private System.Windows.Forms.Label lblDrumsOfWar;
+        private System.Windows.Forms.TrackBar tbExposeWeakness;
+        private System.Windows.Forms.Label lblBloodlust;
+        private System.Windows.Forms.Label lblExposeWeakness;
+        private System.Windows.Forms.Label lblTargetArmorDescription;
+        private System.Windows.Forms.TrackBar tbTargetArmor;
+        private System.Windows.Forms.Label lblTargetArmor;
+        private System.Windows.Forms.Label lblDrumsOfBattle;
     }
 }

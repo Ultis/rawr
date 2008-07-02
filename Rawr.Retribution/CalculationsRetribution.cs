@@ -175,7 +175,7 @@ namespace Rawr.Retribution
             CharacterCalculationsRetribution calcs = new CharacterCalculationsRetribution();
             calcs.BasicStats = stats;
 
-            float dpsWhite = 0f, dpsCrusader = 0f, dpsConsecration = 0f, dpsExorcism = 0f, dpsJudge = 0f, wfDPS = 0.0f, dpsSeal = 0.0f;
+            float dpsWhite = 0f, dpsSeal = 0f, dpsCrusader = 0f, dpsConsecration = 0f, dpsExorcism = 0f, dpsJudgement = 0f, dpsWindfury = 0.0f;
             float baseSpeed = 1f, hastedSpeed = 1f, baseDamage = 0f, mitigation = 1f;
             float whiteHit = 0f, physHitsCrits = 1f, totalMiss = 0f, spellHitsCrits = 1f, spellResist = 0f;
             float chanceToGlance = 0.25f, glancingAmount = 0.35f;
@@ -186,7 +186,7 @@ namespace Rawr.Retribution
             float crusade = 1f + 0.01f * (float)calcOpts.Crusade;
             float vengeance = 1f + 0.03f * (float)calcOpts.Vengeance;
             float sancAura = 1f + 0.1f * (float)calcOpts.SanctityAura;
-            float spellPower = 1f + stats.BonusSpellPowerMultiplier; // Covers all % Spell damage increases.  Misery, FI.
+            float spellPower = 1f + stats.BonusSpellPowerMultiplier; // Covers all % spell damage increases.  Misery, FI.
             float physPower = 1f + stats.BonusPhysicalDamageMultiplier; // Covers all % physical damage increases.  Blood Frenzy, FI.
             float partialResist = 0.953f; // Average of 4.7% damage lost to partial resists on spells
             float jotc = 219f;
@@ -223,17 +223,15 @@ namespace Rawr.Retribution
 
                 // Mongoose Enchant grants 2% haste
                 if (stats.MongooseProc > 0)
-                    hastedSpeed /= 1f + 0.02f * 0.4f;  // ASSUMPTION: Mongoose has a 40% uptime
+                    hastedSpeed /= 1f + (0.02f * 0.4f);  // ASSUMPTION: Mongoose has a 40% uptime
                 if (stats.Bloodlust > 0)
                 {
-                    //Bloodlust -- Calculating uptime
-                    //div = Math.DivRem(Convert.ToInt32(fightDuration), 600, out remainder);
-                    //if (remainder == 0)
-                    //    noOfFullBL = div;
-                    //else
-                    //    noOfFullBL = Convert.ToInt32(Math.Ceiling(Convert.ToDouble((fightDuration + 40) / 600)));
+                    float bloodlustUptime = (calcOpts.Bloodlust * 40f);
 
-                    hastedSpeed /= (1f + 0.003f * calcOpts.BloodlustUptime);
+                    if (bloodlustUptime > fightDuration) bloodlustUptime = 1f;
+                    else bloodlustUptime /= fightDuration;
+
+                    hastedSpeed /= 1f + (0.3f * bloodlustUptime);
                 }
             }
             #endregion
@@ -328,59 +326,64 @@ namespace Rawr.Retribution
             #endregion
 
 
-            #region Seal of Blood
-            if (calcOpts.Seal == 1)
+            #region Seal
             {
-                float ppmSoB = (60f / hastedSpeed * (1 - totalMiss)) * (1 + 0.2f * (1 - totalMiss));
-                float avgSoBHitPre = 0.35f * whiteHit;
-                float avgSoBHitPost = avgSoBHitPre * physHitsCrits - avgSoBHitPre * totalMiss;
+                float sealProcs = 0f, sealAvgDam = 0f;
+                if (calcOpts.Seal == 0) // Seal of Command
+                {
+                    float socPPM = 7f, socCoeff = 0.2f, socHolyCoeff = 0.29f;
 
-                //TODO: Add Partial Resists
-                avgSoBHitPost *= impSancAura * crusade * avWrath * vengeance * sancAura * spellPower * 0.96f;
-                float dpsSoB = avgSoBHitPost * ppmSoB / 60f;
-                calcs.SealDPSPoints = dpsSoB;
+                    // Find real PPM.  Procs 7 times per minute before misses
+                    sealProcs = socPPM * (1f - totalMiss);
+                    // Chain Procs: Windfury procs Seal of Command  **TODO subtract out chance that SoC has already proc'd.
+                    if (stats.WindfuryAPBonus > 0) sealProcs *= 1 + 0.2f * (1 - totalMiss);
+
+                    // Seal Damage per hit
+                    sealAvgDam = 0.7f * whiteHit * twoHandedSpec + socCoeff * stats.SpellDamageRating;
+                    sealAvgDam = sealAvgDam * holyDamMult + socHolyCoeff * jotc;
+
+                    // SoC average damage per proc
+                    sealAvgDam *= (physHitsCrits - totalMiss) * partialResist;
+                }
+                else // Seal of Blood
+                {
+                    // Find real PPM.  Procs on every hit.
+                    sealProcs = (60f / hastedSpeed) * (1 - totalMiss);
+                    // Chain Procs: Windfury procs Seal of Blood
+                    if (stats.WindfuryAPBonus > 0) sealProcs *= 1 + 0.2f * (1 - totalMiss);
+
+                    // Seal Damage per hit
+                    sealAvgDam = 0.35f * whiteHit * holyDamMult * twoHandedSpec;
+
+                    // SoB average damage per proc
+                    sealAvgDam *= (physHitsCrits - totalMiss) * partialResist;
+                }
+
+                // Total Seal DPS
+                dpsSeal = sealAvgDam * sealProcs / 60f;
             }
             #endregion
 
 
             #region Windfury
-            float avgTimeBetnWF = (hastedSpeed / (1.0f - totalMiss)) * 5.0f;
-            float wfAPIncrease = stats.WindfuryAPBonus;
-            float wfHitPre = whiteHit + (wfAPIncrease / 14f) * baseSpeed;
-            float wfHitPost = (wfHitPre * physHitsCrits) - (wfHitPre * totalMiss) - (wfHitPre * glancingAmount * chanceToGlance);
-            if (wfAPIncrease > 0)
+            if (stats.WindfuryAPBonus > 0)
             {
-                wfHitPost *= impSancAura * crusade * vengeance * physPower * avWrath * mitigation;
-            }
-            else
-            {
-                wfHitPost = 0f;
-            }
-            wfDPS = wfHitPost / avgTimeBetnWF;
-            calcs.WFDPSPoints = wfDPS;
-            #endregion
+                float windProcRate = .2f, windPerMin = 0f, windAvgDam = 0f, windAPBonus = stats.WindfuryAPBonus;
 
+                // Find real PPM.  Chance to proc on every hit. and damage per hit
+                windPerMin = (60f / hastedSpeed) * (1 - totalMiss) * windProcRate;
+                // Chain Procs: Seal of Command procs Windfury.  Fails if either the swing or SoC misses.  **TODO subtract out chance that WF has already proc'd
+                if (calcOpts.Seal == 0) windPerMin += 7f * (1 - totalMiss) * (1 - totalMiss) * windProcRate;
 
-            #region Seal of Command
-            if (calcOpts.Seal == 0)
-            {
-                float socProcChance = 7.0f / (60f / hastedSpeed);
-                float whiteHits = (60f / hastedSpeed) * (1f - totalMiss);
-                float socHitsOffWhite = whiteHits * socProcChance;
-                float wfHits = whiteHits * 0.2f * (1f - totalMiss);
-                float socHitsOffWF = wfHits * (1f - socProcChance) * socProcChance;
-                float socTotal = socHitsOffWhite + socHitsOffWF;
-                float avgSoCPre = (0.7f * whiteHit + 0.2f * stats.SpellDamageRating + 0.29f * 219f);
-                float avgSoCPost = (avgSoCPre * physHitsCrits - avgSoCPre * totalMiss);
-                avgSoCPost *= impSancAura * vengeance * crusade * avWrath * sancAura * spellPower * 0.96f;
-                dpsSeal = avgSoCPost * socTotal / 60f;
-                calcs.SealDPSPoints = dpsSeal;
+                // Windfury damage per hit
+                windAvgDam = whiteHit + (windAPBonus / 14) * baseSpeed;
+                windAvgDam *= physDamMult;
 
-                if (wfDPS > 0)
-                {
-                    float wfOffSoCDPS = (socTotal / 60f) * wfHitPost * 0.20f;
-                    calcs.WFDPSPoints += wfOffSoCDPS;
-                }
+                // Windfury average damage per proc
+                windAvgDam *= (physHitsCrits - totalMiss) * mitigation;
+
+                // Total Windfury DPS
+                dpsWindfury = windAvgDam * windPerMin / 60f;
             }
             #endregion
 
@@ -461,21 +464,23 @@ namespace Rawr.Retribution
                 judgeAvgDam *= (judgeCrit - spellResist) * partialResist;
 
                 // Total Judgement DPS
-                dpsJudge = judgeAvgDam / judgeCD;
+                dpsJudgement = judgeAvgDam / judgeCD;
             }
             #endregion
 
 
             calcs.WhiteDPSPoints = dpsWhite;
+            calcs.SealDPSPoints = dpsSeal;
+            calcs.WFDPSPoints = dpsWindfury;
             calcs.CSDPSPoints = dpsCrusader;
             calcs.ConsDPSPoints = dpsConsecration;
             calcs.ExoDPSPoints = dpsExorcism;
-            calcs.JudgementDPSPoints = dpsJudge;
+            calcs.JudgementDPSPoints = dpsJudgement;
 
-            calcs.DPSPoints = dpsCrusader + dpsWhite + calcs.SealDPSPoints + dpsConsecration + dpsExorcism + wfDPS + calcs.JudgementDPSPoints;
+            calcs.DPSPoints = dpsWhite + dpsSeal + dpsWindfury + dpsCrusader + dpsConsecration + dpsExorcism + dpsJudgement;
             calcs.SubPoints = new float[] { calcs.DPSPoints };
             calcs.OverallPoints = calcs.DPSPoints;
-            calcs.BasicStats.WeaponDamage = whiteHit * impSancAura * twoHandedSpec;
+            calcs.BasicStats.WeaponDamage = whiteHit * physDamMult;
             return calcs;
         }
 
@@ -581,7 +586,8 @@ namespace Rawr.Retribution
 
             // Mongoose Haste% and Executioner moved to GetCharacterCalculations
             // Mongoose  **ASSUMPTION: Mongoose has a 40% uptime
-            if (statsEnchants.MongooseProc > 0) statsEnchants.Agility += 120f * 0.4f;
+            if (statsEnchants.MongooseProc > 0)
+                statsEnchants.Agility += 120f * 0.4f;
                 //statsBuffs.HasteRating += (15.76f * 2f) * 0.4f;
 
             // Executioner
@@ -591,21 +597,27 @@ namespace Rawr.Retribution
             //}
 
             // Expose Weakness
-            if (statsBuffs.ExposeWeakness > 0) statsBuffs.AttackPower += calcOpts.ExposeWeaknessAPValue;
+            if (statsBuffs.ExposeWeakness > 0)
+                statsBuffs.AttackPower += calcOpts.ExposeWeaknessAPValue;
 
-            // Drums of War
-            statsBuffs.AttackPower += statsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime / 100f;
+            // Drums of War.  60 AP/30 SD with a 25% uptime per drum.
+            if (statsBuffs.DrumsOfWar > 0)
+            {
+                statsBuffs.AttackPower += calcOpts.DrumsOfWar * 15f;
+                statsBuffs.SpellDamageRating += calcOpts.DrumsOfWar * 7.5f;
+            }
 
-            // Drums of Battle
-            statsBuffs.HasteRating += statsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime / 100f;
+            // Drums of Battle.  80 Haste with a 25% uptime per drum.
+            if (statsBuffs.DrumsOfBattle > 0)
+                statsBuffs.HasteRating += calcOpts.DrumsOfBattle * 20f;
 
             // Ferocious Inspiriation  **Temp fix - FI increases all damage, not just physical damage
             if (character.ActiveBuffsContains("Ferocious Inspiration"))
             {
                 statsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsBuffs.BonusPhysicalDamageMultiplier) *
-                    (float)Math.Pow(1.03f, calcOpts.NumberOfFerociousInspirations - 1f)) - 1f;
+                    (float)Math.Pow(1.03f, calcOpts.FerociousInspiration - 1f)) - 1f;
                 statsBuffs.BonusSpellPowerMultiplier = ((1f + statsBuffs.BonusSpellPowerMultiplier) *
-                    (float)Math.Pow(1.03f, calcOpts.NumberOfFerociousInspirations)) - 1f;
+                    (float)Math.Pow(1.03f, calcOpts.FerociousInspiration)) - 1f;
             }
 
             //base
