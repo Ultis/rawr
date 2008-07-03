@@ -96,6 +96,9 @@ namespace Rawr.Healadin
                     _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
 					{
                         Item.ItemType.Plate,
+                        Item.ItemType.Mail,
+                        Item.ItemType.Leather,
+                        Item.ItemType.Cloth,
                         Item.ItemType.None,
 						Item.ItemType.Shield,
 						Item.ItemType.Libram,
