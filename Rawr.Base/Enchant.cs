@@ -367,7 +367,7 @@ namespace Rawr
 
             //The stat value of mongoose and executioner is dependent on the weapon speed and is thus left to the individual models to take care of through the Id
             defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, new Stats() { MongooseProc = 1 }));
-            defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.OneHand, new Stats() { }));
+            defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.OneHand, new Stats() { ExecutionerProc = 1 }));
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Hands, new Stats() { FrostResistance = 8 }));
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Feet, new Stats() { FrostResistance = 8 }));
             defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Chest, new Stats() { FrostResistance = 8 }));

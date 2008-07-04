@@ -249,7 +249,7 @@ namespace Rawr.Retribution
                 mitigation = 1.0f - (targetArmor / (targetArmor + 10557.5f));
 
                 // Executioner enchant.  ASSUMPTION: Executioner has a 40% uptime.
-                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
+                if (stats.ExecutionerProc > 0)
                 {
                     float exeArmor = targetArmor, exeMitigation = 1.0f, exeUptime = 0.4f, exeArmorPen = 840f;
 
@@ -423,8 +423,8 @@ namespace Rawr.Retribution
                 }
                 consAvgDam = consAvgDam * holyDamMult + consCoeff * jotc;
 
-                // Consecration average damage post-resists.  Only first tick can be fully resisted.  **ADD spell hit rating
-                consAvgDam *= (1f - spellResist / 8f) * partialResist;
+                // Consecration average damage post-resists.
+                consAvgDam *= partialResist;
 
                 // Total Consecration DPS
                 dpsConsecration = consAvgDam / consCD;
@@ -646,7 +646,8 @@ namespace Rawr.Retribution
             statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + (statsTotal.Strength - strBase) * 2.0f) * 
                 (1f + statsTotal.BonusAttackPowerMultiplier));
 
-            statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating + statsGearEnchantsBuffs.LotPCritRating;
+            statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
+            statsTotal.CritRating += statsGearEnchantsBuffs.CritMeleeRating + statsGearEnchantsBuffs.LotPCritRating;
             statsTotal.CritRating += 22.08f * ((statsTotal.Agility - agiBase) / 25f);
 			statsTotal.CritRating += 22.08f * ((float)calcOpts.Conviction + (float)calcOpts.SanctifiedSeals);
             statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
@@ -671,6 +672,7 @@ namespace Rawr.Retribution
             statsTotal.Bloodlust = statsGearEnchantsBuffs.Bloodlust;
 
             statsTotal.ShatteredSunMightProc = statsGearEnchantsBuffs.ShatteredSunMightProc;
+            statsTotal.ExecutionerProc = statsGearEnchantsBuffs.ExecutionerProc;
             statsTotal.MongooseProc = statsGearEnchantsBuffs.MongooseProc;
             statsTotal.BonusCrusaderStrikeDamageMultiplier = statsGearEnchantsBuffs.BonusCrusaderStrikeDamageMultiplier;
             return (statsTotal);
@@ -768,12 +770,14 @@ namespace Rawr.Retribution
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
 
                 LotPCritRating = stats.LotPCritRating,
+                CritMeleeRating = stats.CritMeleeRating,
                 WindfuryAPBonus = stats.WindfuryAPBonus,
                 Bloodlust = stats.Bloodlust,
                 ExposeWeakness = stats.ExposeWeakness,
                 DrumsOfBattle = stats.DrumsOfBattle,
                 DrumsOfWar = stats.DrumsOfWar,
                 ShatteredSunMightProc = stats.ShatteredSunMightProc,
+                ExecutionerProc = stats.ExecutionerProc,
                 MongooseProc = stats.MongooseProc,
 
                 BonusCrusaderStrikeDamageMultiplier = stats.BonusCrusaderStrikeDamageMultiplier
@@ -787,8 +791,9 @@ namespace Rawr.Retribution
                 stats.SpellCritRating + stats.SpellHitRating + stats.SpellDamageRating + stats.SpellDamageFromSpiritPercentage +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusSpellPowerMultiplier +
-                stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust + stats.ExposeWeakness + stats.DrumsOfBattle + stats.DrumsOfWar +
-                stats.ShatteredSunMightProc + stats.MongooseProc + stats.BonusCrusaderStrikeDamageMultiplier) != 0;
+                stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust + stats.ExposeWeakness +
+                stats.DrumsOfBattle + stats.DrumsOfWar + stats.ShatteredSunMightProc + stats.ExecutionerProc + stats.MongooseProc +
+                stats.BonusCrusaderStrikeDamageMultiplier) != 0;
         }
 
 

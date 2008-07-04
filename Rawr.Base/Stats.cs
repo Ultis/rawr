@@ -38,6 +38,7 @@ namespace Rawr
         CHManaReduction,
         Crit,
         CritRating,
+        CritMeleeRating,
         CrushChanceReduction,
         Defense,
         DefenseRating,
@@ -46,6 +47,7 @@ namespace Rawr
         DrumsOfBattle,
         DrumsOfWar,
         EvocationExtension,
+        ExecutionerProc,
         Expertise,
         ExpertiseRating,
         ExposeWeakness,
@@ -543,6 +545,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.CritRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Ratings")]
+        [DisplayName("Melee Crit")]
+        public float CritMeleeRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CritMeleeRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CritMeleeRating] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1276,6 +1287,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AverageArmor]; }
             set { _rawAdditiveData[(int)AdditiveStat.AverageArmor] = value; }
+        }
+
+        [DisplayName("Executioner Proc")]
+        [Category("Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ExecutionerProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ExecutionerProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ExecutionerProc] = value; }
         }
 
         [DisplayName("Mongoose Proc")]
