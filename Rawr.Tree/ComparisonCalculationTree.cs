@@ -30,24 +30,37 @@ namespace Rawr.Tree
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
             set { _subPoints = value; }
         }
 
-        public float ThroughputPoints
+        public float HpSPoints
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float LongevityPoints
+        public float Mp5Points
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
         }
+
+        public float SurvivalPoints
+        {
+            get { return _subPoints[2]; }
+            set { _subPoints[2] = value; }
+        }
+
+        public float ToLPoints
+        {
+            get { return _subPoints[3]; }
+            set { _subPoints[3] = value; }
+        }
+
 
         private Item _item = null;
         public override Item Item
@@ -65,7 +78,8 @@ namespace Rawr.Tree
 
         public override string ToString()
         {
-            return string.Format("{0}: ({1}O {2}M {3}S)", Name, Math.Round(OverallPoints), Math.Round(ThroughputPoints), Math.Round(LongevityPoints));
+            return string.Format("{0}: ({1:0.0}O {2:0.0}H {3:0.0}M {4:0.0}S {5:0.0}T)", Name,
+                OverallPoints, HpSPoints, Mp5Points, SurvivalPoints, ToLPoints);
         }
     }
 }
