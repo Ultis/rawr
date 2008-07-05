@@ -330,6 +330,7 @@ namespace Rawr.Tree
                 + stats.BonusHealingTouchMultiplier + stats.TreeOfLifeAura
                 + stats.ReduceRejuvenationCost + stats.ReduceRegrowthCost + stats.ReduceHealingTouchCost
                 + stats.RejuvenationHealBonus + stats.LifebloomTickHealBonus + stats.HealingTouchFinalHealBonus
+                + stats.SpellCombatManaRegeneration
                 ) > 0;
         }
 

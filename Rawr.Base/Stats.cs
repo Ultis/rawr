@@ -1795,6 +1795,8 @@ namespace Rawr
 		}
 
         // Holy Priest set bonuses
+
+        /* See SpellCombatManaRegeneration, a stat that does exactly what the Primal Mooncloth set does
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]
         [DisplayName("% Bonus Manaregen While Casting")]
@@ -1802,7 +1804,7 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusManaregenWhileCastingMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusManaregenWhileCastingMultiplier] = value; }
-        }
+        }*/
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]

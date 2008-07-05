@@ -1357,7 +1357,7 @@ namespace Rawr
               {
                   Name = "Primal Mooncloth 3 Piece Bonus",
                   Category = BuffCategory.SetBonuses,
-                  Stats = new Stats() { BonusManaregenWhileCastingMultiplier = 0.05f },
+                  Stats = new Stats() { SpellCombatManaRegeneration = 0.05f },
                   SetName = "Primal Mooncloth",
                   SetThreshold = 3
               });
