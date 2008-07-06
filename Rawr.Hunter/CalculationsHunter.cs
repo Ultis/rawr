@@ -249,7 +249,8 @@ namespace Rawr.Hunter
 			{
 				returnValue = false;
 			}
-			else if (item.Slot == Item.ItemSlot.Projectile)
+			else if (item.Slot == Item.ItemSlot.Projectile || 
+				(item.Slot == Item.ItemSlot.Ranged && (item.Type == Item.ItemType.Gun || item.Type == Item.ItemType.Bow || item.Type == Item.ItemType.Crossbow)))
 			{
 				returnValue = true;
 			}
@@ -406,6 +407,11 @@ namespace Rawr.Hunter
 					addtionalAPFromProcs += (trueAPGain - rawrHourglassAP);
 				}
 			}
+			if (character.Ranged.Name == "Don Santos' Famous Hunting Rifle")
+			{
+				addtionalAPFromProcs += Math.Floor(250 * (1 - Math.Pow(.95, weightedTotalShotsPerSecond * 10)));
+			}
+
 			if (calculatedStats.BasicStats.ShatteredSunMightProc > 0 && options.ScryerAldor == Faction.Aldor)
 			{
 				//AP * (Duration / (cooldown + (1/duration * weightedShotsPerSecond)))
