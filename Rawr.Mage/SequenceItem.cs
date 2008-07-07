@@ -24,6 +24,7 @@ namespace Rawr.Mage.SequenceReconstruction
             if (group == null) group = new List<SequenceGroup>();
             this.Group = group;
             this.index = index;
+            this.variableType = Calculations.SolutionVariable[index].Type;
             this.Duration = duration;
             this.spell = Calculations.SolutionVariable[index].Spell;
             this.castingState = Calculations.SolutionVariable[index].State;
@@ -33,38 +34,38 @@ namespace Rawr.Mage.SequenceReconstruction
             minTime = 0;
             maxTime = Calculations.CalculationOptions.FightDuration;
 
-            if (index == Calculations.ColumnIdleRegen)
+            if (variableType == VariableType.IdleRegen)
             {
-                mps = -Calculations.BaseState.ManaRegen;
+                mps = -(Calculations.BaseState.ManaRegen * (1 - Calculations.CalculationOptions.Fragmentation) + Calculations.BaseState.ManaRegen5SR * Calculations.CalculationOptions.Fragmentation);
             }
-            else if (index == Calculations.ColumnWand)
+            else if (variableType == VariableType.Wand)
             {
                 spell = Calculations.BaseState.GetSpell(SpellId.Wand);
                 mps = spell.CostPerSecond - spell.ManaRegenPerSecond;
             }
-            else if (index == Calculations.ColumnEvocation || index == Calculations.ColumnManaPotion || index == Calculations.ColumnManaGem)
+            else if (variableType == VariableType.Evocation || variableType == VariableType.ManaPotion || variableType == VariableType.ManaGem)
             {
                 mps = 0;
             }
-            else if (index == Calculations.ColumnDrumsOfBattle)
+            else if (variableType == VariableType.DrumsOfBattle)
             {
                 mps = -Calculations.BaseState.ManaRegen5SR;
             }
-            else if (index == Calculations.ColumnDrinking)
+            else if (variableType == VariableType.Drinking)
             {
                 maxTime = 0;
                 mps = -Calculations.BaseState.ManaRegenDrinking;
             }
-            else if (index == Calculations.ColumnTimeExtension)
+            else if (variableType == VariableType.TimeExtension)
             {
                 minTime = maxTime;
             }
-            else if (index == Calculations.ColumnAfterFightRegen)
+            else if (variableType == VariableType.AfterFightRegen)
             {
                 mps = -Calculations.BaseState.ManaRegenDrinking;
                 minTime = maxTime;
             }
-            else
+            else if (variableType == VariableType.Spell)
             {
                 mps = spell.CostPerSecond - spell.ManaRegenPerSecond;
             }
@@ -79,11 +80,20 @@ namespace Rawr.Mage.SequenceReconstruction
             }
         }
 
+        private VariableType variableType;
+        public VariableType VariableType
+        {
+            get
+            {
+                return variableType;
+            }
+        }
+
         public bool IsManaPotionOrGem
         {
             get
             {
-                return index == Calculations.ColumnManaPotion || index == Calculations.ColumnManaGem;
+                return variableType == VariableType.ManaPotion || variableType == VariableType.ManaGem;
             }
         }
 
@@ -91,7 +101,7 @@ namespace Rawr.Mage.SequenceReconstruction
         {
             get
             {
-                return index == Calculations.ColumnEvocation;
+                return variableType == VariableType.Evocation;
             }
         }
 

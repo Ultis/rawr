@@ -183,7 +183,7 @@ namespace Rawr.Mage
             this.baseRows = baseRows;
             if (baseRows + 10 > maxRows || maxCols + 10 > LP.maxCols)
             {
-                maxRows = Math.Max(rows + 10, maxRows);
+                maxRows = Math.Max(baseRows + 10, maxRows);
                 LP.maxCols = Math.Max(maxCols + 10, LP.maxCols);
                 RecreateArrays();
             }
@@ -231,6 +231,7 @@ namespace Rawr.Mage
             fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
             fixed (bool* blacklist = _blacklist)
             {
+                if (b == null) throw new InvalidOperationException();
                 do
                 {
                 RESTART:
@@ -611,9 +612,12 @@ namespace Rawr.Mage
             int* sRow;
             int sCol1, sCol2;
             int redecompose = 0;
+            const int maxRedecompose = 50;
+            Array.Clear(_blacklist, 0, rows + cols);
 
             fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
             fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
+            fixed (bool* blacklist = _blacklist)
             {
                 /*for (k = 0; k < numExtraConstraints; k++)
                 {
@@ -638,7 +642,7 @@ namespace Rawr.Mage
                             }
                         }
                         lu.Decompose();
-                        redecompose = 50; // decompose each time to see where the instability comes from
+                        redecompose = maxRedecompose; // decompose each time to see where the instability comes from
                         //needsRecalc = true; // extreme measures to determine source of instability
                     }
 
@@ -758,11 +762,17 @@ namespace Rawr.Mage
                     for (i = 0; i < rows; i++)
                     {
                         double costi = d[i];
-                        if (costi < mind - eps) // add eps barriers so that we stabilize pivot order
+                        if (costi < mind - eps && !blacklist[B[i]]) // add eps barriers so that we stabilize pivot order
                         {
                             mind = costi;
                             mini = i;
                         }
+                    }
+
+                    double vvv = 0;
+                    for (i = 0; i < rows; i++)
+                    {
+                        if (B[i] < cols) vvv += cost[B[i]] * d[i];
                     }
 
                     if (mini == -1)
@@ -999,7 +1009,30 @@ namespace Rawr.Mage
                     }
 
                     // pivot stability
+                    double pivotStability = Math.Abs(wd[minj]) / maxnorm;
                     //System.Diagnostics.Trace.WriteLine("Pivot stability " + Math.Abs(wd[minj]) / maxnorm);
+                    if (pivotStability < 0.0001)
+                    {
+                        if (redecompose == maxRedecompose && pivotStability < 0.000001)
+                        {
+                            // basis is stable so it must be something with the pivot
+                            // blacklist it
+                            blacklist[B[mini]] = true;
+                            continue;
+                        }
+                        else if (redecompose == maxRedecompose)
+                        {
+                            // we just refactored and it's probably not horrible bad
+                        }
+                        else
+                        {
+                            // try recalculating basis and variables
+                            redecompose = 0;
+                            needsRecalc = true;
+                            continue;
+                        }
+                    }
+
 
                     // w = U \ (L \ A(:,j));
                     int mincol = V[minj];
@@ -1041,11 +1074,19 @@ namespace Rawr.Mage
                         lu.Update(ww, mini);
                         if (lu.Singular)
                         {
-                            // ok adding this variable made the basis singular
-                            // consider removing it and choose something else
-                            // also possibly need a blacklist
-                            // at the very least recompute the basis to make sure we are singular
-                            redecompose = 0;
+                            if (redecompose == maxRedecompose - 1)
+                            {
+                                redecompose = 0;
+                                needsRecalc = true; // forces recalc
+                                blacklist[B[mini]] = true;
+                                continue;
+                            }
+                            else
+                            {
+                                redecompose = 0;
+                                needsRecalc = true;
+                                continue;
+                            }
                         }
                     }
 

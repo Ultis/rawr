@@ -9,11 +9,35 @@ using Rawr.Mage.SequenceReconstruction;
 
 namespace Rawr.Mage
 {
+    public enum VariableType
+    {
+        IdleRegen,
+        Wand,
+        Evocation,
+        ManaPotion,
+        ManaGem,
+        DrumsOfBattle,
+        Drinking,
+        TimeExtension,
+        AfterFightRegen,
+        ManaOverflow,
+        Spell,
+    }
+
     public struct SolutionVariable
     {
         public int Segment;
         public CastingState State;
         public Spell Spell;
+        public VariableType Type;
+
+        public bool IsZeroTime
+        {
+            get
+            {
+                return Type == VariableType.ManaPotion || Type == VariableType.ManaGem || Type == VariableType.ManaOverflow;
+            }
+        }
     }
 
     public sealed class CharacterCalculationsMage : CharacterCalculationsBase
@@ -89,6 +113,7 @@ namespace Rawr.Mage
         public int ColumnDrinking = -1;
         public int ColumnTimeExtension = -1;
         public int ColumnAfterFightRegen = -1;
+        public int ColumnManaOverflow = -1;
 
         public float ChanceToDie { get; set; }
         public float MeanIncomingDps { get; set; }
@@ -103,7 +128,7 @@ namespace Rawr.Mage
 
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
-                if (Solution[i] > 0.01)
+                if (Solution[i] > 0.01 && SolutionVariable[i].Type != VariableType.ManaOverflow)
                 {
                     sequence.Add(new SequenceItem(i, Solution[i]));
                 }
@@ -230,63 +255,92 @@ namespace Rawr.Mage
             if (MageArmor != null) sb.AppendLine(MageArmor);
             Dictionary<string, double> combinedSolution = new Dictionary<string, double>();
             Dictionary<string, int> combinedSolutionData = new Dictionary<string, int>();
+            double idleRegen = 0;
+            double evocation = 0;
+            double manaPotion = 0;
+            double manaGem = 0;
+            double drums = 0;
+            bool segmentedOutput = false;
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
                 if (Solution[i] > 0.01)
                 {
-                    if (i == ColumnIdleRegen)
+                    switch (SolutionVariable[i].Type)
                     {
-                        sb.AppendLine(String.Format("{0}: {1:F} sec", "Idle Regen", Solution[0]));
-                    }
-                    else if (i == ColumnEvocation)
-                    {
-                        sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration));
-                    }
-                    else if (i == ColumnManaPotion)
-                    {
-                        sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Potion", Solution[i]));
-                    }
-                    else if (i == ColumnManaGem)
-                    {
-                        sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Gem", Solution[i]));
-                    }
-                    else if (i == ColumnDrumsOfBattle)
-                    {
-                        sb.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", Solution[i] / BaseState.GlobalCooldown));
-                    }
-                    else if (i == ColumnDrinking)
-                    {
-                        sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", Solution[i]));
-                    }
-                    else if (i == ColumnTimeExtension)
-                    {
-                    }
-                    else if (i == ColumnAfterFightRegen)
-                    {
-                        sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", Solution[i]));
-                    }
-                    else
-                    {
-                        double value;
-                        Spell s = SolutionVariable[i].Spell;
-                        string label = ((SolutionVariable[i].State.BuffLabel.Length > 0) ? (SolutionVariable[i].State.BuffLabel + "+") : "") + s.Name;
-                        combinedSolution.TryGetValue(label, out value);
-                        combinedSolution[label] = value + Solution[i];
-                        combinedSolutionData[label] = i;
-                        //sb.AppendLine(String.Format("{2}{0}: {1:F} sec", label, Solution[i], SolutionVariable[i].Segment.ToString() + " "));                            
+                        case VariableType.IdleRegen:
+                            idleRegen += Solution[i];
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F} sec", "Idle Regen", Solution[i], SolutionVariable[i].Segment));
+                            break;
+                        case VariableType.Evocation:
+                            evocation += Solution[i];
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration, SolutionVariable[i].Segment));
+                            break;
+                        case VariableType.ManaPotion:
+                            manaPotion += Solution[i];
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Potion", Solution[i], SolutionVariable[i].Segment));
+                            break;
+                        case VariableType.ManaGem:
+                            manaGem += Solution[i];
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Gem", Solution[i], SolutionVariable[i].Segment));
+                            break;
+                        case VariableType.DrumsOfBattle:
+                            drums += Solution[i];
+                            if (segmentedOutput) sb.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", Solution[i] / BaseState.GlobalCooldown));
+                            break;
+                        case VariableType.Drinking:
+                            sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", Solution[i]));
+                            break;
+                        case VariableType.TimeExtension:
+                            break;
+                        case VariableType.AfterFightRegen:
+                            sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", Solution[i]));
+                            break;
+                        case VariableType.Wand:
+                        case VariableType.Spell:
+                            double value;
+                            Spell s = SolutionVariable[i].Spell;
+                            string label = ((SolutionVariable[i].State.BuffLabel.Length > 0) ? (SolutionVariable[i].State.BuffLabel + "+") : "") + s.Name;
+                            combinedSolution.TryGetValue(label, out value);
+                            combinedSolution[label] = value + Solution[i];
+                            combinedSolutionData[label] = i;
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F} sec", label, Solution[i], SolutionVariable[i].Segment.ToString()));
+                            break;
                     }
                 }
             }
-            foreach (KeyValuePair<string, double> kvp in combinedSolution)
+            if (!segmentedOutput)
             {
-                Spell s = SolutionVariable[combinedSolutionData[kvp.Key]].Spell;
-                if (s != null)
+                if (idleRegen > 0)
                 {
-                    sb.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps)", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond));
+                    sb.AppendLine(String.Format("{0}: {1:F} sec", "Idle Regen", idleRegen));
                 }
-                else
+                if (evocation > 0)
                 {
-                    sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation", evocation / EvocationDuration));
+                }
+                if (manaPotion > 0)
+                {
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Potion", manaPotion));
+                }
+                if (manaGem > 0)
+                {
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Gem", manaGem));
+                }
+                if (drums > 0)
+                {
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", drums / BaseState.GlobalCooldown));
+                }
+                foreach (KeyValuePair<string, double> kvp in combinedSolution)
+                {
+                    Spell s = SolutionVariable[combinedSolutionData[kvp.Key]].Spell;
+                    if (s != null)
+                    {
+                        sb.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps)", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond));
+                    }
+                    else
+                    {
+                        sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
+                    }
                 }
             }
             if (WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", WaterElementalDuration / 45f));

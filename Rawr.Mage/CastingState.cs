@@ -103,18 +103,21 @@ namespace Rawr.Mage
 
         public int GetHex()
         {
-            int hex = 0;
-            hex = (hex << 1) + (ArcanePower ? 1 : 0);
-            hex = (hex << 1) + (Combustion ? 1 : 0);
-            hex = (hex << 1) + (DestructionPotion ? 1 : 0);
-            hex = (hex << 1) + (DrumsOfBattle ? 1 : 0);
-            hex = (hex << 1) + (FlameCap ? 1 : 0);
-            hex = (hex << 1) + (Heroism ? 1 : 0);
-            hex = (hex << 1) + (IcyVeins ? 1 : 0);
-            hex = (hex << 1) + (MoltenFury ? 1 : 0);
-            hex = (hex << 1) + (Trinket1 ? 1 : 0);
-            hex = (hex << 1) + (Trinket2 ? 1 : 0);
-            return hex;
+            unchecked
+            {
+                int hex = 0;
+                hex = (hex << 1) + (ArcanePower ? 1 : 0);
+                hex = (hex << 1) + (Combustion ? 1 : 0);
+                hex = (hex << 1) + (DestructionPotion ? 1 : 0);
+                hex = (hex << 1) + (DrumsOfBattle ? 1 : 0);
+                hex = (hex << 1) + (FlameCap ? 1 : 0);
+                hex = (hex << 1) + (Heroism ? 1 : 0);
+                hex = (hex << 1) + (IcyVeins ? 1 : 0);
+                hex = (hex << 1) + (MoltenFury ? 1 : 0);
+                hex = (hex << 1) + (Trinket1 ? 1 : 0);
+                hex = (hex << 1) + (Trinket2 ? 1 : 0);
+                return hex;
+            }
         }
 
         public bool GetCooldown(Cooldown cooldown)

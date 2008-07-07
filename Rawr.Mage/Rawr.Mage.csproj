@@ -86,6 +86,7 @@
     <Compile Include="Sequence.cs" />
     <Compile Include="SequenceGroup.cs" />
     <Compile Include="SequenceItem.cs" />
+    <Compile Include="Solver.MIP.cs" />
     <Compile Include="SolverLP.cs" />
     <Compile Include="SparseMatrix.cs" />
     <Compile Include="Spell.cs" />

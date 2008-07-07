@@ -16,11 +16,11 @@ namespace Rawr.Mage.SequenceReconstruction
         public bool IsCooldownBreakpoint(int index)
         {
             if (index == 0) return true;
-            if (sequence[index].IsManaPotionOrGem || sequence[index].Index == SequenceItem.Calculations.ColumnDrumsOfBattle) return false;
+            if (sequence[index].IsManaPotionOrGem || sequence[index].VariableType == VariableType.DrumsOfBattle) return false;
             CastingState state = sequence[index].CastingState;
             CastingState lastState = null;
             int lastindex = index - 1;
-            while (lastindex >= 0 && (sequence[lastindex].IsManaPotionOrGem || sequence[lastindex].Index == SequenceItem.Calculations.ColumnDrumsOfBattle))
+            while (lastindex >= 0 && (sequence[lastindex].IsManaPotionOrGem || sequence[lastindex].VariableType == VariableType.DrumsOfBattle))
             {
                 lastindex--;
             }
@@ -609,10 +609,15 @@ namespace Rawr.Mage.SequenceReconstruction
                         bool ycritical = y.SuperGroup.MaxTime <= sortStartTime;
                         int compare = ycritical.CompareTo(xcritical);
                         if (compare != 0) return compare;
-                        if (x.Group.Count == 0 || y.Group.Count == 0)
+                        bool xsplit = x.Group.Count == 0;
+                        bool ysplit = y.Group.Count == 0;
+                        compare = xsplit.CompareTo(ysplit);
+                        if (compare != 0) return compare;
+                        if (x.Group.Count == 0 && y.Group.Count == 0)
                         {
                             // only sort by mps for normal casting without cooldowns
                             // if both are in super groups we have to sort in the way as prescribed by SortGroups solution
+                            // only sort by mps if both are splittable (otherwise this would not necessarily be an ordering)
                             compare = CompareByMps(x.SuperGroup, y.SuperGroup);
                             if (compare != 0) return compare;
                         }
@@ -723,6 +728,26 @@ namespace Rawr.Mage.SequenceReconstruction
             return ret;
         }
 
+        public double RemoveIndex(VariableType type)
+        {
+            return RemoveIndex(type, 0);
+        }
+
+        private double RemoveIndex(VariableType type, int startAt)
+        {
+            double ret = 0;
+            for (int i = startAt; i < sequence.Count; i++)
+            {
+                if (sequence[i].VariableType == type)
+                {
+                    ret += sequence[i].Duration;
+                    sequence.RemoveAt(i);
+                    i--;
+                }
+            }
+            return ret;
+        }
+
         private SequenceItem InsertIndex(int index, double duration, double time)
         {
             SequenceItem item = new SequenceItem(index, duration);
@@ -737,7 +762,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 double d = sequence[i].Duration;
                 if (sequence[i].IsManaPotionOrGem) d = 0;
-                if (t + d > time)
+                if (t + d > time + 0.000001)
                 {
                     if (time <= t + 0.000001)
                     {
@@ -904,11 +929,12 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (item.CastingState.DrumsOfBattle) list.Add(item);
             }
             List<SequenceGroup> groups = GroupCooldown(list, 30 - SequenceItem.Calculations.BaseState.GlobalCooldown, 120);
-            double drums = RemoveIndex(5);
+            double drums = RemoveIndex(VariableType.DrumsOfBattle);
             for (int i = 0; i < groups.Count; i++)
             {
+                // TODO take advantage of segmentation data if available
                 //double drum = Math.Min(drums, SequenceItem.Calculations.GlobalCooldown);
-                SequenceItem item = InsertIndex(5, drums / groups.Count, 0);
+                SequenceItem item = InsertIndex(SequenceItem.Calculations.ColumnDrumsOfBattle, drums / groups.Count, 0);
                 item.Group.Add(groups[i]);
                 groups[i].Add(item);
                 //drums -= drum;
@@ -1085,7 +1111,8 @@ namespace Rawr.Mage.SequenceReconstruction
                 }
                 if (gap > eps)
                 {
-                    int maxSegDistance = (int)Math.Ceiling(maxDuration / 30) + 1;
+                    int maxSegDistance = (int)Math.Ceiling(maxDuration / 30.0) + 1;
+                    if (combustionMode) maxSegDistance = (int)Math.Ceiling(15.0 / 30.0) + 1;
                     for (int j = i + 1; j < partialGroups.Count; j++)
                     {
                         SequenceGroup subgroup = partialGroups[j];
@@ -1107,6 +1134,14 @@ namespace Rawr.Mage.SequenceReconstruction
                             group.AddRange(subgroup.Item);
                             partialGroups.RemoveAt(j);
                             j--;
+                            if (partialGroups.Count < maxChains)
+                            {
+                                int addCount = maxChains - partialGroups.Count;
+                                for (int k = 0; k < addCount; k++)
+                                {
+                                    partialGroups.Add(new SequenceGroup());
+                                }
+                            }
                             if (gap < eps) break;
                         }
                     }
@@ -1434,7 +1469,8 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         // check if valid
                         SequenceItem item = itemList[index[i]];
-                        if (i == 0 || superLeft[itemList[index[i - 1]].SuperIndex] == 0 || item.SuperIndex == itemList[index[i - 1]].SuperIndex)
+                        // if we have segmentation data take a more directed search, respect segmentation ordering (jumps should be eliminated, but check back in case something looks strange)
+                        if (i == 0 || ((item.SuperIndex == itemList[index[i - 1]].SuperIndex || superLeft[itemList[index[i - 1]].SuperIndex] == 0) && item.Segment >= itemList[index[i - 1]].Segment))
                         {
                             int tail = item.CooldownHex;
                             int activeTail = 0;
@@ -1450,12 +1486,8 @@ namespace Rawr.Mage.SequenceReconstruction
                                 used[index[i]] = true;
                                 itemList[index[i]].OrderIndex = i;
                                 superLeft[itemList[index[i]].SuperIndex]--;
-                                if (coldsnap[i] == 0)
-                                {
-                                    tail = 0;
-                                    // skip tests, we already computed all this for coldsnap == 1
-                                }
-                                else
+                                // skip tests for coldsnap == 0
+                                if (coldsnap[i] == 1)
                                 {
                                     for (int j = 0; j < N; j++)
                                     {
@@ -1466,19 +1498,27 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 int intersectHexJ = HexCount(itemList[j].CooldownHex & activeTail);
                                                 if (intersectHexJ > intersectHex)
                                                 {
-                                                    // anything up to j is not valid, so skip ahead
-                                                    used[index[i]] = false;
-                                                    superLeft[itemList[index[i]].SuperIndex]++;
-                                                    index[i] = j;
-                                                    used[j] = true;
-                                                    itemList[j].OrderIndex = i;
-                                                    superLeft[itemList[index[i]].SuperIndex]--;
-                                                    intersectHex = intersectHexJ;
-                                                    maxIntersect[i] = intersectHex;
-                                                    item = itemList[j];
-                                                    tail = item.CooldownHex;
-                                                    j = -1;
-                                                    continue;
+                                                    if (i == 0 || itemList[j].Segment >= itemList[index[i - 1]].Segment)
+                                                    {
+                                                        // anything up to j is not valid, so skip ahead
+                                                        used[index[i]] = false;
+                                                        superLeft[itemList[index[i]].SuperIndex]++;
+                                                        index[i] = j;
+                                                        used[j] = true;
+                                                        itemList[j].OrderIndex = i;
+                                                        superLeft[itemList[index[i]].SuperIndex]--;
+                                                        intersectHex = intersectHexJ;
+                                                        maxIntersect[i] = intersectHex;
+                                                        item = itemList[j];
+                                                        tail = item.CooldownHex;
+                                                        j = -1;
+                                                        continue;
+                                                    }
+                                                    else
+                                                    {
+                                                        // invalidate
+                                                        tail = 0;
+                                                    }
                                                 }
                                             }
                                             int intersect = item.CooldownHex & itemList[j].CooldownHex;
@@ -1756,9 +1796,23 @@ namespace Rawr.Mage.SequenceReconstruction
         {
             double ghostMana = Math.Max(0, -ManaCheck());
             double fight = FightDuration;
-            double potTime = RemoveIndex(SequenceItem.Calculations.ColumnManaPotion);
-            double gemTime = RemoveIndex(SequenceItem.Calculations.ColumnManaGem);
-            double evoTime = RemoveIndex(SequenceItem.Calculations.ColumnEvocation);
+            /*List<bool> gemPotList = new List<bool>();
+            List<int> gemPotSegList = new List<int>();
+            for (int i = 0; i < sequence.Count; i++)
+            {
+                if (sequence[i].IsManaPotionOrGem)
+                {
+                    gemPotList.Add(sequence[i].VariableType == VariableType.ManaPotion);
+                    gemPotSegList.Add(sequence[i].Segment);
+                }
+            }
+            bool[] gemPotOrder = gemPotList.ToArray();
+            int[] gemPotSeg = gemPotSegList.ToArray();
+            Array.Sort<int, bool>(gemPotSeg, gemPotOrder);
+            int gemPotIndex = 0;*/
+            double potTime = RemoveIndex(VariableType.ManaPotion);
+            double gemTime = RemoveIndex(VariableType.ManaGem);
+            double evoTime = RemoveIndex(VariableType.Evocation);
             float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
             float[] gemMaxValue = new float[] { 2460f, 2460f, 2460f, 1127f, 871f };
             int gemCount = 0;
@@ -1844,7 +1898,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         targetTime = nextEvo;
                     }
                 }
-                if (potTime > 0 && (nextPot <= nextGem || nextPot == 0) && (nextPot <= nextEvo || nextPot == 0 || evoTime <= 0))
+                if (potTime > 0 && (nextPot <= nextGem || gemTime <= 0 || nextPot == 0) && (nextPot <= nextEvo || nextPot == 0 || evoTime <= 0))
                 {
                     if (nextPot <= time)
                     {
@@ -2102,8 +2156,54 @@ namespace Rawr.Mage.SequenceReconstruction
                 }
                 // always use pot & gem before evo, they need tighter packing
                 // always start with pot because pot needs more buffer than gem, unless
-                if (potTime > 0 && (pot <= gem || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (pot <= evo || nextPot == 0 || evoTime <= 0))
+                // verify timing requirements for flame cap, destro pot
+                bool forceGem = false;
+                bool forcePot = false;
+                if (potTime > 0 && gemTime > 0)
                 {
+                    t = 0;
+                    double nextFlameCap = double.PositiveInfinity;
+                    double nextDestructionPotion = double.PositiveInfinity;
+                    for (i = 0; i < sequence.Count; i++)
+                    {
+                        double d = sequence[i].Duration;
+                        if (sequence[i].IsManaPotionOrGem) d = 0;
+                        if (d > 0 && t >= gem)
+                        {
+                            if (sequence[i].CastingState != null && sequence[i].CastingState.FlameCap)
+                            {
+                                nextFlameCap = Math.Min(nextFlameCap, sequence[i].MaxTime);
+                            }
+                        }
+                        if (d > 0 && t >= pot)
+                        {
+                            if (sequence[i].CastingState != null && sequence[i].CastingState.DestructionPotion)
+                            {
+                                nextDestructionPotion = Math.Min(nextDestructionPotion, sequence[i].MaxTime);
+                            }
+                        }
+                        t += d;
+                    }
+                    // very special case for now, revisit later
+                    if (!double.IsPositiveInfinity(nextFlameCap))
+                    {
+                        if (gem <= nextFlameCap - 120.0 + 0.000001 && pot > gem - 30.0 && double.IsPositiveInfinity(nextDestructionPotion)) forceGem = true;
+                    }
+                    if (!double.IsPositiveInfinity(nextDestructionPotion))
+                    {
+                        if (pot <= nextDestructionPotion - 120.0 + 0.000001 && gem > pot - 30.0 && double.IsPositiveInfinity(nextFlameCap)) forcePot = true;
+                    }
+                }
+                if (potTime > 0 && (((forcePot && !forceGem) || pot <= gem || gemTime <= 0 || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (forcePot || !forceGem)) && (pot <= evo || nextPot == 0 || evoTime <= 0))
+                {
+                    if (pot > targetTime)
+                    {
+                        targetTime = pot;
+                        lastTargetMana = -1;
+                        extraMana = 0;
+                        oomtime = targetTime;
+                        goto Retry;
+                    }
                     InsertIndex(SequenceItem.Calculations.ColumnManaPotion, Math.Min(1.0, potTime), pot);
                     time = pot;
                     nextPot = pot + 120;
@@ -2114,8 +2214,16 @@ namespace Rawr.Mage.SequenceReconstruction
                         potTime = 0.0;
                     }
                 }
-                else if (gemTime > 0 && gem <= pot && (gem <= evo || nextGem == 0 || evoTime <= 0))
+                else if (gemTime > 0 && (gem <= evo || (nextGem == 0 && gem < evo + 30) || evoTime <= 0))
                 {
+                    if (gem > targetTime)
+                    {
+                        targetTime = gem;
+                        lastTargetMana = -1;
+                        extraMana = 0;
+                        oomtime = targetTime;
+                        goto Retry;
+                    }
                     InsertIndex(SequenceItem.Calculations.ColumnManaGem, Math.Min(1.0, gemTime), gem);
                     time = gem;
                     nextGem = gem + 120;
@@ -2127,8 +2235,16 @@ namespace Rawr.Mage.SequenceReconstruction
                         gemTime = 0.0;
                     }
                 }
-                else if (evoTime > 0 && evo <= pot && evo <= gem)
+                else if (evoTime > 0)
                 {
+                    if (evo > targetTime)
+                    {
+                        targetTime = evo;
+                        lastTargetMana = -1;
+                        extraMana = 0;
+                        oomtime = targetTime;
+                        goto Retry;
+                    }
                     InsertIndex(SequenceItem.Calculations.ColumnEvocation, Math.Min(EvocationDuration, evoTime), evo);
                     time = evo + Math.Min(EvocationDuration, evoTime);
                     nextEvo = evo + 60 * 8;
@@ -2152,17 +2268,17 @@ namespace Rawr.Mage.SequenceReconstruction
             double mana = SequenceItem.Calculations.StartingMana;
             for (int i = 0; i < sequence.Count; i++)
             {
-                int index = sequence[i].Index;
+                VariableType type = sequence[i].VariableType;
                 double duration = sequence[i].Duration;
                 double mps = sequence[i].Mps;
-                if (index == SequenceItem.Calculations.ColumnManaPotion)
+                if (type == VariableType.ManaPotion)
                 {
                     for (double _potTime = duration; _potTime > 0.000001; _potTime -= 1.0)
                     {
                         mana += (1 + BasicStats.BonusManaPotion) * 2400;
                     }
                 }
-                else if (index == SequenceItem.Calculations.ColumnManaGem)
+                else if (type == VariableType.ManaGem)
                 {
                     int _gemCount = 0;
                     for (double _gemTime = duration; _gemTime > 0.000001; _gemTime -= 1.0, _gemCount++)
@@ -2170,7 +2286,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         mana += (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
                     }
                 }
-                else if (index == SequenceItem.Calculations.ColumnEvocation)
+                else if (type == VariableType.Evocation)
                 {
                     mana += EvocationRegen * sequence[i].Duration;
                 }
@@ -2249,6 +2365,7 @@ namespace Rawr.Mage.SequenceReconstruction
             for (int i = 0; i < sequence.Count; i++)
             {
                 int index = sequence[i].Index;
+                VariableType type = sequence[i].VariableType;
                 double duration = sequence[i].Duration;
                 Spell spell = sequence[i].Spell;
                 CastingState state = sequence[i].CastingState;
@@ -2293,7 +2410,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         double limit = data[0];
                         double aftertime = data[1];
                         double timetolimit = (mana - limit) / mps;
-                        if (time + duration > aftertime)
+                        if (time + duration > aftertime + 0.000001)
                         {
                             if (time >= aftertime && mana < limit) return time;
                             if (time + timetolimit >= aftertime && timetolimit < duration) return time + timetolimit;
@@ -2307,7 +2424,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         double limit = data[0];
                         double aftertime = data[1];
-                        if (time + duration > aftertime)
+                        if (time + duration > aftertime + 0.000001)
                         {
                             if (time >= aftertime && mana < limit) return time;
                             if (aftertime > time && mana - mps * (aftertime - time) < limit) return aftertime;
@@ -2317,14 +2434,14 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (mode == EvaluationMode.ManaAtTime && duration > 0)
                 {
                     double evalTime = data[0];
-                    if (time + duration > evalTime)
+                    if (time + duration > evalTime + 0.000001)
                     {
                         return mana - mps * (evalTime - time);
                     }
                 }
                 mana -= mps * duration;
                 // Mana Potion
-                if (index == SequenceItem.Calculations.ColumnManaPotion)
+                if (type == VariableType.ManaPotion)
                 {
                     if (potionCooldown > eps)
                     {
@@ -2345,7 +2462,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                 }
                 // Mana Gem
-                if (index == SequenceItem.Calculations.ColumnManaGem)
+                if (type == VariableType.ManaGem)
                 {
                     if (gemCooldown > eps)
                     {
@@ -2367,7 +2484,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                 }
                 // Evocation
-                if (index == SequenceItem.Calculations.ColumnEvocation)
+                if (type == VariableType.Evocation)
                 {
                     if (evocationCooldown > eps)
                     {
@@ -2394,7 +2511,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 }
                 if (mana > 0) manaWarning = false;
                 // Drums of Battle
-                if (index == SequenceItem.Calculations.ColumnDrumsOfBattle)
+                if (type == VariableType.DrumsOfBattle)
                 {
                     if (drumsCooldown > eps)
                     {
@@ -2656,7 +2773,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         combustionLeft = 0;
                         if (timing != null) timing.AppendLine("INFO: Combustion is still up!");
                     }
-                    else
+                    else if (duration > 0) // do not cancel for gems/pots
                     {
                         combustionTime = -1;
                         combustionLeft = 0;
@@ -2726,7 +2843,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         if (time + duration > ivTime + 20 + eps)
                         {
-                            if (coldsnapCooldown <= (ivTime + 20 - time) + eps)
+                            if (coldsnap && coldsnapCooldown <= (ivTime + 20 - time) + eps)
                             {
                                 double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVstart);
                                 ivTime += 20;
@@ -2758,7 +2875,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                         else
                         {
-                            if (ivCooldown > eps && coldsnapCooldown <= eps)
+                            if (coldsnap && ivCooldown > eps && coldsnapCooldown <= eps)
                             {
                                 double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVstart);
                                 coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
@@ -2770,7 +2887,7 @@ namespace Rawr.Mage.SequenceReconstruction
                             lastIVstart = time;
                             if (duration > 20.0)
                             {
-                                if (coldsnapCooldown <= 20.0 + eps)
+                                if (coldsnap && coldsnapCooldown <= 20.0 + eps)
                                 {
                                     double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVstart);
                                     ivTime += 20;
@@ -2803,35 +2920,34 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                 }
                 string label = null;
-                if (index == SequenceItem.Calculations.ColumnIdleRegen)
+                if (type == VariableType.IdleRegen)
                 {
                     label = "Idle Regen";
                 }
-                else if (index == SequenceItem.Calculations.ColumnWand)
+                else if (type == VariableType.Wand)
                 {
                     label = "Wand";
                 }
-                else if (index == SequenceItem.Calculations.ColumnDrumsOfBattle)
+                else if (type == VariableType.DrumsOfBattle)
                 {
                     label = "Drums of Battle";
                 }
-                else if (index == SequenceItem.Calculations.ColumnDrinking)
+                else if (type == VariableType.Drinking)
                 {
                     label = "Drink";
                 }
-                else if (index == SequenceItem.Calculations.ColumnTimeExtension)
+                else if (type == VariableType.TimeExtension)
                 {
                     label = "End";
                 }
-                else if (index == SequenceItem.Calculations.ColumnAfterFightRegen)
+                else if (type == VariableType.AfterFightRegen)
                 {
                     label = "Drink";
                 }
-                else if (spell != null)
+                else if (type == VariableType.Spell)
                 {
                     label = spell.Name;
                 }
-                int specialCycles = 6;
                 if (reportMode == ReportMode.Listing)
                 {
                     if (timing != null && label != null && (i == 0 || spell == null || sequence[i].CastingState != sequence[i - 1].CastingState || sequence[i].Spell != sequence[i - 1].Spell)) timing.AppendLine(TimeFormat(time) + ": " + label + " (" + Math.Round(manabefore).ToString() + " mana)");

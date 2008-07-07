@@ -48,13 +48,16 @@ namespace Rawr.Mage
         [XmlIgnore]
         public int[] IncrementalSetStateIndexes;
         [XmlIgnore]
-        public int[] IncrementalSetSortedCooldowns;
+        public int[] IncrementalSetSortedStates;
         [XmlIgnore]
         public int[] IncrementalSetSegments;
         [XmlIgnore]
         public SpellId[] IncrementalSetSpells;
         [XmlIgnore]
         public string IncrementalSetArmor;
+        [XmlIgnore]
+        public VariableType[] IncrementalSetVariableType;
+
         [XmlIgnore]
         public Character Character
         {
@@ -68,7 +71,7 @@ namespace Rawr.Mage
         {
             IncrementalSetStateIndexes = null;
             IncrementalSetSegments = null;
-            IncrementalSetSortedCooldowns = null;
+            IncrementalSetSortedStates = null;
             IncrementalSetSpells = null;
         }
 
@@ -76,9 +79,8 @@ namespace Rawr.Mage
 
         public bool ComparisonSegmentCooldowns { get; set; }
         public bool DisplaySegmentCooldowns { get; set; }
-
         public bool ComparisonIntegralMana { get; set; }
-        public bool DisplayIntegralMana { get; set; }
+        public bool DisplayIntegralMana { get; set; }        
 
         public float Innervate { get; set; }
         public float ManaTide { get; set; }

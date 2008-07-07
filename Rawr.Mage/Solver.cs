@@ -4,14 +4,9 @@ using System.Text;
 
 namespace Rawr.Mage
 {
-    public enum ManaConsumable
+    public sealed partial class Solver
     {
-        ManaPotion,
-        ManaGem
-    }
-
-    public sealed class Solver
-    {
+        private const int cooldownCount = 10;
         private const double segmentDuration = 30;
         private int segments;
 
@@ -27,8 +22,12 @@ namespace Rawr.Mage
         private CalculationOptionsMage calculationOptions;
 
         private bool segmentCooldowns;
+        private bool segmentNonCooldowns;
         private bool integralMana;
         private bool requiresMIP;
+
+        private bool minimizeTime;
+        private bool restrictManaUse;
 
         private bool heroismAvailable;
         private bool arcanePowerAvailable;
@@ -106,10 +105,13 @@ namespace Rawr.Mage
         private int rowSegmentCombustion = -1;
         private int rowSegmentDrumsOfBattle = -1;
         private int rowSegmentFlameCap = -1;
-        private int rowSegmentDestructionPotion = -1;
+        private int rowSegmentManaGem = -1;
+        private int rowSegmentPotion = -1;
         private int rowSegmentTrinket1 = -1;
         private int rowSegmentTrinket2 = -1;
         private int rowSegment = -1;
+        private int rowSegmentManaOverflow = -1;
+        private int rowSegmentManaUnderflow = -1;
         #endregion
 
         private Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana)
@@ -357,10 +359,9 @@ namespace Rawr.Mage
                 calculationResult.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
                 calculationResult.MageArmor = armor;
 
-                bool minimizeTime;
                 List<double> tpsList;
 
-                ConstructProblem(additionalItem, calculations, rawStats, characterStats, out minimizeTime, out tpsList);
+                ConstructProblem(additionalItem, calculations, rawStats, characterStats, out tpsList);
 
                 if (requiresMIP)
                 {
@@ -465,271 +466,7 @@ namespace Rawr.Mage
             return ret;
         }
 
-        private void RestrictSolution()
-        {
-            int maxHeap = calculationOptions.MaxHeapLimit;
-            lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
-            heap = new Heap<SolverLP>(HeapType.MaximumHeap);
-            heap.Push(lp);
-
-            double max = lp.Value;
-
-            bool valid = true;
-            do
-            {
-                if (heap.Head.Value > max + 0.001) // lowered instability threshold, in case it is still an issue just recompute the solution which "should" give a stable result hopefully
-                {
-                    // recovery measures first
-                    double current = heap.Head.Value;
-                    lp = heap.Pop();
-                    lp.ForceRecalculation();
-                    // some testing indicates that the recalculated solution gives the correct result, so the previous solution is most likely to be the problematic one, since we just discarded it not a big deal
-                    //if (lp.Value <= max + 1.0)
-                    //{
-                    // give more fudge room in case the previous max was the one that was unstable
-                    max = lp.Value;
-                    heap.Push(lp);
-                    continue;
-                    //}
-                    //System.Windows.Forms.MessageBox.Show("Instability detected, aborting SMP algorithm (max = " + max + ", value = " + lp.Value + ")");
-                    // find something reasonably stable
-                    //while (heap.Count > 0 && (lp = heap.Pop()).Value > max + 0.000001) { }
-                    //break;
-                }
-                lp = heap.Pop();
-                max = lp.Value;
-                // this is the best non-evaluated option (highest partially-constrained LP, the optimum has to be lower)
-                // if this one is valid than all others are sub-optimal
-                // validate all segments for each cooldown
-                solution = lp.Solve();
-                /*System.Diagnostics.Trace.WriteLine("Solution basis (value = " + lp.Value + "):");
-                for (int index = 0; index < lpCols; index++)
-                {
-                    if (solution[index] > 0.000001) System.Diagnostics.Trace.WriteLine(index);
-                }*/
-                if (heap.Count > maxHeap)
-                {
-                    System.Windows.Forms.MessageBox.Show("SMP algorithm exceeded maximum allowed computation limit. Displaying the last working solution. Increase the limit in options if you would like to compute the correct solution.");
-                    break;
-                }
-                valid = true;
-
-                if (integralMana)
-                {
-                    if (valid && calculationOptions.ManaPotionEnabled)
-                    {
-                        valid = ValidateIntegralMana(ManaConsumable.ManaPotion);
-                    }
-                    if (valid && calculationOptions.ManaGemEnabled)
-                    {
-                        valid = ValidateIntegralMana(ManaConsumable.ManaGem);
-                    }
-                }
-
-                if (segmentCooldowns)
-                {
-                    // make sure all cooldowns are tightly packed and not fragmented
-                    // mf is trivially satisfied
-                    // heroism
-                    if (valid && heroismAvailable)
-                    {
-                        valid = ValidateCooldown(Cooldown.Heroism, 40, -1);
-                    }
-                    // ap
-                    if (valid && arcanePowerAvailable)
-                    {
-                        valid = ValidateCooldown(Cooldown.ArcanePower, 15, 180);
-                    }
-                    // iv
-                    if (valid && icyVeinsAvailable)
-                    {
-                        valid = ValidateCooldown(Cooldown.IcyVeins, 20 + (coldsnapAvailable ? 20 : 0), 180 + (coldsnapAvailable ? 20 : 0));
-                    }
-                    // combustion
-                    if (valid && combustionAvailable)
-                    {
-                        valid = ValidateCooldown(Cooldown.Combustion, 15, 180 + 15); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
-                    }
-                    // drums
-                    if (valid && calculationOptions.DrumsOfBattle)
-                    {
-                        valid = ValidateCooldown(Cooldown.DrumsOfBattle, 30, 120);
-                    }
-                    // flamecap
-                    if (valid && calculationOptions.FlameCap)
-                    {
-                        valid = ValidateCooldown(Cooldown.FlameCap, 60, 180);
-                    }
-                    // destruction
-                    if (valid && calculationOptions.DestructionPotion)
-                    {
-                        valid = ValidateCooldown(Cooldown.DestructionPotion, 15, 120);
-                    }
-                    // t1
-                    if (valid && trinket1Available)
-                    {
-                        valid = ValidateCooldown(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown);
-                    }
-                    // t2
-                    if (valid && trinket2Available)
-                    {
-                        valid = ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown);
-                    }
-                    /*if (valid && t1ismg && calculationOptions.FlameCap)
-                    {
-                        valid = ValidateSCB(Cooldown.Trinket1);
-                    }
-                    if (valid && t2ismg && calculationOptions.FlameCap)
-                    {
-                        valid = ValidateSCB(Cooldown.Trinket2);
-                    }*/
-                    // eliminate packing cycles
-                    // example:
-                    // H+IV:10
-                    // IV+Icon:10
-                    // H+Icon:10
-                    if (valid)
-                    {
-                        for (int seg = 0; seg < segments - 1; seg++)
-                        {
-                            // collect all cooldowns on the boundary seg...(seg+1)
-                            // assume one instance of cooldown max (coldsnap theoretically doesn't satisfy this, but I think it should still work)
-                            // calculate hex values for boolean arithmetic
-                            // verify if there are cycles
-
-                            // ###   ###
-                            // ######
-                            //    ######
-
-                            // ##
-                            //  ##
-                            //   ##
-                            //    ##
-                            //     ##
-                            // #    #
-
-                            // cycle = no element can be placed at the start, all have two tails that intersect to 0
-                            // inside the boundary we can have more than one cycle and several nice packings
-                            // find elements that can be placed at the start, those are the ones with nice packing
-                            // for each one you find remove the corresponding group
-                            // if we remove everything then there are no cycles
-
-                            List<int> hexList = new List<int>();
-                            for (int index = segmentColumn[seg]; index < segmentColumn[seg + 2]; index++)
-                            {
-                                CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (state != null && solution[index] > 0)
-                                {
-                                    int hex = state.GetHex();
-                                    if (hex != 0 && !hexList.Contains(hex)) hexList.Add(hex);
-                                }
-                            }
-
-                            // placed  ## ### ## #
-                            //         .. ...  
-                            //          .   . .. .
-                            // active   #   #    #
-                            //
-                            // future   #   ##      <= ok
-                            //          #   #  #    <= not ok
-
-                            // take newHex = (future - future & active)
-                            // if newHex & placed > 0 then we have cycle
-
-                            bool ok = true;
-                            int placed = 0;
-                            while (ok && hexList.Count > 0)
-                            {
-                                ok = false;
-                                // check if any can be at the start
-                                for (int i = 0; i < hexList.Count; i++)
-                                {
-                                    int tail = hexList[i];
-                                    for (int j = 0; j < hexList.Count; j++)
-                                    {
-                                        int intersect = hexList[i] & hexList[j];
-                                        if (i != j && intersect > 0)
-                                        {
-                                            tail &= hexList[j];
-                                            if (tail == 0) break;
-                                        }
-                                        int newHex = hexList[j] - intersect;
-                                        if ((newHex & placed) > 0)
-                                        {
-                                            tail = 0;
-                                            break;
-                                        }
-                                    }
-                                    if (tail != 0)
-                                    {
-                                        // i is good
-                                        ok = true;
-                                        placed |= hexList[i];
-                                        hexList.RemoveAt(i);
-                                        break;
-                                    }
-                                }
-                            }
-                            if (hexList.Count > 0)
-                            {
-                                // we have a cycle
-                                // to break the cycle we have to remove one of the elements
-                                // if all are present then obviously we have a cycle, so the true solution must have one of them missing
-                                for (int i = 0; i < hexList.Count; i++)
-                                {
-                                    SolverLP hexRemovedLP = lp.Clone();
-                                    //hexRemovedLP.Log += "Breaking cycle at boundary " + seg + ", removing " + hexList[i] + "\r\n";
-                                    for (int index = segmentColumn[seg]; index < segmentColumn[seg + 2]; index++)
-                                    {
-                                        CastingState state = calculationResult.SolutionVariable[index].State;
-                                        if (state != null && state.GetHex() == hexList[i]) hexRemovedLP.EraseColumn(index);
-                                    }
-                                    heap.Push(hexRemovedLP);
-                                }
-                                valid = false;
-                                break;
-                            }
-                        }
-                    }
-                    if (valid && icyVeinsAvailable && coldsnapAvailable)
-                    {
-                        valid = ValidateColdsnap();
-                    }
-                }
-            } while (heap.Count > 0 && !valid);
-            //System.Diagnostics.Trace.WriteLine("Heap at solution " + heap.Count);
-        }
-
-        private bool ValidateIntegralMana(ManaConsumable manaConsumable)
-        {
-            int column = 0;
-            switch (manaConsumable)
-            {
-                case ManaConsumable.ManaGem:
-                    column = calculationResult.ColumnManaGem;
-                    break;
-                case ManaConsumable.ManaPotion:
-                    column = calculationResult.ColumnManaPotion;
-                    break;
-            }
-            double value = solution[column];
-            int count = (int)Math.Round(value);
-            bool valid = (Math.Abs(value - count) < 0.000001);
-
-            if (!valid)
-            {
-                SolverLP maxCount = lp.Clone();
-                // count <= floor(value)
-                maxCount.SetMaxManaConsumable(manaConsumable, Math.Floor(value));
-                heap.Push(lp);
-                // count >= ceiling(value)
-                lp.SetMinManaConsumable(manaConsumable, Math.Ceiling(value));
-                heap.Push(lp);
-            }
-            return valid;
-        }
-
-        private unsafe void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats characterStats, out bool minimizeTime, out List<double> tpsList)
+        private unsafe void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats characterStats, out List<double> tpsList)
         {
             calculationResult.StartingMana = Math.Min(characterStats.Mana, calculationResult.BaseState.ManaRegenDrinking * calculationOptions.DrinkingTime);
             double maxDrinkingTime = Math.Min(30, (characterStats.Mana - calculationResult.StartingMana) / calculationResult.BaseState.ManaRegenDrinking);
@@ -745,9 +482,12 @@ namespace Rawr.Mage
             }
             if (minimizeTime) needsTimeExtension = true;
 
+            if (segmentCooldowns && (flameCapAvailable || destructionPotionAvailable)) restrictManaUse = true;
+            if (restrictManaUse) segmentNonCooldowns = true;
+
             int rowCount = ConstructRows(minimizeTime, drinkingEnabled, needsTimeExtension, afterFightRegen);
 
-            lp = new SolverLP(rowCount, 9 + spellList.Count * stateList.Count * segments, calculationResult);
+            lp = new SolverLP(rowCount, 9 + (2 + spellList.Count * stateList.Count) * segments, calculationResult, segments);
             tpsList = new List<double>();
             double tps;
             calculationResult.SolutionVariable = new List<SolutionVariable>();
@@ -769,6 +509,14 @@ namespace Rawr.Mage
                 lp.SetRowScaleUnsafe(rowThreat, 0.05);
                 lp.SetRowScaleUnsafe(rowDrumsOfBattle, 30.0);
                 lp.SetRowScaleUnsafe(rowCount, 0.05);
+                if (restrictManaUse)
+                {
+                    for (int ss = 0; ss < segments - 1; ss++)
+                    {
+                        lp.SetRowScaleUnsafe(rowSegmentManaOverflow + ss, 0.1);
+                        lp.SetRowScaleUnsafe(rowSegmentManaUnderflow + ss, 0.1);
+                    }
+                }
                 #endregion
 
                 float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
@@ -778,45 +526,61 @@ namespace Rawr.Mage
 
                 #region Formulate LP
                 // idle regen
-                //calculatedStats.SolutionLabel[0] = "Idle Regen";
-                int column;
+                int column = -1;
                 double manaRegen;
-                calculationResult.ColumnIdleRegen = column = lp.AddColumnUnsafe();
-                calculationResult.SolutionVariable.Add(new SolutionVariable());
-                tpsList.Add(0.0);
+                int idleRegenSegments = (restrictManaUse) ? segments : 1;
                 manaRegen = -(calculationResult.BaseState.ManaRegen * (1 - calculationOptions.Fragmentation) + calculationResult.BaseState.ManaRegen5SR * calculationOptions.Fragmentation);
-                lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
-                lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
-                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                lp.SetElementUnsafe(rowDpsTime, column, -1.0);
-                lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                // wand
-                //calculatedStats.SolutionLabel[1] = "Wand";
-                if (character.Ranged != null && character.Ranged.Type == Item.ItemType.Wand)
+                for (int segment = 0; segment < idleRegenSegments; segment++)
                 {
-                    calculationResult.SolutionVariable.Add(new SolutionVariable());
-                    calculationResult.ColumnWand = column = lp.AddColumnUnsafe();
-                    Spell wand = new Wand(calculationResult.BaseState, (MagicSchool)character.Ranged.DamageType, character.Ranged.MinDamage, character.Ranged.MaxDamage, character.Ranged.Speed);
-                    calculationResult.BaseState.SetSpell(SpellId.Wand, wand);
-                    manaRegen = wand.CostPerSecond - wand.ManaRegenPerSecond;
+                    column = lp.AddColumnUnsafe();
+                    if (segment == 0) calculationResult.ColumnIdleRegen = column;
+                    calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.IdleRegen, Segment = segment });
+                    tpsList.Add(0.0);
                     lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
                     lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
                     lp.SetElementUnsafe(rowFightDuration, column, 1.0);
                     lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                    lp.SetElementUnsafe(rowThreat, column, tps = wand.ThreatPerSecond);
-                    lp.SetElementUnsafe(rowTargetDamage, column, -wand.DamagePerSecond);
-                    lp.SetCostUnsafe(column, minimizeTime ? -1 : wand.DamagePerSecond);
-                    tpsList.Add(tps);
+                    lp.SetElementUnsafe(rowDpsTime, column, -1.0);
+                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                }
+                // wand
+                if (character.Ranged != null && character.Ranged.Type == Item.ItemType.Wand)
+                {
+                    int wandSegments = (restrictManaUse) ? segments : 1;
+                    Spell wand = new Wand(calculationResult.BaseState, (MagicSchool)character.Ranged.DamageType, character.Ranged.MinDamage, character.Ranged.MaxDamage, character.Ranged.Speed);
+                    calculationResult.BaseState.SetSpell(SpellId.Wand, wand);
+                    manaRegen = wand.CostPerSecond - wand.ManaRegenPerSecond;
+                    for (int segment = 0; segment < wandSegments; segment++)
+                    {
+                        column = lp.AddColumnUnsafe();
+                        if (segment == 0) calculationResult.ColumnWand = column;
+                        calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Spell = wand, Segment = segment });
+                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
+                        lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
+                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                        lp.SetElementUnsafe(rowThreat, column, tps = wand.ThreatPerSecond);
+                        lp.SetElementUnsafe(rowTargetDamage, column, -wand.DamagePerSecond);
+                        lp.SetCostUnsafe(column, minimizeTime ? -1 : wand.DamagePerSecond);
+                        tpsList.Add(tps);
+                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                        if (restrictManaUse)
+                        {
+                            for (int ss = segment; ss < segments - 1; ss++)
+                            {
+                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
+                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                            }
+                        }
+                    }
                 }
                 // evocation
                 if (calculationOptions.EvocationEnabled)
                 {
-                    calculationResult.SolutionVariable.Add(new SolutionVariable());
-                    calculationResult.ColumnEvocation = column = lp.AddColumnUnsafe();
+                    int evocationSegments = (restrictManaUse) ? segments : 1;
                     double evocationDuration = (8f + characterStats.EvocationExtension) / calculationResult.BaseState.CastingSpeed;
                     calculationResult.EvocationDuration = evocationDuration;
-                    //calculatedStats.SolutionLabel[2] = "Evocation";
                     float evocationMana = characterStats.Mana;
                     calculationResult.EvocationRegen = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed;
                     if (calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0)
@@ -852,69 +616,143 @@ namespace Rawr.Mage
                             calculationResult.EvocationRegen = evocationRegen;
                         }
                     }
-                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegen);
-                    lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegen);
-                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                    lp.SetElementUnsafe(rowEvocation, column, 1.0);
-                    lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
-                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                    tpsList.Add(tps);
+                    for (int segment = 0; segment < evocationSegments; segment++)
+                    {
+                        calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment });
+                        column = lp.AddColumnUnsafe();
+                        if (segment == 0) calculationResult.ColumnEvocation = column;
+                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegen);
+                        lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegen);
+                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                        lp.SetElementUnsafe(rowEvocation, column, 1.0);
+                        lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
+                        lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                        tpsList.Add(tps);
+                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                        if (restrictManaUse)
+                        {
+                            for (int ss = segment; ss < segments - 1; ss++)
+                            {
+                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegen);
+                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegen);
+                            }
+                        }
+                    }
                 }
-                // mana pot
+                // mana potion
                 if (calculationOptions.ManaPotionEnabled)
                 {
-                    calculationResult.SolutionVariable.Add(new SolutionVariable());
-                    calculationResult.ColumnManaPotion = column = lp.AddColumnUnsafe();
-                    //calculatedStats.SolutionLabel[3] = "Mana Potion";
+                    int manaPotionSegments = (segmentCooldowns && (destructionPotionAvailable || restrictManaUse)) ? segments : 1;
                     calculationResult.MaxManaPotion = 1 + (int)((calculationOptions.FightDuration - 30f) / 120f);
                     manaRegen = -(1 + characterStats.BonusManaPotion) * 2400f;
-                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
-                    lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
-                    lp.SetElementUnsafe(rowPotion, column, 1.0);
-                    lp.SetElementUnsafe(rowThreat, column, tps = (1 + characterStats.BonusManaPotion) * 2400f * 0.5f * threatFactor);
-                    lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
-                    lp.SetCostUnsafe(column, 0.0);
-                    tpsList.Add(tps);
+                    for (int segment = 0; segment < manaPotionSegments; segment++)
+                    {
+                        calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaPotion, Segment = segment });
+                        column = lp.AddColumnUnsafe();
+                        if (segment == 0) calculationResult.ColumnManaPotion = column;
+                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
+                        lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
+                        lp.SetElementUnsafe(rowPotion, column, 1.0);
+                        lp.SetElementUnsafe(rowThreat, column, tps = (1 + characterStats.BonusManaPotion) * 2400f * 0.5f * threatFactor);
+                        lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
+                        lp.SetCostUnsafe(column, 0.0);
+                        tpsList.Add(tps);
+                        if (segmentCooldowns && destructionPotionAvailable)
+                        {
+                            for (int ss = 0; ss < segments; ss++)
+                            {
+                                double cool = 120;
+                                int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                                if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentPotion + ss, column, 15.0);
+                                if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                            }
+                        }
+                        if (restrictManaUse)
+                        {
+                            for (int ss = segment; ss < segments - 1; ss++)
+                            {
+                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
+                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                            }
+                        }
+                    }
                 }
                 // mana gem
                 if (calculationOptions.ManaGemEnabled)
                 {
-                    calculationResult.SolutionVariable.Add(new SolutionVariable());
-                    calculationResult.ColumnManaGem = column = lp.AddColumnUnsafe();
-                    //calculatedStats.SolutionLabel[4] = "Mana Gem";
+                    int manaGemSegments = (segmentCooldowns && (flameCapAvailable || restrictManaUse)) ? segments : 1;
                     calculationResult.MaxManaGem = Math.Min(5, 1 + (int)((calculationOptions.FightDuration - 30f) / 120f));
                     double manaGemRegenAvg = (1 + characterStats.BonusManaGem) * (-Math.Min(3, 1 + (int)((calculationOptions.FightDuration - 30f) / 120f)) * 2400f - ((calculationOptions.FightDuration >= 390) ? 1100f : 0f) - ((calculationOptions.FightDuration >= 510) ? 850 : 0)) / (calculationResult.MaxManaGem);
-                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaGemRegenAvg);
-                    lp.SetElementUnsafe(rowManaRegen, column, manaGemRegenAvg);
-                    lp.SetElementUnsafe(rowManaGem, column, 1.0);
-                    lp.SetElementUnsafe(rowManaGemFlameCap, column, 1.0);
-                    lp.SetElementUnsafe(rowTrinketManaGem, column, -1.0);
-                    lp.SetElementUnsafe(rowThreat, column, tps = -manaGemRegenAvg * 0.5f * threatFactor);
-                    lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
-                    lp.SetCostUnsafe(column, 0.0);
-                    tpsList.Add(tps);
+                    for (int segment = 0; segment < manaGemSegments; segment++)
+                    {
+                        calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaGem, Segment = segment });
+                        column = lp.AddColumnUnsafe();
+                        if (segment == 0) calculationResult.ColumnManaGem = column;
+                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaGemRegenAvg);
+                        lp.SetElementUnsafe(rowManaRegen, column, manaGemRegenAvg);
+                        lp.SetElementUnsafe(rowManaGem, column, 1.0);
+                        lp.SetElementUnsafe(rowManaGemFlameCap, column, 1.0);
+                        lp.SetElementUnsafe(rowTrinketManaGem, column, -1.0);
+                        lp.SetElementUnsafe(rowThreat, column, tps = -manaGemRegenAvg * 0.5f * threatFactor);
+                        lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
+                        lp.SetCostUnsafe(column, 0.0);
+                        tpsList.Add(tps);
+                        if (segmentCooldowns && flameCapAvailable)
+                        {
+                            for (int ss = 0; ss < segments; ss++)
+                            {
+                                double cool = 120;
+                                int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                                if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentManaGem + ss, column, 60.0);
+                                if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                            }
+                        }
+                        if (restrictManaUse)
+                        {
+                            for (int ss = segment; ss < segments - 1; ss++)
+                            {
+                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaGemRegenAvg);
+                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaGemRegenAvg);
+                            }
+                        }
+                    }
                 }
                 // drums
                 if (drumsOfBattleAvailable)
                 {
-                    calculationResult.SolutionVariable.Add(new SolutionVariable());
-                    calculationResult.ColumnDrumsOfBattle = column = lp.AddColumnUnsafe();
-                    //calculatedStats.SolutionLabel[5] = "Drums of Battle";
+                    int drumsOfBattleSegments = (restrictManaUse) ? segments : 1;
                     manaRegen = -calculationResult.BaseState.ManaRegen5SR;
-                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
-                    lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
-                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                    lp.SetElementUnsafe(rowDrumsOfBattleActivation, column, -1 / calculationResult.BaseState.GlobalCooldown);
-                    lp.SetElementUnsafe(rowDrumsOfBattle, column, 1 / calculationResult.BaseState.GlobalCooldown);
-                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                    tpsList.Add(0.0);
+                    for (int segment = 0; segment < drumsOfBattleSegments; segment++)
+                    {
+                        calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.DrumsOfBattle, Segment = segment });
+                        column = lp.AddColumnUnsafe();
+                        if (segment == 0) calculationResult.ColumnDrumsOfBattle = column;
+                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
+                        lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
+                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                        lp.SetElementUnsafe(rowDrumsOfBattleActivation, column, -1 / calculationResult.BaseState.GlobalCooldown);
+                        lp.SetElementUnsafe(rowDrumsOfBattle, column, 1 / calculationResult.BaseState.GlobalCooldown);
+                        lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                        tpsList.Add(0.0);
+                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                        if (restrictManaUse)
+                        {
+                            for (int ss = segment; ss < segments - 1; ss++)
+                            {
+                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
+                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                            }
+                        }
+                    }
                 }
                 // drinking
                 if (drinkingEnabled)
                 {
-                    calculationResult.SolutionVariable.Add(new SolutionVariable());
+                    calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Drinking });
                     calculationResult.ColumnDrinking = column = lp.AddColumnUnsafe();
                     manaRegen = -calculationResult.BaseState.ManaRegenDrinking;
                     lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
@@ -924,11 +762,14 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowDrinking, column, 1.0);
                     lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
                     tpsList.Add(0.0);
+                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + 0, column, 1.0);
+                    lp.SetElementUnsafe(rowSegmentManaUnderflow + 0, column, manaRegen);
+                    lp.SetElementUnsafe(rowSegmentManaOverflow + 0, column, -manaRegen);
                 }
                 // time extension
                 if (needsTimeExtension)
                 {
-                    calculationResult.SolutionVariable.Add(new SolutionVariable());
+                    calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.TimeExtension });
                     calculationResult.ColumnTimeExtension = column = lp.AddColumnUnsafe();
                     lp.SetElementUnsafe(rowFightDuration, column, 1.0);
                     lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
@@ -950,13 +791,31 @@ namespace Rawr.Mage
                 // after fight regen
                 if (afterFightRegen)
                 {
-                    calculationResult.SolutionVariable.Add(new SolutionVariable());
+                    calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.AfterFightRegen });
                     calculationResult.ColumnAfterFightRegen = column = lp.AddColumnUnsafe();
                     lp.SetElementUnsafe(rowFightDuration, column, 1.0);
                     lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
                     lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.BaseState.ManaRegenDrinking);
                     lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
                     tpsList.Add(0.0);
+                }
+                // mana overflow
+                if (restrictManaUse)
+                {
+                    for (int segment = 0; segment < segments; segment++)
+                    {
+                        calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaOverflow, Segment = segment });
+                        column = lp.AddColumnUnsafe();
+                        if (segment == 0) calculationResult.ColumnManaOverflow = column;
+                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, 1.0);
+                        lp.SetElementUnsafe(rowManaRegen, column, 1.0);
+                        tpsList.Add(0.0);
+                        for (int ss = segment; ss < segments - 1; ss++)
+                        {
+                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, 1.0);
+                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -1.0);
+                        }
+                    }
                 }
                 // spells
                 if (calculationOptions.IncrementalOptimizations)
@@ -978,7 +837,7 @@ namespace Rawr.Mage
                                         segmentColumn[++lastSegment] = column;
                                     }
                                 }
-                                calculationResult.SolutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg });
+                                calculationResult.SolutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg, Type = VariableType.Spell });
                                 SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, s);
                             }
                         }
@@ -1000,12 +859,12 @@ namespace Rawr.Mage
                             for (int spell = 0; spell < spellList.Count; spell++)
                             {
                                 if (segmentCooldowns && stateList[buffset].MoltenFury && seg < firstMoltenFurySegment) continue;
-                                if (stateList[buffset] == calculationResult.BaseState && seg != 0) continue;
+                                if (!segmentNonCooldowns && stateList[buffset] == calculationResult.BaseState && seg != 0) continue;
                                 Spell s = stateList[buffset].GetSpell(spellList[spell]);
                                 if (s.AffectedByFlameCap || !stateList[buffset].FlameCap)
                                 {
                                     column = lp.AddColumnUnsafe();
-                                    calculationResult.SolutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg });
+                                    calculationResult.SolutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg, Type = VariableType.Spell });
                                     SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, s);
                                 }
                             }
@@ -1177,7 +1036,11 @@ namespace Rawr.Mage
             if (moltenFuryAvailable && icyVeinsAvailable) lp.SetRHSUnsafe(rowMoltenFuryIcyVeins, coldsnapAvailable ? 40 : 20);
             if (heroismAvailable) lp.SetRHSUnsafe(rowHeroismDestructionPotion, 15);
             if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeinsDestructionPotion, dpivlength);
-            if (calculationOptions.FlameCap && !(!calculationOptions.SmartOptimization && calculationOptions.SpellPower > 0))
+            if (segmentCooldowns)
+            {
+                lp.SetRHSUnsafe(rowManaGemFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : Math.Max(((int)((calculationOptions.FightDuration - 60.0) / 60.0)) * 0.5 + 1.5, calculationResult.MaxManaGem));
+            }
+            else if (calculationOptions.FlameCap && !(!calculationOptions.SmartOptimization && calculationOptions.SpellPower > 0))
             {
                 lp.SetRHSUnsafe(rowManaGemFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : ((int)(calculationOptions.FightDuration / 180.0 + 2.0 / 3.0)) * 3.0 / 2.0);
             }
@@ -1274,13 +1137,19 @@ namespace Rawr.Mage
                         double cool = 180;
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
+                    for (int seg = 0; seg < segments; seg++)
+                    {
+                        lp.SetRHSUnsafe(rowSegmentManaGem + seg, 60.0);
+                        double cool = 120;
+                        if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
                 }
                 // destruction
                 if (destructionPotionAvailable)
                 {
                     for (int seg = 0; seg < segments; seg++)
                     {
-                        lp.SetRHSUnsafe(rowSegmentDestructionPotion + seg, 15.0);
+                        lp.SetRHSUnsafe(rowSegmentPotion + seg, 15.0);
                         double cool = 120;
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
@@ -1309,6 +1178,14 @@ namespace Rawr.Mage
                 for (int seg = 0; seg < segments; seg++)
                 {
                     lp.SetRHSUnsafe(rowSegment + seg, segmentDuration);
+                }
+            }
+            if (restrictManaUse)
+            {
+                for (int ss = 0; ss < segments - 1; ss++)
+                {
+                    lp.SetRHSUnsafe(rowSegmentManaUnderflow + ss, calculationResult.StartingMana);
+                    lp.SetRHSUnsafe(rowSegmentManaOverflow + ss, calculationResult.BaseStats.Mana - calculationResult.StartingMana);
                 }
             }
         }
@@ -1436,7 +1313,7 @@ namespace Rawr.Mage
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
-                // flamecap
+                // flamecap & mana gem
                 if (flameCapAvailable)
                 {
                     rowSegmentFlameCap = rowCount;
@@ -1446,11 +1323,18 @@ namespace Rawr.Mage
                         double cool = 180;
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
+                    rowSegmentManaGem = rowCount;
+                    for (int seg = 0; seg < segments; seg++)
+                    {
+                        rowCount++;
+                        double cool = 120;
+                        if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
                 }
                 // destruction
                 if (destructionPotionAvailable)
                 {
-                    rowSegmentDestructionPotion = rowCount;
+                    rowSegmentPotion = rowCount;
                     for (int seg = 0; seg < segments; seg++)
                     {
                         rowCount++;
@@ -1480,8 +1364,17 @@ namespace Rawr.Mage
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
+                // max segment time
                 rowSegment = rowCount;
                 rowCount += segments;
+                // mana overflow & underflow (don't need over all segments, that is already verified)
+                if (restrictManaUse)
+                {
+                    rowSegmentManaOverflow = rowCount;
+                    rowCount += segments - 1;
+                    rowSegmentManaUnderflow = rowCount;
+                    rowCount += segments - 1;
+                }
             }
             return rowCount;
         }
@@ -1629,6 +1522,14 @@ namespace Rawr.Mage
                         if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentFlameCap + ss, column, 1.0);
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
+                    for (int ss = 0; ss < segments; ss++)
+                    {
+                        double cool = 120;
+                        int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                        if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentManaGem + ss, column, 1.0);
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
                 }
                 if (state.DestructionPotion)
                 {
@@ -1637,7 +1538,7 @@ namespace Rawr.Mage
                         double cool = 120;
                         int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
-                        if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentDestructionPotion + ss, column, 1.0);
+                        if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentPotion + ss, column, 1.0);
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
@@ -1663,7 +1564,15 @@ namespace Rawr.Mage
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
-                if (state != calculationResult.BaseState) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                if (segmentNonCooldowns || state != calculationResult.BaseState) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+            }
+            if (restrictManaUse)
+            {
+                for (int ss = segment; ss < segments - 1; ss++)
+                {
+                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
+                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                }
             }
         }
 
@@ -1771,9 +1680,9 @@ namespace Rawr.Mage
             if (destructionPotionAvailable) availableMask |= 0x1;
             if (calculationOptions.IncrementalOptimizations)
             {
-                for (int incrementalSortedIndex = 0; incrementalSortedIndex < calculationOptions.IncrementalSetSortedCooldowns.Length; incrementalSortedIndex++)
+                for (int incrementalSortedIndex = 0; incrementalSortedIndex < calculationOptions.IncrementalSetSortedStates.Length; incrementalSortedIndex++)
                 {
-                    int incrementalSetIndex = calculationOptions.IncrementalSetSortedCooldowns[incrementalSortedIndex];
+                    int incrementalSetIndex = calculationOptions.IncrementalSetSortedStates[incrementalSortedIndex];
                     bool mf = (incrementalSetIndex & 0x80) == 0;
                     bool heroism = (incrementalSetIndex & 0x40) == 0;
                     bool ap = (incrementalSetIndex & 0x20) == 0;
@@ -1846,537 +1755,6 @@ namespace Rawr.Mage
                 }
             }
             return list;
-        }
-
-        private const int CooldownMax = 10;
-
-        private void EnsureColdsnapConstraints()
-        {
-            if (!lp.HasColdsnapConstraints)
-            {
-                lp.AddColdsnapConstraints(segments + (int)(180.0 / segmentDuration) - 1);
-                for (int seg = 0; seg < segments + (int)(180.0 / segmentDuration) - 1; seg++)
-                {
-                    for (int outseg = Math.Max(0, (int)Math.Ceiling(seg + 1 - 180.0 / segmentDuration - 0.000001)); outseg <= Math.Min(seg, segments - 1); outseg++)
-                    {
-                        for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                        {
-                            CastingState state = calculationResult.SolutionVariable[index].State;
-                            if (state != null && state.GetCooldown(Cooldown.IcyVeins))
-                            {
-                                lp.UpdateColdsnapColumn(seg, index);
-                            }
-                        }
-                    }
-                    lp.UpdateColdsnapDuration(seg, 40.0);
-                }
-            }
-        }
-
-        private bool ValidateColdsnap()
-        {
-            const double eps = 0.000001;
-            double[] segCount = new double[segments];
-            for (int outseg = 0; outseg < segments; outseg++)
-            {
-                double s = 0.0;
-                for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    if (state != null && state.GetCooldown(Cooldown.IcyVeins))
-                    {
-                        s += solution[index];
-                    }
-                }
-                segCount[outseg] = s;
-            }
-            // everything is valid, except possibly coldsnap so we can assume the effects are nicely packed
-            // check where coldsnaps are needed, similar to evaluation in sequence reconstruction
-            bool ivActive = false;
-            double lastIVstart = 0.0;
-            double coldsnapTimer = 0.0;
-            double ivCooldown = 0.0;
-            bool valid = true;
-            double coldsnapActivation = 0.0;
-            for (int seg = 0; seg < segments; seg++)
-            {
-                if (ivActive)
-                {
-                    if (segCount[seg] > 0.0)
-                    {
-                        if (seg * segmentDuration + segCount[seg] > lastIVstart + 20.0 + eps)
-                        {
-                            if (coldsnapTimer <= (lastIVstart + 20.0 - seg * segmentDuration) + eps)
-                            {
-                                coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapTimer, lastIVstart);
-                                lastIVstart += 20.0;
-                                ivCooldown += 20.0;
-                                coldsnapTimer = coldsnapCooldown - (seg * segmentDuration - coldsnapActivation);
-                            }
-                            if (seg * segmentDuration + segCount[seg] > lastIVstart + 20.0 + eps)
-                            {
-                                // we need to coldsnap iv, but it is on cooldown
-                                valid = false;
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ivActive = false;
-                    }
-                }
-                else
-                {
-                    if (segCount[seg] > 0.0)
-                    {
-                        if (ivCooldown + segCount[seg] > segmentDuration + eps && coldsnapTimer + segCount[seg] > segmentDuration + eps)
-                        {
-                            // iv cooldown not ready and coldsnap won't be ready in time
-                            valid = false;
-                            break;
-                        }
-                        else
-                        {
-                            if (ivCooldown + segCount[seg] > segmentDuration + eps && coldsnapTimer + segCount[seg] <= segmentDuration + eps)
-                            {
-                                // iv not ready, but we can coldsnap
-                                coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapTimer, lastIVstart);
-                                coldsnapTimer = coldsnapCooldown - (seg * segmentDuration - coldsnapActivation);
-                                double ivActivation = Math.Max(coldsnapActivation, seg * segmentDuration);
-                                ivCooldown = 180.0 + ivActivation - seg * segmentDuration;
-                                ivActive = true;
-                                lastIVstart = ivActivation;
-                            }
-                            else
-                            {
-                                // start as soon as possible
-                                double ivActivation = Math.Max(seg * segmentDuration + ivCooldown, seg * segmentDuration);
-                                if (seg + 1 < segments && segCount[seg + 1] > 0) ivActivation = (seg + 1) * segmentDuration - segCount[seg];
-                                ivCooldown = 180.0 + ivActivation - seg * segmentDuration;
-                                ivActive = true;
-                                lastIVstart = ivActivation;
-                            }
-                            if (segCount[seg] > 20.0 + eps)
-                            {
-                                if (coldsnapTimer <= (lastIVstart + 20.0 - seg * segmentDuration) + eps)
-                                {
-                                    coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapTimer, lastIVstart);
-                                    lastIVstart += 20.0;
-                                    ivCooldown += 20.0;
-                                    coldsnapTimer = coldsnapCooldown - (seg * segmentDuration - coldsnapActivation);
-                                }
-                                if (seg * segmentDuration + segCount[seg] > lastIVstart + 20.0 + eps)
-                                {
-                                    // we need to coldsnap iv, but it is on cooldown
-                                    valid = false;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        ivActive = false;
-                    }
-                }
-                coldsnapTimer -= segmentDuration;
-                ivCooldown -= segmentDuration;
-            }
-            if (!valid)
-            {
-                EnsureColdsnapConstraints();
-                int coldsnapSegment = (int)(coldsnapActivation / segmentDuration);
-                // branch on whether we have coldsnap in this segment or not
-                SolverLP coldsnapUsedIntra = lp.Clone();
-                SolverLP coldsnapUsedExtra = lp.Clone();
-                SolverLP zerolp = lp.Clone();
-                // if we don't use coldsnap then this segment should be either zeroed or we have to restrict the segments until next iv (I think (tm))
-                for (int seg = coldsnapSegment; seg < Math.Min(coldsnapSegment + (int)Math.Ceiling(180.0 / segmentDuration) + 1, segments + (int)(180.0 / segmentDuration) - 1); seg++) // it's possible we're overrestricting here, might have to add another branch where we go to one less but zero out seg+1
-                {
-                    lp.UpdateColdsnapDuration(seg, 20.0);
-                }
-                heap.Push(lp);
-                for (int index = segmentColumn[coldsnapSegment]; index < segmentColumn[coldsnapSegment + 1]; index++)
-                {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    if (state != null && state.GetCooldown(Cooldown.IcyVeins)) zerolp.EraseColumn(index);
-                }
-                heap.Push(zerolp);
-                // coldsnap used extra
-                // the segments for the duration of one IV can be loose, but all after that have to be restricted until coldsnap is ready
-                coldsnapUsedExtra.UpdateColdsnapDuration(coldsnapSegment, 20.0);
-                int firstRestrictedSeg = coldsnapSegment + 1 + (int)Math.Ceiling(180.0 / segmentDuration);
-                int nextPossibleColdsnap = coldsnapSegment + (int)(coldsnapCooldown / segmentDuration);
-                int segLimit = Math.Min(segments + (int)(180.0 / segmentDuration) - 1, nextPossibleColdsnap);
-                for (int seg = firstRestrictedSeg; seg < segLimit; seg++)
-                {
-                    coldsnapUsedExtra.UpdateColdsnapDuration(seg, 20.0);
-                }
-                heap.Push(coldsnapUsedExtra);
-                for (int seg = Math.Min(coldsnapSegment + 2, segments - 1); seg < coldsnapSegment + (int)(180.0 / segmentDuration); seg++)
-                {
-                    for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
-                    {
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (state != null && state.GetCooldown(Cooldown.IcyVeins)) coldsnapUsedIntra.EraseColumn(index);
-                    }
-                }
-                for (int seg = firstRestrictedSeg; seg < segLimit; seg++)
-                {
-                    coldsnapUsedIntra.UpdateColdsnapDuration(seg, 20.0);
-                }
-                heap.Push(coldsnapUsedIntra);
-                return false;
-            }
-            return valid;
-        }
-
-        private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration)
-        {
-            const double eps = 0.000001;
-            double[] segCount = new double[segments];
-            for (int outseg = 0; outseg < segments; outseg++)
-            {
-                double s = 0.0;
-                for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    if (state != null && state.GetCooldown(cooldown))
-                    {
-                        s += solution[index];
-                    }
-                }
-                segCount[outseg] = s;
-            }
-            int mindist = (int)Math.Ceiling(effectDuration / segmentDuration);
-            int mindist2 = (int)Math.Floor(effectDuration / segmentDuration);
-            int maxdist = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor((cooldownDuration - effectDuration) / segmentDuration));
-            int maxdist2 = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor(cooldownDuration / segmentDuration));
-
-            bool valid = true;
-
-            for (int seg = 0; seg < segments; seg++)
-            {
-                double inseg = segCount[seg];
-                double mxdist = (seg == 0 ? maxdist2 : maxdist); // effect started in first segment couldn't be started earlier
-                if (inseg > 0)
-                {
-                    // verify that outside duration segments are 0
-                    for (int outseg = 0; outseg < segments; outseg++)
-                    {
-                        if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < mxdist)
-                        {
-                            if (segCount[outseg] > 0)
-                            {
-                                valid = false;
-                                break;
-                            }
-                        }
-                    }
-                    if (!valid)
-                    {
-                        //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
-                        // branch on whether cooldown is used in this segment
-                        SolverLP cooldownUsed = lp.Clone();
-                        // cooldown not used
-                        //lp.IVHash += 1 << seg;
-                        //lp.Log += "Disable " + cooldown.ToString() + " at " + seg + "\r\n";
-                        for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
-                        {
-                            CastingState state = calculationResult.SolutionVariable[index].State;
-                            if (state != null && state.GetCooldown(cooldown)) lp.EraseColumn(index);
-                        }
-                        heap.Push(lp);
-                        // cooldown used
-                        //cooldownUsed.Log += "Use " + cooldown.ToString() + " at " + seg + ", disable around\r\n";
-                        for (int outseg = 0; outseg < segments; outseg++)
-                        {
-                            if (Math.Abs(outseg - seg) > mindist && Math.Abs(outseg - seg) < mxdist)
-                            {
-                                //cooldownUsed.IVHash += 1 << outseg;
-                                for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                                {
-                                    CastingState state = calculationResult.SolutionVariable[index].State;
-                                    if (state != null && state.GetCooldown(cooldown)) cooldownUsed.EraseColumn(index);
-                                }
-                            }
-                        }
-                        heap.Push(cooldownUsed);
-                        return false;
-                    }
-                }
-            }
-
-            for (int seg = 0; seg < segments; seg++)
-            {
-                double inseg = segCount[seg];
-                double leftseg = 0.0;
-                double rightseg = 0.0;
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if (Math.Abs(outseg - seg) <= mindist && outseg != seg)
-                    {
-                        if (outseg < seg)
-                        {
-                            leftseg += segCount[outseg];
-                        }
-                        else if (outseg > seg)
-                        {
-                            rightseg += segCount[outseg];
-                        }
-                    }
-                }
-                if (valid && inseg < segmentDuration - 0.000001 && leftseg > 0 && rightseg > 0 /*&& cooldown != Cooldown.IcyVeins*/) // coldsnapped icy veins doesn't have to be contiguous, but getting better results assuming it is
-                {
-                    // fragmentation
-                    // either left must be disabled, right disabled, or seg to max
-                    SolverLP leftDisabled = lp.Clone();
-                    //leftDisabled.Log += "Disable " + cooldown.ToString() + " left of " + seg + "\r\n";
-                    for (int outseg = 0; outseg < segments; outseg++)
-                    {
-                        if ((outseg < seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
-                        {
-                            for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                            {
-                                CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (state != null && state.GetCooldown(cooldown)) leftDisabled.EraseColumn(index);
-                            }
-                        }
-                    }
-                    heap.Push(leftDisabled);
-                    SolverLP rightDisabled = lp.Clone();
-                    //rightDisabled.Log += "Disable " + cooldown.ToString() + " right of " + seg + "\r\n";
-                    for (int outseg = 0; outseg < segments; outseg++)
-                    {
-                        if ((outseg > seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
-                        {
-                            for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                            {
-                                CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (state != null && state.GetCooldown(cooldown)) rightDisabled.EraseColumn(index);
-                            }
-                        }
-                    }
-                    heap.Push(rightDisabled);
-                    //lp.Log += "Force " + cooldown.ToString() + " to max at " + seg + "\r\n";
-                    for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
-                    {
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (state != null)
-                        {
-                            if (state.GetCooldown(cooldown)) lp.UpdateMaximizeSegmentColumn(index);
-                            // for some strange reason trying to help doesn't really help
-                            // so don't try to help
-                            //else lp.EraseColumn(index); // to make it easier on the solver also let it know that anything that doesn't have this cooldown can't be in solution
-                        }
-                    }
-                    lp.UpdateMaximizeSegmentDuration(segmentDuration);
-                    heap.Push(lp);
-                    return false;
-                }
-            }
-
-            /*double t1 = 0.0;
-            double t2 = 0.0;
-            double bestCoverage = 0.0;
-
-            if (cooldownDuration < 0) cooldownDuration = 3 * segments * segmentDuration;
-
-            for (int seg = 0; seg < segments; seg++)
-            {
-                double inseg = segCount[seg];
-                if (inseg > 0 && (seg == 0 || segCount[seg - 1] == 0.0))
-                {
-                    double t = seg;
-                    if (seg < segments - 1 && segCount[seg + 1] > 0.0) t = seg + 1 - inseg / segmentDuration;
-                    double max = t + cooldownDuration / segmentDuration;
-                    // verify that outside duration segments are 0
-                    for (int outseg = seg + 1; outseg < segments; outseg++)
-                    {
-                        if (segCount[outseg] > 0)
-                        {
-                            double tt = outseg + 1 - segCount[outseg] / segmentDuration;
-                            if ((outseg >= t + effectDuration / segmentDuration + eps) && (tt < max - eps))
-                            {
-                                // detected invalid placement undetected by original method
-                                valid = false;
-                                // make sure that we pairwise invalidate
-                                // (outseg >= tin + effectDuration / segmentDuration && outseg < (int)(tin + cooldownDuration / segmentDuration)
-                                // outseg + 1 <= tin + cooldownDuration / segmentDuration
-                                // outseg - effectDuration / segmentDuration >= tin >= outseg + 1 - cooldownDuration / segmentDuration
-                                // cooldownDuration >= effectDuration + 2 * segmentDuration !!! if this isn't true then we have problems, means segmentDuration has to be small enough, 30 sec = good
-                                // (seg >= tout + (effectDuration - cooldownDuration) / segmentDuration && seg < (int)tout)
-                                // seg + 1 <= tout <= seg + (cooldownDuration - effectDuration) / segmentDuration
-                                double tin = t;
-                                double tout = tt;
-                                if (tin < outseg + 1 - cooldownDuration / segmentDuration) tin = outseg + 1 - cooldownDuration / segmentDuration;
-                                if (tout > seg + (cooldownDuration - effectDuration) / segmentDuration) tout = seg + (cooldownDuration - effectDuration) / segmentDuration;
-                                double c1 = 0.0;
-                                double c2 = 0.0;
-                                for (int s = 0; s < segments; s++)
-                                {
-                                    if ((s >= tin + (effectDuration - cooldownDuration) / segmentDuration - eps && s + 1 < tin - eps) || (s >= tin + effectDuration / segmentDuration + eps && s + 1 < tin + cooldownDuration / segmentDuration + eps))
-                                    {
-                                        c1 += segCount[s];
-                                    }
-                                    if ((s >= tout + (effectDuration - cooldownDuration) / segmentDuration - eps && s + 1 < tout - eps) || (s >= tout + effectDuration / segmentDuration + eps && s + 1 < tout + cooldownDuration / segmentDuration + eps))
-                                    {
-                                        c2 += segCount[s];
-                                    }
-                                }
-                                double coverage = Math.Min(c1, c2);
-                                if (coverage < eps)
-                                {
-                                    coverage = 0.0; // troubles
-                                }
-                                if (coverage > bestCoverage)
-                                {
-                                    t1 = tin;
-                                    t2 = tout;
-                                    bestCoverage = coverage;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            /*if (!valid)
-            {
-                //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
-                // branch on whether t1 or t2 is active, they can't be both
-                CompactLP t1active = lp.Clone();
-                // cooldown used
-                //t1active.Log += "Use " + cooldown.ToString() + " at " + t1 + ", disable around\r\n";
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if ((outseg >= t1 + (effectDuration - cooldownDuration) / segmentDuration - eps && outseg + 1 < t1 - eps) || (outseg >= t1 + effectDuration / segmentDuration + eps && outseg + 1 < t1 + cooldownDuration / segmentDuration + eps))
-                    {
-                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                        {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.GetCooldown(cooldown)) t1active.EraseColumn(index);
-                        }
-                    }
-                }
-                heap.Push(t1active);
-                // cooldown not used
-                //lp.Log += "Use " + cooldown.ToString() + " at " + t2 + ", disable around\r\n";
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if ((outseg >= t2 + (effectDuration - cooldownDuration) / segmentDuration - eps && outseg + 1 < t2 - eps) || (outseg >= t2 + effectDuration / segmentDuration + eps && outseg + 1 < t2 + cooldownDuration / segmentDuration + eps))
-                    {
-                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                        {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.GetCooldown(cooldown)) lp.EraseColumn(index);
-                        }
-                    }
-                }
-                heap.Push(lp);
-
-                return false;
-            }*/
-
-            return valid;
-        }
-
-        private bool ValidateSCB(Cooldown trinket)
-        {
-            double[] trinketCount = new double[segments];
-            double[] flamecapCount = new double[segments];
-            for (int outseg = 0; outseg < segments; outseg++)
-            {
-                double s = 0.0;
-                for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    if (state != null && state.GetCooldown(trinket))
-                    {
-                        s += solution[index];
-                    }
-                }
-                trinketCount[outseg] = s;
-            }
-            for (int outseg = 0; outseg < segments; outseg++)
-            {
-                double s = 0.0;
-                for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    if (state != null && state.FlameCap)
-                    {
-                        s += solution[index];
-                    }
-                }
-                flamecapCount[outseg] = s;
-            }
-            int rightdist = ((int)Math.Floor((120.0 - 15.0) / segmentDuration));
-            int leftdist = ((int)Math.Floor((180.0 - 60.0) / segmentDuration));
-
-            bool valid = true;
-            int flamecapSeg = 0;
-            int trinketSeg = 0;
-            int minDist = int.MaxValue;
-
-            for (int seg = 0; seg < segments; seg++) // trinket
-            {
-                double inseg = trinketCount[seg];
-                if (inseg > 0)
-                {
-                    for (int outseg = 0; outseg < segments; outseg++) // flamecap
-                    {
-                        if ((outseg > seg - leftdist) || (outseg < seg + rightdist))
-                        {
-                            if (flamecapCount[outseg] > 0)
-                            {
-                                valid = false;
-                                if (Math.Abs(seg - outseg) < minDist)
-                                {
-                                    trinketSeg = seg;
-                                    flamecapSeg = outseg;
-                                    minDist = Math.Abs(seg - outseg);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (!valid)
-            {
-                // branch on whether trinket is used or flame cap is used
-                SolverLP trinketUsed = lp.Clone();
-                // flame cap used
-                //lp.Log += "Disable " + trinket.ToString() + " close to " + flamecapSeg + "\r\n";
-                for (int inseg = 0; inseg < segments; inseg++)
-                {
-                    if ((inseg > flamecapSeg - rightdist) || (inseg < flamecapSeg + leftdist))
-                    {
-                        for (int index = segmentColumn[inseg]; index < segmentColumn[inseg + 1]; index++)
-                        {
-                            CastingState state = calculationResult.SolutionVariable[index].State;
-                            if (state != null && state.GetCooldown(trinket)) lp.EraseColumn(index);
-                        }
-                    }
-                }
-                heap.Push(lp);
-                // trinket used
-                //trinketUsed.Log += "Disable Flame Cap close to " + trinketSeg + "\r\n";
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if ((outseg > trinketSeg - leftdist) || (outseg < trinketSeg + rightdist))
-                    {
-                        for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                        {
-                            CastingState state = calculationResult.SolutionVariable[index].State;
-                            if (state != null && state.FlameCap) trinketUsed.EraseColumn(index);
-                        }
-                    }
-                }
-                heap.Push(trinketUsed);
-                return false;
-            }
-            return valid;
         }
     }
 }

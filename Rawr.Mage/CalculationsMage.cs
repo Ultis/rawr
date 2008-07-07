@@ -162,8 +162,8 @@ namespace Rawr.Mage
 
         public override string GetCharacterStatsString(Character character)
         {
-			StringBuilder stats = new StringBuilder();
-			stats.AppendFormat("Character:\t\t{0}@{1}-{2}\r\nRace:\t\t{3}",
+			StringBuilder sb = new StringBuilder();
+			sb.AppendFormat("Character:\t\t{0}@{1}-{2}\r\nRace:\t\t{3}",
 				character.Name, character.Region, character.Realm, character.Race);
 
             CalculationOptionsMage CalculationOptions = (CalculationOptionsMage)character.CalculationOptions;
@@ -181,91 +181,96 @@ namespace Rawr.Mage
                     string[] value = kvp.Value.Split('*');
                     if (value.Length == 2)
                     {
-                        stats.AppendFormat("\r\n{0}: {1}\r\n{2}\r\n", kvp.Key, value[0], value[1]);
+                        sb.AppendFormat("\r\n{0}: {1}\r\n{2}\r\n", kvp.Key, value[0], value[1]);
                     }
                     else
                     {
-                        stats.AppendFormat("\r\n{0}: {1}", kvp.Key, value[0]);
+                        sb.AppendFormat("\r\n{0}: {1}", kvp.Key, value[0]);
                     }
                 }
 			}
 
             // spell cycles
-            stats.AppendFormat("\r\n\r\nSpell Cycles:\r\n\r\n");
-            if (calculations.MageArmor != null) stats.AppendLine(calculations.MageArmor);
+            sb.AppendFormat("\r\n\r\nSpell Cycles:\r\n\r\n");
+            if (calculations.MageArmor != null) sb.AppendLine(calculations.MageArmor);
             Dictionary<string, double> combinedSolution = new Dictionary<string, double>();
             Dictionary<string, int> combinedSolutionData = new Dictionary<string, int>();
+            double manaPotion = 0;
+            double manaGem = 0;
             for (int i = 0; i < calculations.SolutionVariable.Count; i++)
             {
                 if (calculations.Solution[i] > 0.01)
                 {
-                    if (i == calculations.ColumnIdleRegen)
+                    switch (calculations.SolutionVariable[i].Type)
                     {
-                        stats.AppendLine(String.Format("{0}: {1:F} sec", "Idle Regen", calculations.Solution[0]));
-                    }
-                    else if (i == calculations.ColumnEvocation)
-                    {
-                        stats.AppendLine(String.Format("{0}: {1:F}x", "Evocation", calculations.Solution[i] / calculations.EvocationDuration));
-                    }
-                    else if (i == calculations.ColumnManaPotion)
-                    {
-                        stats.AppendLine(String.Format("{0}: {1:F}x", "Mana Potion", calculations.Solution[i]));
-                    }
-                    else if (i == calculations.ColumnManaGem)
-                    {
-                        stats.AppendLine(String.Format("{0}: {1:F}x", "Mana Gem", calculations.Solution[i]));
-                    }
-                    else if (i == calculations.ColumnDrumsOfBattle)
-                    {
-                        stats.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", calculations.Solution[i] / calculations.BaseState.GlobalCooldown));
-                    }
-                    else if (i == calculations.ColumnDrinking)
-                    {
-                        stats.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", calculations.Solution[i]));
-                    }
-                    else if (i == calculations.ColumnTimeExtension)
-                    {
-                    }
-                    else if (i == calculations.ColumnAfterFightRegen)
-                    {
-                        stats.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", calculations.Solution[i]));
-                    }
-                    else
-                    {
-                        double value;
-                        Spell s = calculations.SolutionVariable[i].Spell;
-                        string label = ((calculations.SolutionVariable[i].State.BuffLabel.Length > 0) ? (calculations.SolutionVariable[i].State.BuffLabel + "+") : "") + s.Name;
-                        combinedSolution.TryGetValue(label, out value);
-                        combinedSolution[label] = value + calculations.Solution[i];
-                        combinedSolutionData[label] = i;
-                        //stats.AppendLine(String.Format("{2}{0}: {1:F} sec", label, Solution[i], (SolutionSegments == null) ? "" : (SolutionSegments[i].ToString() + " ")));                            
+                        case VariableType.IdleRegen:
+                            sb.AppendLine(String.Format("{0}: {1:F} sec", "Idle Regen", calculations.Solution[i]));
+                            break;
+                        case VariableType.Evocation:
+                            sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation", calculations.Solution[i] / calculations.EvocationDuration));
+                            break;
+                        case VariableType.ManaPotion:
+                            manaPotion += calculations.Solution[i];
+                            break;
+                        case VariableType.ManaGem:
+                            manaGem += calculations.Solution[i];
+                            break;
+                        case VariableType.DrumsOfBattle:
+                            sb.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", calculations.Solution[i] / calculations.BaseState.GlobalCooldown));
+                            break;
+                        case VariableType.Drinking:
+                            sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", calculations.Solution[i]));
+                            break;
+                        case VariableType.TimeExtension:
+                            break;
+                        case VariableType.AfterFightRegen:
+                            sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", calculations.Solution[i]));
+                            break;
+                        case VariableType.Wand:
+                        case VariableType.Spell:
+                            double value;
+                            Spell s = calculations.SolutionVariable[i].Spell;
+                            string label = ((calculations.SolutionVariable[i].State.BuffLabel.Length > 0) ? (calculations.SolutionVariable[i].State.BuffLabel + "+") : "") + s.Name;
+                            combinedSolution.TryGetValue(label, out value);
+                            combinedSolution[label] = value + calculations.Solution[i];
+                            combinedSolutionData[label] = i;
+                            //stats.AppendLine(String.Format("{2}{0}: {1:F} sec", label, Solution[i], (SolutionSegments == null) ? "" : (SolutionSegments[i].ToString() + " ")));                            
+                            break;
                     }
                 }
+            }
+            if (manaPotion > 0)
+            {
+                sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Potion", manaPotion));
+            }
+            if (manaGem > 0)
+            {
+                sb.AppendLine(String.Format("{0}: {1:F}x", "Mana Gem", manaGem));
             }
             foreach (KeyValuePair<string, double> kvp in combinedSolution)
             {
                 Spell s = calculations.SolutionVariable[combinedSolutionData[kvp.Key]].Spell;
                 if (s != null)
                 {
-                    stats.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps) {5}", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, s.Sequence));
+                    sb.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps) {5}", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, s.Sequence));
                 }
                 else
                 {
-                    stats.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
+                    sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
                 }
             }
-            if (calculations.WaterElemental) stats.AppendLine(String.Format("Water Elemental: {0:F}x", calculations.WaterElementalDuration / 45f));
+            if (calculations.WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", calculations.WaterElementalDuration / 45f));
 
             // sequence
             string sequence = dict["Sequence"];
             if (sequence != "*Disabled" && sequence != "*Unavailable")
             {
                 string[] value = sequence.Split('*');
-                stats.AppendFormat("\r\n\r\nSequence:\r\n\r\n");
-                stats.Append(value[1]);
+                sb.AppendFormat("\r\n\r\nSequence:\r\n\r\n");
+                sb.Append(value[1]);
             }
 
-			return stats.ToString();
+			return sb.ToString();
         }
 
 		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Mage; } }
@@ -335,7 +340,7 @@ namespace Rawr.Mage
 
             List<int> filteredCooldowns = ListUtils.RemoveDuplicates(cooldownList);
             filteredCooldowns.Sort();
-            calculationOptions.IncrementalSetSortedCooldowns = filteredCooldowns.ToArray();
+            calculationOptions.IncrementalSetSortedStates = filteredCooldowns.ToArray();
         }
 
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor)
