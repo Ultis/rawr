@@ -39,6 +39,14 @@ namespace Rawr
             public Item Item { get; set; }
             public Enchant Enchant { get; set; }
             public float Value { get; set; }
+            private List<float> valueList = new List<float>();
+            public List<float> ValueList
+            {
+                get
+                {
+                    return valueList;
+                }
+            }
         }
         Dictionary<Character.CharacterSlot, Dictionary<string, UpgradeEntry>> upgradeList;
         IEnumerator<UpgradeEntry> upgradeListEnumerator;
@@ -304,6 +312,7 @@ namespace Rawr
             {
                 case AsyncOperation.BuildUpgradeList:
                     upgradeListEnumerator.Current.Value += e.UpgradeValue * CurrentBatchCharacter.Weight;
+                    upgradeListEnumerator.Current.ValueList.Add(e.UpgradeValue);
                     if (upgradeListEnumerator.MoveNext())
                     {
                         EvaluateUpgradeCurrentBatchCharacter(false);
@@ -361,12 +370,17 @@ namespace Rawr
                                     itemCalc.Name = entry.Item.Name;
                                     itemCalc.Equipped = false;
                                     itemCalc.OverallPoints = entry.Value / totalValue;
+                                    itemCalc.SubPoints = entry.ValueList.ToArray();
 
                                     upgrades[kvp.Key].Add(itemCalc);                                    
                                 }
                             }
-
-                            FormUpgradeComparison.Instance.LoadData(formMain.Character, upgrades);
+                            List<string> customSubpoints = new List<string>();
+                            foreach (BatchCharacter batchCharacter in BatchCharacterList)
+                            {
+                                customSubpoints.Add(batchCharacter.Name);
+                            }
+                            FormUpgradeComparison.Instance.LoadData(formMain.Character, upgrades, customSubpoints.ToArray());
                             FormUpgradeComparison.Instance.Show();
                         }
                     }

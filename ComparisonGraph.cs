@@ -106,7 +106,8 @@ namespace Rawr
         public enum GraphDisplayMode
         {
             Subpoints,
-            Overall
+            Overall,
+            CustomSubpoints,
         }
 
         public GraphDisplayMode DisplayMode
@@ -420,7 +421,7 @@ namespace Rawr
                                 overallWidth = (int) Math.Ceiling((item.OverallPoints / maxScale) * graphWidth);
                             if (float.IsPositiveInfinity(item.OverallPoints))
                                 overallWidth = (int) Math.Ceiling(graphWidth + 50f);
-                            if (overallWidth > 0 && item.OverallPoints > 0.00001f || DisplayMode == GraphDisplayMode.Overall)
+                            if (overallWidth > 0 && item.OverallPoints > 0.00001f || DisplayMode == GraphDisplayMode.Overall || DisplayMode == GraphDisplayMode.CustomSubpoints)
                             {
                                 int barStart = 0;
                                 if (DisplayMode == GraphDisplayMode.Subpoints)
@@ -460,7 +461,7 @@ namespace Rawr
                                         item.OverallPoints.ToString(), this.Font, brushOverall, new Rectangle((int) graphStart + barStart + 2, 50 + i * 36, 50, 24), formatOverall);
 
                                 }
-                                else if (DisplayMode == GraphDisplayMode.Overall)
+                                else if (DisplayMode == GraphDisplayMode.Overall || DisplayMode == GraphDisplayMode.CustomSubpoints)
                                 {
                                     float points = item.OverallPoints;
                                     Color colorA = Color.FromArgb(128, 64, 0, 64);
@@ -469,11 +470,14 @@ namespace Rawr
                                     {
                                         points = item.SubPoints[(int) Sort];
                                         overallWidth = (int) Math.Round((points / maxScale) * graphWidth);
-                                        colorA = colorSubPointsA[(int) Sort];
-                                        colorB = colorSubPointsB[(int) Sort];
+                                        if (DisplayMode != GraphDisplayMode.CustomSubpoints)
+                                        {
+                                            colorA = colorSubPointsA[(int)Sort];
+                                            colorB = colorSubPointsB[(int)Sort];
+                                        }
                                         if (overallWidth < 0)
                                         {
-                                            overallWidth *=-1;
+                                            overallWidth *= -1;
                                             colorA = Color.FromArgb(colorA.A, 255 - colorA.R, 255 - colorA.G, 255 - colorA.B);
                                             colorB = Color.FromArgb(colorB.A, 255 - colorB.R, 255 - colorB.G, 255 - colorB.B);
                                         }
@@ -489,7 +493,7 @@ namespace Rawr
                                             new Rectangle((int) graphStart + 1, rectSubPoint.Y, overallWidth, 24), colorA, colorB,
                                             67f + (20f * (float.IsPositiveInfinity(points) ? 1f : (points / maxScale))));
                                         blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
-                                        blendSubPoint.Colors = new Color[] { colorA,colorB , colorA };
+                                        blendSubPoint.Colors = new Color[] { colorA, colorB, colorA };
                                         blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
                                         brushSubPointFill.InterpolationColors = blendSubPoint;
 
@@ -497,7 +501,7 @@ namespace Rawr
                                         g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
                                         g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
                                         g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
-
+                                        
                                         g.DrawString(RoundValues ? points.ToString("F") :
                                             points.ToString(), this.Font, brushOverall, new Rectangle((int) graphStart + barStart + 2, 50 + i * 36, 50, 24), formatOverall);
 

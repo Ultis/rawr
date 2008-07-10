@@ -291,7 +291,7 @@ namespace Rawr
             else
             {
                 progressBarAlt.Value = progressBarMain.Value = 100;
-                FormUpgradeComparison.Instance.LoadData(_character, e.Upgrades);
+                FormUpgradeComparison.Instance.LoadData(_character, e.Upgrades, null);
                 FormUpgradeComparison.Instance.Show();
                 Close();
                 //FormUpgradeComparison.Instance.BringToFront();
