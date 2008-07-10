@@ -672,7 +672,8 @@ namespace Rawr
 					Bloodlust = stats.Bloodlust,
 					DrumsOfBattle = stats.DrumsOfBattle,
 					DrumsOfWar = stats.DrumsOfWar,
-					ShatteredSunMightProc = stats.ShatteredSunMightProc
+					ShatteredSunMightProc = stats.ShatteredSunMightProc,
+					ThreatReductionMultiplier = stats.ThreatReductionMultiplier
 				};
 		}
 
@@ -685,7 +686,7 @@ namespace Rawr
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
 				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc +
-                stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier) > 0 || (stats.Stamina > 0 && stats.SpellDamageRating == 0);
+				stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.ThreatReductionMultiplier) > 0 || (stats.Stamina > 0 && stats.SpellDamageRating == 0);
 		}
 	}
 
