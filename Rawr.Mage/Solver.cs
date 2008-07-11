@@ -555,7 +555,7 @@ namespace Rawr.Mage
                     {
                         column = lp.AddColumnUnsafe();
                         if (segment == 0) calculationResult.ColumnWand = column;
-                        calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Spell = wand, Segment = segment });
+                        calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Spell = wand, Segment = segment, State = calculationResult.BaseState });
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
                         lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
                         lp.SetElementUnsafe(rowFightDuration, column, 1.0);

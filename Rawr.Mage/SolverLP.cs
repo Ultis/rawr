@@ -165,8 +165,8 @@ namespace Rawr.Mage
         {
             if (rowMinManaConsumable == null)
             {
-                rowMinManaConsumable = new int[(segments + 1) * 2];
-                rowMaxManaConsumable = new int[(segments + 1) * 2];
+                rowMinManaConsumable = new int[(segments + 1) * 3];
+                rowMaxManaConsumable = new int[(segments + 1) * 3];
                 for (int i = 0; i < rowMinManaConsumable.Length; i++)
                 {
                     rowMinManaConsumable[i] = -1;
@@ -178,7 +178,7 @@ namespace Rawr.Mage
         public void SetMinManaConsumable(VariableType manaConsumable, int segment, double value)
         {
             VerifyManaConsumableArrays();
-            int index = ((int)manaConsumable - 3) * (segments + 1) + segment;
+            int index = ((int)manaConsumable - 2) * (segments + 1) + segment;
             if (rowMinManaConsumable[index] == -1)
             {
                 rowMinManaConsumable[index] = lp.AddConstraint();
@@ -197,7 +197,7 @@ namespace Rawr.Mage
 
         public void SetMaxManaConsumable(VariableType manaConsumable, int segment, double value)
         {
-            int index = ((int)manaConsumable - 3) * (segments + 1) + segment;
+            int index = ((int)manaConsumable - 2) * (segments + 1) + segment;
             if (value == 0.0)
             {
                 if (rowDisableColumn == -1) rowDisableColumn = lp.AddConstraint();

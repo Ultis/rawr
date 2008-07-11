@@ -59,11 +59,15 @@ namespace Rawr.Mage
                 {
                     if (valid && calculationOptions.ManaPotionEnabled)
                     {
-                        valid = ValidateIntegralManaOverall(VariableType.ManaPotion);
+                        valid = ValidateIntegralManaOverall(VariableType.ManaPotion, 1.0);
                     }
                     if (valid && calculationOptions.ManaGemEnabled)
                     {
-                        valid = ValidateIntegralManaOverall(VariableType.ManaGem);
+                        valid = ValidateIntegralManaOverall(VariableType.ManaGem, 1.0);
+                    }
+                    if (valid && calculationOptions.EvocationEnabled)
+                    {
+                        valid = ValidateIntegralManaOverall(VariableType.Evocation, 2.0 / calculationResult.BaseState.CastingSpeed);
                     }
                     if (valid && calculationOptions.ManaPotionEnabled)
                     {
@@ -435,7 +439,7 @@ namespace Rawr.Mage
             return true;
         }
 
-        private bool ValidateIntegralManaOverall(VariableType manaConsumable)
+        private bool ValidateIntegralManaOverall(VariableType manaConsumable, double unit)
         {
             double value = 0.0;
             for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
@@ -445,17 +449,17 @@ namespace Rawr.Mage
                     value += solution[index];
                 }
             }
-            int count = (int)Math.Round(value);
+            double count = Math.Round(value / unit) * unit;
             bool valid = (Math.Abs(value - count) < 0.000001);
             if (!valid)
             {
                 SolverLP maxCount = lp.Clone();
                 // count <= floor(value)
-                maxCount.SetMaxManaConsumable(manaConsumable, segments, Math.Floor(value));
+                maxCount.SetMaxManaConsumable(manaConsumable, segments, Math.Floor(value / unit) * unit);
                 if (maxCount.Log != null) maxCount.Log.AppendLine("Integral mana " + manaConsumable + " overall, max " + Math.Floor(value));
                 heap.Push(maxCount);
                 // count >= ceiling(value)
-                lp.SetMinManaConsumable(manaConsumable, segments, Math.Ceiling(value));
+                lp.SetMinManaConsumable(manaConsumable, segments, Math.Ceiling(value / unit) * unit);
                 if (lp.Log != null) lp.Log.AppendLine("Integral mana " + manaConsumable + " overall, min " + Math.Ceiling(value));
                 heap.Push(lp);
                 return false;
