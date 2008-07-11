@@ -326,7 +326,7 @@ namespace Rawr.Mage
             List<int> segmentList = new List<int>();
             for (int i = 0; i < calculations.SolutionVariable.Count; i++)
             {
-                if (calculations.Solution[i] > 0 && calculations.SolutionVariable[i].Spell != null)
+                if (calculations.Solution[i] > 0 && calculations.SolutionVariable[i].Type == VariableType.Spell)
                 {
                     cooldownList.Add(calculations.SolutionVariable[i].State.IncrementalSetIndex);
                     spellList.Add(calculations.SolutionVariable[i].Spell.SpellId);
