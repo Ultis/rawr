@@ -840,7 +840,7 @@ namespace Rawr.Mage
                             heap.Push(nogem);
                             // restrict flame cap
                             if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap around " + seg);
-                            int row = lp.lp.AddConstraint();
+                            int row = lp.lp.AddConstraint(false);
                             lp.lp.SetConstraintRHS(row, maxfc);
                             for (int index = segmentColumn[Math.Max(seg - segdist, 0)]; index < segmentColumn[Math.Min(seg + segdist + 1, segments)]; index++)
                             {

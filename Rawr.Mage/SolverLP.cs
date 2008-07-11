@@ -181,7 +181,7 @@ namespace Rawr.Mage
             int index = ((int)manaConsumable - 2) * (segments + 1) + segment;
             if (rowMinManaConsumable[index] == -1)
             {
-                rowMinManaConsumable[index] = lp.AddConstraint();
+                rowMinManaConsumable[index] = lp.AddConstraint(false);
                 for (int column = 0; column < cCols; column++)
                 {
                     if (calculations.SolutionVariable[column].Type == manaConsumable && (segment == segments || calculations.SolutionVariable[column].Segment == segment))
@@ -200,7 +200,7 @@ namespace Rawr.Mage
             int index = ((int)manaConsumable - 2) * (segments + 1) + segment;
             if (value == 0.0)
             {
-                if (rowDisableColumn == -1) rowDisableColumn = lp.AddConstraint();
+                if (rowDisableColumn == -1) rowDisableColumn = lp.AddDisablingConstraint();
                 for (int column = 0; column < cCols; column++)
                 {
                     if (calculations.SolutionVariable[column].Type == manaConsumable && (segment == segments || calculations.SolutionVariable[column].Segment == segment))
@@ -214,7 +214,7 @@ namespace Rawr.Mage
                 VerifyManaConsumableArrays();
                 if (rowMaxManaConsumable[index] == -1)
                 {
-                    rowMaxManaConsumable[index] = lp.AddConstraint();
+                    rowMaxManaConsumable[index] = lp.AddConstraint(false);
                     for (int column = 0; column < cCols; column++)
                     {
                         if (calculations.SolutionVariable[column].Type == manaConsumable && (segment == segments || calculations.SolutionVariable[column].Segment == segment))
@@ -232,7 +232,7 @@ namespace Rawr.Mage
         public void EraseColumn(int col)
         {
             if (col == -1) return;
-            if (rowDisableColumn == -1) rowDisableColumn = lp.AddConstraint();
+            if (rowDisableColumn == -1) rowDisableColumn = lp.AddDisablingConstraint();
             lp.SetConstraintElement(rowDisableColumn, col, 1.0);
             compactSolution = null;
             needsDual = true;
@@ -241,7 +241,7 @@ namespace Rawr.Mage
         public void UpdateMaximizeSegmentColumn(int col)
         {
             if (col == -1) return;
-            if (rowMaximizeSegment == -1) rowMaximizeSegment = lp.AddConstraint();
+            if (rowMaximizeSegment == -1) rowMaximizeSegment = lp.AddConstraint(true);
             lp.SetConstraintElement(rowMaximizeSegment, col, lp.GetConstraintElement(rowMaximizeSegment, col) - 1.0);
             compactSolution = null;
             needsDual = true;
@@ -249,7 +249,7 @@ namespace Rawr.Mage
 
         public void UpdateMaximizeSegmentDuration(double value)
         {
-            if (rowMaximizeSegment == -1) rowMaximizeSegment = lp.AddConstraint();
+            if (rowMaximizeSegment == -1) rowMaximizeSegment = lp.AddConstraint(true);
             lp.SetConstraintRHS(rowMaximizeSegment, lp.GetConstraintRHS(rowMaximizeSegment) - value);
             compactSolution = null;
             needsDual = true;
@@ -267,8 +267,8 @@ namespace Rawr.Mage
         {
             if (rowColdsnap == -1)
             {
-                rowColdsnap = lp.AddConstraint();
-                for (int i = 1; i < segments; i++) lp.AddConstraint();
+                rowColdsnap = lp.AddConstraint(true);
+                for (int i = 1; i < segments; i++) lp.AddConstraint(true);
             }
         }
 
