@@ -456,11 +456,11 @@ namespace Rawr.Mage
                 SolverLP maxCount = lp.Clone();
                 // count <= floor(value)
                 maxCount.SetMaxManaConsumable(manaConsumable, segments, Math.Floor(value / unit) * unit);
-                if (maxCount.Log != null) maxCount.Log.AppendLine("Integral mana " + manaConsumable + " overall, max " + Math.Floor(value));
+                if (maxCount.Log != null) maxCount.Log.AppendLine("Integral mana " + manaConsumable + " overall, max " + Math.Floor(value / unit));
                 heap.Push(maxCount);
                 // count >= ceiling(value)
                 lp.SetMinManaConsumable(manaConsumable, segments, Math.Ceiling(value / unit) * unit);
-                if (lp.Log != null) lp.Log.AppendLine("Integral mana " + manaConsumable + " overall, min " + Math.Ceiling(value));
+                if (lp.Log != null) lp.Log.AppendLine("Integral mana " + manaConsumable + " overall, min " + Math.Ceiling(value / unit));
                 heap.Push(lp);
                 return false;
             }

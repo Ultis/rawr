@@ -8,7 +8,7 @@ namespace Rawr.Mage
     {
         internal SparseMatrix A;
         private double[] extraConstraints;
-        //private List<bool> extraConstraintEditable;
+        private List<bool> extraConstraintEditable;
         private int numExtraConstraints;
         private int baseRows;
         private int rows;
@@ -64,7 +64,7 @@ namespace Rawr.Mage
             if (numExtraConstraints > 0)
             {
                 clone.extraConstraints = (double[])extraConstraints.Clone();
-                //clone.extraConstraintEditable = new List<bool>(extraConstraintEditable);
+                clone.extraConstraintEditable = new List<bool>(extraConstraintEditable);
             }
             return clone;
         }
@@ -151,8 +151,8 @@ namespace Rawr.Mage
             }
             extraConstraints = newArray;
             extraConstraints[(numExtraConstraints - 1) * (cols + rows + 1) + cols + rows - 1] = 1;
-            //if (extraConstraintEditable == null) extraConstraintEditable = new List<bool>();
-            //extraConstraintEditable.Add(editable);
+            if (extraConstraintEditable == null) extraConstraintEditable = new List<bool>();
+            extraConstraintEditable.Add(editable);
             A.AddColumn();
             A.EndConstruction();
             int[] newB = new int[rows];
@@ -653,7 +653,7 @@ namespace Rawr.Mage
                         }
                         lu.Decompose();
                         redecompose = maxRedecompose; // decompose each time to see where the instability comes from
-                        //needsRecalc = true; // extreme measures to determine source of instability
+                        needsRecalc = true; // for long dual phases refresh the reduced costs
                     }
 
                     if (lu.Singular)
@@ -725,15 +725,15 @@ namespace Rawr.Mage
                             {
                                 costcol -= D[k * (cols + rows + 1) + col] * u[baseRows + k];
                             }
-                            if (costcol > eps)
+                            if (costcol > eps && (disablingConstraint == -1 || V[j] >= cols || D == null || D[disablingConstraint * (cols + rows + 1) + V[j]] == 0.0))
                             {
-                                // I'm almost certain this happens in case of numerical instabilities
+                                // this can happen as result of swapping the basis which while retains primal feasibility and optimality does not necessarily retain dual feasibility
                                 ColdStart = false;
                                 double[] ret = SolvePrimal();
                                 // after we have result of primal make sure we return extra constraints to basis
                                 for (k = 0; k < numExtraConstraints; k++)
                                 {
-                                    //if (extraConstraintEditable[k])
+                                    if (extraConstraintEditable[k])
                                     {
                                         int vindex = Array.IndexOf(_V, cols + baseRows + k);
                                         if (vindex >= 0)
@@ -782,11 +782,11 @@ namespace Rawr.Mage
                         }
                     }
 
-                    double vvv = 0;
+                    /*double vvv = 0;
                     for (i = 0; i < rows; i++)
                     {
                         if (B[i] < cols) vvv += cost[B[i]] * d[i];
-                    }
+                    }*/
 
                     if (mini == -1)
                     {
@@ -808,7 +808,7 @@ namespace Rawr.Mage
                         //System.Diagnostics.Debug.WriteLine("Selecting a non-extended subbasis that is non-singular.");
                         for (k = 0; k < numExtraConstraints; k++)
                         {
-                            //if (extraConstraintEditable[k])
+                            if (extraConstraintEditable[k])
                             {
                                 // we have to compute this anyway and makes a nice test to be 100% sure we're not already in basis
                                 int vindex = Array.IndexOf(_V, cols + baseRows + k);
@@ -985,7 +985,9 @@ namespace Rawr.Mage
 
                     // min over i of d[i]/w[i] where w[i]>0
                     double minr = double.PositiveInfinity;
+                    //double altminr = double.NegativeInfinity;
                     int minj = -1;
+                    //int altminj = -1;
                     double maxnorm = 0.0;
                     for (j = 0; j < cols; j++)
                     {
@@ -1005,16 +1007,30 @@ namespace Rawr.Mage
                         }
                         double v = Math.Abs(wd[j]);
                         if (v > maxnorm) maxnorm = v;
-                        if (wd[j] < -eps)
+                        if (wd[j] < -eps && c[j] < eps)
                         {
-                            double r = c[j] / wd[j];
-                            if (r < minr - eps) // add eps barriers so that we stabilize pivot order
+                            // verify the new c[j] will not go above eps
+                            // c[j] - minr * wd[j] > eps
+                            if (c[j] - minr * wd[j] > 0.000001) // add eps barriers so that we stabilize pivot order??? what when c gets positive
                             {
-                                minr = r;
+                                minr = c[j] / wd[j];
                                 minj = j;
                             }
                         }
+                        /*else if (wd[j] > eps)
+                        {
+                            if (c[j] - altminr * wd[j] > eps)
+                            {
+                                altminr = c[j] / wd[j];
+                                altminj = j;
+                            }
+                        }*/
                     }
+                    /*if (minr < altminr)
+                    {
+                        minr = altminr;
+                        minj = altminj;
+                    }*/
 
                     if (minj == -1)
                     {
@@ -1081,6 +1097,7 @@ namespace Rawr.Mage
                     for (j = 0; j < cols; j++)
                     {
                         c[j] -= minr * wd[j];
+                        //if (c[j] > eps && (disablingConstraint == -1 || D[disablingConstraint * (cols + rows + 1) + V[j]] == 0.0)) c[j] = 0.0;
                     }
                     c[minj] = -minr;
 

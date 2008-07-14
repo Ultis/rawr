@@ -14,7 +14,7 @@ namespace Rawr.Mage
         private double[] compactSolution = null;
         private bool needsDual;
         private int segments;
-        public StringBuilder Log = new StringBuilder();
+        public StringBuilder Log = null; //new StringBuilder();
         //public int[] disabledHex;
 
         private double* pRowScale;
