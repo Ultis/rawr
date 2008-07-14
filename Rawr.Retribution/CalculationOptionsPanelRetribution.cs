@@ -16,18 +16,18 @@ namespace Rawr.Retribution
         public CalculationOptionsPanelRetribution()
         {
             InitializeComponent();
-            armorBosses.Add(3800, ": Shade of Aran");
-            armorBosses.Add(4700, ": Roar");
-            armorBosses.Add(5500, ": Netherspite");
-            armorBosses.Add(6100, ": Julianne, Curator");
-            armorBosses.Add(6200, ": Karathress, Vashj, Solarian, Kael'thas, Winterchill, Anetheron, Kaz'rogal, Azgalor, Archimonde, Teron, Shahraz");
-            armorBosses.Add(6700, ": Maiden, Illhoof");
-            armorBosses.Add(7300, ": Strawman");
-            armorBosses.Add(7500, ": Attumen");
-            armorBosses.Add(7600, ": Romulo, Nightbane, Malchezaar, Doomwalker");
-            armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
-            armorBosses.Add(8200, ": Midnight");
-            armorBosses.Add(8800, ": Void Reaver");
+            armorBosses.Add(3800, "Shade of Aran");
+            armorBosses.Add(4700, "Roar");
+            armorBosses.Add(5500, "Netherspite");
+            armorBosses.Add(6100, "Julianne, Curator");
+            armorBosses.Add(6200, "Karathress, Vashj, Solarian, Kael'thas, Winterchill, Anetheron, Kaz'rogal, Azgalor, Archimonde, Teron, Shahraz");
+            armorBosses.Add(6700, "Maiden, Illhoof");
+            armorBosses.Add(7300, "Strawman");
+            armorBosses.Add(7500, "Attumen");
+            armorBosses.Add(7600, "Romulo, Nightbane, Malchezaar, Doomwalker");
+            armorBosses.Add(7700, "Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
+            armorBosses.Add(8200, "Midnight");
+            armorBosses.Add(8800, "Void Reaver");
         }
         protected override void LoadCalculationOptions()
         {
@@ -83,10 +83,7 @@ namespace Rawr.Retribution
             tbFerociousInspiration.Value = calcOpts.FerociousInspiration;
             lblFerociousInspirationNum.Text = tbFerociousInspiration.Value.ToString();
 
-            tbTargetArmor.Value = calcOpts.BossArmor;
-            lblTargetArmorDescription.Text = tbTargetArmor.Value.ToString()
-                + (armorBosses.ContainsKey(tbTargetArmor.Value) ? armorBosses[tbTargetArmor.Value] : "");
-
+            nudTargetArmor.Value = calcOpts.BossArmor;
         }
 
 
@@ -112,7 +109,6 @@ namespace Rawr.Retribution
                 cbConsRank.Enabled = true;
                 cbConsRank.SelectedItem = "Rank 1";
                 calcOpts.ConsecRank = 1;
-                
             }
             else
             {
@@ -122,21 +118,21 @@ namespace Rawr.Retribution
             Character.OnItemsChanged();
         }
 
-        private void comboBoxConsRank_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbConsRank_SelectedIndexChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.ConsecRank = int.Parse(cbConsRank.SelectedItem.ToString().Substring(5, 1));
             Character.OnItemsChanged();
         }
 
-        private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.TargetLevel = int.Parse(cbTargetLevel.SelectedItem.ToString());
             Character.OnItemsChanged();
         }
 
-        private void trackBarFightLength_Scroll(object sender, EventArgs e)
+        private void tbFightLength_Scroll(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.FightLength = tbFightLength.Value;
@@ -341,21 +337,21 @@ namespace Rawr.Retribution
             Character.OnItemsChanged();
         }
 
-        private void radioButtonAldor_CheckedChanged(object sender, EventArgs e)
+        private void rbAldor_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.ShattrathFaction = rbAldor.Checked ? "Aldor" : "Scryer";
             Character.OnItemsChanged();
         }
 
-        private void radioButtonScryer_CheckedChanged(object sender, EventArgs e)
+        private void rbScryer_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.ShattrathFaction = rbAldor.Checked ? "Aldor" : "Scryer";
             Character.OnItemsChanged();
         }
 
-        private void trackBarExposeWeakness_ValueChanged(object sender, EventArgs e)
+        private void tbExposeWeakness_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.ExposeWeaknessAPValue = tbExposeWeakness.Value;
@@ -363,7 +359,7 @@ namespace Rawr.Retribution
             Character.OnItemsChanged();
         }
 
-        private void trackBarBloodlustUptime_ValueChanged(object sender, EventArgs e)
+        private void tbBloodlust_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.Bloodlust = tbBloodlust.Value;
@@ -371,7 +367,7 @@ namespace Rawr.Retribution
             Character.OnItemsChanged();
         }
 
-        private void trackBarDrumsOfBattleUptime_ValueChanged(object sender, EventArgs e)
+        private void tbDrumsOfBattle_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.DrumsOfBattle = tbDrumsOfBattle.Value;
@@ -379,7 +375,7 @@ namespace Rawr.Retribution
             Character.OnItemsChanged();
         }
 
-        private void trackBarDrumsOfWarUptime_ValueChanged(object sender, EventArgs e)
+        private void tbDrumsOfWar_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.DrumsOfWar = tbDrumsOfWar.Value;
@@ -387,7 +383,7 @@ namespace Rawr.Retribution
             Character.OnItemsChanged();
         }
 
-        private void trackBarNumberOfFerociousInspirations_ValueChanged(object sender, EventArgs e)
+        private void tbFerociousInspiration_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.FerociousInspiration = tbFerociousInspiration.Value;
@@ -395,11 +391,10 @@ namespace Rawr.Retribution
             Character.OnItemsChanged();
         }
 
-        private void trackBarTargetArmor_ValueChanged(object sender, EventArgs e)
+        private void nudTargetArmor_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.BossArmor = tbTargetArmor.Value;
-            lblTargetArmorDescription.Text = tbTargetArmor.Value.ToString() + (armorBosses.ContainsKey(tbTargetArmor.Value) ? armorBosses[tbTargetArmor.Value] : "");
+            calcOpts.BossArmor = (int)nudTargetArmor.Value;
             Character.OnItemsChanged();
         }
     }

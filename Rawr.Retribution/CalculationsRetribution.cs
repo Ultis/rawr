@@ -22,7 +22,6 @@ namespace Rawr.Retribution
         {
             get
             {
-
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
@@ -59,27 +58,25 @@ namespace Rawr.Retribution
                 {
                     List<string> labels = new List<string>(new string[]
                     {
-                    "Basic Stats:Health",
-					"Basic Stats:Attack Power",
-					"Basic Stats:Agility",
-					"Basic Stats:Strength",
-					"Basic Stats:Crit",
-					"Basic Stats:Hit",
-					"Basic Stats:Expertise Rating",
-					"Basic Stats:Haste Rating",
-					"Basic Stats:Armor Penetration",
-					"Basic Stats:Weapon Damage",
-                    "Basic Stats:Spell Damage",
-					"DPS Breakdown:Crusader Strike",
-                    "DPS Breakdown:Seal",
-                    "DPS Breakdown:White",
-                    "DPS Breakdown:Judgement",
-                    "DPS Breakdown:Consecration",
-                    "DPS Breakdown:Exorcism",
-                    "DPS Breakdown:Windfury",
-                    "DPS Breakdown:Total DPS"
-
-                        
+                        "Basic Stats:Health",
+					    "Basic Stats:Attack Power",
+					    "Basic Stats:Agility",
+					    "Basic Stats:Strength",
+					    "Basic Stats:Crit",
+					    "Basic Stats:Hit",
+					    "Basic Stats:Expertise Rating",
+					    "Basic Stats:Haste Rating",
+					    "Basic Stats:Armor Penetration",
+					    "Basic Stats:Weapon Damage",
+                        "Basic Stats:Spell Damage",
+					    "DPS Breakdown:Crusader Strike",
+                        "DPS Breakdown:Seal",
+                        "DPS Breakdown:White",
+                        "DPS Breakdown:Judgement",
+                        "DPS Breakdown:Consecration",
+                        "DPS Breakdown:Exorcism",
+                        "DPS Breakdown:Windfury",
+                        "DPS Breakdown:Total DPS"
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
                 }
@@ -115,7 +112,6 @@ namespace Rawr.Retribution
                 return _relevantItemTypes ?? (_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
 					{
 						Item.ItemType.None,
-						Item.ItemType.Cloth,
                         Item.ItemType.Leather,
                         Item.ItemType.Mail,
                         Item.ItemType.Plate,
@@ -328,39 +324,46 @@ namespace Rawr.Retribution
 
             #region Seal
             {
-                float sealProcs = 0f, sealAvgDam = 0f;
+                float sealActualPPM = 0f, sealAvgDam = 0f, windProcRate = .2f;
                 if (calcOpts.Seal == 0) // Seal of Command
                 {
                     float socPPM = 7f, socCoeff = 0.2f, socHolyCoeff = 0.29f;
 
                     // Find real PPM.  Procs 7 times per minute before misses
-                    sealProcs = socPPM * (1f - totalMiss);
-                    // Chain Procs: Windfury procs Seal of Command  **TODO subtract out chance that SoC has already proc'd.
-                    if (stats.WindfuryAPBonus > 0) sealProcs *= 1 + 0.2f * (1 - totalMiss);
+                    sealActualPPM = socPPM * (1f - totalMiss);
+                    // Chain Procs: Windfury procs Seal of Command
+                    if (stats.WindfuryAPBonus > 0)
+                    {
+                        // Chance SoC has proc'd on a swing
+                        float sealProcChance = socPPM / (60f / hastedSpeed);
+
+                        // Proc chain fails if Windfury misses
+                        windProcRate *= (1 - totalMiss);
+
+                        // SoC procs off of Windfury only if SoC has not already proc'd
+                        sealActualPPM *= 1 + windProcRate * (1 - sealProcChance);
+                    }
 
                     // Seal Damage per hit
                     sealAvgDam = 0.7f * whiteHit * twoHandedSpec + socCoeff * stats.SpellDamageRating;
                     sealAvgDam = sealAvgDam * holyDamMult + socHolyCoeff * jotc;
-
-                    // SoC average damage per proc
-                    sealAvgDam *= (physHitsCrits - totalMiss) * partialResist;
                 }
                 else // Seal of Blood
                 {
                     // Find real PPM.  Procs on every hit.
-                    sealProcs = (60f / hastedSpeed) * (1 - totalMiss);
+                    sealActualPPM = (60f / hastedSpeed) * (1 - totalMiss);
                     // Chain Procs: Windfury procs Seal of Blood
-                    if (stats.WindfuryAPBonus > 0) sealProcs *= 1 + 0.2f * (1 - totalMiss);
+                    if (stats.WindfuryAPBonus > 0) sealActualPPM *= 1 + windProcRate * (1 - totalMiss);
 
                     // Seal Damage per hit
                     sealAvgDam = 0.35f * whiteHit * holyDamMult * twoHandedSpec;
-
-                    // SoB average damage per proc
-                    sealAvgDam *= (physHitsCrits - totalMiss) * partialResist;
                 }
 
+                // Seal average damage per proc
+                sealAvgDam *= (physHitsCrits - totalMiss) * partialResist;
+
                 // Total Seal DPS
-                dpsSeal = sealAvgDam * sealProcs / 60f;
+                dpsSeal = sealAvgDam * sealActualPPM / 60f;
             }
             #endregion
 
@@ -372,8 +375,17 @@ namespace Rawr.Retribution
 
                 // Find real PPM.  Chance to proc on every hit. and damage per hit
                 windPerMin = (60f / hastedSpeed) * (1 - totalMiss) * windProcRate;
-                // Chain Procs: Seal of Command procs Windfury.  Fails if either the swing or SoC misses.  **TODO subtract out chance that WF has already proc'd
-                if (calcOpts.Seal == 0) windPerMin += 7f * (1 - totalMiss) * (1 - totalMiss) * windProcRate;
+                // Chain Procs: Seal of Command can procs Windfury
+                if (calcOpts.Seal == 0)
+                {
+                    float socPPM = 7f;
+
+                    // Proc chain fails if either swing or SoC misses
+                    socPPM *= (1 - totalMiss) * (1 - totalMiss);
+
+                    // Windfury procs off of SoC only if Windfury has not already proc'd
+                    windPerMin += socPPM * windProcRate * (1 - windProcRate);
+                }
 
                 // Windfury damage per hit
                 windAvgDam = whiteHit + (windAPBonus / 14) * baseSpeed;
@@ -460,8 +472,10 @@ namespace Rawr.Retribution
                 else judgeAvgDam = 310f;
                 judgeAvgDam = (judgeAvgDam + judgeCoeff * stats.SpellDamageRating) * holyDamMult + judgeCoeff * jotc;
 
-                // Judgement average damage per cast
-                judgeAvgDam *= (judgeCrit - spellResist) * partialResist;
+                // Judgement average damage per cast.  JoBlood does not get full resisted.
+                if (calcOpts.Seal == 0) judgeAvgDam *= (judgeCrit - spellResist);
+                else judgeAvgDam *= judgeCrit;
+                judgeAvgDam *= partialResist;
 
                 // Total Judgement DPS
                 dpsJudgement = judgeAvgDam / judgeCD;
@@ -513,7 +527,7 @@ namespace Rawr.Retribution
                         Stamina = 118f,
                         Intellect = 87f,
                         Spirit = 88f,
-                        AttackPower = 436,
+                        AttackPower = 436f,
                         CritRating = 3.81f * 22.08f
                     };
                     break;
@@ -526,8 +540,8 @@ namespace Rawr.Retribution
                         Agility = 74f,
                         Stamina = 119f,
                         Intellect = 84f,
-                        Spirit = 147,
-                        AttackPower = 444,
+                        Spirit = 147f,
+                        AttackPower = 444f,
                         CritRating = 3.61f * 22.08f,
                         HitRating = 1f * 15.76f
                     };
@@ -541,9 +555,9 @@ namespace Rawr.Retribution
                         Agility = 77f,
                         Stamina = 120f,
                         Intellect = 83f,
-                        Spirit = 89,
+                        Spirit = 89f,
                         BonusSpiritMultiplier = 0.1f,
-                        AttackPower = 442,
+                        AttackPower = 442f,
                         CritRating = 3.73f * 22.08f                        
                     };
                     //Expertise for Humans
@@ -562,8 +576,8 @@ namespace Rawr.Retribution
                         Agility = 73f,
                         Stamina = 120f,
                         Intellect = 83f,
-                        Spirit = 89,
-                        AttackPower = 446,
+                        Spirit = 89f,
+                        AttackPower = 446f,
                         CritRating = 3.57f * 22.08f
                     };
                     break;
@@ -600,14 +614,14 @@ namespace Rawr.Retribution
             if (statsBuffs.ExposeWeakness > 0)
                 statsBuffs.AttackPower += calcOpts.ExposeWeaknessAPValue;
 
-            // Drums of War.  60 AP/30 SD with a 25% uptime per drum.
+            // Drums of War - 60 AP/30 SD with a 25% uptime per drum
             if (statsBuffs.DrumsOfWar > 0)
             {
                 statsBuffs.AttackPower += calcOpts.DrumsOfWar * 15f;
                 statsBuffs.SpellDamageRating += calcOpts.DrumsOfWar * 7.5f;
             }
 
-            // Drums of Battle.  80 Haste with a 25% uptime per drum.
+            // Drums of Battle - 80 Haste with a 25% uptime per drum
             if (statsBuffs.DrumsOfBattle > 0)
                 statsBuffs.HasteRating += calcOpts.DrumsOfBattle * 20f;
 
@@ -697,7 +711,7 @@ namespace Rawr.Retribution
                         new Item() { Stats = new Stats() { CritRating = 10 } },
                         new Item() { Stats = new Stats() { ArmorPenetration = 66.67f } },
                         new Item() { Stats = new Stats() { AttackPower = 20 } },
-                        new Item() { Stats = new Stats() { ExpertiseRating=10 } }
+                        new Item() { Stats = new Stats() { ExpertiseRating = 10 } }
                     };
                     string[] statList = new string[] {
                         "Strength",
@@ -736,6 +750,14 @@ namespace Rawr.Retribution
                     return new ComparisonCalculationBase[0];
             }
 
+        }
+
+        public override bool IsItemRelevant(Item item)
+        {
+            if (item.Slot == Item.ItemSlot.OffHand ||
+                (item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Libram))
+                return false;
+            return base.IsItemRelevant(item);
         }
 
         public override Stats GetRelevantStats(Stats stats)
