@@ -87,9 +87,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Silverlight.Controls",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.RestoSham", "Rawr.RestoSham\Rawr.RestoSham.csproj", "{CE44F58E-AE57-4969-8819-0AD7F8362881}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.HolyPriest", "Rawr.HolyPriest\Rawr.HolyPriest.csproj", "{95E3AFED-1207-45FB-9B22-64DCFD1279B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ShadowPriest", "Rawr.ShadowPriest\Rawr.ShadowPriest.csproj", "{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 22
+		SccNumberOfProjects = 24
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -158,6 +162,12 @@ Global
 		SccProjectUniqueName21 = Rawr.Test\\Rawr.Test.csproj
 		SccProjectName21 = Rawr.Test
 		SccLocalPath21 = Rawr.Test
+		SccProjectUniqueName22 = Rawr.HolyPriest\\Rawr.HolyPriest.csproj
+		SccProjectName22 = Rawr.HolyPriest
+		SccLocalPath22 = Rawr.HolyPriest
+		SccProjectUniqueName23 = Rawr.ShadowPriest\\Rawr.ShadowPriest.csproj
+		SccProjectName23 = Rawr.ShadowPriest
+		SccLocalPath23 = Rawr.ShadowPriest
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -412,6 +422,30 @@ Global
 		{CE44F58E-AE57-4969-8819-0AD7F8362881}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{CE44F58E-AE57-4969-8819-0AD7F8362881}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CE44F58E-AE57-4969-8819-0AD7F8362881}.Release|x86.ActiveCfg = Release|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Release|.NET.ActiveCfg = Release|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Release|x86.ActiveCfg = Release|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Release|.NET.ActiveCfg = Release|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
