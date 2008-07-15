@@ -636,7 +636,7 @@ namespace Rawr
                 {
                     stats.AccumulateUnsafe(character.MainHandEnchant.Stats);
                 }
-                if (character.OffHand != null &&
+                if (character.OffHand != null && (character.MainHand == null || character.MainHand.Slot != Item.ItemSlot.TwoHand) &&
                     (
                         (
                             character.OffHandEnchant.Slot == Item.ItemSlot.OneHand &&
