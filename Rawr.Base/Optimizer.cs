@@ -544,11 +544,11 @@ namespace Rawr
                             itemEnchantValid[item.GemmedId] = dict;
                         }
                         item.EnchantValid = dict;
-                        foreach (Enchant enchant in Enchant.FindEnchants(item.Slot))
+                        /*foreach (Enchant enchant in Enchant.FindEnchants(item.Slot))
                         {
                             bool valid;
                             if (!dict.TryGetValue(enchant.Id, out valid)) dict[enchant.Id] = false;
-                        }
+                        }*/
                         if (itemEnchant != null)
                         {
                             dict[itemEnchant.Id] = true;
@@ -787,7 +787,9 @@ namespace Rawr
                     return Array.IndexOf<Enchant>(lockedEnchants, enchant) >= 0;
                 }
             }
-            return (item.EnchantValid ?? itemEnchantValid[item.GemmedId])[enchant.Id];
+            bool valid;
+            (item.EnchantValid ?? itemEnchantValid[item.GemmedId]).TryGetValue(enchant.Id, out valid);
+            return valid;
         }
 
         private void PopulateLockedItems(Item item)
@@ -1049,11 +1051,11 @@ namespace Rawr
                             itemEnchantValid[possibleGemmedItem.GemmedId] = dict;
                         }
                         possibleGemmedItem.EnchantValid = dict;
-                        foreach (Enchant enchant in allEnchants)
+                        /*foreach (Enchant enchant in allEnchants)
                         {
                             bool valid;
                             if (!dict.TryGetValue(enchant.Id, out valid)) dict[enchant.Id] = false;
-                        }
+                        }*/
                         foreach (Enchant enchant in validEnchants)
                         {
                             dict[enchant.Id] = true;
@@ -1499,11 +1501,13 @@ namespace Rawr
                     if (slot != lockedSlot && enchant != null)
                     {
                         Dictionary<int, bool> dict = item.EnchantValid ?? itemEnchantValid[item.GemmedId];
-                        if (!dict[enchant.Id])
+                        bool valid;
+                        dict.TryGetValue(enchant.Id, out valid);
+                        if (!valid)
                         {
                             foreach (Enchant e in slotEnchants[(int)slot])
                             {
-                                if (dict[e.Id])
+                                if (dict.TryGetValue(e.Id, out valid) && valid)
                                 {
                                     enchant = e;
                                     break;
@@ -1781,7 +1785,8 @@ namespace Rawr
                     Dictionary<int, bool> dict;
                     // make sure the item and item-enchant combo is allowed
                     Enchant enchant = parent.GetEnchantBySlot(mutation.Slot);
-                    if ((lockedSlot != mutation.Slot || lockedItems == null || lockedItems.Length > 1) && itemEnchantValid.TryGetValue(newItem.GemmedId, out dict) && (enchant == null || dict[enchant.Id]))
+                    bool valid;
+                    if ((lockedSlot != mutation.Slot || lockedItems == null || lockedItems.Length > 1) && itemEnchantValid.TryGetValue(newItem.GemmedId, out dict) && (enchant == null || (dict.TryGetValue(enchant.Id, out valid) && valid)))
                     {
                         items[mutation.Slot] = newItem;
                         successful = true;
@@ -1894,7 +1899,8 @@ namespace Rawr
                 Enchant enchant1, enchant2;
                 enchant1 = parent.GetEnchantBySlot(mutation1.Slot);
                 enchant2 = parent.GetEnchantBySlot(mutation2.Slot);
-                if ((lockedSlot != mutation1.Slot || lockedItems == null || lockedItems.Length > 1) && (lockedSlot != mutation2.Slot || lockedItems == null || lockedItems.Length > 1) && itemEnchantValid.TryGetValue(item1.GemmedId, out dict1) && (enchant1 == null || dict1[enchant1.Id]) && itemEnchantValid.TryGetValue(item2.GemmedId, out dict2) && (enchant2 == null || dict2[enchant2.Id]))
+                bool valid1, valid2;
+                if ((lockedSlot != mutation1.Slot || lockedItems == null || lockedItems.Length > 1) && (lockedSlot != mutation2.Slot || lockedItems == null || lockedItems.Length > 1) && itemEnchantValid.TryGetValue(item1.GemmedId, out dict1) && (enchant1 == null || (dict1.TryGetValue(enchant1.Id, out valid1) && valid1)) && itemEnchantValid.TryGetValue(item2.GemmedId, out dict2) && (enchant2 == null || (dict2.TryGetValue(enchant2.Id, out valid2) && valid2)))
                 {
                     successful = true;
                     items[mutation1.Slot] = item1;
