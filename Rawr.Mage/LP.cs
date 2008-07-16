@@ -215,6 +215,11 @@ namespace Rawr.Mage
 
         public unsafe double[] SolvePrimal()
         {
+            return SolvePrimal(false);
+        }
+
+        public unsafe double[] SolvePrimal(bool dualFeasibilityOnly)
+        {
             // c = data[rows,:]
             // A = data[0:rows-1,0:cols-1][I(rows)]
             // b = data[:,cols]
@@ -226,7 +231,7 @@ namespace Rawr.Mage
             // w_N <- c_N - u*A_N  ... dual solution
 
             //  eps1 = 10-5, eps2 = 10-8, and eps3 = 10-6
-            double eps = 0.00001;
+            const double eps = 0.00001;
 
             int i, j, k;
             bool feasible = false;
@@ -293,6 +298,7 @@ namespace Rawr.Mage
                                 break;
                             }
                         }
+                        if (dualFeasibilityOnly) feasible = true; // if we don't care for primal feasibility then just fake it
                         if (feasible)
                         {
                             //System.Diagnostics.Debug.WriteLine("Primal feasible in " + round);
@@ -393,6 +399,7 @@ namespace Rawr.Mage
 
                     if (maxj == -1)
                     {
+                        if (dualFeasibilityOnly) return null;
                         // rebuild solution so it's stable
                         /*for (i = 0; i < baseRows; i++)
                         {
@@ -458,6 +465,7 @@ namespace Rawr.Mage
 
                     if (mini == -1)
                     {
+                        if (dualFeasibilityOnly) return null; // we need primal feasibility to continue
                         // unbounded
                         if (!ColdStart)
                         {
@@ -613,22 +621,27 @@ namespace Rawr.Mage
             // w_N <- c_N - u*A_N  ... dual solution
 
             //  eps1 = 10-5, eps2 = 10-8, and eps3 = 10-6
-            double eps = 0.00001;
+            const double eps = 0.00001;
 
             int i, j, k;
             int round = 0;
             bool needsRecalc = true;
             double* sValue;
-            int* sRow;
+            int* sRow, sRow2;
             int sCol1, sCol2;
+            double* cj, ccols, wdj;
+            int* Vj;
             int redecompose = 0;
             const int maxRedecompose = 50;
             Array.Clear(_blacklist, 0, rows + cols);
+
+            bool primalPatched = false;
 
             fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
             fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
             fixed (bool* blacklist = _blacklist)
             {
+                ccols = c + cols;
                 /*for (k = 0; k < numExtraConstraints; k++)
                 {
                     if (Array.IndexOf(_B, cols + baseRows + k) == -1) System.Diagnostics.Debug.WriteLine("WARNING!!! extra constraint not in basis at start of dual");
@@ -727,42 +740,58 @@ namespace Rawr.Mage
                             }
                             if (costcol > eps && (disablingConstraint == -1 || V[j] >= cols || D == null || D[disablingConstraint * (cols + rows + 1) + V[j]] == 0.0))
                             {
-                                // this can happen as result of swapping the basis which while retains primal feasibility and optimality does not necessarily retain dual feasibility
-                                ColdStart = false;
-                                double[] ret = SolvePrimal();
-                                // after we have result of primal make sure we return extra constraints to basis
-                                for (k = 0; k < numExtraConstraints; k++)
+                                if (primalPatched)
                                 {
-                                    if (extraConstraintEditable[k])
+                                    // this can happen as result of swapping the basis which while retains primal feasibility and optimality does not necessarily retain dual feasibility
+                                    ColdStart = false;
+                                    double[] ret = SolvePrimal();
+                                    // after we have result of primal make sure we return extra constraints to basis
+                                    for (k = 0; k < numExtraConstraints; k++)
                                     {
-                                        int vindex = Array.IndexOf(_V, cols + baseRows + k);
-                                        if (vindex >= 0)
+                                        if (extraConstraintEditable[k])
                                         {
-                                            for (i = 0; i < rows; i++)
+                                            int vindex = Array.IndexOf(_V, cols + baseRows + k);
+                                            if (vindex >= 0)
                                             {
-                                                x[i] = ((i == baseRows + k) ? 1 : 0);
-                                            }
-                                            lu.FSolveL(x, w);
-                                            lu.FSolveU(w, x);
-                                            for (j = 0; j < rows; j++)
-                                            {
-                                                if (Math.Abs(x[j]) > eps && d[j] <= eps && B[j] < cols + baseRows)
+                                                for (i = 0; i < rows; i++)
                                                 {
-                                                    // do the swap
-                                                    V[vindex] = B[j];
-                                                    B[j] = cols + baseRows + k;
-                                                    // if we'll do more swaps then update the basis
-                                                    if (k < numExtraConstraints - 1)
+                                                    x[i] = ((i == baseRows + k) ? 1 : 0);
+                                                }
+                                                lu.FSolveL(x, w);
+                                                lu.FSolveU(w, x);
+                                                //double cvindex = 0.0;
+                                                //for (i = 0; i < rows; i++)
+                                                //{
+                                                //    if (B[i] < cols) cvindex -= cost[B[i]] * x[i];
+                                                //}
+                                                for (j = 0; j < rows; j++)
+                                                {
+                                                    if (Math.Abs(x[j]) > eps && d[j] <= eps && B[j] < cols + baseRows)
                                                     {
-                                                        lu.Update(w, j);
+                                                        // do the swap
+                                                        V[vindex] = B[j];
+                                                        B[j] = cols + baseRows + k;
+                                                        // if we'll do more swaps then update the basis
+                                                        if (k < numExtraConstraints - 1)
+                                                        {
+                                                            lu.Update(w, j);
+                                                        }
+                                                        break;
                                                     }
-                                                    break;
                                                 }
                                             }
                                         }
                                     }
+                                    return ret;
                                 }
-                                return ret;
+                                else
+                                {
+                                    ColdStart = false;
+                                    SolvePrimal(true);
+                                    redecompose = 0;
+                                    primalPatched = true;
+                                    goto DECOMPOSE;
+                                }
                             }
                             c[j] = costcol;
                         }
@@ -790,6 +819,16 @@ namespace Rawr.Mage
 
                     if (mini == -1)
                     {
+                        // refine solution
+                        for (i = 0; i < baseRows; i++)
+                        {
+                            d[i] = b[i]; // TODO block copy?
+                        }
+                        for (k = 0; k < numExtraConstraints; k++, i++)
+                        {
+                            d[i] = D[k * (cols + rows + 1) + cols + rows];
+                        }
+                        lu.FSolve(d);
                         // optimum, return solution
                         // solution(B_indices,:) = d;
                         double[] ret = new double[cols + 1];
@@ -989,31 +1028,32 @@ namespace Rawr.Mage
                     int minj = -1;
                     //int altminj = -1;
                     double maxnorm = 0.0;
-                    for (j = 0; j < cols; j++)
+                    for (cj = c, wdj = wd, Vj = V, j = 0; j < cols; j++, cj++, wdj++, Vj++)
                     {
-                        wd[j] = 0;
-                        int col = V[j];
+                        *wdj = 0;
+                        int col = *Vj;
                         sCol1 = sparseCol[col];
                         sCol2 = sparseCol[col + 1];
                         sRow = sparseRow + sCol1;
+                        sRow2 = sparseRow + sCol2;
                         sValue = sparseValue + sCol1;
-                        for (i = sCol1; i < sCol2; i++, sRow++, sValue++)
+                        for (; sRow < sRow2; sRow++, sValue++)
                         {
-                            wd[j] += *sValue * x[*sRow];
+                            *wdj += *sValue * x[*sRow];
                         }
-                        for (k = 0; k < numExtraConstraints; k++, i++)
+                        for (k = 0; k < numExtraConstraints; k++)
                         {
-                            wd[j] += D[k * (cols + rows + 1) + col] * x[baseRows + k];
+                            *wdj += D[k * (cols + rows + 1) + col] * x[baseRows + k];
                         }
-                        double v = Math.Abs(wd[j]);
+                        double v = Math.Abs(*wdj);
                         if (v > maxnorm) maxnorm = v;
-                        if (wd[j] < -eps && c[j] < eps)
+                        if (*wdj < -eps && *cj < eps)
                         {
                             // verify the new c[j] will not go above eps
                             // c[j] - minr * wd[j] > eps
-                            if (c[j] - minr * wd[j] > 0.000001) // add eps barriers so that we stabilize pivot order??? what when c gets positive
+                            if (*cj - minr * *wdj > 0.000001) // add eps barriers so that we stabilize pivot order??? what when c gets positive
                             {
-                                minr = c[j] / wd[j];
+                                minr = *cj / *wdj;
                                 minj = j;
                             }
                         }
@@ -1094,10 +1134,10 @@ namespace Rawr.Mage
                         u[i] -= minr * x[i];
                     }
                     d[mini] = rp;
-                    for (j = 0; j < cols; j++)
+                    for (cj = c, wdj = wd; cj < ccols; cj++, wdj++)
                     {
-                        c[j] -= minr * wd[j];
-                        //if (c[j] > eps && (disablingConstraint == -1 || D[disablingConstraint * (cols + rows + 1) + V[j]] == 0.0)) c[j] = 0.0;
+                        *cj -= minr * *wdj;
+                        //if (c[j] > eps && (disablingConstraint == -1 || D[disablingConstraint * (cols + rows + 1) + V[j]] == 0.0)) c[j] += 0.0;
                     }
                     c[minj] = -minr;
 

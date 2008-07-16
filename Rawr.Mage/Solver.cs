@@ -1067,9 +1067,17 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowIcyVeinsDrumsOfBattle, drumsivlength);
             lp.SetRHSUnsafe(rowArcanePowerDrumsOfBattle, drumsaplength);
             lp.SetRHSUnsafe(rowThreat, calculationOptions.TpsLimit * calculationOptions.FightDuration);
-            int manaConsum = ((int)((calculationOptions.FightDuration - 7800 / manaBurn) / 60f + 2));
+            double manaConsum;
+            if (integralMana)
+            {
+                manaConsum = Math.Ceiling((calculationOptions.FightDuration - 7800 / manaBurn) / 60f + 2);
+            }
+            else
+            {
+                manaConsum = ((calculationOptions.FightDuration - 7800 / manaBurn) / 60f + 2);
+            }
             if ((trinket1OnManaGem || trinket2OnManaGem) && manaConsum < calculationResult.MaxManaGem) manaConsum = calculationResult.MaxManaGem;
-            lp.SetRHSUnsafe(rowManaPotionManaGem, manaConsum * 40);
+            lp.SetRHSUnsafe(rowManaPotionManaGem, manaConsum * 40.0);
             lp.SetRHSUnsafe(rowDrumsOfBattle, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : (1 + (int)((calculationOptions.FightDuration - 30) / 120)));
             lp.SetRHSUnsafe(rowDrinking, maxDrinkingTime);
             lp.SetRHSUnsafe(rowTargetDamage, -calculationOptions.TargetDamage);

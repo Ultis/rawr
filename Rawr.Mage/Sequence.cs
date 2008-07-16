@@ -481,7 +481,7 @@ namespace Rawr.Mage.SequenceReconstruction
                             jj++;
                         }
                         // don't split into supergroup, make a clean cut
-                        if (jT > 0 && sequence[jj].Group.Count > 0 && currentPush <= maxPush) // if we're mid super group, and we can push the end we can push the whole super group
+                        if (sequence[jj].Group.Count > 0 && currentPush <= maxPush && (jT > 0 || (jj > 0 && sequence[jj].SuperGroup == sequence[jj - 1].SuperGroup))) // if we're mid super group, and we can push the end we can push the whole super group
                         {
                             // move to start of super group
                             jT = 0;
