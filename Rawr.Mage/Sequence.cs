@@ -370,7 +370,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 for (k = lastHigh; k < sequence.Count; k++)
                 {
                     // make sure item is low mps and can be moved back
-                    if (sequence[k].SuperGroup.Mps <= maxMps && MinTime(k, j) <= tjj + jT) break;
+                    if ((sequence[k].SuperGroup.Mps <= 0 || (!extraMode && sequence[k].SuperGroup.Mps <= maxMps)) && MinTime(k, j) <= tjj + jT) break;
                     // everything we skip will have to be pushed so make sure there is space
                     maxPush = Math.Min(maxPush, sequence[k].MaxTime - tkk);
                     tkk += sequence[k].Duration;
@@ -444,6 +444,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         {
                             break;
                         }
+                        if (nextT == 0.0) break; // if we get stopped in the middle of super group then abort
                     } while (jj >= i && kk < sequence.Count && MinTime(k, jj) <= tjj + jT && MinTime(kk, jj) <= tjj + jT + currentPush - kT && currentPush < maxPush);
                     // [i..[k..||jj..j]XXXkk.]
                     if (kk >= sequence.Count || sequence[kk].Group.Count == 0 || (kT < 0.000001 && (kk == 0 || sequence[kk].SuperGroup != sequence[kk - 1].SuperGroup))) // if require super split, then abort, consider restarting at higher lastHigh
@@ -1794,6 +1795,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
         public void RepositionManaConsumption()
         {
+            if (sequence.Count == 0) return;
             double ghostMana = Math.Max(0, -ManaCheck());
             double fight = FightDuration;
             /*List<bool> gemPotList = new List<bool>();
@@ -1848,12 +1850,12 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (!((potTime > 0 && nextPot == 0) || (gemTime > 0 && nextGem == 0) || (evoTime > 0 && nextEvo == 0)))
                 {
                     double m = mana + ghostMana;
-                    for (double _potTime = potTime; _potTime > 0; _potTime -= 1.0)
+                    for (double _potTime = potTime; _potTime > 0.000001; _potTime -= 1.0)
                     {
                         m += (1 + BasicStats.BonusManaPotion) * 2400;
                     }
                     int __gemCount = gemCount;
-                    for (double _gemTime = gemTime; _gemTime > 0; _gemTime -= 1.0, __gemCount++)
+                    for (double _gemTime = gemTime; _gemTime > 0.000001; _gemTime -= 1.0, __gemCount++)
                     {
                         m += (1 + BasicStats.BonusManaGem) * gemValue[__gemCount];
                     }
@@ -2146,44 +2148,69 @@ namespace Rawr.Mage.SequenceReconstruction
                 double gem = nextGem;
                 double pot = nextPot;
                 double evo = nextEvo;
+                bool evoMoved = false;
                 if (gemTime > 0) gem = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem), 4);
                 if (potTime > 0) pot = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 3000, Math.Max(time, nextPot), 3);
                 if (evoTime > 0)
                 {
                     evo = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - EvocationRegen * Math.Min(evoTime, EvocationDuration), Math.Max(time, nextEvo), 2);
                     double breakpoint = Evaluate(null, EvaluationMode.CooldownBreak, evo);
-                    if (breakpoint < fight) evo = breakpoint;
+                    if (breakpoint < fight && breakpoint > evo)
+                    {
+                        evo = breakpoint;
+                        evoMoved = true;
+                    }
                 }
-                // always use pot & gem before evo, they need tighter packing
-                // always start with pot because pot needs more buffer than gem, unless
+                // use pot & gem before evo, they need tighter packing
+                // start with pot because pot needs more buffer than gem usually
                 // verify timing requirements for flame cap, destro pot
                 bool forceGem = false;
                 bool forcePot = false;
+                t = 0;
+                double nextFlameCap = double.PositiveInfinity;
+                double nextFlameCapMin = double.PositiveInfinity;
+                double nextDestructionPotion = double.PositiveInfinity;
+                double nextDestructionPotionMin = double.PositiveInfinity;
+                for (i = 0; i < sequence.Count; i++)
+                {
+                    double d = sequence[i].Duration;
+                    if (sequence[i].IsManaPotionOrGem) d = 0;
+                    if (d > 0 && t >= gem)
+                    {
+                        if (sequence[i].CastingState != null && sequence[i].CastingState.FlameCap)
+                        {
+                            nextFlameCap = Math.Min(nextFlameCap, sequence[i].MaxTime);
+                            nextFlameCapMin = Math.Min(nextFlameCapMin, sequence[i].MinTime);
+                        }
+                    }
+                    if (d > 0 && t >= pot)
+                    {
+                        if (sequence[i].CastingState != null && sequence[i].CastingState.DestructionPotion)
+                        {
+                            nextDestructionPotion = Math.Min(nextDestructionPotion, sequence[i].MaxTime);
+                            nextDestructionPotionMin = Math.Min(nextDestructionPotionMin, sequence[i].MinTime);
+                        }
+                    }
+                    t += d;
+                }
+                if (gemTime > 0 && !double.IsPositiveInfinity(nextFlameCap))
+                {
+                    if (gem > nextFlameCap - 120.0 + 0.000001 && gem < nextFlameCap)
+                    {
+                        nextGem = nextFlameCapMin + 180.0;
+                        gem = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem), 4);
+                    }
+                }
+                if (potTime > 0 && !double.IsPositiveInfinity(nextDestructionPotion))
+                {
+                    if (pot > nextDestructionPotion - 120.0 + 0.000001 && pot < nextDestructionPotion)
+                    {
+                        nextPot = nextDestructionPotionMin + 120.0;
+                        pot = Evaluate(null, EvaluationMode.ManaBelow, BasicStats.Mana - (1 + BasicStats.BonusManaPotion) * 3000, Math.Max(time, nextPot), 3);
+                    }
+                }
                 if (potTime > 0 && gemTime > 0)
                 {
-                    t = 0;
-                    double nextFlameCap = double.PositiveInfinity;
-                    double nextDestructionPotion = double.PositiveInfinity;
-                    for (i = 0; i < sequence.Count; i++)
-                    {
-                        double d = sequence[i].Duration;
-                        if (sequence[i].IsManaPotionOrGem) d = 0;
-                        if (d > 0 && t >= gem)
-                        {
-                            if (sequence[i].CastingState != null && sequence[i].CastingState.FlameCap)
-                            {
-                                nextFlameCap = Math.Min(nextFlameCap, sequence[i].MaxTime);
-                            }
-                        }
-                        if (d > 0 && t >= pot)
-                        {
-                            if (sequence[i].CastingState != null && sequence[i].CastingState.DestructionPotion)
-                            {
-                                nextDestructionPotion = Math.Min(nextDestructionPotion, sequence[i].MaxTime);
-                            }
-                        }
-                        t += d;
-                    }
                     // very special case for now, revisit later
                     if (!double.IsPositiveInfinity(nextFlameCap))
                     {
@@ -2237,6 +2264,14 @@ namespace Rawr.Mage.SequenceReconstruction
                 }
                 else if (evoTime > 0)
                 {
+                    if (nextEvo <= time && evoMoved) // if we ignored mana checks, but decided to wait for cooldown split, make sure not to run oom during supergroup
+                    {
+                        nextEvo = evo;
+                        lastTargetMana = -1;
+                        extraMana = 0;
+                        oomtime = targetTime;
+                        goto Retry;
+                    }
                     if (evo > targetTime)
                     {
                         targetTime = evo;
@@ -2380,6 +2415,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 // Mana
                 if (mode == EvaluationMode.ManaBelow)
                 {
+                    if (data[0] < 0) data[0] = 0.0;
                     if (data.Length > 2)
                     {
                         if (data[2] == 3)
@@ -2954,7 +2990,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 }
                 else if (reportMode == ReportMode.Compact)
                 {
-                    if (timing != null && label != null && (i == 0 || spell == null || sequence[i].CastingState != sequence[i - 1].CastingState || sequence[i].Spell != sequence[i - 1].Spell))
+                    if (timing != null && label != null && (i == 0 || sequence[i].VariableType != sequence[i - 1].VariableType || sequence[i].CastingState != sequence[i - 1].CastingState || sequence[i].Spell != sequence[i - 1].Spell))
                     {
                         timing.AppendLine(TimeFormat(time) + ": " + (string.IsNullOrEmpty(state.BuffLabel) ? "" : (state.BuffLabel + "+")) + label + " (" + Math.Round(manabefore).ToString() + " mana)");
                     }

@@ -543,6 +543,14 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowDpsTime, column, -1.0);
                     lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
                     if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                    if (restrictManaUse)
+                    {
+                        for (int ss = segment; ss < segments - 1; ss++)
+                        {
+                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
+                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                        }
+                    }
                 }
                 // wand
                 if (character.Ranged != null && character.Ranged.Type == Item.ItemType.Wand)
@@ -615,6 +623,11 @@ namespace Rawr.Mage
                             evocationMana = evocationStats.Mana;
                             calculationResult.EvocationRegen = evocationRegen;
                         }
+                    }
+                    if (calculationResult.EvocationRegen * evocationDuration > characterStats.Mana)
+                    {
+                        evocationDuration = characterStats.Mana / calculationResult.EvocationRegen;
+                        calculationResult.EvocationDuration = evocationDuration;
                     }
                     for (int segment = 0; segment < evocationSegments; segment++)
                     {
@@ -763,8 +776,14 @@ namespace Rawr.Mage
                     lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
                     tpsList.Add(0.0);
                     if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + 0, column, 1.0);
-                    lp.SetElementUnsafe(rowSegmentManaUnderflow + 0, column, manaRegen);
-                    lp.SetElementUnsafe(rowSegmentManaOverflow + 0, column, -manaRegen);
+                    if (restrictManaUse)
+                    {
+                        for (int ss = 0; ss < segments - 1; ss++)
+                        {
+                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
+                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                        }
+                    }
                 }
                 // time extension
                 if (needsTimeExtension)
