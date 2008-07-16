@@ -69,14 +69,6 @@ namespace Rawr.Mage
                     {
                         valid = ValidateIntegralManaOverall(VariableType.Evocation, 2.0 / calculationResult.BaseState.CastingSpeed);
                     }
-                    if (valid && calculationOptions.ManaPotionEnabled)
-                    {
-                        valid = ValidateIntegralMana(VariableType.ManaPotion);
-                    }
-                    if (valid && calculationOptions.ManaGemEnabled)
-                    {
-                        valid = ValidateIntegralMana(VariableType.ManaGem);
-                    }
                 }
 
                 if (segmentCooldowns)
@@ -108,6 +100,22 @@ namespace Rawr.Mage
                     {
                         valid = ValidateCooldown(Cooldown.DrumsOfBattle, 30, 120);
                     }
+                }
+
+                if (integralMana)
+                {
+                    if (valid && calculationOptions.ManaPotionEnabled)
+                    {
+                        valid = ValidateIntegralMana(VariableType.ManaPotion);
+                    }
+                    if (valid && calculationOptions.ManaGemEnabled)
+                    {
+                        valid = ValidateIntegralMana(VariableType.ManaGem);
+                    }
+                }
+
+                if (segmentCooldowns)
+                {
                     // flamecap
                     if (valid && calculationOptions.FlameCap)
                     {
@@ -144,9 +152,186 @@ namespace Rawr.Mage
                     {
                         valid = ValidateColdsnap();
                     }
+                    if (valid)
+                    {
+                        valid = ValidateSupergroupFragmentation();
+                    }
                 }
             } while (heap.Count > 0 && !valid);
             //System.Diagnostics.Trace.WriteLine("Heap at solution " + heap.Count);
+        }
+
+        private bool ValidateSupergroupFragmentation()
+        {
+            List<int>[] hexList = new List<int>[segments];
+            double[] count = new double[segments];
+            for (int seg = 0; seg < segments; seg++)
+            {
+                hexList[seg] = new List<int>();
+                for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
+                {
+                    CastingState state = calculationResult.SolutionVariable[index].State;
+                    if (state != null && solution[index] > 0)
+                    {
+                        int h = state.GetHex();
+                        if (h != 0)
+                        {
+                            if (!hexList[seg].Contains(h)) hexList[seg].Add(h);
+                            count[seg] += solution[index];
+                        }
+                    }
+                }
+            }
+            for (int seg = 1; seg < segments - 1; seg++)
+            {
+                int N = hexList[seg].Count;
+                if (N > 0 && count[seg] < segmentDuration - 0.000001)
+                {
+                    // if any hex links to left and right segment we have a problemž
+                    List<int> minHexChain = null;
+                    for (int i = 0; i < N; i++)
+                    {
+                        // compute distance
+                        int[] hexDistance = new int[N];
+                        for (int j = 0; j < N; j++)
+                        {
+                            hexDistance[j] = -1;
+                        }
+                        hexDistance[i] = 0;
+                        int current = hexList[seg][i];
+                        int distance = 0;
+                        int next;
+                        bool unlinked = true;
+                        while (unlinked)
+                        {
+                            unlinked = false;
+                            distance++;
+                            next = current;
+                            for (int j = 0; j < N; j++)
+                            {
+                                if (hexDistance[j] == -1 && (hexList[seg][j] & current) != 0)
+                                {
+                                    hexDistance[j] = distance;
+                                    next |= hexList[seg][j];
+                                    unlinked = true;
+                                }
+                            }
+                            current = next;
+                        }
+                        // find closest link on left and right
+                        int leftMin = int.MaxValue;
+                        int leftMinHex = 0;
+                        for (int j = 0; j < hexList[seg - 1].Count; j++)
+                        {
+                            int h = hexList[seg - 1][j];
+                            if ((h & current) != 0)
+                            {
+                                for (int k = 0; k < N; k++)
+                                {
+                                    if ((h & hexList[seg][k]) != 0)
+                                    {
+                                        if (hexDistance[k] != -1 && hexDistance[k] < leftMin)
+                                        {
+                                            leftMin = hexDistance[k];
+                                            leftMinHex = h;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        int rightMin = int.MaxValue;
+                        int rightMinHex = 0;
+                        for (int j = 0; j < hexList[seg + 1].Count; j++)
+                        {
+                            int h = hexList[seg + 1][j];
+                            if ((h & current) != 0)
+                            {
+                                for (int k = 0; k < N; k++)
+                                {
+                                    if ((h & hexList[seg][k]) != 0)
+                                    {
+                                        if (hexDistance[k] != -1 && hexDistance[k] < rightMin)
+                                        {
+                                            rightMin = hexDistance[k];
+                                            rightMinHex = h;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (leftMinHex != 0 && rightMinHex != 0)
+                        {
+                            // we found an offensive hex chain
+                            if (minHexChain == null || (leftMin + rightMin + 2) < minHexChain.Count)
+                            {
+                                // reconstruct chain
+                                minHexChain = new List<int>();
+                                int currentHex = leftMinHex;
+                                int currentDist = leftMin;
+                                if (!minHexChain.Contains(currentHex)) minHexChain.Add(currentHex);
+                                while (currentDist > 0)
+                                {
+                                    for (int j = 0; j < N; j++)
+                                    {
+                                        if (hexDistance[j] == currentDist && (hexList[seg][j] & currentHex) != 0)
+                                        {
+                                            currentHex = hexList[seg][j];
+                                            currentDist--;
+                                            if (!minHexChain.Contains(currentHex)) minHexChain.Add(currentHex);
+                                            break;
+                                        }
+                                    }
+                                }
+                                currentHex = rightMinHex;
+                                currentDist = rightMin;
+                                if (!minHexChain.Contains(currentHex)) minHexChain.Add(currentHex);
+                                while (currentDist > 0)
+                                {
+                                    for (int j = 0; j < N; j++)
+                                    {
+                                        if (hexDistance[j] == currentDist && (hexList[seg][j] & currentHex) != 0)
+                                        {
+                                            currentHex = hexList[seg][j];
+                                            currentDist--;
+                                            if (!minHexChain.Contains(currentHex)) minHexChain.Add(currentHex);
+                                            break;
+                                        }
+                                    }
+                                }
+                                currentHex = hexList[seg][i];
+                                if (!minHexChain.Contains(currentHex)) minHexChain.Add(currentHex);
+                            }
+                        }
+                    }
+                    if (minHexChain != null)
+                    {
+                        // we have a problem and the shortest hex chain that identifies it
+                        // solve by branching on eliminating one of the elements in the chain
+                        // or forcing the segment to max
+                        for (int i = 0; i < minHexChain.Count; i++)
+                        {
+                            SolverLP hexRemovedLP = lp.Clone();
+                            if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup fragmentation at " + seg + ", removing " + minHexChain[i]);
+                            for (int index = segmentColumn[seg - 1]; index < segmentColumn[seg + 2]; index++)
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (state != null && state.GetHex() == minHexChain[i]) hexRemovedLP.EraseColumn(index);
+                            }
+                            heap.Push(hexRemovedLP);
+                        }
+                        if (lp.Log != null) lp.Log.AppendLine("Breaking supergroup fragmentation at " + seg + ", force to max");
+                        for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
+                        {
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            if (state != null && state.GetHex() != 0) lp.UpdateMaximizeSegmentColumn(index);
+                        }
+                        lp.UpdateMaximizeSegmentDuration(segmentDuration);
+                        heap.Push(lp);
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         private bool ValidateCycling()
@@ -783,8 +968,6 @@ namespace Rawr.Mage
                         if (state != null)
                         {
                             if (state.GetCooldown(cooldown)) lp.UpdateMaximizeSegmentColumn(index);
-                            // for some strange reason trying to help doesn't really help
-                            // so don't try to help
                             //else lp.EraseColumn(index); // to make it easier on the solver also let it know that anything that doesn't have this cooldown can't be in solution
                         }
                     }
