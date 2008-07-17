@@ -979,12 +979,204 @@ namespace Rawr.Mage
 
             if (cooldown == Cooldown.FlameCap)
             {
+                if (integralMana)
+                {
+                    for (int seg = 0; seg < segments; seg++)
+                    {
+                        if (segCount[seg] > 0 && (seg + 1) * segmentDuration + 60.0 < calculationOptions.FightDuration)
+                        {
+                            double total = 0.0;
+                            for (int s = 0; s < segments; s++)
+                            {
+                                if (Math.Abs(seg - s) <= mindist) total += segCount[s];
+                            }
+                            if (total < 60.0 - eps)
+                            {
+                                // problems, we can't handle nonintegral flame cap, so restrict it
+                                SolverLP fcUsed = lp.Clone();
+                                // fc not used
+                                if (lp.Log != null) lp.Log.AppendLine("Disable " + cooldown.ToString() + " at " + seg);
+                                for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
+                                {
+                                    CastingState state = calculationResult.SolutionVariable[index].State;
+                                    if (state != null && state.GetCooldown(cooldown)) lp.EraseColumn(index);
+                                }
+                                heap.Push(lp);
+                                if (fcUsed.Log != null) fcUsed.Log.AppendLine("Force full flame cap at " + seg);
+                                for (int s = 0; s < segments; s++)
+                                {
+                                    if (Math.Abs(seg - s) <= mindist)
+                                    {
+                                        for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)                                  
+                                        {
+                                            CastingState state = calculationResult.SolutionVariable[index].State;
+                                            if (state != null)
+                                            {
+                                                if (state.FlameCap) fcUsed.UpdateMaximizeSegmentColumn(index);
+                                            }
+                                        }
+                                    }
+                                }
+                                fcUsed.UpdateMaximizeSegmentDuration(60.0);
+                                return false;
+                            }
+                        }
+                    }
+                }
+
                 double[] manaGem = new double[segments];
                 for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                 {
                     if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem)
                     {
                         manaGem[calculationResult.SolutionVariable[index].Segment] += solution[index];
+                    }
+                }
+
+                float manaBurn = 80;
+                if (calculationOptions.AoeDuration > 0)
+                {
+                    Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
+                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                }
+                else if (calculationOptions.EmpoweredFireball > 0)
+                {
+                    Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
+                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                }
+                else if (calculationOptions.EmpoweredFrostbolt > 0)
+                {
+                    Spell s = calculationResult.BaseState.GetSpell(SpellId.Frostbolt);
+                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                }
+                else if (calculationOptions.SpellPower > 0)
+                {
+                    Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneBlast33);
+                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                }
+                if (icyVeinsAvailable)
+                {
+                    manaBurn *= 1.1f;
+                }
+                if (arcanePowerAvailable)
+                {
+                    manaBurn *= 1.1f;
+                }
+
+                // check border case if we have mana gem in first or last segment
+                if (manaGem[0] > 0)
+                {
+                    // either no gem at 0 or make sure it starts late enough
+                    int firstSeg;
+                    for (firstSeg = 0; firstSeg < segments; firstSeg++)
+                    {
+                        if (segCount[firstSeg] > 0) break;
+                    }
+                    if (firstSeg < segments)
+                    {
+                        double totalGem = 0.0;
+                        for (int seg = 0; seg < firstSeg; seg++)
+                        {
+                            totalGem += manaGem[seg];
+                        }
+                        // tfc = firstSeg * 30 + 30 - segCount[firstSeg]
+                        // tgem <= tfc - 120.0 * totalGem
+                        // overflow >= 2400 - tgem * manaBurn
+
+                        // tfc - 120.0 * totalGem >= tgem >= (2400 - overflow) / manaBurn
+
+                        // (2400 - overflow) / manaBurn <= tfc - 120.0 * totalGem
+                        // 120.0 * manaBurn * totalGem - overflow <= (firstSeg * 30 + 30 - segCount[firstSeg]) * manaBurn - 2400
+                        // 120.0 * totalGem - overflow / manaBurn + segCount[firstSeg] <= (firstSeg * 30 + 30) - 2400 / manaBurn
+
+                        double overflow = solution[calculationResult.ColumnManaOverflow];
+
+                        if (120.0 * totalGem - overflow / manaBurn + segCount[firstSeg] > (firstSeg * segmentDuration + segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
+                        {
+                            // no gem
+                            SolverLP nogem = lp.Clone();
+                            if (nogem.Log != null) nogem.Log.AppendLine("No gem at 0");
+                            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                            {
+                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == 0)
+                                {
+                                    nogem.EraseColumn(index);
+                                }
+                            }
+                            heap.Push(nogem);
+                            // restrict flame cap/overflow
+                            if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap with gem at 0");
+                            int row = lp.lp.AddConstraint(false);
+                            lp.lp.SetConstraintRHS(row, (firstSeg * segmentDuration + segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
+                            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment < firstSeg) lp.lp.SetConstraintElement(row, index, 120.0);
+                                else if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == 0) lp.lp.SetConstraintElement(row, index, -1.0 / manaBurn);
+                                else if (state != null && state.FlameCap && calculationResult.SolutionVariable[index].Segment == firstSeg) lp.lp.SetConstraintElement(row, index, 1.0);
+                            }
+                            lp.ForceRecalculation(true);
+                            heap.Push(lp);
+                            return false;
+                        }
+                    }
+                }
+
+                if (manaGem[segments - 1] > 0)
+                {
+                    // either no gem or make sure it starts early enough
+                    int lastSeg;
+                    for (lastSeg = segments - 1; lastSeg >= 0; lastSeg--)
+                    {
+                        if (segCount[lastSeg] > 0) break;
+                    }
+                    if (lastSeg >= 0)
+                    {
+                        while (lastSeg > 0 && segCount[lastSeg - 1] > 0) lastSeg--;
+                        double totalGem = 0.0;
+                        for (int seg = lastSeg + 1; seg < segments; seg++)
+                        {
+                            totalGem += manaGem[seg];
+                        }
+                        // tfc = lastSeg * 30 + 30 - segCount[lastSeg]
+                        // tgem >= tfc + 60.0 + 120 * totalGem
+                        // overflow >= 2400 - fight * manaBurn + tgem * manaBurn
+
+                        // tfc + 60.0 + 120 * totalGem <= tgem <= overflow / manaBurn - 2400 / manaBurn + fight
+
+                        // tfc + 120 * totalGem - overflow / manaBurn <= - 2400 / manaBurn + fight - 60.0
+                        // 120 * totalGem - overflow / manaBurn - segCount[lastSeg] <= fight - 90.0 - lastSeg * 30 - 2400 / manaBurn
+
+                        double overflow = solution[calculationResult.ColumnManaOverflow + segments - 1];
+
+                        if (120.0 * totalGem - overflow / manaBurn - segCount[lastSeg] > (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
+                        {
+                            // no gem
+                            SolverLP nogem = lp.Clone();
+                            if (nogem.Log != null) nogem.Log.AppendLine("No gem at end");
+                            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                            {
+                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == segments - 1)
+                                {
+                                    nogem.EraseColumn(index);
+                                }
+                            }
+                            heap.Push(nogem);
+                            // restrict flame cap/overflow
+                            if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap with gem at end");
+                            int row = lp.lp.AddConstraint(false);
+                            lp.lp.SetConstraintRHS(row, (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
+                            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment > lastSeg) lp.lp.SetConstraintElement(row, index, 120.0);
+                                else if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == segments - 1) lp.lp.SetConstraintElement(row, index, -1.0 / manaBurn);
+                                else if (state != null && state.FlameCap && calculationResult.SolutionVariable[index].Segment == lastSeg) lp.lp.SetConstraintElement(row, index, -1.0);
+                            }
+                            lp.ForceRecalculation(true);
+                            heap.Push(lp);
+                            return false;
+                        }
                     }
                 }
 
