@@ -83,9 +83,12 @@ namespace Rawr.Tree
 
         public override string[] CustomChartNames
         {
-            get { return new string[] {
+            get
+            {
+                return new string[] {
                 "Relative Stat Values (Bigger Picture)"
-            }; }
+            };
+            }
         }
 
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationTree(); }
@@ -241,55 +244,53 @@ namespace Rawr.Tree
             return statsTotal;
         }
 
+        private ComparisonCalculationTree GetRelativeValue(Stats baseStats, int minMultiplier, int maxMultiplier, String label, Character character, CharacterCalculationsTree calcBaseValue)
+        {
+            ComparisonCalculationTree compCalc = null;
+            Stats stats = new Stats();
+            for (int multiplier = minMultiplier; multiplier < maxMultiplier; multiplier++)
+            {
+                stats += baseStats;
+                CharacterCalculationsTree calcValue = GetCharacterCalculations(character, new Item() { Stats = stats } ) as CharacterCalculationsTree;
+
+                if (compCalc == null || (compCalc.OverallPoints < (calcValue.OverallPoints - calcBaseValue.OverallPoints) / multiplier))
+                {
+                    compCalc = new ComparisonCalculationTree(label + "*" + multiplier)
+                    {
+                        OverallPoints = (calcValue.OverallPoints - calcBaseValue.OverallPoints) / multiplier,
+                        HpSPoints = (calcValue.HpSPoints - calcBaseValue.HpSPoints) / multiplier,
+                        Mp5Points = (calcValue.Mp5Points - calcBaseValue.Mp5Points) / multiplier,
+                        SurvivalPoints = (calcValue.SurvivalPoints - calcBaseValue.SurvivalPoints) / multiplier,
+                        ToLPoints = (calcValue.ToLPoints - calcBaseValue.ToLPoints) / multiplier,
+                    };
+                }
+            }
+            return compCalc;
+        }
+
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             switch (chartName)
             {
                 case "Relative Stat Values (Bigger Picture)":
-                    int multiplier = 10;
+                    int multiplier = 5;
                     CharacterCalculationsTree calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsTree;
-                    CharacterCalculationsTree calcHealingValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Healing = 22 * multiplier } }) as CharacterCalculationsTree;
+
                     CharacterCalculationsTree calcMp5Value = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Mp5 = 4 * multiplier } }) as CharacterCalculationsTree;
                     CharacterCalculationsTree calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellHasteRating = 10 * multiplier } }) as CharacterCalculationsTree;
                     CharacterCalculationsTree calcSpiritValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = 10 * multiplier } }) as CharacterCalculationsTree;
                     CharacterCalculationsTree calcIntValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 10 * multiplier } }) as CharacterCalculationsTree;
 
+                    
+
                     return new ComparisonCalculationBase[] { 
-						new ComparisonCalculationTree(multiplier+"*22 Healing") {
-                            OverallPoints = (calcHealingValue.OverallPoints - calcBaseValue.OverallPoints), 
-							HpSPoints = (calcHealingValue.HpSPoints - calcBaseValue.HpSPoints), 
-                            Mp5Points = (calcHealingValue.Mp5Points - calcBaseValue.Mp5Points), 
-                            SurvivalPoints = (calcHealingValue.SurvivalPoints - calcBaseValue.SurvivalPoints), 
-                            ToLPoints = (calcHealingValue.ToLPoints - calcBaseValue.ToLPoints), 
-						},
-                        new ComparisonCalculationTree(multiplier+"*4 Mp5") {
-                            OverallPoints = (calcMp5Value.OverallPoints - calcBaseValue.OverallPoints), 
-							HpSPoints = (calcMp5Value.HpSPoints - calcBaseValue.HpSPoints), 
-                            Mp5Points = (calcMp5Value.Mp5Points - calcBaseValue.Mp5Points), 
-                            SurvivalPoints = (calcMp5Value.SurvivalPoints - calcBaseValue.SurvivalPoints), 
-                            ToLPoints = (calcMp5Value.ToLPoints - calcBaseValue.ToLPoints), 
-                        },
-						new ComparisonCalculationTree(multiplier+"*10 Spell Haste") {
-                            OverallPoints = (calcHasteValue.OverallPoints - calcBaseValue.OverallPoints), 
-							HpSPoints = (calcHasteValue.HpSPoints - calcBaseValue.HpSPoints), 
-                            Mp5Points = (calcHasteValue.Mp5Points - calcBaseValue.Mp5Points), 
-                            SurvivalPoints = (calcHasteValue.SurvivalPoints - calcBaseValue.SurvivalPoints), 
-                            ToLPoints = (calcHasteValue.ToLPoints - calcBaseValue.ToLPoints),
-                        },
-						new ComparisonCalculationTree(multiplier+"*10 Spirit") {
-                            OverallPoints = (calcSpiritValue.OverallPoints - calcBaseValue.OverallPoints), 
-							HpSPoints = (calcSpiritValue.HpSPoints - calcBaseValue.HpSPoints), 
-                            Mp5Points = (calcSpiritValue.Mp5Points - calcBaseValue.Mp5Points), 
-                            SurvivalPoints = (calcSpiritValue.SurvivalPoints - calcBaseValue.SurvivalPoints), 
-                            ToLPoints = (calcSpiritValue.ToLPoints - calcBaseValue.ToLPoints),
-                        },
-                        new ComparisonCalculationTree(multiplier+"*10 Intellect") { 
-                            OverallPoints = (calcIntValue.OverallPoints - calcBaseValue.OverallPoints), 
-							HpSPoints = (calcIntValue.HpSPoints - calcBaseValue.HpSPoints), 
-                            Mp5Points = (calcIntValue.Mp5Points - calcBaseValue.Mp5Points), 
-                            SurvivalPoints = (calcIntValue.SurvivalPoints - calcBaseValue.SurvivalPoints), 
-                            ToLPoints = (calcIntValue.ToLPoints - calcBaseValue.ToLPoints), 
-                        },
+						GetRelativeValue (new Stats() {Healing = 22}, 5, 10, "22 Healing", character, calcBaseValue),
+                        GetRelativeValue (new Stats() {Mp5 = 4}, 5, 10, "4 Mp5", character, calcBaseValue),
+                        GetRelativeValue (new Stats() {SpellHasteRating = 10}, 1, 15, "10 Spell Haste", character, calcBaseValue),
+                        GetRelativeValue (new Stats() {Spirit = 10}, 5, 10, "10 Spirit", character, calcBaseValue),
+                        GetRelativeValue (new Stats() {Intellect = 10}, 5, 10, "10 Intellect", character, calcBaseValue),
+                        GetRelativeValue (new Stats() {Healing = 11, Spirit = 5}, 5, 10, "11 Healing 5 Spirit", character, calcBaseValue),
+                        GetRelativeValue (new Stats() {Healing = 11, Intellect = 5}, 5, 10, "11 Healing 5 Intellect", character, calcBaseValue),
 					};
                 default:
                     return new ComparisonCalculationBase[0];
