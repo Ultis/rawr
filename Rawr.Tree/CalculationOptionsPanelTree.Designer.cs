@@ -61,6 +61,11 @@
             this.cmbIntensity = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.shattNone = new System.Windows.Forms.RadioButton();
+            this.shattAldor = new System.Windows.Forms.RadioButton();
+            this.shattScryer = new System.Windows.Forms.RadioButton();
+            this.enforceMeta = new System.Windows.Forms.CheckBox();
             this.upDownTargetHealth = new System.Windows.Forms.NumericUpDown();
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
@@ -91,6 +96,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.upDownTargetHealth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownSurvScalingAbove)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownSurvScalingBelow)).BeginInit();
@@ -542,6 +548,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.groupBox5);
+            this.groupBox3.Controls.Add(this.enforceMeta);
             this.groupBox3.Controls.Add(this.upDownTargetHealth);
             this.groupBox3.Controls.Add(this.label24);
             this.groupBox3.Controls.Add(this.label23);
@@ -556,10 +564,69 @@
             this.groupBox3.Controls.Add(this.cmbLength);
             this.groupBox3.Location = new System.Drawing.Point(3, 6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(191, 161);
+            this.groupBox3.Size = new System.Drawing.Size(191, 236);
             this.groupBox3.TabIndex = 28;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Fight Parameters";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.shattNone);
+            this.groupBox5.Controls.Add(this.shattAldor);
+            this.groupBox5.Controls.Add(this.shattScryer);
+            this.groupBox5.Location = new System.Drawing.Point(8, 175);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(177, 50);
+            this.groupBox5.TabIndex = 36;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Exalted Faction";
+            // 
+            // shattNone
+            // 
+            this.shattNone.AutoSize = true;
+            this.shattNone.Location = new System.Drawing.Point(6, 19);
+            this.shattNone.Name = "shattNone";
+            this.shattNone.Size = new System.Drawing.Size(51, 17);
+            this.shattNone.TabIndex = 33;
+            this.shattNone.TabStop = true;
+            this.shattNone.Text = "None";
+            this.shattNone.UseVisualStyleBackColor = true;
+            this.shattNone.CheckedChanged += new System.EventHandler(this.shattNone_CheckedChanged);
+            // 
+            // shattAldor
+            // 
+            this.shattAldor.AutoSize = true;
+            this.shattAldor.Location = new System.Drawing.Point(119, 19);
+            this.shattAldor.Name = "shattAldor";
+            this.shattAldor.Size = new System.Drawing.Size(49, 17);
+            this.shattAldor.TabIndex = 35;
+            this.shattAldor.TabStop = true;
+            this.shattAldor.Text = "Aldor";
+            this.shattAldor.UseVisualStyleBackColor = true;
+            this.shattAldor.CheckedChanged += new System.EventHandler(this.shattAldor_CheckedChanged);
+            // 
+            // shattScryer
+            // 
+            this.shattScryer.AutoSize = true;
+            this.shattScryer.Location = new System.Drawing.Point(63, 19);
+            this.shattScryer.Name = "shattScryer";
+            this.shattScryer.Size = new System.Drawing.Size(55, 17);
+            this.shattScryer.TabIndex = 34;
+            this.shattScryer.TabStop = true;
+            this.shattScryer.Text = "Scryer";
+            this.shattScryer.UseVisualStyleBackColor = true;
+            this.shattScryer.CheckedChanged += new System.EventHandler(this.shattScryer_CheckedChanged);
+            // 
+            // enforceMeta
+            // 
+            this.enforceMeta.AutoSize = true;
+            this.enforceMeta.Location = new System.Drawing.Point(9, 152);
+            this.enforceMeta.Name = "enforceMeta";
+            this.enforceMeta.Size = new System.Drawing.Size(178, 17);
+            this.enforceMeta.TabIndex = 32;
+            this.enforceMeta.Text = "Enforce Metagem Requirements";
+            this.enforceMeta.UseVisualStyleBackColor = true;
+            this.enforceMeta.CheckedChanged += new System.EventHandler(this.enforceMeta_CheckedChanged);
             // 
             // upDownTargetHealth
             // 
@@ -898,6 +965,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.upDownTargetHealth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownSurvScalingAbove)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownSurvScalingBelow)).EndInit();
@@ -971,5 +1040,10 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.CheckBox enforceMeta;
+        private System.Windows.Forms.RadioButton shattAldor;
+        private System.Windows.Forms.RadioButton shattScryer;
+        private System.Windows.Forms.RadioButton shattNone;
+        private System.Windows.Forms.GroupBox groupBox5;
     }
 }

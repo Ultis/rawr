@@ -128,6 +128,11 @@ namespace Rawr.Tree
             calculatedStats.BasicStats.TreeOfLifeAura += (calculatedStats.BasicStats.Spirit / 4f);
             calculatedStats.BasicStats.TreeOfLifeAura *= calcOpts.TreeOfLife;
 
+            if (calculatedStats.BasicStats.ShatteredSunRestoProc > 0 && calcOpts.ShattrathFaction == "Aldor")
+            {
+                calculatedStats.BasicStats.AverageHeal += 44; // 1 proc/50 sec
+            }
+
             float baseRegenConstant = 0.00932715221261f;
             float spiritRegen = 0.001f + baseRegenConstant * (float)Math.Sqrt(calculatedStats.BasicStats.Intellect) * calculatedStats.BasicStats.Spirit;
 
@@ -250,40 +255,40 @@ namespace Rawr.Tree
                     CharacterCalculationsTree calcIntValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 10 * multiplier } }) as CharacterCalculationsTree;
 
                     return new ComparisonCalculationBase[] { 
-						new ComparisonCalculationTree("22 Healing") {
-                            OverallPoints = (calcHealingValue.OverallPoints - calcBaseValue.OverallPoints) / multiplier, 
-							HpSPoints = (calcHealingValue.HpSPoints - calcBaseValue.HpSPoints) / multiplier, 
-                            Mp5Points = (calcHealingValue.Mp5Points - calcBaseValue.Mp5Points) / multiplier, 
-                            SurvivalPoints = (calcHealingValue.SurvivalPoints - calcBaseValue.SurvivalPoints) / multiplier, 
-                            ToLPoints = (calcHealingValue.ToLPoints - calcBaseValue.ToLPoints) / multiplier, 
+						new ComparisonCalculationTree(multiplier+"*22 Healing") {
+                            OverallPoints = (calcHealingValue.OverallPoints - calcBaseValue.OverallPoints), 
+							HpSPoints = (calcHealingValue.HpSPoints - calcBaseValue.HpSPoints), 
+                            Mp5Points = (calcHealingValue.Mp5Points - calcBaseValue.Mp5Points), 
+                            SurvivalPoints = (calcHealingValue.SurvivalPoints - calcBaseValue.SurvivalPoints), 
+                            ToLPoints = (calcHealingValue.ToLPoints - calcBaseValue.ToLPoints), 
 						},
-                        new ComparisonCalculationTree("4 Mp5") {
-                            OverallPoints = (calcMp5Value.OverallPoints - calcBaseValue.OverallPoints) / multiplier, 
-							HpSPoints = (calcMp5Value.HpSPoints - calcBaseValue.HpSPoints) / multiplier, 
-                            Mp5Points = (calcMp5Value.Mp5Points - calcBaseValue.Mp5Points) / multiplier, 
-                            SurvivalPoints = (calcMp5Value.SurvivalPoints - calcBaseValue.SurvivalPoints) / multiplier, 
-                            ToLPoints = (calcMp5Value.ToLPoints - calcBaseValue.ToLPoints) / multiplier, 
+                        new ComparisonCalculationTree(multiplier+"*4 Mp5") {
+                            OverallPoints = (calcMp5Value.OverallPoints - calcBaseValue.OverallPoints), 
+							HpSPoints = (calcMp5Value.HpSPoints - calcBaseValue.HpSPoints), 
+                            Mp5Points = (calcMp5Value.Mp5Points - calcBaseValue.Mp5Points), 
+                            SurvivalPoints = (calcMp5Value.SurvivalPoints - calcBaseValue.SurvivalPoints), 
+                            ToLPoints = (calcMp5Value.ToLPoints - calcBaseValue.ToLPoints), 
                         },
-						new ComparisonCalculationTree("10 Spell Haste") {
-                            OverallPoints = (calcHasteValue.OverallPoints - calcBaseValue.OverallPoints) / multiplier, 
-							HpSPoints = (calcHasteValue.HpSPoints - calcBaseValue.HpSPoints) / multiplier, 
-                            Mp5Points = (calcHasteValue.Mp5Points - calcBaseValue.Mp5Points) / multiplier, 
-                            SurvivalPoints = (calcHasteValue.SurvivalPoints - calcBaseValue.SurvivalPoints) / multiplier, 
-                            ToLPoints = (calcHasteValue.ToLPoints - calcBaseValue.ToLPoints) / multiplier,
+						new ComparisonCalculationTree(multiplier+"*10 Spell Haste") {
+                            OverallPoints = (calcHasteValue.OverallPoints - calcBaseValue.OverallPoints), 
+							HpSPoints = (calcHasteValue.HpSPoints - calcBaseValue.HpSPoints), 
+                            Mp5Points = (calcHasteValue.Mp5Points - calcBaseValue.Mp5Points), 
+                            SurvivalPoints = (calcHasteValue.SurvivalPoints - calcBaseValue.SurvivalPoints), 
+                            ToLPoints = (calcHasteValue.ToLPoints - calcBaseValue.ToLPoints),
                         },
-						new ComparisonCalculationTree("10 Spirit") {
-                            OverallPoints = (calcSpiritValue.OverallPoints - calcBaseValue.OverallPoints) / multiplier, 
-							HpSPoints = (calcSpiritValue.HpSPoints - calcBaseValue.HpSPoints) / multiplier, 
-                            Mp5Points = (calcSpiritValue.Mp5Points - calcBaseValue.Mp5Points) / multiplier, 
-                            SurvivalPoints = (calcSpiritValue.SurvivalPoints - calcBaseValue.SurvivalPoints) / multiplier, 
-                            ToLPoints = (calcSpiritValue.ToLPoints - calcBaseValue.ToLPoints) / multiplier,
+						new ComparisonCalculationTree(multiplier+"*10 Spirit") {
+                            OverallPoints = (calcSpiritValue.OverallPoints - calcBaseValue.OverallPoints), 
+							HpSPoints = (calcSpiritValue.HpSPoints - calcBaseValue.HpSPoints), 
+                            Mp5Points = (calcSpiritValue.Mp5Points - calcBaseValue.Mp5Points), 
+                            SurvivalPoints = (calcSpiritValue.SurvivalPoints - calcBaseValue.SurvivalPoints), 
+                            ToLPoints = (calcSpiritValue.ToLPoints - calcBaseValue.ToLPoints),
                         },
-                        new ComparisonCalculationTree("10 Intellect") { 
-                            OverallPoints = (calcIntValue.OverallPoints - calcBaseValue.OverallPoints) / multiplier, 
-							HpSPoints = (calcIntValue.HpSPoints - calcBaseValue.HpSPoints) / multiplier, 
-                            Mp5Points = (calcIntValue.Mp5Points - calcBaseValue.Mp5Points) / multiplier, 
-                            SurvivalPoints = (calcIntValue.SurvivalPoints - calcBaseValue.SurvivalPoints) / multiplier, 
-                            ToLPoints = (calcIntValue.ToLPoints - calcBaseValue.ToLPoints) / multiplier, 
+                        new ComparisonCalculationTree(multiplier+"*10 Intellect") { 
+                            OverallPoints = (calcIntValue.OverallPoints - calcBaseValue.OverallPoints), 
+							HpSPoints = (calcIntValue.HpSPoints - calcBaseValue.HpSPoints), 
+                            Mp5Points = (calcIntValue.Mp5Points - calcBaseValue.Mp5Points), 
+                            SurvivalPoints = (calcIntValue.SurvivalPoints - calcBaseValue.SurvivalPoints), 
+                            ToLPoints = (calcIntValue.ToLPoints - calcBaseValue.ToLPoints), 
                         },
 					};
                 default:
@@ -318,6 +323,7 @@ namespace Rawr.Tree
                 RejuvenationHealBonus = stats.RejuvenationHealBonus,
                 LifebloomTickHealBonus = stats.LifebloomTickHealBonus,
                 HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus,
+                ShatteredSunRestoProc = stats.ShatteredSunRestoProc,
             };
         }
 
@@ -330,7 +336,7 @@ namespace Rawr.Tree
                 + stats.BonusHealingTouchMultiplier + stats.TreeOfLifeAura
                 + stats.ReduceRejuvenationCost + stats.ReduceRegrowthCost + stats.ReduceHealingTouchCost
                 + stats.RejuvenationHealBonus + stats.LifebloomTickHealBonus + stats.HealingTouchFinalHealBonus
-                + stats.SpellCombatManaRegeneration
+                + stats.SpellCombatManaRegeneration + stats.ShatteredSunRestoProc
                 ) > 0;
         }
 

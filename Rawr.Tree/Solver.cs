@@ -54,7 +54,9 @@ namespace Rawr.Tree
                 InnervateMp5 = InnervateManaPerSecond(bestRotation) * 5f;
                 MementoMp5 = MementoManaPerSecond(bestRotation) * 5f;
                 ManaPerCastMp5 = ManaPerCastInManaPerSecond(bestRotation) * 5f;
-                HpS = bestRotation.healPerCycle / bestRotation.bestCycleDuration * FightFraction;
+                HpS = bestRotation.healPerCycle / bestRotation.bestCycleDuration * FightFraction +
+                    // 1 proc / 50 sec
+                    (calculatedStats.BasicStats.ShatteredSunRestoProc > 0 && calcOpts.ShattrathFaction == "Scryer" ? (618 + 682) / 2f * (1 + calculatedStats.BasicStats.SpellCrit/100f) / 50 : 0);
             }
         }
 

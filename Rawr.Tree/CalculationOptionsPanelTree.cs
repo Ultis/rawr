@@ -49,6 +49,22 @@ namespace Rawr.Tree
 
             upDownMaxCycleDuration.Value = (decimal) calcOpts.MaxCycleDuration;
 
+            enforceMeta.Checked = Character.EnforceMetagemRequirements;
+
+            if (calcOpts.ShattrathFaction == "Scryer")
+            {
+                shattScryer.Checked = true;
+            }
+            else if (calcOpts.ShattrathFaction == "Aldor")
+            {
+                shattAldor.Checked = true;
+            }
+            else
+            {
+                calcOpts.ShattrathFaction = "None";
+                shattNone.Checked = true;
+            }
+
             loading = false;
 
             cmbSpellNum_SelectedIndexChanged(null, null);
@@ -348,6 +364,51 @@ namespace Rawr.Tree
                 Character.OnItemsChanged();
             }
         }
+
+        private void enforceMeta_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                Character.EnforceMetagemRequirements = enforceMeta.Checked;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void shattNone_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading && shattNone.Checked)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+                calcOpts.ShattrathFaction = "None";
+
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void shattScryer_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading && shattScryer.Checked)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+                calcOpts.ShattrathFaction = "Scryer";
+
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void shattAldor_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading && shattAldor.Checked)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+                calcOpts.ShattrathFaction = "Aldor";
+
+                Character.OnItemsChanged();
+            }
+        }
     }
     [Serializable]
     public class CalculationOptionsTree : ICalculationOptionBase
@@ -382,6 +443,7 @@ namespace Rawr.Tree
             new String[] {"Nothing"},
         };
         public Boolean InnervateSelf = true;
+        public string ShattrathFaction = "None";
 
         public CalculationOptionsTree()
         {
