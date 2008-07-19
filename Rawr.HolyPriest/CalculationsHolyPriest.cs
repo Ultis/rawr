@@ -131,7 +131,7 @@ namespace Rawr.HolyPriest
             calculatedStats.BasicStats.Spirit = statsRace.Spirit + (calculatedStats.BasicStats.Spirit - statsRace.Spirit) * (1 + character.Talents.GetTalent("Spirit of Redemption").PointsInvested * 0.05f);
 
             calculatedStats.SpiritRegen = (float)Math.Floor(5 * 0.0093271 * calculatedStats.BasicStats.Spirit * Math.Sqrt(calculatedStats.BasicStats.Intellect));
-            calculatedStats.RegenInFSR = (float)Math.Floor((calculatedStats.BasicStats.Mp5 + character.Talents.GetTalent("Meditation").PointsInvested * 0.1f * calculatedStats.SpiritRegen * (1 + calculatedStats.BasicStats.BonusManaregenWhileCastingMultiplier)));
+            calculatedStats.RegenInFSR = (float)Math.Floor((calculatedStats.BasicStats.Mp5 + character.Talents.GetTalent("Meditation").PointsInvested * 0.1f * calculatedStats.SpiritRegen * (1 + calculatedStats.BasicStats.SpellCombatManaRegeneration)));
             calculatedStats.RegenOutFSR = calculatedStats.BasicStats.Mp5 + calculatedStats.SpiritRegen;
             
             calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect / 80) +
@@ -435,7 +435,7 @@ namespace Rawr.HolyPriest
                 Spirit = stats.Spirit,
                 BonusManaPotion = stats.BonusManaPotion,
                 MementoProc = stats.MementoProc,
-                BonusManaregenWhileCastingMultiplier = stats.BonusManaregenWhileCastingMultiplier,
+                SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
                 BonusPoHManaCostReductionMultiplier = stats.BonusPoHManaCostReductionMultiplier,
                 BonusGHHealingMultiplier = stats.BonusGHHealingMultiplier
             };
@@ -445,8 +445,8 @@ namespace Rawr.HolyPriest
         {
             return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
-                + stats.BonusManaPotion + stats.MementoProc + stats.BonusManaregenWhileCastingMultiplier
-                + stats.BonusPoHManaCostReductionMultiplier + stats.BonusManaregenWhileCastingMultiplier) > 0;
+                + stats.BonusManaPotion + stats.MementoProc + stats.SpellCombatManaRegeneration
+                + stats.BonusPoHManaCostReductionMultiplier + stats.SpellCombatManaRegeneration) > 0;
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
