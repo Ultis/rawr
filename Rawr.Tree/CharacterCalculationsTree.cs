@@ -95,19 +95,6 @@ namespace Rawr.Tree
             set;
         }
 
-        /*
-        public float FightFraction
-        {
-            get;
-            set;
-        }
-
-        public SpellRotation BestSpellRotation
-        {
-            get;
-            set;
-        }*/
-
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -117,7 +104,8 @@ namespace Rawr.Tree
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", BasicStats.Spirit.ToString());
-            dictValues.Add("Healing", String.Format("{0}*{1} Spell Damage", BasicStats.Healing, BasicStats.SpellDamageRating));
+            dictValues.Add("Healing", String.Format("{0}*{1} Spell Damage" + (BasicStats.AverageHeal > 0 ? "\n{2} Average Bonus Healing" : ""),
+                BasicStats.Healing, BasicStats.SpellDamageRating, BasicStats.AverageHeal));
             dictValues.Add("Mp5", string.Format("{0}*{1} mp5 outside the 5-second rule",
                 (int) (5*IS5SRRegen),
                 (int) (5*OS5SRRegen)));
