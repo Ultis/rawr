@@ -59,23 +59,26 @@ namespace Rawr.Retribution
                     List<string> labels = new List<string>(new string[]
                     {
                         "Basic Stats:Health",
-					    "Basic Stats:Attack Power",
-					    "Basic Stats:Agility",
 					    "Basic Stats:Strength",
-					    "Basic Stats:Crit",
-					    "Basic Stats:Hit",
-					    "Basic Stats:Expertise Rating",
+					    "Basic Stats:Agility",
+					    "Basic Stats:Attack Power",
+					    "Basic Stats:Crit Rating",
+					    "Basic Stats:Hit Rating",
+					    "Basic Stats:Expertise",
 					    "Basic Stats:Haste Rating",
 					    "Basic Stats:Armor Penetration",
-					    "Basic Stats:Weapon Damage",
-                        "Basic Stats:Spell Damage",
-					    "DPS Breakdown:Crusader Strike",
-                        "DPS Breakdown:Seal",
+					    "Advanced Stats:Weapon Damage*Damage before misses and mitigation",
+					    "Advanced Stats:Attack Speed",
+					    "Advanced Stats:Crit Chance",
+					    "Advanced Stats:Avoided Attacks",
+					    "Advanced Stats:Enemy Mitigation",
                         "DPS Breakdown:White",
+                        "DPS Breakdown:Seal",
+                        "DPS Breakdown:Windfury",
+					    "DPS Breakdown:Crusader Strike",
                         "DPS Breakdown:Judgement",
                         "DPS Breakdown:Consecration",
                         "DPS Breakdown:Exorcism",
-                        "DPS Breakdown:Windfury",
                         "DPS Breakdown:Total DPS"
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
@@ -127,7 +130,7 @@ namespace Rawr.Retribution
 		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Paladin; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation()
         {
-            return  new ComparisonCalculationRetribution();
+            return new ComparisonCalculationRetribution();
         }
 
         public override CharacterCalculationsBase CreateNewCharacterCalculations()
@@ -164,16 +167,16 @@ namespace Rawr.Retribution
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
-            int sealChoice = calcOpts.Seal;
-            character = GetTalents(character);
+            GetTalents(character);
             Stats stats = GetCharacterStats(character, additionalItem);
 
             CharacterCalculationsRetribution calcs = new CharacterCalculationsRetribution();
             calcs.BasicStats = stats;
+            calcs.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
 
-            float dpsWhite = 0f, dpsSeal = 0f, dpsCrusader = 0f, dpsConsecration = 0f, dpsExorcism = 0f, dpsJudgement = 0f, dpsWindfury = 0.0f;
+            float dpsWhite = 0f, dpsSeal = 0f, dpsWindfury = 0f, dpsCrusader = 0f, dpsJudgement = 0f, dpsConsecration = 0f, dpsExorcism = 0f;
             float baseSpeed = 1f, hastedSpeed = 1f, baseDamage = 0f, mitigation = 1f;
-            float whiteHit = 0f, physHitsCrits = 1f, totalMiss = 0f, spellHitsCrits = 1f, spellResist = 0f;
+            float whiteHit = 0f, physCrits = 0f, totalMiss = 0f, spellCrits = 0f, spellResist = 0f;
             float chanceToGlance = 0.25f, glancingAmount = 0.35f;
 
             // Damage Multipliers
@@ -185,6 +188,9 @@ namespace Rawr.Retribution
             float spellPower = 1f + stats.BonusSpellPowerMultiplier; // Covers all % spell damage increases.  Misery, FI.
             float physPower = 1f + stats.BonusPhysicalDamageMultiplier; // Covers all % physical damage increases.  Blood Frenzy, FI.
             float partialResist = 0.953f; // Average of 4.7% damage lost to partial resists on spells
+
+            float physCritMult = 1f + stats.BonusCritMultiplier * 2f;
+            float spellCritMult = 1f + stats.BonusCritMultiplier * 3f;
             float jotc = 219f;
 
             // Avenging Wrath -- Calculating uptime
@@ -242,7 +248,7 @@ namespace Rawr.Retribution
                 if (targetArmor < 0) targetArmor = 0f;
 
                 // Convert armor to mitigation
-                mitigation = 1.0f - (targetArmor / (targetArmor + 10557.5f));
+                mitigation = 1f - (targetArmor / (targetArmor + 10557.5f));
 
                 // Executioner enchant.  ASSUMPTION: Executioner has a 40% uptime.
                 if (stats.ExecutionerProc > 0)
@@ -252,7 +258,7 @@ namespace Rawr.Retribution
                     // Find mitigation while Executioner is up
                     exeArmor = targetArmor - exeArmorPen;
                     if (exeArmor < 0) exeArmor = 0f;
-                    exeMitigation = 1.0f - (exeArmor / (exeArmor + 10557.5f));
+                    exeMitigation = 1f - (exeArmor / (exeArmor + 10557.5f));
 
                     // Weighted average of mitigation with and without Executioner, based on Executioner uptime
                     mitigation = (exeMitigation * exeUptime) + (mitigation * (1 - exeUptime));
@@ -263,22 +269,36 @@ namespace Rawr.Retribution
 
             #region Crits, Misses, Resists
             {
-                float chanceDodged = .065f, chanceMiss = .090f;
-                spellResist = .17f;
+                // Crit: Base .65%
+                physCrits = .0065f;
+                physCrits += stats.CritRating / 2208f;
+                physCrits += stats.Agility / 2500f;
+                physCrits += stats.Crit;
 
-                // Crits include hits before dodge/miss/resist are subtracted out
-                physHitsCrits = 1f + (stats.CritRating / 2208f) * (1f + stats.BonusCritMultiplier * 2f);
-                spellHitsCrits = 1f + (stats.SpellCritRating / 2208f) * (1f + stats.BonusCritMultiplier * 1.5f);
-
-                // Calculate from Rating
-                spellResist -= stats.SpellHitRating / 1262f;
-                chanceDodged -= stats.ExpertiseRating / 1576f;
-                chanceMiss -= stats.HitRating / 1576f;
-
-                // Cap at minimum
-                if (spellResist < .01f) spellResist = .01f;
+                // Dodge: Base 6.5%, Minimum 0%
+                float chanceDodged = .065f;
+                //chanceDodged -= stats.ExpertiseRating / 1576f;
+                chanceDodged -= stats.Expertise * .0025f;
+                calcs.DodgedAttacks = chanceDodged * 100f;
                 if (chanceDodged < 0f) chanceDodged = 0f;
+
+                // Miss: Base 9%, Minimum 0%
+                float chanceMiss = .09f;
+                chanceMiss -= stats.HitRating / 1576f;
+                chanceMiss -= stats.Hit;
+                calcs.MissedAttacks = chanceMiss * 100f;
                 if (chanceMiss < 0f) chanceMiss = 0f;
+
+                // Spell Crit: Base 3.26%  **TODO: include intellect
+                spellCrits = .0326f;
+                spellCrits += stats.SpellCritRating / 2208f;
+                spellCrits += stats.SpellCrit;
+
+                // Resists: Base 17%, Minimum 1%
+                spellResist = .17f;
+                spellResist -= stats.SpellHitRating / 1262f;
+                spellResist -= stats.Hit;
+                if (spellResist < .01f) spellResist = .01f;
 
                 // Total physical misses
                 totalMiss = chanceDodged + chanceMiss;
@@ -301,7 +321,7 @@ namespace Rawr.Retribution
                             break;
                         case "Scryer":
                             dpsSSO = 350f * allDamMult * spellPower;
-                            dpsSSO *= (physHitsCrits - totalMiss);
+                            dpsSSO *= 1f + physCrits * physCritMult - totalMiss;
                             dpsSSO /= 50;  // 50 seconds between procs
                             break;
                     }
@@ -313,7 +333,7 @@ namespace Rawr.Retribution
                 whiteAvgDam = whiteHit * physDamMult;
 
                 // Average white damage per swing
-                whiteAvgDam *= (physHitsCrits - totalMiss - chanceToGlance * glancingAmount) * mitigation;
+                whiteAvgDam *= (1f + physCrits * physCritMult - totalMiss - chanceToGlance * glancingAmount) * mitigation;
 
                 // Total white DPS.  Scryer SSO neck added as "white"
                 dpsWhite = whiteAvgDam / hastedSpeed;
@@ -360,7 +380,7 @@ namespace Rawr.Retribution
                 }
 
                 // Seal average damage per proc
-                sealAvgDam *= (physHitsCrits - totalMiss) * partialResist;
+                sealAvgDam *= (1f + physCrits * physCritMult - totalMiss) * partialResist;
 
                 // Total Seal DPS
                 dpsSeal = sealAvgDam * sealActualPPM / 60f;
@@ -392,7 +412,7 @@ namespace Rawr.Retribution
                 windAvgDam *= physDamMult;
 
                 // Windfury average damage per proc
-                windAvgDam *= (physHitsCrits - totalMiss) * mitigation;
+                windAvgDam *= (1f + physCrits * physCritMult - totalMiss) * mitigation;
 
                 // Total Windfury DPS
                 dpsWindfury = windAvgDam * windPerMin / 60f;
@@ -409,7 +429,7 @@ namespace Rawr.Retribution
                 crusAvgDam *= crusCoeff * physDamMult * (1f + stats.BonusCrusaderStrikeDamageMultiplier);
 
                 // Crusader Strike average damage per swing
-                crusAvgDam *= (physHitsCrits - totalMiss) * mitigation;
+                crusAvgDam *= (1f + physCrits * physCritMult - totalMiss) * mitigation;
 
                 // Total Crusader Strike DPS
                 dpsCrusader = crusAvgDam / crusCD;
@@ -417,6 +437,26 @@ namespace Rawr.Retribution
             #endregion
 
 
+            #region Judgement
+            {
+                float judgeCD = 9.0f, judgeCoeff = 0.429f, judgeAvgDam = 0.0f;
+                float judgeCrit = physCrits + (0.03f * (float)calcOpts.Fanaticism);
+
+                if (calcOpts.Seal == 0) judgeAvgDam = 240f;
+                else judgeAvgDam = 310f;
+                judgeAvgDam = (judgeAvgDam + judgeCoeff * stats.SpellDamageRating) * holyDamMult + judgeCoeff * jotc;
+
+                // Judgement average damage per cast.  JoBlood does not get full resisted.
+                if (calcOpts.Seal == 0) judgeAvgDam *= (1f + judgeCrit * physCritMult - spellResist);
+                else judgeAvgDam *= 1f + judgeCrit * physCritMult;
+                judgeAvgDam *= partialResist;
+
+                // Total Judgement DPS
+                dpsJudgement = judgeAvgDam / judgeCD;
+            }
+            #endregion
+
+            
             #region Consecration
             if (calcOpts.ConsecRank != 0)
             {
@@ -455,7 +495,7 @@ namespace Rawr.Retribution
                 exorAvgDmg = exorAvgDmg * holyDamMult + exorCoeff * jotc;
 
                 // Exorcism average damage per cast  **ADD spell crit
-                exorAvgDmg *= (spellHitsCrits - spellResist) * partialResist;
+                exorAvgDmg *= (1f + (spellCrits / 2f) * spellCritMult - spellResist) * partialResist;
 
                 // Total Exorcism DPS
                 dpsExorcism = exorAvgDmg / exorCD;
@@ -463,39 +503,60 @@ namespace Rawr.Retribution
             #endregion
 
 
-            #region Judgement
-            {
-                float judgeCD = 9.0f, judgeCoeff = 0.429f, judgeAvgDam = 0.0f;
-                float judgeCrit = 1f + (0.03f * (float)calcOpts.Fanaticism) + (stats.CritRating / 22.08f) / 100f;
+            calcs.WeaponDamage = whiteHit * physDamMult;
+            calcs.AttackSpeed = hastedSpeed;
+            calcs.CritChance = 100 * physCrits;
+            calcs.AvoidedAttacks = 100 * totalMiss;
+            calcs.EnemyMitigation = 100 * (1 - mitigation);
 
-                if (calcOpts.Seal == 0) judgeAvgDam = 240f;
-                else judgeAvgDam = 310f;
-                judgeAvgDam = (judgeAvgDam + judgeCoeff * stats.SpellDamageRating) * holyDamMult + judgeCoeff * jotc;
+            calcs.WhiteDPS = dpsWhite;
+            calcs.SealDPS = dpsSeal;
+            calcs.WindfuryDPS = dpsWindfury;
+            calcs.CrusaderDPS = dpsCrusader;
+            calcs.JudgementDPS = dpsJudgement;
+            calcs.ConsecrationDPS = dpsConsecration;
+            calcs.ExorcismDPS = dpsExorcism;
 
-                // Judgement average damage per cast.  JoBlood does not get full resisted.
-                if (calcOpts.Seal == 0) judgeAvgDam *= (judgeCrit - spellResist);
-                else judgeAvgDam *= judgeCrit;
-                judgeAvgDam *= partialResist;
-
-                // Total Judgement DPS
-                dpsJudgement = judgeAvgDam / judgeCD;
-            }
-            #endregion
-
-
-            calcs.WhiteDPSPoints = dpsWhite;
-            calcs.SealDPSPoints = dpsSeal;
-            calcs.WFDPSPoints = dpsWindfury;
-            calcs.CSDPSPoints = dpsCrusader;
-            calcs.ConsDPSPoints = dpsConsecration;
-            calcs.ExoDPSPoints = dpsExorcism;
-            calcs.JudgementDPSPoints = dpsJudgement;
-
-            calcs.DPSPoints = dpsWhite + dpsSeal + dpsWindfury + dpsCrusader + dpsConsecration + dpsExorcism + dpsJudgement;
+            calcs.DPSPoints = dpsWhite + dpsSeal + dpsWindfury + dpsCrusader + dpsJudgement + dpsConsecration + dpsExorcism;
             calcs.SubPoints = new float[] { calcs.DPSPoints };
             calcs.OverallPoints = calcs.DPSPoints;
-            calcs.BasicStats.WeaponDamage = whiteHit * physDamMult;
             return calcs;
+        }
+
+
+        private Stats GetRaceStats(Character character)
+        {
+            Stats statsRace;
+            switch (character.Race)
+            {
+                case Character.CharacterRace.BloodElf:
+                    statsRace = new Stats()
+                    { Strength = 123f, Agility = 79f, Stamina = 118f, Intellect = 87f, Spirit = 88f };
+                    break;
+                case Character.CharacterRace.Draenei:
+                    statsRace = new Stats()
+                    { Strength = 127f, Agility = 74f, Stamina = 119f, Intellect = 84f, Spirit = 89f, Hit = .01f };
+                    break;
+                case Character.CharacterRace.Human:
+                    statsRace = new Stats()
+                    { Strength = 126f, Agility = 77f, Stamina = 120f, Intellect = 83f, Spirit = 89f, BonusSpiritMultiplier = 0.1f, };
+                    //Expertise for Humans
+                    if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
+                        statsRace.Expertise = 5f;
+                    break;
+                case Character.CharacterRace.Dwarf:
+                    statsRace = new Stats()
+                    { Strength = 128f, Agility = 73f, Stamina = 120f, Intellect = 83f, Spirit = 89f, };
+                    break;
+                default:
+                    statsRace = new Stats();
+                    break;
+            }
+            statsRace.AttackPower = 190f;
+            statsRace.Health = 3197f;
+            statsRace.Mana = 2673f;
+
+            return statsRace;
         }
 
 
@@ -513,102 +574,29 @@ namespace Rawr.Retribution
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
            
-            Stats statsRace;
-            switch (character.Race)
-            {
-                case Character.CharacterRace.BloodElf:
-                    statsRace = new Stats()
-                    {
-                        Health = 4377f,
-                        Mana = 2335f,
-                        Strength = 123f,
-                        Agility = 79f,
-                        Stamina = 118f,
-                        Intellect = 87f,
-                        Spirit = 88f,
-                        AttackPower = 436f,
-                        CritRating = 3.81f * 22.08f
-                    };
-                    break;
-                case Character.CharacterRace.Draenei:
-                    statsRace = new Stats()
-                    {
-                        Health = 4387f,
-                        Mana = 2335f,
-                        Strength = 127f,
-                        Agility = 74f,
-                        Stamina = 119f,
-                        Intellect = 84f,
-                        Spirit = 147f,
-                        AttackPower = 444f,
-                        CritRating = 3.61f * 22.08f,
-                        HitRating = 1f * 15.76f
-                    };
-                    break;
-                case Character.CharacterRace.Human:
-                    statsRace = new Stats()
-                    {
-                        Health = 4397f,
-                        Mana = 2335f,
-                        Strength = 126f,
-                        Agility = 77f,
-                        Stamina = 120f,
-                        Intellect = 83f,
-                        Spirit = 89f,
-                        BonusSpiritMultiplier = 0.1f,
-                        AttackPower = 442f,
-                        CritRating = 3.73f * 22.08f                        
-                    };
-                    //Expertise for Humans
-                    if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.TwoHandMace
-                        || character.MainHand.Type == Item.ItemType.TwoHandSword))
-                    {
-                        statsRace.ExpertiseRating = 5f * 3.9f;
-                    }
-                    break;
-                case Character.CharacterRace.Dwarf:
-                    statsRace = new Stats()
-                    {
-                        Health = 4397f,
-                        Mana = 2335f,
-                        Strength = 128f,
-                        Agility = 73f,
-                        Stamina = 120f,
-                        Intellect = 83f,
-                        Spirit = 89f,
-                        AttackPower = 446f,
-                        CritRating = 3.57f * 22.08f
-                    };
-                    break;
-                default:
-                    statsRace = new Stats();
-                    break;
-            }
-
-            
-
+            Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
-            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            Stats statsTalents = new Stats()
+            {
+                Crit = .01f * ((float)calcOpts.Conviction + (float)calcOpts.SanctifiedSeals),
+                Hit = .01f * (float)calcOpts.Precision,
+                SpellCrit = .01f * (float)calcOpts.SanctifiedSeals,
+                BonusStrengthMultiplier = .02f * (float)calcOpts.DivineStrength
+            };
+            Stats statsTotal = new Stats();
+            Stats statsGearEnchantsBuffs;
 
             // Libram of Divine Judgement
             if (character.Ranged != null && character.Ranged.Id == 33503 && calcOpts.Seal == 0)
                 statsBaseGear.AttackPower += character.Ranged.Stats.JudgementOfCommandAttackPowerBonus;
 
-            // Mongoose Haste% and Executioner moved to GetCharacterCalculations
             // Mongoose  **ASSUMPTION: Mongoose has a 40% uptime
             if (statsEnchants.MongooseProc > 0)
                 statsEnchants.Agility += 120f * 0.4f;
-                //statsBuffs.HasteRating += (15.76f * 2f) * 0.4f;
-
-            // Executioner
-            //if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
-            //{
-            //    statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));                
-            //}
 
             // Expose Weakness
             if (statsBuffs.ExposeWeakness > 0)
@@ -634,47 +622,37 @@ namespace Rawr.Retribution
                     (float)Math.Pow(1.03f, calcOpts.FerociousInspiration)) - 1f;
             }
 
-            //base
-            Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
-            TalentTree tree = character.Talents;
-            float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
-            float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
-            float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
-            float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier));
+            statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs + statsRace + statsTalents;
 
+            statsTotal.BonusAttackPowerMultiplier = statsGearEnchantsBuffs.BonusAttackPowerMultiplier;
+            statsTotal.BonusAgilityMultiplier = statsGearEnchantsBuffs.BonusAgilityMultiplier;
+            statsTotal.BonusStrengthMultiplier = statsGearEnchantsBuffs.BonusStrengthMultiplier;
+            statsTotal.BonusStaminaMultiplier = statsGearEnchantsBuffs.BonusStaminaMultiplier;
 
-            Stats statsTotal = new Stats();
-            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
-            statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
-            statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
-            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
+            statsTotal.Agility = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
+            statsTotal.Strength = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
+            statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
-            statsTotal.Agility = (agiBase + (float)Math.Floor((agiBase * statsBuffs.BonusAgilityMultiplier) + agiBonus * (1 + statsBuffs.BonusAgilityMultiplier)));
-            statsTotal.Strength = (strBase + (float)Math.Floor((strBase * statsBuffs.BonusStrengthMultiplier) + strBonus * (1 + statsBuffs.BonusStrengthMultiplier)));
-			statsTotal.Strength *= 1f + 0.02f * (float)calcOpts.DivineStrength;
-            statsTotal.Stamina = (staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier)));          
+            statsTotal.Health = (float)Math.Floor(statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
+            statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
+            statsTotal.AttackPower = (float)Math.Floor((statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2) * (1f + statsTotal.BonusAttackPowerMultiplier));
 
-            statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina-staBase) * 10f))));
-            statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + (statsTotal.Strength - strBase) * 2.0f) * 
-                (1f + statsTotal.BonusAttackPowerMultiplier));
-
-            statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
+            statsTotal.Crit = statsGearEnchantsBuffs.Crit;
+            statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
             statsTotal.CritRating += statsGearEnchantsBuffs.CritMeleeRating + statsGearEnchantsBuffs.LotPCritRating;
-            statsTotal.CritRating += 22.08f * ((statsTotal.Agility - agiBase) / 25f);
-			statsTotal.CritRating += 22.08f * ((float)calcOpts.Conviction + (float)calcOpts.SanctifiedSeals);
-            statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
-			statsTotal.HitRating += 15.76f * (float)calcOpts.Precision;
-            statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
-            statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
-            statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
+            statsTotal.Hit = statsGearEnchantsBuffs.Hit;
+            statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
+            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
+            statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
+            statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 3.94);
+            statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
 
+            statsTotal.SpellCrit = statsGearEnchantsBuffs.SpellCrit;
             statsTotal.SpellCritRating = statsGearEnchantsBuffs.SpellCritRating;
-            statsTotal.SpellCritRating += (22.08f * (float)calcOpts.SanctifiedSeals);
             statsTotal.SpellHitRating = statsGearEnchantsBuffs.SpellHitRating;
-            statsTotal.SpellHitRating += (12.62f * (float)calcOpts.Precision);
             statsTotal.SpellDamageRating = statsGearEnchantsBuffs.SpellDamageRating;
             statsTotal.SpellDamageRating += statsGearEnchantsBuffs.SpellDamageFromSpiritPercentage * statsGearEnchantsBuffs.Spirit;
 
@@ -695,7 +673,7 @@ namespace Rawr.Retribution
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-            CharacterCalculationsRetribution baseCalc,  calc;
+            CharacterCalculationsRetribution baseCalc, calc;
             ComparisonCalculationBase comparison;
             float[] subPoints;
 
@@ -768,6 +746,7 @@ namespace Rawr.Retribution
                 Strength = stats.Strength,
                 Agility = stats.Agility,
                 Stamina = stats.Stamina,
+                Intellect = stats.Intellect,
                 Spirit = stats.Spirit,
 
                 AttackPower = stats.AttackPower,
@@ -823,7 +802,7 @@ namespace Rawr.Retribution
         /// Saves the talents for the character
         /// </summary>
         /// <param name="character">The character for whom the talents should be saved</param>
-        public Character GetTalents(Character character)
+        public void GetTalents(Character character)
         {
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             if (!calcOpts.TalentsSaved)
@@ -852,7 +831,6 @@ namespace Rawr.Retribution
                     calcOpts.TalentsSaved = true;
                 }
             }
-            return character;
         }
     }
 }

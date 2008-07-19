@@ -187,7 +187,7 @@ namespace Rawr.Retribution
                         new Item() { Stats = new Stats() { CritRating = 10 } },
                         new Item() { Stats = new Stats() { ArmorPenetration = 66.67f } },
                         new Item() { Stats = new Stats() { AttackPower = 20 } },
-                        new Item() { Stats = new Stats() { ExpertiseRating=10 } }
+                        new Item() { Stats = new Stats() { ExpertiseRating = 10 } }
                     };
             string[] statList = new string[] {
                         "Strength",

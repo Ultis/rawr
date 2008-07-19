@@ -27,55 +27,54 @@ namespace Rawr.Retribution
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
-        private float _csDPSPoints;
-        public float CSDPSPoints
+
+        private float _whiteDPS;
+        public float WhiteDPS
         {
-            get { return _csDPSPoints; }
-            set { _csDPSPoints = value; }
-        }
-        private float _sealDPSPoints;
-        public float SealDPSPoints
-        {
-            get { return _sealDPSPoints; }
-            set { _sealDPSPoints = value; }
-        }
-        private float judgementDPSPoints;
-        public float JudgementDPSPoints
-        {
-            get { return judgementDPSPoints; }
-            set { judgementDPSPoints = value; }
-        }
-        private float _whiteDPSPoints;
-        public float WhiteDPSPoints
-        {
-            get { return _whiteDPSPoints; }
-            set { _whiteDPSPoints = value; }
-        }
-        private float _consDPSPoints;
-        public float ConsDPSPoints
-        {
-            get { return _consDPSPoints; }
-            set { _consDPSPoints = value; }
-        }
-        private float _exoDPSPoints;
-        public float ExoDPSPoints
-        {
-            get { return _exoDPSPoints; }
-            set { _exoDPSPoints= value; }
+            get { return _whiteDPS; }
+            set { _whiteDPS = value; }
         }
 
-        private float _wfDPSPoints;
-        public float WFDPSPoints
+        private float _sealDPS;
+        public float SealDPS
         {
-            get { return _wfDPSPoints; }
-            set { _wfDPSPoints = value; }
+            get { return _sealDPS; }
+            set { _sealDPS = value; }
         }
 
-        private Stats _basicStats;
-        public Stats BasicStats
+        private float _windfuryDPS;
+        public float WindfuryDPS
         {
-            get { return _basicStats; }
-            set { _basicStats = value; }
+            get { return _windfuryDPS; }
+            set { _windfuryDPS = value; }
+        }
+
+        private float _crusaderDPS;
+        public float CrusaderDPS
+        {
+            get { return _crusaderDPS; }
+            set { _crusaderDPS = value; }
+        }
+
+        private float judgementDPS;
+        public float JudgementDPS
+        {
+            get { return judgementDPS; }
+            set { judgementDPS = value; }
+        }
+
+        private float _consecrationDPS;
+        public float ConsecrationDPS
+        {
+            get { return _consecrationDPS; }
+            set { _consecrationDPS = value; }
+        }
+
+        private float _exorcismDPS;
+        public float ExorcismDPS
+        {
+            get { return _exorcismDPS; }
+            set { _exorcismDPS= value; }
         }
 
         private int _targetLevel;
@@ -83,6 +82,27 @@ namespace Rawr.Retribution
         {
             get { return _targetLevel; }
             set { _targetLevel = value; }
+        }
+
+        private float _weaponDamage;
+        public float WeaponDamage
+        {
+            get { return _weaponDamage; }
+            set { _weaponDamage = value; }
+        }
+
+        private float _attackSpeed;
+        public float AttackSpeed
+        {
+            get { return _attackSpeed; }
+            set { _attackSpeed = value; }
+        }
+
+        private float _critChance;
+        public float CritChance
+        {
+            get { return _critChance; }
+            set { _critChance = value; }
         }
 
         private float _avoidedAttacks;
@@ -106,77 +126,77 @@ namespace Rawr.Retribution
             set { _missedAttacks = value; }
         }
 
-        private float _whiteCrit;
-        public float WhiteCrit
+        private float _enemyMitigation;
+        public float EnemyMitigation
         {
-            get { return _whiteCrit; }
-            set { _whiteCrit = value; }
+            get { return _enemyMitigation; }
+            set { _enemyMitigation = value; }
         }
 
-        private float _yellowCrit;
-        public float YellowCrit
+        private Stats _basicStats;
+        public Stats BasicStats
         {
-            get { return _yellowCrit; }
-            set { _yellowCrit = value; }
+            get { return _basicStats; }
+            set { _basicStats = value; }
         }
 
-        private float _attackSpeed;
-        public float AttackSpeed
-        {
-            get { return _attackSpeed; }
-            set { _attackSpeed = value; }
-        }
-
-        private float _armorMitigation;
-        public float ArmorMitigation
-        {
-            get { return _armorMitigation; }
-            set { _armorMitigation = value; }
-        }
-
-        private float _cycleTime;
-        public float CycleTime
-        {
-            get { return _cycleTime; }
-            set { _cycleTime = value; }
-        }
-
-        private float _meleeDamage;
-        public float MeleeDamage
-        {
-            get { return _meleeDamage; }
-            set { _meleeDamage = value; }
-        }
-        
-        public Character character { get; set; }
+        public List<Buff> ActiveBuffs { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
-            CalculationsRetribution cr = new CalculationsRetribution();
+            float critRating = BasicStats.CritRating;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Judgement of the Crusade")))
+                critRating -= 3444f / 52f;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Leader of the Pack")))
+                critRating -= 22.08f * 5;
+
+            float hitRating = BasicStats.HitRating;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Faerie Fire")))
+                hitRating -= 47.3077f;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+                hitRating -= 15.769f;
+
+            float armorPenetration = BasicStats.ArmorPenetration;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Faerie Fire")))
+                armorPenetration -= 610f;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor (x5)")))
+                armorPenetration -= 2600f;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Curse of Recklessness")))
+                armorPenetration -= 800f;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor (5cp)")))
+                armorPenetration -= 2050f;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Expose Armor (5cp)")))
+                armorPenetration -= 1025f;
+
+            float attackPower = BasicStats.AttackPower;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Hunter's Mark")))
+                attackPower -= 110f * (1f + BasicStats.BonusAttackPowerMultiplier);
 
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             dictValues.Add("Health", BasicStats.Health.ToString("N2"));
-
-            dictValues.Add("Agility", BasicStats.Agility.ToString("N2"));
             dictValues.Add("Strength", BasicStats.Strength.ToString("N2"));
-
-            dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("N2"));
-
-            dictValues.Add("Hit", BasicStats.HitRating.ToString() + " (" + (BasicStats.HitRating / 15.76f).ToString("N2") +"% )");
-            dictValues.Add("Crit", BasicStats.CritRating.ToString() + " (" + (BasicStats.CritRating /22.08f).ToString("N2") +"% )");
-            dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString("N2"));
+            dictValues.Add("Agility", BasicStats.Agility.ToString("N2"));
+            dictValues.Add("Attack Power", attackPower.ToString("N2"));
+            dictValues.Add("Crit Rating", critRating.ToString("N2"));
+            dictValues.Add("Hit Rating", hitRating.ToString("N2"));
+            dictValues.Add("Expertise", BasicStats.Expertise.ToString("N2"));
             dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("N2"));
-            dictValues.Add("Armor Penetration", BasicStats.ArmorPenetration.ToString());
-            dictValues.Add("Spell Damage", BasicStats.SpellDamageRating.ToString());
+            dictValues.Add("Armor Penetration", armorPenetration.ToString());
+
+            dictValues.Add("Weapon Damage", WeaponDamage.ToString("N2"));
+            dictValues.Add("Attack Speed", AttackSpeed.ToString("N2"));
+            dictValues.Add("Crit Chance", CritChance.ToString("N2") + "%");
+            dictValues.Add("Avoided Attacks", AvoidedAttacks.ToString("N2") + "%");
+            dictValues.Add("Enemy Mitigation", EnemyMitigation.ToString("N2") + "%");
+
+            dictValues.Add("White", WhiteDPS.ToString("N2"));
+            dictValues.Add("Seal", SealDPS.ToString("N2"));
+            dictValues.Add("Windfury", WindfuryDPS.ToString("N2"));
+            dictValues.Add("Crusader Strike", CrusaderDPS.ToString("N2"));
+            dictValues.Add("Judgement", JudgementDPS.ToString("N2"));
+            dictValues.Add("Consecration", ConsecrationDPS.ToString("N2"));
+            dictValues.Add("Exorcism", ExorcismDPS.ToString("N2"));
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
-            dictValues.Add("Crusader Strike", CSDPSPoints.ToString("N2"));
-            dictValues.Add("Seal", SealDPSPoints.ToString("N2"));
-            dictValues.Add("White", WhiteDPSPoints.ToString("N2"));
-            dictValues.Add("Judgement", JudgementDPSPoints.ToString("N2"));
-            dictValues.Add("Consecration", ConsDPSPoints.ToString("N2"));
-            dictValues.Add("Exorcism", ExoDPSPoints.ToString("N2"));
-            dictValues.Add("Windfury", WFDPSPoints.ToString("N2"));
-            dictValues.Add("Weapon Damage", BasicStats.WeaponDamage.ToString("N2"));
 
             return dictValues;
            
