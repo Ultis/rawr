@@ -936,6 +936,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 // TODO take advantage of segmentation data if available
                 //double drum = Math.Min(drums, SequenceItem.Calculations.GlobalCooldown);
                 SequenceItem item = InsertIndex(SequenceItem.Calculations.ColumnDrumsOfBattle, drums / groups.Count, 0);
+                item.Segment = groups[i].Segment;
                 item.Group.Add(groups[i]);
                 groups[i].Add(item);
                 //drums -= drum;

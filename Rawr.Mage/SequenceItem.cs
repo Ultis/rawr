@@ -112,6 +112,10 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 return segment;
             }
+            set
+            {
+                segment = value;
+            }
         }
 
         public double Duration;

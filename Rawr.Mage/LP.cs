@@ -383,7 +383,7 @@ namespace Rawr.Mage
                         }
                     }
 
-                    double maxc = eps;
+                    double maxc = 0.0;
                     int maxj = -1;
                     for (j = 0; j < cols; j++)
                     {
@@ -636,16 +636,13 @@ namespace Rawr.Mage
             Array.Clear(_blacklist, 0, rows + cols);
 
             bool primalPatched = false;
+            bool blacklistAllowed = true;
 
             fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
             fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
             fixed (bool* blacklist = _blacklist)
             {
                 ccols = c + cols;
-                /*for (k = 0; k < numExtraConstraints; k++)
-                {
-                    if (Array.IndexOf(_B, cols + baseRows + k) == -1) System.Diagnostics.Debug.WriteLine("WARNING!!! extra constraint not in basis at start of dual");
-                }*/
                 do
                 {
                 DECOMPOSE:
@@ -671,10 +668,7 @@ namespace Rawr.Mage
 
                     if (lu.Singular)
                     {
-                        //System.Diagnostics.Debug.WriteLine("Basis singular");
-                        // when restricting constraints sometimes the basis becomes singular
                         // try to patch the basis by replacing singular columns with corresponding slacks of singular rows
-                        // EDIT: with the latest fixes this doesn't happen anymore, yay
                         redecompose = 0;
                         for (j = lu.Rank; j < rows; j++)
                         {
@@ -685,21 +679,7 @@ namespace Rawr.Mage
                             V[vindex] = B[singularColumn];
                             B[singularColumn] = slackColumn;
                         }
-                        //System.Diagnostics.Debug.WriteLine("Patching singular basis.");
-                        /*for (k = 0; k < numExtraConstraints; k++)
-                        {
-                            if (Array.IndexOf(_B, cols + baseRows + k) == -1) System.Diagnostics.Debug.WriteLine("WARNING!!! extra constraint not in basis after basis patch");
-                        }*/
                         goto DECOMPOSE;
-                        /*for (i = 0; i < rows; i++)
-                        {
-                            B[i] = cols + i;
-                        }
-                        for (j = 0; j < cols; j++)
-                        {
-                            V[j] = j;
-                        }
-                        return SolvePrimal();*/
                     }
 
                     if (needsRecalc)
@@ -799,12 +779,12 @@ namespace Rawr.Mage
                         needsRecalc = false;
                     }
 
-                    double mind = -eps;
+                    double mind = 0.0;
                     int mini = -1;
                     for (i = 0; i < rows; i++)
                     {
                         double costi = d[i];
-                        if (costi < mind - eps && !blacklist[B[i]]) // add eps barriers so that we stabilize pivot order
+                        if (costi < mind - eps) // add eps barriers so that we stabilize pivot order
                         {
                             mind = costi;
                             mini = i;
@@ -1030,24 +1010,31 @@ namespace Rawr.Mage
                     double maxnorm = 0.0;
                     for (cj = c, wdj = wd, Vj = V, j = 0; j < cols; j++, cj++, wdj++, Vj++)
                     {
-                        *wdj = 0;
                         int col = *Vj;
-                        sCol1 = sparseCol[col];
-                        sCol2 = sparseCol[col + 1];
-                        sRow = sparseRow + sCol1;
-                        sRow2 = sparseRow + sCol2;
-                        sValue = sparseValue + sCol1;
-                        for (; sRow < sRow2; sRow++, sValue++)
+                        if (col < cols)
                         {
-                            *wdj += *sValue * x[*sRow];
+                            *wdj = 0;
+                            sCol1 = sparseCol[col];
+                            sCol2 = sparseCol[col + 1];
+                            sRow = sparseRow + sCol1;
+                            sRow2 = sparseRow + sCol2;
+                            sValue = sparseValue + sCol1;
+                            for (; sRow < sRow2; sRow++, sValue++)
+                            {
+                                *wdj += *sValue * x[*sRow];
+                            }
+                            for (k = 0; k < numExtraConstraints; k++)
+                            {
+                                *wdj += D[k * (cols + rows + 1) + col] * x[baseRows + k];
+                            }
                         }
-                        for (k = 0; k < numExtraConstraints; k++)
+                        else
                         {
-                            *wdj += D[k * (cols + rows + 1) + col] * x[baseRows + k];
+                            *wdj = x[col - cols];
                         }
                         double v = Math.Abs(*wdj);
                         if (v > maxnorm) maxnorm = v;
-                        if (*wdj < -eps && *cj < eps)
+                        if (*wdj < -eps && *cj < eps && !blacklist[col])
                         {
                             // verify the new c[j] will not go above eps
                             // c[j] - minr * wd[j] > eps
@@ -1074,6 +1061,26 @@ namespace Rawr.Mage
 
                     if (minj == -1)
                     {
+                        // if we blacklisted some variables give it another try
+                        if (blacklistAllowed)
+                        {
+                            bool retry = false;
+                            for (i = 0; i < cols + rows; i++)
+                            {
+                                if (blacklist[i])
+                                {
+                                    blacklist[i] = false;
+                                    retry = true;
+                                }
+                            }
+                            if (retry)
+                            {
+                                blacklistAllowed = false;
+                                redecompose = 0;
+                                needsRecalc = true;
+                                continue;
+                            }
+                        }
                         // unfeasible, return null solution, don't pursue this branch because no solution exists here
                         double[] ret = new double[cols + 1];
                         //System.Diagnostics.Debug.WriteLine("Dual unfeasible after " + round);
@@ -1085,16 +1092,10 @@ namespace Rawr.Mage
                     //System.Diagnostics.Trace.WriteLine("Pivot stability " + Math.Abs(wd[minj]) / maxnorm);
                     if (pivotStability < 0.0001)
                     {
-                        if (redecompose == maxRedecompose && pivotStability < 0.000001)
+                        if (redecompose == maxRedecompose)
                         {
-                            // basis is stable so it must be something with the pivot
-                            // blacklist it
-                            blacklist[B[mini]] = true;
-                            continue;
-                        }
-                        else if (redecompose == maxRedecompose)
-                        {
-                            // we just refactored and it's probably not horrible bad
+                            // we just refactored, so not much else we can do right now
+                            // if pivot actually fails we'll blacklist it
                         }
                         else
                         {
@@ -1126,12 +1127,13 @@ namespace Rawr.Mage
                     //System.Diagnostics.Trace.WriteLine(w[mini] + " = " + wd[minj]);
 
                     double rp = d[mini] / wd[minj];
+                    if (rp > 1000.0) needsRecalc = true; // if we're making so big jumps in primal space then we have to be a lot more careful with stability
 
                     // update primal and dual
                     for (i = 0; i < rows; i++)
                     {
                         d[i] -= rp * w[i];
-                        u[i] -= minr * x[i];
+                        //u[i] -= minr * x[i];
                     }
                     d[mini] = rp;
                     for (cj = c, wdj = wd; cj < ccols; cj++, wdj++)
@@ -1149,10 +1151,21 @@ namespace Rawr.Mage
                         {
                             if (redecompose == maxRedecompose - 1)
                             {
-                                redecompose = 0;
-                                needsRecalc = true; // forces recalc
-                                blacklist[B[mini]] = true;
-                                continue;
+                                // we just refactored so the factorization is the best we can get
+                                // and shows that previous basis was not singular (could be close to it though)
+                                // the fact that we got a singular basis shows that
+                                // e_mini A_B^-1 A_N_minj == 0
+                                // this however is equivalent to wd[minj] == 0
+                                // this means that in the ratio test we picked an element that looked like != 0, but wasn't
+                                // due to ill conditioning
+                                // therefore we can blacklist it
+                                if (blacklistAllowed) // otherwise we'll make the swap and patch singularity in next phase, beware of oscillation
+                                {
+                                    blacklist[V[minj]] = true;
+                                    redecompose = 0;
+                                    needsRecalc = true;
+                                    continue;
+                                }
                             }
                             else
                             {
@@ -1174,239 +1187,6 @@ namespace Rawr.Mage
             }            
             // just in case
             return new double[cols + 1];
-        }
-
-        private static double[] LPSolve(double[,] data, int rows, int cols)
-        {
-            double[,] a = data;
-            int[] XN;
-            int[] XB;
-
-            bool feasible;
-            int i, j, r, c, t;
-            double v, bestv;
-
-            bestv = 0;
-            c = 0;
-            r = 0;
-
-            XN = new int[cols];
-            XB = new int[rows];
-
-            for (i = 0; i < rows; i++)
-                XB[i] = cols + i;
-            for (j = 0; j < cols; j++)
-                XN[j] = j;
-
-            int round = 0;
-
-            do
-            {
-                feasible = true;
-                // check feasibility
-                for (i = 0; i < rows; i++)
-                {
-                    if (a[i, cols] < 0)
-                    {
-                        feasible = false;
-                        bestv = 0;
-                        for (j = 0; j < cols; j++)
-                        {
-                            if (a[i, j] < bestv)
-                            {
-                                bestv = a[i, j];
-                                c = j;
-                            }
-                        }
-                        break;
-                    }
-                }
-                if (feasible)
-                {
-                    // standard problem
-                    bestv = 0;
-                    for (j = 0; j < cols; j++)
-                    {
-                        if (a[rows, j] > bestv)
-                        {
-                            bestv = a[rows, j];
-                            c = j;
-                        }
-                    }
-                }
-                if (bestv == 0) break;
-                bestv = -1;
-                for (i = 0; i < rows; i++)
-                {
-                    if (a[i, c] > 0)
-                    {
-                        v = a[i, cols] / a[i, c];
-                        if (bestv == -1 || v < bestv)
-                        {
-                            bestv = v;
-                            r = i;
-                        }
-                    }
-                }
-                if (bestv == -1) break;
-                v = a[r, c];
-                a[r, c] = 1;
-                for (j = 0; j <= cols; j++)
-                {
-                    a[r, j] = a[r, j] / v;
-                }
-                for (i = 0; i <= rows; i++)
-                {
-                    if (i != r)
-                    {
-                        v = a[i, c];
-                        a[i, c] = 0;
-                        for (j = 0; j <= cols; j++)
-                        {
-                            a[i, j] = a[i, j] - a[r, j] * v;
-                            if (a[i, j] < 0.00000000001 && a[i, j] > -0.00000000001) a[i, j] = 0; // compensate for floating point errors
-                        }
-                    }
-                }
-                t = XN[c];
-                XN[c] = XB[r];
-                XB[r] = t;
-                round++;
-            } while (round < 5000); // fail safe for infinite loops caused by floating point instability
-
-            double[] ret = new double[cols + 1];
-            for (i = 0; i < rows; i++)
-            {
-                if (XB[i] < cols) ret[XB[i]] = a[i, cols];
-            }
-            ret[cols] = -a[rows, cols];
-
-            return ret;
-        }
-
-        private static unsafe double[] LPSolveUnsafe(double[,] data, int rows, int cols)
-        {
-            double[] ret = new double[cols + 1];
-            int[] xn = new int[cols + 1];
-            int[] xb = new int[rows + 1];
-            if (cols > 30000) return ret; // prevent unstable solutions
-
-            double* ai, aij, arows;
-
-            fixed (double* a = data)
-            {
-                fixed (int* XN = xn, XB = xb)
-                {
-                    arows = a + rows * (cols + 1);
-
-                    bool feasible;
-                    int i, j, r, c, t;
-                    double v, bestv;
-
-                    bestv = 0;
-                    c = 0;
-                    r = 0;
-
-                    for (i = 0; i < rows; i++)
-                        XB[i] = cols + i;
-                    for (j = 0; j < cols; j++)
-                        XN[j] = j;
-
-                    int round = 0;
-
-                    do
-                    {
-                        feasible = true;
-                        // check feasibility
-                        for (i = 0, ai = a; i < rows; i++, ai += (cols + 1))
-                        {
-                            if (ai[cols] < 0)
-                            {
-                                feasible = false;
-                                bestv = 0;
-                                for (j = 0, aij = ai; j < cols; j++, aij++)
-                                {
-                                    if (*aij < bestv)
-                                    {
-                                        bestv = *aij;
-                                        c = j;
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                        if (feasible)
-                        {
-                            // standard problem
-                            bestv = 0;
-                            for (j = 0, aij = arows; j < cols; j++, aij++)
-                            {
-                                if (*aij > bestv)
-                                {
-                                    bestv = *aij;
-                                    c = j;
-                                }
-                            }
-                        }
-                        if (bestv == 0) break;
-                        bestv = -1;
-                        for (i = 0, ai = a; i < rows; i++, ai += (cols + 1))
-                        {
-                            if (ai[c] > 0)
-                            {
-                                v = ai[cols] / ai[c];
-                                if (bestv == -1 || v < bestv)
-                                {
-                                    if (ai[c] > 0.0000000001)
-                                    {
-                                        bestv = v;
-                                        r = i;
-                                    }
-                                    else
-                                    {
-                                        ai[c] = 0;
-                                    }
-                                }
-                            }
-                        }
-                        if (bestv == -1) break;
-                        aij = a + r * (cols + 1) + c;
-                        v = *aij;
-                        *aij = 1;
-                        ai = a + r * (cols + 1);
-                        for (j = 0, aij = ai; j <= cols; j++, aij++)
-                        {
-                            *aij /= v;
-                        }
-                        for (i = 0, ai = a; i <= rows; i++, ai += (cols + 1))
-                        {
-                            if (i != r)
-                            {
-                                v = ai[c];
-                                ai[c] = 0;
-                                for (j = 0, aij = ai; j <= cols; j++, aij++)
-                                {
-                                    *aij -= a[r * (cols + 1) + j] * v;
-                                    if (*aij < 0.00000000001 && *aij > -0.00000000001) *aij = 0; // compensate for floating point errors
-                                }
-                            }
-                        }
-                        //System.Diagnostics.Debug.WriteLine(round + ": " + XN[c] + " <=> " + XB[r]);
-                        t = XN[c];
-                        XN[c] = XB[r];
-                        XB[r] = t;
-                        round++;
-                        if (round == 5000) round++;
-                    } while (round < 5000); // fail safe for infinite loops caused by floating point instability
-
-                    for (i = 0; i < rows; i++)
-                    {
-                        if (XB[i] < cols) ret[XB[i]] = a[i * (cols + 1) + cols];
-                    }
-                    ret[cols] = -a[rows * (cols + 1) + cols];
-                }
-            }
-            return ret;
         }
     }
 }

@@ -10,7 +10,6 @@ namespace Rawr.Mage
         private int cCols;
         private CharacterCalculationsMage calculations;
         internal LP lp;
-        internal double[] rowScale;
         private double[] compactSolution = null;
         private bool needsDual;
         private int segments;
@@ -18,13 +17,33 @@ namespace Rawr.Mage
         //public int[] disabledHex;
 
         private double* pRowScale;
+        private double* pColumnScale;
         private double* pCost;
         private double* pB;
         private SparseMatrix sparseMatrix;
 
-        public void BeginUnsafe(double* pRowScale, double* pCost, double* pB, double* pData, double* pValue, int* pRow, int* pCol)
+        private static int maxRows = 0;
+        private static int maxCols = 0;
+        internal static double[] rowScale;
+        internal static double[] columnScale;
+
+        static SolverLP()
+        {
+            maxRows = 200;
+            maxCols = 5000;
+            RecreateArrays();
+        }
+
+        private static void RecreateArrays()
+        {
+            rowScale = new double[maxRows];
+            columnScale = new double[maxCols];
+        }
+
+        public void BeginUnsafe(double* pRowScale, double* pColumnScale, double* pCost, double* pB, double* pData, double* pValue, int* pRow, int* pCol)
         {
             this.pRowScale = pRowScale;
+            this.pColumnScale = pColumnScale;
             this.pCost = pCost;
             this.pB = pB;
             sparseMatrix = lp.A;
@@ -59,20 +78,26 @@ namespace Rawr.Mage
             clone.compactSolution = null;
             clone.lp = lp.Clone();
             if (Log != null) clone.Log = new StringBuilder(Log.ToString());
-            if (rowMinManaConsumable != null) rowMinManaConsumable = (int[])rowMinManaConsumable.Clone();
-            if (rowMaxManaConsumable != null) rowMaxManaConsumable = (int[])rowMaxManaConsumable.Clone();
+            if (rowMinIntegralConsumable != null) rowMinIntegralConsumable = (int[])rowMinIntegralConsumable.Clone();
+            if (rowMaxIntegralConsumable != null) rowMaxIntegralConsumable = (int[])rowMaxIntegralConsumable.Clone();
             //if (disabledHex != null) clone.disabledHex = (int[])disabledHex.Clone();
             return clone;
         }
 
-        public SolverLP(int commonRows, int maximumColumns, CharacterCalculationsMage calculations, int segments)
+        public SolverLP(int baseRows, int maximumColumns, CharacterCalculationsMage calculations, int segments)
         {
+            if (baseRows > maxRows || maximumColumns > maxCols)
+            {
+                maxRows = Math.Max(baseRows, maxRows);
+                maxCols = Math.Max(maximumColumns, maxCols);
+                RecreateArrays();
+            }
+
             this.calculations = calculations;
             this.segments = segments;
-            cRows = commonRows;
+            cRows = baseRows;
             cCols = 0;
 
-            rowScale = new double[cRows + 1];
             for (int i = 0; i <= cRows; i++)
             {
                 rowScale[i] = 1.0;
@@ -93,14 +118,26 @@ namespace Rawr.Mage
             pRowScale[row] = value;
         }
 
+        public void SetColumnScale(int col, double value)
+        {
+            columnScale[col] = value;
+        }
+
+        public void SetColumnScaleUnsafe(int col, double value)
+        {
+            pColumnScale[col] = value;
+        }
+
         public int AddColumn()
         {
+            columnScale[cCols] = 1.0;
             cCols++;
             return lp.AddColumn();
         }
 
         public int AddColumnUnsafe()
         {
+            pColumnScale[cCols] = 1.0;
             pCost[cCols++] = 0.0;
             lp.cols++;
             return sparseMatrix.AddColumn();
@@ -108,15 +145,15 @@ namespace Rawr.Mage
 
         public double this[int row, int col]
         {
-            get
+            /*get
             {
                 if (row == -1 || col == -1) return 0;
                 return lp[row, col] / rowScale[row];
-            }
+            }*/
             set
             {
                 if (row == -1 || col == -1) return;
-                lp[row, col] = value * rowScale[row];
+                lp[row, col] = value * rowScale[row] * columnScale[col];
                 compactSolution = null;
             }
         }
@@ -129,7 +166,7 @@ namespace Rawr.Mage
         public void SetElementUnsafe(int row, int col, double value)
         {
             if (row == -1) return;
-            sparseMatrix.SetElementUnsafe(row, col, value * pRowScale[row]);
+            sparseMatrix.SetElementUnsafe(row, col, value * pRowScale[row] * pColumnScale[col]);
         }
 
         public void SetRHS(int row, double value)
@@ -147,83 +184,83 @@ namespace Rawr.Mage
         public void SetCost(int col, double value)
         {
             if (col == -1) return;
-            lp.SetCost(col, value * rowScale[cRows]);
+            lp.SetCost(col, value * rowScale[cRows] * columnScale[col]);
         }
 
         public void SetCostUnsafe(int col, double value)
         {
-            pCost[col] = value * pRowScale[cRows];
+            pCost[col] = value * pRowScale[cRows] * pColumnScale[col];
         }
 
         private int rowDisableColumn = -1;
         private int rowMaximizeSegment = -1;
         private int rowColdsnap = -1;
-        private int[] rowMinManaConsumable;
-        private int[] rowMaxManaConsumable;
+        private int[] rowMinIntegralConsumable;
+        private int[] rowMaxIntegralConsumable;
 
-        private void VerifyManaConsumableArrays()
+        private void VerifyIntegralConsumableArrays()
         {
-            if (rowMinManaConsumable == null)
+            if (rowMinIntegralConsumable == null)
             {
-                rowMinManaConsumable = new int[(segments + 1) * 3];
-                rowMaxManaConsumable = new int[(segments + 1) * 3];
-                for (int i = 0; i < rowMinManaConsumable.Length; i++)
+                rowMinIntegralConsumable = new int[(segments + 1) * 4];
+                rowMaxIntegralConsumable = new int[(segments + 1) * 4];
+                for (int i = 0; i < rowMinIntegralConsumable.Length; i++)
                 {
-                    rowMinManaConsumable[i] = -1;
-                    rowMaxManaConsumable[i] = -1;
+                    rowMinIntegralConsumable[i] = -1;
+                    rowMaxIntegralConsumable[i] = -1;
                 }
             }
         }
 
-        public void SetMinManaConsumable(VariableType manaConsumable, int segment, double value)
+        public void SetMinIntegralConsumable(VariableType integralConsumable, int segment, double value)
         {
-            VerifyManaConsumableArrays();
-            int index = ((int)manaConsumable - 2) * (segments + 1) + segment;
-            if (rowMinManaConsumable[index] == -1)
+            VerifyIntegralConsumableArrays();
+            int index = ((int)integralConsumable - 3) * (segments + 1) + segment;
+            if (rowMinIntegralConsumable[index] == -1)
             {
-                rowMinManaConsumable[index] = lp.AddConstraint(false);
+                rowMinIntegralConsumable[index] = lp.AddConstraint(false);
                 for (int column = 0; column < cCols; column++)
                 {
-                    if (calculations.SolutionVariable[column].Type == manaConsumable && (segment == segments || calculations.SolutionVariable[column].Segment == segment))
+                    if (calculations.SolutionVariable[column].Type == integralConsumable && (segment == segments || calculations.SolutionVariable[column].Segment == segment))
                     {
-                        lp.SetConstraintElement(rowMinManaConsumable[index], column, -1.0);
+                        lp.SetConstraintElement(rowMinIntegralConsumable[index], column, -1.0 * columnScale[column]);
                     }
                 }
             }
-            lp.SetConstraintRHS(rowMinManaConsumable[index], -value);
+            lp.SetConstraintRHS(rowMinIntegralConsumable[index], -value);
             compactSolution = null;
             needsDual = true;
         }
 
-        public void SetMaxManaConsumable(VariableType manaConsumable, int segment, double value)
+        public void SetMaxIntegralConsumable(VariableType integralConsumable, int segment, double value)
         {
-            int index = ((int)manaConsumable - 2) * (segments + 1) + segment;
+            int index = ((int)integralConsumable - 3) * (segments + 1) + segment;
             if (value == 0.0)
             {
                 if (rowDisableColumn == -1) rowDisableColumn = lp.AddDisablingConstraint();
                 for (int column = 0; column < cCols; column++)
                 {
-                    if (calculations.SolutionVariable[column].Type == manaConsumable && (segment == segments || calculations.SolutionVariable[column].Segment == segment))
+                    if (calculations.SolutionVariable[column].Type == integralConsumable && (segment == segments || calculations.SolutionVariable[column].Segment == segment))
                     {
-                        lp.SetConstraintElement(rowDisableColumn, column, 1.0);
+                        lp.SetConstraintElement(rowDisableColumn, column, 1.0 * columnScale[column]);
                     }
                 }
             }
             else
             {
-                VerifyManaConsumableArrays();
-                if (rowMaxManaConsumable[index] == -1)
+                VerifyIntegralConsumableArrays();
+                if (rowMaxIntegralConsumable[index] == -1)
                 {
-                    rowMaxManaConsumable[index] = lp.AddConstraint(false);
+                    rowMaxIntegralConsumable[index] = lp.AddConstraint(false);
                     for (int column = 0; column < cCols; column++)
                     {
-                        if (calculations.SolutionVariable[column].Type == manaConsumable && (segment == segments || calculations.SolutionVariable[column].Segment == segment))
+                        if (calculations.SolutionVariable[column].Type == integralConsumable && (segment == segments || calculations.SolutionVariable[column].Segment == segment))
                         {
-                            lp.SetConstraintElement(rowMaxManaConsumable[index], column, 1.0);
+                            lp.SetConstraintElement(rowMaxIntegralConsumable[index], column, 1.0 * columnScale[column]);
                         }
                     }
                 }
-                lp.SetConstraintRHS(rowMaxManaConsumable[index], value);
+                lp.SetConstraintRHS(rowMaxIntegralConsumable[index], value);
             }
             compactSolution = null;
             needsDual = true;
@@ -242,7 +279,7 @@ namespace Rawr.Mage
         {
             if (col == -1) return;
             if (rowMaximizeSegment == -1) rowMaximizeSegment = lp.AddConstraint(true);
-            lp.SetConstraintElement(rowMaximizeSegment, col, lp.GetConstraintElement(rowMaximizeSegment, col) - 1.0);
+            lp.SetConstraintElement(rowMaximizeSegment, col, lp.GetConstraintElement(rowMaximizeSegment, col) - 1.0 * columnScale[col]);
             compactSolution = null;
             needsDual = true;
         }
@@ -277,7 +314,7 @@ namespace Rawr.Mage
             compactSolution = null;
             needsDual = true;
             if (col == -1) return;
-            lp.SetConstraintElement(rowColdsnap + index, col, 1.0);
+            lp.SetConstraintElement(rowColdsnap + index, col, 1.0 * columnScale[col]);
         }
 
         public void UpdateColdsnapDuration(int index, double value)
@@ -301,7 +338,16 @@ namespace Rawr.Mage
                 {
                     compactSolution = lp.SolvePrimal();
                 }
-                compactSolution[compactSolution.Length - 1] /= rowScale[cRows];
+                UnscaleSolution();
+            }
+        }
+
+        private void UnscaleSolution()
+        {
+            compactSolution[compactSolution.Length - 1] /= rowScale[cRows];
+            for (int i = 0; i < compactSolution.Length - 1; i++)
+            {
+                compactSolution[i] *= columnScale[i];
             }
         }
 
@@ -316,7 +362,7 @@ namespace Rawr.Mage
             lp.EndConstruction();
             lp.SolvePrimal();
             compactSolution = lp.SolveDual();
-            compactSolution[compactSolution.Length - 1] /= rowScale[cRows];
+            UnscaleSolution();
         }
 
         public double Value

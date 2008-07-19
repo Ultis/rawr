@@ -11,6 +11,7 @@ namespace Rawr.Mage
 {
     public enum VariableType
     {
+        None,
         IdleRegen,
         Wand,
         Evocation,
