@@ -174,12 +174,7 @@ namespace Rawr.Retribution
             calcs.BasicStats = stats;
             calcs.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
 
-            float dpsWhite = 0f, dpsSeal = 0f, dpsWindfury = 0f, dpsCrusader = 0f, dpsJudgement = 0f, dpsConsecration = 0f, dpsExorcism = 0f;
-            float baseSpeed = 1f, hastedSpeed = 1f, baseDamage = 0f, mitigation = 1f;
-            float whiteHit = 0f, physCrits = 0f, totalMiss = 0f, spellCrits = 0f, spellResist = 0f;
-            float chanceToGlance = 0.25f, glancingAmount = 0.35f;
-
-            // Damage Multipliers
+            #region Damage Multipliers
             float twoHandedSpec = 1f + (0.02f * (float)calcOpts.TwoHandedSpec);
             float impSancAura = 1f + 0.01f * (float)calcOpts.ImprovedSanctityAura;
             float crusade = 1f + 0.01f * (float)calcOpts.Crusade;
@@ -210,7 +205,12 @@ namespace Rawr.Retribution
             float allDamMult = avWrath * crusade * impSancAura;
             float holyDamMult = allDamMult * spellPower * sancAura * vengeance;
             float physDamMult = allDamMult * physPower * twoHandedSpec * vengeance;
+            #endregion
 
+            float dpsWhite = 0f, dpsSeal = 0f, dpsWindfury = 0f, dpsCrusader = 0f, dpsJudgement = 0f, dpsConsecration = 0f, dpsExorcism = 0f;
+            float baseSpeed = 1f, hastedSpeed = 1f, baseDamage = 0f, mitigation = 1f;
+            float whiteHit = 0f, physCrits = 0f, totalMiss = 0f, spellCrits = 0f, spellResist = 0f;
+            float chanceToGlance = 0.25f, glancingAmount = 0.35f;
 
             if (character.MainHand != null)
             {
@@ -237,7 +237,6 @@ namespace Rawr.Retribution
                 }
             }
             #endregion
-
 
             #region Mitigation
             {
@@ -266,7 +265,6 @@ namespace Rawr.Retribution
             }
             #endregion
 
-
             #region Crits, Misses, Resists
             {
                 // Crit: Base .65%
@@ -279,15 +277,15 @@ namespace Rawr.Retribution
                 float chanceDodged = .065f;
                 //chanceDodged -= stats.ExpertiseRating / 1576f;
                 chanceDodged -= stats.Expertise * .0025f;
-                calcs.DodgedAttacks = chanceDodged * 100f;
                 if (chanceDodged < 0f) chanceDodged = 0f;
+                calcs.DodgedAttacks = chanceDodged;
 
                 // Miss: Base 9%, Minimum 0%
                 float chanceMiss = .09f;
                 chanceMiss -= stats.HitRating / 1576f;
                 chanceMiss -= stats.Hit;
-                calcs.MissedAttacks = chanceMiss * 100f;
                 if (chanceMiss < 0f) chanceMiss = 0f;
+                calcs.MissedAttacks = chanceMiss;
 
                 // Spell Crit: Base 3.26%  **TODO: include intellect
                 spellCrits = .0326f;
@@ -341,7 +339,6 @@ namespace Rawr.Retribution
             }
             #endregion
 
-
             #region Seal
             {
                 float sealActualPPM = 0f, sealAvgDam = 0f, windProcRate = .2f;
@@ -387,7 +384,6 @@ namespace Rawr.Retribution
             }
             #endregion
 
-
             #region Windfury
             if (stats.WindfuryAPBonus > 0)
             {
@@ -419,7 +415,6 @@ namespace Rawr.Retribution
             }
             #endregion
 
-
             #region Crusader Strike
             {
                 float crusCD = 6f, crusCoeff = 1.1f, crusAvgDam = 0f;
@@ -435,7 +430,6 @@ namespace Rawr.Retribution
                 dpsCrusader = crusAvgDam / crusCD;
             }
             #endregion
-
 
             #region Judgement
             {
@@ -456,7 +450,6 @@ namespace Rawr.Retribution
             }
             #endregion
 
-            
             #region Consecration
             if (calcOpts.ConsecRank != 0)
             {
@@ -484,7 +477,6 @@ namespace Rawr.Retribution
 
             #endregion
 
-
             #region Exorcism
             if (calcOpts.Exorcism)
             {
@@ -494,7 +486,7 @@ namespace Rawr.Retribution
                 exorAvgDmg = 665f + exorCoeff * stats.SpellDamageRating;
                 exorAvgDmg = exorAvgDmg * holyDamMult + exorCoeff * jotc;
 
-                // Exorcism average damage per cast  **ADD spell crit
+                // Exorcism average damage per cast
                 exorAvgDmg *= (1f + (spellCrits / 2f) * spellCritMult - spellResist) * partialResist;
 
                 // Total Exorcism DPS
@@ -505,9 +497,9 @@ namespace Rawr.Retribution
 
             calcs.WeaponDamage = whiteHit * physDamMult;
             calcs.AttackSpeed = hastedSpeed;
-            calcs.CritChance = 100 * physCrits;
-            calcs.AvoidedAttacks = 100 * totalMiss;
-            calcs.EnemyMitigation = 100 * (1 - mitigation);
+            calcs.CritChance = physCrits;
+            calcs.AvoidedAttacks = totalMiss;
+            calcs.EnemyMitigation = 1 - mitigation;
 
             calcs.WhiteDPS = dpsWhite;
             calcs.SealDPS = dpsSeal;
@@ -518,7 +510,6 @@ namespace Rawr.Retribution
             calcs.ExorcismDPS = dpsExorcism;
 
             calcs.DPSPoints = dpsWhite + dpsSeal + dpsWindfury + dpsCrusader + dpsJudgement + dpsConsecration + dpsExorcism;
-            calcs.SubPoints = new float[] { calcs.DPSPoints };
             calcs.OverallPoints = calcs.DPSPoints;
             return calcs;
         }
@@ -533,11 +524,11 @@ namespace Rawr.Retribution
                     statsRace = new Stats()
                     { Strength = 123f, Agility = 79f, Stamina = 118f, Intellect = 87f, Spirit = 88f };
                     break;
-                case Character.CharacterRace.Draenei:
+                case Character.CharacterRace.Draenei: // Relevant racials: +1% hit
                     statsRace = new Stats()
                     { Strength = 127f, Agility = 74f, Stamina = 119f, Intellect = 84f, Spirit = 89f, Hit = .01f };
                     break;
-                case Character.CharacterRace.Human:
+                case Character.CharacterRace.Human: // Relevant racials: +10% spirit, +5 expertise when wielding mace or sword
                     statsRace = new Stats()
                     { Strength = 126f, Agility = 77f, Stamina = 120f, Intellect = 83f, Spirit = 89f, BonusSpiritMultiplier = 0.1f, };
                     //Expertise for Humans
@@ -552,13 +543,13 @@ namespace Rawr.Retribution
                     statsRace = new Stats();
                     break;
             }
+            // Derived stats base amount, common to all races
             statsRace.AttackPower = 190f;
             statsRace.Health = 3197f;
             statsRace.Mana = 2673f;
 
             return statsRace;
         }
-
 
         /// <summary>
         /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
@@ -683,30 +674,29 @@ namespace Rawr.Retribution
                     Item[] itemList = new Item[] {
                         new Item() { Stats = new Stats() { Strength = 10 } },
                         new Item() { Stats = new Stats() { Agility = 10 } },
-                        new Item() { Stats = new Stats() { SpellDamageRating = 11.7f } },
-                        new Item() { Stats = new Stats() { HitRating = 10 } },
-                        new Item() { Stats = new Stats() { HasteRating = 10 } },
-                        new Item() { Stats = new Stats() { CritRating = 10 } },
-                        new Item() { Stats = new Stats() { ArmorPenetration = 66.67f } },
                         new Item() { Stats = new Stats() { AttackPower = 20 } },
-                        new Item() { Stats = new Stats() { ExpertiseRating = 10 } }
+                        new Item() { Stats = new Stats() { CritRating = 10 } },
+                        new Item() { Stats = new Stats() { HitRating = 10 } },
+                        new Item() { Stats = new Stats() { ExpertiseRating = 10 } },
+                        new Item() { Stats = new Stats() { HasteRating = 10 } },
+                        new Item() { Stats = new Stats() { ArmorPenetration = 66.67f } },
+                        new Item() { Stats = new Stats() { SpellDamageRating = 11.7f } },
                     };
                     string[] statList = new string[] {
                         "Strength",
                         "Agility",
-                        "Spell Damage",
-                        "Hit Rating",
-                        "Haste Rating",
-                        "Crit Rating",
-                        "Armor Penetration",
                         "Attack Power",
-                        "Expertise Rating"
+                        "Crit Rating",
+                        "Hit Rating",
+                        "Expertise Rating",
+                        "Haste Rating",
+                        "Armor Penetration",
+                        "Spell Damage",
                     };
 
                     baseCalc = GetCharacterCalculations(character) as CharacterCalculationsRetribution;
 
-
-                    for (int index = 0; index < statList.Length; index++)
+                    for (int index = 0; index < itemList.Length; index++)
                     {
                         calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsRetribution;
 
@@ -727,7 +717,6 @@ namespace Rawr.Retribution
                 default:
                     return new ComparisonCalculationBase[0];
             }
-
         }
 
         public override bool IsItemRelevant(Item item)

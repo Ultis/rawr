@@ -7,7 +7,6 @@ namespace Rawr.Retribution
 {
     class CharacterCalculationsRetribution : CharacterCalculationsBase
     {
-
         private float _overallPoints = 0f;
         public override float OverallPoints
         {
@@ -172,22 +171,24 @@ namespace Rawr.Retribution
             if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Hunter's Mark")))
                 attackPower -= 110f * (1f + BasicStats.BonusAttackPowerMultiplier);
 
+            float effectiveArmor = 10557.5f / ((1f / EnemyMitigation) - 1f);
+
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            dictValues.Add("Health", BasicStats.Health.ToString("N2"));
-            dictValues.Add("Strength", BasicStats.Strength.ToString("N2"));
-            dictValues.Add("Agility", BasicStats.Agility.ToString("N2"));
-            dictValues.Add("Attack Power", attackPower.ToString("N2"));
-            dictValues.Add("Crit Rating", critRating.ToString("N2"));
-            dictValues.Add("Hit Rating", hitRating.ToString("N2"));
-            dictValues.Add("Expertise", BasicStats.Expertise.ToString("N2"));
-            dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("N2"));
-            dictValues.Add("Armor Penetration", armorPenetration.ToString());
+            dictValues.Add("Health", BasicStats.Health.ToString("N0"));
+            dictValues.Add("Strength", BasicStats.Strength.ToString("N0"));
+            dictValues.Add("Agility", string.Format("{0:0}*Provides {1:P} crit chance", BasicStats.Agility, (BasicStats.Agility / 2500f)));
+            dictValues.Add("Attack Power", attackPower.ToString("N0"));
+            dictValues.Add("Crit Rating", string.Format("{0:0}*Provides {1:P} crit chance", critRating, (critRating / 2208)));
+            dictValues.Add("Hit Rating", string.Format("{0:0}*Negates {1:P} miss chance", hitRating, (hitRating / 1576)));
+            dictValues.Add("Expertise", string.Format("{0:0}*Negates {1:P} dodge chance", BasicStats.Expertise, (BasicStats.Expertise / 400)));
+            dictValues.Add("Haste Rating", string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, (BasicStats.HasteRating / 1576)));
+            dictValues.Add("Armor Penetration", armorPenetration.ToString("N0"));
 
             dictValues.Add("Weapon Damage", WeaponDamage.ToString("N2"));
             dictValues.Add("Attack Speed", AttackSpeed.ToString("N2"));
-            dictValues.Add("Crit Chance", CritChance.ToString("N2") + "%");
-            dictValues.Add("Avoided Attacks", AvoidedAttacks.ToString("N2") + "%");
-            dictValues.Add("Enemy Mitigation", EnemyMitigation.ToString("N2") + "%");
+            dictValues.Add("Crit Chance", string.Format("{0:P}", CritChance));
+            dictValues.Add("Avoided Attacks", string.Format("{0:P}*{1:P} Dodged, {2:P} Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
+            dictValues.Add("Enemy Mitigation", string.Format("{0:P}*{1:0} effective enemy armor", EnemyMitigation, effectiveArmor));
 
             dictValues.Add("White", WhiteDPS.ToString("N2"));
             dictValues.Add("Seal", SealDPS.ToString("N2"));
@@ -199,7 +200,6 @@ namespace Rawr.Retribution
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
 
             return dictValues;
-           
         }
     }
 }

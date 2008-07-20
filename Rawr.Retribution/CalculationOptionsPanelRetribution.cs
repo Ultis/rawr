@@ -33,22 +33,6 @@ namespace Rawr.Retribution
         {
 			if (Character.CalculationOptions == null)
 				Character.CalculationOptions = new CalculationOptionsRetribution();
-			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
-			//    Character.CalculationOptions["TargetLevel"] = "73";
-			//if (!Character.CalculationOptions.ContainsKey("BossArmor"))
-			//    Character.CalculationOptions["BossArmor"] = "7700";
-			//if (!Character.CalculationOptions.ContainsKey("FightLength"))
-			//    Character.CalculationOptions["FightLength"] = "10";
-			//if (!Character.CalculationOptions.ContainsKey("Exorcism"))
-			//    Character.CalculationOptions["Exorcism"] = "0";
-			//if (!Character.CalculationOptions.ContainsKey("ConsecRank"))
-			//    Character.CalculationOptions["ConsecRank"] = "0";
-			//if (!Character.CalculationOptions.ContainsKey("Seal"))
-			//    Character.CalculationOptions["Seal"] = "1";
-			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-			//    Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
-			//if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
-			//    Character.CalculationOptions["ShattrathFaction"] = "Aldor";
 
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 
@@ -154,109 +138,62 @@ namespace Rawr.Retribution
         }
 
         private void btnGraph_Click(object sender, EventArgs e)
-        {   
+        {
+            CalculationsRetribution retCalc = new CalculationsRetribution();
+            CharacterCalculationsRetribution baseCalc = retCalc.GetCharacterCalculations(Character) as CharacterCalculationsRetribution;
             Bitmap _prerenderedGraph = global::Rawr.Retribution.Properties.Resources.GraphBase;
             Graphics g = Graphics.FromImage(_prerenderedGraph);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-            
-
+            float graphHeight = 700f, graphStart = 100f;
             Color[] colors = new Color[] {
-                Color.FromArgb(127,202,180,96), //Strength
-                Color.FromArgb(127,101,225,240), //Agi
-                Color.FromArgb(127,206,189,191),//SpellD
-                Color.FromArgb(127,45,112,63),//Hit
-                Color.FromArgb(127,217,100,54), //Haste
-                Color.FromArgb(127,123,238,199),//Crit
-                Color.FromArgb(127,210,72,195),//ArP
-                Color.FromArgb(127,0,4,3),//AP
-                Color.FromArgb(127,121,72,210),//Exp
+                Color.FromArgb(127,202,180,96), // Strength
+                Color.FromArgb(127,101,225,240), // Agility
+                Color.FromArgb(127,0,4,3), // Attack Power
+                Color.FromArgb(127,123,238,199), // Crit Rating
+                Color.FromArgb(127,45,112,63), // Hit Rating
+                Color.FromArgb(127,121,72,210), //Expertise Rating
+                Color.FromArgb(127,217,100,54), // Haste Rating
+                Color.FromArgb(127,210,72,195), // Armor Penetration
+                Color.FromArgb(127,206,189,191), // Spell Damage
             };
-                
-                
-                
-                
+            Stats[] statsList = new Stats[] {
+                new Stats() { Strength = 10 },
+                new Stats() { Agility = 10 },
+                new Stats() { AttackPower = 20 },
+                new Stats() { CritRating = 10 },
+                new Stats() { HitRating = 10 },
+                new Stats() { ExpertiseRating = 10 },
+                new Stats() { HasteRating = 10 },
+                new Stats() { ArmorPenetration = 66.667f },
+                new Stats() { SpellDamageRating = 11.17f },
+            };
 
-
-            Item[] itemList = new Item[] {
-                        new Item() { Stats = new Stats() { Strength = 10 } },
-                        new Item() { Stats = new Stats() { Agility = 10 } },
-                        new Item() { Stats = new Stats() { SpellDamageRating = 11.7f } },
-                        new Item() { Stats = new Stats() { HitRating = 10 } },
-                        new Item() { Stats = new Stats() { HasteRating = 10 } },
-                        new Item() { Stats = new Stats() { CritRating = 10 } },
-                        new Item() { Stats = new Stats() { ArmorPenetration = 66.67f } },
-                        new Item() { Stats = new Stats() { AttackPower = 20 } },
-                        new Item() { Stats = new Stats() { ExpertiseRating = 10 } }
-                    };
-            string[] statList = new string[] {
-                        "Strength",
-                        "Agility",
-                        "Spell Damage",
-                        "Hit Rating",
-                        "Haste Rating",
-                        "Crit Rating",
-                        "Armor Penetration",
-                        "Attack Power",
-                        "Expertise Rating"
-                    };
-            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-            CharacterCalculationsRetribution baseCalc, currentCalc, calc;
-            ComparisonCalculationBase comparison;
-            CalculationsRetribution retCalc = new CalculationsRetribution();
-            float[] subPoints;
-            float graphHeight = 700f;
-            float graphStart = 100f;
-            baseCalc = retCalc.GetCharacterCalculations(Character) as CharacterCalculationsRetribution;
-
-            for (int index = 0; index < statList.Length; index++)
+            for (int index = 0; index < statsList.Length; index++)
             {
+                Stats newStats = new Stats();
                 Point[] points = new Point[100];
                 for (int count = 0; count < 100; count++)
                 {
-                    Stats newStats = new Stats();
-                    newStats.Strength = itemList[index].Stats.Strength * count;
-                    newStats.Agility = itemList[index].Stats.Agility * count;
-                    newStats.SpellDamageRating = itemList[index].Stats.SpellDamageRating * count;
-                    newStats.HitRating = itemList[index].Stats.HitRating * count;
-                    newStats.CritRating = itemList[index].Stats.CritRating * count;
-                    newStats.ArmorPenetration = itemList[index].Stats.ArmorPenetration * count;
-                    newStats.AttackPower = itemList[index].Stats.AttackPower * count;
-                    newStats.ExpertiseRating = itemList[index].Stats.ExpertiseRating * count;
-                    newStats.HasteRating = itemList[index].Stats.HasteRating * count;
-                    calc = retCalc.GetCharacterCalculations(Character, new Item() { Stats = newStats }) as CharacterCalculationsRetribution;
-                    float overallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                    if (overallPoints <= 0)
-                    {
-                        if (count <= 1)
-                        {
-                            overallPoints = 0;
-                        }
+                    newStats = newStats + statsList[index];
 
-                        else
-                        {
-                            overallPoints = graphHeight - points[count - 1].Y;
-                        }
-                    }
+                    CharacterCalculationsRetribution currentCalc = retCalc.GetCharacterCalculations(Character, new Item() { Stats = newStats }) as CharacterCalculationsRetribution;
+                    float overallPoints = currentCalc.DPSPoints - baseCalc.DPSPoints;
+
                     if ((graphHeight - overallPoints) > 16)
-                    {
-                        points[count] = new Point(Convert.ToInt32(graphStart+ count * 5), (Convert.ToInt32(graphHeight - overallPoints)));
-                    }
+                        points[count] = new Point(Convert.ToInt32(graphStart + count * 5), (Convert.ToInt32(graphHeight - overallPoints)));
                     else
-                    {
-                        points[count]=points[count-1];
-                    }
+                        points[count] = points[count-1];
 
                 }
                 Brush statBrush = new SolidBrush(colors[index]);
                 g.DrawLines(new Pen(statBrush, 3), points);
             }
+
             #region Graph Ticks
-       
             float graphWidth = 500f;// this.Width - 150f;
             float graphEnd = graphStart + graphWidth;
-            float graphStartY = 16f;
-           
+            //float graphStartY = 16f;
             float maxScale = 100f;
             float[] ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
 							(float)Math.Round(graphStart + graphWidth * 0.75f),
@@ -265,7 +202,6 @@ namespace Rawr.Retribution
 							(float)Math.Round(graphStart + graphWidth * 0.375f),
 							(float)Math.Round(graphStart + graphWidth * 0.625f),
 							(float)Math.Round(graphStart + graphWidth * 0.875f)};
-          
             Pen black200 = new Pen(Color.FromArgb(200, 0, 0, 0));
             Pen black150 = new Pen(Color.FromArgb(150, 0, 0, 0));
             Pen black75 = new Pen(Color.FromArgb(75, 0, 0, 0));
@@ -320,14 +256,10 @@ namespace Rawr.Retribution
             g.DrawString((maxScale * 0.375f).ToString(), tickFont, black75brush, ticks[4], _prerenderedGraph.Height-16, formatTick);
             g.DrawString((maxScale * 0.625f).ToString(), tickFont, black75brush, ticks[5], _prerenderedGraph.Height-16, formatTick);
             g.DrawString((maxScale * 0.875f).ToString(), tickFont, black75brush, ticks[6], _prerenderedGraph.Height-16, formatTick);
-
-        
-
-
             #endregion
+
             Graph graph = new Graph(_prerenderedGraph);
             graph.Show();
-                     
         }
 
         private void checkBoxMeta_CheckedChanged(object sender, EventArgs e)
@@ -425,7 +357,7 @@ namespace Rawr.Retribution
         public int DrumsOfWar = 1;
         public int ExposeWeaknessAPValue = 200;
         public int FerociousInspiration = 2;
-	
+
 		public int TwoHandedSpec = 0;
 		public int Conviction = 0;
 		public int Crusade = 0;
