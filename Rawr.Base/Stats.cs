@@ -159,7 +159,15 @@ namespace Rawr
         ReduceHealingTouchCost,
         RejuvenationHealBonus,
         LifebloomTickHealBonus,
-        HealingTouchFinalHealBonus
+        HealingTouchFinalHealBonus,
+        HealingDoneFor15SecOnUse90Sec,
+        HealingDoneFor15SecOnUse2Min,
+        HealingDoneFor20SecOnUse2Min,
+        ManaregenFor8SecOnUse5Min,
+        SpiritFor20SecOnUse2Min,
+        ManaregenOver20SecOnUse3Min,
+        ManaregenOver20SecOnUse5Min,
+        ManacostReduceWithin15OnHealingCast
     }
 
     enum MultiplicativeStat : int
@@ -1512,6 +1520,80 @@ namespace Rawr
 			get { return _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc]; }
 			set { _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc] = value; }
 		}
+
+        /* Healing done trinkets */
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Healing for 15sec (90 sec cd)")]
+        [Category("Equipment Procs")]
+        public float HealingDoneFor15SecOnUse90Sec
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HealingDoneFor15SecOnUse90Sec]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HealingDoneFor15SecOnUse90Sec] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Healing for 15sec (2 min cd)")]
+        [Category("Equipment Procs")]
+        public float HealingDoneFor15SecOnUse2Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HealingDoneFor15SecOnUse2Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HealingDoneFor15SecOnUse2Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Healing for 20sec (2 min cd)")]
+        [Category("Equipment Procs")]
+        public float HealingDoneFor20SecOnUse2Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HealingDoneFor20SecOnUse2Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HealingDoneFor20SecOnUse2Min] = value; }
+        }
+
+        /* Regen trinkets */
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana each sec. for 8 sec. (5 min cd)")]
+        [Category("Equipment Procs")]
+        public float ManaregenFor8SecOnUse5Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenFor8SecOnUse5Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaregenFor8SecOnUse5Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spirit for 20 sec. (2 min cd)")]
+        [Category("Equipment Procs")]
+        public float SpiritFor20SecOnUse2Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpiritFor20SecOnUse2Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpiritFor20SecOnUse2Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana restores over 20 sec. (2 min cd)")]
+        [Category("Equipment Procs")]
+        public float ManaregenOver20SecOnUse3Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenOver20SecOnUse3Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaregenOver20SecOnUse3Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana restores over 20 sec. (5 min cd)")]
+        [Category("Equipment Procs")]
+        public float ManaregenOver20SecOnUse5Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenOver20SecOnUse5Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaregenOver20SecOnUse5Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana cost of next spell reduce (within 15 sec.)")]
+        [Category("Equipment Procs")]
+        public float ManacostReduceWithin15OnHealingCast
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManacostReduceWithin15OnHealingCast]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManacostReduceWithin15OnHealingCast] = value; }
+        }
 
 #endregion
 

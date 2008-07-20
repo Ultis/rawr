@@ -281,23 +281,52 @@ namespace Rawr
                                 {
                                     case 20:
                                         stats.SpellDamageFor20SecOnUse2Min += damageIncrease;
+                                        stats.HealingDoneFor20SecOnUse2Min += damageIncrease;
                                         break;
                                 }
                             }
                             else
                             {
                                 stats.SpellDamageRating += damageIncrease;
+                                stats.Healing += damageIncrease;
                             }
+                        }
+                        else if (spellDesc.StartsWith("Increases your Spirit by +300 for 20 sec."))
+                        {
+                            stats.SpiritFor20SecOnUse2Min += 300;
+                        }
+                        else if (spellDesc.StartsWith("Increases healing done by spells "))
+                        {
+                            Regex r = new Regex("Increases healing done by spells(?: and effects)? by up to (?<heal>\\d*) and damage done by spells by up to (?<dmg>\\d*) for (?<uptime>\\d*) sec.");
+                            Match m = r.Match(spellDesc);
+                            if (m.Success)
+                            {
+                                int damageIncrease = int.Parse(m.Groups["dmg"].Value);
+                                int healingIncrease = int.Parse(m.Groups["heal"].Value);
+                                int duration = int.Parse(m.Groups["uptime"].Value);
+                                switch (duration)
+                                {
+                                    case 20:
+                                        stats.SpellDamageFor20SecOnUse2Min += damageIncrease;
+                                        stats.HealingDoneFor20SecOnUse2Min += healingIncrease;
+                                        break;
+                                }
+                            }
+                        }
+                        else if (spellDesc.StartsWith("Gain 250 mana each sec. for "))
+                        {
+                            stats.ManaregenFor8SecOnUse5Min += 250;
                         }
                         else if (spellDesc.StartsWith("Increases spell damage by up to 150 and healing by up to 280 for 15 sec."))
                         {
                             stats.SpellDamageFor15SecOnUse90Sec += 150;
-                            // TODO healing effect
+                            stats.HealingDoneFor15SecOnUse90Sec += 280;
                         }
                         else if (spellDesc.StartsWith("Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains up to 320 spell damage and healing."))
                         {
                             // Shifting Naaru Sliver
                             stats.SpellDamageFor15SecOnUse2Min += 320;
+                            stats.HealingDoneFor15SecOnUse2Min += 320;
                         }
                         else if (spellDesc.StartsWith("Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec."))
                         {
@@ -310,7 +339,11 @@ namespace Rawr
                         // Figurine - Talasite Owl, 5 min cooldown
                         else if (spellDesc.StartsWith("Restores 900 mana over 12 sec."))
                         {
-                            stats.Mp5 += 5f * 900f / 300f;
+                            if(stats.Mp5 == 18) // Figurine - Seaspray Albatross, 3 min cooldown
+                                stats.ManaregenOver20SecOnUse3Min += 900;
+                            else if(stats.Mp5 == 14) // Figurine - Talasite Owl, 5 min cooldown
+                                stats.ManaregenOver20SecOnUse5Min += 900;
+                            // stats.Mp5 += 5f * 900f / 300f;
                         }
                         // Mind Quickening Gem
                         else if (spellDesc.StartsWith("Quickens the mind, increasing the Mage's spell haste rating by 330 for 20 sec."))
@@ -847,6 +880,10 @@ namespace Rawr
                             {
                                 stats.BonusPetDamageMultiplier = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
                             }
+                        }
+                        else if (spellDesc.StartsWith("Each healing spell you cast has a 2% chance to make your next heal cast within 15 sec cost 450 less mana."))
+                        {
+                            stats.ManacostReduceWithin15OnHealingCast += 450;
                         }
                     }
 				}
