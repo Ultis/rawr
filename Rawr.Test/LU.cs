@@ -10,7 +10,7 @@ namespace Rawr.Test
     /// Summary description for LU
     /// </summary>
     [TestClass]
-    public class LU
+    public unsafe class LU
     {
         public LU()
         {
@@ -131,8 +131,14 @@ namespace Rawr.Test
                 }
             }
             double[] B0 = (double[])B.Clone();
-            Mage.LU2 lu = new Rawr.Mage.LU2(B, size);
-            lu.Decompose();
+            Array.Copy(B0, Rawr.Mage.LU._U, size * size);
+            Mage.LU lu = new Rawr.Mage.LU(size);
+            fixed (double* U = Rawr.Mage.LU._U, sL = Rawr.Mage.LU.sparseL, column = Rawr.Mage.LU.column, column2 = Rawr.Mage.LU.column2)
+            fixed (int* P = Rawr.Mage.LU._P, Q = Rawr.Mage.LU._Q, LJ = Rawr.Mage.LU._LJ, sLI = Rawr.Mage.LU.sparseLI, sLstart = Rawr.Mage.LU.sparseLstart)
+            {
+                lu.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
+                lu.Decompose();
+            }
             for (int j = 0; j < size; j++)
             {
                 // Ln...L0 B = P U Q
@@ -144,7 +150,7 @@ namespace Rawr.Test
                 }
                 for (int k = 0; k < lu.etaSize; k++)
                 {
-                    int row = LU2._LJ[k]; // we're updating using row, if element is zero we can skip
+                    int row = Rawr.Mage.LU._LJ[k]; // we're updating using row, if element is zero we can skip
                     // b~ = b + eta (erow' b)
                     double f = L[row];
                     if (Math.Abs(f) >= 0.000001)
@@ -153,10 +159,10 @@ namespace Rawr.Test
                         {
                             L[i] += f * lu._L[k * size + i];
                         }*/
-                        int maxi = LU2.sparseLstart[k + 1];
-                        for (int i = LU2.sparseLstart[k]; i < maxi; i++)
+                        int maxi = Rawr.Mage.LU.sparseLstart[k + 1];
+                        for (int i = Rawr.Mage.LU.sparseLstart[k]; i < maxi; i++)
                         {
-                            L[LU2.sparseLI[i]] += f * LU2.sparseL[i];
+                            L[Rawr.Mage.LU.sparseLI[i]] += f * Rawr.Mage.LU.sparseL[i];
                         }
                     }
                 }
@@ -165,11 +171,11 @@ namespace Rawr.Test
                 int jj = j;
                 for (jj = 0; jj < size; jj++)
                 {
-                    if (LU2._Q[jj] == j) break;
+                    if (Rawr.Mage.LU._Q[jj] == j) break;
                 }
                 for (int i = 0; i < size; i++)
                 {
-                    R[LU2._P[i]] = lu._U[i * size + jj]; // DON'T CHANGE THIS!!! THIS IS HOW IT REALLY SHOULD BE!!!!1!!
+                    R[Rawr.Mage.LU._P[i]] = Rawr.Mage.LU._U[i * size + jj]; // DON'T CHANGE THIS!!! THIS IS HOW IT REALLY SHOULD BE!!!!1!!
                 }
                 for (int i = 0; i < size; i++)
                 {
@@ -199,14 +205,20 @@ namespace Rawr.Test
                 B[i * size + c] = newB[i];
                 //newB[i] = B[i, c];
             }
-            Mage.LU2 lu = new Rawr.Mage.LU2(B0, size);
-            lu.Decompose();
-            unsafe
+            Array.Copy(B0, Rawr.Mage.LU._U, size * size);
+            Mage.LU lu = new Rawr.Mage.LU(size);
+            fixed (double* U = Rawr.Mage.LU._U, sL = Rawr.Mage.LU.sparseL, column = Rawr.Mage.LU.column, column2 = Rawr.Mage.LU.column2)
+            fixed (int* P = Rawr.Mage.LU._P, Q = Rawr.Mage.LU._Q, LJ = Rawr.Mage.LU._LJ, sLI = Rawr.Mage.LU.sparseLI, sLstart = Rawr.Mage.LU.sparseLstart)
             {
-                fixed (double* nb = newB, t = tmp)
+                lu.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
+                lu.Decompose();
+                unsafe
                 {
-                    lu.FSolveL(nb, t);
-                    lu.Update(t, c);
+                    fixed (double* nb = newB, t = tmp)
+                    {
+                        lu.FSolveL(nb, t);
+                        lu.Update(t, c);
+                    }
                 }
             }
             for (int j = 0; j < size; j++)
@@ -222,7 +234,7 @@ namespace Rawr.Test
                 {
                     if (k < size)
                     {
-                        int row = LU2._LJ[k]; // we're updating using row, if element is zero we can skip
+                        int row = Rawr.Mage.LU._LJ[k]; // we're updating using row, if element is zero we can skip
                         // b~ = b + eta (erow' b)
                         double f = L[row];
                         if (Math.Abs(f) >= 0.000001)
@@ -231,21 +243,21 @@ namespace Rawr.Test
                             {
                                 L[i] += f * lu._L[k * size + i];
                             }*/
-                            int maxi = LU2.sparseLstart[k + 1];
-                            for (int i = LU2.sparseLstart[k]; i < maxi; i++)
+                            int maxi = Rawr.Mage.LU.sparseLstart[k + 1];
+                            for (int i = Rawr.Mage.LU.sparseLstart[k]; i < maxi; i++)
                             {
-                                L[LU2.sparseLI[i]] += f * LU2.sparseL[i];
+                                L[Rawr.Mage.LU.sparseLI[i]] += f * Rawr.Mage.LU.sparseL[i];
                             }
                         }
                     }
                     else
                     {
-                        int row = LU2._LJ[k]; // we're updating row element
+                        int row = Rawr.Mage.LU._LJ[k]; // we're updating row element
                         double f = 0.0;
-                        int maxi = LU2.sparseLstart[k + 1];
-                        for (int i = LU2.sparseLstart[k]; i < maxi; i++)
+                        int maxi = Rawr.Mage.LU.sparseLstart[k + 1];
+                        for (int i = Rawr.Mage.LU.sparseLstart[k]; i < maxi; i++)
                         {
-                            f += L[LU2.sparseLI[i]] * LU2.sparseL[i];
+                            f += L[Rawr.Mage.LU.sparseLI[i]] * Rawr.Mage.LU.sparseL[i];
                         }
                         L[row] += f;
                     }
@@ -255,11 +267,11 @@ namespace Rawr.Test
                 int jj = j;
                 for (jj = 0; jj < size; jj++)
                 {
-                    if (LU2._Q[jj] == j) break;
+                    if (Rawr.Mage.LU._Q[jj] == j) break;
                 }
                 for (int i = 0; i < size; i++)
                 {
-                    R[LU2._P[i]] = lu._U[i * size + jj]; // DON'T CHANGE THIS!!! THIS IS HOW IT REALLY SHOULD BE!!!!1!!
+                    R[Rawr.Mage.LU._P[i]] = Rawr.Mage.LU._U[i * size + jj]; // DON'T CHANGE THIS!!! THIS IS HOW IT REALLY SHOULD BE!!!!1!!
                 }
                 for (int i = 0; i < size; i++)
                 {
@@ -301,15 +313,21 @@ namespace Rawr.Test
                     b[i] += B[i * size + j] * x[j];
                 }
             }
-            Mage.LU2 lu = new Rawr.Mage.LU2(B0, size);
-            lu.Decompose();
-            unsafe
+            Array.Copy(B0, Rawr.Mage.LU._U, size * size);
+            Mage.LU lu = new Rawr.Mage.LU(size);
+            fixed (double* U = Rawr.Mage.LU._U, sL = Rawr.Mage.LU.sparseL, column = Rawr.Mage.LU.column, column2 = Rawr.Mage.LU.column2)
+            fixed (int* P = Rawr.Mage.LU._P, Q = Rawr.Mage.LU._Q, LJ = Rawr.Mage.LU._LJ, sLI = Rawr.Mage.LU.sparseLI, sLstart = Rawr.Mage.LU.sparseLstart)
             {
-                fixed (double* nb = newB, t = tmp, _b = b)
+                lu.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
+                lu.Decompose();
+                unsafe
                 {
-                    lu.FSolveL(nb, t);
-                    lu.Update(t, c);
-                    lu.FSolve(_b);
+                    fixed (double* nb = newB, t = tmp, _b = b)
+                    {
+                        lu.FSolveL(nb, t);
+                        lu.Update(t, c);
+                        lu.FSolve(_b);
+                    }
                 }
             }
             for (int i = 0; i < size; i++)
@@ -342,13 +360,19 @@ namespace Rawr.Test
                     b[i] += B[i * size + j] * x[j];
                 }
             }
-            Mage.LU2 lu = new Rawr.Mage.LU2(B, size);
-            lu.Decompose();
-            unsafe
+            Array.Copy(B, Rawr.Mage.LU._U, size * size);
+            Mage.LU lu = new Rawr.Mage.LU(size);
+            fixed (double* U = Rawr.Mage.LU._U, sL = Rawr.Mage.LU.sparseL, column = Rawr.Mage.LU.column, column2 = Rawr.Mage.LU.column2)
+            fixed (int* P = Rawr.Mage.LU._P, Q = Rawr.Mage.LU._Q, LJ = Rawr.Mage.LU._LJ, sLI = Rawr.Mage.LU.sparseLI, sLstart = Rawr.Mage.LU.sparseLstart)
             {
-                fixed (double* _b = b)
+                lu.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
+                lu.Decompose();
+                unsafe
                 {
-                    lu.FSolve(_b);
+                    fixed (double* _b = b)
+                    {
+                        lu.FSolve(_b);
+                    }
                 }
             }
             for (int i = 0; i < size; i++)
@@ -381,13 +405,19 @@ namespace Rawr.Test
                     b[i] += B[j * size + i] * x[j];
                 }
             }
-            Mage.LU2 lu = new Rawr.Mage.LU2(B, size);
-            lu.Decompose();
-            unsafe
+            Array.Copy(B, Rawr.Mage.LU._U, size * size);
+            Mage.LU lu = new Rawr.Mage.LU(size);
+            fixed (double* U = Rawr.Mage.LU._U, sL = Rawr.Mage.LU.sparseL, column = Rawr.Mage.LU.column, column2 = Rawr.Mage.LU.column2)
+            fixed (int* P = Rawr.Mage.LU._P, Q = Rawr.Mage.LU._Q, LJ = Rawr.Mage.LU._LJ, sLI = Rawr.Mage.LU.sparseLI, sLstart = Rawr.Mage.LU.sparseLstart)
             {
-                fixed (double* _b = b)
+                lu.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
+                lu.Decompose();
+                unsafe
                 {
-                    lu.BSolve(_b);
+                    fixed (double* _b = b)
+                    {
+                        lu.BSolve(_b);
+                    }
                 }
             }
             for (int i = 0; i < size; i++)
