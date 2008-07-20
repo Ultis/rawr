@@ -68,7 +68,7 @@
     <Compile Include="Heap.cs" />
     <Compile Include="ListUtils.cs" />
     <Compile Include="LP.cs" />
-    <Compile Include="LU2.cs" />
+    <Compile Include="LU.cs" />
     <Compile Include="Solver.cs" />
     <Compile Include="MageTalentsForm.cs">
       <SubType>Form</SubType>

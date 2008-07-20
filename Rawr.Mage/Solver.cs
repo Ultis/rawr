@@ -973,6 +973,7 @@ namespace Rawr.Mage
                     segmentColumn[segments] = column + 1;
                 }
 
+                lp.lp.EndColumnConstruction();
                 SetProblemRHS(maxDrinkingTime);
                 #endregion
 

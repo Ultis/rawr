@@ -328,7 +328,6 @@ namespace Rawr.Mage
         {
             if (compactSolution == null)
             {
-                lp.EndConstruction();
                 if (needsDual)
                 {
                     //System.Diagnostics.Debug.WriteLine("Solving H=" + HeroismHash.ToString("X") + ", AP=" + APHash.ToString("X") + ", IV=" + IVHash.ToString("X"));
@@ -359,7 +358,6 @@ namespace Rawr.Mage
 
         public void SolvePrimalDual()
         {
-            lp.EndConstruction();
             lp.SolvePrimal();
             compactSolution = lp.SolveDual();
             UnscaleSolution();
