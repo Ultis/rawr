@@ -5,12 +5,11 @@ using System.Text;
 
 namespace Rawr.Warlock
 {
-    internal class WarlockSpellRotation
+    public class WarlockSpellRotation
     {
         private CharacterCalculationsWarlock calculations;
         private List<Spell> spellList;
         private Spell fillerSpell;
-        private LifeTap lifeTap;
 
         public float ShadowSpellsPerSecond { get; set; }
         public float FireSpellsPerSecond { get; set; }
@@ -19,6 +18,25 @@ namespace Rawr.Warlock
         public float NonAfflictionSpellsPerSecond { get; set; }
         public float ShadowBoltsPerSecond { get; set; }
         public float IncineratesPerSecond { get; set; }
+
+        public float ShadowBoltCastTime
+        {
+            get
+            {
+                return fillerSpell.CastTime;
+            }
+        }
+
+        public float ShadowBoltCastRatio
+        {
+            get
+            {
+                if (fillerSpell is ShadowBolt)
+                    return fillerSpell.CastRatio;
+                else
+                    return 0;
+            }
+        }
 
         public WarlockSpellRotation(CharacterCalculationsWarlock ccw)
         {
@@ -77,24 +95,22 @@ namespace Rawr.Warlock
             IncineratesPerSecond = 0;
         }
 
-        public void Calculate(bool calcDps)
+        public float Calculate(bool calcDps)
         {
-            float durationLeft = calculations.CalculationOptions.FightDuration;
-            float manaLeft = calculations.BasicStats.Mana + calculations.BasicStats.Mp5 / 5 * durationLeft;
-            float totalDamage = 0;
+            float dps = 0;
+            float mpsWithoutFiller = calculations.BasicStats.Mana / calculations.CalculationOptions.FightDuration + calculations.BasicStats.Mp5 / 5;
+            float remainingCastRatio = 1;
 
             foreach (Spell s in spellList)
             {
                 s.CalculateDerivedStats(calculations);
-                float numCasts = (float)Math.Ceiling(calculations.CalculationOptions.FightDuration / s.Frequency);
-
-                durationLeft -= numCasts * s.CastTime;
-                manaLeft -= numCasts * s.ManaCost;
+                mpsWithoutFiller -= s.ManaPerSecond;
+                remainingCastRatio -= s.CastRatio;
 
                 if (calcDps)
                 {
                     s.CalculateDamage(calculations);
-                    totalDamage += numCasts * s.Damage;
+                    dps += s.Damage / s.Frequency;
                 }
                 else
                 {
@@ -119,42 +135,22 @@ namespace Rawr.Warlock
 
             fillerSpell.CalculateDerivedStats(calculations);
             float lifeTapCastTime = calculations.GlobalCooldown + calculations.CalculationOptions.Latency;
-            float lifeTapMana = (float)Math.Round((580 + calculations.ShadowDamage * 0.8f) * (1 + 0.1f * calculations.CalculationOptions.ImprovedLifeTap));
-            float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
-            //float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
-            //float numLifeTaps2 = (durationLeft * fillerSpell.ManaCost - fillerSpell.CastTime * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime);
-            float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
+            float lifeTapMana = -(float)Math.Round((580 + calculations.ShadowDamage * 0.8f) * (1 + 0.1f * calculations.CalculationOptions.ImprovedLifeTap));
 
-            manaLeft -= numFillers * fillerSpell.ManaCost;
-            manaLeft += numLifeTaps * lifeTapMana;
-            while (manaLeft < 0)
-            {
-                numLifeTaps++;
-                manaLeft += lifeTapMana;
-            }
-            while (manaLeft > lifeTapMana)
-            {
-                numLifeTaps--;
-                manaLeft -= lifeTapMana;
-            }
-            numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
-            durationLeft -= numFillers * fillerSpell.CastTime + numLifeTaps * lifeTapCastTime;
-
-            if (calcDps && (manaLeft < 0 || manaLeft > lifeTapMana || durationLeft > fillerSpell.CastTime))
-                Console.WriteLine("sigh");
+            fillerSpell.CastRatio = (lifeTapMana * fillerSpell.CastTime * remainingCastRatio - mpsWithoutFiller * fillerSpell.CastTime * lifeTapCastTime) / (lifeTapMana * fillerSpell.CastTime - fillerSpell.ManaCost * lifeTapCastTime);
+            fillerSpell.ManaPerSecond *= fillerSpell.CastRatio;
+            float lifeTapFrequency = lifeTapMana / (mpsWithoutFiller - fillerSpell.ManaPerSecond);
+            if (lifeTapFrequency < 0)
+                Console.WriteLine("shit");                    
             
             if (calcDps)
             {
                 fillerSpell.CalculateDamage(calculations);
-                totalDamage += numFillers * fillerSpell.Damage;
-                calculations.TotalDamage = totalDamage;
-                float dps = (float)Math.Round(calculations.TotalDamage / calculations.CalculationOptions.FightDuration);
-                calculations.SubPoints = new float[] { dps };
-                calculations.OverallPoints = dps;
+                dps += fillerSpell.Damage / fillerSpell.Frequency * fillerSpell.CastRatio;
             }
             else
             {
-                float fillerHitsPerSecond = fillerSpell.ChanceToHit(calculations.CalculationOptions.TargetLevel, calculations.HitPercent) * numFillers / calculations.CalculationOptions.FightDuration;
+                float fillerHitsPerSecond = fillerSpell.CastRatio / fillerSpell.CastTime * fillerSpell.ChanceToHit;
                 if (fillerSpell is ShadowBolt)
                 {
                     ShadowSpellsPerSecond += fillerHitsPerSecond;
@@ -172,6 +168,8 @@ namespace Rawr.Warlock
                     ShadowBoltsPerSecond = 0;
                 }
             }
+
+            return dps;
         }
 
         public void CalculateAdvancedInfo()
@@ -211,7 +209,7 @@ namespace Rawr.Warlock
             float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
             float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
 
-            float fillerHitsPerSecond = fillerSpell.ChanceToHit(calculations.CalculationOptions.TargetLevel, calculations.HitPercent) * numFillers / calculations.CalculationOptions.FightDuration;
+            float fillerHitsPerSecond = fillerSpell.ChanceToHit * numFillers / calculations.CalculationOptions.FightDuration;
             if (fillerSpell is ShadowBolt)
             {
                 ShadowSpellsPerSecond += fillerHitsPerSecond;
@@ -251,17 +249,36 @@ namespace Rawr.Warlock
             fillerSpell.CalculateDamage(calculations);
             float lifeTapCastTime = calculations.GlobalCooldown + calculations.CalculationOptions.Latency;
             float lifeTapMana = (580 + calculations.ShadowDamage * 0.8f) * (1 + 0.1f * calculations.CalculationOptions.ImprovedLifeTap);
+
             float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
+            //float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
+            //float numLifeTaps2 = (durationLeft * fillerSpell.ManaCost - fillerSpell.CastTime * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime);
             float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
-            //float numLifeTaps = (float)Math.Ceiling((durationLeft * fillerSpell.ManaCost - fillerSpell.CastTime * fillerSpell.ManaCost - manaLeft * fillerSpell.CastTime) / (lifeTapCastTime * fillerSpell.ManaCost + lifeTapMana * fillerSpell.CastTime));
-            //float numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime - 1);
+
+            manaLeft -= numFillers * fillerSpell.ManaCost;
+            manaLeft += numLifeTaps * lifeTapMana;
+            while (manaLeft < 0)
+            {
+                numLifeTaps++;
+                manaLeft += lifeTapMana;
+            }
+            while (manaLeft > lifeTapMana)
+            {
+                numLifeTaps--;
+                manaLeft -= lifeTapMana;
+            }
+            numFillers = (float)Math.Floor((durationLeft - lifeTapCastTime * numLifeTaps) / fillerSpell.CastTime);
+            durationLeft -= numFillers * fillerSpell.CastTime + numLifeTaps * lifeTapCastTime;
+
+            if (manaLeft < 0 || manaLeft > lifeTapMana || durationLeft > fillerSpell.CastTime)
+                Console.WriteLine("sigh");
 
             manaLeft -= numFillers * fillerSpell.ManaCost;
             manaLeft += numLifeTaps * lifeTapMana;
             totalDamage += numFillers * fillerSpell.Damage;
 
-            calculations.TotalDamage = totalDamage;
-            float dps = (float)Math.Round(calculations.TotalDamage / calculations.CalculationOptions.FightDuration);
+            calculations.TotalDamage = (float)Math.Round(totalDamage);
+            float dps = calculations.TotalDamage / calculations.CalculationOptions.FightDuration;
             calculations.SubPoints = new float[] { dps };
             calculations.OverallPoints = dps;
         }

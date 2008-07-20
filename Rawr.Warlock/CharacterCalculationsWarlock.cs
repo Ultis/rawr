@@ -32,6 +32,12 @@ namespace Rawr.Warlock
         Felguard
     }
 
+    public enum IsbMethod
+    {
+        Custom,
+        Raid
+    }
+
     [Serializable]
     public class CalculationOptionsWarlock : ICalculationOptionBase
     {
@@ -61,6 +67,20 @@ namespace Rawr.Warlock
         public bool CastSiphonLife { get; set; }
         public bool CastShadowburn { get; set; }
         public bool CastConflagrate { get; set; }
+        public IsbMethod IsbMethod { get; set; }
+        public float CustomIsbUptime { get; set; }
+        public int NumRaidWarlocks { get; set; }
+        private SUWarlock[] raidWarlocks = new SUWarlock[5];
+        public SUWarlock[] RaidWarlocks
+        {
+            get { return raidWarlocks; }
+        }
+        public int NumRaidShadowPriests { get; set; }
+        private SUShadowPriest[] raidShadowPriests = new SUShadowPriest[5];
+        public SUShadowPriest[] RaidShadowPriests
+        {
+            get { return raidShadowPriests; }
+        }
 
         //affliction talents
         public int Suppression { get; set; }
@@ -136,6 +156,11 @@ namespace Rawr.Warlock
 
         private CalculationOptionsWarlock() 
         {
+            for (int i = 0; i < 5; i++)
+            {
+                RaidWarlocks[i] = new SUWarlock();
+                RaidShadowPriests[i] = new SUShadowPriest();
+            }
         }
 
         public CalculationOptionsWarlock(Character character)
@@ -158,6 +183,16 @@ namespace Rawr.Warlock
             CastConflagrate = false;
             Pet = Pet.Succubus;
             PetSacrificed = true;
+            IsbMethod = IsbMethod.Raid;
+            CustomIsbUptime = .6f;
+            NumRaidWarlocks = 2;
+            NumRaidShadowPriests = 2;
+
+            for (int i = 0; i < 5; i++)
+            {
+                RaidWarlocks[i] = new SUWarlock();
+                RaidShadowPriests[i] = new SUShadowPriest();
+            }
         }
 
         private void ImportTalents(Character character)
@@ -258,7 +293,7 @@ namespace Rawr.Warlock
         } 
     }
 
-    class CharacterCalculationsWarlock : CharacterCalculationsBase
+    public class CharacterCalculationsWarlock : CharacterCalculationsBase
     {
 
         private float _overallPoints = 0f;
@@ -288,6 +323,7 @@ namespace Rawr.Warlock
 
         public Stats BasicStats { get; set; }
         public CalculationOptionsWarlock CalculationOptions { get; set; }
+        public WarlockSpellRotation SpellRotation { get; set; }
 
         public float GlobalCooldown { get; set; }
         public float HitPercent { get; set; }
@@ -297,18 +333,14 @@ namespace Rawr.Warlock
         public float FireDamage { get; set; }
 
         public float TotalDamage { get; set; }
+        public float IsbUptime { get; set; }
+        public float RaidDpsFromIsb { get; set; }
 
         private Stats _totalStats;
         public Stats TotalStats
         {
             get { return _totalStats; }
             set { _totalStats = value; }
-        }
-
-        public Dictionary<Spell, int> NumCasts
-        {
-            get;
-            set;
         }
 
         public int NumLifetaps
@@ -325,7 +357,6 @@ namespace Rawr.Warlock
 
         public float DPS { get; set; }
 
-        public List<Spell> Spells { get; set; }
         public Character character { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -337,13 +368,15 @@ namespace Rawr.Warlock
             vals.Add("Mana", BasicStats.Mana.ToString());
             vals.Add("Stamina", BasicStats.Stamina.ToString());
             vals.Add("Intellect", BasicStats.Intellect.ToString());
-            vals.Add("Total Crit %", CritPercent.ToString());
-            vals.Add("Hit %", HitPercent.ToString());
-            vals.Add("Haste %", HastePercent.ToString());
-            vals.Add("Shadow Damage", ShadowDamage.ToString());
-            vals.Add("Fire Damage", FireDamage.ToString());
+            vals.Add("Total Crit %", CritPercent.ToString("0.00"));
+            vals.Add("Hit %", HitPercent.ToString("0.00"));
+            vals.Add("Haste %", HastePercent.ToString("0.00"));
+            vals.Add("Shadow Damage", ShadowDamage.ToString("0"));
+            vals.Add("Fire Damage", FireDamage.ToString("0"));
+            vals.Add("ISB Uptime", IsbUptime.ToString("0.00"));
+            vals.Add("RDPS from ISB", Math.Round(RaidDpsFromIsb).ToString());
             vals.Add("Total Damage", TotalDamage.ToString());
-            vals.Add("DPS", DpsRating.ToString());
+            vals.Add("DPS", Math.Round(DpsRating).ToString());
             //vals.Add("Casting Speed", (1f / (TotalStats.SpellHasteRating / 1570f + 1f)).ToString());
             //vals.Add("Shadow Damage", (TotalStats.SpellShadowDamageRating + TotalStats.SpellDamageRating).ToString());
             //vals.Add("Fire Damage", (TotalStats.SpellFireDamageRating + TotalStats.SpellDamageRating).ToString());

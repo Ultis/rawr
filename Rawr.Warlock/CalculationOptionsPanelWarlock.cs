@@ -12,18 +12,17 @@ namespace Rawr.Warlock
 	{
         private bool calculationSuspended = false;
         private WarlockTalentsForm talents;
+        private RaidISB raidIsb;
 
 		public CalculationOptionsPanelWarlock()
 		{
 			InitializeComponent();
             talents = new WarlockTalentsForm(this);
+            raidIsb = new RaidISB(this);
         }
 
 		protected override void LoadCalculationOptions()
 		{
-			if (Character.CalculationOptions == null)
-				Character.CalculationOptions = new CalculationOptionsWarlock(Character);
-
             if (Character.CalculationOptions == null)
                 Character.CalculationOptions = new CalculationOptionsWarlock(Character);
 			CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
@@ -41,6 +40,19 @@ namespace Rawr.Warlock
             comboBoxCastedCurse.SelectedIndex = (int)options.CastedCurse;
             checkBoxCastImmolate.Checked = options.CastImmolate;
             checkBoxCastCorruption.Checked = options.CastCorruption;
+            if (options.IsbMethod == IsbMethod.Custom)
+            {
+                radioButtonIsbCustom.Checked = true;
+                textBoxIsbCustom.Enabled = true;
+                buttonIsbRaid.Enabled = false;
+            }
+            else
+            {
+                radioButtonIsbRaid.Checked = true;
+                textBoxIsbCustom.Enabled = false;
+                buttonIsbRaid.Enabled = true;
+            }
+            textBoxIsbCustom.Text = options.CustomIsbUptime.ToString();
 
             checkBoxCastUnstableAffliction.Enabled = options.UnstableAffliction == 1;
             checkBoxCastUnstableAffliction.Checked = checkBoxCastUnstableAffliction.Enabled && options.CastUnstableAffliction;
@@ -64,7 +76,7 @@ namespace Rawr.Warlock
             calculationSuspended = false;
         }
 
-        public void UpdatePanelOptions()
+        public void UpdateTalentOptions()
         {
             CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
 
@@ -241,6 +253,53 @@ namespace Rawr.Warlock
             options.PetSacrificed = checkBoxPetSacrificed.Checked;
             if (!calculationSuspended) Character.OnItemsChanged();
         }
-	}
 
+        private void radioButtonIsbCustom_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            if (radioButtonIsbCustom.Checked)
+            {
+                options.IsbMethod = IsbMethod.Custom;
+                textBoxIsbCustom.Enabled = true;
+            }
+            else
+                textBoxIsbCustom.Enabled = false;
+            if (!calculationSuspended) Character.OnItemsChanged();
+        }
+
+        private void textBoxIsbCustom_Leave(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            float value;
+            if(float.TryParse(textBoxIsbCustom.Text, out value))
+            {
+                options.CustomIsbUptime = value;
+                if (!calculationSuspended) Character.OnItemsChanged();
+            }
+        }
+
+        private void radioButtonIsbRaid_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            if (radioButtonIsbRaid.Checked)
+            {
+                options.IsbMethod = IsbMethod.Raid;
+                buttonIsbRaid.Enabled = true;
+            }
+            else
+            {
+                options.IsbMethod = IsbMethod.Custom;
+                buttonIsbRaid.Enabled = false;
+            }
+            if (!calculationSuspended) Character.OnItemsChanged();
+        }
+
+        private void buttonIsbRaid_Click(object sender, EventArgs e)
+        {
+            raidIsb.LoadRaid();
+            if (raidIsb.ShowDialog() == DialogResult.OK)
+                raidIsb.SaveRaid();
+            if (!calculationSuspended) Character.OnItemsChanged();
+        }
+	}
 }

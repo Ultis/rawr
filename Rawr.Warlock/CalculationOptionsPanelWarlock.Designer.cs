@@ -59,8 +59,14 @@
             this.textBoxDotGap = new System.Windows.Forms.TextBox();
             this.textBoxAfflictionDebuffs = new System.Windows.Forms.TextBox();
             this.textBoxShadowPriestDps = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonIsbRaid = new System.Windows.Forms.Button();
+            this.textBoxIsbCustom = new System.Windows.Forms.TextBox();
+            this.radioButtonIsbRaid = new System.Windows.Forms.RadioButton();
+            this.radioButtonIsbCustom = new System.Windows.Forms.RadioButton();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -197,7 +203,7 @@
             // checkBoxPetSacrificed
             // 
             this.checkBoxPetSacrificed.AutoSize = true;
-            this.checkBoxPetSacrificed.Location = new System.Drawing.Point(10, 44);
+            this.checkBoxPetSacrificed.Location = new System.Drawing.Point(10, 46);
             this.checkBoxPetSacrificed.Name = "checkBoxPetSacrificed";
             this.checkBoxPetSacrificed.Size = new System.Drawing.Size(73, 17);
             this.checkBoxPetSacrificed.TabIndex = 14;
@@ -229,7 +235,7 @@
             this.groupBox2.Controls.Add(this.checkBoxCastUnstableAffliction);
             this.groupBox2.Location = new System.Drawing.Point(3, 220);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(208, 212);
+            this.groupBox2.Size = new System.Drawing.Size(208, 142);
             this.groupBox2.TabIndex = 16;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Spell Choice";
@@ -237,7 +243,7 @@
             // checkBoxCastConflagrate
             // 
             this.checkBoxCastConflagrate.AutoSize = true;
-            this.checkBoxCastConflagrate.Location = new System.Drawing.Point(10, 189);
+            this.checkBoxCastConflagrate.Location = new System.Drawing.Point(123, 119);
             this.checkBoxCastConflagrate.Name = "checkBoxCastConflagrate";
             this.checkBoxCastConflagrate.Size = new System.Drawing.Size(80, 17);
             this.checkBoxCastConflagrate.TabIndex = 17;
@@ -248,7 +254,7 @@
             // checkBoxCastShadowburn
             // 
             this.checkBoxCastShadowburn.AutoSize = true;
-            this.checkBoxCastShadowburn.Location = new System.Drawing.Point(10, 166);
+            this.checkBoxCastShadowburn.Location = new System.Drawing.Point(10, 119);
             this.checkBoxCastShadowburn.Name = "checkBoxCastShadowburn";
             this.checkBoxCastShadowburn.Size = new System.Drawing.Size(86, 17);
             this.checkBoxCastShadowburn.TabIndex = 16;
@@ -259,7 +265,7 @@
             // checkBoxCastImmolate
             // 
             this.checkBoxCastImmolate.AutoSize = true;
-            this.checkBoxCastImmolate.Location = new System.Drawing.Point(10, 74);
+            this.checkBoxCastImmolate.Location = new System.Drawing.Point(10, 73);
             this.checkBoxCastImmolate.Name = "checkBoxCastImmolate";
             this.checkBoxCastImmolate.Size = new System.Drawing.Size(68, 17);
             this.checkBoxCastImmolate.TabIndex = 12;
@@ -270,7 +276,7 @@
             // checkBoxCastCorruption
             // 
             this.checkBoxCastCorruption.AutoSize = true;
-            this.checkBoxCastCorruption.Location = new System.Drawing.Point(10, 97);
+            this.checkBoxCastCorruption.Location = new System.Drawing.Point(123, 73);
             this.checkBoxCastCorruption.Name = "checkBoxCastCorruption";
             this.checkBoxCastCorruption.Size = new System.Drawing.Size(74, 17);
             this.checkBoxCastCorruption.TabIndex = 13;
@@ -281,7 +287,7 @@
             // checkBoxCastSiphonLife
             // 
             this.checkBoxCastSiphonLife.AutoSize = true;
-            this.checkBoxCastSiphonLife.Location = new System.Drawing.Point(10, 143);
+            this.checkBoxCastSiphonLife.Location = new System.Drawing.Point(123, 96);
             this.checkBoxCastSiphonLife.Name = "checkBoxCastSiphonLife";
             this.checkBoxCastSiphonLife.Size = new System.Drawing.Size(79, 17);
             this.checkBoxCastSiphonLife.TabIndex = 14;
@@ -292,7 +298,7 @@
             // checkBoxCastUnstableAffliction
             // 
             this.checkBoxCastUnstableAffliction.AutoSize = true;
-            this.checkBoxCastUnstableAffliction.Location = new System.Drawing.Point(10, 120);
+            this.checkBoxCastUnstableAffliction.Location = new System.Drawing.Point(10, 96);
             this.checkBoxCastUnstableAffliction.Name = "checkBoxCastUnstableAffliction";
             this.checkBoxCastUnstableAffliction.Size = new System.Drawing.Size(111, 17);
             this.checkBoxCastUnstableAffliction.TabIndex = 15;
@@ -305,9 +311,9 @@
             this.groupBox3.Controls.Add(this.comboBoxPet);
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.checkBoxPetSacrificed);
-            this.groupBox3.Location = new System.Drawing.Point(3, 438);
+            this.groupBox3.Location = new System.Drawing.Point(3, 368);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(208, 68);
+            this.groupBox3.Size = new System.Drawing.Size(208, 69);
             this.groupBox3.TabIndex = 17;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Pet Options";
@@ -383,10 +389,66 @@
             this.textBoxShadowPriestDps.TabIndex = 29;
             this.textBoxShadowPriestDps.Leave += new System.EventHandler(this.textBoxShadowPriestDps_Leave);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.buttonIsbRaid);
+            this.groupBox1.Controls.Add(this.textBoxIsbCustom);
+            this.groupBox1.Controls.Add(this.radioButtonIsbRaid);
+            this.groupBox1.Controls.Add(this.radioButtonIsbCustom);
+            this.groupBox1.Location = new System.Drawing.Point(3, 443);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(208, 74);
+            this.groupBox1.TabIndex = 31;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Improved Shadow Bolt";
+            // 
+            // buttonIsbRaid
+            // 
+            this.buttonIsbRaid.Location = new System.Drawing.Point(114, 45);
+            this.buttonIsbRaid.Name = "buttonIsbRaid";
+            this.buttonIsbRaid.Size = new System.Drawing.Size(88, 23);
+            this.buttonIsbRaid.TabIndex = 31;
+            this.buttonIsbRaid.Text = "Shadow Users";
+            this.buttonIsbRaid.UseVisualStyleBackColor = true;
+            this.buttonIsbRaid.Click += new System.EventHandler(this.buttonIsbRaid_Click);
+            // 
+            // textBoxIsbCustom
+            // 
+            this.textBoxIsbCustom.Location = new System.Drawing.Point(114, 19);
+            this.textBoxIsbCustom.Name = "textBoxIsbCustom";
+            this.textBoxIsbCustom.Size = new System.Drawing.Size(88, 20);
+            this.textBoxIsbCustom.TabIndex = 30;
+            this.textBoxIsbCustom.Leave += new System.EventHandler(this.textBoxIsbCustom_Leave);
+            // 
+            // radioButtonIsbRaid
+            // 
+            this.radioButtonIsbRaid.AutoSize = true;
+            this.radioButtonIsbRaid.Location = new System.Drawing.Point(10, 48);
+            this.radioButtonIsbRaid.Name = "radioButtonIsbRaid";
+            this.radioButtonIsbRaid.Size = new System.Drawing.Size(47, 17);
+            this.radioButtonIsbRaid.TabIndex = 1;
+            this.radioButtonIsbRaid.TabStop = true;
+            this.radioButtonIsbRaid.Text = "Raid";
+            this.radioButtonIsbRaid.UseVisualStyleBackColor = true;
+            this.radioButtonIsbRaid.CheckedChanged += new System.EventHandler(this.radioButtonIsbRaid_CheckedChanged);
+            // 
+            // radioButtonIsbCustom
+            // 
+            this.radioButtonIsbCustom.AutoSize = true;
+            this.radioButtonIsbCustom.Location = new System.Drawing.Point(10, 20);
+            this.radioButtonIsbCustom.Name = "radioButtonIsbCustom";
+            this.radioButtonIsbCustom.Size = new System.Drawing.Size(60, 17);
+            this.radioButtonIsbCustom.TabIndex = 0;
+            this.radioButtonIsbCustom.TabStop = true;
+            this.radioButtonIsbCustom.Text = "Custom";
+            this.radioButtonIsbCustom.UseVisualStyleBackColor = true;
+            this.radioButtonIsbCustom.CheckedChanged += new System.EventHandler(this.radioButtonIsbCustom_CheckedChanged);
+            // 
             // CalculationOptionsPanelWarlock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.textBoxShadowPriestDps);
             this.Controls.Add(this.label10);
@@ -409,6 +471,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -446,5 +510,10 @@
         private System.Windows.Forms.CheckBox checkBoxCastConflagrate;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBoxShadowPriestDps;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton radioButtonIsbRaid;
+        private System.Windows.Forms.RadioButton radioButtonIsbCustom;
+        private System.Windows.Forms.Button buttonIsbRaid;
+        private System.Windows.Forms.TextBox textBoxIsbCustom;
 	}
 }

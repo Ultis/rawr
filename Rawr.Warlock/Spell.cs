@@ -55,67 +55,51 @@ namespace Rawr.Warlock
         //derived stats
         public float CritRate { get; set; }
         public float CritBonus { get; set; }
-        public float HitRate { get; set; }
+        public float ChanceToHit { get; set; }
         public float Damage { get; set; }
         public float Frequency { get; set; }
-        //public float CastRatio { get; set; }
+        public float CastRatio { get; set; }
         public float CastTime { get; set; }
-        //public float ManaPerSecond { get; set; }
+        public float ManaPerSecond { get; set; }
         public float ManaCost { get; set; }
         public float BonusMultiplier { get; set; }
         //public float HealthPerSecond { get; set; }
 
-        public float ChanceToHit(int targetLevel, float hitPercent)
+        public void CalculateDerivedStats(CharacterCalculationsWarlock calculations)
         {
-            return Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + 0.01f * hitPercent);
-        }
-
-        public void CalculateHitRate(CharacterCalculationsWarlock calculations)
-        {
-            HitRate = calculations.HitPercent;
+            //hit rate
+            ChanceToHit = CalculationsWarlock.ChanceToHit(calculations.CalculationOptions.TargetLevel, calculations.HitPercent);
             if (SpellTree == SpellTree.Affliction)
-                HitRate += 2 * calculations.CalculationOptions.Suppression;
-        }
+                ChanceToHit = Math.Min(0.99f, ChanceToHit + 2 * calculations.CalculationOptions.Suppression);
 
-        public void CalculateCastTime(CharacterCalculationsWarlock calculations)
-        {
+            //cast time
             CastTime = BaseCastTime / (1 + 0.01f * calculations.HastePercent);
             CastTime += calculations.CalculationOptions.Latency;
             if (CastTime < calculations.GlobalCooldown + calculations.CalculationOptions.Latency)
                 CastTime = calculations.GlobalCooldown + calculations.CalculationOptions.Latency;
-            
             //for DoTs, factor in the chance to miss (because you have to re-apply)
             if (BaseDotDuration != 0)
-                CastTime /= (1 - ChanceToHit(calculations.CalculationOptions.TargetLevel, HitRate) / 100);
-
+                CastTime /= ChanceToHit;
             if (CastTime < calculations.GlobalCooldown + calculations.CalculationOptions.Latency)
                 CastTime = calculations.GlobalCooldown + calculations.CalculationOptions.Latency;
-        }
 
-        public void CalculateFrequency(CharacterCalculationsWarlock calculations)
-        {
+            //frequency
             if (BaseDotDuration == 0)
                 Frequency = CastTime;
             else
                 Frequency = BaseDotDuration + CastTime + calculations.CalculationOptions.DotGap - (BaseCastTime + calculations.CalculationOptions.Latency);
-        }
 
-        public void CalculateManaCost(CharacterCalculationsWarlock calculations)
-        {
+            //mana cost
             ManaCost = BaseManaCost;
             if (SpellTree == SpellTree.Destruction)
                 ManaCost *= (1 - 0.01f * calculations.CalculationOptions.Cataclysm);
             if (BaseDotDuration != 0)
-                ManaCost /= ChanceToHit(calculations.CalculationOptions.TargetLevel, HitRate);
+                ManaCost /= ChanceToHit;
             ManaCost = (float)Math.Round(ManaCost);
-        }
+            ManaPerSecond = ManaCost / Frequency;
 
-        public void CalculateDerivedStats(CharacterCalculationsWarlock calculations)
-        {
-            CalculateHitRate(calculations);
-            CalculateCastTime(calculations);
-            CalculateFrequency(calculations);
-            CalculateManaCost(calculations);
+            //cast ratio
+            CastRatio = CastTime / Frequency;
         }
 
         public void CalculateDamage(CharacterCalculationsWarlock calculations)
@@ -129,7 +113,7 @@ namespace Rawr.Warlock
             {
                 case MagicSchool.Shadow:
                     plusDamage = calculations.ShadowDamage;
-                    BonusMultiplier *= calculations.BasicStats.BonusSpellPowerMultiplier * calculations.BasicStats.BonusShadowSpellPowerMultiplier;
+                    BonusMultiplier *= calculations.BasicStats.BonusSpellPowerMultiplier * calculations.BasicStats.BonusShadowSpellPowerMultiplier * (1 + 0.2f * calculations.IsbUptime);
                     break;
                 case MagicSchool.Fire:
                     plusDamage = calculations.FireDamage;
@@ -150,7 +134,7 @@ namespace Rawr.Warlock
                 averageDamage += plusDamage * DirectDamageCoefficient;
                 averageDamage *= 1 + 0.01f * calculations.CritPercent * CritBonus;
                 if (BaseDotDuration == 0)
-                    averageDamage *= ChanceToHit(calculations.CalculationOptions.TargetLevel, HitRate);
+                    averageDamage *= ChanceToHit;
             }
 
             if (dotDamage != 0)

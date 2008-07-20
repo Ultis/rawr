@@ -66,8 +66,10 @@ namespace Rawr.Warlock
                         "Spell Stats:Hit %",
                         "Spell Stats:Haste %",
                         //"Spell Stats:Casting Speed",
-                        "Spell Stats:Shadow Damage",
-                        "Spell Stats:Fire Damage",
+                        "Spell Stats:Shadow Damage*Includes trinket and proc effects",
+                        "Spell Stats:Fire Damage*Includes trinket and proc effects",
+                        "Overall Stats:ISB Uptime", 
+                        "Overall Stats:RDPS from ISB*Raid DPS loss from switching to Fire", 
                         "Overall Stats:Total Damage", 
                         "Overall Stats:DPS",
                         //"Shadowbolt Stats:SB Min Hit",
@@ -119,7 +121,12 @@ namespace Rawr.Warlock
         private string[] _customChartNames = null;
         public override string[] CustomChartNames
         {
-            get { return _customChartNames ?? ( _customChartNames = new string[] { }); }
+            get 
+            {
+                if (_customChartNames == null)
+                    _customChartNames = new string[] { "Stats" };
+                return _customChartNames;
+            }
         }
 
 
@@ -170,6 +177,11 @@ namespace Rawr.Warlock
 			CalculationOptionsWarlock calcOpts = serializer.Deserialize(reader) as CalculationOptionsWarlock;
 			return calcOpts;
 		}
+
+        public static float ChanceToHit(float targetLevel, float hitPercent)
+        {
+            return Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + 0.01f * hitPercent);
+        }
 
         public static void LoadTalentCode(Character character, string talentCode)
         {
@@ -244,55 +256,6 @@ namespace Rawr.Warlock
             calculationOptions.ShadowAndFlame = int.Parse(talentCode.Substring(62, 1));
             calculationOptions.Shadowfury = int.Parse(talentCode.Substring(63, 1));
         }
-
-        //public Character GetTalents(Character character)
-        //{
-        //    CalculationOptionsWarlock options = character.CalculationOptions as CalculationOptionsWarlock;
-
-        //    //if (!options.TalentsSaved)
-        //    //{
-        //        TalentTree tree = character.Talents;
-        //        options.Suppression = tree.GetTalent("Suppression").PointsInvested;
-        //        options.ImprovedCorruption = tree.GetTalent("ImprovedCorruption").PointsInvested;
-        //        options.ImprovedDrainSoul = tree.GetTalent("ImprovedDrainSoul").PointsInvested;
-        //        options.ImprovedLifeTap = tree.GetTalent("ImprovedLifeTap").PointsInvested;
-        //        options.SoulSiphon = tree.GetTalent("SoulSiphon").PointsInvested;
-        //        options.ImprovedCurseOfAgony = tree.GetTalent("ImprovedCurseOfAgony").PointsInvested;
-        //        options.AmplifyCurse = tree.GetTalent("AmplifyCurse").PointsInvested;
-        //        options.Nightfall = tree.GetTalent("Nightfall").PointsInvested;
-        //        options.EmpoweredCorruption = tree.GetTalent("EmpoweredCorruption").PointsInvested;
-        //        options.ShadowMastery = tree.GetTalent("ShadowMastery").PointsInvested;
-        //        options.Contagion = tree.GetTalent("Contagion").PointsInvested;
-        //        options.ImprovedImp = tree.GetTalent("ImprovedImp").PointsInvested;
-        //        options.DemonicEmbrace = tree.GetTalent("DemonicEmbrace").PointsInvested;
-        //        options.FelIntellect = tree.GetTalent("FelIntellect").PointsInvested;
-        //        options.FelStamina = tree.GetTalent("FelStamina").PointsInvested;
-        //        options.DemonicAegis = tree.GetTalent("DemonicAegis").PointsInvested;
-        //        options.UnholyPower = tree.GetTalent("UnholyPower").PointsInvested;
-        //        options.DemonicSacrifice = tree.GetTalent("DemonicSacrifice").PointsInvested;
-        //        options.ManaFeed = tree.GetTalent("ManaFeed").PointsInvested;
-        //        options.MasterDemonologist = tree.GetTalent("MasterDemonologist").PointsInvested;
-        //        options.SoulLink = tree.GetTalent("SoulLink").PointsInvested;
-        //        options.DemonicKnowledge = tree.GetTalent("DemonicKnowledge").PointsInvested;
-        //        options.DemonicTactics = tree.GetTalent("DemonicTactics").PointsInvested;
-        //        options.ImprovedShadowBolt = tree.GetTalent("ImprovedShadowBolt").PointsInvested;
-        //        options.Cataclysm = tree.GetTalent("Cataclysm").PointsInvested;
-        //        options.Bane = tree.GetTalent("Bane").PointsInvested;
-        //        options.ImprovedFirebolt = tree.GetTalent("ImprovedFirebolt").PointsInvested;
-        //        options.ImprovedLashOfPain = tree.GetTalent("ImprovedLashOfPain").PointsInvested;
-        //        options.Devastation = tree.GetTalent("Devastation").PointsInvested;
-        //        options.ImprovedSearingPain = tree.GetTalent("ImprovedSearingPain").PointsInvested;
-        //        options.ImprovedImmolate = tree.GetTalent("ImprovedImmolate").PointsInvested;
-        //        options.Ruin = tree.GetTalent("Ruin").PointsInvested;
-        //        options.Emberstorm = tree.GetTalent("Emberstorm").PointsInvested;
-        //        options.Backlash = tree.GetTalent("Backlash").PointsInvested;
-        //        options.SoulLeech = tree.GetTalent("SoulLeech").PointsInvested;
-        //        options.ShadowAndFlame = tree.GetTalent("ShadowAndFlame").PointsInvested;
-        //    //}
-
-        //    return character;
-        //}
-
         
         /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
@@ -315,6 +278,7 @@ namespace Rawr.Warlock
             calculations.BasicStats = GetCharacterStats(character, additionalItem);
 			calculations.CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
 
+            int targetLevel = calculations.CalculationOptions.TargetLevel;
             calculations.HitPercent = calculations.BasicStats.SpellHitRating / 12.62f;
             calculations.CritPercent = calculations.BasicStats.SpellCritRating / 22.08f;
             calculations.HastePercent = calculations.BasicStats.SpellHasteRating / 15.77f;
@@ -324,23 +288,26 @@ namespace Rawr.Warlock
             calculations.ShadowDamage = calculations.BasicStats.SpellDamageRating + calculations.BasicStats.SpellShadowDamageRating;
             calculations.FireDamage = calculations.BasicStats.SpellDamageRating + calculations.BasicStats.SpellFireDamageRating;
 
-            WarlockSpellRotation wsr = new WarlockSpellRotation(calculations);
-            wsr.Calculate(false);
-            //wsr.CalculateAdvancedInfo();
+            calculations.SpellRotation = new WarlockSpellRotation(calculations);
+            calculations.SpellRotation.Calculate(false);
+            //calculations.SpellRotation.CalculateAdvancedInfo();
+
+            //calculate ISB
+            ShadowUser.CalculateRaidIsbUptime(calculations);
 
             Stats totalStats = calculations.BasicStats;
             //T4 2 piece bonus
-            totalStats.SpellShadowDamageRating += totalStats.BonusWarlockSchoolDamageOnCast * (1 - (float)Math.Pow(0.95, 15 * wsr.ShadowSpellsPerSecond));
-            totalStats.SpellFireDamageRating += totalStats.BonusWarlockSchoolDamageOnCast * (1 - (float)Math.Pow(0.95, 15 * wsr.FireSpellsPerSecond));
+            totalStats.SpellShadowDamageRating += totalStats.BonusWarlockSchoolDamageOnCast * (1 - (float)Math.Pow(0.95, 15 * calculations.SpellRotation.ShadowSpellsPerSecond));
+            totalStats.SpellFireDamageRating += totalStats.BonusWarlockSchoolDamageOnCast * (1 - (float)Math.Pow(0.95, 15 * calculations.SpellRotation.FireSpellsPerSecond));
 
             //Spellstrike 2 piece bonus
-            totalStats.SpellDamageRating += totalStats.SpellDamageFor10SecOnHit_5 * (1 - (float)Math.Pow(0.95, 10 * wsr.SpellsPerSecond));
+            totalStats.SpellDamageRating += totalStats.SpellDamageFor10SecOnHit_5 * (1 - (float)Math.Pow(0.95, 10 * calculations.SpellRotation.SpellsPerSecond));
             
             //Quagmirran's Eye
-            totalStats.HasteRating += totalStats.SpellHasteFor6SecOnHit_10_45 * 6 / (45 + 9 / wsr.SpellsPerSecond);
+            totalStats.HasteRating += totalStats.SpellHasteFor6SecOnHit_10_45 * 6 / (45 + 9 / calculations.SpellRotation.SpellsPerSecond);
 
             //Band of the Eternal Sage
-            totalStats.SpellDamageRating += totalStats.SpellDamageFor10SecOnHit_10_45 * 10 / (45 + 9 / wsr.SpellsPerSecond);
+            totalStats.SpellDamageRating += totalStats.SpellDamageFor10SecOnHit_10_45 * 10 / (45 + 9 / calculations.SpellRotation.SpellsPerSecond);
 
             calculations.HastePercent = totalStats.SpellHasteRating / 15.77f;
             calculations.GlobalCooldown = 1.5f / (1 + 0.01f * calculations.HastePercent);
@@ -349,8 +316,12 @@ namespace Rawr.Warlock
             calculations.ShadowDamage = totalStats.SpellDamageRating + totalStats.SpellShadowDamageRating;
             calculations.FireDamage = totalStats.SpellDamageRating + totalStats.SpellFireDamageRating;
 
-            wsr.Calculate(true);
-            //wsr.CalculateDps();
+            float dps = calculations.SpellRotation.Calculate(true);
+            //calculations.SpellRotation.CalculateDps();
+
+            calculations.TotalDamage = (float)Math.Round(dps * calculations.CalculationOptions.FightDuration);
+            calculations.SubPoints = new float[] { dps };
+            calculations.OverallPoints = dps;
 
             return calculations;
         }
@@ -576,7 +547,57 @@ namespace Rawr.Warlock
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            throw new NotImplementedException();
+            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+            CharacterCalculationsWarlock baseCalc, currentCalc, calc;
+            ComparisonCalculationBase comparison;
+            float[] subPoints;
+
+            switch (chartName)
+            {
+                case "Stats":
+                    Item[] itemList = new Item[] 
+                    {
+                        new Item() { Stats = new Stats() { SpellDamageRating = 1 } },
+                        new Item() { Stats = new Stats() { SpellShadowDamageRating = 1 } }, 
+                        new Item() { Stats = new Stats() { SpellFireDamageRating = 1 } }, 
+                        new Item() { Stats = new Stats() { SpellCritRating = 1 } },
+                        new Item() { Stats = new Stats() { SpellHasteRating = 1 } },
+                        new Item() { Stats = new Stats() { SpellHitRating = 1 } },
+                    };
+                    string[] statList = new string[] 
+                    {
+                        "1 Spell Damage", 
+                        "1 Shadow Damage", 
+                        "1 Fire Damage", 
+                        "1 Spell Crit Rating", 
+                        "1 Spell Haste Rating", 
+                        "1 Spell Hit Rating",
+                    };
+
+                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
+
+                    for (int index = 0; index < statList.Length; index++)
+                    {
+                        calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsWarlock;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = statList[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+
+                        comparisonList.Add(comparison);
+                    }
+
+                    return comparisonList.ToArray();
+                default:
+                    return new ComparisonCalculationBase[0];
+            }
         }
 
         public override Stats GetRelevantStats(Stats stats)

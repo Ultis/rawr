@@ -102,7 +102,7 @@ namespace Rawr.Warlock
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
-                basePanel.UpdatePanelOptions();
+                basePanel.UpdateTalentOptions();
                 Visible = false;
             }
         }
