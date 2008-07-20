@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Mage
 {
-    public class LU2
+    public class LU
     {
         private static int etaMax;
         private static int sizeMax;
@@ -16,12 +16,12 @@ namespace Rawr.Mage
         public static int[] _LJ; // col/row eta index   Li = I + L[i*size:(i+1)*size-1] * e_LI[i]'
         private static double[] column;
         private static double[] column2;
+        public static double[] _U;
 
         private int size;
         public int etaSize;
-        public double[] _U;
 
-        static LU2()
+        static LU()
         {
             sizeMax = 200;
             RecreateArrays();
@@ -29,6 +29,7 @@ namespace Rawr.Mage
 
         private static void RecreateArrays()
         {
+            _U = new double[sizeMax * sizeMax];
             etaMax = Math.Max(sizeMax + 100, 2 * sizeMax);
             _P = new int[sizeMax];
             _Q = new int[sizeMax];
@@ -80,11 +81,10 @@ namespace Rawr.Mage
         public int Rank { get; set; }
 
         // data will be modified, if you need to retain it clean pass a clone
-        public LU2(double[] data, int size)
+        public LU(int size)
         {
             this.size = size;
             etaSize = 0;
-            _U = data;
             if (size > sizeMax)
             {
                 sizeMax = size;

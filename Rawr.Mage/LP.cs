@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Mage
 {
-    public class LP
+    public unsafe class LP
     {
         internal SparseMatrix A;
         private double[] extraConstraints;
@@ -16,9 +16,8 @@ namespace Rawr.Mage
 
         private int[] _B;
         private int[] _V;
-        LU2 lu;
+        LU lu;
 
-        private static double[] _LU;
         private static double[] _d;
         private static double[] _x;
         private static double[] _w;
@@ -29,6 +28,25 @@ namespace Rawr.Mage
         internal static double[] _b;
         internal static double[] _cost;
         private static bool[] _blacklist;
+
+        private double* a;
+        private double* U;
+        private double* d;
+        private double* x;
+        private double* w;
+        private double* ww;
+        private double* wd;
+        private double* c;
+        private double* u;
+        private double* b;
+        private double* cost;
+        private double* sparseValue;
+        private double* D;
+        private int* B;
+        private int* V;
+        private int* sparseRow;
+        private int* sparseCol;
+        private bool* blacklist;
 
         private static int maxRows = 0;
         private static int maxCols = 0;
@@ -42,7 +60,6 @@ namespace Rawr.Mage
 
         private static void RecreateArrays()
         {
-            _LU = new double[maxRows * maxRows];
             _d = new double[maxRows];
             _x = new double[maxRows];
             _w = new double[maxRows];
@@ -162,7 +179,7 @@ namespace Rawr.Mage
             // extra constraints should be at start so they are not eliminated when patching singular basis
             _B[rows - 1] = _B[numExtraConstraints - 1];
             _B[numExtraConstraints - 1] = cols + rows - 1;
-            lu = new LU2(_LU, rows);
+            lu = new LU(rows);
             return numExtraConstraints - 1;
         }
 
@@ -202,7 +219,7 @@ namespace Rawr.Mage
             this.cols = 0;
 
             A = new SparseMatrix(baseRows, maxCols + baseRows);
-            lu = new LU2(_LU, rows);
+            lu = new LU(rows);
             //extraConstraints = new double[cols + rows + 1];
             //extraConstraints[cols + rows - 1] = 1;
             //numExtraConstraints = 1;
@@ -215,10 +232,57 @@ namespace Rawr.Mage
 
         public unsafe double[] SolvePrimal()
         {
-            return SolvePrimal(false);
+            double[] ret = null;
+
+            fixed (double* a = SparseMatrix.data, U = LU._U, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
+            fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
+            fixed (bool* blacklist = _blacklist)
+            {
+                this.a = a;
+                this.U = U;
+                this.d = d;
+                this.x = x;
+                this.w = w;
+                this.ww = ww;
+                this.wd = wd;
+                this.c = c;
+                this.u = u;
+                this.b = b;
+                this.cost = cost;
+                this.sparseValue = sparseValue;
+                this.D = D;
+                this.B = B;
+                this.V = V;
+                this.sparseRow = sparseRow;
+                this.sparseCol = sparseCol;
+                this.blacklist = blacklist;
+
+                ret = SolvePrimalUnsafe(false);
+
+                this.a = null;
+                this.U = null;
+                this.d = null;
+                this.x = null;
+                this.w = null;
+                this.ww = null;
+                this.wd = null;
+                this.c = null;
+                this.u = null;
+                this.b = null;
+                this.cost = null;
+                this.sparseValue = null;
+                this.D = null;
+                this.B = null;
+                this.V = null;
+                this.sparseRow = null;
+                this.sparseCol = null;
+                this.blacklist = null;
+            }
+
+            return ret;
         }
 
-        public unsafe double[] SolvePrimal(bool dualFeasibilityOnly)
+        private unsafe double[] SolvePrimalUnsafe(bool dualFeasibilityOnly)
         {
             // c = data[rows,:]
             // A = data[0:rows-1,0:cols-1][I(rows)]
@@ -243,9 +307,6 @@ namespace Rawr.Mage
             //double lastInfis = double.PositiveInfinity;
             const int maxRedecompose = 50;
             Array.Clear(_blacklist, 0, rows + cols);
-            fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
-            fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
-            fixed (bool* blacklist = _blacklist)
             {
                 if (b == null) throw new InvalidOperationException();
                 do
@@ -259,11 +320,11 @@ namespace Rawr.Mage
                             int col = B[j];
                             for (i = 0; i < baseRows; i++)
                             {
-                                LU[i * rows + j] = a[i + col * baseRows];
+                                U[i * rows + j] = a[i + col * baseRows];
                             }
                             for (k = 0; k < numExtraConstraints; k++, i++)
                             {
-                                LU[i * rows + j] = D[k * (cols + rows + 1) + col];
+                                U[i * rows + j] = D[k * (cols + rows + 1) + col];
                             }
                         }
                         lu.Decompose();
@@ -607,8 +668,59 @@ namespace Rawr.Mage
             return new double[cols + 1];
         }
 
-        // assumes an existing feasible dual solution (use after restricting constraints, i.e. disabling columns)
         public unsafe double[] SolveDual()
+        {
+            double[] ret = null;
+
+            fixed (double* a = SparseMatrix.data, U = LU._U, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
+            fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
+            fixed (bool* blacklist = _blacklist)
+            {
+                this.a = a;
+                this.U = U;
+                this.d = d;
+                this.x = x;
+                this.w = w;
+                this.ww = ww;
+                this.wd = wd;
+                this.c = c;
+                this.u = u;
+                this.b = b;
+                this.cost = cost;
+                this.sparseValue = sparseValue;
+                this.D = D;
+                this.B = B;
+                this.V = V;
+                this.sparseRow = sparseRow;
+                this.sparseCol = sparseCol;
+                this.blacklist = blacklist;
+
+                ret = SolveDualUnsafe();
+
+                this.a = null;
+                this.U = null;
+                this.d = null;
+                this.x = null;
+                this.w = null;
+                this.ww = null;
+                this.wd = null;
+                this.c = null;
+                this.u = null;
+                this.b = null;
+                this.cost = null;
+                this.sparseValue = null;
+                this.D = null;
+                this.B = null;
+                this.V = null;
+                this.sparseRow = null;
+                this.sparseCol = null;
+                this.blacklist = null;
+            }
+
+            return ret;
+        }
+
+        public unsafe double[] SolveDualUnsafe()
         {
             // c = data[rows,:]
             // A = data[0:rows-1,0:cols-1][I(rows)]
@@ -638,9 +750,6 @@ namespace Rawr.Mage
             bool primalPatched = false;
             bool blacklistAllowed = true;
 
-            fixed (double* a = SparseMatrix.data, LU = _LU, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, b = _b, cost = _cost, sparseValue = SparseMatrix.value, D = extraConstraints)
-            fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col)
-            fixed (bool* blacklist = _blacklist)
             {
                 ccols = c + cols;
                 do
@@ -654,11 +763,11 @@ namespace Rawr.Mage
                             int col = B[j];
                             for (i = 0; i < baseRows; i++)
                             {
-                                LU[i * rows + j] = a[i + col * baseRows];
+                                U[i * rows + j] = a[i + col * baseRows];
                             }
                             for (k = 0; k < numExtraConstraints; k++, i++)
                             {
-                                LU[i * rows + j] = D[k * (cols + rows + 1) + col];
+                                U[i * rows + j] = D[k * (cols + rows + 1) + col];
                             }
                         }
                         lu.Decompose();
@@ -672,8 +781,8 @@ namespace Rawr.Mage
                         redecompose = 0;
                         for (j = lu.Rank; j < rows; j++)
                         {
-                            int singularColumn = LU2._Q[j];
-                            int singularRow = LU2._P[j];
+                            int singularColumn = LU._Q[j];
+                            int singularRow = LU._P[j];
                             int slackColumn = cols + singularRow;
                             int vindex = Array.IndexOf(_V, slackColumn);
                             V[vindex] = B[singularColumn];
@@ -724,7 +833,7 @@ namespace Rawr.Mage
                                 {
                                     // this can happen as result of swapping the basis which while retains primal feasibility and optimality does not necessarily retain dual feasibility
                                     ColdStart = false;
-                                    double[] ret = SolvePrimal();
+                                    double[] ret = SolvePrimalUnsafe(false);
                                     // after we have result of primal make sure we return extra constraints to basis
                                     for (k = 0; k < numExtraConstraints; k++)
                                     {
@@ -767,7 +876,7 @@ namespace Rawr.Mage
                                 else
                                 {
                                     ColdStart = false;
-                                    SolvePrimal(true);
+                                    SolvePrimalUnsafe(true);
                                     redecompose = 0;
                                     primalPatched = true;
                                     goto DECOMPOSE;
