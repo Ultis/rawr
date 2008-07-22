@@ -124,7 +124,7 @@ namespace Rawr.Warlock
             get 
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Stats" };
+                    _customChartNames = new string[] { "Stats", "Stats (Item Budget)", "Talent Specs" };
                 return _customChartNames;
             }
         }
@@ -255,6 +255,69 @@ namespace Rawr.Warlock
             calculationOptions.SoulLeech = int.Parse(talentCode.Substring(61, 1));
             calculationOptions.ShadowAndFlame = int.Parse(talentCode.Substring(62, 1));
             calculationOptions.Shadowfury = int.Parse(talentCode.Substring(63, 1));
+        }
+
+        public static void LoadTalentSpec(Character character, string talentSpec)
+        {
+            string talentCode = String.Empty;
+            CalculationOptionsWarlock options = character.CalculationOptions as CalculationOptionsWarlock;
+            switch (talentSpec)
+            {
+                case "UA Affliction (43/0/18)":
+                    talentCode = "3502220012235105510310000000000000000000000505000510200000000000";
+                    if (options != null)
+                    {
+                        options.CastUnstableAffliction = true;
+                        options.CastCorruption = true;
+                        options.CastImmolate = true;
+                        options.CastSiphonLife = true;
+                        options.FillerSpell = FillerSpell.Shadowbolt;
+                        options.PetSacrificed = false;
+                        options.Pet = Pet.Imp;
+                    }
+                    break;
+                case "Ruin Affliction (40/0/21)":
+                    talentCode = "0502210502035105510300000000000000000000000505000512200010000000";
+                    if(options != null)
+                    {
+                        options.CastUnstableAffliction = false;
+                        options.CastCorruption = true;
+                        options.CastImmolate = true;
+                        options.CastSiphonLife = true;
+                        options.FillerSpell = FillerSpell.Shadowbolt;
+                        options.PetSacrificed = false;
+                        options.Pet = Pet.Imp;
+                    }
+                    break;
+                case "Shadow Destro (0/21/40)":
+                    talentCode = "0000000000000000000002050031133200100000000555000512210013030250";
+                    if (options != null)
+                    {
+                        options.CastUnstableAffliction = false;
+                        options.CastCorruption = false;
+                        options.CastImmolate = false;
+                        options.CastSiphonLife = false;
+                        options.FillerSpell = FillerSpell.Shadowbolt;
+                        options.PetSacrificed = true;
+                        options.Pet = Pet.Succubus;
+                    }
+                    break;
+                case "Fire Destro (0/21/40)":
+                    talentCode = "0000000000000000000002050031133200100000000055000512200510530150";
+                    if (options != null)
+                    {
+                        options.CastUnstableAffliction = false;
+                        options.CastCorruption = false;
+                        options.CastImmolate = true;
+                        options.CastSiphonLife = false;
+                        options.FillerSpell = FillerSpell.Incinerate;
+                        options.PetSacrificed = true;
+                        options.Pet = Pet.Imp;
+                    }
+                    break;
+            }
+
+            LoadTalentCode(character, talentCode);
         }
         
         /// <summary>
@@ -551,11 +614,13 @@ namespace Rawr.Warlock
             CharacterCalculationsWarlock baseCalc, currentCalc, calc;
             ComparisonCalculationBase comparison;
             float[] subPoints;
+            Item[] itemList;
+            string[] statList;
 
             switch (chartName)
             {
                 case "Stats":
-                    Item[] itemList = new Item[] 
+                    itemList = new Item[] 
                     {
                         new Item() { Stats = new Stats() { SpellDamageRating = 1 } },
                         new Item() { Stats = new Stats() { SpellShadowDamageRating = 1 } }, 
@@ -564,7 +629,7 @@ namespace Rawr.Warlock
                         new Item() { Stats = new Stats() { SpellHasteRating = 1 } },
                         new Item() { Stats = new Stats() { SpellHitRating = 1 } },
                     };
-                    string[] statList = new string[] 
+                    statList = new string[] 
                     {
                         "1 Spell Damage", 
                         "1 Shadow Damage", 
@@ -588,6 +653,88 @@ namespace Rawr.Warlock
                         for (int i = 0; i < calc.SubPoints.Length; i++)
                         {
                             subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+
+                        comparisonList.Add(comparison);
+                    }
+
+                    return comparisonList.ToArray();
+                case "Stats (Item Budget)":
+                    itemList = new Item[] 
+                    {
+                        new Item() { Stats = new Stats() { SpellDamageRating = 11.7f } },
+                        new Item() { Stats = new Stats() { SpellShadowDamageRating = 14.3f } }, 
+                        new Item() { Stats = new Stats() { SpellFireDamageRating = 14.3f } }, 
+                        new Item() { Stats = new Stats() { SpellCritRating = 10 } },
+                        new Item() { Stats = new Stats() { SpellHasteRating = 10 } },
+                        new Item() { Stats = new Stats() { SpellHitRating = 10 } },
+                    };
+                    statList = new string[] 
+                    {
+                        "11.7 Spell Damage", 
+                        "14.3 Shadow Damage", 
+                        "14.3 Fire Damage", 
+                        "10 Spell Crit Rating", 
+                        "10 Spell Haste Rating", 
+                        "10 Spell Hit Rating",
+                    };
+
+                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
+
+                    for (int index = 0; index < statList.Length; index++)
+                    {
+                        calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsWarlock;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = statList[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+
+                        comparisonList.Add(comparison);
+                    }
+
+                    return comparisonList.ToArray();
+                case "Talent Specs":
+                    currentCalc = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
+                    comparison = CreateNewComparisonCalculation();
+                    comparison.Name = "Current";
+                    comparison.Equipped = true;
+                    comparison.OverallPoints = currentCalc.OverallPoints;
+                    subPoints = new float[currentCalc.SubPoints.Length];
+                    for (int i = 0; i < currentCalc.SubPoints.Length; i++)
+                    {
+                        subPoints[i] = currentCalc.SubPoints[i];
+                    }
+                    comparison.SubPoints = subPoints;
+
+                    comparisonList.Add(comparison);
+
+                    Character charClone = character.Clone();
+                    string[] talentSpecList = { "UA Affliction (43/0/18)", "Ruin Affliction (40/0/21)", "Shadow Destro (0/21/40)", "Fire Destro (0/21/40)" };
+                    CalculationOptionsWarlock calculations = charClone.CalculationOptions as CalculationOptionsWarlock;
+                    calculations = calculations.Clone();
+
+                    for (int index = 0; index < talentSpecList.Length; index++)
+                    {
+                        LoadTalentSpec(charClone, talentSpecList[index]);
+
+                        calc = GetCharacterCalculations(charClone) as CharacterCalculationsWarlock;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = talentSpecList[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i];
                         }
                         comparison.SubPoints = subPoints;
 

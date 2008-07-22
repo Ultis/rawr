@@ -109,7 +109,6 @@ namespace Rawr.Warlock
 
         private void buttonImportBlizzardCode_Click(object sender, EventArgs e)
         {
-            //http://www.worldofwarcraft.com/info/classes/warlock/talents.html?tal=0000000000000000000000000000000000000000000000000000000000000000
             string talentCode = textBoxBlizzardCode.Text;
             int index = talentCode.IndexOf('=');
             if (index >= 0) talentCode = talentCode.Substring(index + 1);
@@ -121,9 +120,9 @@ namespace Rawr.Warlock
 
         private void buttonImportTalentPreset_Click(object sender, EventArgs e)
         {
-            //CalculationsWarlock.LoadTalentSpec(Character, (string)comboBoxTalentPreset.SelectedItem);
-            //LoadCalculationOptions();
-            //Character.OnItemsChanged();
+            CalculationsWarlock.LoadTalentSpec(Character, (string)comboBoxTalentPreset.SelectedItem);
+            LoadCalculationOptions();
+            Character.OnItemsChanged();
         }
     }
 }

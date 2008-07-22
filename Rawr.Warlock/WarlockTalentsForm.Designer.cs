@@ -1873,15 +1873,10 @@ namespace Rawr.Warlock
             this.comboBoxTalentPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTalentPreset.FormattingEnabled = true;
             this.comboBoxTalentPreset.Items.AddRange(new object[] {
-            "Fire (2/48/11)",
-            "Fire (10/48/3)",
-            "Fire/Cold Snap (0/40/21)",
-            "Frost (10/0/51)",
-            "Arcane (48/0/13)",
-            "Arcane (43/0/18)",
-            "Arcane/Fire (40/18/3)",
-            "Arcane/Fire (40/10/11)",
-            "Arcane/Frost (40/0/21)"});
+            "UA Affliction (43/0/18)",
+            "Ruin Affliction (40/0/21)",
+            "Shadow Destro (0/21/40)",
+            "Fire Destro (0/21/40)"});
             this.comboBoxTalentPreset.Location = new System.Drawing.Point(452, 12);
             this.comboBoxTalentPreset.Name = "comboBoxTalentPreset";
             this.comboBoxTalentPreset.Size = new System.Drawing.Size(149, 21);

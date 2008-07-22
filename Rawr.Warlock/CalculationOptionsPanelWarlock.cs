@@ -94,6 +94,10 @@ namespace Rawr.Warlock
             checkBoxCastConflagrate.Enabled = options.Conflagrate == 1 && checkBoxCastImmolate.Checked;
             checkBoxCastConflagrate.Checked = checkBoxCastConflagrate.Enabled && options.CastConflagrate;
 
+            checkBoxCastCorruption.Checked = options.CastCorruption;
+            checkBoxCastImmolate.Checked = options.CastImmolate;
+            comboBoxFillerSpell.SelectedIndex = (int)options.FillerSpell;
+
             if (options.SummonFelguard == 1 && !comboBoxPet.Items.Contains("Felguard"))
                 comboBoxPet.Items.Add("Felguard");
             else if (options.SummonFelguard != 1 && comboBoxPet.Items.Contains("Felguard"))

@@ -74,12 +74,14 @@ namespace Rawr.Warlock
         public SUWarlock[] RaidWarlocks
         {
             get { return raidWarlocks; }
+            set { raidWarlocks = value; }
         }
         public int NumRaidShadowPriests { get; set; }
         private SUShadowPriest[] raidShadowPriests = new SUShadowPriest[5];
         public SUShadowPriest[] RaidShadowPriests
         {
             get { return raidShadowPriests; }
+            set { raidShadowPriests = value; }
         }
 
         //affliction talents
@@ -280,6 +282,11 @@ namespace Rawr.Warlock
             }
         }
 
+        public CalculationOptionsWarlock Clone()
+        {
+            return MemberwiseClone() as CalculationOptionsWarlock;
+        }
+
         public int GetTalentByName(string name)
         {
             Type t = typeof(CalculationOptionsWarlock);
@@ -377,6 +384,7 @@ namespace Rawr.Warlock
             vals.Add("RDPS from ISB", Math.Round(RaidDpsFromIsb).ToString());
             vals.Add("Total Damage", TotalDamage.ToString());
             vals.Add("DPS", Math.Round(DpsRating).ToString());
+            
             //vals.Add("Casting Speed", (1f / (TotalStats.SpellHasteRating / 1570f + 1f)).ToString());
             //vals.Add("Shadow Damage", (TotalStats.SpellShadowDamageRating + TotalStats.SpellDamageRating).ToString());
             //vals.Add("Fire Damage", (TotalStats.SpellFireDamageRating + TotalStats.SpellDamageRating).ToString());

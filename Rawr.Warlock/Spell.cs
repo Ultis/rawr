@@ -135,6 +135,8 @@ namespace Rawr.Warlock
                 averageDamage *= 1 + 0.01f * calculations.CritPercent * CritBonus;
                 if (BaseDotDuration == 0)
                     averageDamage *= ChanceToHit;
+                else if (this is Immolate)
+                    averageDamage *= 1 + 0.05f * calculations.CalculationOptions.ImprovedImmolate;
             }
 
             if (dotDamage != 0)
@@ -173,8 +175,6 @@ namespace Rawr.Warlock
         {
             BaseCastTime -= 0.1f * calculations.CalculationOptions.Bane;
             BaseDotDuration += calculations.BasicStats.BonusWarlockDotExtension;
-            BaseMinDamage *= 1 + 0.05f * calculations.CalculationOptions.ImprovedImmolate;
-            BaseMaxDamage *= 1 + 0.05f * calculations.CalculationOptions.ImprovedImmolate;
         }
     }
 

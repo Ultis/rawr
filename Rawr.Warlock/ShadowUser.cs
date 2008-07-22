@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Rawr.Warlock
 {
+    [Serializable]
     public abstract class ShadowUser
     {
         public float EffectiveCritRate { get; set; }
@@ -54,6 +55,7 @@ namespace Rawr.Warlock
         }
     }
 
+    [Serializable]
     public class SUWarlock : ShadowUser
     {
         public float HitPercent { get; set; }
@@ -90,6 +92,7 @@ namespace Rawr.Warlock
         }
     }
 
+    [Serializable]
     public class SUShadowPriest : ShadowUser
     {
         public float HitPercent { get; set; }
