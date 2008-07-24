@@ -1181,7 +1181,7 @@ namespace Rawr
                 Category = BuffCategory.SetBonuses,
                 Stats = new Stats() { BonusHealingTouchMultiplier = 0.05f },
                 SetName = "Thunderheart Raiment",
-                SetThreshold = 2
+                SetThreshold = 4
             });
             
 
