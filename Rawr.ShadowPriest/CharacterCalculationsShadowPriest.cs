@@ -8,11 +8,12 @@ namespace Rawr.ShadowPriest
     {
         private Stats basicStats;
         private TalentTree talents;
+        public CalculationOptionsShadowPriest CalculationOptions { get; set; }
 
         public float SpiritRegen { get; set; }
         public float RegenInFSR { get; set; }
         public float RegenOutFSR { get; set; }
-
+        
         public TalentTree Talents
         {
             get { return talents; }
@@ -100,8 +101,13 @@ namespace Rawr.ShadowPriest
                 dictValues.Add("Mind Flay", new MindFlay(BasicStats, talents).ToString());
             else
                 dictValues.Add("Mind Flay", "- *No required talents");
-            
-            
+
+            Solver solver = new Solver(BasicStats, talents, CalculationOptions);
+            solver.Calculate();
+
+            dictValues.Add("Damage done", solver.OverallDamage.ToString());
+            dictValues.Add("Dps", solver.OverallDps.ToString());
+
             return dictValues;
         }
     }

@@ -49,7 +49,9 @@ namespace Rawr.ShadowPriest
                     "Spells:Mind Blast",
                     "Spells:Mind Flay",
                     "Spells:Vampiric Embrace",
-                    "Spells:Power Word Shield"
+                    "Spells:Power Word Shield",
+                    "Simulation:Damage done",
+                    "Simulation:Dps"
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -109,9 +111,11 @@ namespace Rawr.ShadowPriest
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = GetRaceStats(character);
             CharacterCalculationsShadowPriest calculatedStats = new CharacterCalculationsShadowPriest();
+            CalculationOptionsShadowPriest calculationOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
             
             calculatedStats.BasicStats = stats;
             calculatedStats.Talents = character.Talents;
+            calculatedStats.CalculationOptions = calculationOptions;
 
             calculatedStats.BasicStats.Spirit = statsRace.Spirit + (calculatedStats.BasicStats.Spirit - statsRace.Spirit) * (1 + character.Talents.GetTalent("Spirit of Redemption").PointsInvested * 0.05f);
 
@@ -124,13 +128,17 @@ namespace Rawr.ShadowPriest
 
             calculatedStats.BasicStats.SpellDamageRating += calculatedStats.BasicStats.Spirit * character.Talents.GetTalent("Spiritual Guidance").PointsInvested * 0.05f;
 
-            int hitcap = GetSpellHitCap(character.Talents);
-            calculatedStats.DpsPoints = calculatedStats.BasicStats.SpellDamageRating + calculatedStats.BasicStats.SpellShadowDamageRating
-                + (calculatedStats.BasicStats.SpellHasteRating)
-                + (calculatedStats.BasicStats.SpellCritRating / 5.57f)
-                + (calculatedStats.BasicStats.Spirit * 0.11f)
-                + (calculatedStats.BasicStats.Intellect * 0.055f)
-                - (calculatedStats.BasicStats.SpellHitRating < hitcap ? (hitcap - calculatedStats.BasicStats.SpellHitRating) * 1.364f: 0);
+            Solver solver = new Solver(stats, character.Talents, calculationOptions);
+            solver.Calculate();
+
+            calculatedStats.DpsPoints = solver.OverallDps;
+            //int hitcap = GetSpellHitCap(character.Talents);
+            //calculatedStats.DpsPoints = calculatedStats.BasicStats.SpellDamageRating + calculatedStats.BasicStats.SpellShadowDamageRating
+            //    + (calculatedStats.BasicStats.SpellHasteRating)
+            //    + (calculatedStats.BasicStats.SpellCritRating / 5.57f)
+            //    + (calculatedStats.BasicStats.Spirit * 0.11f)
+            //    + (calculatedStats.BasicStats.Intellect * 0.055f)
+            //    - (calculatedStats.BasicStats.SpellHitRating < hitcap ? (hitcap - calculatedStats.BasicStats.SpellHitRating) * 1.364f: 0);
 
             calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Stamina / 10;
             calculatedStats.OverallPoints = calculatedStats.DpsPoints + calculatedStats.SurvivalPoints;
@@ -256,7 +264,12 @@ namespace Rawr.ShadowPriest
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
                 BonusManaPotion = stats.BonusManaPotion,
-                ThreatReductionMultiplier = stats.ThreatReductionMultiplier
+                ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
+                SpellDamageFor15SecOnUse2Min = stats.SpellDamageFor15SecOnUse2Min,
+                SpellDamageFor15SecOnUse90Sec = stats.SpellDamageFor15SecOnUse90Sec,
+                SpellDamageFor20SecOnUse2Min = stats.SpellDamageFor20SecOnUse2Min,
+                SpellHasteFor20SecOnUse2Min = stats.SpellHasteFor20SecOnUse2Min,
+                SpellHasteFor20SecOnUse5Min = stats.SpellHasteFor20SecOnUse5Min
             };
         }
 
@@ -264,7 +277,10 @@ namespace Rawr.ShadowPriest
         {
             return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellDamageRating + stats.SpellShadowDamageRating+ stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
-                + stats.BonusManaPotion + stats.SpellHitRating + stats.ThreatReductionMultiplier) > 0;
+                + stats.BonusManaPotion + stats.SpellHitRating + stats.ThreatReductionMultiplier
+                + stats.SpellDamageFor15SecOnUse2Min + stats.SpellDamageFor15SecOnUse90Sec
+                + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min
+                + stats.SpellHasteFor20SecOnUse5Min) > 0;
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)

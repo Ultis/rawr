@@ -23,14 +23,21 @@ namespace Rawr.ShadowPriest
                 Character.CalculationOptions = new CalculationOptionsShadowPriest();
 
             CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-            cmbLength.Value = (decimal)calcOpts.Length;
+            cmbLength.Value = (decimal)calcOpts.FightDuration;
             cmbManaAmt.Text = calcOpts.ManaAmt.ToString();
             cmbManaTime.Value = (decimal)calcOpts.ManaTime;
             cmbSpriest.Value = (decimal)calcOpts.Spriest;
-
-            trkActivity.Value = (int)calcOpts.Activity;
-            lblActivity.Text = trkActivity.Value + "%";
-
+            lsSpellPriopity.Items.Clear();
+            if (Character.Race != Character.CharacterRace.NightElf)
+                calcOpts.SpellPriority.Remove("Starshards");
+            else if (!calcOpts.SpellPriority.Contains("Starshards"))
+                calcOpts.SpellPriority.Add("Starshards");
+            if (Character.Race != Character.CharacterRace.Undead)
+                calcOpts.SpellPriority.Remove("Devouring Plague");
+            else if (!calcOpts.SpellPriority.Contains("Devouring Plague"))
+                calcOpts.SpellPriority.Add("Devouring Plague");
+            lsSpellPriopity.Items.AddRange(calcOpts.SpellPriority.ToArray());
+            
             loading = false;
         }
 
@@ -39,7 +46,7 @@ namespace Rawr.ShadowPriest
             if (!loading)
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                calcOpts.Length = (float)cmbLength.Value;
+                calcOpts.FightDuration = (float)cmbLength.Value;
                 Character.OnItemsChanged();
             }
         }
@@ -81,18 +88,7 @@ namespace Rawr.ShadowPriest
                 Character.OnItemsChanged();
             }
         }
-
-        private void trkActivity_Scroll(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                lblActivity.Text = trkActivity.Value + "%";
-                calcOpts.Activity = trkActivity.Value;
-                Character.OnItemsChanged();
-            }
-        }
-
+                
         private void cmbSpriest_ValueChanged(object sender, EventArgs e)
         {
             if (!loading)
@@ -101,26 +97,112 @@ namespace Rawr.ShadowPriest
                 calcOpts.Spriest = (float)cmbSpriest.Value;
                 Character.OnItemsChanged();
             }
+        }              
+
+        private void bChangePriority_Click(object sender, EventArgs e)
+        {
+            CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+            SpellPriorityForm priority = new SpellPriorityForm(calcOpts.SpellPriority, lsSpellPriopity);
+            priority.Show();
         }
+
+        private void cmbDrums_ValueChanged(object sender, EventArgs e)
+        {
+            if (cmbDrums.Value == 0)
+            {
+                cbDrums.Checked = false;
+                cbDrums.Enabled = false;
+            }
+            else
+            {
+                cbDrums.Enabled = true;
+            }
+
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.DrumsCount = (int)cmbDrums.Value;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbLag_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.Lag = (float)cmbLag.Value;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbWaitTime_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.WaitTime = (float)cmbWaitTime.Value;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbISB_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.ISBUptime = (float)cmbISB.Value;
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cbDrums_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.UseYourDrum = cbDrums.Checked;
+                Character.OnItemsChanged();
+            }
+        }        
     }
     [Serializable]
 	public class CalculationOptionsShadowPriest : ICalculationOptionBase
 	{
-		public string GetXml()
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsShadowPriest));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
+        public float FightDuration { get; set; }
+        public List<string> SpellPriority { get; set; }
+        
+        public bool EnforceMetagemRequirements { get; set; }
+        public float ManaAmt { get; set; }
+        public float ManaTime { get; set; }
+        public float Spriest { get; set; }
+        public float Lag { get; set; }
+        public float WaitTime { get; set; }
+        public float ISBUptime { get; set; }
+        public int DrumsCount { get; set; }
+        public bool UseYourDrum { get; set; }
 
-		public bool EnforceMetagemRequirements = false;
-		public float Length = 5;
-		public float ManaAmt = 2400;
-		public float ManaTime = 2.5f;
-		public float Activity = 80;
-		public float Spriest = 0;
+        public CalculationOptionsShadowPriest()
+        {
+            SpellPriority = new List<string>(Spell.SpellList);
+            FightDuration = 600;
+            ManaAmt = 2400;
+            ManaTime = 60;
+            Lag = 100;
+            WaitTime = 50;
+            ISBUptime = 30;
+            DrumsCount = 0;
+            UseYourDrum = false;
+        }
+
+        public string GetXml()
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsShadowPriest));
+            StringBuilder xml = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
+        }
 	}
 }
