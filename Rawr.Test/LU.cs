@@ -217,7 +217,8 @@ namespace Rawr.Test
                     fixed (double* nb = newB, t = tmp)
                     {
                         lu.FSolveL(nb, t);
-                        lu.Update(t, c);
+                        double pivot;
+                        lu.Update(t, c, out pivot);
                     }
                 }
             }
@@ -325,7 +326,8 @@ namespace Rawr.Test
                     fixed (double* nb = newB, t = tmp, _b = b)
                     {
                         lu.FSolveL(nb, t);
-                        lu.Update(t, c);
+                        double pivot;
+                        lu.Update(t, c, out pivot);
                         lu.FSolve(_b);
                     }
                 }

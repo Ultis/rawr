@@ -410,7 +410,7 @@ namespace Rawr.Mage
         // a = [P' Ln...L0 aj]
 
         // replace column col in basis B with aj
-        public unsafe void Update(double* a, int col)
+        public unsafe void Update(double* a, int col, out double pivot)
         {
             int i, j, k;
             for (j = 0; j < size; j++)
@@ -419,6 +419,8 @@ namespace Rawr.Mage
                 //c[i] = ecol[Q[i]]; // shuffle Q
             }
             col = j;
+
+            double ujj = U[j * size + j];
 
             // place in column col = j
             // rotate columns to get upper hessenberg form (col...lastnz)
@@ -512,7 +514,7 @@ namespace Rawr.Mage
             {
                 U[lastnz * size + j] = c[j];
             }
-
+            pivot = c[lastnz] / ujj;
             if (Math.Abs(U[lastnz * size + lastnz]) < 0.000001)
             {
                 Singular = true;

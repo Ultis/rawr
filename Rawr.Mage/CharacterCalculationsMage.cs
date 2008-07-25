@@ -100,7 +100,8 @@ namespace Rawr.Mage
         public string Trinket2Name;
         public int MaxManaPotion;
         public int MaxManaGem;
-        //public string[] SolutionLabel;
+        public int MaxEvocation;
+
         public double[] Solution;
         public List<SolutionVariable> SolutionVariable;
         public float Tps;
@@ -286,7 +287,7 @@ namespace Rawr.Mage
                             break;
                         case VariableType.DrumsOfBattle:
                             drums += Solution[i];
-                            if (segmentedOutput) sb.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", Solution[i] / BaseState.GlobalCooldown));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Drums of Battle", Solution[i] / BaseState.GlobalCooldown, SolutionVariable[i].Segment));
                             break;
                         case VariableType.Drinking:
                             sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", Solution[i]));

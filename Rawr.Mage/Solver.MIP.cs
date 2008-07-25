@@ -162,6 +162,10 @@ namespace Rawr.Mage
                     {
                         valid = ValidateSCB(Cooldown.Trinket2);
                     }*/
+                    if (valid && calculationOptions.DrumsOfBattle)
+                    {
+                        valid = ValidateActivation(Cooldown.DrumsOfBattle, 30.0, 120.0, VariableType.DrumsOfBattle);
+                    }
                     if (valid)
                     {
                         valid = ValidateCycling();
@@ -182,7 +186,7 @@ namespace Rawr.Mage
                     bool allLower = true;
                     foreach (SolverLP childLP in childList)
                     {
-                        if (childLP.Value >= max - 0.000001)
+                        if (childLP.Value >= max - 1.0)
                         {
                             allLower = false;
                             break;
@@ -190,8 +194,8 @@ namespace Rawr.Mage
                     }
                     if (allLower && childList.Count > 0 && childList[0].Log != null)
                     {
-                        System.Diagnostics.Debug.WriteLine("\n\nProves branch has lower value:");
-                        System.Diagnostics.Debug.Write(childList[0].Log.ToString());
+                        System.Diagnostics.Trace.WriteLine("\n\nProves branch has nontrivially lower value:");
+                        System.Diagnostics.Trace.Write(childList[0].Log.ToString());
                     }
                     childList.Clear();
                 }
@@ -235,7 +239,7 @@ namespace Rawr.Mage
                 int N = hexList[seg].Count;
                 if (N > 0 && count[seg] < segmentDuration - 0.000001)
                 {
-                    // if any hex links to left and right segment we have a problemž
+                    // if any hex links to left and right segment we have a problem
                     List<int> minHexChain = null;
                     for (int i = 0; i < N; i++)
                     {
@@ -417,14 +421,24 @@ namespace Rawr.Mage
                 // if we remove everything then there are no cycles
 
                 List<int> hexList = new List<int>();
+                List<int> hexList1 = new List<int>();
+                List<int> hexList2 = new List<int>();
                 for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                 {
                     CastingState state = calculationResult.SolutionVariable[index].State;
                     int iseg = calculationResult.SolutionVariable[index].Segment;
-                    if (state != null && solution[index] > 0 && (iseg == seg || iseg == seg + 1))
+                    if (state != null && solution[index] > 0)
                     {
-                        int h = state.GetHex();
-                        if (h != 0 && !hexList.Contains(h)) hexList.Add(h);
+                        if (iseg == seg || iseg == seg + 1)
+                        {
+                            int h = state.GetHex();
+                            if (h != 0)
+                            {
+                                if (!hexList.Contains(h)) hexList.Add(h);
+                                if (iseg == seg && !hexList1.Contains(h)) hexList1.Add(h);
+                                if (iseg == seg + 1 && !hexList2.Contains(h)) hexList2.Add(h);
+                            }
+                        }
                     }
                 }
 
@@ -501,35 +515,23 @@ namespace Rawr.Mage
                 // so either X-Y can't exist or Y-X or X and Y in the other segment
                 // eliminate by 4-way branch
                 int hex1 = 0;
-                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                for (int i = 0; i < hexList1.Count; i++)
                 {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    int iseg = calculationResult.SolutionVariable[index].Segment;
-                    if (state != null && solution[index] > 0 && iseg == seg)
-                    {
-                        hex1 |= state.GetHex();
-                    }
+                    hex1 |= hexList1[i];
                 }
                 int hex2 = 0;
-                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                for (int i = 0; i < hexList2.Count; i++)
                 {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    int iseg = calculationResult.SolutionVariable[index].Segment;
-                    if (state != null && solution[index] > 0 && iseg == seg + 1)
-                    {
-                        hex2 |= state.GetHex();
-                    }
+                    hex2 |= hexList2[i];
                 }
                 int hex = hex1 & hex2; // crossings
                 int cool1 = 0, cool2 = 0, seg1 = 0, seg2 = 0;
-                placed = 0;
-                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                for (int i = 0; i < hexList1.Count; i++)
                 {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    int iseg = calculationResult.SolutionVariable[index].Segment;
-                    if (state != null && solution[index] > 0 && iseg == seg)
+                    for (int j = i + 1; j < hexList1.Count; j++)
                     {
-                        int h = hex & state.GetHex();
+                        placed = hex & hexList1[i];
+                        int h = hex & hexList1[j];
                         int hp = h & placed;
                         if (placed != hp && h != hp)
                         {
@@ -549,47 +551,40 @@ namespace Rawr.Mage
                             }
                             seg1 = seg;
                             seg2 = seg + 1;
-                            break;
-                        }
-                        else
-                        {
-                            placed |= h;
+                            goto ELIMINATECROSSING;
                         }
                     }
                 }
-                if (valid)
+                for (int i = 0; i < hexList2.Count; i++)
                 {
-                    placed = 0;
-                    for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                    for (int j = i + 1; j < hexList2.Count; j++)
                     {
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        int iseg = calculationResult.SolutionVariable[index].Segment;
-                        if (state != null && solution[index] > 0 && iseg == seg + 1)
+                        placed = hex & hexList2[i];
+                        int h = hex & hexList2[j];
+                        int hp = h & placed;
+                        if (placed != hp && h != hp)
                         {
-                            int h = hex & state.GetHex();
-                            int hp = h & placed;
-                            if (placed != hp && h != hp)
+                            // XXX XX   placed
+                            //  XXXX    h
+                            //  .. .    hp
+                            // #  - #   placed - hp
+                            // -  # -   h - hp
+                            valid = false;
+                            for (cool1 = 0; cool1 < cooldownCount; cool1++)
                             {
-                                valid = false;
-                                for (cool1 = 0; cool1 < cooldownCount; cool1++)
-                                {
-                                    if (((1 << cool1) & placed & ~hp) != 0) break;
-                                }
-                                for (cool2 = 0; cool2 < cooldownCount; cool2++)
-                                {
-                                    if (((1 << cool2) & h & ~hp) != 0) break;
-                                }
-                                seg1 = seg + 1;
-                                seg2 = seg;
-                                break;
+                                if (((1 << cool1) & placed & ~hp) != 0) break;
                             }
-                            else
+                            for (cool2 = 0; cool2 < cooldownCount; cool2++)
                             {
-                                placed |= h;
+                                if (((1 << cool2) & h & ~hp) != 0) break;
                             }
+                            seg1 = seg + 1;
+                            seg2 = seg;
+                            goto ELIMINATECROSSING;
                         }
                     }
                 }
+            ELIMINATECROSSING:
                 if (!valid)
                 {
                     int c1 = 1 << cool1;
@@ -658,71 +653,31 @@ namespace Rawr.Mage
 
         private bool ValidateIntegralConsumable(VariableType integralConsumable)
         {
-            /*if (segmentCooldowns && (flameCapAvailable || restrictManaUse))
+            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
             {
-                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                if (calculationResult.SolutionVariable[index].Type == integralConsumable)
                 {
-                    if (calculationResult.SolutionVariable[index].Type == integralConsumable)
-                    {
-                        double value = solution[index];
-                        int count = (int)Math.Round(value);
-                        bool valid = (Math.Abs(value - count) < 0.000001);
+                    double value = solution[index];
+                    int count = (int)Math.Round(value);
+                    bool valid = (Math.Abs(value - count) < 0.000001);
 
-                        if (!valid)
-                        {
-                            // gems and pots only, force to one or many to zero
-                            // count >= ceiling(value)
-                            for (int i = index; i < calculationResult.SolutionVariable.Count; i++)
-                            {
-                                if (solution[i] > 0.0 && calculationResult.SolutionVariable[i].Type == integralConsumable && Math.Abs(calculationResult.SolutionVariable[i].Segment - calculationResult.SolutionVariable[index].Segment) * segmentDuration < 120.0)
-                                {
-                                    SolverLP minCount = lp.Clone();
-                                    minCount.SetMinIntegralConsumable(integralConsumable, calculationResult.SolutionVariable[i].Segment, 1.0);
-                                    if (minCount.Log != null) minCount.Log.AppendLine("Integral consumable " + integralConsumable + " at " + calculationResult.SolutionVariable[i].Segment + ", min " + 1.0);
-                                    HeapPush(minCount);
-                                }
-                            }
-                            for (int i = index; i < calculationResult.SolutionVariable.Count; i++)
-                            {
-                                if (solution[i] > 0.0 && calculationResult.SolutionVariable[i].Type == integralConsumable && Math.Abs(calculationResult.SolutionVariable[i].Segment - calculationResult.SolutionVariable[index].Segment) * segmentDuration < 120.0)
-                                {
-                                    // count <= floor(value)
-                                    lp.SetMaxIntegralConsumable(integralConsumable, calculationResult.SolutionVariable[i].Segment, 0.0);
-                                }
-                            }
-                            if (lp.Log != null) lp.Log.AppendLine("Integral consumable " + integralConsumable + " forward from " + calculationResult.SolutionVariable[index].Segment + ", max " + 0.0);
-                            HeapPush(lp);
-                            return false;
-                        }
+                    if (!valid)
+                    {
+                        SolverLP maxCount = lp.Clone();
+                        // count <= floor(value)
+                        maxCount.SetColumnUpperBound(index, Math.Floor(value));
+                        maxCount.ForceRecalculation(true);
+                        if (maxCount.Log != null) maxCount.Log.AppendLine("Integral consumable " + integralConsumable + " at " + calculationResult.SolutionVariable[index].Segment + ", max " + Math.Floor(value));
+                        HeapPush(maxCount);
+                        // count >= ceiling(value)
+                        lp.SetColumnLowerBound(index, Math.Ceiling(value));
+                        lp.ForceRecalculation(true);
+                        if (lp.Log != null) lp.Log.AppendLine("Integral consumable " + integralConsumable + " at " + calculationResult.SolutionVariable[index].Segment + ", min " + Math.Ceiling(value));
+                        HeapPush(lp);
+                        return false;
                     }
                 }
             }
-            else
-            {*/
-                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
-                {
-                    if (calculationResult.SolutionVariable[index].Type == integralConsumable)
-                    {
-                        double value = solution[index];
-                        int count = (int)Math.Round(value);
-                        bool valid = (Math.Abs(value - count) < 0.000001);
-
-                        if (!valid)
-                        {
-                            SolverLP maxCount = lp.Clone();
-                            // count <= floor(value)
-                            maxCount.SetMaxIntegralConsumable(integralConsumable, calculationResult.SolutionVariable[index].Segment, Math.Floor(value));
-                            if (maxCount.Log != null) maxCount.Log.AppendLine("Integral consumable " + integralConsumable + " at " + calculationResult.SolutionVariable[index].Segment + ", max " + Math.Floor(value));
-                            HeapPush(maxCount);
-                            // count >= ceiling(value)
-                            lp.SetMinIntegralConsumable(integralConsumable, calculationResult.SolutionVariable[index].Segment, Math.Ceiling(value));
-                            if (lp.Log != null) lp.Log.AppendLine("Integral consumable " + integralConsumable + " at " + calculationResult.SolutionVariable[index].Segment + ", min " + Math.Ceiling(value));
-                            HeapPush(lp);
-                            return false;
-                        }
-                    }
-                }
-            //}
             return true;
         }
 
@@ -738,15 +693,33 @@ namespace Rawr.Mage
             }
             double count = Math.Round(value / unit) * unit;
             bool valid = (Math.Abs(value - count) < 0.000001);
+            int row = -1;
+            switch (integralConsumable)
+            {
+                case VariableType.ManaGem:
+                    row = rowManaGemOnly;
+                    break;
+                case VariableType.ManaPotion:
+                    row = rowManaPotion;
+                    break;
+                case VariableType.Evocation:
+                    row = rowEvocation;
+                    break;
+                case VariableType.DrumsOfBattle:
+                    row = rowDrumsOfBattle;
+                    break;
+            }
             if (!valid)
             {
                 SolverLP maxCount = lp.Clone();
                 // count <= floor(value)
-                maxCount.SetMaxIntegralConsumable(integralConsumable, segments, Math.Floor(value / unit) * unit);
+                maxCount.SetRHS(row, Math.Floor(value / unit) * unit);
+                maxCount.ForceRecalculation(true);
                 if (maxCount.Log != null) maxCount.Log.AppendLine("Integral consumable " + integralConsumable + " overall, max " + Math.Floor(value / unit));
                 HeapPush(maxCount);
                 // count >= ceiling(value)
-                lp.SetMinIntegralConsumable(integralConsumable, segments, Math.Ceiling(value / unit) * unit);
+                lp.SetLHS(row, Math.Ceiling(value / unit) * unit);
+                lp.ForceRecalculation(true);
                 if (lp.Log != null) lp.Log.AppendLine("Integral consumable " + integralConsumable + " overall, min " + Math.Ceiling(value / unit));
                 HeapPush(lp);
                 return false;
@@ -941,9 +914,197 @@ namespace Rawr.Mage
             return ValidateCooldown(cooldown, effectDuration, cooldownDuration, false);
         }
 
+        private bool ValidateActivation(Cooldown cooldown, double effectDuration, double cooldownDuration, VariableType activation)
+        {
+            const double eps = 0.00001;
+            double[] segCount = new double[segments];
+            double[] segActivation = new double[segments];
+            for (int outseg = 0; outseg < segments; outseg++)
+            {
+                double s = 0.0;
+                for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
+                {
+                    CastingState state = calculationResult.SolutionVariable[index].State;
+                    if (state != null && state.GetCooldown(cooldown))
+                    {
+                        s += solution[index];
+                    }
+                }
+                segCount[outseg] = s;
+            }
+            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+            {
+                CastingState state = calculationResult.SolutionVariable[index].State;
+                if (state != null && state.GetCooldown(cooldown)) segCount[calculationResult.SolutionVariable[index].Segment] += solution[index];
+            }
+            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+            {
+                if (calculationResult.SolutionVariable[index].Type == activation) segActivation[calculationResult.SolutionVariable[index].Segment] += solution[index];
+            }
+            int mindist = (int)Math.Ceiling(effectDuration / segmentDuration);
+            int mindist2 = (int)Math.Floor(effectDuration / segmentDuration);
+            int maxdist = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor((cooldownDuration - effectDuration) / segmentDuration));
+            int maxdist2 = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor(cooldownDuration / segmentDuration));
+
+            bool valid = true;
+
+            for (int seg = 0; seg < segments; seg++)
+            {
+                if (segActivation[seg] > eps)
+                {
+                    for (int s = 0; s < segments; s++)
+                    {
+                        if (Math.Abs(seg - s) <= mindist && s < seg && segCount[s] > eps) valid = false; 
+                    }
+                    if (!valid)
+                    {
+                        // can't have effect before activation
+                        // either activation is not here or effect is not before it
+                        SolverLP cooldownUsed = lp.Clone();
+                        // activation not used
+                        if (lp.Log != null) lp.Log.AppendLine("Disable activation of " + activation.ToString() + " at " + seg);
+                        for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                        {
+                            if (calculationResult.SolutionVariable[index].Type == activation && calculationResult.SolutionVariable[index].Segment == seg) lp.EraseColumn(index);
+                        }
+                        HeapPush(lp);
+                        if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("No " + cooldown.ToString() + " before activation at " + seg);
+                        for (int s = 0; s < segments; s++)
+                        {
+                            if (Math.Abs(seg - s) <= mindist && s < seg)
+                            {
+                                for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
+                                {
+                                    CastingState state = calculationResult.SolutionVariable[index].State;
+                                    if (state != null && state.GetCooldown(cooldown)) cooldownUsed.EraseColumn(index);
+                                }
+                            }
+                        }
+                        for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                        {
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            if (state != null && state.GetCooldown(cooldown))
+                            {
+                                int outseg = calculationResult.SolutionVariable[index].Segment;
+                                if (Math.Abs(seg - outseg) <= mindist && outseg < seg) cooldownUsed.EraseColumn(index);
+                            }
+                        }
+                        HeapPush(cooldownUsed);
+                        return false;
+                    }
+                }
+            }
+
+            for (int i = 0; i < segmentColumn[0]; i++) // fix if variable ordering changes
+            {
+                if (calculationResult.SolutionVariable[i].Type == activation && solution[i] > eps)
+                {
+                    int seg = calculationResult.SolutionVariable[i].Segment;
+                    int seghex = calculationResult.SolutionVariable[i].State.GetHex();
+                    // check all cooldowns that link to this drums activation
+                    // if any of them is also before this segment we have a cycle if it's not present at activation
+                    int linkedHex = 0;
+                    for (int s = 0; s < segments; s++)
+                    {
+                        if (Math.Abs(seg - s) <= mindist)
+                        {
+                            for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (state != null && state.GetCooldown(cooldown) && solution[index] > eps)
+                                {
+                                    linkedHex |= state.GetHex();
+                                }
+                            }
+                        }
+                    }
+                    for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                    {
+                        CastingState state = calculationResult.SolutionVariable[index].State;
+                        if (state != null && state.GetCooldown(cooldown) && solution[index] > eps)
+                        {
+                            linkedHex |= state.GetHex();
+                        }
+                    }
+
+                    int brokenHex = 0;
+                    for (int s = 0; s < segments; s++)
+                    {
+                        if (s == seg - 1)
+                        {
+                            for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (state != null && solution[index] > eps)
+                                {
+                                    int h = state.GetHex() & linkedHex & ~seghex;
+                                    if (h != 0) brokenHex = h;
+                                }
+                            }
+                        }
+                    }
+                    for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                    {
+                        CastingState state = calculationResult.SolutionVariable[index].State;
+                        if (state != null && solution[index] > eps)
+                        {
+                            int outseg = calculationResult.SolutionVariable[index].Segment;
+                            if (outseg == seg - 1)
+                            {
+                                int h = state.GetHex() & linkedHex & ~seghex;
+                                if (h != 0) brokenHex = h;
+                            }
+                        }
+                    }
+                    if (brokenHex != 0)
+                    {
+                        // either we don't have activation that is without broken hex or drums casting with hex or hex before activation
+                        SolverLP drumsnohex = lp.Clone();
+                        if (drumsnohex.Log != null) drumsnohex.Log.AppendLine(cooldown.ToString() + " without hex");
+                        for (int s = 0; s < segments; s++)
+                        {
+                            if (Math.Abs(seg - s) <= mindist)
+                            {
+                                for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
+                                {
+                                    CastingState state = calculationResult.SolutionVariable[index].State;
+                                    if (state != null && state.GetCooldown(cooldown) && (state.GetHex() & brokenHex) != 0) drumsnohex.EraseColumn(index);
+                                }
+                            }
+                        }
+                        HeapPush(drumsnohex);
+
+                        SolverLP nohex = lp.Clone();
+                        if (nohex.Log != null) nohex.Log.AppendLine("No hex");
+                        for (int s = 0; s < segments; s++)
+                        {
+                            if (s == seg - 1)
+                            {
+                                for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
+                                {
+                                    CastingState state = calculationResult.SolutionVariable[index].State;
+                                    if (state != null && (state.GetHex() & brokenHex) != 0) nohex.EraseColumn(index);
+                                }
+                            }
+                        }
+                        HeapPush(nohex);
+
+                        if (lp.Log != null) lp.Log.AppendLine("Disable activation of " + activation.ToString() + " at " + seg + " without hex");
+                        for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                        {
+                            if (calculationResult.SolutionVariable[index].Type == activation && calculationResult.SolutionVariable[index].Segment == seg && (calculationResult.SolutionVariable[index].State.GetHex() & brokenHex) != brokenHex) lp.EraseColumn(index);
+                        }
+                        HeapPush(lp);
+                    }
+                }
+            }
+
+            return true;
+        }
+
         private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration, bool needsFullEffect)
         {
-            const double eps = 0.000001;
+            const double eps = 0.00001;
             double[] segCount = new double[segments];
             for (int outseg = 0; outseg < segments; outseg++)
             {
@@ -974,7 +1135,7 @@ namespace Rawr.Mage
             {
                 for (int seg = 0; seg < segments; seg++)
                 {
-                    if (segCount[seg] > 0 && (seg + 1) * segmentDuration + 60.0 < calculationOptions.FightDuration)
+                    if (segCount[seg] > 0.0 && (seg + 1) * segmentDuration + effectDuration < calculationOptions.FightDuration)
                     {
                         double total = 0.0;
                         for (int s = 0; s < segments; s++)
@@ -1095,7 +1256,8 @@ namespace Rawr.Mage
                 }
             }
 
-            for (int seg = 0; seg < segments; seg++)
+            // fragmentation detection, replaced with hole detection
+            /*for (int seg = 0; seg < segments; seg++)
             {
                 double inseg = segCount[seg];
                 double leftseg = 0.0;
@@ -1114,7 +1276,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                if (valid && inseg < segmentDuration - 0.000001 && leftseg > 0 && rightseg > 0 /*&& cooldown != Cooldown.IcyVeins*/) // coldsnapped icy veins doesn't have to be contiguous, but getting better results assuming it is
+                if (valid && inseg > 0.000001 && inseg < segmentDuration - 0.000001 && leftseg > 0 && rightseg > 0) // coldsnapped icy veins doesn't have to be contiguous, but getting better results assuming it is
                 {
                     // fragmentation
                     // either left must be disabled, right disabled, or seg to max
@@ -1185,6 +1347,101 @@ namespace Rawr.Mage
                     lp.UpdateMaximizeSegmentDuration(segmentDuration);
                     HeapPush(lp);
                     return false;
+                }
+            }*/
+
+            // detect holes
+            for (int seg = 0; seg < segments; seg++)
+            {
+                double inseg = segCount[seg];
+                if (inseg > 0)
+                {
+                    int lastseg = -1;
+                    for (int outseg = seg + 1; outseg < Math.Min(segments, seg + mindist + 1); outseg++)
+                    {
+                        if (segCount[outseg] > 0) lastseg = outseg;
+                    }
+                    if (lastseg != -1)
+                    {
+                        for (int outseg = seg + 1; outseg < lastseg; outseg++)
+                        {
+                            if (segCount[outseg] < segmentDuration - eps) valid = false;
+                        }
+                        if (!valid) // coldsnapped icy veins doesn't have to be contiguous, but getting better results assuming it is
+                        {
+                            // either seg must be disabled, lastseg disabled, or middle to max
+                            SolverLP leftDisabled = lp.Clone();
+                            if (leftDisabled.Log != null) leftDisabled.Log.AppendLine("Disable left " + cooldown.ToString() + " at " + seg);
+                            for (int outseg = 0; outseg < segments; outseg++)
+                            {
+                                if (outseg == seg)
+                                {
+                                    for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
+                                    {
+                                        CastingState state = calculationResult.SolutionVariable[index].State;
+                                        if (state != null && state.GetCooldown(cooldown)) leftDisabled.EraseColumn(index);
+                                    }
+                                }
+                            }
+                            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (state != null && state.GetCooldown(cooldown))
+                                {
+                                    int outseg = calculationResult.SolutionVariable[index].Segment;
+                                    if (outseg == seg) leftDisabled.EraseColumn(index);
+                                }
+                            }
+                            HeapPush(leftDisabled);
+                            SolverLP rightDisabled = lp.Clone();
+                            if (rightDisabled.Log != null) rightDisabled.Log.AppendLine("Disable right " + cooldown.ToString() + " at " + lastseg);
+                            for (int outseg = 0; outseg < segments; outseg++)
+                            {
+                                if (outseg == lastseg)
+                                {
+                                    for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
+                                    {
+                                        CastingState state = calculationResult.SolutionVariable[index].State;
+                                        if (state != null && state.GetCooldown(cooldown)) rightDisabled.EraseColumn(index);
+                                    }
+                                }
+                            }
+                            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (state != null && state.GetCooldown(cooldown))
+                                {
+                                    int outseg = calculationResult.SolutionVariable[index].Segment;
+                                    if (outseg == lastseg) rightDisabled.EraseColumn(index);
+                                }
+                            }
+                            HeapPush(rightDisabled);
+                            if (lp.Log != null) lp.Log.AppendLine("Force " + cooldown.ToString() + " to max from " + seg + " to " + lastseg);
+                            for (int outseg = 0; outseg < segments; outseg++)
+                            {
+                                if (outseg > seg && outseg < lastseg)
+                                {
+                                    for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
+                                    {
+                                        CastingState state = calculationResult.SolutionVariable[index].State;
+                                        if (state != null && state.GetCooldown(cooldown)) lp.UpdateMaximizeSegmentColumn(index);                                        
+                                    }
+                                }
+                            }
+                            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (state != null && state.GetCooldown(cooldown))
+                                {
+                                    int outseg = calculationResult.SolutionVariable[index].Segment;
+                                    if (outseg > seg && outseg < lastseg) lp.UpdateMaximizeSegmentColumn(index);
+                                }
+                            }
+                            lp.UpdateMaximizeSegmentDuration(segmentDuration * (lastseg - seg - 1));
+                            HeapPush(lp);
+                            return false;
+                        }
+                    }
                 }
             }
 
@@ -1272,14 +1529,14 @@ namespace Rawr.Mage
                             HeapPush(nogem);
                             // restrict flame cap/overflow
                             if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap with gem at 0");
-                            int row = lp.lp.AddConstraint(false);
-                            lp.lp.SetConstraintRHS(row, (firstSeg * segmentDuration + segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
+                            int row = lp.AddConstraint(false);
+                            lp.SetConstraintRHS(row, (firstSeg * segmentDuration + segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
                             for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                             {
                                 CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment < firstSeg) lp.lp.SetConstraintElement(row, index, 120.0 * SolverLP.columnScale[index]);
-                                else if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == 0) lp.lp.SetConstraintElement(row, index, -1.0 / manaBurn * SolverLP.columnScale[index]);
-                                else if (state != null && state.FlameCap && calculationResult.SolutionVariable[index].Segment == firstSeg) lp.lp.SetConstraintElement(row, index, 1.0 * SolverLP.columnScale[index]);
+                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment < firstSeg) lp.SetConstraintElement(row, index, 120.0);
+                                else if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == 0) lp.SetConstraintElement(row, index, -1.0 / manaBurn);
+                                else if (state != null && state.FlameCap && calculationResult.SolutionVariable[index].Segment == firstSeg) lp.SetConstraintElement(row, index, 1.0);
                             }
                             lp.ForceRecalculation(true);
                             HeapPush(lp);
@@ -1330,14 +1587,14 @@ namespace Rawr.Mage
                             HeapPush(nogem);
                             // restrict flame cap/overflow
                             if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap with gem at end");
-                            int row = lp.lp.AddConstraint(false);
-                            lp.lp.SetConstraintRHS(row, (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
+                            int row = lp.AddConstraint(false);
+                            lp.SetConstraintRHS(row, (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
                             for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                             {
                                 CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment > lastSeg) lp.lp.SetConstraintElement(row, index, 120.0 * SolverLP.columnScale[index]);
-                                else if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == segments - 1) lp.lp.SetConstraintElement(row, index, -1.0 / manaBurn * SolverLP.columnScale[index]);
-                                else if (state != null && state.FlameCap && calculationResult.SolutionVariable[index].Segment == lastSeg) lp.lp.SetConstraintElement(row, index, -1.0 * SolverLP.columnScale[index]);
+                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment > lastSeg) lp.SetConstraintElement(row, index, 120.0);
+                                else if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == segments - 1) lp.SetConstraintElement(row, index, -1.0 / manaBurn);
+                                else if (state != null && state.FlameCap && calculationResult.SolutionVariable[index].Segment == lastSeg) lp.SetConstraintElement(row, index, -1.0);
                             }
                             lp.ForceRecalculation(true);
                             HeapPush(lp);
@@ -1381,13 +1638,13 @@ namespace Rawr.Mage
                             HeapPush(nogem);
                             // restrict flame cap
                             if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap around " + seg);
-                            int row = lp.lp.AddConstraint(false);
-                            lp.lp.SetConstraintRHS(row, maxfc);
+                            int row = lp.AddConstraint(false);
+                            lp.SetConstraintRHS(row, maxfc);
                             for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                             {
                                 CastingState state = calculationResult.SolutionVariable[index].State;
                                 int iseg = calculationResult.SolutionVariable[index].Segment;
-                                if (state != null && state.GetCooldown(cooldown) && Math.Abs(seg - iseg) <= segdist) lp.lp.SetConstraintElement(row, index, 1.0 * SolverLP.columnScale[index]);
+                                if (state != null && state.GetCooldown(cooldown) && Math.Abs(seg - iseg) <= segdist) lp.SetConstraintElement(row, index, 1.0);
                             }
                             lp.ForceRecalculation(true);
                             HeapPush(lp);

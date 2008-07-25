@@ -47,12 +47,12 @@ namespace Rawr.Mage
 
         private void checkBoxSMP_CheckedChanged(object sender, EventArgs e)
         {
-            DisplaySMPWarning();
+            //DisplaySMPWarning();
         }
 
         private void checkBoxSMPDisplay_CheckedChanged(object sender, EventArgs e)
         {
-            DisplaySMPWarning();
+            //DisplaySMPWarning();
         }
 
         private void DisplaySMPWarning()

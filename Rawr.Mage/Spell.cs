@@ -110,6 +110,14 @@ namespace Rawr.Mage
         public float CostPerSecond;
         public float ManaRegenPerSecond;
 
+        public float ManaPerSecond
+        {
+            get
+            {
+                return CostPerSecond - ManaRegenPerSecond;
+            }
+        }
+
         public bool AffectedByFlameCap;
         public bool ABCycle;
 
