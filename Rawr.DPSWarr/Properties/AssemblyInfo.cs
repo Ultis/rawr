@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Rawr.DPSWarr.Properties")]
+[assembly: AssemblyTitle("Rawr.DPSWarr")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Rawr.DPSWarr.Properties")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2008")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Rawr.DPSWarr")]
+[assembly: AssemblyCopyright("Copyright ©  2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.14.1")]
-[assembly: AssemblyFileVersion("1.14.1")]
+[assembly: AssemblyVersion("1.15.0")]
+[assembly: AssemblyFileVersion("1.15.0")]
