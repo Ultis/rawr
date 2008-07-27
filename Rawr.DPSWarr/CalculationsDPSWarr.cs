@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rawr.DPSWarr
 {
-	[System.ComponentModel.DisplayName("DPSWarr|Spell_Holy_AuraOfLight")]
+	[System.ComponentModel.DisplayName("DPSWarr|Ability_Rogue_Ambush")]
     class CalculationsDPSWarr : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;

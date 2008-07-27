@@ -162,6 +162,7 @@ namespace Rawr.Hunter
 				BonusPetCritChance = stats.BonusPetCritChance,
 				BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+				LotPCritRating = stats.LotPCritRating,
 				Crit = stats.Crit,
 				CritRating = stats.CritRating,
 				DrumsOfBattle = stats.DrumsOfBattle,
@@ -194,10 +195,11 @@ namespace Rawr.Hunter
 			stats.BonusCritMultiplier +
 			stats.BonusIntellectMultiplier +
 			stats.BonusManaPotion +
-			stats.BonusPetDamageMultiplier + 
+			stats.BonusPetDamageMultiplier +
 			stats.BonusPhysicalDamageMultiplier +
 			stats.BonusStaminaMultiplier +
-			stats.BonusPetCritChance + 
+			stats.BonusPetCritChance +
+			stats.LotPCritRating +
 			stats.Crit +
 			stats.CritRating +
 			stats.DrumsOfBattle +
@@ -213,7 +215,7 @@ namespace Rawr.Hunter
 			stats.ShatteredSunAcumenProc +
 			stats.ShatteredSunMightProc +
 			stats.AshtongueTrinketProc +
-			stats.BonusSteadyShotCrit + 
+			stats.BonusSteadyShotCrit +
 			stats.BonusSteadyShotDamageMultiplier) > 0;
         }
        
@@ -244,7 +246,7 @@ namespace Rawr.Hunter
 			bool returnValue;
 			if ((item.Slot == Item.ItemSlot.Ranged && item.Type == Item.ItemType.Idol) ||
 				//its a feral staff if it has that much AP
-				(item.Slot == Item.ItemSlot.TwoHand && item.Type == Item.ItemType.Staff && item.Stats.AttackPower > 700))
+				(item.Slot == Item.ItemSlot.TwoHand && item.Type == Item.ItemType.Staff && item.Stats.AttackPower >= 292))
 			{
 				returnValue = false;
 			}
@@ -900,7 +902,7 @@ namespace Rawr.Hunter
 			statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
 			statsTotal.BloodlustProc = statsRace.BloodlustProc + statsGearEnchantsBuffs.BloodlustProc;
 			statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
-			statsTotal.CritRating = (float)Math.Floor((decimal)statsRace.CritRating + (decimal)statsGearEnchantsBuffs.CritRating);
+			statsTotal.CritRating = (float)Math.Floor((decimal)statsRace.CritRating + (decimal)statsGearEnchantsBuffs.CritRating + (decimal)statsRace.LotPCritRating + (decimal)statsGearEnchantsBuffs.LotPCritRating);
 			statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
 			statsTotal.HitRating = (float)Math.Floor((decimal)statsRace.HitRating + (decimal)statsGearEnchantsBuffs.HitRating);
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;

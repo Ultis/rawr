@@ -49,15 +49,15 @@ namespace Rawr.DPSWarr
             //string talent = cb.Name.Substring(8);
             //Character.CalculationOptions[talent] = cb.SelectedItem.ToString();
 
-			calcOpts.TwoHandedSpec = int.Parse(comboBoxTwoHandedSpec.SelectedItem.ToString());
-			calcOpts.DeathWish = int.Parse(comboBoxDeathWish.SelectedItem.ToString());
-			calcOpts.Impale = int.Parse(comboBoxImpale.SelectedItem.ToString());
-			calcOpts.DeepWounds = int.Parse(comboBoxDeepWounds.SelectedItem.ToString());
-			calcOpts.MortalStrike = int.Parse(comboBoxMortalStrike.SelectedItem.ToString());
-			calcOpts.Cruelty = int.Parse(comboBoxCruelty.SelectedItem.ToString());
-			calcOpts.Flurry = int.Parse(comboBoxFlurry.SelectedItem.ToString());
-			calcOpts.WeaponMastery = int.Parse(comboBoxWeaponMastery.SelectedItem.ToString());
-			calcOpts.ImpSlam = int.Parse(comboBoxImpSlam.SelectedItem.ToString());
+			calcOpts.TwoHandedSpec = int.Parse((comboBoxTwoHandedSpec.SelectedItem ?? "0").ToString());
+			calcOpts.DeathWish = int.Parse((comboBoxDeathWish.SelectedItem ?? "0").ToString());
+			calcOpts.Impale = int.Parse((comboBoxImpale.SelectedItem ?? "0").ToString());
+			calcOpts.DeepWounds = int.Parse((comboBoxDeepWounds.SelectedItem ?? "0").ToString());
+			calcOpts.MortalStrike = int.Parse((comboBoxMortalStrike.SelectedItem ?? "0").ToString());
+			calcOpts.Cruelty = int.Parse((comboBoxCruelty.SelectedItem ?? "0").ToString());
+			calcOpts.Flurry = int.Parse((comboBoxFlurry.SelectedItem ?? "0").ToString());
+			calcOpts.WeaponMastery = int.Parse((comboBoxWeaponMastery.SelectedItem ?? "0").ToString());
+			calcOpts.ImpSlam = int.Parse((comboBoxImpSlam.SelectedItem ?? "0").ToString());
 			
             calcOpts.TalentsSaved = true;
 			Character.OnItemsChanged();
