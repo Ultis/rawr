@@ -68,7 +68,6 @@ namespace Rawr.Hunter
 				"Basic Calculated Stats:Crit Percentage",
 				"Basic Calculated Stats:Ranged AP",
 				"Basic Calculated Stats:Attack Speed",
-				"Pet Stats:Pet Health",
 				"Pet Stats:Pet Attack Power",
 				"Pet Stats:Pet Hit Percentage",
 				"Pet Stats:Pet Crit Percentage",
