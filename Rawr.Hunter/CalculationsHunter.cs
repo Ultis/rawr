@@ -401,10 +401,11 @@ namespace Rawr.Hunter
 				{
 					rawrHourglassAP = character.Trinket2.Stats.AttackPower;
 				}
+
 				if (rawrHourglassAP > 0)
 				{
 					//AP Boost * Uptime
-					double trueAPGain = 300 * (10 / ((45 + (1 / (calculatedStats.BasicStats.Crit * .1)) * weightedTotalShotsPerSecond) + 10));
+					double trueAPGain = 300 * (10 / ((45 + (1 / (calculatedStats.BasicStats.Crit * .1)) * (1/weightedTotalShotsPerSecond))));
 					addtionalAPFromProcs += (trueAPGain - rawrHourglassAP);
 				}
 			}
@@ -684,9 +685,9 @@ namespace Rawr.Hunter
 				{
 					for (int i = 0; i < petSpecialAttackData.Length; i++)
 					{
-						calculatedStats.PetSpecialDPS = CalculatePetSpecialAttackDPS(petSpecialAttackData[i], petDamageAdjustment, petArmorDamageReductionPercentage);
-						petDPS += calculatedStats.PetSpecialDPS;
+						calculatedStats.PetSpecialDPS += CalculatePetSpecialAttackDPS(petSpecialAttackData[i], petDamageAdjustment, petArmorDamageReductionPercentage);
 					}
+					petDPS += calculatedStats.PetSpecialDPS;
 				}
 			}
 			calculatedStats.PetDpsPoints = (float)petDPS;
