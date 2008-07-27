@@ -1,11 +1,14 @@
-Rawr Beta 14
+Rawr Beta 15
 ------------
- Welcome to Rawr b14. In this beta are two new models: ProtWarr and Healadin. There's also a slew of new features, across all models, and numerous model-specific fixes/additions/changes. Some highlights are Threat for Bears, Sequence Reconstruction for Mage, a massively updated (and much more accurate) calculation model for Moonkin, Mac support, an upgrade list builder, and a much more intelligent Optimizer.
+ Welcome to Rawr b15. In this beta are a whopping *six* new models: Tree, RestoSham, DPSWarr (Arms-only for this release), Hunter (BM-only for this release), Tankadin, and HolyPriest. We've also significantly improved the Moonkin, Warlock, and Retribution models with all the latest theorycrafting knowledge. Please note that all these new models are not 100% complete, see below for details, so please give us feedback on them!
 
 Anyway, as usual, thanks very much for testing Rawr. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
 FAQ
 ---
+ Q: I get a "Cannot access disposed object." error. How can I fix that?
+ A: There's a bug in the .NET Framework 2.0 which causes this on some machines. The only known fix right now is to uninstall it, and then reinstall the latest .NET Framework from Microsoft.
+
  Q: I get an error on load, "To run this application you must first install..." or "The application failed to initialize properly (0xc0000135)." How do I fix this?
  A: Install .NET Framework 2.0 from Microsoft. If it still doesn't work, uninstall .NET Framework completely, reinstall .NET Framework 2.0, and try Rawr again. Download link for .NET Framework 2.0 from Microsoft: http://go.microsoft.com/fwlink/?linkid=32168 
 
@@ -18,31 +21,50 @@ FAQ
  Q: Can you make it, or does Rawr work for [insert class/spec here]?
  A: What you see in Rawr is what's currently developed to release quality. A few more models are in development. If you're a C# developer and would like to begin or help with another model, let me know!
 
-Rawr on Mac OS X
-----------------
-This is the first version where I'm officially supporting running Rawr on OSX. First, let me start by saying that I'm sorry I don't have a native OSX version of Rawr. I'm a Mac user myself, love Macs way more than Windows. Sadly, I only know how to program for Windows, so me developing a native Mac version is out of the question at the moment. If any OSX devs would like to work on *and maintain* a Mac port, let me know.
-
-That said, I'm doing what I can to make Rawr available to Mac users, and starting with this version, that means officially supporting running Rawr on OSX, via Mono. 
-
-*>*>*> You no longer need CrossOver, nor do you need to have an intel-based Mac. <*<*<*
-
-How to Run Rawr on OSX:
- 1) Install Mono (http://www.go-mono.com/mono-downloads/download.html) for Mac OS X. 
- 2) Unzip Rawr. 
- 3) Open the Terminal, navigate to where you unzipped Rawr, and type 'mono Rawr.exe', and hit enter. That should launch Rawr for you. 
- 
-Mono has some problems, so I appreciate your patience as I work to try to make Rawr stable under Mono. I strongly suggest saving often for now.
-
-Known Issues:
- - Mono doesn't look perfect. It looks kinda ugly, and you'll see some weird graphical artifacts. I'll try to work around this as best I can, but it's going to take time.
- - Mono has some crashing problems. Things will be running fine, then all of a sudden, the whole app'll close. I can try to work around these bugs in Mono, but it's going to take time. 
- - Tooltips on labels don't work in Mono. I'll see if I can work around this for a later version. At least for stats, you can work around this by using the Copy Character Stats to Clipboard feature.
- - The clipboard doesn't work under Mono. In the mean time, when running on Mono, Copy Character Stats to Clipboard will save the stats as 'stats.txt' in the folder with Rawr.
- - More issues, I'm sure.
-
 
 Version History
 ---------------
+Beta 15:
+ - Added the Tree, RestoSham, DPSWarr (Arms-only for this release), Hunter (BM-only for this release), Tankadin, and HolyPriest models! These are our first versions of these models, so please report any bugs you find with them!
+ - Revamp of item availability mechanics: Items can be marked to allow regemming and restrict which enchants are available. Left click on diamond as before marks item to be available withot restrictions (regemming and all enchants), CTRL+click marks the item to be available for this specific gemming. By right clicking on the diamond it is possible to restrict which enchants are available (if there are any restrictions active this is indicated by a dot next to diamond). Optimizer has an option to override whether items that aren't specifically marked for regemming/reenchanting can be regemmed or reenchanted.
+ - The optimizer upgrade comparison chart will now display all slots used to achieve the displayed upgrade value in its tooltip, and has a contextual menu item on click to equip all items
+ - Significant performance improvements all around for calculations, especially in the Optimizer
+ - Fix for properly handling gems and socket bonuses with spell damage and healing, and for display gems with three stats
+ - Fixed a bug with encoding for armory lookups, which was breaking some KR character loads
+ - Fixed a bug with item selection popups where the highest rating is 0
+ - Now handles broken images on the armory gracefully
+ - Added Batch Tools. These are still a work-in-progress, and are unstable, but the end goal is to be able to optimize a collection of characters (ie, your guild) at once. Feel free to poke around, but consider this feature incomplete at the moment, and be sure to save before using it.
+ - Rawr.Cat
+   - Fix for Braxxis' Staff not being relevant
+ - Rawr.Bear
+   - Fix for Braxxis' Staff not being relevant
+   - Fixes to threat generation, and included Swipe rotations
+ - Rawr.ProtWarr:
+   - Fixed Combat Table and Crushless Mob debuff
+ - Rawr.Moonkin:
+   - Fix for 4T5 incorrectly applying to Starfire Spam spell rotation
+   - Better judgement of when to clip DoTs and when to let them tick off
+ - Rawr.Mage:
+   - Massive improvements to sequence reconstruction
+   - Added non-debuffed AB to spell info display
+   - Many more options on the Options tab, in a new UI
+   - Fix for IED meta gem having internal cooldown
+   - Fixed the base damage of Arcane Missiles
+   - Added an option to set a custom spell mix
+   - Fix for Fireball-Fire Blast cycle to take advantage of haste in certain ranges
+ - Rawr.Warlock:
+   - Pretty much rewrote the whole thing. It's much better now. Feedback and bugreports are definitely welcome!
+ - Rawr.Retribution:
+   - Mongoose and Executioner reworked
+   - Armor Mitigation and Haste reworked
+   - Minor fixes to Judgement, Exorcism, Crusader Strike, and Consecration calculations
+   - Talents and Options will now save and load properly
+   - Implemented more accurate WF and SoC calculations
+ - Rawr.Healadin:
+   - Added Cloth/Leather/Mail to the relevant item types
+   
+   
+
 Beta 14.1:
  - Possible fix for the 'Unable to access a disposed object' error. I still haven't been able to reproduce this, so am not sure if this will solve it; please let me know asap if you still encounter this issue.
  - Fix for the optimizer swapping gems around inappropriately when using Known Gemmings Only.
@@ -329,6 +351,28 @@ Beta 2:
  -Initial Public Release
 
 
+Rawr on Mac OS X
+----------------
+In the last version, I began officially supporting Rawr on OSX, using Mono. But it became quickly apparent that Mono, currently, is extremely buggy. There's supposed to be a huge new version (2.0) of Mono coming soon, and we're all really hoping that it'll improve the situation alot. Until then, Rawr b15 should work just as well as b14 did, under Mono, so if you were using it that way, it should still work for you. And if you want to give it a try, please do, it very well may work just fine for you. For most users, running Rawr via some form of emulation (Boot Camp, VMWare Fusion, Parallels, etc) will give you the best results, though. 
+
+That said, I'm doing what I can to make Rawr available to Mac users, and that means officially supporting running Rawr on OSX, via Mono. 
+
+*>*>*> You no longer need CrossOver, nor do you need to have an intel-based Mac. <*<*<*
+
+How to Run Rawr on OSX:
+ 1) Install Mono (http://www.go-mono.com/mono-downloads/download.html) for Mac OS X. 
+ 2) Unzip Rawr. 
+ 3) Open the Terminal, navigate to where you unzipped Rawr, and type 'mono Rawr.exe', and hit enter. That should launch Rawr for you. 
+ 
+Mono has some problems, so I appreciate your patience as I work to try to make Rawr stable under Mono. I strongly suggest saving often for now.
+
+Known Issues:
+ - Mono doesn't look perfect. It looks kinda ugly, and you'll see some weird graphical artifacts. I'll try to work around this as best I can, but it's going to take time.
+ - Mono has some crashing problems. Things will be running fine, then all of a sudden, the whole app'll close. I can try to work around these bugs in Mono, but it's going to take time. 
+ - Tooltips on labels don't work in Mono. I'll see if I can work around this for a later version. At least for stats, you can work around this by using the Copy Character Stats to Clipboard feature.
+ - The clipboard doesn't work under Mono. In the mean time, when running on Mono, Copy Character Stats to Clipboard will save the stats as 'stats.txt' in the folder with Rawr.
+ - More issues, I'm sure.
+
 Files
 -----
 Attached to this e-mail, you will find a .zip containing the following:
@@ -370,13 +414,13 @@ Now that you have your current character fairly well defined, use the item compa
 
 
 That's about it, let me know how it works (or doesn't) for you! Thanks!
-~Astrylian on Whisperwind, cnervig@hotmail.com
+~Astrylian on Eonar, cnervig@hotmail.com
 
 
 LICENSE
 -------
 
-   Copyright 2007 Chadd Nervig, "HugeHoss", and "Toskk"
+   Copyright 2008 Chadd Nervig, "HugeHoss", "Toskk", and the Rawr Developers.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
