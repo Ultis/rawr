@@ -124,7 +124,7 @@ namespace Rawr.Warlock
             get 
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Stats", "Stats (Item Budget)", "Talent Specs" };
+                    _customChartNames = new string[] { "Stats vs Spell Damage", "Stats (Item Budget)", "Talent Specs" };
                 return _customChartNames;
             }
         }
@@ -528,8 +528,6 @@ namespace Rawr.Warlock
             //spell haste rating
             statsTotal.SpellHasteRating += statsTotal.DrumsOfBattle * 30 / 120;
             statsTotal.SpellHasteRating += statsTotal.SpellHasteFor20SecOnUse2Min / 6;
-            if (statsTotal.Bloodlust > 0)
-                statsTotal.SpellHasteRating += 30 * 15.77f * 40 / 600;
 
             //mp5
             statsTotal.Mp5 += 100; //Assume Super Mana Potions (TODO: Add some kind of potion selector)
@@ -619,7 +617,7 @@ namespace Rawr.Warlock
 
             switch (chartName)
             {
-                case "Stats":
+                case "Stats vs Spell Damage":
                     itemList = new Item[] 
                     {
                         new Item() { Stats = new Stats() { SpellDamageRating = 1 } },
@@ -628,6 +626,7 @@ namespace Rawr.Warlock
                         new Item() { Stats = new Stats() { SpellCritRating = 1 } },
                         new Item() { Stats = new Stats() { SpellHasteRating = 1 } },
                         new Item() { Stats = new Stats() { SpellHitRating = 1 } },
+                        new Item() { Stats = new Stats() { Mp5 = 1 } }
                     };
                     statList = new string[] 
                     {
@@ -637,22 +636,37 @@ namespace Rawr.Warlock
                         "1 Spell Crit Rating", 
                         "1 Spell Haste Rating", 
                         "1 Spell Hit Rating",
+                        "1 Mana per 5 sec"
                     };
 
                     baseCalc = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
 
-                    for (int index = 0; index < statList.Length; index++)
+                    //get values relative to spell damage
+                    calc = GetCharacterCalculations(character, itemList[0]) as CharacterCalculationsWarlock;
+                    ComparisonCalculationBase spellDamageComparison = CreateNewComparisonCalculation();
+                    spellDamageComparison.Name = statList[0];
+                    spellDamageComparison.Equipped = false;
+                    spellDamageComparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                    subPoints = new float[calc.SubPoints.Length];
+                    for (int i = 0; i < calc.SubPoints.Length; i++)
+                    {
+                        subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                    }
+                    spellDamageComparison.SubPoints = subPoints;
+                    comparisonList.Add(spellDamageComparison);
+
+                    for (int index = 1; index < statList.Length; index++)
                     {
                         calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsWarlock;
 
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = statList[index];
                         comparison.Equipped = false;
-                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        comparison.OverallPoints = (calc.OverallPoints - baseCalc.OverallPoints) / spellDamageComparison.OverallPoints;
                         subPoints = new float[calc.SubPoints.Length];
                         for (int i = 0; i < calc.SubPoints.Length; i++)
                         {
-                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                            subPoints[i] = (calc.SubPoints[i] - baseCalc.SubPoints[i]) / spellDamageComparison.SubPoints[i];
                         }
                         comparison.SubPoints = subPoints;
 
@@ -669,6 +683,7 @@ namespace Rawr.Warlock
                         new Item() { Stats = new Stats() { SpellCritRating = 10 } },
                         new Item() { Stats = new Stats() { SpellHasteRating = 10 } },
                         new Item() { Stats = new Stats() { SpellHitRating = 10 } },
+                        new Item() { Stats = new Stats() { Mp5 = 4 } }
                     };
                     statList = new string[] 
                     {
@@ -678,6 +693,7 @@ namespace Rawr.Warlock
                         "10 Spell Crit Rating", 
                         "10 Spell Haste Rating", 
                         "10 Spell Hit Rating",
+                        "4 Mana per 5 sec"
                     };
 
                     baseCalc = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
@@ -719,7 +735,7 @@ namespace Rawr.Warlock
                     Character charClone = character.Clone();
                     string[] talentSpecList = { "UA Affliction (43/0/18)", "Ruin Affliction (40/0/21)", "Shadow Destro (0/21/40)", "Fire Destro (0/21/40)" };
                     CalculationOptionsWarlock calculations = charClone.CalculationOptions as CalculationOptionsWarlock;
-                    calculations = calculations.Clone();
+                    charClone.CalculationOptions = calculations.Clone();
 
                     for (int index = 0; index < talentSpecList.Length; index++)
                     {

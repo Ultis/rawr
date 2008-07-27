@@ -74,6 +74,8 @@ namespace Rawr.Warlock
 
             //cast time
             CastTime = BaseCastTime / (1 + 0.01f * calculations.HastePercent);
+            if (calculations.BasicStats.Bloodlust > 0)
+                CastTime /= (1 + 0.3f * 40 / 600);
             CastTime += calculations.CalculationOptions.Latency;
             if (CastTime < calculations.GlobalCooldown + calculations.CalculationOptions.Latency)
                 CastTime = calculations.GlobalCooldown + calculations.CalculationOptions.Latency;

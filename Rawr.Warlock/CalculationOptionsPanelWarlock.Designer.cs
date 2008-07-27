@@ -223,8 +223,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.checkBoxCastConflagrate);
-            this.groupBox2.Controls.Add(this.checkBoxCastShadowburn);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.comboBoxFillerSpell);
             this.groupBox2.Controls.Add(this.label4);
@@ -235,7 +233,7 @@
             this.groupBox2.Controls.Add(this.checkBoxCastUnstableAffliction);
             this.groupBox2.Location = new System.Drawing.Point(3, 220);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(208, 142);
+            this.groupBox2.Size = new System.Drawing.Size(208, 119);
             this.groupBox2.TabIndex = 16;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Spell Choice";
@@ -243,23 +241,25 @@
             // checkBoxCastConflagrate
             // 
             this.checkBoxCastConflagrate.AutoSize = true;
-            this.checkBoxCastConflagrate.Location = new System.Drawing.Point(123, 119);
+            this.checkBoxCastConflagrate.Location = new System.Drawing.Point(126, 500);
             this.checkBoxCastConflagrate.Name = "checkBoxCastConflagrate";
             this.checkBoxCastConflagrate.Size = new System.Drawing.Size(80, 17);
             this.checkBoxCastConflagrate.TabIndex = 17;
             this.checkBoxCastConflagrate.Text = "Conflagrate";
             this.checkBoxCastConflagrate.UseVisualStyleBackColor = true;
+            this.checkBoxCastConflagrate.Visible = false;
             this.checkBoxCastConflagrate.CheckedChanged += new System.EventHandler(this.checkBoxCastConflagrate_CheckedChanged);
             // 
             // checkBoxCastShadowburn
             // 
             this.checkBoxCastShadowburn.AutoSize = true;
-            this.checkBoxCastShadowburn.Location = new System.Drawing.Point(10, 119);
+            this.checkBoxCastShadowburn.Location = new System.Drawing.Point(13, 500);
             this.checkBoxCastShadowburn.Name = "checkBoxCastShadowburn";
             this.checkBoxCastShadowburn.Size = new System.Drawing.Size(86, 17);
             this.checkBoxCastShadowburn.TabIndex = 16;
             this.checkBoxCastShadowburn.Text = "Shadowburn";
             this.checkBoxCastShadowburn.UseVisualStyleBackColor = true;
+            this.checkBoxCastShadowburn.Visible = false;
             this.checkBoxCastShadowburn.CheckedChanged += new System.EventHandler(this.checkBoxCastShadowburn_CheckedChanged);
             // 
             // checkBoxCastImmolate
@@ -311,7 +311,7 @@
             this.groupBox3.Controls.Add(this.comboBoxPet);
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.checkBoxPetSacrificed);
-            this.groupBox3.Location = new System.Drawing.Point(3, 368);
+            this.groupBox3.Location = new System.Drawing.Point(3, 345);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(208, 69);
             this.groupBox3.TabIndex = 17;
@@ -395,7 +395,7 @@
             this.groupBox1.Controls.Add(this.textBoxIsbCustom);
             this.groupBox1.Controls.Add(this.radioButtonIsbRaid);
             this.groupBox1.Controls.Add(this.radioButtonIsbCustom);
-            this.groupBox1.Location = new System.Drawing.Point(3, 443);
+            this.groupBox1.Location = new System.Drawing.Point(3, 420);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(208, 74);
             this.groupBox1.TabIndex = 31;
@@ -448,6 +448,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBoxCastConflagrate);
+            this.Controls.Add(this.checkBoxCastShadowburn);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.textBoxShadowPriestDps);
