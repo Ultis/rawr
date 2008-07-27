@@ -204,9 +204,14 @@ namespace Rawr
 							_idToBossMap[tokenId] = Boss;
 							_bossToAreaMap[Boss] = Area;
 						}
-						else
+						else if (list.Count > 1)
 						{
 							Boss = subNode.SelectSingleNode("/page/itemInfo/item/@name").InnerText;
+							Area = "*";
+						}
+						else
+						{
+							Boss = "Unknown";
 							Area = "*";
 						}
 
