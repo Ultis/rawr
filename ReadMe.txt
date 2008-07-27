@@ -21,6 +21,22 @@ FAQ
  Q: Can you make it, or does Rawr work for [insert class/spec here]?
  A: What you see in Rawr is what's currently developed to release quality. A few more models are in development. If you're a C# developer and would like to begin or help with another model, let me know!
 
+Rawr.Hunter Info
+----------------
+This is the first public release of Rawr.Hunter, so please give me feedback on it! Currently, it only models BM builds accurately, but we intend to finish fleshing it out in the next major release. There are a few limitations to the model:
+ - Only BM builds are modeled accurately
+ - Most trinket procs are somewhat rough, but are generally within a few AP of accurate. Some trinkets have been accurately calculated so far: Hourglass, DST, Ashtongue, and a few others.
+ - Assumes 70 and max ranks spells
+ - Scorpids are not modeled correctly
+ - Assumes a 15% haste quiver, highest pet loyalty, and Cobra Reflexes
+ - Buffing pets is not an option currently. This can lead to a large difference in pet DPS (up to double).
+ - OOM issues are not accounted for yet
+
+Shot rotation modeling is based on burst damage, how much DPS you can deal in a set rotation, matching the spreadsheet. Also, note that if a ranged weapon is showing 0 DPS, it may be defined improperly in your ItemCache, probably manually entered from a previous PTR; a simple right click -> Refresh Item Data should fix it.
+
+Rawr.DPSWarr Info
+-----------------
+This is the first public release of Rawr.DPSWarr, so please give me feedback on it! Currently, it only models Arms builds accurately, but we intend to finish fleshing it out in the next major release.
 
 Version History
 ---------------
@@ -63,8 +79,6 @@ Beta 15:
  - Rawr.Healadin:
    - Added Cloth/Leather/Mail to the relevant item types
    
-   
-
 Beta 14.1:
  - Possible fix for the 'Unable to access a disposed object' error. I still haven't been able to reproduce this, so am not sure if this will solve it; please let me know asap if you still encounter this issue.
  - Fix for the optimizer swapping gems around inappropriately when using Known Gemmings Only.
