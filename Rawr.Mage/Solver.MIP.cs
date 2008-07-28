@@ -118,22 +118,6 @@ namespace Rawr.Mage
                     {
                         valid = ValidateCooldown(Cooldown.Combustion, 15, 180 + 15); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                     }
-                }
-
-                if (integralMana)
-                {
-                    if (valid && calculationOptions.ManaPotionEnabled)
-                    {
-                        valid = ValidateIntegralConsumable(VariableType.ManaPotion);
-                    }
-                    if (valid && calculationOptions.ManaGemEnabled)
-                    {
-                        valid = ValidateIntegralConsumable(VariableType.ManaGem);
-                    }
-                }
-
-                if (segmentCooldowns)
-                {
                     // flamecap
                     if (valid && calculationOptions.FlameCap)
                     {
@@ -165,6 +149,26 @@ namespace Rawr.Mage
                     if (valid && calculationOptions.DrumsOfBattle)
                     {
                         valid = ValidateActivation(Cooldown.DrumsOfBattle, 30.0, 120.0, VariableType.DrumsOfBattle);
+                    }
+                }
+
+                if (integralMana)
+                {
+                    if (valid && calculationOptions.ManaPotionEnabled)
+                    {
+                        valid = ValidateIntegralConsumable(VariableType.ManaPotion);
+                    }
+                    if (valid && calculationOptions.ManaGemEnabled)
+                    {
+                        valid = ValidateIntegralConsumable(VariableType.ManaGem);
+                    }
+                }
+
+                if (segmentCooldowns)
+                {
+                    if (valid && calculationOptions.FlameCap)
+                    {
+                        valid = ValidateFlamecap();
                     }
                     if (valid)
                     {
@@ -373,13 +377,15 @@ namespace Rawr.Mage
                             HeapPush(hexRemovedLP);
                         }
                         if (lp.Log != null) lp.Log.AppendLine("Breaking supergroup fragmentation at " + seg + ", force to max");
+                        int row = lp.AddConstraint(false);
                         for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                         {
                             CastingState state = calculationResult.SolutionVariable[index].State;
                             int iseg = calculationResult.SolutionVariable[index].Segment;
-                            if (state != null && iseg == seg && state.GetHex() != 0) lp.UpdateMaximizeSegmentColumn(index);
+                            if (state != null && iseg == seg && state.GetHex() != 0) lp.SetConstraintElement(row, index, -1.0);
                         }
-                        lp.UpdateMaximizeSegmentDuration(segmentDuration);
+                        lp.SetConstraintRHS(row, -segmentDuration);
+                        lp.ForceRecalculation(true);
                         HeapPush(lp);
                         return false;
                     }
@@ -1102,6 +1108,86 @@ namespace Rawr.Mage
             return true;
         }
 
+        private int GetSegmentedCooldownRow(Cooldown cooldown, int minSegment, int maxSegment)
+        {
+            if (minSegment < 0) minSegment = 0;
+            if (maxSegment > segments - 1) maxSegment = segments - 1;
+            switch (cooldown)
+            {
+                case Cooldown.ArcanePower:
+                    for (int ss = 0; ss < segments; ss++)
+                    {
+                        double cool = 180;
+                        int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                        if (minSegment >= ss && maxSegment <= maxs) return rowSegmentArcanePower + ss;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                    return -1;
+                case Cooldown.Combustion:
+                    for (int ss = 0; ss < segments; ss++)
+                    {
+                        double cool = 180 + 15;
+                        int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                        if (minSegment >= ss && maxSegment <= maxs) return rowSegmentArcanePower + ss;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                    return -1;
+                case Cooldown.DrumsOfBattle:
+                    for (int ss = 0; ss < segments; ss++)
+                    {
+                        double cool = 120;
+                        int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                        if (minSegment >= ss && maxSegment <= maxs) return rowSegmentArcanePower + ss;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                    return -1;
+                case Cooldown.FlameCap:
+                    for (int ss = 0; ss < segments; ss++)
+                    {
+                        double cool = 180;
+                        int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                        if (minSegment >= ss && maxSegment <= maxs) return rowSegmentArcanePower + ss;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                    return -1;
+                case Cooldown.IcyVeins:
+                    for (int ss = 0; ss < segments; ss++)
+                    {
+                        double cool = 180 + (coldsnapAvailable ? 20 : 0);
+                        int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                        if (minSegment >= ss && maxSegment <= maxs) return rowSegmentArcanePower + ss;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                    return -1;
+                case Cooldown.Trinket1:
+                    for (int ss = 0; ss < segments; ss++)
+                    {
+                        double cool = trinket1Cooldown;
+                        int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                        if (minSegment >= ss && maxSegment <= maxs) return rowSegmentArcanePower + ss;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                    return -1;
+                case Cooldown.Trinket2:
+                    for (int ss = 0; ss < segments; ss++)
+                    {
+                        double cool = trinket2Cooldown;
+                        int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                        if (minSegment >= ss && maxSegment <= maxs) return rowSegmentArcanePower + ss;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                    return -1;
+            }
+            return -1;
+        }
+
         private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration, bool needsFullEffect)
         {
             const double eps = 0.00001;
@@ -1159,6 +1245,7 @@ namespace Rawr.Mage
                             }
                             HeapPush(lp);
                             if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Force full " + cooldown.ToString() + " at " + seg);
+                            int row = cooldownUsed.AddConstraint(false);
                             for (int s = 0; s < segments; s++)
                             {
                                 if (Math.Abs(seg - s) <= mindist)
@@ -1168,7 +1255,7 @@ namespace Rawr.Mage
                                         CastingState state = calculationResult.SolutionVariable[index].State;
                                         if (state != null)
                                         {
-                                            if (state.GetCooldown(cooldown)) cooldownUsed.UpdateMaximizeSegmentColumn(index);
+                                            if (state.GetCooldown(cooldown)) cooldownUsed.SetConstraintElement(row, index, -1.0);
                                         }
                                     }
                                 }
@@ -1179,10 +1266,21 @@ namespace Rawr.Mage
                                 if (state != null && state.GetCooldown(cooldown))
                                 {
                                     int outseg = calculationResult.SolutionVariable[index].Segment;
-                                    if (Math.Abs(seg - outseg) <= mindist) cooldownUsed.UpdateMaximizeSegmentColumn(index);
+                                    if (Math.Abs(seg - outseg) <= mindist) cooldownUsed.SetConstraintElement(row, index, -1.0);
+                                }
+                                if (cooldown == Cooldown.FlameCap && integralMana)
+                                {
+                                    // if we push flame cap to full in this segment then we can further restrict mana gems to eliminate unnecessary MIP branches
+                                    if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem)
+                                    {
+                                        int gemdist = (int)Math.Floor(120.0 / segmentDuration);
+                                        int outseg = calculationResult.SolutionVariable[index].Segment;
+                                        if (Math.Abs(outseg - seg) < gemdist) cooldownUsed.EraseColumn(index);
+                                    }
                                 }
                             }
-                            cooldownUsed.UpdateMaximizeSegmentDuration(effectDuration);
+                            cooldownUsed.SetConstraintRHS(row, -effectDuration);
+                            cooldownUsed.ForceRecalculation(true);
                             HeapPush(cooldownUsed);
                             return false;
                         }
@@ -1256,100 +1354,6 @@ namespace Rawr.Mage
                 }
             }
 
-            // fragmentation detection, replaced with hole detection
-            /*for (int seg = 0; seg < segments; seg++)
-            {
-                double inseg = segCount[seg];
-                double leftseg = 0.0;
-                double rightseg = 0.0;
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if (Math.Abs(outseg - seg) <= mindist && outseg != seg)
-                    {
-                        if (outseg < seg)
-                        {
-                            leftseg += segCount[outseg];
-                        }
-                        else if (outseg > seg)
-                        {
-                            rightseg += segCount[outseg];
-                        }
-                    }
-                }
-                if (valid && inseg > 0.000001 && inseg < segmentDuration - 0.000001 && leftseg > 0 && rightseg > 0) // coldsnapped icy veins doesn't have to be contiguous, but getting better results assuming it is
-                {
-                    // fragmentation
-                    // either left must be disabled, right disabled, or seg to max
-                    SolverLP leftDisabled = lp.Clone();
-                    if (leftDisabled.Log != null) leftDisabled.Log.AppendLine("Disable " + cooldown.ToString() + " left of " + seg);
-                    for (int outseg = 0; outseg < segments; outseg++)
-                    {
-                        if ((outseg < seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
-                        {
-                            for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                            {
-                                CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (state != null && state.GetCooldown(cooldown)) leftDisabled.EraseColumn(index);
-                            }
-                        }
-                    }
-                    for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
-                    {
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (state != null && state.GetCooldown(cooldown))
-                        {
-                            int outseg = calculationResult.SolutionVariable[index].Segment;
-                            if ((outseg < seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist) leftDisabled.EraseColumn(index);
-                        }
-                    }
-                    HeapPush(leftDisabled);
-                    SolverLP rightDisabled = lp.Clone();
-                    if (rightDisabled.Log != null) rightDisabled.Log.AppendLine("Disable " + cooldown.ToString() + " right of " + seg);
-                    for (int outseg = 0; outseg < segments; outseg++)
-                    {
-                        if ((outseg > seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist)
-                        {
-                            for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                            {
-                                CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (state != null && state.GetCooldown(cooldown)) rightDisabled.EraseColumn(index);
-                            }
-                        }
-                    }
-                    for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
-                    {
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (state != null && state.GetCooldown(cooldown))
-                        {
-                            int outseg = calculationResult.SolutionVariable[index].Segment;
-                            if ((outseg > seg || Math.Abs(outseg - seg) > mindist) && Math.Abs(outseg - seg) < maxdist) rightDisabled.EraseColumn(index);
-                        }
-                    }
-                    HeapPush(rightDisabled);
-                    if (lp.Log != null) lp.Log.AppendLine("Force " + cooldown.ToString() + " to max at " + seg);
-                    for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
-                    {
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (state != null)
-                        {
-                            if (state.GetCooldown(cooldown)) lp.UpdateMaximizeSegmentColumn(index);
-                        }
-                    }
-                    for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
-                    {
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (state != null && state.GetCooldown(cooldown))
-                        {
-                            int outseg = calculationResult.SolutionVariable[index].Segment;
-                            if (outseg == seg) lp.UpdateMaximizeSegmentColumn(index);
-                        }
-                    }
-                    lp.UpdateMaximizeSegmentDuration(segmentDuration);
-                    HeapPush(lp);
-                    return false;
-                }
-            }*/
-
             // detect holes
             for (int seg = 0; seg < segments; seg++)
             {
@@ -1417,6 +1421,7 @@ namespace Rawr.Mage
                             }
                             HeapPush(rightDisabled);
                             if (lp.Log != null) lp.Log.AppendLine("Force " + cooldown.ToString() + " to max from " + seg + " to " + lastseg);
+                            int row = lp.AddConstraint(false);
                             for (int outseg = 0; outseg < segments; outseg++)
                             {
                                 if (outseg > seg && outseg < lastseg)
@@ -1424,7 +1429,7 @@ namespace Rawr.Mage
                                     for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
                                     {
                                         CastingState state = calculationResult.SolutionVariable[index].State;
-                                        if (state != null && state.GetCooldown(cooldown)) lp.UpdateMaximizeSegmentColumn(index);                                        
+                                        if (state != null && state.GetCooldown(cooldown)) lp.SetConstraintElement(row, index, -1.0);                                        
                                     }
                                 }
                             }
@@ -1434,10 +1439,11 @@ namespace Rawr.Mage
                                 if (state != null && state.GetCooldown(cooldown))
                                 {
                                     int outseg = calculationResult.SolutionVariable[index].Segment;
-                                    if (outseg > seg && outseg < lastseg) lp.UpdateMaximizeSegmentColumn(index);
+                                    if (outseg > seg && outseg < lastseg) lp.SetConstraintElement(row, index, -1.0);
                                 }
                             }
-                            lp.UpdateMaximizeSegmentDuration(segmentDuration * (lastseg - seg - 1));
+                            lp.SetConstraintRHS(row, -segmentDuration * (lastseg - seg - 1));
+                            lp.ForceRecalculation(true);
                             HeapPush(lp);
                             return false;
                         }
@@ -1445,316 +1451,246 @@ namespace Rawr.Mage
                 }
             }
 
-            if (cooldown == Cooldown.FlameCap)
+            return valid;
+        }
+
+        private bool ValidateFlamecap()
+        {
+            Cooldown cooldown = Cooldown.FlameCap;
+            double effectDuration = 60.0;
+            double cooldownDuration = 180.0;
+            const double eps = 0.00001;
+            double[] segCount = new double[segments];
+            for (int outseg = 0; outseg < segments; outseg++)
             {
-                double[] manaGem = new double[segments];
-                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                double s = 0.0;
+                for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
                 {
-                    if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem)
+                    CastingState state = calculationResult.SolutionVariable[index].State;
+                    if (state != null && state.GetCooldown(cooldown))
                     {
-                        manaGem[calculationResult.SolutionVariable[index].Segment] += solution[index];
+                        s += solution[index];
                     }
                 }
+                segCount[outseg] = s;
+            }
+            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+            {
+                CastingState state = calculationResult.SolutionVariable[index].State;
+                if (state != null && state.GetCooldown(cooldown)) segCount[calculationResult.SolutionVariable[index].Segment] += solution[index];
+            }
+            int mindist = (int)Math.Ceiling(effectDuration / segmentDuration);
+            int mindist2 = (int)Math.Floor(effectDuration / segmentDuration);
+            int maxdist = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor((cooldownDuration - effectDuration) / segmentDuration));
+            int maxdist2 = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor(cooldownDuration / segmentDuration));
 
-                float manaBurn = 80;
-                if (calculationOptions.AoeDuration > 0)
-                {
-                    Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
-                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-                }
-                else if (calculationOptions.EmpoweredFireball > 0)
-                {
-                    Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
-                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-                }
-                else if (calculationOptions.EmpoweredFrostbolt > 0)
-                {
-                    Spell s = calculationResult.BaseState.GetSpell(SpellId.Frostbolt);
-                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-                }
-                else if (calculationOptions.SpellPower > 0)
-                {
-                    Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneBlast33);
-                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-                }
-                if (icyVeinsAvailable)
-                {
-                    manaBurn *= 1.1f;
-                }
-                if (arcanePowerAvailable)
-                {
-                    manaBurn *= 1.1f;
-                }
+            bool valid = true;
 
-                // check border case if we have mana gem in first or last segment
-                if (manaGem[0] > 0)
+            double[] manaGem = new double[segments];
+            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+            {
+                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem)
                 {
-                    // either no gem at 0 or make sure it starts late enough
-                    int firstSeg;
-                    for (firstSeg = 0; firstSeg < segments; firstSeg++)
+                    manaGem[calculationResult.SolutionVariable[index].Segment] += solution[index];
+                }
+            }
+
+            float manaBurn = 80;
+            if (calculationOptions.AoeDuration > 0)
+            {
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
+                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+            }
+            else if (calculationOptions.EmpoweredFireball > 0)
+            {
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
+                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+            }
+            else if (calculationOptions.EmpoweredFrostbolt > 0)
+            {
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.Frostbolt);
+                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+            }
+            else if (calculationOptions.SpellPower > 0)
+            {
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneBlast33);
+                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+            }
+            if (icyVeinsAvailable)
+            {
+                manaBurn *= 1.1f;
+            }
+            if (arcanePowerAvailable)
+            {
+                manaBurn *= 1.1f;
+            }
+
+            // check border case if we have mana gem in first or last segment
+            if (manaGem[0] > 0)
+            {
+                // either no gem at 0 or make sure it starts late enough
+                int firstSeg;
+                for (firstSeg = 0; firstSeg < segments; firstSeg++)
+                {
+                    if (segCount[firstSeg] > 0) break;
+                }
+                if (firstSeg < segments)
+                {
+                    double totalGem = 0.0;
+                    for (int seg = 0; seg < firstSeg; seg++)
                     {
-                        if (segCount[firstSeg] > 0) break;
+                        totalGem += manaGem[seg];
                     }
-                    if (firstSeg < segments)
+                    // tfc = firstSeg * 30 + 30 - segCount[firstSeg]
+                    // tgem <= tfc - 120.0 * totalGem
+                    // overflow >= 2400 - tgem * manaBurn
+
+                    // tfc - 120.0 * totalGem >= tgem >= (2400 - overflow) / manaBurn
+
+                    // (2400 - overflow) / manaBurn <= tfc - 120.0 * totalGem
+                    // 120.0 * manaBurn * totalGem - overflow <= (firstSeg * 30 + 30 - segCount[firstSeg]) * manaBurn - 2400
+                    // 120.0 * totalGem - overflow / manaBurn + segCount[firstSeg] <= (firstSeg * 30 + 30) - 2400 / manaBurn
+
+                    double overflow = solution[calculationResult.ColumnManaOverflow];
+
+                    if (120.0 * totalGem - overflow / manaBurn + segCount[firstSeg] > (firstSeg * segmentDuration + segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
                     {
-                        double totalGem = 0.0;
-                        for (int seg = 0; seg < firstSeg; seg++)
+                        // no gem
+                        SolverLP nogem = lp.Clone();
+                        if (nogem.Log != null) nogem.Log.AppendLine("No gem at 0");
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                         {
-                            totalGem += manaGem[seg];
+                            if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == 0)
+                            {
+                                nogem.EraseColumn(index);
+                            }
                         }
-                        // tfc = firstSeg * 30 + 30 - segCount[firstSeg]
-                        // tgem <= tfc - 120.0 * totalGem
-                        // overflow >= 2400 - tgem * manaBurn
-
-                        // tfc - 120.0 * totalGem >= tgem >= (2400 - overflow) / manaBurn
-
-                        // (2400 - overflow) / manaBurn <= tfc - 120.0 * totalGem
-                        // 120.0 * manaBurn * totalGem - overflow <= (firstSeg * 30 + 30 - segCount[firstSeg]) * manaBurn - 2400
-                        // 120.0 * totalGem - overflow / manaBurn + segCount[firstSeg] <= (firstSeg * 30 + 30) - 2400 / manaBurn
-
-                        double overflow = solution[calculationResult.ColumnManaOverflow];
-
-                        if (120.0 * totalGem - overflow / manaBurn + segCount[firstSeg] > (firstSeg * segmentDuration + segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
+                        HeapPush(nogem);
+                        // restrict flame cap/overflow
+                        if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap with gem at 0");
+                        int row = lp.AddConstraint(false);
+                        lp.SetConstraintRHS(row, (firstSeg * segmentDuration + segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                         {
-                            // no gem
-                            SolverLP nogem = lp.Clone();
-                            if (nogem.Log != null) nogem.Log.AppendLine("No gem at 0");
-                            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
-                            {
-                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == 0)
-                                {
-                                    nogem.EraseColumn(index);
-                                }
-                            }
-                            HeapPush(nogem);
-                            // restrict flame cap/overflow
-                            if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap with gem at 0");
-                            int row = lp.AddConstraint(false);
-                            lp.SetConstraintRHS(row, (firstSeg * segmentDuration + segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
-                            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
-                            {
-                                CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment < firstSeg) lp.SetConstraintElement(row, index, 120.0);
-                                else if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == 0) lp.SetConstraintElement(row, index, -1.0 / manaBurn);
-                                else if (state != null && state.FlameCap && calculationResult.SolutionVariable[index].Segment == firstSeg) lp.SetConstraintElement(row, index, 1.0);
-                            }
-                            lp.ForceRecalculation(true);
-                            HeapPush(lp);
-                            return false;
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment < firstSeg) lp.SetConstraintElement(row, index, 120.0);
+                            else if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == 0) lp.SetConstraintElement(row, index, -1.0 / manaBurn);
+                            else if (state != null && state.FlameCap && calculationResult.SolutionVariable[index].Segment == firstSeg) lp.SetConstraintElement(row, index, 1.0);
                         }
-                    }
-                }
-
-                if (manaGem[segments - 1] > 0)
-                {
-                    // either no gem or make sure it starts early enough
-                    int lastSeg;
-                    for (lastSeg = segments - 1; lastSeg >= 0; lastSeg--)
-                    {
-                        if (segCount[lastSeg] > 0) break;
-                    }
-                    if (lastSeg >= 0)
-                    {
-                        while (lastSeg > 0 && segCount[lastSeg - 1] > 0) lastSeg--;
-                        double totalGem = 0.0;
-                        for (int seg = lastSeg + 1; seg < segments; seg++)
-                        {
-                            totalGem += manaGem[seg];
-                        }
-                        // tfc = lastSeg * 30 + 30 - segCount[lastSeg]
-                        // tgem >= tfc + 60.0 + 120 * totalGem
-                        // overflow >= 2400 - fight * manaBurn + tgem * manaBurn
-
-                        // tfc + 60.0 + 120 * totalGem <= tgem <= overflow / manaBurn - 2400 / manaBurn + fight
-
-                        // tfc + 120 * totalGem - overflow / manaBurn <= - 2400 / manaBurn + fight - 60.0
-                        // 120 * totalGem - overflow / manaBurn - segCount[lastSeg] <= fight - 90.0 - lastSeg * 30 - 2400 / manaBurn
-
-                        double overflow = solution[calculationResult.ColumnManaOverflow + segments - 1];
-
-                        if (120.0 * totalGem - overflow / manaBurn - segCount[lastSeg] > (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
-                        {
-                            // no gem
-                            SolverLP nogem = lp.Clone();
-                            if (nogem.Log != null) nogem.Log.AppendLine("No gem at end");
-                            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
-                            {
-                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == segments - 1)
-                                {
-                                    nogem.EraseColumn(index);
-                                }
-                            }
-                            HeapPush(nogem);
-                            // restrict flame cap/overflow
-                            if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap with gem at end");
-                            int row = lp.AddConstraint(false);
-                            lp.SetConstraintRHS(row, (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
-                            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
-                            {
-                                CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment > lastSeg) lp.SetConstraintElement(row, index, 120.0);
-                                else if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == segments - 1) lp.SetConstraintElement(row, index, -1.0 / manaBurn);
-                                else if (state != null && state.FlameCap && calculationResult.SolutionVariable[index].Segment == lastSeg) lp.SetConstraintElement(row, index, -1.0);
-                            }
-                            lp.ForceRecalculation(true);
-                            HeapPush(lp);
-                            return false;
-                        }
-                    }
-                }
-
-                // . . . . . . X . . . . .
-                // . .[. . . . X . . .]. . option 1, gem at start of X
-                // . . .[. . . X . . . .]. option 2, gem at end of X
-                // or anywhere in between
-                // . .[. . . . X . . . .]. flamecap in this area is limited
-                // Math.Ceiling(120.0 / segmentDuration) in each way
-                // total area (2 * Math.Ceiling(120.0 / segmentDuration) + 1) * segmentDuration
-                // max flame cap: (2 * Math.Ceiling(120.0 / segmentDuration) + 1) * segmentDuration - 240.0
-                // for partial mana gems convert each 1.0 mana gem into 40 sec of extra flame cap
-                int segdist = (int)Math.Ceiling(120.0 / segmentDuration);
-                for (int seg = 0; seg < segments; seg++)
-                {
-                    if (manaGem[seg] > 0)
-                    {
-                        double maxfc = (2 * segdist + 1) * segmentDuration - 240.0 + (1.0 - manaGem[seg]) * 40.0;
-                        double count = 0.0;
-                        for (int segfc = Math.Max(seg - segdist, 0); segfc < Math.Min(seg + segdist + 1, segments); segfc++)
-                        {
-                            count += segCount[segfc];
-                        }
-                        if (count > maxfc + eps)
-                        {
-                            // remove mana gem
-                            SolverLP nogem = lp.Clone();
-                            if (nogem.Log != null) nogem.Log.AppendLine("No gem at " + seg);
-                            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
-                            {
-                                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == seg)
-                                {
-                                    nogem.EraseColumn(index);
-                                }
-                            }
-                            HeapPush(nogem);
-                            // restrict flame cap
-                            if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap around " + seg);
-                            int row = lp.AddConstraint(false);
-                            lp.SetConstraintRHS(row, maxfc);
-                            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
-                            {
-                                CastingState state = calculationResult.SolutionVariable[index].State;
-                                int iseg = calculationResult.SolutionVariable[index].Segment;
-                                if (state != null && state.GetCooldown(cooldown) && Math.Abs(seg - iseg) <= segdist) lp.SetConstraintElement(row, index, 1.0);
-                            }
-                            lp.ForceRecalculation(true);
-                            HeapPush(lp);
-                            return false;
-                        }
+                        lp.ForceRecalculation(true);
+                        HeapPush(lp);
+                        return false;
                     }
                 }
             }
 
-            /*double t1 = 0.0;
-            double t2 = 0.0;
-            double bestCoverage = 0.0;
+            if (manaGem[segments - 1] > 0)
+            {
+                // either no gem or make sure it starts early enough
+                int lastSeg;
+                for (lastSeg = segments - 1; lastSeg >= 0; lastSeg--)
+                {
+                    if (segCount[lastSeg] > 0) break;
+                }
+                if (lastSeg >= 0)
+                {
+                    while (lastSeg > 0 && segCount[lastSeg - 1] > 0) lastSeg--;
+                    double totalGem = 0.0;
+                    for (int seg = lastSeg + 1; seg < segments; seg++)
+                    {
+                        totalGem += manaGem[seg];
+                    }
+                    // tfc = lastSeg * 30 + 30 - segCount[lastSeg]
+                    // tgem >= tfc + 60.0 + 120 * totalGem
+                    // overflow >= 2400 - fight * manaBurn + tgem * manaBurn
 
-            if (cooldownDuration < 0) cooldownDuration = 3 * segments * segmentDuration;
+                    // tfc + 60.0 + 120 * totalGem <= tgem <= overflow / manaBurn - 2400 / manaBurn + fight
 
+                    // tfc + 120 * totalGem - overflow / manaBurn <= - 2400 / manaBurn + fight - 60.0
+                    // 120 * totalGem - overflow / manaBurn - segCount[lastSeg] <= fight - 90.0 - lastSeg * 30 - 2400 / manaBurn
+
+                    double overflow = solution[calculationResult.ColumnManaOverflow + segments - 1];
+
+                    if (120.0 * totalGem - overflow / manaBurn - segCount[lastSeg] > (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
+                    {
+                        // no gem
+                        SolverLP nogem = lp.Clone();
+                        if (nogem.Log != null) nogem.Log.AppendLine("No gem at end");
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                        {
+                            if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == segments - 1)
+                            {
+                                nogem.EraseColumn(index);
+                            }
+                        }
+                        HeapPush(nogem);
+                        // restrict flame cap/overflow
+                        if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap with gem at end");
+                        int row = lp.AddConstraint(false);
+                        lp.SetConstraintRHS(row, (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                        {
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment > lastSeg) lp.SetConstraintElement(row, index, 120.0);
+                            else if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == segments - 1) lp.SetConstraintElement(row, index, -1.0 / manaBurn);
+                            else if (state != null && state.FlameCap && calculationResult.SolutionVariable[index].Segment == lastSeg) lp.SetConstraintElement(row, index, -1.0);
+                        }
+                        lp.ForceRecalculation(true);
+                        HeapPush(lp);
+                        return false;
+                    }
+                }
+            }
+
+            // . . . . . . X . . . . .
+            // . .[. . . . X . . .]. . option 1, gem at start of X
+            // . . .[. . . X . . . .]. option 2, gem at end of X
+            // or anywhere in between
+            // . .[. . . . X . . . .]. flamecap in this area is limited
+            // Math.Ceiling(120.0 / segmentDuration) in each way
+            // total area (2 * Math.Ceiling(120.0 / segmentDuration) + 1) * segmentDuration
+            // max flame cap: (2 * Math.Ceiling(120.0 / segmentDuration) + 1) * segmentDuration - 240.0
+            // for partial mana gems convert each 1.0 mana gem into 40 sec of extra flame cap
+            int segdist = (int)Math.Ceiling(120.0 / segmentDuration);
             for (int seg = 0; seg < segments; seg++)
             {
-                double inseg = segCount[seg];
-                if (inseg > 0 && (seg == 0 || segCount[seg - 1] == 0.0))
+                if (manaGem[seg] > 0)
                 {
-                    double t = seg;
-                    if (seg < segments - 1 && segCount[seg + 1] > 0.0) t = seg + 1 - inseg / segmentDuration;
-                    double max = t + cooldownDuration / segmentDuration;
-                    // verify that outside duration segments are 0
-                    for (int outseg = seg + 1; outseg < segments; outseg++)
+                    double maxfc = (2 * segdist + 1) * segmentDuration - 240.0 + (1.0 - manaGem[seg]) * 40.0;
+                    double count = 0.0;
+                    for (int segfc = Math.Max(seg - segdist, 0); segfc < Math.Min(seg + segdist + 1, segments); segfc++)
                     {
-                        if (segCount[outseg] > 0)
+                        count += segCount[segfc];
+                    }
+                    if (count > maxfc + eps)
+                    {
+                        // remove mana gem
+                        SolverLP nogem = lp.Clone();
+                        if (nogem.Log != null) nogem.Log.AppendLine("No gem at " + seg);
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                         {
-                            double tt = outseg + 1 - segCount[outseg] / segmentDuration;
-                            if ((outseg >= t + effectDuration / segmentDuration + eps) && (tt < max - eps))
+                            if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == seg)
                             {
-                                // detected invalid placement undetected by original method
-                                valid = false;
-                                // make sure that we pairwise invalidate
-                                // (outseg >= tin + effectDuration / segmentDuration && outseg < (int)(tin + cooldownDuration / segmentDuration)
-                                // outseg + 1 <= tin + cooldownDuration / segmentDuration
-                                // outseg - effectDuration / segmentDuration >= tin >= outseg + 1 - cooldownDuration / segmentDuration
-                                // cooldownDuration >= effectDuration + 2 * segmentDuration !!! if this isn't true then we have problems, means segmentDuration has to be small enough, 30 sec = good
-                                // (seg >= tout + (effectDuration - cooldownDuration) / segmentDuration && seg < (int)tout)
-                                // seg + 1 <= tout <= seg + (cooldownDuration - effectDuration) / segmentDuration
-                                double tin = t;
-                                double tout = tt;
-                                if (tin < outseg + 1 - cooldownDuration / segmentDuration) tin = outseg + 1 - cooldownDuration / segmentDuration;
-                                if (tout > seg + (cooldownDuration - effectDuration) / segmentDuration) tout = seg + (cooldownDuration - effectDuration) / segmentDuration;
-                                double c1 = 0.0;
-                                double c2 = 0.0;
-                                for (int s = 0; s < segments; s++)
-                                {
-                                    if ((s >= tin + (effectDuration - cooldownDuration) / segmentDuration - eps && s + 1 < tin - eps) || (s >= tin + effectDuration / segmentDuration + eps && s + 1 < tin + cooldownDuration / segmentDuration + eps))
-                                    {
-                                        c1 += segCount[s];
-                                    }
-                                    if ((s >= tout + (effectDuration - cooldownDuration) / segmentDuration - eps && s + 1 < tout - eps) || (s >= tout + effectDuration / segmentDuration + eps && s + 1 < tout + cooldownDuration / segmentDuration + eps))
-                                    {
-                                        c2 += segCount[s];
-                                    }
-                                }
-                                double coverage = Math.Min(c1, c2);
-                                if (coverage < eps)
-                                {
-                                    coverage = 0.0; // troubles
-                                }
-                                if (coverage > bestCoverage)
-                                {
-                                    t1 = tin;
-                                    t2 = tout;
-                                    bestCoverage = coverage;
-                                }
+                                nogem.EraseColumn(index);
                             }
                         }
+                        HeapPush(nogem);
+                        // restrict flame cap
+                        if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap around " + seg);
+                        int row = lp.AddConstraint(false);
+                        lp.SetConstraintRHS(row, maxfc);
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                        {
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            int iseg = calculationResult.SolutionVariable[index].Segment;
+                            if (state != null && state.GetCooldown(cooldown) && Math.Abs(seg - iseg) <= segdist) lp.SetConstraintElement(row, index, 1.0);
+                        }
+                        lp.ForceRecalculation(true);
+                        HeapPush(lp);
+                        return false;
                     }
                 }
             }
-            /*if (!valid)
-            {
-                //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
-                // branch on whether t1 or t2 is active, they can't be both
-                CompactLP t1active = lp.Clone();
-                // cooldown used
-                //t1active.Log += "Use " + cooldown.ToString() + " at " + t1 + ", disable around\r\n";
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if ((outseg >= t1 + (effectDuration - cooldownDuration) / segmentDuration - eps && outseg + 1 < t1 - eps) || (outseg >= t1 + effectDuration / segmentDuration + eps && outseg + 1 < t1 + cooldownDuration / segmentDuration + eps))
-                    {
-                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                        {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.GetCooldown(cooldown)) t1active.EraseColumn(index);
-                        }
-                    }
-                }
-                HeapPush(t1active);
-                // cooldown not used
-                //lp.Log += "Use " + cooldown.ToString() + " at " + t2 + ", disable around\r\n";
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if ((outseg >= t2 + (effectDuration - cooldownDuration) / segmentDuration - eps && outseg + 1 < t2 - eps) || (outseg >= t2 + effectDuration / segmentDuration + eps && outseg + 1 < t2 + cooldownDuration / segmentDuration + eps))
-                    {
-                        for (int index = outseg * statsList.Count * spellList.Count + colOffset - 1; index < (outseg + 1) * statsList.Count * spellList.Count + colOffset - 1; index++)
-                        {
-                            CharacterCalculationsMage stats = calculatedStats.SolutionStats[index];
-                            if (stats != null && stats.GetCooldown(cooldown)) lp.EraseColumn(index);
-                        }
-                    }
-                }
-                HeapPush(lp);
-
-                return false;
-            }*/
-
             return valid;
         }
 

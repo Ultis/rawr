@@ -28,6 +28,8 @@ namespace Rawr.Mage
         //internal static double[] _b;
         internal static double[] _cost;
         private static double[] _costWorking;
+        //private static double[] _beta;
+        //private static double[] _betaBackup;
 
         private bool costWorkingDirty;
         private bool shifted;
@@ -46,6 +48,7 @@ namespace Rawr.Mage
         private const int flagUB = 0x40; // variable has finite upper bound
         private const int flagPivot = 0x80; // variable is eligible for pivot
         private const int flagFlip = 0x100; // variable bounds must be flipped
+        private const int flagPivot2 = 0x200; // variable is in reduced pivot candidate set
 
         private bool disabledDirty;
 
@@ -69,13 +72,15 @@ namespace Rawr.Mage
         private int* flags;
         private double* lb;
         private double* ub;
+        private double* beta;
+        private double* betaBackup;
 
         private static int maxRows = 0;
         private static int maxCols = 0;
 
         private const double epsPrimal = 1.0e-7;
         private const double epsPrimalRel = 1.0e-9;
-        private const double epsDual = 1.0e-7;
+        private const double epsDual = 1.0e-7; 
         private const double epsDualI = 1.0e-8;
         private const double epsPivot = 1.0e-5;
         private const double epsPivot2 = 1.0e-7;
@@ -98,9 +103,11 @@ namespace Rawr.Mage
             _wd = new double[maxCols];
             _u = new double[maxRows];
             _c = new double[maxCols];
-            _cost = new double[maxCols];
-            _costWorking = new double[maxCols];
+            _cost = new double[maxCols + maxRows];
+            _costWorking = new double[maxCols + maxRows];
             //_b = new double[maxRows];
+            //_beta = new double[maxRows];
+            //_betaBackup = new double[maxRows];
         }
 
 
@@ -141,6 +148,32 @@ namespace Rawr.Mage
         }
 
         private bool hardInfeasibility = false;
+
+        public bool UpdateLowerBound(int col, double value)
+        {
+            if (value > _lb[col] + epsZero)
+            {
+                SetLowerBound(col, value);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool UpdateUpperBound(int col, double value)
+        {
+            if (value < _ub[col] - epsZero)
+            {
+                SetUpperBound(col, value);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         public void SetLowerBound(int col, double value)
         {
@@ -268,6 +301,7 @@ namespace Rawr.Mage
             extraConstraintEditable.Add(editable);
             _ub[cols + rows - 1] = double.PositiveInfinity;
             _flags[cols + rows - 1] = flagLB | flagB;
+            _cost[cols + rows - 1] = 0.0;
             int[] newB = new int[rows];
             Array.Copy(_B, newB, rows - 1);
             _B = newB;
@@ -296,6 +330,7 @@ namespace Rawr.Mage
                 _B[i] = cols + i;
                 _ub[cols + i] = double.PositiveInfinity;
                 _flags[cols + i] = flagB | flagLB;
+                _cost[cols + i] = 0.0;
             }
             for (int j = 0; j < cols; j++)
             {
@@ -387,7 +422,7 @@ namespace Rawr.Mage
                     LoadCost();
                     PerturbCost();
                 }
-                ret = SolvePrimalUnsafe(prepareForDual, prepareForDual);
+                ret = SolvePrimalUnsafe(prepareForDual, prepareForDual, false);
                 lu.EndUnsafe();
 
                 this.a = null;
@@ -549,8 +584,9 @@ namespace Rawr.Mage
         {
             for (int i = 0; i < rows; i++)
             {
-                if (B[i] < cols) u[i] = cost[B[i]];
-                else u[i] = 0.0;
+                //if (B[i] < cols) u[i] = cost[B[i]];
+                //else u[i] = 0.0;
+                u[i] = cost[B[i]];
             }
             lu.BSolve(u);
             for (int j = 0; j < cols; j++)
@@ -576,7 +612,7 @@ namespace Rawr.Mage
                 }
                 else
                 {
-                    c[j] = -u[col - cols];
+                    c[j] = cost[col] - u[col - cols];
                 }
             }
         }
@@ -885,11 +921,41 @@ namespace Rawr.Mage
                 {
                     if ((flags[col] & flagFix) != 0) continue;
                 }
-                if (((flags[col] & flagNLB) != 0 && *cj > eps) || ((flags[col] & flagNUB) != 0 && *cj < -eps))
+                if ((flags[col] & flagNLB) != 0 && *cj > eps)
                 {
                     // we lost dual feasibility
-                    // fall back to dual phase I
-                    return false;
+                    // creative use of shifting
+                    double shift = eps - *cj;
+                    if (Math.Abs(shift) < 1.0e-5)
+                    {
+                        c[j] += shift;
+                        cost[col] += shift; // requires working copy for cost
+                        costWorkingDirty = true;
+                        shifted = true;
+                    }
+                    else
+                    {
+                        // fall back to dual phase I
+                        return false;
+                    }
+                }
+                else if ((flags[col] & flagNUB) != 0 && *cj < -eps)
+                {
+                    // we lost dual feasibility
+                    // creative use of shifting
+                    double shift = -eps - *cj;
+                    if (Math.Abs(shift) < 1.0e-5)
+                    {
+                        c[j] += shift;
+                        cost[col] += shift; // requires working copy for cost
+                        costWorkingDirty = true;
+                        shifted = true;
+                    }
+                    else
+                    {
+                        // fall back to dual phase I
+                        return false;
+                    }
                 }
                 if (col < cols)
                 {
@@ -978,16 +1044,19 @@ namespace Rawr.Mage
             bool positive = (delta > 0);
             if (!positive) delta = -delta;
             int available = 0;
+            int allavailable = 0;
             bool retried = false;
 
             RETRY:
-            // mark eligible pivots
+            // mark eligible pivots and compute max step
+            double maxstep = double.PositiveInfinity;
             double* cj = c;
             double* wdj = wd;
             int* Vj = V;
             for (int j = 0; j < cols; j++, cj++, wdj++, Vj++)
             {
                 int col = *Vj;
+                flags[col] &= ~flagPivot2;
                 if (phaseI)
                 {
                     if ((flags[col] & flagUB) != 0 && (flags[col] & flagLB) != 0)
@@ -1011,8 +1080,19 @@ namespace Rawr.Mage
                     wdir = *wdj;
                 if (((flags[col] & flagNLB) != 0 && wdir < -epsp) || ((flags[col] & flagNUB) != 0 && wdir > epsp))
                 {
+                    double r;
+                    if (wdir > 0)
+                    {
+                        r = (*cj + eps) / wdir;
+                    }
+                    else
+                    {
+                        r = (*cj - eps) / wdir;
+                    }
+                    if (r < maxstep) maxstep = r;
                     flags[col] |= flagPivot;
                     available++;
+                    allavailable++;
                 }
                 else
                 {
@@ -1026,10 +1106,105 @@ namespace Rawr.Mage
                 goto RETRY;
             }
 
+            double deltamin = 0.0;
+            double step = Math.Max(maxstep * 10.0, eps);
+            while (delta - deltamin > epsZero && allavailable > 0)
+            {
+                available = 0;
+                delta -= deltamin;
+                maxstep = double.PositiveInfinity;
+                cj = c;
+                wdj = wd;
+                Vj = V;
+                deltamin = 0;
+                for (int j = 0; j < cols; j++, cj++, wdj++, Vj++)
+                {
+                    int col = *Vj;
+                    flags[col] &= ~flagPivot2;
+                    if ((flags[col] & flagPivot) != 0)
+                    {
+                        double wdir;
+                        if (positive)
+                            wdir = -*wdj;
+                        else
+                            wdir = *wdj;
+                        double r;
+                        double v = Math.Abs(*wdj);
+                        if (wdir > 0) // upper bound
+                        {
+                            r = (*cj + eps) / wdir;
+                            if (*cj - step * wdir < -eps)
+                            {
+                                flags[col] &= ~flagPivot;
+                                flags[col] |= flagPivot2;
+                                available++;
+                                allavailable--;
+                                if (phaseI)
+                                {
+                                    deltamin += (DualPhaseIUpperBound(col) - DualPhaseILowerBound(col)) * v;
+                                }
+                                else
+                                {
+                                    deltamin += (ub[col] - lb[col]) * v;
+                                }
+                            }
+                            else if (r < maxstep) maxstep = r;
+                        }
+                        else // lower bound
+                        {
+                            r = (*cj - eps) / wdir;
+                            if (*cj - step * wdir > eps)
+                            {
+                                flags[col] &= ~flagPivot;
+                                flags[col] |= flagPivot2;
+                                available++;
+                                allavailable--;
+                                if (phaseI)
+                                {
+                                    deltamin += (DualPhaseIUpperBound(col) - DualPhaseILowerBound(col)) * v;
+                                }
+                                else
+                                {
+                                    deltamin += (ub[col] - lb[col]) * v;
+                                }
+                            }
+                            else if (r < maxstep) maxstep = r;
+                        }
+                    }
+                }
+                step = 2.0 * maxstep;
+            }
+
             while (delta >= 0 && (available > 0 || delta > epsZero))
             {
+                maxstep = double.PositiveInfinity;
+                cj = c;
+                wdj = wd;
+                Vj = V;
+                for (int j = 0; j < cols; j++, cj++, wdj++, Vj++)
+                {
+                    int col = *Vj;
+                    if ((flags[col] & flagPivot2) != 0)
+                    {
+                        double wdir;
+                        if (positive)
+                            wdir = -*wdj;
+                        else
+                            wdir = *wdj;
+                        double r;
+                        if (wdir > 0)
+                        {
+                            r = (*cj + eps) / wdir;
+                        }
+                        else
+                        {
+                            r = (*cj - eps) / wdir;
+                        }
+                        if (r < maxstep) maxstep = r;
+                    }
+                } 
+
                 minj = -1;
-                double minrr = double.PositiveInfinity;
                 double minv = 0.0;
                 cj = c;
                 wdj = wd;
@@ -1037,7 +1212,7 @@ namespace Rawr.Mage
                 for (int j = 0; j < cols; j++, cj++, wdj++, Vj++)
                 {
                     int col = *Vj;
-                    if ((flags[col] & flagPivot) != 0)
+                    if ((flags[col] & flagPivot2) != 0)
                     {
                         double wdir;
                         if (positive)
@@ -1046,34 +1221,27 @@ namespace Rawr.Mage
                             wdir = *wdj;
                         double r = *cj / wdir;
                         double v = Math.Abs(*wdj);
-                        if (r < minrr + epsZero && (r < minrr || v > minv))
+                        if (r <= maxstep)
                         {
-                            minv = v;
-                            minrr = r;
-                            minj = j;
+                            if (phaseI)
+                            {
+                                delta -= (DualPhaseIUpperBound(col) - DualPhaseILowerBound(col)) * v;
+                            }
+                            else
+                            {
+                                delta -= (ub[col] - lb[col]) * v;
+                            }
+                            flags[col] &= ~flagPivot2;
+                            available--;
+                            if (v > minv)
+                            {
+                                minv = v;
+                                minj = j;
+                            }
                         }
                     }
                 }
-                if (minj != -1)
-                {
-                    int col = V[minj];
-                    if (phaseI)
-                    {
-                        delta -= (DualPhaseIUpperBound(col) - DualPhaseILowerBound(col)) * Math.Abs(wd[minj]);
-                    }
-                    else
-                    {
-                        delta -= (ub[col] - lb[col]) * Math.Abs(wd[minj]);
-                    }
-                    // mark col as uneligible
-                    flags[col] &= ~flagPivot;
-                    available--;
-                    //if (delta >= 0) System.Diagnostics.Debug.WriteLine("Should flip " + col);
-                }
-                else
-                {
-                    return;
-                }
+                if (minj == -1) return;
             }
 
             if (minj != -1)
@@ -1240,7 +1408,7 @@ namespace Rawr.Mage
 
         private unsafe void LoadCost()
         {
-            Array.Copy(_cost, _costWorking, cols);
+            Array.Copy(_cost, _costWorking, cols + rows);
             costWorkingDirty = false;
         }
 
@@ -1359,7 +1527,194 @@ namespace Rawr.Mage
             }
         }
 
-        private unsafe double[] SolvePrimalUnsafe(bool prepareForDual, bool verifyRefactoredOptimality)
+        private unsafe bool PreprocessingSingletonConstraint()
+        {
+            bool updated = false;
+            // singleton row            
+            for (int i = 0; i < rows; i++)
+            {
+                //a[i + col * baseRows];
+                double rhs = 0.0;
+                int singlecol = -1;
+                bool issingleton = true;
+                for (int col = 0; col < cols; col++)
+                {
+                    double v;
+                    if (i < baseRows)
+                    {
+                        v = a[i + col * baseRows];
+                    }
+                    else
+                    {
+                        v = D[(i - baseRows) * cols + col];
+                    }
+                    if (Math.Abs(v) > epsZero)
+                    {
+                        if ((flags[col] & flagFix) != 0)
+                        {
+                            rhs -= v * lb[col];
+                        }
+                        else
+                        {
+                            if (singlecol != -1)
+                            {
+                                issingleton = false;
+                                break;
+                            }
+                            else
+                            {
+                                singlecol = col;
+                            }
+                        }
+                    }
+                }
+                if (issingleton)
+                {
+                    if (singlecol == -1)
+                    {
+                        // all variables are fixed => row is fixed
+                        updated |= UpdateLowerBound(cols + i, -rhs);
+                        updated |= UpdateUpperBound(cols + i, -rhs);
+                    }
+                    else
+                    {
+                        // update col bounds
+                        // v * x + s = rhs
+                        // lb <= s <= ub
+                        // -ub <= -s <= -lb
+                        // x = (rhs - s) / v
+                        double v;
+                        if (i < baseRows)
+                        {
+                            v = a[i + singlecol * baseRows];
+                        }
+                        else
+                        {
+                            v = D[(i - baseRows) * cols + singlecol];
+                        }
+                        if (v > 0)
+                        {
+                            // (rhs - ub) / v <= x = (rhs - s) / v <= (rhs - lb) / v
+                            updated |= UpdateLowerBound(singlecol, (rhs - ub[cols + i]) / v);
+                            updated |= UpdateUpperBound(singlecol, (rhs - lb[cols + i]) / v);
+                        }
+                        else
+                        {
+                            // (rhs - ub) / v >= x = (rhs - s) / v >= (rhs - lb) / v
+                            updated |= UpdateUpperBound(singlecol, (rhs - ub[cols + i]) / v);
+                            updated |= UpdateLowerBound(singlecol, (rhs - lb[cols + i]) / v);
+                        }
+                    }
+                }
+            }
+            return updated;
+        }
+
+        private unsafe bool PreprocessingTightenBounds()
+        {
+            bool updated = false;
+            // singleton row            
+            for (int i = 0; i < rows; i++)
+            {
+                //a[i + col * baseRows];
+                double lbi = 0.0;
+                double ubi = 0.0;
+                for (int col = 0; col < cols; col++)
+                {
+                    double v;
+                    if (i < baseRows)
+                    {
+                        v = a[i + col * baseRows];
+                    }
+                    else
+                    {
+                        v = D[(i - baseRows) * cols + col];
+                    }
+                    if (Math.Abs(v) > epsZero)
+                    {
+                        if (v > 0)
+                        {
+                            lbi += v * lb[col];
+                            ubi += v * ub[col];
+                        }
+                        else
+                        {
+                            lbi += v * ub[col];
+                            ubi += v * lb[col];
+                        }
+                    }
+                }
+                updated |= UpdateLowerBound(cols + i, -ubi);
+                updated |= UpdateUpperBound(cols + i, -lbi);
+                for (int col = 0; col < cols; col++)
+                {
+                    double v;
+                    if (i < baseRows)
+                    {
+                        v = a[i + col * baseRows];
+                    }
+                    else
+                    {
+                        v = D[(i - baseRows) * cols + col];
+                    }
+                    if (Math.Abs(v) > epsZero)
+                    {
+                        if (v > 0)
+                        {
+                            updated |= UpdateUpperBound(col, lb[col] - (lbi + lb[cols + i]) / v);
+                            updated |= UpdateLowerBound(col, ub[col] - (ub[cols + i] + ubi) / v);
+                        }
+                        else
+                        {
+                            updated |= UpdateLowerBound(col, ub[col] - (lbi + lb[cols + i]) / v);
+                            updated |= UpdateUpperBound(col, lb[col] - (ub[cols + i] + ubi) / v);
+                        }
+                    }
+                }
+            }
+            return updated;
+        }
+
+        private unsafe void Preprocessing()
+        {
+            if (hardInfeasibility) return;
+            bool updated;
+            do
+            {
+                updated = false;
+                //updated |= PreprocessingSingletonConstraint();
+                updated |= PreprocessingTightenBounds();
+            } while (updated && !hardInfeasibility);
+        }
+
+        private unsafe void InitializeDSEWeights(bool identity)
+        {
+            if (identity)
+            {
+                for (int i = 0; i < rows; i++)
+                {
+                    beta[i] = 1.0;
+                }
+            }
+            else
+            {
+                for (int j = 0; j < rows; j++)
+                {
+                    for (int i = 0; i < rows; i++)
+                    {
+                        x[i] = ((i == j) ? 1 : 0);
+                    }
+                    lu.BSolve(x); // TODO exploit nature of x
+                    beta[j] = 0.0;
+                    for (int i = 0; i < rows; i++)
+                    {
+                        beta[j] += x[i] * x[i];
+                    }
+                }
+            }
+        }
+
+        private unsafe double[] SolvePrimalUnsafe(bool prepareForDual, bool verifyRefactoredOptimality, bool shortLimit)
         {
             // LU = A_B
             // d = x_B <- A_B^-1*b ... primal solution
@@ -1578,7 +1933,7 @@ namespace Rawr.Mage
                 flags[V[maxj]] = (flags[V[maxj]] | bound) & ~flagB;
 
                 round++;
-            } while ((round < 5000 && !verifyRefactoredOptimality) || round < 100); // limit computation so we don't dead loop, if everything works it shouldn't take more than this
+            } while ((round < 5000 && !shortLimit) || round < 100); // limit computation so we don't dead loop, if everything works it shouldn't take more than this
             // when tuning dual feasibility limit to 100 rounds, we don't want to spend too much time on it
 
             // just in case
@@ -1592,7 +1947,7 @@ namespace Rawr.Mage
             if (hardInfeasibility) return new double[cols + 1];
             double[] ret = null;
 
-            fixed (double* a = SparseMatrix.data, U = LU._U, sL = LU.sparseL, column = LU.column, column2 = LU.column2, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, cost = _costWorking, sparseValue = SparseMatrix.value, D = extraConstraints, lb = _lb, ub = _ub)
+            fixed (double* a = SparseMatrix.data, U = LU._U, sL = LU.sparseL, column = LU.column, column2 = LU.column2, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, cost = _costWorking, sparseValue = SparseMatrix.value, D = extraConstraints, lb = _lb, ub = _ub/*, beta = _beta, betaBackup = _betaBackup*/)
             fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col, P = LU._P, Q = LU._Q, LJ = LU._LJ, sLI = LU.sparseLI, sLstart = LU.sparseLstart, flags = _flags)
             {
                 this.a = a;
@@ -1614,12 +1969,15 @@ namespace Rawr.Mage
                 this.flags = flags;
                 this.lb = lb;
                 this.ub = ub;
+                //this.beta = beta;
+                //this.betaBackup = betaBackup;
 
                 lu.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
                 LoadCost();
                 PerturbCost();
                 bool dualUnbounded;
                 shifted = false;
+                //Preprocessing();
                 ret = SolveDualUnsafe(startWithPhaseI, out dualUnbounded);
                 if (!dualUnbounded)
                 {
@@ -1630,7 +1988,7 @@ namespace Rawr.Mage
                         LoadCost();
                         PerturbCost();
                     }
-                    ret = SolvePrimalUnsafe(false, true);
+                    ret = SolvePrimalUnsafe(false, true, true);
                 }
                 if (costWorkingDirty && !dualUnbounded)
                 {
@@ -1650,7 +2008,7 @@ namespace Rawr.Mage
                         _Vcopy = (int[])_V.Clone();
                         _flagscopy = (int[])_flags.Clone();
                     }
-                    ret = SolvePrimalUnsafe(false, false);
+                    ret = SolvePrimalUnsafe(false, false, false);
                     if (!dualUnbounded)
                     {
                         _B = _Bcopy;
@@ -1679,6 +2037,8 @@ namespace Rawr.Mage
                 this.flags = null;
                 this.lb = null;
                 this.ub = null;
+                this.beta = null;
+                this.betaBackup = null;
             }
 
             return ret;
@@ -1742,6 +2102,7 @@ namespace Rawr.Mage
 
                 if (lu.Singular)
                 {
+                    //System.Diagnostics.Trace.WriteLine("Basis singular in " + round);
                     // try to patch the basis by replacing singular columns with corresponding slacks of singular rows
                     redecompose = 0;
                     PatchSingularBasis();
@@ -1799,8 +2160,8 @@ namespace Rawr.Mage
 
                 if (!ComputeDualPivotRow(phaseI, mini))
                 {
-                    //System.Diagnostics.Debug.WriteLine("Feasibility lost in " + round);
                     Decompose();
+                    //System.Diagnostics.Trace.WriteLine("Feasibility lost in " + round + ", conditioning " + U[rows * rows - 1]);
                     if (lu.Singular)
                     {
                         PatchSingularBasis();
@@ -1831,8 +2192,8 @@ namespace Rawr.Mage
                         double[] ret = new double[cols + 1];
                         dualUnbounded = true;
                         // debug measure, verify primal infeasibility by solving the primal
-                        //ret = SolvePrimalUnsafe(true);
-                        //System.Diagnostics.Debug.WriteLine("Dual unfeasible after " + round);
+                        //ret = SolvePrimalUnsafe(true, false, false);
+                        //System.Diagnostics.Trace.WriteLine("Dual unfeasible after " + round);
                         return ret;
                     }
                     else
@@ -1858,7 +2219,7 @@ namespace Rawr.Mage
                     }
                     double shift = minr * wd[minj] - c[minj];
                     c[minj] += shift;
-                    cost[minj] += shift; // requires working copy for cost
+                    cost[V[minj]] += shift; // requires working copy for cost
                     costWorkingDirty = true;
                     shifted = true;
                     // NLB: *cj < eps, NUB: *cj > -eps
@@ -1874,7 +2235,7 @@ namespace Rawr.Mage
                                 {
                                     shift = epsDual - c[j] + minr * wd[j];
                                     c[j] += shift;
-                                    cost[j] += shift; // requires working copy for cost
+                                    cost[col] += shift; // requires working copy for cost
                                 }
                             }
                             else if ((flags[col] & flagNUB) != 0)
@@ -1883,7 +2244,7 @@ namespace Rawr.Mage
                                 {
                                     shift = -epsDual - c[j] + minr * wd[j];
                                     c[j] += shift;
-                                    cost[j] += shift; // requires working copy for cost
+                                    cost[col] += shift; // requires working copy for cost
                                 }
                             }
                         }
