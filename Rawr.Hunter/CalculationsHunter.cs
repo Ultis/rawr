@@ -88,7 +88,6 @@ namespace Rawr.Hunter
                         Item.ItemType.Arrow,
                         Item.ItemType.Bow,
                         Item.ItemType.Bullet,
-                        Item.ItemType.Cloth,
                         Item.ItemType.Crossbow,
                         Item.ItemType.Dagger,
 						Item.ItemType.FistWeapon,
@@ -99,8 +98,7 @@ namespace Rawr.Hunter
                         Item.ItemType.OneHandSword,
                         Item.ItemType.Polearm,
                         Item.ItemType.Quiver,
-                        Item.ItemType.Staff,                        
-                        Item.ItemType.Thrown,
+                        Item.ItemType.Staff,                    
                         Item.ItemType.TwoHandAxe,
                         Item.ItemType.TwoHandSword
 					});
