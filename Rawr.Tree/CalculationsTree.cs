@@ -330,7 +330,7 @@ namespace Rawr.Tree
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Stamina + stats.Health + stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
+            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal
                 + stats.ManaRestorePerCast_5_15 + stats.LifebloomFinalHealBonus + stats.RegrowthExtraTicks
