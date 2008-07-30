@@ -123,7 +123,11 @@ namespace Rawr.Tree
 
         private float ManaPerCastInManaPerSecond(SpellRotation rot)
         {
-            return rot.numberOfSpells * calculatedStats.BasicStats.ManaRestorePerCast_5_15 * 0.05f / rot.currentCycleDuration;
+            float secondsPerSpell = rot.currentCycleDuration / rot.numberOfSpells;
+            // IED 5% proc-rate, 15 sec cooldown
+            // Source: http://elitistjerks.com/f31/t19181-shaman_how_heal_like_pro/p53/#post759589
+            float secondsPerProc = secondsPerSpell * 20f + 15f;
+            return calculatedStats.BasicStats.ManaRestorePerCast_5_15  / secondsPerProc;
         }
 
         private float RotationMultiplier(SpellRotation rot)
