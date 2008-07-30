@@ -53,7 +53,7 @@ namespace Rawr.HolyPriest
 					"Basic Stats:Mp5",
 					"Basic Stats:Regen InFSR",
 					"Basic Stats:Regen OutFSR",
-					"Basic Stats:Spell Crit",
+					"Basic Stats:Holy Spell Crit",
 					"Basic Stats:Spell Haste",
                     "Basic Stats:Global Cooldown",
                     "Spells:Renew",
@@ -123,21 +123,24 @@ namespace Rawr.HolyPriest
             Stats statsRace = GetRaceStats(character);
             CharacterCalculationsHolyPriest calculatedStats = new CharacterCalculationsHolyPriest();
             CalculationOptionsPriest calculationOptions = character.CalculationOptions as CalculationOptionsPriest;
+            if (calculationOptions == null)
+                return null;
 
             calculatedStats.Race = character.Race;
             calculatedStats.BasicStats = stats;
             calculatedStats.Talents = character.Talents;
 
-            calculatedStats.BasicStats.Spirit = statsRace.Spirit + (calculatedStats.BasicStats.Spirit - statsRace.Spirit) * (1 + character.Talents.GetTalent("Spirit of Redemption").PointsInvested * 0.05f);
+            calculatedStats.BasicStats.Health = (float)Math.Floor(calculatedStats.BasicStats.Health * (1 + character.Talents.GetTalent("Enlightenment").PointsInvested * 0.01f));
+            calculatedStats.BasicStats.Spirit = (float)Math.Floor(calculatedStats.BasicStats.Spirit * (1 + character.Talents.GetTalent("Spirit of Redemption").PointsInvested * 0.05f));
 
             calculatedStats.SpiritRegen = (float)Math.Floor(5 * 0.0093271 * calculatedStats.BasicStats.Spirit * Math.Sqrt(calculatedStats.BasicStats.Intellect));
             
             calculatedStats.RegenInFSR = (float)Math.Floor((calculatedStats.BasicStats.Mp5 + character.Talents.GetTalent("Meditation").PointsInvested * 0.1f * 
                 calculatedStats.SpiritRegen * (1 + calculatedStats.BasicStats.SpellCombatManaRegeneration)));
             calculatedStats.RegenOutFSR = calculatedStats.BasicStats.Mp5 + calculatedStats.SpiritRegen;
-            
+
             calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect / 80) +
-                (calculatedStats.BasicStats.SpellCritRating / 22.08) + 1.85 + character.Talents.GetTalent("Holy Specialization").PointsInvested, 2);
+                (calculatedStats.BasicStats.SpellCritRating / 22.08) + 1.24 + character.Talents.GetTalent("Holy Specialization").PointsInvested, 2);
 
             calculatedStats.BasicStats.Healing += calculatedStats.BasicStats.Spirit * character.Talents.GetTalent("Spiritual Guidance").PointsInvested * 0.05f;
             
@@ -181,42 +184,39 @@ namespace Rawr.HolyPriest
                 case Character.CharacterRace.NightElf:
                     return new Stats()
                     {
-                        Health = 3434f,
-                        Mana = 2470f,
+                        Health = 3211f,
+                        Mana = 2620f,
                         Stamina = 57f,
-                        Agility = 50f,
-                        Intellect = 147f,
+                        Intellect = 145f,
                         Spirit = 151f
                     };
                 case Character.CharacterRace.Dwarf:
                     return new Stats()
                     {
-                        Health = 3434f,
-                        Mana = 2470f,
+                        Health = 3211f,
+                        Mana = 2620f,
                         Stamina = 61f,
-                        Agility = 41f,
                         Intellect = 144f,
                         Spirit = 150f
                     };
                 case Character.CharacterRace.Draenei:
                     return new Stats()
                     {
-                        Health = 3434f,
-                        Mana = 2470f,
+                        Health = 3211f,
+                        Mana = 2620f,
                         Stamina = 57f,
-                        Agility = 42f,
                         Intellect = 146f,
-                        Spirit = 160f
+                        Spirit = 153f
                     };
                 case Character.CharacterRace.Human:
                     return new Stats()
                     {
-                        Health = 3434f,
-                        Mana = 2470f,
+                        Health = 3211f,
+                        Mana = 2620f,
                         Stamina = 58f,
-                        Agility = 45f,
                         Intellect = 145f,
-                        Spirit = 174f
+                        Spirit = 152f,
+                        BonusSpiritMultiplier = 0.1f
                     };
                 case Character.CharacterRace.BloodElf:
                     return new Stats()
@@ -224,9 +224,8 @@ namespace Rawr.HolyPriest
                         Health = 3211f,
                         Mana = 2620f,
                         Stamina = 56f,
-                        Agility = 47f,
                         Intellect = 149f,
-                        Spirit = 157f
+                        Spirit = 150f
                     };
                 case Character.CharacterRace.Troll:
                     return new Stats()
@@ -234,22 +233,20 @@ namespace Rawr.HolyPriest
                         Health = 3211f,
                         Mana = 2620f,
                         Stamina = 59f,
-                        Agility = 59f,
                         Intellect = 141f,
-                        Spirit = 159f
+                        Spirit = 152f
                     };
                 case Character.CharacterRace.Undead:
                     return new Stats()
                     {
-                        Health = 3181,
-                        Mana = 2530f,
+                        Health = 3211f,
+                        Mana = 2620f,
                         Stamina = 59f,
-                        Agility = 43f,
-                        Intellect = 145f,
+                        Intellect = 143f,
                         Spirit = 156f,
                     };
             }
-            return null;
+            return new Stats();
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -261,9 +258,9 @@ namespace Rawr.HolyPriest
 
             Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace;
 
-            statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Round(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
+            statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
             statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
             statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
