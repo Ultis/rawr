@@ -291,9 +291,30 @@ namespace Rawr
                                 stats.Healing += damageIncrease;
                             }
                         }
-                        else if (spellDesc.StartsWith("Increases your Spirit by +300 for 20 sec."))
+                        else if (spellDesc.StartsWith("Increases your Spirit by "))
                         {
-                            stats.SpiritFor20SecOnUse2Min += 300;
+                            // Bangle of Endless Blessings, Earring of Soulful Meditation
+                            Regex r = new Regex("Increases your Spirit by \\+?(?<spi>\\d*) for (?<dur>\\d*) sec\\."); // \\(2 Min Cooldown\\)");
+                            Match m = r.Match(spellDesc);
+                            if (m.Success)
+                            {
+                                int spi = int.Parse(m.Groups["spi"].Value);
+                                int dur = int.Parse(m.Groups["dur"].Value);
+                                if (dur == 20)
+                                {
+                                    stats.SpiritFor20SecOnUse2Min += spi;
+                                }
+                            }
+                        }
+                        else if (spellDesc.StartsWith("Your heals each cost "))
+                        {
+                            // Lower City Prayerbook
+                            Regex r = new Regex("Your heals each cost (?<mana>\\d*) less mana for the next 15 sec.");
+                            Match m = r.Match(spellDesc);
+                            if (m.Success)
+                            {
+                                stats.ManacostReduceWithin15OnUse1Min += (float) int.Parse(m.Groups["mana"].Value);
+                            }
                         }
                         else if (spellDesc.StartsWith("Increases healing done by spells "))
                         {
@@ -802,6 +823,17 @@ namespace Rawr
                             spellDesc = spellDesc.Substring("Increases the amount healed by Healing Touch by ".Length);
                             spellDesc = spellDesc.Replace(".", "");
                             stats.HealingTouchFinalHealBonus += (float)int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("Your spell casts have a chance to allow 15% of your mana regeneration to continue while casting for "))
+                        {
+                            spellDesc = spellDesc.Substring("Your spell casts have a chance to allow 15% of your mana regeneration to continue while casting for ".Length);
+                            spellDesc = spellDesc.Replace(" sec.", "");
+                            stats.BangleProc += (float) int.Parse(spellDesc);
+                        }
+                        else if (spellDesc.StartsWith("2% chance on successful spellcast to allow 100% of your Mana regeneration to continue while casting for 15 sec."))
+                        {
+                            // Darkmoon Card: Blue Dragon
+                            stats.FullManaRegenFor15SecOnSpellcast += 2f;
                         }
                         else if (spellDesc.StartsWith("Your Judgement of Command ability has a chance to grant "))
                         {

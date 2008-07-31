@@ -167,7 +167,9 @@ namespace Rawr
         SpiritFor20SecOnUse2Min,
         ManaregenOver20SecOnUse3Min,
         ManaregenOver20SecOnUse5Min,
-        ManacostReduceWithin15OnHealingCast
+        ManacostReduceWithin15OnHealingCast,
+        BangleProc,
+        FullManaRegenFor15SecOnSpellcast
     }
 
     enum MultiplicativeStat : int
@@ -222,6 +224,7 @@ namespace Rawr
         NatureResistanceBuff,
         ShadowResistanceBuff,
         MovementSpeed,
+        ManacostReduceWithin15OnUse1Min,
     }
 
     /// <summary>
@@ -1595,6 +1598,22 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.ManacostReduceWithin15OnHealingCast] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Bangle Proc")]
+        [Category("Equipment Procs")]
+        public float BangleProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BangleProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BangleProc] = value; }
+        }
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% chance on spellcast to allow 100% mana regen for 15 sec")]
+        public float FullManaRegenFor15SecOnSpellcast
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.FullManaRegenFor15SecOnSpellcast]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FullManaRegenFor15SecOnSpellcast] = value; }
+        }
 #endregion
 
         #region MultiplicativeStats
@@ -1975,6 +1994,15 @@ namespace Rawr
         {
             get { return _rawNoStackData[(int)NonStackingStat.MovementSpeed]; }
             set { _rawNoStackData[(int)NonStackingStat.MovementSpeed] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Less mana per spell (15 sec/1 min)")]
+        [Category("Equipment Procs")]
+        public float ManacostReduceWithin15OnUse1Min
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.ManacostReduceWithin15OnUse1Min]; }
+            set { _rawNoStackData[(int)NonStackingStat.ManacostReduceWithin15OnUse1Min] = value; }
         }
 
 #endregion

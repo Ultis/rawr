@@ -325,20 +325,30 @@ namespace Rawr.Tree
                 LifebloomTickHealBonus = stats.LifebloomTickHealBonus,
                 HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus,
                 ShatteredSunRestoProc = stats.ShatteredSunRestoProc,
+                BangleProc = stats.BangleProc,
+                SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
+                ManacostReduceWithin15OnUse1Min = stats.ManacostReduceWithin15OnUse1Min,
+                FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing
+            if (stats.Spirit + stats.Mp5 + stats.Healing
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal
                 + stats.ManaRestorePerCast_5_15 + stats.LifebloomFinalHealBonus + stats.RegrowthExtraTicks
                 + stats.BonusHealingTouchMultiplier + stats.TreeOfLifeAura
                 + stats.ReduceRejuvenationCost + stats.ReduceRegrowthCost + stats.ReduceHealingTouchCost
                 + stats.RejuvenationHealBonus + stats.LifebloomTickHealBonus + stats.HealingTouchFinalHealBonus
-                + stats.SpellCombatManaRegeneration + stats.ShatteredSunRestoProc
-                ) > 0;
+                + stats.SpellCombatManaRegeneration + stats.ShatteredSunRestoProc +
+                + stats.FullManaRegenFor15SecOnSpellcast + stats.BangleProc > 0)
+                return true;
+            // This removes feral PvE items - they have Str, Sta and Int (but not Spirit, which means we still get buffs that raise all stats)
+            // It does not remove S1 feral items sinc ethey have +healing
+            if (stats.Strength + stats.Agility + stats.AttackPower > 0)
+                return false;
+            return (stats.Stamina + stats.Intellect > 0);
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
