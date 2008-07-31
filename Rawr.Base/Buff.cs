@@ -167,6 +167,7 @@ namespace Rawr
 		private static string _cachedModel = "";
         private static Dictionary<BuffType, List<Buff>> _relevantBuffsByType = new Dictionary<BuffType,List<Buff>>();
         private static List<Buff> _relevantSetBonuses = null;
+        private static List<Buff> _allSetBonuses = null;
 
         public static List<Buff> GetBuffsByType(BuffType type)
 		{
@@ -200,9 +201,17 @@ namespace Rawr
             return ret;
 		}
 
+        public static List<Buff> GetAllSetBonuses()
+        {
+            if (_allSetBonuses == null)
+            {
+                _allSetBonuses = AllBuffs.FindAll(buff => !string.IsNullOrEmpty(buff.SetName));
+            }
+            return _allSetBonuses;
+        }
+
         public static List<Buff> GetSetBonuses()
         {
-            List<Buff> ret = null;
             if (Calculations.Instance == null || _cachedModel != Calculations.Instance.ToString())
             {
                 _relevantBuffsByType.Clear();

@@ -247,6 +247,19 @@ namespace Rawr
 			}
 		}
 
+        public Item[] GetRelevantItems(CalculationsBase model)
+        {
+            if (model == Calculations.Instance)
+            {
+                return RelevantItems;
+            }
+            else
+            {
+                return new List<Item>(AllItems).FindAll(new Predicate<Item>(
+                    delegate(Item item) { return model.IsItemRelevant(item); })).ToArray();
+            }
+        }
+
 		public event EventHandler ItemsChanged;
 		public void OnItemsChanged()
 		{

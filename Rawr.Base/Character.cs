@@ -985,7 +985,7 @@ namespace Rawr //O O . .
                 _calculationOptions.TryGetValue(CurrentModel, out ret);
                 if (ret == null && _serializedCalculationOptions.ContainsKey(CurrentModel))
                 {
-                    ret = Calculations.DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
+                    ret = Calculations.GetModel(CurrentModel).DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
                     // set parent Character for models that need backward link
                     System.Reflection.PropertyInfo propertyInfo = ret.GetType().GetProperty("Character", typeof(Character));
                     if (propertyInfo != null) propertyInfo.SetValue(ret, this, null);
@@ -1733,7 +1733,7 @@ namespace Rawr //O O . .
 
             // eliminate searching in active buffs: first remove all set bonuses, then add active ones
             ActiveBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
-            foreach (Buff buff in Buff.GetSetBonuses())
+            foreach (Buff buff in Buff.GetAllSetBonuses()) // can't just get relevant set bonuses, would have to get relevant set bonuses for CurrentModel
             {
                 int setCount;
                 if (setCounts.TryGetValue(buff.SetName, out setCount) && setCount >= buff.SetThreshold)
@@ -2193,7 +2193,7 @@ namespace Rawr //O O . .
 
         public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
                 Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile, Item projectileBag,
-            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, List<Buff> activeBuffs, bool trackEquippedItemChanges)
+            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
         {
             _trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
@@ -2238,6 +2238,7 @@ namespace Rawr //O O . .
             RangedEnchant = enchantRanged;
             IsLoading = false;
             ActiveBuffs.AddRange(activeBuffs);
+            CurrentModel = model;
             RecalculateSetBonuses();
         }
 
@@ -2275,6 +2276,7 @@ namespace Rawr //O O . .
             clone.Class = this.Class;
             clone.Talents = this.Talents;
 			clone.EnforceMetagemRequirements = this.EnforceMetagemRequirements;
+            clone.CurrentModel = this.CurrentModel;
 			return clone;
 		}
     

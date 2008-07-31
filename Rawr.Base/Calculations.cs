@@ -82,8 +82,21 @@ namespace Rawr
                 ModelChanging(null, EventArgs.Empty);
         }
 
+        private static Dictionary<Type, CalculationsBase> ModelCache = new Dictionary<Type, CalculationsBase>();
 
-		public static void LoadModel(Type type) { LoadModel((CalculationsBase)Activator.CreateInstance(type)); }
+        public static CalculationsBase GetModel(Type type)
+        {
+            CalculationsBase model;
+            if (!ModelCache.TryGetValue(type, out model))
+            {
+                model = (CalculationsBase)Activator.CreateInstance(type);
+                ModelCache[type] = model;
+            }
+            return model;
+        }
+        public static CalculationsBase GetModel(string model) { return GetModel(Models[model]); }
+
+		public static void LoadModel(Type type) { LoadModel(GetModel(type)); }
 		public static void LoadModel(CalculationsBase model)
 		{
             OnModelChanging();

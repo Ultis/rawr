@@ -180,7 +180,7 @@ namespace Rawr
 
                         CurrentBatchCharacter.UnsavedChanges = true;
                         //CurrentBatchCharacter.NewScore = e.OptimizedCharacterValue;
-                        CurrentBatchCharacter.NewScore = Optimizer.GetOptimizationValue(_character); // on item change always evaluate with equipped gear first (needed by mage module to store incremental data)
+                        CurrentBatchCharacter.NewScore = Optimizer.GetOptimizationValue(_character, CurrentBatchCharacter.Model); // on item change always evaluate with equipped gear first (needed by mage module to store incremental data)
 
                         optimizerRound = 0;
                     }
@@ -801,7 +801,7 @@ namespace Rawr
             {
                 bool _overrideRegem = checkBoxOverrideRegem.Checked;
                 bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-                _optimizer.InitializeItemCache(CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant);
+                _optimizer.InitializeItemCache(CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, CurrentBatchCharacter.Model);
             }
             _optimizer.OptimizeCharacterAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, true);
         }
@@ -837,7 +837,7 @@ namespace Rawr
             int _thoroughness = trackBarThoroughness.Value;
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-            _optimizer.InitializeItemCache(CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant);
+            _optimizer.InitializeItemCache(CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, CurrentBatchCharacter.Model);
             _optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness);
         }
 
@@ -846,7 +846,7 @@ namespace Rawr
             int _thoroughness = trackBarThoroughness.Value;
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-            if (initializeCache) _optimizer.InitializeItemCache(CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant);
+            if (initializeCache) _optimizer.InitializeItemCache(CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, CurrentBatchCharacter.Model);
             _optimizer.EvaluateUpgradeAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, upgradeListEnumerator.Current.Item, upgradeListEnumerator.Current.Enchant);
         }
     }
@@ -873,7 +873,7 @@ namespace Rawr
                     absolutePath = Path.GetFullPath(relativePath);
                     Directory.SetCurrentDirectory(curDir);
 
-                    score = Optimizer.GetOptimizationValue(Character);
+                    score = Optimizer.GetOptimizationValue(Character, Model);
 
                     if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Name"));
                     if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Score"));
@@ -914,6 +914,20 @@ namespace Rawr
                     character = Character.Load(absolutePath);
                 }
                 return character;
+            }
+        }
+
+        private CalculationsBase model;
+        [XmlIgnore]
+        public CalculationsBase Model
+        {
+            get
+            {
+                if (model == null)
+                {
+                    model = Calculations.GetModel(Character.CurrentModel);
+                }
+                return model;
             }
         }
 

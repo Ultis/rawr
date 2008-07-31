@@ -182,6 +182,7 @@ namespace Rawr
         private string _calculationToOptimize;
         private OptimizationRequirement[] _requirements;
         private int _thoroughness;
+        private CalculationsBase model;
 
         private ItemCacheInstance mainItemCache;
         private ItemCacheInstance optimizerItemCache;
@@ -199,10 +200,11 @@ namespace Rawr
             evaluateUpgradeThreadStartDelegate = new EvaluateUpgradeThreadStartDelegate(EvaluateUpgradeThreadStart);
         }
 
-        public void InitializeItemCache(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
+        public void InitializeItemCache(List<string> availableItems, bool overrideRegem, bool overrideReenchant, CalculationsBase model)
         {
             mainItemCache = ItemCache.Instance;
             optimizerItemCache = new ItemCacheInstance(mainItemCache);
+            this.model = model;
 
             try
             {
@@ -366,8 +368,8 @@ namespace Rawr
             try
             {
                 optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, injectCharacter, out injected, out error);
-				optimizedCharacterValue = GetCalculationsValue(Calculations.GetCharacterCalculations(optimizedCharacter));
-				currentCharacterValue =	GetCalculationsValue(Calculations.GetCharacterCalculations(character));
+				optimizedCharacterValue = GetCalculationsValue(model.GetCharacterCalculations(optimizedCharacter));
+				currentCharacterValue =	GetCalculationsValue(model.GetCharacterCalculations(character));
             }
             catch (Exception ex)
             {
@@ -463,6 +465,7 @@ namespace Rawr
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             _character = character;
+            model = Calculations.GetModel(_character.CurrentModel);
             _calculationToOptimize = calculationToOptimize;
             _requirements = requirements;
             _thoroughness = thoroughness;
@@ -519,6 +522,7 @@ namespace Rawr
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             _character = character;
+            model = Calculations.GetModel(_character.CurrentModel); 
             _calculationToOptimize = calculationToOptimize;
             _requirements = requirements;
             _thoroughness = thoroughness;
@@ -558,12 +562,12 @@ namespace Rawr
 
                 upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>>();
 
-                Item[] items = mainItemCache.RelevantItems;
+                Item[] items = mainItemCache.GetRelevantItems(model);
                 Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
                 foreach (Character.CharacterSlot slot in slots)
                     upgrades[slot] = new List<ComparisonCalculationBase>();
 
-                CharacterCalculationsBase baseCalculations = Calculations.GetCharacterCalculations(_character);
+                CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
                 float baseValue = GetCalculationsValue(baseCalculations);
                 Dictionary<int, Item> itemById = new Dictionary<int, Item>();
                 foreach (Item item in items)
@@ -674,6 +678,7 @@ namespace Rawr
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             _character = character;
+            model = Calculations.GetModel(_character.CurrentModel); 
             _calculationToOptimize = calculationToOptimize;
             _requirements = requirements;
             _thoroughness = thoroughness;
@@ -686,7 +691,7 @@ namespace Rawr
                 ItemCache.Instance = optimizerItemCache;
 
                 Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
-                CharacterCalculationsBase baseCalculations = Calculations.GetCharacterCalculations(_character);
+                CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
                 float baseValue = GetCalculationsValue(baseCalculations);
 
                 Item item = upgrade;                
@@ -803,7 +808,7 @@ namespace Rawr
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
         {
             Dictionary<int, Item> relevantItemMap = new Dictionary<int, Item>();
-            foreach (Item relevantItem in mainItemCache.RelevantItems)
+            foreach (Item relevantItem in mainItemCache.GetRelevantItems(model))
             {
                 relevantItemMap[relevantItem.Id] = relevantItem;
             }
@@ -868,51 +873,51 @@ namespace Rawr
             List<Item> projectileBagItemList = new List<Item>();
 
             List<Enchant> backEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Back, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Back, availableItems, model))
                 backEnchantList.Add(enchant);
             backEnchants = backEnchantList.ToArray();
             List<Enchant> chestEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Chest, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Chest, availableItems, model))
                 chestEnchantList.Add(enchant);
             chestEnchants = chestEnchantList.ToArray();
             List<Enchant> feetEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Feet, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Feet, availableItems, model))
                 feetEnchantList.Add(enchant);
             feetEnchants = feetEnchantList.ToArray();
             List<Enchant> fingerEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Finger, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Finger, availableItems, model))
                 fingerEnchantList.Add(enchant);
             fingerEnchants = fingerEnchantList.ToArray();
             List<Enchant> handsEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Hands, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Hands, availableItems, model))
                 handsEnchantList.Add(enchant);
             handsEnchants = handsEnchantList.ToArray();
             List<Enchant> headEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Head, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Head, availableItems, model))
                 headEnchantList.Add(enchant);
             headEnchants = headEnchantList.ToArray();
             List<Enchant> legsEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Legs, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Legs, availableItems, model))
                 legsEnchantList.Add(enchant);
             legsEnchants = legsEnchantList.ToArray();
             List<Enchant> shouldersEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Shoulders, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Shoulders, availableItems, model))
                 shouldersEnchantList.Add(enchant);
             shouldersEnchants = shouldersEnchantList.ToArray();
             List<Enchant> mainHandEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.MainHand, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.MainHand, availableItems, model))
                 mainHandEnchantList.Add(enchant);
             mainHandEnchants = mainHandEnchantList.ToArray();
             List<Enchant> offHandEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.OffHand, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.OffHand, availableItems, model))
                 offHandEnchantList.Add(enchant);
             offHandEnchants = offHandEnchantList.ToArray();
             List<Enchant> rangedEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Ranged, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Ranged, availableItems, model))
                 rangedEnchantList.Add(enchant);
             rangedEnchants = rangedEnchantList.ToArray();
             List<Enchant> wristEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Wrist, availableItems))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Wrist, availableItems, model))
                 wristEnchantList.Add(enchant);
             wristEnchants = wristEnchantList.ToArray();
 
@@ -1122,7 +1127,7 @@ namespace Rawr
                 }
                 if (validEnchants != null)
                 {
-                    List<Enchant> allEnchants = Enchant.FindEnchants(itemSlot);
+                    List<Enchant> allEnchants = Enchant.FindEnchants(itemSlot, model);
                     Dictionary<int, bool> dict = slotAvailableEnchants[slot] = new Dictionary<int, bool>();
                     foreach (Enchant enchant in allEnchants)
                     {
@@ -1137,18 +1142,18 @@ namespace Rawr
             }
 
             // set to all enchants, restrictions will be applied per item
-            slotEnchants[(int)Character.CharacterSlot.Back] = backEnchants = Enchant.FindEnchants(Item.ItemSlot.Back).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Chest] = chestEnchants = Enchant.FindEnchants(Item.ItemSlot.Chest).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Feet] = feetEnchants = Enchant.FindEnchants(Item.ItemSlot.Feet).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Finger1] = slotEnchants[(int)Character.CharacterSlot.Finger2] = fingerEnchants = Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Hands] = handsEnchants = Enchant.FindEnchants(Item.ItemSlot.Hands).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Head] = headEnchants = Enchant.FindEnchants(Item.ItemSlot.Head).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Legs] = legsEnchants = Enchant.FindEnchants(Item.ItemSlot.Legs).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Shoulders] = shouldersEnchants = Enchant.FindEnchants(Item.ItemSlot.Shoulders).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.MainHand] = mainHandEnchants = Enchant.FindEnchants(Item.ItemSlot.MainHand).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.OffHand] = offHandEnchants = Enchant.FindEnchants(Item.ItemSlot.OffHand).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Ranged] = rangedEnchants = Enchant.FindEnchants(Item.ItemSlot.Ranged).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Wrist] = wristEnchants = Enchant.FindEnchants(Item.ItemSlot.Wrist).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Back] = backEnchants = Enchant.FindEnchants(Item.ItemSlot.Back, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Chest] = chestEnchants = Enchant.FindEnchants(Item.ItemSlot.Chest, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Feet] = feetEnchants = Enchant.FindEnchants(Item.ItemSlot.Feet, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Finger1] = slotEnchants[(int)Character.CharacterSlot.Finger2] = fingerEnchants = Enchant.FindEnchants(Item.ItemSlot.Finger, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Hands] = handsEnchants = Enchant.FindEnchants(Item.ItemSlot.Hands, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Head] = headEnchants = Enchant.FindEnchants(Item.ItemSlot.Head, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Legs] = legsEnchants = Enchant.FindEnchants(Item.ItemSlot.Legs, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Shoulders] = shouldersEnchants = Enchant.FindEnchants(Item.ItemSlot.Shoulders, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.MainHand] = mainHandEnchants = Enchant.FindEnchants(Item.ItemSlot.MainHand, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.OffHand] = offHandEnchants = Enchant.FindEnchants(Item.ItemSlot.OffHand, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Ranged] = rangedEnchants = Enchant.FindEnchants(Item.ItemSlot.Ranged, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Wrist] = wristEnchants = Enchant.FindEnchants(Item.ItemSlot.Wrist, model).ToArray();
 
             if (headItemList.Count == 0) headItemList.Add(null);
             if (neckItemList.Count == 0) neckItemList.Add(null);
@@ -1299,7 +1304,7 @@ namespace Rawr
         private Character Optimize(Character injectCharacter, out float bestValue, out bool injected)
         {
             CharacterCalculationsBase bestCalc;
-            return Optimize(injectCharacter, GetOptimizationValue(injectCharacter), out bestValue, out bestCalc, out injected);
+            return Optimize(injectCharacter, GetOptimizationValue(injectCharacter, model), out bestValue, out bestCalc, out injected);
         }
 
 		private Character Optimize(Character injectCharacter, float injectValue, out float best, out CharacterCalculationsBase bestCalculations, out bool injected)
@@ -1330,7 +1335,7 @@ namespace Rawr
 			else
 			{
 				bestCharacter = _character;
-                best = GetCalculationsValue(Calculations.GetCharacterCalculations(_character));
+                best = GetCalculationsValue(model.GetCharacterCalculations(_character));
 			}
 
 			noImprove = 0;
@@ -1346,7 +1351,7 @@ namespace Rawr
 				    for (int i = 0; i < popSize; i++)
 				    {
                         CharacterCalculationsBase calculations;
-                        values[i] = GetCalculationsValue(calculations = Calculations.GetCharacterCalculations(population[i]));
+                        values[i] = GetCalculationsValue(calculations = model.GetCharacterCalculations(population[i]));
 					    if (values[i] < minv) minv = values[i];
 					    if (values[i] > maxv) maxv = values[i];
 					    if (values[i] > best)
@@ -1517,7 +1522,7 @@ namespace Rawr
                     }
                     charSwap = BuildSingleItemEnchantSwapCharacter(bestCharacter, slot, item, enchant);
                     CharacterCalculationsBase calculations;
-                    value = GetCalculationsValue(calculations = Calculations.GetCharacterCalculations(charSwap));
+                    value = GetCalculationsValue(calculations = model.GetCharacterCalculations(charSwap));
                     if (value > best)
                     {
                         best = value;
@@ -1548,7 +1553,7 @@ namespace Rawr
                     {
                         charSwap = BuildSingleEnchantSwapCharacter(bestCharacter, slot, enchant);
                         CharacterCalculationsBase calculations;
-                        value = GetCalculationsValue(calculations = Calculations.GetCharacterCalculations(charSwap));
+                        value = GetCalculationsValue(calculations = model.GetCharacterCalculations(charSwap));
                         if (value > newBest)
                         {
                             newBest = value;
@@ -1563,9 +1568,9 @@ namespace Rawr
 			return new KeyValuePair<float,Character>(float.NegativeInfinity, null);
 		}
 
-        public static float GetOptimizationValue(Character character)
+        public static float GetOptimizationValue(Character character, CalculationsBase model)
         {
-            return GetCalculationsValue(Calculations.GetCharacterCalculations(character), character.CalculationToOptimize, character.OptimizationRequirements.ToArray());
+            return GetCalculationsValue(model.GetCharacterCalculations(character), character.CalculationToOptimize, character.OptimizationRequirements.ToArray());
         }
 
         private float GetCalculationsValue(CharacterCalculationsBase calcs)
@@ -1665,7 +1670,7 @@ namespace Rawr
                         enchant[(int)Character.CharacterSlot.Legs], enchant[(int)Character.CharacterSlot.Feet],
                         enchant[(int)Character.CharacterSlot.Finger1], enchant[(int)Character.CharacterSlot.Finger2],
                         enchant[(int)Character.CharacterSlot.MainHand], enchant[(int)Character.CharacterSlot.OffHand],
-                        enchant[(int)Character.CharacterSlot.Ranged], _character.ActiveBuffs, false);
+                        enchant[(int)Character.CharacterSlot.Ranged], _character.ActiveBuffs, false, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
 			character.Class = _character.Class;
 			character.Talents = _character.Talents;
@@ -1825,7 +1830,7 @@ namespace Rawr
                 parent.MainHandEnchant,
                 parent.OffHandEnchant,
                 parent.RangedEnchant,
-                _character.ActiveBuffs, false);
+                _character.ActiveBuffs, false, _character.CurrentModel);
             //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
             //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -1939,7 +1944,7 @@ namespace Rawr
                 parent.MainHandEnchant,
                 parent.OffHandEnchant,
                 parent.RangedEnchant,
-                _character.ActiveBuffs, false);
+                _character.ActiveBuffs, false, _character.CurrentModel);
             //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
             //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -2003,7 +2008,7 @@ namespace Rawr
                 slot == Character.CharacterSlot.MainHand ? enchant : baseCharacter.MainHandEnchant,
                 slot == Character.CharacterSlot.OffHand ? enchant : baseCharacter.OffHandEnchant,
                 slot == Character.CharacterSlot.Ranged ? enchant : baseCharacter.RangedEnchant,
-                _character.ActiveBuffs, false);
+                _character.ActiveBuffs, false, _character.CurrentModel);
             //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
             //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -2050,7 +2055,7 @@ namespace Rawr
 				baseCharacter.MainHandEnchant,
 				baseCharacter.OffHandEnchant,
 				baseCharacter.RangedEnchant,
-                _character.ActiveBuffs, false);
+                _character.ActiveBuffs, false, _character.CurrentModel);
 			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
 			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -2097,7 +2102,7 @@ namespace Rawr
 				slot == Character.CharacterSlot.MainHand ? enchant : baseCharacter.MainHandEnchant,
 				slot == Character.CharacterSlot.OffHand ? enchant : baseCharacter.OffHandEnchant,
 				slot == Character.CharacterSlot.Ranged ? enchant : baseCharacter.RangedEnchant,
-                _character.ActiveBuffs, false);
+                _character.ActiveBuffs, false, _character.CurrentModel);
 			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
 			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;

@@ -120,7 +120,12 @@ namespace Rawr
 			return AllEnchants.Find(new Predicate<Enchant>(delegate(Enchant enchant) { return (enchant.Id == id) && (validSlots.Contains(enchant.Slot)); })) ?? AllEnchants[0];
 		}
 
-		public static List<Enchant> FindEnchants(Item.ItemSlot slot)
+        public static List<Enchant> FindEnchants(Item.ItemSlot slot)
+        {
+            return FindEnchants(slot, Calculations.Instance);
+        }
+
+		public static List<Enchant> FindEnchants(Item.ItemSlot slot, CalculationsBase model)
 		{
 			List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
 			if (slot != Item.ItemSlot.MainHand)
@@ -132,15 +137,19 @@ namespace Rawr
 			return AllEnchants.FindAll(new Predicate<Enchant>(
 				delegate(Enchant enchant)
 				{
-					return Calculations.HasRelevantStats(enchant.Stats) &&
+					return model.HasRelevantStats(enchant.Stats) &&
 						( validSlots.Contains(enchant.Slot) || slot == Item.ItemSlot.None )
 						|| enchant.Slot == Item.ItemSlot.None;
 				}
 			));
 		}
 
+        public static List<Enchant> FindEnchants(Item.ItemSlot slot, List<string> availableIds)
+        {
+            return FindEnchants(slot, availableIds, Calculations.Instance);
+        }
 
-		public static List<Enchant> FindEnchants(Item.ItemSlot slot, List<string> availableIds)
+        public static List<Enchant> FindEnchants(Item.ItemSlot slot, List<string> availableIds, CalculationsBase model)
 		{
             List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
             if (slot != Item.ItemSlot.MainHand)
@@ -152,7 +161,7 @@ namespace Rawr
             return AllEnchants.FindAll(new Predicate<Enchant>(
 				delegate(Enchant enchant)
 				{
-                    return ((Calculations.HasRelevantStats(enchant.Stats) &&
+                    return ((model.HasRelevantStats(enchant.Stats) &&
                         (validSlots.Contains(enchant.Slot) || slot == Item.ItemSlot.None) || enchant.Slot == Item.ItemSlot.None)
                         && availableIds.Contains((-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString()))
                         || enchant.Id == 0;
