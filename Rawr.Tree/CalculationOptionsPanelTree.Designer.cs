@@ -61,6 +61,8 @@
             this.cmbIntensity = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.upDownAvgHeal = new System.Windows.Forms.NumericUpDown();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.shattNone = new System.Windows.Forms.RadioButton();
             this.shattAldor = new System.Windows.Forms.RadioButton();
@@ -96,6 +98,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownAvgHeal)).BeginInit();
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.upDownTargetHealth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.upDownSurvScalingAbove)).BeginInit();
@@ -548,6 +551,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.label18);
+            this.groupBox3.Controls.Add(this.upDownAvgHeal);
             this.groupBox3.Controls.Add(this.groupBox5);
             this.groupBox3.Controls.Add(this.enforceMeta);
             this.groupBox3.Controls.Add(this.upDownTargetHealth);
@@ -564,17 +569,50 @@
             this.groupBox3.Controls.Add(this.cmbLength);
             this.groupBox3.Location = new System.Drawing.Point(3, 6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(191, 236);
+            this.groupBox3.Size = new System.Drawing.Size(191, 258);
             this.groupBox3.TabIndex = 28;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Fight Parameters";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(5, 156);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(127, 13);
+            this.label18.TabIndex = 39;
+            this.label18.Text = "Average Healing Scaling:";
+            // 
+            // upDownAvgHeal
+            // 
+            this.upDownAvgHeal.DecimalPlaces = 1;
+            this.upDownAvgHeal.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.upDownAvgHeal.Location = new System.Drawing.Point(136, 154);
+            this.upDownAvgHeal.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.upDownAvgHeal.Name = "upDownAvgHeal";
+            this.upDownAvgHeal.Size = new System.Drawing.Size(45, 20);
+            this.upDownAvgHeal.TabIndex = 38;
+            this.upDownAvgHeal.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            65536});
+            this.upDownAvgHeal.ValueChanged += new System.EventHandler(this.upDownAvgHeal_ValueChanged);
             // 
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.shattNone);
             this.groupBox5.Controls.Add(this.shattAldor);
             this.groupBox5.Controls.Add(this.shattScryer);
-            this.groupBox5.Location = new System.Drawing.Point(8, 175);
+            this.groupBox5.Location = new System.Drawing.Point(9, 180);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(177, 50);
             this.groupBox5.TabIndex = 36;
@@ -620,7 +658,7 @@
             // enforceMeta
             // 
             this.enforceMeta.AutoSize = true;
-            this.enforceMeta.Location = new System.Drawing.Point(9, 152);
+            this.enforceMeta.Location = new System.Drawing.Point(8, 236);
             this.enforceMeta.Name = "enforceMeta";
             this.enforceMeta.Size = new System.Drawing.Size(178, 17);
             this.enforceMeta.TabIndex = 32;
@@ -903,7 +941,7 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(205, 292);
+            this.tabControl1.Size = new System.Drawing.Size(205, 294);
             this.tabControl1.TabIndex = 30;
             // 
             // tabPage1
@@ -912,7 +950,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(197, 266);
+            this.tabPage1.Size = new System.Drawing.Size(197, 268);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Fight";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -923,7 +961,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(197, 266);
+            this.tabPage2.Size = new System.Drawing.Size(197, 268);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Rotation";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -933,7 +971,7 @@
             this.tabPage3.Controls.Add(this.groupBox2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(197, 266);
+            this.tabPage3.Size = new System.Drawing.Size(197, 268);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Mana";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -943,7 +981,7 @@
             this.tabPage4.Controls.Add(this.groupBox1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(197, 266);
+            this.tabPage4.Size = new System.Drawing.Size(197, 268);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Talents";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -954,7 +992,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControl1);
             this.Name = "CalculationOptionsPanelTree";
-            this.Size = new System.Drawing.Size(212, 310);
+            this.Size = new System.Drawing.Size(212, 304);
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -965,6 +1003,7 @@
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownAvgHeal)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.upDownTargetHealth)).EndInit();
@@ -1045,5 +1084,7 @@
         private System.Windows.Forms.RadioButton shattScryer;
         private System.Windows.Forms.RadioButton shattNone;
         private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.NumericUpDown upDownAvgHeal;
     }
 }

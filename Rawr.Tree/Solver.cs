@@ -30,7 +30,22 @@ namespace Rawr.Tree
             get;
             private set;
         }
-        public float ManaPerCastMp5
+        public float ManaProcOnCastMp5
+        {
+            get;
+            private set;
+        }
+        public float LessMana_15s_1m_Mp5
+        {
+            get;
+            private set;
+        }
+        public float BlueDragonMp5
+        {
+            get;
+            private set;
+        }
+        public float BangleMp5
         {
             get;
             private set;
@@ -53,7 +68,10 @@ namespace Rawr.Tree
                 FightFraction = RotationMultiplier(bestRotation);
                 InnervateMp5 = InnervateManaPerSecond(bestRotation) * 5f;
                 MementoMp5 = MementoManaPerSecond(bestRotation) * 5f;
-                ManaPerCastMp5 = ManaPerCastInManaPerSecond(bestRotation) * 5f;
+                ManaProcOnCastMp5 = ManaPerCastInManaPerSecond(bestRotation) * 5f;
+                LessMana_15s_1m_Mp5 = LessManaPerCastInManaPerSecond(bestRotation) * 5f;
+                BlueDragonMp5 = BlueDragonInManaPerSecond(bestRotation) * 5f;
+                BangleMp5 = BangleInManaPerSecond(bestRotation) * 5f;
                 HpS = bestRotation.healPerCycle / bestRotation.bestCycleDuration * FightFraction +
                     // 1 proc / 50 sec
                     (calculatedStats.BasicStats.ShatteredSunRestoProc > 0 && calcOpts.ShattrathFaction == "Scryer" ? (618 + 682) / 2f * (1 + calculatedStats.BasicStats.SpellCrit/100f) / 50 : 0);
@@ -130,6 +148,28 @@ namespace Rawr.Tree
             return calculatedStats.BasicStats.ManaRestorePerCast_5_15  / secondsPerProc;
         }
 
+        private float LessManaPerCastInManaPerSecond(SpellRotation rot)
+        {
+            float secondsPerSpell = rot.currentCycleDuration / rot.numberOfSpells;
+            return calculatedStats.BasicStats.ManacostReduceWithin15OnUse1Min / (4 * secondsPerSpell);
+        }
+
+        private float BlueDragonInManaPerSecond(SpellRotation rot)
+        {
+            // Darkmoon Card: Blue Dragon - let's assume no internal cooldown, no proc while the effect is up and no proc during innervate
+            float secondsPerSpell = rot.currentCycleDuration / rot.numberOfSpells;
+            float secondsPerProc = 100f * secondsPerSpell / calculatedStats.BasicStats.FullManaRegenFor15SecOnSpellcast + 15f;
+            return 15f * (calculatedStats.OS5SRRegen - calculatedStats.IS5SRRegen) / secondsPerProc;
+        }
+
+        private float BangleInManaPerSecond(SpellRotation rot)
+        {
+            // Bangle of Endless Blessings - x% mana regen for 15 sec with 10% proc, 45 sec internal cooldown
+            float secondsPerSpell = rot.currentCycleDuration / rot.numberOfSpells;
+            float secondsPerProc = secondsPerSpell / 0.1f + 45f;
+            return 0.15f * calculatedStats.BasicStats.BangleProc * calculatedStats.OS5SRRegen / secondsPerProc;
+        }
+
         private float RotationMultiplier(SpellRotation rot)
         {
             if (rot == null)
@@ -139,7 +179,11 @@ namespace Rawr.Tree
                 (calculatedStats.Mp5Points / 5 +
                 InnervateManaPerSecond(rot) +
                 MementoManaPerSecond(rot) +
-                ManaPerCastInManaPerSecond(rot));
+                LessManaPerCastInManaPerSecond(rot) +
+                ManaPerCastInManaPerSecond(rot) +
+                BlueDragonInManaPerSecond(rot) +
+                BangleInManaPerSecond(rot)
+                );
 
             float HPSMultiplier = 1.0f;
 

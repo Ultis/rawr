@@ -65,6 +65,18 @@ namespace Rawr.Tree
             set { subPoints[3] = value; }
         }
 
+        public float OS5SRRegenRaw
+        {
+            get;
+            set;
+        }
+
+        public float IS5SRRegenRaw
+        {
+            get;
+            set;
+        }
+
         public float OS5SRRegen
         {
             get;
@@ -107,8 +119,8 @@ namespace Rawr.Tree
             dictValues.Add("Healing", String.Format("{0}*{1} Spell Damage" + (BasicStats.AverageHeal > 0 ? "\n{2} Average Bonus Healing" : ""),
                 BasicStats.Healing, BasicStats.SpellDamageRating, BasicStats.AverageHeal));
             dictValues.Add("Mp5", string.Format("{0}*{1} mp5 outside the 5-second rule",
-                (int) (5*IS5SRRegen),
-                (int) (5*OS5SRRegen)));
+                (int) (5*IS5SRRegenRaw),
+                (int) (5*OS5SRRegenRaw)));
 
             dictValues.Add("Spell Crit", string.Format("{0}%*{1} Spell Crit rating",
                 BasicStats.SpellCrit, BasicStats.SpellCritRating.ToString()));
@@ -136,9 +148,10 @@ namespace Rawr.Tree
             }
             else
             {
-                dictValues.Add("Rotation duration", String.Format("{0:0.0}*{1}{2:0.0}s dead time in the rotation",
+                dictValues.Add("Rotation duration", String.Format("{0:0.0}*{1}{2:0.00}s dead time in the rotation\n{3:0.00} seconds/cast",
                     solver.bestRotation.bestCycleDuration, solver.bestRotation.cycleSpells,
-                    solver.bestRotation.bestCycleDuration-solver.bestRotation.tightCycleDuration));
+                    solver.bestRotation.bestCycleDuration-solver.bestRotation.tightCycleDuration,
+                    solver.bestRotation.bestCycleDuration / solver.bestRotation.numberOfSpells));
                 
                 float netCost = solver.bestRotation.manaPerCycle - Mp5Points * solver.bestRotation.bestCycleDuration / 5;
                 if (netCost < 0)

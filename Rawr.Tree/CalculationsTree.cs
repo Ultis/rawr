@@ -136,11 +136,28 @@ namespace Rawr.Tree
                 calculatedStats.BasicStats.AverageHeal += 44; // 1 proc/50 sec
             }
 
+            calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.HealingDoneFor15SecOnUse2Min / 8;
+            calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.HealingDoneFor15SecOnUse90Sec / 6;
+            calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.HealingDoneFor20SecOnUse2Min / 6;
+
+
             float baseRegenConstant = 0.00932715221261f;
             float spiritRegen = 0.001f + baseRegenConstant * (float)Math.Sqrt(calculatedStats.BasicStats.Intellect) * calculatedStats.BasicStats.Spirit;
 
-            calculatedStats.OS5SRRegen = spiritRegen + calculatedStats.BasicStats.Mp5 / 5f;
-            calculatedStats.IS5SRRegen = spiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5 / 5f;
+            calculatedStats.OS5SRRegenRaw = spiritRegen + calculatedStats.BasicStats.Mp5 / 5f;
+            calculatedStats.IS5SRRegenRaw = spiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5 / 5f;
+
+            if (calculatedStats.BasicStats.SpiritFor20SecOnUse2Min > 0)
+            {
+                spiritRegen = 0.001f + baseRegenConstant * (float)Math.Sqrt(calculatedStats.BasicStats.Intellect) * (calculatedStats.BasicStats.Spirit + calculatedStats.BasicStats.SpiritFor20SecOnUse2Min);
+                calculatedStats.OS5SRRegen = calculatedStats.OS5SRRegenRaw * 5f / 6f + (spiritRegen + calculatedStats.BasicStats.Mp5 / 5f) / 6f;
+                calculatedStats.IS5SRRegen = calculatedStats.IS5SRRegenRaw * 5f / 6f + (spiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5 / 5f) / 6f;
+            }
+            else
+            {
+                calculatedStats.OS5SRRegen = calculatedStats.OS5SRRegenRaw;
+                calculatedStats.IS5SRRegen = calculatedStats.IS5SRRegenRaw;
+            }
 
             Spell lbs = new LifebloomStack(character, calculatedStats.BasicStats, true);
             Spell lb = new Lifebloom(character, calculatedStats.BasicStats, true);
@@ -174,7 +191,8 @@ namespace Rawr.Tree
             int healthBelow = (int)(health < calcOpts.TargetHealth ? health : calcOpts.TargetHealth);
             int healthAbove = health - healthBelow;
 
-            calculatedStats.AddMp5Points(calculatedStats.IS5SRRegen * 5f, "Regen");
+            calculatedStats.AddMp5Points(calculatedStats.IS5SRRegenRaw * 5f, "Regen");
+            calculatedStats.AddMp5Points((calculatedStats.IS5SRRegen - calculatedStats.IS5SRRegenRaw) * 5f, "Spirit on Use (20 sec/2min)"); 
             calculatedStats.AddMp5Points(calcOpts.Spriest, "Shadow Priest");
             calculatedStats.AddMp5Points((calcOpts.ManaPotAmt * (1 + calculatedStats.BasicStats.BonusManaPotion)) / (calcOpts.ManaPotDelay * 12), "Potion");
 
@@ -184,7 +202,10 @@ namespace Rawr.Tree
             {
                 calculatedStats.HpSPoints = calculatedStats.solver.HpS;
                 calculatedStats.AddMp5Points(calculatedStats.solver.InnervateMp5, "Innervate");
-                calculatedStats.AddMp5Points(calculatedStats.solver.ManaPerCastMp5, "Mana per Cast (5%)");
+                calculatedStats.AddMp5Points(calculatedStats.solver.ManaProcOnCastMp5, "Mana per Cast (5%)");
+                calculatedStats.AddMp5Points(calculatedStats.solver.LessMana_15s_1m_Mp5, "Less Mana per Cast (15 sec/1min)");
+                calculatedStats.AddMp5Points(calculatedStats.solver.BlueDragonMp5, "Blue Dragon");
+                calculatedStats.AddMp5Points(calculatedStats.solver.BangleMp5, "Bangle");
                 calculatedStats.AddMp5Points(calculatedStats.solver.MementoMp5, "Memento of Tyrande");
                 calculatedStats.SurvivalPoints = healthBelow / calcOpts.SurvScalingBelow + healthAbove / calcOpts.SurvScalingAbove;
                 calculatedStats.ToLPoints = calculatedStats.BasicStats.TreeOfLifeAura;
@@ -329,6 +350,9 @@ namespace Rawr.Tree
                 SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
                 ManacostReduceWithin15OnUse1Min = stats.ManacostReduceWithin15OnUse1Min,
                 FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
+                HealingDoneFor15SecOnUse2Min = stats.HealingDoneFor15SecOnUse2Min,
+                HealingDoneFor15SecOnUse90Sec = stats.HealingDoneFor15SecOnUse90Sec,
+                HealingDoneFor20SecOnUse2Min = stats.HealingDoneFor20SecOnUse2Min,
             };
         }
 

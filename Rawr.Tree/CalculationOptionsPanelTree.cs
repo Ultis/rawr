@@ -41,8 +41,10 @@ namespace Rawr.Tree
             cmbTreeOfLife.Text = calcOpts.TreeOfLife.ToString();
 
             upDownTargetHealth.Value = (decimal)calcOpts.TargetHealth;
-            upDownSurvScalingAbove.Value = (decimal) calcOpts.SurvScalingAbove;
+            upDownSurvScalingAbove.Value = (decimal)calcOpts.SurvScalingAbove;
             upDownSurvScalingBelow.Value = (decimal)calcOpts.SurvScalingBelow;
+
+            upDownAvgHeal.Value = (decimal)calcOpts.AverageHealingScaling;
 
             cmbNumCyclesPerRotation.Text = calcOpts.NumCyclesPerRotation.ToString();
             cmbSpellNum.Text = "1";
@@ -409,6 +411,18 @@ namespace Rawr.Tree
                 Character.OnItemsChanged();
             }
         }
+
+        private void upDownAvgHeal_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+
+                calcOpts.AverageHealingScaling = (float)upDownAvgHeal.Value;
+
+                Character.OnItemsChanged();
+            }
+        }
     }
     [Serializable]
     public class CalculationOptionsTree : ICalculationOptionBase
@@ -444,6 +458,7 @@ namespace Rawr.Tree
         };
         public Boolean InnervateSelf = true;
         public string ShattrathFaction = "None";
+        public float AverageHealingScaling = 0.8f;
 
         public CalculationOptionsTree()
         {

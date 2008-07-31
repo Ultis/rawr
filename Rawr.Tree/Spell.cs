@@ -149,7 +149,7 @@ namespace Rawr.Tree
 
             // The value of average healing for a tree can be debated - passive healing is generally a lot better
             // since you won't have any trouble refreshing HoTs when the buff runs out
-            Healing += stats.AverageHeal;
+            Healing += stats.AverageHeal * calcOpts.AverageHealingScaling;
 
             if (BasePeriodicTicks > 0 && calcOpts.TreeOfLife == 1)
             {
