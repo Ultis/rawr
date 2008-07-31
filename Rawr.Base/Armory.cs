@@ -322,11 +322,17 @@ namespace Rawr
                             stats.SpellDamageFor15SecOnUse90Sec += 150;
                             stats.HealingDoneFor15SecOnUse90Sec += 280;
                         }
+                        else if (spellDesc.StartsWith("Increases spell damage done by up to 120 and healing done by up to 220 for 15 sec."))
+                        {
+                            // Vengeance of the Illidari
+                            stats.SpellDamageFor15SecOnUse90Sec += 120;
+                            stats.HealingDoneFor15SecOnUse90Sec += 220;
+                        }
                         else if (spellDesc.StartsWith("Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains up to 320 spell damage and healing."))
                         {
                             // Shifting Naaru Sliver
-                            stats.SpellDamageFor15SecOnUse2Min += 320;
-                            stats.HealingDoneFor15SecOnUse2Min += 320;
+                            stats.SpellDamageFor15SecOnUse90Sec += 320;
+                            stats.HealingDoneFor15SecOnUse90Sec += 320;
                         }
                         else if (spellDesc.StartsWith("Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec."))
                         {
