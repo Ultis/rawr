@@ -43,12 +43,12 @@
             this.checkBoxPetSacrificed = new System.Windows.Forms.CheckBox();
             this.buttonTalents = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBoxCastConflagrate = new System.Windows.Forms.CheckBox();
-            this.checkBoxCastShadowburn = new System.Windows.Forms.CheckBox();
             this.checkBoxCastImmolate = new System.Windows.Forms.CheckBox();
             this.checkBoxCastCorruption = new System.Windows.Forms.CheckBox();
             this.checkBoxCastSiphonLife = new System.Windows.Forms.CheckBox();
             this.checkBoxCastUnstableAffliction = new System.Windows.Forms.CheckBox();
+            this.checkBoxCastConflagrate = new System.Windows.Forms.CheckBox();
+            this.checkBoxCastShadowburn = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBoxFightDuration = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -96,7 +96,6 @@
             // checkBoxEnforceMetagemRequirements
             // 
             this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-            this.checkBoxEnforceMetagemRequirements.Enabled = false;
             this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(13, 32);
             this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
             this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
@@ -238,30 +237,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Spell Choice";
             // 
-            // checkBoxCastConflagrate
-            // 
-            this.checkBoxCastConflagrate.AutoSize = true;
-            this.checkBoxCastConflagrate.Location = new System.Drawing.Point(126, 500);
-            this.checkBoxCastConflagrate.Name = "checkBoxCastConflagrate";
-            this.checkBoxCastConflagrate.Size = new System.Drawing.Size(80, 17);
-            this.checkBoxCastConflagrate.TabIndex = 17;
-            this.checkBoxCastConflagrate.Text = "Conflagrate";
-            this.checkBoxCastConflagrate.UseVisualStyleBackColor = true;
-            this.checkBoxCastConflagrate.Visible = false;
-            this.checkBoxCastConflagrate.CheckedChanged += new System.EventHandler(this.checkBoxCastConflagrate_CheckedChanged);
-            // 
-            // checkBoxCastShadowburn
-            // 
-            this.checkBoxCastShadowburn.AutoSize = true;
-            this.checkBoxCastShadowburn.Location = new System.Drawing.Point(13, 500);
-            this.checkBoxCastShadowburn.Name = "checkBoxCastShadowburn";
-            this.checkBoxCastShadowburn.Size = new System.Drawing.Size(86, 17);
-            this.checkBoxCastShadowburn.TabIndex = 16;
-            this.checkBoxCastShadowburn.Text = "Shadowburn";
-            this.checkBoxCastShadowburn.UseVisualStyleBackColor = true;
-            this.checkBoxCastShadowburn.Visible = false;
-            this.checkBoxCastShadowburn.CheckedChanged += new System.EventHandler(this.checkBoxCastShadowburn_CheckedChanged);
-            // 
             // checkBoxCastImmolate
             // 
             this.checkBoxCastImmolate.AutoSize = true;
@@ -305,6 +280,30 @@
             this.checkBoxCastUnstableAffliction.Text = "Unstable Affliction";
             this.checkBoxCastUnstableAffliction.UseVisualStyleBackColor = true;
             this.checkBoxCastUnstableAffliction.CheckedChanged += new System.EventHandler(this.checkBoxCastUnstableAffliction_CheckedChanged);
+            // 
+            // checkBoxCastConflagrate
+            // 
+            this.checkBoxCastConflagrate.AutoSize = true;
+            this.checkBoxCastConflagrate.Location = new System.Drawing.Point(126, 500);
+            this.checkBoxCastConflagrate.Name = "checkBoxCastConflagrate";
+            this.checkBoxCastConflagrate.Size = new System.Drawing.Size(80, 17);
+            this.checkBoxCastConflagrate.TabIndex = 17;
+            this.checkBoxCastConflagrate.Text = "Conflagrate";
+            this.checkBoxCastConflagrate.UseVisualStyleBackColor = true;
+            this.checkBoxCastConflagrate.Visible = false;
+            this.checkBoxCastConflagrate.CheckedChanged += new System.EventHandler(this.checkBoxCastConflagrate_CheckedChanged);
+            // 
+            // checkBoxCastShadowburn
+            // 
+            this.checkBoxCastShadowburn.AutoSize = true;
+            this.checkBoxCastShadowburn.Location = new System.Drawing.Point(13, 500);
+            this.checkBoxCastShadowburn.Name = "checkBoxCastShadowburn";
+            this.checkBoxCastShadowburn.Size = new System.Drawing.Size(86, 17);
+            this.checkBoxCastShadowburn.TabIndex = 16;
+            this.checkBoxCastShadowburn.Text = "Shadowburn";
+            this.checkBoxCastShadowburn.UseVisualStyleBackColor = true;
+            this.checkBoxCastShadowburn.Visible = false;
+            this.checkBoxCastShadowburn.CheckedChanged += new System.EventHandler(this.checkBoxCastShadowburn_CheckedChanged);
             // 
             // groupBox3
             // 

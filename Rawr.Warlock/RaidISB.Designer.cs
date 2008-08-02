@@ -29,6 +29,11 @@
         private void InitializeComponent()
         {
             this.groupBoxWarlocks = new System.Windows.Forms.GroupBox();
+            this.suWarlock5 = new Rawr.Warlock.WarlockControl();
+            this.suWarlock4 = new Rawr.Warlock.WarlockControl();
+            this.suWarlock3 = new Rawr.Warlock.WarlockControl();
+            this.suWarlock2 = new Rawr.Warlock.WarlockControl();
+            this.suWarlock1 = new Rawr.Warlock.WarlockControl();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -39,22 +44,17 @@
             this.label7 = new System.Windows.Forms.Label();
             this.comboBoxNumShadowPriests = new System.Windows.Forms.ComboBox();
             this.groupBoxShadowPriests = new System.Windows.Forms.GroupBox();
+            this.suShadowPriest5 = new Rawr.Warlock.ShadowPriestControl();
+            this.suShadowPriest4 = new Rawr.Warlock.ShadowPriestControl();
+            this.suShadowPriest3 = new Rawr.Warlock.ShadowPriestControl();
+            this.suShadowPriest2 = new Rawr.Warlock.ShadowPriestControl();
+            this.suShadowPriest1 = new Rawr.Warlock.ShadowPriestControl();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
-            this.suShadowPriest5 = new Rawr.Warlock.ShadowPriestControl();
-            this.suShadowPriest4 = new Rawr.Warlock.ShadowPriestControl();
-            this.suShadowPriest3 = new Rawr.Warlock.ShadowPriestControl();
-            this.suShadowPriest2 = new Rawr.Warlock.ShadowPriestControl();
-            this.suShadowPriest1 = new Rawr.Warlock.ShadowPriestControl();
-            this.suWarlock5 = new Rawr.Warlock.WarlockControl();
-            this.suWarlock4 = new Rawr.Warlock.WarlockControl();
-            this.suWarlock3 = new Rawr.Warlock.WarlockControl();
-            this.suWarlock2 = new Rawr.Warlock.WarlockControl();
-            this.suWarlock1 = new Rawr.Warlock.WarlockControl();
             this.groupBoxWarlocks.SuspendLayout();
             this.groupBoxShadowPriests.SuspendLayout();
             this.SuspendLayout();
@@ -78,6 +78,66 @@
             this.groupBoxWarlocks.TabIndex = 2;
             this.groupBoxWarlocks.TabStop = false;
             this.groupBoxWarlocks.Text = "Warlocks";
+            // 
+            // suWarlock5
+            // 
+            this.suWarlock5.CritPercent = 20F;
+            this.suWarlock5.HitPercent = 16F;
+            this.suWarlock5.Location = new System.Drawing.Point(553, 16);
+            this.suWarlock5.Name = "suWarlock5";
+            this.suWarlock5.SbCastRatio = 0.95F;
+            this.suWarlock5.SbCastTime = 2.6F;
+            this.suWarlock5.ShadowDps = 1600F;
+            this.suWarlock5.Size = new System.Drawing.Size(106, 130);
+            this.suWarlock5.TabIndex = 6;
+            // 
+            // suWarlock4
+            // 
+            this.suWarlock4.CritPercent = 20F;
+            this.suWarlock4.HitPercent = 16F;
+            this.suWarlock4.Location = new System.Drawing.Point(441, 16);
+            this.suWarlock4.Name = "suWarlock4";
+            this.suWarlock4.SbCastRatio = 0.95F;
+            this.suWarlock4.SbCastTime = 2.6F;
+            this.suWarlock4.ShadowDps = 1600F;
+            this.suWarlock4.Size = new System.Drawing.Size(106, 130);
+            this.suWarlock4.TabIndex = 5;
+            // 
+            // suWarlock3
+            // 
+            this.suWarlock3.CritPercent = 20F;
+            this.suWarlock3.HitPercent = 16F;
+            this.suWarlock3.Location = new System.Drawing.Point(329, 16);
+            this.suWarlock3.Name = "suWarlock3";
+            this.suWarlock3.SbCastRatio = 0.95F;
+            this.suWarlock3.SbCastTime = 2.6F;
+            this.suWarlock3.ShadowDps = 1600F;
+            this.suWarlock3.Size = new System.Drawing.Size(106, 130);
+            this.suWarlock3.TabIndex = 4;
+            // 
+            // suWarlock2
+            // 
+            this.suWarlock2.CritPercent = 20F;
+            this.suWarlock2.HitPercent = 16F;
+            this.suWarlock2.Location = new System.Drawing.Point(217, 16);
+            this.suWarlock2.Name = "suWarlock2";
+            this.suWarlock2.SbCastRatio = 0.95F;
+            this.suWarlock2.SbCastTime = 2.6F;
+            this.suWarlock2.ShadowDps = 1600F;
+            this.suWarlock2.Size = new System.Drawing.Size(106, 130);
+            this.suWarlock2.TabIndex = 3;
+            // 
+            // suWarlock1
+            // 
+            this.suWarlock1.CritPercent = 20F;
+            this.suWarlock1.HitPercent = 16F;
+            this.suWarlock1.Location = new System.Drawing.Point(105, 16);
+            this.suWarlock1.Name = "suWarlock1";
+            this.suWarlock1.SbCastRatio = 0.95F;
+            this.suWarlock1.SbCastTime = 2.6F;
+            this.suWarlock1.ShadowDps = 1600F;
+            this.suWarlock1.Size = new System.Drawing.Size(106, 130);
+            this.suWarlock1.TabIndex = 2;
             // 
             // label5
             // 
@@ -192,7 +252,57 @@
             this.groupBoxShadowPriests.Size = new System.Drawing.Size(665, 100);
             this.groupBoxShadowPriests.TabIndex = 15;
             this.groupBoxShadowPriests.TabStop = false;
-            this.groupBoxShadowPriests.Text = "Warlocks";
+            this.groupBoxShadowPriests.Text = "Shadow Priests";
+            // 
+            // suShadowPriest5
+            // 
+            this.suShadowPriest5.HitPercent = 16F;
+            this.suShadowPriest5.Location = new System.Drawing.Point(553, 16);
+            this.suShadowPriest5.MbFrequency = 7.5F;
+            this.suShadowPriest5.Name = "suShadowPriest5";
+            this.suShadowPriest5.ShadowDps = 1100F;
+            this.suShadowPriest5.Size = new System.Drawing.Size(106, 78);
+            this.suShadowPriest5.TabIndex = 12;
+            // 
+            // suShadowPriest4
+            // 
+            this.suShadowPriest4.HitPercent = 16F;
+            this.suShadowPriest4.Location = new System.Drawing.Point(441, 16);
+            this.suShadowPriest4.MbFrequency = 7.5F;
+            this.suShadowPriest4.Name = "suShadowPriest4";
+            this.suShadowPriest4.ShadowDps = 1100F;
+            this.suShadowPriest4.Size = new System.Drawing.Size(106, 78);
+            this.suShadowPriest4.TabIndex = 11;
+            // 
+            // suShadowPriest3
+            // 
+            this.suShadowPriest3.HitPercent = 16F;
+            this.suShadowPriest3.Location = new System.Drawing.Point(329, 16);
+            this.suShadowPriest3.MbFrequency = 7.5F;
+            this.suShadowPriest3.Name = "suShadowPriest3";
+            this.suShadowPriest3.ShadowDps = 1100F;
+            this.suShadowPriest3.Size = new System.Drawing.Size(106, 78);
+            this.suShadowPriest3.TabIndex = 10;
+            // 
+            // suShadowPriest2
+            // 
+            this.suShadowPriest2.HitPercent = 16F;
+            this.suShadowPriest2.Location = new System.Drawing.Point(217, 16);
+            this.suShadowPriest2.MbFrequency = 7.5F;
+            this.suShadowPriest2.Name = "suShadowPriest2";
+            this.suShadowPriest2.ShadowDps = 1100F;
+            this.suShadowPriest2.Size = new System.Drawing.Size(106, 78);
+            this.suShadowPriest2.TabIndex = 9;
+            // 
+            // suShadowPriest1
+            // 
+            this.suShadowPriest1.HitPercent = 16F;
+            this.suShadowPriest1.Location = new System.Drawing.Point(105, 16);
+            this.suShadowPriest1.MbFrequency = 7.5F;
+            this.suShadowPriest1.Name = "suShadowPriest1";
+            this.suShadowPriest1.ShadowDps = 1100F;
+            this.suShadowPriest1.Size = new System.Drawing.Size(106, 78);
+            this.suShadowPriest1.TabIndex = 8;
             // 
             // label10
             // 
@@ -249,116 +359,6 @@
             this.label8.Size = new System.Drawing.Size(144, 13);
             this.label8.TabIndex = 18;
             this.label8.Text = "Note: Do not include yourself";
-            // 
-            // suShadowPriest5
-            // 
-            this.suShadowPriest5.HitPercent = 16F;
-            this.suShadowPriest5.Location = new System.Drawing.Point(553, 16);
-            this.suShadowPriest5.MbFrequency = 7.5F;
-            this.suShadowPriest5.Name = "suShadowPriest5";
-            this.suShadowPriest5.ShadowDps = 1100F;
-            this.suShadowPriest5.Size = new System.Drawing.Size(106, 78);
-            this.suShadowPriest5.TabIndex = 12;
-            // 
-            // suShadowPriest4
-            // 
-            this.suShadowPriest4.HitPercent = 16F;
-            this.suShadowPriest4.Location = new System.Drawing.Point(441, 16);
-            this.suShadowPriest4.MbFrequency = 7.5F;
-            this.suShadowPriest4.Name = "suShadowPriest4";
-            this.suShadowPriest4.ShadowDps = 1100F;
-            this.suShadowPriest4.Size = new System.Drawing.Size(106, 78);
-            this.suShadowPriest4.TabIndex = 11;
-            // 
-            // suShadowPriest3
-            // 
-            this.suShadowPriest3.HitPercent = 16F;
-            this.suShadowPriest3.Location = new System.Drawing.Point(329, 16);
-            this.suShadowPriest3.MbFrequency = 7.5F;
-            this.suShadowPriest3.Name = "suShadowPriest3";
-            this.suShadowPriest3.ShadowDps = 1100F;
-            this.suShadowPriest3.Size = new System.Drawing.Size(106, 78);
-            this.suShadowPriest3.TabIndex = 10;
-            // 
-            // suShadowPriest2
-            // 
-            this.suShadowPriest2.HitPercent = 16F;
-            this.suShadowPriest2.Location = new System.Drawing.Point(217, 16);
-            this.suShadowPriest2.MbFrequency = 7.5F;
-            this.suShadowPriest2.Name = "suShadowPriest2";
-            this.suShadowPriest2.ShadowDps = 1100F;
-            this.suShadowPriest2.Size = new System.Drawing.Size(106, 78);
-            this.suShadowPriest2.TabIndex = 9;
-            // 
-            // suShadowPriest1
-            // 
-            this.suShadowPriest1.HitPercent = 16F;
-            this.suShadowPriest1.Location = new System.Drawing.Point(105, 16);
-            this.suShadowPriest1.MbFrequency = 7.5F;
-            this.suShadowPriest1.Name = "suShadowPriest1";
-            this.suShadowPriest1.ShadowDps = 1100F;
-            this.suShadowPriest1.Size = new System.Drawing.Size(106, 78);
-            this.suShadowPriest1.TabIndex = 8;
-            // 
-            // suWarlock5
-            // 
-            this.suWarlock5.CritPercent = 20F;
-            this.suWarlock5.HitPercent = 16F;
-            this.suWarlock5.Location = new System.Drawing.Point(553, 16);
-            this.suWarlock5.Name = "suWarlock5";
-            this.suWarlock5.SbCastRatio = 0.95F;
-            this.suWarlock5.SbCastTime = 2.6F;
-            this.suWarlock5.ShadowDps = 1600F;
-            this.suWarlock5.Size = new System.Drawing.Size(106, 130);
-            this.suWarlock5.TabIndex = 6;
-            // 
-            // suWarlock4
-            // 
-            this.suWarlock4.CritPercent = 20F;
-            this.suWarlock4.HitPercent = 16F;
-            this.suWarlock4.Location = new System.Drawing.Point(441, 16);
-            this.suWarlock4.Name = "suWarlock4";
-            this.suWarlock4.SbCastRatio = 0.95F;
-            this.suWarlock4.SbCastTime = 2.6F;
-            this.suWarlock4.ShadowDps = 1600F;
-            this.suWarlock4.Size = new System.Drawing.Size(106, 130);
-            this.suWarlock4.TabIndex = 5;
-            // 
-            // suWarlock3
-            // 
-            this.suWarlock3.CritPercent = 20F;
-            this.suWarlock3.HitPercent = 16F;
-            this.suWarlock3.Location = new System.Drawing.Point(329, 16);
-            this.suWarlock3.Name = "suWarlock3";
-            this.suWarlock3.SbCastRatio = 0.95F;
-            this.suWarlock3.SbCastTime = 2.6F;
-            this.suWarlock3.ShadowDps = 1600F;
-            this.suWarlock3.Size = new System.Drawing.Size(106, 130);
-            this.suWarlock3.TabIndex = 4;
-            // 
-            // suWarlock2
-            // 
-            this.suWarlock2.CritPercent = 20F;
-            this.suWarlock2.HitPercent = 16F;
-            this.suWarlock2.Location = new System.Drawing.Point(217, 16);
-            this.suWarlock2.Name = "suWarlock2";
-            this.suWarlock2.SbCastRatio = 0.95F;
-            this.suWarlock2.SbCastTime = 2.6F;
-            this.suWarlock2.ShadowDps = 1600F;
-            this.suWarlock2.Size = new System.Drawing.Size(106, 130);
-            this.suWarlock2.TabIndex = 3;
-            // 
-            // suWarlock1
-            // 
-            this.suWarlock1.CritPercent = 20F;
-            this.suWarlock1.HitPercent = 16F;
-            this.suWarlock1.Location = new System.Drawing.Point(105, 16);
-            this.suWarlock1.Name = "suWarlock1";
-            this.suWarlock1.SbCastRatio = 0.95F;
-            this.suWarlock1.SbCastTime = 2.6F;
-            this.suWarlock1.ShadowDps = 1600F;
-            this.suWarlock1.Size = new System.Drawing.Size(106, 130);
-            this.suWarlock1.TabIndex = 2;
             // 
             // RaidISB
             // 
