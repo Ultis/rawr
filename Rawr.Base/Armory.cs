@@ -170,6 +170,20 @@ namespace Rawr
 				if (!string.IsNullOrEmpty(subclassName))
 					type = GetItemType(subclassName, inventoryType, classId);
 
+				/* fix class restrictions on BOP items that can only be made by certain classes */
+				switch (id)
+				{
+					case "32474":
+					case "34356":
+						requiredClasses.Add("Hunter");
+						break;
+					case "32478":
+					case "34353":
+						requiredClasses.Add("Druid");
+						requiredClasses.Add("Rogue");
+						break;
+				}
+
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAgility")) { stats.Agility = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/armor")) { stats.Armor = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDefenseSkillRating")) { stats.DefenseRating = int.Parse(node.InnerText); }
