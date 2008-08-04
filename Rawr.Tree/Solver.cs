@@ -199,17 +199,17 @@ namespace Rawr.Tree
 
         private List<SpellRotation> FilterSpellRotations(List<SpellRotation> spellRotations)
         {
-            // Filter out rotations that have HPS=0
-            spellRotations.RemoveAll(delegate(SpellRotation sr)
-            {
-                return sr.healPerCycle == 0;
-            });
-
             // If we can't keep the rotation up, there's no use keeping it
             spellRotations.RemoveAll(delegate(SpellRotation sr)
             {
                 sr.currentCycleDuration = sr.maxCycleDuration;
                 return RotationMultiplier(sr) < 0.7f;
+            });
+
+            // Filter out rotations that have HPS=0
+            spellRotations.RemoveAll(delegate(SpellRotation sr)
+            {
+                return sr.healPerCycle == 0;
             });
 
             // If something heals for both more per second and for less mana/cycle, there's no use keeping a rotation

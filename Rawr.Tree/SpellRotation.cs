@@ -47,6 +47,7 @@ namespace Rawr.Tree
             }
 
             this.tightCycleDuration = sum;
+            this.currentCycleDuration = this.tightCycleDuration;
         }
 
         public SpellRotation(List<Spell> spells, float maxCycleDuration)
@@ -96,7 +97,10 @@ namespace Rawr.Tree
         {
             get
             {
-                return spells.Count;
+                return spells.FindAll(delegate(Spell s)
+                {
+                    return !(s is Nothing);
+                }).Count;
             }
         }
 
