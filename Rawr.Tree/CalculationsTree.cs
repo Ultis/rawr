@@ -365,14 +365,16 @@ namespace Rawr.Tree
                 + stats.BonusHealingTouchMultiplier + stats.TreeOfLifeAura
                 + stats.ReduceRejuvenationCost + stats.ReduceRegrowthCost + stats.ReduceHealingTouchCost
                 + stats.RejuvenationHealBonus + stats.LifebloomTickHealBonus + stats.HealingTouchFinalHealBonus
-                + stats.SpellCombatManaRegeneration + stats.ShatteredSunRestoProc +
+                + stats.ShatteredSunRestoProc +
                 + stats.FullManaRegenFor15SecOnSpellcast + stats.BangleProc > 0)
                 return true;
             // This removes feral PvE items - they have Str, Sta and Int (but not Spirit, which means we still get buffs that raise all stats)
             // It does not remove S1 feral items sinc ethey have +healing
             if (stats.Strength + stats.Agility + stats.AttackPower > 0)
                 return false;
-            return (stats.Stamina + stats.Intellect > 0);
+            if (stats.SpellCombatManaRegeneration == 0.3f)
+                return false;
+            return (stats.SpellCombatManaRegeneration + stats.Stamina + stats.Intellect > 0);
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
