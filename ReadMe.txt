@@ -1,4 +1,4 @@
-Rawr Beta 15
+Rawr Beta 15.1
 ------------
  Welcome to Rawr b15. In this beta are a whopping *six* new models: Tree, RestoSham, DPSWarr (Arms-only for this release), Hunter (BM-only for this release), Tankadin, and HolyPriest. We've also significantly improved the Moonkin, Warlock, and Retribution models with all the latest theorycrafting knowledge. Please note that all these new models are not 100% complete, see below for details, so please give us feedback on them!
 
@@ -40,6 +40,42 @@ This is the first public release of Rawr.DPSWarr, so please give me feedback on 
 
 Version History
 ---------------
+Beta 15.1:
+ - Fixed Resistances in several models
+ - Added several resistance enchants, including glyphs, armor kits, shoulder inscription, and cloak enchants
+ - Fixed a bug with the cached values in the popup item selector not being reset on character loads
+ - Reduced the scale of thoroughness for the Build Upgrade List feature, in order to give results in reasonable times, compared to Optimze
+ - Added class restrictions to engineering goggles in armory lookups
+ - The Batch features now allows you to choose a different model for each character file
+ - Added a significant amount of (relevantly gemmed) items to the default itemcache for the new models
+ - Rawr.Bear:
+   - Fix for edge conditions with anti-crit and avoidance affecting damage taken
+ - Rawr.DPSWarr:
+   - Added importing talents, and fixed loading of talents in the Talents window
+   - Fixed weapon DPS calculations
+ - Rawr.RestoSham:
+   - Fixed value of haste
+ - Rawr.Healadin:
+   - Fixed value of haste
+   - Increased the maximum fight duration to 60min from 20min
+ - Rawr.HolyPriest:
+   - Increased the maximum fight duration to 60min from 20min
+   - Fixed some calculations that were slightly off with basic stats
+ - Rawr.Warlock:
+   - Fixed title on Shadow Priests box in Raid ISB
+   - Enabled the Enforce Metagem Requirements checkbox
+ - Rawr.Hunter:
+   - Added ranged weapon enchants (scopes)
+   - Cloth and throwing items are no longer considered relevant
+ - Rawr.Tree:
+   - Implemented Bangle, Blue Dragon, Prayerbook, and on-use +healing effects
+   - Introduced a scaling factor for average/temporary +healing
+   - Implemented IED cooldown and fixed a bug in the calculations for it
+   - Items with just spellcrit or health are no longer considered relevant
+ - Rawr.Mage:
+   - Parsing for Vengeance of the Illidari and fix for Shifting Naaru Sliver cooldown
+   - Stability and performance improvements for SMP
+
 Beta 15:
  - Added the Tree, RestoSham, DPSWarr (Arms-only for this release), Hunter (BM-only for this release), Tankadin, and HolyPriest models! These are our first versions of these models, so please report any bugs you find with them!
  - Revamp of item availability mechanics: Items can be marked to allow regemming and restrict which enchants are available. Left click on diamond as before marks item to be available withot restrictions (regemming and all enchants), CTRL+click marks the item to be available for this specific gemming. By right clicking on the diamond it is possible to restrict which enchants are available (if there are any restrictions active this is indicated by a dot next to diamond). Optimizer has an option to override whether items that aren't specifically marked for regemming/reenchanting can be regemmed or reenchanted.
