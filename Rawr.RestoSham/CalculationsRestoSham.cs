@@ -97,6 +97,8 @@ namespace Rawr.RestoSham
                   {
                     _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[] {
                          Item.ItemType.None,
+						 Item.ItemType.Cloth,
+						 Item.ItemType.Leather,
                          Item.ItemType.Mail,
                          Item.ItemType.Totem,
                          Item.ItemType.OneHandMace,
