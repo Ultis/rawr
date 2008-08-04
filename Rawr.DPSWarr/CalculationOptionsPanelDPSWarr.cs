@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Rawr.DPSWarr
 {
@@ -19,7 +20,7 @@ namespace Rawr.DPSWarr
         protected override void LoadCalculationOptions()
         {
 			if (Character.CalculationOptions == null)
-				Character.CalculationOptions = new CalculationOptionsDPSWarr();
+				Character.CalculationOptions = new CalculationOptionsDPSWarr(Character);
 			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
 			//    Character.CalculationOptions["TargetLevel"] = "73";
 			//if (!Character.CalculationOptions.ContainsKey("BossArmor"))
@@ -334,6 +335,45 @@ namespace Rawr.DPSWarr
 			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
 			serializer.Serialize(writer, this);
 			return xml.ToString();
+		}
+
+		public CalculationOptionsDPSWarr() {}
+		public CalculationOptionsDPSWarr(Character character) : this()
+		{
+
+			#region DPSWarr Talents Import
+			try
+			{
+				WebRequestWrapper wrw = new WebRequestWrapper();
+
+				if (character.Class == Character.CharacterClass.Warrior && character.Name != null && character.Realm != null)
+				{
+					XmlDocument docTalents = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm);
+
+					//<talentTab>
+					//  <talentTree value="2550050300230151333125100000000000000000000002030302010000000000000"/>
+					//</talentTab>
+					if (docTalents != null)
+					{
+						string talentCode = docTalents.SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
+						TalentsSaved = true;
+						DeepWounds = int.Parse(talentCode.Substring(8, 1));
+						TwoHandedSpec = int.Parse(talentCode.Substring(9, 1));
+						Impale = int.Parse(talentCode.Substring(10, 1));
+						DeathWish = int.Parse(talentCode.Substring(12, 1));
+						MortalStrike = int.Parse(talentCode.Substring(19, 1));
+						Cruelty = int.Parse(talentCode.Substring(24, 1));
+						ImpSlam = int.Parse(talentCode.Substring(34, 1));
+						WeaponMastery = int.Parse(talentCode.Substring(36, 1));
+						Flurry = int.Parse(talentCode.Substring(38, 1));
+						Precision = int.Parse(talentCode.Substring(39, 1));
+					}
+				}
+			}
+			catch (Exception)
+			{
+			}
+			#endregion
 		}
 
 		public int TargetLevel = 73;

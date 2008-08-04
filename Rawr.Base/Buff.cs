@@ -614,7 +614,8 @@ namespace Rawr
             {
                 Name = "Flask of Chromatic Wonder",
                 Category = BuffCategory.ElixirsAndFlasks,
-                Stats = new Stats() { Agility = 18, Strength = 18, Stamina = 18, Intellect = 18, Spirit = 18, AllResist = 35 },
+                Stats = new Stats() { Agility = 18, Strength = 18, Stamina = 18, Intellect = 18, Spirit = 18, 
+					ArcaneResistance = 35, FireResistance = 35, FrostResistance = 35, ShadowResistance = 35, NatureResistance = 35 },
                 ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }
             });
             defaultBuffs.Add(new Buff()

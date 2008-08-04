@@ -385,6 +385,18 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Feet, new Stats() { ShadowResistance = 8 }));
             defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Chest, new Stats() { ShadowResistance = 8 }));
             defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Legs, new Stats() { ShadowResistance = 8 }));
+			defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Hands, new Stats() { NatureResistance = 8 }));
+			defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Feet, new Stats() { NatureResistance = 8 }));
+			defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Chest, new Stats() { NatureResistance = 8 }));
+			defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Legs, new Stats() { NatureResistance = 8 }));
+			defaultEnchants.Add(new Enchant(3005, "Glyph of Nature Warding", Item.ItemSlot.Head, new Stats() { NatureResistance = 20 }));
+			defaultEnchants.Add(new Enchant(3006, "Glyph of Arcane Warding", Item.ItemSlot.Head, new Stats() { ArcaneResistance = 20 }));
+			defaultEnchants.Add(new Enchant(3007, "Glyph of Fire Warding", Item.ItemSlot.Head, new Stats() { FireResistance = 20 }));
+			defaultEnchants.Add(new Enchant(3008, "Glyph of Frost Warding", Item.ItemSlot.Head, new Stats() { FrostResistance = 20 }));
+			defaultEnchants.Add(new Enchant(3009, "Glyph of Shadow Warding", Item.ItemSlot.Head, new Stats() { ShadowResistance = 20 }));
+			defaultEnchants.Add(new Enchant(2998, "Inscription of Endurance", Item.ItemSlot.Shoulders, new Stats() { NatureResistance = 4, ArcaneResistance = 4, FireResistance = 4, FrostResistance = 4, ShadowResistance = 4 }));
+			defaultEnchants.Add(new Enchant(2664, "Major Resistance", Item.ItemSlot.Back, new Stats() { NatureResistance = 7, ArcaneResistance = 7, FireResistance = 7, FrostResistance = 7, ShadowResistance = 7 }));
+			defaultEnchants.Add(new Enchant(2619, "Greater Fire Resistance", Item.ItemSlot.Back, new Stats() { FireResistance = 15 }));
 
             //Need to fix the enchant class to know offhand only enchants, either that or add a shield ItemSlot
             defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.OffHand, new Stats() { Stamina = 18 }));

@@ -186,7 +186,7 @@ namespace Rawr.DPSWarr
 
 			CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
 			
-            float avgBaseWeaponHit = 0.0f, hastedSpeed = 1.0f, physicalCritModifier = 0.0f, chanceToBeDodged = 6.5f, chanceToMiss = 9.0f; ;
+            float avgBaseWeaponHit = 0.0f, hastedSpeed = 2.0f, physicalCritModifier = 0.0f, chanceToBeDodged = 6.5f, chanceToMiss = 9.0f; ;
             float chanceToGlance = 0.25f, glancingAmount = 0.35f;
             float slamDPS = 0.0f, msDPS = 0.0f, wfDPS = 0.0f, wwDPS = 0.0f;
             float rotationTime;
@@ -273,7 +273,7 @@ namespace Rawr.DPSWarr
             rotationTime += ((calcOpts.SlamLatency)*4);
 
             //Add Attack Power Bonus
-            avgBaseWeaponHit += twoHandedSpec*(stats.AttackPower / 14.0f) * ((character.MainHand == null) ? 1.0f : character.MainHand.Speed);
+            avgBaseWeaponHit += twoHandedSpec*(stats.AttackPower / 14.0f) * ((character.MainHand == null) ? 2.0f : character.MainHand.Speed);
 
             
             //Take Non-Stat Buffs into account
@@ -414,7 +414,7 @@ namespace Rawr.DPSWarr
             }
             #endregion
 
-            calcs.DPSPoints = dpsWhite + slamDPS + msDPS + wwDPS + wfDPS + ssoNeckProcDPS;
+            calcs.DPSPoints = dpsWhite + (character.MainHand == null ? 0 : slamDPS + msDPS + wwDPS) + wfDPS + ssoNeckProcDPS;
             calcs.SubPoints = new float[] { calcs.DPSPoints };
             calcs.OverallPoints = calcs.DPSPoints;
             calcs.BasicStats.WeaponDamage = avgBaseWeaponHit * impSancAura;

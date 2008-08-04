@@ -398,7 +398,7 @@ namespace Rawr
         {
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-            int _thoroughness = trackBarThoroughness.Value;
+            int _thoroughness = (int)Math.Ceiling((float)trackBarThoroughness.Value / 10f);
             string _calculationToOptimize = GetCalculationStringFromComboBox(comboBoxCalculationToOptimize);
             List<OptimizationRequirement> requirements = new List<OptimizationRequirement>();
             foreach (Control ctrl in groupBoxRequirements.Controls)

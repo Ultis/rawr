@@ -477,6 +477,17 @@ namespace Rawr
 			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
 			statsTotal.ShatteredSunMightProc = statsRace.ShatteredSunMightProc + statsGearEnchantsBuffs.ShatteredSunMightProc;
 
+			statsTotal.NatureResistance = statsEnchants.NatureResistance + statsRace.NatureResistance + statsBaseGear.NatureResistance + statsBuffs.NatureResistance +
+				statsEnchants.NatureResistanceBuff + statsRace.NatureResistanceBuff + statsBaseGear.NatureResistanceBuff + statsBuffs.NatureResistanceBuff;
+			statsTotal.FireResistance = statsEnchants.FireResistance + statsRace.FireResistance + statsBaseGear.FireResistance + statsBuffs.FireResistance +
+				statsEnchants.FireResistanceBuff + statsRace.FireResistanceBuff + statsBaseGear.FireResistanceBuff + statsBuffs.FireResistanceBuff;
+			statsTotal.FrostResistance = statsEnchants.FrostResistance + statsRace.FrostResistance + statsBaseGear.FrostResistance + statsBuffs.FrostResistance +
+				statsEnchants.FrostResistanceBuff + statsRace.FrostResistanceBuff + statsBaseGear.FrostResistanceBuff + statsBuffs.FrostResistanceBuff;
+			statsTotal.ShadowResistance = statsEnchants.ShadowResistance + statsRace.ShadowResistance + statsBaseGear.ShadowResistance + statsBuffs.ShadowResistance +
+				statsEnchants.ShadowResistanceBuff + statsRace.ShadowResistanceBuff + statsBaseGear.ShadowResistanceBuff + statsBuffs.ShadowResistanceBuff;
+			statsTotal.ArcaneResistance = statsEnchants.ArcaneResistance + statsRace.ArcaneResistance + statsBaseGear.ArcaneResistance + statsBuffs.ArcaneResistance +
+				statsEnchants.ArcaneResistanceBuff + statsRace.ArcaneResistanceBuff + statsBaseGear.ArcaneResistanceBuff + statsBuffs.ArcaneResistanceBuff;
+            
 			return statsTotal;
 		}
 
@@ -673,7 +684,19 @@ namespace Rawr
 					DrumsOfBattle = stats.DrumsOfBattle,
 					DrumsOfWar = stats.DrumsOfWar,
 					ShatteredSunMightProc = stats.ShatteredSunMightProc,
-					ThreatReductionMultiplier = stats.ThreatReductionMultiplier
+					ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
+
+					AllResist = stats.AllResist,
+					ArcaneResistance = stats.ArcaneResistance,
+					NatureResistance = stats.NatureResistance,
+					FireResistance = stats.FireResistance,
+					FrostResistance = stats.FrostResistance,
+					ShadowResistance = stats.ShadowResistance,
+					ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
+					NatureResistanceBuff = stats.NatureResistanceBuff,
+					FireResistanceBuff = stats.FireResistanceBuff,
+					FrostResistanceBuff = stats.FrostResistanceBuff,
+					ShadowResistanceBuff = stats.ShadowResistanceBuff
 				};
 		}
 
@@ -686,7 +709,11 @@ namespace Rawr
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
 				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc +
-				stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.ThreatReductionMultiplier) > 0 || (stats.Stamina > 0 && stats.SpellDamageRating == 0);
+				stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
+				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
+				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
+				stats.NatureResistanceBuff + stats.FireResistanceBuff +
+				stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0 || (stats.Stamina > 0 && stats.SpellDamageRating == 0);
 		}
 	}
 

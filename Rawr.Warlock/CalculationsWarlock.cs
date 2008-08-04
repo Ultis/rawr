@@ -495,6 +495,14 @@ namespace Rawr.Warlock
 
             Stats statsTotal = statsGearEnchantsBuffs + statsRace;
 
+			statsTotal.NatureResistance = statsGearEnchantsBuffs.NatureResistance + statsRace.NatureResistance + statsGearEnchantsBuffs.NatureResistanceBuff;
+			statsTotal.FireResistance = statsGearEnchantsBuffs.FireResistance + statsRace.FireResistance + statsGearEnchantsBuffs.FireResistanceBuff;
+			statsTotal.FrostResistance = statsGearEnchantsBuffs.FrostResistance + statsRace.FrostResistance + statsGearEnchantsBuffs.FrostResistanceBuff;
+			statsTotal.ShadowResistance = statsGearEnchantsBuffs.ShadowResistance + statsRace.ShadowResistance + statsGearEnchantsBuffs.ShadowResistanceBuff;
+			statsTotal.ArcaneResistance = statsGearEnchantsBuffs.ArcaneResistance + statsRace.ArcaneResistance + statsGearEnchantsBuffs.ArcaneResistanceBuff;
+			statsTotal.AllResist = statsGearEnchantsBuffs.AllResist + statsRace.AllResist;
+            
+
             statsTotal.BonusSpellPowerMultiplier += 1;
             statsTotal.BonusShadowSpellPowerMultiplier += 1;
             statsTotal.BonusFireSpellPowerMultiplier += 1;
@@ -772,7 +780,12 @@ namespace Rawr.Warlock
                 FireResistance = stats.FireResistance,
                 FrostResistance = stats.FrostResistance,
                 NatureResistance = stats.NatureResistance,
-                ShadowResistance = stats.ShadowResistance,
+				ShadowResistance = stats.ShadowResistance,
+				ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
+				NatureResistanceBuff = stats.NatureResistanceBuff,
+				FireResistanceBuff = stats.FireResistanceBuff,
+				FrostResistanceBuff = stats.FrostResistanceBuff,
+				ShadowResistanceBuff = stats.ShadowResistanceBuff,
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
                 Spirit = stats.Spirit,
@@ -873,7 +886,12 @@ namespace Rawr.Warlock
                 + stats.FireResistance
                 + stats.FrostResistance
                 + stats.NatureResistance
-                + stats.ShadowResistance
+				+ stats.ShadowResistance
+				+ stats.ArcaneResistanceBuff
+				+ stats.FireResistanceBuff
+				+ stats.FrostResistanceBuff
+				+ stats.NatureResistanceBuff
+				+ stats.ShadowResistanceBuff
                 + stats.Bloodlust
                 + stats.DrumsOfBattle
                 + stats.DrumsOfWar; 

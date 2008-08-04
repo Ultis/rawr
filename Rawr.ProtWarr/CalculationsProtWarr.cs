@@ -683,11 +683,11 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.Health = health;
 			statsTotal.Miss = statsRace.Miss + statsBaseGear.Miss + statsBuffs.Miss;
             statsTotal.CrushChanceReduction = statsGearEnchantsBuffs.CrushChanceReduction + statsRace.CrushChanceReduction;
-            statsTotal.NatureResistance = statsGearEnchantsBuffs.NatureResistance + statsRace.NatureResistance;
-            statsTotal.FireResistance = statsGearEnchantsBuffs.FireResistance + statsRace.FireResistance;
-            statsTotal.FrostResistance = statsGearEnchantsBuffs.FrostResistance + statsRace.FrostResistance;
-            statsTotal.ShadowResistance = statsGearEnchantsBuffs.ShadowResistance + statsRace.ShadowResistance;
-            statsTotal.ArcaneResistance = statsGearEnchantsBuffs.ArcaneResistance + statsRace.ArcaneResistance;
+            statsTotal.NatureResistance = statsGearEnchantsBuffs.NatureResistance + statsRace.NatureResistance + statsGearEnchantsBuffs.NatureResistanceBuff;
+			statsTotal.FireResistance = statsGearEnchantsBuffs.FireResistance + statsRace.FireResistance + statsGearEnchantsBuffs.FireResistanceBuff;
+			statsTotal.FrostResistance = statsGearEnchantsBuffs.FrostResistance + statsRace.FrostResistance + statsGearEnchantsBuffs.FrostResistanceBuff;
+			statsTotal.ShadowResistance = statsGearEnchantsBuffs.ShadowResistance + statsRace.ShadowResistance + statsGearEnchantsBuffs.ShadowResistanceBuff;
+			statsTotal.ArcaneResistance = statsGearEnchantsBuffs.ArcaneResistance + statsRace.ArcaneResistance + statsGearEnchantsBuffs.ArcaneResistanceBuff;
             statsTotal.AllResist = statsGearEnchantsBuffs.AllResist + statsRace.AllResist;
             statsTotal.Defense = statsRace.Defense + statsTalents.Defense;
             statsTotal.Dodge = statsRace.Dodge + statsTalents.Dodge;
@@ -1017,6 +1017,11 @@ threat and limited threat scaled by the threat scale.",
 				FireResistance = stats.FireResistance,
 				FrostResistance = stats.FrostResistance,
 				ShadowResistance = stats.ShadowResistance,
+				ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
+				NatureResistanceBuff = stats.NatureResistanceBuff,
+				FireResistanceBuff = stats.FireResistanceBuff,
+				FrostResistanceBuff = stats.FrostResistanceBuff,
+				ShadowResistanceBuff = stats.ShadowResistanceBuff,
 
                 Strength = stats.Strength,
                 AttackPower = stats.AttackPower,
@@ -1052,7 +1057,9 @@ threat and limited threat scaled by the threat scale.",
                     stats.BlockRating + stats.BlockValue + stats.Health + 
 				    stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
 				    stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
-				    stats.FrostResistance + stats.ShadowResistance +
+					stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
+					stats.NatureResistanceBuff + stats.FireResistanceBuff +
+					stats.FrostResistanceBuff + stats.ShadowResistanceBuff + 
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage +
                     stats.BonusCritMultiplier + stats.CrushChanceReduction +

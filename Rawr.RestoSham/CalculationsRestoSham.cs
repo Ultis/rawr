@@ -216,7 +216,7 @@ namespace Rawr.RestoSham
                     ch.Weight = options.CHWeight * (options.CHDownrank.Ratio / 100f);
                     list.Add(ch);
                   }
-                if (options.HWDownrank.Ratio < 100)
+				if (options.CHDownrank.Ratio < 100)
                   {
                     ChainHeal ch = new ChainHeal(options.CHDownrank.MinRank);
                     ch.Calcluate(stats, character);
@@ -251,7 +251,7 @@ namespace Rawr.RestoSham
                 esMana = es.ManaCost * esNum;
                 esHeal = es.AverageHealed * esNum;
               }
-            float numHeals = (calcStats.TotalManaPool - esMana) / calcStats.AverageManaCost;
+            float numHeals = Math.Min((options.FightLength * 60) / calcStats.AverageCastTime, (calcStats.TotalManaPool - esMana) / calcStats.AverageManaCost);
             
             // Now, Shattered Sun Pendant of Restoration Aldor proc.  From what I understand, this has a
             //  4% proc rate with no cooldown. This is a rough estimation of the value of this proc, and

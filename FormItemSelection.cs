@@ -23,7 +23,11 @@ namespace Rawr
 		public Character Character
 		{
 			get { return _character; }
-			set { _character = value; }
+			set
+			{
+				_character = value;
+				_characterSlot = Character.CharacterSlot.None;
+			}
 		}
 
 		private ComparisonCalculationBase[] _itemCalculations;
