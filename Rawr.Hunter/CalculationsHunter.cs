@@ -209,6 +209,7 @@ namespace Rawr.Hunter
 			stats.HitRating +
 			stats.Intellect +
 			stats.Miss +
+			stats.Mp5 + 
 			stats.ScopeDamage +
 			stats.ShatteredSunAcumenProc +
 			stats.ShatteredSunMightProc +
