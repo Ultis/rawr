@@ -606,24 +606,44 @@ threat and limited threat scaled by the threat scale.",
                     Expertise = tree.GetTalent("Defiance").PointsInvested * 2f,
                 };
 
-            //Mongoose
-            if (character.MainHand != null && character.MainHandEnchant != null &&
-                character.MainHandEnchant.Id == 2673 && statsBuffs.MongooseProcAverage > 0)
+            float oneProcPerMinAveUptime = 0f;
+            float procChance = 0f;
+            float attacksPer15Seconds = 0f;
+            float attacksPerCycle = 3f;
+            float cycleLength = 6f;
+            float procDuration = 15f;
+
+            if (character.MainHand != null && character.MainHandEnchant != null)
             {
-                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
-                statsBuffs.HasteRating += (2f / WarriorConversions.HasteRatingToHaste) * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+                procChance = character.MainHand.Speed / 60f; // 1 PPM
+
+                // Assumes the default threat cycle (SS, Revenge, Devastate x2)
+                // Only 3 of those special attacks per 6 second cycle can proc weapon enchants
             }
-            else if (character.MainHand != null && character.MainHandEnchant != null &&
-                character.MainHandEnchant.Id == 2673 && statsBuffs.MongooseProcConstant > 0)
+
+            //Mongoose
+            if (statsEnchants.MongooseProc > 0 && statsBuffs.MongooseProcAverage > 0)
+            {
+                attacksPer15Seconds = procDuration / (character.MainHand.Speed / (1.02f)) +
+                    attacksPerCycle * procDuration / cycleLength;
+                oneProcPerMinAveUptime = (float)(1f - Math.Pow(1f - procChance, attacksPer15Seconds));
+                statsBuffs.Agility += 120f * oneProcPerMinAveUptime;
+                statsBuffs.HasteRating += (2f / WarriorConversions.HasteRatingToHaste) *
+                                           oneProcPerMinAveUptime;
+            }
+            else if (statsEnchants.MongooseProc > 0 && statsBuffs.MongooseProcConstant > 0)
             {
                 statsBuffs.Agility += 120f;
                 statsBuffs.HasteRating += 2f / WarriorConversions.HasteRatingToHaste;
             }
 
             //Executioner
-            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
+            if (statsEnchants.ExecutionerProc > 0)
             {
-                statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+                attacksPer15Seconds = procDuration / character.MainHand.Speed +
+                    attacksPerCycle * procDuration / cycleLength;
+                oneProcPerMinAveUptime = (float)(1f - Math.Pow(1f - procChance, attacksPer15Seconds));
+                statsBuffs.ArmorPenetration += 840f * oneProcPerMinAveUptime;
             }
 
             if (character.ActiveBuffsContains("Commanding Shout"))
@@ -1042,6 +1062,8 @@ threat and limited threat scaled by the threat scale.",
                 MongooseProcAverage = stats.MongooseProcAverage,
                 MongooseProcConstant = stats.MongooseProcConstant,
 
+                ExecutionerProc = stats.ExecutionerProc,
+
                 BonusCommandingShoutHP = stats.BonusCommandingShoutHP,
                 BonusShieldSlamDamage = stats.BonusShieldSlamDamage
 
@@ -1066,6 +1088,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.ThreatIncreaseMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusBlockValueMultiplier +
                     stats.LotPCritRating + stats.WindfuryAPBonus +
                     stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant +
+                    stats.ExecutionerProc +
                     stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage
                    ) != 0;
 		}
