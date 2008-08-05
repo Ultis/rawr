@@ -25,23 +25,13 @@ namespace Rawr.HolyPriest
                 Character.CalculationOptions = new CalculationOptionsPriest();
 
             CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-            cmbLength.Value = (decimal)calcOpts.Length;
             
             trkActivity.Value = (int)calcOpts.TimeInFSR;
             lblActivity.Text = trkActivity.Value + "%";
 
             loading = false;
         }
-
-        private void cmbLength_ValueChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                calcOpts.Length = (float)cmbLength.Value;
-                Character.OnItemsChanged();
-            }
-        }
+               
         
         private void trkActivity_Scroll(object sender, EventArgs e)
         {
@@ -76,10 +66,6 @@ namespace Rawr.HolyPriest
 		}
 
 		public bool EnforceMetagemRequirements = false;
-		public float Length = 5;
-		public float ManaAmt = 2400;
-		public float ManaTime = 2.5f;
 		public float TimeInFSR = 80;
-		public float Spriest = 0;
 	}
 }
