@@ -158,19 +158,29 @@ namespace Rawr.HolyPriest
                     character.Talents.GetTalent("Meditation").PointsInvested * 0.1f * procSpiritRegen * (1 + calculatedStats.BasicStats.SpellCombatManaRegeneration) * calculationOptions.TimeInFSR * 0.01f;
             }
 
-            calculatedStats.RegenPoints = (calculatedStats.RegenInFSR * calculationOptions.TimeInFSR*0.01f +
+            float procSpiritRegen2 = 0;
+            if (calculatedStats.BasicStats.BangleProc > 0)
+            {
+                procSpiritRegen2 = ((float)Math.Floor(5 * 0.0093271 * 130f * Math.Sqrt(calculatedStats.BasicStats.Intellect)) * 20f / 120f);
+                procSpiritRegen2 = procSpiritRegen2 * (100 - calculationOptions.TimeInFSR) * 0.01f +
+                    character.Talents.GetTalent("Meditation").PointsInvested * 0.1f * procSpiritRegen2 * (1 + calculatedStats.BasicStats.SpellCombatManaRegeneration) * calculationOptions.TimeInFSR * 0.01f;
+            }
+
+            calculatedStats.RegenPoints = (calculatedStats.RegenInFSR * calculationOptions.TimeInFSR * 0.01f +
                calculatedStats.RegenOutFSR * (100 - calculationOptions.TimeInFSR) * 0.01f)
                 + calculatedStats.BasicStats.MementoProc * 3f * 5f / (45f + 9.5f * 2f)
                 + calculatedStats.BasicStats.ManaregenFor8SecOnUse5Min * 5f * (8f * (1 - calculatedStats.BasicStats.SpellHasteRating / 15.7f / 100f)) / (60f * 5f)
                 + (calculatedStats.BasicStats.BonusManaPotion * 2400f * 5f / 120f)
-                + procSpiritRegen
+                + procSpiritRegen + procSpiritRegen2
                 + (calculatedStats.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0 ? 588f * 5f / 120f : 0)
                 + (calculatedStats.BasicStats.ManaregenOver20SecOnUse3Min * 5f / 180f)
                 + (calculatedStats.BasicStats.ManaregenOver20SecOnUse5Min * 5f / 300f)
-                + (calculatedStats.BasicStats.ManacostReduceWithin15OnHealingCast / (2.0f * 50f)) * 5f;
-            
+                + (calculatedStats.BasicStats.ManacostReduceWithin15OnHealingCast / (2.0f * 50f)) * 5f
+                + (calculatedStats.BasicStats.FullManaRegenFor15SecOnSpellcast > 0?(((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 15f / 125f) * 5f: 0)
+                + (calculatedStats.BasicStats.BangleProc > 0 ? (((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 0.25f * 15f / 125f) * 5f : 0);
+                        
             calculatedStats.HastePoints = calculatedStats.BasicStats.SpellHasteRating / 2f
-                + calculatedStats.BasicStats.SpellHasteFor20SecOnUse2Min * 20f / 120f;
+                + calculatedStats.BasicStats.SpellHasteFor20SecOnUse2Min * 20f / 120f / 2f;
 
             calculatedStats.OverallPoints = calculatedStats.HealPoints + calculatedStats.RegenPoints + calculatedStats.HastePoints;
 
@@ -470,7 +480,9 @@ namespace Rawr.HolyPriest
                 Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
                 ManaregenOver20SecOnUse3Min = stats.ManaregenOver20SecOnUse3Min,
                 ManaregenOver20SecOnUse5Min = stats.ManaregenOver20SecOnUse5Min,
-                ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast
+                ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
+                FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
+                BangleProc = stats.BangleProc
             };
         }
 
@@ -484,7 +496,8 @@ namespace Rawr.HolyPriest
                 + stats.HealingDoneFor15SecOnUse90Sec + stats.SpiritFor20SecOnUse2Min
                 + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min
                 + stats.ManaregenOver20SecOnUse3Min + stats.ManaregenOver20SecOnUse5Min
-                + stats.ManacostReduceWithin15OnHealingCast) > 0;
+                + stats.ManacostReduceWithin15OnHealingCast + stats.FullManaRegenFor15SecOnSpellcast
+                + stats.BangleProc) > 0;
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
