@@ -321,7 +321,7 @@ namespace Rawr.Hunter
 			SimulationResults quickShotShotsPerSecond = null;
 			double quickShotsUpTime = 0;
 			double quickShotHaste = 0;
-			if (options.Aspect == Aspect.Hawk && character.Talents.Trees.ContainsKey(BEAST_MASTER))
+			if (options.Aspect == Aspect.Hawk && character.Talents.Trees.ContainsKey(BEAST_MASTER) && character.Talents.Trees[BEAST_MASTER][0].PointsInvested > 0)
 			{
 				quickShotHaste = .03 * character.Talents.Trees[BEAST_MASTER][0].PointsInvested;
 				quickShotShotsPerSecond = CalculateShotsPerSecond(options, calculatedStats.BaseAttackSpeed / (1 + quickShotHaste), steadyShotCastTime / (1 + quickShotHaste));
@@ -347,7 +347,6 @@ namespace Rawr.Hunter
 			double dstUptime = 0;
 			double dstQuickShotsUpTime = 0;
 			double dstHaste = (325 / HASTE_RATING_PER_PERCENT / 100);
-			double dstQuickShotsHaste = 0;
 			SimulationResults dstShotsPerSecond = new SimulationResults();
 			SimulationResults dstQuickShotsPerSecond = new SimulationResults();
 			if (hasDST)
@@ -363,7 +362,7 @@ namespace Rawr.Hunter
 
 				dstShotsPerSecond = CalculateShotsPerSecond(options, calculatedStats.BaseAttackSpeed / (1 + dstHaste), steadyShotCastTime / (1 + dstHaste));
 
-				if (options.Aspect == Aspect.Hawk)
+				if (options.Aspect == Aspect.Hawk && quickShotShotsPerSecond.autoShotsPerSecond > 0)
 				{
 					double timeForQSAuto = (1 / (quickShotShotsPerSecond.autoShotsPerSecond / (60 / DSTPPM))) * quickShotShotsPerSecond.autoShotsPerSecond;
 					double timeForQSSpecial = (1 / (character.Ranged.Speed / (60 / DSTPPM))) * quickShotShotsPerSecond.steadyShotsPerSecond;
