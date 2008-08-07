@@ -186,6 +186,12 @@ namespace Rawr.Mage
             lp.SetRHS(row, value * pRowScale[row]);
         }
 
+        public void SetLHSUnsafe(int row, double value)
+        {
+            if (row == -1) return;
+            lp.SetLHS(row, value * pRowScale[row]);
+        }
+
         public void SetCost(int col, double value)
         {
             if (col == -1) return;

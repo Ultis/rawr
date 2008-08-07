@@ -14,7 +14,6 @@ namespace Rawr.Mage
         private List<SpellId> spellList;
 
         private SolverLP lp;
-        private Heap<SolverLP> heap;
         private double[] solution;
         private int[] segmentColumn;
         private CharacterCalculationsMage calculationResult;
@@ -753,8 +752,11 @@ namespace Rawr.Mage
                 if (drumsOfBattleAvailable)
                 {
                     List<CastingState> drumsStates = new List<CastingState>();
+                    List<CastingState> mfDrumsStates = new List<CastingState>();
                     //int drums = 0x4;
                     //int drumsAndFC = 0x6;
+                    // mf and drums = 132
+                    // mf and drums and fc = 134
                     bool found = false;
                     for (int i = 0; i < stateList.Count; i++)
                     {
@@ -786,12 +788,47 @@ namespace Rawr.Mage
                             drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, true, false, false, false, true, 6));
                         }
                     }
+                    if (moltenFuryAvailable)
+                    {
+                        found = false;
+                        for (int i = 0; i < stateList.Count; i++)
+                        {
+                            if (stateList[i].IncrementalSetIndex == 132 && !stateList[i].Trinket1 && !stateList[i].Trinket2)
+                            {
+                                mfDrumsStates.Add(stateList[i]);
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                        {
+                            mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, false, false, false, true, 132));
+                        }
+                        if (flameCapAvailable)
+                        {
+                            found = false;
+                            for (int i = 0; i < stateList.Count; i++)
+                            {
+                                if (stateList[i].IncrementalSetIndex == 134 && !stateList[i].Trinket1 && !stateList[i].Trinket2)
+                                {
+                                    mfDrumsStates.Add(stateList[i]);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found)
+                            {
+                                mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, true, false, false, false, true, 134));
+                            }
+                        }
+                    }
 
                     int drumsOfBattleSegments = segments; // always segment, we need it to guarantee each block has activation
                     manaRegen = -calculationResult.BaseState.ManaRegen5SR;
-                    foreach (CastingState state in drumsStates)
+                    for (int segment = 0; segment < drumsOfBattleSegments; segment++)
                     {
-                        for (int segment = 0; segment < drumsOfBattleSegments; segment++)
+                        List<CastingState> states = (calculationOptions.FightDuration - calculationOptions.MoltenFuryPercentage * calculationOptions.FightDuration < segment * segmentDuration) ? mfDrumsStates : drumsStates;
+                        foreach (CastingState state in drumsStates)
                         {
                             calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.DrumsOfBattle, Segment = segment, State = state });
                             column = lp.AddColumnUnsafe();
@@ -1219,8 +1256,18 @@ namespace Rawr.Mage
                     {
                         if ((seg + 1) * segmentDuration > calculationOptions.FightDuration - mflength)
                         {
-                            if (calculationOptions.FightDuration - mflength < seg * segmentDuration) lp.SetRHSUnsafe(rowSegmentMoltenFury + seg, segmentDuration);
-                            else lp.SetRHSUnsafe(rowSegmentMoltenFury + seg, Math.Max(0, segmentDuration - (calculationOptions.FightDuration - mflength - seg * segmentDuration)));
+                            if (calculationOptions.FightDuration - mflength < seg * segmentDuration)
+                            {
+                                double dur = (seg < segments - 1) ? segmentDuration : (calculationOptions.FightDuration - (segments - 1) * segmentDuration);
+                                lp.SetRHSUnsafe(rowSegmentMoltenFury + seg, dur);
+                                lp.SetLHSUnsafe(rowSegmentMoltenFury + seg, dur);
+                            }
+                            else
+                            {
+                                double dur = Math.Max(0, segmentDuration - (calculationOptions.FightDuration - mflength - seg * segmentDuration));
+                                lp.SetRHSUnsafe(rowSegmentMoltenFury + seg, dur);
+                                lp.SetLHSUnsafe(rowSegmentMoltenFury + seg, dur);
+                            }
                         }
                     }
                 }
@@ -1320,7 +1367,7 @@ namespace Rawr.Mage
                 // timing
                 for (int seg = 0; seg < segments; seg++)
                 {
-                    lp.SetRHSUnsafe(rowSegment + seg, segmentDuration);
+                    lp.SetRHSUnsafe(rowSegment + seg, (seg < segments - 1) ? segmentDuration : (calculationOptions.FightDuration - (segments - 1) * segmentDuration));
                 }
             }
             if (restrictManaUse)

@@ -1553,6 +1553,13 @@ namespace Rawr.Mage.SequenceReconstruction
                                                     }
                                                 }
                                             }
+                                            if ((itemList[j].CooldownHex & activeTail & ~item.CooldownHex) != 0) // strong requirement, if converting for reconstruction on nonsegmented data might have to remove this
+                                            {
+                                                // we'll have to place something from active tail that is being removed
+                                                // from active tail
+                                                tail = 0;
+                                                break;
+                                            }
                                             int intersect = item.CooldownHex & itemList[j].CooldownHex;
                                             if (intersect > 0)
                                             {

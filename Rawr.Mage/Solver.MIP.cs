@@ -5,11 +5,34 @@ using System.Text;
 
 namespace Rawr.Mage
 {
+    public enum MIPMethod
+    {
+        BestBound,
+        DepthFirst
+    }
+
     public partial class Solver
     {
 #if DEBUG_BRANCHING
         private List<SolverLP> childList;
 #endif
+
+        private class BranchNode : IComparable<BranchNode>
+        {
+            public SolverLP Lp;
+            public BranchNode Parent;
+            public List<BranchNode> Children = new List<BranchNode>();
+            public int Index;
+            public int Depth;
+
+            int IComparable<BranchNode>.CompareTo(BranchNode other)
+            {
+                return -this.Lp.Value.CompareTo(other.Lp.Value);
+            }
+        }
+
+        private Heap<SolverLP> heap;
+        private BranchNode currentNode;
 
         private void RestrictSolution()
         {
@@ -17,6 +40,95 @@ namespace Rawr.Mage
             childList = new List<SolverLP>();
 #endif
 
+            switch (calculationOptions.MIPMethod)
+            {
+                case MIPMethod.BestBound:
+                    BestBoundSearch();
+                    break;
+                case MIPMethod.DepthFirst:
+                    DepthFirstSearch();
+                    break;
+            }
+        }
+
+        private void DepthFirstSearch()
+        {
+            int sizeLimit = calculationOptions.MaxHeapLimit;
+            lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
+
+            SolverLP rootCopy = lp.Clone();
+            BranchNode root = new BranchNode() { Lp = lp };
+
+            currentNode = root;
+
+            double lowerBound = 0.0;
+            SolverLP incumbent = null;
+
+            int round = 0;
+            do
+            {
+                double value = currentNode.Lp.Value; // force evaluation and get value
+                if (value < lowerBound + 0.00001)
+                {
+                    // prune this, free space by removing from parent, backtrack
+                    do
+                    {
+                        currentNode = currentNode.Parent;
+                        currentNode.Children[currentNode.Index] = null;
+                        currentNode.Index++;
+                    } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
+                    if (currentNode.Index >= currentNode.Children.Count) break; // we explored the whole search space
+                    currentNode = currentNode.Children[currentNode.Index];
+                }
+                else
+                {
+                    lp = currentNode.Lp;
+                    solution = lp.Solve();
+                    bool valid = IsLpValid();
+                    if (valid)
+                    {
+                        // we found a new lower bound
+                        lowerBound = value;
+                        incumbent = lp;
+                        // now backtrack
+                        if (currentNode.Parent != null)
+                        {
+                            do
+                            {
+                                currentNode = currentNode.Parent;
+                                currentNode.Children[currentNode.Index] = null;
+                                currentNode.Index++;
+                            } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        if (currentNode.Index >= currentNode.Children.Count) break; // we explored the whole search space
+                        currentNode = currentNode.Children[currentNode.Index];
+                    }
+                    else
+                    {
+                        if (currentNode.Depth < 6)
+                        {
+                            // for shallow trees prefer exploring good branches
+                            currentNode.Children.Sort();
+                        }
+                        currentNode.Lp = null; // current lp may be reused by one of its children
+                        // evaluate child nodes
+                        currentNode = currentNode.Children[0];
+                    }
+                }
+                round++;
+            } while (round < sizeLimit);
+
+            lp = incumbent;
+            if (lp == null) lp = rootCopy;
+            solution = lp.Solve();
+        }
+
+        private void BestBoundSearch()
+        {
             int maxHeap = calculationOptions.MaxHeapLimit;
             lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
             heap = new Heap<SolverLP>(HeapType.MaximumHeap);
@@ -62,127 +174,134 @@ namespace Rawr.Mage
                     System.Windows.Forms.MessageBox.Show("SMP algorithm exceeded maximum allowed computation limit. Displaying the last working solution. Increase the limit in options if you would like to compute the correct solution.");
                     break;
                 }
-                valid = true;
+                valid = IsLpValid();
+            } while (heap.Count > 0 && !valid);
+            //System.Diagnostics.Trace.WriteLine("Heap at solution " + heap.Count);
+        }
+
+        private bool IsLpValid()
+        {
+            bool valid = true;
 
 #if DEBUG_BRANCHING
                 childList.Clear();
 #endif
 
-                if (integralMana)
+            if (integralMana)
+            {
+                if (valid && calculationOptions.ManaPotionEnabled)
                 {
-                    if (valid && calculationOptions.ManaPotionEnabled)
-                    {
-                        valid = ValidateIntegralConsumableOverall(VariableType.ManaPotion, 1.0);
-                    }
-                    if (valid && calculationOptions.ManaGemEnabled)
-                    {
-                        valid = ValidateIntegralConsumableOverall(VariableType.ManaGem, 1.0);
-                    }
-                    if (valid && calculationOptions.EvocationEnabled)
-                    {
-                        valid = ValidateIntegralConsumableOverall(VariableType.Evocation, 2.0 / calculationResult.BaseState.CastingSpeed);
-                    }
+                    valid = ValidateIntegralConsumableOverall(VariableType.ManaPotion, 1.0);
                 }
+                if (valid && calculationOptions.ManaGemEnabled)
+                {
+                    valid = ValidateIntegralConsumableOverall(VariableType.ManaGem, 1.0);
+                }
+                if (valid && calculationOptions.EvocationEnabled)
+                {
+                    valid = ValidateIntegralConsumableOverall(VariableType.Evocation, 2.0 / calculationResult.BaseState.CastingSpeed);
+                }
+            }
 
-                if (segmentCooldowns)
+            if (segmentCooldowns)
+            {
+                // drums
+                if (valid && calculationOptions.DrumsOfBattle)
                 {
-                    // drums
-                    if (valid && calculationOptions.DrumsOfBattle)
-                    {
-                        valid = ValidateIntegralConsumableOverall(VariableType.DrumsOfBattle, calculationResult.BaseState.GlobalCooldown);
-                    }
-                    // drums
-                    if (valid && calculationOptions.DrumsOfBattle)
-                    {
-                        valid = ValidateCooldown(Cooldown.DrumsOfBattle, 30.0, 120.0, true);
-                    }
-                    // make sure all cooldowns are tightly packed and not fragmented
-                    // mf is trivially satisfied
-                    // heroism
-                    if (valid && heroismAvailable)
-                    {
-                        valid = ValidateCooldown(Cooldown.Heroism, 40, -1);
-                    }
-                    // ap
-                    if (valid && arcanePowerAvailable)
-                    {
-                        valid = ValidateCooldown(Cooldown.ArcanePower, 15, 180);
-                    }
-                    // iv
-                    if (valid && icyVeinsAvailable)
-                    {
-                        valid = ValidateCooldown(Cooldown.IcyVeins, 20 + (coldsnapAvailable ? 20 : 0), 180 + (coldsnapAvailable ? 20 : 0));
-                    }
-                    // combustion
-                    if (valid && combustionAvailable)
-                    {
-                        valid = ValidateCooldown(Cooldown.Combustion, 15, 180 + 15); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
-                    }
-                    // flamecap
-                    if (valid && calculationOptions.FlameCap)
-                    {
-                        valid = ValidateCooldown(Cooldown.FlameCap, 60, 180, integralMana);
-                    }
-                    // destruction
-                    if (valid && calculationOptions.DestructionPotion)
-                    {
-                        valid = ValidateCooldown(Cooldown.DestructionPotion, 15, 120);
-                    }
-                    // t1
-                    if (valid && trinket1Available)
-                    {
-                        valid = ValidateCooldown(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown);
-                    }
-                    // t2
-                    if (valid && trinket2Available)
-                    {
-                        valid = ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown);
-                    }
-                    /*if (valid && t1ismg && calculationOptions.FlameCap)
-                    {
-                        valid = ValidateSCB(Cooldown.Trinket1);
-                    }
-                    if (valid && t2ismg && calculationOptions.FlameCap)
-                    {
-                        valid = ValidateSCB(Cooldown.Trinket2);
-                    }*/
-                    if (valid && calculationOptions.DrumsOfBattle)
-                    {
-                        valid = ValidateActivation(Cooldown.DrumsOfBattle, 30.0, 120.0, VariableType.DrumsOfBattle);
-                    }
+                    valid = ValidateIntegralConsumableOverall(VariableType.DrumsOfBattle, calculationResult.BaseState.GlobalCooldown);
                 }
+                // drums
+                if (valid && calculationOptions.DrumsOfBattle)
+                {
+                    valid = ValidateCooldown(Cooldown.DrumsOfBattle, 30.0, 120.0, true);
+                }
+                // make sure all cooldowns are tightly packed and not fragmented
+                // mf is trivially satisfied
+                // heroism
+                if (valid && heroismAvailable)
+                {
+                    valid = ValidateCooldown(Cooldown.Heroism, 40, -1);
+                }
+                // ap
+                if (valid && arcanePowerAvailable)
+                {
+                    valid = ValidateCooldown(Cooldown.ArcanePower, 15, 180);
+                }
+                // iv
+                if (valid && icyVeinsAvailable)
+                {
+                    valid = ValidateCooldown(Cooldown.IcyVeins, 20 + (coldsnapAvailable ? 20 : 0), 180 + (coldsnapAvailable ? 20 : 0));
+                }
+                // combustion
+                if (valid && combustionAvailable)
+                {
+                    valid = ValidateCooldown(Cooldown.Combustion, 15, 180 + 15); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
+                }
+                // flamecap
+                if (valid && calculationOptions.FlameCap)
+                {
+                    valid = ValidateCooldown(Cooldown.FlameCap, 60, 180, integralMana);
+                }
+                // destruction
+                if (valid && calculationOptions.DestructionPotion)
+                {
+                    valid = ValidateCooldown(Cooldown.DestructionPotion, 15, 120);
+                }
+                // t1
+                if (valid && trinket1Available)
+                {
+                    valid = ValidateCooldown(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown);
+                }
+                // t2
+                if (valid && trinket2Available)
+                {
+                    valid = ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown);
+                }
+                /*if (valid && t1ismg && calculationOptions.FlameCap)
+                {
+                    valid = ValidateSCB(Cooldown.Trinket1);
+                }
+                if (valid && t2ismg && calculationOptions.FlameCap)
+                {
+                    valid = ValidateSCB(Cooldown.Trinket2);
+                }*/
+                if (valid && calculationOptions.DrumsOfBattle)
+                {
+                    valid = ValidateActivation(Cooldown.DrumsOfBattle, 30.0, 120.0, VariableType.DrumsOfBattle);
+                }
+            }
 
-                if (integralMana)
+            if (integralMana)
+            {
+                if (valid && calculationOptions.ManaPotionEnabled)
                 {
-                    if (valid && calculationOptions.ManaPotionEnabled)
-                    {
-                        valid = ValidateIntegralConsumable(VariableType.ManaPotion);
-                    }
-                    if (valid && calculationOptions.ManaGemEnabled)
-                    {
-                        valid = ValidateIntegralConsumable(VariableType.ManaGem);
-                    }
+                    valid = ValidateIntegralConsumable(VariableType.ManaPotion);
                 }
+                if (valid && calculationOptions.ManaGemEnabled)
+                {
+                    valid = ValidateIntegralConsumable(VariableType.ManaGem);
+                }
+            }
 
-                if (segmentCooldowns)
+            if (segmentCooldowns)
+            {
+                if (valid && calculationOptions.FlameCap)
                 {
-                    if (valid && calculationOptions.FlameCap)
-                    {
-                        valid = ValidateFlamecap();
-                    }
-                    if (valid)
-                    {
-                        valid = ValidateCycling();
-                    }
-                    if (valid && icyVeinsAvailable && coldsnapAvailable)
-                    {
-                        valid = ValidateColdsnap();
-                    }
-                    if (valid)
-                    {
-                        valid = ValidateSupergroupFragmentation();
-                    }
+                    valid = ValidateFlamecap();
                 }
+                if (valid)
+                {
+                    valid = ValidateCycling();
+                }
+                if (valid && icyVeinsAvailable && coldsnapAvailable)
+                {
+                    valid = ValidateColdsnap();
+                }
+                if (valid)
+                {
+                    valid = ValidateSupergroupFragmentation();
+                }
+            }
 
 #if DEBUG_BRANCHING
                 if (!valid)
@@ -204,13 +323,20 @@ namespace Rawr.Mage
                     childList.Clear();
                 }
 #endif
-            } while (heap.Count > 0 && !valid);
-            //System.Diagnostics.Trace.WriteLine("Heap at solution " + heap.Count);
+            return valid;
         }
 
         private void HeapPush(SolverLP childLP)
         {
-            heap.Push(childLP);
+            switch (calculationOptions.MIPMethod)
+            {
+                case MIPMethod.BestBound:
+                    heap.Push(childLP);
+                    break;
+                case MIPMethod.DepthFirst:
+                    currentNode.Children.Add(new BranchNode() { Lp = childLP, Parent = currentNode, Depth = currentNode.Depth + 1 });
+                    break;
+            }
 #if DEBUG_BRANCHING
             childList.Add(childLP);
 #endif
@@ -244,6 +370,7 @@ namespace Rawr.Mage
                 if (N > 0 && count[seg] < segmentDuration - 0.000001)
                 {
                     // if any hex links to left and right segment we have a problem
+                    // TODO if hex1 links to left and hex2 links to right and we have an item with both hex1 and hex2 there is also a problem
                     List<int> minHexChain = null;
                     for (int i = 0; i < N; i++)
                     {
@@ -437,6 +564,16 @@ namespace Rawr.Mage
             List<int> ret = new List<int>();
             int last = node;
             int d = min - 1;
+            for (int k = 0; k < N; k++)
+            {
+                if (dist[k] == d && (node & hexList[k] & ~core) != 0)
+                {
+                    last = hexList[k];
+                    ret.Add(last);
+                    break;
+                }
+            }
+            d--;
             while (d > 0)
             {
                 for (int k = 0; k < N; k++)
@@ -926,16 +1063,16 @@ namespace Rawr.Mage
                     if (!valid)
                     {
                         SolverLP maxCount = lp.Clone();
-                        // count <= floor(value)
-                        maxCount.SetColumnUpperBound(index, Math.Floor(value));
-                        maxCount.ForceRecalculation(true);
-                        if (maxCount.Log != null) maxCount.Log.AppendLine("Integral consumable " + integralConsumable + " at " + calculationResult.SolutionVariable[index].Segment + ", max " + Math.Floor(value));
-                        HeapPush(maxCount);
                         // count >= ceiling(value)
                         lp.SetColumnLowerBound(index, Math.Ceiling(value));
                         lp.ForceRecalculation(true);
                         if (lp.Log != null) lp.Log.AppendLine("Integral consumable " + integralConsumable + " at " + calculationResult.SolutionVariable[index].Segment + ", min " + Math.Ceiling(value));
                         HeapPush(lp);
+                        // count <= floor(value)
+                        maxCount.SetColumnUpperBound(index, Math.Floor(value));
+                        maxCount.ForceRecalculation(true);
+                        if (maxCount.Log != null) maxCount.Log.AppendLine("Integral consumable " + integralConsumable + " at " + calculationResult.SolutionVariable[index].Segment + ", max " + Math.Floor(value));
+                        HeapPush(maxCount);
                         return false;
                     }
                 }
@@ -1487,19 +1624,6 @@ namespace Rawr.Mage
                         if (total < effectDuration - eps)
                         {
                             SolverLP cooldownUsed = lp.Clone();
-                            // cooldown not used
-                            if (lp.Log != null) lp.Log.AppendLine("Disable " + cooldown.ToString() + " at " + seg);
-                            for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
-                            {
-                                CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (state != null && state.GetCooldown(cooldown)) lp.EraseColumn(index);
-                            }
-                            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
-                            {
-                                CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (state != null && state.GetCooldown(cooldown) && calculationResult.SolutionVariable[index].Segment == seg) lp.EraseColumn(index);
-                            }
-                            HeapPush(lp);
                             if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Force full " + cooldown.ToString() + " at " + seg);
                             int row = cooldownUsed.AddConstraint(false);
                             for (int s = 0; s < segments; s++)
@@ -1538,6 +1662,19 @@ namespace Rawr.Mage
                             cooldownUsed.SetConstraintRHS(row, -effectDuration);
                             cooldownUsed.ForceRecalculation(true);
                             HeapPush(cooldownUsed);
+                            // cooldown not used
+                            if (lp.Log != null) lp.Log.AppendLine("Disable " + cooldown.ToString() + " at " + seg);
+                            for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (state != null && state.GetCooldown(cooldown)) lp.EraseColumn(index);
+                            }
+                            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (state != null && state.GetCooldown(cooldown) && calculationResult.SolutionVariable[index].Segment == seg) lp.EraseColumn(index);
+                            }
+                            HeapPush(lp);
                             return false;
                         }
                     }
@@ -1567,20 +1704,6 @@ namespace Rawr.Mage
                         //if (lp.disabledHex == null) lp.disabledHex = new int[CooldownMax];
                         // branch on whether cooldown is used in this segment
                         SolverLP cooldownUsed = lp.Clone();
-                        // cooldown not used
-                        //lp.IVHash += 1 << seg;
-                        if (lp.Log != null) lp.Log.AppendLine("Disable " + cooldown.ToString() + " at " + seg);
-                        for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
-                        {
-                            CastingState state = calculationResult.SolutionVariable[index].State;
-                            if (state != null && state.GetCooldown(cooldown)) lp.EraseColumn(index);
-                        }
-                        for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
-                        {
-                            CastingState state = calculationResult.SolutionVariable[index].State;
-                            if (state != null && state.GetCooldown(cooldown) && calculationResult.SolutionVariable[index].Segment == seg) lp.EraseColumn(index);
-                        }
-                        HeapPush(lp);
                         // cooldown used
                         if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Use " + cooldown.ToString() + " at " + seg + ", disable around");
                         for (int outseg = 0; outseg < segments; outseg++)
@@ -1605,6 +1728,20 @@ namespace Rawr.Mage
                             }
                         }
                         HeapPush(cooldownUsed);
+                        // cooldown not used
+                        //lp.IVHash += 1 << seg;
+                        if (lp.Log != null) lp.Log.AppendLine("Disable " + cooldown.ToString() + " at " + seg);
+                        for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
+                        {
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            if (state != null && state.GetCooldown(cooldown)) lp.EraseColumn(index);
+                        }
+                        for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                        {
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            if (state != null && state.GetCooldown(cooldown) && calculationResult.SolutionVariable[index].Segment == seg) lp.EraseColumn(index);
+                        }
+                        HeapPush(lp);
                         return false;
                     }
                 }

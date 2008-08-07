@@ -15,6 +15,8 @@ namespace Rawr.Mage
 		{
 			InitializeComponent();
             talents = new MageTalentsForm(this);
+            comboBoxMIPMethod.Items.Add(MIPMethod.BestBound);
+            comboBoxMIPMethod.Items.Add(MIPMethod.DepthFirst);
 		}
 
         private MageTalentsForm talents;

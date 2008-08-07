@@ -195,6 +195,8 @@
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.comboBoxMIPMethod = new System.Windows.Forms.ComboBox();
+            this.label78 = new System.Windows.Forms.Label();
             this.label77 = new System.Windows.Forms.Label();
             this.checkBoxDisplayIntegralMana = new System.Windows.Forms.CheckBox();
             this.checkBoxComparisonIntegralMana = new System.Windows.Forms.CheckBox();
@@ -1912,6 +1914,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.comboBoxMIPMethod);
+            this.tabPage4.Controls.Add(this.label78);
             this.tabPage4.Controls.Add(this.label77);
             this.tabPage4.Controls.Add(this.checkBoxDisplayIntegralMana);
             this.tabPage4.Controls.Add(this.checkBoxComparisonIntegralMana);
@@ -1937,10 +1941,32 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // comboBoxMIPMethod
+            // 
+            this.comboBoxMIPMethod.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.calculationOptionsMageBindingSource, "MIPMethod", true));
+            this.comboBoxMIPMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxMIPMethod.FormattingEnabled = true;
+            this.comboBoxMIPMethod.Location = new System.Drawing.Point(115, 113);
+            this.comboBoxMIPMethod.Name = "comboBoxMIPMethod";
+            this.comboBoxMIPMethod.Size = new System.Drawing.Size(85, 21);
+            this.comboBoxMIPMethod.TabIndex = 174;
+            // 
+            // label78
+            // 
+            this.label78.AutoSize = true;
+            this.label78.Location = new System.Drawing.Point(0, 116);
+            this.label78.Name = "label78";
+            this.label78.Size = new System.Drawing.Size(116, 13);
+            this.label78.TabIndex = 173;
+            this.label78.Text = "SMP Search Method: *";
+            this.toolTipMage.SetToolTip(this.label78, "If Best Bound method does not provide solution at the specified computation limit" +
+                    " then using Depth First search will provide at least a feasible solution, althou" +
+                    "gh not optimal.");
+            // 
             // label77
             // 
             this.label77.AutoSize = true;
-            this.label77.Location = new System.Drawing.Point(0, 168);
+            this.label77.Location = new System.Drawing.Point(3, 194);
             this.label77.Name = "label77";
             this.label77.Size = new System.Drawing.Size(148, 13);
             this.label77.TabIndex = 172;
@@ -1951,7 +1977,7 @@
             // 
             this.checkBoxDisplayIntegralMana.AutoSize = true;
             this.checkBoxDisplayIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "DisplayIntegralMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxDisplayIntegralMana.Location = new System.Drawing.Point(185, 168);
+            this.checkBoxDisplayIntegralMana.Location = new System.Drawing.Point(188, 194);
             this.checkBoxDisplayIntegralMana.Name = "checkBoxDisplayIntegralMana";
             this.checkBoxDisplayIntegralMana.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDisplayIntegralMana.TabIndex = 171;
@@ -1961,7 +1987,7 @@
             // 
             this.checkBoxComparisonIntegralMana.AutoSize = true;
             this.checkBoxComparisonIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ComparisonIntegralMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(164, 168);
+            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(167, 194);
             this.checkBoxComparisonIntegralMana.Name = "checkBoxComparisonIntegralMana";
             this.checkBoxComparisonIntegralMana.Size = new System.Drawing.Size(15, 14);
             this.checkBoxComparisonIntegralMana.TabIndex = 170;
@@ -1970,7 +1996,7 @@
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(0, 148);
+            this.label32.Location = new System.Drawing.Point(3, 174);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(114, 13);
             this.label32.TabIndex = 169;
@@ -1980,7 +2006,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(83, 122);
+            this.label31.Location = new System.Drawing.Point(86, 148);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(117, 13);
             this.label31.TabIndex = 168;
@@ -2031,7 +2057,7 @@
             // 
             this.checkBoxDisplaySegmentCoodlowns.AutoSize = true;
             this.checkBoxDisplaySegmentCoodlowns.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "DisplaySegmentCooldowns", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxDisplaySegmentCoodlowns.Location = new System.Drawing.Point(185, 148);
+            this.checkBoxDisplaySegmentCoodlowns.Location = new System.Drawing.Point(188, 174);
             this.checkBoxDisplaySegmentCoodlowns.Name = "checkBoxDisplaySegmentCoodlowns";
             this.checkBoxDisplaySegmentCoodlowns.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDisplaySegmentCoodlowns.TabIndex = 162;
@@ -2042,7 +2068,7 @@
             // 
             this.checkBoxComparisonSegmentCooldowns.AutoSize = true;
             this.checkBoxComparisonSegmentCooldowns.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ComparisonSegmentCooldowns", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxComparisonSegmentCooldowns.Location = new System.Drawing.Point(164, 148);
+            this.checkBoxComparisonSegmentCooldowns.Location = new System.Drawing.Point(167, 174);
             this.checkBoxComparisonSegmentCooldowns.Name = "checkBoxComparisonSegmentCooldowns";
             this.checkBoxComparisonSegmentCooldowns.Size = new System.Drawing.Size(15, 14);
             this.checkBoxComparisonSegmentCooldowns.TabIndex = 160;
@@ -2330,6 +2356,8 @@
         private System.Windows.Forms.Label label77;
         private System.Windows.Forms.CheckBox checkBoxDisplayIntegralMana;
         private System.Windows.Forms.CheckBox checkBoxComparisonIntegralMana;
+        private System.Windows.Forms.ComboBox comboBoxMIPMethod;
+        private System.Windows.Forms.Label label78;
 
     }
 }

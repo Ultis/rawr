@@ -81,7 +81,9 @@ namespace Rawr.Mage
         public bool ComparisonSegmentCooldowns { get; set; }
         public bool DisplaySegmentCooldowns { get; set; }
         public bool ComparisonIntegralMana { get; set; }
-        public bool DisplayIntegralMana { get; set; }        
+        public bool DisplayIntegralMana { get; set; }
+
+        public MIPMethod MIPMethod { get; set; }
 
         public float Innervate { get; set; }
         public float ManaTide { get; set; }
