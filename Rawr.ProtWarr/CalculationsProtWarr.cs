@@ -241,7 +241,7 @@ threat and limited threat scaled by the threat scale.",
             //Miss -> Dodge -> Parry -> Block -> Crushing Blow -> Critical Strikes -> Hit
             //Out of 100 attacks, you'll take...
 
-            float crits = Math.Max(5f + (0.2f * levelDifference) - calculatedStats.CritReduction, 0f);
+            float crits = Math.Max(5f + levelDifference - calculatedStats.CritReduction, 0f);
             float blocked = Math.Min(100f - (crits + (calculatedStats.DodgePlusMissPlusParry)), calculatedStats.Block);
             float crushes = targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (calculatedStats.DodgePlusMissPlusParryPlusBlock)), 15f) - stats.CrushChanceReduction, 0f) : 0f;
             float hits = Math.Max(100f - (crits + crushes + blocked + (calculatedStats.DodgePlusMissPlusParry)), 0f);
