@@ -542,6 +542,7 @@ namespace Rawr.Mage
                     int core = hexList[i];
                     int[] tail = new int[3];
                     int[] used = new int[N]; // index+1 of the tail to which it is attached, -1 for core
+                    int[] firsttail = new int[3];
                     used[i] = -1;
                     bool cont = true;
                     while (cont)
@@ -626,6 +627,7 @@ namespace Rawr.Mage
                                             // this means it has to be in a different tail
                                             cont = true;
                                             tail[t] = hexList[j];
+                                            firsttail[t] = hexList[j];
                                             used[j] = t + 1;
                                             if (t == 2)
                                             {
@@ -634,14 +636,7 @@ namespace Rawr.Mage
                                                 threeTail.Add(core);
                                                 for (t = 0; t < 3; t++)
                                                 {
-                                                    for (int k = 0; k < N; k++)
-                                                    {
-                                                        if (used[k] == t + 1 && (core & hexList[k]) != 0)
-                                                        {
-                                                            threeTail.Add(hexList[k]);
-                                                            break;
-                                                        }
-                                                    }
+                                                    threeTail.Add(firsttail[t]);
                                                 }
                                             }
                                         }
@@ -661,9 +656,9 @@ namespace Rawr.Mage
                                         // each tail and loop it into cycle
 
                                         List<int> path1 = FindShortestTailPath(core, used[j] - 1, node, used, N, hexList);
-                                        for (t = used[j] + 1; t < 3 && tail[t] != 0; t++)
+                                        for (t = 0; t < 3 && tail[t] != 0; t++)
                                         {
-                                            if ((~core & tail[t] & node) != 0)
+                                            if (t != used[j] - 1 && (~core & tail[t] & node) != 0)
                                             {
                                                 List<int> path2 = FindShortestTailPath(core, t, node, used, N, hexList);
                                                 if (shortestCycle == null || path1.Count + path2.Count + 2 < shortestCycle.Count)
@@ -739,17 +734,7 @@ namespace Rawr.Mage
                     // find the indicators
                     List<int> indicator = new List<int>();
                     int core = threeTail[0];
-                    for (int i = 1; i < 4; i++)
-                    {
-                        int ind = core & threeTail[i];
-                        for (int k = 1; k < 4; k++)
-                        {
-                            if (k != i) ind &= ~threeTail[k];
-                        }
-                        int s = 1;
-                        while ((s & ind) == 0) s <<= 1;
-                        indicator.Add(s);
-                    }
+                    int mask = (threeTail[1] | threeTail[2] | threeTail[3]) & ~(threeTail[1] & threeTail[2] & threeTail[3]);
                     SolverLP hexRemovedLP = lp.Clone();
                     if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking threetail at boundary " + seg + ", removing core");
                     for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
@@ -759,7 +744,7 @@ namespace Rawr.Mage
                         if (state != null && (iseg == seg || iseg == seg + 1))
                         {
                             int h = state.GetHex();
-                            bool isindicated = (h & indicator[0]) != 0 && (h & indicator[1]) != 0 && (h & indicator[2]) != 0;
+                            bool isindicated = (h & mask) == (core & mask);
                             if (isindicated) hexRemovedLP.EraseColumn(index);
                         }
                     }
@@ -767,7 +752,7 @@ namespace Rawr.Mage
                     for (int i = 0; i < 3; i++)
                     {
                         hexRemovedLP = lp.Clone();
-                        if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking threetail at boundary " + seg + ", removing indicator " + indicator[i]);
+                        if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking threetail at boundary " + seg + ", removing " + (threeTail[i + 1] & mask));
                         for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                         {
                             CastingState state = calculationResult.SolutionVariable[index].State;
@@ -775,18 +760,7 @@ namespace Rawr.Mage
                             if (state != null && (iseg == seg || iseg == seg + 1))
                             {
                                 int h = state.GetHex();
-                                bool isindicated = (h & indicator[i]) != 0;
-                                if (isindicated)
-                                {
-                                    for (int k = 0; k < 3; k++)
-                                    {
-                                        if (k != i && (h & indicator[k]) != 0)
-                                        {
-                                            isindicated = false;
-                                            break;
-                                        }
-                                    }
-                                }
+                                bool isindicated = (h & mask) == (threeTail[i + 1] & mask);
                                 if (isindicated) hexRemovedLP.EraseColumn(index);
                             }
                         }
