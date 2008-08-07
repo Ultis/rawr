@@ -245,16 +245,17 @@ namespace Rawr.Mage
             NatureDamage = /* characterStats.SpellNatureDamageRating + */ SpellDamageRating;
             ShadowDamage = characterStats.SpellShadowDamageRating + SpellDamageRating;
 
-            SpellCrit = 0.01f * (characterStats.Intellect * 0.0125f + 0.9075f) + 0.01f * calculationOptions.ArcaneInstability + 0.01f * calculationOptions.ArcanePotency + characterStats.SpellCritRating / 1400f * levelScalingFactor + characterStats.MageSpellCrit;
+            SpellCrit = 0.01f * (characterStats.Intellect * 0.0125f + 0.9075f) + 0.01f * calculationOptions.ArcaneInstability + (calculationOptions.WotLK ? 0.015f : 0.01f) * calculationOptions.ArcanePotency + characterStats.SpellCritRating / 1400f * levelScalingFactor + characterStats.MageSpellCrit;
             if (destructionPotion) SpellCrit += 0.02f;
             SpellHit = characterStats.SpellHitRating * levelScalingFactor / 800f;
 
             int targetLevel = calculationOptions.TargetLevel;
-            ArcaneHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit + (calculationOptions.WotLK ? 0.01f : 0.02f) * calculationOptions.ArcaneFocus);
-            FireHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit + 0.01f * calculationOptions.ElementalPrecision);
-            FrostHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit + 0.01f * calculationOptions.ElementalPrecision);
-            NatureHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit);
-            ShadowHitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit);
+            float maxHitRate = (calculationOptions.WotLK) ? 1.00f : 0.99f;
+            ArcaneHitRate = Math.Min(maxHitRate, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit + (calculationOptions.WotLK ? 0.01f : 0.02f) * calculationOptions.ArcaneFocus);
+            FireHitRate = Math.Min(maxHitRate, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit + 0.01f * calculationOptions.ElementalPrecision);
+            FrostHitRate = Math.Min(maxHitRate, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit + 0.01f * calculationOptions.ElementalPrecision);
+            NatureHitRate = Math.Min(maxHitRate, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit);
+            ShadowHitRate = Math.Min(maxHitRate, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit);
 
             SpiritRegen = 0.001f + characterStats.Spirit * 0.009327f * (float)Math.Sqrt(characterStats.Intellect);
             ManaRegen = SpiritRegen + characterStats.Mp5 / 5f + SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration;
@@ -291,6 +292,10 @@ namespace Rawr.Mage
             if (heroism)
             {
                 CastingSpeed *= 1.3f;
+            }
+            if (calculationOptions.WotLK)
+            {
+                CastingSpeed *= (1f + 0.02f * calculationOptions.NetherwindPresence);
             }
 
             Latency = calculationOptions.Latency;
@@ -386,9 +391,6 @@ namespace Rawr.Mage
                     break;
                 case SpellId.ArcaneMissilesNoProc:
                     s = new ArcaneMissiles(this, true, false, false);
-                    break;
-                case SpellId.ArcaneMissilesNetherwind:
-                    s = new ArcaneMissilesNetherwind(this);
                     break;
                 /*case SpellId.ArcaneMissilesFTF:
                     s = new ArcaneMissiles(this);

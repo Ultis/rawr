@@ -79,6 +79,7 @@ namespace Rawr.Mage
         private static int maxCols = 0;
 
         private const double epsPrimal = 1.0e-7;
+        private const double epsPrimalLow = 1.0e-6;
         private const double epsPrimalRel = 1.0e-9;
         private const double epsDual = 1.0e-7; 
         private const double epsDualI = 1.0e-8;
@@ -422,7 +423,7 @@ namespace Rawr.Mage
                     LoadCost();
                     PerturbCost();
                 }
-                ret = SolvePrimalUnsafe(prepareForDual, prepareForDual, false);
+                ret = SolvePrimalUnsafe(prepareForDual, prepareForDual, false, true);
                 lu.EndUnsafe();
 
                 this.a = null;
@@ -567,12 +568,12 @@ namespace Rawr.Mage
             lu.FSolve(d);
         }
 
-        private unsafe bool IsPrimalFeasible()
+        private unsafe bool IsPrimalFeasible(double eps)
         {
             for (int i = 0; i < rows; i++)
             {
                 int col = B[i];
-                if (d[i] < lb[col] - Math.Abs(lb[col]) * epsPrimalRel - epsPrimal || d[i] > ub[col] + Math.Abs(ub[col]) * epsPrimalRel + epsPrimal)
+                if (d[i] < lb[col] - Math.Abs(lb[col]) * epsPrimalRel - eps || d[i] > ub[col] + Math.Abs(ub[col]) * epsPrimalRel + eps)
                 {
                     return false;
                 }
@@ -617,18 +618,18 @@ namespace Rawr.Mage
             }
         }
 
-        private unsafe void ComputePhaseIReducedCosts(out double infeasibility)
+        private unsafe void ComputePhaseIReducedCosts(out double infeasibility, double eps)
         {
             infeasibility = 0.0;
             for (int i = 0; i < rows; i++)
             {
                 int col = B[i];
-                if (d[i] < lb[col] - Math.Abs(lb[col]) * epsPrimalRel - epsPrimal)
+                if (d[i] < lb[col] - Math.Abs(lb[col]) * epsPrimalRel - eps)
                 {
                     x[i] = 1.0;
                     infeasibility += lb[col] - d[i];
                 }
-                else if (d[i] > ub[col] + Math.Abs(ub[col]) * epsPrimalRel + epsPrimal)
+                else if (d[i] > ub[col] + Math.Abs(ub[col]) * epsPrimalRel + eps)
                 {
                     x[i] = -1.0;
                     infeasibility += d[i] - ub[col];
@@ -673,8 +674,8 @@ namespace Rawr.Mage
                 if (B[i] < cols)
                 {
                     double di = d[i];
-                    if (Math.Abs(di - lb[i]) < Math.Abs(lb[i]) * epsPrimalRel + epsPrimal) di = lb[i];
-                    else if (Math.Abs(di - ub[i]) < Math.Abs(ub[i]) * epsPrimalRel + epsPrimal) di = ub[i];
+                    if (Math.Abs(di - lb[i]) < Math.Abs(lb[i]) * epsPrimalRel + epsPrimalLow) di = lb[i];
+                    else if (Math.Abs(di - ub[i]) < Math.Abs(ub[i]) * epsPrimalRel + epsPrimalLow) di = ub[i];
                     ret[B[i]] = di;
                     value += cost[B[i]] * di;
                 }
@@ -773,7 +774,7 @@ namespace Rawr.Mage
             return maxj;
         }
 
-        private unsafe bool SelectPrimalOutgoing(int incoming, double direction, bool feasible, out int mini, out double minr, out int bound)
+        private unsafe bool SelectPrimalOutgoing(int incoming, double direction, bool feasible, out int mini, out double minr, out int bound, double eps)
         {
             // w = U \ (L \ A(:,j));
             int maxcol = V[incoming];
@@ -808,40 +809,73 @@ namespace Rawr.Mage
             mini = -1;
             bound = 0;
             double minv = 0.0;
+            //double reducedcost = c[incoming];
             for (int i = 0; i < rows; i++)
             {
                 double v = Math.Abs(w[i]);
                 double wi = direction * w[i];
                 int col = B[i];
-                bool ifeasible = (d[i] >= lb[col] - Math.Abs(lb[col]) * epsPrimalRel - epsPrimal && d[i] <= ub[col] + Math.Abs(ub[col]) * epsPrimalRel + epsPrimal);
+                bool ifeasiblelb = (d[i] >= lb[col] - Math.Abs(lb[col]) * epsPrimalRel - eps);
+                bool ifeasibleub = (d[i] <= ub[col] + Math.Abs(ub[col]) * epsPrimalRel + eps);
+                bool ifeasible = ifeasiblelb && ifeasibleub;
                 if (feasible && !ifeasible)
                 {
                     // we lost primal feasibility
                     // fall back to phase I
                     return false;
                 }
-                if (wi > epsPivot && (flags[col] & flagLB) != 0 && ifeasible) // !!! if variable is currently unfeasible you should let it go more unfeasible as a compromise to get some others into feasible range, if you block on it you actually force entering variable to be negative which means total infeasibilities will increase
+                if (feasible || ifeasible)
                 {
-                    double r = (d[i] - lb[col]) / wi;
-                    if (r < minrr + epsZero && (r < minrr || v > minv))
+                    if (wi > epsPivot && (flags[col] & flagLB) != 0)
                     {
-                        minrr = r;
-                        minr = (d[i] - lb[col]) / w[i];
-                        mini = i;
-                        minv = v;
-                        bound = flagNLB;
+                        double r = (d[i] - lb[col]) / wi;
+                        if (r < minrr + epsZero && (r < minrr || v > minv))
+                        {
+                            minrr = r;
+                            minr = (d[i] - lb[col]) / w[i];
+                            mini = i;
+                            minv = v;
+                            bound = flagNLB;
+                        }
+                    }
+                    else if (wi < -epsPivot && (flags[col] & flagUB) != 0)
+                    {
+                        double r = (d[i] - ub[col]) / wi;
+                        if (r < minrr + epsZero && (r < minrr || v > minv))
+                        {
+                            minrr = r;
+                            minr = (d[i] - ub[col]) / w[i];
+                            mini = i;
+                            minv = v;
+                            bound = flagNUB;
+                        }
                     }
                 }
-                else if (wi < -epsPivot && (flags[col] & flagUB) != 0 && ifeasible) // !!! if variable is currently unfeasible you should let it go more unfeasible as a compromise to get some others into feasible range, if you block on it you actually force entering variable to be negative which means total infeasibilities will increase
+                else
                 {
-                    double r = (d[i] - ub[col]) / wi;
-                    if (r < minrr + epsZero && (r < minrr || v > minv))
+                    if (!ifeasibleub && wi > epsPivot)
                     {
-                        minrr = r;
-                        minr = (d[i] - ub[col]) / w[i];
-                        mini = i;
-                        minv = v;
-                        bound = flagNUB;
+                        double r = (d[i] - ub[col]) / wi;
+                        if (r < minrr + epsZero && (r < minrr || v > minv))
+                        {
+                            minrr = r;
+                            minr = (d[i] - ub[col]) / w[i];
+                            mini = i;
+                            minv = v;
+                            bound = flagNUB;
+                        }
+                    }
+                    else if (!ifeasiblelb && wi < -epsPivot)
+                    {
+                        double r = (d[i] - lb[col]) / wi;
+                        if (r < minrr + epsZero && (r < minrr || v > minv))
+                        {
+                            minrr = r;
+                            minr = (d[i] - lb[col]) / w[i];
+                            mini = i;
+                            minv = v;
+                            bound = flagNLB;
+                        }
                     }
                 }
             }
@@ -1714,7 +1748,7 @@ namespace Rawr.Mage
             }
         }
 
-        private unsafe double[] SolvePrimalUnsafe(bool prepareForDual, bool verifyRefactoredOptimality, bool shortLimit)
+        private unsafe double[] SolvePrimalUnsafe(bool prepareForDual, bool verifyRefactoredOptimality, bool shortLimit, bool highPrecision)
         {
             // LU = A_B
             // d = x_B <- A_B^-1*b ... primal solution
@@ -1727,6 +1761,8 @@ namespace Rawr.Mage
             int redecompose = 0;
             const int maxRedecompose = 50;
             int verificationAttempts = 0;
+            double eps = highPrecision ? epsPrimal : epsPrimalLow;
+            double lowestInfeasibility = double.PositiveInfinity;
 
             if (disabledDirty)
             {
@@ -1756,19 +1792,37 @@ namespace Rawr.Mage
                 if (!feasible)
                 {
                     ComputePrimalSolution(false);
-                    feasible = IsPrimalFeasible();
+                    feasible = IsPrimalFeasible(eps);
 
                     if (feasible)
                     {
                         // we have a feasible solution, initialize phase 2
                         ComputeReducedCosts();
                     }
+                    else if (shortLimit)
+                    {
+                        // we're retuning dual optimality on unshifted/redecomposed basis
+                        // if redecomposition caused loss of primal optimality then we probably
+                        // won't be able to fix the optimality and doing so might just cause us problems
+                        // in the dual
+                        // abort and let dual handle the problems if we're also dual unfeasible
+                        return null;
+                    }
                 }
 
                 if (!feasible)
                 {
                     double infeasibility;
-                    ComputePhaseIReducedCosts(out infeasibility);
+                    ComputePhaseIReducedCosts(out infeasibility, eps);
+                    if (infeasibility < lowestInfeasibility) lowestInfeasibility = infeasibility;
+                    else if (infeasibility > lowestInfeasibility + 0.00001)
+                    {
+                        // we're not using a shifting strategy for primal so the only way to combat
+                        // numerical cycling is to lower the tolerances
+                        eps *= 10.0;
+                        lowestInfeasibility = double.PositiveInfinity;
+                        goto DECOMPOSE;
+                    }
                     if (infeasibility > 100.0 && !ColdStart)
                     {
                         // we're so far out of feasible region we're better off starting from scratch
@@ -1840,9 +1894,10 @@ namespace Rawr.Mage
                 double minr;
                 int bound;
 
-                if (!SelectPrimalOutgoing(maxj, direction, feasible, out mini, out minr, out bound))
+                if (!SelectPrimalOutgoing(maxj, direction, feasible, out mini, out minr, out bound, eps))
                 {
                     feasible = false;
+                    lowestInfeasibility = double.PositiveInfinity;
                     redecompose = 0;
                     goto DECOMPOSE;
                 }
@@ -1988,9 +2043,9 @@ namespace Rawr.Mage
                         LoadCost();
                         PerturbCost();
                     }
-                    ret = SolvePrimalUnsafe(false, true, true);
+                    ret = SolvePrimalUnsafe(false, true, true, true);
                 }
-                if (costWorkingDirty && !dualUnbounded)
+                if ((costWorkingDirty && !dualUnbounded) || ret == null)
                 {
                     if (costWorkingDirty) LoadCost();
                     int[] _Bcopy = null;
@@ -2008,7 +2063,7 @@ namespace Rawr.Mage
                         _Vcopy = (int[])_V.Clone();
                         _flagscopy = (int[])_flags.Clone();
                     }
-                    ret = SolvePrimalUnsafe(false, false, false);
+                    ret = SolvePrimalUnsafe(false, false, false, false);
                     if (!dualUnbounded)
                     {
                         _B = _Bcopy;
@@ -2183,9 +2238,6 @@ namespace Rawr.Mage
 
                 if (minj == -1)
                 {
-                    if (delta < epsPrimal)
-                    {
-                    }
                     if (redecompose == maxRedecompose)
                     {
                         // unfeasible, return null solution, don't pursue this branch because no solution exists here

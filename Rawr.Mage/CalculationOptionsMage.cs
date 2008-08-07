@@ -16,6 +16,7 @@ namespace Rawr.Mage
     [Serializable]
     public sealed class CalculationOptionsMage : ICalculationOptionBase
     {
+        public int PlayerLevel { get; set; }
         public int TargetLevel { get; set; }
         public int AoeTargetLevel { get; set; }
         public float Latency { get; set; }
@@ -257,11 +258,13 @@ namespace Rawr.Mage
         public int MagicAttunement { get; set; }
 
         // WotLK
-        public int PotentSpirit { get; set; }
+        public int SpellImpact { get; set; }
         public int StudentOfTheMind { get; set; }
         public int IncantersAbsorption { get; set; }
         public int NetherwindPresence { get; set; }
         public int ArcaneBarrage { get; set; }
+        public int MissileBarrage { get; set; }
+        public int ArcaneFlows { get; set; }
 
         private CalculationOptionsMage()
         {
@@ -306,6 +309,7 @@ namespace Rawr.Mage
             BurstWindow = 5f;
             BurstImpacts = 5f;
             //ChanceToLiveLimit = 99f;
+            PlayerLevel = 70;
         }
 
         public CalculationOptionsMage(Character character)

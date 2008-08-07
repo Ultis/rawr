@@ -65,11 +65,15 @@ namespace Rawr.Mage
             SuspendLayout();
             if (calculationOptions.WotLK)
             {
-                Height = 891;
-                groupBoxArcane.Height = 816;
-                groupBoxFire.Height = 816;
-                groupBoxFrost.Height = 816;
+                Height = 939;
+                groupBoxArcane.Height = 868;
+                groupBoxFire.Height = 868;
+                groupBoxFrost.Height = 868;
                 if (comboBoxArcaneFocus.Items.Count == 6) { comboBoxArcaneFocus.Items.RemoveAt(4); comboBoxArcaneFocus.Items.RemoveAt(4); }
+                if (comboBoxMagicAbsorption.Items.Count == 6) { comboBoxMagicAbsorption.Items.RemoveAt(3); comboBoxMagicAbsorption.Items.RemoveAt(3); comboBoxMagicAbsorption.Items.RemoveAt(3); }
+                if (comboBoxArcaneFortitude.Items.Count == 2) comboBoxArcaneFortitude.Items.AddRange(new string[] { "2", "3" });
+                if (comboBoxPrismaticCloak.Items.Count == 3) comboBoxPrismaticCloak.Items.AddRange(new string[] { "3" });
+                if (comboBoxArcanePotency.Items.Count == 4) { comboBoxArcanePotency.Items.RemoveAt(3); }
             }
             else
             {
@@ -78,6 +82,10 @@ namespace Rawr.Mage
                 groupBoxFire.Height = 673;
                 groupBoxFrost.Height = 673;
                 if (comboBoxArcaneFocus.Items.Count == 4) comboBoxArcaneFocus.Items.AddRange(new string[] { "4", "5" });
+                if (comboBoxMagicAbsorption.Items.Count == 3) comboBoxMagicAbsorption.Items.AddRange(new string[] { "3", "4", "5" });
+                if (comboBoxArcaneFortitude.Items.Count == 4) { comboBoxArcaneFortitude.Items.RemoveAt(2); comboBoxArcaneFortitude.Items.RemoveAt(2); }
+                if (comboBoxPrismaticCloak.Items.Count == 4) { comboBoxPrismaticCloak.Items.RemoveAt(3); }
+                if (comboBoxArcanePotency.Items.Count == 2) comboBoxArcanePotency.Items.AddRange(new string[] { "3" });
             }
             ResumeLayout();
         }

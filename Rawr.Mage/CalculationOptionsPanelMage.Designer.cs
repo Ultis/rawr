@@ -33,6 +33,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label35 = new System.Windows.Forms.Label();
             this.textBoxEvocationSpirit = new System.Windows.Forms.TextBox();
             this.label33 = new System.Windows.Forms.Label();
@@ -194,6 +195,11 @@
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label77 = new System.Windows.Forms.Label();
+            this.checkBoxDisplayIntegralMana = new System.Windows.Forms.CheckBox();
+            this.checkBoxComparisonIntegralMana = new System.Windows.Forms.CheckBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
             this.textBoxSMPComputationLimit = new System.Windows.Forms.TextBox();
             this.label38 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
@@ -207,20 +213,14 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label31 = new System.Windows.Forms.Label();
-            this.label32 = new System.Windows.Forms.Label();
-            this.label77 = new System.Windows.Forms.Label();
-            this.checkBoxDisplayIntegralMana = new System.Windows.Forms.CheckBox();
-            this.checkBoxComparisonIntegralMana = new System.Windows.Forms.CheckBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -272,6 +272,11 @@
             this.comboBoxFaction.Name = "comboBoxFaction";
             this.comboBoxFaction.Size = new System.Drawing.Size(75, 21);
             this.comboBoxFaction.TabIndex = 151;
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label35
             // 
@@ -1932,6 +1937,56 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // label77
+            // 
+            this.label77.AutoSize = true;
+            this.label77.Location = new System.Drawing.Point(0, 168);
+            this.label77.Name = "label77";
+            this.label77.Size = new System.Drawing.Size(148, 13);
+            this.label77.TabIndex = 172;
+            this.label77.Text = "Integral Mana Consumables: *";
+            this.toolTipMage.SetToolTip(this.label77, "Do not allow partial uses of mana consumables.");
+            // 
+            // checkBoxDisplayIntegralMana
+            // 
+            this.checkBoxDisplayIntegralMana.AutoSize = true;
+            this.checkBoxDisplayIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "DisplayIntegralMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxDisplayIntegralMana.Location = new System.Drawing.Point(185, 168);
+            this.checkBoxDisplayIntegralMana.Name = "checkBoxDisplayIntegralMana";
+            this.checkBoxDisplayIntegralMana.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxDisplayIntegralMana.TabIndex = 171;
+            this.checkBoxDisplayIntegralMana.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxComparisonIntegralMana
+            // 
+            this.checkBoxComparisonIntegralMana.AutoSize = true;
+            this.checkBoxComparisonIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ComparisonIntegralMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(164, 168);
+            this.checkBoxComparisonIntegralMana.Name = "checkBoxComparisonIntegralMana";
+            this.checkBoxComparisonIntegralMana.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxComparisonIntegralMana.TabIndex = 170;
+            this.checkBoxComparisonIntegralMana.UseVisualStyleBackColor = true;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(0, 148);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(114, 13);
+            this.label32.TabIndex = 169;
+            this.label32.Text = "Segment Cooldowns: *";
+            this.toolTipMage.SetToolTip(this.label32, "Segment cooldowns into 30 second intervals.");
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(83, 122);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(117, 13);
+            this.label31.TabIndex = 168;
+            this.label31.Text = "Comparison / Display: *";
+            this.toolTipMage.SetToolTip(this.label31, "Enable options for comparisons or for display only.");
+            // 
             // textBoxSMPComputationLimit
             // 
             this.textBoxSMPComputationLimit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "MaxHeapLimit", true));
@@ -1965,7 +2020,6 @@
             // 
             this.checkBoxWotLK.AutoSize = true;
             this.checkBoxWotLK.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "WotLK", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxWotLK.Enabled = false;
             this.checkBoxWotLK.Location = new System.Drawing.Point(185, 67);
             this.checkBoxWotLK.Name = "checkBoxWotLK";
             this.checkBoxWotLK.Size = new System.Drawing.Size(15, 14);
@@ -2065,61 +2119,6 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(83, 122);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(117, 13);
-            this.label31.TabIndex = 168;
-            this.label31.Text = "Comparison / Display: *";
-            this.toolTipMage.SetToolTip(this.label31, "Enable options for comparisons or for display only.");
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(0, 148);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(114, 13);
-            this.label32.TabIndex = 169;
-            this.label32.Text = "Segment Cooldowns: *";
-            this.toolTipMage.SetToolTip(this.label32, "Segment cooldowns into 30 second intervals.");
-            // 
-            // label77
-            // 
-            this.label77.AutoSize = true;
-            this.label77.Location = new System.Drawing.Point(0, 168);
-            this.label77.Name = "label77";
-            this.label77.Size = new System.Drawing.Size(148, 13);
-            this.label77.TabIndex = 172;
-            this.label77.Text = "Integral Mana Consumables: *";
-            this.toolTipMage.SetToolTip(this.label77, "Do not allow partial uses of mana consumables.");
-            // 
-            // checkBoxDisplayIntegralMana
-            // 
-            this.checkBoxDisplayIntegralMana.AutoSize = true;
-            this.checkBoxDisplayIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "DisplayIntegralMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxDisplayIntegralMana.Location = new System.Drawing.Point(185, 168);
-            this.checkBoxDisplayIntegralMana.Name = "checkBoxDisplayIntegralMana";
-            this.checkBoxDisplayIntegralMana.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxDisplayIntegralMana.TabIndex = 171;
-            this.checkBoxDisplayIntegralMana.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxComparisonIntegralMana
-            // 
-            this.checkBoxComparisonIntegralMana.AutoSize = true;
-            this.checkBoxComparisonIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ComparisonIntegralMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(164, 168);
-            this.checkBoxComparisonIntegralMana.Name = "checkBoxComparisonIntegralMana";
-            this.checkBoxComparisonIntegralMana.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxComparisonIntegralMana.TabIndex = 170;
-            this.checkBoxComparisonIntegralMana.UseVisualStyleBackColor = true;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
-            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2131,6 +2130,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2141,7 +2141,6 @@
             this.tabPage5.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}

@@ -394,6 +394,65 @@ namespace Rawr.Mage
             return true;
         }
 
+        private List<int> FindShortestTailPath(int core, int t, int node, int[] used, int N, List<int> hexList)
+        {
+            int[] dist = new int[N]; // distance from CTn indicator
+            for (int k = 0; k < N; k++)
+            {
+                if (used[k] == t + 1)
+                {
+                    if ((hexList[k] & core & ~node) != 0) dist[k] = 1;
+                }
+            }
+            bool updated;
+            do
+            {
+                updated = false;
+                for (int k = 0; k < N; k++)
+                {
+                    if (used[k] == t + 1)
+                    {
+                        for (int l = 0; l < N; l++)
+                        {
+                            if (used[l] == t + 1 && dist[l] > 0)
+                            {
+                                if ((hexList[k] & hexList[l]) != 0 && (dist[l] + 1 < dist[k] || dist[k] == 0))
+                                {
+                                    dist[k] = dist[l] + 1;
+                                    updated = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            } while (updated);
+            int min = int.MaxValue;
+            for (int k = 0; k < N; k++)
+            {
+                if (used[k] == t + 1)
+                {
+                    if ((hexList[k] & ~core & node) != 0 && dist[k] + 1 < min) min = dist[k] + 1;
+                }
+            }
+            List<int> ret = new List<int>();
+            int last = node;
+            int d = min - 1;
+            while (d > 0)
+            {
+                for (int k = 0; k < N; k++)
+                {
+                    if (dist[k] == d && (last & hexList[k]) != 0)
+                    {
+                        last = hexList[k];
+                        ret.Add(last);
+                        break;
+                    }
+                }
+                d--;
+            }
+            return ret;
+        }
+
         private bool ValidateCycling()
         {
             // eliminate packing cycles
@@ -426,6 +485,33 @@ namespace Rawr.Mage
                 // for each one you find remove the corresponding group
                 // if we remove everything then there are no cycles
 
+                // we identify problematic node by enumerating over all
+                // for each we start building tails that connect to the current core
+                // we ignore nodes until they connect to one of the tails
+                // if a node connects to the core or tailes we examine existing tails
+                // and if it is consistent/connects with any of the tails we attach it to the tail
+                // if at any point we get 3 tails or any 2 tails connect we have a packing cycle/impossibility
+
+                // if node connects to tail at noncore position (tail & node & ~core != 0) and also connects to
+                // core, but at a point not in the tail (core & node & ~tail != 0) then the node has to come before the tail
+                // if reverse is also true, that is the tail needs to be before node because it connects at distinct point
+                // (tail & core & ~node != 0) then the node is incompatible with the tail, but since it also connects to it
+                // it forms a 2 tail cycle with it
+
+                // if node connects to tail at noncore position (tail & node & ~core != 0) then it has to be in the same tail
+
+                // if node connects to core where tail does not (core & node & ~tail != 0) and tail where node does not
+                // (tail & core & ~node != 0) then they have to be in different tails
+
+                // XX 
+                //  XX
+                // X X
+                
+                //  X
+                // XXX
+                // X
+                //   X
+
                 List<int> hexList = new List<int>();
                 List<int> hexList1 = new List<int>();
                 List<int> hexList2 = new List<int>();
@@ -448,71 +534,267 @@ namespace Rawr.Mage
                     }
                 }
 
-                // placed  ## ### ## #
-                //         .. ...  
-                //          .   . .. .
-                // active   #   #    #
-                //
-                // future   #   ##      <= ok
-                //          #   #  #    <= not ok
-
-                // take newHex = (future - future & active)
-                // if newHex & placed > 0 then we have cycle
-
-                bool ok = true;
-                int placed = 0;
-                while (ok && hexList.Count > 0)
+                int N = hexList.Count;
+                List<int> shortestCycle = null;
+                List<int> threeTail = null;
+                for (int i = 0; i < N; i++)
                 {
-                    ok = false;
-                    // check if any can be at the start
-                    for (int i = 0; i < hexList.Count; i++)
+                    int core = hexList[i];
+                    int[] tail = new int[3];
+                    int[] used = new int[N]; // index+1 of the tail to which it is attached, -1 for core
+                    used[i] = -1;
+                    bool cont = true;
+                    while (cont)
                     {
-                        int tail = hexList[i];
-                        for (int j = 0; j < hexList.Count; j++)
+                        cont = false;
+                        for (int j = 0; j < N; j++)
                         {
-                            int intersect = hexList[i] & hexList[j];
-                            if (i != j && intersect > 0)
+                            if (used[j] == 0)
                             {
-                                tail &= hexList[j];
-                                if (tail == 0) break;
+                                int node = hexList[j];
+                                int t = 0;
+                                bool alldifferent = true;
+                                for (; t < 3 && tail[t] != 0; t++)
+                                {
+                                    int cTN = tail[t] & node & ~core;
+                                    int CtN = ~tail[t] & node & core;
+                                    int CTn = tail[t] & ~node & core;
+                                    bool connects = cTN != 0;
+                                    bool different = CtN != 0 && CTn != 0;
+                                    if (connects && different)
+                                    {
+                                        // this is a cycle
+                                        // XXXXX        core  oo........    XX XX
+                                        // XXX  XXX     tail  ......oo.. => XX    XX
+                                        //   XXX XXXX   node  ...oo.....       XX XX
+
+                                        // to break the cycle we have to find the connecting link in tail
+                                        // if we have a 4 node cycle then the corresponding indicators
+                                        // are ABcd, aBCd, abCD, AbcD
+
+                                        // XXXXX        core   oo........    XX XX
+                                        // XX   X       tail_1 .....o....    XX   X
+                                        //   X  XXX     tail_2 ......oo.. =>      XXX
+                                        //   XXX XXXX   node   ...oo.....       XX XX
+
+                                        // XXXXX        core   oo........    XX XX
+                                        // XXX  XX      tail_1 .....o....    XX   X
+                                        //   X  XXX     tail_2 .......o.. =>      X X
+                                        //   XXX XXXX   node   ...oo.....       XX  X
+
+                                        // XXXXX        core   oo........    XX XX
+                                        // XXX  XX      tail_1 ......o...    XX    X
+                                        //   XXX XXXX   node   ...oo.....       XX X
+                                        
+                                        // when looking for a connection it is enough that it touches both
+                                        // sides, it does not to completely cover it
+                                        // we want to use single indicators anyway as they're more powerful
+                                        // in eliminating options and potential future cycles
+
+                                        List<int> path = FindShortestTailPath(core, t, node, used, N, hexList);
+                                        if (shortestCycle == null || path.Count + 2 < shortestCycle.Count)
+                                        {
+                                            shortestCycle = new List<int>();
+                                            shortestCycle.Add(node);
+                                            shortestCycle.AddRange(path);
+                                            shortestCycle.Add(core);
+                                            if (shortestCycle.Count == 3) goto BREAKCYCLE;
+                                        }
+                                        cont = true;
+                                        used[j] = -1;
+                                        break;
+                                    }
+                                    else if (connects && !different)
+                                    {
+                                        cont = true;
+                                        used[j] = t + 1;
+                                        tail[t] |= hexList[j];
+                                        break;
+                                    }
+                                    else if (!different)
+                                    {
+                                        alldifferent = false;
+                                    }
+                                }
+                                if (t < 3)
+                                {
+                                    if (tail[t] == 0)
+                                    {
+                                        if (alldifferent)
+                                        {
+                                            // it doesn't connect to any existing tails and we can prove it's not in any of them
+                                            // this means it has to be in a different tail
+                                            cont = true;
+                                            tail[t] = hexList[j];
+                                            used[j] = t + 1;
+                                            if (t == 2)
+                                            {
+                                                // we have a three-tail
+                                                threeTail = new List<int>();
+                                                threeTail.Add(core);
+                                                for (t = 0; t < 3; t++)
+                                                {
+                                                    for (int k = 0; k < N; k++)
+                                                    {
+                                                        if (used[k] == t + 1 && (core & hexList[k]) != 0)
+                                                        {
+                                                            threeTail.Add(hexList[k]);
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        // otherwise it could be in one of the previous tails so we can't do anything
+                                    }
+                                    else if (used[j] > 0)
+                                    {
+                                        // node connected to one of the tails
+                                        // it is still possible that it connects to some other tail also
+
+                                        //      XX    tail2
+                                        //    XXX     core
+                                        //   XX       tail1                                        
+                                        //   X   X
+
+                                        // in this case we also have a cycle, find the shortest path through
+                                        // each tail and loop it into cycle
+
+                                        List<int> path1 = FindShortestTailPath(core, used[j] - 1, node, used, N, hexList);
+                                        for (t = used[j] + 1; t < 3 && tail[t] != 0; t++)
+                                        {
+                                            if ((~core & tail[t] & node) != 0)
+                                            {
+                                                List<int> path2 = FindShortestTailPath(core, t, node, used, N, hexList);
+                                                if (shortestCycle == null || path1.Count + path2.Count + 2 < shortestCycle.Count)
+                                                {
+                                                    shortestCycle = new List<int>();
+                                                    shortestCycle.Add(node);
+                                                    shortestCycle.AddRange(path1);
+                                                    shortestCycle.Add(core);
+                                                    path2.Reverse();
+                                                    shortestCycle.AddRange(path2);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            int newHex = hexList[j] - intersect;
-                            if ((newHex & placed) > 0)
-                            {
-                                tail = 0;
-                                break;
-                            }
-                        }
-                        if (tail != 0)
-                        {
-                            // i is good
-                            ok = true;
-                            placed |= hexList[i];
-                            hexList.RemoveAt(i);
-                            break;
                         }
                     }
                 }
-                if (hexList.Count > 0)
+            BREAKCYCLE:
+                if (shortestCycle != null && (threeTail == null || shortestCycle.Count < threeTail.Count))
                 {
-                    // we have a cycle
-                    // to break the cycle we have to remove one of the elements
-                    // if all are present then obviously we have a cycle, so the true solution must have one of them missing
-                    for (int i = 0; i < hexList.Count; i++)
+                    // break the cycle
+                    // first compute indicators and for each indicator select a single representative
+                    int M = shortestCycle.Count;
+                    List<int> indicator = new List<int>();
+                    for (int i = 0; i < M; i++)
                     {
+                        int j = (i + 1) % M;
+                        int ind = shortestCycle[i] & shortestCycle[j];
+                        for (int k = 0; k < M; k++)
+                        {
+                            if (k != i && k != j) ind &= ~shortestCycle[k];
+                        }
+                        int s = 1;
+                        while ((s & ind) == 0) s <<= 1;
+                        indicator.Add(s);
+                    }
+                    // break cycle by eliminating one pair of indicators
+                    for (int i = 0; i < M; i++)
+                    {
+                        int j = (i + 1) % M;
                         SolverLP hexRemovedLP = lp.Clone();
-                        if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking cycle at boundary " + seg + ", removing " + hexList[i]);
+                        if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking cycle at boundary " + seg + ", removing " + indicator[i] + "+" + indicator[j]);
                         for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                         {
                             CastingState state = calculationResult.SolutionVariable[index].State;
                             int iseg = calculationResult.SolutionVariable[index].Segment;
-                            if (state != null && state.GetHex() == hexList[i] && (iseg == seg || iseg == seg + 1)) hexRemovedLP.EraseColumn(index);
+                            if (state != null && (iseg == seg || iseg == seg + 1))
+                            {
+                                int h = state.GetHex();
+                                bool isindicated = (h & indicator[i]) != 0 && (h & indicator[j]) != 0;
+                                if (isindicated)
+                                {
+                                    for (int k = 0; k < M; k++)
+                                    {
+                                        if (k != i && k != j && (h & indicator[k]) != 0)
+                                        {
+                                            isindicated = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (isindicated) hexRemovedLP.EraseColumn(index);
+                            }
                         }
                         HeapPush(hexRemovedLP);
                     }
-                    valid = false;
-                    break;
+                    return false;
                 }
+                else if (threeTail != null)
+                {
+                    // find the indicators
+                    List<int> indicator = new List<int>();
+                    int core = threeTail[0];
+                    for (int i = 1; i < 4; i++)
+                    {
+                        int ind = core & threeTail[i];
+                        for (int k = 1; k < 4; k++)
+                        {
+                            if (k != i) ind &= ~threeTail[k];
+                        }
+                        int s = 1;
+                        while ((s & ind) == 0) s <<= 1;
+                        indicator.Add(s);
+                    }
+                    SolverLP hexRemovedLP = lp.Clone();
+                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking threetail at boundary " + seg + ", removing core");
+                    for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                    {
+                        CastingState state = calculationResult.SolutionVariable[index].State;
+                        int iseg = calculationResult.SolutionVariable[index].Segment;
+                        if (state != null && (iseg == seg || iseg == seg + 1))
+                        {
+                            int h = state.GetHex();
+                            bool isindicated = (h & indicator[0]) != 0 && (h & indicator[1]) != 0 && (h & indicator[2]) != 0;
+                            if (isindicated) hexRemovedLP.EraseColumn(index);
+                        }
+                    }
+                    HeapPush(hexRemovedLP);
+                    for (int i = 0; i < 3; i++)
+                    {
+                        hexRemovedLP = lp.Clone();
+                        if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking threetail at boundary " + seg + ", removing indicator " + indicator[i]);
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                        {
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            int iseg = calculationResult.SolutionVariable[index].Segment;
+                            if (state != null && (iseg == seg || iseg == seg + 1))
+                            {
+                                int h = state.GetHex();
+                                bool isindicated = (h & indicator[i]) != 0;
+                                if (isindicated)
+                                {
+                                    for (int k = 0; k < 3; k++)
+                                    {
+                                        if (k != i && (h & indicator[k]) != 0)
+                                        {
+                                            isindicated = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (isindicated) hexRemovedLP.EraseColumn(index);
+                            }
+                        }
+                        HeapPush(hexRemovedLP);
+                    }
+                    return false;
+                }
+
                 // detect and eliminate double crossings
                 // #X |X #
                 // # Y| Y#
@@ -536,7 +818,7 @@ namespace Rawr.Mage
                 {
                     for (int j = i + 1; j < hexList1.Count; j++)
                     {
-                        placed = hex & hexList1[i];
+                        int placed = hex & hexList1[i];
                         int h = hex & hexList1[j];
                         int hp = h & placed;
                         if (placed != hp && h != hp)
@@ -565,7 +847,7 @@ namespace Rawr.Mage
                 {
                     for (int j = i + 1; j < hexList2.Count; j++)
                     {
-                        placed = hex & hexList2[i];
+                        int placed = hex & hexList2[i];
                         int h = hex & hexList2[j];
                         int hp = h & placed;
                         if (placed != hp && h != hp)

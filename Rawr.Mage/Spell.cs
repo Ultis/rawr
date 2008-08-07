@@ -25,7 +25,6 @@ namespace Rawr.Mage
         ArcaneMissiles,
         ArcaneMissilesCC,
         ArcaneMissilesNoProc,
-        ArcaneMissilesNetherwind,
         //ArcaneMissilesFTF,
         //ArcaneMissilesFTT,
         [Description("Frostbolt")]
@@ -98,6 +97,15 @@ namespace Rawr.Mage
         [Description("Cone of Cold")]
         ConeOfCold,
         CustomSpellMix
+    }
+
+    public struct SpellData
+    {
+        public float MinDamage;
+        public float MaxDamage;
+        public float PeriodicDamage;
+        public int Cost;
+        public float SpellDamageCoefficient;
     }
 
     public abstract class Spell
@@ -188,6 +196,13 @@ namespace Rawr.Mage
         public float MaxCritDamage;
         public float DotDamage;
 
+        protected static int RankLevelIndex(int rank, int level)
+        {
+            return rank * 100 + level;
+        }
+
+        public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int range, float castTime, float cooldown, MagicSchool magicSchool, SpellData spellData) : this(name, channeled, binary, instant, areaEffect, spellData.Cost, range, castTime, cooldown, magicSchool, spellData.MinDamage, spellData.MaxDamage, spellData.PeriodicDamage, 1, 1, spellData.SpellDamageCoefficient, 0, 0, false) { }
+        public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int range, float castTime, float cooldown, MagicSchool magicSchool, SpellData spellData, float hitProcs, float castProcs) : this(name, channeled, binary, instant, areaEffect, spellData.Cost, range, castTime, cooldown, magicSchool, spellData.MinDamage, spellData.MaxDamage, spellData.PeriodicDamage, hitProcs, castProcs, spellData.SpellDamageCoefficient, 0, 0, false) { }
         public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float spellDamageCoefficient) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, spellDamageCoefficient, 0, 0, false) { }
         public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, instant ? (1.5f / 3.5f) : (castTime / 3.5f), 0, 0, false) { }
         public BaseSpell(string name, bool channeled, bool binary, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float hitProcs, float castProcs) : this(name, channeled, binary, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, hitProcs, castProcs, instant ? (1.5f / 3.5f) : (castTime / 3.5f), 0, 0, false) { }
@@ -329,11 +344,18 @@ namespace Rawr.Mage
 
             if (ManualClearcasting && !ClearcastingAveraged)
             {
-                CritRate -= 0.01f * castingState.CalculationOptions.ArcanePotency; // replace averaged arcane potency with actual % chance
-                if (ClearcastingActive) CritRate += 0.1f * castingState.CalculationOptions.ArcanePotency;
+                CritRate -= (castingState.CalculationOptions.WotLK ? 0.015f : 0.01f) * castingState.CalculationOptions.ArcanePotency; // replace averaged arcane potency with actual % chance
+                if (ClearcastingActive) CritRate += (castingState.CalculationOptions.WotLK ? 0.15f : 0.1f) * castingState.CalculationOptions.ArcanePotency;
             }
 
-            PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - castingState.BaseStats.SpellPenetration / 350f * 0.75f) - ((targetLevel > 70 && !Binary) ? ((targetLevel - 70) * 0.02f) : 0f));
+            if (castingState.CalculationOptions.WotLK)
+            {
+                PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - castingState.BaseStats.SpellPenetration / 350f * 0.75f) - ((targetLevel > 70) ? ((targetLevel - 70) * 0.02f) : 0f));
+            }
+            else
+            {
+                PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - castingState.BaseStats.SpellPenetration / 350f * 0.75f) - ((targetLevel > 70 && !Binary) ? ((targetLevel - 70) * 0.02f) : 0f));
+            }
         }
 
         private float ProcBuffUp(float procChance, float buffDuration, float triggerInterval)
@@ -590,6 +612,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             Cooldown -= 0.5f * castingState.CalculationOptions.ImprovedFireBlast;
             CritRate += 0.02f * castingState.CalculationOptions.Incinerate;
+            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.02f * castingState.CalculationOptions.SpellImpact);
             CalculateDerivedStats(castingState);
         }
     }
@@ -651,8 +674,21 @@ namespace Rawr.Mage
 
     class Frostbolt : BaseSpell
     {
+        public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
+        public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
+        static Frostbolt()
+        {
+            MaxRank[70] = 14;
+            SpellData[RankLevelIndex(13, 70)] = new SpellData() { Cost = 330, MinDamage = 600, MaxDamage = 647, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
+            SpellData[RankLevelIndex(14, 70)] = new SpellData() { Cost = 345, MinDamage = 630, MaxDamage = 680, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
+        }
+        private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
+        {
+            return SpellData[RankLevelIndex(options.WotLK ? MaxRank[options.PlayerLevel] : 13, options.PlayerLevel)];
+        }
+
         public Frostbolt(CastingState castingState, bool manualClearcasting, bool clearcastingActive, bool pom)
-            : base("Frostbolt", false, true, false, false, 330, 30, 3, 0, MagicSchool.Frost, 600, 647, 0, 0.95f * 3f / 3.5f)
+            : base("Frostbolt", false, true, false, false, 30, 3, 0, MagicSchool.Frost, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             if (pom)
             {
@@ -669,7 +705,7 @@ namespace Rawr.Mage
         }
 
         public Frostbolt(CastingState castingState)
-            : base("Frostbolt", false, true, false, false, 330, 30, 3, 0, MagicSchool.Frost, 600, 647, 0, 0.95f * 3f / 3.5f)
+            : base("Frostbolt", false, true, false, false, 30, 3, 0, MagicSchool.Frost, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             Calculate(castingState);
         }
@@ -691,8 +727,21 @@ namespace Rawr.Mage
 
     class Fireball : BaseSpell
     {
+        public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
+        public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
+        static Fireball()
+        {
+            MaxRank[70] = 14;
+            SpellData[RankLevelIndex(13, 70)] = new SpellData() { Cost = 425, MinDamage = 649, MaxDamage = 821, PeriodicDamage = 84, SpellDamageCoefficient = 3.5f / 3.5f };
+            SpellData[RankLevelIndex(14, 70)] = new SpellData() { Cost = 465, MinDamage = 717, MaxDamage = 913, PeriodicDamage = 92, SpellDamageCoefficient = 3.5f / 3.5f };
+        }
+        private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
+        {
+            return SpellData[RankLevelIndex(options.WotLK ? MaxRank[options.PlayerLevel] : 13, options.PlayerLevel)];
+        }
+
         public Fireball(CastingState castingState, bool pom)
-            : base("Fireball", false, false, false, false, 425, 35, 3.5f, 0, MagicSchool.Fire, 649, 821, 84)
+            : base("Fireball", false, false, false, false, 35, 3.5f, 0, MagicSchool.Fire, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             if (pom)
             {
@@ -737,7 +786,15 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             AoeDamageCap = 6500;
             int ImprovedConeOfCold = castingState.CalculationOptions.ImprovedConeOfCold;
-            SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0));
+            if (castingState.CalculationOptions.WotLK)
+            {
+                SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0) + 0.02f * castingState.CalculationOptions.SpellImpact);
+                CritRate += 0.02f * castingState.CalculationOptions.Incinerate;
+            }
+            else
+            {
+                SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0));
+            }
             CalculateDerivedStats(castingState);
         }
     }
@@ -786,9 +843,18 @@ namespace Rawr.Mage
         public override void Calculate(CastingState castingState)
         {
             base.Calculate(castingState);
-            BaseCastTime -= timeDebuff / 3f;
             CostModifier += 0.75f * costDebuff + castingState.BaseStats.ArcaneBlastBonus;
-            SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus);
+            if (castingState.CalculationOptions.WotLK)
+            {
+                SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus + 0.15f * timeDebuff + 0.02f * castingState.CalculationOptions.SpellImpact);
+                SpellDamageCoefficient += 0.03f * castingState.CalculationOptions.EmpoweredArcaneMissiles; // TODO change talent name
+                CritRate += 0.02f * castingState.CalculationOptions.Incinerate;
+            }
+            else
+            {
+                SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus);
+                BaseCastTime -= timeDebuff / 3f;
+            }
             CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
             CalculateDerivedStats(castingState);
         }
@@ -800,11 +866,25 @@ namespace Rawr.Mage
     // 1269 arcane, 805-806, 1.03 * 1.05 amp
     // 1275 arcane, 807-808 , 1.03 * 1.05 amp
     //
-    // 267.55514100785945446139620896945 <= base <= 267.7420527045769764216366158113
+    // 267.55514100785945446139620896945 <= base 10 <= 267.7420527045769764216366158113
+    // 287.7142857142857142857142857144 <= base 11 <= 288.7142857142857142857142857144
     class ArcaneMissiles : BaseSpell
     {
+        public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
+        public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
+        static ArcaneMissiles()
+        {
+            MaxRank[70] = 11;
+            SpellData[RankLevelIndex(10, 70)] = new SpellData() { Cost = 740, MinDamage = 267.6f * 5, MaxDamage = 267.6f * 5, SpellDamageCoefficient = 5f / 3.5f };
+            SpellData[RankLevelIndex(11, 70)] = new SpellData() { Cost = 761, MinDamage = 287.9f * 5, MaxDamage = 287.9f * 5, SpellDamageCoefficient = 5f / 3.5f }; // there's some indication that coefficient might be slightly different
+        }
+        private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
+        {
+            return SpellData[RankLevelIndex(options.WotLK ? MaxRank[options.PlayerLevel] : 10, options.PlayerLevel)];
+        }
+
         public ArcaneMissiles(CastingState castingState, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing)
-            : base("Arcane Missiles", true, false, false, false, 740, 30, 5, 0, MagicSchool.Arcane, 267.6f * 5, 267.6f * 5, 0, 5, 6)
+            : base("Arcane Missiles", true, false, false, false, 30, 5, 0, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions), 5, 6)
         {
             ManualClearcasting = true;
             ClearcastingActive = clearcastingActive;
@@ -814,7 +894,7 @@ namespace Rawr.Mage
         }
 
         public ArcaneMissiles(CastingState castingState)
-            : base("Arcane Missiles", true, false, false, false, 740, 30, 5, 0, MagicSchool.Arcane, 267.6f * 5, 267.6f * 5, 0, 5, 1)
+            : base("Arcane Missiles", true, false, false, false, 30, 5, 0, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions), 5, 6)
         {
             Calculate(castingState);
         }
@@ -822,11 +902,11 @@ namespace Rawr.Mage
         public override void Calculate(CastingState castingState)
         {
             base.Calculate(castingState);
-            CostModifier += 0.02f * castingState.CalculationOptions.EmpoweredArcaneMissiles;
+            if (!castingState.CalculationOptions.WotLK) CostModifier += 0.02f * castingState.CalculationOptions.EmpoweredArcaneMissiles;
 
             // CC double dipping
-            if (!ManualClearcasting) CritRate += 0.01f * castingState.CalculationOptions.ArcanePotency;
-            else if (ClearcastingProccing) CritRate += 0.1f * castingState.CalculationOptions.ArcanePotency;
+            if (!ManualClearcasting) CritRate += (castingState.CalculationOptions.WotLK ? 0.015f : 0.01f) * castingState.CalculationOptions.ArcanePotency;
+            else if (ClearcastingProccing) CritRate += (castingState.CalculationOptions.WotLK ? 0.15f : 0.1f) * castingState.CalculationOptions.ArcanePotency;
 
             SpellDamageCoefficient += 0.15f * castingState.CalculationOptions.EmpoweredArcaneMissiles;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
@@ -872,6 +952,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
+            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.02f * castingState.CalculationOptions.SpellImpact);
             AoeDamageCap = 10180;
             CalculateDerivedStats(castingState);
         }
@@ -884,6 +965,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             AoeDamageCap = 9440;
+            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.02f * castingState.CalculationOptions.SpellImpact);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1022,54 +1104,6 @@ namespace Rawr.Mage
     }
 
     #region Spell Cycles
-
-    class ArcaneMissilesNetherwind : Spell
-    {
-        public ArcaneMissilesNetherwind(CastingState castingState)
-        {
-            Name = "AM?";
-            ABCycle = true;
-
-            Spell AB = castingState.GetSpell(SpellId.ArcaneBlast0POM);
-            Spell FB = castingState.GetSpell(SpellId.FireballPOM);
-            Spell FrB = castingState.GetSpell(SpellId.FrostboltPOM);
-            Spell ABarr = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
-
-            Spell maxProc = AB;
-            if (FB.DamagePerSecond > maxProc.DamagePerSecond) maxProc = FB;
-            if (FrB.DamagePerSecond > maxProc.DamagePerSecond) maxProc = FrB;
-
-            if (castingState.CalculationOptions.NetherwindPresence == 0)
-            {
-                CastTime = AM.CastTime;
-                CostPerSecond = AM.CostPerSecond;
-                DamagePerSecond = AM.DamagePerSecond;
-                ThreatPerSecond = AM.ThreatPerSecond;
-                ManaRegenPerSecond = AM.ManaRegenPerSecond;
-                sequence = AM.Sequence;
-            }
-            else
-            {
-                float procRate = castingState.CalculationOptions.NetherwindPresence * 0.01f;
-                // chance that at least one procs = 1 - chance that nothing procs
-                // 1 - (1 - procRate)^N
-
-                // lim n->inf [x - x^(n+1) + nx^(n+1)(x-1)] / (x-1)^2 = x / (x-1)^2
-                // sum_N N(1 - procRate)^N procRate = procRate sum_N  N(1 - procRate)^N = (1 - procRate) / procRate = 1 / procRate - 1
-
-                // assume {1,5,6} cast procs per AM
-                float averageAMs = (1 / procRate - 1) / 6;
-
-                CastTime = (averageAMs * AM.CastTime + maxProc.CastTime) / (averageAMs + 1);
-                CostPerSecond = (averageAMs * AM.CastTime * AM.CostPerSecond + maxProc.CastTime * maxProc.CostPerSecond) / (averageAMs + 1) / CastTime;
-                DamagePerSecond = (averageAMs * AM.CastTime * AM.DamagePerSecond + maxProc.CastTime * maxProc.DamagePerSecond) / (averageAMs + 1) / CastTime;
-                ThreatPerSecond = (averageAMs * AM.CastTime * AM.ThreatPerSecond + maxProc.CastTime * maxProc.ThreatPerSecond) / (averageAMs + 1) / CastTime;
-                ManaRegenPerSecond = (averageAMs * AM.CastTime * AM.ManaRegenPerSecond + maxProc.CastTime * maxProc.ManaRegenPerSecond) / (averageAMs + 1) / CastTime;
-                sequence = AM.Name + "=>" + maxProc.Name;
-            }
-        }
-    }
 
     class ABAMP : SpellCycle
     {
