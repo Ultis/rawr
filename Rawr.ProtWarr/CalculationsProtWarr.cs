@@ -325,7 +325,7 @@ threat and limited threat scaled by the threat scale.",
                                                 stats.Crit - levelDifference) / 100f);
             calculatedStats.Crit = chanceCrit * 100f;
             float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
-            float chanceParry = Math.Max(0f, 0.1425f - expertiseBonus);
+            float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus);
             if((targetLevel - 70f) < 3)
                 chanceParry = Math.Max(0f, 0.065f - expertiseBonus);
             
