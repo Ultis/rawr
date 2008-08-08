@@ -161,22 +161,27 @@ namespace Rawr
 
         class LuaIntegerToken : LuaToken
         {
-            int m_iValue;
+            // Integers are stored as longs because of an edge
+            // case.
+            // It turns out that you can have the value 2147483648
+            // as an integer output in a saved variable file, but
+            // that's out of the range of legitimate C# int32 values.
+            long m_lValue;
 
-            public LuaIntegerToken(int iValue)
+            public LuaIntegerToken(long lValue)
                 : base(LuaTokenTypes.LUA_INTEGER)
             {
-                m_iValue = iValue;
+                m_lValue = lValue;
             }
 
             public override object getValue()
             {
-                return m_iValue;
+                return m_lValue;
             }
 
-            public int getInteger()
+            public long getInteger()
             {
-                return m_iValue;
+                return m_lValue;
             }
         };
 
@@ -270,8 +275,14 @@ namespace Rawr
 
             public SavedVariableFileStream(string sFileName)
             {
-                StreamReader streamReader = new StreamReader(sFileName);
+                // Allow the file to be read/written by other processes.
+                // Even though having the file written to while it's being read is likely to
+                // yield an invalid Saved Variables file, it will at least allow the
+                // game to function properly.
+                FileStream fileStream = new FileStream(sFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                StreamReader streamReader = new StreamReader(fileStream);
                 m_sFullFile = streamReader.ReadToEnd();
+                fileStream.Close();
                 m_iCurrentOffset = 0;
                 m_iLastOffset = m_sFullFile.Length;
             }
@@ -357,22 +368,34 @@ namespace Rawr
 
         private static LuaToken getNextToken(SavedVariableFileStream stream)
         {
+            // Note:
+            // The general rule on the true/false parameter of getNextCharacter/peekNextCharacter.
+            // That boolean indicates whether the function should parse out comments & white-spaces
+            // from the next possible character.  While it's useful to ignore those characters
+            // when talking about separators between keywords, those characters should not
+            // be ignored when the next keyword is being processed.  Imagine the following
+            // example:
+            // var1 = 0xc0
+            // ffee = 72
+            // In this case, if we were processing the numer '0xc0' and asked for the next
+            // character ignoring white spaces, 'ffee' would be appended letting var1 = 0xc0ffee
+            // when in actuality ffee is the name of the next keyword / variable.
             char cCharacter = stream.getNextCharacter(false);
 
             if ((cCharacter >= '0' && cCharacter <= '9') || (cCharacter == '-' || cCharacter == '+'))
             {
-                char? cNextCharacter = stream.peekNextCharacter(false);
+                char? cNextCharacter = stream.peekNextCharacter(true);
                 // Numeric token
                 if (cCharacter == '0' && cNextCharacter != null && Char.ToUpper((char)cNextCharacter) == 'X')
                 {
                     // Hexadecimal character
                     int iValue = 0;
                     // Consume 'X'
-                    stream.getNextCharacter(false);
+                    stream.getNextCharacter(true);
 
                     while (true)
                     {
-                        cNextCharacter = stream.peekNextCharacter(false);
+                        cNextCharacter = stream.peekNextCharacter(true);
 
                         if (cNextCharacter != null && Char.ToUpper((char)cNextCharacter) >= 'A' && Char.ToUpper((char)cNextCharacter) <= 'F')
                         {
@@ -387,7 +410,8 @@ namespace Rawr
                             break;
                         }
 
-                        stream.getNextCharacter(false);
+                        // Consume the character we just read in
+                        stream.getNextCharacter(true);
                     }
                     return new LuaIntegerToken(iValue);
                 }
@@ -401,7 +425,7 @@ namespace Rawr
 
                     while (true)
                     {
-                        cNextCharacter = stream.peekNextCharacter(false);
+                        cNextCharacter = stream.peekNextCharacter(true);
 
                         if (cNextCharacter == 'e' || cNextCharacter == 'E' || cNextCharacter == '.' || cNextCharacter == '-')
                         {
@@ -416,12 +440,13 @@ namespace Rawr
                         }
 
                         sValue += cNextCharacter;
-                        stream.getNextCharacter(false);
+                        // Consume the character we just read in
+                        stream.getNextCharacter(true);
                     }
 
                     if (bIsInteger)
                     {
-                        return new LuaIntegerToken(Int32.Parse(sValue));
+                        return new LuaIntegerToken(Int64.Parse(sValue));
                     }
                     else
                     {
@@ -437,6 +462,8 @@ namespace Rawr
                 {
                     char cNextCharacter = stream.getNextCharacter(true);
 
+                    // String terminates when it ends with the same character
+                    // it began with (i.e. ' is needed to close ', and " for ")
                     if (cNextCharacter == cCharacter)
                     {
                         break;
@@ -444,6 +471,7 @@ namespace Rawr
                     else if (cNextCharacter == '\\')
                     {
                         sValue += cNextCharacter;
+                        // Escape the next character...  Read it in whatever it is.
                         cNextCharacter = stream.getNextCharacter(true);
                     }
                     sValue += cNextCharacter;
@@ -525,7 +553,7 @@ namespace Rawr
 
                 return new LuaTableToken(items);
             }
-            else if ((cCharacter >= 'a' && cCharacter <= 'z') || (cCharacter >= 'A' && cCharacter <= 'Z'))
+            else if ((cCharacter >= 'a' && cCharacter <= 'z') || (cCharacter >= 'A' && cCharacter <= 'Z') || cCharacter == '_')
             {
                 string sKeyword = null;
 
@@ -533,11 +561,11 @@ namespace Rawr
 
                 while (true)
                 {
-                    char? cNextCharacter = stream.peekNextCharacter(false);
+                    char? cNextCharacter = stream.peekNextCharacter(true);
 
-                    if ((cNextCharacter >= 'a' && cNextCharacter <= 'z') || (cNextCharacter >= 'A' && cNextCharacter <= 'Z') || (cNextCharacter >= '0' && cNextCharacter <= '9'))
+                    if ((cNextCharacter >= 'a' && cNextCharacter <= 'z') || (cNextCharacter >= 'A' && cNextCharacter <= 'Z') || (cNextCharacter >= '0' && cNextCharacter <= '9') || cNextCharacter == '_')
                     {
-                        sKeyword += stream.getNextCharacter(false);
+                        sKeyword += stream.getNextCharacter(true);
                     }
                     else
                     {

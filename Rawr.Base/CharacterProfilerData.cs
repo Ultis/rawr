@@ -255,7 +255,7 @@ namespace Rawr
         {
             m_characterInfo = characterInfo;
             m_sName = sName;
-            m_iLevel = (int)characterInfo["Level"];
+            m_iLevel = (int) (characterInfo["Level"] as long?);
             m_sRace = (string)characterInfo["Race"];
             m_sClass = (string)characterInfo["Class"];
 
