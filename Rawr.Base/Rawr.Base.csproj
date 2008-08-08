@@ -54,6 +54,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Character.cs" />
+    <Compile Include="CharacterProfilerData.cs" />
     <Compile Include="CustomControls\ExtendedToolTipCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -84,6 +85,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>NetworkSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="SavedVariablesParser.cs" />
     <Compile Include="SerializableDictionary.cs" />
     <Compile Include="Stats.cs" />
     <Compile Include="StatusMessaging.cs" />

@@ -108,6 +108,12 @@
     <Compile Include="FormBatchTools.Designer.cs">
       <DependentUpon>FormBatchTools.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormChooseCharacter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormChooseCharacter.designer.cs">
+      <DependentUpon>FormChooseCharacter.cs</DependentUpon>
+    </Compile>
     <Compile Include="ItemEnchantContextualMenu.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -240,6 +246,9 @@
     <EmbeddedResource Include="FormBatchTools.resx">
       <DependentUpon>FormBatchTools.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormChooseCharacter.resx">
+      <DependentUpon>FormChooseCharacter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEnterId.resx">
       <SubType>Designer</SubType>

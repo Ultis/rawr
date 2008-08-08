@@ -131,6 +131,7 @@ namespace Rawr
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadFromCharacterProfilerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1199,6 +1200,7 @@ namespace Rawr
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
             this.loadFromArmoryToolStripMenuItem,
+            this.loadFromCharacterProfilerToolStripMenuItem,
             this.toolStripSeparator,
             this.toolStripSeparator8,
             this.saveToolStripMenuItem,
@@ -1238,6 +1240,14 @@ namespace Rawr
             this.loadFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.loadFromArmoryToolStripMenuItem.Text = "&Load from Armory...";
             this.loadFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.loadFromArmoryToolStripMenuItem_Click);
+            // 
+            // loadFromCharacterProfilerToolStripMenuItem
+            // 
+            this.loadFromCharacterProfilerToolStripMenuItem.Name = "loadFromCharacterProfilerToolStripMenuItem";
+            this.loadFromCharacterProfilerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.loadFromCharacterProfilerToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
+            this.loadFromCharacterProfilerToolStripMenuItem.Text = "Load from Character &Profiler";
+            this.loadFromCharacterProfilerToolStripMenuItem.Click += new System.EventHandler(this.loadFromCharacterProfilerToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
@@ -1866,6 +1876,7 @@ namespace Rawr
 		private System.Windows.Forms.GroupBox groupBox4;
 		private ItemComparison itemComparison1;
 		private System.Windows.Forms.ToolStripMenuItem loadFromArmoryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadFromCharacterProfilerToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem copyCharacterStatsToClipboardToolStripMenuItem;
 		private System.Windows.Forms.ToolStrip toolStripItemComparison;
 		private System.Windows.Forms.ToolStripLabel toolStripLabel1;

@@ -1093,7 +1093,80 @@ namespace Rawr
             form.Show();            
         }
 
-		//private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
+        // Charinna
+        private void loadFromCharacterProfilerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (PromptToSaveBeforeClosing())
+            {
+                OpenFileDialog dialog = new OpenFileDialog();
+                dialog.DefaultExt = ".lua";
+                dialog.Filter = "Character Profiler Saved Variables Files | *.lua";
+                dialog.Multiselect = false;
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        CharacterProfilerData characterList = new CharacterProfilerData(dialog.FileName);
+
+                        FormChooseCharacter form = new FormChooseCharacter(characterList);
+
+                        if (form.ShowDialog() == DialogResult.OK)
+                        {
+                            StartProcessing();
+                            BackgroundWorker bw = new BackgroundWorker();
+                            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_LoadCharacterProfilerComplete);
+                            bw.DoWork += new DoWorkEventHandler(bw_LoadCharacterProfiler);
+                            bw.RunWorkerAsync(form.Character);
+                        }
+
+                        form.Dispose();
+                    }
+                    catch (InvalidDataException ex)
+                    {
+                        MessageBox.Show("Unable to parse saved variable file: " + ex.Message);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Error reading saved variable file.");
+                    }
+                }
+                dialog.Dispose();
+            }
+        }
+
+        // Charinna
+        void bw_LoadCharacterProfiler(object sender, DoWorkEventArgs e)
+        {
+            WebRequestWrapper.ResetFatalErrorIndicator();
+            StatusMessaging.UpdateStatus("Loading Character", "Loading Saved Character");
+            StatusMessaging.UpdateStatus("Update Item Cache", "Queued");
+            StatusMessaging.UpdateStatus("Cache Item Icons", "Queued");
+            Character character = e.Argument as Character;
+            StatusMessaging.UpdateStatusFinished("Loading Character");
+            if (character != null)
+            {
+                this.EnsureItemsLoaded(character.GetAllEquipedAndAvailableGearIds());
+                _characterPath = null;
+                e.Result = character;
+            }
+        }
+
+        // Charinna
+        void bw_LoadCharacterProfilerComplete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                MessageBox.Show(e.Error.Message);
+            }
+            else
+            {
+                //Load Character into UI
+                LoadCharacterIntoForm(e.Result as Character);
+                FinishedProcessing();
+            }
+        }
+
+        //private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
 		//{
 		//    FormItemEditor itemEditor = new FormItemEditor(Character);
 		//    itemEditor.ShowDialog(this);
