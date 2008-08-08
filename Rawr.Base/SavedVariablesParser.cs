@@ -16,10 +16,9 @@ namespace Rawr
      * This class parses a saved variable file and outputs a list of variable = value keys.
      * Note that it does not support the following:
      * 1. Values that are expressions other than numeric constants, strings, booleans or nil values.
-     * 2. Negative values
-     * 3. String values that are defined using long format (long brackets)
-     * 4. Multi-line comments
-     * 5. Whatever else it doesn't support :)
+     * 2. String values that are defined using long format (long brackets)
+     * 3. Multi-line comments
+     * 4. Whatever else it doesn't support :)
      * 
      * There's no technical reason not to support these items, I just did not get around to it.
      */
@@ -360,7 +359,7 @@ namespace Rawr
         {
             char cCharacter = stream.getNextCharacter(false);
 
-            if (cCharacter >= '0' && cCharacter <= '9')
+            if ((cCharacter >= '0' && cCharacter <= '9') || (cCharacter == '-' || cCharacter == '+'))
             {
                 char? cNextCharacter = stream.peekNextCharacter(false);
                 // Numeric token
