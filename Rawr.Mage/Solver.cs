@@ -41,6 +41,8 @@ namespace Rawr.Mage
         private bool destructionPotionAvailable;
         private bool drumsOfBattleAvailable;
         private bool flameCapAvailable;
+
+        private double arcanePowerCooldown;
         
         private bool trinket1OnManaGem;
         private bool trinket2OnManaGem;
@@ -258,6 +260,7 @@ namespace Rawr.Mage
                 flameCapAvailable = !calculationOptions.DisableCooldowns && calculationOptions.FlameCap;
                 drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
                 coldsnapCooldown = 8 * 60 * (1 - 0.1f * calculationOptions.IceFloes);
+                arcanePowerCooldown = calculationOptions.WotLK ? 180.0 - 30.0 * calculationOptions.ArcaneFlows : 180.0;
 
                 trinket1OnManaGem = false;
                 trinket2OnManaGem = false;
@@ -927,7 +930,7 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowEvocation, column, calculationResult.EvocationDuration / 480.0);
                     lp.SetElementUnsafe(rowPotion, column, 1.0 / 120.0);
                     lp.SetElementUnsafe(rowManaGem, column, 1.0 / 120.0);
-                    lp.SetElementUnsafe(rowArcanePower, column, 15.0 / 180.0);
+                    lp.SetElementUnsafe(rowArcanePower, column, 15.0 / arcanePowerCooldown);
                     lp.SetElementUnsafe(rowIcyVeins, column, 20.0 / 180.0 + (coldsnapAvailable ? 20.0 / coldsnapCooldown : 0.0));
                     lp.SetElementUnsafe(rowMoltenFury, column, calculationOptions.MoltenFuryPercentage);
                     lp.SetElementUnsafe(rowManaGemFlameCap, column, 1f / 120f);
@@ -1109,7 +1112,7 @@ namespace Rawr.Mage
                 ivlength = (1 + (int)((calculationOptions.FightDuration - 20f) / 180f)) * 20;
             }
 
-            double aplength = (1 + (int)((calculationOptions.FightDuration - 30f) / 180f)) * 15;
+            double aplength = (1 + (int)((calculationOptions.FightDuration - 30f) / arcanePowerCooldown)) * 15;
             double mflength = calculationOptions.MoltenFuryPercentage * calculationOptions.FightDuration;
             double dpivstackArea = calculationOptions.FightDuration;
             //if (mfAvailable && heroismAvailable) dpivstackArea -= 120; // only applies if heroism and iv cannot stack
@@ -1195,7 +1198,7 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowManaGem, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             lp.SetRHSUnsafe(rowManaGemOnly, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             if (heroismAvailable) lp.SetRHSUnsafe(rowHeroism, 40);
-            if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? 15.0 / 180.0 * calculationOptions.FightDuration : aplength);
+            if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? 15.0 / arcanePowerCooldown * calculationOptions.FightDuration : aplength);
             if (heroismAvailable && arcanePowerAvailable) lp.SetRHSUnsafe(rowHeroismArcanePower, 15);
             if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeins, calculationOptions.AverageCooldowns ? (20.0 / 180.0 + (coldsnapAvailable ? 20.0 / coldsnapCooldown : 0.0)) * calculationOptions.FightDuration : ivlength);
             if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFury, mflength);
@@ -1278,7 +1281,7 @@ namespace Rawr.Mage
                     for (int seg = 0; seg < segments; seg++)
                     {
                         lp.SetRHSUnsafe(rowSegmentArcanePower + seg, 15.0);
-                        double cool = 180;
+                        double cool = arcanePowerCooldown;
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
@@ -1473,7 +1476,7 @@ namespace Rawr.Mage
                     for (int seg = 0; seg < segments; seg++)
                     {
                         rowCount++;
-                        double cool = 180;
+                        double cool = arcanePowerCooldown;
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
@@ -1682,7 +1685,7 @@ namespace Rawr.Mage
                     bound = Math.Min(bound, 15.0);
                     for (int ss = 0; ss < segments; ss++)
                     {
-                        double cool = 180;
+                        double cool = arcanePowerCooldown;
                         int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                         if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentArcanePower + ss, column, 1.0);
@@ -1842,31 +1845,39 @@ namespace Rawr.Mage
                 }
                 if (calculationOptions.ABCycles)
                 {
-                    if (calculationOptions.EmpoweredArcaneMissiles > 0)
+                    if (calculationOptions.WotLK)
                     {
-                        list.Add(SpellId.ABAMP);
                         list.Add(SpellId.ABAM);
-                        list.Add(SpellId.AB3AMSc);
-                        list.Add(SpellId.ABAM3Sc);
-                        list.Add(SpellId.ABAM3Sc2);
-                        list.Add(SpellId.ABAM3FrB);
-                        list.Add(SpellId.ABAM3FrB2);
-                        list.Add(SpellId.ABAM3ScCCAM);
-                        list.Add(SpellId.ABAM3Sc2CCAM);
-                        list.Add(SpellId.ABAM3FrBCCAM);
-                        list.Add(SpellId.ABAM3FrBScCCAM);
-                        list.Add(SpellId.ABAMCCAM);
-                        list.Add(SpellId.ABAM3CCAM);
+                        if (calculationOptions.MissileBarrage > 0) list.Add(SpellId.ABMBAM);
                     }
-                    if (calculationOptions.ImprovedFrostbolt > 0)
+                    else
                     {
-                        list.Add(SpellId.ABFrB3FrB);
-                        list.Add(SpellId.ABFrB3FrBSc);
-                    }
-                    if (calculationOptions.ImprovedFireball > 0)
-                    {
-                        list.Add(SpellId.ABFB3FBSc);
-                        //list.Add(SpellId.AB3Sc);
+                        if (calculationOptions.EmpoweredArcaneMissiles > 0)
+                        {
+                            list.Add(SpellId.ABAMP);
+                            list.Add(SpellId.ABAM);
+                            list.Add(SpellId.AB3AMSc);
+                            list.Add(SpellId.ABAM3Sc);
+                            list.Add(SpellId.ABAM3Sc2);
+                            list.Add(SpellId.ABAM3FrB);
+                            list.Add(SpellId.ABAM3FrB2);
+                            list.Add(SpellId.ABAM3ScCCAM);
+                            list.Add(SpellId.ABAM3Sc2CCAM);
+                            list.Add(SpellId.ABAM3FrBCCAM);
+                            list.Add(SpellId.ABAM3FrBScCCAM);
+                            list.Add(SpellId.ABAMCCAM);
+                            list.Add(SpellId.ABAM3CCAM);
+                        }
+                        if (calculationOptions.ImprovedFrostbolt > 0)
+                        {
+                            list.Add(SpellId.ABFrB3FrB);
+                            list.Add(SpellId.ABFrB3FrBSc);
+                        }
+                        if (calculationOptions.ImprovedFireball > 0)
+                        {
+                            list.Add(SpellId.ABFB3FBSc);
+                            //list.Add(SpellId.AB3Sc);
+                        }
                     }
                 }
                 if (calculationOptions.AoeDuration > 0)

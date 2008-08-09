@@ -350,7 +350,7 @@ namespace Rawr.Mage
                 // ap
                 if (valid && arcanePowerAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.ArcanePower, 15, 180);
+                    valid = ValidateCooldown(Cooldown.ArcanePower, 15, arcanePowerCooldown);
                 }
                 // iv
                 if (valid && icyVeinsAvailable)
@@ -1978,7 +1978,7 @@ namespace Rawr.Mage
                 case Cooldown.ArcanePower:
                     for (int ss = 0; ss < segments; ss++)
                     {
-                        double cool = 180;
+                        double cool = arcanePowerCooldown;
                         int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                         if (minSegment >= ss && maxSegment <= maxs) return rowSegmentArcanePower + ss;

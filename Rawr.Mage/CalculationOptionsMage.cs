@@ -45,6 +45,7 @@ namespace Rawr.Mage
         public bool DrumsOfBattle { get; set; }
         public bool AutomaticArmor { get; set; }
         public bool IncrementalOptimizations { get; set; }
+        public float SlowedTime { get; set; }
 
         [XmlIgnore]
         public int[] IncrementalSetStateIndexes;
@@ -261,12 +262,14 @@ namespace Rawr.Mage
 
         // WotLK
         public int SpellImpact { get; set; }
+        public int TormentTheWeak { get; set; }
         public int StudentOfTheMind { get; set; }
         public int IncantersAbsorption { get; set; }
         public int NetherwindPresence { get; set; }
         public int ArcaneBarrage { get; set; }
         public int MissileBarrage { get; set; }
         public int ArcaneFlows { get; set; }
+        public int FocusMagic { get; set; }
 
         private CalculationOptionsMage()
         {

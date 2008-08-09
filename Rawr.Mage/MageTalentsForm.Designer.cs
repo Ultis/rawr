@@ -29,6 +29,10 @@ namespace Rawr.Mage
         private void InitializeComponent()
         {
             this.groupBoxArcane = new System.Windows.Forms.GroupBox();
+            this.comboBoxArcaneFlows = new System.Windows.Forms.ComboBox();
+            this.label74 = new System.Windows.Forms.Label();
+            this.comboBoxMissileBarrage = new System.Windows.Forms.ComboBox();
+            this.label73 = new System.Windows.Forms.Label();
             this.comboBoxArcaneBarrage = new System.Windows.Forms.ComboBox();
             this.label72 = new System.Windows.Forms.Label();
             this.comboBoxNetherwindPresence = new System.Windows.Forms.ComboBox();
@@ -179,10 +183,10 @@ namespace Rawr.Mage
             this.buttonImportBlizzardCode = new System.Windows.Forms.Button();
             this.comboBoxTalentPreset = new System.Windows.Forms.ComboBox();
             this.buttonImportTalentPreset = new System.Windows.Forms.Button();
-            this.comboBoxMissileBarrage = new System.Windows.Forms.ComboBox();
-            this.label73 = new System.Windows.Forms.Label();
-            this.comboBoxArcaneFlows = new System.Windows.Forms.ComboBox();
-            this.label74 = new System.Windows.Forms.Label();
+            this.comboBoxTormentTheWeak = new System.Windows.Forms.ComboBox();
+            this.label75 = new System.Windows.Forms.Label();
+            this.comboBoxFocusMagic = new System.Windows.Forms.ComboBox();
+            this.label76 = new System.Windows.Forms.Label();
             this.groupBoxArcane.SuspendLayout();
             this.groupBoxFire.SuspendLayout();
             this.groupBoxFrost.SuspendLayout();
@@ -190,6 +194,10 @@ namespace Rawr.Mage
             // 
             // groupBoxArcane
             // 
+            this.groupBoxArcane.Controls.Add(this.comboBoxFocusMagic);
+            this.groupBoxArcane.Controls.Add(this.label76);
+            this.groupBoxArcane.Controls.Add(this.comboBoxTormentTheWeak);
+            this.groupBoxArcane.Controls.Add(this.label75);
             this.groupBoxArcane.Controls.Add(this.comboBoxArcaneFlows);
             this.groupBoxArcane.Controls.Add(this.label74);
             this.groupBoxArcane.Controls.Add(this.comboBoxMissileBarrage);
@@ -252,10 +260,59 @@ namespace Rawr.Mage
             this.groupBoxArcane.Controls.Add(this.label3);
             this.groupBoxArcane.Location = new System.Drawing.Point(12, 40);
             this.groupBoxArcane.Name = "groupBoxArcane";
-            this.groupBoxArcane.Size = new System.Drawing.Size(211, 868);
+            this.groupBoxArcane.Size = new System.Drawing.Size(211, 923);
             this.groupBoxArcane.TabIndex = 0;
             this.groupBoxArcane.TabStop = false;
             this.groupBoxArcane.Text = "Arcane";
+            // 
+            // comboBoxArcaneFlows
+            // 
+            this.comboBoxArcaneFlows.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxArcaneFlows.FormattingEnabled = true;
+            this.comboBoxArcaneFlows.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2"});
+            this.comboBoxArcaneFlows.Location = new System.Drawing.Point(155, 813);
+            this.comboBoxArcaneFlows.Name = "comboBoxArcaneFlows";
+            this.comboBoxArcaneFlows.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxArcaneFlows.TabIndex = 67;
+            this.comboBoxArcaneFlows.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
+            // 
+            // label74
+            // 
+            this.label74.AutoSize = true;
+            this.label74.Location = new System.Drawing.Point(6, 816);
+            this.label74.Name = "label74";
+            this.label74.Size = new System.Drawing.Size(74, 13);
+            this.label74.TabIndex = 66;
+            this.label74.Text = "Arcane Flows:";
+            // 
+            // comboBoxMissileBarrage
+            // 
+            this.comboBoxMissileBarrage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxMissileBarrage.FormattingEnabled = true;
+            this.comboBoxMissileBarrage.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.comboBoxMissileBarrage.Location = new System.Drawing.Point(155, 786);
+            this.comboBoxMissileBarrage.Name = "comboBoxMissileBarrage";
+            this.comboBoxMissileBarrage.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxMissileBarrage.TabIndex = 65;
+            this.comboBoxMissileBarrage.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
+            // 
+            // label73
+            // 
+            this.label73.AutoSize = true;
+            this.label73.Location = new System.Drawing.Point(6, 789);
+            this.label73.Name = "label73";
+            this.label73.Size = new System.Drawing.Size(81, 13);
+            this.label73.TabIndex = 64;
+            this.label73.Text = "Missile Barrage:";
             // 
             // comboBoxArcaneBarrage
             // 
@@ -971,7 +1028,7 @@ namespace Rawr.Mage
             this.groupBoxFire.Controls.Add(this.label46);
             this.groupBoxFire.Location = new System.Drawing.Point(229, 40);
             this.groupBoxFire.Name = "groupBoxFire";
-            this.groupBoxFire.Size = new System.Drawing.Size(211, 868);
+            this.groupBoxFire.Size = new System.Drawing.Size(211, 923);
             this.groupBoxFire.TabIndex = 1;
             this.groupBoxFire.TabStop = false;
             this.groupBoxFire.Text = "Fire";
@@ -1548,7 +1605,7 @@ namespace Rawr.Mage
             this.groupBoxFrost.Controls.Add(this.label69);
             this.groupBoxFrost.Location = new System.Drawing.Point(446, 40);
             this.groupBoxFrost.Name = "groupBoxFrost";
-            this.groupBoxFrost.Size = new System.Drawing.Size(211, 868);
+            this.groupBoxFrost.Size = new System.Drawing.Size(211, 923);
             this.groupBoxFrost.TabIndex = 2;
             this.groupBoxFrost.TabStop = false;
             this.groupBoxFrost.Text = "Frost";
@@ -2127,58 +2184,57 @@ namespace Rawr.Mage
             this.buttonImportTalentPreset.UseVisualStyleBackColor = true;
             this.buttonImportTalentPreset.Click += new System.EventHandler(this.buttonImportTalentPreset_Click);
             // 
-            // comboBoxMissileBarrage
+            // comboBoxTormentTheWeak
             // 
-            this.comboBoxMissileBarrage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxMissileBarrage.FormattingEnabled = true;
-            this.comboBoxMissileBarrage.Items.AddRange(new object[] {
+            this.comboBoxTormentTheWeak.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTormentTheWeak.FormattingEnabled = true;
+            this.comboBoxTormentTheWeak.Items.AddRange(new object[] {
             "0",
             "1",
             "2",
-            "3",
-            "4",
-            "5"});
-            this.comboBoxMissileBarrage.Location = new System.Drawing.Point(155, 786);
-            this.comboBoxMissileBarrage.Name = "comboBoxMissileBarrage";
-            this.comboBoxMissileBarrage.Size = new System.Drawing.Size(50, 21);
-            this.comboBoxMissileBarrage.TabIndex = 65;
+            "3"});
+            this.comboBoxTormentTheWeak.Location = new System.Drawing.Point(155, 867);
+            this.comboBoxTormentTheWeak.Name = "comboBoxTormentTheWeak";
+            this.comboBoxTormentTheWeak.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxTormentTheWeak.TabIndex = 69;
+            this.comboBoxTormentTheWeak.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
-            // label73
+            // label75
             // 
-            this.label73.AutoSize = true;
-            this.label73.Location = new System.Drawing.Point(6, 789);
-            this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(81, 13);
-            this.label73.TabIndex = 64;
-            this.label73.Text = "Missile Barrage:";
+            this.label75.AutoSize = true;
+            this.label75.Location = new System.Drawing.Point(6, 870);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(99, 13);
+            this.label75.TabIndex = 68;
+            this.label75.Text = "Torment the Weak:";
             // 
-            // comboBoxArcaneFlows
+            // comboBoxFocusMagic
             // 
-            this.comboBoxArcaneFlows.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxArcaneFlows.FormattingEnabled = true;
-            this.comboBoxArcaneFlows.Items.AddRange(new object[] {
+            this.comboBoxFocusMagic.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFocusMagic.FormattingEnabled = true;
+            this.comboBoxFocusMagic.Items.AddRange(new object[] {
             "0",
-            "1",
-            "2"});
-            this.comboBoxArcaneFlows.Location = new System.Drawing.Point(155, 813);
-            this.comboBoxArcaneFlows.Name = "comboBoxArcaneFlows";
-            this.comboBoxArcaneFlows.Size = new System.Drawing.Size(50, 21);
-            this.comboBoxArcaneFlows.TabIndex = 67;
+            "1"});
+            this.comboBoxFocusMagic.Location = new System.Drawing.Point(155, 894);
+            this.comboBoxFocusMagic.Name = "comboBoxFocusMagic";
+            this.comboBoxFocusMagic.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxFocusMagic.TabIndex = 71;
+            this.comboBoxFocusMagic.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
-            // label74
+            // label76
             // 
-            this.label74.AutoSize = true;
-            this.label74.Location = new System.Drawing.Point(6, 816);
-            this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(74, 13);
-            this.label74.TabIndex = 66;
-            this.label74.Text = "Arcane Flows:";
+            this.label76.AutoSize = true;
+            this.label76.Location = new System.Drawing.Point(6, 897);
+            this.label76.Name = "label76";
+            this.label76.Size = new System.Drawing.Size(68, 13);
+            this.label76.TabIndex = 70;
+            this.label76.Text = "Focus Magic";
             // 
             // MageTalentsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(669, 915);
+            this.ClientSize = new System.Drawing.Size(669, 969);
             this.Controls.Add(this.buttonImportTalentPreset);
             this.Controls.Add(this.comboBoxTalentPreset);
             this.Controls.Add(this.buttonImportBlizzardCode);
@@ -2359,5 +2415,9 @@ namespace Rawr.Mage
         private System.Windows.Forms.Label label73;
         private System.Windows.Forms.ComboBox comboBoxArcaneFlows;
         private System.Windows.Forms.Label label74;
+        private System.Windows.Forms.ComboBox comboBoxTormentTheWeak;
+        private System.Windows.Forms.Label label75;
+        private System.Windows.Forms.ComboBox comboBoxFocusMagic;
+        private System.Windows.Forms.Label label76;
     }
 }

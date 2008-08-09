@@ -65,15 +65,16 @@ namespace Rawr.Mage
             SuspendLayout();
             if (calculationOptions.WotLK)
             {
-                Height = 939;
-                groupBoxArcane.Height = 868;
-                groupBoxFire.Height = 868;
-                groupBoxFrost.Height = 868;
+                Height = 993;
+                groupBoxArcane.Height = 923;
+                groupBoxFire.Height = 923;
+                groupBoxFrost.Height = 923;
                 if (comboBoxArcaneFocus.Items.Count == 6) { comboBoxArcaneFocus.Items.RemoveAt(4); comboBoxArcaneFocus.Items.RemoveAt(4); }
                 if (comboBoxMagicAbsorption.Items.Count == 6) { comboBoxMagicAbsorption.Items.RemoveAt(3); comboBoxMagicAbsorption.Items.RemoveAt(3); comboBoxMagicAbsorption.Items.RemoveAt(3); }
                 if (comboBoxArcaneFortitude.Items.Count == 2) comboBoxArcaneFortitude.Items.AddRange(new string[] { "2", "3" });
                 if (comboBoxPrismaticCloak.Items.Count == 3) comboBoxPrismaticCloak.Items.AddRange(new string[] { "3" });
                 if (comboBoxArcanePotency.Items.Count == 4) { comboBoxArcanePotency.Items.RemoveAt(3); }
+                if (comboBoxIncinerate.Items.Count == 3) comboBoxIncinerate.Items.AddRange(new string[] { "3" });
             }
             else
             {
@@ -86,6 +87,7 @@ namespace Rawr.Mage
                 if (comboBoxArcaneFortitude.Items.Count == 4) { comboBoxArcaneFortitude.Items.RemoveAt(2); comboBoxArcaneFortitude.Items.RemoveAt(2); }
                 if (comboBoxPrismaticCloak.Items.Count == 4) { comboBoxPrismaticCloak.Items.RemoveAt(3); }
                 if (comboBoxArcanePotency.Items.Count == 2) comboBoxArcanePotency.Items.AddRange(new string[] { "3" });
+                if (comboBoxIncinerate.Items.Count == 4) { comboBoxIncinerate.Items.RemoveAt(3); }
             }
             ResumeLayout();
         }

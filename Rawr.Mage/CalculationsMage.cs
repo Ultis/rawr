@@ -62,7 +62,7 @@ namespace Rawr.Mage
                     //"Spell Info:AM?*Arcane Missiles with Netherwind proc",
                     "Spell Info:Arcane Blast*Spammed",
                     "Spell Info:Arcane Blast(0)*Non-debuffed",
-                    //"Spell Info:Arcane Barrage*Requires talent points",
+                    "Spell Info:Arcane Barrage*Requires talent points",
                     "Spell Info:Scorch",
                     "Spell Info:Fire Blast",
                     "Spell Info:Pyroblast*Requires talent points",
@@ -72,6 +72,7 @@ namespace Rawr.Mage
                     "Spell Info:Frostbolt",
                     "Spell Info:ABAMP*Pause so that AB debuff runs out mid-cast",
                     "Spell Info:ABAM*Spam with no pause",
+                    "Spell Info:ABMBAM*Arcane Missiles on Missile Barrage",
                     "Spell Info:ABAMCC*AM when AM procs clearcast, ramp up AB before returning to AB-AM",
                     "Spell Info:ABAM3CC*AM when AM procs clearcast, ramp up with AB-AM",
                     "Spell Info:AB3AMSc*Prefer pause over longer filler",
@@ -549,7 +550,7 @@ namespace Rawr.Mage
 
             statsTotal.Mp5 += calculationOptions.ShadowPriest;
 
-            statsTotal.SpellDamageFromIntellectPercentage += 0.05f * calculationOptions.MindMastery;
+            statsTotal.SpellDamageFromIntellectPercentage += (calculationOptions.WotLK ? 0.03f : 0.05f) * calculationOptions.MindMastery;
 
             statsTotal.AllResist += statsTotal.MageAllResist;
 
@@ -586,9 +587,13 @@ namespace Rawr.Mage
             return statsTotal;
         }
 
-        private static string[] TalentList = { "ArcaneSubtlety", "ArcaneFocus", "ImprovedArcaneMissiles", "WandSpecialization", "MagicAbsorption", "ArcaneConcentration", "MagicAttunement", "ArcaneImpact", "ArcaneFortitude", "ImprovedManaShield", "ImprovedCounterspell", "ArcaneMeditation", "ImprovedBlink", "PresenceOfMind", "ArcaneMind", "PrismaticCloak", "ArcaneInstability", "ArcanePotency", "EmpoweredArcaneMissiles", "ArcanePower", "SpellPower", "MindMastery", "Slow", "ImprovedFireball", "Impact", "Ignite", "FlameThrowing", "ImprovedFireBlast", "Incinerate", "ImprovedFlamestrike", "Pyroblast", "BurningSoul", "ImprovedScorch", "ImprovedFireWard", "MasterOfElements", "PlayingWithFire", "CriticalMass", "BlastWave", "BlazingSpeed", "FirePower", "Pyromaniac", "Combustion", "MoltenFury", "EmpoweredFireball", "DragonsBreath", "FrostWarding", "ImprovedFrostbolt", "ElementalPrecision", "IceShards", "Frostbite", "ImprovedFrostNova", "Permafrost", "PiercingIce", "IcyVeins", "ImprovedBlizzard", "ArcticReach", "FrostChanneling", "Shatter", "FrozenCore", "ColdSnap", "ImprovedConeOfCold", "IceFloes", "WintersChill", "IceBarrier", "ArcticWinds", "EmpoweredFrostbolt", "SummonWaterElemental", "PotentSpirit", "StudentOfTheMind" };
-        private static string[] TalentListFriendly = { "Arcane Subtlety", "Arcane Focus", "Improved Arcane Missiles", "Wand Specialization", "Magic Absorption", "Arcane Concentration", "Magic Attunement", "Arcane Impact", "Arcane Fortitude", "Improved Mana Shield", "Improved Counterspell", "Arcane Meditation", "Improved Blink", "Presence of Mind", "Arcane Mind", "Prismatic Cloak", "Arcane Instability", "Arcane Potency", "Empowered Arcane Missiles", "Arcane Power", "Spell Power", "Mind Mastery", "Slow", "Improved Fireball", "Impact", "Ignite", "Flame Throwing", "Improved Fire Blast", "Incinerate", "Improved Flamestrike", "Pyroblast", "Burning Soul", "Improved Scorch", "Improved Fire Ward", "Master of Elements", "Playing with Fire", "Critical Mass", "Blast Wave", "Blazing Speed", "Fire Power", "Pyromaniac", "Combustion", "Molten Fury", "Empowered Fireball", "Dragon's Breath", "Frost Warding", "Improved Frostbolt", "Elemental Precision", "Ice Shards", "Frostbite", "Improved Frost Nova", "Permafrost", "Piercing Ice", "Icy Veins", "Improved Blizzard", "Arctic Reach", "Frost Channeling", "Shatter", "Frozen Core", "Cold Snap", "Improved Cone of Cold", "Ice Floes", "Winter's Chill", "Ice Barrier", "Arctic Winds", "Empowered Frostbolt", "Summon Water Elemental", "Potent Spirit", "Student of the Mind" };
-        private static int[] MaxTalentPoints = { 2, 5, 5, 2, 5, 5, 2, 3, 1, 2, 2, 3, 2, 1, 5, 2, 3, 3, 3, 1, 2, 5, 1, 5, 5, 5, 2, 3, 2, 3, 1, 2, 3, 2, 3, 3, 3, 1, 2, 5, 3, 1, 2, 5, 1, 2, 5, 3, 5, 3, 2, 3, 3, 1, 3, 2, 3, 5, 3, 1, 3, 2, 5, 1, 5, 5, 1, 2, 3 };
+        private static string[] TalentList = { "ArcaneSubtlety", "ArcaneFocus", "ImprovedArcaneMissiles", "WandSpecialization", "MagicAbsorption", "ArcaneConcentration", "MagicAttunement", "ArcaneImpact", "ArcaneFortitude", "ImprovedManaShield", "ImprovedCounterspell", "ArcaneMeditation", "ImprovedBlink", "PresenceOfMind", "ArcaneMind", "PrismaticCloak", "ArcaneInstability", "ArcanePotency", "EmpoweredArcaneMissiles", "ArcanePower", "SpellPower", "MindMastery", "Slow", "ImprovedFireball", "Impact", "Ignite", "FlameThrowing", "ImprovedFireBlast", "Incinerate", "ImprovedFlamestrike", "Pyroblast", "BurningSoul", "ImprovedScorch", "ImprovedFireWard", "MasterOfElements", "PlayingWithFire", "CriticalMass", "BlastWave", "BlazingSpeed", "FirePower", "Pyromaniac", "Combustion", "MoltenFury", "EmpoweredFireball", "DragonsBreath", "FrostWarding", "ImprovedFrostbolt", "ElementalPrecision", "IceShards", "Frostbite", "ImprovedFrostNova", "Permafrost", "PiercingIce", "IcyVeins", "ImprovedBlizzard", "ArcticReach", "FrostChanneling", "Shatter", "FrozenCore", "ColdSnap", "ImprovedConeOfCold", "IceFloes", "WintersChill", "IceBarrier", "ArcticWinds", "EmpoweredFrostbolt", "SummonWaterElemental" };
+        private static string[] TalentListFriendly = { "Arcane Subtlety", "Arcane Focus", "Improved Arcane Missiles", "Wand Specialization", "Magic Absorption", "Arcane Concentration", "Magic Attunement", "Arcane Impact", "Arcane Fortitude", "Improved Mana Shield", "Improved Counterspell", "Arcane Meditation", "Improved Blink", "Presence of Mind", "Arcane Mind", "Prismatic Cloak", "Arcane Instability", "Arcane Potency", "Empowered Arcane Missiles", "Arcane Power", "Spell Power", "Mind Mastery", "Slow", "Improved Fireball", "Impact", "Ignite", "Flame Throwing", "Improved Fire Blast", "Incinerate", "Improved Flamestrike", "Pyroblast", "Burning Soul", "Improved Scorch", "Improved Fire Ward", "Master of Elements", "Playing with Fire", "Critical Mass", "Blast Wave", "Blazing Speed", "Fire Power", "Pyromaniac", "Combustion", "Molten Fury", "Empowered Fireball", "Dragon's Breath", "Frost Warding", "Improved Frostbolt", "Elemental Precision", "Ice Shards", "Frostbite", "Improved Frost Nova", "Permafrost", "Piercing Ice", "Icy Veins", "Improved Blizzard", "Arctic Reach", "Frost Channeling", "Shatter", "Frozen Core", "Cold Snap", "Improved Cone of Cold", "Ice Floes", "Winter's Chill", "Ice Barrier", "Arctic Winds", "Empowered Frostbolt", "Summon Water Elemental" };
+        private static int[] MaxTalentPoints = { 2, 5, 5, 2, 5, 5, 2, 3, 1, 2, 2, 3, 2, 1, 5, 2, 3, 3, 3, 1, 2, 5, 1, 5, 5, 5, 2, 3, 2, 3, 1, 2, 3, 2, 3, 3, 3, 1, 2, 5, 3, 1, 2, 5, 1, 2, 5, 3, 5, 3, 2, 3, 3, 1, 3, 2, 3, 5, 3, 1, 3, 2, 5, 1, 5, 5, 1 };
+
+        private static string[] TalentListWotLK = {          "ArcaneSubtlety",  "ArcaneFocus",   "ImprovedArcaneMissiles",  "MagicAbsorption",  "ArcaneConcentration",  "MagicAttunement",  "SpellImpact",  "ArcaneFortitude",    "StudentOfTheMind",  "FocusMagic", "ImprovedManaShield",  "ImprovedCounterspell",  "ArcaneMeditation",  "ImprovedBlink",   "PresenceOfMind",   "TormentTheWeak",  "ArcaneMind",  "PrismaticCloak",  "ArcaneInstability",  "ArcanePotency", "EmpoweredArcaneMissiles",  "ArcanePower",  "SpellPower",  "MindMastery", "Slow",   "IncantersAbsorption",  "ArcaneFlows",  "MissileBarrage",  "NetherwindPresence",  "ArcaneBarrage",  "ImprovedFireball", "Impact", "Ignite",  "FlameThrowing",   "ImprovedFireBlast",   "Incinerate", "ImprovedFlamestrike", "Pyroblast", "BurningSoul", "ImprovedScorch", "ImprovedFireWard", "MasterOfElements", "PlayingWithFire", "CriticalMass", "BlastWave", "BlazingSpeed", "FirePower", "Pyromaniac", "Combustion", "MoltenFury", "EmpoweredFireball", "DragonsBreath", "FrostWarding", "ImprovedFrostbolt", "ElementalPrecision", "IceShards", "Frostbite", "ImprovedFrostNova", "Permafrost", "PiercingIce", "IcyVeins", "ImprovedBlizzard", "ArcticReach", "FrostChanneling", "Shatter", "FrozenCore", "ColdSnap", "ImprovedConeOfCold", "IceFloes", "WintersChill", "IceBarrier", "ArcticWinds", "EmpoweredFrostbolt", "SummonWaterElemental" };
+        private static string[] TalentListFriendlyWotLK = { "Arcane Subtlety", "Arcane Focus", "Improved Arcane Missiles", "Magic Absorption", "Arcane Concentration", "Magic Attunement", "Spell Impact", "Arcane Fortitude", "Student of the Mind", "Focus Magic",   "Arcane Shielding", "Improved Counterspell", "Arcane Meditation", "Improved Blink", "Presence of Mind", "Torment the Weak", "Arcane Mind", "Prismatic Cloak", "Arcane Instability", "Arcane Potency",      "Arcane Empowerment", "Arcane Power", "Spell Power", "Mind Mastery", "Slow", "Incanter's Absorption", "Arcane Flows", "Missile Barrage", "Netherwind Presence", "Arcane Barrage", "Improved Fireball", "Impact", "Ignite", "Flame Throwing", "Improved Fire Blast", "Incineration", "Improved Flamestrike", "Pyroblast", "Burning Soul", "Improved Scorch", "Improved Fire Ward", "Master of Elements", "Playing with Fire", "Critical Mass", "Blast Wave", "Blazing Speed", "Fire Power", "Pyromaniac", "Combustion", "Molten Fury", "Empowered Fireball", "Dragon's Breath", "Frost Warding", "Improved Frostbolt", "Elemental Precision", "Ice Shards", "Frostbite", "Improved Frost Nova", "Permafrost", "Piercing Ice", "Icy Veins", "Improved Blizzard", "Arctic Reach", "Frost Channeling", "Shatter", "Frozen Core", "Cold Snap", "Improved Cone of Cold", "Ice Floes", "Winter's Chill", "Ice Barrier", "Arctic Winds", "Empowered Frostbolt", "Summon Water Elemental" };
+        private static int[] MaxTalentPointsWotLK = {                       2,              3,                          5,                  2,                      5,                  2,              3,                  3,                     3,             1,                    2,                       2,                   3,                2,                  1,                  3,             5,                 3,                    3,                2,                         3,              1,             2,              5,      1,                       3,              2,                 5,                     3,                1,                   5,        5,        5,                2,                     3,              3, 3, 1, 2, 3, 2, 3, 3, 3, 1, 2, 5, 3, 1, 2, 5, 1, 2, 5, 3, 5, 3, 2, 3, 3, 1, 3, 2, 3, 5, 3, 1, 3, 2, 5, 1, 5, 5, 1 };
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
@@ -601,6 +606,22 @@ namespace Rawr.Mage
             {
                 case "Talents (per talent point)":
                     CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+
+                    string[] talents;
+                    string[] talentsFriendly;
+                    int[] maxTalents;
+                    if (calculationOptions.WotLK)
+                    {
+                        talents = TalentListWotLK;
+                        talentsFriendly = TalentListFriendlyWotLK;
+                        maxTalents = MaxTalentPointsWotLK;
+                    }
+                    else
+                    {
+                        talents = TalentList;
+                        talentsFriendly = TalentListFriendly;
+                        maxTalents = MaxTalentPoints;
+                    }
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
                     bool savedIncrementalOptimizations = calculationOptions.IncrementalOptimizations;
                     bool savedSmartOptimizations = calculationOptions.SmartOptimization;
@@ -608,10 +629,10 @@ namespace Rawr.Mage
                     calculationOptions.IncrementalOptimizations = false;
                     calculationOptions.SmartOptimization = true;
 
-                    for (int index = 0; index < TalentList.Length; index++ )
+                    for (int index = 0; index < talents.Length; index++ )
                     {
-                        string talent = TalentList[index];
-                        int maxPoints = MaxTalentPoints[index];
+                        string talent = talents[index];
+                        int maxPoints = maxTalents[index];
                         int currentPoints = calculationOptions.GetTalentByName(talent);
 
                         if (currentPoints > 0)
@@ -620,7 +641,7 @@ namespace Rawr.Mage
                             calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
                             comparison = CreateNewComparisonCalculation();
-                            comparison.Name = string.Format("{0} ({1})", TalentListFriendly[index], currentPoints);
+                            comparison.Name = string.Format("{0} ({1})", talentsFriendly[index], currentPoints);
                             comparison.Equipped = true;
                             comparison.OverallPoints = (currentCalc.OverallPoints - calc.OverallPoints) / (float)currentPoints;
                             subPoints = new float[calc.SubPoints.Length];
@@ -633,19 +654,19 @@ namespace Rawr.Mage
                             comparisonList.Add(comparison);
                         }
 
-                        if (currentPoints < MaxTalentPoints[index])
+                        if (currentPoints < maxTalents[index])
                         {
-                            calculationOptions.SetTalentByName(talent, MaxTalentPoints[index]);
+                            calculationOptions.SetTalentByName(talent, maxTalents[index]);
                             calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
                             comparison = CreateNewComparisonCalculation();
-                            comparison.Name = string.Format("{0} ({1})", TalentListFriendly[index], MaxTalentPoints[index]);
+                            comparison.Name = string.Format("{0} ({1})", talentsFriendly[index], maxTalents[index]);
                             comparison.Equipped = false;
-                            comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints) / (float)(MaxTalentPoints[index] - currentPoints);
+                            comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints) / (float)(maxTalents[index] - currentPoints);
                             subPoints = new float[calc.SubPoints.Length];
                             for (int i = 0; i < calc.SubPoints.Length; i++)
                             {
-                                subPoints[i] = (calc.SubPoints[i] - currentCalc.SubPoints[i]) / (float)(MaxTalentPoints[index] - currentPoints);
+                                subPoints[i] = (calc.SubPoints[i] - currentCalc.SubPoints[i]) / (float)(maxTalents[index] - currentPoints);
                             }
                             comparison.SubPoints = subPoints;
 

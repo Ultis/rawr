@@ -304,7 +304,7 @@ namespace Rawr.Mage
             GlobalCooldownLimit = 1f;
             GlobalCooldown = Math.Max(GlobalCooldownLimit, 1.5f / CastingSpeed);
 
-            ArcaneSpellModifier = (1 + 0.01f * calculationOptions.ArcaneInstability) * (1 + 0.01f * calculationOptions.PlayingWithFire) * (1 + characterStats.BonusSpellPowerMultiplier);
+            ArcaneSpellModifier = (1 + 0.01f * calculationOptions.ArcaneInstability) * (1 + 0.01f * calculationOptions.PlayingWithFire) * (1 + characterStats.BonusSpellPowerMultiplier) * (1 + 0.01f * calculationOptions.TormentTheWeak * calculationOptions.SlowedTime);
             if (arcanePower)
             {
                 ArcaneSpellModifier *= 1.3f;
@@ -384,13 +384,16 @@ namespace Rawr.Mage
                     s = new LightningBolt(this);
                     break;
                 case SpellId.ArcaneMissiles:
-                    s = new ArcaneMissiles(this);
+                    s = new ArcaneMissiles(this, false);
+                    break;
+                case SpellId.ArcaneMissilesMB:
+                    s = new ArcaneMissiles(this, true);
                     break;
                 case SpellId.ArcaneMissilesCC:
                     s = new ArcaneMissilesCC(this);
                     break;
                 case SpellId.ArcaneMissilesNoProc:
-                    s = new ArcaneMissiles(this, true, false, false);
+                    s = new ArcaneMissiles(this, false, true, false, false);
                     break;
                 /*case SpellId.ArcaneMissilesFTF:
                     s = new ArcaneMissiles(this);
@@ -463,6 +466,9 @@ namespace Rawr.Mage
                     break;
                 case SpellId.ABAM:
                     s = new ABAM(this);
+                    break;
+                case SpellId.ABMBAM:
+                    s = new ABMBAM(this);
                     break;
                 case SpellId.ABAMP:
                     s = new ABAMP(this);

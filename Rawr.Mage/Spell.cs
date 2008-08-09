@@ -19,10 +19,12 @@ namespace Rawr.Mage
         None,
         Wand,
         LightningBolt,
+        [Description("Arcane Barrage")]
         ArcaneBarrage,
         ArcaneBolt,
         [Description("Arcane Missiles")]
         ArcaneMissiles,
+        ArcaneMissilesMB,
         ArcaneMissilesCC,
         ArcaneMissilesNoProc,
         //ArcaneMissilesFTF,
@@ -61,6 +63,7 @@ namespace Rawr.Mage
         ArcaneBlast23,
         ArcaneBlast30,
         ABAM,
+        ABMBAM,
         ABAMP,
         AB3AMSc,
         ABAM3Sc,
@@ -612,7 +615,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             Cooldown -= 0.5f * castingState.CalculationOptions.ImprovedFireBlast;
             CritRate += 0.02f * castingState.CalculationOptions.Incinerate;
-            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.02f * castingState.CalculationOptions.SpellImpact);
+            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.002f * castingState.CalculationOptions.SpellImpact);
             CalculateDerivedStats(castingState);
         }
     }
@@ -788,7 +791,7 @@ namespace Rawr.Mage
             int ImprovedConeOfCold = castingState.CalculationOptions.ImprovedConeOfCold;
             if (castingState.CalculationOptions.WotLK)
             {
-                SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0) + 0.02f * castingState.CalculationOptions.SpellImpact);
+                SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0) + 0.002f * castingState.CalculationOptions.SpellImpact);
                 CritRate += 0.02f * castingState.CalculationOptions.Incinerate;
             }
             else
@@ -802,7 +805,7 @@ namespace Rawr.Mage
     class ArcaneBarrage : BaseSpell
     {
         public ArcaneBarrage(CastingState castingState)
-            : base("Arcane Barrage", false, false, true, false, 405, 30, 0, 3, MagicSchool.Arcane, 709, 865, 0)
+            : base("Arcane Barrage", false, false, true, false, 405, 30, 0, 3, MagicSchool.Arcane, 709, 865, 0, 3.0f / 3.5f)
         {
             Calculate(castingState);
             CalculateDerivedStats(castingState);
@@ -846,7 +849,7 @@ namespace Rawr.Mage
             CostModifier += 0.75f * costDebuff + castingState.BaseStats.ArcaneBlastBonus;
             if (castingState.CalculationOptions.WotLK)
             {
-                SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus + 0.15f * timeDebuff + 0.02f * castingState.CalculationOptions.SpellImpact);
+                SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus + 0.25f * timeDebuff + 0.002f * castingState.CalculationOptions.SpellImpact);
                 SpellDamageCoefficient += 0.03f * castingState.CalculationOptions.EmpoweredArcaneMissiles; // TODO change talent name
                 CritRate += 0.02f * castingState.CalculationOptions.Incinerate;
             }
@@ -870,6 +873,8 @@ namespace Rawr.Mage
     // 287.7142857142857142857142857144 <= base 11 <= 288.7142857142857142857142857144
     class ArcaneMissiles : BaseSpell
     {
+        private bool barrage;
+
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
         static ArcaneMissiles()
@@ -883,25 +888,28 @@ namespace Rawr.Mage
             return SpellData[RankLevelIndex(options.WotLK ? MaxRank[options.PlayerLevel] : 10, options.PlayerLevel)];
         }
 
-        public ArcaneMissiles(CastingState castingState, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing)
+        public ArcaneMissiles(CastingState castingState, bool barrage, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing)
             : base("Arcane Missiles", true, false, false, false, 30, 5, 0, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions), 5, 6)
         {
             ManualClearcasting = true;
             ClearcastingActive = clearcastingActive;
             ClearcastingAveraged = clearcastingAveraged;
             ClearcastingProccing = clearcastingProccing;
+            this.barrage = barrage;
             Calculate(castingState);
         }
 
-        public ArcaneMissiles(CastingState castingState)
+        public ArcaneMissiles(CastingState castingState, bool barrage)
             : base("Arcane Missiles", true, false, false, false, 30, 5, 0, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions), 5, 6)
         {
+            this.barrage = barrage;
             Calculate(castingState);
         }
 
         public override void Calculate(CastingState castingState)
         {
             base.Calculate(castingState);
+            if (barrage) BaseCastTime -= 2.5f;
             if (!castingState.CalculationOptions.WotLK) CostModifier += 0.02f * castingState.CalculationOptions.EmpoweredArcaneMissiles;
 
             // CC double dipping
@@ -930,9 +938,9 @@ namespace Rawr.Mage
 
             float CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
 
-            Spell AMc1 = new ArcaneMissiles(castingState, true, false, true);
-            Spell AM10 = new ArcaneMissiles(castingState, false, true, false);
-            Spell AM11 = new ArcaneMissiles(castingState, false, true, true);
+            Spell AMc1 = new ArcaneMissiles(castingState, false, true, false, true);
+            Spell AM10 = new ArcaneMissiles(castingState, false, false, true, false);
+            Spell AM11 = new ArcaneMissiles(castingState, false, false, true, true);
 
             CastProcs = AMc1.CastProcs * (1 + 1 / (1 - CC));
             CastTime = AMc1.CastTime * (1 + 1 / (1 - CC));
@@ -952,7 +960,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
-            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.02f * castingState.CalculationOptions.SpellImpact);
+            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.002f * castingState.CalculationOptions.SpellImpact);
             AoeDamageCap = 10180;
             CalculateDerivedStats(castingState);
         }
@@ -965,7 +973,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             AoeDamageCap = 9440;
-            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.02f * castingState.CalculationOptions.SpellImpact);
+            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.002f * castingState.CalculationOptions.SpellImpact);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1123,20 +1131,137 @@ namespace Rawr.Mage
         }
     }
 
-    class ABAM : SpellCycle
+    class ABAM : Spell
     {
-        public ABAM(CastingState castingState) : base(2)
+        public ABAM(CastingState castingState)
         {
             Name = "ABAM";
             ABCycle = true;
 
-            Spell AB = castingState.GetSpell(SpellId.ArcaneBlast33);
+            Spell AB = castingState.GetSpell(castingState.CalculationOptions.WotLK ? SpellId.ArcaneBlast00 : SpellId.ArcaneBlast33);
             Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            AddSpell(AB, castingState);
-            AddSpell(AM, castingState);
+            float MB = 0.03f * castingState.CalculationOptions.MissileBarrage;
 
-            Calculate(castingState);
+            if (MB == 0.0 || !castingState.CalculationOptions.WotLK)
+            {
+                // if we don't have barrage then this degenerates to AB-AM
+                SpellCycle chain1 = new SpellCycle(2);
+                chain1.AddSpell(AB, castingState);
+                chain1.AddSpell(AM, castingState);
+                chain1.Calculate(castingState);
+
+                CastTime = chain1.CastTime;
+                CostPerSecond = chain1.CostPerSecond;
+                DamagePerSecond = chain1.DamagePerSecond;
+                ThreatPerSecond = chain1.ThreatPerSecond;
+                ManaRegenPerSecond = chain1.ManaRegenPerSecond;
+            }
+            else
+            {
+                //AB-AM 0.85
+                SpellCycle chain1 = new SpellCycle(2);
+                chain1.AddSpell(AB, castingState);
+                chain1.AddSpell(AM, castingState);
+                chain1.Calculate(castingState);
+
+                //AB-MBAM 0.15
+                SpellCycle chain2 = new SpellCycle(2);
+                chain2.AddSpell(AB, castingState);
+                chain2.AddSpell(MBAM, castingState);
+                chain2.Calculate(castingState);
+
+                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
+                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            }
+        }
+    }
+
+    class ABMBAM : Spell
+    {
+        public ABMBAM(CastingState castingState)
+        {
+            Name = "ABMBAM";
+            ABCycle = true;
+
+            // main cycle is AB3 spam
+            // on MB we change into ramp up mode
+
+            // RAMP =
+            // AB0-AB1-AB2           0.85*0.85*0.85 = k1
+            // AB0-AB1-AB2-MBAM-RAMP 0.85*0.85*0.15 = k2
+            // AB0-AB1-MBAM-RAMP     0.85*0.15      = k3
+            // AB0-MBAM-RAMP         0.15           = k4
+
+            // RAMP = k1 * (AB0+AB1+AB2) + k2 * (AB0+AB1+AB2+MBAM + RAMP) + k3 * (AB0+AB1+MBAM + RAMP) + k4 * (AB0+MBAM + RAMP)
+            // RAMP * (1 - k2 - k3 - k4) = k1 * (AB0+AB1+AB2) + k2 * (AB0+AB1+AB2+MBAM) + k3 * (AB0+AB1+MBAM) + k4 * (AB0+MBAM)
+            // RAMP = (AB0+AB1+AB2) + k2 / k1 * (AB0+AB1+AB2+MBAM) + k3 / k1 * (AB0+AB1+MBAM) + k4 / k1 * (AB0+MBAM)
+
+            // AB3           0.85
+            // AB3-MBAM-RAMP 0.15
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22);
+            Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast33);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+
+            float MB = 0.03f * castingState.CalculationOptions.MissileBarrage;
+
+            if (MB == 0.0 || !castingState.CalculationOptions.WotLK)
+            {
+                // if we don't have barrage then this degenerates to AB
+                CastTime = AB3.CastTime;
+                CostPerSecond = AB3.CostPerSecond;
+                DamagePerSecond = AB3.DamagePerSecond;
+                ThreatPerSecond = AB3.ThreatPerSecond;
+                ManaRegenPerSecond = AB3.ManaRegenPerSecond;
+            }
+            else
+            {
+                //AB3 0.85
+
+                //AB3-MBAM-RAMP 0.15
+                SpellCycle chain1 = new SpellCycle(2);
+                chain1.AddSpell(AB3, castingState);
+                chain1.AddSpell(MBAM, castingState);
+                chain1.AddSpell(AB0, castingState);
+                chain1.AddSpell(AB1, castingState);
+                chain1.AddSpell(AB2, castingState);
+                chain1.Calculate(castingState);
+
+                SpellCycle chain3 = new SpellCycle(4);
+                chain3.AddSpell(AB0, castingState);
+                chain3.AddSpell(AB1, castingState);
+                chain3.AddSpell(AB2, castingState);
+                chain3.AddSpell(MBAM, castingState);
+                chain3.Calculate(castingState);
+
+                SpellCycle chain4 = new SpellCycle(3);
+                chain4.AddSpell(AB0, castingState);
+                chain4.AddSpell(AB1, castingState);
+                chain4.AddSpell(MBAM, castingState);
+                chain4.Calculate(castingState);
+
+                SpellCycle chain5 = new SpellCycle(2);
+                chain5.AddSpell(AB0, castingState);
+                chain5.AddSpell(MBAM, castingState);
+                chain5.Calculate(castingState);
+
+                float MB3 = MB / (1 - MB);
+                float MB4 = MB / (1 - MB) / (1 - MB);
+                float MB5 = MB / (1 - MB) / (1 - MB) / (1 - MB);
+
+                CastTime = (1 - MB) * AB3.CastTime + MB * (chain1.CastTime + MB3 * chain3.CastTime + MB4 * chain4.CastTime + MB5 * chain5.CastTime);
+                CostPerSecond = ((1 - MB) * AB3.CostPerSecond * AB3.CastTime + MB * (chain1.CostPerSecond * chain1.CastTime + MB3 * chain3.CostPerSecond * chain3.CastTime + MB4 * chain4.CostPerSecond * chain4.CastTime + MB5 * chain5.CostPerSecond * chain5.CastTime)) / CastTime;
+                DamagePerSecond = ((1 - MB) * AB3.DamagePerSecond * AB3.CastTime + MB * (chain1.DamagePerSecond * chain1.CastTime + MB3 * chain3.DamagePerSecond * chain3.CastTime + MB4 * chain4.DamagePerSecond * chain4.CastTime + MB5 * chain5.DamagePerSecond * chain5.CastTime)) / CastTime;
+                ThreatPerSecond = ((1 - MB) * AB3.ThreatPerSecond * AB3.CastTime + MB * (chain1.ThreatPerSecond * chain1.CastTime + MB3 * chain3.ThreatPerSecond * chain3.CastTime + MB4 * chain4.ThreatPerSecond * chain4.CastTime + MB5 * chain5.ThreatPerSecond * chain5.CastTime)) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * AB3.ManaRegenPerSecond * AB3.CastTime + MB * (chain1.ManaRegenPerSecond * chain1.CastTime + MB3 * chain3.ManaRegenPerSecond * chain3.CastTime + MB4 * chain4.ManaRegenPerSecond * chain4.CastTime + MB5 * chain5.ManaRegenPerSecond * chain5.CastTime)) / CastTime;
+            }
         }
     }
 

@@ -889,7 +889,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.ArcanePower) list.Add(item);
             }
-            GroupCooldown(list, 15, 180);
+            GroupCooldown(list, 15, SequenceItem.Calculations.CalculationOptions.WotLK ? 180.0 - 30.0 * SequenceItem.Calculations.CalculationOptions.ArcaneFlows : 180.0);
         }
 
         public void GroupIcyVeins()
@@ -2904,7 +2904,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         else
                         {
                             if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Arcane Power (" + Math.Round(manabefore).ToString() + " mana)");
-                            apCooldown = 180;
+                            apCooldown = (SequenceItem.Calculations.CalculationOptions.WotLK ? 180.0 - 30.0 * SequenceItem.Calculations.CalculationOptions.ArcaneFlows : 180.0);
                             apTime = time;
                             apWarning = false;
                         }
