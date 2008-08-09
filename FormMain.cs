@@ -292,7 +292,7 @@ namespace Rawr
 				recentCharacterMenuItem.Tag = recentCharacter;
 				recentCharacterMenuItem.Click += new EventHandler(recentCharacterMenuItem_Click);
 				_recentCharacterMenuItems.Add(recentCharacterMenuItem);
-				fileToolStripMenuItem.DropDownItems.Insert(4, recentCharacterMenuItem);
+				fileToolStripMenuItem.DropDownItems.Insert(5, recentCharacterMenuItem);
 			}
 		}
 
