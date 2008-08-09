@@ -262,7 +262,7 @@ namespace Rawr.Mage
             double manaPotion = 0;
             double manaGem = 0;
             double drums = 0;
-            bool segmentedOutput = false;
+            bool segmentedOutput = true;
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
                 if (Solution[i] > 0.01)

@@ -24,15 +24,21 @@ namespace Rawr.Mage
             public List<BranchNode> Children = new List<BranchNode>();
             public int Index;
             public int Depth;
+            public double Value;
+            public double ProbeValue;
 
             int IComparable<BranchNode>.CompareTo(BranchNode other)
-            {
+            {                
                 return -this.Lp.Value.CompareTo(other.Lp.Value);
             }
         }
 
         private Heap<SolverLP> heap;
         private BranchNode currentNode;
+
+        private List<int>[] hexList;
+        private double[] segmentFilled;
+        private int[] hexMask;
 
         private void RestrictSolution()
         {
@@ -64,10 +70,13 @@ namespace Rawr.Mage
             double lowerBound = 0.0;
             SolverLP incumbent = null;
 
+            int highestBacktrack = int.MaxValue;
+
             int round = 0;
             do
             {
-                double value = currentNode.Lp.Value; // force evaluation and get value
+                double value = (currentNode.Lp != null) ? currentNode.Lp.Value : currentNode.Value; // force evaluation and get value
+                currentNode.Value = value;
                 if (value < lowerBound + 0.00001)
                 {
                     // prune this, free space by removing from parent, backtrack
@@ -78,7 +87,137 @@ namespace Rawr.Mage
                         currentNode.Index++;
                     } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
                     if (currentNode.Index >= currentNode.Children.Count) break; // we explored the whole search space
+                    if (value > 0 && currentNode.Depth < highestBacktrack)
+                    {
+                        highestBacktrack = currentNode.Depth;
+                        System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
+                    }
                     currentNode = currentNode.Children[currentNode.Index];
+                }
+                else
+                {
+                    lp = currentNode.Lp;
+                    if (lp != null)
+                    {
+                        solution = lp.Solve();
+                        bool valid = IsLpValid();
+                        if (valid)
+                        {
+                            // we found a new lower bound
+                            lowerBound = value;
+                            incumbent = lp;
+                            // now backtrack
+                            if (currentNode.Parent != null)
+                            {
+                                do
+                                {
+                                    currentNode = currentNode.Parent;
+                                    currentNode.Children[currentNode.Index] = null;
+                                    currentNode.Index++;
+                                } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            if (currentNode.Index >= currentNode.Children.Count) break; // we explored the whole search space
+                            if (currentNode.Depth < highestBacktrack)
+                            {
+                                highestBacktrack = currentNode.Depth;
+                                System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
+                            }
+                            currentNode = currentNode.Children[currentNode.Index];
+                        }
+                        else
+                        {
+                            BranchNode first = null;
+                            foreach (BranchNode node in currentNode.Children)
+                            {
+                                ProbeDive(node, ref round, ref incumbent, ref lowerBound, sizeLimit);
+                                if (node.ProbeValue > lowerBound - 0.00001) first = node;
+                            }
+                            if (first != null)
+                            {
+                                currentNode.Children.Remove(first);
+                                currentNode.Children.Insert(0, first);
+                            }
+                            currentNode.Lp = null; // current lp may be reused by one of its children
+                            // evaluate child nodes
+                            currentNode = currentNode.Children[0];
+                        }
+                    }
+                    else
+                    {
+                        if (currentNode.Children.Count > 0)
+                        {
+                            BranchNode first = null;
+                            foreach (BranchNode node in currentNode.Children)
+                            {
+                                ProbeDive(node, ref round, ref incumbent, ref lowerBound, sizeLimit);
+                                if (node.ProbeValue > lowerBound - 0.00001) first = node;
+                            }
+                            if (first != null)
+                            {
+                                currentNode.Children.Remove(first);
+                                currentNode.Children.Insert(0, first);
+                            }
+                            currentNode.Lp = null; // current lp may be reused by one of its children
+                            // evaluate child nodes
+                            currentNode = currentNode.Children[0];
+                        }
+                        else
+                        {
+                            if (currentNode.Parent != null)
+                            {
+                                do
+                                {
+                                    currentNode = currentNode.Parent;
+                                    currentNode.Children[currentNode.Index] = null;
+                                    currentNode.Index++;
+                                } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            if (currentNode.Index >= currentNode.Children.Count) break; // we explored the whole search space
+                            if (currentNode.Depth < highestBacktrack)
+                            {
+                                highestBacktrack = currentNode.Depth;
+                                System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
+                            }
+                            currentNode = currentNode.Children[currentNode.Index];
+                        }
+                    }
+                }
+                round++;
+            } while (round < sizeLimit);
+
+            lp = incumbent;
+            if (lp == null) lp = rootCopy;
+            solution = lp.Solve();
+        }
+
+        private void ProbeDive(BranchNode node, ref int round, ref SolverLP incumbent, ref double lowerBound, int sizeLimit)
+        {
+            if (node.ProbeValue != 0) return;
+            BranchNode store = currentNode;
+            currentNode = node;
+            do
+            {
+                double value = currentNode.Lp.Value; // force evaluation and get value
+                currentNode.Value = value;
+                if (value < lowerBound + 0.00001)
+                {
+                    if (value == 0.0) value = -1.0;
+                    currentNode.ProbeValue = value;
+                    while (currentNode != node)
+                    {
+                        currentNode = currentNode.Parent;
+                        currentNode.ProbeValue = value;
+                    }
+                    currentNode = store;
+                    return;
                 }
                 else
                 {
@@ -90,30 +229,19 @@ namespace Rawr.Mage
                         // we found a new lower bound
                         lowerBound = value;
                         incumbent = lp;
-                        // now backtrack
-                        if (currentNode.Parent != null)
+                        System.Diagnostics.Trace.WriteLine("Probe value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
+                        currentNode.ProbeValue = value;
+                        while (currentNode != node)
                         {
-                            do
-                            {
-                                currentNode = currentNode.Parent;
-                                currentNode.Children[currentNode.Index] = null;
-                                currentNode.Index++;
-                            } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
+                            currentNode = currentNode.Parent;
+                            currentNode.ProbeValue = value;
                         }
-                        else
-                        {
-                            break;
-                        }
-                        if (currentNode.Index >= currentNode.Children.Count) break; // we explored the whole search space
-                        currentNode = currentNode.Children[currentNode.Index];
+                        currentNode = store;
+                        return;
                     }
                     else
                     {
-                        if (currentNode.Depth < 6)
-                        {
-                            // for shallow trees prefer exploring good branches
-                            currentNode.Children.Sort();
-                        }
+                        currentNode.Children.Sort();
                         currentNode.Lp = null; // current lp may be reused by one of its children
                         // evaluate child nodes
                         currentNode = currentNode.Children[0];
@@ -121,10 +249,6 @@ namespace Rawr.Mage
                 }
                 round++;
             } while (round < sizeLimit);
-
-            lp = incumbent;
-            if (lp == null) lp = rootCopy;
-            solution = lp.Solve();
         }
 
         private void BestBoundSearch()
@@ -181,6 +305,7 @@ namespace Rawr.Mage
 
         private bool IsLpValid()
         {
+            AnalyzeSolution();
             bool valid = true;
 
 #if DEBUG_BRANCHING
@@ -265,10 +390,6 @@ namespace Rawr.Mage
                 {
                     valid = ValidateSCB(Cooldown.Trinket2);
                 }*/
-                if (valid && calculationOptions.DrumsOfBattle)
-                {
-                    valid = ValidateActivation(Cooldown.DrumsOfBattle, 30.0, 120.0, VariableType.DrumsOfBattle);
-                }
             }
 
             if (integralMana)
@@ -299,7 +420,15 @@ namespace Rawr.Mage
                 }
                 if (valid)
                 {
+                    valid = ValidateSupergroupCycles();
+                }
+                if (valid)
+                {
                     valid = ValidateSupergroupFragmentation();
+                }
+                if (valid && calculationOptions.DrumsOfBattle)
+                {
+                    valid = ValidateActivation(Cooldown.DrumsOfBattle, 30.0, 120.0, VariableType.DrumsOfBattle);
                 }
             }
 
@@ -342,10 +471,11 @@ namespace Rawr.Mage
 #endif
         }
 
-        private bool ValidateSupergroupFragmentation()
+        private void AnalyzeSolution()
         {
-            List<int>[] hexList = new List<int>[segments];
-            double[] count = new double[segments];
+            hexList = new List<int>[segments];
+            segmentFilled = new double[segments];
+            hexMask = new int[segments];
             for (int seg = 0; seg < segments; seg++)
             {
                 hexList[seg] = new List<int>();
@@ -358,19 +488,273 @@ namespace Rawr.Mage
                         int h = state.GetHex();
                         if (h != 0)
                         {
+                            hexMask[seg] |= h;
                             if (!hexList[seg].Contains(h)) hexList[seg].Add(h);
-                            count[seg] += solution[index];
+                            segmentFilled[seg] += solution[index];
                         }
                     }
                 }
             }
+        }
+
+        private bool ValidateSupergroupCycles()
+        {
             for (int seg = 1; seg < segments - 1; seg++)
             {
                 int N = hexList[seg].Count;
-                if (N > 0 && count[seg] < segmentDuration - 0.000001)
+                if (N > 0)
+                {
+                    for (int i = 0; i < N; i++)
+                    {
+                        int current = hexList[seg][i];
+                        int leftmask = 0;
+                        for (int j = 0; j < hexList[seg - 1].Count; j++)
+                        {
+                            leftmask |= (current & hexList[seg - 1][j]);
+                        }
+                        int rightmask = 0;
+                        for (int j = 0; j < hexList[seg + 1].Count; j++)
+                        {
+                            rightmask |= (current & hexList[seg + 1][j]);
+                        }
+                        if (leftmask != 0 && rightmask != 0)
+                        {
+                            // single node connects to both left and right
+                            // this means that every element in this segment has to contain either full left mask
+                            // or full right mask
+                            // to make the branch as powerful as possible pick one indicator from left mask
+                            // and one indicator from right mask
+                            // the situation is we have ind1 in left segment, ind2 in right segment and ind1 | ind2 here
+                            // if this is the case then all items in this segment must have either ind1 or ind2
+                            // otherwise we have to break the preconditions, so either no ind1 in left, no ind2 in right
+                            // or not ind1 | ind2 here
+
+                            // first detect if we have a problem
+                            for (int j = 0; j < N; j++)
+                            {
+                                int h = hexList[seg][j];
+                                if ((h & leftmask) != leftmask && (h & rightmask) != rightmask)
+                                {
+                                    // this indicates a problem
+                                    // we have an item that doesn't have one of the masks
+                                    // determine which indicators identify this issue
+
+                                    //  XXX XX       leftmask
+                                    //  XXXXXXXXX    current
+                                    //   XXXX XX XX  issue
+                                    //     XX  XX    rightmask
+
+                                    //       *
+                                    //  XXXXXXXXX
+                                    //   XXXX XX XX
+                                    //          *
+
+                                    // basically find an entry from leftmask that is not in this one and an entry
+                                    // from right mask that is not in this one
+
+                                    int ind1 = 1;
+                                    while ((ind1 & leftmask & ~h) == 0) ind1 <<= 1;
+                                    int ind2 = 1;
+                                    while ((ind2 & rightmask & ~h) == 0) ind2 <<= 1;
+
+                                    // do elimination
+                                    // eliminate left
+                                    SolverLP hexRemovedLP = lp.Clone();
+                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle at " + seg + ", removing left " + ind1);
+                                    for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                                    {
+                                        CastingState state = calculationResult.SolutionVariable[index].State;
+                                        int iseg = calculationResult.SolutionVariable[index].Segment;
+                                        if (state != null && iseg == seg - 1 && (state.GetHex() & ind1) != 0) hexRemovedLP.EraseColumn(index);
+                                    }
+                                    HeapPush(hexRemovedLP);
+                                    // eliminate right
+                                    hexRemovedLP = lp.Clone();
+                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle at " + seg + ", removing right " + ind2);
+                                    for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                                    {
+                                        CastingState state = calculationResult.SolutionVariable[index].State;
+                                        int iseg = calculationResult.SolutionVariable[index].Segment;
+                                        if (state != null && iseg == seg + 1 && (state.GetHex() & ind2) != 0) hexRemovedLP.EraseColumn(index);
+                                    }
+                                    HeapPush(hexRemovedLP);
+                                    // eliminate middle
+                                    hexRemovedLP = lp.Clone();
+                                    int ind = ind1 | ind2;
+                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle at " + seg + ", removing center " + ind);
+                                    for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                                    {
+                                        CastingState state = calculationResult.SolutionVariable[index].State;
+                                        int iseg = calculationResult.SolutionVariable[index].Segment;
+                                        if (state != null && iseg == seg && (state.GetHex() & ind) == ind) hexRemovedLP.EraseColumn(index);
+                                    }
+                                    HeapPush(hexRemovedLP);
+                                    // force to full
+                                    // this is equivalent to disabling all that are not good
+                                    if (lp.Log != null) lp.Log.AppendLine("Breaking supergroup cycle at " + seg + ", force to max");
+                                    //int row = lp.AddConstraint(false);
+                                    for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                                    {
+                                        CastingState state = calculationResult.SolutionVariable[index].State;
+                                        int iseg = calculationResult.SolutionVariable[index].Segment;
+                                        if (state != null && iseg == seg)
+                                        {
+                                            int hex = state.GetHex();
+                                            if ((state.GetHex() & (ind1 | ind2)) == 0) lp.EraseColumn(index);
+                                            //if ((state.GetHex() & (ind1 | ind2)) != 0) lp.SetConstraintElement(row, index, -1.0);
+                                        }
+                                    }
+                                    //lp.SetConstraintRHS(row, -segmentDuration);
+                                    //lp.ForceRecalculation(true);
+                                    HeapPush(lp);
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            for (int seg = 0; seg < segments; seg++)
+            {
+                for (int seg2 = seg - 1; seg2 <= seg + 1; seg2 += 2)
+                {
+                    if (seg2 >= 0 && seg2 < segments)
+                    {
+                        int mask = hexMask[seg2];
+                        for (int i = 0; i < hexList[seg].Count; i++)
+                        {
+                            int core = hexList[seg][i];
+
+                            // example problem cycle
+
+                            // CDH   mask
+
+                            // ICDH  core
+                            // DH    <= connects to core but missing something from coremask
+                            // IDG   <= connects to core but missing something from coremask
+
+                            // key is that there is a pair of cooldowns that one has and the other does not that connect them to core
+                            // this causes a variant of the double crossing except that here
+                            // the whole thing happens in single segment, but by extension from other segment
+
+                            int coremask = core & mask;
+                            for (int j = 0; j < hexList[seg].Count; j++)
+                            {
+                                int h = hexList[seg][j];
+                                if ((h & core) != 0 && (~h & coremask) != 0)
+                                {
+                                    for (int k = j + 1; k < hexList[seg].Count; k++)
+                                    {
+                                        int g = hexList[seg][k];
+                                        if ((g & core) != 0 && (~g & coremask) != 0)
+                                        {
+                                            int hcore = core & h & ~g;
+                                            int gcore = core & g & ~h;
+                                            if (hcore != 0 && gcore != 0)
+                                            {
+                                                // key elements are:
+                                                // - element from coremask that is missing in h
+                                                // - element from coremask that is missing in g
+                                                // - connecting element between core and h not in g
+                                                // - connecting element between core and g not in h
+
+                                                //  CD
+
+                                                // VCDZ
+                                                //    Z
+                                                // V
+
+                                                int c = 1;
+                                                while ((c & ~h & coremask) == 0) c <<= 1;
+                                                int d = 1;
+                                                while ((d & ~g & coremask) == 0) d <<= 1;
+                                                int v = 1;
+                                                while ((v & hcore) == 0) v <<= 1;
+                                                int z = 1;
+                                                while ((z & gcore) == 0) z <<= 1;
+
+                                                // either break one of the links forcing h and g behind core
+                                                // or eliminate the double crossing
+
+                                                // eliminate c from mask
+                                                SolverLP hexRemovedLP = lp.Clone();
+                                                if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking advanced supergroup cycle at " + seg + ", removing from neighbor mask " + c);
+                                                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                                                {
+                                                    CastingState state = calculationResult.SolutionVariable[index].State;
+                                                    int iseg = calculationResult.SolutionVariable[index].Segment;
+                                                    if (state != null && iseg == seg2 && (state.GetHex() & c) != 0) hexRemovedLP.EraseColumn(index);
+                                                }
+                                                HeapPush(hexRemovedLP);
+
+                                                // eliminate d from mask
+                                                if (d != c)
+                                                {
+                                                    hexRemovedLP = lp.Clone();
+                                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking advanced supergroup cycle at " + seg + ", removing from neighbor mask " + d);
+                                                    for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                                                    {
+                                                        CastingState state = calculationResult.SolutionVariable[index].State;
+                                                        int iseg = calculationResult.SolutionVariable[index].Segment;
+                                                        if (state != null && iseg == seg2 && (state.GetHex() & d) != 0) hexRemovedLP.EraseColumn(index);
+                                                    }
+                                                    HeapPush(hexRemovedLP);
+                                                }
+
+                                                // eliminate bridge
+                                                int bridge = c | d | v | z;
+                                                hexRemovedLP = lp.Clone();
+                                                if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking advanced supergroup cycle at " + seg + ", removing bridge " + bridge);
+                                                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                                                {
+                                                    CastingState state = calculationResult.SolutionVariable[index].State;
+                                                    int iseg = calculationResult.SolutionVariable[index].Segment;
+                                                    if (state != null && iseg == seg && (state.GetHex() & bridge) == bridge) hexRemovedLP.EraseColumn(index);
+                                                }
+                                                HeapPush(hexRemovedLP);
+
+                                                // eliminate hcore
+                                                hexRemovedLP = lp.Clone();
+                                                if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking advanced supergroup cycle at " + seg + ", removing doublecross " + v + "-" + z);
+                                                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                                                {
+                                                    CastingState state = calculationResult.SolutionVariable[index].State;
+                                                    int iseg = calculationResult.SolutionVariable[index].Segment;
+                                                    if (state != null && iseg == seg && (state.GetHex() & (v | z)) == v) hexRemovedLP.EraseColumn(index);
+                                                }
+                                                HeapPush(hexRemovedLP);
+
+                                                // eliminate gcore
+                                                hexRemovedLP = lp.Clone();
+                                                if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking advanced supergroup cycle at " + seg + ", removing doublecross " + z + "-" + v);
+                                                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                                                {
+                                                    CastingState state = calculationResult.SolutionVariable[index].State;
+                                                    int iseg = calculationResult.SolutionVariable[index].Segment;
+                                                    if (state != null && iseg == seg && (state.GetHex() & (v | z)) == z) hexRemovedLP.EraseColumn(index);
+                                                }
+                                                HeapPush(hexRemovedLP);
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        private bool ValidateSupergroupFragmentation()
+        {
+            for (int seg = 1; seg < segments - 1; seg++)
+            {
+                int N = hexList[seg].Count;
+                if (N > 0 && segmentFilled[seg] < segmentDuration - 0.000001)
                 {
                     // if any hex links to left and right segment we have a problem
-                    // TODO if hex1 links to left and hex2 links to right and we have an item with both hex1 and hex2 there is also a problem
                     List<int> minHexChain = null;
                     for (int i = 0; i < N; i++)
                     {
@@ -504,15 +888,16 @@ namespace Rawr.Mage
                             HeapPush(hexRemovedLP);
                         }
                         if (lp.Log != null) lp.Log.AppendLine("Breaking supergroup fragmentation at " + seg + ", force to max");
-                        int row = lp.AddConstraint(false);
+                        //int row = lp.AddConstraint(false);
                         for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                         {
                             CastingState state = calculationResult.SolutionVariable[index].State;
                             int iseg = calculationResult.SolutionVariable[index].Segment;
-                            if (state != null && iseg == seg && state.GetHex() != 0) lp.SetConstraintElement(row, index, -1.0);
+                            if (state != null && iseg == seg && state.GetHex() == 0) lp.EraseColumn(index);
+                            //if (state != null && iseg == seg && state.GetHex() != 0) lp.SetConstraintElement(row, index, -1.0);
                         }
-                        lp.SetConstraintRHS(row, -segmentDuration);
-                        lp.ForceRecalculation(true);
+                        //lp.SetConstraintRHS(row, -segmentDuration);
+                        //lp.ForceRecalculation(true);
                         HeapPush(lp);
                         return false;
                     }
@@ -521,14 +906,14 @@ namespace Rawr.Mage
             return true;
         }
 
-        private List<int> FindShortestTailPath(int core, int t, int node, int[] used, int N, List<int> hexList)
+        private List<int> FindShortestTailPath(int core, int t, int node, int[] used, int N, List<int> segmentHexList)
         {
             int[] dist = new int[N]; // distance from CTn indicator
             for (int k = 0; k < N; k++)
             {
                 if (used[k] == t + 1)
                 {
-                    if ((hexList[k] & core & ~node) != 0) dist[k] = 1;
+                    if ((segmentHexList[k] & core & ~node) != 0) dist[k] = 1;
                 }
             }
             bool updated;
@@ -543,7 +928,7 @@ namespace Rawr.Mage
                         {
                             if (used[l] == t + 1 && dist[l] > 0)
                             {
-                                if ((hexList[k] & hexList[l]) != 0 && (dist[l] + 1 < dist[k] || dist[k] == 0))
+                                if ((segmentHexList[k] & segmentHexList[l]) != 0 && (dist[l] + 1 < dist[k] || dist[k] == 0))
                                 {
                                     dist[k] = dist[l] + 1;
                                     updated = true;
@@ -558,7 +943,7 @@ namespace Rawr.Mage
             {
                 if (used[k] == t + 1)
                 {
-                    if ((hexList[k] & ~core & node) != 0 && dist[k] + 1 < min) min = dist[k] + 1;
+                    if ((segmentHexList[k] & ~core & node) != 0 && dist[k] + 1 < min) min = dist[k] + 1;
                 }
             }
             List<int> ret = new List<int>();
@@ -566,9 +951,9 @@ namespace Rawr.Mage
             int d = min - 1;
             for (int k = 0; k < N; k++)
             {
-                if (dist[k] == d && (node & hexList[k] & ~core) != 0)
+                if (dist[k] == d && (node & segmentHexList[k] & ~core) != 0)
                 {
-                    last = hexList[k];
+                    last = segmentHexList[k];
                     ret.Add(last);
                     break;
                 }
@@ -578,9 +963,9 @@ namespace Rawr.Mage
             {
                 for (int k = 0; k < N; k++)
                 {
-                    if (dist[k] == d && (last & hexList[k]) != 0)
+                    if (dist[k] == d && (last & segmentHexList[k]) != 0)
                     {
-                        last = hexList[k];
+                        last = segmentHexList[k];
                         ret.Add(last);
                         break;
                     }
@@ -649,34 +1034,18 @@ namespace Rawr.Mage
                 // X
                 //   X
 
-                List<int> hexList = new List<int>();
-                List<int> hexList1 = new List<int>();
-                List<int> hexList2 = new List<int>();
-                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
-                {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    int iseg = calculationResult.SolutionVariable[index].Segment;
-                    if (state != null && solution[index] > 0)
-                    {
-                        if (iseg == seg || iseg == seg + 1)
-                        {
-                            int h = state.GetHex();
-                            if (h != 0)
-                            {
-                                if (!hexList.Contains(h)) hexList.Add(h);
-                                if (iseg == seg && !hexList1.Contains(h)) hexList1.Add(h);
-                                if (iseg == seg + 1 && !hexList2.Contains(h)) hexList2.Add(h);
-                            }
-                        }
-                    }
-                }
+                List<int> hexList1 = hexList[seg];
+                List<int> hexList2 = hexList[seg + 1];
+                List<int> hexList12 = new List<int>();
+                hexList12.AddRange(hexList1);
+                hexList12.AddRange(hexList2);
 
-                int N = hexList.Count;
+                int N = hexList12.Count;
                 List<int> shortestCycle = null;
                 List<int> threeTail = null;
                 for (int i = 0; i < N; i++)
                 {
-                    int core = hexList[i];
+                    int core = hexList12[i];
                     int[] tail = new int[3];
                     int[] used = new int[N]; // index+1 of the tail to which it is attached, -1 for core
                     int[] firsttail = new int[3];
@@ -689,7 +1058,7 @@ namespace Rawr.Mage
                         {
                             if (used[j] == 0)
                             {
-                                int node = hexList[j];
+                                int node = hexList12[j];
                                 int t = 0;
                                 bool alldifferent = true;
                                 for (; t < 3 && tail[t] != 0; t++)
@@ -729,7 +1098,7 @@ namespace Rawr.Mage
                                         // we want to use single indicators anyway as they're more powerful
                                         // in eliminating options and potential future cycles
 
-                                        List<int> path = FindShortestTailPath(core, t, node, used, N, hexList);
+                                        List<int> path = FindShortestTailPath(core, t, node, used, N, hexList12);
                                         if (shortestCycle == null || path.Count + 2 < shortestCycle.Count)
                                         {
                                             shortestCycle = new List<int>();
@@ -746,7 +1115,7 @@ namespace Rawr.Mage
                                     {
                                         cont = true;
                                         used[j] = t + 1;
-                                        tail[t] |= hexList[j];
+                                        tail[t] |= hexList12[j];
                                         break;
                                     }
                                     else if (!different)
@@ -763,8 +1132,8 @@ namespace Rawr.Mage
                                             // it doesn't connect to any existing tails and we can prove it's not in any of them
                                             // this means it has to be in a different tail
                                             cont = true;
-                                            tail[t] = hexList[j];
-                                            firsttail[t] = hexList[j];
+                                            tail[t] = hexList12[j];
+                                            firsttail[t] = hexList12[j];
                                             used[j] = t + 1;
                                             if (t == 2)
                                             {
@@ -792,12 +1161,12 @@ namespace Rawr.Mage
                                         // in this case we also have a cycle, find the shortest path through
                                         // each tail and loop it into cycle
 
-                                        List<int> path1 = FindShortestTailPath(core, used[j] - 1, node, used, N, hexList);
+                                        List<int> path1 = FindShortestTailPath(core, used[j] - 1, node, used, N, hexList12);
                                         for (t = 0; t < 3 && tail[t] != 0; t++)
                                         {
                                             if (t != used[j] - 1 && (~core & tail[t] & node) != 0)
                                             {
-                                                List<int> path2 = FindShortestTailPath(core, t, node, used, N, hexList);
+                                                List<int> path2 = FindShortestTailPath(core, t, node, used, N, hexList12);
                                                 if (shortestCycle == null || path1.Count + path2.Count + 2 < shortestCycle.Count)
                                                 {
                                                     shortestCycle = new List<int>();
@@ -1420,7 +1789,7 @@ namespace Rawr.Mage
                     for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                     {
                         CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (state != null && state.GetCooldown(cooldown) && solution[index] > eps)
+                        if (Math.Abs(seg - calculationResult.SolutionVariable[index].Segment) <= mindist && state != null && state.GetCooldown(cooldown) && solution[index] > eps)
                         {
                             linkedHex |= state.GetHex();
                         }
@@ -1494,6 +1863,105 @@ namespace Rawr.Mage
                             if (calculationResult.SolutionVariable[index].Type == activation && calculationResult.SolutionVariable[index].Segment == seg && (calculationResult.SolutionVariable[index].State.GetHex() & brokenHex) != brokenHex) lp.EraseColumn(index);
                         }
                         HeapPush(lp);
+                        return false;
+                    }
+
+                    // another class of activation cycles is if drums link into next segment, this
+                    // causes drums to be full from activation to the end of segment so anything in this or previous
+                    // segment that links to some of the drums has to cross the activation and so has to be present
+                    // in the activation
+
+                    // first check if drums are present in next segment                    
+                    if (seg < segments - 1)
+                    {
+                        bool drumsinnext = false;
+                        int drumshex = 1 << 6;
+                        for (int j = 0; j < hexList[seg + 1].Count; j++)
+                        {
+                            if ((hexList[seg + 1][j] & drumshex) != 0)
+                            {
+                                drumsinnext = true;
+                                break;
+                            }
+                        }
+                        if (drumsinnext)
+                        {
+                            // check what links to drums, we already have all that is active during drums in linkedHex
+                            for (int ss = Math.Max(0, seg - 1); ss <= seg; ss++)
+                            {
+                                for (int j = 0; j < hexList[ss].Count; j++)
+                                {
+                                    int h = hexList[ss][j];
+                                    if ((h & linkedHex) != 0 && (h & drumshex) == 0 && (h & linkedHex & ~seghex) != 0)
+                                    {
+                                        // we found an item that is before activation that has cooldown not present at activation
+                                        // identify one such cooldown
+                                        int ind = 1;
+                                        while ((ind & h & linkedHex & ~seghex) == 0) ind <<= 1;
+                                        // we branch
+                                        // either activation has this cooldown, this cooldown without drums is not present in this or previous segment
+                                        // or drums don't link to this cooldown, or drums don't extend to next segment
+
+                                        // no cooldown without drums
+                                        SolverLP drumsnohex = lp.Clone();
+                                        if (drumsnohex.Log != null) drumsnohex.Log.AppendLine("Disable " + ind + " without drums before activation at " + seg);
+                                        for (int s = 0; s < segments; s++)
+                                        {
+                                            if (s >= seg - 1 && s <= seg)
+                                            {
+                                                for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
+                                                {
+                                                    CastingState state = calculationResult.SolutionVariable[index].State;
+                                                    if (state != null && !state.GetCooldown(cooldown) && (state.GetHex() & ind) != 0) drumsnohex.EraseColumn(index);
+                                                }
+                                            }
+                                        }
+                                        HeapPush(drumsnohex);
+
+                                        // no cooldown with drums
+                                        drumsnohex = lp.Clone();
+                                        if (drumsnohex.Log != null) drumsnohex.Log.AppendLine("Disable " + ind + " with drums in " + seg);
+                                        for (int s = 0; s < segments; s++)
+                                        {
+                                            if (Math.Abs(seg - s) <= mindist)
+                                            {
+                                                for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
+                                                {
+                                                    CastingState state = calculationResult.SolutionVariable[index].State;
+                                                    if (state != null && state.GetCooldown(cooldown) && (state.GetHex() & ind) != 0) drumsnohex.EraseColumn(index);
+                                                }
+                                            }
+                                        }
+                                        HeapPush(drumsnohex);
+
+                                        // drums don't extend to next segment
+                                        drumsnohex = lp.Clone();
+                                        if (drumsnohex.Log != null) drumsnohex.Log.AppendLine("Disable drums in next segment " + (seg + 1));
+                                        for (int s = 0; s < segments; s++)
+                                        {
+                                            if (s == seg + 1)
+                                            {
+                                                for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
+                                                {
+                                                    CastingState state = calculationResult.SolutionVariable[index].State;
+                                                    if (state != null && state.GetCooldown(cooldown)) drumsnohex.EraseColumn(index);
+                                                }
+                                            }
+                                        }
+                                        HeapPush(drumsnohex);
+
+                                        // activation has this cooldown
+                                        if (lp.Log != null) lp.Log.AppendLine("Disable activation of " + activation.ToString() + " at " + seg + " without hex");
+                                        for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                                        {
+                                            if (calculationResult.SolutionVariable[index].Type == activation && calculationResult.SolutionVariable[index].Segment == seg && (calculationResult.SolutionVariable[index].State.GetHex() & ind) == 0) lp.EraseColumn(index);
+                                        }
+                                        HeapPush(lp);
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1814,7 +2282,7 @@ namespace Rawr.Mage
                             }
                             HeapPush(rightDisabled);
                             if (lp.Log != null) lp.Log.AppendLine("Force " + cooldown.ToString() + " to max from " + seg + " to " + lastseg);
-                            int row = lp.AddConstraint(false);
+                            //int row = lp.AddConstraint(false);
                             for (int outseg = 0; outseg < segments; outseg++)
                             {
                                 if (outseg > seg && outseg < lastseg)
@@ -1822,21 +2290,23 @@ namespace Rawr.Mage
                                     for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
                                     {
                                         CastingState state = calculationResult.SolutionVariable[index].State;
-                                        if (state != null && state.GetCooldown(cooldown)) lp.SetConstraintElement(row, index, -1.0);                                        
+                                        //if (state != null && state.GetCooldown(cooldown)) lp.SetConstraintElement(row, index, -1.0);
+                                        if (state != null && !state.GetCooldown(cooldown)) lp.EraseColumn(index);
                                     }
                                 }
                             }
                             for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                             {
                                 CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (state != null && state.GetCooldown(cooldown))
+                                if (state != null && !state.GetCooldown(cooldown))
                                 {
                                     int outseg = calculationResult.SolutionVariable[index].Segment;
-                                    if (outseg > seg && outseg < lastseg) lp.SetConstraintElement(row, index, -1.0);
+                                    //if (outseg > seg && outseg < lastseg) lp.SetConstraintElement(row, index, -1.0);
+                                    if (outseg > seg && outseg < lastseg) lp.EraseColumn(index);
                                 }
                             }
-                            lp.SetConstraintRHS(row, -segmentDuration * (lastseg - seg - 1));
-                            lp.ForceRecalculation(true);
+                            //lp.SetConstraintRHS(row, -segmentDuration * (lastseg - seg - 1));
+                            //lp.ForceRecalculation(true);
                             HeapPush(lp);
                             return false;
                         }

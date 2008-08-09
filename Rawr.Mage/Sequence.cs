@@ -1133,7 +1133,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         {
                             gapReduction = subgroup.Duration;
                         }
-                        if (subgroup.Duration > 0 && gapReduction <= gap && Math.Abs(group.Segment - subgroup.Segment) < maxSegDistance && ItemsCompatible(group.Item, subgroup.Item, 0))
+                        if (subgroup.Duration > 0 && gapReduction <= gap + eps && Math.Abs(group.Segment - subgroup.Segment) < maxSegDistance && ItemsCompatible(group.Item, subgroup.Item, 0))
                         {
                             gap -= gapReduction;
                             group.AddRange(subgroup.Item);
