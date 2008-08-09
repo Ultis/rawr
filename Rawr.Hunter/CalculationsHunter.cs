@@ -61,7 +61,7 @@ namespace Rawr.Hunter
 				"Basic Stats:Hit Rating",
 				"Basic Stats:Armor Penetration",
 				"Basic Stats:Haste Rating",
-				"Basic Stats:MP5",
+				"Basic Stats:MP5",				
 				"Basic Calculated Stats:Health",
 				"Basic Calculated Stats:Mana",
 				"Basic Calculated Stats:Hit Percentage",
@@ -109,6 +109,22 @@ namespace Rawr.Hunter
 		}
 
 		#region CalculationsBase Overrides
+
+		private string[] _optimizableCalculationLabels = null;
+		public override string[] OptimizableCalculationLabels
+		{
+			get
+			{
+				if (_optimizableCalculationLabels == null)
+					_optimizableCalculationLabels = new string[] {
+					"Health",
+                    "Mana",
+					"Crit Rating",
+					"Hit Rating"
+					};
+				return _optimizableCalculationLabels;
+			}
+		}
 
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
         {

@@ -116,5 +116,20 @@ namespace Rawr.Hunter
 			return dictValues;
 		}
 
+		public override float GetOptimizableCalculationValue(string calculation)
+		{
+			switch (calculation)
+			{
+				case "Health":
+					return BasicStats.Health;
+				case "Crit Rating":
+					return BasicStats.CritRating;
+				case "Hit Rating":
+					return BasicStats.HitRating;
+				case "Mana":
+					return BasicStats.Mana;
+			}
+			return 0;
+		}
     }
 }
