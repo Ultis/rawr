@@ -176,11 +176,13 @@ namespace Rawr
 					case "35181":
 					case "32495":
 						requiredClasses.Add("Priest");
+						break;
 					case "32476":
 					case "35184":
 					case "32475":
 					case "34355":
 						requiredClasses.Add("Shaman");
+						break;
 					case "32474":
 					case "34356":
 						requiredClasses.Add("Hunter");
@@ -190,6 +192,7 @@ namespace Rawr
 					case "32480":
 					case "46109":
 						requiredClasses.Add("Druid");
+						break;
 					case "32478":
 					case "34353":
 						requiredClasses.Add("Druid");
