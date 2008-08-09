@@ -6,13 +6,13 @@ namespace Rawr
     /**
      * CharacterProfilerCharacter
      * @author Charinna
-     * This class is a subclass of Character that imports its data from a saved variables
+     * This class is a container of Character classes that imports its data from a saved variables
      * file created by teh CharacterProfiler mod.
      * It automatically populates the character with the currently equipped gear as
      * well as make available for optimization all items in the character's inventory
      * with their current gemming & enchants.
      */
-    public class CharacterProfilerCharacter : Character
+    public class CharacterProfilerCharacter
     {
         public string Name
         {
@@ -22,6 +22,11 @@ namespace Rawr
         public string Summary
         {
             get { return "Level " + m_iLevel + " " + m_sRace + " " + m_sClass; }
+        }
+
+        public Character Character
+        {
+            get { return m_character; }
         }
 
         static readonly string [] s_asEquippableTooltipKeywords =
@@ -46,21 +51,21 @@ namespace Rawr
             "<br>Projectile",
         };
 
-        static readonly Dictionary<string, CharacterRace> s_stringToRace;
+        static readonly Dictionary<string, Character.CharacterRace> s_stringToRace;
 
         static CharacterProfilerCharacter()
         {
-            s_stringToRace = new Dictionary<string, CharacterRace>();
-            s_stringToRace.Add("Human", CharacterRace.Human);
-            s_stringToRace.Add("Orc", CharacterRace.Orc);
-            s_stringToRace.Add("Dwarf", CharacterRace.Dwarf);
-            s_stringToRace.Add("Night Elf", CharacterRace.NightElf);
-            s_stringToRace.Add("Undead", CharacterRace.Undead);
-            s_stringToRace.Add("Tauren", CharacterRace.Tauren);
-            s_stringToRace.Add("Gnome", CharacterRace.Gnome);
-            s_stringToRace.Add("Troll", CharacterRace.Troll);
-            s_stringToRace.Add("Blood Elf", CharacterRace.BloodElf);
-            s_stringToRace.Add("Draenei", CharacterRace.Draenei);
+            s_stringToRace = new Dictionary<string, Character.CharacterRace>();
+            s_stringToRace.Add("Human", Character.CharacterRace.Human);
+            s_stringToRace.Add("Orc", Character.CharacterRace.Orc);
+            s_stringToRace.Add("Dwarf", Character.CharacterRace.Dwarf);
+            s_stringToRace.Add("Night Elf", Character.CharacterRace.NightElf);
+            s_stringToRace.Add("Undead", Character.CharacterRace.Undead);
+            s_stringToRace.Add("Tauren", Character.CharacterRace.Tauren);
+            s_stringToRace.Add("Gnome", Character.CharacterRace.Gnome);
+            s_stringToRace.Add("Troll", Character.CharacterRace.Troll);
+            s_stringToRace.Add("Blood Elf", Character.CharacterRace.BloodElf);
+            s_stringToRace.Add("Draenei", Character.CharacterRace.Draenei);
         }
 
         static int getEnchant(Dictionary<IComparable, object> item)
@@ -215,8 +220,15 @@ namespace Rawr
          * */
 
         public CharacterProfilerCharacter(string sName, string sRealm, Dictionary<IComparable, object> characterInfo)
-            : base(sName, sRealm, 
-            CharacterRegion.US, // Have to figure out if I know the region
+        {
+            m_characterInfo = characterInfo;
+            m_sName = sName;
+            m_iLevel = (int) (characterInfo["Level"] as long?);
+            m_sRace = (string)characterInfo["Race"];
+            m_sClass = (string)characterInfo["Class"];
+
+            m_character = new Character(sName, sRealm, 
+            Character.CharacterRegion.US, // Have to figure out if I know the region
             s_stringToRace[characterInfo["Race"] as string],
             getGearStringBySlot(characterInfo, "Head"),
             getGearStringBySlot(characterInfo, "Neck"),
@@ -251,13 +263,7 @@ namespace Rawr
             getEnchantBySlot(characterInfo, "Finger1"),
             getEnchantBySlot(characterInfo, "MainHand"),
             getEnchantBySlot(characterInfo, "SecondaryHand"),
-            getEnchantBySlot(characterInfo, "Ranged"))
-        {
-            m_characterInfo = characterInfo;
-            m_sName = sName;
-            m_iLevel = (int) (characterInfo["Level"] as long?);
-            m_sRace = (string)characterInfo["Race"];
-            m_sClass = (string)characterInfo["Class"];
+            getEnchantBySlot(characterInfo, "Ranged"));
 
             // Populate available items
             // Note that some of these items cannot be enchanted
@@ -286,7 +292,7 @@ namespace Rawr
 
             addPossessionsForOptimization(asOptimizableItems, characterInfo);
 
-            AvailableItems = asOptimizableItems;
+            m_character.AvailableItems = asOptimizableItems;
         }
 
         string m_sName;
@@ -294,6 +300,7 @@ namespace Rawr
         string m_sClass;
         int m_iLevel;
         Dictionary<IComparable, object> m_characterInfo;
+        Character m_character;
     }
 
     public class CharacterProfilerRealm

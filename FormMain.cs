@@ -1141,13 +1141,13 @@ namespace Rawr
             StatusMessaging.UpdateStatus("Loading Character", "Loading Saved Character");
             StatusMessaging.UpdateStatus("Update Item Cache", "Queued");
             StatusMessaging.UpdateStatus("Cache Item Icons", "Queued");
-            Character character = e.Argument as Character;
+            CharacterProfilerCharacter characterProfilerChoice = e.Argument as CharacterProfilerCharacter;
             StatusMessaging.UpdateStatusFinished("Loading Character");
-            if (character != null)
+            if (characterProfilerChoice != null)
             {
-                this.EnsureItemsLoaded(character.GetAllEquipedAndAvailableGearIds());
+                this.EnsureItemsLoaded(characterProfilerChoice.Character.GetAllEquipedAndAvailableGearIds());
                 _characterPath = null;
-                e.Result = character;
+                e.Result = characterProfilerChoice.Character;
             }
         }
 
