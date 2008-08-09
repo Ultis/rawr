@@ -173,10 +173,23 @@ namespace Rawr
 				/* fix class restrictions on BOP items that can only be made by certain classes */
 				switch (id)
 				{
+					case "35181":
+					case "32495":
+						requiredClasses.Add("Priest");
+					case "32476":
+					case "35184":
+					case "32475":
+					case "34355":
+						requiredClasses.Add("Shaman");
 					case "32474":
 					case "34356":
 						requiredClasses.Add("Hunter");
 						break;
+					case "46106":
+					case "32479":
+					case "32480":
+					case "46109":
+						requiredClasses.Add("Druid");
 					case "32478":
 					case "34353":
 						requiredClasses.Add("Druid");
