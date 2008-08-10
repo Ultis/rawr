@@ -212,7 +212,15 @@ namespace Rawr.Mage
             this.calculations = calculations;
             IncrementalSetIndex = incrementalSetIndex;
 
-            float levelScalingFactor = (1 - (70 - 60) / 82f * 3);
+            float levelScalingFactor;
+            if (calculationOptions.WotLK)
+            {
+                levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (calculationOptions.PlayerLevel - 70) / 10f));
+            }
+            else
+            {
+                levelScalingFactor = (1 - (70 - 60) / 82f * 3);
+            }
 
             SpellDamageRating = characterStats.SpellDamageRating;
             SpellHasteRating = characterStats.SpellHasteRating;
@@ -245,19 +253,81 @@ namespace Rawr.Mage
             NatureDamage = /* characterStats.SpellNatureDamageRating + */ SpellDamageRating;
             ShadowDamage = characterStats.SpellShadowDamageRating + SpellDamageRating;
 
-            SpellCrit = 0.01f * (characterStats.Intellect * 0.0125f + 0.9075f) + 0.01f * calculationOptions.ArcaneInstability + (calculationOptions.WotLK ? 0.015f : 0.01f) * calculationOptions.ArcanePotency + characterStats.SpellCritRating / 1400f * levelScalingFactor + characterStats.MageSpellCrit;
+            float spellCritPerInt = 0f;
+            float spellCritBase = 0f;
+            float baseRegen = 0f;
+            switch (calculationOptions.PlayerLevel)
+            {
+                case 70:
+                    spellCritPerInt = 0.0125f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.009327f;
+                    break;
+                case 71:
+                    spellCritPerInt = 0.0116f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.009079f;
+                    break;
+                case 72:
+                    spellCritPerInt = 0.0108f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.008838f;
+                    break;
+                case 73:
+                    spellCritPerInt = 0.0101f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.008603f;
+                    break;
+                case 74:
+                    spellCritPerInt = 0.0093f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.008375f;
+                    break;
+                case 75:
+                    spellCritPerInt = 0.0087f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.008152f;
+                    break;
+                case 76:
+                    spellCritPerInt = 0.0081f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.007936f;
+                    break;
+                case 77:
+                    spellCritPerInt = 0.0075f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.007725f;
+                    break;
+                case 78:
+                    spellCritPerInt = 0.007f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.00752f;
+                    break;
+                case 79:
+                    spellCritPerInt = 0.0065f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.00732f;
+                    break;
+                case 80:
+                    spellCritPerInt = 0.006f;
+                    spellCritBase = 0.9075f;
+                    baseRegen = 0.007125f;
+                    break;
+            }
+            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * calculationOptions.ArcaneInstability + (calculationOptions.WotLK ? 0.015f : 0.01f) * calculationOptions.ArcanePotency + characterStats.SpellCritRating / 1400f * levelScalingFactor + characterStats.MageSpellCrit;
             if (destructionPotion) SpellCrit += 0.02f;
             SpellHit = characterStats.SpellHitRating * levelScalingFactor / 800f;
 
             int targetLevel = calculationOptions.TargetLevel;
+            int playerLevel = calculationOptions.PlayerLevel;
             float maxHitRate = (calculationOptions.WotLK) ? 1.00f : 0.99f;
-            ArcaneHitRate = Math.Min(maxHitRate, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit + (calculationOptions.WotLK ? 0.01f : 0.02f) * calculationOptions.ArcaneFocus);
-            FireHitRate = Math.Min(maxHitRate, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit + 0.01f * calculationOptions.ElementalPrecision);
-            FrostHitRate = Math.Min(maxHitRate, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit + 0.01f * calculationOptions.ElementalPrecision);
-            NatureHitRate = Math.Min(maxHitRate, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit);
-            ShadowHitRate = Math.Min(maxHitRate, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + SpellHit);
+            ArcaneHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + (calculationOptions.WotLK ? 0.01f : 0.02f) * calculationOptions.ArcaneFocus);
+            FireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * calculationOptions.ElementalPrecision);
+            FrostHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * calculationOptions.ElementalPrecision);
+            NatureHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
+            ShadowHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
 
-            SpiritRegen = 0.001f + characterStats.Spirit * 0.009327f * (float)Math.Sqrt(characterStats.Intellect);
+            SpiritRegen = 0.001f + characterStats.Spirit * baseRegen * (float)Math.Sqrt(characterStats.Intellect);
             ManaRegen = SpiritRegen + characterStats.Mp5 / 5f + SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration;
             ManaRegen5SR = SpiritRegen * characterStats.SpellCombatManaRegeneration + characterStats.Mp5 / 5f + SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration;
             ManaRegenDrinking = ManaRegen + 240f;

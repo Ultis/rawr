@@ -1056,6 +1056,7 @@ namespace Rawr.Mage
             // water elemental
             if (calculationOptions.SummonWaterElemental == 1)
             {
+                int playerLevel = calculationOptions.PlayerLevel;
                 int targetLevel = calculationOptions.TargetLevel;
                 calculationResult.WaterElemental = true;
                 // 45 sec, 3 min cooldown + cold snap
@@ -1065,7 +1066,7 @@ namespace Rawr.Mage
                 float spellHit = 0;
                 if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Totem of Wrath"))) spellHit += 0.03f;
                 if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Inspiring Presence"))) spellHit += 0.01f;
-                float hitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + spellHit);
+                float hitRate = Math.Min(0.99f, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + spellHit);
                 float spellCrit = 0.05f;
                 if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Winter's Chill")) || calculationOptions.WintersChill == 1) spellHit += 0.1f;
                 float multiplier = hitRate;
@@ -1073,7 +1074,7 @@ namespace Rawr.Mage
                 if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Curse of the Elements"))) multiplier *= 1.13f / 1.1f;
                 if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Misery"))) multiplier *= 1.05f;
                 float realResistance = calculationOptions.FrostResist;
-                float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > 70) ? ((targetLevel - 70) * 0.02f) : 0f));
+                float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f));
                 multiplier *= partialResistFactor;
                 calculationResult.WaterElementalDps = (521.5f + (0.4f * calculationResult.BaseState.FrostDamage + (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath of Air")) ? 101 : 0)) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f;
                 calculationResult.WaterElementalDuration = (float)(1 + (int)((calculationOptions.FightDuration - 45f) / 180f)) * 45;

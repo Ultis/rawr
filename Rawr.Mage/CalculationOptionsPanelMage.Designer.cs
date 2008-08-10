@@ -41,6 +41,8 @@
             this.buttonTalents = new System.Windows.Forms.Button();
             this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textBoxSlowedTime = new System.Windows.Forms.TextBox();
+            this.label79 = new System.Windows.Forms.Label();
             this.buttonCustomSpellMix = new System.Windows.Forms.Button();
             this.label48 = new System.Windows.Forms.Label();
             this.checkBoxCustomSpellMixOnly = new System.Windows.Forms.CheckBox();
@@ -214,9 +216,9 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxSlowedTime = new System.Windows.Forms.TextBox();
-            this.label79 = new System.Windows.Forms.Label();
             this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
+            this.label80 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -248,6 +250,8 @@
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
+            this.tabPage1.Controls.Add(this.comboBoxPlayerLevel);
+            this.tabPage1.Controls.Add(this.label80);
             this.tabPage1.Controls.Add(this.comboBoxFaction);
             this.tabPage1.Controls.Add(this.label35);
             this.tabPage1.Controls.Add(this.textBoxEvocationSpirit);
@@ -394,6 +398,24 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Spells & Buffs";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // textBoxSlowedTime
+            // 
+            this.textBoxSlowedTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "SlowedTime", true));
+            this.textBoxSlowedTime.Location = new System.Drawing.Point(112, 388);
+            this.textBoxSlowedTime.Name = "textBoxSlowedTime";
+            this.textBoxSlowedTime.Size = new System.Drawing.Size(75, 20);
+            this.textBoxSlowedTime.TabIndex = 192;
+            // 
+            // label79
+            // 
+            this.label79.AutoSize = true;
+            this.label79.Location = new System.Drawing.Point(0, 391);
+            this.label79.Name = "label79";
+            this.label79.Size = new System.Drawing.Size(102, 13);
+            this.label79.TabIndex = 191;
+            this.label79.Text = "Slowed Time (0-1): *";
+            this.toolTipMage.SetToolTip(this.label79, "Percentage of time that the target is slowed.");
             // 
             // buttonCustomSpellMix
             // 
@@ -1164,7 +1186,17 @@
             "70",
             "71",
             "72",
-            "73"});
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "83"});
             this.comboBoxTargetLevel.Location = new System.Drawing.Point(112, 3);
             this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
             this.comboBoxTargetLevel.Size = new System.Drawing.Size(75, 21);
@@ -2144,28 +2176,32 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // textBoxSlowedTime
-            // 
-            this.textBoxSlowedTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "SlowedTime", true));
-            this.textBoxSlowedTime.Location = new System.Drawing.Point(112, 388);
-            this.textBoxSlowedTime.Name = "textBoxSlowedTime";
-            this.textBoxSlowedTime.Size = new System.Drawing.Size(75, 20);
-            this.textBoxSlowedTime.TabIndex = 192;
-            // 
-            // label79
-            // 
-            this.label79.AutoSize = true;
-            this.label79.Location = new System.Drawing.Point(0, 391);
-            this.label79.Name = "label79";
-            this.label79.Size = new System.Drawing.Size(102, 13);
-            this.label79.TabIndex = 191;
-            this.label79.Text = "Slowed Time (0-1): *";
-            this.toolTipMage.SetToolTip(this.label79, "Percentage of time that the target is slowed.");
-            // 
             // calculationOptionsMageBindingSource
             // 
             this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
             this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            // 
+            // comboBoxPlayerLevel
+            // 
+            this.comboBoxPlayerLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "PlayerLevel", true));
+            this.comboBoxPlayerLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPlayerLevel.FormattingEnabled = true;
+            this.comboBoxPlayerLevel.Items.AddRange(new object[] {
+            "70",
+            "71"});
+            this.comboBoxPlayerLevel.Location = new System.Drawing.Point(112, 134);
+            this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
+            this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
+            this.comboBoxPlayerLevel.TabIndex = 153;
+            // 
+            // label80
+            // 
+            this.label80.AutoSize = true;
+            this.label80.Location = new System.Drawing.Point(0, 137);
+            this.label80.Name = "label80";
+            this.label80.Size = new System.Drawing.Size(71, 13);
+            this.label80.TabIndex = 152;
+            this.label80.Text = "Player Level: ";
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2382,6 +2418,8 @@
         private System.Windows.Forms.Label label78;
         private System.Windows.Forms.TextBox textBoxSlowedTime;
         private System.Windows.Forms.Label label79;
+        private System.Windows.Forms.ComboBox comboBoxPlayerLevel;
+        private System.Windows.Forms.Label label80;
 
     }
 }

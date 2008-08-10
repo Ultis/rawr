@@ -436,18 +436,40 @@ namespace Rawr.Mage
                     };
                     break;
                 case Character.CharacterRace.Gnome:
-                    statsRace = new Stats()
+                    switch (calculationOptions.PlayerLevel)
                     {
-                        Health = 3213f,
-                        Mana = 1961f,
-                        Strength = 28f,
-                        Agility = 42f,
-                        Stamina = 50f,
-                        Intellect = 154f,
-                        Spirit = 145,
-                        ArcaneResistance = 10,
-                        BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
-                    };
+                        case 70:
+                            statsRace = new Stats()
+                            {
+                                Health = 3213f,
+                                Mana = 1961f,
+                                Strength = 28f,
+                                Agility = 42f,
+                                Stamina = 50f,
+                                Intellect = 154f,
+                                Spirit = 145,
+                                ArcaneResistance = 10,
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                            };
+                            break;
+                        case 71:
+                            statsRace = new Stats()
+                            {
+                                Health = 3308f,
+                                Mana = 2063f,
+                                Strength = 28f,
+                                Agility = 42f,
+                                Stamina = 51f,
+                                Intellect = 157f,
+                                Spirit = 148f,
+                                ArcaneResistance = 10,
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                            };
+                            break;
+                        default:
+                            statsRace = new Stats();
+                            break;
+                    }
                     break;
                 case Character.CharacterRace.Human:
                     statsRace = new Stats()
@@ -563,7 +585,7 @@ namespace Rawr.Mage
             statsTotal.NatureResistance += statsTotal.AllResist + statsTotal.NatureResistanceBuff;
             statsTotal.ShadowResistance += statsTotal.AllResist + statsTotal.ShadowResistanceBuff;
 
-            int playerLevel = 70;
+            int playerLevel = calculationOptions.PlayerLevel;
             float maxHitRate = (calculationOptions.WotLK) ? 1.0f : 0.99f;
             float bossHitRate = Math.Min(maxHitRate, ((playerLevel <= calculationOptions.TargetLevel + 2) ? (0.96f - (playerLevel - calculationOptions.TargetLevel) * 0.01f) : (0.94f - (playerLevel - calculationOptions.TargetLevel - 2) * 0.11f)));
             statsTotal.Mp5 -= 5 * calculationOptions.EffectShadowManaDrain * calculationOptions.EffectShadowManaDrainFrequency * bossHitRate * Math.Max(1 - statsTotal.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
