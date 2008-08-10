@@ -40,6 +40,16 @@ namespace Rawr.Tree
             cmbImprovedRegrowth.Text = calcOpts.ImprovedRegrowth.ToString();
             cmbTreeOfLife.Text = calcOpts.TreeOfLife.ToString();
 
+            cmbNaturalist.Text = calcOpts.Naturalist.ToString();
+            cmbEmpoweredTouch.Text = calcOpts.EmpoweredTouch.ToString();
+            cmbTranquilSpirit.Text = calcOpts.TranquilSpirit.ToString();
+            cmbMoonglow.Text = calcOpts.Moonglow.ToString();
+            cmbLunarGuidance.Text = calcOpts.LunarGuidance.ToString();
+            cmbDreamstate.Text = calcOpts.Dreamstate.ToString();
+            cmbHeartOfTheWild.Text = calcOpts.HotW.ToString();
+            cmbSurvivalOfTheFittest.Text = calcOpts.SotF.ToString();
+            cmbNurturingInstinct.Text = calcOpts.NurturingInstinct.ToString();
+
             upDownTargetHealth.Value = (decimal)calcOpts.TargetHealth;
             upDownSurvScalingAbove.Value = (decimal)calcOpts.SurvScalingAbove;
             upDownSurvScalingBelow.Value = (decimal)calcOpts.SurvScalingBelow;
@@ -138,20 +148,6 @@ namespace Rawr.Tree
                 try
                 {
                     calcOpts.Intensity = int.Parse(cmbIntensity.Text);
-                }
-                catch { }
-                Character.OnItemsChanged();
-            }
-        }
-
-        private void cmbLivingSpirit_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-                try
-                {
-                    calcOpts.LivingSpirit = int.Parse(cmbLivingSpirit.Text);
                 }
                 catch { }
                 Character.OnItemsChanged();
@@ -423,6 +419,147 @@ namespace Rawr.Tree
                 Character.OnItemsChanged();
             }
         }
+
+        private void cmbNaturalist_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                try
+                {
+                    calcOpts.Naturalist = int.Parse(cmbNaturalist.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbEmpoweredTouch_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                try
+                {
+                    calcOpts.EmpoweredTouch = int.Parse(cmbEmpoweredTouch.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbTranquilSpirit_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                try
+                {
+                    calcOpts.TranquilSpirit = int.Parse(cmbTranquilSpirit.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbMoonglow_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                try
+                {
+                    calcOpts.Moonglow = int.Parse(cmbMoonglow.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbLunarGuidance_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                try
+                {
+                    calcOpts.LunarGuidance = int.Parse(cmbLunarGuidance.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbDreamstate_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                try
+                {
+                    calcOpts.Dreamstate = int.Parse(cmbDreamstate.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbHeartOfTheWild_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                try
+                {
+                    calcOpts.HotW = int.Parse(cmbHeartOfTheWild.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbSurvivalOfTheFittest_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                try
+                {
+                    calcOpts.SotF = int.Parse(cmbSurvivalOfTheFittest.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbNurturingInstinct_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                try
+                {
+                    calcOpts.NurturingInstinct = int.Parse(cmbNurturingInstinct.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
+        }
+
+        private void cmbLivingSpirit_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+                try
+                {
+                    calcOpts.LivingSpirit = int.Parse(cmbLivingSpirit.Text);
+                }
+                catch { }
+                Character.OnItemsChanged();
+            }
+        }
+
     }
     [Serializable]
     public class CalculationOptionsTree : ICalculationOptionBase
@@ -451,8 +588,8 @@ namespace Rawr.Tree
         public String[][] availableSpells = new String[][] {
             new String[] {"Lifebloom Stack"},
             new String[] {"Rejuvenation", "Regrowth"},
-            new String[] {"Regrowth", "Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)", "Nothing"},
-            new String[] {"Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)", "Nothing"},
+            new String[] {"Regrowth", "Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)", "Healing Touch", "Nothing"},
+            new String[] {"Lifebloom (no aura)", "Rejuvenation (no aura)", "Regrowth (no aura)", "Healing Touch", "Nothing"},
             new String[] {"Nothing"},
             new String[] {"Nothing"},
         };

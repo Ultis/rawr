@@ -43,6 +43,24 @@
             this.cmbManaTime = new System.Windows.Forms.NumericUpDown();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.cmbNurturingInstinct = new System.Windows.Forms.ComboBox();
+            this.cmbSurvivalOfTheFittest = new System.Windows.Forms.ComboBox();
+            this.cmbHeartOfTheWild = new System.Windows.Forms.ComboBox();
+            this.cmbDreamstate = new System.Windows.Forms.ComboBox();
+            this.cmbLunarGuidance = new System.Windows.Forms.ComboBox();
+            this.cmbMoonglow = new System.Windows.Forms.ComboBox();
+            this.cmbTranquilSpirit = new System.Windows.Forms.ComboBox();
+            this.cmbEmpoweredTouch = new System.Windows.Forms.ComboBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.cmbNaturalist = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -330,6 +348,24 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label36);
+            this.groupBox1.Controls.Add(this.label35);
+            this.groupBox1.Controls.Add(this.label34);
+            this.groupBox1.Controls.Add(this.label33);
+            this.groupBox1.Controls.Add(this.label32);
+            this.groupBox1.Controls.Add(this.label31);
+            this.groupBox1.Controls.Add(this.label30);
+            this.groupBox1.Controls.Add(this.label29);
+            this.groupBox1.Controls.Add(this.cmbNurturingInstinct);
+            this.groupBox1.Controls.Add(this.cmbSurvivalOfTheFittest);
+            this.groupBox1.Controls.Add(this.cmbHeartOfTheWild);
+            this.groupBox1.Controls.Add(this.cmbDreamstate);
+            this.groupBox1.Controls.Add(this.cmbLunarGuidance);
+            this.groupBox1.Controls.Add(this.cmbMoonglow);
+            this.groupBox1.Controls.Add(this.cmbTranquilSpirit);
+            this.groupBox1.Controls.Add(this.cmbEmpoweredTouch);
+            this.groupBox1.Controls.Add(this.label16);
+            this.groupBox1.Controls.Add(this.cmbNaturalist);
             this.groupBox1.Controls.Add(this.label15);
             this.groupBox1.Controls.Add(this.label14);
             this.groupBox1.Controls.Add(this.label13);
@@ -348,10 +384,221 @@
             this.groupBox1.Controls.Add(this.cmbIntensity);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(191, 238);
+            this.groupBox1.Size = new System.Drawing.Size(191, 487);
             this.groupBox1.TabIndex = 26;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Talents";
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(9, 457);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(90, 13);
+            this.label36.TabIndex = 43;
+            this.label36.Text = "Nurturing Instinct:";
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(9, 430);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(109, 13);
+            this.label35.TabIndex = 42;
+            this.label35.Text = "Survival of the Fittest:";
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(9, 403);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(90, 13);
+            this.label34.TabIndex = 41;
+            this.label34.Text = "Heart of the Wild:";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(9, 376);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(64, 13);
+            this.label33.TabIndex = 40;
+            this.label33.Text = "Dreamstate:";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(9, 349);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(86, 13);
+            this.label32.TabIndex = 39;
+            this.label32.Text = "Lunar Guidance:";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(9, 322);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(59, 13);
+            this.label31.TabIndex = 38;
+            this.label31.Text = "Moonglow:";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(9, 295);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(74, 13);
+            this.label30.TabIndex = 37;
+            this.label30.Text = "Tranquil Spirit:";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(9, 268);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(100, 13);
+            this.label29.TabIndex = 36;
+            this.label29.Text = "Empowered Touch:";
+            // 
+            // cmbNurturingInstinct
+            // 
+            this.cmbNurturingInstinct.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2"});
+            this.cmbNurturingInstinct.Location = new System.Drawing.Point(146, 454);
+            this.cmbNurturingInstinct.Name = "cmbNurturingInstinct";
+            this.cmbNurturingInstinct.Size = new System.Drawing.Size(33, 21);
+            this.cmbNurturingInstinct.TabIndex = 35;
+            this.cmbNurturingInstinct.Text = "0";
+            this.cmbNurturingInstinct.SelectedIndexChanged += new System.EventHandler(this.cmbNurturingInstinct_SelectedIndexChanged);
+            // 
+            // cmbSurvivalOfTheFittest
+            // 
+            this.cmbSurvivalOfTheFittest.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.cmbSurvivalOfTheFittest.Location = new System.Drawing.Point(146, 427);
+            this.cmbSurvivalOfTheFittest.Name = "cmbSurvivalOfTheFittest";
+            this.cmbSurvivalOfTheFittest.Size = new System.Drawing.Size(33, 21);
+            this.cmbSurvivalOfTheFittest.TabIndex = 34;
+            this.cmbSurvivalOfTheFittest.Text = "0";
+            this.cmbSurvivalOfTheFittest.SelectedIndexChanged += new System.EventHandler(this.cmbSurvivalOfTheFittest_SelectedIndexChanged);
+            // 
+            // cmbHeartOfTheWild
+            // 
+            this.cmbHeartOfTheWild.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.cmbHeartOfTheWild.Location = new System.Drawing.Point(146, 400);
+            this.cmbHeartOfTheWild.Name = "cmbHeartOfTheWild";
+            this.cmbHeartOfTheWild.Size = new System.Drawing.Size(33, 21);
+            this.cmbHeartOfTheWild.TabIndex = 33;
+            this.cmbHeartOfTheWild.Text = "0";
+            this.cmbHeartOfTheWild.SelectedIndexChanged += new System.EventHandler(this.cmbHeartOfTheWild_SelectedIndexChanged);
+            // 
+            // cmbDreamstate
+            // 
+            this.cmbDreamstate.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.cmbDreamstate.Location = new System.Drawing.Point(146, 373);
+            this.cmbDreamstate.Name = "cmbDreamstate";
+            this.cmbDreamstate.Size = new System.Drawing.Size(33, 21);
+            this.cmbDreamstate.TabIndex = 32;
+            this.cmbDreamstate.Text = "0";
+            this.cmbDreamstate.SelectedIndexChanged += new System.EventHandler(this.cmbDreamstate_SelectedIndexChanged);
+            // 
+            // cmbLunarGuidance
+            // 
+            this.cmbLunarGuidance.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.cmbLunarGuidance.Location = new System.Drawing.Point(146, 346);
+            this.cmbLunarGuidance.Name = "cmbLunarGuidance";
+            this.cmbLunarGuidance.Size = new System.Drawing.Size(33, 21);
+            this.cmbLunarGuidance.TabIndex = 31;
+            this.cmbLunarGuidance.Text = "0";
+            this.cmbLunarGuidance.SelectedIndexChanged += new System.EventHandler(this.cmbLunarGuidance_SelectedIndexChanged);
+            // 
+            // cmbMoonglow
+            // 
+            this.cmbMoonglow.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3"});
+            this.cmbMoonglow.Location = new System.Drawing.Point(146, 319);
+            this.cmbMoonglow.Name = "cmbMoonglow";
+            this.cmbMoonglow.Size = new System.Drawing.Size(33, 21);
+            this.cmbMoonglow.TabIndex = 30;
+            this.cmbMoonglow.Text = "0";
+            this.cmbMoonglow.SelectedIndexChanged += new System.EventHandler(this.cmbMoonglow_SelectedIndexChanged);
+            // 
+            // cmbTranquilSpirit
+            // 
+            this.cmbTranquilSpirit.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.cmbTranquilSpirit.Location = new System.Drawing.Point(146, 292);
+            this.cmbTranquilSpirit.Name = "cmbTranquilSpirit";
+            this.cmbTranquilSpirit.Size = new System.Drawing.Size(33, 21);
+            this.cmbTranquilSpirit.TabIndex = 29;
+            this.cmbTranquilSpirit.Text = "0";
+            this.cmbTranquilSpirit.SelectedIndexChanged += new System.EventHandler(this.cmbTranquilSpirit_SelectedIndexChanged);
+            // 
+            // cmbEmpoweredTouch
+            // 
+            this.cmbEmpoweredTouch.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2"});
+            this.cmbEmpoweredTouch.Location = new System.Drawing.Point(146, 265);
+            this.cmbEmpoweredTouch.Name = "cmbEmpoweredTouch";
+            this.cmbEmpoweredTouch.Size = new System.Drawing.Size(33, 21);
+            this.cmbEmpoweredTouch.TabIndex = 28;
+            this.cmbEmpoweredTouch.Text = "0";
+            this.cmbEmpoweredTouch.SelectedIndexChanged += new System.EventHandler(this.cmbEmpoweredTouch_SelectedIndexChanged);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(9, 241);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(54, 13);
+            this.label16.TabIndex = 27;
+            this.label16.Text = "Naturalist:";
+            // 
+            // cmbNaturalist
+            // 
+            this.cmbNaturalist.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.cmbNaturalist.Location = new System.Drawing.Point(146, 238);
+            this.cmbNaturalist.Name = "cmbNaturalist";
+            this.cmbNaturalist.Size = new System.Drawing.Size(33, 21);
+            this.cmbNaturalist.TabIndex = 26;
+            this.cmbNaturalist.Text = "0";
+            this.cmbNaturalist.SelectedIndexChanged += new System.EventHandler(this.cmbNaturalist_SelectedIndexChanged);
             // 
             // label15
             // 
@@ -507,6 +754,7 @@
             this.cmbLivingSpirit.Size = new System.Drawing.Size(33, 21);
             this.cmbLivingSpirit.TabIndex = 13;
             this.cmbLivingSpirit.Text = "3";
+            this.cmbLivingSpirit.SelectedIndexChanged += new System.EventHandler(this.cmbLivingSpirit_SelectedIndexChanged);
             // 
             // label8
             // 
@@ -853,6 +1101,7 @@
             "Lifebloom (no aura)",
             "Rejuvenation (no aura)",
             "Regrowth (no aura)",
+            "Healing Touch",
             "Nothing"});
             this.spellList.Location = new System.Drawing.Point(6, 97);
             this.spellList.Name = "spellList";
@@ -941,7 +1190,7 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(205, 294);
+            this.tabControl1.Size = new System.Drawing.Size(205, 519);
             this.tabControl1.TabIndex = 30;
             // 
             // tabPage1
@@ -950,7 +1199,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(197, 268);
+            this.tabPage1.Size = new System.Drawing.Size(197, 493);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Fight";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -961,7 +1210,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(197, 268);
+            this.tabPage2.Size = new System.Drawing.Size(197, 493);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Rotation";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -971,7 +1220,7 @@
             this.tabPage3.Controls.Add(this.groupBox2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(197, 268);
+            this.tabPage3.Size = new System.Drawing.Size(197, 493);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Mana";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -981,7 +1230,7 @@
             this.tabPage4.Controls.Add(this.groupBox1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(197, 268);
+            this.tabPage4.Size = new System.Drawing.Size(197, 493);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Talents";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -992,7 +1241,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControl1);
             this.Name = "CalculationOptionsPanelTree";
-            this.Size = new System.Drawing.Size(212, 304);
+            this.Size = new System.Drawing.Size(212, 525);
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -1086,5 +1335,23 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.NumericUpDown upDownAvgHeal;
+        private System.Windows.Forms.ComboBox cmbSurvivalOfTheFittest;
+        private System.Windows.Forms.ComboBox cmbHeartOfTheWild;
+        private System.Windows.Forms.ComboBox cmbDreamstate;
+        private System.Windows.Forms.ComboBox cmbLunarGuidance;
+        private System.Windows.Forms.ComboBox cmbMoonglow;
+        private System.Windows.Forms.ComboBox cmbTranquilSpirit;
+        private System.Windows.Forms.ComboBox cmbEmpoweredTouch;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.ComboBox cmbNaturalist;
+        private System.Windows.Forms.ComboBox cmbNurturingInstinct;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label29;
     }
 }

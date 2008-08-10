@@ -281,6 +281,7 @@ namespace Rawr.Tree
         {
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
             HealMultiplier += 0.05f * calcOpts.ImprovedRejuvenation;
+            Cost = (int)(Cost * (1f - 0.03f * calcOpts.Moonglow));
         }
     }
 
@@ -316,6 +317,7 @@ namespace Rawr.Tree
         {
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
             CritPercent += 10 * calcOpts.ImprovedRegrowth;
+            Cost = (int)(Cost * (1f - 0.03f * calcOpts.Moonglow));
         }
     }
 
@@ -357,7 +359,7 @@ namespace Rawr.Tree
         {
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
             BaseCastTime -= 0.1f * calcOpts.Naturalist;
-            Cost = (int)(Cost * (1f - 0.02f * calcOpts.TranquilSpirit));
+            Cost = (int)(Cost * (1f - 0.02f * calcOpts.TranquilSpirit) * (1f - 0.03f * calcOpts.Moonglow));
             // TODO: See if the T6 4-piece bonus applies here or if it needs to be modeled in a different way
             DirectHealingBonusMultiplier += 0.1f * calcOpts.EmpoweredTouch + stats.BonusHealingTouchMultiplier;
         }

@@ -235,18 +235,26 @@ namespace Rawr.Tree
                     Agility = 75f,
                     Intellect = 120f,
                     Spirit = 133f,
-                    BonusSpiritMultiplier = calcOpts.LivingSpirit * 0.05f
+                    BonusAgilityMultiplier = 0.01f * calcOpts.SotF,
+                    BonusIntellectMultiplier = 0.01f * calcOpts.SotF,
+                    BonusSpiritMultiplier = 0.01f * calcOpts.SotF,
+                    BonusStaminaMultiplier = 0.01f * calcOpts.SotF,
+                    BonusStrengthMultiplier = 0.01f * calcOpts.SotF,
                 } :
                 new Stats()
                 {
                     Health = 3434f,
-                    Mana = 2470f,
+                    Mana = 2370f,
                     Stamina = 85f,
                     Agility = 64.5f,
                     Intellect = 115f,
                     Spirit = 135f,
-                    BonusSpiritMultiplier = calcOpts.LivingSpirit * 0.05f,
-                    BonusHealthMultiplier = 0.05f
+                    BonusHealthMultiplier = 0.05f,
+                    BonusAgilityMultiplier = 0.01f * calcOpts.SotF,
+                    BonusIntellectMultiplier = 0.01f * calcOpts.SotF,
+                    BonusSpiritMultiplier = 0.01f * calcOpts.SotF,
+                    BonusStaminaMultiplier = 0.01f * calcOpts.SotF,
+                    BonusStrengthMultiplier = 0.01f * calcOpts.SotF,
                 };
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -255,13 +263,20 @@ namespace Rawr.Tree
 
             Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace;
 
+            statsTotal.Agility = (float)Math.Floor((statsTotal.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect) * (1 + calcOpts.HotW * 0.04f));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
-            statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
-            statsTotal.Health = statsTotal.Health + (float)Math.Round(statsTotal.Stamina * 10f * (1 + statsTotal.BonusHealthMultiplier));
+            statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + calcOpts.LivingSpirit * 0.05f));
 
+            float lunarGuidance = (calcOpts.LunarGuidance == 3 ? 0.25f : calcOpts.LunarGuidance * 0.08f);
+            statsTotal.SpellDamageRating = (float)Math.Round(statsTotal.SpellDamageRating + statsTotal.Intellect * lunarGuidance);
+            statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit) + (statsTotal.Intellect * lunarGuidance) + (calcOpts.NurturingInstinct * 0.5f * statsTotal.Agility));
+            statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
+
+            statsTotal.Health = (float)Math.Round(((statsTotal.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
+            statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * (calcOpts.Dreamstate > 0 ? calcOpts.Dreamstate * 0.03f + 0.01f : 0f)); 
             return statsTotal;
         }
 

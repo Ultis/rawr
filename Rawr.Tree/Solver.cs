@@ -248,6 +248,8 @@ namespace Rawr.Tree
                 for (int j = 0; j < calcOpts.availableSpells[i].GetLength(0); j++)
                 {
                     spellList[i][j] = calculatedStats.Spells.Find(delegate(Spell s) { return s.Name.Equals(calcOpts.availableSpells[i][j]); });
+                    if (calcOpts.TreeOfLife > 0 && spellList[i][j] is HealingTouch)
+                        spellList[i][j] = calculatedStats.Spells.Find(delegate(Spell s) { return s.Name.Equals("Nothing"); });
                 }
             }
 
