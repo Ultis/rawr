@@ -590,7 +590,7 @@ namespace Rawr.Mage
                                     }
                                     HeapPush(hexRemovedLP);
                                     // force to full
-                                    // this is equivalent to disabling all that are not good
+                                    // this is equivalent to disabling all that are not good (at least I think it is)
                                     if (lp.Log != null) lp.Log.AppendLine("Breaking supergroup cycle at " + seg + ", force to max");
                                     //int row = lp.AddConstraint(false);
                                     for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
@@ -1637,11 +1637,13 @@ namespace Rawr.Mage
                 SolverLP coldsnapUsedExtra = lp.Clone();
                 SolverLP zerolp = lp.Clone();
                 // if we don't use coldsnap then this segment should be either zeroed or we have to restrict the segments until next iv (I think (tm))
+                if (lp.Log != null) lp.Log.AppendLine("No coldsnap in " + coldsnapSegment + ", restrict segments until next IV");
                 for (int seg = coldsnapSegment; seg < Math.Min(coldsnapSegment + (int)Math.Ceiling(180.0 / segmentDuration) + 1, segments + (int)(180.0 / segmentDuration) - 1); seg++) // it's possible we're overrestricting here, might have to add another branch where we go to one less but zero out seg+1
                 {
                     lp.UpdateColdsnapDuration(seg, 20.0);
                 }
                 HeapPush(lp);
+                if (zerolp.Log != null) zerolp.Log.AppendLine("No coldsnap in " + coldsnapSegment + ", zero segment");
                 for (int index = segmentColumn[coldsnapSegment]; index < segmentColumn[coldsnapSegment + 1]; index++)
                 {
                     CastingState state = calculationResult.SolutionVariable[index].State;
@@ -1650,15 +1652,18 @@ namespace Rawr.Mage
                 HeapPush(zerolp);
                 // coldsnap used extra
                 // the segments for the duration of one IV can be loose, but all after that have to be restricted until coldsnap is ready
-                coldsnapUsedExtra.UpdateColdsnapDuration(coldsnapSegment, 20.0);
+                // TODO this needs some heavy testing, I don't see what case this corresponded to, removing for now
                 int firstRestrictedSeg = coldsnapSegment + 1 + (int)Math.Ceiling(180.0 / segmentDuration);
                 int nextPossibleColdsnap = coldsnapSegment + (int)(coldsnapCooldown / segmentDuration);
                 int segLimit = Math.Min(segments + (int)(180.0 / segmentDuration) - 1, nextPossibleColdsnap);
+                /*if (coldsnapUsedExtra.Log != null) coldsnapUsedExtra.Log.AppendLine("Use coldsnap in " + coldsnapSegment + ", extra");
+                coldsnapUsedExtra.UpdateColdsnapDuration(coldsnapSegment, 20.0);
                 for (int seg = firstRestrictedSeg; seg < segLimit; seg++)
                 {
                     coldsnapUsedExtra.UpdateColdsnapDuration(seg, 20.0);
                 }
-                HeapPush(coldsnapUsedExtra);
+                HeapPush(coldsnapUsedExtra);*/
+                if (coldsnapUsedIntra.Log != null) coldsnapUsedIntra.Log.AppendLine("Use coldsnap in " + coldsnapSegment + ", intra");
                 for (int seg = Math.Min(coldsnapSegment + 2, segments - 1); seg < coldsnapSegment + (int)(180.0 / segmentDuration); seg++)
                 {
                     for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
@@ -1670,6 +1675,32 @@ namespace Rawr.Mage
                 for (int seg = firstRestrictedSeg; seg < segLimit; seg++)
                 {
                     coldsnapUsedIntra.UpdateColdsnapDuration(seg, 20.0);
+                }
+                // additionally need a constraint that restricts where the next IV can start, due to coarse grained resolution of fragmentation
+                // warning: this part of code relies on seg duration = 30
+                if (coldsnapSegment + (int)(180.0 / segmentDuration) < segments)
+                {
+                    int row = coldsnapUsedIntra.AddConstraint(false);
+                    int outseg = coldsnapSegment;
+                    for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
+                    {
+                        CastingState state = calculationResult.SolutionVariable[index].State;
+                        if (state != null && state.GetCooldown(Cooldown.IcyVeins))
+                        {
+                            coldsnapUsedIntra.SetConstraintElement(row, index, -1.0);
+                        }
+                    }
+                    outseg = coldsnapSegment + (int)(180.0 / segmentDuration); // TODO rethink for seg != 30
+                    for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
+                    {
+                        CastingState state = calculationResult.SolutionVariable[index].State;
+                        if (state != null && state.GetCooldown(Cooldown.IcyVeins))
+                        {
+                            coldsnapUsedIntra.SetConstraintElement(row, index, 1.0);
+                        }
+                    }
+                    coldsnapUsedIntra.SetConstraintRHS(row, -20.0);
+                    coldsnapUsedIntra.ForceRecalculation(true);
                 }
                 HeapPush(coldsnapUsedIntra);
                 return false;
@@ -2282,7 +2313,7 @@ namespace Rawr.Mage
                             }
                             HeapPush(rightDisabled);
                             if (lp.Log != null) lp.Log.AppendLine("Force " + cooldown.ToString() + " to max from " + seg + " to " + lastseg);
-                            //int row = lp.AddConstraint(false);
+                            int row = lp.AddConstraint(false); // need the extra constraint because just removing others won't force this one to full 30 sec
                             for (int outseg = 0; outseg < segments; outseg++)
                             {
                                 if (outseg > seg && outseg < lastseg)
@@ -2290,7 +2321,7 @@ namespace Rawr.Mage
                                     for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
                                     {
                                         CastingState state = calculationResult.SolutionVariable[index].State;
-                                        //if (state != null && state.GetCooldown(cooldown)) lp.SetConstraintElement(row, index, -1.0);
+                                        if (state != null && state.GetCooldown(cooldown)) lp.SetConstraintElement(row, index, -1.0);
                                         if (state != null && !state.GetCooldown(cooldown)) lp.EraseColumn(index);
                                     }
                                 }
@@ -2298,15 +2329,15 @@ namespace Rawr.Mage
                             for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                             {
                                 CastingState state = calculationResult.SolutionVariable[index].State;
-                                if (state != null && !state.GetCooldown(cooldown))
+                                int outseg = calculationResult.SolutionVariable[index].Segment;
+                                if (outseg > seg && outseg < lastseg)
                                 {
-                                    int outseg = calculationResult.SolutionVariable[index].Segment;
-                                    //if (outseg > seg && outseg < lastseg) lp.SetConstraintElement(row, index, -1.0);
-                                    if (outseg > seg && outseg < lastseg) lp.EraseColumn(index);
+                                    if (state != null && state.GetCooldown(cooldown)) lp.SetConstraintElement(row, index, -1.0);
+                                    if (state != null && !state.GetCooldown(cooldown)) lp.EraseColumn(index);
                                 }
                             }
-                            //lp.SetConstraintRHS(row, -segmentDuration * (lastseg - seg - 1));
-                            //lp.ForceRecalculation(true);
+                            lp.SetConstraintRHS(row, -segmentDuration * (lastseg - seg - 1));
+                            lp.ForceRecalculation(true);
                             HeapPush(lp);
                             return false;
                         }

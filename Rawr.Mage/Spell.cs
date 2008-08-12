@@ -994,6 +994,9 @@ namespace Rawr.Mage
     //665/(1.03*1.03*1.05) <= x + k*864 <= 666/(1.03*1.03*1.05)
     //476/(1.03*1.03*1.05) <= x + k*389 <= 477/(1.03*1.03*1.05)
     //319/(1.03*1.03) <= x + k*35 <= 320/(1.03*1.03)
+    //289 <= x <= 290
+    //297/1.03 <= x <= 298/1.03
+    //306/(1.03*1.03) <= x <= 307/(1.03*1.03)
 
     //710.98662860374614545601443518307 <= x + k*1182 <= 711.88433899339734008411546351032
     //596.97740911804442768718383762214 <= x + k*864 <= 597.8751195076956223152848659494
@@ -1014,16 +1017,16 @@ namespace Rawr.Mage
 
     //4.670622414486951292280911989065 <= kbase <= 4.69854997424063893676091071819
 
-    //k := 0.35771428571428571428571428571429
+    //k := 0.35692857142857142857142857142857
 
-    //288.1683428894604311703001494691 <= x <= 289.0660532791116257984011777964
-    //287.9122662609015705443266947652 <= x <= 288.8099766505527651724277230925
-    //288.1592883311115001189466266289 <= x <= 289.0569987207626947470476549561
-    //288.16809501366764068243943821281 <= x <= 289.11069092280139504194551795641
+    //289.0970571751747168845858637551 <= x <= 289.9947675648259115126868920824
+    //288.59112340375871340146955190831 <= x <= 289.48883379340990802957058023561
+    //288.46493118825435726180376948611 <= x <= 289.36264157790555188990479781331
+    //288.19559501366764068243943821282 <= x <= 289.13819092280139504194551795642
 
-    //288.1683428894604311703001494691 <= x <= 288.8099766505527651724277230925
+    //289.0970571751747168845858637551 <= x <= 289.13819092280139504194551795642
 
-    // x := 288.5
+    // x := 289.1
     class ArcaneMissiles : BaseSpell
     {
         private bool barrage;
@@ -1036,7 +1039,7 @@ namespace Rawr.Mage
             MaxRank[71] = 11;
             SpellData[RankLevelIndex(10, 70)] = new SpellData() { Cost = 740, MinDamage = 267.6f * 5, MaxDamage = 267.6f * 5, SpellDamageCoefficient = 5f / 3.5f };
             SpellData[RankLevelIndex(11, 70)] = new SpellData() { Cost = 761, MinDamage = 287.9f * 5, MaxDamage = 287.9f * 5, SpellDamageCoefficient = 5f / 3.5f }; // there's some indication that coefficient might be slightly different
-            SpellData[RankLevelIndex(11, 71)] = new SpellData() { Cost = 761, MinDamage = 288.5f * 5, MaxDamage = 288.5f * 5, SpellDamageCoefficient = 4.685f / 3.5f }; // some huge downraking style penalty for some reason
+            SpellData[RankLevelIndex(11, 71)] = new SpellData() { Cost = 761, MinDamage = 289.1f * 5, MaxDamage = 289.1f * 5, SpellDamageCoefficient = 4.67125f / 3.5f }; // some huge downraking style penalty for some reason (seems to be 0.95 * (5/3.5 + 0.45)), for now don't place the coeff on 0.45, just use 4.67125 instead of 4.75
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {

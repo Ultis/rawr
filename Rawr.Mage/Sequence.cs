@@ -1950,7 +1950,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         minMps = ((1 + BaseStats.BonusManaPotion) * 3000 - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
                 }
-                else if (gemTime > 0 && nextGem <= nextPot && (nextGem <= nextEvo || nextGem == 0 || evoTime <= 0))
+                else if (gemTime > 0 && (nextGem <= nextEvo || nextGem == 0 || evoTime <= 0))
                 {
                     if (nextGem <= time)
                     {
@@ -1962,7 +1962,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         minMps = ((1 + BaseStats.BonusManaGem) * gemMaxValue[gemCount] - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
                 }
-                else if (evoTime > 0 && nextEvo <= nextPot && nextEvo <= nextGem)
+                else if (evoTime > 0)
                 {
                     if (nextEvo <= time)
                     {
