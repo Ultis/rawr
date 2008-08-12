@@ -622,8 +622,10 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 9;
             MaxRank[71] = 9;
+            MaxRank[72] = 9;
             SpellData[RankLevelIndex(9, 70)] = new SpellData() { Cost = 465, MinDamage = 664, MaxDamage = 786, SpellDamageCoefficient = 1.5f / 3.5f };
             SpellData[RankLevelIndex(9, 71)] = new SpellData() { Cost = 465, MinDamage = 667, MaxDamage = 790, SpellDamageCoefficient = 1.5f / 3.5f };
+            SpellData[RankLevelIndex(9, 72)] = new SpellData() { Cost = 465, MinDamage = 671, MaxDamage = 794, SpellDamageCoefficient = 1.5f / 3.5f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -654,8 +656,10 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 9;
             MaxRank[71] = 9;
+            MaxRank[72] = 9;
             SpellData[RankLevelIndex(9, 70)] = new SpellData() { Cost = 180, MinDamage = 305, MaxDamage = 361, SpellDamageCoefficient = 1.5f / 3.5f };
             SpellData[RankLevelIndex(9, 71)] = new SpellData() { Cost = 180, MinDamage = 307, MaxDamage = 364, SpellDamageCoefficient = 1.5f / 3.5f };
+            SpellData[RankLevelIndex(9, 72)] = new SpellData() { Cost = 180, MinDamage = 310, MaxDamage = 366, SpellDamageCoefficient = 1.5f / 3.5f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -693,8 +697,10 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 7;
             MaxRank[71] = 7;
+            MaxRank[72] = 8;
             SpellData[RankLevelIndex(7, 70)] = new SpellData() { Cost = 1175, MinDamage = 480, MaxDamage = 585, PeriodicDamage = 424, SpellDamageCoefficient = 0.2363f, DotDamageCoefficient = 0.12f };
             SpellData[RankLevelIndex(7, 71)] = new SpellData() { Cost = 1175, MinDamage = 480, MaxDamage = 585, PeriodicDamage = 424, SpellDamageCoefficient = 0.2363f, DotDamageCoefficient = 0.12f };
+            SpellData[RankLevelIndex(8, 72)] = new SpellData() { Cost = 1565, MinDamage = 688, MaxDamage = 842, PeriodicDamage = 620, SpellDamageCoefficient = 0.2363f, DotDamageCoefficient = 0.12f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -719,8 +725,10 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 5;
             MaxRank[71] = 5;
+            MaxRank[72] = 5;
             SpellData[RankLevelIndex(5, 70)] = new SpellData() { Cost = 185, MinDamage = 100, MaxDamage = 113, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f }; // TODO need level 70 WotLK data
             SpellData[RankLevelIndex(5, 71)] = new SpellData() { Cost = 185, MinDamage = 232, MaxDamage = 262, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f };
+            SpellData[RankLevelIndex(5, 72)] = new SpellData() { Cost = 185, MinDamage = 232, MaxDamage = 263, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -750,9 +758,11 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 14;
             MaxRank[71] = 14;
+            MaxRank[72] = 14;
             SpellData[RankLevelIndex(13, 70)] = new SpellData() { Cost = 330, MinDamage = 600, MaxDamage = 647, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
             SpellData[RankLevelIndex(14, 70)] = new SpellData() { Cost = 345, MinDamage = 630, MaxDamage = 680, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
             SpellData[RankLevelIndex(14, 71)] = new SpellData() { Cost = 345, MinDamage = 633, MaxDamage = 684, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
+            SpellData[RankLevelIndex(14, 72)] = new SpellData() { Cost = 345, MinDamage = 637, MaxDamage = 688, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -808,9 +818,11 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 14;
             MaxRank[71] = 14;
+            MaxRank[72] = 14;
             SpellData[RankLevelIndex(13, 70)] = new SpellData() { Cost = 425, MinDamage = 649, MaxDamage = 821, PeriodicDamage = 84, SpellDamageCoefficient = 3.5f / 3.5f };
             SpellData[RankLevelIndex(14, 70)] = new SpellData() { Cost = 465, MinDamage = 717, MaxDamage = 913, PeriodicDamage = 92, SpellDamageCoefficient = 3.5f / 3.5f };
             SpellData[RankLevelIndex(14, 71)] = new SpellData() { Cost = 465, MinDamage = 721, MaxDamage = 918, PeriodicDamage = 92, SpellDamageCoefficient = 3.5f / 3.5f };
+            SpellData[RankLevelIndex(14, 72)] = new SpellData() { Cost = 465, MinDamage = 725, MaxDamage = 922, PeriodicDamage = 92, SpellDamageCoefficient = 3.5f / 3.5f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -863,8 +875,10 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 6;
             MaxRank[71] = 6;
+            MaxRank[72] = 7;
             SpellData[RankLevelIndex(6, 70)] = new SpellData() { Cost = 645, MinDamage = 418, MaxDamage = 457, SpellDamageCoefficient = 0.1357f };
             SpellData[RankLevelIndex(6, 71)] = new SpellData() { Cost = 645, MinDamage = 418, MaxDamage = 457, SpellDamageCoefficient = 0.1357f };
+            SpellData[RankLevelIndex(7, 72)] = new SpellData() { Cost = 840, MinDamage = 559, MaxDamage = 611, SpellDamageCoefficient = 0.1357f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -898,8 +912,10 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 2;
             MaxRank[71] = 2;
+            MaxRank[72] = 2;
             SpellData[RankLevelIndex(2, 70)] = new SpellData() { Cost = 405, MinDamage = 709, MaxDamage = 865, SpellDamageCoefficient = 3.0f / 3.5f };
             SpellData[RankLevelIndex(2, 71)] = new SpellData() { Cost = 405, MinDamage = 724, MaxDamage = 881, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellData[RankLevelIndex(2, 72)] = new SpellData() { Cost = 405, MinDamage = 740, MaxDamage = 896, SpellDamageCoefficient = 3.0f / 3.5f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -922,9 +938,11 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 1;
             MaxRank[71] = 2;
+            MaxRank[72] = 2;
             SpellData[RankLevelIndex(1, 70)] = new SpellData() { Cost = 195, MinDamage = 668, MaxDamage = 772, SpellDamageCoefficient = 2.5f / 3.5f };
             SpellData[RankLevelIndex(1, 71)] = new SpellData() { Cost = 195, MinDamage = 668, MaxDamage = 772, SpellDamageCoefficient = 2.5f / 3.5f };
             SpellData[RankLevelIndex(2, 71)] = new SpellData() { Cost = 255, MinDamage = 690, MaxDamage = 800, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellData[RankLevelIndex(2, 72)] = new SpellData() { Cost = 255, MinDamage = 695, MaxDamage = 806, SpellDamageCoefficient = 2.5f / 3.5f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1027,6 +1045,33 @@ namespace Rawr.Mage
     //289.0970571751747168845858637551 <= x <= 289.13819092280139504194551795642
 
     // x := 289.1
+
+    // level 72
+    // 290 <= x <= 291
+    // 299/1.03 <= x <= 300/1.03
+
+    // 290.31954001319634272787256103309 <= x <= 291
+
+    // 308/(1.03*1.03) <= x <= 309/(1.03*1.03)
+    // 321/(1.03*1.03) <= x + k*36 <= 322/(1.03*1.03) (very heavily slanted towards 321)
+    // 476/(1.03*1.03) <= x + k*468 <= 477/(1.03*1.03)
+    // 769/(1.03*1.03*1.05) <= x + k*1182 <= 770/(1.03*1.03*1.05)
+
+    // 0.32148018977597637226254438055556 <= k <= 0.36656507577423780647458656696111
+    // 0.33691378792236554513866230333376 <= k <= 0.34038185607607796315497324074957
+    // 0.3378504988509041192975387340577 <= k <= 0.33918566837413157437387415478046
+
+    // 0.3378504988509041192975387340577 <= k <= 0.33918566837413157437387415478046
+
+    // k := 0.33814285714285714285714285714286
+
+    // 290.40014397479229225859445484289 <= x <= 291.34273988392604661810053458649
+    // 290.42479560480993226775110081774 <= x <= 291.36739151394368662725718056134
+    // 290.65443249891152615254792651436 <= x <= 291.55214288856272078064895484166
+
+    // 290.65443249891152615254792651436 <= x <= 291
+
+    // x := 290.8
     class ArcaneMissiles : BaseSpell
     {
         private bool barrage;
@@ -1037,9 +1082,11 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 11;
             MaxRank[71] = 11;
+            MaxRank[72] = 11;
             SpellData[RankLevelIndex(10, 70)] = new SpellData() { Cost = 740, MinDamage = 267.6f * 5, MaxDamage = 267.6f * 5, SpellDamageCoefficient = 5f / 3.5f };
             SpellData[RankLevelIndex(11, 70)] = new SpellData() { Cost = 761, MinDamage = 287.9f * 5, MaxDamage = 287.9f * 5, SpellDamageCoefficient = 5f / 3.5f }; // there's some indication that coefficient might be slightly different
             SpellData[RankLevelIndex(11, 71)] = new SpellData() { Cost = 761, MinDamage = 289.1f * 5, MaxDamage = 289.1f * 5, SpellDamageCoefficient = 4.67125f / 3.5f }; // some huge downraking style penalty for some reason (seems to be 0.95 * (5/3.5 + 0.45)), for now don't place the coeff on 0.45, just use 4.67125 instead of 4.75
+            SpellData[RankLevelIndex(11, 72)] = new SpellData() { Cost = 761, MinDamage = 290.8f * 5, MaxDamage = 290.8f * 5, SpellDamageCoefficient = 4.3425f / 3.5f }; // some huge downraking style penalty for some reason (hypothesis 0.9 * (5/3.5 + 0.45), confirmed)
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1089,8 +1136,10 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 8;
             MaxRank[71] = 8;
+            MaxRank[72] = 8;
             SpellData[RankLevelIndex(8, 70)] = new SpellData() { Cost = 545, MinDamage = 377, MaxDamage = 407, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f };
             SpellData[RankLevelIndex(8, 71)] = new SpellData() { Cost = 545, MinDamage = 378, MaxDamage = 409, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f };
+            SpellData[RankLevelIndex(8, 72)] = new SpellData() { Cost = 545, MinDamage = 380, MaxDamage = 411, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1139,8 +1188,10 @@ namespace Rawr.Mage
         {
             MaxRank[70] = 7;
             MaxRank[71] = 7;
+            MaxRank[72] = 7;
             SpellData[RankLevelIndex(7, 70)] = new SpellData() { Cost = 1645, MinDamage = 1476, MaxDamage = 1476, SpellDamageCoefficient = 1.1429f }; // TODO verify level 70 WotLK data
             SpellData[RankLevelIndex(7, 71)] = new SpellData() { Cost = 1645, MinDamage = 2192, MaxDamage = 2192, SpellDamageCoefficient = 1.1429f };
+            SpellData[RankLevelIndex(7, 72)] = new SpellData() { Cost = 1645, MinDamage = 2192, MaxDamage = 2192, SpellDamageCoefficient = 1.1429f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {

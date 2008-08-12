@@ -32,6 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelMage));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
             this.textBoxEvocationSpirit = new System.Windows.Forms.TextBox();
@@ -216,17 +219,14 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
-            this.label80 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -267,6 +267,34 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Character";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // comboBoxPlayerLevel
+            // 
+            this.comboBoxPlayerLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "PlayerLevel", true));
+            this.comboBoxPlayerLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPlayerLevel.FormattingEnabled = true;
+            this.comboBoxPlayerLevel.Items.AddRange(new object[] {
+            "70",
+            "71",
+            "72"});
+            this.comboBoxPlayerLevel.Location = new System.Drawing.Point(112, 134);
+            this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
+            this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
+            this.comboBoxPlayerLevel.TabIndex = 153;
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            // 
+            // label80
+            // 
+            this.label80.AutoSize = true;
+            this.label80.Location = new System.Drawing.Point(0, 137);
+            this.label80.Name = "label80";
+            this.label80.Size = new System.Drawing.Size(71, 13);
+            this.label80.TabIndex = 152;
+            this.label80.Text = "Player Level: ";
             // 
             // comboBoxFaction
             // 
@@ -2176,33 +2204,6 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
-            // 
-            // comboBoxPlayerLevel
-            // 
-            this.comboBoxPlayerLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "PlayerLevel", true));
-            this.comboBoxPlayerLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxPlayerLevel.FormattingEnabled = true;
-            this.comboBoxPlayerLevel.Items.AddRange(new object[] {
-            "70",
-            "71"});
-            this.comboBoxPlayerLevel.Location = new System.Drawing.Point(112, 134);
-            this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
-            this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
-            this.comboBoxPlayerLevel.TabIndex = 153;
-            // 
-            // label80
-            // 
-            this.label80.AutoSize = true;
-            this.label80.Location = new System.Drawing.Point(0, 137);
-            this.label80.Name = "label80";
-            this.label80.Size = new System.Drawing.Size(71, 13);
-            this.label80.TabIndex = 152;
-            this.label80.Text = "Player Level: ";
-            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2214,6 +2215,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2224,7 +2226,6 @@
             this.tabPage5.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
