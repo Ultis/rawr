@@ -101,13 +101,13 @@ namespace Rawr
                 SavedVariablesDictionary gems = item["Gem"] as SavedVariablesDictionary;
 
                 string sItemSlotString = asItemElements[0];
-                for (int iGemSlot = 1; iGemSlot <= 3; iGemSlot++)
+                for (long lGemSlot = 1; lGemSlot <= 3; lGemSlot++)
                 {
                     sItemSlotString += ".";
 
-                    if (gems.ContainsKey(iGemSlot))
+                    if (gems.ContainsKey(lGemSlot))
                     {
-                        string sGemItemString = (gems[iGemSlot] as SavedVariablesDictionary)["Item"] as string;
+                        string sGemItemString = (gems[lGemSlot] as SavedVariablesDictionary)["Item"] as string;
                         sItemSlotString += sGemItemString.Split(acSplitCharacters)[0];
                     }
                     else
