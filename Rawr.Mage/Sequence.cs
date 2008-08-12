@@ -349,7 +349,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 int jj = j; double jT = targetTime - t;
                 double tjj = t;
                 double tkk = tLastHigh;
-                if (jT <= 0)
+                if (jT <= 0.00001)
                 {
                     jj--;
                     if (jj >= 0 && jj < sequence.Count)
