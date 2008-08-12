@@ -1125,9 +1125,9 @@ namespace Rawr
                     {
                         MessageBox.Show("Unable to parse saved variable file: " + ex.Message);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Error reading saved variable file.");
+                        MessageBox.Show("Error reading saved variable file: " + ex.Message);
                     }
                 }
                 dialog.Dispose();

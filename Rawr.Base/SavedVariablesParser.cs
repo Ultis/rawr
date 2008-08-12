@@ -12,6 +12,65 @@ namespace Rawr
      * a list of dictionary items for tables, and native types for strings, booleans and numbers.
      */
 
+    public class SavedVariablesDictionary : Dictionary<IComparable, object>
+    {
+        /**
+         * This function is actually very slow and used mainly for testing,
+         * to test the equivalence of two dictionaries.
+         */
+        public bool Equivalent(SavedVariablesDictionary other)
+        {
+            SavedVariablesDictionary leftDictionary, rightDictionary;
+
+            for (int iPass = 0; iPass < 2; iPass++)
+            {
+                if (iPass == 0)
+                {
+                    leftDictionary = this;
+                    rightDictionary = other;
+                }
+                else
+                {
+                    leftDictionary = other;
+                    rightDictionary = this;
+                }
+
+                // Compare every value in this instance to the other
+                foreach (IComparable key in leftDictionary.Keys)
+                {
+                    if (!rightDictionary.ContainsKey(key))
+                    {
+                        return false;
+                    }
+                    else if (leftDictionary[key] == null || rightDictionary[key] == null)
+                    {
+                        if (leftDictionary[key] != rightDictionary[key])
+                        {
+                            return false;
+                        }
+                    }
+                    else if (leftDictionary[key].GetType() != rightDictionary[key].GetType())
+                    {
+                        return false;
+                    }
+                    else if (leftDictionary[key].GetType() == typeof(SavedVariablesDictionary))
+                    {
+                        if (!(leftDictionary[key] as SavedVariablesDictionary).Equivalent(rightDictionary[key] as SavedVariablesDictionary))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (!leftDictionary[key].Equals(rightDictionary[key]))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+    }
+
     /**
      * This class parses a saved variable file and outputs a list of variable = value keys.
      * Note that it does not support the following:
@@ -243,9 +302,9 @@ namespace Rawr
 
         class LuaTableToken : LuaToken
         {
-            Dictionary<IComparable, object> m_values;
+            SavedVariablesDictionary m_values;
 
-            public LuaTableToken(Dictionary<IComparable, object> values)
+            public LuaTableToken(SavedVariablesDictionary values)
                 : base(LuaTokenTypes.LUA_TABLE)
             {
                 m_values = values;
@@ -256,7 +315,7 @@ namespace Rawr
                 return m_values;
             }
 
-            public Dictionary<IComparable, object> getTable()
+            public SavedVariablesDictionary getTable()
             {
                 return m_values;
             }
@@ -267,13 +326,13 @@ namespace Rawr
          * It has read and peek functions, and allows ignoring white spaces & comments
          * or processing them.
          */
-        class SavedVariableFileStream
+        class SavedVariablesFileStream
         {
             string m_sFullFile;
             int m_iCurrentOffset;
             int m_iLastOffset;
 
-            public SavedVariableFileStream(string sFileName)
+            public SavedVariablesFileStream(string sFileName)
             {
                 // Allow the file to be read/written by other processes.
                 // Even though having the file written to while it's being read is likely to
@@ -289,25 +348,23 @@ namespace Rawr
 
             /**
              * Helper function for stream.getNextCharacter/stream.peekNextCharacter to read the next character
-             * off the stream, if there is one.
-             * Throws EndOfStreamException if there is no next character.
+             * off the stream, if there is one.  Returns null if not.
              */
-            private char advanceCharacter()
+            private char? advanceCharacter()
             {
                 if (m_iCurrentOffset + 1 == m_iLastOffset)
-                    throw new EndOfStreamException();
+                    return null;
                 return m_sFullFile[m_iCurrentOffset++];
             }
 
             /**
-             * Returns the next character in the stream. Advances the read pointer.
+             * Returns the next character in the stream, null if there is none. Advances the read pointer.
              * bUnparsed: When true, comments, white spaces, and the like are not interpreted.
-             * Throws EndOfStreamException if there is no next character.
              */
-            public char getNextCharacter(bool bUnparsed)
+            public char? getNextCharacter(bool bUnparsed)
             {
                 bool bValidCharacter = bUnparsed;
-                char cNextCharacter = advanceCharacter();
+                char? cNextCharacter = advanceCharacter();
 
                 while (!bValidCharacter)
                 {
@@ -347,17 +404,10 @@ namespace Rawr
              */
             public char? peekNextCharacter(bool bUnparsed)
             {
-                try
-                {
-                    int iSavedPosition = m_iCurrentOffset;
-                    char cNextCharacter = getNextCharacter(bUnparsed);
-                    m_iCurrentOffset = iSavedPosition;
-                    return cNextCharacter;
-                }
-                catch (EndOfStreamException)
-                {
-                    return null;
-                }
+                int iSavedPosition = m_iCurrentOffset;
+                char? cNextCharacter = getNextCharacter(bUnparsed);
+                m_iCurrentOffset = iSavedPosition;
+                return cNextCharacter;
             }
 
             public string getErrorContext()
@@ -366,7 +416,7 @@ namespace Rawr
             }
         }
 
-        private static LuaToken getNextToken(SavedVariableFileStream stream)
+        private static LuaToken getNextToken(SavedVariablesFileStream stream)
         {
             // Note:
             // The general rule on the true/false parameter of getNextCharacter/peekNextCharacter.
@@ -380,7 +430,10 @@ namespace Rawr
             // In this case, if we were processing the numer '0xc0' and asked for the next
             // character ignoring white spaces, 'ffee' would be appended letting var1 = 0xc0ffee
             // when in actuality ffee is the name of the next keyword / variable.
-            char cCharacter = stream.getNextCharacter(false);
+            char? cCharacter = stream.getNextCharacter(false);
+
+            if (cCharacter == null)
+                return null;
 
             if ((cCharacter >= '0' && cCharacter <= '9') || (cCharacter == '-' || cCharacter == '+'))
             {
@@ -389,7 +442,7 @@ namespace Rawr
                 if (cCharacter == '0' && cNextCharacter != null && Char.ToUpper((char)cNextCharacter) == 'X')
                 {
                     // Hexadecimal character
-                    int iValue = 0;
+                    long lValue = 0;
                     // Consume 'X'
                     stream.getNextCharacter(true);
 
@@ -399,11 +452,11 @@ namespace Rawr
 
                         if (cNextCharacter != null && Char.ToUpper((char)cNextCharacter) >= 'A' && Char.ToUpper((char)cNextCharacter) <= 'F')
                         {
-                            iValue = iValue * 16 + (10 + (char)cNextCharacter - 'A');
+                            lValue = lValue * 16 + (10 + (char)cNextCharacter - 'A');
                         }
                         else if (cNextCharacter >= '0' && (char)cNextCharacter <= '9')
                         {
-                            iValue = iValue * 16 + (char)cNextCharacter - '0';
+                            lValue = lValue * 16 + (char)cNextCharacter - '0';
                         }
                         else
                         {
@@ -413,7 +466,7 @@ namespace Rawr
                         // Consume the character we just read in
                         stream.getNextCharacter(true);
                     }
-                    return new LuaIntegerToken(iValue);
+                    return new LuaIntegerToken(lValue);
                 }
                 else
                 {
@@ -431,10 +484,7 @@ namespace Rawr
                         {
                             bIsInteger = false;
                         }
-                        else if (cNextCharacter >= '0' && cNextCharacter <= '9')
-                        {
-                        }
-                        else
+                        else if (!(cNextCharacter >= '0' && cNextCharacter <= '9'))
                         {
                             break;
                         }
@@ -460,7 +510,7 @@ namespace Rawr
 
                 while (true)
                 {
-                    char cNextCharacter = stream.getNextCharacter(true);
+                    char? cNextCharacter = stream.getNextCharacter(true);
 
                     // String terminates when it ends with the same character
                     // it began with (i.e. ' is needed to close ', and " for ")
@@ -468,11 +518,53 @@ namespace Rawr
                     {
                         break;
                     }
+                    else if (cNextCharacter == null)
+                    {
+                        throw new InvalidDataException("Unterminated lua string.");
+                    }
                     else if (cNextCharacter == '\\')
                     {
-                        sValue += cNextCharacter;
                         // Escape the next character...  Read it in whatever it is.
                         cNextCharacter = stream.getNextCharacter(true);
+
+                        switch (cNextCharacter)
+                        {
+                            case '0':
+                                cNextCharacter = '\0';
+                                break;
+                            case 'a':
+                                cNextCharacter = '\a';
+                                break;
+                            case 'b':
+                                cNextCharacter = '\b';
+                                break;
+                            case 'f':
+                                cNextCharacter = '\f';
+                                break;
+                            case 'n':
+                                cNextCharacter = '\n';
+                                break;
+                            case 'r':
+                                cNextCharacter = '\r';
+                                break;
+                            case 't':
+                                cNextCharacter = '\t';
+                                break;
+                            case 'v':
+                                cNextCharacter = '\v';
+                                break;
+                            case '\'':
+                            case '\"':
+                                // These types pass through
+                                break;
+                            default:
+                                // If it's an escape sequence we don't understand
+                                // just reproduce it.  Sometimes it's not properly formatted 
+                                // strings (e.g. !Swatter had some paths that used the '\' from
+                                // the path separator without escape codes)
+                                sValue += '\\';
+                                break;
+                        }
                     }
                     sValue += cNextCharacter;
                 }
@@ -483,7 +575,11 @@ namespace Rawr
             {
                 LuaToken key = getNextToken(stream);
 
-                if (stream.getNextCharacter(false) != ']')
+                if (key == null)
+                {
+                    throw new InvalidDataException("Expected a field identifier after [");
+                }
+                else if (stream.getNextCharacter(false) != ']')
                 {
                     throw new InvalidDataException("Expected a ] after field key");
                 }
@@ -493,21 +589,30 @@ namespace Rawr
                 }
                 else
                 {
-                    LuaToken nextToken = getNextToken(stream);
+                    LuaToken value = getNextToken(stream);
 
-                    return new LuaFieldToken(key, nextToken.getInterpretedValue());
+                    if (value == null)
+                    {
+                        throw new InvalidDataException("Expected value after [" + key + "] = ");
+                    }
+
+                    return new LuaFieldToken(key, value.getInterpretedValue());
                 }
             }
             else if (cCharacter == '{')
             {
-                Dictionary<IComparable, object> items = new Dictionary<IComparable, object>();
-                int iAnonymousKey = 1;
+                SavedVariablesDictionary items = new SavedVariablesDictionary();
+                long lAnonymousKey = 1;
 
                 while (true)
                 {
                     char? cNextCharacter = stream.peekNextCharacter(false);
 
-                    if (cNextCharacter == '}')
+                    if (cNextCharacter == null)
+                    {
+                        throw new InvalidDataException("Unterminated lua table (no '}' after '{' in file).");
+                    }
+                    else if (cNextCharacter == '}')
                     {
                         // Consume the close brackets
                         stream.getNextCharacter(false);
@@ -520,6 +625,11 @@ namespace Rawr
                     else
                     {
                         LuaToken nextToken = getNextToken(stream);
+
+                        if (nextToken == null)
+                        {
+                            throw new InvalidDataException("Unterminated lua table (no '}' after '{' in file).");
+                        }
 
                         // Case 1: [key] = value pair
                         if (nextToken.getTokenType() == LuaTokenTypes.LUA_FIELD)
@@ -546,7 +656,7 @@ namespace Rawr
                         else
                         // Case 3: value
                         {
-                            items.Add(iAnonymousKey++, nextToken.getInterpretedValue());
+                            items.Add(lAnonymousKey++, nextToken.getInterpretedValue());
                         }
                     }
                 }
@@ -577,32 +687,162 @@ namespace Rawr
             throw new InvalidDataException("Can't parse string " + stream.getErrorContext());
         }
 
-
-        public static Dictionary<string, object> parse(string sFileName)
+        static void exportObject(StreamWriter writer, object exportData, string sIndentation)
         {
-            Dictionary<string, object> savedVariables = new Dictionary<string, object>();
+            if (exportData == null)
+            {
+                writer.Write("nil");
+            }
+            else if (exportData.GetType() == typeof(long))
+            {
+                writer.Write(exportData as long?);
+            }
+            else if (exportData.GetType() == typeof(int))
+            {
+                writer.Write(exportData as int?);
+            }
+            else if (exportData.GetType() == typeof(double))
+            {
+                writer.Write(string.Format("{0:G16}", exportData as double?));
+            }
+            else if (exportData.GetType() == typeof(bool))
+            {
+                writer.Write(((bool)exportData) ? "true" : "false");
+            }
+            else if (exportData.GetType() == typeof(string))
+            {
+                // Todo:
+                // Write this more efficiently
+                string sExportString = exportData as string;
+
+                sExportString = sExportString.Replace("\0", "\\0");
+                sExportString = sExportString.Replace("\a", "\\a");
+                sExportString = sExportString.Replace("\b", "\\b");
+                sExportString = sExportString.Replace("\f", "\\f");
+                sExportString = sExportString.Replace("\n", "\\n");
+                sExportString = sExportString.Replace("\r", "\\r");
+                // For whatever reason SavedVariable files don't escape tabs.
+                //sExportString = sExportString.Replace("\t", "\\t");
+                sExportString = sExportString.Replace("\v", "\\v");
+                sExportString = sExportString.Replace("\"", "\\\"");
+
+                writer.Write('"' + sExportString + '"');
+            }
+            else if (exportData.GetType() == typeof(SavedVariablesDictionary))
+            {
+                SavedVariablesDictionary dict = exportData as SavedVariablesDictionary;
+                string sInnerIndentation = sIndentation + "\t";
+
+                writer.WriteLine("{");
+
+                foreach (IComparable key in dict.Keys)
+                {
+                    writer.Write(sInnerIndentation + "[");
+                    exportObject(writer, key, sInnerIndentation);
+                    writer.Write("] = ");
+                    exportObject(writer, dict[key], sInnerIndentation);
+                    writer.WriteLine(",");
+                }
+
+                writer.Write(sIndentation + "}");
+
+            }
+            else
+            {
+                throw new InvalidDataException("Don't know how to export type: " + exportData.GetType());
+            }
+        }
+
+        /**
+         * Saves out a SavedVariablesDictionary
+         * Comparison against (my set of) SavedVariable files showed them
+         * to be identical with one insignificant difference.  For lua tables,
+         * if an entry is not assigned a key, it is given one implicitly.
+         * SavedVariable files use these implicit keys and have a comment that
+         * follow the variables indicating which key they should have.
+         * This class just outputs the key explicitly.
+         * 
+         * WoW export:
+ 					{
+						["a"] = 1,
+						["b"] = 0.5,
+						["g"] = 0.9,
+						["r"] = 1,
+					}, -- [2]
+					nil, -- [3]
+         * 
+         * SavedVariablesParser export:
+					[2] = {
+						["a"] = 1,
+						["b"] = 0.5,
+						["g"] = 0.9,
+						["r"] = 1,
+					},
+					[3] = nil,
+         * 
+         * Note the data is identical.
+         */
+        public static void export(string sFileName, SavedVariablesDictionary exportData)
+        {
+            StreamWriter writer = new StreamWriter(sFileName);
+            // Not sure why, but SavedVariables files seem to start
+            // with a newline character.
+            writer.WriteLine();
+
+            foreach (string sKey in exportData.Keys)
+            {
+                writer.Write(sKey + " = ");
+                exportObject(writer, exportData[sKey], "");
+                writer.WriteLine();
+            }
+
+            writer.Flush();
+            writer.Close();
+            writer = null;
+        }
+
+        public static SavedVariablesDictionary parse(string sFileName)
+        {
+            SavedVariablesDictionary savedVariables = new SavedVariablesDictionary();
 
             // Note -- file errors are deliberately allowed to bubble to the caller.
             // Note 2: This function reads in the entire file.  There are undoubtedly better ways to do this.
-            SavedVariableFileStream stream = new SavedVariableFileStream(sFileName);
+            SavedVariablesFileStream stream = new SavedVariablesFileStream(sFileName);
 
-            try
+            for (LuaToken variable = getNextToken(stream); variable != null; variable = getNextToken(stream))
             {
-                while (true)
+                if (stream.getNextCharacter(false) != '=')
                 {
-                    LuaToken variable = getNextToken(stream);
-
-                    if (stream.getNextCharacter(false) != '=')
-                    {
-                        throw new InvalidDataException("Expected 'variable_name = value' pairs in saved variables file.");
-                    }
-
-                    savedVariables.Add(((LuaKeywordToken)variable).getKeyword(), getNextToken(stream).getInterpretedValue());
+                    throw new InvalidDataException("Expected 'variable_name = value' pairs in saved variables file.");
                 }
+
+                savedVariables.Add(((LuaKeywordToken)variable).getKeyword(), getNextToken(stream).getInterpretedValue());
             }
-            catch (EndOfStreamException)
+
+            /*
+            // Sanity check tests
+            // First, Save -> Reload should yield equivalent databases
+            // Second, Save File 1 -> Load File 1 -> Save File 2 should yield identical files
+
+            string sExportTest = "c:\\sv\\original\\" + sFileName.Substring(sFileName.LastIndexOf('\\'));
+            string sReexportTest = "c:\\sv\\reexport\\" + sFileName.Substring(sFileName.LastIndexOf('\\'));
+
+            if (sFileName != sExportTest)
             {
+                // Test export functionality
+                export(sExportTest, savedVariables);
+                // And reimport test file
+                SavedVariablesDictionary reimport = parse(sExportTest);
+
+                if (!savedVariables.Equivalent(reimport))
+                {
+                    throw new InvalidDataException("Export file does not match import file.");
+                }
+
+                // And test export the reimport
+                export(sReexportTest, reimport);
             }
+            */
 
             stream = null;
 

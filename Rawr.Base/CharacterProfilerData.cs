@@ -68,20 +68,20 @@ namespace Rawr
             s_stringToRace.Add("Draenei", Character.CharacterRace.Draenei);
         }
 
-        static int getEnchant(Dictionary<IComparable, object> item)
+        static int getEnchant(SavedVariablesDictionary item)
         {
             string sItemString = item["Item"] as string;
             char[] acSplitCharacters = { ':' };
             return Int32.Parse(sItemString.Split(acSplitCharacters)[1]);
         }
 
-        static int getEnchantBySlot(Dictionary<IComparable, object> characterInfo, string sSlot)
+        static int getEnchantBySlot(SavedVariablesDictionary characterInfo, string sSlot)
         {
-            Dictionary<IComparable, object> equipment = (Dictionary<IComparable, object>) characterInfo["Equipment"];
+            SavedVariablesDictionary equipment = (SavedVariablesDictionary) characterInfo["Equipment"];
 
             if (equipment.ContainsKey(sSlot))
             {
-                Dictionary<IComparable, object> item = equipment[sSlot] as Dictionary<IComparable, object>;
+                SavedVariablesDictionary item = equipment[sSlot] as SavedVariablesDictionary;
                 return getEnchant(item);
             }
             else
@@ -90,7 +90,7 @@ namespace Rawr
             }
         }
 
-        static string getGearString(Dictionary<IComparable, object> item)
+        static string getGearString(SavedVariablesDictionary item)
         {
             string sItemString = item["Item"] as string;
             char[] acSplitCharacters = { ':' };
@@ -98,7 +98,7 @@ namespace Rawr
 
             if (item.ContainsKey("Gem"))
             {
-                Dictionary<IComparable, object> gems = item["Gem"] as Dictionary<IComparable, object>;
+                SavedVariablesDictionary gems = item["Gem"] as SavedVariablesDictionary;
 
                 string sItemSlotString = asItemElements[0];
                 for (int iGemSlot = 1; iGemSlot <= 3; iGemSlot++)
@@ -107,7 +107,7 @@ namespace Rawr
 
                     if (gems.ContainsKey(iGemSlot))
                     {
-                        string sGemItemString = (gems[iGemSlot] as Dictionary<IComparable, object>)["Item"] as string;
+                        string sGemItemString = (gems[iGemSlot] as SavedVariablesDictionary)["Item"] as string;
                         sItemSlotString += sGemItemString.Split(acSplitCharacters)[0];
                     }
                     else
@@ -124,13 +124,13 @@ namespace Rawr
             }
         }
 
-        static string getGearStringBySlot(Dictionary<IComparable, object> characterInfo, string sSlot)
+        static string getGearStringBySlot(SavedVariablesDictionary characterInfo, string sSlot)
         {
-            Dictionary<IComparable, object> equipment = (Dictionary<IComparable, object>) characterInfo["Equipment"];
+            SavedVariablesDictionary equipment = (SavedVariablesDictionary) characterInfo["Equipment"];
 
             if (equipment.ContainsKey(sSlot))
             {
-                Dictionary<IComparable, object> item = equipment[sSlot] as Dictionary<IComparable, object>;
+                SavedVariablesDictionary item = equipment[sSlot] as SavedVariablesDictionary;
                 return getGearString(item);
             }
             else
@@ -147,7 +147,7 @@ namespace Rawr
          * that involves searching item Tooltips.
          * Returns true if the item is equippable.
          */
-        static bool isEquippable(Dictionary<IComparable, object> itemInfo)
+        static bool isEquippable(SavedVariablesDictionary itemInfo)
         {
             if (itemInfo != null && itemInfo.ContainsKey("Tooltip"))
             {
@@ -166,7 +166,7 @@ namespace Rawr
         }
 
         static bool addEquippedItemForOptimization(List<string> asOptimizableItems, 
-            Dictionary<IComparable, object> characterInfo, string sSlot)
+            SavedVariablesDictionary characterInfo, string sSlot)
         {
             string sItem = getGearStringBySlot(characterInfo, sSlot);
 
@@ -180,7 +180,7 @@ namespace Rawr
         }
 
         static void addPossessionsForOptimization(List<string> asOptimizableItems,
-            Dictionary<IComparable, object> characterInfo)
+            SavedVariablesDictionary characterInfo)
         {
             string [] asSources = { "Inventory", "Bank" };
 
@@ -188,16 +188,16 @@ namespace Rawr
             {
                 if (characterInfo.ContainsKey(sSource))
                 {
-                    Dictionary<IComparable, object> bags = characterInfo[sSource] as Dictionary<IComparable, object>;
+                    SavedVariablesDictionary bags = characterInfo[sSource] as SavedVariablesDictionary;
 
                     foreach (object oBag in bags.Values)
                     {
-                        Dictionary<IComparable, object> bag = oBag as Dictionary<IComparable, object>;
-                        Dictionary<IComparable, object> contents = bag["Contents"] as Dictionary<IComparable, object>;
+                        SavedVariablesDictionary bag = oBag as SavedVariablesDictionary;
+                        SavedVariablesDictionary contents = bag["Contents"] as SavedVariablesDictionary;
 
                         foreach (object oItem in contents.Values)
                         {
-                            Dictionary<IComparable, object> item = oItem as Dictionary<IComparable, object>;
+                            SavedVariablesDictionary item = oItem as SavedVariablesDictionary;
 
                             if (isEquippable(item))
                             {
@@ -219,7 +219,7 @@ namespace Rawr
          * int enchantHands, int enchantLegs, int enchantFeet, int enchantFinger1, int enchantFinger2, int enchantMainHand, int enchantOffHand, int enchantRanged)
          * */
 
-        public CharacterProfilerCharacter(string sName, string sRealm, Dictionary<IComparable, object> characterInfo)
+        public CharacterProfilerCharacter(string sName, string sRealm, SavedVariablesDictionary characterInfo)
         {
             m_characterInfo = characterInfo;
             m_sName = sName;
@@ -299,7 +299,7 @@ namespace Rawr
         string m_sRace;
         string m_sClass;
         int m_iLevel;
-        Dictionary<IComparable, object> m_characterInfo;
+        SavedVariablesDictionary m_characterInfo;
         Character m_character;
     }
 
@@ -335,14 +335,14 @@ namespace Rawr
 
         public CharacterProfilerData(string sFileName)
         {
-            Dictionary<string, object> savedVariables = SavedVariablesParser.parse(sFileName);
+            SavedVariablesDictionary savedVariables = SavedVariablesParser.parse(sFileName);
 
             if (!savedVariables.ContainsKey("myProfile"))
             {
                 throw new InvalidDataException("Expected myProfile variable in file.");
             }
 
-            Dictionary<IComparable, object> realms = (Dictionary<IComparable, object>)savedVariables["myProfile"];
+            SavedVariablesDictionary realms = (SavedVariablesDictionary)savedVariables["myProfile"];
 
             foreach (string sRealm in realms.Keys)
             {
@@ -350,12 +350,12 @@ namespace Rawr
 
                 CharacterProfilerRealm realm = new CharacterProfilerRealm(sRealm);
 
-                Dictionary<IComparable, object> characterContainer = (Dictionary<IComparable, object>)realms[sRealm];
-                Dictionary<IComparable, object> characters = (Dictionary<IComparable, object>)characterContainer["Character"];
+                SavedVariablesDictionary characterContainer = (SavedVariablesDictionary)realms[sRealm];
+                SavedVariablesDictionary characters = (SavedVariablesDictionary)characterContainer["Character"];
 
                 foreach (string sCharacter in characters.Keys)
                 {
-                    Dictionary<IComparable, object> characterInfo = (Dictionary<IComparable, object>)characters[sCharacter];
+                    SavedVariablesDictionary characterInfo = (SavedVariablesDictionary)characters[sCharacter];
                     CharacterProfilerCharacter character = new CharacterProfilerCharacter(sCharacter, sRealm, characterInfo);
                     realm.Characters.Add(character);
                     bHaveCharacters = true;
