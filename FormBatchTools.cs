@@ -441,7 +441,7 @@ namespace Rawr
                 dialog.DefaultExt = ".xml";
                 dialog.Filter = "Rawr Xml Character Files | *.xml";
                 dialog.Multiselect = true;
-                if (dialog.ShowDialog() == DialogResult.OK)
+                if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
                     _unsavedChanges = true;
                     _filePath = null;
@@ -464,7 +464,7 @@ namespace Rawr
                 dialog.DefaultExt = ".xml";
                 dialog.Filter = "Rawr Batch Files | *.xml";
                 dialog.Multiselect = false;
-                if (dialog.ShowDialog() == DialogResult.OK)
+                if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
                     _filePath = dialog.FileName;
                     batchCharacterListBindingSource.DataSource = BatchCharacterList.Load(_filePath);
@@ -491,7 +491,7 @@ namespace Rawr
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.DefaultExt = ".xml";
             dialog.Filter = "Rawr Batch Files | *.xml";
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog(this) == DialogResult.OK)
             {
                 _filePath = dialog.FileName;
                 ((BatchCharacterList)batchCharacterListBindingSource.DataSource).Save(_filePath);
@@ -591,7 +591,7 @@ namespace Rawr
                 dialog.DefaultExt = ".xml";
                 dialog.Filter = "Rawr Xml Character Files | *.xml";
                 dialog.Multiselect = false;
-                if (dialog.ShowDialog() == DialogResult.OK)
+                if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
                     dataGridView[e.ColumnIndex, e.RowIndex].Value = RelativePath(dialog.FileName, AppDomain.CurrentDomain.BaseDirectory);
                     dataGridView.NotifyCurrentCellDirty(true); // force DataGridView to add new row

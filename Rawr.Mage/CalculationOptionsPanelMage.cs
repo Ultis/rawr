@@ -82,7 +82,7 @@ namespace Rawr.Mage
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             if (calculationOptions.CustomSpellMix == null) calculationOptions.CustomSpellMix = new List<SpellWeight>();
             CustomSpellMixForm form = new CustomSpellMixForm(calculationOptions.CustomSpellMix);
-            form.ShowDialog();
+            form.ShowDialog(this);
         }
 	}
 }

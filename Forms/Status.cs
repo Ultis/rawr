@@ -156,7 +156,7 @@ namespace Rawr.Forms
             {
                 ListViewItem item = ErrorListView.Items[ErrorListView.SelectedIndices[0]];
                 ErrorReport dialog = new ErrorReport(item.Tag as StatusErrorEventArgs);
-                dialog.ShowDialog();
+                dialog.ShowDialog(this);
                 dialog.Dispose();
             }
         }

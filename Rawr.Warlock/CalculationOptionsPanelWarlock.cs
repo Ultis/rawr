@@ -301,7 +301,7 @@ namespace Rawr.Warlock
         private void buttonIsbRaid_Click(object sender, EventArgs e)
         {
             raidIsb.LoadRaid();
-            if (raidIsb.ShowDialog() == DialogResult.OK)
+            if (raidIsb.ShowDialog(this) == DialogResult.OK)
                 raidIsb.SaveRaid();
             if (!calculationSuspended) Character.OnItemsChanged();
         }

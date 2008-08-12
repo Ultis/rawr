@@ -257,7 +257,7 @@ namespace Rawr
 		private void buttonAdd_Click(object sender, EventArgs e)
 		{
 			FormEnterId form = new FormEnterId();
-			if (form.ShowDialog() == DialogResult.OK)
+			if (form.ShowDialog(this) == DialogResult.OK)
 			{
 				_changingItemCache = true;
 				try
@@ -333,7 +333,7 @@ namespace Rawr
 		private void buttonFillSockets_Click(object sender, EventArgs e)
 		{
 			FormFillSockets form = new FormFillSockets();
-			if (form.ShowDialog() == DialogResult.OK)
+			if (form.ShowDialog(this) == DialogResult.OK)
 			{
 				foreach (Item item in ItemCache.AllItems)
 				{

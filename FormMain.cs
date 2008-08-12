@@ -482,7 +482,7 @@ namespace Rawr
 				dialog.DefaultExt = ".xml";
 				dialog.Filter = "Rawr Xml Character Files | *.xml";
 				dialog.Multiselect = false;
-				if (dialog.ShowDialog() == DialogResult.OK)
+				if (dialog.ShowDialog(this) == DialogResult.OK)
 				{
 					LoadSavedCharacter(dialog.FileName);
 				}
@@ -579,7 +579,7 @@ namespace Rawr
 			if (PromptToSaveBeforeClosing())
 			{
 				FormEnterNameRealm form = new FormEnterNameRealm();
-				if (form.ShowDialog() == DialogResult.OK)
+				if (form.ShowDialog(this) == DialogResult.OK)
 				{
 					if (form.ArmoryRegion == Character.CharacterRegion.US && form.Realm == "Dragonmaw" && form.CharacterName == "Emposter")
 					{
@@ -695,7 +695,7 @@ namespace Rawr
 			SaveFileDialog dialog = new SaveFileDialog();
 			dialog.DefaultExt = ".xml";
 			dialog.Filter = "Rawr Xml Character Files | *.xml";
-			if (dialog.ShowDialog() == DialogResult.OK)
+			if (dialog.ShowDialog(this) == DialogResult.OK)
 			{
 				this.Cursor = Cursors.WaitCursor;
 				Character.Save(dialog.FileName);
