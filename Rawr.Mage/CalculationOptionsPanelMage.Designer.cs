@@ -276,7 +276,8 @@
             this.comboBoxPlayerLevel.Items.AddRange(new object[] {
             "70",
             "71",
-            "72"});
+            "72",
+            "73"});
             this.comboBoxPlayerLevel.Location = new System.Drawing.Point(112, 134);
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
