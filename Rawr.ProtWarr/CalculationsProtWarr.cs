@@ -612,10 +612,12 @@ threat and limited threat scaled by the threat scale.",
             float attacksPerCycle = 3f;
             float cycleLength = 6f;
             float procDuration = 15f;
+            float attackSpeed = 0f;
 
             if (character.MainHand != null && character.MainHandEnchant != null)
             {
                 procChance = character.MainHand.Speed / 60f; // 1 PPM
+                attackSpeed = character.MainHand.Speed;
 
                 // Assumes the default threat cycle (SS, Revenge, Devastate x2)
                 // Only 3 of those special attacks per 6 second cycle can proc weapon enchants
@@ -624,7 +626,7 @@ threat and limited threat scaled by the threat scale.",
             //Mongoose
             if (statsEnchants.MongooseProc > 0 && statsBuffs.MongooseProcAverage > 0)
             {
-                attacksPer15Seconds = procDuration / (character.MainHand.Speed / (1.02f)) +
+                attacksPer15Seconds = procDuration / (attackSpeed / (1.02f)) +
                     attacksPerCycle * procDuration / cycleLength;
                 oneProcPerMinAveUptime = (float)(1f - Math.Pow(1f - procChance, attacksPer15Seconds));
                 statsBuffs.Agility += 120f * oneProcPerMinAveUptime;
@@ -640,7 +642,7 @@ threat and limited threat scaled by the threat scale.",
             //Executioner
             if (statsEnchants.ExecutionerProc > 0)
             {
-                attacksPer15Seconds = procDuration / character.MainHand.Speed +
+                attacksPer15Seconds = procDuration / attackSpeed +
                     attacksPerCycle * procDuration / cycleLength;
                 oneProcPerMinAveUptime = (float)(1f - Math.Pow(1f - procChance, attacksPer15Seconds));
                 statsBuffs.ArmorPenetration += 840f * oneProcPerMinAveUptime;
