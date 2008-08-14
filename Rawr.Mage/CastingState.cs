@@ -374,7 +374,7 @@ namespace Rawr.Mage
             GlobalCooldownLimit = 1f;
             GlobalCooldown = Math.Max(GlobalCooldownLimit, 1.5f / CastingSpeed);
 
-            ArcaneSpellModifier = (1 + 0.01f * calculationOptions.ArcaneInstability) * (1 + 0.01f * calculationOptions.PlayingWithFire) * (1 + characterStats.BonusSpellPowerMultiplier) * (1 + 0.01f * calculationOptions.TormentTheWeak * calculationOptions.SlowedTime);
+            ArcaneSpellModifier = (1 + 0.01f * calculationOptions.ArcaneInstability) * (1 + 0.01f * calculationOptions.PlayingWithFire) * (1 + characterStats.BonusSpellPowerMultiplier) * (1 + 0.02f * calculationOptions.TormentTheWeak * calculationOptions.SlowedTime);
             if (arcanePower)
             {
                 ArcaneSpellModifier *= 1.3f;

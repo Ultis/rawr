@@ -441,10 +441,10 @@
             this.label79.AutoSize = true;
             this.label79.Location = new System.Drawing.Point(0, 391);
             this.label79.Name = "label79";
-            this.label79.Size = new System.Drawing.Size(102, 13);
+            this.label79.Size = new System.Drawing.Size(101, 13);
             this.label79.TabIndex = 191;
-            this.label79.Text = "Slowed Time (0-1): *";
-            this.toolTipMage.SetToolTip(this.label79, "Percentage of time that the target is slowed.");
+            this.label79.Text = "Snared Time (0-1): *";
+            this.toolTipMage.SetToolTip(this.label79, "Percentage of time that the target is snared.");
             // 
             // buttonCustomSpellMix
             // 
