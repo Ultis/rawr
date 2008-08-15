@@ -2025,6 +2025,8 @@ namespace Rawr.Mage.SequenceReconstruction
                             {
                                 // we were not successful in recovering from oom
                                 // go into swap mode
+                                // extraMana might not be set
+                                extraMana = -targetmana;
                                 goto SwapRecovery;
                             }
                             oomtime = t + d;

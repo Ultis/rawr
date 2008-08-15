@@ -277,7 +277,8 @@
             "70",
             "71",
             "72",
-            "73"});
+            "73",
+            "74"});
             this.comboBoxPlayerLevel.Location = new System.Drawing.Point(112, 134);
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
