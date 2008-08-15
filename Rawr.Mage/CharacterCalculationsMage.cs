@@ -249,7 +249,9 @@ namespace Rawr.Mage
             }
             bs = BaseState.GetSpell(SpellId.ArcaneBlast00) as BaseSpell;
             dictValues.Add("Arcane Blast(0)", String.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{14:F} Mana\r\n{9:F} - {10:F} Hit\r\n{11:F} - {12:F} Crit{13}\r\n{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier\r\nAB Spam Tradeoff: {8:F} Dpm", bs.DamagePerSecond, bs.CostPerSecond - bs.ManaRegenPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - bs.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - bs.CostPerSecond + bs.ManaRegenPerSecond), bs.MinHitDamage, bs.MaxHitDamage, bs.MinCritDamage, bs.MaxCritDamage, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
-            dictValues.Add("Total Damage", String.Format("{0:F}", DpsRating * CalculationOptions.FightDuration));
+            float totalDamage = (CalculationOptions.TargetDamage > 0.0f) ? CalculationOptions.TargetDamage : DpsRating * CalculationOptions.FightDuration;
+            dictValues.Add("Total Damage", String.Format("{0:F}", totalDamage));
+            dictValues.Add("Score", String.Format("{0:F}", OverallPoints));
             dictValues.Add("Dps", String.Format("{0:F}", DpsRating));
             dictValues.Add("Tps", String.Format("{0:F}", Tps));
             dictValues.Add("Sequence", ReconstructSequence());
@@ -263,6 +265,7 @@ namespace Rawr.Mage
             double manaGem = 0;
             double drums = 0;
             bool segmentedOutput = false;
+            Dictionary<string, SpellContribution> byspell = new Dictionary<string, SpellContribution>();
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
                 if (Solution[i] > 0.01)
@@ -301,6 +304,7 @@ namespace Rawr.Mage
                         case VariableType.Spell:
                             double value;
                             Spell s = SolutionVariable[i].Spell;
+                            s.AddSpellContribution(byspell, (float)Solution[i]);
                             string label = ((SolutionVariable[i].State.BuffLabel.Length > 0) ? (SolutionVariable[i].State.BuffLabel + "+") : "") + s.Name;
                             combinedSolution.TryGetValue(label, out value);
                             combinedSolution[label] = value + Solution[i];
@@ -347,6 +351,14 @@ namespace Rawr.Mage
             }
             if (WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", WaterElementalDuration / 45f));
             dictValues.Add("Spell Cycles", sb.ToString());
+            sb = new StringBuilder("*");
+            List<SpellContribution> contribList = new List<SpellContribution>(byspell.Values);
+            contribList.Sort();
+            foreach (SpellContribution contrib in contribList)
+            {
+                sb.AppendFormat("{0}: {1:F}%, {2:F} Damage, {3:F} Hits\n", contrib.Name, 100.0 * contrib.Damage / totalDamage, contrib.Damage, contrib.Hits);
+            }
+            dictValues.Add("By Spell", sb.ToString());
             return dictValues;
         }
 

@@ -115,6 +115,18 @@ namespace Rawr.Mage
         public float DotDamageCoefficient;
     }
 
+    public class SpellContribution : IComparable<SpellContribution>
+    {
+        public string Name;
+        public float Hits;
+        public float Damage;
+
+        public int CompareTo(SpellContribution other)
+        {
+            return other.Damage.CompareTo(this.Damage);
+        }
+    }
+
     public abstract class Spell
     {
         public string Name;
@@ -151,16 +163,21 @@ namespace Rawr.Mage
         public float HitProcs;
         public float CastProcs;
         public float CastTime;
+
+        public abstract void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration);
     }
 
     public class SpellCustomMix : Spell
     {
+        float weightTotal;
+        CastingState castingState;
+
         public SpellCustomMix(CastingState castingState)
         {
+            this.castingState = castingState;
             sequence = "Custom Mix";
             Name = "Custom Mix";
             if (castingState.CalculationOptions.CustomSpellMix == null) return;
-            float weightTotal = 0f;
             foreach (SpellWeight spellWeight in castingState.CalculationOptions.CustomSpellMix)
             {
                 Spell spell = castingState.GetSpell(spellWeight.Spell);
@@ -176,6 +193,15 @@ namespace Rawr.Mage
             DamagePerSecond /= weightTotal;
             ThreatPerSecond /= weightTotal;
             ManaRegenPerSecond /= weightTotal;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            foreach (SpellWeight spellWeight in castingState.CalculationOptions.CustomSpellMix)
+            {
+                Spell spell = castingState.GetSpell(spellWeight.Spell);
+                spell.AddSpellContribution(dict, duration * spellWeight.Weight / weightTotal);
+            }
         }
     }
 
@@ -272,8 +298,11 @@ namespace Rawr.Mage
         public float Cooldown;
         public float Cost;
 
+        private CastingState castingState;
+
         public virtual void Calculate(CastingState castingState)
         {
+            this.castingState = castingState;
             if (AreaEffect) TargetProcs *= castingState.CalculationOptions.AoeTargets;
             Cooldown = BaseCooldown;
 
@@ -587,6 +616,47 @@ namespace Rawr.Mage
                 float totalMana = castingState.Mp5OnCastFor20Sec / 5f / CastTime * 0.5f * (20 - CastTime / HitProcs / 2f) * (20 - CastTime / HitProcs / 2f);
                 ManaRegenPerSecond += totalMana / 20f;
                 ThreatPerSecond += totalMana / 20f * 0.5f * (1 + castingState.BaseStats.ThreatIncreaseMultiplier) * (1 - castingState.BaseStats.ThreatReductionMultiplier);
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            SpellContribution contrib;
+            if (!dict.TryGetValue(Name, out contrib))
+            {
+                contrib = new SpellContribution() { Name = Name };
+                dict[Name] = contrib;
+            }
+            contrib.Hits += HitProcs * duration / CastTime;
+            contrib.Damage += AverageDamage * duration / CastTime;
+            if (!EffectProc && castingState.BaseStats.LightningCapacitorProc > 0)
+            {
+                BaseSpell LightningBolt = (BaseSpell)castingState.GetSpell(SpellId.LightningBolt);
+                if (!dict.TryGetValue(LightningBolt.Name, out contrib))
+                {
+                    contrib = new SpellContribution() { Name = LightningBolt.Name };
+                    dict[LightningBolt.Name] = contrib;
+                }
+                //discrete model
+                int hitsInsideCooldown = (int)(2.5f / (CastTime / HitProcs));
+                float avgCritsPerHit = CritRate * TargetProcs / HitProcs;
+                float avgHitsToDischarge = 3f / avgCritsPerHit;
+                if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
+                float boltDps = LightningBolt.AverageDamage / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
+                contrib.Hits += duration / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
+                contrib.Damage += boltDps * duration;
+            }
+            if (!EffectProc && castingState.BaseStats.ShatteredSunAcumenProc > 0 && !castingState.CalculationOptions.Aldor)
+            {
+                BaseSpell ArcaneBolt = (BaseSpell)castingState.GetSpell(SpellId.ArcaneBolt);
+                if (!dict.TryGetValue(ArcaneBolt.Name, out contrib))
+                {
+                    contrib = new SpellContribution() { Name = ArcaneBolt.Name };
+                    dict[ArcaneBolt.Name] = contrib;
+                }
+                float boltDps = ArcaneBolt.AverageDamage / (45f + CastTime / HitProcs / 0.1f);
+                contrib.Hits += duration / (45f + CastTime / HitProcs / 0.1f);
+                contrib.Damage += boltDps * duration;
             }
         }
     }
@@ -1347,7 +1417,7 @@ namespace Rawr.Mage
         {
             get
             {
-                if (sequence == null) sequence = string.Join("-", spellList.ToArray());
+                if (sequence == null) sequence = string.Join("-", spellList.ConvertAll<string>(spell => (spell != null) ? spell.Name : "Pause").ToArray());
                 return sequence;
             }
         }
@@ -1357,18 +1427,18 @@ namespace Rawr.Mage
         public float Cost;
         public float SpellCount = 0;
 
-        private List<string> spellList = new List<string>();
+        private List<Spell> spellList;
         private FSRCalc fsr = new FSRCalc();
 
         public SpellCycle()
         {
-            spellList = new List<string>();
+            spellList = new List<Spell>();
             fsr = new FSRCalc();
         }
 
         public SpellCycle(int capacity)
         {
-            spellList = new List<string>(capacity);
+            spellList = new List<Spell>(capacity);
             fsr = new FSRCalc(capacity);
         }
 
@@ -1381,14 +1451,14 @@ namespace Rawr.Mage
             AverageThreat += spell.ThreatPerSecond * spell.CastTime;
             Cost += spell.CostPerSecond * spell.CastTime;
             AffectedByFlameCap = AffectedByFlameCap || spell.AffectedByFlameCap;
-            spellList.Add(spell.Name);
+            spellList.Add(spell);
             SpellCount++;
         }
 
         public void AddPause(float duration)
         {
             fsr.AddPause(duration);
-            spellList.Add("Pause");
+            spellList.Add(null);
         }
 
         public void Calculate(CastingState castingState)
@@ -1410,12 +1480,28 @@ namespace Rawr.Mage
                 ManaRegenPerSecond += totalMana / 20f;
             }
         }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            foreach (Spell spell in spellList)
+            {
+                if (spell != null)
+                {
+                    spell.AddSpellContribution(dict, spell.CastTime * duration / CastTime);
+                }
+            }
+        }
     }
 
     #region Spell Cycles
 
     class ArcaneMissilesCC : Spell
     {
+        Spell AMc1;
+        Spell AM10;
+        Spell AM11;
+        float CC;
+
         public ArcaneMissilesCC(CastingState castingState)
         {
             Name = "Arcane Missiles CC";
@@ -1427,11 +1513,11 @@ namespace Rawr.Mage
             //TIME = T * [1 + 1/0.9]
             //DAMAGE = AM?1 + AM10 + 0.1/0.9*AM11
 
-            float CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
 
-            Spell AMc1 = new ArcaneMissiles(castingState, false, true, false, true);
-            Spell AM10 = new ArcaneMissiles(castingState, false, false, true, false);
-            Spell AM11 = new ArcaneMissiles(castingState, false, false, true, true);
+            AMc1 = new ArcaneMissiles(castingState, false, true, false, true);
+            AM10 = new ArcaneMissiles(castingState, false, false, true, false);
+            AM11 = new ArcaneMissiles(castingState, false, false, true, true);
 
             CastProcs = AMc1.CastProcs * (1 + 1 / (1 - CC));
             CastTime = AMc1.CastTime * (1 + 1 / (1 - CC));
@@ -1441,6 +1527,13 @@ namespace Rawr.Mage
             DamagePerSecond = (AMc1.DamagePerSecond + AM10.DamagePerSecond + CC / (1 - CC) * AM11.DamagePerSecond) / (1 + 1 / (1 - CC));
             ThreatPerSecond = (AMc1.ThreatPerSecond + AM10.ThreatPerSecond + CC / (1 - CC) * AM11.ThreatPerSecond) / (1 + 1 / (1 - CC));
             //ManaRegenPerSecond = (AMc1.ManaRegenPerSecond + AM10.ManaRegenPerSecond + CC / (1 - CC) * AM11.ManaRegenPerSecond) / (1 + 1 / (1 - CC)); // we only use it indirectly in spell cycles that recompute oo5sr
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            AMc1.AddSpellContribution(dict, duration * 1 / (1 + 1 / (1 - CC)));
+            AM10.AddSpellContribution(dict, duration * 1 / (1 + 1 / (1 - CC)));
+            AM11.AddSpellContribution(dict, duration * CC / (1 - CC) / (1 + 1 / (1 - CC)));
         }
     }
 
@@ -1464,6 +1557,10 @@ namespace Rawr.Mage
 
     class ABAM : Spell
     {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        float MB;
+
         public ABAM(CastingState castingState)
         {
             Name = "ABAM";
@@ -1473,12 +1570,12 @@ namespace Rawr.Mage
             Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            float MB = 0.03f * castingState.CalculationOptions.MissileBarrage;
+            MB = 0.03f * castingState.CalculationOptions.MissileBarrage;
 
             if (MB == 0.0 || !castingState.CalculationOptions.WotLK)
             {
                 // if we don't have barrage then this degenerates to AB-AM
-                SpellCycle chain1 = new SpellCycle(2);
+                chain1 = new SpellCycle(2);
                 chain1.AddSpell(AB, castingState);
                 chain1.AddSpell(AM, castingState);
                 chain1.Calculate(castingState);
@@ -1492,13 +1589,13 @@ namespace Rawr.Mage
             else
             {
                 //AB-AM 0.85
-                SpellCycle chain1 = new SpellCycle(2);
+                chain1 = new SpellCycle(2);
                 chain1.AddSpell(AB, castingState);
                 chain1.AddSpell(AM, castingState);
                 chain1.Calculate(castingState);
 
                 //AB-MBAM 0.15
-                SpellCycle chain2 = new SpellCycle(2);
+                chain2 = new SpellCycle(2);
                 chain2.AddSpell(AB, castingState);
                 chain2.AddSpell(MBAM, castingState);
                 chain2.Calculate(castingState);
@@ -1510,10 +1607,30 @@ namespace Rawr.Mage
                 ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
             }
         }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            if (chain2 == null)
+            {
+                chain1.AddSpellContribution(dict, duration);
+            }
+            else
+            {
+                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
+                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+            }
+        }
     }
 
     class ABMBAM : Spell
     {
+        Spell AB3;
+        SpellCycle chain1;
+        SpellCycle chain3;
+        SpellCycle chain4;
+        SpellCycle chain5;
+        float MB, MB3, MB4, MB5;
+
         public ABMBAM(CastingState castingState)
         {
             Name = "ABMBAM";
@@ -1538,10 +1655,10 @@ namespace Rawr.Mage
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
             Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22);
-            Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast33);
+            AB3 = castingState.GetSpell(SpellId.ArcaneBlast33);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            float MB = 0.03f * castingState.CalculationOptions.MissileBarrage;
+            MB = 0.03f * castingState.CalculationOptions.MissileBarrage;
 
             if (MB == 0.0 || !castingState.CalculationOptions.WotLK)
             {
@@ -1557,7 +1674,7 @@ namespace Rawr.Mage
                 //AB3 0.85
 
                 //AB3-MBAM-RAMP 0.15
-                SpellCycle chain1 = new SpellCycle(2);
+                chain1 = new SpellCycle(2);
                 chain1.AddSpell(AB3, castingState);
                 chain1.AddSpell(MBAM, castingState);
                 chain1.AddSpell(AB0, castingState);
@@ -1565,33 +1682,49 @@ namespace Rawr.Mage
                 chain1.AddSpell(AB2, castingState);
                 chain1.Calculate(castingState);
 
-                SpellCycle chain3 = new SpellCycle(4);
+                chain3 = new SpellCycle(4);
                 chain3.AddSpell(AB0, castingState);
                 chain3.AddSpell(AB1, castingState);
                 chain3.AddSpell(AB2, castingState);
                 chain3.AddSpell(MBAM, castingState);
                 chain3.Calculate(castingState);
 
-                SpellCycle chain4 = new SpellCycle(3);
+                chain4 = new SpellCycle(3);
                 chain4.AddSpell(AB0, castingState);
                 chain4.AddSpell(AB1, castingState);
                 chain4.AddSpell(MBAM, castingState);
                 chain4.Calculate(castingState);
 
-                SpellCycle chain5 = new SpellCycle(2);
+                chain5 = new SpellCycle(2);
                 chain5.AddSpell(AB0, castingState);
                 chain5.AddSpell(MBAM, castingState);
                 chain5.Calculate(castingState);
 
-                float MB3 = MB / (1 - MB);
-                float MB4 = MB / (1 - MB) / (1 - MB);
-                float MB5 = MB / (1 - MB) / (1 - MB) / (1 - MB);
+                MB3 = MB / (1 - MB);
+                MB4 = MB / (1 - MB) / (1 - MB);
+                MB5 = MB / (1 - MB) / (1 - MB) / (1 - MB);
 
                 CastTime = (1 - MB) * AB3.CastTime + MB * (chain1.CastTime + MB3 * chain3.CastTime + MB4 * chain4.CastTime + MB5 * chain5.CastTime);
                 CostPerSecond = ((1 - MB) * AB3.CostPerSecond * AB3.CastTime + MB * (chain1.CostPerSecond * chain1.CastTime + MB3 * chain3.CostPerSecond * chain3.CastTime + MB4 * chain4.CostPerSecond * chain4.CastTime + MB5 * chain5.CostPerSecond * chain5.CastTime)) / CastTime;
                 DamagePerSecond = ((1 - MB) * AB3.DamagePerSecond * AB3.CastTime + MB * (chain1.DamagePerSecond * chain1.CastTime + MB3 * chain3.DamagePerSecond * chain3.CastTime + MB4 * chain4.DamagePerSecond * chain4.CastTime + MB5 * chain5.DamagePerSecond * chain5.CastTime)) / CastTime;
                 ThreatPerSecond = ((1 - MB) * AB3.ThreatPerSecond * AB3.CastTime + MB * (chain1.ThreatPerSecond * chain1.CastTime + MB3 * chain3.ThreatPerSecond * chain3.CastTime + MB4 * chain4.ThreatPerSecond * chain4.CastTime + MB5 * chain5.ThreatPerSecond * chain5.CastTime)) / CastTime;
                 ManaRegenPerSecond = ((1 - MB) * AB3.ManaRegenPerSecond * AB3.CastTime + MB * (chain1.ManaRegenPerSecond * chain1.CastTime + MB3 * chain3.ManaRegenPerSecond * chain3.CastTime + MB4 * chain4.ManaRegenPerSecond * chain4.CastTime + MB5 * chain5.ManaRegenPerSecond * chain5.CastTime)) / CastTime;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            if (chain1 == null)
+            {
+                AB3.AddSpellContribution(dict, duration);
+            }
+            else
+            {
+                AB3.AddSpellContribution(dict, duration * (1 - MB) * AB3.CastTime / CastTime);
+                chain1.AddSpellContribution(dict, duration * MB * chain1.CastTime / CastTime);
+                chain3.AddSpellContribution(dict, duration * MB * MB3 * chain3.CastTime / CastTime);
+                chain4.AddSpellContribution(dict, duration * MB * MB4 * chain4.CastTime / CastTime);
+                chain5.AddSpellContribution(dict, duration * MB * MB5 * chain5.CastTime / CastTime);
             }
         }
     }
@@ -2065,6 +2198,12 @@ namespace Rawr.Mage
 
     class ABAM3ScCCAM : Spell
     {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        SpellCycle chain3;
+        SpellCycle chain4;
+        float CC;
+
         public ABAM3ScCCAM(CastingState castingState)
         {
             Name = "ABAM3ScCC";
@@ -2090,16 +2229,16 @@ namespace Rawr.Mage
             Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast30);
             Spell Sc = castingState.GetSpell(SpellId.Scorch);
 
-            float CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
-            SpellCycle chain1 = new SpellCycle(2);
+            chain1 = new SpellCycle(2);
             chain1.AddSpell(AMCC, castingState);
             chain1.AddSpell(AB0, castingState);
             chain1.Calculate(castingState);
 
             //AM?0-AB1-AMCC-AB0              0.9*0.1
-            SpellCycle chain2 = new SpellCycle(4);
+            chain2 = new SpellCycle(4);
             chain2.AddSpell(AMc0, castingState);
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AMCC, castingState);
@@ -2107,7 +2246,7 @@ namespace Rawr.Mage
             chain2.Calculate(castingState);
 
             //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
-            SpellCycle chain3 = new SpellCycle(6);
+            chain3 = new SpellCycle(6);
             chain3.AddSpell(AMc0, castingState);
             chain3.AddSpell(AB1, castingState);
             chain3.AddSpell(AMc0, castingState);
@@ -2117,7 +2256,7 @@ namespace Rawr.Mage
             chain3.Calculate(castingState);
 
             //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
-            SpellCycle chain4 = new SpellCycle(13);
+            chain4 = new SpellCycle(13);
             chain4.AddSpell(AMc0, castingState);
             chain4.AddSpell(AB1, castingState);
             chain4.AddSpell(AMc0, castingState);
@@ -2152,10 +2291,24 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
+            chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
+            chain3.AddSpellContribution(dict, duration * CC * (1 - CC) * (1 - CC) * chain3.CastTime / CastTime);
+            chain4.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime / CastTime);
+        }
     }
 
     class ABAM3Sc2CCAM : Spell
     {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        SpellCycle chain3;
+        SpellCycle chain4;
+        float CC;
+
         public ABAM3Sc2CCAM(CastingState castingState)
         {
             Name = "ABAM3Sc2CC";
@@ -2181,16 +2334,16 @@ namespace Rawr.Mage
             Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast30);
             Spell Sc = castingState.GetSpell(SpellId.Scorch);
 
-            float CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
-            SpellCycle chain1 = new SpellCycle(2);
+            chain1 = new SpellCycle(2);
             chain1.AddSpell(AMCC, castingState);
             chain1.AddSpell(AB0, castingState);
             chain1.Calculate(castingState);
 
             //AM?0-AB1-AMCC-AB0              0.9*0.1
-            SpellCycle chain2 = new SpellCycle(4);
+            chain2 = new SpellCycle(4);
             chain2.AddSpell(AMc0, castingState);
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AMCC, castingState);
@@ -2198,7 +2351,7 @@ namespace Rawr.Mage
             chain2.Calculate(castingState);
 
             //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
-            SpellCycle chain3 = new SpellCycle(13);
+            chain3 = new SpellCycle(13);
             chain3.AddSpell(AMc0, castingState);
             chain3.AddSpell(AB1, castingState);
             chain3.AddSpell(AMc0, castingState);
@@ -2208,7 +2361,7 @@ namespace Rawr.Mage
             chain3.Calculate(castingState);
 
             //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
-            SpellCycle chain4 = new SpellCycle();
+            chain4 = new SpellCycle();
             chain4.AddSpell(AMc0, castingState);
             chain4.AddSpell(AB1, castingState);
             chain4.AddSpell(AMc0, castingState);
@@ -2243,10 +2396,24 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
+            chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
+            chain3.AddSpellContribution(dict, duration * CC * (1 - CC) * (1 - CC) * chain3.CastTime / CastTime);
+            chain4.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime / CastTime);
+        }
     }
 
     class ABAM3FrBCCAM : Spell
     {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        SpellCycle chain3;
+        SpellCycle chain4;
+        float CC;
+
         public ABAM3FrBCCAM(CastingState castingState)
         {
             Name = "ABAM3FrBCC";
@@ -2272,16 +2439,16 @@ namespace Rawr.Mage
             Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast30);
             Spell FrB = castingState.GetSpell(SpellId.Frostbolt);
 
-            float CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
-            SpellCycle chain1 = new SpellCycle(2);
+            chain1 = new SpellCycle(2);
             chain1.AddSpell(AMCC, castingState);
             chain1.AddSpell(AB0, castingState);
             chain1.Calculate(castingState);
 
             //AM?0-AB1-AMCC-AB0              0.9*0.1
-            SpellCycle chain2 = new SpellCycle(4);
+            chain2 = new SpellCycle(4);
             chain2.AddSpell(AMc0, castingState);
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AMCC, castingState);
@@ -2289,7 +2456,7 @@ namespace Rawr.Mage
             chain2.Calculate(castingState);
 
             //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
-            SpellCycle chain3 = new SpellCycle(6);
+            chain3 = new SpellCycle(6);
             chain3.AddSpell(AMc0, castingState);
             chain3.AddSpell(AB1, castingState);
             chain3.AddSpell(AMc0, castingState);
@@ -2299,7 +2466,7 @@ namespace Rawr.Mage
             chain3.Calculate(castingState);
 
             //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
-            SpellCycle chain4 = new SpellCycle(13);
+            chain4 = new SpellCycle(13);
             chain4.AddSpell(AMc0, castingState);
             chain4.AddSpell(AB1, castingState);
             chain4.AddSpell(AMc0, castingState);
@@ -2334,10 +2501,24 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
+            chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
+            chain3.AddSpellContribution(dict, duration * CC * (1 - CC) * (1 - CC) * chain3.CastTime / CastTime);
+            chain4.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime / CastTime);
+        }
     }
 
     class ABAM3FrBCCAMFail : Spell
     {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        SpellCycle chain3;
+        SpellCycle chain4;
+        float CC;
+
         public ABAM3FrBCCAMFail(CastingState castingState)
         {
             Name = "ABAM3FrBCCFail";
@@ -2363,16 +2544,16 @@ namespace Rawr.Mage
             Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast00);
             Spell FrB = castingState.GetSpell(SpellId.Frostbolt);
 
-            float CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
-            SpellCycle chain1 = new SpellCycle(2);
+            chain1 = new SpellCycle(2);
             chain1.AddSpell(AMCC, castingState);
             chain1.AddSpell(AB0, castingState);
             chain1.Calculate(castingState);
 
             //AM?0-AB1-AMCC-AB0              0.9*0.1
-            SpellCycle chain2 = new SpellCycle(4);
+            chain2 = new SpellCycle(4);
             chain2.AddSpell(AMc0, castingState);
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AMCC, castingState);
@@ -2380,7 +2561,7 @@ namespace Rawr.Mage
             chain2.Calculate(castingState);
 
             //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
-            SpellCycle chain3 = new SpellCycle(6);
+            chain3 = new SpellCycle(6);
             chain3.AddSpell(AMc0, castingState);
             chain3.AddSpell(AB1, castingState);
             chain3.AddSpell(AMc0, castingState);
@@ -2390,7 +2571,7 @@ namespace Rawr.Mage
             chain3.Calculate(castingState);
 
             //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
-            SpellCycle chain4 = new SpellCycle(13);
+            chain4 = new SpellCycle(13);
             chain4.AddSpell(AMc0, castingState);
             chain4.AddSpell(AB1, castingState);
             chain4.AddSpell(AMc0, castingState);
@@ -2425,10 +2606,24 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
+            chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
+            chain3.AddSpellContribution(dict, duration * CC * (1 - CC) * (1 - CC) * chain3.CastTime / CastTime);
+            chain4.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime / CastTime);
+        }
     }
 
     class ABAM3FrBScCCAM : Spell
     {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        SpellCycle chain3;
+        SpellCycle chain4;
+        float CC;
+
         public ABAM3FrBScCCAM(CastingState castingState)
         {
             Name = "ABAM3FrBScCC";
@@ -2456,16 +2651,16 @@ namespace Rawr.Mage
             Spell FrB = castingState.GetSpell(SpellId.Frostbolt);
             Spell Sc = castingState.GetSpell(SpellId.Scorch);
 
-            float CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
-            SpellCycle chain1 = new SpellCycle(2);
+            chain1 = new SpellCycle(2);
             chain1.AddSpell(AMCC, castingState);
             chain1.AddSpell(AB0, castingState);
             chain1.Calculate(castingState);
 
             //AM?0-AB1-AMCC-AB0              0.9*0.1
-            SpellCycle chain2 = new SpellCycle(4);
+            chain2 = new SpellCycle(4);
             chain2.AddSpell(AMc0, castingState);
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AMCC, castingState);
@@ -2473,7 +2668,7 @@ namespace Rawr.Mage
             chain2.Calculate(castingState);
 
             //AM?0-AB1-AM?0-AB2-AMCC-AB0     0.9*0.9*0.1
-            SpellCycle chain3 = new SpellCycle(6);
+            chain3 = new SpellCycle(6);
             chain3.AddSpell(AMc0, castingState);
             chain3.AddSpell(AB1, castingState);
             chain3.AddSpell(AMc0, castingState);
@@ -2483,7 +2678,7 @@ namespace Rawr.Mage
             chain3.Calculate(castingState);
 
             //AM?0-AB1-AM?0-AB2-AM?0-S-AB3?  0.9*0.9*0.9
-            SpellCycle chain4 = new SpellCycle(13);
+            chain4 = new SpellCycle(13);
             chain4.AddSpell(AMc0, castingState);
             chain4.AddSpell(AB1, castingState);
             chain4.AddSpell(AMc0, castingState);
@@ -2534,10 +2729,22 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
+            chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
+            chain3.AddSpellContribution(dict, duration * CC * (1 - CC) * (1 - CC) * chain3.CastTime / CastTime);
+            chain4.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime / CastTime);
+        }
     }
 
     class ABAMCCAM : Spell
     {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        float CC;
+
         public ABAMCCAM(CastingState castingState)
         {
             Name = "ABAMCC";
@@ -2554,12 +2761,12 @@ namespace Rawr.Mage
             Spell AB23 = castingState.GetSpell(SpellId.ArcaneBlast23);
             Spell AB33 = castingState.GetSpell(SpellId.ArcaneBlast33NoCC);
 
-            float CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
 
             if (CC == 0)
             {
                 // if we don't have clearcasting then this degenerates to AMc0-AB33
-                SpellCycle chain1 = new SpellCycle(2);
+                chain1 = new SpellCycle(2);
                 chain1.AddSpell(AMc0, castingState);
                 chain1.AddSpell(AB33, castingState);
                 chain1.Calculate(castingState);
@@ -2576,7 +2783,7 @@ namespace Rawr.Mage
             {
 
                 //AMCC-AB00-AB01-AB12-AB23       0.1
-                SpellCycle chain1 = new SpellCycle(5);
+                chain1 = new SpellCycle(5);
                 chain1.AddSpell(AMCC, castingState);
                 chain1.AddSpell(AB00, castingState);
                 chain1.AddSpell(AB01, castingState);
@@ -2585,7 +2792,7 @@ namespace Rawr.Mage
                 chain1.Calculate(castingState);
 
                 //AM?0-AB33                      0.9
-                SpellCycle chain2 = new SpellCycle(2);
+                chain2 = new SpellCycle(2);
                 chain2.AddSpell(AMc0, castingState);
                 chain2.AddSpell(AB33, castingState);
                 chain2.Calculate(castingState);
@@ -2609,10 +2816,28 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            if (CC == 0)
+            {
+                chain1.AddSpellContribution(dict, duration);
+            }
+            else
+            {
+                chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
+                chain2.AddSpellContribution(dict, duration * (1 - CC) * chain2.CastTime / CastTime);
+            }
+        }
     }
 
     class ABAM3CCAM : Spell
     {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        SpellCycle chain3;
+        float CC;
+
         public ABAM3CCAM(CastingState castingState)
         {
             Name = "ABAM3CC";
@@ -2645,12 +2870,12 @@ namespace Rawr.Mage
             Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22NoCC);
             Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast33NoCC);
 
-            float CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
 
             if (CC == 0)
             {
                 // if we don't have clearcasting then this degenerates to AMc0-AB33
-                SpellCycle chain1 = new SpellCycle(2);
+                chain1 = new SpellCycle(2);
                 chain1.AddSpell(AMc0, castingState);
                 chain1.AddSpell(AB3, castingState);
                 chain1.Calculate(castingState);
@@ -2666,7 +2891,7 @@ namespace Rawr.Mage
             else
             {
                 //AB00-AM?0-AB11-AM?0-AB22-[(AM?0-AB33)x9+AMCC]       0.9*0.9
-                SpellCycle chain1 = new SpellCycle(24);
+                chain1 = new SpellCycle(24);
                 chain1.AddSpell(AB0, castingState);
                 chain1.AddSpell(AMc0, castingState);
                 chain1.AddSpell(AB1, castingState);
@@ -2681,7 +2906,7 @@ namespace Rawr.Mage
                 chain1.Calculate(castingState);
 
                 //AB00-AM?0-AB11-AMCC                                 0.9*0.1
-                SpellCycle chain2 = new SpellCycle(4);
+                chain2 = new SpellCycle(4);
                 chain2.AddSpell(AB0, castingState);
                 chain2.AddSpell(AMc0, castingState);
                 chain2.AddSpell(AB1, castingState);
@@ -2689,7 +2914,7 @@ namespace Rawr.Mage
                 chain2.Calculate(castingState);
 
                 //AB00-AMCC                                           0.1
-                SpellCycle chain3 = new SpellCycle(2);
+                chain3 = new SpellCycle(2);
                 chain3.AddSpell(AB0, castingState);
                 chain3.AddSpell(AMCC, castingState);
                 chain3.Calculate(castingState);
@@ -2712,6 +2937,20 @@ namespace Rawr.Mage
             get
             {
                 return commonChain.Sequence;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            if (CC == 0)
+            {
+                chain1.AddSpellContribution(dict, duration);
+            }
+            else
+            {
+                chain1.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * chain1.CastTime / CastTime);
+                chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
+                chain3.AddSpellContribution(dict, duration * CC * chain3.CastTime / CastTime);
             }
         }
     }
