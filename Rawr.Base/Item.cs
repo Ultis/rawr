@@ -902,6 +902,8 @@ namespace Rawr
         /// </summary>
         [XmlIgnore]
         internal Dictionary<int, bool> EnchantValid;
+        [XmlIgnore]
+        internal List<Enchant> EnchantValidList;
 
         #region IComparable<Item> Members
 

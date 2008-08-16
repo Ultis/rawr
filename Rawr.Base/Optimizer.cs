@@ -542,20 +542,23 @@ namespace Rawr
                     {
                         Enchant itemEnchant = _character.GetEnchantBySlot((Character.CharacterSlot)i);
                         Dictionary<int, bool> dict;
+                        List<Enchant> list;
                         if (!itemEnchantValid.TryGetValue(item.GemmedId, out dict))
                         {
                             dict = new Dictionary<int, bool>();
                             itemEnchantValid[item.GemmedId] = dict;
                         }
                         item.EnchantValid = dict;
-                        /*foreach (Enchant enchant in Enchant.FindEnchants(item.Slot))
+                        if (!itemEnchantValidList.TryGetValue(item.GemmedId, out list))
                         {
-                            bool valid;
-                            if (!dict.TryGetValue(enchant.Id, out valid)) dict[enchant.Id] = false;
-                        }*/
+                            list = new List<Enchant>();
+                            itemEnchantValidList[item.GemmedId] = list;
+                        }
+                        item.EnchantValidList = list;
                         if (itemEnchant != null)
                         {
                             dict[itemEnchant.Id] = true;
+                            if (!list.Contains(itemEnchant)) list.Add(itemEnchant);
                         }
                     }
                 }                    
@@ -776,6 +779,7 @@ namespace Rawr
         Item[] lockedItems;
         Enchant[] lockedEnchants;
         Dictionary<string, Dictionary<int, bool>> itemEnchantValid;
+        Dictionary<string, List<Enchant>> itemEnchantValidList;
         Character.CharacterSlot lockedSlot = Character.CharacterSlot.None;
 		Random rand;
 
@@ -958,6 +962,7 @@ namespace Rawr
             }
             gemmedIds = new List<string>(gemmedIdMap.Keys);
             itemEnchantValid = new Dictionary<string, Dictionary<int, bool>>();
+            itemEnchantValidList = new Dictionary<string, List<Enchant>>();
             foreach (string gid in gemmedIds)
             {
                 int dot = gid.IndexOf('.');
@@ -1050,20 +1055,23 @@ namespace Rawr
                     foreach (Item possibleGemmedItem in possibleGemmedItems)
                     {
                         Dictionary<int, bool> dict;
+                        List<Enchant> list;
                         if (!itemEnchantValid.TryGetValue(possibleGemmedItem.GemmedId, out dict))
                         {
                             dict = new Dictionary<int, bool>();
                             itemEnchantValid[possibleGemmedItem.GemmedId] = dict;
                         }
                         possibleGemmedItem.EnchantValid = dict;
-                        /*foreach (Enchant enchant in allEnchants)
+                        if (!itemEnchantValidList.TryGetValue(possibleGemmedItem.GemmedId, out list))
                         {
-                            bool valid;
-                            if (!dict.TryGetValue(enchant.Id, out valid)) dict[enchant.Id] = false;
-                        }*/
+                            list = new List<Enchant>();
+                            itemEnchantValidList[possibleGemmedItem.GemmedId] = list;
+                        }
+                        possibleGemmedItem.EnchantValidList = list;
                         foreach (Enchant enchant in validEnchants)
                         {
                             dict[enchant.Id] = true;
+                            if (!list.Contains(enchant)) list.Add(enchant);
                         }
                     }                    
                 }
@@ -1142,18 +1150,18 @@ namespace Rawr
             }
 
             // set to all enchants, restrictions will be applied per item
-            slotEnchants[(int)Character.CharacterSlot.Back] = backEnchants = Enchant.FindEnchants(Item.ItemSlot.Back, model).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Chest] = chestEnchants = Enchant.FindEnchants(Item.ItemSlot.Chest, model).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Feet] = feetEnchants = Enchant.FindEnchants(Item.ItemSlot.Feet, model).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Finger1] = slotEnchants[(int)Character.CharacterSlot.Finger2] = fingerEnchants = Enchant.FindEnchants(Item.ItemSlot.Finger, model).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Hands] = handsEnchants = Enchant.FindEnchants(Item.ItemSlot.Hands, model).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Head] = headEnchants = Enchant.FindEnchants(Item.ItemSlot.Head, model).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Legs] = legsEnchants = Enchant.FindEnchants(Item.ItemSlot.Legs, model).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Shoulders] = shouldersEnchants = Enchant.FindEnchants(Item.ItemSlot.Shoulders, model).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.MainHand] = mainHandEnchants = Enchant.FindEnchants(Item.ItemSlot.MainHand, model).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.OffHand] = offHandEnchants = Enchant.FindEnchants(Item.ItemSlot.OffHand, model).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Ranged] = rangedEnchants = Enchant.FindEnchants(Item.ItemSlot.Ranged, model).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Wrist] = wristEnchants = Enchant.FindEnchants(Item.ItemSlot.Wrist, model).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Back] = backEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Back).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Chest] = chestEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Chest).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Feet] = feetEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Feet).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Finger1] = slotEnchants[(int)Character.CharacterSlot.Finger2] = fingerEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Finger).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Hands] = handsEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Hands).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Head] = headEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Head).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Legs] = legsEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Legs).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Shoulders] = shouldersEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Shoulders).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.MainHand] = mainHandEnchants = Enchant.FindAllEnchants(Item.ItemSlot.MainHand).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.OffHand] = offHandEnchants = Enchant.FindAllEnchants(Item.ItemSlot.OffHand).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Ranged] = rangedEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Ranged).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Wrist] = wristEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Wrist).ToArray();
 
             if (headItemList.Count == 0) headItemList.Add(null);
             if (neckItemList.Count == 0) neckItemList.Add(null);
@@ -1611,17 +1619,19 @@ namespace Rawr
 		}
 
         private delegate Item GeneratorItemSelector(int slot);
-        private delegate Enchant GeneratorEnchantSelector(int slot);     
+        private delegate Enchant GeneratorEnchantSelector(int slot, Item item);     
 
         private void GeneratorFillSlot(int slot, Item[] item, Enchant[] enchant, GeneratorItemSelector itemSelector, GeneratorEnchantSelector enchantSelector)
         {
-            item[slot] = itemSelector(slot);
-            if (item[slot] != null && slotEnchants[slot] != null)
+            Item i = item[slot] = itemSelector(slot);
+            if (i != null && slotEnchants[slot] != null)
             {
+                Enchant e = null;
                 do
                 {
-                    enchant[slot] = enchantSelector(slot);
-                } while (!ItemEnchantValid((Character.CharacterSlot)slot, item[slot], enchant[slot]));
+                    e = enchantSelector(slot, i);
+                } while (!ItemEnchantValid((Character.CharacterSlot)slot, i, e));
+                enchant[slot] = e;
             }
         }
 
@@ -1685,9 +1695,9 @@ namespace Rawr
                 {
                     return (lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Length)] : slotItems[slot][rand.Next(slotItems[slot].Length)];
                 },
-                delegate(int slot)
+                delegate(int slot, Item item)
                 {
-                    return (lockedSlot == (Character.CharacterSlot)slot && lockedEnchants != null) ? lockedEnchants[rand.Next(lockedEnchants.Length)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)];
+                    return (lockedSlot == (Character.CharacterSlot)slot && lockedEnchants != null) ? lockedEnchants[rand.Next(lockedEnchants.Length)] : (item.EnchantValidList != null ? item.EnchantValidList[rand.Next(item.EnchantValidList.Count)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)]);
                 });
         }
 
@@ -1698,7 +1708,7 @@ namespace Rawr
                 {
                     return rand.NextDouble() < 0.5d ? father[(Character.CharacterSlot)slot] : mother[(Character.CharacterSlot)slot];
                 },
-                delegate(int slot)
+                delegate(int slot, Item item)
                 {
                     return rand.NextDouble() < 0.5d ? father.GetEnchantBySlot((Character.CharacterSlot)slot) : mother.GetEnchantBySlot((Character.CharacterSlot)slot);
                 });
@@ -1966,9 +1976,9 @@ namespace Rawr
                 {
                     return rand.NextDouble() < mutationChance ? ((lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Length)] : slotItems[slot][rand.Next(slotItems[slot].Length)]) : parent[(Character.CharacterSlot)slot];
                 },
-                delegate(int slot)
+                delegate(int slot, Item item)
                 {
-                    return rand.NextDouble() < mutationChance ? ((lockedSlot == (Character.CharacterSlot)slot && lockedEnchants != null) ? lockedEnchants[rand.Next(lockedEnchants.Length)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)]) : parent.GetEnchantBySlot((Character.CharacterSlot)slot);
+                    return rand.NextDouble() < mutationChance ? ((lockedSlot == (Character.CharacterSlot)slot && lockedEnchants != null) ? lockedEnchants[rand.Next(lockedEnchants.Length)] : (item.EnchantValidList != null ? item.EnchantValidList[rand.Next(item.EnchantValidList.Count)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)])) : parent.GetEnchantBySlot((Character.CharacterSlot)slot);
                 });
 		}
 
