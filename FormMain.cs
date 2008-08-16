@@ -1025,11 +1025,11 @@ namespace Rawr
 			if (reload != null)
 			{
 				//load values for gear from armory into original character
-				foreach (Character.CharacterSlot slot in Enum.GetValues(typeof(Character.CharacterSlot)))
+				foreach (Character.CharacterSlot slot in Character.CharacterSlots)
 				{
 					character[slot] = reload[slot];
 				}
-				foreach (Item.ItemSlot slot in Enum.GetValues(typeof(Item.ItemSlot)))
+                foreach (Character.CharacterSlot slot in Character.CharacterSlots)
 				{
 					character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
 				}
