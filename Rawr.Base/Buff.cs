@@ -210,6 +210,18 @@ namespace Rawr
             return _allSetBonuses;
         }
 
+        private static Dictionary<string, List<Buff>> setBonusesByName = new Dictionary<string, List<Buff>>();
+        public static List<Buff> GetSetBonuses(string setName)
+        {
+            List<Buff> setBonuses;
+            if (!setBonusesByName.TryGetValue(setName, out setBonuses))
+            {
+                setBonuses = AllBuffs.FindAll(buff => buff.SetName == setName);
+                setBonusesByName[setName] = setBonuses;
+            }
+            return setBonuses;
+        }
+
         public static List<Buff> GetSetBonuses()
         {
             if (Calculations.Instance == null || _cachedModel != Calculations.Instance.ToString())

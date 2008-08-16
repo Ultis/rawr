@@ -1653,34 +1653,7 @@ namespace Rawr
                 }
             }
 
-			Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race,
-                        item[(int)Character.CharacterSlot.Head],
-                        item[(int)Character.CharacterSlot.Neck],
-                        item[(int)Character.CharacterSlot.Shoulders],
-                        item[(int)Character.CharacterSlot.Back],
-                        item[(int)Character.CharacterSlot.Chest],
-                        null, null,
-                        item[(int)Character.CharacterSlot.Wrist],
-                        item[(int)Character.CharacterSlot.Hands],
-                        item[(int)Character.CharacterSlot.Waist],
-                        item[(int)Character.CharacterSlot.Legs],
-                        item[(int)Character.CharacterSlot.Feet],
-                        item[(int)Character.CharacterSlot.Finger1],
-                        item[(int)Character.CharacterSlot.Finger2],
-                        item[(int)Character.CharacterSlot.Trinket1],
-                        item[(int)Character.CharacterSlot.Trinket2],
-                        item[(int)Character.CharacterSlot.MainHand],
-                        item[(int)Character.CharacterSlot.OffHand],
-                        item[(int)Character.CharacterSlot.Ranged],
-                        item[(int)Character.CharacterSlot.Projectile],
-                        item[(int)Character.CharacterSlot.ProjectileBag],
-                        enchant[(int)Character.CharacterSlot.Head], enchant[(int)Character.CharacterSlot.Shoulders],
-                        enchant[(int)Character.CharacterSlot.Back], enchant[(int)Character.CharacterSlot.Chest],
-                        enchant[(int)Character.CharacterSlot.Wrist], enchant[(int)Character.CharacterSlot.Hands],
-                        enchant[(int)Character.CharacterSlot.Legs], enchant[(int)Character.CharacterSlot.Feet],
-                        enchant[(int)Character.CharacterSlot.Finger1], enchant[(int)Character.CharacterSlot.Finger2],
-                        enchant[(int)Character.CharacterSlot.MainHand], enchant[(int)Character.CharacterSlot.OffHand],
-                        enchant[(int)Character.CharacterSlot.Ranged], _character.ActiveBuffs, false, _character.CurrentModel);
+			Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, item, enchant, _character.ActiveBuffs, false, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
 			character.Class = _character.Class;
 			character.Talents = _character.Talents;
@@ -1739,40 +1712,40 @@ namespace Rawr
 
         private Character BuildReplaceGemMutantCharacter(Character parent, out bool successful)
         {
-            Dictionary<Character.CharacterSlot, Item> items = new Dictionary<Character.CharacterSlot, Item>();
-            items[Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
-            items[Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
-            items[Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
-            items[Character.CharacterSlot.Back] = parent[Character.CharacterSlot.Back];
-            items[Character.CharacterSlot.Chest] = parent[Character.CharacterSlot.Chest];
-            items[Character.CharacterSlot.Wrist] = parent[Character.CharacterSlot.Wrist];
-            items[Character.CharacterSlot.Hands] = parent[Character.CharacterSlot.Hands];
-            items[Character.CharacterSlot.Waist] = parent[Character.CharacterSlot.Waist];
-            items[Character.CharacterSlot.Legs] = parent[Character.CharacterSlot.Legs];
-            items[Character.CharacterSlot.Feet] = parent[Character.CharacterSlot.Feet];
-            items[Character.CharacterSlot.Finger1] = parent[Character.CharacterSlot.Finger1];
-            items[Character.CharacterSlot.Finger2] = parent[Character.CharacterSlot.Finger2];
-            items[Character.CharacterSlot.Trinket1] = parent[Character.CharacterSlot.Trinket1];
-            items[Character.CharacterSlot.Trinket2] = parent[Character.CharacterSlot.Trinket2];
-            items[Character.CharacterSlot.MainHand] = parent[Character.CharacterSlot.MainHand];
-            items[Character.CharacterSlot.OffHand] = parent[Character.CharacterSlot.OffHand];
-            items[Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
-            items[Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
-            items[Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
+            Item[] items = new Item[slotCount];
+            items[(int)Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
+            items[(int)Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
+            items[(int)Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
+            items[(int)Character.CharacterSlot.Back] = parent[Character.CharacterSlot.Back];
+            items[(int)Character.CharacterSlot.Chest] = parent[Character.CharacterSlot.Chest];
+            items[(int)Character.CharacterSlot.Wrist] = parent[Character.CharacterSlot.Wrist];
+            items[(int)Character.CharacterSlot.Hands] = parent[Character.CharacterSlot.Hands];
+            items[(int)Character.CharacterSlot.Waist] = parent[Character.CharacterSlot.Waist];
+            items[(int)Character.CharacterSlot.Legs] = parent[Character.CharacterSlot.Legs];
+            items[(int)Character.CharacterSlot.Feet] = parent[Character.CharacterSlot.Feet];
+            items[(int)Character.CharacterSlot.Finger1] = parent[Character.CharacterSlot.Finger1];
+            items[(int)Character.CharacterSlot.Finger2] = parent[Character.CharacterSlot.Finger2];
+            items[(int)Character.CharacterSlot.Trinket1] = parent[Character.CharacterSlot.Trinket1];
+            items[(int)Character.CharacterSlot.Trinket2] = parent[Character.CharacterSlot.Trinket2];
+            items[(int)Character.CharacterSlot.MainHand] = parent[Character.CharacterSlot.MainHand];
+            items[(int)Character.CharacterSlot.OffHand] = parent[Character.CharacterSlot.OffHand];
+            items[(int)Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
+            items[(int)Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
+            items[(int)Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
             successful = false;
 
             // do the work
 
             // build a list of possible mutation points
             List<GemInformation> locationList = new List<GemInformation>();
-            foreach (KeyValuePair<Character.CharacterSlot, Item> pair in items)
+            for (int slot = 0; slot < slotCount; slot++)
             {
-                if (pair.Value != null)
+                if (items[slot] != null)
                 {
                     for (int i = 1; i <= 3; i++)
                     {
-                        Item gem = pair.Value.GetGem(i);
-                        if (gem != null) locationList.Add(new GemInformation() { Slot = pair.Key, Index = i, Gem = gem, Socket = pair.Value.Sockets.GetColor(i) });
+                        Item gem = items[slot].GetGem(i);
+                        if (gem != null) locationList.Add(new GemInformation() { Slot = (Character.CharacterSlot)slot, Index = i, Gem = gem, Socket = items[slot].Sockets.GetColor(i) });
                     }
                 }
             }
@@ -1796,14 +1769,14 @@ namespace Rawr
                     {
                         newGem = gemItems[rand.Next(gemItems.Length)];
                     }
-                    Item newItem = ReplaceGem(items[mutation.Slot], mutation.Index, newGem);
+                    Item newItem = ReplaceGem(items[(int)mutation.Slot], mutation.Index, newGem);
                     Dictionary<int, bool> dict;
                     // make sure the item and item-enchant combo is allowed
                     Enchant enchant = parent.GetEnchantBySlot(mutation.Slot);
                     bool valid;
                     if ((lockedSlot != mutation.Slot || lockedItems == null || lockedItems.Length > 1) && itemEnchantValid.TryGetValue(newItem.GemmedId, out dict) && (enchant == null || (dict.TryGetValue(enchant.Id, out valid) && valid)))
                     {
-                        items[mutation.Slot] = newItem;
+                        items[(int)mutation.Slot] = newItem;
                         successful = true;
                     }
                 }
@@ -1811,22 +1784,7 @@ namespace Rawr
 
             // create character
 
-            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race,
-                items[Character.CharacterSlot.Head],
-                items[Character.CharacterSlot.Neck],
-                items[Character.CharacterSlot.Shoulders],
-                items[Character.CharacterSlot.Back],
-                items[Character.CharacterSlot.Chest],
-                null, null,
-                items[Character.CharacterSlot.Wrist],
-                items[Character.CharacterSlot.Hands],
-                items[Character.CharacterSlot.Waist],
-                items[Character.CharacterSlot.Legs],
-                items[Character.CharacterSlot.Feet],
-                items[Character.CharacterSlot.Finger1], items[Character.CharacterSlot.Finger2], items[Character.CharacterSlot.Trinket1], items[Character.CharacterSlot.Trinket2], items[Character.CharacterSlot.MainHand], items[Character.CharacterSlot.OffHand],
-                items[Character.CharacterSlot.Ranged],
-                items[Character.CharacterSlot.Projectile],
-                items[Character.CharacterSlot.ProjectileBag],
+            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, items,
                 parent.HeadEnchant,
                 parent.ShouldersEnchant,
                 parent.BackEnchant,
@@ -1853,26 +1811,26 @@ namespace Rawr
 
         private Character BuildSwapGemMutantCharacter(Character parent, out bool successful)
         {
-            Dictionary<Character.CharacterSlot, Item> items = new Dictionary<Character.CharacterSlot, Item>();
-            items[Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
-            items[Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
-            items[Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
-            items[Character.CharacterSlot.Back] = parent[Character.CharacterSlot.Back];
-            items[Character.CharacterSlot.Chest] = parent[Character.CharacterSlot.Chest];
-            items[Character.CharacterSlot.Wrist] = parent[Character.CharacterSlot.Wrist];
-            items[Character.CharacterSlot.Hands] = parent[Character.CharacterSlot.Hands];
-            items[Character.CharacterSlot.Waist] = parent[Character.CharacterSlot.Waist];
-            items[Character.CharacterSlot.Legs] = parent[Character.CharacterSlot.Legs];
-            items[Character.CharacterSlot.Feet] = parent[Character.CharacterSlot.Feet];
-            items[Character.CharacterSlot.Finger1] = parent[Character.CharacterSlot.Finger1];
-            items[Character.CharacterSlot.Finger2] = parent[Character.CharacterSlot.Finger2];
-            items[Character.CharacterSlot.Trinket1] = parent[Character.CharacterSlot.Trinket1];
-            items[Character.CharacterSlot.Trinket2] = parent[Character.CharacterSlot.Trinket2];
-            items[Character.CharacterSlot.MainHand] = parent[Character.CharacterSlot.MainHand];
-            items[Character.CharacterSlot.OffHand] = parent[Character.CharacterSlot.OffHand];
-            items[Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
-            items[Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
-            items[Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
+            Item[] items = new Item[slotCount];
+            items[(int)Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
+            items[(int)Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
+            items[(int)Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
+            items[(int)Character.CharacterSlot.Back] = parent[Character.CharacterSlot.Back];
+            items[(int)Character.CharacterSlot.Chest] = parent[Character.CharacterSlot.Chest];
+            items[(int)Character.CharacterSlot.Wrist] = parent[Character.CharacterSlot.Wrist];
+            items[(int)Character.CharacterSlot.Hands] = parent[Character.CharacterSlot.Hands];
+            items[(int)Character.CharacterSlot.Waist] = parent[Character.CharacterSlot.Waist];
+            items[(int)Character.CharacterSlot.Legs] = parent[Character.CharacterSlot.Legs];
+            items[(int)Character.CharacterSlot.Feet] = parent[Character.CharacterSlot.Feet];
+            items[(int)Character.CharacterSlot.Finger1] = parent[Character.CharacterSlot.Finger1];
+            items[(int)Character.CharacterSlot.Finger2] = parent[Character.CharacterSlot.Finger2];
+            items[(int)Character.CharacterSlot.Trinket1] = parent[Character.CharacterSlot.Trinket1];
+            items[(int)Character.CharacterSlot.Trinket2] = parent[Character.CharacterSlot.Trinket2];
+            items[(int)Character.CharacterSlot.MainHand] = parent[Character.CharacterSlot.MainHand];
+            items[(int)Character.CharacterSlot.OffHand] = parent[Character.CharacterSlot.OffHand];
+            items[(int)Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
+            items[(int)Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
+            items[(int)Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
             successful = false;
 
             // do the work
@@ -1880,14 +1838,14 @@ namespace Rawr
             // build a list of possible mutation points
             // make sure not to do meta gem swaps
             List<GemInformation> locationList = new List<GemInformation>();
-            foreach (KeyValuePair<Character.CharacterSlot, Item> pair in items)
+            for (int slot = 0; slot < slotCount; slot++)
             {
-                if (pair.Value != null)
+                if (items[slot] != null)
                 {
                     for (int i = 1; i <= 3; i++)
                     {
-                        Item gem = pair.Value.GetGem(i);
-                        if (gem != null && gem.Slot != Item.ItemSlot.Meta) locationList.Add(new GemInformation() { Slot = pair.Key, Index = i, Gem = gem, Socket = pair.Value.Sockets.GetColor(i) });
+                        Item gem = items[slot].GetGem(i);
+                        if (gem != null && gem.Slot != Item.ItemSlot.Meta) locationList.Add(new GemInformation() { Slot = (Character.CharacterSlot)slot, Index = i, Gem = gem, Socket = items[slot].Sockets.GetColor(i) });
                     }
                 }
             }
@@ -1908,8 +1866,8 @@ namespace Rawr
                 } while (tries < 10 && mutation1.Gem == mutation2.Gem);
 
                 // mutate
-                Item item1 = ReplaceGem(items[mutation1.Slot], mutation1.Index, mutation2.Gem);
-                Item item2 = ReplaceGem(items[mutation2.Slot], mutation2.Index, mutation1.Gem);
+                Item item1 = ReplaceGem(items[(int)mutation1.Slot], mutation1.Index, mutation2.Gem);
+                Item item2 = ReplaceGem(items[(int)mutation2.Slot], mutation2.Index, mutation1.Gem);
                 Dictionary<int, bool> dict1, dict2;
                 Enchant enchant1, enchant2;
                 enchant1 = parent.GetEnchantBySlot(mutation1.Slot);
@@ -1918,29 +1876,14 @@ namespace Rawr
                 if ((lockedSlot != mutation1.Slot || lockedItems == null || lockedItems.Length > 1) && (lockedSlot != mutation2.Slot || lockedItems == null || lockedItems.Length > 1) && itemEnchantValid.TryGetValue(item1.GemmedId, out dict1) && (enchant1 == null || (dict1.TryGetValue(enchant1.Id, out valid1) && valid1)) && itemEnchantValid.TryGetValue(item2.GemmedId, out dict2) && (enchant2 == null || (dict2.TryGetValue(enchant2.Id, out valid2) && valid2)))
                 {
                     successful = true;
-                    items[mutation1.Slot] = item1;
-                    items[mutation2.Slot] = item2;
+                    items[(int)mutation1.Slot] = item1;
+                    items[(int)mutation2.Slot] = item2;
                 }
             }
 
             // create character
 
-            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race,
-                items[Character.CharacterSlot.Head],
-                items[Character.CharacterSlot.Neck],
-                items[Character.CharacterSlot.Shoulders],
-                items[Character.CharacterSlot.Back],
-                items[Character.CharacterSlot.Chest],
-                null, null,
-                items[Character.CharacterSlot.Wrist],
-                items[Character.CharacterSlot.Hands],
-                items[Character.CharacterSlot.Waist],
-                items[Character.CharacterSlot.Legs],
-                items[Character.CharacterSlot.Feet],
-                items[Character.CharacterSlot.Finger1], items[Character.CharacterSlot.Finger2], items[Character.CharacterSlot.Trinket1], items[Character.CharacterSlot.Trinket2], items[Character.CharacterSlot.MainHand], items[Character.CharacterSlot.OffHand],
-                items[Character.CharacterSlot.Ranged],
-                items[Character.CharacterSlot.Projectile],
-                items[Character.CharacterSlot.ProjectileBag],
+            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, items,
                 parent.HeadEnchant,
                 parent.ShouldersEnchant,
                 parent.BackEnchant,

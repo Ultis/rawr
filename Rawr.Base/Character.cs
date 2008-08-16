@@ -26,74 +26,82 @@ namespace Rawr //O O . .
         public List<Buff> _activeBuffs = new List<Buff>();
         [XmlElement("ActiveBuffs")]
         public List<string> _activeBuffsXml = new List<string>();
+        [XmlIgnore]
+        private string[] _item = new string[21];
+        [XmlIgnore]
+        private Item[] _itemCached = new Item[21];
+        [XmlIgnore]
+        private int[] _itemEnchant = new int[21];
+        [XmlIgnore]
+        private Enchant[] _itemEnchantCached = new Enchant[21];
         [XmlElement("Head")]
-        public string _head;
+        public string _head { get { return _item[(int)CharacterSlot.Head]; } set { _item[(int)CharacterSlot.Head] = value; } }
         [XmlElement("Neck")]
-        public string _neck;
+        public string _neck { get { return _item[(int)CharacterSlot.Neck]; } set { _item[(int)CharacterSlot.Neck] = value; } }
         [XmlElement("Shoulders")]
-        public string _shoulders;
+        public string _shoulders { get { return _item[(int)CharacterSlot.Shoulders]; } set { _item[(int)CharacterSlot.Shoulders] = value; } }
         [XmlElement("Back")]
-        public string _back;
+        public string _back { get { return _item[(int)CharacterSlot.Back]; } set { _item[(int)CharacterSlot.Back] = value; } }
         [XmlElement("Chest")]
-        public string _chest;
+        public string _chest { get { return _item[(int)CharacterSlot.Chest]; } set { _item[(int)CharacterSlot.Chest] = value; } }
         [XmlElement("Shirt")]
-        public string _shirt;
+        public string _shirt { get { return _item[(int)CharacterSlot.Shirt]; } set { _item[(int)CharacterSlot.Shirt] = value; } }
         [XmlElement("Tabard")]
-        public string _tabard;
+        public string _tabard { get { return _item[(int)CharacterSlot.Tabard]; } set { _item[(int)CharacterSlot.Tabard] = value; } }
         [XmlElement("Wrist")]
-        public string _wrist;
+        public string _wrist { get { return _item[(int)CharacterSlot.Wrist]; } set { _item[(int)CharacterSlot.Wrist] = value; } }
         [XmlElement("Hands")]
-        public string _hands;
+        public string _hands { get { return _item[(int)CharacterSlot.Hands]; } set { _item[(int)CharacterSlot.Hands] = value; } }
         [XmlElement("Waist")]
-        public string _waist;
+        public string _waist { get { return _item[(int)CharacterSlot.Waist]; } set { _item[(int)CharacterSlot.Waist] = value; } }
         [XmlElement("Legs")]
-        public string _legs;
+        public string _legs { get { return _item[(int)CharacterSlot.Legs]; } set { _item[(int)CharacterSlot.Legs] = value; } }
         [XmlElement("Feet")]
-        public string _feet;
+        public string _feet { get { return _item[(int)CharacterSlot.Feet]; } set { _item[(int)CharacterSlot.Feet] = value; } }
         [XmlElement("Finger1")]
-        public string _finger1;
+        public string _finger1 { get { return _item[(int)CharacterSlot.Finger1]; } set { _item[(int)CharacterSlot.Finger1] = value; } }
         [XmlElement("Finger2")]
-        public string _finger2;
+        public string _finger2 { get { return _item[(int)CharacterSlot.Finger2]; } set { _item[(int)CharacterSlot.Finger2] = value; } }
         [XmlElement("Trinket1")]
-        public string _trinket1;
+        public string _trinket1 { get { return _item[(int)CharacterSlot.Trinket1]; } set { _item[(int)CharacterSlot.Trinket1] = value; } }
         [XmlElement("Trinket2")]
-        public string _trinket2;
+        public string _trinket2 { get { return _item[(int)CharacterSlot.Trinket2]; } set { _item[(int)CharacterSlot.Trinket2] = value; } }
 		[XmlElement("MainHand")]
-		public string _mainHand;
+        public string _mainHand { get { return _item[(int)CharacterSlot.MainHand]; } set { _item[(int)CharacterSlot.MainHand] = value; } }
 		[XmlElement("OffHand")]
-		public string _offHand;
+        public string _offHand { get { return _item[(int)CharacterSlot.OffHand]; } set { _item[(int)CharacterSlot.OffHand] = value; } }
 		[XmlElement("Ranged")]
-		public string _ranged;
+        public string _ranged { get { return _item[(int)CharacterSlot.Ranged]; } set { _item[(int)CharacterSlot.Ranged] = value; } }
 		[XmlElement("Projectile")]
-		public string _projectile;
+        public string _projectile { get { return _item[(int)CharacterSlot.Projectile]; } set { _item[(int)CharacterSlot.Projectile] = value; } }
 		[XmlElement("ProjectileBag")]
-		public string _projectileBag;
+        public string _projectileBag { get { return _item[(int)CharacterSlot.ProjectileBag]; } set { _item[(int)CharacterSlot.ProjectileBag] = value; } }
 		[XmlElement("HeadEnchant")]
-		public int _headEnchant = 0;
+        public int _headEnchant { get { return _itemEnchant[(int)CharacterSlot.Head]; } set { _itemEnchant[(int)CharacterSlot.Head] = value; } }
 		[XmlElement("ShouldersEnchant")]
-		public int _shouldersEnchant = 0;
+        public int _shouldersEnchant { get { return _itemEnchant[(int)CharacterSlot.Shoulders]; } set { _itemEnchant[(int)CharacterSlot.Shoulders] = value; } }
 		[XmlElement("BackEnchant")]
-		public int _backEnchant = 0;
+        public int _backEnchant { get { return _itemEnchant[(int)CharacterSlot.Back]; } set { _itemEnchant[(int)CharacterSlot.Back] = value; } }
 		[XmlElement("ChestEnchant")]
-		public int _chestEnchant = 0;
+        public int _chestEnchant { get { return _itemEnchant[(int)CharacterSlot.Chest]; } set { _itemEnchant[(int)CharacterSlot.Chest] = value; } }
 		[XmlElement("WristEnchant")]
-		public int _wristEnchant = 0;
+        public int _wristEnchant { get { return _itemEnchant[(int)CharacterSlot.Wrist]; } set { _itemEnchant[(int)CharacterSlot.Wrist] = value; } }
 		[XmlElement("HandsEnchant")]
-		public int _handsEnchant = 0;
+        public int _handsEnchant { get { return _itemEnchant[(int)CharacterSlot.Hands]; } set { _itemEnchant[(int)CharacterSlot.Hands] = value; } }
 		[XmlElement("LegsEnchant")]
-		public int _legsEnchant = 0;
+        public int _legsEnchant { get { return _itemEnchant[(int)CharacterSlot.Legs]; } set { _itemEnchant[(int)CharacterSlot.Legs] = value; } }
 		[XmlElement("FeetEnchant")]
-		public int _feetEnchant = 0;
+        public int _feetEnchant { get { return _itemEnchant[(int)CharacterSlot.Feet]; } set { _itemEnchant[(int)CharacterSlot.Feet] = value; } }
 		[XmlElement("Finger1Enchant")]
-		public int _finger1Enchant = 0;
+        public int _finger1Enchant { get { return _itemEnchant[(int)CharacterSlot.Finger1]; } set { _itemEnchant[(int)CharacterSlot.Finger1] = value; } }
 		[XmlElement("Finger2Enchant")]
-		public int _finger2Enchant = 0;
+        public int _finger2Enchant { get { return _itemEnchant[(int)CharacterSlot.Finger2]; } set { _itemEnchant[(int)CharacterSlot.Finger2] = value; } }
 		[XmlElement("MainHandEnchant")]
-		public int _mainHandEnchant = 0;
+        public int _mainHandEnchant { get { return _itemEnchant[(int)CharacterSlot.MainHand]; } set { _itemEnchant[(int)CharacterSlot.MainHand] = value; } }
 		[XmlElement("OffHandEnchant")]
-		public int _offHandEnchant = 0;
+        public int _offHandEnchant { get { return _itemEnchant[(int)CharacterSlot.OffHand]; } set { _itemEnchant[(int)CharacterSlot.OffHand] = value; } }
 		[XmlElement("RangedEnchant")]
-		public int _rangedEnchant = 0;
+        public int _rangedEnchant { get { return _itemEnchant[(int)CharacterSlot.Ranged]; } set { _itemEnchant[(int)CharacterSlot.Ranged] = value; } }
 		[XmlElement("CalculationOptions")]
 		public SerializableDictionary<string, string> _serializedCalculationOptions = new SerializableDictionary<string, string>();
         [XmlElement("Talents")]
@@ -165,814 +173,75 @@ namespace Rawr //O O . .
             return _activeBuffs.FindIndex(x => x.Name == buff) >= 0;
         }
 
-		[XmlIgnore]
-		private Item _headCached = null;
         [XmlIgnore]
-        public Item Head
-        {
-			get
-			{
-				if (_headCached == null)
-				{
-					_headCached = Item.LoadFromId(_head, "Equipped Head");
-                    if (_headCached != null && _trackEquippedItemChanges) _headCached.IdsChanged += new EventHandler(_headCached_IdsChanged);
-                }
-				return _headCached;
-			}
-            set
-            {
-                if (value == null || _head != value.GemmedId)
-                {
-                    _head = value != null ? value.GemmedId : null;
-                    if (_headCached != null && _trackEquippedItemChanges) _headCached.IdsChanged -= new EventHandler(_headCached_IdsChanged);
-                    _headCached = value;
-                    if (_headCached != null && _trackEquippedItemChanges) _headCached.IdsChanged += new EventHandler(_headCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
+        public Item Head { get { return this[CharacterSlot.Head]; } set { this[CharacterSlot.Head] = value; } }
 		[XmlIgnore]
-		private Item _neckCached = null;
+        public Item Neck { get { return this[CharacterSlot.Neck]; } set { this[CharacterSlot.Neck] = value; } }
 		[XmlIgnore]
-        public Item Neck
-        {
-			get
-			{
-				if (_neckCached == null)
-				{
-					_neckCached = Item.LoadFromId(_neck, "Equipped Neck");
-                    if (_neckCached != null && _trackEquippedItemChanges) _neckCached.IdsChanged += new EventHandler(_neckCached_IdsChanged);
-                }
-				return _neckCached;
-			}
-            set
-            {
-                if (value == null || _neck != value.GemmedId)
-                {
-                    _neck = value != null ? value.GemmedId : null;
-                    if (_neckCached != null && _trackEquippedItemChanges) _neckCached.IdsChanged -= new EventHandler(_neckCached_IdsChanged);
-                    _neckCached = value;
-                    if (_neckCached != null && _trackEquippedItemChanges) _neckCached.IdsChanged += new EventHandler(_neckCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
+        public Item Shoulders { get { return this[CharacterSlot.Shoulders]; } set { this[CharacterSlot.Shoulders] = value; } }
 		[XmlIgnore]
-		private Item _shouldersCached = null;
+        public Item Back { get { return this[CharacterSlot.Back]; } set { this[CharacterSlot.Back] = value; } }
 		[XmlIgnore]
-        public Item Shoulders
-        {
-			get
-			{
-				if (_shouldersCached == null)
-				{
-					_shouldersCached = Item.LoadFromId(_shoulders, "Equipped Shoulders");
-                    if (_shouldersCached != null && _trackEquippedItemChanges) _shouldersCached.IdsChanged += new EventHandler(_shouldersCached_IdsChanged);
-                }
-				return _shouldersCached;
-			}
-            set
-            {
-                if (value == null || _shoulders != value.GemmedId)
-                {
-                    _shoulders = value != null ? value.GemmedId : null;
-                    if (_shouldersCached != null && _trackEquippedItemChanges) _shouldersCached.IdsChanged -= new EventHandler(_shouldersCached_IdsChanged);
-                    _shouldersCached = value;
-                    if (_shouldersCached != null && _trackEquippedItemChanges) _shouldersCached.IdsChanged += new EventHandler(_shouldersCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
+        public Item Chest { get { return this[CharacterSlot.Chest]; } set { this[CharacterSlot.Chest] = value; } }
 		[XmlIgnore]
-		private Item _backCached = null;
+        public Item Shirt { get { return this[CharacterSlot.Shirt]; } set { this[CharacterSlot.Shirt] = value; } }
 		[XmlIgnore]
-        public Item Back
-        {
-			get
-			{
-				if (_backCached == null)
-				{
-					_backCached = Item.LoadFromId(_back, "Equipped Back");
-                    if (_backCached != null && _trackEquippedItemChanges) _backCached.IdsChanged += new EventHandler(_backCached_IdsChanged);
-                }
-				return _backCached;
-			}
-            set
-            {
-                if (value == null || _back != value.GemmedId)
-                {
-                    _back = value != null ? value.GemmedId : null;
-                    if (_backCached != null && _trackEquippedItemChanges) _backCached.IdsChanged -= new EventHandler(_backCached_IdsChanged);
-                    _backCached = value;
-                    if (_backCached != null && _trackEquippedItemChanges) _backCached.IdsChanged += new EventHandler(_backCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
+        public Item Tabard { get { return this[CharacterSlot.Tabard]; } set { this[CharacterSlot.Tabard] = value; } }
 		[XmlIgnore]
-		private Item _chestCached = null;
+        public Item Wrist { get { return this[CharacterSlot.Wrist]; } set { this[CharacterSlot.Wrist] = value; } }
 		[XmlIgnore]
-        public Item Chest
-        {
-			get
-			{
-				if (_chestCached == null)
-				{
-					_chestCached = Item.LoadFromId(_chest, "Equipped Chest");
-                    if (_chestCached != null && _trackEquippedItemChanges) _chestCached.IdsChanged += new EventHandler(_chestCached_IdsChanged);
-                }
-				return _chestCached;
-			}
-            set
-            {
-                if (value == null || _chest != value.GemmedId)
-                {
-                    _chest = value != null ? value.GemmedId : null;
-                    if (_chestCached != null && _trackEquippedItemChanges) _chestCached.IdsChanged -= new EventHandler(_chestCached_IdsChanged);
-                    _chestCached = value;
-                    if (_chestCached != null && _trackEquippedItemChanges) _chestCached.IdsChanged += new EventHandler(_chestCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
+        public Item Hands { get { return this[CharacterSlot.Hands]; } set { this[CharacterSlot.Hands] = value; } }
 		[XmlIgnore]
-		private Item _shirtCached = null;
+        public Item Waist { get { return this[CharacterSlot.Waist]; } set { this[CharacterSlot.Waist] = value; } }
 		[XmlIgnore]
-        public Item Shirt
-        {
-			get
-			{
-				if (_shirtCached == null)
-				{
-					_shirtCached = Item.LoadFromId(_shirt, "Equipped Shirt");
-                    if (_shirtCached != null && _trackEquippedItemChanges) _shirtCached.IdsChanged += new EventHandler(_shirtCached_IdsChanged);
-                }
-				return _shirtCached;
-			}
-            set
-            {
-                if (value == null || _shirt != value.GemmedId)
-                {
-                    _shirt = value != null ? value.GemmedId : null;
-                    if (_shirtCached != null && _trackEquippedItemChanges) _shirtCached.IdsChanged -= new EventHandler(_shirtCached_IdsChanged);
-                    _shirtCached = value;
-                    if (_shirtCached != null && _trackEquippedItemChanges) _shirtCached.IdsChanged += new EventHandler(_shirtCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
+        public Item Legs { get { return this[CharacterSlot.Legs]; } set { this[CharacterSlot.Legs] = value; } }
 		[XmlIgnore]
-		private Item _tabardCached = null;
+        public Item Feet { get { return this[CharacterSlot.Feet]; } set { this[CharacterSlot.Feet] = value; } }
 		[XmlIgnore]
-        public Item Tabard
-        {
-			get
-			{
-				if (_tabardCached == null)
-				{
-					_tabardCached = Item.LoadFromId(_tabard, "Equipped Tabard");
-                    if (_tabardCached != null && _trackEquippedItemChanges) _tabardCached.IdsChanged += new EventHandler(_tabardCached_IdsChanged);
-                }
-				return _tabardCached;
-			}
-            set
-            {
-                if (value == null || _tabard != value.GemmedId)
-                {
-                    _tabard = value != null ? value.GemmedId : null;
-                    if (_tabardCached != null && _trackEquippedItemChanges) _tabardCached.IdsChanged -= new EventHandler(_tabardCached_IdsChanged);
-                    _tabardCached = value;
-                    if (_tabardCached != null && _trackEquippedItemChanges) _tabardCached.IdsChanged += new EventHandler(_tabardCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
+        public Item Finger1 { get { return this[CharacterSlot.Finger1]; } set { this[CharacterSlot.Finger1] = value; } }
 		[XmlIgnore]
-		private Item _wristCached = null;
+        public Item Finger2 { get { return this[CharacterSlot.Finger2]; } set { this[CharacterSlot.Finger2] = value; } }
 		[XmlIgnore]
-        public Item Wrist
-        {
-			get
-			{
-				if (_wristCached == null)
-				{
-					_wristCached = Item.LoadFromId(_wrist, "Equipped Wrist");
-                    if (_wristCached != null && _trackEquippedItemChanges) _wristCached.IdsChanged += new EventHandler(_wristCached_IdsChanged);
-                }
-				return _wristCached;
-			} 
-            set
-            {
-                if (value == null || _wrist != value.GemmedId)
-                {
-                    _wrist = value != null ? value.GemmedId : null;
-                    if (_wristCached != null && _trackEquippedItemChanges) _wristCached.IdsChanged -= new EventHandler(_wristCached_IdsChanged);
-                    _wristCached = value;
-                    if (_wristCached != null && _trackEquippedItemChanges) _wristCached.IdsChanged += new EventHandler(_wristCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
+        public Item Trinket1 { get { return this[CharacterSlot.Trinket1]; } set { this[CharacterSlot.Trinket1] = value; } }
 		[XmlIgnore]
-		private Item _handsCached = null;
+        public Item Trinket2 { get { return this[CharacterSlot.Trinket2]; } set { this[CharacterSlot.Trinket2] = value; } }
 		[XmlIgnore]
-        public Item Hands
-        {
-			get
-			{
-				if (_handsCached == null)
-				{
-					_handsCached = Item.LoadFromId(_hands, "Equipped Hands");
-                    if (_handsCached != null && _trackEquippedItemChanges) _handsCached.IdsChanged += new EventHandler(_handsCached_IdsChanged);
-                }
-				return _handsCached;
-			} 
-            set
-            {
-                if (value == null || _hands != value.GemmedId)
-                {
-                    _hands = value != null ? value.GemmedId : null;
-                    if (_handsCached != null && _trackEquippedItemChanges) _handsCached.IdsChanged -= new EventHandler(_handsCached_IdsChanged);
-                    _handsCached = value;
-                    if (_handsCached != null && _trackEquippedItemChanges) _handsCached.IdsChanged += new EventHandler(_handsCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
+        public Item MainHand { get { return this[CharacterSlot.MainHand]; } set { this[CharacterSlot.MainHand] = value; } }
 		[XmlIgnore]
-		private Item _waistCached = null;
+		public Item OffHand { get { return this[CharacterSlot.OffHand]; } set { this[CharacterSlot.OffHand] = value; } }
 		[XmlIgnore]
-        public Item Waist
-        {
-			get
-			{
-				if (_waistCached == null)
-				{
-					_waistCached = Item.LoadFromId(_waist, "Equipped Waist");
-                    if (_waistCached != null && _trackEquippedItemChanges) _waistCached.IdsChanged += new EventHandler(_waistCached_IdsChanged);
-                }
-				return _waistCached;
-			}
-            set
-            {
-                if (value == null || _waist != value.GemmedId)
-                {
-                    _waist = value != null ? value.GemmedId : null;
-                    if (_waistCached != null && _trackEquippedItemChanges) _waistCached.IdsChanged -= new EventHandler(_waistCached_IdsChanged);
-                    _waistCached = value;
-                    if (_waistCached != null && _trackEquippedItemChanges) _waistCached.IdsChanged += new EventHandler(_waistCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
+        public Item Ranged { get { return this[CharacterSlot.Ranged]; } set { this[CharacterSlot.Ranged] = value; } }
 		[XmlIgnore]
-		private Item _legsCached = null;
+		public Item Projectile { get { return this[CharacterSlot.Projectile]; } set { this[CharacterSlot.Projectile] = value; } }
 		[XmlIgnore]
-        public Item Legs
-        {
-			get
-			{
-				if (_legsCached == null)
-				{
-					_legsCached = Item.LoadFromId(_legs, "Equipped Legs");
-                    if (_legsCached != null && _trackEquippedItemChanges) _legsCached.IdsChanged += new EventHandler(_legsCached_IdsChanged);
-                }
-				return _legsCached;
-			}
-            set
-            {
-                if (value == null || _legs != value.GemmedId)
-                {
-                    _legs = value != null ? value.GemmedId : null;
-                    if (_legsCached != null && _trackEquippedItemChanges) _legsCached.IdsChanged -= new EventHandler(_legsCached_IdsChanged);
-                    _legsCached = value;
-                    if (_legsCached != null && _trackEquippedItemChanges) _legsCached.IdsChanged += new EventHandler(_legsCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
-		[XmlIgnore]
-		private Item _feetCached = null;
-		[XmlIgnore]
-        public Item Feet
-        {
-			get
-			{
-				if (_feetCached == null)
-				{
-					_feetCached = Item.LoadFromId(_feet, "Equipped Feet");
-                    if (_feetCached != null && _trackEquippedItemChanges) _feetCached.IdsChanged += new EventHandler(_feetCached_IdsChanged);
-                }
-				return _feetCached;
-			} 
-            set
-            {
-                if (value == null || _feet != value.GemmedId)
-                {
-                    _feet = value != null ? value.GemmedId : null;
-                    if (_feetCached != null && _trackEquippedItemChanges) _feetCached.IdsChanged -= new EventHandler(_feetCached_IdsChanged);
-                    _feetCached = value;
-                    if (_feetCached != null && _trackEquippedItemChanges) _feetCached.IdsChanged += new EventHandler(_feetCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
-		[XmlIgnore]
-		private Item _finger1Cached = null;
-		[XmlIgnore]
-        public Item Finger1
-        {
-			get
-			{
-				if (_finger1Cached == null)
-				{
-					_finger1Cached = Item.LoadFromId(_finger1, "Equipped Finger1");
-                    if (_finger1Cached != null && _trackEquippedItemChanges) _finger1Cached.IdsChanged += new EventHandler(_finger1Cached_IdsChanged);
-                }
-				return _finger1Cached;
-			}
-            set
-            {
-                if (value == null || _finger1 != value.GemmedId)
-                {
-                    _finger1 = value != null ? value.GemmedId : null;
-                    if (_finger1Cached != null && _trackEquippedItemChanges) _finger1Cached.IdsChanged -= new EventHandler(_finger1Cached_IdsChanged);
-                    _finger1Cached = value;
-                    if (_finger1Cached != null && _trackEquippedItemChanges) _finger1Cached.IdsChanged += new EventHandler(_finger1Cached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
-		[XmlIgnore]
-		private Item _finger2Cached = null;
-		[XmlIgnore]
-        public Item Finger2
-        {
-			get
-			{
-				if (_finger2Cached == null)
-				{
-					_finger2Cached = Item.LoadFromId(_finger2, "Equipped Finger2");
-                    if (_finger2Cached != null && _trackEquippedItemChanges) _finger2Cached.IdsChanged += new EventHandler(_finger2Cached_IdsChanged);
-                }
-				return _finger2Cached;
-			}
-            set
-            {
-                if (value == null || _finger2 != value.GemmedId)
-                {
-                    _finger2 = value != null ? value.GemmedId : null;
-                    if (_finger2Cached != null && _trackEquippedItemChanges) _finger2Cached.IdsChanged -= new EventHandler(_finger2Cached_IdsChanged);
-                    _finger2Cached = value;
-                    if (_finger2Cached != null && _trackEquippedItemChanges) _finger2Cached.IdsChanged += new EventHandler(_finger2Cached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
-		[XmlIgnore]
-		private Item _trinket1Cached = null;
-		[XmlIgnore]
-        public Item Trinket1
-        {
-			get
-			{
-				if (_trinket1Cached == null)
-				{
-					_trinket1Cached = Item.LoadFromId(_trinket1, "Equipped Trinket1");
-                    if (_trinket1Cached != null && _trackEquippedItemChanges) _trinket1Cached.IdsChanged += new EventHandler(_trinket1Cached_IdsChanged);
-                }
-				return _trinket1Cached;
-			}
-            set
-            {
-                if (value == null || _trinket1 != value.GemmedId)
-                {
-                    _trinket1 = value != null ? value.GemmedId : null;
-                    if (_trinket1Cached != null && _trackEquippedItemChanges) _trinket1Cached.IdsChanged -= new EventHandler(_trinket1Cached_IdsChanged);
-                    _trinket1Cached = value;
-                    if (_trinket1Cached != null && _trackEquippedItemChanges) _trinket1Cached.IdsChanged += new EventHandler(_trinket1Cached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
-		[XmlIgnore]
-		private Item _trinket2Cached = null;
-		[XmlIgnore]
-        public Item Trinket2
-        {
-			get
-			{
-				if (_trinket2Cached == null)
-				{
-					_trinket2Cached = Item.LoadFromId(_trinket2, "Equipped Trinket2");
-                    if (_trinket2Cached != null && _trackEquippedItemChanges) _trinket2Cached.IdsChanged += new EventHandler(_trinket2Cached_IdsChanged);
-                }
-				return _trinket2Cached;
-			}
-            set
-            {
-                if (value == null || _trinket2 != value.GemmedId)
-                {
-                    _trinket2 = value != null ? value.GemmedId : null;
-                    if (_trinket2Cached != null && _trackEquippedItemChanges) _trinket2Cached.IdsChanged -= new EventHandler(_trinket2Cached_IdsChanged);
-                    _trinket2Cached = value;
-                    if (_trinket2Cached != null && _trackEquippedItemChanges) _trinket2Cached.IdsChanged += new EventHandler(_trinket2Cached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
-		[XmlIgnore]
-		private Item _mainHandCached = null;
-		[XmlIgnore]
-        public Item MainHand
-        {
-			get
-			{
-				if (_mainHandCached == null)
-				{
-					_mainHandCached = Item.LoadFromId(_mainHand, "Equipped MainHand");
-                    if (_mainHandCached != null && _trackEquippedItemChanges) _mainHandCached.IdsChanged += new EventHandler(_mainHandCached_IdsChanged);
-                }
-				return _mainHandCached;
-			}
-            set
-            {
-				if (value == null || _mainHand != value.GemmedId)
-                {
-					_mainHand = value != null ? value.GemmedId : null;
-					//if (MainHand != null && MainHand.Slot == Item.ItemSlot.TwoHand)
-					//    OffHand = null;
-                    if (_mainHandCached != null && _trackEquippedItemChanges) _mainHandCached.IdsChanged -= new EventHandler(_mainHandCached_IdsChanged);
-                    _mainHandCached = value;
-                    if (_mainHandCached != null && _trackEquippedItemChanges) _mainHandCached.IdsChanged += new EventHandler(_mainHandCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-        }
-		[XmlIgnore]
-		private Item _offHandCached = null;
-		[XmlIgnore]
-		public Item OffHand
-		{
-			get
-			{
-				if (_offHandCached == null)
-				{
-					_offHandCached = Item.LoadFromId(_offHand, "Equipped OffHand");
-                    if (_offHandCached != null && _trackEquippedItemChanges) _offHandCached.IdsChanged += new EventHandler(_offHandCached_IdsChanged);
-                }
-				return _offHandCached;
-			}
-			set
-			{
-				if (value == null || _offHand != value.GemmedId)
-				{
-					_offHand = value != null ? value.GemmedId : null;
-                    if (_offHandCached != null && _trackEquippedItemChanges) _offHandCached.IdsChanged -= new EventHandler(_offHandCached_IdsChanged);
-                    _offHandCached = value;
-                    if (_offHandCached != null && _trackEquippedItemChanges) _offHandCached.IdsChanged += new EventHandler(_offHandCached_IdsChanged);
-                    OnItemsChanged();
-				}
-			}
-		}
-		[XmlIgnore]
-		private Item _rangedCached = null;
-		[XmlIgnore]
-        public Item Ranged
-        {
-			get
-			{
-				if (_rangedCached == null)
-				{
-					_rangedCached = Item.LoadFromId(_ranged, "Equipped Ranged");
-                    if (_rangedCached != null && _trackEquippedItemChanges) _rangedCached.IdsChanged += new EventHandler(_rangedCached_IdsChanged);
-                }
-				return _rangedCached;
-			} 
-            set
-            {
-				if (value == null || _ranged != value.GemmedId)
-                {
-					_ranged = value != null ? value.GemmedId : null;
-                    if (_rangedCached != null && _trackEquippedItemChanges) _rangedCached.IdsChanged -= new EventHandler(_rangedCached_IdsChanged);
-                    _rangedCached = value;
-                    if (_rangedCached != null && _trackEquippedItemChanges) _rangedCached.IdsChanged += new EventHandler(_rangedCached_IdsChanged);
-                    OnItemsChanged();
-                }
-            }
-		}
-		[XmlIgnore]
-		private Item _projectileCached = null;
-		[XmlIgnore]
-		public Item Projectile
-		{
-			get
-			{
-				if (_projectileCached == null)
-				{
-					_projectileCached = Item.LoadFromId(_projectile, "Equipped Projectile");
-                    if (_projectileCached != null && _trackEquippedItemChanges) _projectileCached.IdsChanged += new EventHandler(_projectileCached_IdsChanged);
-                }
-				return _projectileCached;
-			} 
-			set
-			{
-				if (value == null || _projectile != value.GemmedId)
-				{
-					_projectile = value != null ? value.GemmedId : null;
-                    if (_projectileCached != null && _trackEquippedItemChanges) _projectileCached.IdsChanged -= new EventHandler(_projectileCached_IdsChanged);
-                    _projectileCached = value;
-                    if (_projectileCached != null && _trackEquippedItemChanges) _projectileCached.IdsChanged += new EventHandler(_projectileCached_IdsChanged);
-                    OnItemsChanged();
-				}
-			}
-		}
-		[XmlIgnore]
-		private Item _projectileBagCached = null;
-		[XmlIgnore]
-		public Item ProjectileBag
-		{
-			get
-			{
-				if (_projectileBagCached == null)
-				{
-					_projectileBagCached = Item.LoadFromId(_projectileBag, "Equipped ProjectileBag");
-                    if (_projectileBagCached != null && _trackEquippedItemChanges) _projectileBagCached.IdsChanged += new EventHandler(_projectileBagCached_IdsChanged);
-                }
-				return _projectileBagCached;
-			} 
-			set
-			{
-				if (value == null || _projectileBag != value.GemmedId)
-				{
-					_projectileBag = value != null ? value.GemmedId : null;
-                    if (_projectileBagCached != null && _trackEquippedItemChanges) _projectileBagCached.IdsChanged -= new EventHandler(_projectileBagCached_IdsChanged);
-                    _projectileBagCached = value;
-                    if (_projectileBagCached != null && _trackEquippedItemChanges) _projectileBagCached.IdsChanged += new EventHandler(_projectileBagCached_IdsChanged);
-                    OnItemsChanged();
-				}
-			}
-		}
+		public Item ProjectileBag { get { return this[CharacterSlot.ProjectileBag]; } set { this[CharacterSlot.ProjectileBag] = value; } }
 
         [XmlIgnore]
-        private Enchant _headEnchantCached = null;
+		public Enchant HeadEnchant { get { return GetEnchantBySlot(CharacterSlot.Head); } set { SetEnchantBySlot(CharacterSlot.Head, value); } }
         [XmlIgnore]
-		public Enchant HeadEnchant
-		{
-			get
-            {
-                if (_headEnchantCached == null || _headEnchantCached.Id != _headEnchant)
-                {
-                    _headEnchantCached = Enchant.FindEnchant(_headEnchant, Item.ItemSlot.Head);
-                }
-                return _headEnchantCached;
-            }
-			set 
-            {
-                _headEnchant = value == null ? 0 : value.Id;
-                _headEnchantCached = value;
-            }
-		}
-
+		public Enchant ShouldersEnchant  { get { return GetEnchantBySlot(CharacterSlot.Shoulders); } set { SetEnchantBySlot(CharacterSlot.Shoulders, value); } }
         [XmlIgnore]
-        private Enchant _shouldersEnchantCached = null;
+		public Enchant BackEnchant { get { return GetEnchantBySlot(CharacterSlot.Back); } set { SetEnchantBySlot(CharacterSlot.Back, value); } }
         [XmlIgnore]
-		public Enchant ShouldersEnchant
-		{
-			get 
-            {
-                if (_shouldersEnchantCached == null || _shouldersEnchantCached.Id != _shouldersEnchant)
-                {
-                    _shouldersEnchantCached = Enchant.FindEnchant(_shouldersEnchant, Item.ItemSlot.Shoulders);
-                }
-                return _shouldersEnchantCached;
-            }
-			set 
-            {
-                _shouldersEnchant = value == null ? 0 : value.Id;
-                _shouldersEnchantCached = value;
-            }
-		}
-
+		public Enchant ChestEnchant { get { return GetEnchantBySlot(CharacterSlot.Chest); } set { SetEnchantBySlot(CharacterSlot.Chest, value); } }
         [XmlIgnore]
-        private Enchant _backEnchantCached = null;
+		public Enchant WristEnchant { get { return GetEnchantBySlot(CharacterSlot.Wrist); } set { SetEnchantBySlot(CharacterSlot.Wrist, value); } }
         [XmlIgnore]
-		public Enchant BackEnchant
-		{
-			get 
-            {
-                if (_backEnchantCached == null || _backEnchantCached.Id != _backEnchant)
-                {
-                    _backEnchantCached = Enchant.FindEnchant(_backEnchant, Item.ItemSlot.Back);
-                }
-                return _backEnchantCached;
-            }
-			set 
-            {
-                _backEnchant = value == null ? 0 : value.Id;
-                _backEnchantCached = value;
-            }
-		}
-
+		public Enchant HandsEnchant { get { return GetEnchantBySlot(CharacterSlot.Hands); } set { SetEnchantBySlot(CharacterSlot.Hands, value); } }
         [XmlIgnore]
-        private Enchant _chestEnchantCached = null;
+		public Enchant LegsEnchant { get { return GetEnchantBySlot(CharacterSlot.Legs); } set { SetEnchantBySlot(CharacterSlot.Legs, value); } }
         [XmlIgnore]
-		public Enchant ChestEnchant
-		{
-			get
-            {
-                if (_chestEnchantCached == null || _chestEnchantCached.Id != _chestEnchant)
-                {
-                    _chestEnchantCached = Enchant.FindEnchant(_chestEnchant, Item.ItemSlot.Chest);
-                }
-                return _chestEnchantCached;
-            }
-			set
-            {
-                _chestEnchant = value == null ? 0 : value.Id;
-                _chestEnchantCached = value;
-            }
-		}
-
+		public Enchant FeetEnchant { get { return GetEnchantBySlot(CharacterSlot.Feet); } set { SetEnchantBySlot(CharacterSlot.Feet, value); } }
         [XmlIgnore]
-        private Enchant _wristEnchantCached = null;
+		public Enchant Finger1Enchant { get { return GetEnchantBySlot(CharacterSlot.Finger1); } set { SetEnchantBySlot(CharacterSlot.Finger1, value); } }
         [XmlIgnore]
-		public Enchant WristEnchant
-		{
-			get 
-            {
-                if (_wristEnchantCached == null || _wristEnchantCached.Id != _wristEnchant)
-                {
-                    _wristEnchantCached = Enchant.FindEnchant(_wristEnchant, Item.ItemSlot.Wrist);
-                }
-                return _wristEnchantCached;
-            }
-			set
-            {
-                _wristEnchant = value == null ? 0 : value.Id;
-                _wristEnchantCached = value;
-            }
-		}
-
+		public Enchant Finger2Enchant { get { return GetEnchantBySlot(CharacterSlot.Finger2); } set { SetEnchantBySlot(CharacterSlot.Finger2, value); } }
         [XmlIgnore]
-        private Enchant _handsEnchantCached = null;
+		public Enchant MainHandEnchant { get { return GetEnchantBySlot(CharacterSlot.MainHand); } set { SetEnchantBySlot(CharacterSlot.MainHand, value); } }
         [XmlIgnore]
-		public Enchant HandsEnchant
-		{
-			get
-            {
-                if (_handsEnchantCached == null || _handsEnchantCached.Id != _handsEnchant)
-                {
-                    _handsEnchantCached = Enchant.FindEnchant(_handsEnchant, Item.ItemSlot.Hands);
-                }
-                return _handsEnchantCached;
-            }
-			set
-            {
-                _handsEnchant = value == null ? 0 : value.Id;
-                _handsEnchantCached = value;
-            }
-		}
-
+		public Enchant OffHandEnchant { get { return GetEnchantBySlot(CharacterSlot.OffHand); } set { SetEnchantBySlot(CharacterSlot.OffHand, value); } }
         [XmlIgnore]
-        private Enchant _legsEnchantCached = null;
-        [XmlIgnore]
-		public Enchant LegsEnchant
-		{
-			get 
-            {
-                if (_legsEnchantCached == null || _legsEnchantCached.Id != _legsEnchant)
-                {
-                    _legsEnchantCached = Enchant.FindEnchant(_legsEnchant, Item.ItemSlot.Legs);
-                }
-                return _legsEnchantCached;
-            }
-			set
-            {
-                _legsEnchant = value == null ? 0 : value.Id;
-                _legsEnchantCached = value;
-            }
-		}
-
-        [XmlIgnore]
-        private Enchant _feetEnchantCached = null;
-        [XmlIgnore]
-		public Enchant FeetEnchant
-		{
-			get
-            {
-                if (_feetEnchantCached == null || _feetEnchantCached.Id != _feetEnchant)
-                {
-                    _feetEnchantCached = Enchant.FindEnchant(_feetEnchant, Item.ItemSlot.Feet);
-                }
-                return _feetEnchantCached;
-            }
-			set 
-            {
-                _feetEnchant = value == null ? 0 : value.Id;
-                _feetEnchantCached = value;
-            }
-		}
-
-        [XmlIgnore]
-        private Enchant _finger1EnchantCached = null;
-        [XmlIgnore]
-		public Enchant Finger1Enchant
-		{
-			get 
-            {
-                if (_finger1EnchantCached == null || _finger1EnchantCached.Id != _finger1Enchant)
-                {
-                    _finger1EnchantCached = Enchant.FindEnchant(_finger1Enchant, Item.ItemSlot.Finger);
-                }
-                return _finger1EnchantCached;
-            }
-			set
-            {
-                _finger1Enchant = value == null ? 0 : value.Id;
-                _finger1EnchantCached = value;
-            }
-		}
-
-        [XmlIgnore]
-        private Enchant _finger2EnchantCached = null;
-        [XmlIgnore]
-		public Enchant Finger2Enchant
-		{
-			get 
-            {
-                if (_finger2EnchantCached == null || _finger2EnchantCached.Id != _finger2Enchant)
-                {
-                    _finger2EnchantCached = Enchant.FindEnchant(_finger2Enchant, Item.ItemSlot.Finger);
-                }
-                return _finger2EnchantCached;
-            }
-			set
-            {
-                _finger2Enchant = value == null ? 0 : value.Id;
-                _finger2EnchantCached = value;
-            }
-		}
-
-        [XmlIgnore]
-        private Enchant _mainHandEnchantCached = null;
-        [XmlIgnore]
-		public Enchant MainHandEnchant
-		{
-			get 
-            {
-                if (_mainHandEnchantCached == null || _mainHandEnchantCached.Id != _mainHandEnchant)
-                {
-                    _mainHandEnchantCached = Enchant.FindEnchant(_mainHandEnchant, Item.ItemSlot.MainHand);
-                }
-                return _mainHandEnchantCached;
-            }
-			set
-            {
-                _mainHandEnchant = value == null ? 0 : value.Id;
-                _mainHandEnchantCached = value;
-            }
-		}
-
-        [XmlIgnore]
-        private Enchant _offHandEnchantCached = null;
-        [XmlIgnore]
-		public Enchant OffHandEnchant
-		{
-			get 
-            {
-                if (_offHandEnchantCached == null || _offHandEnchantCached.Id != _offHandEnchant)
-                {
-                    _offHandEnchantCached = Enchant.FindEnchant(_offHandEnchant, Item.ItemSlot.OffHand);
-                }
-                return _offHandEnchantCached;
-            }
-			set 
-            {
-                _offHandEnchant = value == null ? 0 : value.Id;
-                _offHandEnchantCached = value;
-            }
-		}
-
-        [XmlIgnore]
-        private Enchant _rangedEnchantCached = null;
-        [XmlIgnore]
-		public Enchant RangedEnchant
-		{
-			get
-            {
-                if (_rangedEnchantCached == null || _rangedEnchantCached.Id != _rangedEnchant)
-                {
-                    _rangedEnchantCached = Enchant.FindEnchant(_rangedEnchant, Item.ItemSlot.Ranged);
-                }
-                return _rangedEnchantCached;
-            }
-			set
-            {
-                _rangedEnchant = value == null ? 0 : value.Id;
-                _rangedEnchantCached = value;
-            }
-		}
+		public Enchant RangedEnchant { get { return GetEnchantBySlot(CharacterSlot.Ranged); } set { SetEnchantBySlot(CharacterSlot.Ranged, value); } }
 
 		[XmlIgnore]
         private Dictionary<string, ICalculationOptionBase> _calculationOptions = new SerializableDictionary<string, ICalculationOptionBase>();
@@ -1240,39 +509,17 @@ namespace Rawr //O O . .
 			}
 		}
 
+        private static Item.ItemSlot[] characterSlot2ItemSlot = new Item.ItemSlot[] { Item.ItemSlot.Projectile, Item.ItemSlot.Head, Item.ItemSlot.Neck, Item.ItemSlot.Shoulders, Item.ItemSlot.Chest, Item.ItemSlot.Waist, Item.ItemSlot.Legs, Item.ItemSlot.Feet, Item.ItemSlot.Wrist, Item.ItemSlot.Hands, Item.ItemSlot.Finger, Item.ItemSlot.Finger, Item.ItemSlot.Trinket, Item.ItemSlot.Trinket, Item.ItemSlot.Back, Item.ItemSlot.MainHand, Item.ItemSlot.OffHand, Item.ItemSlot.Ranged, Item.ItemSlot.ProjectileBag, Item.ItemSlot.Tabard, Item.ItemSlot.Shirt };
         public Enchant GetEnchantBySlot(Character.CharacterSlot slot)
         {
-            switch (slot)
+            int i = (int)slot;
+            if (i < 0 || i > 20) return null;
+            Enchant e = _itemEnchantCached[i];
+            if (e == null)
             {
-                case Character.CharacterSlot.Head:
-                    return HeadEnchant;
-                case Character.CharacterSlot.Shoulders:
-                    return ShouldersEnchant;
-                case Character.CharacterSlot.Back:
-                    return BackEnchant;
-                case Character.CharacterSlot.Chest:
-                    return ChestEnchant;
-                case Character.CharacterSlot.Wrist:
-                    return WristEnchant;
-                case Character.CharacterSlot.Hands:
-                    return HandsEnchant;
-                case Character.CharacterSlot.Legs:
-                    return LegsEnchant;
-                case Character.CharacterSlot.Feet:
-                    return FeetEnchant;
-                case Character.CharacterSlot.Finger1:
-                    return Finger1Enchant;
-                case Character.CharacterSlot.Finger2:
-                    return Finger2Enchant;
-                case Character.CharacterSlot.MainHand:
-                    return MainHandEnchant;
-                case Character.CharacterSlot.OffHand:
-                    return OffHandEnchant;
-                case Character.CharacterSlot.Ranged:
-                    return RangedEnchant;
-                default:
-                    return null;
+                e = _itemEnchantCached[i] = Enchant.FindEnchant(_itemEnchant[i], characterSlot2ItemSlot[i]);
             }
+            return e;
         }
 
         public bool IsEnchantable(Character.CharacterSlot slot)
@@ -1369,48 +616,10 @@ namespace Rawr //O O . .
 
         public void SetEnchantBySlot(Character.CharacterSlot slot, Enchant enchant)
         {
-            switch (slot)
-            {
-                case Character.CharacterSlot.Head:
-                    HeadEnchant = enchant;
-                    break;
-                case Character.CharacterSlot.Shoulders:
-                    ShouldersEnchant = enchant;
-                    break;
-                case Character.CharacterSlot.Back:
-                    BackEnchant = enchant;
-                    break;
-                case Character.CharacterSlot.Chest:
-                    ChestEnchant = enchant;
-                    break;
-                case Character.CharacterSlot.Wrist:
-                    WristEnchant = enchant;
-                    break;
-                case Character.CharacterSlot.Hands:
-                    HandsEnchant = enchant;
-                    break;
-                case Character.CharacterSlot.Legs:
-                    LegsEnchant = enchant;
-                    break;
-                case Character.CharacterSlot.Feet:
-                    FeetEnchant = enchant;
-                    break;
-                case Character.CharacterSlot.Finger1:
-                    Finger1Enchant = enchant;
-                    break;
-                case Character.CharacterSlot.Finger2:
-                    Finger2Enchant = enchant;
-                    break;
-                case Character.CharacterSlot.MainHand:
-                    MainHandEnchant = enchant;
-                    break;
-                case Character.CharacterSlot.OffHand:
-                    OffHandEnchant = enchant;
-                    break;
-                case Character.CharacterSlot.Ranged:
-                    RangedEnchant = enchant;
-                    break;
-            }
+            int i = (int)slot;
+            if (i < 0 || i > 20) return;
+            _itemEnchant[i] = enchant == null ? 0 : enchant.Id;
+            _itemEnchantCached[i] = enchant;
         }
 
         private static CharacterSlot[] _characterSlots;
@@ -1445,161 +654,33 @@ namespace Rawr //O O . .
                     if (_trackEquippedItemChanges)
                     {
                         // hook events
-                        if (_headCached != null) _headCached.IdsChanged += new EventHandler(_headCached_IdsChanged);
-                        if (_neckCached != null) _neckCached.IdsChanged += new EventHandler(_neckCached_IdsChanged);
-                        if (_shouldersCached != null) _shouldersCached.IdsChanged += new EventHandler(_shouldersCached_IdsChanged);
-                        if (_backCached != null) _backCached.IdsChanged += new EventHandler(_backCached_IdsChanged);
-                        if (_chestCached != null) _chestCached.IdsChanged += new EventHandler(_chestCached_IdsChanged);
-                        if (_shirtCached != null) _shirtCached.IdsChanged += new EventHandler(_shirtCached_IdsChanged);
-                        if (_tabardCached != null) _tabardCached.IdsChanged += new EventHandler(_tabardCached_IdsChanged);
-                        if (_wristCached != null) _wristCached.IdsChanged += new EventHandler(_wristCached_IdsChanged);
-                        if (_handsCached != null) _handsCached.IdsChanged += new EventHandler(_handsCached_IdsChanged);
-                        if (_waistCached != null) _waistCached.IdsChanged += new EventHandler(_waistCached_IdsChanged);
-                        if (_legsCached != null) _legsCached.IdsChanged += new EventHandler(_legsCached_IdsChanged);
-                        if (_feetCached != null) _feetCached.IdsChanged += new EventHandler(_feetCached_IdsChanged);
-                        if (_finger1Cached != null) _finger1Cached.IdsChanged += new EventHandler(_finger1Cached_IdsChanged);
-                        if (_finger2Cached != null) _finger2Cached.IdsChanged += new EventHandler(_finger2Cached_IdsChanged);
-                        if (_trinket1Cached != null) _trinket1Cached.IdsChanged += new EventHandler(_trinket1Cached_IdsChanged);
-                        if (_trinket2Cached != null) _trinket2Cached.IdsChanged += new EventHandler(_trinket2Cached_IdsChanged);
-                        if (_mainHandCached != null) _mainHandCached.IdsChanged += new EventHandler(_mainHandCached_IdsChanged);
-                        if (_offHandCached != null) _offHandCached.IdsChanged += new EventHandler(_offHandCached_IdsChanged);
-                        if (_rangedCached != null) _rangedCached.IdsChanged += new EventHandler(_rangedCached_IdsChanged);
-                        if (_projectileCached != null) _projectileCached.IdsChanged += new EventHandler(_projectileCached_IdsChanged);
-                        if (_projectileBagCached != null) _projectileBagCached.IdsChanged += new EventHandler(_projectileBagCached_IdsChanged);
+                        for (int i = 0; i < _itemCached.Length; i++)
+                        {
+                            if (_itemCached[i] != null) _itemCached[i].IdsChanged += new EventHandler(_itemCached_IdsChanged);
+                        }
                     }
                     else
                     {
                         // unhook events
-                        if (_headCached != null) _headCached.IdsChanged -= new EventHandler(_headCached_IdsChanged);
-                        if (_neckCached != null) _neckCached.IdsChanged -= new EventHandler(_neckCached_IdsChanged);
-                        if (_shouldersCached != null) _shouldersCached.IdsChanged -= new EventHandler(_shouldersCached_IdsChanged);
-                        if (_backCached != null) _backCached.IdsChanged -= new EventHandler(_backCached_IdsChanged);
-                        if (_chestCached != null) _chestCached.IdsChanged -= new EventHandler(_chestCached_IdsChanged);
-                        if (_shirtCached != null) _shirtCached.IdsChanged -= new EventHandler(_shirtCached_IdsChanged);
-                        if (_tabardCached != null) _tabardCached.IdsChanged -= new EventHandler(_tabardCached_IdsChanged);
-                        if (_wristCached != null) _wristCached.IdsChanged -= new EventHandler(_wristCached_IdsChanged);
-                        if (_handsCached != null) _handsCached.IdsChanged -= new EventHandler(_handsCached_IdsChanged);
-                        if (_waistCached != null) _waistCached.IdsChanged -= new EventHandler(_waistCached_IdsChanged);
-                        if (_legsCached != null) _legsCached.IdsChanged -= new EventHandler(_legsCached_IdsChanged);
-                        if (_feetCached != null) _feetCached.IdsChanged -= new EventHandler(_feetCached_IdsChanged);
-                        if (_finger1Cached != null) _finger1Cached.IdsChanged -= new EventHandler(_finger1Cached_IdsChanged);
-                        if (_finger2Cached != null) _finger2Cached.IdsChanged -= new EventHandler(_finger2Cached_IdsChanged);
-                        if (_trinket1Cached != null) _trinket1Cached.IdsChanged -= new EventHandler(_trinket1Cached_IdsChanged);
-                        if (_trinket2Cached != null) _trinket2Cached.IdsChanged -= new EventHandler(_trinket2Cached_IdsChanged);
-                        if (_mainHandCached != null) _mainHandCached.IdsChanged -= new EventHandler(_mainHandCached_IdsChanged);
-                        if (_offHandCached != null) _offHandCached.IdsChanged -= new EventHandler(_offHandCached_IdsChanged);
-                        if (_rangedCached != null) _rangedCached.IdsChanged -= new EventHandler(_rangedCached_IdsChanged);
-                        if (_projectileCached != null) _projectileCached.IdsChanged -= new EventHandler(_projectileCached_IdsChanged);
-                        if (_projectileBagCached != null) _projectileBagCached.IdsChanged -= new EventHandler(_projectileBagCached_IdsChanged);
+                        for (int i = 0; i < _itemCached.Length; i++)
+                        {
+                            if (_itemCached[i] != null) _itemCached[i].IdsChanged -= new EventHandler(_itemCached_IdsChanged);
+                        }
                     }
                 }
             }
         }
 
-        void _headCached_IdsChanged(object sender, EventArgs e)
+        void _itemCached_IdsChanged(object sender, EventArgs e)
         {
-            ((Item)sender).IdsChanged -= new EventHandler(_headCached_IdsChanged);
-            _headCached = null;
-        }
-        void _neckCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_neckCached_IdsChanged);
-            _neckCached = null;
-        }
-        void _shouldersCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_shouldersCached_IdsChanged);
-            _shouldersCached = null;
-        }
-        void _backCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_backCached_IdsChanged);
-            _backCached = null;
-        }
-        void _chestCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_chestCached_IdsChanged);
-            _chestCached = null;
-        }
-        void _shirtCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_shirtCached_IdsChanged);
-            _shirtCached = null;
-        }
-        void _tabardCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_tabardCached_IdsChanged);
-            _tabardCached = null;
-        }
-        void _wristCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_wristCached_IdsChanged);
-            _wristCached = null;
-        }
-        void _handsCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_handsCached_IdsChanged);
-            _handsCached = null;
-        }
-        void _waistCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_waistCached_IdsChanged);
-            _waistCached = null;
-        }
-        void _legsCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_legsCached_IdsChanged);
-            _legsCached = null;
-        }
-        void _feetCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_feetCached_IdsChanged);
-            _feetCached = null;
-        }
-        void _finger1Cached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_finger1Cached_IdsChanged);
-            _finger1Cached = null;
-        }
-        void _finger2Cached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_finger2Cached_IdsChanged);
-            _finger2Cached = null;
-        }
-        void _trinket1Cached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_trinket1Cached_IdsChanged);
-            _trinket1Cached = null;
-        }
-        void _trinket2Cached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_trinket2Cached_IdsChanged);
-            _trinket2Cached = null;
-        }
-        void _mainHandCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_mainHandCached_IdsChanged);
-            _mainHandCached = null;
-        }
-        void _offHandCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_offHandCached_IdsChanged);
-            _offHandCached = null;
-        }
-        void _rangedCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_rangedCached_IdsChanged);
-            _rangedCached = null;
-        }
-        void _projectileCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_projectileCached_IdsChanged);
-            _projectileCached = null;
-        }
-        void _projectileBagCached_IdsChanged(object sender, EventArgs e)
-        {
-            ((Item)sender).IdsChanged -= new EventHandler(_projectileBagCached_IdsChanged);
-            _projectileBagCached = null;
+            for (int i = 0; i < _itemCached.Length; i++)
+            {
+                if (sender == _itemCached[i])
+                {
+                    _itemCached[i].IdsChanged -= new EventHandler(_itemCached_IdsChanged);
+                    _itemCached[i] = null;
+                }
+            }
         }
         #endregion
 
@@ -1715,6 +796,35 @@ namespace Rawr //O O . .
 			if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
 		}
 
+        private void RecalculateSetBonusesFromCache()
+        {
+            //Compute Set Bonuses
+            Dictionary<string, int> setCounts = new Dictionary<string, int>();
+            for (int slot = 0; slot < _itemCached.Length; slot++)
+            {
+                Item item = _itemCached[slot];
+                if (item != null && !string.IsNullOrEmpty(item.SetName))
+                {
+                    int count;
+                    setCounts.TryGetValue(item.SetName, out count);
+                    setCounts[item.SetName] = count + 1;
+                }
+            }
+
+            // eliminate searching in active buffs: first remove all set bonuses, then add active ones
+            ActiveBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
+            foreach (KeyValuePair<string, int> pair in setCounts)
+            {
+                foreach (Buff buff in Buff.GetSetBonuses(pair.Key))
+                {
+                    if (pair.Value >= buff.SetThreshold)
+                    {
+                        ActiveBuffs.Add(buff);
+                    }
+                }
+            }
+        }
+
 		public void RecalculateSetBonuses()
 		{
 			//Compute Set Bonuses
@@ -1724,183 +834,52 @@ namespace Rawr //O O . .
 			{
 				if (item != null && !string.IsNullOrEmpty(item.SetName))
 				{
-					if (setCounts.ContainsKey(item.SetName))
-						setCounts[item.SetName] = setCounts[item.SetName] + 1;
-					else
-						setCounts[item.SetName] = 1;
+                    int count;
+                    setCounts.TryGetValue(item.SetName, out count);
+					setCounts[item.SetName] = count + 1;
 				}
 			}
 
             // eliminate searching in active buffs: first remove all set bonuses, then add active ones
             ActiveBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
-            foreach (Buff buff in Buff.GetAllSetBonuses()) // can't just get relevant set bonuses, would have to get relevant set bonuses for CurrentModel
+            foreach (KeyValuePair<string, int> pair in setCounts)
             {
-                int setCount;
-                if (setCounts.TryGetValue(buff.SetName, out setCount) && setCount >= buff.SetThreshold)
+                foreach (Buff buff in Buff.GetSetBonuses(pair.Key))
                 {
-                    ActiveBuffs.Add(buff);
+                    if (pair.Value >= buff.SetThreshold)
+                    {
+                        ActiveBuffs.Add(buff);
+                    }
                 }
             }
-
-            //foreach (Buff buff in Buff.GetBuffsByType(Buff.BuffType.All))
-            //{
-            //    if (!string.IsNullOrEmpty(buff.SetName))
-            //    {
-            //        if (setCounts.ContainsKey(buff.SetName) && setCounts[buff.SetName] >= buff.SetThreshold)
-            //        {
-            //            if (!ActiveBuffs.Contains(buff.Name))
-            //                ActiveBuffs.Add(buff.Name);
-            //        }
-            //        else
-            //        {
-            //            if (ActiveBuffs.Contains(buff.Name))
-            //                ActiveBuffs.Remove(buff.Name);
-            //        }
-            //    }
-            //}
-		}
+        }
 
         [XmlIgnore]
         public Item this[CharacterSlot slot]
         {
             get
             {
-                switch (slot)
+                int i = (int)slot;
+                if (i < 0 || i > 20) return null;
+                Item item;
+                if ((item = _itemCached[i]) == null)
                 {
-                    case CharacterSlot.Head:
-                        return this.Head;
-
-                    case CharacterSlot.Neck:
-                        return this.Neck;
-
-                    case CharacterSlot.Shoulders:
-                        return this.Shoulders;
-
-                    case CharacterSlot.Back:
-                        return this.Back;
-
-                    case CharacterSlot.Chest:
-                        return this.Chest;
-
-                    case CharacterSlot.Shirt:
-                        return this.Shirt;
-
-                    case CharacterSlot.Tabard:
-                        return this.Tabard;
-
-                    case CharacterSlot.Wrist:
-                        return this.Wrist;
-
-                    case CharacterSlot.Hands:
-                        return this.Hands;
-
-                    case CharacterSlot.Waist:
-                        return this.Waist;
-
-                    case CharacterSlot.Legs:
-                        return this.Legs;
-
-                    case CharacterSlot.Feet:
-                        return this.Feet;
-
-                    case CharacterSlot.Finger1:
-                        return this.Finger1;
-
-                    case CharacterSlot.Finger2:
-                        return this.Finger2;
-
-                    case CharacterSlot.Trinket1:
-                        return this.Trinket1;
-
-                    case CharacterSlot.Trinket2:
-                        return this.Trinket2;
-
-					case CharacterSlot.MainHand:
-						return this.MainHand;
-
-					case CharacterSlot.OffHand:
-						return this.OffHand;
-
-					case CharacterSlot.Ranged:
-						return this.Ranged;
-
-					case CharacterSlot.Projectile:
-						return this.Projectile;
-
-					case CharacterSlot.ProjectileBag:
-						return this.ProjectileBag;
-
-					default:
-                        return null;
+                    item = _itemCached[i] = Item.LoadFromId(_item[i], "Equipped Item");
+                    if (item != null && _trackEquippedItemChanges) item.IdsChanged += new EventHandler(_itemCached_IdsChanged);
                 }
+                return item;
             }
             set
             {
-                switch (slot)
+                int i = (int)slot;
+                if (i < 0 || i > 20) return;
+                if (value == null || _item[i] != value.GemmedId)
                 {
-                    case CharacterSlot.Head:
-                        this.Head = value;
-                        break;
-                    case CharacterSlot.Neck:
-                        this.Neck = value;
-                        break;
-                    case CharacterSlot.Shoulders:
-                        this.Shoulders = value;
-                        break;
-                    case CharacterSlot.Back:
-                        this.Back = value;
-                        break;
-                    case CharacterSlot.Chest:
-                        this.Chest = value;
-                        break;
-                    case CharacterSlot.Shirt:
-                        this.Shirt = value;
-                        break;
-                    case CharacterSlot.Tabard:
-                        this.Tabard = value;
-                        break;
-                    case CharacterSlot.Wrist:
-                        this.Wrist = value;
-                        break;
-                    case CharacterSlot.Hands:
-                        this.Hands = value;
-                        break;
-                    case CharacterSlot.Waist:
-                        this.Waist = value;
-                        break;
-                    case CharacterSlot.Legs:
-                        this.Legs = value;
-                        break;
-                    case CharacterSlot.Feet:
-                        this.Feet = value;
-                        break;
-                    case CharacterSlot.Finger1:
-                        this.Finger1 = value;
-                        break;
-                    case CharacterSlot.Finger2:
-                        this.Finger2 = value;
-                        break;
-                    case CharacterSlot.Trinket1:
-                        this.Trinket1 = value;
-                        break;
-                    case CharacterSlot.Trinket2:
-						this.Trinket2 = value;
-						break;
-					case CharacterSlot.MainHand:
-						this.MainHand = value;
-						break;
-					case CharacterSlot.OffHand:
-						this.OffHand = value;
-						break;
-					case CharacterSlot.Ranged:
-						this.Ranged = value;
-						break;
-					case CharacterSlot.Projectile:
-						this.Projectile = value;
-						break;
-					case CharacterSlot.ProjectileBag:
-						this.ProjectileBag = value;
-                        break;
+                    _item[i] = value != null ? value.GemmedId : null;
+                    if (_itemCached[i] != null && _trackEquippedItemChanges) _itemCached[i].IdsChanged -= new EventHandler(_itemCached_IdsChanged);
+                    _itemCached[i] = value;
+                    if (_itemCached[i] != null && _trackEquippedItemChanges) _itemCached[i].IdsChanged += new EventHandler(_itemCached_IdsChanged);
+                    OnItemsChanged();
                 }
             }
         }
@@ -2191,6 +1170,7 @@ namespace Rawr //O O . .
             RecalculateSetBonuses();
         }
 
+        // the following are special contructors used by optimizer, they assume the cached items/enchant are always used, and the underlying gemmedid/enchantid are never used
         public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
                 Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile, Item projectileBag,
             Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
@@ -2201,45 +1181,91 @@ namespace Rawr //O O . .
             _realm = realm;
             _region = region;
             _race = race;
-            Head = head;
-            Neck = neck;
-            Shoulders = shoulders;
-            Back = back;
-            Chest = chest;
-            Shirt = shirt;
-            Tabard = tabard;
-            Wrist = wrist;
-            Hands = hands;
-            Waist = waist;
-            Legs = legs;
-            Feet = feet;
-            Finger1 = finger1;
-            Finger2 = finger2;
-            Trinket1 = trinket1;
-            Trinket2 = trinket2;
-            MainHand = mainHand;
-            OffHand = offHand;
-            Ranged = ranged;
-            Projectile = projectile;
-            ProjectileBag = projectileBag;
+            _itemCached[(int)CharacterSlot.Head] = head;
+            _itemCached[(int)CharacterSlot.Neck] = neck;
+            _itemCached[(int)CharacterSlot.Shoulders] = shoulders;
+            _itemCached[(int)CharacterSlot.Back] = back;
+            _itemCached[(int)CharacterSlot.Chest] = chest;
+            _itemCached[(int)CharacterSlot.Shirt] = shirt;
+            _itemCached[(int)CharacterSlot.Tabard] = tabard;
+            _itemCached[(int)CharacterSlot.Wrist] = wrist;
+            _itemCached[(int)CharacterSlot.Hands] = hands;
+            _itemCached[(int)CharacterSlot.Waist] = waist;
+            _itemCached[(int)CharacterSlot.Legs] = legs;
+            _itemCached[(int)CharacterSlot.Feet] = feet;
+            _itemCached[(int)CharacterSlot.Finger1] = finger1;
+            _itemCached[(int)CharacterSlot.Finger2] = finger2;
+            _itemCached[(int)CharacterSlot.Trinket1] = trinket1;
+            _itemCached[(int)CharacterSlot.Trinket2] = trinket2;
+            _itemCached[(int)CharacterSlot.MainHand] = mainHand;
+            _itemCached[(int)CharacterSlot.OffHand] = offHand;
+            _itemCached[(int)CharacterSlot.Ranged] = ranged;
+            _itemCached[(int)CharacterSlot.Projectile] = projectile;
+            _itemCached[(int)CharacterSlot.ProjectileBag] = projectileBag;
 
-            HeadEnchant = enchantHead;
-            ShouldersEnchant = enchantShoulders;
-            BackEnchant = enchantBack;
-            ChestEnchant = enchantChest;
-            WristEnchant = enchantWrist;
-            HandsEnchant = enchantHands;
-            LegsEnchant = enchantLegs;
-            FeetEnchant = enchantFeet;
-            Finger1Enchant = enchantFinger1;
-            Finger2Enchant = enchantFinger2;
-            MainHandEnchant = enchantMainHand;
-            OffHandEnchant = enchantOffHand;
-            RangedEnchant = enchantRanged;
+            _itemEnchantCached[(int)CharacterSlot.Head] = enchantHead;
+            _itemEnchantCached[(int)CharacterSlot.Shoulders] = enchantShoulders;
+            _itemEnchantCached[(int)CharacterSlot.Back] = enchantBack;
+            _itemEnchantCached[(int)CharacterSlot.Chest] = enchantChest;
+            _itemEnchantCached[(int)CharacterSlot.Wrist] = enchantWrist;
+            _itemEnchantCached[(int)CharacterSlot.Hands] = enchantHands;
+            _itemEnchantCached[(int)CharacterSlot.Legs] = enchantLegs;
+            _itemEnchantCached[(int)CharacterSlot.Feet] = enchantFeet;
+            _itemEnchantCached[(int)CharacterSlot.Finger1] = enchantFinger1;
+            _itemEnchantCached[(int)CharacterSlot.Finger2] = enchantFinger2;
+            _itemEnchantCached[(int)CharacterSlot.MainHand] = enchantMainHand;
+            _itemEnchantCached[(int)CharacterSlot.OffHand] = enchantOffHand;
+            _itemEnchantCached[(int)CharacterSlot.Ranged] = enchantRanged;
             IsLoading = false;
             ActiveBuffs.AddRange(activeBuffs);
             CurrentModel = model;
-            RecalculateSetBonuses();
+            RecalculateSetBonusesFromCache();
+        }
+
+        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item[] items,
+            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
+        {
+            _trackEquippedItemChanges = trackEquippedItemChanges;
+            IsLoading = true;
+            _name = name;
+            _realm = realm;
+            _region = region;
+            _race = race;
+            Array.Copy(items, _itemCached, items.Length);
+
+            _itemEnchantCached[(int)CharacterSlot.Head] = enchantHead;
+            _itemEnchantCached[(int)CharacterSlot.Shoulders] = enchantShoulders;
+            _itemEnchantCached[(int)CharacterSlot.Back] = enchantBack;
+            _itemEnchantCached[(int)CharacterSlot.Chest] = enchantChest;
+            _itemEnchantCached[(int)CharacterSlot.Wrist] = enchantWrist;
+            _itemEnchantCached[(int)CharacterSlot.Hands] = enchantHands;
+            _itemEnchantCached[(int)CharacterSlot.Legs] = enchantLegs;
+            _itemEnchantCached[(int)CharacterSlot.Feet] = enchantFeet;
+            _itemEnchantCached[(int)CharacterSlot.Finger1] = enchantFinger1;
+            _itemEnchantCached[(int)CharacterSlot.Finger2] = enchantFinger2;
+            _itemEnchantCached[(int)CharacterSlot.MainHand] = enchantMainHand;
+            _itemEnchantCached[(int)CharacterSlot.OffHand] = enchantOffHand;
+            _itemEnchantCached[(int)CharacterSlot.Ranged] = enchantRanged;
+            IsLoading = false;
+            ActiveBuffs.AddRange(activeBuffs);
+            CurrentModel = model;
+            RecalculateSetBonusesFromCache();
+        }
+
+        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item[] items, Enchant[] enchants, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
+        {
+            _trackEquippedItemChanges = trackEquippedItemChanges;
+            IsLoading = true;
+            _name = name;
+            _realm = realm;
+            _region = region;
+            _race = race;
+            Array.Copy(items, _itemCached, items.Length);
+            Array.Copy(enchants, _itemEnchantCached, enchants.Length);
+            IsLoading = false;
+            ActiveBuffs.AddRange(activeBuffs);
+            CurrentModel = model;
+            RecalculateSetBonusesFromCache();
         }
 
 		public Character Clone()
