@@ -235,6 +235,7 @@ namespace Rawr
 			_domains.Add(Character.CharacterRegion.EU, "eu");
 			_domains.Add(Character.CharacterRegion.KR, "kr");
 			_domains.Add(Character.CharacterRegion.TW, "tw");
+			_domains.Add(Character.CharacterRegion.CN, "cn");
 		}
 
 

@@ -1949,7 +1949,7 @@ namespace Rawr //O O . .
 			return listSlots.ToArray();
 		}
 
-		public enum CharacterRegion { US, EU, KR, TW }
+		public enum CharacterRegion { US, EU, KR, TW, CN }
 		public enum CharacterRace
         {
             Human = 1,
