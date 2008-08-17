@@ -1505,7 +1505,8 @@ namespace Rawr
                 int pairSlot = pairSlotMap[(int)slot];
                 if (item != null && (bestCharacter[slot] == null || bestCharacter[slot].GemmedId != item.GemmedId) && !(pairSlot >= 0 && bestCharacter[(Character.CharacterSlot)pairSlot] != null && bestCharacter[(Character.CharacterSlot)pairSlot].Id == item.Id && item.Unique))
 				{
-                    Enchant enchant = bestCharacter.GetEnchantBySlot(slot);
+                    Enchant enchant = null;
+                    if (slotEnchants[(int)slot] != null) enchant = bestCharacter.GetEnchantBySlot(slot);
                     // replace enchant with a valid enchant
                     if (slot == lockedSlot && lockedEnchants != null && Array.IndexOf(lockedEnchants, enchant) == -1)
                     {
