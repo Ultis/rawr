@@ -785,18 +785,18 @@ namespace Rawr
 
         private bool ItemEnchantValid(Character.CharacterSlot slot, Item item, Enchant enchant)
         {
+            bool valid;
             if (slot == lockedSlot)
             {
                 if (lockedEnchants == null)
-                {
-                    return slotAvailableEnchants[(int)slot][enchant.Id];
+                {                    
+                    return slotAvailableEnchants[(int)slot].TryGetValue(enchant.Id, out valid) && valid;
                 }
                 else
                 {
                     return Array.IndexOf<Enchant>(lockedEnchants, enchant) >= 0;
                 }
             }
-            bool valid;
             (item.EnchantValid ?? itemEnchantValid[item.GemmedId]).TryGetValue(enchant.Id, out valid);
             return valid;
         }
