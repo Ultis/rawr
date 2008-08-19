@@ -213,10 +213,10 @@ namespace Rawr
                     buttonOptimize.Enabled = buttonUpgrades.Enabled = checkBoxOverrideRegem.Enabled = checkBoxOverrideReenchant.Enabled =
 					 trackBarThoroughness.Enabled = true;
 					progressBarAlt.Value = progressBarMain.Value = 0;
-					MessageBox.Show("Sorry, Rawr was unable to find a gearset to meet your requirements.", "Rawr Optimizer Results");
+					MessageBox.Show(this,"Sorry, Rawr was unable to find a gearset to meet your requirements.", "Rawr Optimizer Results");
 				}
 
-				if (_character == null || MessageBox.Show(string.Format("The Optimizer found a gearset with a score of {0}. " +
+				if (_character == null || MessageBox.Show(this,string.Format("The Optimizer found a gearset with a score of {0}. " +
 					"(Your currently equipped gear has a score of {1}) Would you like to equip the optimized gear?",
 					e.OptimizedCharacterValue,
 					e.CurrentCharacterValue),
