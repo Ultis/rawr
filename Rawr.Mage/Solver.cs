@@ -543,7 +543,7 @@ namespace Rawr.Mage
                     column = lp.AddColumnUnsafe();
                     lp.SetColumnUpperBound(column, (idleRegenSegments > 1) ? segmentDuration : calculationOptions.FightDuration);
                     if (segment == 0) calculationResult.ColumnIdleRegen = column;
-                    calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.IdleRegen, Segment = segment });
+                    calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.IdleRegen, Segment = segment, State = calculationResult.BaseState });
                     tpsList.Add(0.0);
                     lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
                     lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
@@ -642,7 +642,7 @@ namespace Rawr.Mage
                     calculationResult.MaxEvocation = (int)Math.Max(1, (1 + Math.Floor((calculationOptions.FightDuration - 200f) / 480f)));
                     for (int segment = 0; segment < evocationSegments; segment++)
                     {
-                        calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment });
+                        calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = calculationResult.BaseState });
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnUpperBound(column, (evocationSegments > 1) ? evocationDuration : evocationDuration * calculationResult.MaxEvocation);
                         if (segment == 0) calculationResult.ColumnEvocation = column;

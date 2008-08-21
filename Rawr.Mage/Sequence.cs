@@ -1849,10 +1849,11 @@ namespace Rawr.Mage.SequenceReconstruction
             bool[] gemPotOrder = gemPotList.ToArray();
             int[] gemPotSeg = gemPotSegList.ToArray();
             Array.Sort<int, bool>(gemPotSeg, gemPotOrder);
-            int gemPotIndex = 0;*/
+            int gemPotIndex = 0;*/            
             double potTime = RemoveIndex(VariableType.ManaPotion);
             double gemTime = RemoveIndex(VariableType.ManaGem);
             double evoTime = RemoveIndex(VariableType.Evocation);
+            bool gemActivated = (SequenceItem.Calculations.BaseStats.SpellDamageFor15SecOnManaGem > 0);
             float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
             float[] gemMaxValue = new float[] { 2460f, 2460f, 2460f, 1127f, 871f };
             int gemCount = 0;
@@ -1866,6 +1867,7 @@ namespace Rawr.Mage.SequenceReconstruction
             }
             do
             {
+            DoStart:
                 // verify we're not leaking mana
                 /*double verifyDeficit = -ManaCheck();
                 for (double _potTime = potTime; _potTime > 0.000001; _potTime -= ManaPotionTime)
@@ -2261,7 +2263,36 @@ namespace Rawr.Mage.SequenceReconstruction
                         if (pot <= nextDestructionPotion - 120.0 + 0.000001 && gem > pot - 30.0 && double.IsPositiveInfinity(nextFlameCap)) forcePot = true;
                     }
                 }
-                if (potTime > 0 && (((forcePot && !forceGem) || pot <= gem || gemTime <= 0 || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (forcePot || !forceGem)) && (pot <= evo || nextPot == 0 || evoTime <= 0))
+                // if gem is activated then check for activations
+                if (gemActivated && gemTime > 0)
+                {
+                    double maxtime = fight;
+                    if (potTime > 0 && pot < maxtime) maxtime = pot;
+                    if (evoTime > 0 && evo < maxtime) maxtime = evo;
+                    t = 0;
+                    for (i = 0; i < sequence.Count; i++)
+                    {
+                        double d = sequence[i].Duration;
+                        if (sequence[i].IsManaPotionOrGem) d = 0;
+                        if (d > 0 && t >= time && t < maxtime && sequence[i].CastingState.ManaGemActivation && (i == 0 || (!sequence[i - 1].CastingState.ManaGemActivation && sequence[i - 1].VariableType != VariableType.ManaGem && sequence[i - 1].VariableType != VariableType.ManaPotion)))
+                        {
+                            // insert gem
+                            InsertIndex(SequenceItem.Calculations.ColumnManaGem, Math.Min(1.0, gemTime), t);
+                            time = t;
+                            nextGem = t + 120;
+                            gemCount++;
+                            gemTime -= 1.0;
+                            if (gemTime <= 0.000001)
+                            {
+                                nextGem = fight;
+                                gemTime = 0.0;
+                            }
+                            goto DoStart;
+                        }
+                        t += d;
+                    }
+                }
+                if (potTime > 0 && (((forcePot && !forceGem) || gemActivated || pot <= gem || gemTime <= 0 || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (forcePot || !forceGem)) && (pot <= evo || nextPot == 0 || evoTime <= 0))
                 {
                     if (pot > targetTime + 0.00001)
                     {
@@ -2281,7 +2312,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         potTime = 0.0;
                     }
                 }
-                else if (gemTime > 0 && (gem <= evo || (nextGem == 0 && gem < evo + 30) || evoTime <= 0))
+                else if (!gemActivated && gemTime > 0 && (gem <= evo || (nextGem == 0 && gem < evo + 30) || evoTime <= 0))
                 {
                     if (gem > targetTime + 0.00001)
                     {

@@ -163,7 +163,34 @@ namespace Rawr.Mage
                             }
                             currentNode.Lp = null; // current lp may be reused by one of its children
                             // evaluate child nodes
-                            currentNode = currentNode.Children[0];
+                            if (currentNode.Children.Count == 0)
+                            {
+                                // can happen, so just handle it
+                                if (currentNode.Parent != null)
+                                {
+                                    do
+                                    {
+                                        currentNode = currentNode.Parent;
+                                        currentNode.Children[currentNode.Index] = null;
+                                        currentNode.Index++;
+                                    } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                                if (currentNode.Index >= currentNode.Children.Count) break; // we explored the whole search space
+                                if (currentNode.Depth < highestBacktrack)
+                                {
+                                    highestBacktrack = currentNode.Depth;
+                                    System.Diagnostics.Trace.WriteLine("Backtrack at " + highestBacktrack + ", value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
+                                }
+                                currentNode = currentNode.Children[currentNode.Index];
+                            }
+                            else
+                            {
+                                currentNode = currentNode.Children[0];
+                            }
                         }
                         else
                         {
@@ -338,7 +365,7 @@ namespace Rawr.Mage
                 // drums
                 if (valid && calculationOptions.DrumsOfBattle)
                 {
-                    valid = ValidateCooldown(Cooldown.DrumsOfBattle, 30.0, 120.0, true);
+                    valid = ValidateCooldown(Cooldown.DrumsOfBattle, 30.0, 120.0, true, 30.0);
                 }
                 // make sure all cooldowns are tightly packed and not fragmented
                 // mf is trivially satisfied
@@ -350,22 +377,22 @@ namespace Rawr.Mage
                 // ap
                 if (valid && arcanePowerAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.ArcanePower, 15, arcanePowerCooldown);
+                    valid = ValidateCooldown(Cooldown.ArcanePower, 15.0, arcanePowerCooldown, true, 15.0);
                 }
                 // iv
                 if (valid && icyVeinsAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.IcyVeins, 20 + (coldsnapAvailable ? 20 : 0), 180 + (coldsnapAvailable ? 20 : 0));
+                    valid = ValidateCooldown(Cooldown.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), 180.0 + (coldsnapAvailable ? 20.0 : 0.0), coldsnapAvailable, 20.0);
                 }
                 // combustion
                 if (valid && combustionAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.Combustion, 15, 180 + 15); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
+                    valid = ValidateCooldown(Cooldown.Combustion, 15.0, 180.0 + 15.0); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                 }
                 // flamecap
                 if (valid && calculationOptions.FlameCap)
                 {
-                    valid = ValidateCooldown(Cooldown.FlameCap, 60, 180, integralMana);
+                    valid = ValidateCooldown(Cooldown.FlameCap, 60.0, 180.0, integralMana, 60.0);
                 }
                 // destruction
                 if (valid && calculationOptions.DestructionPotion)
@@ -382,14 +409,14 @@ namespace Rawr.Mage
                 {
                     valid = ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown);
                 }
-                /*if (valid && t1ismg && calculationOptions.FlameCap)
+                if (valid && trinket1OnManaGem)
                 {
                     valid = ValidateSCB(Cooldown.Trinket1);
                 }
-                if (valid && t2ismg && calculationOptions.FlameCap)
+                if (valid && trinket2OnManaGem)
                 {
                     valid = ValidateSCB(Cooldown.Trinket2);
-                }*/
+                }
             }
 
             if (integralMana)
@@ -896,6 +923,7 @@ namespace Rawr.Mage
                             if (state != null && iseg == seg && state.GetHex() == 0) lp.EraseColumn(index);
                             //if (state != null && iseg == seg && state.GetHex() != 0) lp.SetConstraintElement(row, index, -1.0);
                         }
+                        lp.SetLHS(rowSegment + seg, segmentDuration);
                         //lp.SetConstraintRHS(row, -segmentDuration);
                         //lp.ForceRecalculation(true);
                         HeapPush(lp);
@@ -1710,7 +1738,7 @@ namespace Rawr.Mage
 
         private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration)
         {
-            return ValidateCooldown(cooldown, effectDuration, cooldownDuration, false);
+            return ValidateCooldown(cooldown, effectDuration, cooldownDuration, false, effectDuration);
         }
 
         private bool ValidateActivation(Cooldown cooldown, double effectDuration, double cooldownDuration, VariableType activation)
@@ -2080,7 +2108,7 @@ namespace Rawr.Mage
             return -1;
         }
 
-        private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration, bool needsFullEffect)
+        private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration, bool needsFullEffect, double fullEffectDuration)
         {
             const double eps = 0.00001;
             double[] segCount = new double[segments];
@@ -2120,7 +2148,7 @@ namespace Rawr.Mage
                         {
                             if (Math.Abs(seg - s) <= mindist) total += segCount[s];
                         }
-                        if (total < effectDuration - eps)
+                        if (total < fullEffectDuration - eps)
                         {
                             SolverLP cooldownUsed = lp.Clone();
                             if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Force full " + cooldown.ToString() + " at " + seg);
@@ -2158,7 +2186,7 @@ namespace Rawr.Mage
                                     }
                                 }
                             }
-                            cooldownUsed.SetConstraintRHS(row, -effectDuration);
+                            cooldownUsed.SetConstraintRHS(row, -fullEffectDuration);
                             cooldownUsed.ForceRecalculation(true);
                             HeapPush(cooldownUsed);
                             // cooldown not used
@@ -2590,8 +2618,8 @@ namespace Rawr.Mage
 
         private bool ValidateSCB(Cooldown trinket)
         {
+            const double eps = 0.00001;
             double[] trinketCount = new double[segments];
-            double[] flamecapCount = new double[segments];
             for (int outseg = 0; outseg < segments; outseg++)
             {
                 double s = 0.0;
@@ -2605,85 +2633,129 @@ namespace Rawr.Mage
                 }
                 trinketCount[outseg] = s;
             }
-            for (int outseg = 0; outseg < segments; outseg++)
+            double[] manaGem = new double[segments];
+            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
             {
-                double s = 0.0;
-                for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
+                if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem)
                 {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    if (state != null && state.FlameCap)
-                    {
-                        s += solution[index];
-                    }
+                    manaGem[calculationResult.SolutionVariable[index].Segment] += solution[index];
                 }
-                flamecapCount[outseg] = s;
             }
-            int rightdist = ((int)Math.Floor((120.0 - 15.0) / segmentDuration));
-            int leftdist = ((int)Math.Floor((180.0 - 60.0) / segmentDuration));
 
-            bool valid = true;
-            int flamecapSeg = 0;
-            int trinketSeg = 0;
-            int minDist = int.MaxValue;
-
-            for (int seg = 0; seg < segments; seg++) // trinket
+            // make sure gem is activated together with SCB
+            for (int i = 0; i < segments; i++)
             {
-                double inseg = trinketCount[seg];
-                if (inseg > 0)
+                if (trinketCount[i] > 0.0 && (i == 0 || trinketCount[i - 1] == 0.0))
                 {
-                    for (int outseg = 0; outseg < segments; outseg++) // flamecap
+                    if (manaGem[i] < 1.0 - eps)
                     {
-                        if ((outseg > seg - leftdist) || (outseg < seg + rightdist))
+                        // either pop gem
+                        SolverLP gem = lp.Clone();
+                        if (gem.Log != null) gem.Log.AppendLine("Pop gem with SCB at " + i);
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                         {
-                            if (flamecapCount[outseg] > 0)
+                            if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == i)
                             {
-                                valid = false;
-                                if (Math.Abs(seg - outseg) < minDist)
-                                {
-                                    trinketSeg = seg;
-                                    flamecapSeg = outseg;
-                                    minDist = Math.Abs(seg - outseg);
-                                }
+                                gem.SetColumnLowerBound(index, 1.0);
                             }
                         }
+                        gem.ForceRecalculation(true);
+                        HeapPush(gem);
+                        // or delay activation
+                        if (lp.Log != null) lp.Log.AppendLine("Delay activation of SCB at " + i);
+                        for (int index = segmentColumn[i]; index < segmentColumn[i + 1]; index++)
+                        {
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            if (state != null && state.GetCooldown(trinket) && calculationResult.SolutionVariable[index].Segment == i)
+                            {
+                                lp.EraseColumn(index);
+                            }
+                        }
+                        HeapPush(lp);
+                        return false;
                     }
                 }
             }
-            if (!valid)
+
+            float manaBurn = 80;
+            if (calculationOptions.AoeDuration > 0)
             {
-                // branch on whether trinket is used or flame cap is used
-                SolverLP trinketUsed = lp.Clone();
-                // flame cap used
-                //lp.Log += "Disable " + trinket.ToString() + " close to " + flamecapSeg + "\r\n";
-                for (int inseg = 0; inseg < segments; inseg++)
-                {
-                    if ((inseg > flamecapSeg - rightdist) || (inseg < flamecapSeg + leftdist))
-                    {
-                        for (int index = segmentColumn[inseg]; index < segmentColumn[inseg + 1]; index++)
-                        {
-                            CastingState state = calculationResult.SolutionVariable[index].State;
-                            if (state != null && state.GetCooldown(trinket)) lp.EraseColumn(index);
-                        }
-                    }
-                }
-                HeapPush(lp);
-                // trinket used
-                //trinketUsed.Log += "Disable Flame Cap close to " + trinketSeg + "\r\n";
-                for (int outseg = 0; outseg < segments; outseg++)
-                {
-                    if ((outseg > trinketSeg - leftdist) || (outseg < trinketSeg + rightdist))
-                    {
-                        for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                        {
-                            CastingState state = calculationResult.SolutionVariable[index].State;
-                            if (state != null && state.FlameCap) trinketUsed.EraseColumn(index);
-                        }
-                    }
-                }
-                HeapPush(trinketUsed);
-                return false;
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
+                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            return valid;
+            else if (calculationOptions.EmpoweredFireball > 0)
+            {
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
+                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+            }
+            else if (calculationOptions.EmpoweredFrostbolt > 0)
+            {
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.Frostbolt);
+                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+            }
+            else if (calculationOptions.SpellPower > 0)
+            {
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneBlast33);
+                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+            }
+            if (icyVeinsAvailable)
+            {
+                manaBurn *= 1.1f;
+            }
+            if (arcanePowerAvailable)
+            {
+                manaBurn *= 1.1f;
+            }
+
+            // check border case if we have mana gem in first or last segment
+            if (manaGem[0] > 0 && trinketCount[0] > 0)
+            {
+                // either no activation at 0 or make sure it starts late enough
+                // tgem <= 30 - trinketCount[0]
+                // overflow >= 2400 - tgem * manaBurn
+
+                // 30 - trinketCount[0] >= tgem >= (2400 - overflow) / manaBurn
+
+                // (2400 - overflow) / manaBurn <= 30 - trinketCount[0]
+                // trinketCount[0] - overflow / manaBurn <= 30 - 2400 / manaBurn
+
+                double overflow = solution[calculationResult.ColumnManaOverflow];
+
+                if (trinketCount[0] - overflow / manaBurn > segmentDuration - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
+                {
+                    // no gem/trinket at 0
+                    SolverLP nogem = lp.Clone();
+                    if (nogem.Log != null) nogem.Log.AppendLine("No SCB at 0");
+                    for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                    {
+                        if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == 0)
+                        {
+                            nogem.EraseColumn(index);
+                        }
+                        CastingState state = calculationResult.SolutionVariable[index].State;
+                        if (state != null && state.GetCooldown(trinket) && calculationResult.SolutionVariable[index].Segment == 0)
+                        {
+                            nogem.EraseColumn(index);
+                        }
+                    }
+                    HeapPush(nogem);
+                    // restrict SCB/overflow
+                    if (lp.Log != null) lp.Log.AppendLine("Restrict SCB at 0");
+                    int row = lp.AddConstraint(false);
+                    lp.SetConstraintRHS(row, segmentDuration - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
+                    for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                    {
+                        CastingState state = calculationResult.SolutionVariable[index].State;
+                        if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == 0) lp.SetConstraintElement(row, index, -1.0 / manaBurn);
+                        else if (state != null && state.GetCooldown(trinket) && calculationResult.SolutionVariable[index].Segment == 0) lp.SetConstraintElement(row, index, 1.0);
+                    }
+                    lp.ForceRecalculation(true);
+                    HeapPush(lp);
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

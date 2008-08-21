@@ -157,6 +157,7 @@ namespace Rawr.Mage
         public bool FlameCap { get; set; }
         public bool Trinket1 { get; set; }
         public bool Trinket2 { get; set; }
+        public bool ManaGemActivation { get; set; }
         public bool DrumsOfBattle { get; set; }
         public bool Combustion { get; set; }
         public float CombustionDuration { get; set; }
@@ -233,6 +234,7 @@ namespace Rawr.Mage
                 SpellDamageRating += t.SpellDamageFor20SecOnUse2Min + t.SpellDamageFor15SecOnManaGem + t.SpellDamageFor15SecOnUse90Sec + t.SpellDamageFor15SecOnUse2Min;
                 SpellHasteRating += t.SpellHasteFor20SecOnUse2Min + t.SpellHasteFor20SecOnUse5Min;
                 Mp5OnCastFor20Sec = t.Mp5OnCastFor20SecOnUse2Min;
+                if (t.SpellDamageFor15SecOnManaGem > 0.0) ManaGemActivation = true;
             }
             if (trinket2)
             {
@@ -240,6 +242,7 @@ namespace Rawr.Mage
                 SpellDamageRating += t.SpellDamageFor20SecOnUse2Min + t.SpellDamageFor15SecOnManaGem + t.SpellDamageFor15SecOnUse90Sec + t.SpellDamageFor15SecOnUse2Min;
                 SpellHasteRating += t.SpellHasteFor20SecOnUse2Min + t.SpellHasteFor20SecOnUse5Min;
                 Mp5OnCastFor20Sec = t.Mp5OnCastFor20SecOnUse2Min;
+                if (t.SpellDamageFor15SecOnManaGem > 0.0) ManaGemActivation = true;
             }
             if (drums)
             {
