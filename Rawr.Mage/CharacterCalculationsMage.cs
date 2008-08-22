@@ -154,8 +154,57 @@ namespace Rawr.Mage
             sequence.GroupCombustion();
             sequence.GroupArcanePower();
             sequence.GroupDestructionPotion();
-            sequence.GroupTrinket1();
-            sequence.GroupTrinket2();
+            List<SequenceGroup> list1 = sequence.GroupTrinket1();
+            List<SequenceGroup> list2 = sequence.GroupTrinket2();
+            List<SequenceGroup> list = null;
+            if (Character.Trinket1 != null && Character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0)
+            {
+                list = list1;
+            }
+            if (Character.Trinket2 != null && Character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)
+            {
+                list = list2;
+            }
+            if (list != null)
+            {
+                float manaBurn = 80;
+                if (CalculationOptions.AoeDuration > 0)
+                {
+                    Spell s = BaseState.GetSpell(SpellId.ArcaneExplosion);
+                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                }
+                else if (CalculationOptions.EmpoweredFireball > 0)
+                {
+                    Spell s = BaseState.GetSpell(SpellId.Fireball);
+                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                }
+                else if (CalculationOptions.EmpoweredFrostbolt > 0)
+                {
+                    Spell s = BaseState.GetSpell(SpellId.Frostbolt);
+                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                }
+                else if (CalculationOptions.SpellPower > 0)
+                {
+                    Spell s = BaseState.GetSpell(SpellId.ArcaneBlast33);
+                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                }
+                if (CalculationOptions.IcyVeins > 0)
+                {
+                    manaBurn *= 1.1f;
+                }
+                if (CalculationOptions.ArcanePower > 0)
+                {
+                    manaBurn *= 1.1f;
+                }
+
+                double overflow = Solution[ColumnManaOverflow];
+                double tmin = (2400.0 * (1 + BaseStats.BonusManaGem) - overflow) / manaBurn;
+
+                foreach (SequenceGroup g in list)
+                {
+                    if (g.Segment == 0) g.MinTime = tmin;
+                }
+            }
             sequence.GroupIcyVeins(); // should come after trinkets because of coldsnap
             sequence.GroupDrumsOfBattle();
             sequence.GroupFlameCap();

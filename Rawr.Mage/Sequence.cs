@@ -73,6 +73,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
         private double MinTime(SequenceGroup super, int placedUpTo)
         {
+            const double eps = 0.000001;
             double minTime = super.MinTime;
             foreach (SequenceGroup group in GetAllGroups(super.Item))
             {
@@ -83,7 +84,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         if (sequence[j].Group.Contains(constraint.Group))
                         {
-                            if (!constraint.ColdSnap || (group.MinTime - sequence[j].MinTime >= 180 - 0.000001)) // make sure to ignore coldsnapped constraints
+                            if (!constraint.ColdSnap || (group.MinTime - sequence[j].MinTime >= 180 - eps)) // make sure to ignore coldsnapped constraints
                             {
                                 minTime = Math.Max(minTime, sequence[j].Timestamp + constraint.Cooldown - diff);
                             }
@@ -103,6 +104,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
         public void SortByMps(bool preserveCooldowns, double minMps, double maxMps, double startTime, double targetTime, double extraMana, double startMana)
         {
+            const double eps = 0.000001;
             if (minMps > maxMps) maxMps = minMps;
 
             this.sortByMps = true;
@@ -125,7 +127,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 double d = sequence[i].Duration;
                 if (sequence[i].IsManaPotionOrGem) d = 0;
-                if (d > 0 && t + 0.000001 >= startTime)
+                if (d > 0 && t + eps >= startTime)
                 {
                     if (lastGroup != sequence[i].SuperGroup) break;
                     else mana += sequence[i].Mps * d;
@@ -164,6 +166,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 double d = sequence[j].Duration;
                 if (sequence[j].IsManaPotionOrGem) d = 0;
+                double overflowBuffer = 0.0;
                 if (lastSuper != sequence[j].SuperGroup)
                 {
                     /*if (sequence[j].Group.Count > 0)
@@ -176,8 +179,38 @@ namespace Rawr.Mage.SequenceReconstruction
                     }*/
                     overflowLimit = BaseStats.Mana - overflowMana;
                     lastSuper = sequence[j].SuperGroup;
+                    // analize if the group overflows
+                    double projectMana = overflowMana;
+                    double projectTime = t;
+                    for (int k = 0; k < sequence[j].SuperGroup.Item.Count; k++)
+                    {
+                        SequenceItem kitem = sequence[j].SuperGroup.Item[k];
+                        double kd = kitem.Duration;
+                        if (kitem.CastingState.ManaGemActivation && (k == 0 || (!sequence[j].SuperGroup.Item[k - 1].CastingState.ManaGemActivation && sequence[j].SuperGroup.Item[k - 1].VariableType != VariableType.ManaGem && sequence[j].SuperGroup.Item[k - 1].VariableType != VariableType.ManaPotion)))
+                        {
+                            projectMana += 2400.0 * (1 + BaseStats.BonusManaGem);
+                            if (projectMana - BaseStats.Mana > overflowBuffer)
+                            {
+                                overflowBuffer = projectMana - BaseStats.Mana;
+                            }
+                        }
+                        if (projectTime + kd > targetTime)
+                        {
+                            projectMana -= kitem.Mps * (targetTime - projectTime);
+                            break;
+                        }
+                        else
+                        {
+                            projectMana -= kitem.Mps * kd;
+                            projectTime += kd;
+                        }
+                        if (projectMana - BaseStats.Mana > overflowBuffer)
+                        {
+                            overflowBuffer = projectMana - BaseStats.Mana;
+                        }
+                    }
                 }
-                if (t < MinTime(j, j - 1) - 0.000001)
+                if (t < MinTime(j, j - 1) - eps || overflowBuffer > eps)
                 {
                     // sequence positioned too early, we have to buffer up with something that can
                     // be positioned at t and is either small enough not to disrupt max time
@@ -186,17 +219,21 @@ namespace Rawr.Mage.SequenceReconstruction
                     double minbuffer = MinTime(j, j - 1) - t;
                     double buffer = sequence[j].MaxTime - t;
                     int k;
-                    for (k = j + 1; k < sequence.Count && minbuffer > 0.000001 && buffer > 0.000001; k++)
+                    for (k = j + 1; k < sequence.Count && (minbuffer > eps || overflowBuffer > eps) && buffer > eps; k++)
                     {
                         if (sequence[k].SuperGroup != lastSuper) // intra super ordering not allowed
                         {
                             if (MinTime(k, j - 1) <= t)
                             {
-                                if (sequence[k].Group.Count == 0)
+                                if (sequence[k].Group.Count == 0 && (minbuffer > eps || sequence[k].Mps > 0))
                                 {
-                                    if (sequence[k].Duration > minbuffer + 0.000001)
+                                    if (minbuffer > eps && sequence[k].Duration > minbuffer + eps)
                                     {
                                         SplitAt(k, minbuffer);
+                                    }
+                                    else if (overflowBuffer > eps && sequence[k].Duration > overflowBuffer / sequence[k].Mps)
+                                    {
+                                        SplitAt(k, overflowBuffer / sequence[k].Mps);
                                     }
                                     SequenceItem copy = sequence[k];
                                     sequence.RemoveAt(k);
@@ -204,12 +241,13 @@ namespace Rawr.Mage.SequenceReconstruction
                                     ComputeTimestamps();
                                     minbuffer -= copy.Duration;
                                     buffer -= copy.Duration;
+                                    if (overflowBuffer > eps) overflowBuffer -= copy.Mps * copy.Duration;
                                     t += copy.Duration;
                                     updated = true;
                                     j++;
                                     k = j;
                                 }
-                                else if (sequence[k].SuperGroup.Duration <= buffer)
+                                else if (sequence[k].SuperGroup.Duration <= buffer && (minbuffer > eps || sequence[k].SuperGroup.Mps > 0))
                                 {
                                     int l;
                                     for (l = k + 1; l < sequence.Count; l++)
@@ -222,6 +260,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                     ComputeTimestamps();
                                     minbuffer -= copy[0].SuperGroup.Duration;
                                     buffer -= copy[0].SuperGroup.Duration;
+                                    if (overflowBuffer > eps) overflowBuffer -= copy[0].SuperGroup.Mps * copy[0].SuperGroup.Duration;
                                     t += copy[0].SuperGroup.Duration;
                                     updated = true;
                                     j += copy.Count;
@@ -266,7 +305,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (lastSuper != sequence[a].SuperGroup)
                 {
                     lastSuper = sequence[a].SuperGroup;
-                    if (tt > lastSuper.MaxTime + 0.000001 && tt > T && tt > MinTime(lastSuper, a - 1) + 0.000001) // there might be other cases where it is impossible to move back without breaking others, double check for infinite cycles
+                    if (tt > lastSuper.MaxTime + eps && tt > T && tt > MinTime(lastSuper, a - 1) + eps) // there might be other cases where it is impossible to move back without breaking others, double check for infinite cycles
                     {
                         // compute buffer of items that can be moved way back
                         double buffer = 0;
@@ -282,7 +321,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         for (b = a - 1; b >= i; b--)
                         {
                             t3 -= sequence[b].Duration;
-                            if (t3 <= lastSuper.MaxTime + 0.000001)
+                            if (t3 <= lastSuper.MaxTime + eps)
                             {
                                 // possible insert point
                                 if (sequence[b].Group.Count == 0)
@@ -341,7 +380,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 tt += d;
             }
             bool extraMode = extraMana > 0;
-            if (mana > maxMana + 0.000001 || extraMana > 0)
+            if (mana > maxMana + eps || extraMana > 0)
             {
                 // [i....j]XXX[k....]
                 int k;
@@ -383,7 +422,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         double nextT = Math.Min(jT, sequence[kk].Duration - kT);
                         double mpsdiff = sequence[jj].Mps - sequence[kk].Mps;
-                        if (mpsdiff < -0.000001)
+                        if (mpsdiff < -eps)
                         {
                             break; // if we go on we'll actually make it worse, so stop here and hope that we can do some swapping
                         }
@@ -435,19 +474,19 @@ namespace Rawr.Mage.SequenceReconstruction
                             }
                         }
                         kT += nextT;
-                        if (kT >= sequence[kk].Duration - 0.000001)
+                        if (kT >= sequence[kk].Duration - eps)
                         {
                             kT -= sequence[kk].Duration;
                             kk++;
                         }
-                        if (((mana <= maxMana && (extraMana <= 0.000001 || mana <= minMana)) || (sequence[jj].Group.Count > 0 && overflowLimit <= 0)) && (kk >= sequence.Count || sequence[kk].Group.Count == 0 || (kT < 0.000001 && (kk == 0 || sequence[kk].SuperGroup != sequence[kk - 1].SuperGroup)))) // make sure not to force a split of super group, if you actually have a low mps super then you have to move it as a whole
+                        if (((mana <= maxMana && (extraMana <= eps || mana <= minMana)) || (sequence[jj].Group.Count > 0 && overflowLimit <= 0)) && (kk >= sequence.Count || sequence[kk].Group.Count == 0 || (kT < eps && (kk == 0 || sequence[kk].SuperGroup != sequence[kk - 1].SuperGroup)))) // make sure not to force a split of super group, if you actually have a low mps super then you have to move it as a whole
                         {
                             break;
                         }
                         if (nextT == 0.0) break; // if we get stopped in the middle of super group then abort
                     } while (jj >= i && kk < sequence.Count && MinTime(k, jj) <= tjj + jT && MinTime(kk, jj) <= tjj + jT + currentPush - kT && currentPush < maxPush);
                     // [i..[k..||jj..j]XXXkk.]
-                    if (kk >= sequence.Count || sequence[kk].Group.Count == 0 || (kT < 0.000001 && (kk == 0 || sequence[kk].SuperGroup != sequence[kk - 1].SuperGroup))) // if require super split, then abort, consider restarting at higher lastHigh
+                    if (kk >= sequence.Count || sequence[kk].Group.Count == 0 || (kT < eps && (kk == 0 || sequence[kk].SuperGroup != sequence[kk - 1].SuperGroup))) // if require super split, then abort, consider restarting at higher lastHigh
                     {
                         if (kT > 0)
                         {
@@ -523,7 +562,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         lastSuper = sequence[a].SuperGroup;
                         double minLastSuper = MinTime(lastSuper, a - 1);
-                        if (tt + lastSuper.Duration > targetTime && lastSuper.Mps > minMps && tt > T && tt > minLastSuper + 0.000001)
+                        if (tt + lastSuper.Duration > targetTime && lastSuper.Mps > minMps && tt > T && tt > minLastSuper + eps)
                         {
                             // compute buffer of items that can be moved way back
                             double buffer = 0;
@@ -541,7 +580,7 @@ namespace Rawr.Mage.SequenceReconstruction
                             {
                                 if (b == 0 || sequence[b].SuperGroup != sequence[b - 1].SuperGroup) lastSafeInsert = b;
                                 t3 -= sequence[b].Duration;
-                                if (t3 <= minLastSuper + 0.000001)
+                                if (t3 <= minLastSuper + eps)
                                 {
                                     // possible insert point
                                     if (sequence[b].Group.Count == 0)
@@ -758,14 +797,15 @@ namespace Rawr.Mage.SequenceReconstruction
 
         private void InsertIndex(SequenceItem item, double time)
         {
+            const double eps = 0.000001;
             double t = 0;
             for (int i = 0; i < sequence.Count; i++)
             {
                 double d = sequence[i].Duration;
                 if (sequence[i].IsManaPotionOrGem) d = 0;
-                if (t + d > time + 0.000001)
+                if (t + d > time + eps)
                 {
-                    if (time <= t + 0.000001)
+                    if (time <= t + eps)
                     {
                         sequence.Insert(i, item);
                         return;
@@ -1255,6 +1295,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
         public void SortGroups()
         {
+            const double eps = 0.000001;
             List<SequenceItem> groupedItems = new List<SequenceItem>();
             foreach (SequenceItem item in sequence)
                 if (item.Group.Count > 0)
@@ -1290,7 +1331,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                 for (int j = i + 1; j < compactItems.Count; j++)
                                 {
                                     // skip cooldown constraints that are coldsnapped in the solution
-                                    if (compactItems[j].Group.Contains(constraint.Group) && (!constraint.ColdSnap || (compactItems[j].MinTime - item.MinTime >= 180 - 0.000001)))
+                                    if (compactItems[j].Group.Contains(constraint.Group) && (!constraint.ColdSnap || (compactItems[j].MinTime - item.MinTime >= 180 - eps)))
                                     {
                                         time = Math.Min(time, compactItems[j].MaxTime - constraint.Cooldown);
                                         break;
@@ -1345,6 +1386,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
         private void SortGroups_Compute(List<SequenceItem> itemList)
         {
+            const double eps = 0.000001;
             int N = itemList.Count;
             if (N == 0) return;
             List<double> constructionTime = new List<double>();
@@ -1628,7 +1670,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                         {
                                             if (coldsnap[j] == 1) lastColdsnap = j;
                                         }
-                                        if (coldsnapGroup.Duration > 20.0 + 0.000001)
+                                        if (coldsnapGroup.Duration > 20.0 + eps)
                                         {
                                             // we need internal coldsnap
                                             if (coldsnap[i] == 1)
@@ -1646,7 +1688,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 valid = false;
                                             }
                                         }
-                                        else if (time - constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] >= 180 - 0.000001)
+                                        else if (time - constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] >= 180 - eps)
                                         {
                                             // don't need coldsnap and can start right at time
                                             coldsnap[i] = 0;
@@ -1677,7 +1719,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                             time = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + 180);
                                         }
                                     }
-                                    else if (coldsnapGroup != null && coldsnapGroup.Duration > 20.0 + 0.000001)
+                                    else if (coldsnapGroup != null && coldsnapGroup.Duration > 20.0 + eps)
                                     {
                                         // need internal coldsnap, this is first IV item being placed so all cooldowns are ready
                                         // but we need to use coldsnap
@@ -1833,6 +1875,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
         public void RepositionManaConsumption()
         {
+            const double eps = 0.000001;
             if (sequence.Count == 0) return;
             double ghostMana = Math.Max(0, -ManaCheck());
             double fight = FightDuration;
@@ -1870,18 +1913,18 @@ namespace Rawr.Mage.SequenceReconstruction
             DoStart:
                 // verify we're not leaking mana
                 /*double verifyDeficit = -ManaCheck();
-                for (double _potTime = potTime; _potTime > 0.000001; _potTime -= ManaPotionTime)
+                for (double _potTime = potTime; _potTime > eps; _potTime -= ManaPotionTime)
                 {
                     verifyDeficit -= (1 + BasicStats.BonusManaPotion) * 2400;
                 }
                 int _gemCount = gemCount;
-                for (double _gemTime = gemTime; _gemTime > 0.000001; _gemTime -= ManaPotionTime, _gemCount++)
+                for (double _gemTime = gemTime; _gemTime > eps; _gemTime -= ManaPotionTime, _gemCount++)
                 {
                     verifyDeficit -= (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
                 }
                 verifyDeficit -= EvocationRegen * evoTime;
                 if (verifyDeficit < 0.0) verifyDeficit = 0.0;
-                if (Math.Abs(verifyDeficit - ghostMana) > 0.000001)
+                if (Math.Abs(verifyDeficit - ghostMana) > eps)
                 {
                     verifyDeficit = 0.0;
                 }*/
@@ -1890,12 +1933,12 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (!((potTime > 0 && nextPot == 0) || (gemTime > 0 && nextGem == 0) || (evoTime > 0 && nextEvo == 0)))
                 {
                     double m = mana + ghostMana;
-                    for (double _potTime = potTime; _potTime > 0.000001; _potTime -= 1.0)
+                    for (double _potTime = potTime; _potTime > eps; _potTime -= 1.0)
                     {
                         m += (1 + BaseStats.BonusManaPotion) * 2400;
                     }
                     int __gemCount = gemCount;
-                    for (double _gemTime = gemTime; _gemTime > 0.000001; _gemTime -= 1.0, __gemCount++)
+                    for (double _gemTime = gemTime; _gemTime > eps; _gemTime -= 1.0, __gemCount++)
                     {
                         m += (1 + BaseStats.BonusManaGem) * gemValue[__gemCount];
                     }
@@ -2005,7 +2048,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         // resort to swapping in this case
                         // the other handler takes care only of trailing oom, we have to make sure here that we
                         // get to the point where the pot/gem can be used (targetTime is always for next consumable or end of fight)
-                        if (targetmana < -0.000001 && !((nextPot <= time && potTime > 0) || (nextGem <= time && gemTime > 0) || (nextEvo <= time && evoTime > 0)))
+                        if (targetmana < -eps && !((nextPot <= time && potTime > 0) || (nextGem <= time && gemTime > 0) || (nextEvo <= time && evoTime > 0)))
                         {
                             // only split if it is splittable
                             if (sequence[i].Group.Count == 0)
@@ -2020,10 +2063,10 @@ namespace Rawr.Mage.SequenceReconstruction
                     else if (d > 0 && t + d > time)
                     {
                         targetmana -= sequence[i].Mps * sequence[i].Duration;
-                        if (i < sequence.Count - 1 && targetmana < -0.000001 && !((nextPot <= time && potTime > 0) || (nextGem <= time && gemTime > 0) || (nextEvo <= time && evoTime > 0))) // only worry if we already started all mana cooldowns and we're not at last item (at which point we can't do anything and it's only ghost mana left)
+                        if (i < sequence.Count - 1 && targetmana < -eps && !((nextPot <= time && potTime > 0) || (nextGem <= time && gemTime > 0) || (nextEvo <= time && evoTime > 0))) // only worry if we already started all mana cooldowns and we're not at last item (at which point we can't do anything and it's only ghost mana left)
                         {
                             // we run oom during construction
-                            if (oomtime < targetTime && Math.Abs(t + d - oomtime) < 0.000001 && Math.Abs(lastTargetMana - targetmana) < 0.000001)
+                            if (oomtime < targetTime && Math.Abs(t + d - oomtime) < eps && Math.Abs(lastTargetMana - targetmana) < eps)
                             {
                                 // we were not successful in recovering from oom
                                 // go into swap mode
@@ -2060,12 +2103,12 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                         // account for to be used consumables (don't assume evo during super group unless we haven't placed the first one, in that case it will actually be placed before the super group)
                         double manaUsed = mana;
-                        for (double _potTime = potTime, _nextPot = nextPot; _potTime > 0.000001 && _nextPot < t; _potTime -= 1.0, _nextPot += 120.0)
+                        for (double _potTime = potTime, _nextPot = nextPot; _potTime > eps && _nextPot < t; _potTime -= 1.0, _nextPot += 120.0)
                         {
                             targetmana += (1 + BaseStats.BonusManaPotion) * 2400;
                         }
                         int _gemCount = gemCount;
-                        for (double _gemTime = gemTime, _nextGem = nextGem; _gemTime > 0.000001 && _nextGem < t; _gemTime -= 1.0, _nextGem += 120.0, _gemCount++)
+                        for (double _gemTime = gemTime, _nextGem = nextGem; _gemTime > eps && _nextGem < t; _gemTime -= 1.0, _nextGem += 120.0, _gemCount++)
                         {
                             targetmana += (1 + BaseStats.BonusManaGem) * gemValue[_gemCount];
                         }
@@ -2082,7 +2125,7 @@ namespace Rawr.Mage.SequenceReconstruction
                             targetmana += EvocationRegen * Math.Min(evoTime, EvocationDuration);
                         }
                         if (t >= fight) targetmana += ghostMana;
-                        if (targetmana < -0.000001)
+                        if (targetmana < -eps)
                         {
                             //maxMps = (mana - (tmana - targetmana)) / (targetTime - time);
                             minMps = -(BaseStats.Mana - mana) / (targetTime - time);
@@ -2110,7 +2153,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 int superIndex = i;
                 double superTime = t;
                 int lowestMpsIndex = 0;
-                while (extraMana > 0.000001 && lowestMpsIndex >= 0)
+                while (extraMana > eps && lowestMpsIndex >= 0)
                 {
                     i = superIndex + 1;
                     t = superTime;
@@ -2137,14 +2180,14 @@ namespace Rawr.Mage.SequenceReconstruction
                                 double neededSwap = extraMana / mpsdiff;
                                 if (neededSwap > sequence[i].Duration) neededSwap = sequence[i].Duration;
                                 if (neededSwap > sequence[lowestMpsIndex].Duration) neededSwap = sequence[lowestMpsIndex].Duration;
-                                if (neededSwap < sequence[i].Duration - 0.000001)
+                                if (neededSwap < sequence[i].Duration - eps)
                                 {
                                     SplitAt(i, sequence[i].Duration - neededSwap);
                                     superIndex++;
                                     i++;
                                     lowestMpsIndex++;
                                 }
-                                if (neededSwap < sequence[lowestMpsIndex].Duration - 0.000001)
+                                if (neededSwap < sequence[lowestMpsIndex].Duration - eps)
                                 {
                                     SplitAt(lowestMpsIndex, neededSwap);
                                 }
@@ -2164,7 +2207,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                     // we cannot perform the swap, but let's at least do a partial swap if possible
                                     // so that it is clear in the output that even starting from full mana our mana
                                     // pool is too shallow to go through this sequence
-                                    if (BaseStats.Mana - imana > 0.000001)
+                                    if (BaseStats.Mana - imana > eps)
                                     {
                                         extraMana = BaseStats.Mana - imana;
                                     }
@@ -2237,7 +2280,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 }
                 if (gemTime > 0 && !double.IsPositiveInfinity(nextFlameCap))
                 {
-                    if (gem > nextFlameCap - 120.0 + 0.000001 && gem < nextFlameCap)
+                    if (gem > nextFlameCap - 120.0 + eps && gem < nextFlameCap)
                     {
                         nextGem = nextFlameCapMin + 180.0;
                         gem = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem), 4);
@@ -2245,7 +2288,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 }
                 if (potTime > 0 && !double.IsPositiveInfinity(nextDestructionPotion))
                 {
-                    if (pot > nextDestructionPotion - 120.0 + 0.000001 && pot < nextDestructionPotion)
+                    if (pot > nextDestructionPotion - 120.0 + eps && pot < nextDestructionPotion)
                     {
                         nextPot = nextDestructionPotionMin + 120.0;
                         pot = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaPotion) * 3000, Math.Max(time, nextPot), 3);
@@ -2256,11 +2299,11 @@ namespace Rawr.Mage.SequenceReconstruction
                     // very special case for now, revisit later
                     if (!double.IsPositiveInfinity(nextFlameCap))
                     {
-                        if (gem <= nextFlameCap - 120.0 + 0.000001 && pot > gem - 30.0 && double.IsPositiveInfinity(nextDestructionPotion)) forceGem = true;
+                        if (gem <= nextFlameCap - 120.0 + eps && pot > gem - 30.0 && double.IsPositiveInfinity(nextDestructionPotion)) forceGem = true;
                     }
                     if (!double.IsPositiveInfinity(nextDestructionPotion))
                     {
-                        if (pot <= nextDestructionPotion - 120.0 + 0.000001 && gem > pot - 30.0 && double.IsPositiveInfinity(nextFlameCap)) forcePot = true;
+                        if (pot <= nextDestructionPotion - 120.0 + eps && gem > pot - 30.0 && double.IsPositiveInfinity(nextFlameCap)) forcePot = true;
                     }
                 }
                 // if gem is activated then check for activations
@@ -2269,6 +2312,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     double maxtime = fight;
                     if (potTime > 0 && pot < maxtime) maxtime = pot;
                     if (evoTime > 0 && evo < maxtime) maxtime = evo;
+                    if (time == 0) maxtime = fight; // assume that at start we want to activate SCB as soon as possible, in most cases we have to insert burn before activation to prevent overflow and that can cause pot to activate earlier recausing overflow
                     t = 0;
                     for (i = 0; i < sequence.Count; i++)
                     {
@@ -2282,7 +2326,7 @@ namespace Rawr.Mage.SequenceReconstruction
                             nextGem = t + 120;
                             gemCount++;
                             gemTime -= 1.0;
-                            if (gemTime <= 0.000001)
+                            if (gemTime <= eps)
                             {
                                 nextGem = fight;
                                 gemTime = 0.0;
@@ -2306,7 +2350,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     time = pot;
                     nextPot = pot + 120;
                     potTime -= 1.0;
-                    if (potTime <= 0.000001)
+                    if (potTime <= eps)
                     {
                         nextPot = fight;
                         potTime = 0.0;
@@ -2327,7 +2371,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     nextGem = gem + 120;
                     gemCount++;
                     gemTime -= 1.0;
-                    if (gemTime <= 0.000001)
+                    if (gemTime <= eps)
                     {
                         nextGem = fight;
                         gemTime = 0.0;
@@ -2355,7 +2399,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     time = evo + Math.Min(EvocationDuration, evoTime);
                     nextEvo = evo + 60 * 8;
                     evoTime -= EvocationDuration;
-                    if (evoTime <= 0.000001)
+                    if (evoTime <= eps)
                     {
                         evoTime = 0.0;
                         nextEvo = fight;
@@ -2370,6 +2414,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
         public double ManaCheck()
         {
+            const double eps = 0.000001;
             float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
             double mana = SequenceItem.Calculations.StartingMana;
             for (int i = 0; i < sequence.Count; i++)
@@ -2379,7 +2424,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 double mps = sequence[i].Mps;
                 if (type == VariableType.ManaPotion)
                 {
-                    for (double _potTime = duration; _potTime > 0.000001; _potTime -= 1.0)
+                    for (double _potTime = duration; _potTime > eps; _potTime -= 1.0)
                     {
                         mana += (1 + BaseStats.BonusManaPotion) * 2400;
                     }
@@ -2387,7 +2432,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 else if (type == VariableType.ManaGem)
                 {
                     int _gemCount = 0;
-                    for (double _gemTime = duration; _gemTime > 0.000001; _gemTime -= 1.0, _gemCount++)
+                    for (double _gemTime = duration; _gemTime > eps; _gemTime -= 1.0, _gemCount++)
                     {
                         mana += (1 + BaseStats.BonusManaGem) * gemValue[_gemCount];
                     }
@@ -2517,7 +2562,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         double limit = data[0];
                         double aftertime = data[1];
                         double timetolimit = (mana - limit) / mps;
-                        if (time + duration > aftertime + 0.000001)
+                        if (time + duration > aftertime + eps)
                         {
                             if (time >= aftertime && mana < limit) return time;
                             if (time + timetolimit >= aftertime && timetolimit < duration) return time + timetolimit;
@@ -2531,7 +2576,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         double limit = data[0];
                         double aftertime = data[1];
-                        if (time + duration > aftertime + 0.000001)
+                        if (time + duration > aftertime + eps)
                         {
                             if (time >= aftertime && mana < limit) return time;
                             if (aftertime > time && mana - mps * (aftertime - time) < limit) return aftertime;
@@ -2541,7 +2586,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (mode == EvaluationMode.ManaAtTime && duration > 0)
                 {
                     double evalTime = data[0];
-                    if (time + duration > evalTime + 0.000001)
+                    if (time + duration > evalTime + eps)
                     {
                         return mana - mps * (evalTime - time);
                     }
