@@ -71,6 +71,7 @@ namespace Rawr.Mage
                     "Spell Info:Fireball",
                     "Spell Info:FireballScorch*Must enable Maintain Scorch and have points in Improved Scorch talent to enable",
                     "Spell Info:FireballFireBlast",
+                    "Spell Info:Frostfire Bolt",
                     "Spell Info:Frostbolt",
                     "Spell Info:ABAMP*Pause so that AB debuff runs out mid-cast",
                     "Spell Info:ABAM*Spam with no pause",
@@ -506,6 +507,20 @@ namespace Rawr.Mage
                                 Stamina = 53f,
                                 Intellect = 166f,
                                 Spirit = 156f,
+                                ArcaneResistance = 10,
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                            };
+                            break;
+                        case 75:
+                            statsRace = new Stats()
+                            {
+                                Health = 3726f,
+                                Mana = 2474f,
+                                Strength = 29f,
+                                Agility = 44f,
+                                Stamina = 54f,
+                                Intellect = 169f,
+                                Spirit = 159f,
                                 ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
                             };
