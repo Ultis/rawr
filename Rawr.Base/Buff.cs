@@ -974,30 +974,30 @@ namespace Rawr
                 Category = BuffCategory.Debuffs,
                 Stats = new Stats() { SpellFrostCritRating = 11480f / 52f }
             });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Curse of Shadow",
-                Category = BuffCategory.Debuffs,
-                Stats = new Stats() { BonusShadowSpellPowerMultiplier = 0.1f, BonusArcaneSpellPowerMultiplier = 0.1f }
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Improved Curse of Shadow",
-                Category = BuffCategory.Debuffs,
-                Stats = new Stats() { BonusShadowSpellPowerMultiplier = ((1.13f / 1.1f) - 1f), BonusArcaneSpellPowerMultiplier = ((1.13f / 1.1f) - 1f) },
-                RequiredBuff = "Curse of Shadow"
-            });
+			//defaultBuffs.Add(new Buff()
+			//{
+			//    Name = "Curse of Shadow",
+			//    Category = BuffCategory.Debuffs,
+			//    Stats = new Stats() { BonusShadowSpellPowerMultiplier = 0.1f, BonusArcaneSpellPowerMultiplier = 0.1f }
+			//});
+			//defaultBuffs.Add(new Buff()
+			//{
+			//    Name = "Improved Curse of Shadow",
+			//    Category = BuffCategory.Debuffs,
+			//    Stats = new Stats() { BonusShadowSpellPowerMultiplier = ((1.13f / 1.1f) - 1f), BonusArcaneSpellPowerMultiplier = ((1.13f / 1.1f) - 1f) },
+			//    RequiredBuff = "Curse of Shadow"
+			//});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Curse of the Elements",
                 Category = BuffCategory.Debuffs,
-                Stats = new Stats() { BonusFireSpellPowerMultiplier = 0.1f, BonusFrostSpellPowerMultiplier = 0.1f }
+				Stats = new Stats() { BonusFireSpellPowerMultiplier = 0.1f, BonusFrostSpellPowerMultiplier = 0.1f, BonusShadowSpellPowerMultiplier = 0.1f, BonusArcaneSpellPowerMultiplier = 0.1f }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Improved Curse of the Elements",
                 Category = BuffCategory.Debuffs,
-                Stats = new Stats() { BonusFireSpellPowerMultiplier = ((1.13f / 1.1f) - 1f), BonusFrostSpellPowerMultiplier = ((1.13f / 1.1f) - 1f) },
+				Stats = new Stats() { BonusFireSpellPowerMultiplier = ((1.13f / 1.1f) - 1f), BonusFrostSpellPowerMultiplier = ((1.13f / 1.1f) - 1f), BonusShadowSpellPowerMultiplier = ((1.13f / 1.1f) - 1f), BonusArcaneSpellPowerMultiplier = ((1.13f / 1.1f) - 1f) },
                 RequiredBuff = "Curse of the Elements"
             });
             defaultBuffs.Add(new Buff()
