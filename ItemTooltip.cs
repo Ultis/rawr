@@ -191,7 +191,7 @@ namespace Rawr
                                     nameBrush = new SolidBrush(Color.Blue);
                                     break;
                                 case Item.ItemQuality.Uncommon:
-                                    nameBrush = new SolidBrush(Color.Gray);
+                                    nameBrush = new SolidBrush(Color.Green);
                                     break;
                             }
                             g.DrawString(CurrentItem.Name, _fontName, nameBrush, 2, 4);
