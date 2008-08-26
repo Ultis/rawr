@@ -20,6 +20,7 @@ namespace Rawr.Rogue {
                 if (_characterDisplayCalculationLabels == null) {
                     _characterDisplayCalculationLabels = new string[] {
                         "Base Stats:Health",
+                        "Base Stats:Stamina",
                         "Base Stats:Strength",
                         "Base Stats:Agility",
                         "Base Stats:Attack Power",
@@ -135,8 +136,12 @@ namespace Rawr.Rogue {
 
                 AttackPower = 120f,
 
+                Crit = 3.73f,
+
                 DodgeRating = (float)(-0.59 * 18.92f),
             };
+
+            statsRace.Health += statsRace.Stamina * 10f;
 
             if (race == Character.CharacterRace.NightElf)
                 statsRace.DodgeRating += 18.92f;
@@ -165,39 +170,61 @@ namespace Rawr.Rogue {
             TalentTree tree = character.Talents;
 
             float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
-            float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
+            float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
             float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
+            float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
-            float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
+            float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier));
 
             Stats statsTotal = new Stats();
-            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
-            statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
+            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier) * (1 + calcOpts.Deadliness * 0.02f)) - 1;
+            statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) * (1 + calcOpts.Vitality * 0.01f) * (1 + calcOpts.SinisterCalling * 0.03f)) - 1;
             statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
-            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
+            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier) * (1 + calcOpts.Vitality * 0.02f)) - 1;
 
-            statsTotal.Agility = (agiBase + (float)Math.Floor((agiBase * statsBuffs.BonusAgilityMultiplier) + agiBonus * (1 + statsBuffs.BonusAgilityMultiplier)));
-            statsTotal.Strength = (strBase + (float)Math.Floor((strBase * statsBuffs.BonusStrengthMultiplier) + strBonus * (1 + statsBuffs.BonusStrengthMultiplier)));
-            statsTotal.Stamina = (staBase + (float)Math.Floor((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier)));
+            statsTotal.Agility = (float)Math.Floor(agiBase * (1f + statsTotal.BonusAgilityMultiplier)) + (float)Math.Floor(agiBonus * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Strength = (float)Math.Floor(strBase * (1f + statsTotal.BonusStrengthMultiplier)) + (float)Math.Floor(strBonus * (1 + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(staBase * (1f + statsTotal.BonusStaminaMultiplier)) + (float)Math.Floor(staBonus * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina - staBase) * 10f))));
-            
-            statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + (statsTotal.Strength * 1) + (statsTotal.Agility * 1)) * (1f + statsTotal.BonusAttackPowerMultiplier));
 
+            statsTotal.AttackPower = (statsTotal.Agility + statsTotal.Strength + statsRace.AttackPower) + statsGearEnchantsBuffs.AttackPower;
+            //statsTotal.AttackPower = statsRace.AttackPower + ((statsTotal.Agility - agiBase) + (statsTotal.Strength - strBase) + statsGearEnchantsBuffs.AttackPower) * (1f + statsTotal.BonusAttackPowerMultiplier);
+            //statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + ((statsTotal.Strength - strBase) * 1) + ((statsTotal.Agility - agiBase) * 1)) * (1f + statsTotal.BonusAttackPowerMultiplier));
+
+            statsTotal.Hit = calcOpts.Precision;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
+
+            statsTotal.Expertise += calcOpts.WeaponExpertise * 5.0f;
             statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
+
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
+
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
+            switch (calcOpts.SerratedBlades) {
+                case 3:
+                    statsTotal.ArmorPenetration += 560;
+                    break;
+                case 2:
+                    statsTotal.ArmorPenetration += 373;
+                    break;
+                case 1:
+                    statsTotal.ArmorPenetration += 186;
+                    break;
+            }
 
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
-            statsTotal.Crit = ((statsTotal.Agility / 40f) * 22.08f) + statsTotal.CritRating / 22.08f;
-            //statsTotal.CritRating += ((statsTotal.Agility / 40f) * 22.08f);
+            statsTotal.Crit = statsRace.Crit;
+            statsTotal.Crit += (statsTotal.Agility - (statsRace.Agility * (1f + statsTotal.BonusAgilityMultiplier))) * RogueConversions.AgilityToCrit;
+            statsTotal.Crit += calcOpts.Malice * 1f;
             //statsTotal.CritRating += statsBuffs.LotPCritRating;
 
+            statsTotal.Dodge += statsTotal.Agility * RogueConversions.AgilityToDodge;
+            statsTotal.Dodge += calcOpts.LightningReflexes;
+
+            statsTotal.Parry += calcOpts.Deflection;
+
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
-
-            /* talents later */
-
+            
             return statsTotal;
         }
 
@@ -216,8 +243,6 @@ namespace Rawr.Rogue {
                     if (currentCalculationsRogue != null) {
                         calcMiss.Name = "    Miss    ";
                         calcDodge.Name = "   Dodge   ";
-                        calcParry.Name = "   Parry   ";
-                        calcBlock.Name = "   Block   ";
                         calcGlance.Name = " Glance ";
                         calcCrit.Name = "  Crit  ";
                         calcHit.Name = "Hit";
@@ -263,8 +288,7 @@ namespace Rawr.Rogue {
                 MongooseProc = stats.MongooseProc,
                 MongooseProcAverage = stats.MongooseProcAverage,
                 MongooseProcConstant = stats.MongooseProcConstant,
-                ExecutionerProc = stats.ExecutionerProc,
-                BonusCommandingShoutHP = stats.BonusCommandingShoutHP
+                ExecutionerProc = stats.ExecutionerProc
             };
         }
 
@@ -282,6 +306,7 @@ namespace Rawr.Rogue {
         public static readonly float StaminaToHP = 10.0f;
         public static readonly float HitRatingToHit = 1.0f / 15.7692f;
         public static readonly float CritRatingToCrit = 1.0f / 22.0769f; //14*82/52
+        public static readonly float CritToCritRating = 22.0769f; //14*82/52
         public static readonly float HasteRatingToHaste = 1.0f / 15.77f;
         public static readonly float ExpertiseRatingToExpertise = 1.0f / 3.9423f;
         public static readonly float ExpertiseToDodgeParryReduction = 0.25f;

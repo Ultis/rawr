@@ -63,7 +63,7 @@
             this.buttonTalents.TabIndex = 2;
             this.buttonTalents.Text = "Talents";
             this.buttonTalents.UseVisualStyleBackColor = true;
-            this.buttonTalents.Click += new System.EventHandler(this.button1_Click);
+            this.buttonTalents.Click += new System.EventHandler(this.buttonTalents_Click);
             // 
             // label2
             // 
