@@ -96,7 +96,8 @@ namespace Rawr.Hunter
         private void chkEnforceMetaGemRequirements_CheckedChanged(object sender, EventArgs e)
         {
             options.EnforceMetaGem = chkEnforceMetaGemRequirements.Checked;
-            Character.OnItemsChanged();
+			Character.EnforceMetagemRequirements = options.EnforceMetaGem;
+			Character.OnItemsChanged();
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)

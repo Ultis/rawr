@@ -79,7 +79,7 @@ namespace Rawr.Hunter
 		public bool EnforceMetaGem
 		{
 			get { return _EnforceMetaGem; }
-			set { _EnforceMetaGem = true; }
+			set { _EnforceMetaGem = value; }
 		}
 
 		public Faction ScryerAldor
