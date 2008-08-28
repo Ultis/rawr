@@ -21,6 +21,24 @@ namespace Rawr.Rogue {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
+
+        private float _whiteDPS = 0f;
+        public float WhiteDPS {
+            get { return _whiteDPS; }
+            set { _whiteDPS = value; }
+        }
+
+        private float _ssDPS = 0f;
+        public float SSDPS {
+            get { return _ssDPS; }
+            set { _ssDPS = value; }
+        }
+
+        private float _ruptureDPS = 0f;
+        public float RuptureDPS {
+            get { return _ruptureDPS; }
+            set { _ruptureDPS = value; }
+        }
         #endregion
 
         #region Basic Stats
@@ -54,13 +72,17 @@ namespace Rawr.Rogue {
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Strength", BasicStats.Strength.ToString());
             dictValues.Add("Agility", BasicStats.Agility.ToString());
-            dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
-            dictValues["Hit"] = Math.Round(BasicStats.HitRating * RogueConversions.HitRatingToHit + BasicStats.Hit, 2).ToString() + string.Format("%*Hit Rating {0}", BasicStats.HitRating);
-            dictValues["Expertise"] = (Math.Round(BasicStats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise + BasicStats.Expertise)).ToString() + string.Format("%*Expertise Rating {0}", BasicStats.ExpertiseRating);
-            dictValues["Haste"] = Math.Round(BasicStats.HasteRating * RogueConversions.HasteRatingToHaste, 2).ToString() + string.Format("%*Haste Rating {0}", BasicStats.HasteRating);
-            dictValues["Armor Penetration"] = BasicStats.ArmorPenetration.ToString();
-            dictValues["Crit"] = Math.Round(BasicStats.CritRating * RogueConversions.CritRatingToCrit + BasicStats.Crit, 2).ToString() + string.Format("%*Crit Rating {0}", BasicStats.CritRating);
-            dictValues["Weapon Damage"] = BasicStats.WeaponDamage.ToString();
+            dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
+            dictValues.Add("Hit", Math.Round(BasicStats.HitRating * RogueConversions.HitRatingToHit + BasicStats.Hit, 2).ToString() + string.Format("%*Hit Rating {0}", BasicStats.HitRating));
+            dictValues.Add("Expertise", (Math.Round(BasicStats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise + BasicStats.Expertise)).ToString() + string.Format("%*Expertise Rating {0}", BasicStats.ExpertiseRating));
+            dictValues.Add("Haste", Math.Round(BasicStats.HasteRating * RogueConversions.HasteRatingToHaste, 2).ToString() + string.Format("%*Haste Rating {0}", BasicStats.HasteRating));
+            dictValues.Add("Armor Penetration", BasicStats.ArmorPenetration.ToString());
+            dictValues.Add("Crit", Math.Round(BasicStats.CritRating * RogueConversions.CritRatingToCrit + BasicStats.Crit, 2).ToString() + string.Format("%*Crit Rating {0}", BasicStats.CritRating));
+            dictValues.Add("Weapon Damage", BasicStats.WeaponDamage.ToString());
+            dictValues.Add("White DPS", _whiteDPS.ToString());
+            dictValues.Add("Sinister Strike DPS", _ssDPS.ToString());
+            dictValues.Add("Rupture DPS", _ruptureDPS.ToString());
+            dictValues.Add("Total DPS", _subPoints[0].ToString());
 
             return dictValues;
         }

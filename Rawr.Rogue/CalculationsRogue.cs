@@ -31,8 +31,10 @@ namespace Rawr.Rogue {
                         "Base Stats:Crit",
                         "Base Stats:Weapon Damage",
 
-                        "DPS Breakdown:White",
-                        "DPS Breakdown:Overall DPS"
+                        "DPS Breakdown:White DPS",
+                        "DPS Breakdown:Sinister Strike DPS",
+                        "DPS Breakdown:Rupture DPS",
+                        "DPS Breakdown:Total DPS"
                     };
                 }
                 return _characterDisplayCalculationLabels;
@@ -97,13 +99,135 @@ namespace Rawr.Rogue {
         }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem) {
+            float chanceToMiss, chanceToBeDodged, chanceToGlance;
+            float avgMHDmg, avgOHDmg, critChanceMH, critChanceOH;
+            float whiteDPS;
+            float hastedSpeedMH, hastedSpeedOH;
+            float avgSSDmg;
+            float energySS;
+            float SSPerCycle;
+            float fightLength, cycleEnergy, cycleLength;
+            float ssDPS;
+            float sndPoints, rupturePoints;
+            float ruptureDmg, ruptureDPS;
+            float effArmor, damageReduction;
+
             CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
-            int targetLevel = calcOpts.TargetLevel;
-
             Stats stats = GetCharacterStats(character, additionalItem);
-
             CharacterCalculationsRogue calculatedStats = new CharacterCalculationsRogue();
             calculatedStats.BasicStats = stats;
+
+            switch(calcOpts.ImprovedSinisterStrike) {
+                case 2:
+                    energySS = 40f;
+                    break;
+                case 1:
+                    energySS = 42f;
+                    break;
+                default:
+                    energySS = 45f;
+                    break;
+            }
+
+            // cycle stuff
+            fightLength = 10f;
+            // 4s5r
+            SSPerCycle = 9f;
+            sndPoints = 4f;
+            rupturePoints = 5f;
+
+            // 9 SS, 1snd, 1rupture
+            cycleEnergy = SSPerCycle * energySS + 1f * 25f + 1f * 25f;
+            cycleLength = cycleEnergy / 10f;
+            if (cycleLength <= 0f)
+                cycleLength = 1f;
+
+            // combat table
+            chanceToMiss = 28f;
+            chanceToMiss -= (stats.Hit + stats.HitRating * RogueConversions.HitRatingToHit);
+            if (chanceToMiss < 0f)
+                chanceToMiss = 0f;
+
+            chanceToBeDodged = 6.5f;
+            chanceToBeDodged -= (stats.Expertise + stats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise) * RogueConversions.ExpertiseToDodgeParryReduction;
+            if (chanceToBeDodged < 0f)
+                chanceToBeDodged = 0f;
+
+            chanceToGlance = 25f;
+            
+            critChanceMH = stats.Crit + stats.CritRating / RogueConversions.CritRatingToCrit;
+            critChanceOH = critChanceMH;
+
+            effArmor = calcOpts.TargetArmor - stats.ArmorPenetration;
+            if (effArmor < 0f)
+                effArmor = 0f;
+            damageReduction = 1 - effArmor / (effArmor + 10557.5f);
+
+            #region White Damage
+            whiteDPS = 0f;
+
+            // MH
+            if(character.MainHand != null) {
+                avgMHDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage * 2) / 2.0f;
+                avgMHDmg += (stats.AttackPower / 14.0f) * character.MainHand.Speed;
+                avgMHDmg *= damageReduction;
+
+                hastedSpeedMH = (stats.HasteRating == 0) ? character.MainHand.Speed : character.MainHand.Speed / (1 + (stats.HasteRating + stats.DrumsOfBattle) / 1576f);
+
+                if (character.MainHand.Type == Item.ItemType.FistWeapon && calcOpts.FistSpecialization > 0) {
+                    critChanceMH += 5f;
+                }
+
+                whiteDPS += (avgMHDmg / hastedSpeedMH);
+            }
+
+            // OH
+            if (character.OffHand != null) {
+                avgOHDmg = (character.OffHand.MinDamage + character.OffHand.MaxDamage + stats.WeaponDamage * 2) / 2.0f;
+                avgOHDmg += (stats.AttackPower / 14.0f) * character.OffHand.Speed;
+                avgOHDmg *= (0.25f + calcOpts.DualWieldSpecialization * 0.1f);
+                avgOHDmg *= damageReduction;
+
+                hastedSpeedOH = (stats.HasteRating == 0) ? character.OffHand.Speed : character.OffHand.Speed / (1 + (stats.HasteRating + stats.DrumsOfBattle) / 1576f);
+
+                if (character.OffHand.Type == Item.ItemType.FistWeapon && calcOpts.FistSpecialization > 0) {
+                    critChanceOH += 5f;
+                }
+
+                whiteDPS += avgOHDmg / hastedSpeedOH;
+            }
+            #endregion
+
+            #region Sinister Strike
+            if (character.MainHand != null && SSPerCycle > 0f) {
+                avgSSDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage + 2f * stats.WeaponDamage) / 2f;
+                avgSSDmg += (stats.AttackPower / 14f) * 2.4f;
+                avgSSDmg += 98f;
+                avgSSDmg *= (1f + calcOpts.Aggression * 0.02f) * (1f + calcOpts.SurpriseAttacks * 0.1f);
+                avgSSDmg *= damageReduction;
+            }
+            else {
+                avgSSDmg = 0f;
+            }
+
+            ssDPS = avgSSDmg * SSPerCycle / cycleLength;
+            #endregion
+
+            #region Rupture
+            if (rupturePoints > 0) {
+                ruptureDmg = 1000 + 0.24f * stats.AttackPower;
+                ruptureDPS = ruptureDmg / cycleLength;
+            }
+            else {
+                ruptureDPS = 0f;
+            }
+            #endregion
+
+            calculatedStats.WhiteDPS = whiteDPS;
+            calculatedStats.SSDPS = ssDPS;
+            calculatedStats.RuptureDPS = ruptureDPS;
+            calculatedStats.DPSPoints = whiteDPS + ssDPS + ruptureDPS;
+            calculatedStats.OverallPoints = calculatedStats.DPSPoints;
             return calculatedStats;
         }
 
@@ -164,6 +288,25 @@ namespace Rawr.Rogue {
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+            // buffs from DPSWarr
+            //Add Expose Weakness since it's not listed as an AP buff
+            if (statsBuffs.ExposeWeakness > 0) statsBuffs.AttackPower += 200f;
+
+            //Mongoose
+            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673) {
+                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+            }
+            if (character.OffHand != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 2673) {
+                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.OffHand.Speed)) / 6f));
+                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.OffHand.Speed)) / 6f));
+            }
+
+            //Executioner
+            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225) {
+                statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+            }
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
