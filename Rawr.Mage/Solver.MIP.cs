@@ -29,7 +29,7 @@ namespace Rawr.Mage
 
             int IComparable<BranchNode>.CompareTo(BranchNode other)
             {                
-                return -this.Lp.Value.CompareTo(other.Lp.Value);
+                return -(this.Lp != null ? this.Lp.Value : this.Value).CompareTo(other.Lp != null ? other.Lp.Value : other.Value);
             }
         }
 
@@ -232,19 +232,44 @@ namespace Rawr.Mage
             currentNode = node;
             do
             {
-                double value = currentNode.Lp.Value; // force evaluation and get value
+                double value = currentNode.Lp != null ? currentNode.Lp.Value : currentNode.Value; // force evaluation and get value
                 currentNode.Value = value;
                 if (value < lowerBound + 0.00001)
                 {
-                    if (value == 0.0) value = -1.0;
-                    currentNode.ProbeValue = value;
-                    while (currentNode != node)
+                    if (value == 0.0)
                     {
-                        currentNode = currentNode.Parent;
+                        value = -1.0; // if we have a value of 0 then all siblings have a value of 0, so this whole subtree is unfeasible, reprobe
                         currentNode.ProbeValue = value;
+                        if (currentNode == node)
+                        {
+                            currentNode = store;
+                            return;
+                        }
+                        currentNode = currentNode.Parent; // this node has all children with value of 0
+                        currentNode.Value = 0.0;
+                        currentNode.ProbeValue = value;
+                        if (currentNode == node)
+                        {
+                            currentNode = store;
+                            return;
+                        }
+                        currentNode = currentNode.Parent; // this node has to be reevaluated
+                        // reprobe
+                        currentNode.Children.Sort();
+                        // evaluate child nodes
+                        currentNode = currentNode.Children[0];
                     }
-                    currentNode = store;
-                    return;
+                    else
+                    {
+                        currentNode.ProbeValue = value;
+                        while (currentNode != node)
+                        {
+                            currentNode = currentNode.Parent;
+                            currentNode.ProbeValue = value;
+                        }
+                        currentNode = store;
+                        return;
+                    }
                 }
                 else
                 {
@@ -384,6 +409,10 @@ namespace Rawr.Mage
                 {
                     valid = ValidateCooldown(Cooldown.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), 180.0 + (coldsnapAvailable ? 20.0 : 0.0), coldsnapAvailable, 20.0);
                 }
+                if (valid && icyVeinsAvailable && coldsnapAvailable)
+                {
+                    valid = ValidateColdsnap();
+                }
                 // combustion
                 if (valid && combustionAvailable)
                 {
@@ -440,10 +469,6 @@ namespace Rawr.Mage
                 if (valid)
                 {
                     valid = ValidateCycling();
-                }
-                if (valid && icyVeinsAvailable && coldsnapAvailable)
-                {
-                    valid = ValidateColdsnap();
                 }
                 if (valid)
                 {
@@ -2144,9 +2169,76 @@ namespace Rawr.Mage
                     if (segCount[seg] > 0.0 && (seg + 1) * segmentDuration + effectDuration < calculationOptions.FightDuration)
                     {
                         double total = 0.0;
+                        double localtotal = 0.0;
                         for (int s = 0; s < segments; s++)
                         {
                             if (Math.Abs(seg - s) <= mindist) total += segCount[s];
+                            if (Math.Abs(seg - s) <= 1) localtotal += segCount[s];
+                        }
+                        if (localtotal > fullEffectDuration + eps && total < effectDuration - eps)
+                        {
+                            // there might be other similar cases, but I'm afraid to overrestrict
+                            // needs some heavy evaluation to determine when it is safe to restrict
+                            // two branches, either force to full full total or restrict to just one
+                            SolverLP cooldownUsed = lp.Clone();
+                            if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Force total full " + cooldown.ToString() + " at " + seg);
+                            int row = cooldownUsed.AddConstraint(false);
+                            for (int s = 0; s < segments; s++)
+                            {
+                                if (Math.Abs(seg - s) <= mindist)
+                                {
+                                    for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
+                                    {
+                                        CastingState state = calculationResult.SolutionVariable[index].State;
+                                        if (state != null)
+                                        {
+                                            if (state.GetCooldown(cooldown)) cooldownUsed.SetConstraintElement(row, index, -1.0);
+                                        }
+                                    }
+                                }
+                            }
+                            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (state != null && state.GetCooldown(cooldown))
+                                {
+                                    int outseg = calculationResult.SolutionVariable[index].Segment;
+                                    if (Math.Abs(seg - outseg) <= mindist) cooldownUsed.SetConstraintElement(row, index, -1.0);
+                                }
+                            }
+                            cooldownUsed.SetConstraintRHS(row, -effectDuration);
+                            cooldownUsed.ForceRecalculation(true);
+                            HeapPush(cooldownUsed);
+                            cooldownUsed = lp.Clone();
+                            if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Limit total full " + cooldown.ToString() + " at " + seg);
+                            row = cooldownUsed.AddConstraint(false);
+                            for (int s = 0; s < segments; s++)
+                            {
+                                if (Math.Abs(seg - s) <= mindist)
+                                {
+                                    for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
+                                    {
+                                        CastingState state = calculationResult.SolutionVariable[index].State;
+                                        if (state != null)
+                                        {
+                                            if (state.GetCooldown(cooldown)) cooldownUsed.SetConstraintElement(row, index, 1.0);
+                                        }
+                                    }
+                                }
+                            }
+                            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+                            {
+                                CastingState state = calculationResult.SolutionVariable[index].State;
+                                if (state != null && state.GetCooldown(cooldown))
+                                {
+                                    int outseg = calculationResult.SolutionVariable[index].Segment;
+                                    if (Math.Abs(seg - outseg) <= mindist) cooldownUsed.SetConstraintElement(row, index, 1.0);
+                                }
+                            }
+                            cooldownUsed.SetConstraintRHS(row, fullEffectDuration);
+                            cooldownUsed.ForceRecalculation(true);
+                            HeapPush(cooldownUsed);
+                            return false;
                         }
                         if (total < fullEffectDuration - eps)
                         {

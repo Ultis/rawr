@@ -1017,6 +1017,7 @@ namespace Rawr.Mage
                             {
                                 if (segmentCooldowns && stateList[buffset].MoltenFury && seg < firstMoltenFurySegment) continue;
                                 if (!segmentNonCooldowns && stateList[buffset] == calculationResult.BaseState && seg != 0) continue;
+                                if (segmentCooldowns && calculationOptions.HeroismControl == 3 && stateList[buffset].Heroism && seg < firstMoltenFurySegment) continue;
                                 Spell s = stateList[buffset].GetSpell(spellList[spell]);
                                 bool skip = false;
                                 foreach (Spell s2 in placed)
@@ -1933,7 +1934,7 @@ namespace Rawr.Mage
                                 {
                                     if ((!trinket1 || !trinket1OnManaGem || !flameCap) && (!trinket2 || !trinket2OnManaGem || !flameCap)) // do not allow SCB together with flame cap
                                     {
-                                        if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == 0xFF && !trinket1 && !trinket2)))
+                                        if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == 0xFF && !trinket1 && !trinket2)) || (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                         {
                                             list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, destructionPotion, flameCap, trinket1, trinket2, combustion, drums, incrementalSetIndex));
                                             if (incrementalSetIndex == 0xFF && !trinket1 && !trinket2)

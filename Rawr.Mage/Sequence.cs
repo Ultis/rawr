@@ -1154,6 +1154,10 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     gap = maxDuration - group.Duration;
                 }
+                if (gap < -eps && coldSnapMode)
+                {
+                    gap += maxDuration;
+                }
                 if (gap > eps)
                 {
                     int maxSegDistance = (int)Math.Ceiling(maxDuration / 30.0) + 1;
@@ -1258,7 +1262,7 @@ namespace Rawr.Mage.SequenceReconstruction
             return partialGroups;
         }
 
-        public void GroupHeroism()
+        public SequenceGroup GroupHeroism()
         {
             SequenceGroup group = new SequenceGroup();
             foreach (SequenceItem item in sequence)
@@ -1269,6 +1273,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     item.Group.Add(group);
                 }
             }
+            return group;
         }
 
         private double moltenFuryStart = 0;
@@ -2322,7 +2327,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         {
                             // insert gem
                             InsertIndex(SequenceItem.Calculations.ColumnManaGem, Math.Min(1.0, gemTime), t);
-                            time = t;
+                            time = Math.Min(t + 0.01, t + d / 2); // block activation from moving
                             nextGem = t + 120;
                             gemCount++;
                             gemTime -= 1.0;

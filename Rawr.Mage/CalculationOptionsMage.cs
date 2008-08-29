@@ -92,7 +92,7 @@ namespace Rawr.Mage
         public float SurvivabilityRating { get; set; }
         public bool Aldor { get; set; }
         public bool WotLK { get; set; }
-        public int HeroismControl { get; set; }
+        public int HeroismControl { get; set; } // 0 = optimla, 1 = before 20%, 2 = no cooldowns, 3 = after 20%
         public bool AverageCooldowns { get; set; }
         public bool EvocationEnabled { get; set; }
         public bool ManaPotionEnabled { get; set; }
