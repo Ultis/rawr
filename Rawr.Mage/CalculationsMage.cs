@@ -553,6 +553,20 @@ namespace Rawr.Mage
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
                             };
                             break;
+                        case 78:
+                            statsRace = new Stats()
+                            {
+                                Health = 4063f,
+                                Mana = 2783f,
+                                Strength = 30f,
+                                Agility = 45f,
+                                Stamina = 56f,
+                                Intellect = 178f,
+                                Spirit = 168f,
+                                ArcaneResistance = 10,
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                            };
+                            break;
                         default:
                             statsRace = new Stats();
                             break;
