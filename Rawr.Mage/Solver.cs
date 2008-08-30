@@ -1850,6 +1850,7 @@ namespace Rawr.Mage
                     if (calculationOptions.WotLK)
                     {
                         list.Add(SpellId.ABAM);
+                        if (calculationOptions.ArcaneBarrage > 0) list.Add(SpellId.ABABar);
                         if (calculationOptions.MissileBarrage > 0) list.Add(SpellId.ABMBAM);
                     }
                     else

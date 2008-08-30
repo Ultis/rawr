@@ -70,6 +70,7 @@ namespace Rawr.Mage
         ArcaneBlast30,
         ABAM,
         ABMBAM,
+        ABABar,
         ABAMP,
         AB3AMSc,
         ABAM3Sc,
@@ -453,10 +454,10 @@ namespace Rawr.Mage
             }
 
             // TODO consider converting to discrete model for procs
-
+            float maxPushback = castingState.CalculationOptions.WotLK ? 0.5f : 1.0f;
             GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
             CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
-            CastTime = CastTime * (1 + InterruptFactor) - (0.5f + castingState.Latency) * InterruptFactor;
+            CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
             if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
 
             // Quagmirran
@@ -466,7 +467,7 @@ namespace Rawr.Mage
                 float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + castingState.BaseStats.SpellHasteFor6SecOnHit_10_45) / 995f * levelScalingFactor);
                 float gcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / speed);
                 float cast = BaseCastTime / speed + castingState.Latency;
-                cast = cast * (1 + InterruptFactor) - (0.5f + castingState.Latency) * InterruptFactor;
+                cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
                 if (cast < gcd + castingState.Latency) cast = gcd + castingState.Latency;
 
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
@@ -480,7 +481,7 @@ namespace Rawr.Mage
 
                 GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
                 CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
-                CastTime = CastTime * (1 + InterruptFactor) - (0.5f + castingState.Latency) * InterruptFactor;
+                CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
                 if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
             }
 
@@ -491,7 +492,7 @@ namespace Rawr.Mage
                 float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + castingState.BaseStats.SpellHasteFor6SecOnCast_15_45) / 995f * levelScalingFactor);
                 float gcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / speed);
                 float cast = BaseCastTime / speed + castingState.Latency;
-                cast = cast * (1 + InterruptFactor) - (0.5f + castingState.Latency) * InterruptFactor;
+                cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
                 if (cast < gcd + castingState.Latency) cast = gcd + castingState.Latency;
 
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
@@ -503,7 +504,7 @@ namespace Rawr.Mage
 
                 GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
                 CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
-                CastTime = CastTime * (1 + InterruptFactor) - (0.5f + castingState.Latency) * InterruptFactor;
+                CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
                 if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
             }
 
@@ -517,7 +518,7 @@ namespace Rawr.Mage
                 float proccedSpeed = CastingSpeed * (1 + (rawHaste + castingState.BaseStats.SpellHasteFor5SecOnCrit_50) / 995f * levelScalingFactor);
                 float proccedGcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / proccedSpeed);
                 float proccedCastTime = BaseCastTime / proccedSpeed + castingState.Latency;
-                proccedCastTime = proccedCastTime * (1 + InterruptFactor) - (0.5f + castingState.Latency) * InterruptFactor;
+                proccedCastTime = proccedCastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
                 if (proccedCastTime < proccedGcd + castingState.Latency) proccedCastTime = proccedGcd + castingState.Latency;
                 int chancesToProc = (int)(((int)Math.Floor(5f / proccedCastTime) + 1) * HitProcs);
                 if (!Instant) chancesToProc -= 1;
@@ -527,7 +528,7 @@ namespace Rawr.Mage
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
                 GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
                 CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
-                CastTime = CastTime * (1 + InterruptFactor) - (0.5f + castingState.Latency) * InterruptFactor;
+                CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
                 if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
             }
 
@@ -1195,16 +1196,16 @@ namespace Rawr.Mage
             MaxRank[76] = 3;
             MaxRank[77] = 3;
             MaxRank[78] = 3;
-            SpellData[RankLevelIndex(1, 70)] = new SpellData() { Cost = (int)(0.4 * BaseMana[70]), MinDamage = 668, MaxDamage = 772, SpellDamageCoefficient = 2.5f / 3.5f };
-            SpellData[RankLevelIndex(1, 71)] = new SpellData() { Cost = (int)(0.4 * BaseMana[71]), MinDamage = 668, MaxDamage = 772, SpellDamageCoefficient = 2.5f / 3.5f };
-            SpellData[RankLevelIndex(2, 71)] = new SpellData() { Cost = (int)(0.4 * BaseMana[71]), MinDamage = 690, MaxDamage = 800, SpellDamageCoefficient = 2.5f / 3.5f };
-            SpellData[RankLevelIndex(2, 72)] = new SpellData() { Cost = (int)(0.4 * BaseMana[72]), MinDamage = 695, MaxDamage = 806, SpellDamageCoefficient = 2.5f / 3.5f };
-            SpellData[RankLevelIndex(2, 73)] = new SpellData() { Cost = (int)(0.4 * BaseMana[73]), MinDamage = 700, MaxDamage = 811, SpellDamageCoefficient = 2.5f / 3.5f };
-            SpellData[RankLevelIndex(2, 74)] = new SpellData() { Cost = (int)(0.4 * BaseMana[74]), MinDamage = 705, MaxDamage = 816, SpellDamageCoefficient = 2.5f / 3.5f };
-            SpellData[RankLevelIndex(2, 75)] = new SpellData() { Cost = (int)(0.4 * BaseMana[75]), MinDamage = 711, MaxDamage = 822, SpellDamageCoefficient = 2.5f / 3.5f };
-            SpellData[RankLevelIndex(3, 76)] = new SpellData() { Cost = (int)(0.4 * BaseMana[76]), MinDamage = 805, MaxDamage = 935, SpellDamageCoefficient = 2.5f / 3.5f };
-            SpellData[RankLevelIndex(3, 77)] = new SpellData() { Cost = (int)(0.4 * BaseMana[77]), MinDamage = 811, MaxDamage = 942, SpellDamageCoefficient = 2.5f / 3.5f };
-            SpellData[RankLevelIndex(3, 78)] = new SpellData() { Cost = (int)(0.4 * BaseMana[78]), MinDamage = 817, MaxDamage = 948, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellData[RankLevelIndex(1, 70)] = new SpellData() { Cost = (int)(0.09 * BaseMana[70]), MinDamage = 668, MaxDamage = 772, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellData[RankLevelIndex(1, 71)] = new SpellData() { Cost = (int)(0.09 * BaseMana[71]), MinDamage = 668, MaxDamage = 772, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellData[RankLevelIndex(2, 71)] = new SpellData() { Cost = (int)(0.09 * BaseMana[71]), MinDamage = 690, MaxDamage = 800, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellData[RankLevelIndex(2, 72)] = new SpellData() { Cost = (int)(0.09 * BaseMana[72]), MinDamage = 695, MaxDamage = 806, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellData[RankLevelIndex(2, 73)] = new SpellData() { Cost = (int)(0.09 * BaseMana[73]), MinDamage = 700, MaxDamage = 811, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellData[RankLevelIndex(2, 74)] = new SpellData() { Cost = (int)(0.09 * BaseMana[74]), MinDamage = 705, MaxDamage = 816, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellData[RankLevelIndex(2, 75)] = new SpellData() { Cost = (int)(0.09 * BaseMana[75]), MinDamage = 711, MaxDamage = 822, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellData[RankLevelIndex(3, 76)] = new SpellData() { Cost = (int)(0.09 * BaseMana[76]), MinDamage = 805, MaxDamage = 935, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellData[RankLevelIndex(3, 77)] = new SpellData() { Cost = (int)(0.09 * BaseMana[77]), MinDamage = 811, MaxDamage = 942, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellData[RankLevelIndex(3, 78)] = new SpellData() { Cost = (int)(0.09 * BaseMana[78]), MinDamage = 817, MaxDamage = 948, SpellDamageCoefficient = 2.5f / 3.5f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1779,6 +1780,74 @@ namespace Rawr.Mage
         }
     }
 
+    class ABABar : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        float MB;
+
+        public ABABar(CastingState castingState)
+        {
+            Name = "ABABar";
+            ABCycle = true;
+
+            Spell AB = castingState.GetSpell(SpellId.ArcaneBlast00);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+
+            MB = 0.03f * castingState.CalculationOptions.MissileBarrage;
+
+            if (MB == 0.0 || !castingState.CalculationOptions.WotLK)
+            {
+                // if we don't have barrage then this degenerates to AB-ABar
+                chain1 = new SpellCycle(2);
+                chain1.AddSpell(AB, castingState);
+                chain1.AddSpell(ABar, castingState);
+                chain1.Calculate(castingState);
+
+                CastTime = chain1.CastTime;
+                CostPerSecond = chain1.CostPerSecond;
+                DamagePerSecond = chain1.DamagePerSecond;
+                ThreatPerSecond = chain1.ThreatPerSecond;
+                ManaRegenPerSecond = chain1.ManaRegenPerSecond;
+            }
+            else
+            {
+                //AB-ABar 0.85
+                chain1 = new SpellCycle(2);
+                chain1.AddSpell(AB, castingState);
+                chain1.AddSpell(ABar, castingState);
+                chain1.Calculate(castingState);
+
+                //AB-ABar-MBAM 0.15
+                chain2 = new SpellCycle(3);
+                chain2.AddSpell(AB, castingState);
+                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM, castingState);
+                chain2.Calculate(castingState);
+
+                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
+                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            if (chain2 == null)
+            {
+                chain1.AddSpellContribution(dict, duration);
+            }
+            else
+            {
+                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
+                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+            }
+        }
+    }
+
     class ABMBAM : Spell
     {
         Spell AB3;
@@ -1798,16 +1867,16 @@ namespace Rawr.Mage
 
             // RAMP =
             // AB0-AB1-AB2           0.85*0.85*0.85 = k1
-            // AB0-AB1-AB2-MBAM-RAMP 0.85*0.85*0.15 = k2
-            // AB0-AB1-MBAM-RAMP     0.85*0.15      = k3
-            // AB0-MBAM-RAMP         0.15           = k4
+            // AB0-AB1-AB2-(AB3-)MBAM-RAMP 0.85*0.85*0.15 = k2
+            // AB0-AB1-(AB2-)MBAM-RAMP     0.85*0.15      = k3
+            // AB0-(AB1-)MBAM-RAMP         0.15           = k4
 
             // RAMP = k1 * (AB0+AB1+AB2) + k2 * (AB0+AB1+AB2+MBAM + RAMP) + k3 * (AB0+AB1+MBAM + RAMP) + k4 * (AB0+MBAM + RAMP)
             // RAMP * (1 - k2 - k3 - k4) = k1 * (AB0+AB1+AB2) + k2 * (AB0+AB1+AB2+MBAM) + k3 * (AB0+AB1+MBAM) + k4 * (AB0+MBAM)
             // RAMP = (AB0+AB1+AB2) + k2 / k1 * (AB0+AB1+AB2+MBAM) + k3 / k1 * (AB0+AB1+MBAM) + k4 / k1 * (AB0+MBAM)
 
             // AB3           0.85
-            // AB3-MBAM-RAMP 0.15
+            // AB3-(AB3-)MBAM-RAMP 0.15
 
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
@@ -1831,8 +1900,9 @@ namespace Rawr.Mage
                 //AB3 0.85
 
                 //AB3-MBAM-RAMP 0.15
-                chain1 = new SpellCycle(2);
+                chain1 = new SpellCycle(6);
                 chain1.AddSpell(AB3, castingState);
+                chain1.AddSpell(AB3, castingState); // account for latency
                 chain1.AddSpell(MBAM, castingState);
                 chain1.AddSpell(AB0, castingState);
                 chain1.AddSpell(AB1, castingState);
@@ -1843,17 +1913,20 @@ namespace Rawr.Mage
                 chain3.AddSpell(AB0, castingState);
                 chain3.AddSpell(AB1, castingState);
                 chain3.AddSpell(AB2, castingState);
+                chain3.AddSpell(AB3, castingState); // account for latency
                 chain3.AddSpell(MBAM, castingState);
                 chain3.Calculate(castingState);
 
                 chain4 = new SpellCycle(3);
                 chain4.AddSpell(AB0, castingState);
                 chain4.AddSpell(AB1, castingState);
+                chain4.AddSpell(AB2, castingState); // account for latency
                 chain4.AddSpell(MBAM, castingState);
                 chain4.Calculate(castingState);
 
                 chain5 = new SpellCycle(2);
                 chain5.AddSpell(AB0, castingState);
+                chain5.AddSpell(AB1, castingState); // account for latency
                 chain5.AddSpell(MBAM, castingState);
                 chain5.Calculate(castingState);
 
