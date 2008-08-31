@@ -43,7 +43,8 @@ namespace Rawr.Mage
         private bool flameCapAvailable;
 
         private double arcanePowerCooldown;
-        
+        private double waterElementalCooldown;
+      
         private bool trinket1OnManaGem;
         private bool trinket2OnManaGem;
         private double trinket1Cooldown;
@@ -261,6 +262,7 @@ namespace Rawr.Mage
                 drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
                 coldsnapCooldown = 8 * 60 * (1 - 0.1f * calculationOptions.IceFloes);
                 arcanePowerCooldown = calculationOptions.WotLK ? 180.0 - 30.0 * calculationOptions.ArcaneFlows : 180.0;
+                waterElementalCooldown = 180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0);
 
                 trinket1OnManaGem = false;
                 trinket2OnManaGem = false;
@@ -1078,8 +1080,8 @@ namespace Rawr.Mage
                 float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f));
                 multiplier *= partialResistFactor;
                 calculationResult.WaterElementalDps = (521.5f + (0.4f * calculationResult.BaseState.FrostDamage + (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath of Air")) ? 101 : 0)) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f;
-                calculationResult.WaterElementalDuration = (float)(1 + (int)((calculationOptions.FightDuration - 45f) / 180f)) * 45;
-                if (coldsnapAvailable) calculationResult.WaterElementalDuration = (float)MaximizeColdsnapDuration(calculationOptions.FightDuration, coldsnapCooldown, 45.0, 180.0, out coldsnapCount);
+                calculationResult.WaterElementalDuration = (float)(1 + (int)((calculationOptions.FightDuration - 45f) / waterElementalCooldown)) * 45;
+                if (coldsnapAvailable) calculationResult.WaterElementalDuration = (float)MaximizeColdsnapDuration(calculationOptions.FightDuration, coldsnapCooldown, 45.0, waterElementalCooldown, out coldsnapCount);
                 /*calculatedStats.WaterElementalDuration = (float)(1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 45f) / 180f)) * 45;
                 float nextElementalEnd = (float)((calculatedStats.WaterElementalDuration / 45f - coldsnapCount) * 180f + coldsnapCount * coldsnapDelay + 45f);
                 if (nextElementalEnd - 45.0f < calculationOptions.FightDuration) calculatedStats.WaterElementalDuration += calculationOptions.FightDuration - nextElementalEnd + 45.0f;

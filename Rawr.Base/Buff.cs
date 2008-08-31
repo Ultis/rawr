@@ -546,14 +546,14 @@ namespace Rawr
             {
                 Name = "Mage Armor",
                 Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { SpellCombatManaRegeneration = 0.3f, MageAllResist = 18 },
+                Stats = new Stats() { MageMageArmor = 1f },
                 ConflictingBuffs = new string[] { "Armor" }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Molten Armor",
                 Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { MageSpellCrit = 0.03f },
+                Stats = new Stats() { MageMoltenArmor = 1f },
                 ConflictingBuffs = new string[] { "Armor" }
             });
             defaultBuffs.Add(new Buff()

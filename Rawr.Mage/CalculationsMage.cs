@@ -126,7 +126,7 @@ namespace Rawr.Mage
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Talents (per talent point)", "Talent Specs", "Item Budget" };
+                    _customChartNames = new string[] { "Talents (per talent point)", "Talent Specs", "Item Budget", "Glyphs" };
                 return _customChartNames;
             }
         }
@@ -568,6 +568,20 @@ namespace Rawr.Mage
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
                             };
                             break;
+                        case 79:
+                            statsRace = new Stats()
+                            {
+                                Health = 4172f,
+                                Mana = 2885f,
+                                Strength = 30f,
+                                Agility = 46f,
+                                Stamina = 57f,
+                                Intellect = 181f,
+                                Spirit = 171f,
+                                ArcaneResistance = 10,
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                            };
+                            break;
                         default:
                             statsRace = new Stats();
                             break;
@@ -664,8 +678,21 @@ namespace Rawr.Mage
             // TODO do similar for Mage Armor and Arcane Shielding
             if (statsTotal.MageIceArmor > 0)
             {
-                statsTotal.Armor += (float)Math.Floor(645 * (1 + 0.15f * frostWarding));
-                statsTotal.FrostResistance += (float)Math.Floor(18 * (1 + 0.15f * frostWarding));
+                statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + 0.15f * frostWarding) * (1 + (calculationOptions.GlyphOfIceArmor ? 0.2f : 0.0f)));
+                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 18 : 40) * (1 + 0.15f * frostWarding) * (1 + (calculationOptions.GlyphOfIceArmor ? 0.2f : 0.0f)));
+            }
+            if (statsTotal.MageMageArmor > 0)
+            {
+                statsTotal.SpellCombatManaRegeneration += 0.3f + (calculationOptions.GlyphOfMageArmor ? 0.2f : 0.0f);
+                statsTotal.AllResist += (calculationOptions.PlayerLevel < 71 ? 18f : (calculationOptions.PlayerLevel < 79 ? 21f : 40f)) * (1 + (calculationOptions.WotLK ? calculationOptions.ImprovedManaShield * 0.25f : 0.0f));
+            }
+            if (statsTotal.MageMoltenArmor > 0)
+            {
+                statsTotal.SpellCrit += 0.03f + (calculationOptions.GlyphOfMoltenArmor ? 0.02f : 0.0f);
+            }
+            if (calculationOptions.GlyphOfManaGem)
+            {
+                statsTotal.BonusManaGem = (1 + statsTotal.BonusManaGem) * (1 + 0.1f) - 1;
             }
 
             statsTotal.SpellCombatManaRegeneration += 0.1f * calculationOptions.ArcaneMeditation;
@@ -718,6 +745,9 @@ namespace Rawr.Mage
         private static string[] TalentListWotLK = {          "ArcaneSubtlety",  "ArcaneFocus",   "ImprovedArcaneMissiles",  "MagicAbsorption",  "ArcaneConcentration",  "MagicAttunement",  "SpellImpact",  "ArcaneFortitude",    "StudentOfTheMind",  "FocusMagic", "ImprovedManaShield",  "ImprovedCounterspell",  "ArcaneMeditation",  "ImprovedBlink",   "PresenceOfMind",   "TormentTheWeak",  "ArcaneMind",  "PrismaticCloak",  "ArcaneInstability",  "ArcanePotency", "EmpoweredArcaneMissiles",  "ArcanePower",  "SpellPower",  "MindMastery", "Slow",   "IncantersAbsorption",  "ArcaneFlows",  "MissileBarrage",  "NetherwindPresence",  "ArcaneBarrage",  "ImprovedFireball", "Impact", "Ignite",  "FlameThrowing",   "ImprovedFireBlast",   "Incinerate", "ImprovedFlamestrike", "Pyroblast", "BurningSoul", "ImprovedScorch", "ImprovedFireWard", "MasterOfElements", "PlayingWithFire", "CriticalMass", "BlastWave", "BlazingSpeed", "FirePower", "Pyromaniac", "Combustion", "MoltenFury", "EmpoweredFireball", "DragonsBreath", "FrostWarding", "ImprovedFrostbolt", "ElementalPrecision", "IceShards", "Frostbite", "ImprovedFrostNova", "Permafrost", "PiercingIce", "IcyVeins", "ImprovedBlizzard", "ArcticReach", "FrostChanneling", "Shatter", "FrozenCore", "ColdSnap", "ImprovedConeOfCold", "IceFloes", "WintersChill", "IceBarrier", "ArcticWinds", "EmpoweredFrostbolt", "SummonWaterElemental" };
         private static string[] TalentListFriendlyWotLK = { "Arcane Subtlety", "Arcane Focus", "Improved Arcane Missiles", "Magic Absorption", "Arcane Concentration", "Magic Attunement", "Spell Impact", "Arcane Fortitude", "Student of the Mind", "Focus Magic",   "Arcane Shielding", "Improved Counterspell", "Arcane Meditation", "Improved Blink", "Presence of Mind", "Torment the Weak", "Arcane Mind", "Prismatic Cloak", "Arcane Instability", "Arcane Potency",      "Arcane Empowerment", "Arcane Power", "Spell Power", "Mind Mastery", "Slow", "Incanter's Absorption", "Arcane Flows", "Missile Barrage", "Netherwind Presence", "Arcane Barrage", "Improved Fireball", "Impact", "Ignite", "Flame Throwing", "Improved Fire Blast", "Incineration", "Improved Flamestrike", "Pyroblast", "Burning Soul", "Improved Scorch", "Improved Fire Ward", "Master of Elements", "Playing with Fire", "Critical Mass", "Blast Wave", "Blazing Speed", "Fire Power", "Pyromaniac", "Combustion", "Molten Fury", "Empowered Fireball", "Dragon's Breath", "Frost Warding", "Improved Frostbolt", "Elemental Precision", "Ice Shards", "Frostbite", "Improved Frost Nova", "Permafrost", "Piercing Ice", "Icy Veins", "Improved Blizzard", "Arctic Reach", "Frost Channeling", "Shatter", "Frozen Core", "Cold Snap", "Improved Cone of Cold", "Ice Floes", "Winter's Chill", "Ice Barrier", "Arctic Winds", "Empowered Frostbolt", "Summon Water Elemental" };
         private static int[] MaxTalentPointsWotLK = {                       2,              3,                          5,                  2,                      5,                  2,              3,                  3,                     3,             1,                    2,                       2,                   3,                2,                  1,                  3,             5,                 3,                    3,                2,                         3,              1,             2,              5,      1,                       3,              2,                 5,                     3,                1,                   5,        5,        5,                2,                     3,              3, 3, 1, 2, 3, 2, 3, 3, 3, 1, 2, 5, 3, 1, 2, 5, 1, 2, 5, 3, 5, 3, 2, 3, 3, 1, 3, 2, 3, 5, 3, 1, 3, 2, 5, 1, 5, 5, 1 };
+
+        private static string[] GlyphList = { "GlyphOfFireball", "GlyphOfFrostbolt", "GlyphOfIceArmor", "GlyphOfImprovedScorch", "GlyphOfMageArmor", "GlyphOfManaGem", "GlyphOfMoltenArmor", "GlyphOfWaterElemental", "GlyphOfArcaneExplosion" };
+        private static string[] GlyphListFriendly = { "Glyph of Fireball", "Glyph of Frostbolt", "Glyph of Ice Armor", "Glyph of Improved Scorch", "Glyph of Mage Armor", "Glyph of Mana Gem", "Glyph of Molten Armor", "Glyph of Water Elemental", "Glyph of Arcane Explosion" };
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
@@ -798,6 +828,65 @@ namespace Rawr.Mage
                         }
 
                         calculationOptions.SetTalentByName(talent, currentPoints);
+                    }
+
+                    calculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
+                    calculationOptions.SmartOptimization = savedSmartOptimizations;
+
+                    return comparisonList.ToArray();
+                case "Glyphs":
+                    calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+
+                    currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                    savedIncrementalOptimizations = calculationOptions.IncrementalOptimizations;
+                    savedSmartOptimizations = calculationOptions.SmartOptimization;
+
+                    calculationOptions.IncrementalOptimizations = false;
+                    calculationOptions.SmartOptimization = true;
+
+                    for (int index = 0; index < GlyphList.Length; index++)
+                    {
+                        string glyph = GlyphList[index];
+                        bool glyphEnabled = calculationOptions.GetGlyphByName(glyph);
+
+                        if (glyphEnabled)
+                        {
+                            calculationOptions.SetGlyphByName(glyph, false);
+                            calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+
+                            comparison = CreateNewComparisonCalculation();
+                            comparison.Name = GlyphListFriendly[index];
+                            comparison.Equipped = true;
+                            comparison.OverallPoints = (currentCalc.OverallPoints - calc.OverallPoints);
+                            subPoints = new float[calc.SubPoints.Length];
+                            for (int i = 0; i < calc.SubPoints.Length; i++)
+                            {
+                                subPoints[i] = (currentCalc.SubPoints[i] - calc.SubPoints[i]);
+                            }
+                            comparison.SubPoints = subPoints;
+
+                            comparisonList.Add(comparison);
+                        }
+                        else
+                        {
+                            calculationOptions.SetGlyphByName(glyph, true);
+                            calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+
+                            comparison = CreateNewComparisonCalculation();
+                            comparison.Name = GlyphListFriendly[index];
+                            comparison.Equipped = false;
+                            comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints);
+                            subPoints = new float[calc.SubPoints.Length];
+                            for (int i = 0; i < calc.SubPoints.Length; i++)
+                            {
+                                subPoints[i] = (calc.SubPoints[i] - currentCalc.SubPoints[i]);
+                            }
+                            comparison.SubPoints = subPoints;
+
+                            comparisonList.Add(comparison);
+                        }
+
+                        calculationOptions.SetGlyphByName(glyph, glyphEnabled);
                     }
 
                     calculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
@@ -1155,7 +1244,6 @@ namespace Rawr.Mage
                 SpellHasteFor6SecOnHit_10_45 = stats.SpellHasteFor6SecOnHit_10_45,
                 SpellDamageFor10SecOnCrit_20_45 = stats.SpellDamageFor10SecOnCrit_20_45,
                 BonusManaPotion = stats.BonusManaPotion,
-                MageSpellCrit = stats.MageSpellCrit,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
                 SpellHasteFor20SecOnUse5Min = stats.SpellHasteFor20SecOnUse5Min,
@@ -1172,12 +1260,14 @@ namespace Rawr.Mage
                 PVPTrinket = stats.PVPTrinket,
                 MovementSpeed = stats.MovementSpeed,
                 MageIceArmor = stats.MageIceArmor,
+                MageMageArmor = stats.MageMageArmor,
+                MageMoltenArmor = stats.MageMoltenArmor,
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.MageSpellCrit + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.SpellHasteFor20SecOnUse5Min + stats.AldorRegaliaInterruptProtection + stats.SpellDamageFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.ManaRestorePerCast_5_15 + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.MageIceArmor;
+            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.SpellHasteFor20SecOnUse5Min + stats.AldorRegaliaInterruptProtection + stats.SpellDamageFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.ManaRestorePerCast_5_15 + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor;
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + stats.Healing + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.Hit + stats.HitRating + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating;
             return (mageStats > 0 || ((stats.Health + stats.Stamina + stats.Armor) > 0 && ignoreStats == 0.0f));
         }

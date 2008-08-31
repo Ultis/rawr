@@ -76,7 +76,8 @@ namespace Rawr
         LotPCritRating,
         MageAllResist,
         MageIceArmor,
-        MageSpellCrit,
+        MageMageArmor,
+        MageMoltenArmor,
         Mana,
         ManaSpringMp5Increase,
         ManaRestorePerCast,
@@ -1228,17 +1229,24 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float MageSpellCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MageSpellCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MageSpellCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float MageIceArmor
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MageIceArmor]; }
             set { _rawAdditiveData[(int)AdditiveStat.MageIceArmor] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MageMageArmor
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MageMageArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MageMageArmor] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float MageMoltenArmor
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MageMoltenArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MageMoltenArmor] = value; }
         }
 
         // Unseen Moon idol

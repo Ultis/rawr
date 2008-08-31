@@ -324,7 +324,7 @@ namespace Rawr.Mage
                     baseRegen = 0.007125f;
                     break;
             }
-            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * calculationOptions.ArcaneInstability + (calculationOptions.WotLK ? 0.015f : 0.01f) * calculationOptions.ArcanePotency + characterStats.SpellCritRating / 1400f * levelScalingFactor + characterStats.MageSpellCrit;
+            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * calculationOptions.ArcaneInstability + (calculationOptions.WotLK ? 0.015f : 0.01f) * calculationOptions.ArcanePotency + characterStats.SpellCritRating / 1400f * levelScalingFactor + characterStats.SpellCrit;
             if (destructionPotion) SpellCrit += 0.02f;
             SpellHit = characterStats.SpellHitRating * levelScalingFactor / 800f;
 

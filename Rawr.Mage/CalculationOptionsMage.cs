@@ -190,6 +190,18 @@ namespace Rawr.Mage
             t.GetProperty(name).SetValue(this, value, null);
         }
 
+        public bool GetGlyphByName(string name)
+        {
+            Type t = typeof(CalculationOptionsMage);
+            return (bool)t.GetProperty(name).GetValue(this, null);
+        }
+
+        public void SetGlyphByName(string name, bool value)
+        {
+            Type t = typeof(CalculationOptionsMage);
+            t.GetProperty(name).SetValue(this, value, null);
+        }
+
         public int Pyromaniac { get; set; }
         public int ElementalPrecision { get; set; }
         public int FrostChanneling { get; set; }
@@ -270,6 +282,16 @@ namespace Rawr.Mage
         public int MissileBarrage { get; set; }
         public int ArcaneFlows { get; set; }
         public int FocusMagic { get; set; }
+
+        public bool GlyphOfFireball { get; set; }
+        public bool GlyphOfFrostbolt { get; set; }
+        public bool GlyphOfIceArmor { get; set; }
+        public bool GlyphOfImprovedScorch { get; set; }
+        public bool GlyphOfMageArmor { get; set; }
+        public bool GlyphOfManaGem { get; set; }
+        public bool GlyphOfMoltenArmor { get; set; }
+        public bool GlyphOfWaterElemental { get; set; }
+        public bool GlyphOfArcaneExplosion { get; set; }
 
         private CalculationOptionsMage()
         {
