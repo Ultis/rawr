@@ -44,7 +44,7 @@ Beta 16:
    - Added Cloth and Leather as relevant item types
  - Rawr.HolyPriest:
    - Added support for Bangle and Blue Dragon
- - Rwar.ProtWarr:
+ - Rawr.ProtWarr:
    - Updated the calculations for PPM enchants (like Mongoose)
    - Adjusted the Parry cap to 13.75% reflect latest testing
 
