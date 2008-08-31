@@ -259,7 +259,7 @@ you are being killed by burst damage, focus on Survival Points.",
             float expertiseBonus = stats.ExpertiseRating * 52f / 82f / 2.5f * 0.0025f;
 
             float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 73) - expertiseBonus);
-            float chanceParry = Math.Max(0f, 0.1425f - expertiseBonus); // Parry for lower levels?
+            float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
             float chanceBlock = 0;//ha!
             float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
             if ((targetLevel - 70f) < 3)
@@ -396,7 +396,7 @@ you are being killed by burst damage, focus on Survival Points.",
             float expertiseBonus = stats.ExpertiseRating * 52f / 82f / 2.5f * 0.0025f;
             
             float chanceDodge = Math.Max(0f, 0.065f+.005f*(targetLevel -73) - expertiseBonus);
-            float chanceParry = Math.Max(0f, 0.1425f - expertiseBonus); // Parry for lower levels?
+            float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
             float chanceBlock = 0;//ha!
             float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
             if ((targetLevel - 70f) < 3)
