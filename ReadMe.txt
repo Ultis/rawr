@@ -1,6 +1,6 @@
-Rawr Beta 15.1
+Rawr Beta 16
 ------------
- Welcome to Rawr b15. In this beta are a whopping *six* new models: Tree, RestoSham, DPSWarr (Arms-only for this release), Hunter (BM-only for this release), Tankadin, and HolyPriest. We've also significantly improved the Moonkin, Warlock, and Retribution models with all the latest theorycrafting knowledge. Please note that all these new models are not 100% complete, see below for details, so please give us feedback on them!
+ Welcome to Rawr b16. This beta contains no new models, but significant improvements to the core application, and many of the models. Unfortunately, support for Fury warriors and Marksman/Survival hunters still isn't ready, but we're actively working on them.
 
 Anyway, as usual, thanks very much for testing Rawr. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
@@ -16,30 +16,38 @@ FAQ
  A: Most likely, no. First, the calculations in Rawr are for combat against raid boss mobs, which changes the chances to be missed, to dodge, to be crushed, and to be crit, so you'll see values off by 0.6% from what the character sheet says. Additionall, WoW sometimes rounds stats oddly, when many buffs are involved. I've gone to great lengths to make Rawr as accurate as possible, but it'll still calculate Stamina and Agility off by 1 in about 5 to 10% of cases. That in turn may make your health, dodge, and armor off by a tiny amount as well. Anyway, that's rare, and even when it does happen, the difference is *extremely* negligable, so don't worry about it. If you do find a situation where other calculations are off, or any of those are off significantly, please let me know. I want to ensure Rawr is as accurate as possible.
 
  Q: There's an item missing! Can you please add [Some Item]?
- A: No, I designed Rawr so that I wouldn't need to update it with new items every time a new tanking item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
+ A: No, I designed Rawr so that I wouldn't need to update it with new items every time a new item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
  
  Q: Can you make it, or does Rawr work for [insert class/spec here]?
  A: What you see in Rawr is what's currently developed to release quality. A few more models are in development. If you're a C# developer and would like to begin or help with another model, let me know!
 
-Rawr.Hunter Info
-----------------
-This is the first public release of Rawr.Hunter, so please give me feedback on it! Currently, it only models BM builds accurately, but we intend to finish fleshing it out in the next major release. There are a few limitations to the model:
- - Only BM builds are modeled accurately
- - Most trinket procs are somewhat rough, but are generally within a few AP of accurate. Some trinkets have been accurately calculated so far: Hourglass, DST, Ashtongue, and a few others.
- - Assumes 70 and max ranks spells
- - Scorpids are not modeled correctly
- - Assumes a 15% haste quiver, highest pet loyalty, and Cobra Reflexes
- - Buffing pets is not an option currently. This can lead to a large difference in pet DPS (up to double).
- - OOM issues are not accounted for yet
-
-Shot rotation modeling is based on burst damage, how much DPS you can deal in a set rotation, matching the spreadsheet. Also, note that if a ranged weapon is showing 0 DPS, it may be defined improperly in your ItemCache, probably manually entered from a previous PTR; a simple right click -> Refresh Item Data should fix it.
-
-Rawr.DPSWarr Info
------------------
-This is the first public release of Rawr.DPSWarr, so please give me feedback on it! Currently, it only models Arms builds accurately, but we intend to finish fleshing it out in the next major release.
-
 Version History
 ---------------
+Beta 16:
+ - Significantly improved the performance and accuracy of the Optimizer
+ - Added support for importing a character from a Character Profiler saved data file
+ - Added Sapphiron enchants to the default EnchantCache
+ - Added support for loading characters from the CN Armory
+ - Fixed a few crashing bugs in the Optimizer
+ - Fixed a potential crash when running Rawr under Mono on OSX
+ - Rawr.Bear:
+   - Adjusted the Parry cap to 13.75% reflect latest testing
+ - Rawr.Mage:
+   - Improvements to Sequence Reconstruction 
+   - Added support for Serpent-Coil Braid
+   - Added breakdown of total damage by spells including damage done, % total damage and number of hits
+ - Rawr.Tree:
+   - Fixed a few crashing bugs
+   - Added support for more talents
+   - Added support for HT in rotations
+ - Rawr.RestoSham:
+   - Added Cloth and Leather as relevant item types
+ - Rawr.HolyPriest:
+   - Added support for Bangle and Blue Dragon
+ - Rwar.ProtWarr:
+   - Updated the calculations for PPM enchants (like Mongoose)
+   - Adjusted the Parry cap to 13.75% reflect latest testing
+
 Beta 15.1:
  - Fixed Resistances in several models
  - Added several resistance enchants, including glyphs, armor kits, shoulder inscription, and cloak enchants
