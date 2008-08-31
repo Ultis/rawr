@@ -1324,11 +1324,23 @@ namespace Rawr
             injected = false;
 
 			int popSize = _thoroughness;
+            int islandSize = 20;
+            int islandStagnationLimit = 50;
+            int islandCount = (popSize - 1) / islandSize + 1;
 			int cycleLimit = _thoroughness;
 			Character[] population = new Character[popSize];
 			Character[] popCopy = new Character[popSize];
 			float[] values = new float[popSize];
-			float[] share = new float[popSize];
+            float[] minIsland = new float[islandCount];
+            float[] maxIsland = new float[islandCount];
+            float[] bestIsland = new float[islandCount];
+            Character[] characterIsland = new Character[islandCount];
+            int[] islandNoImprove = new int[islandCount];
+            for (int i = 0; i < islandCount; i++)
+            {
+                bestIsland[i] = -10000000;
+            }
+            float[] share = new float[popSize];
 			float s, sum, minv, maxv;
 			Character bestCharacter = null;
 			rand = new Random();
@@ -1353,28 +1365,45 @@ namespace Rawr
 				{
 				    if (cancellationPending) return null;
 					ReportProgress((int)Math.Round((float)noImprove / ((float)cycleLimit / 100f)), best);
-    					
+
+                    for (int i = 0; i < islandCount; i++)
+                    {
+                        minIsland[i] = 10000000;
+                        maxIsland[i] = -10000000;
+                        islandNoImprove[i]++;
+                    }
 				    minv = 10000000;
 				    maxv = -10000000;
 				    for (int i = 0; i < popSize; i++)
 				    {
+                        int island = i / islandSize;
                         CharacterCalculationsBase calculations;
                         values[i] = GetCalculationsValue(calculations = model.GetCharacterCalculations(population[i]));
-					    if (values[i] < minv) minv = values[i];
-					    if (values[i] > maxv) maxv = values[i];
-					    if (values[i] > best)
+                        if (values[i] < minIsland[island]) minIsland[island] = values[i];
+                        if (values[i] > maxIsland[island]) maxIsland[island] = values[i];
+                        if (values[i] > bestIsland[island])
+                        {
+                            bestIsland[island] = values[i];
+                            characterIsland[island] = population[i];
+                            islandNoImprove[island] = 0;
+                        }
+                        if (values[i] > best)
 					    {
 						    best = values[i];
                             bestCalculations = calculations;
 						    bestCharacter = population[i];
 						    noImprove = -1;
+                            //if (population[i].Geneology != null) System.Diagnostics.Trace.WriteLine(best + " " + population[i].Geneology);
 					    }
 				    }
-				    sum = 0;
-				    for (int i = 0; i < popSize; i++)
-					    sum += values[i] - minv + (maxv - minv) / 2;
-				    for (int i = 0; i < popSize; i++)
-					    share[i] = sum == 0 ? 1f / popSize : (values[i] - minv + (maxv - minv) / 2) / sum;
+                    for (int island = 0; island < islandCount; island++)
+                    {
+                        sum = 0;
+                        for (int i = island * islandSize; i < Math.Min(popSize, (island + 1) * islandSize); i++)
+                            sum += values[i] - minIsland[island] + (maxIsland[island] - minIsland[island]) / 2;
+                        for (int i = island * islandSize; i < Math.Min(popSize, (island + 1) * islandSize); i++)
+                            share[i] = sum == 0 ? 1f / (Math.Min(popSize, (island + 1) * islandSize) - island * islandSize) : (values[i] - minIsland[island] + (maxIsland[island] - minIsland[island]) / 2) / sum;
+                    }
 				}
 
 				noImprove++;
@@ -1382,62 +1411,88 @@ namespace Rawr
                 if (_thoroughness > 1 && noImprove < cycleLimit)
 				{
 					population.CopyTo(popCopy, 0);
-					if (bestCharacter == null)
-						population[0] = BuildRandomCharacter();
-					else
-						population[0] = bestCharacter;
-					for (int i = 1; i < popSize; i++)
+					for (int i = 0; i < popSize; i++)
 					{
-						if (best == 0 || rand.NextDouble() < 0.1d)
-						{
-							//completely random
-							population[i] = BuildRandomCharacter();
-						}
-						else if (rand.NextDouble() < 0.4d)
-						{
-							//crossover
-							s = (float)rand.NextDouble();
-							sum = 0;
-							for (i1 = 0; i1 < popSize - 1; i1++)
-							{
-								sum += share[i1];
-								if (sum >= s) break;
-							}
-							s = (float)rand.NextDouble();
-							sum = 0;
-							for (i2 = 0; i2 < popSize - 1; i2++)
-							{
-								sum += share[i2];
-								if (sum >= s) break;
-							}
-							population[i] = BuildChildCharacter(popCopy[i1], popCopy[i2]);
-						}
-						else
-						{
-							//mutate
-							s = (float)rand.NextDouble();
-							sum = 0;
-							for (i1 = 0; i1 < popSize - 1; i1++)
-							{
-								sum += share[i1];
-								if (sum >= s) break;
-							}
+                        int island = i / islandSize;
+                        if (i % islandSize == 0)
+                        {
+                            if (characterIsland[island] == null)
+                            {
+                                population[i] = BuildRandomCharacter();
+                                //population[i].Geneology = "Random";
+                            }
+                            else
+                            {
+                                population[i] = characterIsland[island];
+                            }
+                        }
+                        else if (rand.NextDouble() < 0.05d)
+                        {
+                            //completely random
+                            population[i] = BuildRandomCharacter();
+                            //population[i].Geneology = "Random";
+                        }
+                        else if (rand.NextDouble() < 0.4d)
+                        {
+                            int transplant = island;
+                            if (islandNoImprove[island] > islandStagnationLimit) transplant = rand.Next(islandCount);
+                            //crossover
+                            s = (float)rand.NextDouble();
+                            sum = 0;
+                            for (i1 = transplant * islandSize; i1 < Math.Min(popSize, (transplant + 1) * islandSize) - 1; i1++)
+                            {
+                                sum += share[i1];
+                                if (sum >= s) break;
+                            }
+                            s = (float)rand.NextDouble();
+                            sum = 0;
+                            for (i2 = island * islandSize; i2 < Math.Min(popSize, (island + 1) * islandSize) - 1; i2++)
+                            {
+                                sum += share[i2];
+                                if (sum >= s) break;
+                            }
+                            population[i] = BuildChildCharacter(popCopy[i1], popCopy[i2]);
+                            //population[i].Geneology = "Crossover(" + values[i1] + ", " + values[i2] + ")";
+                        }
+                        else
+                        {
+                            int transplant = island;
+                            if (islandNoImprove[island] > islandStagnationLimit && rand.NextDouble() < 1.0 / islandSize) transplant = rand.Next(islandCount);
+                            //mutate
+                            s = (float)rand.NextDouble();
+                            sum = 0;
+                            for (i1 = transplant * islandSize; i1 < Math.Min(popSize, (transplant + 1) * islandSize) - 1; i1++)
+                            {
+                                sum += share[i1];
+                                if (sum >= s) break;
+                            }
                             bool successful;
-                            if (rand.NextDouble() < 0.8)
+                            if (rand.NextDouble() < 0.9)
                             {
                                 population[i] = BuildMutantCharacter(popCopy[i1]);
+                                //population[i].Geneology = "Mutation(" + values[i1] + ")";
                             }
                             else if (rand.NextDouble() < 0.5)
                             {
                                 population[i] = BuildReplaceGemMutantCharacter(popCopy[i1], out successful);
-                                if (!successful) population[i] = BuildMutantCharacter(popCopy[i1]);
+                                //population[i].Geneology = "MutationReplaceGem(" + values[i1] + ")";
+                                if (!successful)
+                                {
+                                    population[i] = BuildMutantCharacter(popCopy[i1]);
+                                    //population[i].Geneology = "Mutation(" + values[i1] + ")";
+                                }
                             }
                             else
                             {
                                 population[i] = BuildSwapGemMutantCharacter(popCopy[i1], out successful);
-                                if (!successful) population[i] = BuildMutantCharacter(popCopy[i1]);
+                                //population[i].Geneology = "MutationSwapGem(" + values[i1] + ")";
+                                if (!successful)
+                                {
+                                    population[i] = BuildMutantCharacter(popCopy[i1]);
+                                    //population[i].Geneology = "Mutation(" + values[i1] + ")";
+                                }
                             }
-						}
+                        }
 					}
 				}
                 else if (_thoroughness > 1 && injectCharacter != null && !injected && injectValue > best)
@@ -1454,7 +1509,15 @@ namespace Rawr
                     for (int slot = 0; slot < slotCount; slot++)
                     {
                         results = LookForDirectItemUpgrades(slotItems[slot], (Character.CharacterSlot)slot, best, bestCharacter, out calculations);
-                        if (results.Key > best) { best = results.Key; bestCalculations = calculations; bestCharacter = results.Value; noImprove = 0; }
+                        if (results.Key > best) 
+                        {
+                            best = results.Key; 
+                            bestCalculations = calculations; 
+                            bestCharacter = results.Value; 
+                            noImprove = 0;
+                            population[0] = bestCharacter;
+                            //population[0].Geneology = "DirectUpgrade";
+                        }
                     }
 
                     for (int slot = 0; slot < slotCount; slot++)
@@ -1462,7 +1525,15 @@ namespace Rawr
                         if (slotEnchants[slot] != null)
                         {
                             results = LookForDirectEnchantUpgrades(slotEnchants[slot], (Character.CharacterSlot)slot, best, bestCharacter, out calculations);
-                            if (results.Key > best) { best = results.Key; bestCalculations = calculations; bestCharacter = results.Value; noImprove = 0; }
+                            if (results.Key > best) 
+                            {
+                                best = results.Key;
+                                bestCalculations = calculations;
+                                bestCharacter = results.Value;
+                                noImprove = 0;
+                                population[0] = bestCharacter;
+                                //population[0].Geneology = "DirectUpgrade";
+                            }
                         }
                     }
                 }
