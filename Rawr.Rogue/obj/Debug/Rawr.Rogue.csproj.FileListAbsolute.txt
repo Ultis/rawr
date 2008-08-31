@@ -1,8 +1,0 @@
-C:\Documents and Settings\Quinn\Desktop\Rawr-22201\bin\Debug\Rawr.Rogue.dll
-C:\Documents and Settings\Quinn\Desktop\Rawr-22201\bin\Debug\Rawr.Rogue.pdb
-C:\Documents and Settings\Quinn\Desktop\Rawr-22201\Rawr.Rogue\obj\Debug\ResolveAssemblyReference.cache
-C:\Documents and Settings\Quinn\Desktop\Rawr-22201\Rawr.Rogue\obj\Debug\Rawr.Rogue.CalculationOptionsPanelRogue.resources
-C:\Documents and Settings\Quinn\Desktop\Rawr-22201\Rawr.Rogue\obj\Debug\Rawr.Rogue.RogueTalents.resources
-C:\Documents and Settings\Quinn\Desktop\Rawr-22201\Rawr.Rogue\obj\Debug\Rawr.Rogue.csproj.GenerateResource.Cache
-C:\Documents and Settings\Quinn\Desktop\Rawr-22201\Rawr.Rogue\obj\Debug\Rawr.Rogue.dll
-C:\Documents and Settings\Quinn\Desktop\Rawr-22201\Rawr.Rogue\obj\Debug\Rawr.Rogue.pdb
