@@ -16,7 +16,16 @@ namespace Rawr.UserControls.Options
 			//cannot be in load, because its possible this tab won't show, and the values will not be initialized.
 			//if this happens, then the users settings will be cleared.
             WarningsEnabledCheckBox.Checked = Properties.Optimizer.Default.WarningsEnabled;
-		}
+            switch (Properties.Optimizer.Default.OptimizationMethod)
+            {
+                case OptimizationMethod.GeneticAlgorithm:
+                    comboBoxOptimizationMethod.SelectedIndex = 0;
+                    break;
+                case OptimizationMethod.SimulatedAnnealing:
+                    comboBoxOptimizationMethod.SelectedIndex = 1;
+                    break;
+            }
+        }
 
 
 		#region IOptions Members
@@ -24,6 +33,15 @@ namespace Rawr.UserControls.Options
 		public void Save()
 		{
             Properties.Optimizer.Default.WarningsEnabled = WarningsEnabledCheckBox.Checked;
+            switch (comboBoxOptimizationMethod.SelectedIndex)
+            {
+                case 0:
+                    Properties.Optimizer.Default.OptimizationMethod = OptimizationMethod.GeneticAlgorithm;
+                    break;
+                case 1:
+                    Properties.Optimizer.Default.OptimizationMethod = OptimizationMethod.SimulatedAnnealing;
+                    break;
+            }
             Properties.Optimizer.Default.Save();
 		}
 

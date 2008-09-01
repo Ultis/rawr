@@ -25,6 +25,7 @@ namespace Rawr.Mage
         ArcaneBolt,
         [Description("Arcane Missiles")]
         ArcaneMissiles,
+        [Description("MBAM")]
         ArcaneMissilesMB,
         ArcaneMissilesCC,
         ArcaneMissilesNoProc,

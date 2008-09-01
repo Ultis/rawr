@@ -176,6 +176,12 @@ namespace Rawr
         public float Value { get; set; }
     }
 
+    public enum OptimizationMethod
+    {
+        GeneticAlgorithm,
+        SimulatedAnnealing
+    }
+
     public class Optimizer
     {
         private Character _character;
@@ -186,6 +192,8 @@ namespace Rawr
 
         private ItemCacheInstance mainItemCache;
         private ItemCacheInstance optimizerItemCache;
+
+        public static OptimizationMethod OptimizationMethod { get; set; }
 
         public Optimizer()
 		{
@@ -1315,7 +1323,27 @@ namespace Rawr
             return Optimize(injectCharacter, GetOptimizationValue(injectCharacter, model), out bestValue, out bestCalc, out injected);
         }
 
-		private Character Optimize(Character injectCharacter, float injectValue, out float best, out CharacterCalculationsBase bestCalculations, out bool injected)
+        private Character Optimize(Character injectCharacter, float injectValue, out float best, out CharacterCalculationsBase bestCalculations, out bool injected)
+        {
+            switch (OptimizationMethod)
+            {
+                case OptimizationMethod.GeneticAlgorithm:
+                    return OptimizeGA(injectCharacter, injectValue, out best, out bestCalculations, out injected);
+                case OptimizationMethod.SimulatedAnnealing:
+                    return OptimizeSA(injectCharacter, injectValue, out best, out bestCalculations, out injected);
+            }
+            best = 0.0f;
+            bestCalculations = null;
+            injected = false;
+            return null;
+        }
+
+        private Character OptimizeSA(Character injectCharacter, float injectValue, out float best, out CharacterCalculationsBase bestCalculations, out bool injected)
+        {
+            throw new NotImplementedException();
+        }
+
+		private Character OptimizeGA(Character injectCharacter, float injectValue, out float best, out CharacterCalculationsBase bestCalculations, out bool injected)
 		{
 			//Begin Genetic
 			int noImprove, i1, i2;

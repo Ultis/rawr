@@ -17,5 +17,8 @@
     <Setting Name="OverrideReenchant" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="OptimizationMethod" Type="Rawr.OptimizationMethod" Scope="User">
+      <Value Profile="(Default)">GeneticAlgorithm</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
