@@ -1338,9 +1338,108 @@ namespace Rawr
             return null;
         }
 
+        /// <summary>
+        /// Optimization function based on simulated annealing
+        /// http://en.wikipedia.org/wiki/Simulated_annealing
+        /// Author: ebo
+        /// </summary>
         private Character OptimizeSA(Character injectCharacter, float injectValue, out float best, out CharacterCalculationsBase bestCalculations, out bool injected)
         {
-            throw new NotImplementedException();
+            best = -10000000;
+            bestCalculations = null;
+            injected = false;
+
+            rand = new Random();
+            injected = false;
+
+            Character currentChar = BuildRandomCharacter();
+            double currentValue = GetCalculationsValue(model.GetCharacterCalculations(currentChar));
+
+            Character bestChar = currentChar;
+            double bestValue = currentValue;
+
+            int maxCycles = _thoroughness * 50;
+
+            //http://research.microsoft.com/constraint-reasoning/workshops/autonomous-cp07/papers/2.pdf
+
+            double temp = 10;
+            double acceptRate = 0.5;
+            double lamRate = 0.5;
+
+            for (int cycle = 0; cycle < maxCycles; cycle++)
+            {
+                if (cancellationPending) return null;
+                ReportProgress((int)Math.Round((float)cycle / ((float)(maxCycles / 100f))), (float)bestValue);
+
+                // Generate new character
+                Character nextChar = GeneratorBuildSACharacter(currentChar);
+
+                double nextValue = GetCalculationsValue(model.GetCharacterCalculations(nextChar));
+
+
+                // Save best character
+                if (nextValue > bestValue)
+                {
+                    bestChar = nextChar;
+                    bestValue = nextValue;
+                }
+
+                if (nextValue > currentValue)
+                {
+                    //Better solution. Accept move
+                    currentChar = nextChar;
+                    currentValue = nextValue;
+                    acceptRate = 1.0 / 500.0 * (499.0 * acceptRate + 1);
+                }
+                else
+                {
+                    if (SAAcceptance(currentValue, nextValue, temp, rand))
+                    {
+                        //accept move
+                        currentChar = nextChar;
+                        currentValue = nextValue;
+                        acceptRate = 1.0 / 500.0 * (499.0 * acceptRate + 1);
+                    }
+                    else
+                    {
+                        //reject move
+                        acceptRate = 1.0 / 500.0 * (499.0 * acceptRate);
+                    }
+
+                }
+
+
+                // tune acceptRate
+                double part = (double)cycle / maxCycles;
+                if (part < 0.15)
+                {
+                    lamRate = 0.44 + 0.56 * Math.Pow(560, -cycle / (maxCycles * 0.15));
+                }
+                else if (part < 0.65)
+                {
+                    lamRate = 0.44;
+                }
+                else
+                {
+                    lamRate = 0.44 * Math.Pow(440, -((double)cycle / (double)maxCycles - 0.65) / 0.35);
+                }
+
+                if (acceptRate > lamRate)
+                {
+                    temp *= 0.999;
+                }
+                else
+                {
+                    temp /= 0.999;
+                }
+
+
+            }
+
+            best = (float)bestValue;
+            bestCalculations = model.GetCharacterCalculations(bestChar);
+
+            return bestChar;
         }
 
 		private Character OptimizeGA(Character injectCharacter, float injectValue, out float best, out CharacterCalculationsBase bestCalculations, out bool injected)
@@ -1786,6 +1885,131 @@ namespace Rawr
                     return rand.NextDouble() < 0.5d ? father.GetEnchantBySlot((Character.CharacterSlot)slot) : mother.GetEnchantBySlot((Character.CharacterSlot)slot);
                 });
 		}
+
+        /// <summary>
+        /// This is funtions decides wether we take a new character or drop it
+        /// Author: ebo
+        /// </summary>
+        private bool SAAcceptance(double e, double enew, double T, Random R)
+        {
+            // Always accept character if its better
+            if (enew > e)
+            {
+                return true;
+            }
+            else
+            {
+                // Accept based on difference and temperature
+                // higher temperature means bigger differences possible (or likely)
+                // see http://en.wikipedia.org/wiki/Simulated_annealing
+                double chance = Math.Exp((enew - e) / T);
+                return chance > R.NextDouble();
+            }
+
+        }
+
+        /// <summary>
+        /// This is funtions clones a character and changes one item and based on a probability one enchant
+        /// Author: ebo
+        /// </summary>
+        private Character GeneratorBuildSACharacter(Character parent)
+        {
+            Item[] item = new Item[slotCount];
+            Enchant[] enchant = new Enchant[slotCount];
+
+            for (int slot = 0; slot < slotCount; slot++)
+            {
+                item[slot] = parent[(Character.CharacterSlot)slot];
+                enchant[slot] = parent.GetEnchantBySlot((Character.CharacterSlot)slot);
+            }
+
+            double r = rand.NextDouble();
+            bool successfull = false;
+
+            if (r < 0.1)
+            {
+                // Change one enchant?
+                // There are better methods to make sure to change one item (shuffled list of all slots) but this works
+
+                for (int i = 0; i < slotCount; i++)
+                {
+                    int slot = rand.Next(slotCount);
+                    Item cItem = item[slot];
+                    if (cItem == null || slotEnchants[slot] == null)
+                    {
+                        continue;
+                    }
+
+                    Enchant newenchant;
+                    if (lockedSlot == (Character.CharacterSlot)slot && lockedEnchants != null)
+                    {
+                        newenchant = lockedEnchants[rand.Next(lockedEnchants.Length)];
+                    }
+                    else
+                    {
+                        if (cItem.EnchantValidList != null)
+                        {
+                            newenchant = cItem.EnchantValidList[rand.Next(cItem.EnchantValidList.Count)];
+                        }
+                        else
+                        {
+                            newenchant = slotEnchants[slot][rand.Next(slotEnchants[slot].Length)];
+                        }
+                    }
+                    if (newenchant == null) continue;
+                    if (enchant[slot] == null || (newenchant.Id != enchant[slot].Id && ItemEnchantValid((Character.CharacterSlot)slot, item[slot], newenchant)))
+                    {
+                        enchant[slot] = newenchant;
+                        successfull = true;
+                        break;
+                    }
+                }
+            }
+
+            r = rand.NextDouble();
+
+            if (r < 0.5 && !successfull)
+            {
+
+                Character nextChar2 = rand.NextDouble() < 0.75f ? BuildReplaceGemMutantCharacter(parent, out successfull) : BuildSwapGemMutantCharacter(parent, out successfull);
+                if (successfull)
+                {
+                    return nextChar2;
+                }
+            }
+
+            if (!successfull)
+            {
+                // Make sure to change one item
+                // There are better methods to make sure to change one item (shuffled list of all slots) but this works
+                for (int i = 0; i < slotCount; i++)
+                {
+                    int slot = rand.Next(slotCount);
+                    Item newitem = ((lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Length)] : slotItems[slot][rand.Next(slotItems[slot].Length)]);
+                    if (newitem == null) continue;
+                    int pairSlot = pairSlotMap[slot];
+                    if (item[slot] == null || newitem.Id != item[slot].Id)
+                    {
+                        if (pairSlot != -1 && item[pairSlot] != null && item[pairSlot].Id == newitem.Id && newitem.Unique)
+                        {
+                            continue;
+                        }
+                        item[slot] = newitem;
+                        break;
+                    }
+                }
+            }
+
+
+            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, item, enchant, _character.ActiveBuffs, false, _character.CurrentModel);
+            character.CalculationOptions = _character.CalculationOptions;
+            character.Class = _character.Class;
+            character.Talents = _character.Talents;
+            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
+
+            return character;
+
+        }
 
         private Item ReplaceGem(Item item, int index, Item gem)
         {
