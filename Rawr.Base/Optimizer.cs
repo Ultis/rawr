@@ -1358,7 +1358,7 @@ namespace Rawr
             Character bestChar = currentChar;
             double bestValue = currentValue;
 
-            int maxCycles = _thoroughness * 50;
+            int maxCycles = _thoroughness * _thoroughness;
 
             //http://research.microsoft.com/constraint-reasoning/workshops/autonomous-cp07/papers/2.pdf
 
