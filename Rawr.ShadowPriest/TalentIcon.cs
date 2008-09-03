@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
@@ -93,7 +92,7 @@ namespace Rawr.ShadowPriest
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            if (Talent != null && CharClass != null)
+            if (Talent != null /*&& CharClass != null*/)
             {
                 panel1.BackgroundImage = _icon;
                 label2.Text = "(" + Talent.PointsInvested + "/" + Talent.Rank + ")";

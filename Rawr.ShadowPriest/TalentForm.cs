@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -34,7 +33,7 @@ namespace Rawr.ShadowPriest
         }
         void panel1_Resize(object sender, EventArgs e)
         {
-            int xbuffer = 10;
+            //int xbuffer = 10;
             int y = panel1.Location.Y;
             panel2.Location = new Point(panel1.Location.X +  panel1.Width + 10, y);
             panel3.Location = new Point(panel2.Location.X + panel2.Width + 10, y);

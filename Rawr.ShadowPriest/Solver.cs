@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Rawr.ShadowPriest
@@ -31,23 +30,23 @@ namespace Rawr.ShadowPriest
                 SpellPriority.Add(SpellFactory.CreateSpell(spellname, playerStats, playerTalentTree));
 
             HitChance = PlayerStats.SpellHitRating / 12.6f;
-            ShadowHitChance = 83 + (PlayerStats.SpellHitRating + playerTalentTree.GetTalent("Shadow Focus").PointsInvested * 12.6f * 2) / 12.6f;
-            if (ShadowHitChance > 99)
-                ShadowHitChance = 99;
+            ShadowHitChance = 83.0f + (PlayerStats.SpellHitRating + playerTalentTree.GetTalent("Shadow Focus").PointsInvested * 12.6f * 2.0f) / 12.6f;
+            if (ShadowHitChance > 99.0f)
+                ShadowHitChance = 99.0f;
 
             Trinkets = new List<Trinket>();
             ShadowCritChance = PlayerStats.SpellCrit + playerTalentTree.GetTalent("Shadow Power").PointsInvested * 3;
             Sequence = new Dictionary<float, Spell>();
-            if (playerStats.SpellDamageFor15SecOnUse2Min > 0)
-                Trinkets.Add(new Trinket() { Cooldown = 120, DamageBonus = playerStats.SpellDamageFor15SecOnUse2Min, UpTime = 15 });
-            if (playerStats.SpellDamageFor15SecOnUse90Sec > 0)
-                Trinkets.Add(new Trinket() { Cooldown = 90, DamageBonus = playerStats.SpellDamageFor15SecOnUse90Sec, UpTime = 15 });
-            if (playerStats.SpellDamageFor20SecOnUse2Min > 0)
-                Trinkets.Add(new Trinket() { Cooldown = 120, DamageBonus = playerStats.SpellDamageFor20SecOnUse2Min, UpTime = 20 });
-            if (playerStats.SpellHasteFor20SecOnUse2Min > 0)
-                Trinkets.Add(new Trinket() { Cooldown = 120, HasteBonus = playerStats.SpellHasteFor20SecOnUse2Min, UpTime = 20 });
-            if (playerStats.SpellHasteFor20SecOnUse5Min > 0)
-                Trinkets.Add(new Trinket() { Cooldown = 300, HasteBonus = playerStats.SpellHasteFor20SecOnUse5Min, UpTime = 20 });
+            if (playerStats.SpellDamageFor15SecOnUse2Min > 0.0f)
+                Trinkets.Add(new Trinket() { Cooldown = 120.0f, DamageBonus = playerStats.SpellDamageFor15SecOnUse2Min, UpTime = 15.0f });
+            if (playerStats.SpellDamageFor15SecOnUse90Sec > 0.0f)
+                Trinkets.Add(new Trinket() { Cooldown = 90.0f, DamageBonus = playerStats.SpellDamageFor15SecOnUse90Sec, UpTime = 15.0f });
+            if (playerStats.SpellDamageFor20SecOnUse2Min > 0.0f)
+                Trinkets.Add(new Trinket() { Cooldown = 120.0f, DamageBonus = playerStats.SpellDamageFor20SecOnUse2Min, UpTime = 20.0f });
+            if (playerStats.SpellHasteFor20SecOnUse2Min > 0.0f)
+                Trinkets.Add(new Trinket() { Cooldown = 120.0f, HasteBonus = playerStats.SpellHasteFor20SecOnUse2Min, UpTime = 20.0f });
+            if (playerStats.SpellHasteFor20SecOnUse5Min > 0.0f)
+                Trinkets.Add(new Trinket() { Cooldown = 300.0f, HasteBonus = playerStats.SpellHasteFor20SecOnUse5Min, UpTime = 20.0f });
         }
 
         private Spell GetCastSpell(float timer)
@@ -89,17 +88,17 @@ namespace Rawr.ShadowPriest
             Stats currentStats;
             Random rnd = new Random(DateTime.Now.Millisecond);
             int castCount = 0, critableCount = 0, ssCount = 0;
-            float timer = 0, drumsTimer = 0, drumsUpTimer = 0;
+            float timer = 0.0f, drumsTimer = 0.0f, drumsUpTimer = 0.0f;
             
             while (timer < CalculationOptions.FightDuration)
             {
-                timer += CalculationOptions.Lag/1000;
-                timer += CalculationOptions.WaitTime/1000;
+                timer += CalculationOptions.Lag/1000.0f;
+                timer += CalculationOptions.WaitTime/1000.0f;
                 
                 if(CalculationOptions.DrumsCount > 0 && drumsTimer < timer)
                 {
-                    drumsTimer = timer + 120;
-                    drumsUpTimer = timer + CalculationOptions.DrumsCount * 30;
+                    drumsTimer = timer + 120.0f;
+                    drumsUpTimer = timer + CalculationOptions.DrumsCount * 30.0f;
                     if(CalculationOptions.UseYourDrum)
                     {
                         timer += SpellPriority[0].GlobalCooldown;
@@ -111,7 +110,7 @@ namespace Rawr.ShadowPriest
                 
                 currentStats = PlayerStats.Clone();
                 if (CalculationOptions.DrumsCount > 0 && drumsUpTimer > timer)
-                    currentStats.SpellHasteRating += 80;
+                    currentStats.SpellHasteRating += 80.0f;
                 GetTrinketBuff(timer, currentStats);
 
                 Spell spell = GetCastSpell(timer);
@@ -122,27 +121,27 @@ namespace Rawr.ShadowPriest
                 }
 
                 Spell seqspell = SpellFactory.CreateSpell(spell.Name, currentStats, PlayerTalentTree);
-                if (spell.CritCoef > 1)
+                if (spell.CritCoef > 1.0f)
                     critableCount++;
                 if (spell.MagicSchool != MagicSchool.Shadow)
                     ssCount++;
-                if (spell.DebuffDuration > 0 || spell.Cooldown > 0)
+                if (spell.DebuffDuration > 0.0f || spell.Cooldown > 0.0f)
                     spell.SpellStatistics.CooldownReset = timer + (spell.DebuffDuration > spell.Cooldown ? spell.DebuffDuration : spell.Cooldown);
 
                 spell.SpellStatistics.HitCount++;
                 Sequence.Add(timer, seqspell);
-                timer += seqspell.CastTime > 0 ? seqspell.CastTime : seqspell.GlobalCooldown;
+                timer += seqspell.CastTime > 0.0f ? seqspell.CastTime : seqspell.GlobalCooldown;
                 castCount++;
             }
 
-            int missCount = (int)Math.Round((Sequence.Count - ssCount) * (100 - ShadowHitChance) / 100);
-            int mbmissCount = (int)Math.Round((double)missCount / 2);
-            int critCount = (int)Math.Round(critableCount * ShadowCritChance / 100);
-            int mbcritCount = (int)Math.Round((double)critCount / 2);
-            int ssmissCount = (int)Math.Round(ssCount * (100 - HitChance) / 100);
+            int missCount = (int)Math.Round((Sequence.Count - ssCount) * (100.0f - ShadowHitChance) / 100.0f);
+            int mbmissCount = (int)Math.Round((double)missCount / 2.0f);
+            int critCount = (int)Math.Round(critableCount * ShadowCritChance / 100.0f);
+            int mbcritCount = (int)Math.Round((double)critCount / 2.0f);
+            int ssmissCount = (int)Math.Round(ssCount * (100.0f - HitChance) / 100.0f);
             foreach (Spell spell in SpellPriority)
             {
-                if(spell.CritCoef > 1)
+                if(spell.CritCoef > 1.0f)
                 {
                     if (spell.Name == "Mind Blast")
                     {
