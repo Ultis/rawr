@@ -313,7 +313,15 @@ namespace Rawr
 				_customChartMenuItems.Add(customChartMenuItem);
 				toolStripDropDownButtonSlot.DropDownItems.Add(customChartMenuItem);
 			}
-		}
+            foreach (string chartName in Calculations.CustomRenderedChartNames)
+            {
+                ToolStripMenuItem customChartMenuItem = new ToolStripMenuItem(chartName);
+                customChartMenuItem.Tag = "CustomRendered." + chartName;
+                customChartMenuItem.Click += new EventHandler(slotToolStripMenuItem_Click);
+                _customChartMenuItems.Add(customChartMenuItem);
+                toolStripDropDownButtonSlot.DropDownItems.Add(customChartMenuItem);
+            }
+        }
 
 		void recentCharacterMenuItem_Click(object sender, EventArgs e)
 		{
@@ -834,6 +842,7 @@ namespace Rawr
 					if ((item as ToolStripMenuItem).Checked)
 					{
 						string[] tag = item.Tag.ToString().Split('.');
+                        if (tag[0] == "CustomRendered") tag[0] = "Custom";
 						toolStripDropDownButtonSlot.Text = tag[0];
 						if (tag.Length > 1) toolStripDropDownButtonSlot.Text += " > " + item.Text;
 					}
@@ -880,7 +889,11 @@ namespace Rawr
 						case "Custom":
 							itemComparison1.LoadCustomChart(tag[1]);
 							break;
-					}
+
+                        case "CustomRendered":
+                            itemComparison1.LoadCustomRenderedChart(tag[1]);
+                            break;
+                    }
 				}
 			}
 		}

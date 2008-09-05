@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using System.Drawing;
 
 namespace Rawr.Mage
 {
@@ -128,6 +129,19 @@ namespace Rawr.Mage
                 if (_customChartNames == null)
                     _customChartNames = new string[] { "Talents (per talent point)", "Talent Specs", "Item Budget", "Glyphs" };
                 return _customChartNames;
+            }
+        }
+
+        private string[] _customRenderedChartNames = null;
+        public override string[] CustomRenderedChartNames
+        {
+            get
+            {
+                if (_customRenderedChartNames == null)
+                {
+                    _customRenderedChartNames = new string[] { "Sequence Reconstruction" };
+                }
+                return _customRenderedChartNames;
             }
         }
 
@@ -1057,6 +1071,276 @@ namespace Rawr.Mage
                     return comparisonList.ToArray();
                 default:
                     return new ComparisonCalculationBase[0];
+            }
+        }
+
+        private static string TimeFormat(double time)
+        {
+            TimeSpan span = new TimeSpan((long)(Math.Round(time, 2) / 0.0000001));
+            return string.Format("{0:0}:{1:00}", span.Minutes, span.Seconds, span.Milliseconds);
+        }
+
+        public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
+        {
+            switch (chartName)
+            {
+                case "Sequence Reconstruction":
+                    CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+
+                    if (calculationOptions.SequenceReconstruction == null)
+                    {
+                        Font fontLegend = new Font("Verdana", 10f, GraphicsUnit.Pixel);
+                        g.DrawString("Sequence reconstruction data is not available.", fontLegend, Brushes.Black, 2, 2);
+                    }
+                    else
+                    {
+                        #region Legend
+                        Rectangle rectSubPoint;
+                        System.Drawing.Drawing2D.LinearGradientBrush brushSubPointFill;
+                        System.Drawing.Drawing2D.ColorBlend blendSubPoint;
+
+                        Font fontLegend = new Font("Verdana", 10f, GraphicsUnit.Pixel);
+                        int legendY = 2;
+
+                        string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Destruction Potion", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Name : "Trinket 2", "Drums of Battle", "Combustion" };
+                        Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.Orange, Color.Aqua, Color.Blue, Color.Brown, Color.OrangeRed };
+                        Brush[] brushSubPoints = new Brush[cooldownColors.Length];
+                        Color[] colorSubPointsA = new Color[cooldownColors.Length];
+                        Color[] colorSubPointsB = new Color[cooldownColors.Length];
+                        for (int i = 0; i < cooldownColors.Length; i++)
+                        {
+                            Color baseColor = cooldownColors[i];
+                            brushSubPoints[i] = new SolidBrush(Color.FromArgb(baseColor.R / 2, baseColor.G / 2, baseColor.B / 2));
+                            colorSubPointsA[i] = Color.FromArgb(baseColor.A / 2, baseColor.R / 2, baseColor.G / 2, baseColor.B / 2);
+                            colorSubPointsB[i] = Color.FromArgb(baseColor.A / 2, baseColor);
+                        }
+                        StringFormat formatSubPoint = new StringFormat();
+                        formatSubPoint.Alignment = StringAlignment.Center;
+                        formatSubPoint.LineAlignment = StringAlignment.Center;
+
+                        int maxWidth = 1;
+                        for (int i = 0; i < cooldownNames.Length; i++)
+                        {
+                            string subPointName = cooldownNames[i];
+                            int widthSubPoint = (int)Math.Ceiling(g.MeasureString(subPointName, fontLegend).Width + 2f);
+                            if (widthSubPoint > maxWidth) maxWidth = widthSubPoint;
+                        }
+                        for (int i = 0; i < cooldownNames.Length; i++)
+                        {
+                            string cooldownName = cooldownNames[i];
+                            rectSubPoint = new Rectangle(2, legendY, maxWidth, 16);
+                            blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
+                            blendSubPoint.Colors = new Color[] { colorSubPointsA[i], colorSubPointsB[i], colorSubPointsA[i] };
+                            blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
+                            brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rectSubPoint, colorSubPointsA[i], colorSubPointsB[i], 67f);
+                            brushSubPointFill.InterpolationColors = blendSubPoint;
+
+                            g.FillRectangle(brushSubPointFill, rectSubPoint);
+                            g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                            g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+                            g.DrawRectangle(new Pen(brushSubPointFill), rectSubPoint);
+
+                            g.DrawString(cooldownName, fontLegend, brushSubPoints[i], rectSubPoint, formatSubPoint);
+                            legendY += 16;
+                        }
+                        #endregion
+
+                        #region Graph Ticks
+                        float graphStart = 20f;
+                        float graphWidth = width - 40f;
+                        float graphTop = legendY;
+                        float graphHeight = height - 44 - graphTop - 40;
+                        float maxScale = calculationOptions.FightDuration;
+                        float graphEnd = graphStart + graphWidth;
+                        float[] ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
+							(float)Math.Round(graphStart + graphWidth * 0.75f),
+							(float)Math.Round(graphStart + graphWidth * 0.25f),
+							(float)Math.Round(graphStart + graphWidth * 0.125f),
+							(float)Math.Round(graphStart + graphWidth * 0.375f),
+							(float)Math.Round(graphStart + graphWidth * 0.625f),
+							(float)Math.Round(graphStart + graphWidth * 0.875f)};
+                        Pen black200 = new Pen(Color.FromArgb(200, 0, 0, 0));
+                        Pen black150 = new Pen(Color.FromArgb(150, 0, 0, 0));
+                        Pen black75 = new Pen(Color.FromArgb(75, 0, 0, 0));
+                        Pen black50 = new Pen(Color.FromArgb(50, 0, 0, 0));
+                        Pen black25 = new Pen(Color.FromArgb(25, 0, 0, 0));
+                        StringFormat formatTick = new StringFormat();
+                        formatTick.LineAlignment = StringAlignment.Far;
+                        formatTick.Alignment = StringAlignment.Center;
+                        Brush black200brush = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
+                        Brush black150brush = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
+                        Brush black75brush = new SolidBrush(Color.FromArgb(75, 0, 0, 0));
+                        Brush black50brush = new SolidBrush(Color.FromArgb(50, 0, 0, 0));
+                        Brush black25brush = new SolidBrush(Color.FromArgb(25, 0, 0, 0));
+
+                        g.DrawLine(black150, ticks[1], graphTop + 36, ticks[1], graphTop + 39);
+                        g.DrawLine(black150, ticks[2], graphTop + 36, ticks[2], graphTop + 39);
+                        g.DrawLine(black75, ticks[3], graphTop + 36, ticks[3], graphTop + 39);
+                        g.DrawLine(black75, ticks[4], graphTop + 36, ticks[4], graphTop + 39);
+                        g.DrawLine(black75, ticks[5], graphTop + 36, ticks[5], graphTop + 39);
+                        g.DrawLine(black75, ticks[6], graphTop + 36, ticks[6], graphTop + 39);
+                        g.DrawLine(black75, graphEnd, graphTop + 41, graphEnd, height - 4);
+                        g.DrawLine(black75, ticks[0], graphTop + 41, ticks[0], height - 4);
+                        g.DrawLine(black50, ticks[1], graphTop + 41, ticks[1], height - 4);
+                        g.DrawLine(black50, ticks[2], graphTop + 41, ticks[2], height - 4);
+                        g.DrawLine(black25, ticks[3], graphTop + 41, ticks[3], height - 4);
+                        g.DrawLine(black25, ticks[4], graphTop + 41, ticks[4], height - 4);
+                        g.DrawLine(black25, ticks[5], graphTop + 41, ticks[5], height - 4);
+                        g.DrawLine(black25, ticks[6], graphTop + 41, ticks[6], height - 4);
+                        g.DrawLine(black200, graphStart - 4, graphTop + 40, graphEnd + 4, graphTop + 40);
+                        g.DrawLine(black200, graphStart, graphTop + 36, graphStart, height - 4);
+                        g.DrawLine(black200, graphEnd, graphTop + 36, graphEnd, height - 4);
+                        g.DrawLine(black200, graphStart - 4, height - 44, graphEnd + 4, height - 44);
+
+                        g.DrawString(TimeFormat(0f), fontLegend, black200brush, graphStart, graphTop + 36, formatTick);
+                        g.DrawString(TimeFormat(maxScale), fontLegend, black200brush, graphEnd, graphTop + 36, formatTick);
+                        g.DrawString(TimeFormat(maxScale * 0.5f), fontLegend, black200brush, ticks[0], graphTop + 36, formatTick);
+                        g.DrawString(TimeFormat(maxScale * 0.75f), fontLegend, black150brush, ticks[1], graphTop + 36, formatTick);
+                        g.DrawString(TimeFormat(maxScale * 0.25f), fontLegend, black150brush, ticks[2], graphTop + 36, formatTick);
+                        g.DrawString(TimeFormat(maxScale * 0.125f), fontLegend, black75brush, ticks[3], graphTop + 36, formatTick);
+                        g.DrawString(TimeFormat(maxScale * 0.375f), fontLegend, black75brush, ticks[4], graphTop + 36, formatTick);
+                        g.DrawString(TimeFormat(maxScale * 0.625f), fontLegend, black75brush, ticks[5], graphTop + 36, formatTick);
+                        g.DrawString(TimeFormat(maxScale * 0.875f), fontLegend, black75brush, ticks[6], graphTop + 36, formatTick);
+                        #endregion
+
+                        List<SequenceReconstruction.SequenceItem> sequence = calculationOptions.SequenceReconstruction.sequence;
+
+                        float mana = calculationOptions.Calculations.StartingMana;
+                        float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
+                        int gemCount = 0;
+                        float time = 0;
+                        Color manaFill = Color.FromArgb(50, Color.Blue);
+                        float lastMana = mana;
+                        float maxMana = calculationOptions.Calculations.BaseStats.Mana;
+                        float maxDps = 0;
+                        for (int i = 0; i < sequence.Count; i++)
+                        {
+                            int index = sequence[i].Index;
+                            VariableType type = sequence[i].VariableType;
+                            float duration = (float)sequence[i].Duration;
+                            Spell spell = sequence[i].Spell;
+                            if (spell != null && spell.DamagePerSecond > maxDps) maxDps = spell.DamagePerSecond;
+                            CastingState state = sequence[i].CastingState;
+                            float mps = (float)sequence[i].Mps;
+                            if (sequence[i].IsManaPotionOrGem)
+                            {
+                                duration = 0;
+                                if (sequence[i].VariableType == VariableType.ManaGem)
+                                {
+                                    mana += (1 + calculationOptions.Calculations.BaseStats.BonusManaGem) * gemValue[gemCount];
+                                    gemCount++;
+                                }
+                                else if (sequence[i].VariableType == VariableType.ManaPotion)
+                                {
+                                    mana += (1 + calculationOptions.Calculations.BaseStats.BonusManaPotion) * 2400;
+                                }
+                                if (mana < 0) mana = 0;
+                                if (mana > maxMana)
+                                {
+                                    mana = maxMana;
+                                }
+                                g.DrawLine(Pens.Aqua, graphStart + time / maxScale * graphWidth, height - 44 - graphHeight * lastMana / maxMana, graphStart + time / maxScale * graphWidth, height - 44 - graphHeight * mana / maxMana);
+                            }
+                            else
+                            {
+                                if (sequence[i].VariableType == VariableType.Evocation)
+                                {
+                                    mps = -(float)calculationOptions.Calculations.EvocationRegen;
+                                }
+                                float partTime = duration;
+                                if (mana - mps * duration < 0) partTime = mana / mps;
+                                else if (mana - mps * duration > maxMana) partTime = (mana - maxMana) / mps;
+                                mana -= mps * duration;
+                                if (mana < 0) mana = 0;
+                                if (mana > maxMana)
+                                {
+                                    mana = maxMana;
+                                }
+                                float x1 = graphStart + time / maxScale * graphWidth;
+                                float x2 = graphStart + (time + partTime) / maxScale * graphWidth;
+                                float x3 = graphStart + (time + duration) / maxScale * graphWidth;
+                                float y1 = height - 44 - graphHeight * lastMana / maxMana;
+                                float y2 = height - 44 - graphHeight * mana / maxMana;
+                                float y3 = height - 44;
+                                g.FillPolygon(new SolidBrush(manaFill), new PointF[] { new PointF(x1, y1), new PointF(x2, y2), new PointF(x3, y2), new PointF(x3, y3), new PointF(x1, y3) });
+                                g.DrawLine(Pens.Aqua, x1, y1, x2, y2);
+                                g.DrawLine(Pens.Aqua, x2, y2, x3, y2);
+                            }
+                            lastMana = mana;
+                            time += duration;
+                        }
+
+                        maxDps *= 1.1f;
+                        List<PointF> list = new List<PointF>();
+                        time = 0.0f;
+                        for (int i = 0; i < sequence.Count; i++)
+                        {
+                            int index = sequence[i].Index;
+                            VariableType type = sequence[i].VariableType;
+                            float duration = (float)sequence[i].Duration;
+                            Spell spell = sequence[i].Spell;
+                            CastingState state = sequence[i].CastingState;
+                            float mps = (float)sequence[i].Mps;
+                            if (sequence[i].IsManaPotionOrGem) duration = 0;
+                            float dps = 0;
+                            if (spell != null)
+                            {
+                                dps = spell.DamagePerSecond;
+                            }
+                            if (duration > 0)
+                            {
+                                list.Add(new PointF(graphStart + (time + 0.1f * duration) / maxScale * graphWidth, height - 44 - graphHeight * dps / maxDps));
+                                list.Add(new PointF(graphStart + (time + 0.9f * duration) / maxScale * graphWidth, height - 44 - graphHeight * dps / maxDps));
+                            }
+                            time += duration;
+                        }
+                        g.DrawLines(Pens.Red, list.ToArray());
+
+                        for (int cooldown = 0; cooldown < cooldownNames.Length; cooldown++)
+                        {
+                            blendSubPoint = new System.Drawing.Drawing2D.ColorBlend(3);
+                            blendSubPoint.Colors = new Color[] { colorSubPointsA[cooldown], colorSubPointsB[cooldown], colorSubPointsA[cooldown] };
+                            blendSubPoint.Positions = new float[] { 0f, 0.5f, 1f };
+                            bool on = false;
+                            float timeOn = 0.0f;
+                            time = 0;
+                            for (int i = 0; i < sequence.Count; i++)
+                            {
+                                float duration = (float)sequence[i].Duration;
+                                if (sequence[i].IsManaPotionOrGem) duration = 0;
+                                if (on && !sequence[i].CastingState.GetCooldown((Cooldown)cooldown) && !sequence[i].IsManaPotionOrGem)
+                                {
+                                    on = false;
+                                    RectangleF rect = new RectangleF(graphStart + graphWidth * timeOn / maxScale, height - 44 + cooldown * 4, graphWidth * (time - timeOn) / maxScale, 4);
+                                    brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rect, colorSubPointsA[cooldown], colorSubPointsB[cooldown], 67f);
+                                    brushSubPointFill.InterpolationColors = blendSubPoint;
+
+                                    g.FillRectangle(brushSubPointFill, rect);
+                                    g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
+                                    g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
+                                    g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
+                                }
+                                else if (!on && sequence[i].CastingState.GetCooldown((Cooldown)cooldown))
+                                {
+                                    on = true;
+                                    timeOn = time;
+                                }
+                                time += duration;
+                            }
+                            if (on)
+                            {
+                                RectangleF rect = new RectangleF(graphStart + graphWidth * timeOn / maxScale, height - 44 + cooldown * 4, graphWidth * (time - timeOn) / maxScale, 4);
+                                brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rect, colorSubPointsA[cooldown], colorSubPointsB[cooldown], 67f);
+                                brushSubPointFill.InterpolationColors = blendSubPoint;
+
+                                g.FillRectangle(brushSubPointFill, rect);
+                                g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
+                                g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
+                                g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
+                            }
+                        }
+                    }
+                    break;
             }
         }
 

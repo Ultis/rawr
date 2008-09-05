@@ -131,7 +131,11 @@ namespace Rawr
 		{
 			get { return Instance.CustomChartNames; }
 		}
-		public static Dictionary<string, System.Drawing.Color> SubPointNameColors
+        public static string[] CustomRenderedChartNames
+        {
+            get { return Instance.CustomRenderedChartNames; }
+        }
+        public static Dictionary<string, System.Drawing.Color> SubPointNameColors
 		{
 			get { return Instance.SubPointNameColors; }
 		}
@@ -193,7 +197,11 @@ namespace Rawr
 		{
 			return Instance.GetCustomChartData(character, chartName);
 		}
-		public static Stats GetRelevantStats(Stats stats)
+        public static void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
+        {
+            Instance.RenderCustomChart(character, chartName, g, width, height);
+        }
+        public static Stats GetRelevantStats(Stats stats)
 		{
 			return Instance.GetRelevantStats(stats);
 		}
@@ -233,7 +241,7 @@ namespace Rawr
             }
             return null;
         }
-	}
+    }
 
 	/// <summary>
 	/// CalculationsBase is the base class which each model's main Calculations class will inherit from.
@@ -279,6 +287,11 @@ namespace Rawr
 		/// The names of all custom charts provided by the model, if any.
 		/// </summary>
 		public abstract string[] CustomChartNames { get; }
+
+        /// <summary>
+        /// The names of charts for which the model provides custom rendering.
+        /// </summary>
+        public virtual string[] CustomRenderedChartNames { get { return new string[] { }; } }
 
 		/// <summary>
 		/// A custom panel inheriting from CalculationOptionsPanelBase which contains controls for
@@ -371,7 +384,17 @@ namespace Rawr
 		/// <param name="chartName">The name of the custom chart to get data for.</param>
 		/// <returns>The data for the custom chart.</returns>
 		public abstract ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName);
-		
+
+        /// <summary>
+        /// Render custom chart, based on the chart name, as defined in CustomRenderedChartNames.
+        /// </summary>
+        /// <param name="character">The character to build the chart for.</param>
+        /// <param name="chartName">The name of the custom chart to get data for.</param>
+        /// <param name="g">Graphics object used to render the chart.</param>
+        /// <param name="width">Width of the graph.</param>
+        /// <param name="height">Height of the graph.</param>
+        public virtual void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height) { }
+
 		/// <summary>
 		/// Filters a Stats object to just the stats relevant to the model.
 		/// </summary>
@@ -754,10 +777,7 @@ namespace Rawr
         {
             get { return false; }
         }
-
-
-
-	}
+    }
 
 	/// <summary>
 	/// Base CharacterCalculations class, which will hold the final result data of the calculations from

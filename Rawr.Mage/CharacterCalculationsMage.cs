@@ -122,6 +122,8 @@ namespace Rawr.Mage
 
         public string ReconstructSequence()
         {
+            CalculationOptions.SequenceReconstruction = null;
+            CalculationOptions.Calculations = null;
             if (!CalculationOptions.ReconstructSequence) return "*Disabled";
             if (CalculationOptions.FightDuration > 900) return "*Unavailable";
 
@@ -220,6 +222,8 @@ namespace Rawr.Mage
 
             sequence.RemoveIndex(ColumnTimeExtension);
             sequence.Compact(true);
+            CalculationOptions.SequenceReconstruction = sequence;
+            CalculationOptions.Calculations = this;
 
             // evaluate sequence
             unexplained = sequence.Evaluate(timing, Sequence.EvaluationMode.Unexplained);

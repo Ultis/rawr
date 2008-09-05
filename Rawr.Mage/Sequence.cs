@@ -6,7 +6,7 @@ namespace Rawr.Mage.SequenceReconstruction
 {
     public class Sequence : IComparer<SequenceItem>
     {
-        private List<SequenceItem> sequence = new List<SequenceItem>();
+        internal List<SequenceItem> sequence = new List<SequenceItem>();
 
         public void Add(SequenceItem item)
         {

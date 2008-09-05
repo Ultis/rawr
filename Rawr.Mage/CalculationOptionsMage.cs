@@ -59,6 +59,10 @@ namespace Rawr.Mage
         public string IncrementalSetArmor;
         [XmlIgnore]
         public VariableType[] IncrementalSetVariableType;
+        [XmlIgnore]
+        public Rawr.Mage.SequenceReconstruction.Sequence SequenceReconstruction;
+        [XmlIgnore]
+        public CharacterCalculationsMage Calculations;
 
         [XmlIgnore]
         public Character Character

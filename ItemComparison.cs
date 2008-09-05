@@ -59,6 +59,7 @@ namespace Rawr
             }
 
             comparisonGraph1.RoundValues = true;
+            comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = itemCalculations.ToArray();
             comparisonGraph1.EquipSlot = slot == Character.CharacterSlot.Gems || slot == Character.CharacterSlot.Metas ?
                 Character.CharacterSlot.None : slot;
@@ -69,6 +70,7 @@ namespace Rawr
             if (Items != null && Character != null)
             {
                 comparisonGraph1.RoundValues = true;
+                comparisonGraph1.CustomRendered = false;
                 comparisonGraph1.ItemCalculations = Calculations.GetEnchantCalculations(slot, Character, currentCalculations).ToArray();
                 comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
             }
@@ -79,6 +81,7 @@ namespace Rawr
             if (Items != null && Character != null)
             {
                 comparisonGraph1.RoundValues = true;
+                comparisonGraph1.CustomRendered = false;
                 comparisonGraph1.ItemCalculations = Calculations.GetBuffCalculations(Character, currentCalculations, buffType, activeOnly).ToArray();
                 comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
             }
@@ -211,6 +214,7 @@ namespace Rawr
             }
 
             comparisonGraph1.RoundValues = true;
+            comparisonGraph1.CustomRendered = false;
             comparisonGraph1.DisplayMode = ComparisonGraph.GraphDisplayMode.Overall;
             comparisonGraph1.ItemCalculations = itemCalculations.ToArray();
             comparisonGraph1.EquipSlot = Character.CharacterSlot.AutoSelect;
@@ -246,6 +250,7 @@ namespace Rawr
             }
 
             comparisonGraph1.RoundValues = true;
+            comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = itemCalculations.ToArray();
             comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
         }
@@ -253,7 +258,17 @@ namespace Rawr
         public void LoadCustomChart(string chartName)
         {
             comparisonGraph1.RoundValues = true;
+            comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = Calculations.GetCustomChartData(Character, chartName);
+            comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
+        }
+
+        internal void LoadCustomRenderedChart(string chartName)
+        {
+            comparisonGraph1.RoundValues = true;
+            comparisonGraph1.CustomRendered = true;
+            comparisonGraph1.CustomRenderedChartName = chartName;
+            comparisonGraph1.ItemCalculations = null;
             comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
         }
     }
