@@ -1443,7 +1443,7 @@ namespace Rawr.Mage
             SpellData[RankLevelIndex(12, 77)] = new SpellData() { Cost = (int)(0.34 * BaseMana[77]), MinDamage = 323.0f * 5, MaxDamage = 323.0f * 5, SpellDamageCoefficient = 5f / 3.5f };
             SpellData[RankLevelIndex(12, 78)] = new SpellData() { Cost = (int)(0.34 * BaseMana[78]), MinDamage = 324.8f * 5, MaxDamage = 324.8f * 5, SpellDamageCoefficient = 5f / 3.5f };
             SpellData[RankLevelIndex(13, 79)] = new SpellData() { Cost = (int)(0.34 * BaseMana[79]), MinDamage = 360.0f * 5, MaxDamage = 360.0f * 5, SpellDamageCoefficient = 5f / 3.5f };
-            SpellData[RankLevelIndex(13, 80)] = new SpellData() { Cost = (int)(0.34 * BaseMana[80]), MinDamage = 361.5f * 5, MaxDamage = 361.5f * 5, SpellDamageCoefficient = 5f / 3.5f };
+            SpellData[RankLevelIndex(13, 80)] = new SpellData() { Cost = (int)(0.34 * BaseMana[80]), MinDamage = 361.9f * 5, MaxDamage = 361.9f * 5, SpellDamageCoefficient = 5f / 3.5f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
