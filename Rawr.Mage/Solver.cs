@@ -221,6 +221,19 @@ namespace Rawr.Mage
             return bestEffect;
         }
 
+        private double MaximizeEffectDuration(double fightDuration, double effectDuration, double effectCooldown)
+        {
+            if (fightDuration < effectDuration) return fightDuration;
+            double total = effectDuration;
+            fightDuration -= effectDuration;
+            int count = (int)(fightDuration / effectCooldown);
+            total += effectDuration * count;
+            fightDuration -= effectCooldown * count;
+            fightDuration -= effectCooldown - effectDuration;
+            if (fightDuration > 0) total += fightDuration;
+            return total;
+        }
+
         private static object calculationLock = new object();
 
         public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana)
@@ -1111,10 +1124,10 @@ namespace Rawr.Mage
             }
             else
             {
-                ivlength = (1 + (int)((calculationOptions.FightDuration - 20f) / calculationResult.IcyVeinsCooldown)) * 20;
+                ivlength = MaximizeEffectDuration(calculationOptions.FightDuration, 20.0, calculationResult.IcyVeinsCooldown);
             }
 
-            double aplength = (1 + (int)((calculationOptions.FightDuration - 30f) / calculationResult.ArcanePowerCooldown)) * 15;
+            double aplength = MaximizeEffectDuration(calculationOptions.FightDuration, 15.0, calculationResult.ArcanePowerCooldown);
             double mflength = calculationOptions.MoltenFuryPercentage * calculationOptions.FightDuration;
             double dpivstackArea = calculationOptions.FightDuration;
             //if (mfAvailable && heroismAvailable) dpivstackArea -= 120; // only applies if heroism and iv cannot stack

@@ -536,7 +536,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         if (jj >= i)
                         {
                             sequence.RemoveRange(k, kk - k);
-                            if (jT > 0)
+                            if (jT > eps)
                             {
                                 SplitAt(jj, jT);
                                 jj++;
@@ -3024,7 +3024,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     if (state != null && state.IcyVeins)
                     {
-                        if (ivCooldown > eps && coldsnapCooldown > eps)
+                        if (ivCooldown > eps && (!coldsnap || coldsnapCooldown > eps))
                         {
                             unexplained += duration;
                             if (timing != null && !ivWarning) timing.AppendLine("WARNING: Icy Veins cooldown not ready!");

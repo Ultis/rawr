@@ -1971,6 +1971,22 @@ namespace Rawr.Mage
                 ThreatPerSecond = AB3.ThreatPerSecond;
                 ManaRegenPerSecond = AB3.ManaRegenPerSecond;
             }
+            else if (AB3.CastTime + MBAM.CastTime < 3.0)
+            {
+                //AB3 0.85
+
+                //AB3-MBAM 0.15
+                chain1 = new SpellCycle(3);
+                chain1.AddSpell(AB3, castingState);
+                chain1.AddSpell(AB3, castingState); // account for latency
+                chain1.AddSpell(MBAM, castingState);
+
+                CastTime = (1 - MB) * AB3.CastTime + MB * chain1.CastTime;
+                CostPerSecond = ((1 - MB) * AB3.CostPerSecond * AB3.CastTime + MB * chain1.CostPerSecond * chain1.CastTime) / CastTime;
+                DamagePerSecond = ((1 - MB) * AB3.DamagePerSecond * AB3.CastTime + MB * chain1.DamagePerSecond * chain1.CastTime) / CastTime;
+                ThreatPerSecond = ((1 - MB) * AB3.ThreatPerSecond * AB3.CastTime + MB * chain1.ThreatPerSecond * chain1.CastTime) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * AB3.ManaRegenPerSecond * AB3.CastTime + MB * chain1.ManaRegenPerSecond * chain1.CastTime) / CastTime;
+            }
             else
             {
                 //AB3 0.85
@@ -2023,6 +2039,11 @@ namespace Rawr.Mage
             if (chain1 == null)
             {
                 AB3.AddSpellContribution(dict, duration);
+            }
+            else if (chain3 == null)
+            {
+                AB3.AddSpellContribution(dict, duration * (1 - MB) * AB3.CastTime / CastTime);
+                chain1.AddSpellContribution(dict, duration * MB * chain1.CastTime / CastTime);
             }
             else
             {

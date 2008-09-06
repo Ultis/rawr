@@ -407,7 +407,7 @@ namespace Rawr.Mage
                 // iv
                 if (valid && icyVeinsAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), coldsnapAvailable, 20.0);
+                    valid = ValidateCooldown(Cooldown.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0);
                 }
                 if (valid && icyVeinsAvailable && coldsnapAvailable)
                 {
