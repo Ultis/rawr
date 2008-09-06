@@ -102,6 +102,10 @@ namespace Rawr.Mage
         public int MaxManaGem;
         public int MaxEvocation;
 
+        public double IcyVeinsCooldown;
+        public double ColdsnapCooldown;
+        public double ArcanePowerCooldown;
+
         public double[] Solution;
         public List<SolutionVariable> SolutionVariable;
         public float Tps;

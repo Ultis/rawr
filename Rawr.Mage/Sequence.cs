@@ -84,7 +84,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         if (sequence[j].Group.Contains(constraint.Group))
                         {
-                            if (!constraint.ColdSnap || (group.MinTime - sequence[j].MinTime >= 180 - eps)) // make sure to ignore coldsnapped constraints
+                            if (!constraint.ColdSnap || (group.MinTime - sequence[j].MinTime >= SequenceItem.Calculations.IcyVeinsCooldown - eps)) // make sure to ignore coldsnapped constraints
                             {
                                 minTime = Math.Max(minTime, sequence[j].Timestamp + constraint.Cooldown - diff);
                             }
@@ -929,7 +929,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.ArcanePower) list.Add(item);
             }
-            GroupCooldown(list, 15, SequenceItem.Calculations.CalculationOptions.WotLK ? 180.0 - 30.0 * SequenceItem.Calculations.CalculationOptions.ArcaneFlows : 180.0);
+            GroupCooldown(list, 15, SequenceItem.Calculations.ArcanePowerCooldown);
         }
 
         public void GroupIcyVeins()
@@ -939,7 +939,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.IcyVeins) list.Add(item);
             }
-            GroupCooldown(list, 20, 180, false, SequenceItem.Calculations.CalculationOptions.ColdSnap == 1);
+            GroupCooldown(list, 20, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.CalculationOptions.ColdSnap == 1);
         }
 
         public void GroupFlameCap()
@@ -1336,7 +1336,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                 for (int j = i + 1; j < compactItems.Count; j++)
                                 {
                                     // skip cooldown constraints that are coldsnapped in the solution
-                                    if (compactItems[j].Group.Contains(constraint.Group) && (!constraint.ColdSnap || (compactItems[j].MinTime - item.MinTime >= 180 - eps)))
+                                    if (compactItems[j].Group.Contains(constraint.Group) && (!constraint.ColdSnap || (compactItems[j].MinTime - item.MinTime >= SequenceItem.Calculations.IcyVeinsCooldown - eps)))
                                     {
                                         time = Math.Min(time, compactItems[j].MaxTime - constraint.Cooldown);
                                         break;
@@ -1680,9 +1680,9 @@ namespace Rawr.Mage.SequenceReconstruction
                                             // we need internal coldsnap
                                             if (coldsnap[i] == 1)
                                             {
-                                                double normalTime = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + 180);
+                                                double normalTime = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
                                                 double coldsnapReady = 0;
-                                                if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + 8 * 60 * (1 - 0.1 * SequenceItem.Calculations.CalculationOptions.IceFloes);
+                                                if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
                                                 // we have to do first one on normal time and have coldsnap ready in the middle
                                                 time = Math.Max(normalTime, coldsnapReady - 20.0);
                                                 coldsnapTime[i] = Math.Max(time, coldsnapReady);
@@ -1693,7 +1693,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 valid = false;
                                             }
                                         }
-                                        else if (time - constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] >= 180 - eps)
+                                        else if (time - constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] >= SequenceItem.Calculations.IcyVeinsCooldown - eps)
                                         {
                                             // don't need coldsnap and can start right at time
                                             coldsnap[i] = 0;
@@ -1701,9 +1701,9 @@ namespace Rawr.Mage.SequenceReconstruction
                                         else if (coldsnap[i] == 1)
                                         {
                                             // use coldsnap
-                                            double normalTime = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + 180);
+                                            double normalTime = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
                                             double coldsnapReady = 0;
-                                            if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + 8 * 60 * (1 - 0.1 * SequenceItem.Calculations.CalculationOptions.IceFloes);
+                                            if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
                                             if (coldsnapReady >= normalTime)
                                             {
                                                 // coldsnap won't be ready until IV will be back anyway, so we don't actually need it
@@ -1721,7 +1721,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                         {
                                             // we are not allowed to use coldsnap even if we could
                                             // make sure to adjust by coldsnap constraints
-                                            time = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + 180);
+                                            time = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
                                         }
                                     }
                                     else if (coldsnapGroup != null && coldsnapGroup.Duration > 20.0 + eps)
@@ -2476,7 +2476,7 @@ namespace Rawr.Mage.SequenceReconstruction
             ReportMode reportMode = ReportMode.Compact;
 
             bool coldsnap = SequenceItem.Calculations.CalculationOptions.ColdSnap == 1;
-            float coldsnapCooldownDuration = 8 * 60 * (1 - 0.1f * SequenceItem.Calculations.CalculationOptions.IceFloes);
+            double coldsnapCooldownDuration = SequenceItem.Calculations.ColdsnapCooldown;
 
             int gemCount = 0;
             double potionCooldown = 0;
@@ -2987,7 +2987,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         else
                         {
                             if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Arcane Power (" + Math.Round(manabefore).ToString() + " mana)");
-                            apCooldown = (SequenceItem.Calculations.CalculationOptions.WotLK ? 180.0 - 30.0 * SequenceItem.Calculations.CalculationOptions.ArcaneFlows : 180.0);
+                            apCooldown = SequenceItem.Calculations.ArcanePowerCooldown;
                             apTime = time;
                             apWarning = false;
                         }
@@ -3038,7 +3038,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                 coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
                             }
                             if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Icy Veins (" + Math.Round(manabefore).ToString() + " mana)");
-                            ivCooldown = 180;
+                            ivCooldown = SequenceItem.Calculations.IcyVeinsCooldown;
                             ivTime = time;
                             ivWarning = false;
                             lastIVstart = time;

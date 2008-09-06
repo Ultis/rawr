@@ -42,7 +42,6 @@ namespace Rawr.Mage
         private bool drumsOfBattleAvailable;
         private bool flameCapAvailable;
 
-        private double arcanePowerCooldown;
         private double waterElementalCooldown;
       
         private bool trinket1OnManaGem;
@@ -51,8 +50,6 @@ namespace Rawr.Mage
         private double trinket1Duration;
         private double trinket2Cooldown;
         private double trinket2Duration;
-
-        private double coldsnapCooldown;
 
         #region LP rows
         private int rowManaRegen = -1;
@@ -249,6 +246,12 @@ namespace Rawr.Mage
                 segments = (segmentCooldowns) ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
                 segmentColumn = new int[segments + 1];
 
+                calculationResult = new CharacterCalculationsMage();
+                calculationResult.Calculations = calculations;
+                calculationResult.BaseStats = characterStats;
+                calculationResult.Character = character;
+                calculationResult.CalculationOptions = calculationOptions;
+
                 heroismAvailable = calculationOptions.HeroismAvailable;
                 arcanePowerAvailable = !calculationOptions.DisableCooldowns && (calculationOptions.ArcanePower == 1);
                 icyVeinsAvailable = !calculationOptions.DisableCooldowns && (calculationOptions.IcyVeins == 1);
@@ -260,8 +263,9 @@ namespace Rawr.Mage
                 destructionPotionAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DestructionPotion;
                 flameCapAvailable = !calculationOptions.DisableCooldowns && calculationOptions.FlameCap;
                 drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
-                coldsnapCooldown = 8 * 60 * (1 - 0.1f * calculationOptions.IceFloes);
-                arcanePowerCooldown = calculationOptions.WotLK ? 180.0 - 30.0 * calculationOptions.ArcaneFlows : 180.0;
+                calculationResult.ColdsnapCooldown = 8 * 60 * (calculationOptions.WotLK ? 1 : (1 - 0.1f * calculationOptions.IceFloes));
+                calculationResult.ArcanePowerCooldown = calculationOptions.WotLK ? 180.0 - 30.0 * calculationOptions.ArcaneFlows : 180.0;
+                calculationResult.IcyVeinsCooldown = calculationOptions.WotLK ? 180.0 * (1 - 0.07 * calculationOptions.IceFloes + (calculationOptions.IceFloes == 3 ? 0.01 : 0.00)) : 180.0;
                 waterElementalCooldown = 180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0);
 
                 trinket1OnManaGem = false;
@@ -279,12 +283,6 @@ namespace Rawr.Mage
                         calculationOptions.FlameCap = false;
                     }
                 }
-
-                calculationResult = new CharacterCalculationsMage();
-                calculationResult.Calculations = calculations;
-                calculationResult.BaseStats = characterStats;
-                calculationResult.Character = character;
-                calculationResult.CalculationOptions = calculationOptions;
 
                 #region Setup Trinkets
                 if (trinket1Available)
@@ -932,8 +930,8 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowEvocation, column, calculationResult.EvocationDuration / 480.0);
                     lp.SetElementUnsafe(rowPotion, column, 1.0 / 120.0);
                     lp.SetElementUnsafe(rowManaGem, column, 1.0 / 120.0);
-                    lp.SetElementUnsafe(rowArcanePower, column, 15.0 / arcanePowerCooldown);
-                    lp.SetElementUnsafe(rowIcyVeins, column, 20.0 / 180.0 + (coldsnapAvailable ? 20.0 / coldsnapCooldown : 0.0));
+                    lp.SetElementUnsafe(rowArcanePower, column, 15.0 / calculationResult.ArcanePowerCooldown);
+                    lp.SetElementUnsafe(rowIcyVeins, column, 20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0));
                     lp.SetElementUnsafe(rowMoltenFury, column, calculationOptions.MoltenFuryPercentage);
                     lp.SetElementUnsafe(rowManaGemFlameCap, column, 1f / 120f);
                     lp.SetElementUnsafe(rowTrinket1, column, trinket1Duration / trinket1Cooldown);
@@ -1054,7 +1052,7 @@ namespace Rawr.Mage
         private void SetProblemRHS()
         {
             #region Water Elemental
-            int coldsnapCount = coldsnapAvailable ? (1 + (int)((calculationOptions.FightDuration - 45f) / coldsnapCooldown)) : 0;
+            int coldsnapCount = coldsnapAvailable ? (1 + (int)((calculationOptions.FightDuration - 45f) / calculationResult.ColdsnapCooldown)) : 0;
 
             // water elemental
             if (calculationOptions.SummonWaterElemental == 1)
@@ -1081,7 +1079,7 @@ namespace Rawr.Mage
                 multiplier *= partialResistFactor;
                 calculationResult.WaterElementalDps = (521.5f + (0.4f * calculationResult.BaseState.FrostDamage + (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath of Air")) ? 101 : 0)) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f;
                 calculationResult.WaterElementalDuration = (float)(1 + (int)((calculationOptions.FightDuration - 45f) / waterElementalCooldown)) * 45;
-                if (coldsnapAvailable) calculationResult.WaterElementalDuration = (float)MaximizeColdsnapDuration(calculationOptions.FightDuration, coldsnapCooldown, 45.0, waterElementalCooldown, out coldsnapCount);
+                if (coldsnapAvailable) calculationResult.WaterElementalDuration = (float)MaximizeColdsnapDuration(calculationOptions.FightDuration, calculationResult.ColdsnapCooldown, 45.0, waterElementalCooldown, out coldsnapCount);
                 /*calculatedStats.WaterElementalDuration = (float)(1 + coldsnapCount + (int)((calculatedStats.FightDuration - coldsnapCount * coldsnapDelay - 45f) / 180f)) * 45;
                 float nextElementalEnd = (float)((calculatedStats.WaterElementalDuration / 45f - coldsnapCount) * 180f + coldsnapCount * coldsnapDelay + 45f);
                 if (nextElementalEnd - 45.0f < calculationOptions.FightDuration) calculatedStats.WaterElementalDuration += calculationOptions.FightDuration - nextElementalEnd + 45.0f;
@@ -1101,7 +1099,7 @@ namespace Rawr.Mage
             double ivlength = 0.0;
             if (calculationOptions.SummonWaterElemental == 0 && coldsnapAvailable)
             {
-                ivlength = Math.Floor(MaximizeColdsnapDuration(calculationOptions.FightDuration, coldsnapCooldown, 20.0, 180.0, out coldsnapCount));
+                ivlength = Math.Floor(MaximizeColdsnapDuration(calculationOptions.FightDuration, calculationResult.ColdsnapCooldown, 20.0, calculationResult.IcyVeinsCooldown, out coldsnapCount));
             }
             else if (calculationOptions.SummonWaterElemental == 1 && coldsnapAvailable)
             {
@@ -1113,10 +1111,10 @@ namespace Rawr.Mage
             }
             else
             {
-                ivlength = (1 + (int)((calculationOptions.FightDuration - 20f) / 180f)) * 20;
+                ivlength = (1 + (int)((calculationOptions.FightDuration - 20f) / calculationResult.IcyVeinsCooldown)) * 20;
             }
 
-            double aplength = (1 + (int)((calculationOptions.FightDuration - 30f) / arcanePowerCooldown)) * 15;
+            double aplength = (1 + (int)((calculationOptions.FightDuration - 30f) / calculationResult.ArcanePowerCooldown)) * 15;
             double mflength = calculationOptions.MoltenFuryPercentage * calculationOptions.FightDuration;
             double dpivstackArea = calculationOptions.FightDuration;
             //if (mfAvailable && heroismAvailable) dpivstackArea -= 120; // only applies if heroism and iv cannot stack
@@ -1202,9 +1200,9 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowManaGem, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             lp.SetRHSUnsafe(rowManaGemOnly, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             if (heroismAvailable) lp.SetRHSUnsafe(rowHeroism, 40);
-            if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? 15.0 / arcanePowerCooldown * calculationOptions.FightDuration : aplength);
+            if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? 15.0 / calculationResult.ArcanePowerCooldown * calculationOptions.FightDuration : aplength);
             if (heroismAvailable && arcanePowerAvailable) lp.SetRHSUnsafe(rowHeroismArcanePower, 15);
-            if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeins, calculationOptions.AverageCooldowns ? (20.0 / 180.0 + (coldsnapAvailable ? 20.0 / coldsnapCooldown : 0.0)) * calculationOptions.FightDuration : ivlength);
+            if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeins, calculationOptions.AverageCooldowns ? (20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0)) * calculationOptions.FightDuration : ivlength);
             if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFury, mflength);
             if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryDestructionPotion, 15);
             if (moltenFuryAvailable && icyVeinsAvailable) lp.SetRHSUnsafe(rowMoltenFuryIcyVeins, coldsnapAvailable ? 40 : 20);
@@ -1285,7 +1283,7 @@ namespace Rawr.Mage
                     for (int seg = 0; seg < segments; seg++)
                     {
                         lp.SetRHSUnsafe(rowSegmentArcanePower + seg, 15.0);
-                        double cool = arcanePowerCooldown;
+                        double cool = calculationResult.ArcanePowerCooldown;
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
@@ -1295,7 +1293,7 @@ namespace Rawr.Mage
                     for (int seg = 0; seg < segments; seg++)
                     {
                         lp.SetRHSUnsafe(rowSegmentIcyVeins + seg, 20 + (coldsnapAvailable ? 20 : 0));
-                        double cool = 180 + (coldsnapAvailable ? 20 : 0);
+                        double cool = calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20 : 0);
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
@@ -1480,7 +1478,7 @@ namespace Rawr.Mage
                     for (int seg = 0; seg < segments; seg++)
                     {
                         rowCount++;
-                        double cool = arcanePowerCooldown;
+                        double cool = calculationResult.ArcanePowerCooldown;
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
@@ -1491,7 +1489,7 @@ namespace Rawr.Mage
                     for (int seg = 0; seg < segments; seg++)
                     {
                         rowCount++;
-                        double cool = 180 + (coldsnapAvailable ? 20 : 0);
+                        double cool = calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20 : 0);
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
@@ -1689,7 +1687,7 @@ namespace Rawr.Mage
                     bound = Math.Min(bound, 15.0);
                     for (int ss = 0; ss < segments; ss++)
                     {
-                        double cool = arcanePowerCooldown;
+                        double cool = calculationResult.ArcanePowerCooldown;
                         int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                         if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentArcanePower + ss, column, 1.0);
@@ -1701,7 +1699,7 @@ namespace Rawr.Mage
                     bound = Math.Min(bound, (coldsnapAvailable) ? 40.0 : 20.0);
                     for (int ss = 0; ss < segments; ss++)
                     {
-                        double cool = 180 + (coldsnapAvailable ? 20 : 0);
+                        double cool = calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20 : 0);
                         int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                         if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentIcyVeins + ss, column, 1.0);

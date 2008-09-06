@@ -402,12 +402,12 @@ namespace Rawr.Mage
                 // ap
                 if (valid && arcanePowerAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.ArcanePower, 15.0, arcanePowerCooldown, true, 15.0);
+                    valid = ValidateCooldown(Cooldown.ArcanePower, 15.0, calculationResult.ArcanePowerCooldown, true, 15.0);
                 }
                 // iv
                 if (valid && icyVeinsAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), 180.0 + (coldsnapAvailable ? 20.0 : 0.0), coldsnapAvailable, 20.0);
+                    valid = ValidateCooldown(Cooldown.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), coldsnapAvailable, 20.0);
                 }
                 if (valid && icyVeinsAvailable && coldsnapAvailable)
                 {
@@ -1552,10 +1552,10 @@ namespace Rawr.Mage
         {
             if (!lp.HasColdsnapConstraints)
             {
-                lp.AddColdsnapConstraints(segments + (int)(180.0 / segmentDuration) - 1);
-                for (int seg = 0; seg < segments + (int)(180.0 / segmentDuration) - 1; seg++)
+                lp.AddColdsnapConstraints(segments + (int)(calculationResult.IcyVeinsCooldown / segmentDuration) - 1);
+                for (int seg = 0; seg < segments + (int)(calculationResult.IcyVeinsCooldown / segmentDuration) - 1; seg++)
                 {
-                    for (int outseg = Math.Max(0, (int)Math.Ceiling(seg + 1 - 180.0 / segmentDuration - 0.000001)); outseg <= Math.Min(seg, segments - 1); outseg++)
+                    for (int outseg = Math.Max(0, (int)Math.Ceiling(seg + 1 - calculationResult.IcyVeinsCooldown / segmentDuration - 0.000001)); outseg <= Math.Min(seg, segments - 1); outseg++)
                     {
                         for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
                         {
@@ -1609,7 +1609,7 @@ namespace Rawr.Mage
                                 coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapTimer, lastIVstart);
                                 lastIVstart += 20.0;
                                 ivCooldown += 20.0;
-                                coldsnapTimer = coldsnapCooldown - (seg * segmentDuration - coldsnapActivation);
+                                coldsnapTimer = calculationResult.ColdsnapCooldown - (seg * segmentDuration - coldsnapActivation);
                             }
                             if (seg * segmentDuration + segCount[seg] > lastIVstart + 20.0 + eps)
                             {
@@ -1640,9 +1640,9 @@ namespace Rawr.Mage
                             {
                                 // iv not ready, but we can coldsnap
                                 coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapTimer, lastIVstart);
-                                coldsnapTimer = coldsnapCooldown - (seg * segmentDuration - coldsnapActivation);
+                                coldsnapTimer = calculationResult.ColdsnapCooldown - (seg * segmentDuration - coldsnapActivation);
                                 double ivActivation = Math.Max(coldsnapActivation, seg * segmentDuration);
-                                ivCooldown = 180.0 + ivActivation - seg * segmentDuration;
+                                ivCooldown = calculationResult.IcyVeinsCooldown + ivActivation - seg * segmentDuration;
                                 ivActive = true;
                                 lastIVstart = ivActivation;
                             }
@@ -1651,7 +1651,7 @@ namespace Rawr.Mage
                                 // start as soon as possible
                                 double ivActivation = Math.Max(seg * segmentDuration + ivCooldown, seg * segmentDuration);
                                 if (seg + 1 < segments && segCount[seg + 1] > 0) ivActivation = (seg + 1) * segmentDuration - segCount[seg];
-                                ivCooldown = 180.0 + ivActivation - seg * segmentDuration;
+                                ivCooldown = calculationResult.IcyVeinsCooldown + ivActivation - seg * segmentDuration;
                                 ivActive = true;
                                 lastIVstart = ivActivation;
                             }
@@ -1662,7 +1662,7 @@ namespace Rawr.Mage
                                     coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapTimer, lastIVstart);
                                     lastIVstart += 20.0;
                                     ivCooldown += 20.0;
-                                    coldsnapTimer = coldsnapCooldown - (seg * segmentDuration - coldsnapActivation);
+                                    coldsnapTimer = calculationResult.ColdsnapCooldown - (seg * segmentDuration - coldsnapActivation);
                                 }
                                 if (seg * segmentDuration + segCount[seg] > lastIVstart + 20.0 + eps)
                                 {
@@ -1691,7 +1691,7 @@ namespace Rawr.Mage
                 SolverLP zerolp = lp.Clone();
                 // if we don't use coldsnap then this segment should be either zeroed or we have to restrict the segments until next iv (I think (tm))
                 if (lp.Log != null) lp.Log.AppendLine("No coldsnap in " + coldsnapSegment + ", restrict segments until next IV");
-                for (int seg = coldsnapSegment; seg < Math.Min(coldsnapSegment + (int)Math.Ceiling(180.0 / segmentDuration) + 1, segments + (int)(180.0 / segmentDuration) - 1); seg++) // it's possible we're overrestricting here, might have to add another branch where we go to one less but zero out seg+1
+                for (int seg = coldsnapSegment; seg < Math.Min(coldsnapSegment + (int)Math.Ceiling(calculationResult.IcyVeinsCooldown / segmentDuration) + 1, segments + (int)(180.0 / segmentDuration) - 1); seg++) // it's possible we're overrestricting here, might have to add another branch where we go to one less but zero out seg+1
                 {
                     lp.UpdateColdsnapDuration(seg, 20.0);
                 }
@@ -1706,9 +1706,9 @@ namespace Rawr.Mage
                 // coldsnap used extra
                 // the segments for the duration of one IV can be loose, but all after that have to be restricted until coldsnap is ready
                 // TODO this needs some heavy testing, I don't see what case this corresponded to, removing for now
-                int firstRestrictedSeg = coldsnapSegment + 1 + (int)Math.Ceiling(180.0 / segmentDuration);
-                int nextPossibleColdsnap = coldsnapSegment + (int)(coldsnapCooldown / segmentDuration);
-                int segLimit = Math.Min(segments + (int)(180.0 / segmentDuration) - 1, nextPossibleColdsnap);
+                int firstRestrictedSeg = coldsnapSegment + 1 + (int)Math.Ceiling(calculationResult.IcyVeinsCooldown / segmentDuration);
+                int nextPossibleColdsnap = coldsnapSegment + (int)(calculationResult.ColdsnapCooldown / segmentDuration);
+                int segLimit = Math.Min(segments + (int)(calculationResult.IcyVeinsCooldown / segmentDuration) - 1, nextPossibleColdsnap);
                 /*if (coldsnapUsedExtra.Log != null) coldsnapUsedExtra.Log.AppendLine("Use coldsnap in " + coldsnapSegment + ", extra");
                 coldsnapUsedExtra.UpdateColdsnapDuration(coldsnapSegment, 20.0);
                 for (int seg = firstRestrictedSeg; seg < segLimit; seg++)
@@ -1717,7 +1717,7 @@ namespace Rawr.Mage
                 }
                 HeapPush(coldsnapUsedExtra);*/
                 if (coldsnapUsedIntra.Log != null) coldsnapUsedIntra.Log.AppendLine("Use coldsnap in " + coldsnapSegment + ", intra");
-                for (int seg = Math.Min(coldsnapSegment + 2, segments - 1); seg < coldsnapSegment + (int)(180.0 / segmentDuration); seg++)
+                for (int seg = Math.Min(coldsnapSegment + 2, segments - 1); seg < coldsnapSegment + (int)(calculationResult.IcyVeinsCooldown / segmentDuration); seg++)
                 {
                     for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
                     {
@@ -1731,7 +1731,7 @@ namespace Rawr.Mage
                 }
                 // additionally need a constraint that restricts where the next IV can start, due to coarse grained resolution of fragmentation
                 // warning: this part of code relies on seg duration = 30
-                if (coldsnapSegment + (int)(180.0 / segmentDuration) < segments)
+                if (coldsnapSegment + (int)(calculationResult.IcyVeinsCooldown / segmentDuration) < segments)
                 {
                     int row = coldsnapUsedIntra.AddConstraint(false);
                     int outseg = coldsnapSegment;
@@ -1743,7 +1743,7 @@ namespace Rawr.Mage
                             coldsnapUsedIntra.SetConstraintElement(row, index, -1.0);
                         }
                     }
-                    outseg = coldsnapSegment + (int)(180.0 / segmentDuration); // TODO rethink for seg != 30
+                    outseg = coldsnapSegment + (int)(calculationResult.IcyVeinsCooldown / segmentDuration); // TODO rethink for seg != 30
                     for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
                     {
                         CastingState state = calculationResult.SolutionVariable[index].State;
@@ -2062,7 +2062,7 @@ namespace Rawr.Mage
                 case Cooldown.ArcanePower:
                     for (int ss = 0; ss < segments; ss++)
                     {
-                        double cool = arcanePowerCooldown;
+                        double cool = calculationResult.ArcanePowerCooldown;
                         int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                         if (minSegment >= ss && maxSegment <= maxs) return rowSegmentArcanePower + ss;
@@ -2102,7 +2102,7 @@ namespace Rawr.Mage
                 case Cooldown.IcyVeins:
                     for (int ss = 0; ss < segments; ss++)
                     {
-                        double cool = 180 + (coldsnapAvailable ? 20 : 0);
+                        double cool = calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20 : 0);
                         int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                         if (minSegment >= ss && maxSegment <= maxs) return rowSegmentArcanePower + ss;

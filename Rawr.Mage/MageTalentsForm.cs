@@ -75,6 +75,7 @@ namespace Rawr.Mage
                 if (comboBoxPrismaticCloak.Items.Count == 3) comboBoxPrismaticCloak.Items.AddRange(new string[] { "3" });
                 if (comboBoxArcanePotency.Items.Count == 4) { comboBoxArcanePotency.Items.RemoveAt(3); }
                 if (comboBoxIncinerate.Items.Count == 3) comboBoxIncinerate.Items.AddRange(new string[] { "3" });
+                if (comboBoxIceFloes.Items.Count == 3) comboBoxIceFloes.Items.AddRange(new string[] { "3" });
             }
             else
             {
@@ -88,6 +89,7 @@ namespace Rawr.Mage
                 if (comboBoxPrismaticCloak.Items.Count == 4) { comboBoxPrismaticCloak.Items.RemoveAt(3); }
                 if (comboBoxArcanePotency.Items.Count == 2) comboBoxArcanePotency.Items.AddRange(new string[] { "3" });
                 if (comboBoxIncinerate.Items.Count == 4) { comboBoxIncinerate.Items.RemoveAt(3); }
+                if (comboBoxIceFloes.Items.Count == 4) { comboBoxIceFloes.Items.RemoveAt(3); }
             }
             ResumeLayout();
         }
