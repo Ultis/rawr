@@ -216,7 +216,8 @@ namespace Rawr.Mage.SequenceReconstruction
                             projectThreat += kitem.Tps * kd;
                             projectTime += kd;
                         }
-                        if (projectMana - BaseStats.Mana > overflowBuffer)
+                        // don't care if idle regen is placed at start if we have threat limitations
+                        if (!(maxTps < 5000.0 && kitem.VariableType == VariableType.IdleRegen && kitem.Segment == 0) && projectMana - BaseStats.Mana > overflowBuffer)
                         {
                             overflowBuffer = projectMana - BaseStats.Mana;
                         }
@@ -322,6 +323,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     mana += sequence[j].Mps * d;
                     threat += sequence[j].Mps * d;
                     overflowMana -= sequence[j].Mps * d;
+                    if (maxTps < 5000.0 && overflowMana > BaseStats.Mana) overflowMana = BaseStats.Mana;
                     t += d;
                 }
             }

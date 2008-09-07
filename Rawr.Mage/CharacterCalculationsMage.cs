@@ -137,12 +137,19 @@ namespace Rawr.Mage
             SequenceItem.Calculations = this;
             Sequence sequence = new Sequence();
 
+            double totalTime = 0.0;
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
                 if (Solution[i] > 0.01 && SolutionVariable[i].Type != VariableType.ManaOverflow)
                 {
-                    sequence.Add(new SequenceItem(i, Solution[i]));
+                    SequenceItem item = new SequenceItem(i, Solution[i]);
+                    sequence.Add(item);
+                    if (!item.IsManaPotionOrGem) totalTime += item.Duration;
                 }
+            }
+            if (CalculationOptions.TargetDamage == 0.0 && totalTime < CalculationOptions.FightDuration - 0.00001)
+            {
+                sequence.Add(new SequenceItem(ColumnIdleRegen, CalculationOptions.FightDuration - totalTime));
             }
 
             StringBuilder timing = new StringBuilder();
@@ -330,7 +337,7 @@ namespace Rawr.Mage
             double manaPotion = 0;
             double manaGem = 0;
             double drums = 0;
-            bool segmentedOutput = true;
+            bool segmentedOutput = false;
             Dictionary<string, SpellContribution> byspell = new Dictionary<string, SpellContribution>();
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
