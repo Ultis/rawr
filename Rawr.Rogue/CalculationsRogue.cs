@@ -115,7 +115,8 @@ namespace Rawr.Rogue {
             string cpg;
             float missChance, mhDodgeChance, ohDodgeChance, glanceChance, mhExpertise, ohExpertise, mhCrit, ohCrit, probMHHit, probOHHit;
             float mhHastedSpeed, ohHastedSpeed, avgMHDmg, avgOHDmg, totalArmor;
-            float whiteDPS, finisherDPS, evisDPS, envenomDPS, wfDPS, ssDPS, poisonDPS, cpgDPS;
+            float mhAttacks, ohAttacks;
+            float whiteDPS, finisherDPS, wfDPS, ssDPS, poisonDPS, cpgDPS;
             float mhWhite, ohWhite, damageReduction, bonusWhiteCritDmg;
             float avgCPGDmg, bonusCPGCrit, bonusCPGDmgMult, bonusCPGCritDmgMult, cpgCrit;
             float finisherDmg, evisMod, evisMin, evisMax;
@@ -241,13 +242,16 @@ namespace Rawr.Rogue {
                 avgMHDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage * 2) / 2.0f;
                 avgMHDmg += (stats.AttackPower / 14.0f) * character.MainHand.Speed;
 
-                mhHastedSpeed = character.MainHand.Speed / totalHaste;
+                //mhHastedSpeed = character.MainHand.Speed / totalHaste;
+                mhAttacks = totalHaste / character.MainHand.Speed;
 
-                mhWhite += (avgMHDmg / mhHastedSpeed);
+                mhWhite = avgMHDmg * mhAttacks;
+
+/*                mhWhite += (avgMHDmg / mhHastedSpeed);
                 mhWhite *= (1f - (missChance / 100f));
                 mhWhite *= (1f - (mhDodgeChance / 100f));
                 mhWhite *= damageReduction;
-                mhWhite = (1f - mhCrit / 100f) * mhWhite + (mhCrit / 100f) * (mhWhite * (2f + bonusWhiteCritDmg));
+                mhWhite = (1f - mhCrit / 100f) * mhWhite + (mhCrit / 100f) * (mhWhite * (2f + bonusWhiteCritDmg)); */
             }
 
             // OH
@@ -258,11 +262,18 @@ namespace Rawr.Rogue {
 
                 ohHastedSpeed = character.OffHand.Speed / totalHaste;
 
-                ohWhite = (1f - ohCrit / 100f) * ohWhite + (ohCrit / 100f) * (ohWhite * (2f + bonusWhiteCritDmg));
+                if (ohHastedSpeed > 0f) {
+                    energyRegen += (.2f * 3f * calcOpts.CombatPotency) / ohHastedSpeed * probOHHit;
+                }
+
+                ohAttacks = totalHaste / character.OffHand.Speed;
+                ohWhite = avgOHDmg * ohAttacks;
+
+/*                ohWhite = (1f - ohCrit / 100f) * ohWhite + (ohCrit / 100f) * (ohWhite * (2f + bonusWhiteCritDmg));
                 ohWhite += avgOHDmg / ohHastedSpeed;
                 ohWhite *= (1f - (missChance / 100f));
                 ohWhite *= (1f - (ohDodgeChance / 100f));
-                ohWhite *= damageReduction;
+                ohWhite *= damageReduction; */
             }
 
             whiteDPS = mhWhite + ohWhite;
@@ -592,7 +603,13 @@ namespace Rawr.Rogue {
                 MongooseProc = stats.MongooseProc,
                 MongooseProcAverage = stats.MongooseProcAverage,
                 MongooseProcConstant = stats.MongooseProcConstant,
-                ExecutionerProc = stats.ExecutionerProc
+                ExecutionerProc = stats.ExecutionerProc,
+                NetherbladeBonusSnDDuration = stats.NetherbladeBonusSnDDuration,
+                NetherbladeCPonFinisher = stats.NetherbladeCPonFinisher,
+                DeathmantleBonusDamage = stats.DeathmantleBonusDamage,
+                DeathmantleBonusFreeFinisher = stats.DeathmantleBonusFreeFinisher,
+                SlayerBonusCPGDamage = stats.SlayerBonusCPGDamage,
+                SlayerBonusSnDHaste = stats.SlayerBonusSnDHaste
             };
         }
 
@@ -702,7 +719,7 @@ namespace Rawr.Rogue {
         }
 
         public override bool HasRelevantStats(Stats stats) {
-            return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.Stamina + stats.BonusStaminaMultiplier + stats.Health + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.BonusCommandingShoutHP) != 0;
+            return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.NetherbladeBonusSnDDuration + stats.NetherbladeCPonFinisher + stats.DeathmantleBonusDamage + stats.DeathmantleBonusFreeFinisher + stats.SlayerBonusCPGDamage + stats.SlayerBonusSnDHaste) != 0;
         }
     }
 
