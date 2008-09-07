@@ -1143,6 +1143,11 @@ namespace Rawr.Mage
                             g.DrawString(cooldownName, fontLegend, brushSubPoints[i], rectSubPoint, formatSubPoint);
                             legendY += 16;
                         }
+
+                        g.DrawLine(Pens.Aqua, new Point(maxWidth + 40, 10), new Point(maxWidth + 80, 10));
+                        g.DrawString("Mana", fontLegend, Brushes.Black, new Point(maxWidth + 90, 2));
+                        g.DrawLine(Pens.Red, new Point(maxWidth + 40, 26), new Point(maxWidth + 80, 26));
+                        g.DrawString("Dps", fontLegend, Brushes.Black, new Point(maxWidth + 90, 18));
                         #endregion
 
                         #region Graph Ticks
