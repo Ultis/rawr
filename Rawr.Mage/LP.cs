@@ -1815,7 +1815,7 @@ namespace Rawr.Mage
                     double infeasibility;
                     ComputePhaseIReducedCosts(out infeasibility, eps);
                     if (infeasibility < lowestInfeasibility) lowestInfeasibility = infeasibility;
-                    else if (infeasibility > lowestInfeasibility + 0.00001)
+                    else if (infeasibility > lowestInfeasibility + eps)
                     {
                         // we're not using a shifting strategy for primal so the only way to combat
                         // numerical cycling is to lower the tolerances
