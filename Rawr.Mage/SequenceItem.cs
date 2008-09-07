@@ -10,6 +10,7 @@ namespace Rawr.Mage.SequenceReconstruction
         public double Cooldown;
         public double Duration;
         public bool ColdSnap;
+        public Cooldown Type;
     }
 
     public class SequenceItem : ICloneable

@@ -1819,9 +1819,16 @@ namespace Rawr.Mage
                     {
                         // we're not using a shifting strategy for primal so the only way to combat
                         // numerical cycling is to lower the tolerances
-                        eps *= 10.0;
-                        lowestInfeasibility = double.PositiveInfinity;
-                        goto DECOMPOSE;
+                        if (eps < 1.0)
+                        {
+                            eps *= 10.0;
+                            lowestInfeasibility = double.PositiveInfinity;
+                        }
+                        if (redecompose < maxRedecompose)
+                        {
+                            redecompose = 0;
+                            goto DECOMPOSE;
+                        }
                     }
                     if (infeasibility > 100.0 && !ColdStart)
                     {

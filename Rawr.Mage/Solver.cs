@@ -533,7 +533,7 @@ namespace Rawr.Mage
                 lp.SetRowScaleUnsafe(rowHeroismCombustion, 10.0);
                 lp.SetRowScaleUnsafe(rowMoltenFuryCombustion, 10.0);
                 lp.SetRowScaleUnsafe(rowDrumsOfBattleActivation, 30.0);
-                lp.SetRowScaleUnsafe(rowThreat, 0.05);
+                lp.SetRowScaleUnsafe(rowThreat, 0.001);
                 lp.SetRowScaleUnsafe(rowCount, 0.05);
                 if (restrictManaUse)
                 {
@@ -541,6 +541,13 @@ namespace Rawr.Mage
                     {
                         lp.SetRowScaleUnsafe(rowSegmentManaOverflow + ss, 0.1);
                         lp.SetRowScaleUnsafe(rowSegmentManaUnderflow + ss, 0.1);
+                    }
+                }
+                if (restrictThreat)
+                {
+                    for (int ss = 0; ss < segments - 1; ss++)
+                    {
+                        lp.SetRowScaleUnsafe(rowSegmentThreat + ss, 0.001);
                     }
                 }
                 #endregion

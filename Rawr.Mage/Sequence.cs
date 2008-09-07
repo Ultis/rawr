@@ -924,7 +924,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.Trinket1) list.Add(item);
             }
-            return GroupCooldown(list, Trinket1Duration, SequenceItem.Calculations.Trinket1Cooldown);
+            return GroupCooldown(list, Trinket1Duration, SequenceItem.Calculations.Trinket1Cooldown, Cooldown.Trinket1);
         }
 
         public List<SequenceGroup> GroupTrinket2()
@@ -934,7 +934,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.Trinket2) list.Add(item);
             }
-            return GroupCooldown(list, Trinket2Duration, SequenceItem.Calculations.Trinket2Cooldown);
+            return GroupCooldown(list, Trinket2Duration, SequenceItem.Calculations.Trinket2Cooldown, Cooldown.Trinket2);
         }
 
         public void ConstrainTrinkets(List<SequenceGroup> t1, List<SequenceGroup> t2)
@@ -957,7 +957,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.Combustion) list.Add(item);
             }
-            GroupCooldown(list, 0, 180.0 + 15.0, true, false);
+            GroupCooldown(list, 0, 180.0 + 15.0, true, false, Cooldown.Combustion);
         }
 
         public void GroupArcanePower()
@@ -967,7 +967,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.ArcanePower) list.Add(item);
             }
-            GroupCooldown(list, 15, SequenceItem.Calculations.ArcanePowerCooldown);
+            GroupCooldown(list, 15, SequenceItem.Calculations.ArcanePowerCooldown, Cooldown.ArcanePower);
         }
 
         public void GroupIcyVeins()
@@ -977,17 +977,17 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.IcyVeins) list.Add(item);
             }
-            GroupCooldown(list, 20, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.CalculationOptions.ColdSnap == 1);
+            GroupCooldown(list, 20, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.CalculationOptions.ColdSnap == 1, Cooldown.IcyVeins);
         }
 
-        public void GroupFlameCap()
+        public List<SequenceGroup> GroupFlameCap()
         {
             List<SequenceItem> list = new List<SequenceItem>();
             foreach (SequenceItem item in sequence)
             {
                 if (item.CastingState.FlameCap) list.Add(item);
             }
-            GroupCooldown(list, 60, 180);
+            return GroupCooldown(list, 60, 180, Cooldown.FlameCap);
         }
 
         public void GroupDestructionPotion()
@@ -997,7 +997,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.DestructionPotion) list.Add(item);
             }
-            GroupCooldown(list, 15, 120);
+            GroupCooldown(list, 15, 120, Cooldown.DestructionPotion);
         }
 
         public void GroupDrumsOfBattle()
@@ -1007,7 +1007,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.DrumsOfBattle) list.Add(item);
             }
-            List<SequenceGroup> groups = GroupCooldown(list, 30, 120);
+            List<SequenceGroup> groups = GroupCooldown(list, 30, 120, Cooldown.DrumsOfBattle);
             if (!SequenceItem.Calculations.CalculationOptions.DisplaySegmentCooldowns)
             {
                 double drums = RemoveIndex(VariableType.DrumsOfBattle);
@@ -1024,9 +1024,9 @@ namespace Rawr.Mage.SequenceReconstruction
             }
         }
 
-        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown)
+        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, Cooldown type)
         {
-            return GroupCooldown(cooldownItems, maxDuration, cooldown, false, false);
+            return GroupCooldown(cooldownItems, maxDuration, cooldown, false, false, type);
         }
 
         private bool ItemsCompatible(List<SequenceItem> item1, List<SequenceItem> item2, double maxCooldown)
@@ -1068,7 +1068,7 @@ namespace Rawr.Mage.SequenceReconstruction
             return true;
         }
 
-        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool combustionMode, bool coldSnapMode)
+        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool combustionMode, bool coldSnapMode, Cooldown type)
         {
             const double eps = 0.00001;
             List<SequenceGroup> existingGroup = new List<SequenceGroup>();
@@ -1292,7 +1292,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     if (i != j)
                     {
-                        group.Constraint.Add(new CooldownConstraint() { Cooldown = cooldown, Duration = maxDuration, Group = partialGroups[j], ColdSnap = coldSnapMode });
+                        group.Constraint.Add(new CooldownConstraint() { Cooldown = cooldown, Duration = maxDuration, Group = partialGroups[j], ColdSnap = coldSnapMode, Type = type });
                     }
                 }
             }

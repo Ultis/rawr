@@ -138,6 +138,7 @@ namespace Rawr.Mage
             Sequence sequence = new Sequence();
 
             double totalTime = 0.0;
+            double totalGem = 0.0;
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
                 if (Solution[i] > 0.01 && SolutionVariable[i].Type != VariableType.ManaOverflow)
@@ -145,6 +146,7 @@ namespace Rawr.Mage
                     SequenceItem item = new SequenceItem(i, Solution[i]);
                     sequence.Add(item);
                     if (!item.IsManaPotionOrGem) totalTime += item.Duration;
+                    if (item.VariableType == VariableType.ManaGem) totalGem += Solution[i];
                 }
             }
             if (CalculationOptions.TargetDamage == 0.0 && totalTime < CalculationOptions.FightDuration - 0.00001)
@@ -227,8 +229,21 @@ namespace Rawr.Mage
             }
             sequence.GroupIcyVeins(); // should come after trinkets because of coldsnap
             sequence.GroupDrumsOfBattle();
-            sequence.GroupFlameCap();
-
+            list = sequence.GroupFlameCap();
+            // very very special case for now
+            if (list.Count == 2 && CalculationOptions.FightDuration < 400 && totalGem >= 1)
+            {
+                foreach (SequenceGroup group in list)
+                {
+                    foreach (CooldownConstraint constraint in group.Constraint)
+                    {
+                        if (constraint.Type == Cooldown.FlameCap)
+                        {
+                            constraint.Cooldown = 300.0;
+                        }
+                    }
+                }
+            }
             sequence.SortGroups();
 
             // mana gem/pot/evo positioning

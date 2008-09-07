@@ -321,6 +321,7 @@ namespace Rawr.Mage
                     double current = heap.Head.Value;
                     lp = heap.Pop();
                     lp.ForceRecalculation();
+                    lp.SolvePrimalDual();
                     // some testing indicates that the recalculated solution gives the correct result, so the previous solution is most likely to be the problematic one, since we just discarded it not a big deal
                     //if (lp.Value <= max + 1.0)
                     //{
