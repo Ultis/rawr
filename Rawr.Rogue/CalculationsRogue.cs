@@ -227,7 +227,7 @@ namespace Rawr.Rogue {
                 sndHaste *= stats.SlayerBonusSnDHaste;
 
             totalArmor = calcOpts.TargetArmor - stats.ArmorPenetration;
-            damageReduction = totalArmor / (totalArmor + 10557.5f);
+            damageReduction = 1f - (totalArmor / (totalArmor + 10557.5f));
 
             #region White Damage
             whiteDPS = mhWhite = ohWhite = 0f;
@@ -245,13 +245,10 @@ namespace Rawr.Rogue {
                 //mhHastedSpeed = character.MainHand.Speed / totalHaste;
                 mhAttacks = totalHaste / character.MainHand.Speed;
 
-                mhWhite = avgMHDmg * mhAttacks;
+                mhWhite = avgMHDmg * mhAttacks * probMHHit;
 
-/*                mhWhite += (avgMHDmg / mhHastedSpeed);
-                mhWhite *= (1f - (missChance / 100f));
-                mhWhite *= (1f - (mhDodgeChance / 100f));
+                mhWhite = (1f - mhCrit / 100f) * mhWhite + (mhCrit / 100f) * (mhWhite * (2f * bonusWhiteCritDmg));
                 mhWhite *= damageReduction;
-                mhWhite = (1f - mhCrit / 100f) * mhWhite + (mhCrit / 100f) * (mhWhite * (2f + bonusWhiteCritDmg)); */
             }
 
             // OH
@@ -267,13 +264,10 @@ namespace Rawr.Rogue {
                 }
 
                 ohAttacks = totalHaste / character.OffHand.Speed;
-                ohWhite = avgOHDmg * ohAttacks;
 
-/*                ohWhite = (1f - ohCrit / 100f) * ohWhite + (ohCrit / 100f) * (ohWhite * (2f + bonusWhiteCritDmg));
-                ohWhite += avgOHDmg / ohHastedSpeed;
-                ohWhite *= (1f - (missChance / 100f));
-                ohWhite *= (1f - (ohDodgeChance / 100f));
-                ohWhite *= damageReduction; */
+                ohWhite = avgOHDmg * ohAttacks * probOHHit;
+                ohWhite = (1f - ohCrit / 100f) * ohWhite + (ohCrit / 100f) * (ohWhite * (2f * bonusWhiteCritDmg));
+                ohWhite *= damageReduction;
             }
 
             whiteDPS = mhWhite + ohWhite;
@@ -325,9 +319,7 @@ namespace Rawr.Rogue {
 
                 avgCPGDmg = (1f - cpgCrit / 100f) * avgCPGDmg + (cpgCrit / 100f) * (avgCPGDmg * (2f + bonusCPGCritDmgMult));
 
-                cpgDPS = avgCPGDmg * numCPG / cycleTime;
-                cpgDPS *= (1f - (missChance / 100f));
-                cpgDPS *= (1f - (mhDodgeChance / 100f));
+                cpgDPS = avgCPGDmg * numCPG * probMHHit / cycleTime;
                 cpgDPS *= damageReduction;
             }
             #endregion
