@@ -101,6 +101,9 @@ namespace Rawr.Mage
         public int MaxManaPotion;
         public int MaxManaGem;
         public int MaxEvocation;
+        public double EvocationTps;
+        public double ManaGemTps;
+        public double ManaPotionTps;
 
         public double IcyVeinsCooldown;
         public double ColdsnapCooldown;
@@ -327,7 +330,7 @@ namespace Rawr.Mage
             double manaPotion = 0;
             double manaGem = 0;
             double drums = 0;
-            bool segmentedOutput = false;
+            bool segmentedOutput = true;
             Dictionary<string, SpellContribution> byspell = new Dictionary<string, SpellContribution>();
             for (int i = 0; i < SolutionVariable.Count; i++)
             {

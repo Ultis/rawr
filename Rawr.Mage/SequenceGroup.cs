@@ -7,18 +7,34 @@ namespace Rawr.Mage.SequenceReconstruction
     public class SequenceGroup
     {
         public double Mana;
+        public double Threat;
         public double Duration;
         public double Mps
         {
             get
             {
-                if (Duration > 0)
+                if (Duration > 0.0)
                 {
                     return Mana / Duration;
                 }
                 else
                 {
-                    return 0;
+                    return 0.0;
+                }
+            }
+        }
+
+        public double Tps
+        {
+            get
+            {
+                if (Duration > 0.0)
+                {
+                    return Threat / Duration;
+                }
+                else
+                {
+                    return 0.0;
                 }
             }
         }
@@ -90,6 +106,7 @@ namespace Rawr.Mage.SequenceReconstruction
         public void Add(SequenceItem item)
         {
             Mana += item.Mps * item.Duration;
+            Threat += item.Tps * item.Duration;
             Duration += item.Duration;
             Item.Add(item);
         }
