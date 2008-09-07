@@ -1402,7 +1402,56 @@ namespace Rawr
                   SetThreshold = 2
               });
 
-            //i think you're slipping
+            // Rogue set bonuses
+              defaultBuffs.Add(new Buff() {
+                  Name = "Netherblade 2 Piece Bonus",
+                  Category = BuffCategory.SetBonuses,
+                  Stats = new Stats() { NetherbladeBonusSnDDuration = 3f },
+                  SetName = "Netherblade",
+                  SetThreshold = 2
+              });
+
+              defaultBuffs.Add(new Buff() {
+                  Name = "Netherblade 4 Piece Bonus",
+                  Category = BuffCategory.SetBonuses,
+                  Stats = new Stats() { NetherbladeCPonFinisher = .15f },
+                  SetName = "Netherblade",
+                  SetThreshold = 4
+              });
+
+              defaultBuffs.Add(new Buff() {
+                  Name = "Deathmantle 2 Piece Bonus",
+                  Category = BuffCategory.SetBonuses,
+                  Stats = new Stats() { DeathmantleBonusDamage = 40f },
+                  SetName = "Deathmantle",
+                  SetThreshold = 2
+              });
+
+              defaultBuffs.Add(new Buff() {
+                  Name = "Deathmantle 4 Piece Bonus",
+                  Category = BuffCategory.SetBonuses,
+                  Stats = new Stats() { DeathmantleBonusFreeFinisher = 1f },
+                  SetName = "Deathmantle",
+                  SetThreshold = 4
+              });
+
+              defaultBuffs.Add(new Buff() {
+                  Name = "Slayer's Armor 2 Piece Bonus",
+                  Category = BuffCategory.SetBonuses,
+                  Stats = new Stats() { SlayerBonusSnDHaste = .05f },
+                  SetName = "Slayer's Armor",
+                  SetThreshold = 2
+              });
+
+              defaultBuffs.Add(new Buff() {
+                  Name = "Slayer's Armor 4 Piece Bonus",
+                  Category = BuffCategory.SetBonuses,
+                  Stats = new Stats() { SlayerBonusCPGDamage = .06f },
+                  SetName = "Slayer's Armor",
+                  SetThreshold = 4
+              });
+
+              //i think you're slipping
             defaultBuffs.Add(new Buff()
             {
                 Name = "Bloodlust",
