@@ -30,8 +30,6 @@
             this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
             this.labelTargetArmorDescription = new System.Windows.Forms.Label();
             this.groupBoxCycles = new System.Windows.Forms.GroupBox();
-            this.radioButton3s5s5r = new System.Windows.Forms.RadioButton();
-            this.radioButton2s5r = new System.Windows.Forms.RadioButton();
             this.radioButton4s5r = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.comboBoxOHPoison = new System.Windows.Forms.ComboBox();
@@ -109,8 +107,6 @@
             // 
             // groupBoxCycles
             // 
-            this.groupBoxCycles.Controls.Add(this.radioButton3s5s5r);
-            this.groupBoxCycles.Controls.Add(this.radioButton2s5r);
             this.groupBoxCycles.Controls.Add(this.radioButton4s5r);
             this.groupBoxCycles.Location = new System.Drawing.Point(15, 146);
             this.groupBoxCycles.Name = "groupBoxCycles";
@@ -118,28 +114,6 @@
             this.groupBoxCycles.TabIndex = 6;
             this.groupBoxCycles.TabStop = false;
             this.groupBoxCycles.Text = "Cycles";
-            // 
-            // radioButton3s5s5r
-            // 
-            this.radioButton3s5s5r.AutoSize = true;
-            this.radioButton3s5s5r.Location = new System.Drawing.Point(6, 65);
-            this.radioButton3s5s5r.Name = "radioButton3s5s5r";
-            this.radioButton3s5s5r.Size = new System.Drawing.Size(56, 17);
-            this.radioButton3s5s5r.TabIndex = 2;
-            this.radioButton3s5s5r.Text = "3s5s5r";
-            this.radioButton3s5s5r.UseVisualStyleBackColor = true;
-            this.radioButton3s5s5r.CheckedChanged += new System.EventHandler(this.OnCheckedChanged);
-            // 
-            // radioButton2s5r
-            // 
-            this.radioButton2s5r.AutoSize = true;
-            this.radioButton2s5r.Location = new System.Drawing.Point(6, 42);
-            this.radioButton2s5r.Name = "radioButton2s5r";
-            this.radioButton2s5r.Size = new System.Drawing.Size(45, 17);
-            this.radioButton2s5r.TabIndex = 1;
-            this.radioButton2s5r.Text = "2s5r";
-            this.radioButton2s5r.UseVisualStyleBackColor = true;
-            this.radioButton2s5r.CheckedChanged += new System.EventHandler(this.OnCheckedChanged);
             // 
             // radioButton4s5r
             // 
@@ -165,7 +139,7 @@
             this.groupBox1.Size = new System.Drawing.Size(181, 77);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Temporary Weapon Enchants";
+            this.groupBox1.Text = "Poisons";
             // 
             // comboBoxOHPoison
             // 
@@ -178,6 +152,7 @@
             this.comboBoxOHPoison.Name = "comboBoxOHPoison";
             this.comboBoxOHPoison.Size = new System.Drawing.Size(96, 21);
             this.comboBoxOHPoison.TabIndex = 3;
+            this.comboBoxOHPoison.SelectedIndexChanged += new System.EventHandler(this.OnOHPoisonChanged);
             // 
             // label4
             // 
@@ -193,13 +168,13 @@
             this.comboBoxMHPoison.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMHPoison.FormattingEnabled = true;
             this.comboBoxMHPoison.Items.AddRange(new object[] {
-            "Windfury Totem",
-            "Instant Poison",
-            "Deadly Poison"});
+            "Deadly Poison",
+            "Instant Poison"});
             this.comboBoxMHPoison.Location = new System.Drawing.Point(72, 19);
             this.comboBoxMHPoison.Name = "comboBoxMHPoison";
             this.comboBoxMHPoison.Size = new System.Drawing.Size(96, 21);
             this.comboBoxMHPoison.TabIndex = 1;
+            this.comboBoxMHPoison.SelectedIndexChanged += new System.EventHandler(this.OnMHPoisonChanged);
             // 
             // label3
             // 
@@ -245,8 +220,6 @@
         private System.Windows.Forms.GroupBox groupBoxCycles;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.RadioButton radioButton3s5s5r;
-        private System.Windows.Forms.RadioButton radioButton2s5r;
         private System.Windows.Forms.RadioButton radioButton4s5r;
         private System.Windows.Forms.ComboBox comboBoxOHPoison;
         private System.Windows.Forms.Label label4;

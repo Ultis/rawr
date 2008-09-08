@@ -76,9 +76,19 @@ namespace Rawr.Rogue {
         }
 
         private void OnCheckedChanged(object sender, EventArgs e) {
-            if (((RadioButton)sender).Text == "Custom:") {
+        }
+
+        private void OnMHPoisonChanged(object sender, EventArgs e) {
+            if (Character != null && Character.CalculationOptions != null) {
+                CalculationOptionsRogue calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
+                calcOpts.TempMainHandEnchant = ((ComboBox)sender).SelectedItem.ToString();
             }
-            else {
+        }
+
+        private void OnOHPoisonChanged(object sender, EventArgs e) {
+            if (Character != null && Character.CalculationOptions != null) {
+                CalculationOptionsRogue calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
+                calcOpts.TempOffHandEnchant = ((ComboBox)sender).SelectedItem.ToString();
             }
         }
     }

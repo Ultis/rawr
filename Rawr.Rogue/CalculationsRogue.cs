@@ -115,7 +115,7 @@ namespace Rawr.Rogue {
             string cpg;
             float missChance, mhDodgeChance, ohDodgeChance, glanceChance, mhExpertise, ohExpertise, mhCrit, ohCrit, probMHHit, probOHHit;
             float mhHastedSpeed, ohHastedSpeed, avgMHDmg, avgOHDmg, totalArmor;
-            float mhAttacks, ohAttacks;
+            float mhAttacks, ohAttacks, ssHits, wfHits, avgWFDmg;
             float whiteDPS, finisherDPS, wfDPS, ssDPS, poisonDPS, cpgDPS;
             float mhWhite, ohWhite, damageReduction, bonusWhiteCritDmg;
             float avgCPGDmg, bonusCPGCrit, bonusCPGDmgMult, bonusCPGCritDmgMult, cpgCrit;
@@ -125,6 +125,8 @@ namespace Rawr.Rogue {
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsRogue calculatedStats = new CharacterCalculationsRogue();
             calculatedStats.BasicStats = stats;
+
+            whiteDPS = finisherDPS = wfDPS = ssDPS = poisonDPS = cpgDPS = 0f;
 
             missChance = 28f;
             missChance -= calcOpts.Precision + stats.Hit + stats.HitRating * RogueConversions.HitRatingToHit;
@@ -238,6 +240,8 @@ namespace Rawr.Rogue {
             bonusWhiteCritDmg = 1f + stats.BonusCritMultiplier;
 
             // MH
+            mhAttacks = 0f;
+            avgMHDmg = 0f;
             if(character.MainHand != null) {
                 avgMHDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage * 2) / 2.0f;
                 avgMHDmg += (stats.AttackPower / 14.0f) * character.MainHand.Speed;
@@ -252,6 +256,7 @@ namespace Rawr.Rogue {
             }
 
             // OH
+            ohAttacks = 0f;
             if (character.OffHand != null) {
                 avgOHDmg = (character.OffHand.MinDamage + character.OffHand.MaxDamage + stats.WeaponDamage * 2) / 2.0f;
                 avgOHDmg += (stats.AttackPower / 14.0f) * character.OffHand.Speed;
@@ -269,9 +274,6 @@ namespace Rawr.Rogue {
                 ohWhite = (1f - ohCrit / 100f) * ohWhite + (ohCrit / 100f) * (ohWhite * (2f * bonusWhiteCritDmg));
                 ohWhite *= damageReduction;
             }
-
-            whiteDPS = mhWhite + ohWhite;
-            #endregion
 
             #region CPG Damage
             cpgDPS = 0f;
@@ -294,7 +296,7 @@ namespace Rawr.Rogue {
                     bonusCPGCrit += 10f * calcOpts.PuncturingWounds;
                     bonusCPGCritDmgMult *= (1f + .06f * calcOpts.Lethality);
 
-                    avgCPGDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f;
+                    avgCPGDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage) / 2f;
                     avgCPGDmg += stats.AttackPower / 14f * 1.7f;
                     avgCPGDmg *= 1.5f;
                     avgCPGDmg += 255f;
@@ -304,7 +306,7 @@ namespace Rawr.Rogue {
                 }
                 else {
                     // sinister strike
-                    avgCPGDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f;
+                    avgCPGDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage) / 2f;
                     avgCPGDmg += stats.AttackPower / 14f * 2.4f;
                     avgCPGDmg += 98f; // TBC max rank
 
@@ -346,7 +348,7 @@ namespace Rawr.Rogue {
                             break;
                     }
 
-                    finisherDmg *= (1f + .1f * calcOpts.SerratedBlades);
+                    finisherDmg *= (1f + .1f * calcOpts.SerratedBlades) * (1f + stats.BonusBleedDamageMultiplier);
                     finisherDmg *= (1f - missChance / 100f);
                     if (calcOpts.SurpriseAttacks < 1)
                         finisherDmg *= (1f - mhDodgeChance / 100f);
@@ -372,19 +374,53 @@ namespace Rawr.Rogue {
             }
             #endregion
 
-            #region WF Damage
-            wfDPS = 0f;
-            #endregion
-
             #region Sword Spec Damage
             ssDPS = 0f;
+            ssHits = 0f;
+
+            // main hand
+            if (character.MainHand != null && character.MainHand.Type == Item.ItemType.OneHandSword) {
+                ssHits += mhAttacks * 0.01f * calcOpts.SwordSpecialization * probMHHit;
+
+                // CPG
+                ssHits += (numCPG / cycleTime) * 0.01f * calcOpts.SwordSpecialization * probMHHit;
+
+                // finishers
+                ssHits += 1f / cycleTime * 0.01f * calcOpts.SwordSpecialization * probMHHit;
+            }
+
+            // offhand
+            if (character.OffHand != null && character.OffHand.Type == Item.ItemType.OneHandSword) {
+                ssHits += ohAttacks * 0.01f * calcOpts.SwordSpecialization * probOHHit;
+            }
+
+            ssDPS = (ssHits * avgMHDmg) * (1 - mhCrit / 100f) + (ssHits * avgMHDmg * 2f) * (mhCrit / 100f);
+            ssDPS *= damageReduction;
+            #endregion
+
+            #region WF Damage
+            wfDPS = 0f;
+            if (character.MainHand != null && stats.WindfuryAPBonus > 0) {
+                wfHits = mhAttacks * probMHHit * .2f * probMHHit;
+                wfHits += ssHits * .2f * probMHHit;
+
+                avgWFDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage * 2) / 2.0f;
+                avgWFDmg += (stats.AttackPower + stats.WindfuryAPBonus) / 14f * character.MainHand.Speed;
+                avgWFDmg = avgWFDmg * (1f - mhCrit / 100f) + avgMHDmg * 2f * (mhCrit / 100f);
+
+                wfDPS = avgWFDmg * wfHits;
+                wfDPS *= damageReduction;
+            }
+            #endregion
+
+            whiteDPS = mhWhite + ohWhite;
             #endregion
 
             #region Poison DPS
             poisonDPS = 0f;
             #endregion
 
-            calculatedStats.WhiteDPS = whiteDPS;
+            calculatedStats.WhiteDPS = whiteDPS + ssDPS;
             calculatedStats.CPGDPS = cpgDPS;
             calculatedStats.FinisherDPS = finisherDPS;
             calculatedStats.WindfuryDPS = wfDPS;
@@ -531,6 +567,10 @@ namespace Rawr.Rogue {
             statsTotal.Parry += calcOpts.Deflection;
 
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
+
+            statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;
+
+            statsTotal.WindfuryAPBonus = statsGearEnchantsBuffs.WindfuryAPBonus;
             
             return statsTotal;
         }
@@ -601,7 +641,8 @@ namespace Rawr.Rogue {
                 DeathmantleBonusDamage = stats.DeathmantleBonusDamage,
                 DeathmantleBonusFreeFinisher = stats.DeathmantleBonusFreeFinisher,
                 SlayerBonusCPGDamage = stats.SlayerBonusCPGDamage,
-                SlayerBonusSnDHaste = stats.SlayerBonusSnDHaste
+                SlayerBonusSnDHaste = stats.SlayerBonusSnDHaste,
+                BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier
             };
         }
 
@@ -711,7 +752,7 @@ namespace Rawr.Rogue {
         }
 
         public override bool HasRelevantStats(Stats stats) {
-            return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.NetherbladeBonusSnDDuration + stats.NetherbladeCPonFinisher + stats.DeathmantleBonusDamage + stats.DeathmantleBonusFreeFinisher + stats.SlayerBonusCPGDamage + stats.SlayerBonusSnDHaste) != 0;
+            return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.NetherbladeBonusSnDDuration + stats.NetherbladeCPonFinisher + stats.DeathmantleBonusDamage + stats.DeathmantleBonusFreeFinisher + stats.SlayerBonusCPGDamage + stats.SlayerBonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
         }
     }
 
