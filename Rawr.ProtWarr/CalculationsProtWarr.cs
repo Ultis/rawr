@@ -745,7 +745,7 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.ThreatIncreaseMultiplier = ((1 + statsRace.ThreatIncreaseMultiplier) *
                                                    (1 + statsGearEnchantsBuffs.ThreatIncreaseMultiplier) *
                                                    (1 + statsTalents.ThreatIncreaseMultiplier)) - 1;
-            statsTotal.Agility = statsRace.Agility + statsGearEnchantsBuffs.Agility + statsTalents.Agility; ;
+            statsTotal.Agility = (statsRace.Agility + statsGearEnchantsBuffs.Agility + statsTalents.Agility) * statsBuffs.BonusAgilityMultiplier;
             statsTotal.Strength = strength;
  
             statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
