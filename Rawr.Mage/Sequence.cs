@@ -577,7 +577,8 @@ namespace Rawr.Mage.SequenceReconstruction
                                 jj++;
                                 kk++;
                             }
-                            sequence.InsertRange(jj, copy);
+                            if (jj >= sequence.Count) sequence.AddRange(copy); // only happens in release, wasn't able to track it down
+                            else sequence.InsertRange(jj, copy);
                         }
                         ComputeTimestamps();
                     }
