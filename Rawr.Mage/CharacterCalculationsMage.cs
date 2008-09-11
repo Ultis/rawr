@@ -187,7 +187,7 @@ namespace Rawr.Mage
             {
                 list = list2;
             }
-            if (list != null)
+            if (list != null && CalculationOptions.DisplaySegmentCooldowns && ColumnManaOverflow != -1)
             {
                 float manaBurn = 80;
                 if (CalculationOptions.AoeDuration > 0)
