@@ -1304,15 +1304,16 @@ namespace Rawr.Mage
         public override void Calculate(CastingState castingState)
         {
             base.Calculate(castingState);
-            CostModifier += 0.75f * costDebuff + castingState.BaseStats.ArcaneBlastBonus;
             if (castingState.CalculationOptions.WotLK)
             {
-                SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus + 0.25f * timeDebuff + 0.002f * castingState.CalculationOptions.SpellImpact);
+                CostModifier += 0.75f * costDebuff + castingState.BaseStats.ArcaneBlastBonus * 0.25f;
+                SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus * 0.25f + 0.25f * timeDebuff + 0.002f * castingState.CalculationOptions.SpellImpact);
                 SpellDamageCoefficient += 0.03f * castingState.CalculationOptions.EmpoweredArcaneMissiles; // TODO change talent name
                 CritRate += 0.02f * castingState.CalculationOptions.Incinerate;
             }
             else
             {
+                CostModifier += 0.75f * costDebuff + castingState.BaseStats.ArcaneBlastBonus;
                 SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus);
                 BaseCastTime -= timeDebuff / 3f;
             }

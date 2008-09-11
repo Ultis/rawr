@@ -433,13 +433,13 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                 }
                 double maxPush = double.PositiveInfinity;
-                // if jj > lastHigh then jj actually won't be pushed back as the swap will occur before it (it might actually be moving toward start)
-                if (jj < sequence.Count && jj <= lastHigh) maxPush = sequence[jj].MaxTime - tjj; // you can assume jj won't be split
                 if (lastHigh <= j && j < sequence.Count - 1)
                 {
                     if (sequence[j].Group.Count == 0) lastHigh = j;
                     else lastHigh = j + 1;
                 }
+                // if jj > lastHigh then jj actually won't be pushed back as the swap will occur before it (it might actually be moving toward start)
+                if (jj < sequence.Count && jj <= lastHigh) maxPush = sequence[jj].MaxTime - tjj; // you can assume jj won't be split
                 for (k = lastHigh; k < sequence.Count; k++)
                 {
                     // make sure item is low mps and can be moved back
