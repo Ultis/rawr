@@ -1964,6 +1964,7 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
 		private System.Windows.Forms.ComboBox comboBoxRegion;
         private System.Windows.Forms.ToolStripMenuItem batchToolsToolStripMenuItem6;
+        private System.Windows.Forms.ToolStripMenuItem refineEquipmentParametersToolStripMenuItem;
     }
 }
 

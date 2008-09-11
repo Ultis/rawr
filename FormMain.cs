@@ -31,6 +31,17 @@ namespace Rawr
 		private Status _statusForm;
 		private string _formatWindowTitle = "Rawr (Beta {0})";
 
+        private FormRelevantItemRefinement _itemRefinement;
+
+        public FormRelevantItemRefinement ItemRefinement
+        {
+            get
+            {
+                if (_itemRefinement == null || _itemRefinement.IsDisposed)
+                    _itemRefinement = new FormRelevantItemRefinement(null);
+                return _itemRefinement;
+            }
+        }
 
 		private FormItemSelection _formItemSelection;
 		public FormItemSelection FormItemSelection
@@ -413,6 +424,7 @@ namespace Rawr
             }
 			Character = Character;
 
+            ItemRefinement.resetLists();
 			ItemCache.OnItemsChanged();
 			//Character.OnItemsChanged(); already called when setting Character
 			_unsavedChanges = unsavedChanges;
@@ -445,6 +457,21 @@ namespace Rawr
                 LoadComparisonData();
             }
 		}
+
+        void refineEquipmentParametersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            ItemRefinement.updateBoxes();
+            ItemRefinement.ShowDialog(this);
+
+            //the items listed in the cache are resifted so that they
+            //meet the user's more stringent requirements. 
+
+            Item[] items = ItemRefinement.Refine(ItemCache.RelevantItems);
+            itemComparison1.Items = items;
+            LoadComparisonData();
+
+        }
 
 		private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
