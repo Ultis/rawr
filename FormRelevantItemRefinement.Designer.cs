@@ -1,0 +1,450 @@
+﻿namespace Rawr
+{
+    partial class FormRelevantItemRefinement
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxPlateArmor = new System.Windows.Forms.CheckBox();
+            this.checkBoxMailArmor = new System.Windows.Forms.CheckBox();
+            this.checkBoxLeatherArmor = new System.Windows.Forms.CheckBox();
+            this.checkBoxClothArmor = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.checkBoxBow = new System.Windows.Forms.CheckBox();
+            this.checkBoxCrossbow = new System.Windows.Forms.CheckBox();
+            this.checkBoxThrown = new System.Windows.Forms.CheckBox();
+            this.checkBoxWand = new System.Windows.Forms.CheckBox();
+            this.checkBoxGun = new System.Windows.Forms.CheckBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.checkBoxTwoHandedSword = new System.Windows.Forms.CheckBox();
+            this.checkBoxTwoHandedAxe = new System.Windows.Forms.CheckBox();
+            this.checkBoxTwoHandedMace = new System.Windows.Forms.CheckBox();
+            this.checkBoxStaff = new System.Windows.Forms.CheckBox();
+            this.checkBoxPolearm = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkBoxDagger = new System.Windows.Forms.CheckBox();
+            this.checkBoxFistWeapon = new System.Windows.Forms.CheckBox();
+            this.checkBoxOneHandedAxe = new System.Windows.Forms.CheckBox();
+            this.checkBoxOneHandedMace = new System.Windows.Forms.CheckBox();
+            this.checkBoxOneHandedSword = new System.Windows.Forms.CheckBox();
+            this.CancelButton = new System.Windows.Forms.Button();
+            this.OKButton = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.checkBoxShield = new System.Windows.Forms.CheckBox();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.checkBoxPlateArmor);
+            this.groupBox1.Controls.Add(this.checkBoxMailArmor);
+            this.groupBox1.Controls.Add(this.checkBoxLeatherArmor);
+            this.groupBox1.Controls.Add(this.checkBoxClothArmor);
+            this.groupBox1.Location = new System.Drawing.Point(308, 12);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(120, 160);
+            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Armor";
+            // 
+            // checkBoxPlateArmor
+            // 
+            this.checkBoxPlateArmor.AutoSize = true;
+            this.checkBoxPlateArmor.Enabled = false;
+            this.checkBoxPlateArmor.Location = new System.Drawing.Point(27, 97);
+            this.checkBoxPlateArmor.Name = "checkBoxPlateArmor";
+            this.checkBoxPlateArmor.Size = new System.Drawing.Size(50, 17);
+            this.checkBoxPlateArmor.TabIndex = 3;
+            this.checkBoxPlateArmor.Tag = Rawr.Item.ItemType.Plate;
+            this.checkBoxPlateArmor.Text = "Plate";
+            this.checkBoxPlateArmor.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxMailArmor
+            // 
+            this.checkBoxMailArmor.AutoSize = true;
+            this.checkBoxMailArmor.Enabled = false;
+            this.checkBoxMailArmor.Location = new System.Drawing.Point(27, 74);
+            this.checkBoxMailArmor.Name = "checkBoxMailArmor";
+            this.checkBoxMailArmor.Size = new System.Drawing.Size(45, 17);
+            this.checkBoxMailArmor.TabIndex = 2;
+            this.checkBoxMailArmor.Tag = Rawr.Item.ItemType.Mail;
+            this.checkBoxMailArmor.Text = "Mail";
+            this.checkBoxMailArmor.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxLeatherArmor
+            // 
+            this.checkBoxLeatherArmor.AutoSize = true;
+            this.checkBoxLeatherArmor.Enabled = false;
+            this.checkBoxLeatherArmor.Location = new System.Drawing.Point(27, 51);
+            this.checkBoxLeatherArmor.Name = "checkBoxLeatherArmor";
+            this.checkBoxLeatherArmor.Size = new System.Drawing.Size(62, 17);
+            this.checkBoxLeatherArmor.TabIndex = 1;
+            this.checkBoxLeatherArmor.Tag = Rawr.Item.ItemType.Leather;
+            this.checkBoxLeatherArmor.Text = "Leather";
+            this.checkBoxLeatherArmor.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxClothArmor
+            // 
+            this.checkBoxClothArmor.AutoSize = true;
+            this.checkBoxClothArmor.Enabled = false;
+            this.checkBoxClothArmor.Location = new System.Drawing.Point(27, 28);
+            this.checkBoxClothArmor.Name = "checkBoxClothArmor";
+            this.checkBoxClothArmor.Size = new System.Drawing.Size(50, 17);
+            this.checkBoxClothArmor.TabIndex = 0;
+            this.checkBoxClothArmor.Tag = Rawr.Item.ItemType.Cloth;
+            this.checkBoxClothArmor.Text = "Cloth";
+            this.checkBoxClothArmor.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.groupBox5);
+            this.groupBox2.Controls.Add(this.groupBox4);
+            this.groupBox2.Controls.Add(this.groupBox3);
+            this.groupBox2.Location = new System.Drawing.Point(5, 12);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(297, 282);
+            this.groupBox2.TabIndex = 1;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Weapons";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.checkBoxBow);
+            this.groupBox5.Controls.Add(this.checkBoxCrossbow);
+            this.groupBox5.Controls.Add(this.checkBoxThrown);
+            this.groupBox5.Controls.Add(this.checkBoxWand);
+            this.groupBox5.Controls.Add(this.checkBoxGun);
+            this.groupBox5.Location = new System.Drawing.Point(12, 184);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(273, 92);
+            this.groupBox5.TabIndex = 4;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Ranged Weapons";
+            // 
+            // checkBoxBow
+            // 
+            this.checkBoxBow.AutoSize = true;
+            this.checkBoxBow.Location = new System.Drawing.Point(25, 19);
+            this.checkBoxBow.Name = "checkBoxBow";
+            this.checkBoxBow.Size = new System.Drawing.Size(47, 17);
+            this.checkBoxBow.TabIndex = 10;
+            this.checkBoxBow.Tag = Rawr.Item.ItemType.Bow;
+            this.checkBoxBow.Text = "Bow";
+            this.checkBoxBow.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCrossbow
+            // 
+            this.checkBoxCrossbow.AutoSize = true;
+            this.checkBoxCrossbow.Location = new System.Drawing.Point(25, 42);
+            this.checkBoxCrossbow.Name = "checkBoxCrossbow";
+            this.checkBoxCrossbow.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxCrossbow.TabIndex = 11;
+            this.checkBoxCrossbow.Tag = Rawr.Item.ItemType.Crossbow;
+            this.checkBoxCrossbow.Text = "Crossbow";
+            this.checkBoxCrossbow.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxThrown
+            // 
+            this.checkBoxThrown.AutoSize = true;
+            this.checkBoxThrown.Location = new System.Drawing.Point(159, 42);
+            this.checkBoxThrown.Name = "checkBoxThrown";
+            this.checkBoxThrown.Size = new System.Drawing.Size(62, 17);
+            this.checkBoxThrown.TabIndex = 14;
+            this.checkBoxThrown.Tag = Rawr.Item.ItemType.Thrown;
+            this.checkBoxThrown.Text = "Thrown";
+            this.checkBoxThrown.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWand
+            // 
+            this.checkBoxWand.AutoSize = true;
+            this.checkBoxWand.Location = new System.Drawing.Point(159, 19);
+            this.checkBoxWand.Name = "checkBoxWand";
+            this.checkBoxWand.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxWand.TabIndex = 13;
+            this.checkBoxWand.Tag = Rawr.Item.ItemType.Wand;
+            this.checkBoxWand.Text = "Wand";
+            this.checkBoxWand.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxGun
+            // 
+            this.checkBoxGun.AutoSize = true;
+            this.checkBoxGun.Location = new System.Drawing.Point(25, 65);
+            this.checkBoxGun.Name = "checkBoxGun";
+            this.checkBoxGun.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxGun.TabIndex = 12;
+            this.checkBoxGun.Tag = Rawr.Item.ItemType.Gun;
+            this.checkBoxGun.Text = "Gun";
+            this.checkBoxGun.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.checkBoxTwoHandedSword);
+            this.groupBox4.Controls.Add(this.checkBoxTwoHandedAxe);
+            this.groupBox4.Controls.Add(this.checkBoxTwoHandedMace);
+            this.groupBox4.Controls.Add(this.checkBoxStaff);
+            this.groupBox4.Controls.Add(this.checkBoxPolearm);
+            this.groupBox4.Location = new System.Drawing.Point(155, 23);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(130, 155);
+            this.groupBox4.TabIndex = 4;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "2-Handed Weapons";
+            // 
+            // checkBoxTwoHandedSword
+            // 
+            this.checkBoxTwoHandedSword.AutoSize = true;
+            this.checkBoxTwoHandedSword.Location = new System.Drawing.Point(16, 120);
+            this.checkBoxTwoHandedSword.Name = "checkBoxTwoHandedSword";
+            this.checkBoxTwoHandedSword.Size = new System.Drawing.Size(106, 17);
+            this.checkBoxTwoHandedSword.TabIndex = 7;
+            this.checkBoxTwoHandedSword.Tag = Rawr.Item.ItemType.TwoHandSword;
+            this.checkBoxTwoHandedSword.Text = "2 Handed Sword";
+            this.checkBoxTwoHandedSword.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxTwoHandedAxe
+            // 
+            this.checkBoxTwoHandedAxe.AutoSize = true;
+            this.checkBoxTwoHandedAxe.Location = new System.Drawing.Point(16, 74);
+            this.checkBoxTwoHandedAxe.Name = "checkBoxTwoHandedAxe";
+            this.checkBoxTwoHandedAxe.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxTwoHandedAxe.TabIndex = 5;
+            this.checkBoxTwoHandedAxe.Tag = Rawr.Item.ItemType.TwoHandAxe;
+            this.checkBoxTwoHandedAxe.Text = "2 Handed Axe";
+            this.checkBoxTwoHandedAxe.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxTwoHandedMace
+            // 
+            this.checkBoxTwoHandedMace.AutoSize = true;
+            this.checkBoxTwoHandedMace.Location = new System.Drawing.Point(16, 97);
+            this.checkBoxTwoHandedMace.Name = "checkBoxTwoHandedMace";
+            this.checkBoxTwoHandedMace.Size = new System.Drawing.Size(103, 17);
+            this.checkBoxTwoHandedMace.TabIndex = 6;
+            this.checkBoxTwoHandedMace.Tag = Rawr.Item.ItemType.TwoHandMace;
+            this.checkBoxTwoHandedMace.Text = "2 Handed Mace";
+            this.checkBoxTwoHandedMace.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxStaff
+            // 
+            this.checkBoxStaff.AutoSize = true;
+            this.checkBoxStaff.Location = new System.Drawing.Point(16, 28);
+            this.checkBoxStaff.Name = "checkBoxStaff";
+            this.checkBoxStaff.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxStaff.TabIndex = 8;
+            this.checkBoxStaff.Tag = Rawr.Item.ItemType.Staff;
+            this.checkBoxStaff.Text = "Staff";
+            this.checkBoxStaff.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxPolearm
+            // 
+            this.checkBoxPolearm.AutoSize = true;
+            this.checkBoxPolearm.Location = new System.Drawing.Point(16, 51);
+            this.checkBoxPolearm.Name = "checkBoxPolearm";
+            this.checkBoxPolearm.Size = new System.Drawing.Size(64, 17);
+            this.checkBoxPolearm.TabIndex = 9;
+            this.checkBoxPolearm.Tag = Rawr.Item.ItemType.Polearm;
+            this.checkBoxPolearm.Text = "Polearm";
+            this.checkBoxPolearm.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.checkBoxDagger);
+            this.groupBox3.Controls.Add(this.checkBoxFistWeapon);
+            this.groupBox3.Controls.Add(this.checkBoxOneHandedAxe);
+            this.groupBox3.Controls.Add(this.checkBoxOneHandedMace);
+            this.groupBox3.Controls.Add(this.checkBoxOneHandedSword);
+            this.groupBox3.Location = new System.Drawing.Point(17, 23);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(132, 155);
+            this.groupBox3.TabIndex = 15;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "1-Handed Weapons";
+            // 
+            // checkBoxDagger
+            // 
+            this.checkBoxDagger.AutoSize = true;
+            this.checkBoxDagger.Location = new System.Drawing.Point(20, 28);
+            this.checkBoxDagger.Name = "checkBoxDagger";
+            this.checkBoxDagger.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxDagger.TabIndex = 0;
+            this.checkBoxDagger.Tag = Rawr.Item.ItemType.Dagger;
+            this.checkBoxDagger.Text = "Dagger";
+            this.checkBoxDagger.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxFistWeapon
+            // 
+            this.checkBoxFistWeapon.AutoSize = true;
+            this.checkBoxFistWeapon.Location = new System.Drawing.Point(20, 51);
+            this.checkBoxFistWeapon.Name = "checkBoxFistWeapon";
+            this.checkBoxFistWeapon.Size = new System.Drawing.Size(86, 17);
+            this.checkBoxFistWeapon.TabIndex = 1;
+            this.checkBoxFistWeapon.Tag = Rawr.Item.ItemType.FistWeapon;
+            this.checkBoxFistWeapon.Text = "Fist Weapon";
+            this.checkBoxFistWeapon.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxOneHandedAxe
+            // 
+            this.checkBoxOneHandedAxe.AutoSize = true;
+            this.checkBoxOneHandedAxe.Location = new System.Drawing.Point(20, 74);
+            this.checkBoxOneHandedAxe.Name = "checkBoxOneHandedAxe";
+            this.checkBoxOneHandedAxe.Size = new System.Drawing.Size(94, 17);
+            this.checkBoxOneHandedAxe.TabIndex = 2;
+            this.checkBoxOneHandedAxe.Tag = Rawr.Item.ItemType.OneHandAxe;
+            this.checkBoxOneHandedAxe.Text = "1 Handed Axe";
+            this.checkBoxOneHandedAxe.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxOneHandedMace
+            // 
+            this.checkBoxOneHandedMace.AutoSize = true;
+            this.checkBoxOneHandedMace.Location = new System.Drawing.Point(20, 97);
+            this.checkBoxOneHandedMace.Name = "checkBoxOneHandedMace";
+            this.checkBoxOneHandedMace.Size = new System.Drawing.Size(103, 17);
+            this.checkBoxOneHandedMace.TabIndex = 3;
+            this.checkBoxOneHandedMace.Tag = Rawr.Item.ItemType.OneHandMace;
+            this.checkBoxOneHandedMace.Text = "1 Handed Mace";
+            this.checkBoxOneHandedMace.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxOneHandedSword
+            // 
+            this.checkBoxOneHandedSword.AutoSize = true;
+            this.checkBoxOneHandedSword.Location = new System.Drawing.Point(20, 120);
+            this.checkBoxOneHandedSword.Name = "checkBoxOneHandedSword";
+            this.checkBoxOneHandedSword.Size = new System.Drawing.Size(106, 17);
+            this.checkBoxOneHandedSword.TabIndex = 4;
+            this.checkBoxOneHandedSword.Tag = Rawr.Item.ItemType.OneHandSword;
+            this.checkBoxOneHandedSword.Text = "1 Handed Sword";
+            this.checkBoxOneHandedSword.UseVisualStyleBackColor = true;
+            // 
+            // CancelButton
+            // 
+            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.CancelButton.Location = new System.Drawing.Point(171, 316);
+            this.CancelButton.Name = "CancelButton";
+            this.CancelButton.Size = new System.Drawing.Size(108, 30);
+            this.CancelButton.TabIndex = 2;
+            this.CancelButton.Text = "Cancel";
+            this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            // 
+            // OKButton
+            // 
+            this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.OKButton.Location = new System.Drawing.Point(309, 316);
+            this.OKButton.Name = "OKButton";
+            this.OKButton.Size = new System.Drawing.Size(110, 30);
+            this.OKButton.TabIndex = 3;
+            this.OKButton.Text = "OK";
+            this.OKButton.UseVisualStyleBackColor = true;
+            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.checkBoxShield);
+            this.groupBox6.Location = new System.Drawing.Point(309, 185);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(119, 109);
+            this.groupBox6.TabIndex = 4;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Offhand/Misc";
+            // 
+            // checkBoxShield
+            // 
+            this.checkBoxShield.AutoSize = true;
+            this.checkBoxShield.Location = new System.Drawing.Point(26, 30);
+            this.checkBoxShield.Name = "checkBoxShield";
+            this.checkBoxShield.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxShield.TabIndex = 0;
+            this.checkBoxShield.Tag = Rawr.Item.ItemType.Shield;
+            this.checkBoxShield.Text = "Shield";
+            this.checkBoxShield.UseVisualStyleBackColor = true;
+            // 
+            // FormRelevantItemRefinement
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(440, 358);
+            this.Controls.Add(this.groupBox6);
+            this.Controls.Add(this.OKButton);
+            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
+            this.Name = "FormRelevantItemRefinement";
+            this.Text = "Refining Item Selection";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox checkBoxPlateArmor;
+        private System.Windows.Forms.CheckBox checkBoxMailArmor;
+        private System.Windows.Forms.CheckBox checkBoxLeatherArmor;
+        private System.Windows.Forms.CheckBox checkBoxClothArmor;
+        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button OKButton;
+        private System.Windows.Forms.CheckBox checkBoxThrown;
+        private System.Windows.Forms.CheckBox checkBoxWand;
+        private System.Windows.Forms.CheckBox checkBoxGun;
+        private System.Windows.Forms.CheckBox checkBoxCrossbow;
+        private System.Windows.Forms.CheckBox checkBoxBow;
+        private System.Windows.Forms.CheckBox checkBoxPolearm;
+        private System.Windows.Forms.CheckBox checkBoxStaff;
+        private System.Windows.Forms.CheckBox checkBoxTwoHandedSword;
+        private System.Windows.Forms.CheckBox checkBoxTwoHandedMace;
+        private System.Windows.Forms.CheckBox checkBoxTwoHandedAxe;
+        private System.Windows.Forms.CheckBox checkBoxOneHandedSword;
+        private System.Windows.Forms.CheckBox checkBoxOneHandedMace;
+        private System.Windows.Forms.CheckBox checkBoxOneHandedAxe;
+        private System.Windows.Forms.CheckBox checkBoxFistWeapon;
+        private System.Windows.Forms.CheckBox checkBoxDagger;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.CheckBox checkBoxShield;
+
+        
+    }
+}
