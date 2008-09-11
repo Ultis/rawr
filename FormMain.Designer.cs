@@ -32,6 +32,7 @@ namespace Rawr
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.tabControlCharacter = new System.Windows.Forms.TabControl();
             this.tabPageStats = new System.Windows.Forms.TabPage();
+            this.calculationDisplay1 = new Rawr.CalculationDisplay();
             this.label32 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.comboBoxRegion = new System.Windows.Forms.ComboBox();
@@ -70,8 +71,31 @@ namespace Rawr
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPageBuffs = new System.Windows.Forms.TabPage();
+            this.buffSelector1 = new Rawr.BuffSelector();
             this.tabPageOptions = new System.Windows.Forms.TabPage();
+            this.itemButtonBack = new Rawr.ItemButton();
+            this.itemButtonChest = new Rawr.ItemButton();
+            this.itemButtonFeet = new Rawr.ItemButton();
+            this.itemButtonFinger1 = new Rawr.ItemButton();
+            this.itemButtonFinger2 = new Rawr.ItemButton();
+            this.itemButtonHands = new Rawr.ItemButton();
+            this.itemButtonHead = new Rawr.ItemButton();
+            this.itemButtonRanged = new Rawr.ItemButton();
+            this.itemButtonLegs = new Rawr.ItemButton();
+            this.itemButtonNeck = new Rawr.ItemButton();
+            this.itemButtonProjectileBag = new Rawr.ItemButton();
+            this.itemButtonProjectile = new Rawr.ItemButton();
+            this.itemButtonOffHand = new Rawr.ItemButton();
+            this.itemButtonShirt = new Rawr.ItemButton();
+            this.itemButtonShoulders = new Rawr.ItemButton();
+            this.itemButtonTabard = new Rawr.ItemButton();
+            this.itemButtonTrinket1 = new Rawr.ItemButton();
+            this.itemButtonTrinket2 = new Rawr.ItemButton();
+            this.itemButtonWaist = new Rawr.ItemButton();
+            this.itemButtonMainHand = new Rawr.ItemButton();
+            this.itemButtonWrist = new Rawr.ItemButton();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.itemComparison1 = new Rawr.ItemComparison();
             this.toolStripItemComparison = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripDropDownButtonSlot = new System.Windows.Forms.ToolStripDropDownButton();
@@ -150,6 +174,7 @@ namespace Rawr
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.batchToolsToolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.copyCharacterStatsToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.reloadCurrentCharacterFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -157,31 +182,7 @@ namespace Rawr
             this.updateItemCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.batchToolsToolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.calculationDisplay1 = new Rawr.CalculationDisplay();
-            this.buffSelector1 = new Rawr.BuffSelector();
-            this.itemButtonBack = new Rawr.ItemButton();
-            this.itemButtonChest = new Rawr.ItemButton();
-            this.itemButtonFeet = new Rawr.ItemButton();
-            this.itemButtonFinger1 = new Rawr.ItemButton();
-            this.itemButtonFinger2 = new Rawr.ItemButton();
-            this.itemButtonHands = new Rawr.ItemButton();
-            this.itemButtonHead = new Rawr.ItemButton();
-            this.itemButtonRanged = new Rawr.ItemButton();
-            this.itemButtonLegs = new Rawr.ItemButton();
-            this.itemButtonNeck = new Rawr.ItemButton();
-            this.itemButtonProjectileBag = new Rawr.ItemButton();
-            this.itemButtonProjectile = new Rawr.ItemButton();
-            this.itemButtonOffHand = new Rawr.ItemButton();
-            this.itemButtonShirt = new Rawr.ItemButton();
-            this.itemButtonShoulders = new Rawr.ItemButton();
-            this.itemButtonTabard = new Rawr.ItemButton();
-            this.itemButtonTrinket1 = new Rawr.ItemButton();
-            this.itemButtonTrinket2 = new Rawr.ItemButton();
-            this.itemButtonWaist = new Rawr.ItemButton();
-            this.itemButtonMainHand = new Rawr.ItemButton();
-            this.itemButtonWrist = new Rawr.ItemButton();
-            this.itemComparison1 = new Rawr.ItemComparison();
+            this.refineEquipmentParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -261,6 +262,17 @@ namespace Rawr
             this.tabPageStats.TabIndex = 0;
             this.tabPageStats.Text = "Stats";
             this.tabPageStats.UseVisualStyleBackColor = true;
+            // 
+            // calculationDisplay1
+            // 
+            this.calculationDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.calculationDisplay1.AutoScroll = true;
+            this.calculationDisplay1.Location = new System.Drawing.Point(0, 134);
+            this.calculationDisplay1.Name = "calculationDisplay1";
+            this.calculationDisplay1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.calculationDisplay1.Size = new System.Drawing.Size(214, 398);
+            this.calculationDisplay1.TabIndex = 5;
             // 
             // label32
             // 
@@ -683,6 +695,17 @@ namespace Rawr
             this.tabPageBuffs.Text = "Buffs";
             this.tabPageBuffs.UseVisualStyleBackColor = true;
             // 
+            // buffSelector1
+            // 
+            this.buffSelector1.AutoScroll = true;
+            this.buffSelector1.Character = null;
+            this.buffSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buffSelector1.Location = new System.Drawing.Point(0, 0);
+            this.buffSelector1.Name = "buffSelector1";
+            this.buffSelector1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.buffSelector1.Size = new System.Drawing.Size(214, 551);
+            this.buffSelector1.TabIndex = 0;
+            // 
             // tabPageOptions
             // 
             this.tabPageOptions.Location = new System.Drawing.Point(4, 22);
@@ -691,6 +714,303 @@ namespace Rawr
             this.tabPageOptions.TabIndex = 3;
             this.tabPageOptions.Text = "Options";
             this.tabPageOptions.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonBack
+            // 
+            this.itemButtonBack.Character = null;
+            this.itemButtonBack.CharacterSlot = Rawr.Character.CharacterSlot.Back;
+            this.itemButtonBack.ItemIcon = null;
+            this.itemButtonBack.Location = new System.Drawing.Point(3, 231);
+            this.itemButtonBack.Name = "itemButtonBack";
+            this.itemButtonBack.SelectedItem = null;
+            this.itemButtonBack.SelectedItemId = 0;
+            this.itemButtonBack.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonBack.TabIndex = 2;
+            this.itemButtonBack.Text = "Back";
+            this.itemButtonBack.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonChest
+            // 
+            this.itemButtonChest.Character = null;
+            this.itemButtonChest.CharacterSlot = Rawr.Character.CharacterSlot.Chest;
+            this.itemButtonChest.ItemIcon = null;
+            this.itemButtonChest.Location = new System.Drawing.Point(3, 307);
+            this.itemButtonChest.Name = "itemButtonChest";
+            this.itemButtonChest.SelectedItem = null;
+            this.itemButtonChest.SelectedItemId = 0;
+            this.itemButtonChest.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonChest.TabIndex = 2;
+            this.itemButtonChest.Text = "Chest";
+            this.itemButtonChest.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonFeet
+            // 
+            this.itemButtonFeet.Character = null;
+            this.itemButtonFeet.CharacterSlot = Rawr.Character.CharacterSlot.Feet;
+            this.itemButtonFeet.ItemIcon = null;
+            this.itemButtonFeet.Location = new System.Drawing.Point(307, 231);
+            this.itemButtonFeet.Name = "itemButtonFeet";
+            this.itemButtonFeet.SelectedItem = null;
+            this.itemButtonFeet.SelectedItemId = 0;
+            this.itemButtonFeet.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonFeet.TabIndex = 2;
+            this.itemButtonFeet.Text = "Feet";
+            this.itemButtonFeet.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonFinger1
+            // 
+            this.itemButtonFinger1.Character = null;
+            this.itemButtonFinger1.CharacterSlot = Rawr.Character.CharacterSlot.Finger1;
+            this.itemButtonFinger1.ItemIcon = null;
+            this.itemButtonFinger1.Location = new System.Drawing.Point(307, 307);
+            this.itemButtonFinger1.Name = "itemButtonFinger1";
+            this.itemButtonFinger1.SelectedItem = null;
+            this.itemButtonFinger1.SelectedItemId = 0;
+            this.itemButtonFinger1.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonFinger1.TabIndex = 2;
+            this.itemButtonFinger1.Text = "Finger1";
+            this.itemButtonFinger1.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonFinger2
+            // 
+            this.itemButtonFinger2.Character = null;
+            this.itemButtonFinger2.CharacterSlot = Rawr.Character.CharacterSlot.Finger2;
+            this.itemButtonFinger2.ItemIcon = null;
+            this.itemButtonFinger2.Location = new System.Drawing.Point(307, 383);
+            this.itemButtonFinger2.Name = "itemButtonFinger2";
+            this.itemButtonFinger2.SelectedItem = null;
+            this.itemButtonFinger2.SelectedItemId = 0;
+            this.itemButtonFinger2.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonFinger2.TabIndex = 2;
+            this.itemButtonFinger2.Text = "Finger2";
+            this.itemButtonFinger2.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonHands
+            // 
+            this.itemButtonHands.Character = null;
+            this.itemButtonHands.CharacterSlot = Rawr.Character.CharacterSlot.Hands;
+            this.itemButtonHands.ItemIcon = null;
+            this.itemButtonHands.Location = new System.Drawing.Point(307, 3);
+            this.itemButtonHands.Name = "itemButtonHands";
+            this.itemButtonHands.SelectedItem = null;
+            this.itemButtonHands.SelectedItemId = 0;
+            this.itemButtonHands.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonHands.TabIndex = 2;
+            this.itemButtonHands.Text = "Hands";
+            this.itemButtonHands.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonHead
+            // 
+            this.itemButtonHead.Character = null;
+            this.itemButtonHead.CharacterSlot = Rawr.Character.CharacterSlot.Head;
+            this.itemButtonHead.ItemIcon = null;
+            this.itemButtonHead.Location = new System.Drawing.Point(3, 3);
+            this.itemButtonHead.Name = "itemButtonHead";
+            this.itemButtonHead.SelectedItem = null;
+            this.itemButtonHead.SelectedItemId = 0;
+            this.itemButtonHead.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonHead.TabIndex = 2;
+            this.itemButtonHead.Text = "Head";
+            this.itemButtonHead.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonRanged
+            // 
+            this.itemButtonRanged.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.itemButtonRanged.Character = null;
+            this.itemButtonRanged.CharacterSlot = Rawr.Character.CharacterSlot.Ranged;
+            this.itemButtonRanged.ItemIcon = null;
+            this.itemButtonRanged.Location = new System.Drawing.Point(231, 586);
+            this.itemButtonRanged.Name = "itemButtonRanged";
+            this.itemButtonRanged.SelectedItem = null;
+            this.itemButtonRanged.SelectedItemId = 0;
+            this.itemButtonRanged.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonRanged.TabIndex = 2;
+            this.itemButtonRanged.Text = "Idol";
+            this.itemButtonRanged.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonLegs
+            // 
+            this.itemButtonLegs.Character = null;
+            this.itemButtonLegs.CharacterSlot = Rawr.Character.CharacterSlot.Legs;
+            this.itemButtonLegs.ItemIcon = null;
+            this.itemButtonLegs.Location = new System.Drawing.Point(307, 155);
+            this.itemButtonLegs.Name = "itemButtonLegs";
+            this.itemButtonLegs.SelectedItem = null;
+            this.itemButtonLegs.SelectedItemId = 0;
+            this.itemButtonLegs.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonLegs.TabIndex = 2;
+            this.itemButtonLegs.Text = "Legs";
+            this.itemButtonLegs.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonNeck
+            // 
+            this.itemButtonNeck.Character = null;
+            this.itemButtonNeck.CharacterSlot = Rawr.Character.CharacterSlot.Neck;
+            this.itemButtonNeck.ItemIcon = null;
+            this.itemButtonNeck.Location = new System.Drawing.Point(3, 79);
+            this.itemButtonNeck.Name = "itemButtonNeck";
+            this.itemButtonNeck.SelectedItem = null;
+            this.itemButtonNeck.SelectedItemId = 0;
+            this.itemButtonNeck.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonNeck.TabIndex = 2;
+            this.itemButtonNeck.Text = "Neck";
+            this.itemButtonNeck.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonProjectileBag
+            // 
+            this.itemButtonProjectileBag.Character = null;
+            this.itemButtonProjectileBag.CharacterSlot = Rawr.Character.CharacterSlot.ProjectileBag;
+            this.itemButtonProjectileBag.ItemIcon = null;
+            this.itemButtonProjectileBag.Location = new System.Drawing.Point(342, 611);
+            this.itemButtonProjectileBag.Name = "itemButtonProjectileBag";
+            this.itemButtonProjectileBag.SelectedItem = null;
+            this.itemButtonProjectileBag.SelectedItemId = 0;
+            this.itemButtonProjectileBag.Size = new System.Drawing.Size(35, 35);
+            this.itemButtonProjectileBag.TabIndex = 2;
+            this.itemButtonProjectileBag.Text = "ProjBag";
+            this.itemButtonProjectileBag.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonProjectile
+            // 
+            this.itemButtonProjectile.Character = null;
+            this.itemButtonProjectile.CharacterSlot = Rawr.Character.CharacterSlot.Projectile;
+            this.itemButtonProjectile.ItemIcon = null;
+            this.itemButtonProjectile.Location = new System.Drawing.Point(307, 611);
+            this.itemButtonProjectile.Name = "itemButtonProjectile";
+            this.itemButtonProjectile.SelectedItem = null;
+            this.itemButtonProjectile.SelectedItemId = 0;
+            this.itemButtonProjectile.Size = new System.Drawing.Size(35, 35);
+            this.itemButtonProjectile.TabIndex = 2;
+            this.itemButtonProjectile.Text = "Proj";
+            this.itemButtonProjectile.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonOffHand
+            // 
+            this.itemButtonOffHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.itemButtonOffHand.Character = null;
+            this.itemButtonOffHand.CharacterSlot = Rawr.Character.CharacterSlot.OffHand;
+            this.itemButtonOffHand.ItemIcon = null;
+            this.itemButtonOffHand.Location = new System.Drawing.Point(155, 586);
+            this.itemButtonOffHand.Name = "itemButtonOffHand";
+            this.itemButtonOffHand.SelectedItem = null;
+            this.itemButtonOffHand.SelectedItemId = 0;
+            this.itemButtonOffHand.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonOffHand.TabIndex = 2;
+            this.itemButtonOffHand.Text = "OffHand";
+            this.itemButtonOffHand.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonShirt
+            // 
+            this.itemButtonShirt.Character = null;
+            this.itemButtonShirt.CharacterSlot = Rawr.Character.CharacterSlot.Shirt;
+            this.itemButtonShirt.ItemIcon = null;
+            this.itemButtonShirt.Location = new System.Drawing.Point(3, 383);
+            this.itemButtonShirt.Name = "itemButtonShirt";
+            this.itemButtonShirt.SelectedItem = null;
+            this.itemButtonShirt.SelectedItemId = 0;
+            this.itemButtonShirt.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonShirt.TabIndex = 2;
+            this.itemButtonShirt.Text = "Shirt";
+            this.itemButtonShirt.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonShoulders
+            // 
+            this.itemButtonShoulders.Character = null;
+            this.itemButtonShoulders.CharacterSlot = Rawr.Character.CharacterSlot.Shoulders;
+            this.itemButtonShoulders.ItemIcon = null;
+            this.itemButtonShoulders.Location = new System.Drawing.Point(3, 155);
+            this.itemButtonShoulders.Name = "itemButtonShoulders";
+            this.itemButtonShoulders.SelectedItem = null;
+            this.itemButtonShoulders.SelectedItemId = 0;
+            this.itemButtonShoulders.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonShoulders.TabIndex = 2;
+            this.itemButtonShoulders.Text = "Shoulders";
+            this.itemButtonShoulders.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonTabard
+            // 
+            this.itemButtonTabard.Character = null;
+            this.itemButtonTabard.CharacterSlot = Rawr.Character.CharacterSlot.Tabard;
+            this.itemButtonTabard.ItemIcon = null;
+            this.itemButtonTabard.Location = new System.Drawing.Point(3, 459);
+            this.itemButtonTabard.Name = "itemButtonTabard";
+            this.itemButtonTabard.SelectedItem = null;
+            this.itemButtonTabard.SelectedItemId = 0;
+            this.itemButtonTabard.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonTabard.TabIndex = 2;
+            this.itemButtonTabard.Text = "Tabard";
+            this.itemButtonTabard.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonTrinket1
+            // 
+            this.itemButtonTrinket1.Character = null;
+            this.itemButtonTrinket1.CharacterSlot = Rawr.Character.CharacterSlot.Trinket1;
+            this.itemButtonTrinket1.ItemIcon = null;
+            this.itemButtonTrinket1.Location = new System.Drawing.Point(307, 459);
+            this.itemButtonTrinket1.Name = "itemButtonTrinket1";
+            this.itemButtonTrinket1.SelectedItem = null;
+            this.itemButtonTrinket1.SelectedItemId = 0;
+            this.itemButtonTrinket1.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonTrinket1.TabIndex = 2;
+            this.itemButtonTrinket1.Text = "Trinket1";
+            this.itemButtonTrinket1.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonTrinket2
+            // 
+            this.itemButtonTrinket2.Character = null;
+            this.itemButtonTrinket2.CharacterSlot = Rawr.Character.CharacterSlot.Trinket2;
+            this.itemButtonTrinket2.ItemIcon = null;
+            this.itemButtonTrinket2.Location = new System.Drawing.Point(307, 535);
+            this.itemButtonTrinket2.Name = "itemButtonTrinket2";
+            this.itemButtonTrinket2.SelectedItem = null;
+            this.itemButtonTrinket2.SelectedItemId = 0;
+            this.itemButtonTrinket2.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonTrinket2.TabIndex = 2;
+            this.itemButtonTrinket2.Text = "Trinket2";
+            this.itemButtonTrinket2.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonWaist
+            // 
+            this.itemButtonWaist.Character = null;
+            this.itemButtonWaist.CharacterSlot = Rawr.Character.CharacterSlot.Waist;
+            this.itemButtonWaist.ItemIcon = null;
+            this.itemButtonWaist.Location = new System.Drawing.Point(307, 79);
+            this.itemButtonWaist.Name = "itemButtonWaist";
+            this.itemButtonWaist.SelectedItem = null;
+            this.itemButtonWaist.SelectedItemId = 0;
+            this.itemButtonWaist.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonWaist.TabIndex = 2;
+            this.itemButtonWaist.Text = "Waist";
+            this.itemButtonWaist.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonMainHand
+            // 
+            this.itemButtonMainHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.itemButtonMainHand.Character = null;
+            this.itemButtonMainHand.CharacterSlot = Rawr.Character.CharacterSlot.MainHand;
+            this.itemButtonMainHand.ItemIcon = null;
+            this.itemButtonMainHand.Location = new System.Drawing.Point(79, 586);
+            this.itemButtonMainHand.Name = "itemButtonMainHand";
+            this.itemButtonMainHand.SelectedItem = null;
+            this.itemButtonMainHand.SelectedItemId = 0;
+            this.itemButtonMainHand.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonMainHand.TabIndex = 2;
+            this.itemButtonMainHand.Text = "MainHand";
+            this.itemButtonMainHand.UseVisualStyleBackColor = true;
+            // 
+            // itemButtonWrist
+            // 
+            this.itemButtonWrist.Character = null;
+            this.itemButtonWrist.CharacterSlot = Rawr.Character.CharacterSlot.Wrist;
+            this.itemButtonWrist.ItemIcon = null;
+            this.itemButtonWrist.Location = new System.Drawing.Point(3, 535);
+            this.itemButtonWrist.Name = "itemButtonWrist";
+            this.itemButtonWrist.SelectedItem = null;
+            this.itemButtonWrist.SelectedItemId = 0;
+            this.itemButtonWrist.Size = new System.Drawing.Size(70, 70);
+            this.itemButtonWrist.TabIndex = 2;
+            this.itemButtonWrist.Text = "Wrists";
+            this.itemButtonWrist.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
@@ -705,6 +1025,19 @@ namespace Rawr
             this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Comparisons";
+            // 
+            // itemComparison1
+            // 
+            this.itemComparison1.BackColor = System.Drawing.Color.White;
+            this.itemComparison1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.itemComparison1.Character = null;
+            this.itemComparison1.DisplayMode = Rawr.ComparisonGraph.GraphDisplayMode.Subpoints;
+            this.itemComparison1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemComparison1.Location = new System.Drawing.Point(3, 41);
+            this.itemComparison1.Name = "itemComparison1";
+            this.itemComparison1.Size = new System.Drawing.Size(458, 600);
+            this.itemComparison1.Sort = Rawr.ComparisonGraph.ComparisonSort.Overall;
+            this.itemComparison1.TabIndex = 3;
             // 
             // toolStripItemComparison
             // 
@@ -1217,7 +1550,7 @@ namespace Rawr
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -1227,7 +1560,7 @@ namespace Rawr
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -1237,7 +1570,7 @@ namespace Rawr
             this.loadFromArmoryToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.loadFromArmoryToolStripMenuItem.Name = "loadFromArmoryToolStripMenuItem";
             this.loadFromArmoryToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.loadFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.loadFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
             this.loadFromArmoryToolStripMenuItem.Text = "&Load from Armory...";
             this.loadFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.loadFromArmoryToolStripMenuItem_Click);
             // 
@@ -1245,19 +1578,19 @@ namespace Rawr
             // 
             this.loadFromCharacterProfilerToolStripMenuItem.Name = "loadFromCharacterProfilerToolStripMenuItem";
             this.loadFromCharacterProfilerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.loadFromCharacterProfilerToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
+            this.loadFromCharacterProfilerToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
             this.loadFromCharacterProfilerToolStripMenuItem.Text = "Load from Character &Profiler";
             this.loadFromCharacterProfilerToolStripMenuItem.Click += new System.EventHandler(this.loadFromCharacterProfilerToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(220, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(256, 6);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(220, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(256, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -1265,26 +1598,26 @@ namespace Rawr
             this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(220, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(256, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -1364,6 +1697,7 @@ namespace Rawr
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editItemsToolStripMenuItem,
+            this.refineEquipmentParametersToolStripMenuItem,
             this.optimizeToolStripMenuItem,
             this.batchToolsToolStripMenuItem6,
             this.copyCharacterStatsToClipboardToolStripMenuItem,
@@ -1390,6 +1724,13 @@ namespace Rawr
             this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
             this.optimizeToolStripMenuItem.Text = "Optimize...";
             this.optimizeToolStripMenuItem.Click += new System.EventHandler(this.optimizeToolStripMenuItem_Click);
+            // 
+            // batchToolsToolStripMenuItem6
+            // 
+            this.batchToolsToolStripMenuItem6.Name = "batchToolsToolStripMenuItem6";
+            this.batchToolsToolStripMenuItem6.Size = new System.Drawing.Size(272, 22);
+            this.batchToolsToolStripMenuItem6.Text = "Batch Tools...";
+            this.batchToolsToolStripMenuItem6.Click += new System.EventHandler(this.BatchToolsToolStripMenuItem6_Click);
             // 
             // copyCharacterStatsToClipboardToolStripMenuItem
             // 
@@ -1436,344 +1777,12 @@ namespace Rawr
             this.optionsToolStripMenuItem.Text = "Options...";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
-            // batchToolsToolStripMenuItem6
+            // refineEquipmentParametersToolStripMenuItem
             // 
-            this.batchToolsToolStripMenuItem6.Name = "batchToolsToolStripMenuItem6";
-            this.batchToolsToolStripMenuItem6.Size = new System.Drawing.Size(272, 22);
-            this.batchToolsToolStripMenuItem6.Text = "Batch Tools...";
-            this.batchToolsToolStripMenuItem6.Click += new System.EventHandler(this.BatchToolsToolStripMenuItem6_Click);
-            // 
-            // calculationDisplay1
-            // 
-            this.calculationDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.calculationDisplay1.AutoScroll = true;
-            this.calculationDisplay1.Location = new System.Drawing.Point(0, 134);
-            this.calculationDisplay1.Name = "calculationDisplay1";
-            this.calculationDisplay1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.calculationDisplay1.Size = new System.Drawing.Size(214, 398);
-            this.calculationDisplay1.TabIndex = 5;
-            // 
-            // buffSelector1
-            // 
-            this.buffSelector1.AutoScroll = true;
-            this.buffSelector1.Character = null;
-            this.buffSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buffSelector1.Location = new System.Drawing.Point(0, 0);
-            this.buffSelector1.Name = "buffSelector1";
-            this.buffSelector1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.buffSelector1.Size = new System.Drawing.Size(214, 551);
-            this.buffSelector1.TabIndex = 0;
-            // 
-            // itemButtonBack
-            // 
-            this.itemButtonBack.Character = null;
-            this.itemButtonBack.CharacterSlot = Rawr.Character.CharacterSlot.Back;
-            this.itemButtonBack.ItemIcon = null;
-            this.itemButtonBack.Location = new System.Drawing.Point(3, 231);
-            this.itemButtonBack.Name = "itemButtonBack";
-            this.itemButtonBack.SelectedItem = null;
-            this.itemButtonBack.SelectedItemId = 0;
-            this.itemButtonBack.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonBack.TabIndex = 2;
-            this.itemButtonBack.Text = "Back";
-            this.itemButtonBack.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonChest
-            // 
-            this.itemButtonChest.Character = null;
-            this.itemButtonChest.CharacterSlot = Rawr.Character.CharacterSlot.Chest;
-            this.itemButtonChest.ItemIcon = null;
-            this.itemButtonChest.Location = new System.Drawing.Point(3, 307);
-            this.itemButtonChest.Name = "itemButtonChest";
-            this.itemButtonChest.SelectedItem = null;
-            this.itemButtonChest.SelectedItemId = 0;
-            this.itemButtonChest.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonChest.TabIndex = 2;
-            this.itemButtonChest.Text = "Chest";
-            this.itemButtonChest.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonFeet
-            // 
-            this.itemButtonFeet.Character = null;
-            this.itemButtonFeet.CharacterSlot = Rawr.Character.CharacterSlot.Feet;
-            this.itemButtonFeet.ItemIcon = null;
-            this.itemButtonFeet.Location = new System.Drawing.Point(307, 231);
-            this.itemButtonFeet.Name = "itemButtonFeet";
-            this.itemButtonFeet.SelectedItem = null;
-            this.itemButtonFeet.SelectedItemId = 0;
-            this.itemButtonFeet.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonFeet.TabIndex = 2;
-            this.itemButtonFeet.Text = "Feet";
-            this.itemButtonFeet.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonFinger1
-            // 
-            this.itemButtonFinger1.Character = null;
-            this.itemButtonFinger1.CharacterSlot = Rawr.Character.CharacterSlot.Finger1;
-            this.itemButtonFinger1.ItemIcon = null;
-            this.itemButtonFinger1.Location = new System.Drawing.Point(307, 307);
-            this.itemButtonFinger1.Name = "itemButtonFinger1";
-            this.itemButtonFinger1.SelectedItem = null;
-            this.itemButtonFinger1.SelectedItemId = 0;
-            this.itemButtonFinger1.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonFinger1.TabIndex = 2;
-            this.itemButtonFinger1.Text = "Finger1";
-            this.itemButtonFinger1.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonFinger2
-            // 
-            this.itemButtonFinger2.Character = null;
-            this.itemButtonFinger2.CharacterSlot = Rawr.Character.CharacterSlot.Finger2;
-            this.itemButtonFinger2.ItemIcon = null;
-            this.itemButtonFinger2.Location = new System.Drawing.Point(307, 383);
-            this.itemButtonFinger2.Name = "itemButtonFinger2";
-            this.itemButtonFinger2.SelectedItem = null;
-            this.itemButtonFinger2.SelectedItemId = 0;
-            this.itemButtonFinger2.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonFinger2.TabIndex = 2;
-            this.itemButtonFinger2.Text = "Finger2";
-            this.itemButtonFinger2.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonHands
-            // 
-            this.itemButtonHands.Character = null;
-            this.itemButtonHands.CharacterSlot = Rawr.Character.CharacterSlot.Hands;
-            this.itemButtonHands.ItemIcon = null;
-            this.itemButtonHands.Location = new System.Drawing.Point(307, 3);
-            this.itemButtonHands.Name = "itemButtonHands";
-            this.itemButtonHands.SelectedItem = null;
-            this.itemButtonHands.SelectedItemId = 0;
-            this.itemButtonHands.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonHands.TabIndex = 2;
-            this.itemButtonHands.Text = "Hands";
-            this.itemButtonHands.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonHead
-            // 
-            this.itemButtonHead.Character = null;
-            this.itemButtonHead.CharacterSlot = Rawr.Character.CharacterSlot.Head;
-            this.itemButtonHead.ItemIcon = null;
-            this.itemButtonHead.Location = new System.Drawing.Point(3, 3);
-            this.itemButtonHead.Name = "itemButtonHead";
-            this.itemButtonHead.SelectedItem = null;
-            this.itemButtonHead.SelectedItemId = 0;
-            this.itemButtonHead.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonHead.TabIndex = 2;
-            this.itemButtonHead.Text = "Head";
-            this.itemButtonHead.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonRanged
-            // 
-            this.itemButtonRanged.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.itemButtonRanged.Character = null;
-            this.itemButtonRanged.CharacterSlot = Rawr.Character.CharacterSlot.Ranged;
-            this.itemButtonRanged.ItemIcon = null;
-            this.itemButtonRanged.Location = new System.Drawing.Point(231, 586);
-            this.itemButtonRanged.Name = "itemButtonRanged";
-            this.itemButtonRanged.SelectedItem = null;
-            this.itemButtonRanged.SelectedItemId = 0;
-            this.itemButtonRanged.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonRanged.TabIndex = 2;
-            this.itemButtonRanged.Text = "Idol";
-            this.itemButtonRanged.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonLegs
-            // 
-            this.itemButtonLegs.Character = null;
-            this.itemButtonLegs.CharacterSlot = Rawr.Character.CharacterSlot.Legs;
-            this.itemButtonLegs.ItemIcon = null;
-            this.itemButtonLegs.Location = new System.Drawing.Point(307, 155);
-            this.itemButtonLegs.Name = "itemButtonLegs";
-            this.itemButtonLegs.SelectedItem = null;
-            this.itemButtonLegs.SelectedItemId = 0;
-            this.itemButtonLegs.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonLegs.TabIndex = 2;
-            this.itemButtonLegs.Text = "Legs";
-            this.itemButtonLegs.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonNeck
-            // 
-            this.itemButtonNeck.Character = null;
-            this.itemButtonNeck.CharacterSlot = Rawr.Character.CharacterSlot.Neck;
-            this.itemButtonNeck.ItemIcon = null;
-            this.itemButtonNeck.Location = new System.Drawing.Point(3, 79);
-            this.itemButtonNeck.Name = "itemButtonNeck";
-            this.itemButtonNeck.SelectedItem = null;
-            this.itemButtonNeck.SelectedItemId = 0;
-            this.itemButtonNeck.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonNeck.TabIndex = 2;
-            this.itemButtonNeck.Text = "Neck";
-            this.itemButtonNeck.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonProjectileBag
-            // 
-            this.itemButtonProjectileBag.Character = null;
-            this.itemButtonProjectileBag.CharacterSlot = Rawr.Character.CharacterSlot.ProjectileBag;
-            this.itemButtonProjectileBag.ItemIcon = null;
-            this.itemButtonProjectileBag.Location = new System.Drawing.Point(342, 611);
-            this.itemButtonProjectileBag.Name = "itemButtonProjectileBag";
-            this.itemButtonProjectileBag.SelectedItem = null;
-            this.itemButtonProjectileBag.SelectedItemId = 0;
-            this.itemButtonProjectileBag.Size = new System.Drawing.Size(35, 35);
-            this.itemButtonProjectileBag.TabIndex = 2;
-            this.itemButtonProjectileBag.Text = "ProjBag";
-            this.itemButtonProjectileBag.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonProjectile
-            // 
-            this.itemButtonProjectile.Character = null;
-            this.itemButtonProjectile.CharacterSlot = Rawr.Character.CharacterSlot.Projectile;
-            this.itemButtonProjectile.ItemIcon = null;
-            this.itemButtonProjectile.Location = new System.Drawing.Point(307, 611);
-            this.itemButtonProjectile.Name = "itemButtonProjectile";
-            this.itemButtonProjectile.SelectedItem = null;
-            this.itemButtonProjectile.SelectedItemId = 0;
-            this.itemButtonProjectile.Size = new System.Drawing.Size(35, 35);
-            this.itemButtonProjectile.TabIndex = 2;
-            this.itemButtonProjectile.Text = "Proj";
-            this.itemButtonProjectile.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonOffHand
-            // 
-            this.itemButtonOffHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.itemButtonOffHand.Character = null;
-            this.itemButtonOffHand.CharacterSlot = Rawr.Character.CharacterSlot.OffHand;
-            this.itemButtonOffHand.ItemIcon = null;
-            this.itemButtonOffHand.Location = new System.Drawing.Point(155, 586);
-            this.itemButtonOffHand.Name = "itemButtonOffHand";
-            this.itemButtonOffHand.SelectedItem = null;
-            this.itemButtonOffHand.SelectedItemId = 0;
-            this.itemButtonOffHand.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonOffHand.TabIndex = 2;
-            this.itemButtonOffHand.Text = "OffHand";
-            this.itemButtonOffHand.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonShirt
-            // 
-            this.itemButtonShirt.Character = null;
-            this.itemButtonShirt.CharacterSlot = Rawr.Character.CharacterSlot.Shirt;
-            this.itemButtonShirt.ItemIcon = null;
-            this.itemButtonShirt.Location = new System.Drawing.Point(3, 383);
-            this.itemButtonShirt.Name = "itemButtonShirt";
-            this.itemButtonShirt.SelectedItem = null;
-            this.itemButtonShirt.SelectedItemId = 0;
-            this.itemButtonShirt.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonShirt.TabIndex = 2;
-            this.itemButtonShirt.Text = "Shirt";
-            this.itemButtonShirt.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonShoulders
-            // 
-            this.itemButtonShoulders.Character = null;
-            this.itemButtonShoulders.CharacterSlot = Rawr.Character.CharacterSlot.Shoulders;
-            this.itemButtonShoulders.ItemIcon = null;
-            this.itemButtonShoulders.Location = new System.Drawing.Point(3, 155);
-            this.itemButtonShoulders.Name = "itemButtonShoulders";
-            this.itemButtonShoulders.SelectedItem = null;
-            this.itemButtonShoulders.SelectedItemId = 0;
-            this.itemButtonShoulders.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonShoulders.TabIndex = 2;
-            this.itemButtonShoulders.Text = "Shoulders";
-            this.itemButtonShoulders.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonTabard
-            // 
-            this.itemButtonTabard.Character = null;
-            this.itemButtonTabard.CharacterSlot = Rawr.Character.CharacterSlot.Tabard;
-            this.itemButtonTabard.ItemIcon = null;
-            this.itemButtonTabard.Location = new System.Drawing.Point(3, 459);
-            this.itemButtonTabard.Name = "itemButtonTabard";
-            this.itemButtonTabard.SelectedItem = null;
-            this.itemButtonTabard.SelectedItemId = 0;
-            this.itemButtonTabard.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonTabard.TabIndex = 2;
-            this.itemButtonTabard.Text = "Tabard";
-            this.itemButtonTabard.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonTrinket1
-            // 
-            this.itemButtonTrinket1.Character = null;
-            this.itemButtonTrinket1.CharacterSlot = Rawr.Character.CharacterSlot.Trinket1;
-            this.itemButtonTrinket1.ItemIcon = null;
-            this.itemButtonTrinket1.Location = new System.Drawing.Point(307, 459);
-            this.itemButtonTrinket1.Name = "itemButtonTrinket1";
-            this.itemButtonTrinket1.SelectedItem = null;
-            this.itemButtonTrinket1.SelectedItemId = 0;
-            this.itemButtonTrinket1.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonTrinket1.TabIndex = 2;
-            this.itemButtonTrinket1.Text = "Trinket1";
-            this.itemButtonTrinket1.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonTrinket2
-            // 
-            this.itemButtonTrinket2.Character = null;
-            this.itemButtonTrinket2.CharacterSlot = Rawr.Character.CharacterSlot.Trinket2;
-            this.itemButtonTrinket2.ItemIcon = null;
-            this.itemButtonTrinket2.Location = new System.Drawing.Point(307, 535);
-            this.itemButtonTrinket2.Name = "itemButtonTrinket2";
-            this.itemButtonTrinket2.SelectedItem = null;
-            this.itemButtonTrinket2.SelectedItemId = 0;
-            this.itemButtonTrinket2.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonTrinket2.TabIndex = 2;
-            this.itemButtonTrinket2.Text = "Trinket2";
-            this.itemButtonTrinket2.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonWaist
-            // 
-            this.itemButtonWaist.Character = null;
-            this.itemButtonWaist.CharacterSlot = Rawr.Character.CharacterSlot.Waist;
-            this.itemButtonWaist.ItemIcon = null;
-            this.itemButtonWaist.Location = new System.Drawing.Point(307, 79);
-            this.itemButtonWaist.Name = "itemButtonWaist";
-            this.itemButtonWaist.SelectedItem = null;
-            this.itemButtonWaist.SelectedItemId = 0;
-            this.itemButtonWaist.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonWaist.TabIndex = 2;
-            this.itemButtonWaist.Text = "Waist";
-            this.itemButtonWaist.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonMainHand
-            // 
-            this.itemButtonMainHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.itemButtonMainHand.Character = null;
-            this.itemButtonMainHand.CharacterSlot = Rawr.Character.CharacterSlot.MainHand;
-            this.itemButtonMainHand.ItemIcon = null;
-            this.itemButtonMainHand.Location = new System.Drawing.Point(79, 586);
-            this.itemButtonMainHand.Name = "itemButtonMainHand";
-            this.itemButtonMainHand.SelectedItem = null;
-            this.itemButtonMainHand.SelectedItemId = 0;
-            this.itemButtonMainHand.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonMainHand.TabIndex = 2;
-            this.itemButtonMainHand.Text = "MainHand";
-            this.itemButtonMainHand.UseVisualStyleBackColor = true;
-            // 
-            // itemButtonWrist
-            // 
-            this.itemButtonWrist.Character = null;
-            this.itemButtonWrist.CharacterSlot = Rawr.Character.CharacterSlot.Wrist;
-            this.itemButtonWrist.ItemIcon = null;
-            this.itemButtonWrist.Location = new System.Drawing.Point(3, 535);
-            this.itemButtonWrist.Name = "itemButtonWrist";
-            this.itemButtonWrist.SelectedItem = null;
-            this.itemButtonWrist.SelectedItemId = 0;
-            this.itemButtonWrist.Size = new System.Drawing.Size(70, 70);
-            this.itemButtonWrist.TabIndex = 2;
-            this.itemButtonWrist.Text = "Wrists";
-            this.itemButtonWrist.UseVisualStyleBackColor = true;
-            // 
-            // itemComparison1
-            // 
-            this.itemComparison1.BackColor = System.Drawing.Color.White;
-            this.itemComparison1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.itemComparison1.Character = null;
-            this.itemComparison1.DisplayMode = Rawr.ComparisonGraph.GraphDisplayMode.Subpoints;
-            this.itemComparison1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemComparison1.Location = new System.Drawing.Point(3, 41);
-            this.itemComparison1.Name = "itemComparison1";
-            this.itemComparison1.Size = new System.Drawing.Size(458, 600);
-            this.itemComparison1.Sort = Rawr.ComparisonGraph.ComparisonSort.Overall;
-            this.itemComparison1.TabIndex = 3;
+            this.refineEquipmentParametersToolStripMenuItem.Name = "refineEquipmentParametersToolStripMenuItem";
+            this.refineEquipmentParametersToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.refineEquipmentParametersToolStripMenuItem.Text = "Refine Types of Items Listed";
+            this.refineEquipmentParametersToolStripMenuItem.Click += new System.EventHandler(this.refineEquipmentParametersToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -1965,6 +1974,7 @@ namespace Rawr
 		private System.Windows.Forms.ComboBox comboBoxRegion;
         private System.Windows.Forms.ToolStripMenuItem batchToolsToolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem refineEquipmentParametersToolStripMenuItem;
+        
     }
 }
 
