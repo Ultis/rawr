@@ -56,6 +56,7 @@
             this.OKButton = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.checkBoxShield = new System.Windows.Forms.CheckBox();
+            this.checkBoxMisc = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -368,6 +369,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.checkBoxMisc);
             this.groupBox6.Controls.Add(this.checkBoxShield);
             this.groupBox6.Location = new System.Drawing.Point(309, 185);
             this.groupBox6.Name = "groupBox6";
@@ -386,6 +388,17 @@
             this.checkBoxShield.Tag = Rawr.Item.ItemType.Shield;
             this.checkBoxShield.Text = "Shield";
             this.checkBoxShield.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxMisc
+            // 
+            this.checkBoxMisc.AutoSize = true;
+            this.checkBoxMisc.Location = new System.Drawing.Point(26, 53);
+            this.checkBoxMisc.Name = "checkBoxMisc";
+            this.checkBoxMisc.Size = new System.Drawing.Size(51, 17);
+            this.checkBoxMisc.TabIndex = 1;
+            this.checkBoxMisc.Tag = Rawr.Item.ItemType.None;
+            this.checkBoxMisc.Text = "Misc.";
+            this.checkBoxMisc.UseVisualStyleBackColor = true;
             // 
             // FormRelevantItemRefinement
             // 
@@ -444,6 +457,7 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.CheckBox checkBoxShield;
+        private System.Windows.Forms.CheckBox checkBoxMisc;
 
         
     }

@@ -50,6 +50,7 @@ namespace Rawr
             checkBoxes.Add(this.checkBoxThrown);
             checkBoxes.Add(this.checkBoxWand);
             checkBoxes.Add(this.checkBoxShield);
+            checkBoxes.Add(this.checkBoxMisc);
         }
 
 
@@ -91,21 +92,7 @@ namespace Rawr
                         checkBoxClothArmor.Enabled = true;
                         checkBoxClothArmor.Checked = true;
                     }
-                    if (item == Item.ItemType.Leather)
-                    {
-                        checkBoxLeatherArmor.Enabled = true;
-                        checkBoxLeatherArmor.Checked = true;
-                    }
-                    if (item == Item.ItemType.Mail)
-                    {
-                        checkBoxMailArmor.Enabled = true;
-                        checkBoxMailArmor.Checked = true;
-                    }
-                    if (item == Item.ItemType.Plate)
-                    {
-                        checkBoxPlateArmor.Enabled = true;
-                        checkBoxPlateArmor.Checked = true;
-                    }
+                   
                     */
                 }
             }
