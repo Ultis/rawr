@@ -614,6 +614,7 @@ namespace Rawr
 			if (PromptToSaveBeforeClosing())
 			{
 				FormEnterNameRealm form = new FormEnterNameRealm();
+                form.Icon = this.Icon;
 				if (form.ShowDialog(this) == DialogResult.OK)
 				{
 					if (form.ArmoryRegion == Character.CharacterRegion.US && form.Realm == "Dragonmaw" && form.CharacterName == "Emposter")
