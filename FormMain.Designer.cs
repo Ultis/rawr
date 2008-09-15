@@ -1569,7 +1569,7 @@ namespace Rawr
             this.loadFromArmoryToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadFromArmoryToolStripMenuItem.Image")));
             this.loadFromArmoryToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.loadFromArmoryToolStripMenuItem.Name = "loadFromArmoryToolStripMenuItem";
-            this.loadFromArmoryToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.loadFromArmoryToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
             this.loadFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
             this.loadFromArmoryToolStripMenuItem.Text = "&Load from Armory...";
             this.loadFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.loadFromArmoryToolStripMenuItem_Click);
