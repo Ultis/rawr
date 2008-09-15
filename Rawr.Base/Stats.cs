@@ -36,12 +36,12 @@ namespace Rawr
         BonusRipDamagePerCPPerTick,
         BonusShredDamage,
         BonusSnDDuration,
-        BonusSndHaste,
+        BonusSnDHaste,
 		BonusStreadyShotCrit,
         CatFormStrength,
         CHHealIncrease,
         CHManaReduction,
-        CPonFinisher,
+        CPOnFinisher,
         Crit,
         CritRating,
         CritMeleeRating,
@@ -761,73 +761,43 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float NetherbladeBonusSnDDuration {
+        public float BonusSnDDuration 
+		{
             get { return _rawAdditiveData[(int)AdditiveStat.BonusSnDDuration]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusSnDDuration] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float NetherbladeCPonFinisher {
-            get { return _rawAdditiveData[(int)AdditiveStat.CPonFinisher]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CPonFinisher] = value; }
+        public float CPOnFinisher 
+		{
+            get { return _rawAdditiveData[(int)AdditiveStat.CPOnFinisher]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CPOnFinisher] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float DeathmantleBonusDamage {
+        public float BonusEvisEnvenomDamage 
+		{
             get { return _rawAdditiveData[(int)AdditiveStat.BonusEvisEnvenomDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusEvisEnvenomDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float DeathmantleBonusFreeFinisher {
+        public float BonusFreeFinisher 
+		{
             get { return _rawAdditiveData[(int)AdditiveStat.BonusFreeFinisher]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusFreeFinisher] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float SlayerBonusSnDHaste {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusSndHaste]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusSndHaste] = value; }
+        public float BonusSnDHaste 
+		{
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusSnDHaste]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusSnDHaste] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float SlayerBonusCPGDamage {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusCPGDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusCPGDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float NetherbladeBonusSnDDuration {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusSnDDuration]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusSnDDuration] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float NetherbladeCPonFinisher {
-            get { return _rawAdditiveData[(int)AdditiveStat.CPonFinisher]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CPonFinisher] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float DeathmantleBonusDamage {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusEvisEnvenomDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusEvisEnvenomDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float DeathmantleBonusFreeFinisher {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusFreeFinisher]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusFreeFinisher] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float SlayerBonusSnDHaste {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusSndHaste]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusSndHaste] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float SlayerBonusCPGDamage {
+        public float BonusCPGDamage 
+		{
             get { return _rawAdditiveData[(int)AdditiveStat.BonusCPGDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusCPGDamage] = value; }
         }

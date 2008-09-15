@@ -204,7 +204,7 @@ namespace Rawr.Rogue {
 
             // cycle stuff
             sndLength = 6f + 3f * calcOpts.DPSCycle['s'];
-            sndLength += stats.NetherbladeBonusSnDDuration;
+            sndLength += stats.BonusSnDDuration;
             sndLength *= 1f + 0.15f * calcOpts.ImprovedSliceandDice;
 
             ruthlessnessCP = .2f * calcOpts.Ruthlessness;
@@ -227,7 +227,7 @@ namespace Rawr.Rogue {
 
             sndEnergy = (calcOpts.DPSCycle['s'] - ruthlessnessCP) * energyCPG + 25f;
             sndHaste = .3f;
-            sndHaste *= (1f + stats.SlayerBonusSnDHaste);
+            sndHaste *= (1f + stats.BonusSnDHaste);
 
             totalArmor = calcOpts.TargetArmor - stats.ArmorPenetration;
             damageReduction = 1f - (totalArmor / (totalArmor + 10557.5f));
@@ -311,7 +311,7 @@ namespace Rawr.Rogue {
                 }
                 else if (cpg == "hemo") {
                     bonusCPGDmgMult *= (1f + .1f * calcOpts.SurpriseAttacks);
-                    bonusCPGDmgMult *= (1f + stats.SlayerBonusCPGDamage);
+                    bonusCPGDmgMult *= (1f + stats.BonusCPGDamage);
                     bonusCPGCritDmgMult *= (1f + .06f * calcOpts.Lethality);
 
                     avgCPGDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage) / 2f;
@@ -326,7 +326,7 @@ namespace Rawr.Rogue {
 
                     bonusCPGDmgMult *= (1f + .02f * calcOpts.Aggression);
                     bonusCPGDmgMult *= (1f + .1f * calcOpts.SurpriseAttacks);
-                    bonusCPGDmgMult *= (1f + stats.SlayerBonusCPGDamage);
+                    bonusCPGDmgMult *= (1f + stats.BonusCPGDamage);
                     bonusCPGCritDmgMult *= (1f + .06f * calcOpts.Lethality);
                 }
 
@@ -610,16 +610,16 @@ namespace Rawr.Rogue {
             statsTotal.WindfuryAPBonus = statsGearEnchantsBuffs.WindfuryAPBonus;
 
             // T4 bonuses
-            statsTotal.NetherbladeBonusSnDDuration = statsGearEnchantsBuffs.NetherbladeBonusSnDDuration;
-            statsTotal.NetherbladeCPonFinisher = statsGearEnchantsBuffs.NetherbladeCPonFinisher;
+            statsTotal.BonusSnDDuration = statsGearEnchantsBuffs.BonusSnDDuration;
+            statsTotal.CPOnFinisher = statsGearEnchantsBuffs.CPOnFinisher;
 
             // T5 bonuses
-            statsTotal.DeathmantleBonusDamage = statsGearEnchantsBuffs.DeathmantleBonusDamage;
-            statsTotal.DeathmantleBonusFreeFinisher = statsGearEnchantsBuffs.DeathmantleBonusFreeFinisher;
+            statsTotal.BonusEvisEnvenomDamage = statsGearEnchantsBuffs.BonusEvisEnvenomDamage;
+            statsTotal.BonusFreeFinisher = statsGearEnchantsBuffs.BonusFreeFinisher;
 
             // T6 bonuses
-            statsTotal.SlayerBonusCPGDamage = statsGearEnchantsBuffs.SlayerBonusCPGDamage;
-            statsTotal.SlayerBonusSnDHaste = statsGearEnchantsBuffs.SlayerBonusSnDHaste;
+            statsTotal.BonusCPGDamage = statsGearEnchantsBuffs.BonusCPGDamage;
+            statsTotal.BonusSnDHaste = statsGearEnchantsBuffs.BonusSnDHaste;
 
             return statsTotal;
         }
@@ -685,12 +685,12 @@ namespace Rawr.Rogue {
                 MongooseProcAverage = stats.MongooseProcAverage,
                 MongooseProcConstant = stats.MongooseProcConstant,
                 ExecutionerProc = stats.ExecutionerProc,
-                NetherbladeBonusSnDDuration = stats.NetherbladeBonusSnDDuration,
-                NetherbladeCPonFinisher = stats.NetherbladeCPonFinisher,
-                DeathmantleBonusDamage = stats.DeathmantleBonusDamage,
-                DeathmantleBonusFreeFinisher = stats.DeathmantleBonusFreeFinisher,
-                SlayerBonusCPGDamage = stats.SlayerBonusCPGDamage,
-                SlayerBonusSnDHaste = stats.SlayerBonusSnDHaste,
+                BonusSnDDuration = stats.BonusSnDDuration,
+                CPOnFinisher = stats.CPOnFinisher,
+                BonusEvisEnvenomDamage = stats.BonusEvisEnvenomDamage,
+                BonusFreeFinisher = stats.BonusFreeFinisher,
+                BonusCPGDamage = stats.BonusCPGDamage,
+                BonusSnDHaste = stats.BonusSnDHaste,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier
             };
         }
@@ -801,7 +801,7 @@ namespace Rawr.Rogue {
         }
 
         public override bool HasRelevantStats(Stats stats) {
-            return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.NetherbladeBonusSnDDuration + stats.NetherbladeCPonFinisher + stats.DeathmantleBonusDamage + stats.DeathmantleBonusFreeFinisher + stats.SlayerBonusCPGDamage + stats.SlayerBonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
+            return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.BonusSnDDuration + stats.CPOnFinisher + stats.BonusEvisEnvenomDamage + stats.BonusFreeFinisher + stats.BonusCPGDamage + stats.BonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
         }
     }
 

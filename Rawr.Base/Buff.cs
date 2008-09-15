@@ -1411,7 +1411,7 @@ namespace Rawr
               defaultBuffs.Add(new Buff() {
                   Name = "Netherblade 2 Piece Bonus",
                   Category = BuffCategory.SetBonuses,
-                  Stats = new Stats() { NetherbladeBonusSnDDuration = 3f },
+                  Stats = new Stats() { BonusSnDDuration = 3f },
                   SetName = "Netherblade",
                   SetThreshold = 2
               });
@@ -1419,7 +1419,7 @@ namespace Rawr
               defaultBuffs.Add(new Buff() {
                   Name = "Netherblade 4 Piece Bonus",
                   Category = BuffCategory.SetBonuses,
-                  Stats = new Stats() { NetherbladeCPonFinisher = .15f },
+                  Stats = new Stats() { CPOnFinisher = .15f },
                   SetName = "Netherblade",
                   SetThreshold = 4
               });
@@ -1427,7 +1427,7 @@ namespace Rawr
               defaultBuffs.Add(new Buff() {
                   Name = "Deathmantle 2 Piece Bonus",
                   Category = BuffCategory.SetBonuses,
-                  Stats = new Stats() { DeathmantleBonusDamage = 40f },
+                  Stats = new Stats() { BonusEvisEnvenomDamage = 40f },
                   SetName = "Deathmantle",
                   SetThreshold = 2
               });
@@ -1435,7 +1435,7 @@ namespace Rawr
               defaultBuffs.Add(new Buff() {
                   Name = "Deathmantle 4 Piece Bonus",
                   Category = BuffCategory.SetBonuses,
-                  Stats = new Stats() { DeathmantleBonusFreeFinisher = 1f },
+                  Stats = new Stats() { BonusFreeFinisher = 1f },
                   SetName = "Deathmantle",
                   SetThreshold = 4
               });
@@ -1443,7 +1443,7 @@ namespace Rawr
               defaultBuffs.Add(new Buff() {
                   Name = "Slayer's Armor 2 Piece Bonus",
                   Category = BuffCategory.SetBonuses,
-                  Stats = new Stats() { SlayerBonusSnDHaste = .05f },
+                  Stats = new Stats() { BonusSnDHaste = .05f },
                   SetName = "Slayer's Armor",
                   SetThreshold = 2
               });
@@ -1451,7 +1451,7 @@ namespace Rawr
               defaultBuffs.Add(new Buff() {
                   Name = "Slayer's Armor 4 Piece Bonus",
                   Category = BuffCategory.SetBonuses,
-                  Stats = new Stats() { SlayerBonusCPGDamage = .06f },
+                  Stats = new Stats() { BonusCPGDamage = .06f },
                   SetName = "Slayer's Armor",
                   SetThreshold = 4
               });
