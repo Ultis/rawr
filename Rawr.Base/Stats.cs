@@ -185,6 +185,7 @@ namespace Rawr
         BonusAgilityMultiplier,
         BonusArcaneSpellPowerMultiplier,
         BonusArmorMultiplier,
+        BonusBleedDamageMultiplier,
         BonusBlockValueMultiplier,
         BonusAttackPowerMultiplier,
         BonusCritMultiplier,
@@ -796,9 +797,44 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float NetherbladeBonusSnDDuration {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusSnDDuration]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusSnDDuration] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float NetherbladeCPonFinisher {
+            get { return _rawAdditiveData[(int)AdditiveStat.CPonFinisher]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CPonFinisher] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float DeathmantleBonusDamage {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusEvisEnvenomDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusEvisEnvenomDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float DeathmantleBonusFreeFinisher {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusFreeFinisher]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusFreeFinisher] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float SlayerBonusSnDHaste {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusSndHaste]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusSndHaste] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float SlayerBonusCPGDamage {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusCPGDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusCPGDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Commanding Shout HP")]
-        public float BonusCommandingShoutHP
-        {
+        public float BonusCommandingShoutHP {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusCommandingShoutHP]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusCommandingShoutHP] = value; }
         }
@@ -1684,6 +1720,14 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusCrusaderStrikeDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusCrusaderStrikeDamageMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Multiplicative]
+        [DisplayName("Bonus Bleed Damage Multiplier")]
+        public float BonusBleedDamageMultiplier {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusBleedDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusBleedDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

@@ -904,6 +904,11 @@ namespace Rawr
 				Stats = new Stats() { CrushChanceReduction = 15f },
 				Type = BuffType.ShortDurationDW
 			});
+            defaultBuffs.Add(new Buff() {
+                Name = "Mangle",
+                Category = BuffCategory.Debuffs,
+                Stats = new Stats() { BonusBleedDamageMultiplier = .3f },
+            });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Faerie Fire",
