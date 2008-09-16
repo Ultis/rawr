@@ -17,6 +17,7 @@ namespace Rawr
 			InitializeComponent();		
 			BuildControls();
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+            ScrollHook.hookRec(this);
 		}
 
 		void Calculations_ModelChanged(object sender, EventArgs e)
