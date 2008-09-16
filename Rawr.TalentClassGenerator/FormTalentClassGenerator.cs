@@ -170,6 +170,10 @@ namespace Rawr
             code.Append("{\r\n");
             code.AppendFormat("return ({0})((ICloneable)this).Clone();\r\n", className);
             code.Append("}\r\n\r\n");
+			code.Append("public static string[] TreeNames = new string[] {");
+			foreach (string treeName in treeNames)
+				code.AppendFormat("\r\n@\"{0}\",", treeName);
+			code.Append("};\r\n\r\n");
 			foreach (TalentData talent in talents)
 			{
 				code.AppendFormat("\r\n[TalentData({0}, \"{1}\", {2}, {3}, {4}, {5}, {6}, new string[] {{",
