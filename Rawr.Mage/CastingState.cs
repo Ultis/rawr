@@ -30,6 +30,14 @@ namespace Rawr.Mage
             }
         }
 
+        public MageTalents MageTalents
+        {
+            get
+            {
+                return calculations.Character.MageTalents;
+            }
+        }
+
         public Stats BaseStats
         {
             get
@@ -220,14 +228,7 @@ namespace Rawr.Mage
             IncrementalSetIndex = incrementalSetIndex;
 
             float levelScalingFactor;
-            if (calculationOptions.WotLK)
-            {
-                levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (calculationOptions.PlayerLevel - 70) / 10f));
-            }
-            else
-            {
-                levelScalingFactor = (1 - (70 - 60) / 82f * 3);
-            }
+            levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (calculationOptions.PlayerLevel - 70) / 10f));
 
             SpellDamageRating = characterStats.SpellDamageRating;
             SpellHasteRating = characterStats.SpellHasteRating;
@@ -324,19 +325,19 @@ namespace Rawr.Mage
                     baseRegen = 0.007125f;
                     break;
             }
-            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * calculationOptions.ArcaneInstability + (calculationOptions.WotLK ? 0.015f : 0.01f) * calculationOptions.ArcanePotency + characterStats.SpellCritRating / 1400f * levelScalingFactor + characterStats.SpellCrit;
+            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.015f * character.MageTalents.ArcanePotency + characterStats.SpellCritRating / 1400f * levelScalingFactor + characterStats.SpellCrit;
             if (destructionPotion) SpellCrit += 0.02f;
             SpellHit = characterStats.SpellHitRating * levelScalingFactor / 800f;
 
             int targetLevel = calculationOptions.TargetLevel;
             int playerLevel = calculationOptions.PlayerLevel;
-            float maxHitRate = (calculationOptions.WotLK) ? 1.00f : 0.99f;
-            ArcaneHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + (calculationOptions.WotLK ? 0.01f : 0.02f) * calculationOptions.ArcaneFocus);
-            FireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * calculationOptions.ElementalPrecision);
-            FrostHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * calculationOptions.ElementalPrecision);
+            float maxHitRate = 1.00f;
+            ArcaneHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ArcaneFocus);
+            FireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ElementalPrecision);
+            FrostHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ElementalPrecision);
             NatureHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
             ShadowHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            FrostFireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * calculationOptions.ElementalPrecision);
+            FrostFireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ElementalPrecision);
 
             SpiritRegen = 0.001f + characterStats.Spirit * baseRegen * (float)Math.Sqrt(characterStats.Intellect);
             ManaRegen = SpiritRegen + characterStats.Mp5 / 5f + SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration;
@@ -374,31 +375,28 @@ namespace Rawr.Mage
             {
                 CastingSpeed *= 1.3f;
             }
-            if (calculationOptions.WotLK)
-            {
-                CastingSpeed *= (1f + 0.02f * calculationOptions.NetherwindPresence);
-            }
+            CastingSpeed *= (1f + 0.02f * character.MageTalents.NetherwindPresence);
 
             Latency = calculationOptions.Latency;
-            ClearcastingChance = 0.02f * calculationOptions.ArcaneConcentration;
+            ClearcastingChance = 0.02f * character.MageTalents.ArcaneConcentration;
 
             GlobalCooldownLimit = 1f;
             GlobalCooldown = Math.Max(GlobalCooldownLimit, 1.5f / CastingSpeed);
 
-            ArcaneSpellModifier = (1 + 0.01f * calculationOptions.ArcaneInstability) * (1 + 0.01f * calculationOptions.PlayingWithFire) * (1 + characterStats.BonusSpellPowerMultiplier) * (1 + 0.02f * calculationOptions.TormentTheWeak * calculationOptions.SlowedTime);
+            ArcaneSpellModifier = (1 + 0.01f * character.MageTalents.ArcaneInstability) * (1 + 0.01f * character.MageTalents.PlayingWithFire) * (1 + characterStats.BonusSpellPowerMultiplier) * (1 + 0.02f * character.MageTalents.TormentTheWeak * calculationOptions.SlowedTime);
             if (arcanePower)
             {
                 ArcaneSpellModifier *= 1.3f;
             }
             if (moltenFury)
             {
-                ArcaneSpellModifier *= (1 + 0.1f * calculationOptions.MoltenFury);
+                ArcaneSpellModifier *= (1 + 0.1f * character.MageTalents.MoltenFury);
             }
-            FireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * calculationOptions.FirePower);
-            FrostSpellModifier = ArcaneSpellModifier * (1 + 0.02f * calculationOptions.PiercingIce) * (1 + 0.01f * calculationOptions.ArcticWinds);
+            FireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower);
+            FrostSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds);
             NatureSpellModifier = ArcaneSpellModifier;
             ShadowSpellModifier = ArcaneSpellModifier;
-            FrostFireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * calculationOptions.FirePower) * (1 + 0.02f * calculationOptions.PiercingIce) * (1 + 0.01f * calculationOptions.ArcticWinds) * Math.Max(1 + characterStats.BonusFireSpellPowerMultiplier, 1 + characterStats.BonusFrostSpellPowerMultiplier);
+            FrostFireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower) * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds) * Math.Max(1 + characterStats.BonusFireSpellPowerMultiplier, 1 + characterStats.BonusFrostSpellPowerMultiplier);
             ArcaneSpellModifier *= (1 + characterStats.BonusArcaneSpellPowerMultiplier);
             FireSpellModifier *= (1 + characterStats.BonusFireSpellPowerMultiplier);
             FrostSpellModifier *= (1 + characterStats.BonusFrostSpellPowerMultiplier);
@@ -408,15 +406,15 @@ namespace Rawr.Mage
             ResilienceCritDamageReduction = 1;
             ResilienceCritRateReduction = 0;
 
-            ArcaneCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * calculationOptions.SpellPower)) * ResilienceCritDamageReduction;
-            FireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * calculationOptions.SpellPower)) * (1 + 0.08f * calculationOptions.Ignite) * ResilienceCritDamageReduction;
-            FrostCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.2f * calculationOptions.IceShards + 0.25f * calculationOptions.SpellPower)) * ResilienceCritDamageReduction;
-            FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.2f * calculationOptions.IceShards + 0.25f * calculationOptions.SpellPower)) * (1 + 0.08f * calculationOptions.Ignite) * ResilienceCritDamageReduction;
-            NatureCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * calculationOptions.SpellPower)) * ResilienceCritDamageReduction;
-            ShadowCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * calculationOptions.SpellPower)) * ResilienceCritDamageReduction;
+            ArcaneCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
+            FireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
+            FrostCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.2f * character.MageTalents.IceShards + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
+            FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.2f * character.MageTalents.IceShards + 0.25f * character.MageTalents.SpellPower)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
+            NatureCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
+            ShadowCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
 
             ArcaneCritRate = SpellCrit;
-            FireCritRate = SpellCrit + 0.02f * calculationOptions.CriticalMass + 0.01f * calculationOptions.Pyromaniac;
+            FireCritRate = SpellCrit + 0.02f * character.MageTalents.CriticalMass + 0.01f * character.MageTalents.Pyromaniac;
             if (combustion)
             {
                 CombustionDuration = ComputeCombustion(FireCritRate);
@@ -429,10 +427,10 @@ namespace Rawr.Mage
 
             float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
 
-            ArcaneThreatMultiplier = threatFactor * (1 - calculationOptions.ArcaneSubtlety * 0.2f);
-            FireThreatMultiplier = threatFactor * (1 - calculationOptions.BurningSoul * 0.05f);
-            FrostThreatMultiplier = threatFactor * (1 - ((calculationOptions.FrostChanneling > 0) ? (0.01f + 0.03f * calculationOptions.FrostChanneling) : 0f));
-            FrostFireThreatMultiplier = threatFactor * (1 - calculationOptions.BurningSoul * 0.05f) * (1 - ((calculationOptions.FrostChanneling > 0) ? (0.01f + 0.03f * calculationOptions.FrostChanneling) : 0f));
+            ArcaneThreatMultiplier = threatFactor * (1 - character.MageTalents.ArcaneSubtlety * 0.2f);
+            FireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.05f);
+            FrostThreatMultiplier = threatFactor * (1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
+            FrostFireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.05f) * (1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
             NatureThreatMultiplier = threatFactor;
             ShadowThreatMultiplier = threatFactor;
         }

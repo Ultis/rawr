@@ -227,8 +227,6 @@
             this.label31 = new System.Windows.Forms.Label();
             this.textBoxSMPComputationLimit = new System.Windows.Forms.TextBox();
             this.label38 = new System.Windows.Forms.Label();
-            this.label36 = new System.Windows.Forms.Label();
-            this.checkBoxWotLK = new System.Windows.Forms.CheckBox();
             this.checkBoxDisplaySegmentCoodlowns = new System.Windows.Forms.CheckBox();
             this.checkBoxComparisonSegmentCooldowns = new System.Windows.Forms.CheckBox();
             this.label25 = new System.Windows.Forms.Label();
@@ -2220,8 +2218,6 @@
             this.tabPage4.Controls.Add(this.label31);
             this.tabPage4.Controls.Add(this.textBoxSMPComputationLimit);
             this.tabPage4.Controls.Add(this.label38);
-            this.tabPage4.Controls.Add(this.label36);
-            this.tabPage4.Controls.Add(this.checkBoxWotLK);
             this.tabPage4.Controls.Add(this.checkBoxDisplaySegmentCoodlowns);
             this.tabPage4.Controls.Add(this.checkBoxComparisonSegmentCooldowns);
             this.tabPage4.Controls.Add(this.label25);
@@ -2327,28 +2323,6 @@
             this.label38.TabIndex = 166;
             this.label38.Text = "SMP Computation Limit: *";
             this.toolTipMage.SetToolTip(this.label38, "Limits the number of iterations taken by SMP algorithm.");
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(0, 67);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(153, 13);
-            this.label36.TabIndex = 165;
-            this.label36.Text = "Wrath of the Lich King Mode: *";
-            this.toolTipMage.SetToolTip(this.label36, "Changes functionality of changed talents and enables additional spells from expan" +
-                    "sion.");
-            // 
-            // checkBoxWotLK
-            // 
-            this.checkBoxWotLK.AutoSize = true;
-            this.checkBoxWotLK.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "WotLK", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxWotLK.Location = new System.Drawing.Point(185, 67);
-            this.checkBoxWotLK.Name = "checkBoxWotLK";
-            this.checkBoxWotLK.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxWotLK.TabIndex = 164;
-            this.checkBoxWotLK.UseVisualStyleBackColor = true;
-            this.checkBoxWotLK.CheckedChanged += new System.EventHandler(this.checkBoxWotLK_CheckedChanged);
             // 
             // checkBoxDisplaySegmentCoodlowns
             // 
@@ -2540,8 +2514,6 @@
         private System.Windows.Forms.ComboBox comboBoxAoeTargetLevel;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.CheckBox checkBoxWotLK;
         private System.Windows.Forms.CheckBox checkBoxDisplaySegmentCoodlowns;
         private System.Windows.Forms.CheckBox checkBoxComparisonSegmentCooldowns;
         private System.Windows.Forms.Label label25;

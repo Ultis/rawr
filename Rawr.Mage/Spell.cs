@@ -321,13 +321,13 @@ namespace Rawr.Mage
             CostModifier = 1;
             CostAmplifier = 1;
             DirectDamageModifier = 1;
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) CostAmplifier *= (1.0f - 0.01f * castingState.CalculationOptions.Pyromaniac);
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost || MagicSchool == MagicSchool.FrostFire) CostAmplifier *= (1.0f - 0.01f * castingState.CalculationOptions.ElementalPrecision);
-            if (MagicSchool == MagicSchool.Frost) CostAmplifier *= (1.0f - 0.05f * castingState.CalculationOptions.FrostChanneling);
-            if (castingState.CalculationOptions.WotLK && MagicSchool == MagicSchool.Arcane) CostAmplifier *= (1.0f - 0.01f * castingState.CalculationOptions.ArcaneFocus);
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.Pyromaniac);
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost || MagicSchool == MagicSchool.FrostFire) CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.ElementalPrecision);
+            if (MagicSchool == MagicSchool.Frost) CostAmplifier *= (1.0f - 0.05f * castingState.MageTalents.FrostChanneling);
+            if (MagicSchool == MagicSchool.Arcane) CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.ArcaneFocus);
             if (castingState.ArcanePower) CostModifier += 0.3f;
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) AffectedByFlameCap = true;
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) InterruptProtection += 0.35f * castingState.CalculationOptions.BurningSoul;
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) InterruptProtection += 0.35f * castingState.MageTalents.BurningSoul;
             InterruptProtection += castingState.BaseStats.InterruptProtection;
 
             switch (MagicSchool)
@@ -394,41 +394,34 @@ namespace Rawr.Mage
             // do not include molten fury (molten fury relates to boss), instead amplify all by average
             if (AreaEffect)
             {
-                SpellModifier = (1 + 0.01f * castingState.CalculationOptions.ArcaneInstability) * (1 + 0.01f * castingState.CalculationOptions.PlayingWithFire);
+                SpellModifier = (1 + 0.01f * castingState.MageTalents.ArcaneInstability) * (1 + 0.01f * castingState.MageTalents.PlayingWithFire);
                 if (castingState.ArcanePower)
                 {
                     SpellModifier *= 1.3f;
                 }
-                if (castingState.CalculationOptions.MoltenFury > 0)
+                if (castingState.MageTalents.MoltenFury > 0)
                 {
-                    SpellModifier *= (1 + 0.1f * castingState.CalculationOptions.MoltenFury * castingState.CalculationOptions.MoltenFuryPercentage);
+                    SpellModifier *= (1 + 0.1f * castingState.MageTalents.MoltenFury * castingState.CalculationOptions.MoltenFuryPercentage);
                 }
-                if (MagicSchool == MagicSchool.Fire) SpellModifier *= (1 + 0.02f * castingState.CalculationOptions.FirePower);
-                if (MagicSchool == MagicSchool.Frost) SpellModifier *= (1 + 0.02f * castingState.CalculationOptions.PiercingIce);
+                if (MagicSchool == MagicSchool.Fire) SpellModifier *= (1 + 0.02f * castingState.MageTalents.FirePower);
+                if (MagicSchool == MagicSchool.Frost) SpellModifier *= (1 + 0.02f * castingState.MageTalents.PiercingIce);
 
-                float maxHitRate = castingState.CalculationOptions.WotLK ? 1.00f : 0.99f;
+                float maxHitRate = 1.00f;
                 int playerLevel = castingState.CalculationOptions.PlayerLevel;
-                if (MagicSchool == MagicSchool.Arcane) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit + (castingState.CalculationOptions.WotLK ? 0.01f : 0.02f) * castingState.CalculationOptions.ArcaneFocus);
-                if (MagicSchool == MagicSchool.Fire) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit + 0.01f * castingState.CalculationOptions.ElementalPrecision);
-                if (MagicSchool == MagicSchool.Frost) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit + 0.01f * castingState.CalculationOptions.ElementalPrecision);
+                if (MagicSchool == MagicSchool.Arcane) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit + 0.01f * castingState.MageTalents.ArcaneFocus);
+                if (MagicSchool == MagicSchool.Fire) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit + 0.01f * castingState.MageTalents.ElementalPrecision);
+                if (MagicSchool == MagicSchool.Frost) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit + 0.01f * castingState.MageTalents.ElementalPrecision);
                 if (MagicSchool == MagicSchool.Nature) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit);
                 if (MagicSchool == MagicSchool.Shadow) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit);
             }
 
             if (ManualClearcasting && !ClearcastingAveraged)
             {
-                CritRate -= (castingState.CalculationOptions.WotLK ? 0.015f : 0.01f) * castingState.CalculationOptions.ArcanePotency; // replace averaged arcane potency with actual % chance
-                if (ClearcastingActive) CritRate += (castingState.CalculationOptions.WotLK ? 0.15f : 0.1f) * castingState.CalculationOptions.ArcanePotency;
+                CritRate -= 0.015f * castingState.MageTalents.ArcanePotency; // replace averaged arcane potency with actual % chance
+                if (ClearcastingActive) CritRate += 0.15f * castingState.MageTalents.ArcanePotency;
             }
 
-            if (castingState.CalculationOptions.WotLK)
-            {
-                PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - castingState.BaseStats.SpellPenetration / 350f * 0.75f) - ((targetLevel > castingState.CalculationOptions.PlayerLevel) ? ((targetLevel - castingState.CalculationOptions.PlayerLevel) * 0.02f) : 0f));
-            }
-            else
-            {
-                PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - castingState.BaseStats.SpellPenetration / 350f * 0.75f) - ((targetLevel > castingState.CalculationOptions.PlayerLevel && !Binary) ? ((targetLevel - castingState.CalculationOptions.PlayerLevel) * 0.02f) : 0f));
-            }
+            PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - castingState.BaseStats.SpellPenetration / 350f * 0.75f) - ((targetLevel > castingState.CalculationOptions.PlayerLevel) ? ((targetLevel - castingState.CalculationOptions.PlayerLevel) * 0.02f) : 0f));
         }
 
         private float ProcBuffUp(float procChance, float buffDuration, float triggerInterval)
@@ -449,17 +442,10 @@ namespace Rawr.Mage
 
             float Haste = castingState.SpellHasteRating;
             float levelScalingFactor;
-            if (castingState.CalculationOptions.WotLK)
-            {
-                levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (castingState.CalculationOptions.PlayerLevel - 70) / 10f));
-            }
-            else
-            {
-                levelScalingFactor = (1 - (70 - 60) / 82f * 3);
-            }
+            levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (castingState.CalculationOptions.PlayerLevel - 70) / 10f));
 
             // TODO consider converting to discrete model for procs
-            float maxPushback = castingState.CalculationOptions.WotLK ? 0.5f : 1.0f;
+            float maxPushback = 0.5f;
             GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
             CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
             CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
@@ -540,13 +526,13 @@ namespace Rawr.Mage
             Cost = (float)Math.Floor(Math.Floor(BaseCost * CostAmplifier) * CostModifier); // glyph and talent amplifiers are rounded down
 
             CritRate = Math.Min(1, CritRate);
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost) Cost *= (1f - CritRate * 0.1f * castingState.CalculationOptions.MasterOfElements);
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost) Cost *= (1f - CritRate * 0.1f * castingState.MageTalents.MasterOfElements);
 
             CostPerSecond = Cost / CastTime;
 
             if (!ManualClearcasting || ClearcastingAveraged)
             {
-                CostPerSecond *= (1 - 0.02f * castingState.CalculationOptions.ArcaneConcentration);
+                CostPerSecond *= (1 - 0.02f * castingState.MageTalents.ArcaneConcentration);
             }
             else if (ClearcastingActive)
             {
@@ -694,7 +680,7 @@ namespace Rawr.Mage
             CastTime = speed;
             CritRate = castingState.SpellCrit;
             CritBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1)) * castingState.ResilienceCritDamageReduction;
-            SpellModifier = (1 + 0.01f * castingState.CalculationOptions.ArcaneInstability) * (1 + 0.01f * castingState.CalculationOptions.PlayingWithFire) * (1 + castingState.BaseStats.BonusSpellPowerMultiplier);
+            SpellModifier = (1 + 0.01f * castingState.MageTalents.ArcaneInstability) * (1 + 0.01f * castingState.MageTalents.PlayingWithFire) * (1 + castingState.BaseStats.BonusSpellPowerMultiplier);
             switch (school)
             {
                 case MagicSchool.Arcane:
@@ -713,10 +699,6 @@ namespace Rawr.Mage
                     SpellModifier *= (1 + castingState.BaseStats.BonusShadowSpellPowerMultiplier);
                     break;
             }
-            if (castingState.CalculationOptions.WandSpecialization > 0)
-            {
-                SpellModifier *= 1 + 0.01f + 0.12f * castingState.CalculationOptions.WandSpecialization;
-            }
             CalculateDerivedStats(castingState);
         }
     }
@@ -725,7 +707,6 @@ namespace Rawr.Mage
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
-        public static SpellData TBCSpellData = new SpellData() { Cost = 465, MinDamage = 664, MaxDamage = 786, SpellDamageCoefficient = 1.5f / 3.5f };
         static FireBlast()
         {
             MaxRank[70] = 9;
@@ -753,7 +734,7 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return options.WotLK ? SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)] : TBCSpellData;
+            return SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)];
         }
 
         public FireBlast(CastingState castingState)
@@ -765,9 +746,9 @@ namespace Rawr.Mage
         public override void Calculate(CastingState castingState)
         {
             base.Calculate(castingState);
-            Cooldown -= 0.5f * castingState.CalculationOptions.ImprovedFireBlast;
-            CritRate += 0.02f * castingState.CalculationOptions.Incinerate;
-            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.002f * castingState.CalculationOptions.SpellImpact);
+            Cooldown -= 0.5f * castingState.MageTalents.ImprovedFireBlast;
+            CritRate += 0.02f * castingState.MageTalents.Incineration;
+            SpellModifier *= (1 + 0.002f * castingState.MageTalents.SpellImpact);
             CalculateDerivedStats(castingState);
         }
     }
@@ -776,7 +757,6 @@ namespace Rawr.Mage
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
-        public static SpellData TBCSpellData = new SpellData() { Cost = 180, MinDamage = 305, MaxDamage = 361, SpellDamageCoefficient = 1.5f / 3.5f };
         static Scorch()
         {
             MaxRank[70] = 9;
@@ -804,7 +784,7 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return options.WotLK ? SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)] : TBCSpellData;
+            return SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)];
         }
 
         public Scorch(CastingState castingState, bool clearcastingActive)
@@ -825,7 +805,7 @@ namespace Rawr.Mage
         public override void Calculate(CastingState castingState)
         {
             base.Calculate(castingState);
-            CritRate += 0.02f * castingState.CalculationOptions.Incinerate;
+            CritRate += 0.02f * castingState.MageTalents.Incineration;
             CalculateDerivedStats(castingState);
         }
     }
@@ -834,7 +814,6 @@ namespace Rawr.Mage
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
-        public static SpellData TBCSpellData = new SpellData() { Cost = 1175, MinDamage = 480, MaxDamage = 585, PeriodicDamage = 424, SpellDamageCoefficient = 0.2363f, DotDamageCoefficient = 0.12f };
         static Flamestrike()
         {
             MaxRank[70] = 7;
@@ -862,7 +841,7 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return options.WotLK ? SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)] : TBCSpellData;
+            return SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)];
         }
 
         public Flamestrike(CastingState castingState, bool spammedDot)
@@ -870,7 +849,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             AoeDamageCap = 7830;
-            CritRate += 0.05f * castingState.CalculationOptions.ImprovedFlamestrike;
+            //CritRate += 0.05f * castingState.CalculationOptions.ImprovedFlamestrike;
             CalculateDerivedStats(castingState);
         }
     }
@@ -879,7 +858,6 @@ namespace Rawr.Mage
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
-        public static SpellData TBCSpellData = new SpellData() { Cost = 185, MinDamage = 100, MaxDamage = 113, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f }; // TODO need level 70 WotLK data
         static FrostNova()
         {
             MaxRank[70] = 5;
@@ -907,7 +885,7 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return options.WotLK ? SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)] : TBCSpellData;
+            return SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)];
         }
 
         public FrostNova(CastingState castingState)
@@ -920,7 +898,7 @@ namespace Rawr.Mage
         public override void Calculate(CastingState castingState)
         {
             base.Calculate(castingState);
-            Cooldown -= 2 * castingState.CalculationOptions.ImprovedFrostNova;
+            //Cooldown -= 2 * castingState.CalculationOptions.ImprovedFrostNova;
             CalculateDerivedStats(castingState);
         }
     }
@@ -929,7 +907,6 @@ namespace Rawr.Mage
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
-        public static SpellData TBCSpellData = new SpellData() { Cost = 330, MinDamage = 600, MaxDamage = 647, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f };
         static Frostbolt()
         {
             MaxRank[70] = 14;
@@ -958,7 +935,7 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return options.WotLK ? SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)] : TBCSpellData;
+            return SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)];
         }
 
         public Frostbolt(CastingState castingState, bool manualClearcasting, bool clearcastingActive, bool pom)
@@ -979,7 +956,7 @@ namespace Rawr.Mage
         }
 
         public Frostbolt(CastingState castingState)
-            : base("Frostbolt", false, castingState.CalculationOptions.WotLK ? false : true, false, false, 30, 3, 0, MagicSchool.Frost, GetMaxRankSpellData(castingState.CalculationOptions))
+            : base("Frostbolt", false, false, false, false, 30, 3, 0, MagicSchool.Frost, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             Calculate(castingState);
         }
@@ -992,15 +969,10 @@ namespace Rawr.Mage
             {
                 DirectDamageModifier *= 1.05f;
             }
-            BaseCastTime -= 0.1f * castingState.CalculationOptions.ImprovedFrostbolt;
-            CritRate += 0.01f * castingState.CalculationOptions.EmpoweredFrostbolt;
+            BaseCastTime -= 0.1f * castingState.MageTalents.ImprovedFrostbolt;
+            CritRate += 0.01f * castingState.MageTalents.EmpoweredFrostbolt;
             InterruptProtection += castingState.BaseStats.AldorRegaliaInterruptProtection;
-            SpellDamageCoefficient += 0.02f * castingState.CalculationOptions.EmpoweredFrostbolt;
-            if (!castingState.CalculationOptions.WotLK)
-            {
-                int targetLevel = castingState.CalculationOptions.TargetLevel;
-                HitRate = Math.Min(0.99f, ((targetLevel <= 72) ? (0.96f - (targetLevel - 70) * 0.01f) : (0.94f - (targetLevel - 72) * 0.11f)) + castingState.SpellHit + 0.02f * castingState.CalculationOptions.ElementalPrecision); // bugged Elemental Precision
-            }
+            SpellDamageCoefficient += 0.02f * castingState.MageTalents.EmpoweredFrostbolt;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
             CalculateDerivedStats(castingState);
         }
@@ -1010,7 +982,6 @@ namespace Rawr.Mage
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
-        public static SpellData TBCSpellData = new SpellData() { Cost = 425, MinDamage = 649, MaxDamage = 821, PeriodicDamage = 84, SpellDamageCoefficient = 3.5f / 3.5f };
         static Fireball()
         {
             MaxRank[70] = 14;
@@ -1039,7 +1010,7 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return options.WotLK ? SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)] : TBCSpellData;
+            return SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)];
         }
 
         public Fireball(CastingState castingState, bool pom)
@@ -1059,8 +1030,8 @@ namespace Rawr.Mage
             SpammedDot = true;
             DotDuration = 8;
             InterruptProtection += castingState.BaseStats.AldorRegaliaInterruptProtection;
-            BaseCastTime -= 0.1f * castingState.CalculationOptions.ImprovedFireball;
-            SpellDamageCoefficient += 0.03f * castingState.CalculationOptions.EmpoweredFireball;
+            BaseCastTime -= 0.1f * castingState.MageTalents.ImprovedFireball;
+            SpellDamageCoefficient += 0.03f * castingState.MageTalents.EmpoweredFireball;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
             CalculateDerivedStats(castingState);
         }
@@ -1144,7 +1115,6 @@ namespace Rawr.Mage
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
-        public static SpellData TBCSpellData = new SpellData() { Cost = 645, MinDamage = 418, MaxDamage = 457, SpellDamageCoefficient = 0.1357f };
         static ConeOfCold()
         {
             MaxRank[70] = 6;
@@ -1172,7 +1142,7 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return options.WotLK ? SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)] : TBCSpellData;
+            return SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)];
         }
 
         public ConeOfCold(CastingState castingState)
@@ -1180,16 +1150,9 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             AoeDamageCap = 6500;
-            int ImprovedConeOfCold = castingState.CalculationOptions.ImprovedConeOfCold;
-            if (castingState.CalculationOptions.WotLK)
-            {
-                SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0) + 0.002f * castingState.CalculationOptions.SpellImpact);
-                CritRate += 0.02f * castingState.CalculationOptions.Incinerate;
-            }
-            else
-            {
-                SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0));
-            }
+            int ImprovedConeOfCold = castingState.MageTalents.ImprovedConeOfCold;
+            SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0) + 0.002f * castingState.MageTalents.SpellImpact);
+            CritRate += 0.02f * castingState.MageTalents.Incineration;
             CalculateDerivedStats(castingState);
         }
     }
@@ -1240,7 +1203,6 @@ namespace Rawr.Mage
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
-        public static SpellData TBCSpellData = new SpellData() { Cost = 195, MinDamage = 668, MaxDamage = 772, SpellDamageCoefficient = 2.5f / 3.5f };
         static ArcaneBlast()
         {
             MaxRank[70] = 1;
@@ -1269,7 +1231,7 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return options.WotLK ? SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)] : TBCSpellData;
+            return SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)];
         }
 
         public ArcaneBlast(CastingState castingState, int timeDebuff, int costDebuff, bool manualClearcasting, bool clearcastingActive, bool pom)
@@ -1304,20 +1266,11 @@ namespace Rawr.Mage
         public override void Calculate(CastingState castingState)
         {
             base.Calculate(castingState);
-            if (castingState.CalculationOptions.WotLK)
-            {
-                CostModifier += 0.75f * costDebuff + castingState.BaseStats.ArcaneBlastBonus * 0.25f;
-                SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus * 0.25f + 0.25f * timeDebuff + 0.002f * castingState.CalculationOptions.SpellImpact);
-                SpellDamageCoefficient += 0.03f * castingState.CalculationOptions.EmpoweredArcaneMissiles; // TODO change talent name
-                CritRate += 0.02f * castingState.CalculationOptions.Incinerate;
-            }
-            else
-            {
-                CostModifier += 0.75f * costDebuff + castingState.BaseStats.ArcaneBlastBonus;
-                SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus);
-                BaseCastTime -= timeDebuff / 3f;
-            }
-            CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
+            CostModifier += 0.75f * costDebuff + castingState.BaseStats.ArcaneBlastBonus * 0.25f;
+            SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus * 0.25f + 0.25f * timeDebuff + 0.002f * castingState.MageTalents.SpellImpact);
+            SpellDamageCoefficient += 0.03f * castingState.MageTalents.ArcaneEmpowerment; // TODO change talent name
+            CritRate += 0.02f * castingState.MageTalents.Incineration;
+            //CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
             CalculateDerivedStats(castingState);
         }
     }
@@ -1419,7 +1372,6 @@ namespace Rawr.Mage
 
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
-        public static SpellData TBCSpellData = new SpellData() { Cost = 740, MinDamage = 267.6f * 5, MaxDamage = 267.6f * 5, SpellDamageCoefficient = 5f / 3.5f };
         static ArcaneMissiles()
         {
             MaxRank[70] = 11;
@@ -1448,7 +1400,7 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return options.WotLK ? SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)] : TBCSpellData;
+            return SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)];
         }
 
         public ArcaneMissiles(CastingState castingState, bool barrage, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing)
@@ -1473,18 +1425,9 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             if (barrage) BaseCastTime -= 2.5f;
-            if (!castingState.CalculationOptions.WotLK) CostModifier += 0.02f * castingState.CalculationOptions.EmpoweredArcaneMissiles;
-
-            // CC double dipping
-            if (!castingState.CalculationOptions.WotLK)
-            {
-                if (!ManualClearcasting) CritRate += (castingState.CalculationOptions.WotLK ? 0.015f : 0.01f) * castingState.CalculationOptions.ArcanePotency;
-                else if (ClearcastingProccing) CritRate += (castingState.CalculationOptions.WotLK ? 0.15f : 0.1f) * castingState.CalculationOptions.ArcanePotency;
-            }
-
-            SpellDamageCoefficient += 0.15f * castingState.CalculationOptions.EmpoweredArcaneMissiles;
+            SpellDamageCoefficient += 0.15f * castingState.MageTalents.ArcaneEmpowerment;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
-            InterruptProtection += 0.2f * castingState.CalculationOptions.ImprovedArcaneMissiles;
+            InterruptProtection += 0.2f * castingState.MageTalents.ImprovedArcaneMissiles;
             CalculateDerivedStats(castingState);
         }
     }
@@ -1493,7 +1436,6 @@ namespace Rawr.Mage
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
-        public static SpellData TBCSpellData = new SpellData() { Cost = 545, MinDamage = 377, MaxDamage = 407, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f };
         static ArcaneExplosion()
         {
             MaxRank[70] = 8;
@@ -1521,7 +1463,7 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return options.WotLK ? SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)] : TBCSpellData;
+            return SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)];
         }
 
         public ArcaneExplosion(CastingState castingState)
@@ -1529,8 +1471,8 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             if (castingState.CalculationOptions.GlyphOfArcaneExplosion) CostAmplifier *= 0.9f;
-            CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
-            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.002f * castingState.CalculationOptions.SpellImpact);
+            //CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
+            SpellModifier *= (1 + 0.002f * castingState.MageTalents.SpellImpact); // bugged currently
             AoeDamageCap = 10180;
             CalculateDerivedStats(castingState);
         }
@@ -1543,7 +1485,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             AoeDamageCap = 9440;
-            if (castingState.CalculationOptions.WotLK) SpellModifier *= (1 + 0.002f * castingState.CalculationOptions.SpellImpact);
+            SpellModifier *= (1 + 0.002f * castingState.MageTalents.SpellImpact);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1563,7 +1505,6 @@ namespace Rawr.Mage
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
-        public static SpellData TBCSpellData = new SpellData() { Cost = 1645, MinDamage = 1476, MaxDamage = 1476, SpellDamageCoefficient = 1.1429f }; // TODO verify level 70 WotLK data
         static Blizzard()
         {
             MaxRank[70] = 7;
@@ -1591,19 +1532,13 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return options.WotLK ? SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)] : TBCSpellData;
+            return SpellData[RankLevelIndex(MaxRank[options.PlayerLevel], options.PlayerLevel)];
         }
 
         public Blizzard(CastingState castingState)
             : base("Blizzard", true, false, false, true, 0, 8, 0, MagicSchool.Frost, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             base.Calculate(castingState);
-            if (!castingState.CalculationOptions.WotLK)
-            {
-                CritBonus = 1;
-                CritRate = 0;
-            }
-            HitRate = 1;
             AoeDamageCap = 28950;
             CalculateDerivedStats(castingState);
         }
@@ -1748,7 +1683,7 @@ namespace Rawr.Mage
             //TIME = T * [1 + 1/0.9]
             //DAMAGE = AM?1 + AM10 + 0.1/0.9*AM11
 
-            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.MageTalents.ArcaneConcentration;
 
             AMc1 = new ArcaneMissiles(castingState, false, true, false, true);
             AM10 = new ArcaneMissiles(castingState, false, false, true, false);
@@ -1801,13 +1736,13 @@ namespace Rawr.Mage
             Name = "ABAM";
             ABCycle = true;
 
-            Spell AB = castingState.GetSpell(castingState.CalculationOptions.WotLK ? SpellId.ArcaneBlast00 : SpellId.ArcaneBlast33);
+            Spell AB = castingState.GetSpell(SpellId.ArcaneBlast00);
             Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = 0.03f * castingState.CalculationOptions.MissileBarrage;
+            MB = 0.03f * castingState.MageTalents.MissileBarrage;
 
-            if (MB == 0.0 || !castingState.CalculationOptions.WotLK)
+            if (MB == 0.0)
             {
                 // if we don't have barrage then this degenerates to AB-AM
                 chain1 = new SpellCycle(2);
@@ -1872,9 +1807,9 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = 0.03f * castingState.CalculationOptions.MissileBarrage;
+            MB = 0.03f * castingState.MageTalents.MissileBarrage;
 
-            if (MB == 0.0 || !castingState.CalculationOptions.WotLK)
+            if (MB == 0.0)
             {
                 // if we don't have barrage then this degenerates to AB-ABar
                 chain1 = new SpellCycle(2);
@@ -1961,9 +1896,9 @@ namespace Rawr.Mage
             AB3 = castingState.GetSpell(SpellId.ArcaneBlast33);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = 0.03f * castingState.CalculationOptions.MissileBarrage;
+            MB = 0.03f * castingState.MageTalents.MissileBarrage;
 
-            if (MB == 0.0 || !castingState.CalculationOptions.WotLK)
+            if (MB == 0.0)
             {
                 // if we don't have barrage then this degenerates to AB
                 CastTime = AB3.CastTime;
@@ -2425,7 +2360,7 @@ namespace Rawr.Mage
             Spell FB = castingState.GetSpell(SpellId.Fireball);
             Spell Sc = castingState.GetSpell(SpellId.Scorch);
 
-            if (castingState.CalculationOptions.ImprovedScorch == 0)
+            if (castingState.MageTalents.ImprovedScorch == 0)
             {
                 // in this case just Fireball, scorch debuff won't be applied
                 AddSpell(FB, castingState);
@@ -2433,7 +2368,7 @@ namespace Rawr.Mage
             }
             else
             {
-                int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.CalculationOptions.ImprovedScorch);
+                int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
                 int extraScorches = 1;
                 if (castingState.CalculationOptions.GlyphOfImprovedScorch)
                 {
@@ -2472,7 +2407,7 @@ namespace Rawr.Mage
             BaseSpell Blast = (BaseSpell)castingState.GetSpell(SpellId.FireBlast);
             Spell Sc = castingState.GetSpell(SpellId.Scorch);
 
-            if (castingState.CalculationOptions.ImprovedScorch == 0)
+            if (castingState.MageTalents.ImprovedScorch == 0)
             {
                 // in this case just Fireball/Fire Blast, scorch debuff won't be applied
                 float blastCooldown = Blast.Cooldown - Blast.CastTime;
@@ -2486,7 +2421,7 @@ namespace Rawr.Mage
             }
             else
             {
-                int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.CalculationOptions.ImprovedScorch);
+                int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
                 int extraScorches = 1;
                 if (castingState.CalculationOptions.GlyphOfImprovedScorch)
                 {
@@ -2569,7 +2504,7 @@ namespace Rawr.Mage
             Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast30);
             Spell Sc = castingState.GetSpell(SpellId.Scorch);
 
-            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.MageTalents.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
             chain1 = new SpellCycle(2);
@@ -2674,7 +2609,7 @@ namespace Rawr.Mage
             Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast30);
             Spell Sc = castingState.GetSpell(SpellId.Scorch);
 
-            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.MageTalents.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
             chain1 = new SpellCycle(2);
@@ -2779,7 +2714,7 @@ namespace Rawr.Mage
             Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast30);
             Spell FrB = castingState.GetSpell(SpellId.Frostbolt);
 
-            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.MageTalents.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
             chain1 = new SpellCycle(2);
@@ -2884,7 +2819,7 @@ namespace Rawr.Mage
             Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast00);
             Spell FrB = castingState.GetSpell(SpellId.Frostbolt);
 
-            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.MageTalents.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
             chain1 = new SpellCycle(2);
@@ -2991,7 +2926,7 @@ namespace Rawr.Mage
             Spell FrB = castingState.GetSpell(SpellId.Frostbolt);
             Spell Sc = castingState.GetSpell(SpellId.Scorch);
 
-            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.MageTalents.ArcaneConcentration;
 
             //AMCC-AB0                       0.1
             chain1 = new SpellCycle(2);
@@ -3101,7 +3036,7 @@ namespace Rawr.Mage
             Spell AB23 = castingState.GetSpell(SpellId.ArcaneBlast23);
             Spell AB33 = castingState.GetSpell(SpellId.ArcaneBlast33NoCC);
 
-            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.MageTalents.ArcaneConcentration;
 
             if (CC == 0)
             {
@@ -3210,7 +3145,7 @@ namespace Rawr.Mage
             Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22NoCC);
             Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast33NoCC);
 
-            CC = 0.02f * castingState.CalculationOptions.ArcaneConcentration;
+            CC = 0.02f * castingState.MageTalents.ArcaneConcentration;
 
             if (CC == 0)
             {

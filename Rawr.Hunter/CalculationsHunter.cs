@@ -337,9 +337,9 @@ namespace Rawr.Hunter
 			SimulationResults quickShotShotsPerSecond = null;
 			double quickShotsUpTime = 0;
 			double quickShotHaste = 0;
-			if (options.Aspect == Aspect.Hawk && /*character.AllTalents.Trees.ContainsKey(BEAST_MASTER) && */character.HunterTalents.ImprovedAspectoftheHawk > 0)
+			if (options.Aspect == Aspect.Hawk && /*character.AllTalents.Trees.ContainsKey(BEAST_MASTER) && */character.HunterTalents.ImprovedAspectOfTheHawk > 0)
 			{
-				quickShotHaste = .03 * character.HunterTalents.ImprovedAspectoftheHawk;
+				quickShotHaste = .03 * character.HunterTalents.ImprovedAspectOfTheHawk;
 				quickShotShotsPerSecond = CalculateShotsPerSecond(options, calculatedStats.BaseAttackSpeed / (1 + quickShotHaste), steadyShotCastTime / (1 + quickShotHaste));
 
 				//Quick Shot Uptime From Cheeky's DPS Spreadsheet with special notation - "By Norwest"
@@ -452,7 +452,7 @@ namespace Rawr.Hunter
 				//if (character.AllTalents.Trees.ContainsKey(MARKSMAN))
 				{
 					//Go for the Throat
-					petFocusRegenPer4 += ((weightedTotalShotsPerSecond * 4 * calculatedStats.BasicStats.Crit) * (25 * character.HunterTalents.GofortheThroat));
+					petFocusRegenPer4 += ((weightedTotalShotsPerSecond * 4 * calculatedStats.BasicStats.Crit) * (25 * character.HunterTalents.GoForTheThroat));
 				}
 				petFocusPerSecond = petFocusRegenPer4 / 4f;
 			}

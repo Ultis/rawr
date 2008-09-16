@@ -65,11 +65,18 @@ namespace Rawr.Mage
         public CharacterCalculationsMage Calculations;
 
         [XmlIgnore]
+        private Character _character;
+        [XmlIgnore]
         public Character Character
         {
+            get
+            {
+                return _character;
+            }
             set
             {
                 value.ItemsChanged += new EventHandler(Character_ItemsChanged);
+                _character = value;
             }
         }
 
@@ -95,8 +102,7 @@ namespace Rawr.Mage
         public float Fragmentation { get; set; }
         public float SurvivabilityRating { get; set; }
         public bool Aldor { get; set; }
-        public bool WotLK { get; set; }
-        public int HeroismControl { get; set; } // 0 = optimla, 1 = before 20%, 2 = no cooldowns, 3 = after 20%
+        public int HeroismControl { get; set; } // 0 = optimal, 1 = before 20%, 2 = no cooldowns, 3 = after 20%
         public bool AverageCooldowns { get; set; }
         public bool EvocationEnabled { get; set; }
         public bool ManaPotionEnabled { get; set; }
@@ -184,14 +190,14 @@ namespace Rawr.Mage
 
         public int GetTalentByName(string name)
         {
-            Type t = typeof(CalculationOptionsMage);
-            return (int)t.GetProperty(name).GetValue(this, null);
+            Type t = typeof(MageTalents);
+            return (int)t.GetProperty(name).GetValue(Character.MageTalents, null);
         }
 
         public void SetTalentByName(string name, int value)
         {
-            Type t = typeof(CalculationOptionsMage);
-            t.GetProperty(name).SetValue(this, value, null);
+            Type t = typeof(MageTalents);
+            t.GetProperty(name).SetValue(Character.MageTalents, value, null);
         }
 
         public bool GetGlyphByName(string name)
@@ -205,87 +211,6 @@ namespace Rawr.Mage
             Type t = typeof(CalculationOptionsMage);
             t.GetProperty(name).SetValue(this, value, null);
         }
-
-        public int Pyromaniac { get; set; }
-        public int ElementalPrecision { get; set; }
-        public int FrostChanneling { get; set; }
-        public int MasterOfElements { get; set; }
-        public int ArcaneConcentration { get; set; }
-        public int MindMastery { get; set; }
-        public int ArcaneInstability { get; set; }
-        public int ArcanePotency { get; set; }
-        public int ArcaneFocus { get; set; }
-        public int PlayingWithFire { get; set; }
-        public int MoltenFury { get; set; }
-        public int FirePower { get; set; }
-        public int PiercingIce { get; set; }
-        public int SpellPower { get; set; }
-        public int Ignite { get; set; }
-        public int IceShards { get; set; }
-        public int CriticalMass { get; set; }
-        public int Combustion { get; set; }
-        public int ImprovedFrostbolt { get; set; }
-        public int EmpoweredFrostbolt { get; set; }
-        public int ImprovedFireball { get; set; }
-        public int EmpoweredFireball { get; set; }
-        public int ArcaneImpact { get; set; }
-        public int EmpoweredArcaneMissiles { get; set; }
-        public int Incinerate { get; set; }
-        public int ImprovedScorch { get; set; }
-        public int WintersChill { get; set; }
-        public int BurningSoul { get; set; }
-        public int ImprovedArcaneMissiles { get; set; }
-        public int WandSpecialization { get; set; }
-        public int BlastWave { get; set; }
-        public int DragonsBreath { get; set; }
-        public int ArcanePower { get; set; }
-        public int IcyVeins { get; set; }
-        public int ColdSnap { get; set; }
-        public int IceFloes { get; set; }
-        public int SummonWaterElemental { get; set; }
-        public int ArcaneMind { get; set; }
-        public int ArcaneFortitude { get; set; }
-        public int MagicAbsorption { get; set; }
-        public int FrostWarding { get; set; }
-        public int ArcaneMeditation { get; set; }
-        public int ArcaneSubtlety { get; set; }
-        public int ImprovedFireBlast { get; set; }
-        public int ImprovedFlamestrike { get; set; }
-        public int ImprovedFrostNova { get; set; }
-        public int ImprovedConeOfCold { get; set; }
-        public int ArcticWinds { get; set; }
-        public int FrozenCore { get; set; }
-        public int Pyroblast { get; set; }
-        public int PrismaticCloak { get; set; }
-
-        // not implemented
-        public int IceBarrier { get; set; }
-        public int Shatter { get; set; }
-        public int ArcticReach { get; set; }
-        public int ImprovedBlizzard { get; set; }
-        public int Permafrost { get; set; }
-        public int Frostbite { get; set; }
-        public int BlazingSpeed { get; set; }
-        public int ImprovedFireWard { get; set; }
-        public int FlameThrowing { get; set; }
-        public int Impact { get; set; }
-        public int Slow { get; set; }
-        public int PresenceOfMind { get; set; }
-        public int ImprovedBlink { get; set; }
-        public int ImprovedCounterspell { get; set; }
-        public int ImprovedManaShield { get; set; }
-        public int MagicAttunement { get; set; }
-
-        // WotLK
-        public int SpellImpact { get; set; }
-        public int TormentTheWeak { get; set; }
-        public int StudentOfTheMind { get; set; }
-        public int IncantersAbsorption { get; set; }
-        public int NetherwindPresence { get; set; }
-        public int ArcaneBarrage { get; set; }
-        public int MissileBarrage { get; set; }
-        public int ArcaneFlows { get; set; }
-        public int FocusMagic { get; set; }
 
         public bool GlyphOfFireball { get; set; }
         public bool GlyphOfFrostbolt { get; set; }
@@ -346,97 +271,8 @@ namespace Rawr.Mage
         public CalculationOptionsMage(Character character)
             : this()
         {
+            _character = character;
             character.ItemsChanged += new EventHandler(Character_ItemsChanged);
-            // pull talents
-            #region Mage Talents Import
-            try
-            {
-                WebRequestWrapper wrw = new WebRequestWrapper();
-
-                if (character.Class == Character.CharacterClass.Mage && character.Name != null && character.Realm != null)
-                {
-                    XmlDocument docTalents = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm);
-
-                    //<talentTab>
-                    //  <talentTree value="2550050300230151333125100000000000000000000002030302010000000000000"/>
-                    //</talentTab>
-                    if (docTalents != null)
-                    {
-                        string talentCode = docTalents.SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
-                        ArcaneSubtlety = int.Parse(talentCode.Substring(0, 1));
-                        ArcaneFocus = int.Parse(talentCode.Substring(1, 1));
-                        ImprovedArcaneMissiles = int.Parse(talentCode.Substring(2, 1));
-                        WandSpecialization = int.Parse(talentCode.Substring(3, 1));
-                        MagicAbsorption = int.Parse(talentCode.Substring(4, 1));
-                        ArcaneConcentration = int.Parse(talentCode.Substring(5, 1));
-                        MagicAttunement = int.Parse(talentCode.Substring(6, 1));
-                        ArcaneImpact = int.Parse(talentCode.Substring(7, 1));
-                        ArcaneFortitude = int.Parse(talentCode.Substring(8, 1));
-                        ImprovedManaShield = int.Parse(talentCode.Substring(9, 1));
-                        ImprovedCounterspell = int.Parse(talentCode.Substring(10, 1));
-                        ArcaneMeditation = int.Parse(talentCode.Substring(11, 1));
-                        ImprovedBlink = int.Parse(talentCode.Substring(12, 1));
-                        PresenceOfMind = int.Parse(talentCode.Substring(13, 1));
-                        ArcaneMind = int.Parse(talentCode.Substring(14, 1));
-                        PrismaticCloak = int.Parse(talentCode.Substring(15, 1));
-                        ArcaneInstability = int.Parse(talentCode.Substring(16, 1));
-                        ArcanePotency = int.Parse(talentCode.Substring(17, 1));
-                        EmpoweredArcaneMissiles = int.Parse(talentCode.Substring(18, 1));
-                        ArcanePower = int.Parse(talentCode.Substring(19, 1));
-                        SpellPower = int.Parse(talentCode.Substring(20, 1));
-                        MindMastery = int.Parse(talentCode.Substring(21, 1));
-                        Slow = int.Parse(talentCode.Substring(22, 1));
-                        ImprovedFireball = int.Parse(talentCode.Substring(23, 1));
-                        Impact = int.Parse(talentCode.Substring(24, 1));
-                        Ignite = int.Parse(talentCode.Substring(25, 1));
-                        FlameThrowing = int.Parse(talentCode.Substring(26, 1));
-                        ImprovedFireBlast = int.Parse(talentCode.Substring(27, 1));
-                        Incinerate = int.Parse(talentCode.Substring(28, 1));
-                        ImprovedFlamestrike = int.Parse(talentCode.Substring(29, 1));
-                        Pyroblast = int.Parse(talentCode.Substring(30, 1));
-                        BurningSoul = int.Parse(talentCode.Substring(31, 1));
-                        ImprovedScorch = int.Parse(talentCode.Substring(32, 1));
-                        ImprovedFireWard = int.Parse(talentCode.Substring(33, 1));
-                        MasterOfElements = int.Parse(talentCode.Substring(34, 1));
-                        PlayingWithFire = int.Parse(talentCode.Substring(35, 1));
-                        CriticalMass = int.Parse(talentCode.Substring(36, 1));
-                        BlastWave = int.Parse(talentCode.Substring(37, 1));
-                        BlazingSpeed = int.Parse(talentCode.Substring(38, 1));
-                        FirePower = int.Parse(talentCode.Substring(39, 1));
-                        Pyromaniac = int.Parse(talentCode.Substring(40, 1));
-                        Combustion = int.Parse(talentCode.Substring(41, 1));
-                        MoltenFury = int.Parse(talentCode.Substring(42, 1));
-                        EmpoweredFireball = int.Parse(talentCode.Substring(43, 1));
-                        DragonsBreath = int.Parse(talentCode.Substring(44, 1));
-                        FrostWarding = int.Parse(talentCode.Substring(45, 1));
-                        ImprovedFrostbolt = int.Parse(talentCode.Substring(46, 1));
-                        ElementalPrecision = int.Parse(talentCode.Substring(47, 1));
-                        IceShards = int.Parse(talentCode.Substring(48, 1));
-                        Frostbite = int.Parse(talentCode.Substring(49, 1));
-                        ImprovedFrostNova = int.Parse(talentCode.Substring(50, 1));
-                        Permafrost = int.Parse(talentCode.Substring(51, 1));
-                        PiercingIce = int.Parse(talentCode.Substring(52, 1));
-                        IcyVeins = int.Parse(talentCode.Substring(53, 1));
-                        ImprovedBlizzard = int.Parse(talentCode.Substring(54, 1));
-                        ArcticReach = int.Parse(talentCode.Substring(55, 1));
-                        FrostChanneling = int.Parse(talentCode.Substring(56, 1));
-                        Shatter = int.Parse(talentCode.Substring(57, 1));
-                        FrozenCore = int.Parse(talentCode.Substring(58, 1));
-                        ColdSnap = int.Parse(talentCode.Substring(59, 1));
-                        ImprovedConeOfCold = int.Parse(talentCode.Substring(60, 1));
-                        IceFloes = int.Parse(talentCode.Substring(61, 1));
-                        WintersChill = int.Parse(talentCode.Substring(62, 1));
-                        IceBarrier = int.Parse(talentCode.Substring(63, 1));
-                        ArcticWinds = int.Parse(talentCode.Substring(64, 1));
-                        EmpoweredFrostbolt = int.Parse(talentCode.Substring(65, 1));
-                        SummonWaterElemental = int.Parse(talentCode.Substring(66, 1));
-                    }
-                }
-            }
-            catch (Exception)
-            {
-            }
-            #endregion
         }
 
         string ICalculationOptionBase.GetXml()

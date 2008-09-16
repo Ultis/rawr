@@ -54,44 +54,8 @@ namespace Rawr.Mage
                     }
                 }
             }
-            UpdateWotLK();
             calculationSuspended = false;
             ComputeTalentTotals();
-        }
-
-        public void UpdateWotLK()
-        {
-            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
-            SuspendLayout();
-            if (calculationOptions.WotLK)
-            {
-                Height = 993;
-                groupBoxArcane.Height = 923;
-                groupBoxFire.Height = 923;
-                groupBoxFrost.Height = 923;
-                if (comboBoxArcaneFocus.Items.Count == 6) { comboBoxArcaneFocus.Items.RemoveAt(4); comboBoxArcaneFocus.Items.RemoveAt(4); }
-                if (comboBoxMagicAbsorption.Items.Count == 6) { comboBoxMagicAbsorption.Items.RemoveAt(3); comboBoxMagicAbsorption.Items.RemoveAt(3); comboBoxMagicAbsorption.Items.RemoveAt(3); }
-                if (comboBoxArcaneFortitude.Items.Count == 2) comboBoxArcaneFortitude.Items.AddRange(new string[] { "2", "3" });
-                if (comboBoxPrismaticCloak.Items.Count == 3) comboBoxPrismaticCloak.Items.AddRange(new string[] { "3" });
-                if (comboBoxArcanePotency.Items.Count == 4) { comboBoxArcanePotency.Items.RemoveAt(3); }
-                if (comboBoxIncinerate.Items.Count == 3) comboBoxIncinerate.Items.AddRange(new string[] { "3" });
-                if (comboBoxIceFloes.Items.Count == 3) comboBoxIceFloes.Items.AddRange(new string[] { "3" });
-            }
-            else
-            {
-                Height = 747;
-                groupBoxArcane.Height = 673;
-                groupBoxFire.Height = 673;
-                groupBoxFrost.Height = 673;
-                if (comboBoxArcaneFocus.Items.Count == 4) comboBoxArcaneFocus.Items.AddRange(new string[] { "4", "5" });
-                if (comboBoxMagicAbsorption.Items.Count == 3) comboBoxMagicAbsorption.Items.AddRange(new string[] { "3", "4", "5" });
-                if (comboBoxArcaneFortitude.Items.Count == 4) { comboBoxArcaneFortitude.Items.RemoveAt(2); comboBoxArcaneFortitude.Items.RemoveAt(2); }
-                if (comboBoxPrismaticCloak.Items.Count == 4) { comboBoxPrismaticCloak.Items.RemoveAt(3); }
-                if (comboBoxArcanePotency.Items.Count == 2) comboBoxArcanePotency.Items.AddRange(new string[] { "3" });
-                if (comboBoxIncinerate.Items.Count == 4) { comboBoxIncinerate.Items.RemoveAt(3); }
-                if (comboBoxIceFloes.Items.Count == 4) { comboBoxIceFloes.Items.RemoveAt(3); }
-            }
-            ResumeLayout();
         }
 
         private void ComputeTalentTotals()

@@ -88,7 +88,7 @@ namespace Rawr.HolyPriest
             dictValues.Add("Prayer of Mending", new PrayerOfMending(BasicStats, talents).ToString());
             dictValues.Add("Power Word Shield", new PowerWordShield(BasicStats, talents).ToString());
 
-            if (talents.CircleofHealing > 0)
+            if (talents.CircleOfHealing > 0)
                 dictValues.Add("CoH", new CircleOfHealing(BasicStats, talents).ToString());
             else
                 dictValues.Add("CoH", "- *No required talents");

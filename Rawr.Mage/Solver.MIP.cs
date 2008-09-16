@@ -2516,17 +2516,17 @@ namespace Rawr.Mage
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (calculationOptions.EmpoweredFireball > 0)
+            else if (character.MageTalents.EmpoweredFireball > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (calculationOptions.EmpoweredFrostbolt > 0)
+            else if (character.MageTalents.EmpoweredFrostbolt > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.Frostbolt);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (calculationOptions.SpellPower > 0)
+            else if (character.MageTalents.SpellPower > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneBlast33);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
@@ -2776,17 +2776,17 @@ namespace Rawr.Mage
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (calculationOptions.EmpoweredFireball > 0)
+            else if (character.MageTalents.EmpoweredFireball > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (calculationOptions.EmpoweredFrostbolt > 0)
+            else if (character.MageTalents.EmpoweredFrostbolt > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.Frostbolt);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (calculationOptions.SpellPower > 0)
+            else if (character.MageTalents.SpellPower > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneBlast33);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;

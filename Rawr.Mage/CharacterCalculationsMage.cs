@@ -195,26 +195,26 @@ namespace Rawr.Mage
                     Spell s = BaseState.GetSpell(SpellId.ArcaneExplosion);
                     manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
                 }
-                else if (CalculationOptions.EmpoweredFireball > 0)
+                else if (Character.MageTalents.EmpoweredFireball > 0)
                 {
                     Spell s = BaseState.GetSpell(SpellId.Fireball);
                     manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
                 }
-                else if (CalculationOptions.EmpoweredFrostbolt > 0)
+                else if (Character.MageTalents.EmpoweredFrostbolt > 0)
                 {
                     Spell s = BaseState.GetSpell(SpellId.Frostbolt);
                     manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
                 }
-                else if (CalculationOptions.SpellPower > 0)
+                else if (Character.MageTalents.SpellPower > 0)
                 {
                     Spell s = BaseState.GetSpell(SpellId.ArcaneBlast33);
                     manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
                 }
-                if (CalculationOptions.IcyVeins > 0)
+                if (Character.MageTalents.IcyVeins > 0)
                 {
                     manaBurn *= 1.1f;
                 }
-                if (CalculationOptions.ArcanePower > 0)
+                if (Character.MageTalents.ArcanePower > 0)
                 {
                     manaBurn *= 1.1f;
                 }
@@ -314,7 +314,7 @@ namespace Rawr.Mage
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * BaseState.Dodge));
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
-            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.ABMBAM, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.ArcaneBlast33, SpellId.ABAMP, SpellId.ABAM, SpellId.AB3AMSc, SpellId.ABAM3Sc, SpellId.ABAM3Sc2, SpellId.ABAM3FrB, SpellId.ABAM3FrB2, SpellId.ABFrB3FrB, SpellId.ABFrB3FrBSc, SpellId.ABFB3FBSc, SpellId.FireballScorch, SpellId.FireballFireBlast, SpellId.FireBlast, SpellId.ABAM3ScCCAM, SpellId.ABAM3Sc2CCAM, SpellId.ABAM3FrBCCAM, SpellId.ABAM3FrBScCCAM, SpellId.ABAMCCAM, SpellId.ABAM3CCAM, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.ABFrB, SpellId.FrostfireBolt, SpellId.ABABar };
+            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.ABMBAM, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.ArcaneBlast33, SpellId.ABAM, SpellId.FireballScorch, SpellId.FireballFireBlast, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBolt, SpellId.ABABar };
             Spell AB = BaseState.GetSpell(SpellId.ArcaneBlast33);
             BaseSpell bs;
             foreach (SpellId spell in spellList)

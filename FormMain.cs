@@ -1074,7 +1074,7 @@ namespace Rawr
 				{
 					character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
 				}
-                character.AllTalents = reload.AllTalents;
+                character.AssignAllTalentsFromCharacter(reload);
 			}
 			return character;
 		}

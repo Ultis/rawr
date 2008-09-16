@@ -4,143 +4,155 @@ using System.Collections.Generic;
 
 namespace Rawr
 {
-	[AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-	public sealed class TalentDataAttribute : Attribute
-	{
-		public TalentDataAttribute(int index, string name, int maxPoints, int tree, int column, int row, int prerequisite, string[] description)
-		{
-			_index = index;
-			_name = name;
-			_maxPoints = maxPoints;
-			_tree = tree;
-			_column = column;
-			_row = row;
-			_prerequisite = prerequisite;
-			_description = description;
-		}
+    [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+    public sealed class TalentDataAttribute : Attribute
+    {
+        public TalentDataAttribute(int index, string name, int maxPoints, int tree, int column, int row, int prerequisite, string[] description)
+        {
+            _index = index;
+            _name = name;
+            _maxPoints = maxPoints;
+            _tree = tree;
+            _column = column;
+            _row = row;
+            _prerequisite = prerequisite;
+            _description = description;
+        }
 
-		private readonly int _index;
-		private readonly string _name;
-		private readonly int _maxPoints;
-		private readonly int _tree;
-		private readonly int _column;
-		private readonly int _row;
-		private readonly int _prerequisite;
-		private readonly string[] _description;
+        private readonly int _index;
+        private readonly string _name;
+        private readonly int _maxPoints;
+        private readonly int _tree;
+        private readonly int _column;
+        private readonly int _row;
+        private readonly int _prerequisite;
+        private readonly string[] _description;
 
-		public int Index { get { return _index; } }
-		public string Name { get { return _name; } }
-		public int MaxPoints { get { return _maxPoints; } }
-		public int Tree { get { return _tree; } }
-		public int Column { get { return _column; } }
-		public int Row { get { return _row; } }
-		public int Prerequisite { get { return _prerequisite; } }
-		public string[] Description { get { return _description; } }
-	}
+        public int Index { get { return _index; } }
+        public string Name { get { return _name; } }
+        public int MaxPoints { get { return _maxPoints; } }
+        public int Tree { get { return _tree; } }
+        public int Column { get { return _column; } }
+        public int Row { get { return _row; } }
+        public int Prerequisite { get { return _prerequisite; } }
+        public string[] Description { get { return _description; } }
+    }
 
-	public class PriestTalents
-	{
-		private int[] _data = new int[81];
-		public PriestTalents() { }
-		public PriestTalents(string talents)
-		{
-			List<int> data = new List<int>();
-			foreach (Char digit in talents)
-				data.Add(int.Parse(digit.ToString()));
-			data.CopyTo(_data);
-		}
+    public class PriestTalents : ICloneable
+    {
+        private int[] _data = new int[81];
+        public PriestTalents() { }
+        public PriestTalents(string talents)
+        {
+            List<int> data = new List<int>();
+            foreach (Char digit in talents)
+                data.Add(int.Parse(digit.ToString()));
+            data.CopyTo(_data);
+        }
 
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
-		}
+        public override string ToString()
+        {
+            StringBuilder ret = new StringBuilder();
+            foreach (int digit in _data)
+                ret.Append(digit.ToString());
+            return ret.ToString();
+        }
+        object ICloneable.Clone()
+        {
+            PriestTalents clone = (PriestTalents)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            return clone;
+        }
 
-		[TalentData(0, "Unbreakable Will", 5, 0, 2, 1, -1, new string[] {
+        public PriestTalents Clone()
+        {
+            return (PriestTalents)((ICloneable)this).Clone();
+        }
+
+
+        [TalentData(0, "Unbreakable Will", 5, 0, 2, 1, -1, new string[] {
 @"Reduces the duration of Stun, Fear, and Silence effects done to you by an additional 3%.",
 @"Reduces the duration of Stun, Fear, and Silence effects done to you by an additional 6%.",
 @"Reduces the duration of Stun, Fear, and Silence effects done to you by an additional 9%.",
 @"Reduces the duration of Stun, Fear, and Silence effects done to you by an additional 12%.",
 @"Reduces the duration of Stun, Fear, and Silence effects done to you by an additional 15%.",})]
-		public int UnbreakableWill { get { return _data[0]; } set { _data[0] = value; } }
+        public int UnbreakableWill { get { return _data[0]; } set { _data[0] = value; } }
 
-		[TalentData(1, "Twin Disciplines", 5, 0, 3, 1, -1, new string[] {
+        [TalentData(1, "Twin Disciplines", 5, 0, 3, 1, -1, new string[] {
 @"Increases your spell damage and healing by 1%.",
 @"Increases your spell damage and healing by 2%.",
 @"Increases your spell damage and healing by 3%.",
 @"Increases your spell damage and healing by 4%.",
 @"Increases your spell damage and healing by 5%.",})]
-		public int TwinDisciplines { get { return _data[1]; } set { _data[1] = value; } }
+        public int TwinDisciplines { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Silent Resolve", 3, 0, 1, 2, -1, new string[] {
+        [TalentData(2, "Silent Resolve", 3, 0, 1, 2, -1, new string[] {
 @"Reduces the threat generated by your Holy and Discipline spells by 7% and reduces the chance your spells will be dispelled by 10%.",
 @"Reduces the threat generated by your Holy and Discipline spells by 14% and reduces the chance your spells will be dispelled by 20%.",
 @"Reduces the threat generated by your Holy and Discipline spells by 20% and reduces the chance your spells will be dispelled by 30%.",})]
-		public int SilentResolve { get { return _data[2]; } set { _data[2] = value; } }
+        public int SilentResolve { get { return _data[2]; } set { _data[2] = value; } }
 
-		[TalentData(3, "Improved Power Word: Fortitude", 2, 0, 2, 2, -1, new string[] {
+        [TalentData(3, "Improved Power Word: Fortitude", 2, 0, 2, 2, -1, new string[] {
 @"Increases the effect of your Power Word: Fortitude and Prayer of Fortitude spells by 15%.",
 @"Increases the effect of your Power Word: Fortitude and Prayer of Fortitude spells by 30%.",})]
-		public int ImprovedPowerWordFortitude { get { return _data[3]; } set { _data[3] = value; } }
+        public int ImprovedPowerWordFortitude { get { return _data[3]; } set { _data[3] = value; } }
 
-		[TalentData(4, "Improved Power Word: Shield", 3, 0, 3, 2, -1, new string[] {
+        [TalentData(4, "Improved Power Word: Shield", 3, 0, 3, 2, -1, new string[] {
 @"Increases the damage absorbed by your Power Word: Shield by 5%.",
 @"Increases the damage absorbed by your Power Word: Shield by 10%.",
 @"Increases the damage absorbed by your Power Word: Shield by 15%.",})]
-		public int ImprovedPowerWordShield { get { return _data[4]; } set { _data[4] = value; } }
+        public int ImprovedPowerWordShield { get { return _data[4]; } set { _data[4] = value; } }
 
-		[TalentData(5, "Martyrdom", 2, 0, 4, 2, -1, new string[] {
+        [TalentData(5, "Martyrdom", 2, 0, 4, 2, -1, new string[] {
 @"Gives you a 50% chance to gain the Focused Casting effect that lasts for 6 sec after being the victim of a melee or ranged critical strike. The Focused Casting effect prevents you from losing casting time when taking damage and increases resistance to Interrupt effects by 10%.",
 @"Gives you a 100% chance to gain the Focused Casting effect that lasts for 6 sec after being the victim of a melee or ranged critical strike. The Focused Casting effect prevents you from losing casting time when taking damage and increases resistance to Interrupt effects by 20%.",})]
-		public int Martyrdom { get { return _data[5]; } set { _data[5] = value; } }
+        public int Martyrdom { get { return _data[5]; } set { _data[5] = value; } }
 
-		[TalentData(6, "Absolution", 3, 0, 1, 3, -1, new string[] {
+        [TalentData(6, "Absolution", 3, 0, 1, 3, -1, new string[] {
 @"Reduces the mana cost of your Dispel Magic, Cure Disease, Abolish Disease and Mass Dispel spells by 5%.",
 @"Reduces the mana cost of your Dispel Magic, Cure Disease, Abolish Disease and Mass Dispel spells by 10%.",
 @"Reduces the mana cost of your Dispel Magic, Cure Disease, Abolish Disease and Mass Dispel spells by 15%.",})]
-		public int Absolution { get { return _data[6]; } set { _data[6] = value; } }
+        public int Absolution { get { return _data[6]; } set { _data[6] = value; } }
 
-		[TalentData(7, "Inner Focus", 1, 0, 2, 3, -1, new string[] {
+        [TalentData(7, "Inner Focus", 1, 0, 2, 3, -1, new string[] {
 @"Instant,3 min cooldown,
 When activated, reduces the Mana cost of your next spell by 100% and increases its critical effect chance by 25% if it is capable of a critical effect.",})]
-		public int InnerFocus { get { return _data[7]; } set { _data[7] = value; } }
+        public int InnerFocus { get { return _data[7]; } set { _data[7] = value; } }
 
-		[TalentData(8, "Meditation", 3, 0, 3, 3, -1, new string[] {
+        [TalentData(8, "Meditation", 3, 0, 3, 3, -1, new string[] {
 @"Allows 10% of your Mana regeneration to continue while casting.",
 @"Allows 20% of your Mana regeneration to continue while casting.",
 @"Allows 30% of your Mana regeneration to continue while casting.",})]
-		public int Meditation { get { return _data[8]; } set { _data[8] = value; } }
+        public int Meditation { get { return _data[8]; } set { _data[8] = value; } }
 
-		[TalentData(9, "Improved Inner Fire", 3, 0, 1, 4, -1, new string[] {
+        [TalentData(9, "Improved Inner Fire", 3, 0, 1, 4, -1, new string[] {
 @"Increases the armor bonus and bonus healing of your Inner Fire spell by 10%.",
 @"Increases the armor bonus and bonus healing of your Inner Fire spell by 20%.",
 @"Increases the armor bonus and bonus healing of your Inner Fire spell by 30%.",})]
-		public int ImprovedInnerFire { get { return _data[9]; } set { _data[9] = value; } }
+        public int ImprovedInnerFire { get { return _data[9]; } set { _data[9] = value; } }
 
-		[TalentData(10, "Mental Agility", 5, 0, 2, 4, -1, new string[] {
+        [TalentData(10, "Mental Agility", 5, 0, 2, 4, -1, new string[] {
 @"Reduces the mana cost of your instant cast spells by 2%.",
 @"Reduces the mana cost of your instant cast spells by 4%.",
 @"Reduces the mana cost of your instant cast spells by 6%.",
 @"Reduces the mana cost of your instant cast spells by 8%.",
 @"Reduces the mana cost of your instant cast spells by 10%.",})]
-		public int MentalAgility { get { return _data[10]; } set { _data[10] = value; } }
+        public int MentalAgility { get { return _data[10]; } set { _data[10] = value; } }
 
-		[TalentData(11, "Improved Mana Burn", 2, 0, 4, 4, -1, new string[] {
+        [TalentData(11, "Improved Mana Burn", 2, 0, 4, 4, -1, new string[] {
 @"Reduces the casting time of your Mana Burn spell by 0.5 sec.",
 @"Reduces the casting time of your Mana Burn spell by 1.0 sec.",})]
-		public int ImprovedManaBurn { get { return _data[11]; } set { _data[11] = value; } }
+        public int ImprovedManaBurn { get { return _data[11]; } set { _data[11] = value; } }
 
-		[TalentData(12, "Mental Strength", 5, 0, 2, 5, -1, new string[] {
+        [TalentData(12, "Mental Strength", 5, 0, 2, 5, -1, new string[] {
 @"Increases your total Intellect by 3%.",
 @"Increases your total Intellect by 6%.",
 @"Increases your total Intellect by 9%.",
 @"Increases your total Intellect by 12%.",
 @"Increases your total Intellect by 15%.",})]
-		public int MentalStrength { get { return _data[12]; } set { _data[12] = value; } }
+        public int MentalStrength { get { return _data[12]; } set { _data[12] = value; } }
 
-		[TalentData(13, "Divine Spirit", 1, 0, 3, 5, 8, new string[] {
+        [TalentData(13, "Divine Spirit", 1, 0, 3, 5, 8, new string[] {
 @"3013 Mana,30 yd range,
 Instant cast
 Holy power infuses the target, increasing their Spirit by 17 for 30 min.
@@ -152,130 +164,130 @@ Holy power infuses the target, increasing their Spirit by 17 for 30 min.
 			 Rank 5: 50 Spirit
 			 Rank 6: 80 Spirit
 ",})]
-		public int DivineSpirit { get { return _data[13]; } set { _data[13] = value; } }
+        public int DivineSpirit { get { return _data[13]; } set { _data[13] = value; } }
 
-		[TalentData(14, "Improved Divine Spirit", 2, 0, 4, 5, 13, new string[] {
+        [TalentData(14, "Improved Divine Spirit", 2, 0, 4, 5, 13, new string[] {
 @"Your Divine Spirit and Prayer of Spirit spells also increase the target's spell damage and healing by an amount equal to 3% of their total Spirit.",
 @"Your Divine Spirit and Prayer of Spirit spells also increase the target's spell damage and healing by an amount equal to 6% of their total Spirit.",})]
-		public int ImprovedDivineSpirit { get { return _data[14]; } set { _data[14] = value; } }
+        public int ImprovedDivineSpirit { get { return _data[14]; } set { _data[14] = value; } }
 
-		[TalentData(15, "Focused Power", 2, 0, 1, 6, -1, new string[] {
+        [TalentData(15, "Focused Power", 2, 0, 1, 6, -1, new string[] {
 @"Increases your total spell damage and healing done by 2%. In addition, your Mass Dispel cast time is reduced by 0.5 sec.",
 @"Increases your total spell damage and healing done by 4%. In addition, your Mass Dispel cast time is reduced by 1 sec.",})]
-		public int FocusedPower { get { return _data[15]; } set { _data[15] = value; } }
+        public int FocusedPower { get { return _data[15]; } set { _data[15] = value; } }
 
-		[TalentData(16, "Enlightenment", 5, 0, 3, 6, -1, new string[] {
+        [TalentData(16, "Enlightenment", 5, 0, 3, 6, -1, new string[] {
 @"Increases your total Stamina and Spirit by 1% and increases your spell haste by 1%.",
 @"Increases your total Stamina and Spirit by 2% and increases your spell haste by 2%.",
 @"Increases your total Stamina and Spirit by 3% and increases your spell haste by 3%.",
 @"Increases your total Stamina and Spirit by 4% and increases your spell haste by 4%.",
 @"Increases your total Stamina and Spirit by 5% and increases your spell haste by 5%.",})]
-		public int Enlightenment { get { return _data[16]; } set { _data[16] = value; } }
+        public int Enlightenment { get { return _data[16]; } set { _data[16] = value; } }
 
-		[TalentData(17, "Focused Will", 3, 0, 1, 7, -1, new string[] {
+        [TalentData(17, "Focused Will", 3, 0, 1, 7, -1, new string[] {
 @"After taking a critical hit you gain the Focused Will effect, reducing all damage taken by 2% and increasing healing effects on you by 3%.  Stacks up to 3 times.  Lasts 8 sec.",
 @"After taking a critical hit you gain the Focused Will effect, reducing all damage taken by 3% and increasing healing effects on you by 4%.  Stacks up to 3 times.  Lasts 8 sec.",
 @"After taking a critical hit you gain the Focused Will effect, reducing all damage taken by 4% and increasing healing effects on you by 5%.  Stacks up to 3 times.  Lasts 8 sec.",})]
-		public int FocusedWill { get { return _data[17]; } set { _data[17] = value; } }
+        public int FocusedWill { get { return _data[17]; } set { _data[17] = value; } }
 
-		[TalentData(18, "Power Infusion", 1, 0, 2, 7, 12, new string[] {
+        [TalentData(18, "Power Infusion", 1, 0, 2, 7, 12, new string[] {
 @"419 Mana,30 yd range,
 Instant cast,2 min cooldown,
 Infuses the target with power, increasing spell casting speed by 20% and reducing the mana cost of all spells by 20%. Lasts 15 sec.",})]
-		public int PowerInfusion { get { return _data[18]; } set { _data[18] = value; } }
+        public int PowerInfusion { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Reflective Shield", 3, 0, 3, 7, -1, new string[] {
+        [TalentData(19, "Reflective Shield", 3, 0, 3, 7, -1, new string[] {
 @"Causes 15% of the damage absorbed by your Power Word: Shield to reflect back at the attacker. This damage causes no threat.",
 @"Causes 30% of the damage absorbed by your Power Word: Shield to reflect back at the attacker. This damage causes no threat.",
 @"Causes 45% of the damage absorbed by your Power Word: Shield to reflect back at the attacker. This damage causes no threat.",})]
-		public int ReflectiveShield { get { return _data[19]; } set { _data[19] = value; } }
+        public int ReflectiveShield { get { return _data[19]; } set { _data[19] = value; } }
 
-		[TalentData(20, "Renewed Hope", 2, 0, 1, 8, -1, new string[] {
+        [TalentData(20, "Renewed Hope", 2, 0, 1, 8, -1, new string[] {
 @"Increases the critical effect chance of your Flash Heal, Greater Heal and Penance spells by 2% on targets afflicted by the Weakened Soul effect.",
 @"Increases the critical effect chance of your Flash Heal, Greater Heal and Penance spells by 4% on targets afflicted by the Weakened Soul effect.",})]
-		public int RenewedHope { get { return _data[20]; } set { _data[20] = value; } }
+        public int RenewedHope { get { return _data[20]; } set { _data[20] = value; } }
 
-		[TalentData(21, "Rapture", 5, 0, 2, 8, -1, new string[] {
+        [TalentData(21, "Rapture", 5, 0, 2, 8, -1, new string[] {
 @"Causes you to gain mana equal to 0.5% of the healing done by your Greater Heal, Flash Heal and Penance spells, and 5% the damage absorbed by your Power Word: Shield and Divine Aegis is returned as mana to you.",
 @"Causes you to gain mana equal to 1.0% of the healing done by your Greater Heal, Flash Heal and Penance spells, and 10% the damage absorbed by your Power Word: Shield and Divine Aegis is returned as mana to you.",
 @"Causes you to gain mana equal to 1.5% of the healing done by your Greater Heal, Flash Heal and Penance spells, and 15% the damage absorbed by your Power Word: Shield and Divine Aegis is returned as mana to you.",
 @"Causes you to gain mana equal to 2.0% of the healing done by your Greater Heal, Flash Heal and Penance spells, and 20% the damage absorbed by your Power Word: Shield and Divine Aegis is returned as mana to you.",
 @"Causes you to gain mana equal to 2.5% of the healing done by your Greater Heal, Flash Heal and Penance spells, and 25% the damage absorbed by your Power Word: Shield and Divine Aegis is returned as mana to you.",})]
-		public int Rapture { get { return _data[21]; } set { _data[21] = value; } }
+        public int Rapture { get { return _data[21]; } set { _data[21] = value; } }
 
-		[TalentData(22, "Aspiration", 2, 0, 3, 8, -1, new string[] {
+        [TalentData(22, "Aspiration", 2, 0, 3, 8, -1, new string[] {
 @"Reduces the cooldown of your Inner Focus, Power Infusion, Pain Suppression and Penance spells by 10%.",
 @"Reduces the cooldown of your Inner Focus, Power Infusion, Pain Suppression and Penance spells by 20%.",})]
-		public int Aspiration { get { return _data[22]; } set { _data[22] = value; } }
+        public int Aspiration { get { return _data[22]; } set { _data[22] = value; } }
 
-		[TalentData(23, "Divine Aegis", 3, 0, 1, 9, -1, new string[] {
+        [TalentData(23, "Divine Aegis", 3, 0, 1, 9, -1, new string[] {
 @"Critical heals create a protective shield on the target, absorbing 10% of the amount healed. Lasts 12 sec.",
 @"Critical heals create a protective shield on the target, absorbing 20% of the amount healed. Lasts 12 sec.",
 @"Critical heals create a protective shield on the target, absorbing 30% of the amount healed. Lasts 12 sec.",})]
-		public int DivineAegis { get { return _data[23]; } set { _data[23] = value; } }
+        public int DivineAegis { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Pain Suppression", 1, 0, 2, 9, -1, new string[] {
+        [TalentData(24, "Pain Suppression", 1, 0, 2, 9, -1, new string[] {
 @"209 Mana,40 yd range,
 Instant cast,3 min cooldown,
 Instantly reduces a friendly target's threat by 5%, reduces all damage taken by 40% and increases resistance to Dispel mechanics by 65% for 8 sec.",})]
-		public int PainSuppression { get { return _data[24]; } set { _data[24] = value; } }
+        public int PainSuppression { get { return _data[24]; } set { _data[24] = value; } }
 
-		[TalentData(25, "Grace", 2, 0, 3, 9, -1, new string[] {
+        [TalentData(25, "Grace", 2, 0, 3, 9, -1, new string[] {
 @"Your Flash Heal, Greater Heal, and Penance spells have a 50% chance to bless the target with Grace, reducing damage done to the target by 1%. This effect will stack up to 3 times. Effect lasts 8 sec.",
 @"Your Flash Heal, Greater Heal, and Penance spells have a 100% chance to bless the target with Grace, reducing damage done to the target by 1%. This effect will stack up to 3 times. Effect lasts 8 sec.",})]
-		public int Grace { get { return _data[25]; } set { _data[25] = value; } }
+        public int Grace { get { return _data[25]; } set { _data[25] = value; } }
 
-		[TalentData(26, "Borrowed Time", 5, 0, 2, 10, -1, new string[] {
+        [TalentData(26, "Borrowed Time", 5, 0, 2, 10, -1, new string[] {
 @"Reduces the global cooldown of your Power Word: Shield spell by 0.1 sec, and increases the amount absorbed by your Power Word: Shield equal to 4% of your healing.",
 @"Reduces the global cooldown of your Power Word: Shield spell by 0.2 sec, and increases the amount absorbed by your Power Word: Shield equal to 8% of your healing.",
 @"Reduces the global cooldown of your Power Word: Shield spell by 0.3 sec, and increases the amount absorbed by your Power Word: Shield equal to 12% of your healing.",
 @"Reduces the global cooldown of your Power Word: Shield spell by 0.4 sec, and increases the amount absorbed by your Power Word: Shield equal to 16% of your healing.",
 @"Reduces the global cooldown of your Power Word: Shield spell by 0.5 sec, and increases the amount absorbed by your Power Word: Shield equal to 20% of your healing.",})]
-		public int BorrowedTime { get { return _data[26]; } set { _data[26] = value; } }
+        public int BorrowedTime { get { return _data[26]; } set { _data[26] = value; } }
 
-		[TalentData(27, "Penance", 1, 0, 2, 11, -1, new string[] {
+        [TalentData(27, "Penance", 1, 0, 2, 11, -1, new string[] {
 @"Enemy: 30 yd range,
 715 Mana,Friendly: 40 yd range,
 Channeled,10 sec cooldown,
 Launches a volley of holy light at the target, causing 184 Holy damage to an enemy, or 670 to 756 healing to an ally every 1 sec for 3 sec.",})]
-		public int Penance { get { return _data[27]; } set { _data[27] = value; } }
+        public int Penance { get { return _data[27]; } set { _data[27] = value; } }
 
-		[TalentData(28, "Healing Focus", 2, 1, 1, 1, -1, new string[] {
+        [TalentData(28, "Healing Focus", 2, 1, 1, 1, -1, new string[] {
 @"Gives you a 35% chance to avoid interruption caused by damage while casting any healing spell.",
 @"Gives you a 70% chance to avoid interruption caused by damage while casting any healing spell.",})]
-		public int HealingFocus { get { return _data[28]; } set { _data[28] = value; } }
+        public int HealingFocus { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(29, "Improved Renew", 3, 1, 2, 1, -1, new string[] {
+        [TalentData(29, "Improved Renew", 3, 1, 2, 1, -1, new string[] {
 @"Increases the amount healed by your Renew spell by 5%.",
 @"Increases the amount healed by your Renew spell by 10%.",
 @"Increases the amount healed by your Renew spell by 15%.",})]
-		public int ImprovedRenew { get { return _data[29]; } set { _data[29] = value; } }
+        public int ImprovedRenew { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(30, "Holy Specialization", 5, 1, 3, 1, -1, new string[] {
+        [TalentData(30, "Holy Specialization", 5, 1, 3, 1, -1, new string[] {
 @"Increases the critical effect chance of your Holy spells by 1%.",
 @"Increases the critical effect chance of your Holy spells by 2%.",
 @"Increases the critical effect chance of your Holy spells by 3%.",
 @"Increases the critical effect chance of your Holy spells by 4%.",
 @"Increases the critical effect chance of your Holy spells by 5%.",})]
-		public int HolySpecialization { get { return _data[30]; } set { _data[30] = value; } }
+        public int HolySpecialization { get { return _data[30]; } set { _data[30] = value; } }
 
-		[TalentData(31, "Spell Warding", 5, 1, 2, 2, -1, new string[] {
+        [TalentData(31, "Spell Warding", 5, 1, 2, 2, -1, new string[] {
 @"Reduces all spell damage taken by 2%.",
 @"Reduces all spell damage taken by 4%.",
 @"Reduces all spell damage taken by 6%.",
 @"Reduces all spell damage taken by 8%.",
 @"Reduces all spell damage taken by 10%.",})]
-		public int SpellWarding { get { return _data[31]; } set { _data[31] = value; } }
+        public int SpellWarding { get { return _data[31]; } set { _data[31] = value; } }
 
-		[TalentData(32, "Divine Fury", 5, 1, 3, 2, -1, new string[] {
+        [TalentData(32, "Divine Fury", 5, 1, 3, 2, -1, new string[] {
 @"Reduces the casting time of your Smite, Holy Fire, Heal and Greater Heal spells by 0.1 sec.",
 @"Reduces the casting time of your Smite, Holy Fire, Heal and Greater Heal spells by 0.2 sec.",
 @"Reduces the casting time of your Smite, Holy Fire, Heal and Greater Heal spells by 0.3 sec.",
 @"Reduces the casting time of your Smite, Holy Fire, Heal and Greater Heal spells by 0.4 sec.",
 @"Reduces the casting time of your Smite, Holy Fire, Heal and Greater Heal spells by 0.5 sec.",})]
-		public int DivineFury { get { return _data[32]; } set { _data[32] = value; } }
+        public int DivineFury { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(33, "Holy Nova", 1, 1, 1, 3, -1, new string[] {
+        [TalentData(33, "Holy Nova", 1, 1, 1, 3, -1, new string[] {
 @"185 Mana
 Instant cast,
 Causes an explosion of holy light around the caster, causing 29 to 34 Holy damage to all enemy targets within 10 yards and healing all party members within 10 yards for 54 to 63. These effects cause no threat.
@@ -288,73 +300,73 @@ Causes an explosion of holy light around the caster, causing 29 to 34 Holy damag
 			 Rank 6: 750 Mana, 188-217 Damage, 307-356 Health
 			 Rank 7: 875 Mana, 244-283 Damage, 386-448 Health
 ",})]
-		public int HolyNova { get { return _data[33]; } set { _data[33] = value; } }
+        public int HolyNova { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(34, "Blessed Recovery", 3, 1, 2, 3, -1, new string[] {
+        [TalentData(34, "Blessed Recovery", 3, 1, 2, 3, -1, new string[] {
 @"After being struck by a melee or ranged critical hit, heal 8% of the damage taken over 6 sec.",
 @"After being struck by a melee or ranged critical hit, heal 16% of the damage taken over 6 sec.",
 @"After being struck by a melee or ranged critical hit, heal 25% of the damage taken over 6 sec.",})]
-		public int BlessedRecovery { get { return _data[34]; } set { _data[34] = value; } }
+        public int BlessedRecovery { get { return _data[34]; } set { _data[34] = value; } }
 
-		[TalentData(35, "Inspiration", 3, 1, 4, 3, -1, new string[] {
+        [TalentData(35, "Inspiration", 3, 1, 4, 3, -1, new string[] {
 @"Increases your target's armor by 8% for 15 sec after getting a critical effect from your Flash Heal, Heal, Greater Heal, Binding Heal, Penance, Prayer of Healing, or Circle of Healing spell.",
 @"Increases your target's armor by 16% for 15 sec after getting a critical effect from your Flash Heal, Heal, Greater Heal, Binding Heal, Penance, Prayer of Healing, or Circle of Healing spell.",
 @"Increases your target's armor by 25% for 15 sec after getting a critical effect from your Flash Heal, Heal, Greater Heal, Binding Heal, Penance, Prayer of Healing, or Circle of Healing spell.",})]
-		public int Inspiration { get { return _data[35]; } set { _data[35] = value; } }
+        public int Inspiration { get { return _data[35]; } set { _data[35] = value; } }
 
-		[TalentData(36, "Holy Reach", 2, 1, 1, 4, -1, new string[] {
+        [TalentData(36, "Holy Reach", 2, 1, 1, 4, -1, new string[] {
 @"Increases the range of your Smite and Holy Fire spells and the radius of your Prayer of Healing, Holy Nova, and Circle of Healing spells by 10%.",
 @"Increases the range of your Smite and Holy Fire spells and the radius of your Prayer of Healing, Holy Nova, and Circle of Healing spells by 20%.",})]
-		public int HolyReach { get { return _data[36]; } set { _data[36] = value; } }
+        public int HolyReach { get { return _data[36]; } set { _data[36] = value; } }
 
-		[TalentData(37, "Improved Healing", 3, 1, 2, 4, -1, new string[] {
+        [TalentData(37, "Improved Healing", 3, 1, 2, 4, -1, new string[] {
 @"Reduces the Mana cost of your Lesser Heal, Heal, Greater Heal and Penance spells by 5%.",
 @"Reduces the Mana cost of your Lesser Heal, Heal, Greater Heal and Penance spells by 10%.",
 @"Reduces the Mana cost of your Lesser Heal, Heal, Greater Heal and Penance spells by 15%.",})]
-		public int ImprovedHealing { get { return _data[37]; } set { _data[37] = value; } }
+        public int ImprovedHealing { get { return _data[37]; } set { _data[37] = value; } }
 
-		[TalentData(38, "Searing Light", 2, 1, 3, 4, 32, new string[] {
+        [TalentData(38, "Searing Light", 2, 1, 3, 4, 32, new string[] {
 @"Increases the damage of your Smite, Holy Fire, Holy Nova and Penance spells by 5%.",
 @"Increases the damage of your Smite, Holy Fire, Holy Nova and Penance spells by 10%.",})]
-		public int SearingLight { get { return _data[38]; } set { _data[38] = value; } }
+        public int SearingLight { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Healing Prayers", 2, 1, 1, 5, -1, new string[] {
+        [TalentData(39, "Healing Prayers", 2, 1, 1, 5, -1, new string[] {
 @"Reduces the Mana cost of your Prayer of Healing and Prayer of Mending spells by 10%.",
 @"Reduces the Mana cost of your Prayer of Healing and Prayer of Mending spells by 20%.",})]
-		public int HealingPrayers { get { return _data[39]; } set { _data[39] = value; } }
+        public int HealingPrayers { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(40, "Spirit of Redemption", 1, 1, 2, 5, -1, new string[] {
+        [TalentData(40, "Spirit of Redemption", 1, 1, 2, 5, -1, new string[] {
 @"Increases total Spirit by 5% and upon death, the priest becomes the Spirit of Redemption for 15 sec.  The Spirit of Redemption cannot move, attack, be attacked or targeted by any spells or effects.  While in this form, the priest can cast any healing spell free of cost.  When the effect ends, the priest dies.",})]
-		public int SpiritofRedemption { get { return _data[40]; } set { _data[40] = value; } }
+        public int SpiritOfRedemption { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(41, "Spiritual Guidance", 5, 1, 3, 5, -1, new string[] {
+        [TalentData(41, "Spiritual Guidance", 5, 1, 3, 5, -1, new string[] {
 @"Increases spell damage and healing by up to 5% of your total Spirit.",
 @"Increases spell damage and healing by up to 10% of your total Spirit.",
 @"Increases spell damage and healing by up to 15% of your total Spirit.",
 @"Increases spell damage and healing by up to 20% of your total Spirit.",
 @"Increases spell damage and healing by up to 25% of your total Spirit.",})]
-		public int SpiritualGuidance { get { return _data[41]; } set { _data[41] = value; } }
+        public int SpiritualGuidance { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(42, "Surge of Light", 2, 1, 1, 6, -1, new string[] {
+        [TalentData(42, "Surge of Light", 2, 1, 1, 6, -1, new string[] {
 @"Your spell criticals have a 25% chance to cause your next Smite spell to be instant cast, cost no mana but be incapable of a critical hit. This effect lasts 10 sec.",
 @"Your spell criticals have a 50% chance to cause your next Smite spell to be instant cast, cost no mana but be incapable of a critical hit. This effect lasts 10 sec.",})]
-		public int SurgeofLight { get { return _data[42]; } set { _data[42] = value; } }
+        public int SurgeOfLight { get { return _data[42]; } set { _data[42] = value; } }
 
-		[TalentData(43, "Spiritual Healing", 5, 1, 3, 6, -1, new string[] {
+        [TalentData(43, "Spiritual Healing", 5, 1, 3, 6, -1, new string[] {
 @"Increases the amount healed by your healing spells by 2%.",
 @"Increases the amount healed by your healing spells by 4%.",
 @"Increases the amount healed by your healing spells by 6%.",
 @"Increases the amount healed by your healing spells by 8%.",
 @"Increases the amount healed by your healing spells by 10%.",})]
-		public int SpiritualHealing { get { return _data[43]; } set { _data[43] = value; } }
+        public int SpiritualHealing { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Holy Concentration", 3, 1, 1, 7, -1, new string[] {
+        [TalentData(44, "Holy Concentration", 3, 1, 1, 7, -1, new string[] {
 @"Gives you a 2% chance to enter a Clearcasting state after casting any Flash Heal, Binding Heal, or Greater Heal spell.  The Clearcasting state reduces the mana cost of your next Flash Heal, Binding Heal, or Greater Heal spell by 100%.",
 @"Gives you a 4% chance to enter a Clearcasting state after casting any Flash Heal, Binding Heal, or Greater Heal spell.  The Clearcasting state reduces the mana cost of your next Flash Heal, Binding Heal, or Greater Heal spell by 100%.",
 @"Gives you a 6% chance to enter a Clearcasting state after casting any Flash Heal, Binding Heal, or Greater Heal spell.  The Clearcasting state reduces the mana cost of your next Flash Heal, Binding Heal, or Greater Heal spell by 100%.",})]
-		public int HolyConcentration { get { return _data[44]; } set { _data[44] = value; } }
+        public int HolyConcentration { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(45, "Lightwell", 1, 1, 2, 7, 40, new string[] {
+        [TalentData(45, "Lightwell", 1, 1, 2, 7, 40, new string[] {
 @"225 Mana,40 yd range,
 0.5 sec cast,3 min cooldown,
 Creates a Holy Lightwell.  Members of your raid or party can click the Lightwell to restore 801 health over 6 sec. Attacks done to you equal to 30% of your total health will cancel the effect. Lightwell lasts for 3 min or 10 charges.
@@ -363,35 +375,35 @@ Creates a Holy Lightwell.  Members of your raid or party can click the Lightwell
 			 Rank 2: 295 Mana, 1164 Health
 			 Rank 3: 365 Mana, 1599 Health
 			 Rank 4: 445 Mana, 2361 Health",})]
-		public int Lightwell { get { return _data[45]; } set { _data[45] = value; } }
+        public int Lightwell { get { return _data[45]; } set { _data[45] = value; } }
 
-		[TalentData(46, "Blessed Resilience", 3, 1, 3, 7, -1, new string[] {
+        [TalentData(46, "Blessed Resilience", 3, 1, 3, 7, -1, new string[] {
 @"Critical hits made against you have a 20% chance to prevent you from being critically hit again for 6 sec.",
 @"Critical hits made against you have a 40% chance to prevent you from being critically hit again for 6 sec.",
 @"Critical hits made against you have a 60% chance to prevent you from being critically hit again for 6 sec.",})]
-		public int BlessedResilience { get { return _data[46]; } set { _data[46] = value; } }
+        public int BlessedResilience { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Empowered Healing", 5, 1, 2, 8, -1, new string[] {
+        [TalentData(47, "Empowered Healing", 5, 1, 2, 8, -1, new string[] {
 @"Your Greater Heal spell gains an additional 8% and your Flash Heal and Binding Heal gain an additional 4% of your bonus healing effects.",
 @"Your Greater Heal spell gains an additional 16% and your Flash Heal and Binding Heal gain an additional 8% of your bonus healing effects.",
 @"Your Greater Heal spell gains an additional 24% and your Flash Heal and Binding Heal gain an additional 12% of your bonus healing effects.",
 @"Your Greater Heal spell gains an additional 32% and your Flash Heal and Binding Heal gain an additional 16% of your bonus healing effects.",
 @"Your Greater Heal spell gains an additional 40% and your Flash Heal and Binding Heal gain an additional 20% of your bonus healing effects.",})]
-		public int EmpoweredHealing { get { return _data[47]; } set { _data[47] = value; } }
+        public int EmpoweredHealing { get { return _data[47]; } set { _data[47] = value; } }
 
-		[TalentData(48, "Serendipity", 3, 1, 3, 8, -1, new string[] {
+        [TalentData(48, "Serendipity", 3, 1, 3, 8, -1, new string[] {
 @"If your Greater Heal or Flash Heal spells overheal the target for greater than 50%, you are instantly refunded 20% of the spell's mana cost.",
 @"If your Greater Heal or Flash Heal spells overheal the target for greater than 50%, you are instantly refunded 40% of the spell's mana cost.",
 @"If your Greater Heal or Flash Heal spells overheal the target for greater than 50%, you are instantly refunded 60% of the spell's mana cost.",})]
-		public int Serendipity { get { return _data[48]; } set { _data[48] = value; } }
+        public int Serendipity { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(49, "Improved Holy Concentration", 3, 1, 1, 9, 44, new string[] {
+        [TalentData(49, "Improved Holy Concentration", 3, 1, 1, 9, 44, new string[] {
 @"Increases the chance you'll enter Holy Concentration by 4%, and also increases your spell haste by 20% for the next three Greater Heal, Flash Heal or Binding Heal spells after you gain Holy Concentration. Lasts 20 sec.",
 @"Increases the chance you'll enter Holy Concentration by 7%, and also increases your spell haste by 40% for the next three Greater Heal, Flash Heal or Binding Heal spells after you gain Holy Concentration. Lasts 20 sec.",
 @"Increases the chance you'll enter Holy Concentration by 10%, and also increases your spell haste by 60% for the next three Greater Heal, Flash Heal or Binding Heal spells after you gain Holy Concentration. Lasts 20 sec.",})]
-		public int ImprovedHolyConcentration { get { return _data[49]; } set { _data[49] = value; } }
+        public int ImprovedHolyConcentration { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(50, "Circle of Healing", 1, 1, 2, 9, -1, new string[] {
+        [TalentData(50, "Circle of Healing", 1, 1, 2, 9, -1, new string[] {
 @"370 Mana,40 yd range,
 Instant cast,
 Heals up to 5 friendly party or raid members within 15 yards of the target for 250 to 274.
@@ -404,78 +416,78 @@ Heals up to 5 friendly party or raid members within 15 yards of the target for 2
 			 Rank 6: 760 Mana, 597 to 659 Healing
 			 Rank 7: 890 Mana, 684 to 756 Healing
 			",})]
-		public int CircleofHealing { get { return _data[50]; } set { _data[50] = value; } }
+        public int CircleOfHealing { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Test of Faith", 3, 1, 3, 9, -1, new string[] {
+        [TalentData(51, "Test of Faith", 3, 1, 3, 9, -1, new string[] {
 @"Increases healing by 5% and spell critical effect chance by 4% on friendly targets at or below 50% health.",
 @"Increases healing by 10% and spell critical effect chance by 7% on friendly targets at or below 50% health.",
 @"Increases healing by 15% and spell critical effect chance by 10% on friendly targets at or below 50% health.",})]
-		public int TestofFaith { get { return _data[51]; } set { _data[51] = value; } }
+        public int TestOfFaith { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(52, "Divine Providence", 5, 1, 2, 10, -1, new string[] {
+        [TalentData(52, "Divine Providence", 5, 1, 2, 10, -1, new string[] {
 @"Increases the amount healed by Circle of Healing, Binding Heal, Holy Nova, Prayer of Healing and Prayer of Mending by 2%.",
 @"Increases the amount healed by Circle of Healing, Binding Heal, Holy Nova, Prayer of Healing and Prayer of Mending by 4%.",
 @"Increases the amount healed by Circle of Healing, Binding Heal, Holy Nova, Prayer of Healing and Prayer of Mending by 6%.",
 @"Increases the amount healed by Circle of Healing, Binding Heal, Holy Nova, Prayer of Healing and Prayer of Mending by 8%.",
 @"Increases the amount healed by Circle of Healing, Binding Heal, Holy Nova, Prayer of Healing and Prayer of Mending by 10%.",})]
-		public int DivineProvidence { get { return _data[52]; } set { _data[52] = value; } }
+        public int DivineProvidence { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(53, "Guardian Spirit", 1, 1, 2, 11, -1, new string[] {
+        [TalentData(53, "Guardian Spirit", 1, 1, 2, 11, -1, new string[] {
 @"231 Mana,40 yd range,
 Instant cast,3 min cooldown,
 Calls upon a guardian spirit to watch over the friendly target. The spirit increases the healing received by the target by 40%, and also prevents the target from dying by sacrificing itself. This sacrifice terminates the effect but heals the target of 10% of their maximum health. Lasts 10 sec.",})]
-		public int GuardianSpirit { get { return _data[53]; } set { _data[53] = value; } }
+        public int GuardianSpirit { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(54, "Spirit Tap", 3, 2, 1, 1, -1, new string[] {
+        [TalentData(54, "Spirit Tap", 3, 2, 1, 1, -1, new string[] {
 @"Gives you a 33% chance to gain a 100% bonus to your Spirit after killing a target that yields experience or honor.  For the duration, your Mana will regenerate at a 50% rate while casting. Lasts 15 sec.",
 @"Gives you a 66% chance to gain a 100% bonus to your Spirit after killing a target that yields experience or honor.  For the duration, your Mana will regenerate at a 50% rate while casting. Lasts 15 sec.",
 @"Gives you a 100% chance to gain a 100% bonus to your Spirit after killing a target that yields experience or honor.  For the duration, your Mana will regenerate at a 50% rate while casting. Lasts 15 sec.",})]
-		public int SpiritTap { get { return _data[54]; } set { _data[54] = value; } }
+        public int SpiritTap { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(55, "Improved Spirit Tap", 2, 2, 2, 1, 54, new string[] {
+        [TalentData(55, "Improved Spirit Tap", 2, 2, 2, 1, 54, new string[] {
 @"Your Mind Blast and Shadow Word: Death critical strikes increase your total Spirit by 25%. For the duration, your mana will regenerate at a 25% rate while casting. Lasts 8 sec.",
 @"Your Mind Blast and Shadow Word: Death critical strikes increase your total Spirit by 50%. For the duration, your mana will regenerate at a 50% rate while casting. Lasts 8 sec.",})]
-		public int ImprovedSpiritTap { get { return _data[55]; } set { _data[55] = value; } }
+        public int ImprovedSpiritTap { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "Blackout", 5, 2, 3, 1, -1, new string[] {
+        [TalentData(56, "Blackout", 5, 2, 3, 1, -1, new string[] {
 @"Gives your Shadow damage spells a 2% chance to stun the target for 3 sec.",
 @"Gives your Shadow damage spells a 4% chance to stun the target for 3 sec.",
 @"Gives your Shadow damage spells a 6% chance to stun the target for 3 sec.",
 @"Gives your Shadow damage spells a 8% chance to stun the target for 3 sec.",
 @"Gives your Shadow damage spells a 10% chance to stun the target for 3 sec.",})]
-		public int Blackout { get { return _data[56]; } set { _data[56] = value; } }
+        public int Blackout { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(57, "Shadow Affinity", 3, 2, 1, 2, -1, new string[] {
+        [TalentData(57, "Shadow Affinity", 3, 2, 1, 2, -1, new string[] {
 @"Reduces the threat generated by your Shadow spells by 8%.",
 @"Reduces the threat generated by your Shadow spells by 16%.",
 @"Reduces the threat generated by your Shadow spells by 25%.",})]
-		public int ShadowAffinity { get { return _data[57]; } set { _data[57] = value; } }
+        public int ShadowAffinity { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(58, "Improved Shadow Word: Pain", 2, 2, 2, 2, -1, new string[] {
+        [TalentData(58, "Improved Shadow Word: Pain", 2, 2, 2, 2, -1, new string[] {
 @"Increases the damage of your Shadow Word: Pain spell by 5%.",
 @"Increases the damage of your Shadow Word: Pain spell by 10%.",})]
-		public int ImprovedShadowWordPain { get { return _data[58]; } set { _data[58] = value; } }
+        public int ImprovedShadowWordPain { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(59, "Shadow Focus", 3, 2, 3, 2, -1, new string[] {
+        [TalentData(59, "Shadow Focus", 3, 2, 3, 2, -1, new string[] {
 @"Increases your chance to hit with your Shadow spells by 1%, and reduces the mana cost of your Shadow spells by 2%.",
 @"Increases your chance to hit with your Shadow spells by 2%, and reduces the mana cost of your Shadow spells by 4%.",
 @"Increases your chance to hit with your Shadow spells by 3%, and reduces the mana cost of your Shadow spells by 6%.",})]
-		public int ShadowFocus { get { return _data[59]; } set { _data[59] = value; } }
+        public int ShadowFocus { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(60, "Improved Psychic Scream", 2, 2, 1, 3, -1, new string[] {
+        [TalentData(60, "Improved Psychic Scream", 2, 2, 1, 3, -1, new string[] {
 @"Reduces the cooldown of your Psychic Scream spell by 2 sec.",
 @"Reduces the cooldown of your Psychic Scream spell by 4 sec.",})]
-		public int ImprovedPsychicScream { get { return _data[60]; } set { _data[60] = value; } }
+        public int ImprovedPsychicScream { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Improved Mind Blast", 5, 2, 2, 3, -1, new string[] {
+        [TalentData(61, "Improved Mind Blast", 5, 2, 2, 3, -1, new string[] {
 @"Reduces the cooldown of your Mind Blast spell by 0.5 sec.",
 @"Reduces the cooldown of your Mind Blast spell by 1 sec.",
 @"Reduces the cooldown of your Mind Blast spell by 1.5 sec.",
 @"Reduces the cooldown of your Mind Blast spell by 2 sec.",
 @"Reduces the cooldown of your Mind Blast spell by 2.5 sec.",})]
-		public int ImprovedMindBlast { get { return _data[61]; } set { _data[61] = value; } }
+        public int ImprovedMindBlast { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Mind Flay", 1, 2, 3, 3, -1, new string[] {
+        [TalentData(62, "Mind Flay", 1, 2, 3, 3, -1, new string[] {
 @"45 Mana,20 yd range,
 Channeled
 Assault the target's mind with Shadow energy, causing 75 damage over 3 sec and slowing their movement speed by 50%.			
@@ -487,91 +499,91 @@ Assault the target's mind with Shadow energy, causing 75 damage over 3 sec and s
 			 Rank 5: 165 Mana, 330 Damage
 			 Rank 6: 205 Mana, 426 Damage
 			 Rank 7: 230 Mana, 528 Damage",})]
-		public int MindFlay { get { return _data[62]; } set { _data[62] = value; } }
+        public int MindFlay { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(63, "Improved Fade", 2, 2, 2, 4, -1, new string[] {
+        [TalentData(63, "Improved Fade", 2, 2, 2, 4, -1, new string[] {
 @"Decreases the cooldown of your Fade ability by 3 sec.",
 @"Decreases the cooldown of your Fade ability by 6 sec.",})]
-		public int ImprovedFade { get { return _data[63]; } set { _data[63] = value; } }
+        public int ImprovedFade { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(64, "Shadow Reach", 2, 2, 3, 4, -1, new string[] {
+        [TalentData(64, "Shadow Reach", 2, 2, 3, 4, -1, new string[] {
 @"Increases the range of your offensive Shadow spells by 10%.",
 @"Increases the range of your offensive Shadow spells by 20%.",})]
-		public int ShadowReach { get { return _data[64]; } set { _data[64] = value; } }
+        public int ShadowReach { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(65, "Shadow Weaving", 5, 2, 4, 4, -1, new string[] {
+        [TalentData(65, "Shadow Weaving", 5, 2, 4, 4, -1, new string[] {
 @"Your Shadow damage spells have a 33% chance to increase the Shadow damage you deal by 2% for 15 sec. Stacks up to 5 times.",
 @"Your Shadow damage spells have a 66% chance to increase the Shadow damage you deal by 2% for 15 sec. Stacks up to 5 times.",
 @"Your Shadow damage spells have a 100% chance to increase the Shadow damage you deal by 2% for 15 sec. Stacks up to 5 times.",})]
-		public int ShadowWeaving { get { return _data[65]; } set { _data[65] = value; } }
+        public int ShadowWeaving { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(66, "Silence", 1, 2, 1, 5, 60, new string[] {
+        [TalentData(66, "Silence", 1, 2, 1, 5, 60, new string[] {
 @"225 Mana,20 yd range,
 Instant cast,45 sec cooldown,
 Silences the target, preventing them from casting spells for 5 sec.",})]
-		public int Silence { get { return _data[66]; } set { _data[66] = value; } }
+        public int Silence { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(67, "Vampiric Embrace", 1, 2, 2, 5, -1, new string[] {
+        [TalentData(67, "Vampiric Embrace", 1, 2, 2, 5, -1, new string[] {
 @"77 Mana,30 yd range,
 Instant cast,10 sec cooldown,
 Afflicts your target with Shadow energy that causes all party members to be healed for 15% of any Shadow damage you deal for 1 min.",})]
-		public int VampiricEmbrace { get { return _data[67]; } set { _data[67] = value; } }
+        public int VampiricEmbrace { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(68, "Improved Vampiric Embrace", 2, 2, 3, 5, 67, new string[] {
+        [TalentData(68, "Improved Vampiric Embrace", 2, 2, 3, 5, 67, new string[] {
 @"Increases the percentage healed by Vampiric Embrace by an additional 5%.",
 @"Increases the percentage healed by Vampiric Embrace by an additional 10%.",})]
-		public int ImprovedVampiricEmbrace { get { return _data[68]; } set { _data[68] = value; } }
+        public int ImprovedVampiricEmbrace { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(69, "Focused Mind", 3, 2, 4, 5, -1, new string[] {
+        [TalentData(69, "Focused Mind", 3, 2, 4, 5, -1, new string[] {
 @"Reduces the mana cost of your Mind Blast, Mind Control, Mind Flay and Mind Sear spells by 5%.",
 @"Reduces the mana cost of your Mind Blast, Mind Control, Mind Flay and Mind Sear spells by 10%.",
 @"Reduces the mana cost of your Mind Blast, Mind Control, Mind Flay and Mind Sear spells by 15%.",})]
-		public int FocusedMind { get { return _data[69]; } set { _data[69] = value; } }
+        public int FocusedMind { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(70, "Shadow Resilience", 2, 2, 1, 6, -1, new string[] {
+        [TalentData(70, "Shadow Resilience", 2, 2, 1, 6, -1, new string[] {
 @"Reduces all physical damage taken by 2%.",
 @"Reduces all physical damage taken by 4%.",})]
-		public int ShadowResilience { get { return _data[70]; } set { _data[70] = value; } }
+        public int ShadowResilience { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Darkness", 5, 2, 3, 6, -1, new string[] {
+        [TalentData(71, "Darkness", 5, 2, 3, 6, -1, new string[] {
 @"Increases your Shadow spell damage by 2%.",
 @"Increases your Shadow spell damage by 4%.",
 @"Increases your Shadow spell damage by 6%.",
 @"Increases your Shadow spell damage by 8%.",
 @"Increases your Shadow spell damage by 10%.",})]
-		public int Darkness { get { return _data[71]; } set { _data[71] = value; } }
+        public int Darkness { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(72, "Shadowform", 1, 2, 2, 7, 67, new string[] {
+        [TalentData(72, "Shadowform", 1, 2, 2, 7, 67, new string[] {
 @"1161 Mana
 Instant cast,1.5 sec cooldown,
 Assume a Shadowform, increasing your Shadow damage by 15%, reducing Physical damage done to you by 15% and threat generated by 30%. However, you may not cast Holy spells while in this form.",})]
-		public int Shadowform { get { return _data[72]; } set { _data[72] = value; } }
+        public int Shadowform { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "Shadow Power", 5, 2, 3, 7, -1, new string[] {
+        [TalentData(73, "Shadow Power", 5, 2, 3, 7, -1, new string[] {
 @"Increases the critical strike chance of your Mind Blast and Shadow Word: Death spells by 2%, and increases the critical strike damage bonus of your Mind Blast and Shadow Word: Death spells by 10%.",
 @"Increases the critical strike chance of your Mind Blast and Shadow Word: Death spells by 4%, and increases the critical strike damage bonus of your Mind Blast and Shadow Word: Death spells by 20%.",
 @"Increases the critical strike chance of your Mind Blast and Shadow Word: Death spells by 6%, and increases the critical strike damage bonus of your Mind Blast and Shadow Word: Death spells by 30%.",
 @"Increases the critical strike chance of your Mind Blast and Shadow Word: Death spells by 8%, and increases the critical strike damage bonus of your Mind Blast and Shadow Word: Death spells by 40%.",
 @"Increases the critical strike chance of your Mind Blast and Shadow Word: Death spells by 10%, and increases the critical strike damage bonus of your Mind Blast and Shadow Word: Death spells by 50%.",})]
-		public int ShadowPower { get { return _data[73]; } set { _data[73] = value; } }
+        public int ShadowPower { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(74, "Improved Shadowform", 2, 2, 1, 8, 72, new string[] {
+        [TalentData(74, "Improved Shadowform", 2, 2, 1, 8, 72, new string[] {
 @"Reduces casting or channeling time lost when damaged by 35% when casting any Shadow spell while in Shadowform.",
 @"Reduces casting or channeling time lost when damaged by 70% when casting any Shadow spell while in Shadowform.",})]
-		public int ImprovedShadowform { get { return _data[74]; } set { _data[74] = value; } }
+        public int ImprovedShadowform { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(75, "Misery", 3, 2, 3, 8, -1, new string[] {
+        [TalentData(75, "Misery", 3, 2, 3, 8, -1, new string[] {
 @"Your Shadow Word: Pain, Mind Flay and Vampiric Touch spells also increase the chance for harmful spells to hit by 3%.",
 @"Your Shadow Word: Pain, Mind Flay and Vampiric Touch spells also increase the chance for harmful spells to hit by 6%.",
 @"Your Shadow Word: Pain, Mind Flay and Vampiric Touch spells also increase the chance for harmful spells to hit by 9%.",})]
-		public int Misery { get { return _data[75]; } set { _data[75] = value; } }
+        public int Misery { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(76, "Psychic Horror", 2, 2, 1, 9, -1, new string[] {
+        [TalentData(76, "Psychic Horror", 2, 2, 1, 9, -1, new string[] {
 @"Causes your Psychic Scream spell to have a 50% chance to Fear the target in horror for 4 sec.",
 @"Causes your Psychic Scream spell to have a 100% chance to Fear the target in horror for 4 sec.",})]
-		public int PsychicHorror { get { return _data[76]; } set { _data[76] = value; } }
+        public int PsychicHorror { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(77, "Vampiric Touch", 1, 2, 2, 9, 72, new string[] {
+        [TalentData(77, "Vampiric Touch", 1, 2, 2, 9, 72, new string[] {
 @"695 Mana,30 yd range,
 1.5 sec cast
 			Causes 450 Shadow damage over 15 sec to your target and causes up to 10 party or raid members to gain 0.5% of their maximum mana per second while you are dealing shadow damage.			
@@ -579,222 +591,234 @@ Assume a Shadowform, increasing your Shadow damage by 15%, reducing Physical dam
 			 Trainable Ranks Listed Below:
 			 Rank 2: 400 Mana, 600 Damage
 			 Rank 3: 425 Mana, 650 Damage",})]
-		public int VampiricTouch { get { return _data[77]; } set { _data[77] = value; } }
+        public int VampiricTouch { get { return _data[77]; } set { _data[77] = value; } }
 
-		[TalentData(78, "Pain and Suffering", 3, 2, 3, 9, -1, new string[] {
+        [TalentData(78, "Pain and Suffering", 3, 2, 3, 9, -1, new string[] {
 @"Your Mind Flay has a 33% chance to refresh the duration of your Shadow Word: Pain on the target, and reduces the damage you take from your own Shadow Word: Death by 20%.",
 @"Your Mind Flay has a 66% chance to refresh the duration of your Shadow Word: Pain on the target, and reduces the damage you take from your own Shadow Word: Death by 40%.",
 @"Your Mind Flay has a 100% chance to refresh the duration of your Shadow Word: Pain on the target, and reduces the damage you take from your own Shadow Word: Death by 60%.",})]
-		public int PainandSuffering { get { return _data[78]; } set { _data[78] = value; } }
+        public int PainAndSuffering { get { return _data[78]; } set { _data[78] = value; } }
 
-		[TalentData(79, "Twisted Faith", 5, 2, 3, 10, -1, new string[] {
+        [TalentData(79, "Twisted Faith", 5, 2, 3, 10, -1, new string[] {
 @"Increases your shadow spell power by 6% of your total Spirit, and your damage done by your Mind Flay and Mind Blast is increased by 1% for each of your Shadow damage over time effects on the target.",
 @"Increases your shadow spell power by 12% of your total Spirit, and your damage done by your Mind Flay and Mind Blast is increased by 2% for each of your Shadow damage over time effects on the target.",
 @"Increases your shadow spell power by 18% of your total Spirit, and your damage done by your Mind Flay and Mind Blast is increased by 3% for each of your Shadow damage over time effects on the target.",
 @"Increases your shadow spell power by 24% of your total Spirit, and your damage done by your Mind Flay and Mind Blast is increased by 4% for each of your Shadow damage over time effects on the target.",
 @"Increases your shadow spell power by 30% of your total Spirit, and your damage done by your Mind Flay and Mind Blast is increased by 5% for each of your Shadow damage over time effects on the target.",})]
-		public int TwistedFaith { get { return _data[79]; } set { _data[79] = value; } }
+        public int TwistedFaith { get { return _data[79]; } set { _data[79] = value; } }
 
-		[TalentData(80, "Dispersion", 1, 2, 2, 11, 77, new string[] {
+        [TalentData(80, "Dispersion", 1, 2, 2, 11, 77, new string[] {
 @"Instant,3 min cooldown,
 You disperse into pure shadow energy, reducing all damage taken by 90%. You are unable to attack or cast spells, but you regenerate 6% health and mana every 1 sec for 6 sec.",})]
-		public int Dispersion { get { return _data[80]; } set { _data[80] = value; } }
-	}
+        public int Dispersion { get { return _data[80]; } set { _data[80] = value; } }
+    }
 
-	public class MageTalents
-	{
-		private int[] _data = new int[86];
-		public MageTalents() { }
-		public MageTalents(string talents)
-		{
-			List<int> data = new List<int>();
-			foreach (Char digit in talents)
-				data.Add(int.Parse(digit.ToString()));
-			data.CopyTo(_data);
-		}
+    public class MageTalents : ICloneable
+    {
+        private int[] _data = new int[86];
+        public MageTalents() { }
+        public MageTalents(string talents)
+        {
+            List<int> data = new List<int>();
+            foreach (Char digit in talents)
+                data.Add(int.Parse(digit.ToString()));
+            data.CopyTo(_data);
+        }
 
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
-		}
+        public override string ToString()
+        {
+            StringBuilder ret = new StringBuilder();
+            foreach (int digit in _data)
+                ret.Append(digit.ToString());
+            return ret.ToString();
+        }
+        object ICloneable.Clone()
+        {
+            MageTalents clone = (MageTalents)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            return clone;
+        }
 
-		[TalentData(0, "Arcane Subtlety", 2, 0, 1, 1, -1, new string[] {
+        public MageTalents Clone()
+        {
+            return (MageTalents)((ICloneable)this).Clone();
+        }
+
+
+        [TalentData(0, "Arcane Subtlety", 2, 0, 1, 1, -1, new string[] {
 @"Reduces the chance your spells will be dispelled by 15% and reduces the threat caused by your Arcane spells by 20%.",
 @"Reduces the chance your spells will be dispelled by 30% and reduces the threat caused by your Arcane spells by 40%.",})]
-		public int ArcaneSubtlety { get { return _data[0]; } set { _data[0] = value; } }
+        public int ArcaneSubtlety { get { return _data[0]; } set { _data[0] = value; } }
 
-		[TalentData(1, "Arcane Focus", 3, 0, 2, 1, -1, new string[] {
+        [TalentData(1, "Arcane Focus", 3, 0, 2, 1, -1, new string[] {
 @"Increases your chance to hit and reduces the mana cost of your Arcane spells by 1%.",
 @"Increases your chance to hit and reduces the mana cost of your Arcane spells by 2%.",
 @"Increases your chance to hit and reduces the mana cost of your Arcane spells by 3%.",})]
-		public int ArcaneFocus { get { return _data[1]; } set { _data[1] = value; } }
+        public int ArcaneFocus { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Improved Arcane Missiles", 5, 0, 3, 1, -1, new string[] {
+        [TalentData(2, "Improved Arcane Missiles", 5, 0, 3, 1, -1, new string[] {
 @"Gives you a 20% chance to avoid interruption caused by damage while channeling Arcane Missiles.",
 @"Gives you a 40% chance to avoid interruption caused by damage while channeling Arcane Missiles.",
 @"Gives you a 60% chance to avoid interruption caused by damage while channeling Arcane Missiles.",
 @"Gives you a 80% chance to avoid interruption caused by damage while channeling Arcane Missiles.",
 @"Gives you a 100% chance to avoid interruption caused by damage while channeling Arcane Missiles.",})]
-		public int ImprovedArcaneMissiles { get { return _data[2]; } set { _data[2] = value; } }
+        public int ImprovedArcaneMissiles { get { return _data[2]; } set { _data[2] = value; } }
 
-		[TalentData(3, "Arcane Fortitude", 3, 0, 1, 2, -1, new string[] {
+        [TalentData(3, "Arcane Fortitude", 3, 0, 1, 2, -1, new string[] {
 @"Increases your armor by an amount equal to 50% of your Intellect.",
 @"Increases your armor by an amount equal to 100% of your Intellect.",
 @"Increases your armor by an amount equal to 150% of your Intellect.",})]
-		public int ArcaneFortitude { get { return _data[3]; } set { _data[3] = value; } }
+        public int ArcaneFortitude { get { return _data[3]; } set { _data[3] = value; } }
 
-		[TalentData(4, "Magic Absorption", 2, 0, 2, 2, -1, new string[] {
+        [TalentData(4, "Magic Absorption", 2, 0, 2, 2, -1, new string[] {
 @"Increases all resistances by .5 per level and causes all spells you fully resist to restore 1% of your total mana.  1 sec. cooldown.",
 @"Increases all resistances by 1 per level and causes all spells you fully resist to restore 2% of your total mana.  1 sec. cooldown.",})]
-		public int MagicAbsorption { get { return _data[4]; } set { _data[4] = value; } }
+        public int MagicAbsorption { get { return _data[4]; } set { _data[4] = value; } }
 
-		[TalentData(5, "Arcane Concentration", 5, 0, 3, 2, -1, new string[] {
+        [TalentData(5, "Arcane Concentration", 5, 0, 3, 2, -1, new string[] {
 @"Gives you a 2% chance of entering a Clearcasting state after any damage spell hits a target. The Clearcasting state reduces the mana cost of your next damage	spell by 100%.",
 @"Gives you a 4% chance of entering a Clearcasting state after any damage spell hits a target. The Clearcasting state reduces the mana cost of your next damage spell by 100%.",
 @"Gives you a 6% chance of entering a Clearcasting state after any damage spell hits a target. The Clearcasting state reduces the mana cost of your next damage spell by 100%.",
 @"Gives you a 8% chance of entering a Clearcasting state after any damage spell hits a target. The Clearcasting state reduces the mana cost of your next damage spell by 100%.",
 @"Gives you a 10% chance of entering a Clearcasting state after any damage spell hits a target. The Clearcasting state reduces the mana cost of your next damage spell by 100%.",})]
-		public int ArcaneConcentration { get { return _data[5]; } set { _data[5] = value; } }
+        public int ArcaneConcentration { get { return _data[5]; } set { _data[5] = value; } }
 
-		[TalentData(6, "Magic Attunement", 2, 0, 1, 3, -1, new string[] {
+        [TalentData(6, "Magic Attunement", 2, 0, 1, 3, -1, new string[] {
 @"Increases the range of your Arcane spells by 3 yards and the effect of your Amplify Magic and Dampen Magic spells by 25%.",
 @"Increases the range of your Arcane spells by 6 yards and the effect of your Amplify Magic and Dampen Magic spells by 50%.",})]
-		public int MagicAttunement { get { return _data[6]; } set { _data[6] = value; } }
+        public int MagicAttunement { get { return _data[6]; } set { _data[6] = value; } }
 
-		[TalentData(7, "Spell Impact", 3, 0, 2, 3, -1, new string[] {
+        [TalentData(7, "Spell Impact", 3, 0, 2, 3, -1, new string[] {
 @"Increases the critical strike chance of your Arcane Explosion, Arcane Blast, Blast Wave, Fire Blast, Ice Lance and Cone of Cold spells by an additional 2%.",
 @"Increases the critical strike chance of your Arcane Explosion, Arcane Blast, Blast Wave, Fire Blast, Ice Lance and Cone of Cold spells by an additional 4%.",
 @"Increases the critical strike chance of your Arcane Explosion, Arcane Blast, Blast Wave, Fire Blast, Ice Lance and Cone of Cold spells by an additional 6%.",})]
-		public int SpellImpact { get { return _data[7]; } set { _data[7] = value; } }
+        public int SpellImpact { get { return _data[7]; } set { _data[7] = value; } }
 
-		[TalentData(8, "Student of the Mind", 3, 0, 3, 3, -1, new string[] {
+        [TalentData(8, "Student of the Mind", 3, 0, 3, 3, -1, new string[] {
 @"Increases your total Spirit by 4%.",
 @"Increases your total Spirit by 7%.",
 @"Increases your total Spirit by 10%.",})]
-		public int StudentoftheMind { get { return _data[8]; } set { _data[8] = value; } }
+        public int StudentOfTheMind { get { return _data[8]; } set { _data[8] = value; } }
 
-		[TalentData(9, "Focus Magic", 1, 0, 4, 3, -1, new string[] {
+        [TalentData(9, "Focus Magic", 1, 0, 4, 3, -1, new string[] {
 @"915 Mana,30 yd range,
 Instant cast,
 Focus magical energies, increasing spell power of all party or raid members by 10. Lasts 1 min or until 50 charges are expended.",})]
-		public int FocusMagic { get { return _data[9]; } set { _data[9] = value; } }
+        public int FocusMagic { get { return _data[9]; } set { _data[9] = value; } }
 
-		[TalentData(10, "Arcane Shielding", 2, 0, 1, 4, -1, new string[] {
+        [TalentData(10, "Arcane Shielding", 2, 0, 1, 4, -1, new string[] {
 @"Decreases the mana lost per point of damage taken when Mana Shield is active by 17% and increases the resistances granted by Mage Armor by 25%.",
 @"Decreases the mana lost per point of damage taken when Mana Shield is active by 33% and increases the resistances granted by Mage Armor by 50%.",})]
-		public int ArcaneShielding { get { return _data[10]; } set { _data[10] = value; } }
+        public int ArcaneShielding { get { return _data[10]; } set { _data[10] = value; } }
 
-		[TalentData(11, "Improved Counterspell", 2, 0, 2, 4, -1, new string[] {
+        [TalentData(11, "Improved Counterspell", 2, 0, 2, 4, -1, new string[] {
 @"Your Counterspell also silences the target for 2 sec.",
 @"Your Counterspell also silences the target for 4 sec.",})]
-		public int ImprovedCounterspell { get { return _data[11]; } set { _data[11] = value; } }
+        public int ImprovedCounterspell { get { return _data[11]; } set { _data[11] = value; } }
 
-		[TalentData(12, "Arcane Meditation", 3, 0, 3, 4, -1, new string[] {
+        [TalentData(12, "Arcane Meditation", 3, 0, 3, 4, -1, new string[] {
 @"Allows 10% of your Mana regeneration to continue while casting.",
 @"Allows 20% of your Mana regeneration to continue while casting.",
 @"Allows 30% of your Mana regeneration to continue while casting.",})]
-		public int ArcaneMeditation { get { return _data[12]; } set { _data[12] = value; } }
+        public int ArcaneMeditation { get { return _data[12]; } set { _data[12] = value; } }
 
-		[TalentData(13, "Torment the Weak", 3, 0, 4, 4, -1, new string[] {
+        [TalentData(13, "Torment the Weak", 3, 0, 4, 4, -1, new string[] {
 @"All damage done to ensnared targets is increased by 2%.",
 @"All damage done to ensnared targets is increased by 4%.",
 @"All damage done to ensnared targets is increased by 6%.",})]
-		public int TormenttheWeak { get { return _data[13]; } set { _data[13] = value; } }
+        public int TormentTheWeak { get { return _data[13]; } set { _data[13] = value; } }
 
-		[TalentData(14, "Improved Blink", 2, 0, 1, 5, -1, new string[] {
+        [TalentData(14, "Improved Blink", 2, 0, 1, 5, -1, new string[] {
 @"Reduces the mana cost of Blink by 25% and for 4 sec after casting your chance to be hit by all attacks and spells is reduced by 15%.",
 @"Reduces the mana cost of Blink by 50% and for 4 sec after casting your chance to be hit by all attacks and spells is reduced by 30%.",})]
-		public int ImprovedBlink { get { return _data[14]; } set { _data[14] = value; } }
+        public int ImprovedBlink { get { return _data[14]; } set { _data[14] = value; } }
 
-		[TalentData(15, "Presence of Mind", 1, 0, 2, 5, -1, new string[] {
+        [TalentData(15, "Presence of Mind", 1, 0, 2, 5, -1, new string[] {
 @"Instant,3 min cooldown,
 When activated, your next Mage spell with a casting time less than 10 sec becomes an instant cast spell.",})]
-		public int PresenceofMind { get { return _data[15]; } set { _data[15] = value; } }
+        public int PresenceOfMind { get { return _data[15]; } set { _data[15] = value; } }
 
-		[TalentData(16, "Arcane Mind", 5, 0, 4, 5, -1, new string[] {
+        [TalentData(16, "Arcane Mind", 5, 0, 4, 5, -1, new string[] {
 @"Increases your total Intellect by 3%.",
 @"Increases your total Intellect by 6%.",
 @"Increases your total Intellect by 9%.",
 @"Increases your total Intellect by 12%.",
 @"Increases your total Intellect by 15%.",})]
-		public int ArcaneMind { get { return _data[16]; } set { _data[16] = value; } }
+        public int ArcaneMind { get { return _data[16]; } set { _data[16] = value; } }
 
-		[TalentData(17, "Prismatic Cloak", 3, 0, 1, 6, -1, new string[] {
+        [TalentData(17, "Prismatic Cloak", 3, 0, 1, 6, -1, new string[] {
 @"Reduces all damage taken by 2% and reduces the fade time of your invisibility spell by 1 sec.",
 @"Reduces all damage taken by 4% and reduces the fade time of your invisibility spell by 2 sec.",
 @"Reduces all damage taken by 6% and reduces the fade time of your invisibility spell by 3 sec.",})]
-		public int PrismaticCloak { get { return _data[17]; } set { _data[17] = value; } }
+        public int PrismaticCloak { get { return _data[17]; } set { _data[17] = value; } }
 
-		[TalentData(18, "Arcane Instability", 3, 0, 2, 6, 15, new string[] {
+        [TalentData(18, "Arcane Instability", 3, 0, 2, 6, 15, new string[] {
 @"Increases your spell damage and critical strike chance by 1%.",
 @"Increases your spell damage and critical strike chance by 2%.",
 @"Increases your spell damage and critical strike chance by 3%.",})]
-		public int ArcaneInstability { get { return _data[18]; } set { _data[18] = value; } }
+        public int ArcaneInstability { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Arcane Potency", 2, 0, 3, 6, 15, new string[] {
+        [TalentData(19, "Arcane Potency", 2, 0, 3, 6, 15, new string[] {
 @"Increases the critical strike chance of any spell cast while Clearcasting or Presence of Mind is active by 15%.",
 @"Increases the critical strike chance of any spell cast while Clearcasting or Presence of Mind is active by 30%.",})]
-		public int ArcanePotency { get { return _data[19]; } set { _data[19] = value; } }
+        public int ArcanePotency { get { return _data[19]; } set { _data[19] = value; } }
 
-		[TalentData(20, "Arcane Empowerment", 3, 0, 1, 7, -1, new string[] {
+        [TalentData(20, "Arcane Empowerment", 3, 0, 1, 7, -1, new string[] {
 @"Increases the damage of your Arcane Missiles spell by an amount equal to 15% of your spell power and the damage of your Arcane Blast by 3% of your spell power.",
 @"Increases the damage of your Arcane Missiles spell by an amount equal to 30% of your spell power and the damage of your Arcane Blast by 6% of your spell power.",
 @"Increases the damage of your Arcane Missiles spell by an amount equal to 45% of your spell power and the damage of your Arcane Blast by 9% of your spell power.",})]
-		public int ArcaneEmpowerment { get { return _data[20]; } set { _data[20] = value; } }
+        public int ArcaneEmpowerment { get { return _data[20]; } set { _data[20] = value; } }
 
-		[TalentData(21, "Arcane Power", 1, 0, 2, 7, 18, new string[] {
+        [TalentData(21, "Arcane Power", 1, 0, 2, 7, 18, new string[] {
 @"Instant,3 min cooldown,
 When activated, your spells deal 30% more damage while costing 30% more mana to cast. This effect lasts 15 sec.",})]
-		public int ArcanePower { get { return _data[21]; } set { _data[21] = value; } }
+        public int ArcanePower { get { return _data[21]; } set { _data[21] = value; } }
 
-		[TalentData(22, "Incanter's Absorption", 3, 0, 3, 7, -1, new string[] {
+        [TalentData(22, "Incanter's Absorption", 3, 0, 3, 7, -1, new string[] {
 @"When you absorb damage your spell damage is increased by 5% of the amount absorbed for 10 sec.",
 @"When you absorb damage your spell damage is increased by 10% of the amount absorbed for 10 sec.",
 @"When you absorb damage your spell damage is increased by 15% of the amount absorbed for 10 sec.",})]
-		public int IncantersAbsorption { get { return _data[22]; } set { _data[22] = value; } }
+        public int IncantersAbsorption { get { return _data[22]; } set { _data[22] = value; } }
 
-		[TalentData(23, "Arcane Flows", 2, 0, 2, 8, 21, new string[] {
+        [TalentData(23, "Arcane Flows", 2, 0, 2, 8, 21, new string[] {
 @"Reduces the cooldown of your Presence of Mind, Arcane Power and Invisibility spells by 30 secs.",
 @"Reduces the cooldown of your Presence of Mind, Arcane Power and Invisibility spells by 60 secs.",})]
-		public int ArcaneFlows { get { return _data[23]; } set { _data[23] = value; } }
+        public int ArcaneFlows { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Mind Mastery", 5, 0, 3, 8, -1, new string[] {
+        [TalentData(24, "Mind Mastery", 5, 0, 3, 8, -1, new string[] {
 @"Increases spell power by 3% of your total intellect.",
 @"Increases spell power by 6% of your total intellect.",
 @"Increases spell power by 9% of your total intellect.",
 @"Increases spell power by 12% of your total intellect.",
 @"Increases spell power by 15% of your total intellect.",})]
-		public int MindMastery { get { return _data[24]; } set { _data[24] = value; } }
+        public int MindMastery { get { return _data[24]; } set { _data[24] = value; } }
 
-		[TalentData(25, "Slow", 1, 0, 2, 9, -1, new string[] {
+        [TalentData(25, "Slow", 1, 0, 2, 9, -1, new string[] {
 @"627 Mana,30 yd range,
 Instant cast,
 Reduces target's movement speed by 60%, increases the time between ranged attacks by 60% and increases casting time by 60%. Lasts 15 sec. Slow can only affect one target at a time.",})]
-		public int Slow { get { return _data[25]; } set { _data[25] = value; } }
+        public int Slow { get { return _data[25]; } set { _data[25] = value; } }
 
-		[TalentData(26, "Missile Barrage", 5, 0, 3, 9, -1, new string[] {
+        [TalentData(26, "Missile Barrage", 5, 0, 3, 9, -1, new string[] {
 @"Gives your Arcane Barrage, Fireball, Frostbolt and Frostfire Bolt spells a 3% chance to reduce the channeled duration of the next Arcane Missiles spell by 2.5 secs and fire missiles every .5 sec.",
 @"Gives your Arcane Barrage, Fireball, Frostbolt and Frostfire Bolt spells a 6% chance to reduce the channeled duration of the next Arcane Missiles spell by 2.5 secs and fire missiles every .5 sec.",
 @"Gives your Arcane Barrage, Fireball, Frostbolt and Frostfire Bolt spells a 9% chance to reduce the channeled duration of the next Arcane Missiles spell by 2.5 secs and fire missiles every .5 sec.",
 @"Gives your Arcane Barrage, Fireball, Frostbolt and Frostfire Bolt spells a 12% chance to reduce the channeled duration of the next Arcane Missiles spell by 2.5 secs and fire missiles every .5 sec.",
 @"Gives your Arcane Barrage, Fireball, Frostbolt and Frostfire Bolt spells a 15% chance to reduce the channeled duration of the next Arcane Missiles spell by 2.5 secs and fire missiles every .5 sec.",})]
-		public int MissileBarrage { get { return _data[26]; } set { _data[26] = value; } }
+        public int MissileBarrage { get { return _data[26]; } set { _data[26] = value; } }
 
-		[TalentData(27, "Netherwind Presence", 3, 0, 2, 10, -1, new string[] {
+        [TalentData(27, "Netherwind Presence", 3, 0, 2, 10, -1, new string[] {
 @"Increases your spell haste by 2%.",
 @"Increases your spell haste by 4%.",
 @"Increases your spell haste by 6%.",})]
-		public int NetherwindPresence { get { return _data[27]; } set { _data[27] = value; } }
+        public int NetherwindPresence { get { return _data[27]; } set { _data[27] = value; } }
 
-		[TalentData(28, "Spell Power", 2, 0, 3, 10, -1, new string[] {
+        [TalentData(28, "Spell Power", 2, 0, 3, 10, -1, new string[] {
 @"Increases critical strike damage bonus of all spells by 25%.",
 @"Increases critical strike damage bonus of all spells by 50%.",})]
-		public int SpellPower { get { return _data[28]; } set { _data[28] = value; } }
+        public int SpellPower { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(29, "Arcane Barrage", 1, 0, 2, 11, -1, new string[] {
+        [TalentData(29, "Arcane Barrage", 1, 0, 2, 11, -1, new string[] {
 @"325 Mana,30 yd range,
 Instant cast,3 sec cooldown,
 Launches several missiles at the enemy target, causing 401 to 485 Arcane damage.
@@ -803,58 +827,58 @@ Launches several missiles at the enemy target, causing 401 to 485 Arcane damage.
 		 Rank 2: 393 Mana, 802-958 Arcane Damage
 		 Rank 3: 592 Mana, 936-1144 Arcane Damage
 		",})]
-		public int ArcaneBarrage { get { return _data[29]; } set { _data[29] = value; } }
+        public int ArcaneBarrage { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(30, "Improved Fire Blast", 2, 1, 1, 1, -1, new string[] {
+        [TalentData(30, "Improved Fire Blast", 2, 1, 1, 1, -1, new string[] {
 @"Reduces the cooldown of your Fire Blast spell by 1 sec.",
 @"Reduces the cooldown of your Fire Blast spell by 2 sec.",})]
-		public int ImprovedFireBlast { get { return _data[30]; } set { _data[30] = value; } }
+        public int ImprovedFireBlast { get { return _data[30]; } set { _data[30] = value; } }
 
-		[TalentData(31, "Incineration", 3, 1, 2, 1, -1, new string[] {
+        [TalentData(31, "Incineration", 3, 1, 2, 1, -1, new string[] {
 @"Increases the critical strike chance of your Fire Blast, Scorch, Arcane Blast and Cone of Cold spells by 2%.",
 @"Increases the critical strike chance of your Fire Blast, Scorch, Arcane Blast and Cone of Cold spells by 4%.",
 @"Increases the critical strike chance of your Fire Blast, Scorch, Arcane Blast and Cone of Cold spells by 6%.",})]
-		public int Incineration { get { return _data[31]; } set { _data[31] = value; } }
+        public int Incineration { get { return _data[31]; } set { _data[31] = value; } }
 
-		[TalentData(32, "Improved Fireball", 5, 1, 3, 1, -1, new string[] {
+        [TalentData(32, "Improved Fireball", 5, 1, 3, 1, -1, new string[] {
 @"Reduces the casting time of your Fireball spell by 0.1 sec.",
 @"Reduces the casting time of your Fireball spell by 0.2 sec.",
 @"Reduces the casting time of your Fireball spell by 0.3 sec.",
 @"Reduces the casting time of your Fireball spell by 0.4 sec.",
 @"Reduces the casting time of your Fireball spell by 0.5 sec.",})]
-		public int ImprovedFireball { get { return _data[32]; } set { _data[32] = value; } }
+        public int ImprovedFireball { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(33, "Ignite", 5, 1, 1, 2, -1, new string[] {
+        [TalentData(33, "Ignite", 5, 1, 1, 2, -1, new string[] {
 @"Your critical strikes from Fire damage spells cause the target to burn for an additional 8% of your spell's damage over 4 sec.",
 @"Your critical strikes from Fire damage spells cause the target to burn for an additional 16% of your spell's damage over 4 sec.",
 @"Your critical strikes from Fire damage spells cause the target to burn for an additional 24% of your spell's damage over 4 sec.",
 @"Your critical strikes from Fire damage spells cause the target to burn for an additional 32% of your spell's damage over 4 sec.",
 @"Your critical strikes from Fire damage spells cause the target to burn for an additional 40% of your spell's damage over 4 sec.",})]
-		public int Ignite { get { return _data[33]; } set { _data[33] = value; } }
+        public int Ignite { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(34, "Burning Determination", 2, 1, 2, 2, -1, new string[] {
+        [TalentData(34, "Burning Determination", 2, 1, 2, 2, -1, new string[] {
 @"When Interrupted or Silenced you have a 50% chance to become immune to both mechanics for 10 sec.",
 @"When Interrupted or Silenced you have a 100% chance to become immune to both mechanics for 10 sec.",})]
-		public int BurningDetermination { get { return _data[34]; } set { _data[34] = value; } }
+        public int BurningDetermination { get { return _data[34]; } set { _data[34] = value; } }
 
-		[TalentData(35, "World in Flames", 3, 1, 3, 2, -1, new string[] {
+        [TalentData(35, "World in Flames", 3, 1, 3, 2, -1, new string[] {
 @"Increases the critical strike chance of your Flamestrike, Blast Wave, Dragon's Breath, Living Bomb, Blizzard and Arcane Explosion spells by 2%.",
 @"Increases the critical strike chance of your Flamestrike, Blast Wave, Dragon's Breath, Living Bomb, Blizzard and Arcane Explosion spells by 4%.",
 @"Increases the critical strike chance of your Flamestrike, Blast Wave, Dragon's Breath, Living Bomb, Blizzard and Arcane Explosion spells by 6%.",})]
-		public int WorldinFlames { get { return _data[35]; } set { _data[35] = value; } }
+        public int WorldInFlames { get { return _data[35]; } set { _data[35] = value; } }
 
-		[TalentData(36, "Flame Throwing", 2, 1, 1, 3, -1, new string[] {
+        [TalentData(36, "Flame Throwing", 2, 1, 1, 3, -1, new string[] {
 @"Increases the range of your Fire spells by 3 yards.",
 @"Increases the range of your Fire spells by 6 yards.",})]
-		public int FlameThrowing { get { return _data[36]; } set { _data[36] = value; } }
+        public int FlameThrowing { get { return _data[36]; } set { _data[36] = value; } }
 
-		[TalentData(37, "Impact", 3, 1, 2, 3, -1, new string[] {
+        [TalentData(37, "Impact", 3, 1, 2, 3, -1, new string[] {
 @"Gives your damaging spells a 4% chance to stun the target for 2 sec.",
 @"Gives your damaging spells a 7% chance to stun the target for 2 sec.",
 @"Gives your damaging spells a 10% chance to stun the target for 2 sec.",})]
-		public int Impact { get { return _data[37]; } set { _data[37] = value; } }
+        public int Impact { get { return _data[37]; } set { _data[37] = value; } }
 
-		[TalentData(38, "Pyroblast", 1, 1, 3, 3, -1, new string[] {
+        [TalentData(38, "Pyroblast", 1, 1, 3, 3, -1, new string[] {
 @"125 Mana,35 yd range,
 5 sec cast,
 Hurls an immense fiery boulder that causes 148 to 195 Fire damage and an additional 56 Fire damage over 12 sec.
@@ -868,43 +892,43 @@ Hurls an immense fiery boulder that causes 148 to 195 Fire damage and an additio
 		 Rank 7: 385 Mana, 625-776 Damage, 228/12 sec
 		 Rank 8: 440 Mana, 735-926 Damage, 268/12 sec
 		 Rank 9: 460 Mana, 876-1104 Damage, 324/12 sec",})]
-		public int Pyroblast { get { return _data[38]; } set { _data[38] = value; } }
+        public int Pyroblast { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Burning Soul", 2, 1, 4, 3, -1, new string[] {
+        [TalentData(39, "Burning Soul", 2, 1, 4, 3, -1, new string[] {
 @"Gives your Fire spells a 35% chance to not lose casting time when you take damage and reduces the threat caused by your Fire spells by 5%.",
 @"Gives your Fire spells a 70% chance to not lose casting time when you take damage and reduces the threat caused by your Fire spells by 10%.",})]
-		public int BurningSoul { get { return _data[39]; } set { _data[39] = value; } }
+        public int BurningSoul { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(40, "Improved Scorch", 3, 1, 1, 4, -1, new string[] {
+        [TalentData(40, "Improved Scorch", 3, 1, 1, 4, -1, new string[] {
 @"Your Scorch spells have a 33% chance to cause your target to be vulnerable to Fire, Frost and Arcane damage, increasing damage taken by 2% and lasts 30 sec. Stacks up to 5 times.",
 @"Your Scorch spells have a 66% chance to cause your target to be vulnerable to Fire, Frost and Arcane damage, increasing damage taken by 2% and lasts 30 sec. Stacks up to 5 times.",
 @"Your Scorch spells have a 100% chance to cause your target to be vulnerable to Fire, Frost and Arcane damage, increasing damage taken by 2% and lasts 30 sec. Stacks up to 5 times.",})]
-		public int ImprovedScorch { get { return _data[40]; } set { _data[40] = value; } }
+        public int ImprovedScorch { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(41, "Molten Shields", 2, 1, 2, 4, -1, new string[] {
+        [TalentData(41, "Molten Shields", 2, 1, 2, 4, -1, new string[] {
 @"Causes your Fire Ward and Frost Ward spells to have a 15% chance to reflect the warded spell while active. In addition, your Molten Armor has a 50% chance to affect ranged and spell attacks.",
 @"Causes your Fire Ward and Frost Ward spells to have a 30% chance to reflect the warded spell while active. In addition, your Molten Armor has a 50% chance to affect ranged and spell attacks.",})]
-		public int MoltenShields { get { return _data[41]; } set { _data[41] = value; } }
+        public int MoltenShields { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(42, "Master of Elements", 3, 1, 4, 4, -1, new string[] {
+        [TalentData(42, "Master of Elements", 3, 1, 4, 4, -1, new string[] {
 @"Your spell criticals will refund 10% of their base mana cost.",
 @"Your spell criticals will refund 20% of their base mana cost.",
 @"Your spell criticals will refund 30% of their base mana cost.",})]
-		public int MasterofElements { get { return _data[42]; } set { _data[42] = value; } }
+        public int MasterOfElements { get { return _data[42]; } set { _data[42] = value; } }
 
-		[TalentData(43, "Playing with Fire", 3, 1, 1, 5, -1, new string[] {
+        [TalentData(43, "Playing with Fire", 3, 1, 1, 5, -1, new string[] {
 @"Increases all spell damage caused by 1% and all spell damage taken by 1%.",
 @"Increases all spell damage caused by 2% and all spell damage taken by 2%.",
 @"Increases all spell damage caused by 3% and all spell damage taken by 3%.",})]
-		public int PlayingwithFire { get { return _data[43]; } set { _data[43] = value; } }
+        public int PlayingWithFire { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Critical Mass", 3, 1, 2, 5, -1, new string[] {
+        [TalentData(44, "Critical Mass", 3, 1, 2, 5, -1, new string[] {
 @"Increases the critical strike chance of your fire spells by 2%.",
 @"Increases the critical strike chance of your fire spells by 4%.",
 @"Increases the critical strike chance of your fire spells by 6%.",})]
-		public int CriticalMass { get { return _data[44]; } set { _data[44] = value; } }
+        public int CriticalMass { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(45, "Blast Wave", 1, 1, 3, 5, 38, new string[] {
+        [TalentData(45, "Blast Wave", 1, 1, 3, 5, 38, new string[] {
 @"215 Mana
 Instant,30 sec cooldown,
 A wave of flame radiates outward from the caster, damaging all enemies caught within the blast for 160 to 192 Fire damage, knocking them back and Dazing them for 6 sec.
@@ -919,54 +943,54 @@ A wave of flame radiates outward from the caster, damaging all enemies caught wi
 		 Rank 8: 795 Mana, 895-1052 Damage
 		 Rank 9: 620 Mana, 1047-1233 Damage
 ",})]
-		public int BlastWave { get { return _data[45]; } set { _data[45] = value; } }
+        public int BlastWave { get { return _data[45]; } set { _data[45] = value; } }
 
-		[TalentData(46, "Blazing Speed", 2, 1, 1, 6, -1, new string[] {
+        [TalentData(46, "Blazing Speed", 2, 1, 1, 6, -1, new string[] {
 @"Gives you a 5% chance when hit by a melee or ranged attack to increase your movement speed by 50% and dispel all movement impairing effects. This effect lasts 8 sec.",
 @"Gives you a 10% chance when hit by a melee or ranged attack to increase your movement speed by 50% and dispel all movement impairing effects. This effect lasts 8 sec.",})]
-		public int BlazingSpeed { get { return _data[46]; } set { _data[46] = value; } }
+        public int BlazingSpeed { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Fire Power", 5, 1, 3, 6, -1, new string[] {
+        [TalentData(47, "Fire Power", 5, 1, 3, 6, -1, new string[] {
 @"Increases the damage done by your fire spells by 2%.",
 @"Increases the damage done by your fire spells by 4%.",
 @"Increases the damage done by your fire spells by 6%.",
 @"Increases the damage done by your fire spells by 8%.",
 @"Increases the damage done by your fire spells by 10%.",})]
-		public int FirePower { get { return _data[47]; } set { _data[47] = value; } }
+        public int FirePower { get { return _data[47]; } set { _data[47] = value; } }
 
-		[TalentData(48, "Pyromaniac", 3, 1, 1, 7, -1, new string[] {
+        [TalentData(48, "Pyromaniac", 3, 1, 1, 7, -1, new string[] {
 @"Increases chance to critically hit and reduces the mana cost of all Fire spells by an additional 1%.",
 @"Increases chance to critically hit and reduces the mana cost of all Fire spells by an additional 2%.",
 @"Increases chance to critically hit and reduces the mana cost of all Fire spells by an additional 3%.",})]
-		public int Pyromaniac { get { return _data[48]; } set { _data[48] = value; } }
+        public int Pyromaniac { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(49, "Combustion", 1, 1, 2, 7, 44, new string[] {
+        [TalentData(49, "Combustion", 1, 1, 2, 7, 44, new string[] {
 @"Instant,3 min cooldown,
 When activated, this spell causes each of your Fire damage spell hits to increase your critical strike chance with Fire damage spells by 10%. This effect lasts until you have caused 3 critical strikes with Fire spells.",})]
-		public int Combustion { get { return _data[49]; } set { _data[49] = value; } }
+        public int Combustion { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(50, "Molten Fury", 2, 1, 3, 7, -1, new string[] {
+        [TalentData(50, "Molten Fury", 2, 1, 3, 7, -1, new string[] {
 @"Increases damage of all spells against targets with less than 20% health by 10%.",
 @"Increases damage of all spells against targets with less than 20% health by 20%.",})]
-		public int MoltenFury { get { return _data[50]; } set { _data[50] = value; } }
+        public int MoltenFury { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Fiery Payback", 2, 1, 1, 8, -1, new string[] {
+        [TalentData(51, "Fiery Payback", 2, 1, 1, 8, -1, new string[] {
 @"When below 35% health all damage taken is reduced by 10% and your Pyroblast spell's cast time is reduced by 1.8 secs while the cooldown is increased by 2.5 secs.",
 @"When below 35% health all damage taken is reduced by 20% and your Pyroblast spell's cast time is reduced by 3.5 secs while the cooldown is increased by 5 secs.",})]
-		public int FieryPayback { get { return _data[51]; } set { _data[51] = value; } }
+        public int FieryPayback { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(52, "Empowered Fireball", 3, 1, 3, 8, -1, new string[] {
+        [TalentData(52, "Empowered Fireball", 3, 1, 3, 8, -1, new string[] {
 @"Increases the damage of your Fireball spell by an amount equal to 5% of your spell power.",
 @"Increases the damage of your Fireball spell by an amount equal to 10% of your spell power.",
 @"Increases the damage of your Fireball spell by an amount equal to 15% of your spell power.",})]
-		public int EmpoweredFireball { get { return _data[52]; } set { _data[52] = value; } }
+        public int EmpoweredFireball { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(53, "Firestarter", 2, 1, 1, 9, 54, new string[] {
+        [TalentData(53, "Firestarter", 2, 1, 1, 9, 54, new string[] {
 @"Your Blast Wave and Dragon's Breath spells have a 50% chance to make your next Flamestrike spell instant cast. Lasts 10 sec.",
 @"Your Blast Wave and Dragon's Breath spells have a 100% chance to make your next Flamestrike spell instant cast. Lasts 10 sec.",})]
-		public int Firestarter { get { return _data[53]; } set { _data[53] = value; } }
+        public int Firestarter { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(54, "Dragon's Breath", 1, 1, 2, 9, 49, new string[] {
+        [TalentData(54, "Dragon's Breath", 1, 1, 2, 9, 49, new string[] {
 @"475 Mana,
 Instant cast,20 sec cooldown,
 Targets in a cone in front of the caster take 382 to 442 Fire damage and are Disoriented for 5 sec. Any direct damaging attack will revive targets. Turns off your attack when used.
@@ -978,23 +1002,23 @@ Targets in a cone in front of the caster take 382 to 442 Fire damage and are Dis
 		 Rank 5: 900 Mana, 945-1096 Damage
 		 Rank 6: 1050 Mana, 1101-1279 Damage
 		",})]
-		public int DragonsBreath { get { return _data[54]; } set { _data[54] = value; } }
+        public int DragonsBreath { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(55, "Hot Streak", 3, 1, 3, 9, -1, new string[] {
+        [TalentData(55, "Hot Streak", 3, 1, 3, 9, -1, new string[] {
 @"Any time you score 3 spell criticals in a row, you have a 33% chance the next spell cast within 10 sec will gain 100% increased chance to score a critical hit.",
 @"Any time you score 3 spell criticals in a row, you have a 66% chance the next spell cast within 10 sec will gain 100% increased chance to score a critical hit.",
 @"Any time you score 3 spell criticals in a row, you have a 100% chance the next spell cast within 10 sec will gain 100% increased chance to score a critical hit.",})]
-		public int HotStreak { get { return _data[55]; } set { _data[55] = value; } }
+        public int HotStreak { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "Burnout", 5, 1, 2, 10, -1, new string[] {
+        [TalentData(56, "Burnout", 5, 1, 2, 10, -1, new string[] {
 @"Increases your spell critical damage bonus with all Fire spells by 10% but your spell criticals cost an additional 1% of the spell's cost.",
 @"Increases your spell critical damage bonus with all Fire spells by 20% but your spell criticals cost an additional 2% of the spell's cost.",
 @"Increases your spell critical damage bonus with all Fire spells by 30% but your spell criticals cost an additional 3% of the spell's cost.",
 @"Increases your spell critical damage bonus with all Fire spells by 40% but your spell criticals cost an additional 4% of the spell's cost.",
 @"Increases your spell critical damage bonus with all Fire spells by 50% but your spell criticals cost an additional 5% of the spell's cost.",})]
-		public int Burnout { get { return _data[56]; } set { _data[56] = value; } }
+        public int Burnout { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(57, "Living Bomb", 1, 1, 2, 11, -1, new string[] {
+        [TalentData(57, "Living Bomb", 1, 1, 2, 11, -1, new string[] {
 @"295 Mana,35 yd range,
 
 Instant cast,
@@ -1004,124 +1028,124 @@ The target becomes a Living Bomb, taking 612 Fire damage over 12 sec. After 12 s
 		 Rank 2: 543 Mana, 1024 Fire Damage/12 sec, 563 to 564 Fire Damage explosion.
 		 Rank 3: 980 Mana, 1380 Fire Damage/12 sec, 759 Fire Damage explosion.
 ",})]
-		public int LivingBomb { get { return _data[57]; } set { _data[57] = value; } }
+        public int LivingBomb { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(58, "Frost Warding", 2, 2, 1, 1, -1, new string[] {
+        [TalentData(58, "Frost Warding", 2, 2, 1, 1, -1, new string[] {
 @"Increases the armor and resistances given by your Frost Armor and Ice Armor spells by 25%. In addition, gives your Frost Ward and Fire Ward a 15% chance to negate the warded damage spell and restore mana equal to the damage caused.",
 @"Increases the armor and resistances given by your Frost Armor and Ice Armor spells by 50%. In addition, gives your Frost Ward and Fire Ward a 30% chance to negate the warded damage spell and restore mana equal to the damage caused.",})]
-		public int FrostWarding { get { return _data[58]; } set { _data[58] = value; } }
+        public int FrostWarding { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(59, "Improved Frostbolt", 5, 2, 2, 1, -1, new string[] {
+        [TalentData(59, "Improved Frostbolt", 5, 2, 2, 1, -1, new string[] {
 @"Reduces the casting time of your Frostbolt spell by 0.1 sec.",
 @"Reduces the casting time of your Frostbolt spell by 0.2 sec.",
 @"Reduces the casting time of your Frostbolt spell by 0.3 sec.",
 @"Reduces the casting time of your Frostbolt spell by 0.4 sec.",
 @"Reduces the casting time of your Frostbolt spell by 0.5 sec.",})]
-		public int ImprovedFrostbolt { get { return _data[59]; } set { _data[59] = value; } }
+        public int ImprovedFrostbolt { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(60, "Ice Floes", 3, 2, 3, 1, -1, new string[] {
+        [TalentData(60, "Ice Floes", 3, 2, 3, 1, -1, new string[] {
 @"Reduces the cooldown of your Frost Nova, Cone of Cold, Ice Block and Icy Veins spells by 7%.",
 @"Reduces the cooldown of your Frost Nova, Cone of Cold, Ice Block and Icy Veins spells by 14%.",
 @"Reduces the cooldown of your Frost Nova, Cone of Cold, Ice Block and Icy Veins spells by 20%.",})]
-		public int IceFloes { get { return _data[60]; } set { _data[60] = value; } }
+        public int IceFloes { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Ice Shards", 5, 2, 1, 2, -1, new string[] {
+        [TalentData(61, "Ice Shards", 5, 2, 1, 2, -1, new string[] {
 @"Increases the critical strike damage bonus of your Frost spells by 20%.",
 @"Increases the critical strike damage bonus of your Frost spells by 40%.",
 @"Increases the critical strike damage bonus of your Frost spells by 60%.",
 @"Increases the critical strike damage bonus of your Frost spells by 80%.",
 @"Increases the critical strike damage bonus of your Frost spells by 100%.",})]
-		public int IceShards { get { return _data[61]; } set { _data[61] = value; } }
+        public int IceShards { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Frostbite", 3, 2, 2, 2, -1, new string[] {
+        [TalentData(62, "Frostbite", 3, 2, 2, 2, -1, new string[] {
 @"Gives your Chill effects a 5% chance to freeze the target for 5 sec.",
 @"Gives your Chill effects a 10% chance to freeze the target for 5 sec.",
 @"Gives your Chill effects a 15% chance to freeze the target for 5 sec.",})]
-		public int Frostbite { get { return _data[62]; } set { _data[62] = value; } }
+        public int Frostbite { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(63, "Elemental Precision", 3, 2, 3, 2, -1, new string[] {
+        [TalentData(63, "Elemental Precision", 3, 2, 3, 2, -1, new string[] {
 @"Reduces the mana cost and increases your chance to hit with Frost and Fire spells by 1%.",
 @"Reduces the mana cost and increases your chance to hit with Frost and Fire spells by 2%.",
 @"Reduces the mana cost and increases your chance to hit with Frost and Fire spells by 3%.",})]
-		public int ElementalPrecision { get { return _data[63]; } set { _data[63] = value; } }
+        public int ElementalPrecision { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(64, "Permafrost", 3, 2, 4, 2, -1, new string[] {
+        [TalentData(64, "Permafrost", 3, 2, 4, 2, -1, new string[] {
 @"Increases the duration of your Chill effects by 1 sec and reduces the target's speed by an additional 4%.",
 @"Increases the duration of your Chill effects by 2 sec and reduces the target's speed by an additional 7%.",
 @"Increases the duration of your Chill effects by 3 sec and reduces the target's speed by an additional 10%.",})]
-		public int Permafrost { get { return _data[64]; } set { _data[64] = value; } }
+        public int Permafrost { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(65, "Piercing Ice", 3, 2, 1, 3, -1, new string[] {
+        [TalentData(65, "Piercing Ice", 3, 2, 1, 3, -1, new string[] {
 @"Increases the damage done by your Frost spells by 2%.",
 @"Increases the damage done by your Frost spells by 4%.",
 @"Increases the damage done by your Frost spells by 6%.",})]
-		public int PiercingIce { get { return _data[65]; } set { _data[65] = value; } }
+        public int PiercingIce { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(66, "Icy Veins", 1, 2, 2, 3, -1, new string[] {
+        [TalentData(66, "Icy Veins", 1, 2, 2, 3, -1, new string[] {
 @"67 Mana,
 Instant,3 min cooldown,
 Hastens your spellcasting, increasing spell casting speed by 20% and gives you 100% chance to avoid interruption caused by damage while casting. Lasts 20 sec.",})]
-		public int IcyVeins { get { return _data[66]; } set { _data[66] = value; } }
+        public int IcyVeins { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(67, "Improved Blizzard", 3, 2, 3, 3, -1, new string[] {
+        [TalentData(67, "Improved Blizzard", 3, 2, 3, 3, -1, new string[] {
 @"Adds a chill effect to your Blizzard spell. This effect lowers the target's movement speed by 30%. Lasts 1.50 sec.",
 @"Adds a chill effect to your Blizzard spell. This effect lowers the target's movement speed by 50%. Lasts 1.50 sec.",
 @"Adds a chill effect to your Blizzard spell. This effect lowers the target's movement speed by 75%. Lasts 1.50 sec.",})]
-		public int ImprovedBlizzard { get { return _data[67]; } set { _data[67] = value; } }
+        public int ImprovedBlizzard { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(68, "Arctic Reach", 2, 2, 1, 4, -1, new string[] {
+        [TalentData(68, "Arctic Reach", 2, 2, 1, 4, -1, new string[] {
 @"Increases the range of your Frostbolt, Ice Lance, Deep Freeze and Blizzard spells and the radius of your Frost Nova and Cone of Cold spells by 10%.",
 @"Increases the range of your Frostbolt, Ice Lance, Deep Freeze and Blizzard spells and the radius of your Frost Nova and Cone of Cold spells by 20%.",})]
-		public int ArcticReach { get { return _data[68]; } set { _data[68] = value; } }
+        public int ArcticReach { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(69, "Frost Channeling", 3, 2, 2, 4, -1, new string[] {
+        [TalentData(69, "Frost Channeling", 3, 2, 2, 4, -1, new string[] {
 @"Reduces the mana cost of all spells by 4% and reduces the threat caused by your Frost spells by 4%.",
 @"Reduces the mana cost of all spells by 7% and reduces the threat caused by your Frost spells by 7%.",
 @"Reduces the mana cost of all spells by 10% and reduces the threat caused by your Frost spells by 10%.",})]
-		public int FrostChanneling { get { return _data[69]; } set { _data[69] = value; } }
+        public int FrostChanneling { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(70, "Shatter", 5, 2, 3, 4, -1, new string[] {
+        [TalentData(70, "Shatter", 5, 2, 3, 4, -1, new string[] {
 @"Increases the critical strike chance of all your spells against frozen targets by 10%.",
 @"Increases the critical strike chance of all your spells against frozen targets by 20%.",
 @"Increases the critical strike chance of all your spells against frozen targets by 30%.",
 @"Increases the critical strike chance of all your spells against frozen targets by 40%.",
 @"Increases the critical strike chance of all your spells against frozen targets by 50%.",})]
-		public int Shatter { get { return _data[70]; } set { _data[70] = value; } }
+        public int Shatter { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Cold Snap", 1, 2, 2, 5, -1, new string[] {
+        [TalentData(71, "Cold Snap", 1, 2, 2, 5, -1, new string[] {
 @"Instant,8 min cooldown,
 When activated, this spell finishes the cooldown on all Frost spells you recently cast.",})]
-		public int ColdSnap { get { return _data[71]; } set { _data[71] = value; } }
+        public int ColdSnap { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(72, "Improved Cone of Cold", 3, 2, 3, 5, -1, new string[] {
+        [TalentData(72, "Improved Cone of Cold", 3, 2, 3, 5, -1, new string[] {
 @"Increases the damage dealt by your Cone of Cold spell by 15%.",
 @"Increases the damage dealt by your Cone of Cold spell by 25%.",
 @"Increases the damage dealt by your Cone of Cold spell by 35%.",})]
-		public int ImprovedConeofCold { get { return _data[72]; } set { _data[72] = value; } }
+        public int ImprovedConeOfCold { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "Frozen Core", 3, 2, 4, 5, -1, new string[] {
+        [TalentData(73, "Frozen Core", 3, 2, 4, 5, -1, new string[] {
 @"Reduces the damage taken by Frost and Fire effects by 2%.",
 @"Reduces the damage taken by Frost and Fire effects by 4%.",
 @"Reduces the damage taken by Frost and Fire effects by 6%.",})]
-		public int FrozenCore { get { return _data[73]; } set { _data[73] = value; } }
+        public int FrozenCore { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(74, "Cold as Ice", 2, 2, 1, 6, 71, new string[] {
+        [TalentData(74, "Cold as Ice", 2, 2, 1, 6, 71, new string[] {
 @"Reduces the cooldown of your Cold Snap, Ice Barrier, Deep Freeze and Summon Water Elemental spells by 10%.",
 @"Reduces the cooldown of your Cold Snap, Ice Barrier, Deep Freeze and Summon Water Elemental spells by 20%.",})]
-		public int ColdasIce { get { return _data[74]; } set { _data[74] = value; } }
+        public int ColdAsIce { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(75, "Winter's Chill", 3, 2, 3, 6, -1, new string[] {
+        [TalentData(75, "Winter's Chill", 3, 2, 3, 6, -1, new string[] {
 @"Gives your Frost damage spells a 33% chance to apply the Winter's Chill effect, which increases the chance Arcane, Fire and Frost Spells will critically hit the target by 2% for 15 sec. Stacks up to 5 times.",
 @"Gives your Frost damage spells a 66% chance to apply the Winter's Chill effect, which increases the chance Arcane, Fire and Frost Spells will critically hit the target by 2% for 15 sec. Stacks up to 5 times.",
 @"Gives your Frost damage spells a 100% chance to apply the Winter's Chill effect, which increases the chance Arcane, Fire and Frost Spells will critically hit the target by 2% for 15 sec. Stacks up to 5 times.",})]
-		public int WintersChill { get { return _data[75]; } set { _data[75] = value; } }
+        public int WintersChill { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(76, "Shattered Barrier", 2, 2, 1, 7, 77, new string[] {
+        [TalentData(76, "Shattered Barrier", 2, 2, 1, 7, 77, new string[] {
 @"Gives your Ice Barrier spell a 50% chance to freeze all enemies within 10 yds for 8 sec when it is destroyed.",
 @"Gives your Ice Barrier spell a 100% chance to freeze all enemies within 10 yds for 8 sec when it is destroyed.",})]
-		public int ShatteredBarrier { get { return _data[76]; } set { _data[76] = value; } }
+        public int ShatteredBarrier { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(77, "Ice Barrier", 1, 2, 2, 7, 71, new string[] {
+        [TalentData(77, "Ice Barrier", 1, 2, 2, 7, 71, new string[] {
 @"305 Mana,
 Instant cast,30 sec cooldown,
 Instantly shields you, absorbing 454 damage. Lasts 1 min. While the shield holds, spells will not be interrupted.
@@ -1135,53 +1159,53 @@ Instantly shields you, absorbing 454 damage. Lasts 1 min. While the shield holds
 		 Rank 7: Absorbs 2860 Damage
 		 Rank 8: Absorbs 3300 Damage
 ",})]
-		public int IceBarrier { get { return _data[77]; } set { _data[77] = value; } }
+        public int IceBarrier { get { return _data[77]; } set { _data[77] = value; } }
 
-		[TalentData(78, "Arctic Winds", 5, 2, 3, 7, -1, new string[] {
+        [TalentData(78, "Arctic Winds", 5, 2, 3, 7, -1, new string[] {
 @"Increases all Frost damage you cause by 1% and reduces the chance melee and ranged attacks will hit you by 1%.",
 @"Increases all Frost damage you cause by 2% and reduces the chance melee and ranged attacks will hit you by 2%.",
 @"Increases all Frost damage you cause by 3% and reduces the chance melee and ranged attacks will hit you by 3%.",
 @"Increases all Frost damage you cause by 4% and reduces the chance melee and ranged attacks will hit you by 4%.",
 @"Increases all Frost damage you cause by 5% and reduces the chance melee and ranged attacks will hit you by 5%.",})]
-		public int ArcticWinds { get { return _data[78]; } set { _data[78] = value; } }
+        public int ArcticWinds { get { return _data[78]; } set { _data[78] = value; } }
 
-		[TalentData(79, "Empowered Frostbolt", 2, 2, 2, 8, -1, new string[] {
+        [TalentData(79, "Empowered Frostbolt", 2, 2, 2, 8, -1, new string[] {
 @"Increases the damage of your Frostbolt spell by an amount equal to 5% of your spell power and increases the critical strike chance by an additional 2%.",
 @"Increases the damage of your Frostbolt spell by an amount equal to 10% of your spell power and increases the critical strike chance by an additional 4%.",})]
-		public int EmpoweredFrostbolt { get { return _data[79]; } set { _data[79] = value; } }
+        public int EmpoweredFrostbolt { get { return _data[79]; } set { _data[79] = value; } }
 
-		[TalentData(80, "Fingers of Frost", 2, 2, 3, 8, -1, new string[] {
+        [TalentData(80, "Fingers of Frost", 2, 2, 3, 8, -1, new string[] {
 @"Gives your Frost damage spells a 5% chance to grant you the Fingers of Frost effect, which treats your next 2 Frost spells cast as if the target were Frozen. Lasts 15 sec.",
 @"Gives your Frost damage spells a 10% chance to grant you the Fingers of Frost effect, which treats your next 2 Frost spells cast as if the target were Frozen. Lasts 15 sec.",})]
-		public int FingersofFrost { get { return _data[80]; } set { _data[80] = value; } }
+        public int FingersOfFrost { get { return _data[80]; } set { _data[80] = value; } }
 
-		[TalentData(81, "Brain Freeze", 3, 2, 1, 9, -1, new string[] {
+        [TalentData(81, "Brain Freeze", 3, 2, 1, 9, -1, new string[] {
 @"Your Frost damage spells have a 5% chance to cause your next Fireball spell to be instant cast and cost no mana.",
 @"Your Frost damage spells have a 10% chance to cause your next Fireball spell to be instant cast and cost no mana.",
 @"Your Frost damage spells have a 15% chance to cause your next Fireball spell to be instant cast and cost no mana.",})]
-		public int BrainFreeze { get { return _data[81]; } set { _data[81] = value; } }
+        public int BrainFreeze { get { return _data[81]; } set { _data[81] = value; } }
 
-		[TalentData(82, "Summon Water Elemental", 1, 2, 2, 9, -1, new string[] {
+        [TalentData(82, "Summon Water Elemental", 1, 2, 2, 9, -1, new string[] {
 @"358 Mana
 Instant cast,3 min cooldown,
 Summon a Water Elemental to fight for the caster for 45 sec.",})]
-		public int SummonWaterElemental { get { return _data[82]; } set { _data[82] = value; } }
+        public int SummonWaterElemental { get { return _data[82]; } set { _data[82] = value; } }
 
-		[TalentData(83, "Improved Water Elemental", 3, 2, 3, 9, 82, new string[] {
+        [TalentData(83, "Improved Water Elemental", 3, 2, 3, 9, 82, new string[] {
 @"Increases the duration of your Summon Water Elemental spell by 5 sec and your Water Elemental restores mana to all party or raid members within 100 yds an amount equal to 0.2% of their total mana every 5 sec.",
 @"Increases the duration of your Summon Water Elemental spell by 10 sec and your Water Elemental restores mana to all party or raid members within 100 yds an amount equal to 0.4% of their total mana every 5 sec.",
 @"Increases the duration of your Summon Water Elemental spell by 15 sec and your Water Elemental restores mana to all party or raid members within 100 yds an amount equal to 0.6% of their total mana every 5 sec.",})]
-		public int ImprovedWaterElemental { get { return _data[83]; } set { _data[83] = value; } }
+        public int ImprovedWaterElemental { get { return _data[83]; } set { _data[83] = value; } }
 
-		[TalentData(84, "Chilled to the Bone", 5, 2, 2, 10, -1, new string[] {
+        [TalentData(84, "Chilled to the Bone", 5, 2, 2, 10, -1, new string[] {
 @"Increases the damage caused by your Frostbolt, Frostfire Bolt and Ice Lance spells by 1% and reduces the movement speed of all chilled targets by an additional 2%",
 @"Increases the damage caused by your Frostbolt, Frostfire Bolt and Ice Lance spells by 2% and reduces the movement speed of all chilled targets by an additional 4%",
 @"Increases the damage caused by your Frostbolt, Frostfire Bolt and Ice Lance spells by 3% and reduces the movement speed of all chilled targets by an additional 6%",
 @"Increases the damage caused by your Frostbolt, Frostfire Bolt and Ice Lance spells by 4% and reduces the movement speed of all chilled targets by an additional 8%",
 @"Increases the damage caused by your Frostbolt, Frostfire Bolt and Ice Lance spells by 5% and reduces the movement speed of all chilled targets by an additional 10%",})]
-		public int ChilledtotheBone { get { return _data[84]; } set { _data[84] = value; } }
+        public int ChilledToTheBone { get { return _data[84]; } set { _data[84] = value; } }
 
-		[TalentData(85, "Deep Freeze", 1, 2, 2, 11, -1, new string[] {
+        [TalentData(85, "Deep Freeze", 1, 2, 2, 11, -1, new string[] {
 @"222 Mana,30 yd range,
 1.5 sec cast,30 sec cooldown,
 Causes 694 to 806 Frost damage and stuns the target for 5 sec. Only usable on Frozen targets.
@@ -1190,110 +1214,122 @@ Causes 694 to 806 Frost damage and stuns the target for 5 sec. Only usable on Fr
 		 Rank 2: 787 to 913 Frost Damage
 		 Rank 3: 1018 to 1182 Frost Damage
 		 Rank 4: 1319 to 1531 Frost Damage",})]
-		public int DeepFreeze { get { return _data[85]; } set { _data[85] = value; } }
-	}
+        public int DeepFreeze { get { return _data[85]; } set { _data[85] = value; } }
+    }
 
-	public class WarlockTalents
-	{
-		private int[] _data = new int[80];
-		public WarlockTalents() { }
-		public WarlockTalents(string talents)
-		{
-			List<int> data = new List<int>();
-			foreach (Char digit in talents)
-				data.Add(int.Parse(digit.ToString()));
-			data.CopyTo(_data);
-		}
+    public class WarlockTalents : ICloneable
+    {
+        private int[] _data = new int[80];
+        public WarlockTalents() { }
+        public WarlockTalents(string talents)
+        {
+            List<int> data = new List<int>();
+            foreach (Char digit in talents)
+                data.Add(int.Parse(digit.ToString()));
+            data.CopyTo(_data);
+        }
 
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
-		}
+        public override string ToString()
+        {
+            StringBuilder ret = new StringBuilder();
+            foreach (int digit in _data)
+                ret.Append(digit.ToString());
+            return ret.ToString();
+        }
+        object ICloneable.Clone()
+        {
+            WarlockTalents clone = (WarlockTalents)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            return clone;
+        }
 
-		[TalentData(0, "Improved Curse of Agony", 2, 0, 1, 1, -1, new string[] {
+        public WarlockTalents Clone()
+        {
+            return (WarlockTalents)((ICloneable)this).Clone();
+        }
+
+
+        [TalentData(0, "Improved Curse of Agony", 2, 0, 1, 1, -1, new string[] {
 @"Increases the damage done by your Curse of Agony by 5%.",
 @"Increases the damage done by your Curse of Agony by 10%.",})]
-		public int ImprovedCurseofAgony { get { return _data[0]; } set { _data[0] = value; } }
+        public int ImprovedCurseOfAgony { get { return _data[0]; } set { _data[0] = value; } }
 
-		[TalentData(1, "Suppression", 3, 0, 2, 1, -1, new string[] {
+        [TalentData(1, "Suppression", 3, 0, 2, 1, -1, new string[] {
 @"Increases your chance to hit with Affliction spells by 1%, and reduces the mana cost of your Affliction spells by 2%.",
 @"Increases your chance to hit with Affliction spells by 2%, and reduces the mana cost of your Affliction spells by 4%.",
 @"Increases your chance to hit with Affliction spells by 3%, and reduces the mana cost of your Affliction spells by 6%.",})]
-		public int Suppression { get { return _data[1]; } set { _data[1] = value; } }
+        public int Suppression { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Improved Corruption", 5, 0, 3, 1, -1, new string[] {
+        [TalentData(2, "Improved Corruption", 5, 0, 3, 1, -1, new string[] {
 @"Reduces the casting time of your Corruption spell by 0.4 sec.",
 @"Reduces the casting time of your Corruption spell by 0.8 sec.",
 @"Reduces the casting time of your Corruption spell by 1.2 sec.",
 @"Reduces the casting time of your Corruption spell by 1.6 sec.",
 @"Reduces the casting time of your Corruption spell by 2 sec.",})]
-		public int ImprovedCorruption { get { return _data[2]; } set { _data[2] = value; } }
+        public int ImprovedCorruption { get { return _data[2]; } set { _data[2] = value; } }
 
-		[TalentData(3, "Frailty", 2, 0, 1, 2, -1, new string[] {
+        [TalentData(3, "Frailty", 2, 0, 1, 2, -1, new string[] {
 @"Increases the amount of attack power reduced by your Curse of Weakness by 10%, and reduces the amount of attack power granted by your Curse of Recklessness by 50%.",
 @"Increases the amount of attack power reduced by your Curse of Weakness by 20%, and reduces the amount of attack power granted by your Curse of Recklessness by 100%.",})]
-		public int Frailty { get { return _data[3]; } set { _data[3] = value; } }
+        public int Frailty { get { return _data[3]; } set { _data[3] = value; } }
 
-		[TalentData(4, "Improved Drain Soul", 2, 0, 2, 2, -1, new string[] {
+        [TalentData(4, "Improved Drain Soul", 2, 0, 2, 2, -1, new string[] {
 @"Returns 7% of your maximum mana if the target is killed by you while you drain its soul. In addition, your Affliction spells generate 5% less threat.",
 @"Returns 15% of your maximum mana if the target is killed by you while you drain its soul. In addition, your Affliction spells generate 10% less threat.",})]
-		public int ImprovedDrainSoul { get { return _data[4]; } set { _data[4] = value; } }
+        public int ImprovedDrainSoul { get { return _data[4]; } set { _data[4] = value; } }
 
-		[TalentData(5, "Improved Life Tap", 2, 0, 3, 2, -1, new string[] {
+        [TalentData(5, "Improved Life Tap", 2, 0, 3, 2, -1, new string[] {
 @"Increases the amount of Mana awarded by your Life Tap spell by 10%.",
 @"Increases the amount of Mana awarded by your Life Tap spell by 20%.",})]
-		public int ImprovedLifeTap { get { return _data[5]; } set { _data[5] = value; } }
+        public int ImprovedLifeTap { get { return _data[5]; } set { _data[5] = value; } }
 
-		[TalentData(6, "Soul Siphon", 2, 0, 4, 2, -1, new string[] {
+        [TalentData(6, "Soul Siphon", 2, 0, 4, 2, -1, new string[] {
 @"Increases the amount drained by your Drain Life and Drain Soul spells by an additional 2% for each Affliction effect on the target, up to a maximum of 24% additional effect.",
 @"Increases the amount drained by your Drain Life and Drain Soul spells by an additional 4% for each Affliction effect on the target, up to a maximum of 60% additional effect.",})]
-		public int SoulSiphon { get { return _data[6]; } set { _data[6] = value; } }
+        public int SoulSiphon { get { return _data[6]; } set { _data[6] = value; } }
 
-		[TalentData(7, "Improved Fear", 2, 0, 1, 3, -1, new string[] {
+        [TalentData(7, "Improved Fear", 2, 0, 1, 3, -1, new string[] {
 @"When your Fear spell is resisted, your next Fear spell has a 50% chance of being instant cast. Lasts 10 sec.",
 @"When your Fear spell is resisted, your next Fear spell has a 100% chance of being instant cast. Lasts 10 sec.",})]
-		public int ImprovedFear { get { return _data[7]; } set { _data[7] = value; } }
+        public int ImprovedFear { get { return _data[7]; } set { _data[7] = value; } }
 
-		[TalentData(8, "Fel Concentration", 5, 0, 2, 3, -1, new string[] {
+        [TalentData(8, "Fel Concentration", 5, 0, 2, 3, -1, new string[] {
 @"Gives you a 14% chance to avoid interruption caused by damage while channeling the Drain Life, Drain Mana, or Drain Soul spell and 14% chance to avoid interruption while casting your Unstable Affliction and Haunt spells.",
 @"Gives you a 28% chance to avoid interruption caused by damage while channeling the Drain Life, Drain Mana, or Drain Soul spell and 28% chance to avoid interruption while casting your Unstable Affliction and Haunt spells.",
 @"Gives you a 42% chance to avoid interruption caused by damage while channeling the Drain Life, Drain Mana, or Drain Soul spell and 42% chance to avoid interruption while casting your Unstable Affliction and Haunt spells.",
 @"Gives you a 56% chance to avoid interruption caused by damage while channeling the Drain Life, Drain Mana, or Drain Soul spell and 56% chance to avoid interruption while casting your Unstable Affliction and Haunt spells.",
 @"Gives you a 70% chance to avoid interruption caused by damage while channeling the Drain Life, Drain Mana, or Drain Soul spell and 70% chance to avoid interruption while casting your Unstable Affliction and Haunt spells.",})]
-		public int FelConcentration { get { return _data[8]; } set { _data[8] = value; } }
+        public int FelConcentration { get { return _data[8]; } set { _data[8] = value; } }
 
-		[TalentData(9, "Amplify Curse", 1, 0, 3, 3, -1, new string[] {
+        [TalentData(9, "Amplify Curse", 1, 0, 3, 3, -1, new string[] {
 @"Increases the effect of your Curse of Doom and Curse of Agony by 15%, and reduces the global cooldown of your Curses by 0.5 sec.",})]
-		public int AmplifyCurse { get { return _data[9]; } set { _data[9] = value; } }
+        public int AmplifyCurse { get { return _data[9]; } set { _data[9] = value; } }
 
-		[TalentData(10, "Grim Reach", 2, 0, 1, 4, -1, new string[] {
+        [TalentData(10, "Grim Reach", 2, 0, 1, 4, -1, new string[] {
 @"Increases the range of your Affliction spells by 10%.",
 @"Increases the range of your Affliction spells by 20%.",})]
-		public int GrimReach { get { return _data[10]; } set { _data[10] = value; } }
+        public int GrimReach { get { return _data[10]; } set { _data[10] = value; } }
 
-		[TalentData(11, "Nightfall", 2, 0, 2, 4, -1, new string[] {
+        [TalentData(11, "Nightfall", 2, 0, 2, 4, -1, new string[] {
 @"Gives your Corruption and Drain Life spells a 2% chance to cause you to enter a Shadow Trance state after damaging the opponent. The Shadow Trance state reduces the casting time of your next Shadow Bolt spell by 100%.",
 @"Gives your Corruption and Drain Life spells a 4% chance to cause you to enter a Shadow Trance state after damaging the opponent. The Shadow Trance state reduces the casting time of your next Shadow Bolt spell by 100%.",})]
-		public int Nightfall { get { return _data[11]; } set { _data[11] = value; } }
+        public int Nightfall { get { return _data[11]; } set { _data[11] = value; } }
 
-		[TalentData(12, "Empowered Corruption", 3, 0, 4, 4, -1, new string[] {
+        [TalentData(12, "Empowered Corruption", 3, 0, 4, 4, -1, new string[] {
 @"Increases the damage of your Corruption spell by an amount equal to 12% of your spell power.",
 @"Increases the damage of your Corruption spell by an amount equal to 24% of your spell power.",
 @"Increases the damage of your Corruption spell by an amount equal to 36% of your spell power.",})]
-		public int EmpoweredCorruption { get { return _data[12]; } set { _data[12] = value; } }
+        public int EmpoweredCorruption { get { return _data[12]; } set { _data[12] = value; } }
 
-		[TalentData(13, "Shadow Embrace", 5, 0, 1, 5, -1, new string[] {
+        [TalentData(13, "Shadow Embrace", 5, 0, 1, 5, -1, new string[] {
 @"Your Corruption, Curse of Agony, Siphon Life and Seed of Corruption spells also cause the Shadow Embrace effect for until cancelled, increasing Shadow damage dealt by 2%.",
 @"Your Corruption, Curse of Agony, Siphon Life and Seed of Corruption spells also cause the Shadow Embrace effect for until cancelled, increasing Shadow damage dealt by 4%.",
 @"Your Corruption, Curse of Agony, Siphon Life and Seed of Corruption spells also cause the Shadow Embrace effect for until cancelled, increasing Shadow damage dealt by 6%.",
 @"Your Corruption, Curse of Agony, Siphon Life and Seed of Corruption spells also cause the Shadow Embrace effect for until cancelled, increasing Shadow damage dealt by 8%.",
 @"Your Corruption, Curse of Agony, Siphon Life and Seed of Corruption spells also cause the Shadow Embrace effect for until cancelled, increasing Shadow damage dealt by 10%.",})]
-		public int ShadowEmbrace { get { return _data[13]; } set { _data[13] = value; } }
+        public int ShadowEmbrace { get { return _data[13]; } set { _data[13] = value; } }
 
-		[TalentData(14, "Siphon Life", 1, 0, 2, 5, -1, new string[] {
+        [TalentData(14, "Siphon Life", 1, 0, 2, 5, -1, new string[] {
 @"140 Mana,30 yd range,
 Instant cast
 Transfers 15 health from the target to the caster every 3 sec. Lasts 30 sec.
@@ -1306,36 +1342,36 @@ Transfers 15 health from the target to the caster every 3 sec. Lasts 30 sec.
 		 Rank 6: 410 Mana, 63 Health
 		 Rank 7: 605 Mana, 70 Health
 		 Rank 8: 710 Mana, 81 Health",})]
-		public int SiphonLife { get { return _data[14]; } set { _data[14] = value; } }
+        public int SiphonLife { get { return _data[14]; } set { _data[14] = value; } }
 
-		[TalentData(15, "Curse of Exhaustion", 1, 0, 3, 5, 9, new string[] {
+        [TalentData(15, "Curse of Exhaustion", 1, 0, 3, 5, 9, new string[] {
 @"231 Mana,30 yd range,
 Instant cast
 Reduces the target's movement speed by 50% for 12 sec. Only one Curse per Warlock can be active on any one target.",})]
-		public int CurseofExhaustion { get { return _data[15]; } set { _data[15] = value; } }
+        public int CurseOfExhaustion { get { return _data[15]; } set { _data[15] = value; } }
 
-		[TalentData(16, "Improved Felhunter", 2, 0, 1, 6, -1, new string[] {
+        [TalentData(16, "Improved Felhunter", 2, 0, 1, 6, -1, new string[] {
 @"Your Felhunter gains mana equal to 100% of the damage done by it's Shadow Bite ability, and increases the effect of your Felhunter's Fel Intelligence by 5%.",
 @"Your Felhunter gains mana equal to 200% of the damage done by it's Shadow Bite ability, and increases the effect of your Felhunter's Fel Intelligence by 10%.",})]
-		public int ImprovedFelhunter { get { return _data[16]; } set { _data[16] = value; } }
+        public int ImprovedFelhunter { get { return _data[16]; } set { _data[16] = value; } }
 
-		[TalentData(17, "Shadow Mastery", 5, 0, 2, 6, 14, new string[] {
+        [TalentData(17, "Shadow Mastery", 5, 0, 2, 6, 14, new string[] {
 @"Increases the damage dealt or life drained by your Shadow spells by 2%.",
 @"Increases the damage dealt or life drained by your Shadow spells by 4%.",
 @"Increases the damage dealt or life drained by your Shadow spells by 6%.",
 @"Increases the damage dealt or life drained by your Shadow spells by 8%.",
 @"Increases the damage dealt or life drained by your Shadow spells by 10%.",})]
-		public int ShadowMastery { get { return _data[17]; } set { _data[17] = value; } }
+        public int ShadowMastery { get { return _data[17]; } set { _data[17] = value; } }
 
-		[TalentData(18, "Contagion", 5, 0, 2, 7, -1, new string[] {
+        [TalentData(18, "Contagion", 5, 0, 2, 7, -1, new string[] {
 @"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 1% and reduces the chance your Affliction spells will be dispelled by an additional 6%.",
 @"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 2% and reduces the chance your Affliction spells will be dispelled by an additional 12%.",
 @"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 3% and reduces the chance your Affliction spells will be dispelled by an additional 18%.",
 @"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 4% and reduces the chance your Affliction spells will be dispelled by an additional 24%.",
 @"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 5% and reduces the chance your Affliction spells will be dispelled by an additional 30%.",})]
-		public int Contagion { get { return _data[18]; } set { _data[18] = value; } }
+        public int Contagion { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Dark Pact", 1, 0, 3, 7, -1, new string[] {
+        [TalentData(19, "Dark Pact", 1, 0, 3, 7, -1, new string[] {
 @"30 yd range
 Instant
 Drains 305 of your summoned demon's Mana, returning 100% to you.
@@ -1344,26 +1380,26 @@ Drains 305 of your summoned demon's Mana, returning 100% to you.
 		 Rank 2: 440 Mana
 		 Rank 3: 545 Mana
 		 Rank 4: 700 Mana",})]
-		public int DarkPact { get { return _data[19]; } set { _data[19] = value; } }
+        public int DarkPact { get { return _data[19]; } set { _data[19] = value; } }
 
-		[TalentData(20, "Improved Howl of Terror", 2, 0, 1, 8, -1, new string[] {
+        [TalentData(20, "Improved Howl of Terror", 2, 0, 1, 8, -1, new string[] {
 @"Reduces the casting time of your Howl of Terror spell by 0.8 sec.",
 @"Reduces the casting time of your Howl of Terror spell by 1.5 sec.",})]
-		public int ImprovedHowlofTerror { get { return _data[20]; } set { _data[20] = value; } }
+        public int ImprovedHowlOfTerror { get { return _data[20]; } set { _data[20] = value; } }
 
-		[TalentData(21, "Malediction", 3, 0, 3, 8, -1, new string[] {
+        [TalentData(21, "Malediction", 3, 0, 3, 8, -1, new string[] {
 @"Increases the damage bonus effect of your Curse of the Elements spell by an additional 1%.",
 @"Increases the damage bonus effect of your Curse of the Elements spell by an additional 2%.",
 @"Increases the damage bonus effect of your Curse of the Elements spell by an additional 3%.",})]
-		public int Malediction { get { return _data[21]; } set { _data[21] = value; } }
+        public int Malediction { get { return _data[21]; } set { _data[21] = value; } }
 
-		[TalentData(22, "Death's Embrace", 3, 0, 1, 9, -1, new string[] {
+        [TalentData(22, "Death's Embrace", 3, 0, 1, 9, -1, new string[] {
 @"Increases the amount drained by your Drain Life by 10% while your health is at or below 20% health, and increases the critical strike chance of your Shadow spells by 5% when your target is at or below 20% health.",
 @"Increases the amount drained by your Drain Life by 20% while your health is at or below 20% health, and increases the critical strike chance of your Shadow spells by 10% when your target is at or below 20% health.",
 @"Increases the amount drained by your Drain Life by 30% while your health is at or below 20% health, and increases the critical strike chance of your Shadow spells by 15% when your target is at or below 20% health.",})]
-		public int DeathsEmbrace { get { return _data[22]; } set { _data[22] = value; } }
+        public int DeathsEmbrace { get { return _data[22]; } set { _data[22] = value; } }
 
-		[TalentData(23, "Unstable Affliction", 1, 0, 2, 9, 18, new string[] {
+        [TalentData(23, "Unstable Affliction", 1, 0, 2, 9, 18, new string[] {
 @"270 Mana,30 yd range,
 1.5 sec cast
 Shadow energy slowly destroys the target, causing 660 damage over 18 sec. In addition, if the Unstable Affliction is dispelled it will cause 990 damage to the dispeller and silence them for 3 sec.
@@ -1371,101 +1407,101 @@ Shadow energy slowly destroys the target, causing 660 damage over 18 sec. In add
 		 Trainable Ranks Listed Below:
 		 Rank 2: 330 Mana, 840 DoT, 1260 damage to dispeller
 		 Rank 3: 400 Mana, 1050 DoT, 1575 damage to dispeller",})]
-		public int UnstableAffliction { get { return _data[23]; } set { _data[23] = value; } }
+        public int UnstableAffliction { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Eradication", 3, 0, 3, 9, -1, new string[] {
+        [TalentData(24, "Eradication", 3, 0, 3, 9, -1, new string[] {
 @"Your Corruption ticks have a 4% chance to increase your spell casting speed by 20% for 12 sec.",
 @"Your Corruption ticks have a 7% chance to increase your spell casting speed by 20% for 12 sec.",
 @"Your Corruption ticks have a 10% chance to increase your spell casting speed by 20% for 12 sec.",})]
-		public int Eradication { get { return _data[24]; } set { _data[24] = value; } }
+        public int Eradication { get { return _data[24]; } set { _data[24] = value; } }
 
-		[TalentData(25, "Everlasting Affliction", 5, 0, 2, 10, -1, new string[] {
+        [TalentData(25, "Everlasting Affliction", 5, 0, 2, 10, -1, new string[] {
 @"Your Corruption, Siphon Life and Unstable Affliction spells gain an additional 4% of your bonus spell damage effects, and your Drain Life and Shadow Bolt spells have a 20% chance to reset the duration of your Corruption spell on the target.",
 @"Your Corruption, Siphon Life and Unstable Affliction spells gain an additional 8% of your bonus spell damage effects, and your Drain Life and Shadow Bolt spells have a 40% chance to reset the duration of your Corruption spell on the target.",
 @"Your Corruption, Siphon Life and Unstable Affliction spells gain an additional 12% of your bonus spell damage effects, and your Drain Life and Shadow Bolt spells have a 60% chance to reset the duration of your Corruption spell on the target.",
 @"Your Corruption, Siphon Life and Unstable Affliction spells gain an additional 16% of your bonus spell damage effects, and your Drain Life and Shadow Bolt spells have a 80% chance to reset the duration of your Corruption spell on the target.",
 @"Your Corruption, Siphon Life and Unstable Affliction spells gain an additional 20% of your bonus spell damage effects, and your Drain Life and Shadow Bolt spells have a 100% chance to reset the duration of your Corruption spell on the target.",})]
-		public int EverlastingAffliction { get { return _data[25]; } set { _data[25] = value; } }
+        public int EverlastingAffliction { get { return _data[25]; } set { _data[25] = value; } }
 
-		[TalentData(26, "Haunt", 1, 0, 2, 11, -1, new string[] {
+        [TalentData(26, "Haunt", 1, 0, 2, 11, -1, new string[] {
 @"462 Mana,30 yd range,
 1.5 sec cast,10 sec cooldown,
  You send a ghostly soul into the target, dealing 645 to 754 Shadow damage and increasing all damage done by your damage-over-time effects on the target by 20% for 12 sec. When the Haunt spell ends or is dispelled, the soul returns to you, healing you for 20% of all damage done to the target.",})]
-		public int Haunt { get { return _data[26]; } set { _data[26] = value; } }
+        public int Haunt { get { return _data[26]; } set { _data[26] = value; } }
 
-		[TalentData(27, "Improved Healthstone", 2, 1, 1, 1, -1, new string[] {
+        [TalentData(27, "Improved Healthstone", 2, 1, 1, 1, -1, new string[] {
 @"Increases the amount of Health restored by your Healthstone by 10%.",
 @"Increases the amount of Health restored by your Healthstone by 20%.",})]
-		public int ImprovedHealthstone { get { return _data[27]; } set { _data[27] = value; } }
+        public int ImprovedHealthstone { get { return _data[27]; } set { _data[27] = value; } }
 
-		[TalentData(28, "Improved Imp", 3, 1, 2, 1, -1, new string[] {
+        [TalentData(28, "Improved Imp", 3, 1, 2, 1, -1, new string[] {
 @"Increases the effect of your Imp's Firebolt, Fire Shield, and Blood Pact spells by 10%.",
 @"Increases the effect of your Imp's Firebolt, Fire Shield, and Blood Pact spells by 20%.",
 @"Increases the effect of your Imp's Firebolt, Fire Shield, and Blood Pact spells by 30%.",})]
-		public int ImprovedImp { get { return _data[28]; } set { _data[28] = value; } }
+        public int ImprovedImp { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(29, "Demonic Embrace", 5, 1, 3, 1, -1, new string[] {
+        [TalentData(29, "Demonic Embrace", 5, 1, 3, 1, -1, new string[] {
 @"Increases your total Stamina by 2%.",
 @"Increases your total Stamina by 4%.",
 @"Increases your total Stamina by 6%.",
 @"Increases your total Stamina by 8%.",
 @"Increases your total Stamina by 10%.",})]
-		public int DemonicEmbrace { get { return _data[29]; } set { _data[29] = value; } }
+        public int DemonicEmbrace { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(30, "Improved Health Funnel", 2, 1, 1, 2, -1, new string[] {
+        [TalentData(30, "Improved Health Funnel", 2, 1, 1, 2, -1, new string[] {
 @"Increases the amount of Health transfered by your Health Funnel spell by 10% and reduces the initial health cost by 10%.",
 @"Increases the amount of Health transfered by your Health Funnel spell by 20% and reduces the initial health cost by 20%.",})]
-		public int ImprovedHealthFunnel { get { return _data[30]; } set { _data[30] = value; } }
+        public int ImprovedHealthFunnel { get { return _data[30]; } set { _data[30] = value; } }
 
-		[TalentData(31, "Improved Voidwalker", 3, 1, 2, 2, -1, new string[] {
+        [TalentData(31, "Improved Voidwalker", 3, 1, 2, 2, -1, new string[] {
 @"Increases the effectiveness of your Voidwalker's Torment, Consume Shadows, Sacrifice and Suffering spells by 10%.",
 @"Increases the effectiveness of your Voidwalker's Torment, Consume Shadows, Sacrifice and Suffering spells by 20%.",
 @"Increases the effectiveness of your Voidwalker's Torment, Consume Shadows, Sacrifice and Suffering spells by 30%.",})]
-		public int ImprovedVoidwalker { get { return _data[31]; } set { _data[31] = value; } }
+        public int ImprovedVoidwalker { get { return _data[31]; } set { _data[31] = value; } }
 
-		[TalentData(32, "Fel Vitality", 3, 1, 3, 2, -1, new string[] {
+        [TalentData(32, "Fel Vitality", 3, 1, 3, 2, -1, new string[] {
 @"Increases the Stamina and Intellect of your Imp, Voidwalker, Succubus, Felhunter and Felguard by 5% and increases your maximum health and mana by 1%.",
 @"Increases the Stamina and Intellect of your Imp, Voidwalker, Succubus, Felhunter and Felguard by 10% and increases your maximum health and mana by 2%.",
 @"Increases the Stamina and Intellect of your Imp, Voidwalker, Succubus, Felhunter and Felguard by 15% and increases your maximum health and mana by 3%.",})]
-		public int FelVitality { get { return _data[32]; } set { _data[32] = value; } }
+        public int FelVitality { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(33, "Improved Succubus", 3, 1, 1, 3, -1, new string[] {
+        [TalentData(33, "Improved Succubus", 3, 1, 1, 3, -1, new string[] {
 @"Gives your Succubus a 33% chance to resist interruption caused by damage while channeling Seduction, and increases the duration of your Succubus' Seduction and Lesser Invisibility spells by 10%.",
 @"Gives your Succubus a 66% chance to resist interruption caused by damage while channeling Seduction, and increases the duration of your Succubus' Seduction and Lesser Invisibility spells by 20%.",
 @"Gives your Succubus a 100% chance to resist interruption caused by damage while channeling Seduction, and increases the duration of your Succubus' Seduction and Lesser Invisibility spells by 30%.",})]
-		public int ImprovedSuccubus { get { return _data[33]; } set { _data[33] = value; } }
+        public int ImprovedSuccubus { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(34, "Soul Link", 1, 1, 2, 3, -1, new string[] {
+        [TalentData(34, "Soul Link", 1, 1, 2, 3, -1, new string[] {
 @"616 Mana,100 yd range,
 Instant cast
 When active, 15% of all damage taken by the caster is taken by your Imp, Voidwalker, Succubus, Felhunter, Felguard, or enslaved demon instead.  That damage cannot be prevented. Lasts as long as the demon is active and controlled.",})]
-		public int SoulLink { get { return _data[34]; } set { _data[34] = value; } }
+        public int SoulLink { get { return _data[34]; } set { _data[34] = value; } }
 
-		[TalentData(35, "Fel Domination", 1, 1, 3, 3, -1, new string[] {
+        [TalentData(35, "Fel Domination", 1, 1, 3, 3, -1, new string[] {
 @"Instant,15 min cooldown,
 Your next Imp, Voidwalker, Succubus, Felhunter or Felguard Summon spell has its casting time reduced by 5.5 sec and its Mana cost reduced by 50%.",})]
-		public int FelDomination { get { return _data[35]; } set { _data[35] = value; } }
+        public int FelDomination { get { return _data[35]; } set { _data[35] = value; } }
 
-		[TalentData(36, "Demonic Aegis", 3, 1, 4, 3, -1, new string[] {
+        [TalentData(36, "Demonic Aegis", 3, 1, 4, 3, -1, new string[] {
 @"Increases the effectiveness of your Demon Armor and Fel Armor spells by 10%.",
 @"Increases the effectiveness of your Demon Armor and Fel Armor spells by 20%.",
 @"Increases the effectiveness of your Demon Armor and Fel Armor spells by 30%.",})]
-		public int DemonicAegis { get { return _data[36]; } set { _data[36] = value; } }
+        public int DemonicAegis { get { return _data[36]; } set { _data[36] = value; } }
 
-		[TalentData(37, "Unholy Power", 5, 1, 2, 4, -1, new string[] {
+        [TalentData(37, "Unholy Power", 5, 1, 2, 4, -1, new string[] {
 @"Increases the damage done by your Voidwalker, Succubus, Felhunter and Felguard's melee attacks and your Imp's Firebolt by 4%.",
 @"Increases the damage done by your Voidwalker, Succubus, Felhunter and Felguard's melee attacks and your Imp's Firebolt by 8%.",
 @"Increases the damage done by your Voidwalker, Succubus, Felhunter and Felguard's melee attacks and your Imp's Firebolt by 12%.",
 @"Increases the damage done by your Voidwalker, Succubus, Felhunter and Felguard's melee attacks and your Imp's Firebolt by 16%.",
 @"Increases the damage done by your Voidwalker, Succubus, Felhunter and Felguard's melee attacks and your Imp's Firebolt by 20%.",})]
-		public int UnholyPower { get { return _data[37]; } set { _data[37] = value; } }
+        public int UnholyPower { get { return _data[37]; } set { _data[37] = value; } }
 
-		[TalentData(38, "Master Summoner", 2, 1, 3, 4, 35, new string[] {
+        [TalentData(38, "Master Summoner", 2, 1, 3, 4, 35, new string[] {
 @"Reduces the casting time of your Imp, Voidwalker, Succubus, Felhunter and Felguard Summoning spells by 2 sec and the Mana cost by 20%.",
 @"Reduces the casting time of your Imp, Voidwalker, Succubus, Felhunter and Felguard Summoning spells by 4 sec and the Mana cost by 40%.",})]
-		public int MasterSummoner { get { return _data[38]; } set { _data[38] = value; } }
+        public int MasterSummoner { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Demonic Sacrifice", 1, 1, 1, 5, 37, new string[] {
+        [TalentData(39, "Demonic Sacrifice", 1, 1, 1, 5, 37, new string[] {
 @"100 yd range
 Instant
 When activated, sacrifices your summoned demon to grant you an effect that lasts 30 min. The effect is canceled if any Demon is summoned.
@@ -1479,20 +1515,20 @@ Succubus: Increases your Shadow damage by 10%.
 Felhunter: Restores 3% of total mana every 4 sec.
 
 Felguard: Increases your Shadow and Fire damage by 10% and restores 2% of total mana every 4 sec.",})]
-		public int DemonicSacrifice { get { return _data[39]; } set { _data[39] = value; } }
+        public int DemonicSacrifice { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(40, "Master Conjuror", 2, 1, 3, 5, -1, new string[] {
+        [TalentData(40, "Master Conjuror", 2, 1, 3, 5, -1, new string[] {
 @"Increases the bonus Fire damage from Firestones and the Firestone effect by 15% and increases the spell critical strike rating bonus of your Spellstone by 15%.",
 @"Increases the bonus Fire damage from Firestones and the Firestone effect by 30% and increases the spell critical strike rating bonus of your Spellstone by 30%.",})]
-		public int MasterConjuror { get { return _data[40]; } set { _data[40] = value; } }
+        public int MasterConjuror { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(41, "Mana Feed", 3, 1, 1, 6, -1, new string[] {
+        [TalentData(41, "Mana Feed", 3, 1, 1, 6, -1, new string[] {
 @"When you gain mana from Drain Mana or Life Tap spells, your summoned demon gains 33% of the mana you gain.",
 @"When you gain mana from Drain Mana or Life Tap spells, your summoned demon gains 66% of the mana you gain.",
 @"When you gain mana from Drain Mana or Life Tap spells, your summoned demon gains 100% of the mana you gain.",})]
-		public int ManaFeed { get { return _data[41]; } set { _data[41] = value; } }
+        public int ManaFeed { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(42, "Master Demonologist", 5, 1, 2, 6, 37, new string[] {
+        [TalentData(42, "Master Demonologist", 5, 1, 2, 6, 37, new string[] {
 @"Grants both the Warlock and the summoned demon an effect as long as that demon is active.
 
 Imp - Increases your fire damage by 1%, and increases the critical effect chance of your fire spells by 1%.
@@ -1548,20 +1584,20 @@ Succubus - Increases your shadow damage by 5%, and increases the critical effect
 Felhunter - Reduces all spell damage taken by 10%.
 
 Felguard - Increases all damage done by 5%, and reduces all damage taken by 5%.",})]
-		public int MasterDemonologist { get { return _data[42]; } set { _data[42] = value; } }
+        public int MasterDemonologist { get { return _data[42]; } set { _data[42] = value; } }
 
-		[TalentData(43, "Improved Enslave Demon", 2, 1, 3, 6, -1, new string[] {
+        [TalentData(43, "Improved Enslave Demon", 2, 1, 3, 6, -1, new string[] {
 @"Reduces the Attack Speed and Casting Speed penalty of your Enslave Demon spell by 5% and reduces the resist chance by 5%.",
 @"Reduces the Attack Speed and Casting Speed penalty of your Enslave Demon spell by 10% and reduces the resist chance by 10%.",})]
-		public int ImprovedEnslaveDemon { get { return _data[43]; } set { _data[43] = value; } }
+        public int ImprovedEnslaveDemon { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Demonic Resilience", 3, 1, 1, 7, -1, new string[] {
+        [TalentData(44, "Demonic Resilience", 3, 1, 1, 7, -1, new string[] {
 @"Reduces the chance you'll be critically hit by melee and spells by 1% and reduces all damage your summoned demon takes by 5%.",
 @"Reduces the chance you'll be critically hit by melee and spells by 2% and reduces all damage your summoned demon takes by 10%.",
 @"Reduces the chance you'll be critically hit by melee and spells by 3% and reduces all damage your summoned demon takes by 15%.",})]
-		public int DemonicResilience { get { return _data[44]; } set { _data[44] = value; } }
+        public int DemonicResilience { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(45, "Demonic Empowerment", 1, 1, 2, 7, 42, new string[] {
+        [TalentData(45, "Demonic Empowerment", 1, 1, 2, 7, 42, new string[] {
 @"Grants the Warlock's summoned demon Empowerment.
 
  Succubus - Instantly vanishes, causing the Succubus to go into an improved Invisibility state. The vanish effect removes all stuns, snares and movement imparing effects from the Succubus.
@@ -1573,98 +1609,98 @@ Felguard - Increases all damage done by 5%, and reduces all damage taken by 5%."
  Felhunter - Dispels all magical effects from the Felhunter.<br/><br/> Fel Guard - Increases the Fel Guard's attack speed by 20% and breaks all stun, snare and movement impairing effects and makes your Fel Guard immune to them.
 
 ",})]
-		public int DemonicEmpowerment { get { return _data[45]; } set { _data[45] = value; } }
+        public int DemonicEmpowerment { get { return _data[45]; } set { _data[45] = value; } }
 
-		[TalentData(46, "Demonic Knowledge", 3, 1, 3, 7, -1, new string[] {
+        [TalentData(46, "Demonic Knowledge", 3, 1, 3, 7, -1, new string[] {
 @"Increases your spell damage by an amount equal to 4% of the total of your active demon's Stamina plus Intellect.",
 @"Increases your spell damage by an amount equal to 8% of the total of your active demon's Stamina plus Intellect.",
 @"Increases your spell damage by an amount equal to 12% of the total of your active demon's Stamina plus Intellect.",})]
-		public int DemonicKnowledge { get { return _data[46]; } set { _data[46] = value; } }
+        public int DemonicKnowledge { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Demonic Tactics", 5, 1, 2, 8, -1, new string[] {
+        [TalentData(47, "Demonic Tactics", 5, 1, 2, 8, -1, new string[] {
 @"Increases melee and spell critical strike chance for you and your summoned demon by 1%.",
 @"Increases melee and spell critical strike chance for you and your summoned demon by 2%.",
 @"Increases melee and spell critical strike chance for you and your summoned demon by 3%.",
 @"Increases melee and spell critical strike chance for you and your summoned demon by 4%.",
 @"Increases melee and spell critical strike chance for you and your summoned demon by 5%.",})]
-		public int DemonicTactics { get { return _data[47]; } set { _data[47] = value; } }
+        public int DemonicTactics { get { return _data[47]; } set { _data[47] = value; } }
 
-		[TalentData(48, "Fel Synergy", 2, 1, 3, 8, -1, new string[] {
+        [TalentData(48, "Fel Synergy", 2, 1, 3, 8, -1, new string[] {
 @"Your Summoned Demons share an additional 5% of your Armor, Intellect and Stamina, and you have a 50% chance to heal your pet for 15% of the amount of damage done to you.",
 @"Your Summoned Demons share an additional 10% of your Armor, Intellect and Stamina, and you have a 100% chance to heal your pet for 15% of the amount of damage done to you.",})]
-		public int FelSynergy { get { return _data[48]; } set { _data[48] = value; } }
+        public int FelSynergy { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(49, "Improved Demonic Tactics", 3, 1, 1, 9, 47, new string[] {
+        [TalentData(49, "Improved Demonic Tactics", 3, 1, 1, 9, 47, new string[] {
 @"Increases your summoned demons critical strike chance equal to 10% of your critical strike chance.",
 @"Increases your summoned demons critical strike chance equal to 20% of your critical strike chance.",
 @"Increases your summoned demons critical strike chance equal to 30% of your critical strike chance.",})]
-		public int ImprovedDemonicTactics { get { return _data[49]; } set { _data[49] = value; } }
+        public int ImprovedDemonicTactics { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(50, "Summon Felguard", 1, 1, 2, 9, -1, new string[] {
+        [TalentData(50, "Summon Felguard", 1, 1, 2, 9, -1, new string[] {
 @"2092 Mana,
 10 sec cast,
 Reagents: Soul Shard
 Summons a Felguard under the command of the Warlock.",})]
-		public int SummonFelguard { get { return _data[50]; } set { _data[50] = value; } }
+        public int SummonFelguard { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Demonic Empathy", 3, 1, 3, 9, -1, new string[] {
+        [TalentData(51, "Demonic Empathy", 3, 1, 3, 9, -1, new string[] {
 @"When you or your pet critically hits with a spell or ability, the other's damage done by their next 3 spells or abilities is increased by 2%. Lasts 15 sec.",
 @"When you or your pet critically hits with a spell or ability, the other's damage done by their next 3 spells or abilities is increased by 4%. Lasts 15 sec.",
 @"When you or your pet critically hits with a spell or ability, the other's damage done by their next 3 spells or abilities is increased by 6%. Lasts 15 sec.",})]
-		public int DemonicEmpathy { get { return _data[51]; } set { _data[51] = value; } }
+        public int DemonicEmpathy { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(52, "Demonic Pact", 5, 1, 2, 10, -1, new string[] {
+        [TalentData(52, "Demonic Pact", 5, 1, 2, 10, -1, new string[] {
 @"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 2% of your Spell Damage for 12 sec.",
 @"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 4% of your Spell Damage for 12 sec.",
 @"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 6% of your Spell Damage for 12 sec.",
 @"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 8% of your Spell Damage for 12 sec.",
 @"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 10% of your Spell Damage for 12 sec.",})]
-		public int DemonicPact { get { return _data[52]; } set { _data[52] = value; } }
+        public int DemonicPact { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(53, "Metamorphosis", 1, 1, 2, 11, -1, new string[] {
+        [TalentData(53, "Metamorphosis", 1, 1, 2, 11, -1, new string[] {
 @"Instant,3 min cooldown,
 You transform into a Demon, increasing your armor by 360%, reducing the duration of stun and snare effects on you by 50% and increasing your attack power equal to 75% of your spell power.<br/><br/>While in Demon Form, you cannot cast spells, and your summoned Demon is temporarily dismissed, but you gain unique demon abilities. When the Metamorphosis effect ends, your summoned Demon will re-appear.",})]
-		public int Metamorphosis { get { return _data[53]; } set { _data[53] = value; } }
+        public int Metamorphosis { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(54, "Improved Shadow Bolt", 5, 2, 2, 1, -1, new string[] {
+        [TalentData(54, "Improved Shadow Bolt", 5, 2, 2, 1, -1, new string[] {
 @"Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 3% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.",
 @"Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 6% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.",
 @"Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 9% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.",
 @"Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 12% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.",
 @"Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 15% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.",})]
-		public int ImprovedShadowBolt { get { return _data[54]; } set { _data[54] = value; } }
+        public int ImprovedShadowBolt { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(55, "Bane", 5, 2, 3, 1, -1, new string[] {
+        [TalentData(55, "Bane", 5, 2, 3, 1, -1, new string[] {
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.1 sec and your Soul Fire spell by 0.4 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.2 sec and your Soul Fire spell by 0.8 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.3 sec and your Soul Fire spell by 1.2 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.4 sec and your Soul Fire spell by 1.6 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.5 sec and your Soul Fire spell by 2.0 sec.",})]
-		public int Bane { get { return _data[55]; } set { _data[55] = value; } }
+        public int Bane { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "Aftermath", 2, 2, 1, 2, -1, new string[] {
+        [TalentData(56, "Aftermath", 2, 2, 1, 2, -1, new string[] {
 @"Gives your Destruction spells a 5% chance to daze the target for 5 sec.",
 @"Gives your Destruction spells a 10% chance to daze the target for 5 sec.",})]
-		public int Aftermath { get { return _data[56]; } set { _data[56] = value; } }
+        public int Aftermath { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(57, "Molten Core", 3, 2, 2, 2, -1, new string[] {
+        [TalentData(57, "Molten Core", 3, 2, 2, 2, -1, new string[] {
 @"Your Shadow spells and damage over time effects have a 5% chance to increase the damage of your Fire spells by 10% for 6 sec.",
 @"Your Shadow spells and damage over time effects have a 10% chance to increase the damage of your Fire spells by 10% for 6 sec.",
 @"Your Shadow spells and damage over time effects have a 15% chance to increase the damage of your Fire spells by 10% for 6 sec.",})]
-		public int MoltenCore { get { return _data[57]; } set { _data[57] = value; } }
+        public int MoltenCore { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(58, "Cataclysm", 3, 2, 3, 2, -1, new string[] {
+        [TalentData(58, "Cataclysm", 3, 2, 3, 2, -1, new string[] {
 @"Reduces the Mana cost of your Destruction spells by 2%, and increases the chance to hit with your Destruction spells by 1%.",
 @"Reduces the Mana cost of your Destruction spells by 4%, and increases the chance to hit with your Destruction spells by 2%.",
 @"Reduces the Mana cost of your Destruction spells by 6%, and increases the chance to hit with your Destruction spells by 3%.",})]
-		public int Cataclysm { get { return _data[58]; } set { _data[58] = value; } }
+        public int Cataclysm { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(59, "Demonic Power", 2, 2, 1, 3, -1, new string[] {
+        [TalentData(59, "Demonic Power", 2, 2, 1, 3, -1, new string[] {
 @"Reduces the cooldown of your Succubus' Lash of Pain spell by 3 sec, and reduces the casting time of your Imp's Firebolt spell by 0.25 sec",
 @"Reduces the cooldown of your Succubus' Lash of Pain spell by 6 sec, and reduces the casting time of your Imp's Firebolt spell by 0.50 sec",})]
-		public int DemonicPower { get { return _data[59]; } set { _data[59] = value; } }
+        public int DemonicPower { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(60, "Shadowburn", 1, 2, 2, 3, -1, new string[] {
+        [TalentData(60, "Shadowburn", 1, 2, 2, 3, -1, new string[] {
 @"105 Mana,20 yd range,
 Instant cast,15 sec cooldown,
 Reagents: Soul Shard
@@ -1678,64 +1714,64 @@ Instantly blasts the target for 91 to 104 Shadow damage. If the target dies with
 		 Rank 6: 365 Mana, 468-520 Damage
 		 Rank 7: 435 Mana, 538-599 Damage
 		 Rank 8: 515 Mana, 597-665 Damage",})]
-		public int Shadowburn { get { return _data[60]; } set { _data[60] = value; } }
+        public int Shadowburn { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Devastation", 5, 2, 3, 3, -1, new string[] {
+        [TalentData(61, "Devastation", 5, 2, 3, 3, -1, new string[] {
 @"Increases the critical strike chance of your Destruction spells by 1%.",
 @"Increases the critical strike chance of your Destruction spells by 2%.",
 @"Increases the critical strike chance of your Destruction spells by 3%.",
 @"Increases the critical strike chance of your Destruction spells by 4%.",
 @"Increases the critical strike chance of your Destruction spells by 5%.",})]
-		public int Devastation { get { return _data[61]; } set { _data[61] = value; } }
+        public int Devastation { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Intensity", 2, 2, 1, 4, -1, new string[] {
+        [TalentData(62, "Intensity", 2, 2, 1, 4, -1, new string[] {
 @"Gives you a 35% chance to resist interruption caused by damage while casting or channeling any Destruction spell.",
 @"Gives you a 70% chance to resist interruption caused by damage while casting or channeling any Destruction spell.",})]
-		public int Intensity { get { return _data[62]; } set { _data[62] = value; } }
+        public int Intensity { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(63, "Destructive Reach", 2, 2, 2, 4, -1, new string[] {
+        [TalentData(63, "Destructive Reach", 2, 2, 2, 4, -1, new string[] {
 @"Increases the range of your Destruction spells by 10% and reduces threat caused by Destruction spells by 5%.",
 @"Increases the range of your Destruction spells by 20% and reduces threat caused by Destruction spells by 10%.",})]
-		public int DestructiveReach { get { return _data[63]; } set { _data[63] = value; } }
+        public int DestructiveReach { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(64, "Improved Searing Pain", 3, 2, 4, 4, -1, new string[] {
+        [TalentData(64, "Improved Searing Pain", 3, 2, 4, 4, -1, new string[] {
 @"Increases the critical strike chance of your Searing Pain spell by 4%.",
 @"Increases the critical strike chance of your Searing Pain spell by 7%.",
 @"Increases the critical strike chance of your Searing Pain spell by 10%.",})]
-		public int ImprovedSearingPain { get { return _data[64]; } set { _data[64] = value; } }
+        public int ImprovedSearingPain { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(65, "Pyroclasm", 2, 2, 1, 5, 62, new string[] {
+        [TalentData(65, "Pyroclasm", 2, 2, 1, 5, 62, new string[] {
 @"Gives your Rain of Fire, Hellfire, Conflagrate and Soul Fire spells a 13% chance to stun the target for 3 sec.",
 @"Gives your Rain of Fire, Hellfire, Conflagrate and Soul Fire spells a 26% chance to stun the target for 3 sec.",})]
-		public int Pyroclasm { get { return _data[65]; } set { _data[65] = value; } }
+        public int Pyroclasm { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(66, "Improved Immolate", 5, 2, 2, 5, -1, new string[] {
+        [TalentData(66, "Improved Immolate", 5, 2, 2, 5, -1, new string[] {
 @"Increases the initial damage of your Immolate spell by 5%.",
 @"Increases the initial damage of your Immolate spell by 10%.",
 @"Increases the initial damage of your Immolate spell by 15%.",
 @"Increases the initial damage of your Immolate spell by 20%.",
 @"Increases the initial damage of your Immolate spell by 25%.",})]
-		public int ImprovedImmolate { get { return _data[66]; } set { _data[66] = value; } }
+        public int ImprovedImmolate { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(67, "Ruin", 1, 2, 3, 5, 61, new string[] {
+        [TalentData(67, "Ruin", 1, 2, 3, 5, 61, new string[] {
 @"Increases the critical strike damage bonus of your Destruction spells by 100%.",})]
-		public int Ruin { get { return _data[67]; } set { _data[67] = value; } }
+        public int Ruin { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(68, "Nether Protection", 3, 2, 1, 6, -1, new string[] {
+        [TalentData(68, "Nether Protection", 3, 2, 1, 6, -1, new string[] {
 @"After being hit with a spell, you have a 10% chance to gain Nether Protection, reducing all damage by that spell school by 60% for 8 sec.",
 @"After being hit with a spell, you have a 20% chance to gain Nether Protection, reducing all damage by that spell school by 60% for 8 sec.",
 @"After being hit with a spell, you have a 30% chance to gain Nether Protection, reducing all damage by that spell school by 60% for 8 sec.",})]
-		public int NetherProtection { get { return _data[68]; } set { _data[68] = value; } }
+        public int NetherProtection { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(69, "Emberstorm", 5, 2, 3, 6, -1, new string[] {
+        [TalentData(69, "Emberstorm", 5, 2, 3, 6, -1, new string[] {
 @"Increases the damage done by your Fire spells by 2% and reduces the cast time of your Incinerate spell by 0.1 sec.",
 @"Increases the damage done by your Fire spells by 4% and reduces the cast time of your Incinerate spell by 0.2 sec.",
 @"Increases the damage done by your Fire spells by 6% and reduces the cast time of your Incinerate spell by 0.3 sec.",
 @"Increases the damage done by your Fire spells by 8% and reduces the cast time of your Incinerate spell by 0.4 sec.",
 @"Increases the damage done by your Fire spells by 10% and reduces the cast time of your Incinerate spell by 0.5 sec.",})]
-		public int Emberstorm { get { return _data[69]; } set { _data[69] = value; } }
+        public int Emberstorm { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(70, "Conflagrate", 1, 2, 2, 7, 66, new string[] {
+        [TalentData(70, "Conflagrate", 1, 2, 2, 7, 66, new string[] {
 @"165 Mana,30 yd range,
 Instant Cast,10 sec cooldown,
 Ignites a target that is already afflicted by your Immolate, dealing 249 to 316 Fire damage and consuming the Immolate spell.
@@ -1746,40 +1782,40 @@ Ignites a target that is already afflicted by your Immolate, dealing 249 to 316 
 		 Rank 4: 255 Mana, 455-566 Damage
 		 Rank 5: 280 Mana, 521-648 Damage
 		 Rank 6: 305 Mana, 579-721 Damage",})]
-		public int Conflagrate { get { return _data[70]; } set { _data[70] = value; } }
+        public int Conflagrate { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Soul Leech", 3, 2, 3, 7, -1, new string[] {
+        [TalentData(71, "Soul Leech", 3, 2, 3, 7, -1, new string[] {
 @"Gives your Shadow Bolt, Shadowburn, Soul Fire, Incinerate, Searing Pain and Conflagrate spells a 10% chance to return health equal to 20% of the damage caused.",
 @"Gives your Shadow Bolt, Shadowburn, Soul Fire, Incinerate, Searing Pain and Conflagrate spells a 20% chance to return health equal to 20% of the damage caused.",
 @"Gives your Shadow Bolt, Shadowburn, Soul Fire, Incinerate, Searing Pain and Conflagrate spells a 30% chance to return health equal to 20% of the damage caused.",})]
-		public int SoulLeech { get { return _data[71]; } set { _data[71] = value; } }
+        public int SoulLeech { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(72, "Backlash", 3, 2, 4, 7, -1, new string[] {
+        [TalentData(72, "Backlash", 3, 2, 4, 7, -1, new string[] {
 @"Increases your critical strike chance with spells by an additional 1% and gives you a 8% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
 @"Increases your critical strike chance with spells by an additional 2% and gives you a 16% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
 @"Increases your critical strike chance with spells by an additional 3% and gives you a 25% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",})]
-		public int Backlash { get { return _data[72]; } set { _data[72] = value; } }
+        public int Backlash { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "Shadow and Flame", 5, 2, 2, 8, -1, new string[] {
+        [TalentData(73, "Shadow and Flame", 5, 2, 2, 8, -1, new string[] {
 @"Your Shadow Bolt and Incinerate spells gain an additional 4% of your bonus spell damage effects.",
 @"Your Shadow Bolt and Incinerate spells gain an additional 8% of your bonus spell damage effects.",
 @"Your Shadow Bolt and Incinerate spells gain an additional 12% of your bonus spell damage effects.",
 @"Your Shadow Bolt and Incinerate spells gain an additional 16% of your bonus spell damage effects.",
 @"Your Shadow Bolt and Incinerate spells gain an additional 20% of your bonus spell damage effects.",})]
-		public int ShadowandFlame { get { return _data[73]; } set { _data[73] = value; } }
+        public int ShadowAndFlame { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(74, "Improved Soul Leech", 2, 2, 3, 8, 71, new string[] {
+        [TalentData(74, "Improved Soul Leech", 2, 2, 3, 8, 71, new string[] {
 @"Your Soul Leech effect also restores mana to you and your summoned demon equal to 5% of the damage caused.",
 @"Your Soul Leech effect also restores mana to you and your summoned demon equal to 10% of the damage caused.",})]
-		public int ImprovedSoulLeech { get { return _data[74]; } set { _data[74] = value; } }
+        public int ImprovedSoulLeech { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(75, "Backdraft", 3, 2, 1, 9, 70, new string[] {
+        [TalentData(75, "Backdraft", 3, 2, 1, 9, 70, new string[] {
 @"When you cast Conflagrate, the cast time and mana cost of your next three Destruction spells is reduced by 10%. Lasts 15 sec.",
 @"When you cast Conflagrate, the cast time and mana cost of your next three Destruction spells is reduced by 20%. Lasts 15 sec.",
 @"When you cast Conflagrate, the cast time and mana cost of your next three Destruction spells is reduced by 30%. Lasts 15 sec.",})]
-		public int Backdraft { get { return _data[75]; } set { _data[75] = value; } }
+        public int Backdraft { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(76, "Shadowfury", 1, 2, 2, 9, 73, new string[] {
+        [TalentData(76, "Shadowfury", 1, 2, 2, 9, 73, new string[] {
 @"440 Mana,30 yd range,
 0.5 sec cast,20 sec cooldown,
 Shadowfury is unleashed, causing 357 to 422 Shadow damage and stunning all enemies within 8 yds for 3 sec. Can be cast while moving.
@@ -1788,123 +1824,135 @@ Shadowfury is unleashed, causing 357 to 422 Shadow damage and stunning all enemi
 		 Rank 2: 545 Mana, 476-565 Damage
 		 Rank 3: 710 Mana, 612-728 Damage
 ",})]
-		public int Shadowfury { get { return _data[76]; } set { _data[76] = value; } }
+        public int Shadowfury { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(77, "Empowered Imp", 3, 2, 3, 9, -1, new string[] {
+        [TalentData(77, "Empowered Imp", 3, 2, 3, 9, -1, new string[] {
 @"Increases the damage done by your Imp by 5%, and all critical hits done by your Imp have a 33% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.",
 @"Increases the damage done by your Imp by 10%, and all critical hits done by your Imp have a 66% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.",
 @"Increases the damage done by your Imp by 15%, and all critical hits done by your Imp have a 100% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.",})]
-		public int EmpoweredImp { get { return _data[77]; } set { _data[77] = value; } }
+        public int EmpoweredImp { get { return _data[77]; } set { _data[77] = value; } }
 
-		[TalentData(78, "Fire and Brimstone", 5, 2, 2, 10, -1, new string[] {
+        [TalentData(78, "Fire and Brimstone", 5, 2, 2, 10, -1, new string[] {
 @"Increases the damage of your Immolate spell by an amount equal to 5% of your spell power, and the critical strike chance of your Conflagrate spell is increased by 5% if the Immolate on the target has 5 or fewer seconds remaining.",
 @"Increases the damage of your Immolate spell by an amount equal to 10% of your spell power, and the critical strike chance of your Conflagrate spell is increased by 10% if the Immolate on the target has 5 or fewer seconds remaining.",
 @"Increases the damage of your Immolate spell by an amount equal to 15% of your spell power, and the critical strike chance of your Conflagrate spell is increased by 15% if the Immolate on the target has 5 or fewer seconds remaining.",
 @"Increases the damage of your Immolate spell by an amount equal to 20% of your spell power, and the critical strike chance of your Conflagrate spell is increased by 20% if the Immolate on the target has 5 or fewer seconds remaining.",
 @"Increases the damage of your Immolate spell by an amount equal to 25% of your spell power, and the critical strike chance of your Conflagrate spell is increased by 25% if the Immolate on the target has 5 or fewer seconds remaining.",})]
-		public int FireandBrimstone { get { return _data[78]; } set { _data[78] = value; } }
+        public int FireAndBrimstone { get { return _data[78]; } set { _data[78] = value; } }
 
-		[TalentData(79, "Chaos Bolt", 1, 2, 2, 11, -1, new string[] {
+        [TalentData(79, "Chaos Bolt", 1, 2, 2, 11, -1, new string[] {
 @"715 Mana,30 yd range,
 2 sec cast,12 sec cooldown,
  Sends a bolt of chaotic fire at the enemy, dealing 1012 to 1278 Fire damage. Chaos Bolt cannot be resisted, and pierces through all absorption effects.",})]
-		public int ChaosBolt { get { return _data[79]; } set { _data[79] = value; } }
-	}
+        public int ChaosBolt { get { return _data[79]; } set { _data[79] = value; } }
+    }
 
-	public class DruidTalents
-	{
-		private int[] _data = new int[83];
-		public DruidTalents() { }
-		public DruidTalents(string talents)
-		{
-			List<int> data = new List<int>();
-			foreach (Char digit in talents)
-				data.Add(int.Parse(digit.ToString()));
-			data.CopyTo(_data);
-		}
+    public class DruidTalents : ICloneable
+    {
+        private int[] _data = new int[83];
+        public DruidTalents() { }
+        public DruidTalents(string talents)
+        {
+            List<int> data = new List<int>();
+            foreach (Char digit in talents)
+                data.Add(int.Parse(digit.ToString()));
+            data.CopyTo(_data);
+        }
 
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
-		}
+        public override string ToString()
+        {
+            StringBuilder ret = new StringBuilder();
+            foreach (int digit in _data)
+                ret.Append(digit.ToString());
+            return ret.ToString();
+        }
+        object ICloneable.Clone()
+        {
+            DruidTalents clone = (DruidTalents)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            return clone;
+        }
 
-		[TalentData(0, "Starlight Wrath", 5, 0, 2, 1, -1, new string[] {
+        public DruidTalents Clone()
+        {
+            return (DruidTalents)((ICloneable)this).Clone();
+        }
+
+
+        [TalentData(0, "Starlight Wrath", 5, 0, 2, 1, -1, new string[] {
 @"Reduces the cast time of your Wrath and Starfire spells by 0.1 sec.",
 @"Reduces the cast time of your Wrath and Starfire spells by 0.2 sec.",
 @"Reduces the cast time of your Wrath and Starfire spells by 0.3 sec.",
 @"Reduces the cast time of your Wrath and Starfire spells by 0.4 sec.",
 @"Reduces the cast time of your Wrath and Starfire spells by 0.5 sec.",})]
-		public int StarlightWrath { get { return _data[0]; } set { _data[0] = value; } }
+        public int StarlightWrath { get { return _data[0]; } set { _data[0] = value; } }
 
-		[TalentData(1, "Genesis", 5, 0, 3, 1, -1, new string[] {
+        [TalentData(1, "Genesis", 5, 0, 3, 1, -1, new string[] {
 @"Increases the damage and healing done by your periodic spells by 1%.",
 @"Increases the damage and healing done by your periodic spells by 2%.",
 @"Increases the damage and healing done by your periodic spells by 3%.",
 @"Increases the damage and healing done by your periodic spells by 4%.",
 @"Increases the damage and healing done by your periodic spells by 5%.",})]
-		public int Genesis { get { return _data[1]; } set { _data[1] = value; } }
+        public int Genesis { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Moonglow", 3, 0, 1, 2, -1, new string[] {
+        [TalentData(2, "Moonglow", 3, 0, 1, 2, -1, new string[] {
 @"Reduces the Mana cost of your Moonfire, Starfire, Starfall, Wrath, Healing Touch, Regrowth and Rejuvenation spells by 3%.",
 @"Reduces the Mana cost of your Moonfire, Starfire, Starfall, Wrath, Healing Touch, Regrowth and Rejuvenation spells by 6%.",
 @"Reduces the Mana cost of your Moonfire, Starfire, Starfall, Wrath, Healing Touch, Regrowth and Rejuvenation spells by 9%.",})]
-		public int Moonglow { get { return _data[2]; } set { _data[2] = value; } }
+        public int Moonglow { get { return _data[2]; } set { _data[2] = value; } }
 
-		[TalentData(3, "Nature's Mastery", 2, 0, 2, 2, -1, new string[] {
+        [TalentData(3, "Nature's Mastery", 2, 0, 2, 2, -1, new string[] {
 @"Increases the critical strike chance of your Wrath, Starfire, Starfall, Nourish and Healing Touch spells by 2%.",
 @"Increases the critical strike chance of your Wrath, Starfire, Starfall, Nourish and Healing Touch spells by 4%.",})]
-		public int NaturesMastery { get { return _data[3]; } set { _data[3] = value; } }
+        public int NaturesMastery { get { return _data[3]; } set { _data[3] = value; } }
 
-		[TalentData(4, "Improved Moonfire", 2, 0, 4, 2, -1, new string[] {
+        [TalentData(4, "Improved Moonfire", 2, 0, 4, 2, -1, new string[] {
 @"Increases the damage and critical strike chance of your Moonfire spell by 5%.",
 @"Increases the damage and critical strike chance of your Moonfire spell by 10%.",})]
-		public int ImprovedMoonfire { get { return _data[4]; } set { _data[4] = value; } }
+        public int ImprovedMoonfire { get { return _data[4]; } set { _data[4] = value; } }
 
-		[TalentData(5, "Brambles", 3, 0, 1, 3, -1, new string[] {
+        [TalentData(5, "Brambles", 3, 0, 1, 3, -1, new string[] {
 @"Damage from your Thorns and Entangling Roots increased by 25% and damage done by your Treants increased by 5%. In addition, damage from your Treants and attacks done to you while you have Barkskin active have a 5% chance to daze the target for 3 sec.",
 @"Damage from your Thorns and Entangling Roots increased by 50% and damage done by your Treants increased by 10%. In addition, damage from your Treants and attacks done to you while you have Barkskin active have a 10% chance to daze the target for 3 sec.",
 @"Damage from your Thorns and Entangling Roots increased by 75% and damage done by your Treants increased by 15%. In addition, damage from your Treants and attacks done to you while you have Barkskin active have a 15% chance to daze the target for 3 sec.",})]
-		public int Brambles { get { return _data[5]; } set { _data[5] = value; } }
+        public int Brambles { get { return _data[5]; } set { _data[5] = value; } }
 
-		[TalentData(6, "Nature's Grace", 1, 0, 2, 3, 3, new string[] {
+        [TalentData(6, "Nature's Grace", 1, 0, 2, 3, 3, new string[] {
 @"All spell criticals grace you with a blessing of nature, reducing the casting time of your next spell by 0.5 sec.",})]
-		public int NaturesGrace { get { return _data[6]; } set { _data[6] = value; } }
+        public int NaturesGrace { get { return _data[6]; } set { _data[6] = value; } }
 
-		[TalentData(7, "Nature's Splendor", 3, 0, 3, 3, 3, new string[] {
+        [TalentData(7, "Nature's Splendor", 3, 0, 3, 3, 3, new string[] {
 @"Increases the duration of your Moonfire, Insect Swarm, Rejuvenation, Regrowth, Lifebloom and Flourish spells by 10%.",
 @"Increases the duration of your Moonfire, Insect Swarm, Rejuvenation, Regrowth, Lifebloom and Flourish spells by 20%.",
 @"Increases the duration of your Moonfire, Insect Swarm, Rejuvenation, Regrowth, Lifebloom and Flourish spells by 30%.",})]
-		public int NaturesSplendor { get { return _data[7]; } set { _data[7] = value; } }
+        public int NaturesSplendor { get { return _data[7]; } set { _data[7] = value; } }
 
-		[TalentData(8, "Nature's Reach", 2, 0, 4, 3, -1, new string[] {
+        [TalentData(8, "Nature's Reach", 2, 0, 4, 3, -1, new string[] {
 @"Increases the range of your Balance spells and Faerie Fire (Feral) ability by 10%, and reduces the threat generated by your Balance spells by 15%.",
 @"Increases the range of your Balance spells and Faerie Fire (Feral) ability by 20%, and reduces the threat generated by your Balance spells by 30%.",})]
-		public int NaturesReach { get { return _data[8]; } set { _data[8] = value; } }
+        public int NaturesReach { get { return _data[8]; } set { _data[8] = value; } }
 
-		[TalentData(9, "Vengeance", 5, 0, 2, 4, -1, new string[] {
+        [TalentData(9, "Vengeance", 5, 0, 2, 4, -1, new string[] {
 @"Increases the critical strike damage bonus of your Starfire, Starfall, Moonfire, and Wrath spells by 20%.",
 @"Increases the critical strike damage bonus of your Starfire, Starfall, Moonfire, and Wrath spells by 40%.",
 @"Increases the critical strike damage bonus of your Starfire, Starfall, Moonfire, and Wrath spells by 60%.",
 @"Increases the critical strike damage bonus of your Starfire, Starfall, Moonfire, and Wrath spells by 80%.",
 @"Increases the critical strike damage bonus of your Starfire, Starfall, Moonfire, and Wrath spells by 100%.",})]
-		public int Vengeance { get { return _data[9]; } set { _data[9] = value; } }
+        public int Vengeance { get { return _data[9]; } set { _data[9] = value; } }
 
-		[TalentData(10, "Celestial Focus", 3, 0, 3, 4, -1, new string[] {
+        [TalentData(10, "Celestial Focus", 3, 0, 3, 4, -1, new string[] {
 @"Gives your Starfire and Starfall spells a 5% chance to stun the target for 3 sec and increases your total spell haste by 1%.",
 @"Gives your Starfire and Starfall spells a 10% chance to stun the target for 3 sec and increases your total spell haste by 2%.",
 @"Gives your Starfire and Starfall spells a 15% chance to stun the target for 3 sec and increases your total spell haste by 3%.",})]
-		public int CelestialFocus { get { return _data[10]; } set { _data[10] = value; } }
+        public int CelestialFocus { get { return _data[10]; } set { _data[10] = value; } }
 
-		[TalentData(11, "Lunar Guidance", 3, 0, 1, 5, -1, new string[] {
+        [TalentData(11, "Lunar Guidance", 3, 0, 1, 5, -1, new string[] {
 @"Increases your spell damage and healing by 4% of your total Intellect.",
 @"Increases your spell damage and healing by 8% of your total Intellect.",
 @"Increases your spell damage and healing by 12% of your total Intellect.",})]
-		public int LunarGuidance { get { return _data[11]; } set { _data[11] = value; } }
+        public int LunarGuidance { get { return _data[11]; } set { _data[11] = value; } }
 
-		[TalentData(12, "Insect Swarm", 1, 0, 2, 5, -1, new string[] {
+        [TalentData(12, "Insect Swarm", 1, 0, 2, 5, -1, new string[] {
 @"50 Mana,30 yd range,
 Instant cast
 The enemy target is swarmed by insects, decreasing their chance to hit by 2% and causing 108 Nature damage over 12 sec.
@@ -1915,254 +1963,254 @@ The enemy target is swarmed by insects, decreasing their chance to hit by 2% and
 		 Rank 4: 135 Mana, 432 Damage
 		 Rank 5: 155 Mana, 594 Damage
 		 Rank 6: 175 Mana, 792 Damage",})]
-		public int InsectSwarm { get { return _data[12]; } set { _data[12] = value; } }
+        public int InsectSwarm { get { return _data[12]; } set { _data[12] = value; } }
 
-		[TalentData(13, "Improved Insect Swarm", 3, 0, 3, 5, 12, new string[] {
+        [TalentData(13, "Improved Insect Swarm", 3, 0, 3, 5, 12, new string[] {
 @"Increases your damage done by your Wrath spell to targets afflicted by your Insect Swarm by 1%, and increases the critical strike chance of your Starfire spell by 1% on targets afflicted by your Moonfire spell.",
 @"Increases your damage done by your Wrath spell to targets afflicted by your Insect Swarm by 2%, and increases the critical strike chance of your Starfire spell by 2% on targets afflicted by your Moonfire spell.",
 @"Increases your damage done by your Wrath spell to targets afflicted by your Insect Swarm by 3%, and increases the critical strike chance of your Starfire spell by 3% on targets afflicted by your Moonfire spell.",})]
-		public int ImprovedInsectSwarm { get { return _data[13]; } set { _data[13] = value; } }
+        public int ImprovedInsectSwarm { get { return _data[13]; } set { _data[13] = value; } }
 
-		[TalentData(14, "Dreamstate", 3, 0, 1, 6, -1, new string[] {
+        [TalentData(14, "Dreamstate", 3, 0, 1, 6, -1, new string[] {
 @"Regenerate mana equal to 4% of your Intellect every 5 sec. even while casting.",
 @"Regenerate mana equal to 7% of your Intellect every 5 sec. even while casting.",
 @"Regenerate mana equal to 10% of your Intellect every 5 sec. even while casting.",})]
-		public int Dreamstate { get { return _data[14]; } set { _data[14] = value; } }
+        public int Dreamstate { get { return _data[14]; } set { _data[14] = value; } }
 
-		[TalentData(15, "Moonfury", 5, 0, 2, 6, -1, new string[] {
+        [TalentData(15, "Moonfury", 5, 0, 2, 6, -1, new string[] {
 @"Increases the damage done by your Starfire, Moonfire and Wrath spells by 2%.",
 @"Increases the damage done by your Starfire, Moonfire and Wrath spells by 4%.",
 @"Increases the damage done by your Starfire, Moonfire and Wrath spells by 6%.",
 @"Increases the damage done by your Starfire, Moonfire and Wrath spells by 8%.",
 @"Increases the damage done by your Starfire, Moonfire and Wrath spells by 10%.",})]
-		public int Moonfury { get { return _data[15]; } set { _data[15] = value; } }
+        public int Moonfury { get { return _data[15]; } set { _data[15] = value; } }
 
-		[TalentData(16, "Balance of Power", 2, 0, 3, 6, -1, new string[] {
+        [TalentData(16, "Balance of Power", 2, 0, 3, 6, -1, new string[] {
 @"Increases your chance to hit with all spells and reduces the chance you'll be hit by spells by 2%.",
 @"Increases your chance to hit with all spells and reduces the chance you'll be hit by spells by 4%.",})]
-		public int BalanceofPower { get { return _data[16]; } set { _data[16] = value; } }
+        public int BalanceOfPower { get { return _data[16]; } set { _data[16] = value; } }
 
-		[TalentData(17, "Moonkin Form", 1, 0, 2, 7, -1, new string[] {
+        [TalentData(17, "Moonkin Form", 1, 0, 2, 7, -1, new string[] {
 @"538 Mana
 Instant cast,
 Shapeshift into Moonkin Form. While in this form the armor contribution from items is increased by 400% and all party members within 30 yards have their spell critical chance increased by 5%. Spell critical strikes in this form have a chance to instantly regenerate 2% of your total mana. The Moonkin can only cast Balance and Remove Curse spells while shapeshifted.
 
 The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.",})]
-		public int MoonkinForm { get { return _data[17]; } set { _data[17] = value; } }
+        public int MoonkinForm { get { return _data[17]; } set { _data[17] = value; } }
 
-		[TalentData(18, "Improved Moonkin Form", 3, 0, 3, 7, 17, new string[] {
+        [TalentData(18, "Improved Moonkin Form", 3, 0, 3, 7, 17, new string[] {
 @"Your Moonkin Aura also causes affected targets to have a 33% chance to gain 20% spell haste when they critically hit with spells for 8 sec. This effect has a 30 second cooldown.",
 @"Your Moonkin Aura also causes affected targets to have a 66% chance to gain 20% spell haste when they critically hit with spells for 8 sec. This effect has a 30 second cooldown.",
 @"Your Moonkin Aura also causes affected targets to have a 100% chance to gain 20% spell haste when they critically hit with spells for 8 sec. This effect has a 30 second cooldown.",})]
-		public int ImprovedMoonkinForm { get { return _data[18]; } set { _data[18] = value; } }
+        public int ImprovedMoonkinForm { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Improved Faerie Fire", 3, 0, 4, 7, -1, new string[] {
+        [TalentData(19, "Improved Faerie Fire", 3, 0, 4, 7, -1, new string[] {
 @"Your Faerie Fire spell also increases the chance the target will be hit by melee, ranged and spell attacks by 1%.",
 @"Your Faerie Fire spell also increases the chance the target will be hit by melee, ranged and spell attacks by 2%.",
 @"Your Faerie Fire spell also increases the chance the target will be hit by melee, ranged and spell attacks by 3%.",})]
-		public int ImprovedFaerieFire { get { return _data[19]; } set { _data[19] = value; } }
+        public int ImprovedFaerieFire { get { return _data[19]; } set { _data[19] = value; } }
 
-		[TalentData(20, "Owlkin Frenzy", 3, 0, 1, 8, 17, new string[] {
+        [TalentData(20, "Owlkin Frenzy", 3, 0, 1, 8, 17, new string[] {
 @"Attacks done to you while in Moonkin form have a 5% chance to cause you to go into a Frenzy, increasing your damage by 10% and causes you to be immune to pushback while casting Balance spells. Lasts 10 sec.",
 @"Attacks done to you while in Moonkin form have a 10% chance to cause you to go into a Frenzy, increasing your damage by 10% and causes you to be immune to pushback while casting Balance spells. Lasts 10 sec.",
 @"Attacks done to you while in Moonkin form have a 15% chance to cause you to go into a Frenzy, increasing your damage by 10% and causes you to be immune to pushback while casting Balance spells. Lasts 10 sec.",})]
-		public int OwlkinFrenzy { get { return _data[20]; } set { _data[20] = value; } }
+        public int OwlkinFrenzy { get { return _data[20]; } set { _data[20] = value; } }
 
-		[TalentData(21, "Wrath of Cenarius", 5, 0, 3, 8, -1, new string[] {
+        [TalentData(21, "Wrath of Cenarius", 5, 0, 3, 8, -1, new string[] {
 @"Your Starfire spell gains an additional 4% and your Wrath gains an additional 2% of your bonus damage effects.",
 @"Your Starfire spell gains an additional 8% and your Wrath gains an additional 4% of your bonus damage effects.",
 @"Your Starfire spell gains an additional 12% and your Wrath gains an additional 6% of your bonus damage effects.",
 @"Your Starfire spell gains an additional 16% and your Wrath gains an additional 8% of your bonus damage effects.",
 @"Your Starfire spell gains an additional 20% and your Wrath gains an additional 10% of your bonus damage effects.",})]
-		public int WrathofCenarius { get { return _data[21]; } set { _data[21] = value; } }
+        public int WrathOfCenarius { get { return _data[21]; } set { _data[21] = value; } }
 
-		[TalentData(22, "Eclipse", 3, 0, 1, 9, -1, new string[] {
+        [TalentData(22, "Eclipse", 3, 0, 1, 9, -1, new string[] {
 @"When you critically hit with Starfire, you have a 20% chance of increasing damage done by Wrath by 10%. When you critically hit with Wrath, you have a 20% chance of increasing your critical strike chance with Starfire by 10%. Effect lasts 30 sec and has a 2 min cooldown.",
 @"When you critically hit with Starfire, you have a 40% chance of increasing damage done by Wrath by 10%. When you critically hit with Wrath, you have a 40% chance of increasing your critical strike chance with Starfire by 10%. Effect lasts 30 sec and has a 2 min cooldown.",
 @"When you critically hit with Starfire, you have a 60% chance of increasing damage done by Wrath by 10%. When you critically hit with Wrath, you have a 60% chance of increasing your critical strike chance with Starfire by 10%. Effect lasts 30 sec and has a 2 min cooldown.",})]
-		public int Eclipse { get { return _data[22]; } set { _data[22] = value; } }
+        public int Eclipse { get { return _data[22]; } set { _data[22] = value; } }
 
-		[TalentData(23, "Typhoon", 1, 0, 2, 9, 17, new string[] {
+        [TalentData(23, "Typhoon", 1, 0, 2, 9, 17, new string[] {
 @"475 Mana,20 yd range,
 Instant cast,20 sec cooldow,
 You summon a violent Typhoon that does 516 to 517 Nature damage when in contact with hostile targets, knocking them back 5 yards.",})]
-		public int Typhoon { get { return _data[23]; } set { _data[23] = value; } }
+        public int Typhoon { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Force of Nature", 1, 0, 3, 9, -1, new string[] {
+        [TalentData(24, "Force of Nature", 1, 0, 3, 9, -1, new string[] {
 @"284 Mana,30 yd range,
 Instant cast,3 min cooldown,
 Summons 3 treants to attack the enemy target for 30 sec.",})]
-		public int ForceofNature { get { return _data[24]; } set { _data[24] = value; } }
+        public int ForceOfNature { get { return _data[24]; } set { _data[24] = value; } }
 
-		[TalentData(25, "Gale Winds", 2, 0, 4, 9, -1, new string[] {
+        [TalentData(25, "Gale Winds", 2, 0, 4, 9, -1, new string[] {
 @"Increases damage done by your Hurricane and Typhoon spells by 25%, and increases the range of your Cyclone spell by 2 yards.",
 @"Increases damage done by your Hurricane and Typhoon spells by 50%, and increases the range of your Cyclone spell by 4 yards.",})]
-		public int GaleWinds { get { return _data[25]; } set { _data[25] = value; } }
+        public int GaleWinds { get { return _data[25]; } set { _data[25] = value; } }
 
-		[TalentData(26, "Earth and Moon", 5, 0, 2, 10, -1, new string[] {
+        [TalentData(26, "Earth and Moon", 5, 0, 2, 10, -1, new string[] {
 @"Your Wrath and Starfire spells have a 20% of applying the Earth and Moon effect, which increases Nature and Arcane damage done to the target by 2%. Lasts 12 sec. Stacks up to 3 times.",
 @"Your Wrath and Starfire spells have a 40% of applying the Earth and Moon effect, which increases Nature and Arcane damage done to the target by 2%. Lasts 12 sec. Stacks up to 3 times.",
 @"Your Wrath and Starfire spells have a 60% of applying the Earth and Moon effect, which increases Nature and Arcane damage done to the target by 2%. Lasts 12 sec. Stacks up to 3 times.",
 @"Your Wrath and Starfire spells have a 80% of applying the Earth and Moon effect, which increases Nature and Arcane damage done to the target by 2%. Lasts 12 sec. Stacks up to 3 times.",
 @"Your Wrath and Starfire spells have a 100% of applying the Earth and Moon effect, which increases Nature and Arcane damage done to the target by 2%. Lasts 12 sec. Stacks up to 3 times.",})]
-		public int EarthandMoon { get { return _data[26]; } set { _data[26] = value; } }
+        public int EarthAndMoon { get { return _data[26]; } set { _data[26] = value; } }
 
-		[TalentData(27, "Starfall", 1, 0, 2, 11, -1, new string[] {
+        [TalentData(27, "Starfall", 1, 0, 2, 11, -1, new string[] {
 @"1365 Mana,30 yd range,
 Instant cast,3 min cooldown,
 You summon a flurry of stars from the sky on all targets within 30 yards of the caster, each doing 111 to 129 Arcane damage, and an additional 20 Arcane damage to all nearby targets within 5 yards. Maximum 20 stars. Lasts 10 sec.",})]
-		public int Starfall { get { return _data[27]; } set { _data[27] = value; } }
+        public int Starfall { get { return _data[27]; } set { _data[27] = value; } }
 
-		[TalentData(28, "Ferocity", 5, 1, 2, 1, -1, new string[] {
+        [TalentData(28, "Ferocity", 5, 1, 2, 1, -1, new string[] {
 @"Reduces the cost of your Maul, Swipe, Claw, Rake and Mangle abilities by 1 Rage or Energy.",
 @"Reduces the cost of your Maul, Swipe, Claw, Rake and Mangle abilities by 2 Rage or Energy.",
 @"Reduces the cost of your Maul, Swipe, Claw, Rake and Mangle abilities by 3 Rage or Energy.",
 @"Reduces the cost of your Maul, Swipe, Claw, Rake and Mangle abilities by 4 Rage or Energy.",
 @"Reduces the cost of your Maul, Swipe, Claw, Rake and Mangle abilities by 5 Rage or Energy.",})]
-		public int Ferocity { get { return _data[28]; } set { _data[28] = value; } }
+        public int Ferocity { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(29, "Feral Aggression", 5, 1, 3, 1, -1, new string[] {
+        [TalentData(29, "Feral Aggression", 5, 1, 3, 1, -1, new string[] {
 @"Increases the Attack Power reduction of your Demoralizing Roar by 8% and the damage caused by your Ferocious Bite by 3%.",
 @"Increases the Attack Power reduction of your Demoralizing Roar by 16% and the damage caused by your Ferocious Bite by 6%.",
 @"Increases the Attack Power reduction of your Demoralizing Roar by 24% and the damage caused by your Ferocious Bite by 9%.",
 @"Increases the Attack Power reduction of your Demoralizing Roar by 32% and the damage caused by your Ferocious Bite by 12%.",
 @"Increases the Attack Power reduction of your Demoralizing Roar by 40% and the damage caused by your Ferocious Bite by 15%.",})]
-		public int FeralAggression { get { return _data[29]; } set { _data[29] = value; } }
+        public int FeralAggression { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(30, "Feral Instinct", 3, 1, 1, 2, -1, new string[] {
+        [TalentData(30, "Feral Instinct", 3, 1, 1, 2, -1, new string[] {
 @"Increases the damage done by your Swipe (Bear) ability by 10% and reduces the chance enemies have to detect you while Prowling.",
 @"Increases the damage done by your Swipe (Bear) ability by 20% and reduces the chance enemies have to detect you while Prowling.",
 @"Increases the damage done by your Swipe (Bear) ability by 30% and reduces the chance enemies have to detect you while Prowling.",})]
-		public int FeralInstinct { get { return _data[30]; } set { _data[30] = value; } }
+        public int FeralInstinct { get { return _data[30]; } set { _data[30] = value; } }
 
-		[TalentData(31, "Brutal Impact", 2, 1, 2, 2, -1, new string[] {
+        [TalentData(31, "Brutal Impact", 2, 1, 2, 2, -1, new string[] {
 @"Increases the stun duration of your Bash and Pounce abilities by 0.5 sec.",
 @"Increases the stun duration of your Bash and Pounce abilities by 1 sec.",})]
-		public int BrutalImpact { get { return _data[31]; } set { _data[31] = value; } }
+        public int BrutalImpact { get { return _data[31]; } set { _data[31] = value; } }
 
-		[TalentData(32, "Thick Hide", 3, 1, 3, 2, -1, new string[] {
+        [TalentData(32, "Thick Hide", 3, 1, 3, 2, -1, new string[] {
 @"Increases your Armor contribution from items by 4%.",
 @"Increases your Armor contribution from items by 7%.",
 @"Increases your Armor contribution from items by 10%.",})]
-		public int ThickHide { get { return _data[32]; } set { _data[32] = value; } }
+        public int ThickHide { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(33, "Feral Swiftness", 2, 1, 1, 3, -1, new string[] {
+        [TalentData(33, "Feral Swiftness", 2, 1, 1, 3, -1, new string[] {
 @"Increases your movement speed by 15% in Cat Form and increases your chance to dodge while in Cat Form, Bear Form and Dire Bear Form by 2%.",
 @"Increases your movement speed by 30% in Cat Form and increases your chance to dodge while in Cat Form, Bear Form and Dire Bear Form by 4%.",})]
-		public int FeralSwiftness { get { return _data[33]; } set { _data[33] = value; } }
+        public int FeralSwiftness { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(34, "Faerie Fire (Feral)", 1, 1, 2, 3, -1, new string[] {
+        [TalentData(34, "Faerie Fire (Feral)", 1, 1, 2, 3, -1, new string[] {
 @"30 yd range
 Instant,6 sec cooldown,
 Decrease the armor of the target by 175 for 40 sec. While affected, the target cannot stealth or turn invisible.",})]
-		public int FaerieFireFeral { get { return _data[34]; } set { _data[34] = value; } }
+        public int FaerieFireFeral { get { return _data[34]; } set { _data[34] = value; } }
 
-		[TalentData(35, "Sharpened Claws", 3, 1, 3, 3, -1, new string[] {
+        [TalentData(35, "Sharpened Claws", 3, 1, 3, 3, -1, new string[] {
 @"Increases your critical strike chance while in Bear, Dire Bear or Cat Form by 2%.",
 @"Increases your critical strike chance while in Bear, Dire Bear or Cat Form by 4%.",
 @"Increases your critical strike chance while in Bear, Dire Bear or Cat Form by 6%.",})]
-		public int SharpenedClaws { get { return _data[35]; } set { _data[35] = value; } }
+        public int SharpenedClaws { get { return _data[35]; } set { _data[35] = value; } }
 
-		[TalentData(36, "Shredding Attacks", 2, 1, 1, 4, -1, new string[] {
+        [TalentData(36, "Shredding Attacks", 2, 1, 1, 4, -1, new string[] {
 @"Reduces the energy cost of your Shred ability by 9 and the rage cost of your Lacerate ability by 1.",
 @"Reduces the energy cost of your Shred ability by 18 and the rage cost of your Lacerate ability by 2.",})]
-		public int ShreddingAttacks { get { return _data[36]; } set { _data[36] = value; } }
+        public int ShreddingAttacks { get { return _data[36]; } set { _data[36] = value; } }
 
-		[TalentData(37, "Predatory Strikes", 3, 1, 2, 4, -1, new string[] {
+        [TalentData(37, "Predatory Strikes", 3, 1, 2, 4, -1, new string[] {
 @"Increases your melee attack power in Cat, Bear, Dire Bear and Moonkin Forms by 50% of your level and 7% of any attack power on your equipped weapon.",
 @"Increases your melee attack power in Cat, Bear, Dire Bear and Moonkin Forms by 100% of your level and 14% of any attack power on your equipped weapon.",
 @"Increases your melee attack power in Cat, Bear, Dire Bear and Moonkin Forms by 150% of your level and 20% of any attack power on your equipped weapon.",})]
-		public int PredatoryStrikes { get { return _data[37]; } set { _data[37] = value; } }
+        public int PredatoryStrikes { get { return _data[37]; } set { _data[37] = value; } }
 
-		[TalentData(38, "Primal Fury", 2, 1, 3, 4, 35, new string[] {
+        [TalentData(38, "Primal Fury", 2, 1, 3, 4, 35, new string[] {
 @"Gives you a 50% chance to gain an additional 5 Rage anytime you get a critical strike while in Bear and Dire Bear Form and your critical strikes from Cat Form abilities that add combo points have a 50% chance to add an additional combo point.",
 @"Gives you a 100% chance to gain an additional 5 Rage anytime you get a critical strike while in Bear and Dire Bear Form and your critical strikes from Cat Form abilities that add combo points have a 100% chance to add an additional combo point.",})]
-		public int PrimalFury { get { return _data[38]; } set { _data[38] = value; } }
+        public int PrimalFury { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Primal Precision", 2, 1, 4, 4, 35, new string[] {
+        [TalentData(39, "Primal Precision", 2, 1, 4, 4, 35, new string[] {
 @"Increases your expertise by 5, and you are refunded 40% of the energy cost of a finishing move if it fails to land.",
 @"Increases your expertise by 10, and you are refunded 80% of the energy cost of a finishing move if it fails to land.",})]
-		public int PrimalPrecision { get { return _data[39]; } set { _data[39] = value; } }
+        public int PrimalPrecision { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(40, "Savage Fury", 2, 1, 1, 5, -1, new string[] {
+        [TalentData(40, "Savage Fury", 2, 1, 1, 5, -1, new string[] {
 @"Increases the damage caused by your Claw, Rake, Mangle (Cat), Mangle (Bear) and Maul abilities by 10%.",
 @"Increases the damage caused by your Claw, Rake, Mangle (Cat), Mangle (Bear) and Maul abilities by 20%.",})]
-		public int SavageFury { get { return _data[40]; } set { _data[40] = value; } }
+        public int SavageFury { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(41, "Feral Charge", 1, 1, 3, 5, -1, new string[] {
+        [TalentData(41, "Feral Charge", 1, 1, 3, 5, -1, new string[] {
 @"5 Rage,8-25 yd range,
 Instant,15 sec cooldown,
 
 Causes you to charge an enemy, immobilizing and interrupting any spell being cast for 4 sec. This ability can be used in Cat Form, Bear Form, and Dire Bear Form.",})]
-		public int FeralCharge { get { return _data[41]; } set { _data[41] = value; } }
+        public int FeralCharge { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(42, "Nurturing Instinct", 2, 1, 4, 5, -1, new string[] {
+        [TalentData(42, "Nurturing Instinct", 2, 1, 4, 5, -1, new string[] {
 @"Increases your healing spells by up to 35% of your Agility, and increases healing done to you by 10% while in Cat form.",
 @"Increases your healing spells by up to 70% of your Agility, and increases healing done to you by 20% while in Cat form.",})]
-		public int NurturingInstinct { get { return _data[42]; } set { _data[42] = value; } }
+        public int NurturingInstinct { get { return _data[42]; } set { _data[42] = value; } }
 
-		[TalentData(43, "Natural Reaction", 3, 1, 1, 6, -1, new string[] {
+        [TalentData(43, "Natural Reaction", 3, 1, 1, 6, -1, new string[] {
 @"Increases your dodge while in Bear Form or Dire Bear Form by 2%, and you regenerate 1 rage everytime you dodge while in Bear Form or Dire Bear Form.",
 @"Increases your dodge while in Bear Form or Dire Bear Form by 4%, and you regenerate 2 rage everytime you dodge while in Bear Form or Dire Bear Form.",
 @"Increases your dodge while in Bear Form or Dire Bear Form by 6%, and you regenerate 3 rage everytime you dodge while in Bear Form or Dire Bear Form.",})]
-		public int NaturalReaction { get { return _data[43]; } set { _data[43] = value; } }
+        public int NaturalReaction { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Heart of the Wild", 5, 1, 2, 6, 37, new string[] {
+        [TalentData(44, "Heart of the Wild", 5, 1, 2, 6, 37, new string[] {
 @"Increases your Intellect by 4%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 4% and while in Cat Form your attack power is increased by 2%.",
 @"Increases your Intellect by 8%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 8% and while in Cat Form your attack power is increased by 4%.",
 @"Increases your Intellect by 12%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 12% and while in Cat Form your attack power is increased by 6%.",
 @"Increases your Intellect by 16%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 16% and while in Cat Form your attack power is increased by 8%.",
 @"Increases your Intellect by 20%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 20% and while in Cat Form your attack power is increased by 10%.",})]
-		public int HeartoftheWild { get { return _data[44]; } set { _data[44] = value; } }
+        public int HeartOfTheWild { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(45, "Survival of the Fittest", 3, 1, 3, 6, -1, new string[] {
+        [TalentData(45, "Survival of the Fittest", 3, 1, 3, 6, -1, new string[] {
 @"Increases all attributes by 2% and reduces the chance you'll be critically hit by melee attacks by 2%.",
 @"Increases all attributes by 4% and reduces the chance you'll be critically hit by melee attacks by 4%.",
 @"Increases all attributes by 6% and reduces the chance you'll be critically hit by melee attacks by 6%.",})]
-		public int SurvivaloftheFittest { get { return _data[45]; } set { _data[45] = value; } }
+        public int SurvivalOfTheFittest { get { return _data[45]; } set { _data[45] = value; } }
 
-		[TalentData(46, "Leader of the Pack", 1, 1, 2, 7, -1, new string[] {
+        [TalentData(46, "Leader of the Pack", 1, 1, 2, 7, -1, new string[] {
 @"While in Cat, Bear or Dire Bear Form, the Leader of the Pack increases ranged and melee critical chance of all party members within 45 yards by 5%.",})]
-		public int LeaderofthePack { get { return _data[46]; } set { _data[46] = value; } }
+        public int LeaderOfThePack { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Improved Leader of the Pack", 2, 1, 3, 7, 46, new string[] {
+        [TalentData(47, "Improved Leader of the Pack", 2, 1, 3, 7, 46, new string[] {
 @"Your Leader of the Pack ability also causes affected targets to have a 100% chance to heal themselves for 2% of their total health when they critically hit with a melee or ranged attack. The healing effect cannot occur more than once every 6 sec.",
 @"Your Leader of the Pack ability also causes affected targets to have a 100% chance to heal themselves for 4% of their total health when they critically hit with a melee or ranged attack. The healing effect cannot occur more than once every 6 sec.",})]
-		public int ImprovedLeaderofthePack { get { return _data[47]; } set { _data[47] = value; } }
+        public int ImprovedLeaderOfThePack { get { return _data[47]; } set { _data[47] = value; } }
 
-		[TalentData(48, "Primal Tenacity", 3, 1, 4, 7, -1, new string[] {
+        [TalentData(48, "Primal Tenacity", 3, 1, 4, 7, -1, new string[] {
 @"Reduces the duration of Fear effects by 10%, and reduces all damage taken while Stunned by 10%.",
 @"Reduces the duration of Fear effects by 20%, and reduces all damage taken while Stunned by 20%.",
 @"Reduces the duration of Fear effects by 30%, and reduces all damage taken while Stunned by 30%.",})]
-		public int PrimalTenacity { get { return _data[48]; } set { _data[48] = value; } }
+        public int PrimalTenacity { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(49, "Mother Bear", 3, 1, 1, 8, 46, new string[] {
+        [TalentData(49, "Mother Bear", 3, 1, 1, 8, 46, new string[] {
 @"Increases the bonus attack power for Bear Form and Dire Bear Form by an additional 20%, and for each friendly player in your party, damage you take is reduced while in Bear Form and Dire Bear Form by 1%.",
 @"Increases the bonus attack power for Bear Form and Dire Bear Form by an additional 40%, and for each friendly player in your party, damage you take is reduced while in Bear Form and Dire Bear Form by 2%.",
 @"Increases the bonus attack power for Bear Form and Dire Bear Form by an additional 60%, and for each friendly player in your party, damage you take is reduced while in Bear Form and Dire Bear Form by 3%.",})]
-		public int MotherBear { get { return _data[49]; } set { _data[49] = value; } }
+        public int MotherBear { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(50, "Predatory Instincts", 5, 1, 3, 8, -1, new string[] {
+        [TalentData(50, "Predatory Instincts", 5, 1, 3, 8, -1, new string[] {
 @"While in Cat Form, Bear Form, or Dire Bear Form, increases your damage from melee critical strikes by 2% and your chance to avoid area effect attacks by 3%.",
 @"While in Cat Form, Bear Form, or Dire Bear Form, increases your damage from melee critical strikes by 4% and your chance to avoid area effect attacks by 6%.",
 @"While in Cat Form, Bear Form, or Dire Bear Form, increases your damage from melee critical strikes by 6% and your chance to avoid area effect attacks by 9%.",
 @"While in Cat Form, Bear Form, or Dire Bear Form, increases your damage from melee critical strikes by 8% and your chance to avoid area effect attacks by 12%.",
 @"While in Cat Form, Bear Form, or Dire Bear Form, increases your damage from melee critical strikes by 10% and your chance to avoid area effect attacks by 15%.",})]
-		public int PredatoryInstincts { get { return _data[50]; } set { _data[50] = value; } }
+        public int PredatoryInstincts { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Infected Wounds", 3, 1, 4, 8, -1, new string[] {
+        [TalentData(51, "Infected Wounds", 3, 1, 4, 8, -1, new string[] {
 @"Your Shred, Maul and Mangle attacks have 33% chance to cause an Infected Wound in the target. The Infected Wound reduces the movement speed of the target by 10% and the attack speed of the target by 4%. Stacks up to 5 times. Lasts 12 sec.",
 @"Your Shred, Maul and Mangle attacks have 66% chance to cause an Infected Wound in the target. The Infected Wound reduces the movement speed of the target by 10% and the attack speed of the target by 4%. Stacks up to 5 times. Lasts 12 sec.",
 @"Your Shred, Maul and Mangle attacks have 100% chance to cause an Infected Wound in the target. The Infected Wound reduces the movement speed of the target by 10% and the attack speed of the target by 4%. Stacks up to 5 times. Lasts 12 sec.",})]
-		public int InfectedWounds { get { return _data[51]; } set { _data[51] = value; } }
+        public int InfectedWounds { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(52, "King of the Jungle", 3, 1, 1, 9, -1, new string[] {
+        [TalentData(52, "King of the Jungle", 3, 1, 1, 9, -1, new string[] {
 @"While using your Enrage ability in Bear form or Dire Bear form, your damage is increased by 5%, and your Tiger's Fury ability also instantly restores 20 energy.",
 @"While using your Enrage ability in Bear form or Dire Bear form, your damage is increased by 10%, and your Tiger's Fury ability also instantly restores 40 energy.",
 @"While using your Enrage ability in Bear form or Dire Bear form, your damage is increased by 15%, and your Tiger's Fury ability also instantly restores 60 energy.",})]
-		public int KingoftheJungle { get { return _data[52]; } set { _data[52] = value; } }
+        public int KingOfTheJungle { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(53, "Mangle", 1, 1, 2, 9, 46, new string[] {
+        [TalentData(53, "Mangle", 1, 1, 2, 9, 46, new string[] {
 @"Mangle the target, inflicting damage and causing the target to take additional damage from Maul, Shred, and bleed effects for 12 sec. This ability can be used in Cat Form or Dire Bear Form.		
 
  Bear Form:
@@ -2178,77 +2226,77 @@ Causes you to charge an enemy, immobilizing and interrupting any spell being cas
 		 Rank 1: +158
 		 Rank 2: +205
 		 Rank 3: +264",})]
-		public int Mangle { get { return _data[53]; } set { _data[53] = value; } }
+        public int Mangle { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(54, "Improved Mangle", 3, 1, 3, 9, 53, new string[] {
+        [TalentData(54, "Improved Mangle", 3, 1, 3, 9, 53, new string[] {
 @"Reduces the cooldown of your Mangle (Bear) ability by 0.5 sec., and reduces the energy cost of your Mangle (Cat) ability by 2.",
 @"Reduces the cooldown of your Mangle (Bear) ability by 1.0 sec., and reduces the energy cost of your Mangle (Cat) ability by 4.",
 @"Reduces the cooldown of your Mangle (Bear) ability by 1.5 sec., and reduces the energy cost of your Mangle (Cat) ability by 6.",})]
-		public int ImprovedMangle { get { return _data[54]; } set { _data[54] = value; } }
+        public int ImprovedMangle { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(55, "Rend and Tear", 5, 1, 2, 10, -1, new string[] {
+        [TalentData(55, "Rend and Tear", 5, 1, 2, 10, -1, new string[] {
 @"Increases damage done by your Maul and Shred attacks on bleeding targets by 2%, and increases the critical strike chance of your Ferocious Bite ability on bleeding targets by 10%.",
 @"Increases damage done by your Maul and Shred attacks on bleeding targets by 4%, and increases the critical strike chance of your Ferocious Bite ability on bleeding targets by 20%.",
 @"Increases damage done by your Maul and Shred attacks on bleeding targets by 6%, and increases the critical strike chance of your Ferocious Bite ability on bleeding targets by 30%.",
 @"Increases damage done by your Maul and Shred attacks on bleeding targets by 8%, and increases the critical strike chance of your Ferocious Bite ability on bleeding targets by 40%.",
 @"Increases damage done by your Maul and Shred attacks on bleeding targets by 10%, and increases the critical strike chance of your Ferocious Bite ability on bleeding targets by 50%.",})]
-		public int RendandTear { get { return _data[55]; } set { _data[55] = value; } }
+        public int RendAndTear { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "Berserk", 1, 1, 2, 11, -1, new string[] {
+        [TalentData(56, "Berserk", 1, 1, 2, 11, -1, new string[] {
 @"Instant,5 min cooldown,
 When activated, this ability temporarily grants you 30% of your maximum health while in Bear Form or Dire Bear Form, causes your Mangle (Bear) and Maul attacks hit up to 3 targets, and reduces the energy cost of all your Cat Form abilities by 50%. Lasts 15 sec.<br/><br/>Berserk instantly clears all effects which cause loss of control of your character, and makes you immune to them for the duration while in Cat Form, Bear Form, or Dire Bear Form.",})]
-		public int Berserk { get { return _data[56]; } set { _data[56] = value; } }
+        public int Berserk { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(57, "Improved Mark of the Wild", 2, 2, 1, 1, -1, new string[] {
+        [TalentData(57, "Improved Mark of the Wild", 2, 2, 1, 1, -1, new string[] {
 @"Increases the effects of your Mark of the Wild and Gift of the Wild spells by 20%.",
 @"Increases the effects of your Mark of the Wild and Gift of the Wild spells by 40%.",})]
-		public int ImprovedMarkoftheWild { get { return _data[57]; } set { _data[57] = value; } }
+        public int ImprovedMarkOfTheWild { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(58, "Nature's Focus", 3, 2, 2, 1, -1, new string[] {
+        [TalentData(58, "Nature's Focus", 3, 2, 2, 1, -1, new string[] {
 @"Gives you a 23% chance to avoid interruption caused by damage while casting the Healing Touch, Wrath, Entangling Roots, Cyclone, Nourish, Regrowth and Tranquility spells.",
 @"Gives you a 46% chance to avoid interruption caused by damage while casting the Healing Touch, Wrath, Entangling Roots, Cyclone, Nourish, Regrowth and Tranquility spells.",
 @"Gives you a 70% chance to avoid interruption caused by damage while casting the Healing Touch, Wrath, Entangling Roots, Cyclone, Nourish, Regrowth and Tranquility spells.",})]
-		public int NaturesFocus { get { return _data[58]; } set { _data[58] = value; } }
+        public int NaturesFocus { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(59, "Furor", 5, 2, 3, 1, -1, new string[] {
+        [TalentData(59, "Furor", 5, 2, 3, 1, -1, new string[] {
 @"Gives you 20% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form or 40 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 2%.",
 @"Gives you 40% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form or 40 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 4%.",
 @"Gives you 60% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form or 40 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 6%.",
 @"Gives you 80% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form or 40 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 8%.",
 @"Gives you 100% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form or 40 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 10%.",})]
-		public int Furor { get { return _data[59]; } set { _data[59] = value; } }
+        public int Furor { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(60, "Naturalist", 5, 2, 1, 2, -1, new string[] {
+        [TalentData(60, "Naturalist", 5, 2, 1, 2, -1, new string[] {
 @"Reduces the cast time of your Healing Touch spell by 0.1 sec and increases the damage you deal with physical attacks in all forms by 2%.",
 @"Reduces the cast time of your Healing Touch spell by 0.2 sec and increases the damage you deal with physical attacks in all forms by 4%.",
 @"Reduces the cast time of your Healing Touch spell by 0.3 sec and increases the damage you deal with physical attacks in all forms by 6%.",
 @"Reduces the cast time of your Healing Touch spell by 0.4 sec and increases the damage you deal with physical attacks in all forms by 8%.",
 @"Reduces the cast time of your Healing Touch spell by 0.5 sec and increases the damage you deal with physical attacks in all forms by 10%.",})]
-		public int Naturalist { get { return _data[60]; } set { _data[60] = value; } }
+        public int Naturalist { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Subtlety", 3, 2, 2, 2, -1, new string[] {
+        [TalentData(61, "Subtlety", 3, 2, 2, 2, -1, new string[] {
 @"Reduces the threat generated by your restoration spells by 10% and reduces the chance your healing over time spells will be dispelled by 10%.",
 @"Reduces the threat generated by your restoration spells by 20% and reduces the chance your healing over time spells will be dispelled by 20%.",
 @"Reduces the threat generated by your restoration spells by 30% and reduces the chance your healing over time spells will be dispelled by 30%.",})]
-		public int Subtlety { get { return _data[61]; } set { _data[61] = value; } }
+        public int Subtlety { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Natural Shapeshifter", 3, 2, 3, 2, -1, new string[] {
+        [TalentData(62, "Natural Shapeshifter", 3, 2, 3, 2, -1, new string[] {
 @"Reduces the mana cost of all shapeshifting by 10%.",
 @"Reduces the mana cost of all shapeshifting by 20%.",
 @"Reduces the mana cost of all shapeshifting by 30%.",})]
-		public int NaturalShapeshifter { get { return _data[62]; } set { _data[62] = value; } }
+        public int NaturalShapeshifter { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(63, "Intensity", 3, 2, 1, 3, -1, new string[] {
+        [TalentData(63, "Intensity", 3, 2, 1, 3, -1, new string[] {
 @"Allows 10% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 4 rage.",
 @"Allows 20% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 7 rage.",
 @"Allows 30% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 10 rage.",})]
-		public int Intensity { get { return _data[63]; } set { _data[63] = value; } }
+        public int Intensity { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(64, "Omen of Clarity", 1, 2, 2, 3, -1, new string[] {
+        [TalentData(64, "Omen of Clarity", 1, 2, 2, 3, -1, new string[] {
 @"Each of the Druid's spells and autoattacks has a chance of causing the caster to enter a Clearcasting state. The Clearcasting state reduces the Mana, Rage or Energy cost of your next damage, healing spell or offensive ability by 100%.",})]
-		public int OmenofClarity { get { return _data[64]; } set { _data[64] = value; } }
+        public int OmenOfClarity { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(65, "Master Shapeshifter", 2, 2, 3, 3, 62, new string[] {
+        [TalentData(65, "Master Shapeshifter", 2, 2, 3, 3, 62, new string[] {
 @"Grants an effect which lasts while the Druid is within the respective shapeshift form.
 
 Bear form - Increases physical damage by 2%
@@ -2267,242 +2315,254 @@ Cat form - Increases critical strike chance by 4%
 Moonkin form - Increases spell damage by 4%
 
 Tree of Life form - Increases healing by 4%.",})]
-		public int MasterShapeshifter { get { return _data[65]; } set { _data[65] = value; } }
+        public int MasterShapeshifter { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(66, "Tranquil Spirit", 5, 2, 2, 4, -1, new string[] {
+        [TalentData(66, "Tranquil Spirit", 5, 2, 2, 4, -1, new string[] {
 @"Reduces the mana cost of your Healing Touch, Nourish and Tranquility spells by 2%.",
 @"Reduces the mana cost of your Healing Touch, Nourish and Tranquility spells by 4%.",
 @"Reduces the mana cost of your Healing Touch, Nourish and Tranquility spells by 6%.",
 @"Reduces the mana cost of your Healing Touch, Nourish and Tranquility spells by 8%.",
 @"Reduces the mana cost of your Healing Touch, Nourish and Tranquility spells by 10%.",})]
-		public int TranquilSpirit { get { return _data[66]; } set { _data[66] = value; } }
+        public int TranquilSpirit { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(67, "Improved Rejuvenation", 3, 2, 3, 4, -1, new string[] {
+        [TalentData(67, "Improved Rejuvenation", 3, 2, 3, 4, -1, new string[] {
 @"Increases the effect of your Rejuvenation spell by 5%.",
 @"Increases the effect of your Rejuvenation spell by 10%.",
 @"Increases the effect of your Rejuvenation spell by 15%.",})]
-		public int ImprovedRejuvenation { get { return _data[67]; } set { _data[67] = value; } }
+        public int ImprovedRejuvenation { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(68, "Nature's Swiftness", 1, 2, 1, 5, 63, new string[] {
+        [TalentData(68, "Nature's Swiftness", 1, 2, 1, 5, 63, new string[] {
 @"Instant,3 min cooldown,
 When activated, your next Nature spell with a casting time less than 10 sec. becomes an instant cast spell.",})]
-		public int NaturesSwiftness { get { return _data[68]; } set { _data[68] = value; } }
+        public int NaturesSwiftness { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(69, "Gift of Nature", 5, 2, 2, 5, -1, new string[] {
+        [TalentData(69, "Gift of Nature", 5, 2, 2, 5, -1, new string[] {
 @"Increases the effect of all healing spells by 2%.",
 @"Increases the effect of all healing spells by 4%.",
 @"Increases the effect of all healing spells by 6%.",
 @"Increases the effect of all healing spells by 8%.",
 @"Increases the effect of all healing spells by 10%.",})]
-		public int GiftofNature { get { return _data[69]; } set { _data[69] = value; } }
+        public int GiftOfNature { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(70, "Improved Tranquility", 2, 2, 4, 5, -1, new string[] {
+        [TalentData(70, "Improved Tranquility", 2, 2, 4, 5, -1, new string[] {
 @"Reduces threat caused by Tranquility by 50%, and reduces the cooldown by 30%.",
 @"Reduces threat caused by Tranquility by 100%, and reduces the cooldown by 60%.",})]
-		public int ImprovedTranquility { get { return _data[70]; } set { _data[70] = value; } }
+        public int ImprovedTranquility { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Empowered Touch", 2, 2, 1, 6, -1, new string[] {
+        [TalentData(71, "Empowered Touch", 2, 2, 1, 6, -1, new string[] {
 @"Your Healing Touch spell gains an additional 20% of your bonus healing effects.",
 @"Your Healing Touch spell gains an additional 40% of your bonus healing effects.",})]
-		public int EmpoweredTouch { get { return _data[71]; } set { _data[71] = value; } }
+        public int EmpoweredTouch { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(72, "Improved Regrowth", 5, 2, 3, 6, 67, new string[] {
+        [TalentData(72, "Improved Regrowth", 5, 2, 3, 6, 67, new string[] {
 @"Increases the critical effect chance of your Regrowth spell by 10%.",
 @"Increases the critical effect chance of your Regrowth spell by 20%.",
 @"Increases the critical effect chance of your Regrowth spell by 30%.",
 @"Increases the critical effect chance of your Regrowth spell by 40%.",
 @"Increases the critical effect chance of your Regrowth spell by 50%.",})]
-		public int ImprovedRegrowth { get { return _data[72]; } set { _data[72] = value; } }
+        public int ImprovedRegrowth { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "Living Spirit", 3, 2, 1, 7, -1, new string[] {
+        [TalentData(73, "Living Spirit", 3, 2, 1, 7, -1, new string[] {
 @"Increases your total Spirit by 5%.",
 @"Increases your total Spirit by 10%.",
 @"Increases your total Spirit by 15%.",})]
-		public int LivingSpirit { get { return _data[73]; } set { _data[73] = value; } }
+        public int LivingSpirit { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(74, "Swiftmend", 1, 2, 2, 7, 69, new string[] {
+        [TalentData(74, "Swiftmend", 1, 2, 2, 7, 69, new string[] {
 @"379 Mana,40 yd range,
 Instant cast,15 sec cooldown,
 Consumes a Rejuvenation or Regrowth effect on a friendly target to instantly heal them an amount equal to 12 sec. of Rejuvenation or 18 sec. of Regrowth.",})]
-		public int Swiftmend { get { return _data[74]; } set { _data[74] = value; } }
+        public int Swiftmend { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(75, "Natural Perfection", 3, 2, 3, 7, -1, new string[] {
+        [TalentData(75, "Natural Perfection", 3, 2, 3, 7, -1, new string[] {
 @"Your critical strike chance with all spells is increased by 1% and critical strikes against you give you the Natural Perfection effect reducing all damage taken by 2%.  Stacks up to 3 times.  Lasts 8 sec.",
 @"Your critical strike chance with all spells is increased by 2% and critical strikes against you give you the Natural Perfection effect reducing all damage taken by 3%.  Stacks up to 3 times.  Lasts 8 sec.",
 @"Your critical strike chance with all spells is increased by 3% and critical strikes against you give you the Natural Perfection effect reducing all damage taken by 4%.  Stacks up to 3 times.  Lasts 8 sec.",})]
-		public int NaturalPerfection { get { return _data[75]; } set { _data[75] = value; } }
+        public int NaturalPerfection { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(76, "Empowered Rejuvenation", 5, 2, 2, 8, -1, new string[] {
+        [TalentData(76, "Empowered Rejuvenation", 5, 2, 2, 8, -1, new string[] {
 @"The bonus healing effects of your healing over time spells is increased by 4%.",
 @"The bonus healing effects of your healing over time spells is increased by 8%.",
 @"The bonus healing effects of your healing over time spells is increased by 12%.",
 @"The bonus healing effects of your healing over time spells is increased by 16%.",
 @"The bonus healing effects of your healing over time spells is increased by 20%.",})]
-		public int EmpoweredRejuvenation { get { return _data[76]; } set { _data[76] = value; } }
+        public int EmpoweredRejuvenation { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(77, "Living Seed", 3, 2, 3, 8, -1, new string[] {
+        [TalentData(77, "Living Seed", 3, 2, 3, 8, -1, new string[] {
 @"When you gain a critical effect from your Swiftmend, Regrowth, Nourish or Healing Touch spell you have a 33% chance to plant a Living Seed on the target for 30% of the amount healed. The Living Seed will bloom when the target is next attacked. Lasts 15 sec.",
 @"When you gain a critical effect from your Swiftmend, Regrowth, Nourish or Healing Touch spell you have a 66% chance to plant a Living Seed on the target for 30% of the amount healed. The Living Seed will bloom when the target is next attacked. Lasts 15 sec.",
 @"When you gain a critical effect from your Swiftmend, Regrowth, Nourish or Healing Touch spell you have a 100% chance to plant a Living Seed on the target for 30% of the amount healed. The Living Seed will bloom when the target is next attacked. Lasts 15 sec.",})]
-		public int LivingSeed { get { return _data[77]; } set { _data[77] = value; } }
+        public int LivingSeed { get { return _data[77]; } set { _data[77] = value; } }
 
-		[TalentData(78, "Replenish", 3, 2, 1, 9, -1, new string[] {
+        [TalentData(78, "Replenish", 3, 2, 1, 9, -1, new string[] {
 @"Your Rejuvenation spell has a 5% chance to restore 10 Energy, 5 Rage, 2% Mana or 10 Runic Power per tick.",
 @"Your Rejuvenation spell has a 10% chance to restore 10 Energy, 5 Rage, 2% Mana or 10 Runic Power per tick.",
 @"Your Rejuvenation spell has a 15% chance to restore 10 Energy, 5 Rage, 2% Mana or 10 Runic Power per tick.",})]
-		public int Replenish { get { return _data[78]; } set { _data[78] = value; } }
+        public int Replenish { get { return _data[78]; } set { _data[78] = value; } }
 
-		[TalentData(79, "Tree of Life", 1, 2, 2, 9, 76, new string[] {
+        [TalentData(79, "Tree of Life", 1, 2, 2, 9, 76, new string[] {
 @"<span>684 Mana,
 <span>Instant cast,
 Shapeshift into the Tree of Life. While in this form you increase healing received by 3% for all party and raid members within 45 yards, and you can only cast Restoration and Barkskin spells, but the mana cost of your healing over time spells is reduced by 20%.
 
 The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.",})]
-		public int TreeofLife { get { return _data[79]; } set { _data[79] = value; } }
+        public int TreeOfLife { get { return _data[79]; } set { _data[79] = value; } }
 
-		[TalentData(80, "Improved Tree of Life", 3, 2, 3, 9, 79, new string[] {
+        [TalentData(80, "Improved Tree of Life", 3, 2, 3, 9, 79, new string[] {
 @"Increases your Armor while in Tree of Life Form by 33%, and reduces the mana cost of your heal over time spells while in Tree of Life Form by an additional 5%.",
 @"Increases your Armor while in Tree of Life Form by 66%, and reduces the mana cost of your heal over time spells while in Tree of Life Form by an additional 10%.",
 @"Increases your Armor while in Tree of Life Form by 100%, and reduces the mana cost of your heal over time spells while in Tree of Life Form by an additional 15%.",})]
-		public int ImprovedTreeofLife { get { return _data[80]; } set { _data[80] = value; } }
+        public int ImprovedTreeOfLife { get { return _data[80]; } set { _data[80] = value; } }
 
-		[TalentData(81, "Gift of the Earthmother", 5, 2, 3, 10, -1, new string[] {
+        [TalentData(81, "Gift of the Earthmother", 5, 2, 3, 10, -1, new string[] {
 @"Reduces the global cooldown of your Rejuvenation and Lifebloom spells by 0.1 sec, and causes your Healing Touch and Nourish spells to refund 1% of their base cost for each healing over time effect on the target.",
 @"Reduces the global cooldown of your Rejuvenation and Lifebloom spells by 0.2 sec, and causes your Healing Touch and Nourish spells to refund 2% of their base cost for each healing over time effect on the target.",
 @"Reduces the global cooldown of your Rejuvenation and Lifebloom spells by 0.3 sec, and causes your Healing Touch and Nourish spells to refund 3% of their base cost for each healing over time effect on the target.",
 @"Reduces the global cooldown of your Rejuvenation and Lifebloom spells by 0.4 sec, and causes your Healing Touch and Nourish spells to refund 4% of their base cost for each healing over time effect on the target.",
 @"Reduces the global cooldown of your Rejuvenation and Lifebloom spells by 0.5 sec, and causes your Healing Touch and Nourish spells to refund 5% of their base cost for each healing over time effect on the target.",})]
-		public int GiftoftheEarthmother { get { return _data[81]; } set { _data[81] = value; } }
+        public int GiftOfTheEarthmother { get { return _data[81]; } set { _data[81] = value; } }
 
-		[TalentData(82, "Flourish", 1, 2, 2, 11, 79, new string[] {
+        [TalentData(82, "Flourish", 1, 2, 2, 11, 79, new string[] {
 @"585 Mana,40 yd range,
 Instant cast
 Heals up to 5 friendly party or raid members within 15 yards of the target for 1610 over 7 sec. The amount healed is applied quickly at first, and slows down as the Flourish reaches its full duration.",})]
-		public int Flourish { get { return _data[82]; } set { _data[82] = value; } }
-	}
+        public int Flourish { get { return _data[82]; } set { _data[82] = value; } }
+    }
 
-	public class RogueTalents
-	{
-		private int[] _data = new int[85];
-		public RogueTalents() { }
-		public RogueTalents(string talents)
-		{
-			List<int> data = new List<int>();
-			foreach (Char digit in talents)
-				data.Add(int.Parse(digit.ToString()));
-			data.CopyTo(_data);
-		}
+    public class RogueTalents : ICloneable
+    {
+        private int[] _data = new int[85];
+        public RogueTalents() { }
+        public RogueTalents(string talents)
+        {
+            List<int> data = new List<int>();
+            foreach (Char digit in talents)
+                data.Add(int.Parse(digit.ToString()));
+            data.CopyTo(_data);
+        }
 
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
-		}
+        public override string ToString()
+        {
+            StringBuilder ret = new StringBuilder();
+            foreach (int digit in _data)
+                ret.Append(digit.ToString());
+            return ret.ToString();
+        }
+        object ICloneable.Clone()
+        {
+            RogueTalents clone = (RogueTalents)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            return clone;
+        }
 
-		[TalentData(0, "Improved Eviscerate", 3, 0, 1, 1, -1, new string[] {
+        public RogueTalents Clone()
+        {
+            return (RogueTalents)((ICloneable)this).Clone();
+        }
+
+
+        [TalentData(0, "Improved Eviscerate", 3, 0, 1, 1, -1, new string[] {
 @"Increases the damage done by your Eviscerate ability by 5%.",
 @"Increases the damage done by your Eviscerate ability by 10%.",
 @"Increases the damage done by your Eviscerate ability by 15%.",})]
-		public int ImprovedEviscerate { get { return _data[0]; } set { _data[0] = value; } }
+        public int ImprovedEviscerate { get { return _data[0]; } set { _data[0] = value; } }
 
-		[TalentData(1, "Remorseless Attacks", 2, 0, 2, 1, -1, new string[] {
+        [TalentData(1, "Remorseless Attacks", 2, 0, 2, 1, -1, new string[] {
 @"After killing an opponent that yields experience or honor, gives you a 20% increased critical strike chance on your next Sinister Strike, Backstab, Mutilate, Hemorrhage, Ambush, or Ghostly Strike. Lasts 20 sec.",
 @"After killing an opponent that yields experience or honor, gives you a 40% increased critical strike chance on your next Sinister Strike, Backstab, Mutilate, Hemorrhage, Ambush, or Ghostly Strike. Lasts 20 sec.",})]
-		public int RemorselessAttacks { get { return _data[1]; } set { _data[1] = value; } }
+        public int RemorselessAttacks { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Malice", 5, 0, 3, 1, -1, new string[] {
+        [TalentData(2, "Malice", 5, 0, 3, 1, -1, new string[] {
 @"Increases your critical strike chance by 1%.",
 @"Increases your critical strike chance by 2%.",
 @"Increases your critical strike chance by 3%.",
 @"Increases your critical strike chance by 4%.",
 @"Increases your critical strike chance by 5%.",})]
-		public int Malice { get { return _data[2]; } set { _data[2] = value; } }
+        public int Malice { get { return _data[2]; } set { _data[2] = value; } }
 
-		[TalentData(3, "Ruthlessness", 3, 0, 1, 2, -1, new string[] {
+        [TalentData(3, "Ruthlessness", 3, 0, 1, 2, -1, new string[] {
 @"Gives your melee finishing moves a 20% chance to add a combo point to your target.",
 @"Gives your melee finishing moves a 40% chance to add a combo point to your target.",
 @"Gives your melee finishing moves a 60% chance to add a combo point to your target.",})]
-		public int Ruthlessness { get { return _data[3]; } set { _data[3] = value; } }
+        public int Ruthlessness { get { return _data[3]; } set { _data[3] = value; } }
 
-		[TalentData(4, "Murder", 2, 0, 2, 2, -1, new string[] {
+        [TalentData(4, "Murder", 2, 0, 2, 2, -1, new string[] {
 @"Increases all damage caused against Humanoid, Giant, Beast, and Dragonkin targets by 1%",
 @"Increases all damage caused against Humanoid, Giant, Beast, and Dragonkin targets by 2%",})]
-		public int Murder { get { return _data[4]; } set { _data[4] = value; } }
+        public int Murder { get { return _data[4]; } set { _data[4] = value; } }
 
-		[TalentData(5, "Puncturing Wounds", 3, 0, 4, 2, -1, new string[] {
+        [TalentData(5, "Puncturing Wounds", 3, 0, 4, 2, -1, new string[] {
 @"Increases the critical strike chance of your Backstab ability by 10%, and the critical strike chance of your Mutilate ability by 5%.",
 @"Increases the critical strike chance of your Backstab ability by 20%, and the critical strike chance of your Mutilate ability by 10%.",
 @"Increases the critical strike chance of your Backstab ability by 30%, and the critical strike chance of your Mutilate ability by 15%.",})]
-		public int PuncturingWounds { get { return _data[5]; } set { _data[5] = value; } }
+        public int PuncturingWounds { get { return _data[5]; } set { _data[5] = value; } }
 
-		[TalentData(6, "Relentless Strikes", 1, 0, 1, 3, -1, new string[] {
+        [TalentData(6, "Relentless Strikes", 1, 0, 1, 3, -1, new string[] {
 @"Your finishing moves have a 20% chance per combo point to restore 25 energy.",})]
-		public int RelentlessStrikes { get { return _data[6]; } set { _data[6] = value; } }
+        public int RelentlessStrikes { get { return _data[6]; } set { _data[6] = value; } }
 
-		[TalentData(7, "Improved Expose Armor", 2, 0, 2, 3, -1, new string[] {
+        [TalentData(7, "Improved Expose Armor", 2, 0, 2, 3, -1, new string[] {
 @"Increases the armor reduced by your Expose Armor ability by 25%.",
 @"Increases the armor reduced by your Expose Armor ability by 50%.",})]
-		public int ImprovedExposeArmor { get { return _data[7]; } set { _data[7] = value; } }
+        public int ImprovedExposeArmor { get { return _data[7]; } set { _data[7] = value; } }
 
-		[TalentData(8, "Lethality", 5, 0, 3, 3, 2, new string[] {
+        [TalentData(8, "Lethality", 5, 0, 3, 3, 2, new string[] {
 @"Increases the critical strike damage bonus of your Sinister Strike, Gouge, Backstab, Ghostly Strike, Mutilate, Shiv, and Hemorrhage abilites by 6%.",
 @"Increases the critical strike damage bonus of your Sinister Strike, Gouge, Backstab, Ghostly Strike, Mutilate, Shiv, and Hemorrhage abilites by 12%.",
 @"Increases the critical strike damage bonus of your Sinister Strike, Gouge, Backstab, Ghostly Strike, Mutilate, Shiv, and Hemorrhage abilites by 18%.",
 @"Increases the critical strike damage bonus of your Sinister Strike, Gouge, Backstab, Ghostly Strike, Mutilate, Shiv, and Hemorrhage abilites by 24%.",
 @"Increases the critical strike damage bonus of your Sinister Strike, Gouge, Backstab, Ghostly Strike, Mutilate, Shiv, and Hemorrhage abilites by 30%.",})]
-		public int Lethality { get { return _data[8]; } set { _data[8] = value; } }
+        public int Lethality { get { return _data[8]; } set { _data[8] = value; } }
 
-		[TalentData(9, "Vile Poisons", 3, 0, 2, 4, -1, new string[] {
+        [TalentData(9, "Vile Poisons", 3, 0, 2, 4, -1, new string[] {
 @"Increases the damage dealt by your poisons and Envenom ability by 7% and gives your poisons an additional 10% chance to resist dispel effects.",
 @"Increases the damage dealt by your poisons and Envenom ability by 14% and gives your poisons an additional 20% chance to resist dispel effects.",
 @"Increases the damage dealt by your poisons and Envenom ability by 20% and gives your poisons an additional 30% chance to resist dispel effects.",})]
-		public int VilePoisons { get { return _data[9]; } set { _data[9] = value; } }
+        public int VilePoisons { get { return _data[9]; } set { _data[9] = value; } }
 
-		[TalentData(10, "Improved Poisons", 5, 0, 3, 4, -1, new string[] {
+        [TalentData(10, "Improved Poisons", 5, 0, 3, 4, -1, new string[] {
 @"Increases the chance to apply poisons to your target by 5%.",
 @"Increases the chance to apply poisons to your target by 10%.",
 @"Increases the chance to apply poisons to your target by 15%.",
 @"Increases the chance to apply poisons to your target by 20%.",
 @"Increases the chance to apply poisons to your target by 25%.",})]
-		public int ImprovedPoisons { get { return _data[10]; } set { _data[10] = value; } }
+        public int ImprovedPoisons { get { return _data[10]; } set { _data[10] = value; } }
 
-		[TalentData(11, "Fleet Footed", 2, 0, 1, 5, -1, new string[] {
+        [TalentData(11, "Fleet Footed", 2, 0, 1, 5, -1, new string[] {
 @"Reduces the duration of all movement impairing effects by 25% and increases your movement speed by 8% This does not stack with other movement speed increasing effects.",
 @"Reduces the duration of all movement impairing effects by 50% and increases your movement speed by 15% This does not stack with other movement speed increasing effects.",})]
-		public int FleetFooted { get { return _data[11]; } set { _data[11] = value; } }
+        public int FleetFooted { get { return _data[11]; } set { _data[11] = value; } }
 
-		[TalentData(12, "Cold Blood", 1, 0, 2, 5, -1, new string[] {
+        [TalentData(12, "Cold Blood", 1, 0, 2, 5, -1, new string[] {
 @"Instant,3 min cooldown,
 When activated, increases the critical strike chance of your next offensive ability by 100%.",})]
-		public int ColdBlood { get { return _data[12]; } set { _data[12] = value; } }
+        public int ColdBlood { get { return _data[12]; } set { _data[12] = value; } }
 
-		[TalentData(13, "Improved Kidney Shot", 3, 0, 3, 5, -1, new string[] {
+        [TalentData(13, "Improved Kidney Shot", 3, 0, 3, 5, -1, new string[] {
 @"While affected by your Kidney Shot ability, target receives an additional 3% damage from all sources.",
 @"While affected by your Kidney Shot ability, target receives an additional 6% damage from all sources.",
 @"While affected by your Kidney Shot ability, target receives an additional 9% damage from all sources.",})]
-		public int ImprovedKidneyShot { get { return _data[13]; } set { _data[13] = value; } }
+        public int ImprovedKidneyShot { get { return _data[13]; } set { _data[13] = value; } }
 
-		[TalentData(14, "Quick Recovery", 2, 0, 4, 5, -1, new string[] {
+        [TalentData(14, "Quick Recovery", 2, 0, 4, 5, -1, new string[] {
 @"All healing effects on you are increased by 10%. In addition, your finishing moves cost 40% less Energy when they fail to hit.",
 @"All healing effects on you are increased by 20%. In addition, your finishing moves cost 80% less Energy when they fail to hit.",})]
-		public int QuickRecovery { get { return _data[14]; } set { _data[14] = value; } }
+        public int QuickRecovery { get { return _data[14]; } set { _data[14] = value; } }
 
-		[TalentData(15, "Seal Fate", 5, 0, 2, 6, 12, new string[] {
+        [TalentData(15, "Seal Fate", 5, 0, 2, 6, 12, new string[] {
 @"Your critical strikes from abilities that add combo points have a 20% chance to add an additional combo point.",
 @"Your critical strikes from abilities that add combo points have a 40% chance to add an additional combo point.",
 @"Your critical strikes from abilities that add combo points have a 60% chance to add an additional combo point.",
 @"Your critical strikes from abilities that add combo points have a 80% chance to add an additional combo point.",
 @"Your critical strikes from abilities that add combo points have a 100% chance to add an additional combo point.",})]
-		public int SealFate { get { return _data[15]; } set { _data[15] = value; } }
+        public int SealFate { get { return _data[15]; } set { _data[15] = value; } }
 
-		[TalentData(16, "Master Poisoner", 2, 0, 3, 6, -1, new string[] {
+        [TalentData(16, "Master Poisoner", 2, 0, 3, 6, -1, new string[] {
 @"Reduces the chance your poisons will be resisted by 5% and reduces the duration of all Poison effects by 25%.",
 @"Reduces the chance your poisons will be resisted by 10% and reduces the duration of all Poison effects by 50%.",})]
-		public int MasterPoisoner { get { return _data[16]; } set { _data[16] = value; } }
+        public int MasterPoisoner { get { return _data[16]; } set { _data[16] = value; } }
 
-		[TalentData(17, "Deadly Brew", 2, 0, 1, 7, -1, new string[] {
+        [TalentData(17, "Deadly Brew", 2, 0, 1, 7, -1, new string[] {
 @"When you apply Instant, Wounding or Mind-Numbing poison to a target, you have a 50% chance to apply a second poison:
 
 Instant -&gt; Deadly
@@ -2513,45 +2573,45 @@ Instant -&gt; Deadly
 Instant -&gt; Deadly
  Wounding -&gt; Crippling
  Mind-Numbing -&gt; Crippling.",})]
-		public int DeadlyBrew { get { return _data[17]; } set { _data[17] = value; } }
+        public int DeadlyBrew { get { return _data[17]; } set { _data[17] = value; } }
 
-		[TalentData(18, "Vigor", 1, 0, 2, 7, -1, new string[] {
+        [TalentData(18, "Vigor", 1, 0, 2, 7, -1, new string[] {
 @"Increases your maximum Energy by 10.",})]
-		public int Vigor { get { return _data[18]; } set { _data[18] = value; } }
+        public int Vigor { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Deadened Nerves", 5, 0, 3, 7, -1, new string[] {
+        [TalentData(19, "Deadened Nerves", 5, 0, 3, 7, -1, new string[] {
 @"Decreases all physical damage taken by 1%.",
 @"Decreases all physical damage taken by 2%.",
 @"Decreases all physical damage taken by 3%.",
 @"Decreases all physical damage taken by 4%.",
 @"Decreases all physical damage taken by 5%.",})]
-		public int DeadenedNerves { get { return _data[19]; } set { _data[19] = value; } }
+        public int DeadenedNerves { get { return _data[19]; } set { _data[19] = value; } }
 
-		[TalentData(20, "Turn the Tables", 3, 0, 1, 8, -1, new string[] {
+        [TalentData(20, "Turn the Tables", 3, 0, 1, 8, -1, new string[] {
 @"Whenever anyone in your party or raid blocks, dodges, or parries an attack your chance to critically hit with all combo moves is increased by 2% for 8 sec.",
 @"Whenever anyone in your party or raid blocks, dodges, or parries an attack your chance to critically hit with all combo moves is increased by 4% for 8 sec.",
 @"Whenever anyone in your party or raid blocks, dodges, or parries an attack your chance to critically hit with all combo moves is increased by 6% for 8 sec.",})]
-		public int TurntheTables { get { return _data[20]; } set { _data[20] = value; } }
+        public int TurnTheTables { get { return _data[20]; } set { _data[20] = value; } }
 
-		[TalentData(21, "Find Weakness", 5, 0, 3, 8, -1, new string[] {
+        [TalentData(21, "Find Weakness", 5, 0, 3, 8, -1, new string[] {
 @"Your finishing moves increase the damage of all offensive abilities by 2% for 10 sec.",
 @"Your finishing moves increase the damage of all offensive abilities by 4% for 10 sec.",
 @"Your finishing moves increase the damage of all offensive abilities by 6% for 10 sec.",
 @"Your finishing moves increase the damage of all offensive abilities by 8% for 10 sec.",
 @"Your finishing moves increase the damage of all offensive abilities by 10% for 10 sec.",})]
-		public int FindWeakness { get { return _data[21]; } set { _data[21] = value; } }
+        public int FindWeakness { get { return _data[21]; } set { _data[21] = value; } }
 
-		[TalentData(22, "Infectious Poisons", 2, 0, 4, 8, -1, new string[] {
+        [TalentData(22, "Infectious Poisons", 2, 0, 4, 8, -1, new string[] {
 @"Increases the damage caused by your Instant Poison and Deadly Poison by 10%. In addition, when a target you've poisoned is healed or cured, there is a 50% chance the poison afflicts the healer.",
 @"Increases the damage caused by your Instant Poison and Deadly Poison by 20%. In addition, when a target you've poisoned is healed or cured, there is a 50% chance the poison afflicts the healer.",})]
-		public int InfectiousPoisons { get { return _data[22]; } set { _data[22] = value; } }
+        public int InfectiousPoisons { get { return _data[22]; } set { _data[22] = value; } }
 
-		[TalentData(23, "Blood Spatter", 2, 0, 1, 9, -1, new string[] {
+        [TalentData(23, "Blood Spatter", 2, 0, 1, 9, -1, new string[] {
 @"Increases the damage caused by your Garrote and Rupture abilities by 10%.",
 @"Increases the damage caused by your Garrote and Rupture abilities by 20%.",})]
-		public int BloodSpatter { get { return _data[23]; } set { _data[23] = value; } }
+        public int BloodSpatter { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Mutilate", 1, 0, 2, 9, 18, new string[] {
+        [TalentData(24, "Mutilate", 1, 0, 2, 9, 18, new string[] {
 @"60 Energy,Melee range,
 Instant
 Requires Daggers
@@ -2561,298 +2621,298 @@ Instantly attacks with both weapons for an additional 44 with each weapon. Damag
 			 Rank 2: 63 with each weapon
 			 Rank 3: 88 with each weapon
 			 Rank 4: 101 with each weapon",})]
-		public int Mutilate { get { return _data[24]; } set { _data[24] = value; } }
+        public int Mutilate { get { return _data[24]; } set { _data[24] = value; } }
 
-		[TalentData(25, "Focused Attacks", 3, 0, 3, 9, -1, new string[] {
+        [TalentData(25, "Focused Attacks", 3, 0, 3, 9, -1, new string[] {
 @"Your melee critical strikes have a 30% chance to give you 1 energy.",
 @"Your melee critical strikes have a 30% chance to give you 2 energy.",
 @"Your melee critical strikes have a 30% chance to give you 3 energy.",})]
-		public int FocusedAttacks { get { return _data[25]; } set { _data[25] = value; } }
+        public int FocusedAttacks { get { return _data[25]; } set { _data[25] = value; } }
 
-		[TalentData(26, "Cut to the Chase", 5, 0, 2, 10, -1, new string[] {
+        [TalentData(26, "Cut to the Chase", 5, 0, 2, 10, -1, new string[] {
 @"Your Eviscerate and Envenom critical strikes have a 20% chance to refresh your Slice and Dice duration to its 5 combo point maximum.",
 @"Your Eviscerate and Envenom critical strikes have a 40% chance to refresh your Slice and Dice duration to its 5 combo point maximum.",
 @"Your Eviscerate and Envenom critical strikes have a 60% chance to refresh your Slice and Dice duration to its 5 combo point maximum.",
 @"Your Eviscerate and Envenom critical strikes have a 80% chance to refresh your Slice and Dice duration to its 5 combo point maximum.",
 @"Your Eviscerate and Envenom critical strikes have a 100% chance to refresh your Slice and Dice duration to its 5 combo point maximum.",})]
-		public int CuttotheChase { get { return _data[26]; } set { _data[26] = value; } }
+        public int CutToTheChase { get { return _data[26]; } set { _data[26] = value; } }
 
-		[TalentData(27, "Hunger For Blood", 1, 0, 2, 11, -1, new string[] {
+        [TalentData(27, "Hunger For Blood", 1, 0, 2, 11, -1, new string[] {
 @"30 Energy,
 Instant,
 Enrages you, increasing all damage caused by 5%. If used while a Bleeding or Magic effect is afflicting you, it will remove one Bleed and one Magic effect and refund the energy cost. This effect can be stacked up to 3 times. Lasts 10 sec.",})]
-		public int HungerForBlood { get { return _data[27]; } set { _data[27] = value; } }
+        public int HungerForBlood { get { return _data[27]; } set { _data[27] = value; } }
 
-		[TalentData(28, "Improved Gouge", 3, 1, 1, 1, -1, new string[] {
+        [TalentData(28, "Improved Gouge", 3, 1, 1, 1, -1, new string[] {
 @"Increases the effect duration of your Gouge ability by 0.5 sec.",
 @"Increases the effect duration of your Gouge ability by 1 sec.",
 @"Increases the effect duration of your Gouge ability by 1.5 sec.",})]
-		public int ImprovedGouge { get { return _data[28]; } set { _data[28] = value; } }
+        public int ImprovedGouge { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(29, "Improved Sinister Strike", 2, 1, 2, 1, -1, new string[] {
+        [TalentData(29, "Improved Sinister Strike", 2, 1, 2, 1, -1, new string[] {
 @"Reduces the Energy cost of your Sinister Strike ability by 3.",
 @"Reduces the Energy cost of your Sinister Strike ability by 5.",})]
-		public int ImprovedSinisterStrike { get { return _data[29]; } set { _data[29] = value; } }
+        public int ImprovedSinisterStrike { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(30, "Lightning Reflexes", 5, 1, 3, 1, -1, new string[] {
+        [TalentData(30, "Lightning Reflexes", 5, 1, 3, 1, -1, new string[] {
 @"Increases your Dodge chance by 1%.",
 @"Increases your Dodge chance by 2%.",
 @"Increases your Dodge chance by 3%.",
 @"Increases your Dodge chance by 4%.",
 @"Increases your Dodge chance by 5%.",})]
-		public int LightningReflexes { get { return _data[30]; } set { _data[30] = value; } }
+        public int LightningReflexes { get { return _data[30]; } set { _data[30] = value; } }
 
-		[TalentData(31, "Improved Slice and Dice", 3, 1, 1, 2, -1, new string[] {
+        [TalentData(31, "Improved Slice and Dice", 3, 1, 1, 2, -1, new string[] {
 @"Increases the duration of your Slice and Dice ability by 15%.",
 @"Increases the duration of your Slice and Dice ability by 30%.",
 @"Increases the duration of your Slice and Dice ability by 45%.",})]
-		public int ImprovedSliceandDice { get { return _data[31]; } set { _data[31] = value; } }
+        public int ImprovedSliceAndDice { get { return _data[31]; } set { _data[31] = value; } }
 
-		[TalentData(32, "Deflection", 5, 1, 2, 2, -1, new string[] {
+        [TalentData(32, "Deflection", 5, 1, 2, 2, -1, new string[] {
 @"Increases your Parry chance by 1%.",
 @"Increases your Parry chance by 2%.",
 @"Increases your Parry chance by 3%.",
 @"Increases your Parry chance by 4%.",
 @"Increases your Parry chance by 5%.",})]
-		public int Deflection { get { return _data[32]; } set { _data[32] = value; } }
+        public int Deflection { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(33, "Precision", 5, 1, 3, 2, -1, new string[] {
+        [TalentData(33, "Precision", 5, 1, 3, 2, -1, new string[] {
 @"Increases your chance to hit with weapons by 1%.",
 @"Increases your chance to hit with weapons by 2%.",
 @"Increases your chance to hit with weapons by 3%.",
 @"Increases your chance to hit with weapons by 4%.",
 @"Increases your chance to hit with weapons by 5%.",})]
-		public int Precision { get { return _data[33]; } set { _data[33] = value; } }
+        public int Precision { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(34, "Endurance", 2, 1, 1, 3, -1, new string[] {
+        [TalentData(34, "Endurance", 2, 1, 1, 3, -1, new string[] {
 @"Reduces the cooldown of your Sprint and Evasion abilities by 45 sec",
 @"Reduces the cooldown of your Sprint and Evasion abilities by 1.5 min.",})]
-		public int Endurance { get { return _data[34]; } set { _data[34] = value; } }
+        public int Endurance { get { return _data[34]; } set { _data[34] = value; } }
 
-		[TalentData(35, "Riposte", 1, 1, 2, 3, 32, new string[] {
+        [TalentData(35, "Riposte", 1, 1, 2, 3, 32, new string[] {
 @"10 Energy,Melee range,
 Instant,6 sec cooldown,
 A strike that becomes active after parrying an opponent's attack. This attack deals 150% weapon damage and slows their melee attack speed by 20% for 30 sec.",})]
-		public int Riposte { get { return _data[35]; } set { _data[35] = value; } }
+        public int Riposte { get { return _data[35]; } set { _data[35] = value; } }
 
-		[TalentData(36, "Improved Sprint", 2, 1, 4, 3, -1, new string[] {
+        [TalentData(36, "Improved Sprint", 2, 1, 4, 3, -1, new string[] {
 @"Gives a 50% chance to remove all movement imparing effects when you activate your Sprint ability.",
 @"Gives a 100% chance to remove all movement imparing effects when you activate your Sprint ability.",})]
-		public int ImprovedSprint { get { return _data[36]; } set { _data[36] = value; } }
+        public int ImprovedSprint { get { return _data[36]; } set { _data[36] = value; } }
 
-		[TalentData(37, "Improved Kick", 2, 1, 1, 4, -1, new string[] {
+        [TalentData(37, "Improved Kick", 2, 1, 1, 4, -1, new string[] {
 @"Gives your Kick ability a 50% chance to silence the target for 2 sec.",
 @"Gives your Kick ability a 100% chance to silence the target for 2 sec.",})]
-		public int ImprovedKick { get { return _data[37]; } set { _data[37] = value; } }
+        public int ImprovedKick { get { return _data[37]; } set { _data[37] = value; } }
 
-		[TalentData(38, "Dagger Specialization", 5, 1, 2, 4, -1, new string[] {
+        [TalentData(38, "Dagger Specialization", 5, 1, 2, 4, -1, new string[] {
 @"Increases your chance to get a critical strike with Daggers by 1%.",
 @"Increases your chance to get a critical strike with Daggers by 2%.",
 @"Increases your chance to get a critical strike with Daggers by 3%.",
 @"Increases your chance to get a critical strike with Daggers by 4%.",
 @"Increases your chance to get a critical strike with Daggers by 5%.",})]
-		public int DaggerSpecialization { get { return _data[38]; } set { _data[38] = value; } }
+        public int DaggerSpecialization { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Dual Wield Specialization", 5, 1, 3, 4, 33, new string[] {
+        [TalentData(39, "Dual Wield Specialization", 5, 1, 3, 4, 33, new string[] {
 @"Increases the damage done by your offhand weapon by 10%.",
 @"Increases the damage done by your offhand weapon by 20%.",
 @"Increases the damage done by your offhand weapon by 30%.",
 @"Increases the damage done by your offhand weapon by 40%.",
 @"Increases the damage done by your offhand weapon by 50%.",})]
-		public int DualWieldSpecialization { get { return _data[39]; } set { _data[39] = value; } }
+        public int DualWieldSpecialization { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(40, "Mace Specialization", 5, 1, 1, 5, -1, new string[] {
+        [TalentData(40, "Mace Specialization", 5, 1, 1, 5, -1, new string[] {
 @"Increases the damage dealt by your critical strikes with maces by 1%, and gives you a 1% chance to stun your target for 3 sec with a mace.",
 @"Increases the damage dealt by your critical strikes with maces by 2%, and gives you a 2% chance to stun your target for 3 sec with a mace.",
 @"Increases the damage dealt by your critical strikes with maces by 3%, and gives you a 3% chance to stun your target for 3 sec with a mace.",
 @"Increases the damage dealt by your critical strikes with maces by 4%, and gives you a 4% chance to stun your target for 3 sec with a mace.",
 @"Increases the damage dealt by your critical strikes with maces by 5%, and gives you a 6% chance to stun your target for 3 sec with a mace.",})]
-		public int MaceSpecialization { get { return _data[40]; } set { _data[40] = value; } }
+        public int MaceSpecialization { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(41, "Blade Flurry", 1, 1, 2, 5, -1, new string[] {
+        [TalentData(41, "Blade Flurry", 1, 1, 2, 5, -1, new string[] {
 @"25 Energy
 Instant,2 min cooldown,
 Increases your attack speed by 20%. In addition, attacks strike an additional nearby opponent. Lasts 15 sec.",})]
-		public int BladeFlurry { get { return _data[41]; } set { _data[41] = value; } }
+        public int BladeFlurry { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(42, "Sword Specialization", 5, 1, 3, 5, -1, new string[] {
+        [TalentData(42, "Sword Specialization", 5, 1, 3, 5, -1, new string[] {
 @"Gives you a 1% chance to get an extra attack on the same target after hitting your target with your Sword.",
 @"Gives you a 2% chance to get an extra attack on the same target after hitting your target with your Sword.",
 @"Gives you a 3% chance to get an extra attack on the same target after hitting your target with your Sword.",
 @"Gives you a 4% chance to get an extra attack on the same target after hitting your target with your Sword.",
 @"Gives you a 5% chance to get an extra attack on the same target after hitting your target with your Sword.",})]
-		public int SwordSpecialization { get { return _data[42]; } set { _data[42] = value; } }
+        public int SwordSpecialization { get { return _data[42]; } set { _data[42] = value; } }
 
-		[TalentData(43, "Fist Weapon Specialization", 5, 1, 4, 5, -1, new string[] {
+        [TalentData(43, "Fist Weapon Specialization", 5, 1, 4, 5, -1, new string[] {
 @"Increases your chance to get a critical strike with Fist Weapons by 1%.",
 @"Increases your chance to get a critical strike with Fist Weapons by 2%.",
 @"Increases your chance to get a critical strike with Fist Weapons by 3%.",
 @"Increases your chance to get a critical strike with Fist Weapons by 4%.",
 @"Increases your chance to get a critical strike with Fist Weapons by 5%.",})]
-		public int FistWeaponSpecialization { get { return _data[43]; } set { _data[43] = value; } }
+        public int FistWeaponSpecialization { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Blade Twisting", 2, 1, 1, 6, -1, new string[] {
+        [TalentData(44, "Blade Twisting", 2, 1, 1, 6, -1, new string[] {
 @"Your damaging melee attacks have a 10% chance to Daze the target for 4 sec.",
 @"Your damaging melee attacks have a 10% chance to Daze the target for 8 sec.",})]
-		public int BladeTwisting { get { return _data[44]; } set { _data[44] = value; } }
+        public int BladeTwisting { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(45, "Weapon Expertise", 2, 1, 2, 6, 41, new string[] {
+        [TalentData(45, "Weapon Expertise", 2, 1, 2, 6, 41, new string[] {
 @"Increases your expertise by 5.",
 @"Increases your expertise by 10.",})]
-		public int WeaponExpertise { get { return _data[45]; } set { _data[45] = value; } }
+        public int WeaponExpertise { get { return _data[45]; } set { _data[45] = value; } }
 
-		[TalentData(46, "Aggression", 3, 1, 3, 6, -1, new string[] {
+        [TalentData(46, "Aggression", 3, 1, 3, 6, -1, new string[] {
 @"Increases the damage of your Sinister Strike, Backstab, and Eviscerate abilities by 2%.",
 @"Increases the damage of your Sinister Strike, Backstab, and Eviscerate abilities by 4%.",
 @"Increases the damage of your Sinister Strike, Backstab, and Eviscerate abilities by 6%.",})]
-		public int Aggression { get { return _data[46]; } set { _data[46] = value; } }
+        public int Aggression { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Vitality", 2, 1, 1, 7, -1, new string[] {
+        [TalentData(47, "Vitality", 2, 1, 1, 7, -1, new string[] {
 @"Increases your total Stamina by 2% and your total Agility by 1%.",
 @"Increases your total Stamina by 4% and your total Agility by 2%.",})]
-		public int Vitality { get { return _data[47]; } set { _data[47] = value; } }
+        public int Vitality { get { return _data[47]; } set { _data[47] = value; } }
 
-		[TalentData(48, "Adrenaline Rush", 1, 1, 2, 7, -1, new string[] {
+        [TalentData(48, "Adrenaline Rush", 1, 1, 2, 7, -1, new string[] {
 @"Instant,5 min cooldown,
 Increases your Energy regeneration rate by 100% for 15 sec.",})]
-		public int AdrenalineRush { get { return _data[48]; } set { _data[48] = value; } }
+        public int AdrenalineRush { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(49, "Nerves of Steel", 2, 1, 3, 7, -1, new string[] {
+        [TalentData(49, "Nerves of Steel", 2, 1, 3, 7, -1, new string[] {
 @"Reduces the duration of all Stun and Fear effects by 15%.",
 @"Reduces the duration of all Stun and Fear effects by 30%.",})]
-		public int NervesofSteel { get { return _data[49]; } set { _data[49] = value; } }
+        public int NervesOfSteel { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(50, "Throwing Specialization", 2, 1, 1, 8, -1, new string[] {
+        [TalentData(50, "Throwing Specialization", 2, 1, 1, 8, -1, new string[] {
 @"Increases the range of Throw and Deadly Throw by 2 yards and gives your Deadly Throw a 50% chance to interrupt the target for 3 sec.",
 @"Increases the range of Throw and Deadly Throw by 4 yards and gives your Deadly Throw a 100% chance to interrupt the target for 3 sec.",})]
-		public int ThrowingSpecialization { get { return _data[50]; } set { _data[50] = value; } }
+        public int ThrowingSpecialization { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Combat Potency", 5, 1, 3, 8, -1, new string[] {
+        [TalentData(51, "Combat Potency", 5, 1, 3, 8, -1, new string[] {
 @"Gives your successful off-hand melee attacks a 20% chance to generate 3 Energy.",
 @"Gives your successful off-hand melee attacks a 20% chance to generate 6 Energy.",
 @"Gives your successful off-hand melee attacks a 20% chance to generate 9 Energy.",
 @"Gives your successful off-hand melee attacks a 20% chance to generate 12 Energy.",
 @"Gives your successful off-hand melee attacks a 20% chance to generate 15 Energy.",})]
-		public int CombatPotency { get { return _data[51]; } set { _data[51] = value; } }
+        public int CombatPotency { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(52, "Unfair Advantage", 2, 1, 1, 9, -1, new string[] {
+        [TalentData(52, "Unfair Advantage", 2, 1, 1, 9, -1, new string[] {
 @"Whenever you critically hit an enemy or dodge an attack you gain an Unfair Advantage, increasing your chance to critically hit and dodge by 1% for 8 sec.",
 @"Whenever you critically hit an enemy or dodge an attack you gain an Unfair Advantage, increasing your chance to critically hit and dodge by 2% for 8 sec.",})]
-		public int UnfairAdvantage { get { return _data[52]; } set { _data[52] = value; } }
+        public int UnfairAdvantage { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(53, "Surprise Attacks", 1, 1, 2, 9, 48, new string[] {
+        [TalentData(53, "Surprise Attacks", 1, 1, 2, 9, 48, new string[] {
 @"Your finishing moves can no longer be dodged, and the damage dealt by your Sinister Strike, Backstab, Shiv and Gouge abilities is increased by 10%.",})]
-		public int SurpriseAttacks { get { return _data[53]; } set { _data[53] = value; } }
+        public int SurpriseAttacks { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(54, "Stay of Execution", 3, 1, 3, 9, -1, new string[] {
+        [TalentData(54, "Stay of Execution", 3, 1, 3, 9, -1, new string[] {
 @"When you have less than 35% health, all damage taken is reduced by 5% and you are treated as if you are at full health.",
 @"When you have less than 35% health, all damage taken is reduced by 10% and you are treated as if you are at full health.",
 @"When you have less than 35% health, all damage taken is reduced by 15% and you are treated as if you are at full health.",})]
-		public int StayofExecution { get { return _data[54]; } set { _data[54] = value; } }
+        public int StayOfExecution { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(55, "Prey on the Weak", 5, 1, 2, 10, -1, new string[] {
+        [TalentData(55, "Prey on the Weak", 5, 1, 2, 10, -1, new string[] {
 @"Your normal melee critical strike damage is increased by 5% when the target has less health than you (as a percentage of total health).",
 @"Your normal melee critical strike damage is increased by 10% when the target has less health than you (as a percentage of total health).",
 @"Your normal melee critical strike damage is increased by 15% when the target has less health than you (as a percentage of total health).",
 @"Your normal melee critical strike damage is increased by 20% when the target has less health than you (as a percentage of total health).",
 @"Your normal melee critical strike damage is increased by 25% when the target has less health than you (as a percentage of total health).",})]
-		public int PreyontheWeak { get { return _data[55]; } set { _data[55] = value; } }
+        public int PreyOnTheWeak { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "Murder Spree", 1, 1, 2, 11, -1, new string[] {
+        [TalentData(56, "Murder Spree", 1, 1, 2, 11, -1, new string[] {
 @"Instant,2 min cooldown,
 Step through the shadows from enemy to enemy within 10 yards, attacking an enemy every 0.5 secs with both weapons until 5 assaults are made. Can hit the same target multiple times.",})]
-		public int MurderSpree { get { return _data[56]; } set { _data[56] = value; } }
+        public int MurderSpree { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(57, "Relentless Strikes", 5, 2, 1, 1, -1, new string[] {
+        [TalentData(57, "Relentless Strikes", 5, 2, 1, 1, -1, new string[] {
 @"Your finishing moves have a 4% chance per combo point to restore 25 energy.",
 @"Your finishing moves have a 8% chance per combo point to restore 25 energy.",
 @"Your finishing moves have a 12% chance per combo point to restore 25 energy.",
 @"Your finishing moves have a 16% chance per combo point to restore 25 energy.",
 @"Your finishing moves have a 20% chance per combo point to restore 25 energy.",})]
-		public int RelentlessStrikes2 { get { return _data[57]; } set { _data[57] = value; } }
+        public int RelentlessStrikes2 { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(58, "Master of Deception", 5, 2, 2, 1, -1, new string[] {
+        [TalentData(58, "Master of Deception", 5, 2, 2, 1, -1, new string[] {
 @"Reduces the chance enemies have to detect you while in Stealth mode.",
 @"Reduces the chance enemies have to detect you while in Stealth mode. More effective than Master of Deception (Rank 1).",
 @"Reduces the chance enemies have to detect you while in Stealth mode. More effective than Master of Deception (Rank 2).",
 @"Reduces the chance enemies have to detect you while in Stealth mode. More effective than Master of Deception (Rank 3).",
 @"Reduces the chance enemies have to detect you while in Stealth mode. More effective than Master of Deception (Rank 4).",})]
-		public int MasterofDeception { get { return _data[58]; } set { _data[58] = value; } }
+        public int MasterOfDeception { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(59, "Opportunity", 2, 2, 3, 1, -1, new string[] {
+        [TalentData(59, "Opportunity", 2, 2, 3, 1, -1, new string[] {
 @"Increases the damage dealt when striking from behind with your Backstab, Mutilate, Garrote, and Ambush abilities by 10%.",
 @"Increases the damage dealt when striking from behind with your Backstab, Mutilate, Garrote, and Ambush abilities by 20%.",})]
-		public int Opportunity { get { return _data[59]; } set { _data[59] = value; } }
+        public int Opportunity { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(60, "Sleight of Hand", 2, 2, 1, 2, -1, new string[] {
+        [TalentData(60, "Sleight of Hand", 2, 2, 1, 2, -1, new string[] {
 @"Reduces the chance you are critically hit by melee and ranged attacks by 1% and increases the threat reduction of your Feint ability by 10%.",
 @"Reduces the chance you are critically hit by melee and ranged attacks by 2% and increases the threat reduction of your Feint ability by 20%.",})]
-		public int SleightofHand { get { return _data[60]; } set { _data[60] = value; } }
+        public int SleightOfHand { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Dirty Tricks", 2, 2, 2, 2, -1, new string[] {
+        [TalentData(61, "Dirty Tricks", 2, 2, 2, 2, -1, new string[] {
 @"Increases the range of your Blind and Sap abilities by 2 yards and reduces the energy cost of your Blind and Sap abilities by 25%.",
 @"Increases the range of your Blind and Sap abilities by 5 yards and reduces the energy cost of your Blind and Sap abilities by 50%.",})]
-		public int DirtyTricks { get { return _data[61]; } set { _data[61] = value; } }
+        public int DirtyTricks { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Camouflage", 3, 2, 3, 2, -1, new string[] {
+        [TalentData(62, "Camouflage", 3, 2, 3, 2, -1, new string[] {
 @"Increases your speed while stealthed by 5% and reduces the cooldown of your Stealth ability by 2 sec.",
 @"Increases your speed while stealthed by 10% and reduces the cooldown of your Stealth ability by 4 sec.",
 @"Increases your speed while stealthed by 15% and reduces the cooldown of your Stealth ability by 6 sec.",})]
-		public int Camouflage { get { return _data[62]; } set { _data[62] = value; } }
+        public int Camouflage { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(63, "Initiative", 3, 2, 1, 3, -1, new string[] {
+        [TalentData(63, "Initiative", 3, 2, 1, 3, -1, new string[] {
 @"Gives you a 25% chance to add an additional combo point to your target when using your Ambush, Garrote, or Cheap Shot ability.",
 @"Gives you a 50% chance to add an additional combo point to your target when using your Ambush, Garrote, or Cheap Shot ability.",
 @"Gives you a 75% chance to add an additional combo point to your target when using your Ambush, Garrote, or Cheap Shot ability.",})]
-		public int Initiative { get { return _data[63]; } set { _data[63] = value; } }
+        public int Initiative { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(64, "Ghostly Strike", 1, 2, 2, 3, -1, new string[] {
+        [TalentData(64, "Ghostly Strike", 1, 2, 2, 3, -1, new string[] {
 @"40 Energy,5 yd range,
 Instant,20 sec cooldown,
 <span style='text-align:left;float:left;'>Requires Melee Weapon,
 A strike that deals 125% weapon damage and increases your chance to dodge by 15% for 7 sec. Awards 1 combo point.",})]
-		public int GhostlyStrike { get { return _data[64]; } set { _data[64] = value; } }
+        public int GhostlyStrike { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(65, "Improved Ambush", 3, 2, 3, 3, -1, new string[] {
+        [TalentData(65, "Improved Ambush", 3, 2, 3, 3, -1, new string[] {
 @"Increases the critical strike chance of your Ambush ability by 15%.",
 @"Increases the critical strike chance of your Ambush ability by 30%.",
 @"Increases the critical strike chance of your Ambush ability by 45%.",})]
-		public int ImprovedAmbush { get { return _data[65]; } set { _data[65] = value; } }
+        public int ImprovedAmbush { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(66, "Setup", 3, 2, 1, 4, -1, new string[] {
+        [TalentData(66, "Setup", 3, 2, 1, 4, -1, new string[] {
 @"Gives you a 33% chance to add a combo point to your target after dodging their attack or fully resisting one of their spells. This cannot happen more than once per second.",
 @"Gives you a 66% chance to add a combo point to your target after dodging their attack or fully resisting one of their spells. This cannot happen more than once per second.",
 @"Gives you a 100% chance to add a combo point to your target after dodging their attack or fully resisting one of their spells. This cannot happen more than once per second.",})]
-		public int Setup { get { return _data[66]; } set { _data[66] = value; } }
+        public int Setup { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(67, "Elusiveness", 2, 2, 2, 4, -1, new string[] {
+        [TalentData(67, "Elusiveness", 2, 2, 2, 4, -1, new string[] {
 @"Reduces the cooldown of your Vanish and Blind abilities by 45 sec.",
 @"Reduces the cooldown of your Vanish and Blind abilities by 1.5 min.",
 @"Reduces the cooldown of your Evasion, Vanish, and Blind abilities by 1.3 min.",})]
-		public int Elusiveness { get { return _data[67]; } set { _data[67] = value; } }
+        public int Elusiveness { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(68, "Serrated Blades", 3, 2, 3, 4, -1, new string[] {
+        [TalentData(68, "Serrated Blades", 3, 2, 3, 4, -1, new string[] {
 @"Causes your attacks to ignore 186 of your target's Armor and increases the damage dealt by your Rupture ability by 10%.  The amount of Armor reduced increases with your level.",
 @"Causes your attacks to ignore 373 of your target's Armor and increases the damage dealt by your Rupture ability by 20%.  The amount of Armor reduced increases with your level.",
 @"Causes your attacks to ignore 560 of your target's Armor and increases the damage dealt by your Rupture ability by 30%.  The amount of Armor reduced increases with your level.",})]
-		public int SerratedBlades { get { return _data[68]; } set { _data[68] = value; } }
+        public int SerratedBlades { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(69, "Heightened Senses", 2, 2, 1, 5, -1, new string[] {
+        [TalentData(69, "Heightened Senses", 2, 2, 1, 5, -1, new string[] {
 @"Increases your Stealth detection and reduces the chance you are hit by spells and ranged attacks by 2%.",
 @"Increases your Stealth detection and reduces the chance you are hit by spells and ranged attacks by 4%. More effective than Heightened Senses (Rank 1).",})]
-		public int HeightenedSenses { get { return _data[69]; } set { _data[69] = value; } }
+        public int HeightenedSenses { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(70, "Preparation", 1, 2, 2, 5, -1, new string[] {
+        [TalentData(70, "Preparation", 1, 2, 2, 5, -1, new string[] {
 @"Instant,10 min cooldown,
 When activated, this ability immediately finishes the cooldown on your Evasion, Sprint, Vanish, Cold Blood, Shadowstep and Premeditation abilities.",})]
-		public int Preparation { get { return _data[70]; } set { _data[70] = value; } }
+        public int Preparation { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Dirty Deeds", 2, 2, 3, 5, -1, new string[] {
+        [TalentData(71, "Dirty Deeds", 2, 2, 3, 5, -1, new string[] {
 @"Reduces the Energy Cost of your Cheap Shot and Garrote abilities by 10. Additionally, your special abilities cause 10% more damage against targets below 35% health.",
 @"Reduces the Energy Cost of your Cheap Shot and Garrote abilities by 20. Additionally, your special abilities cause 20% more damage against targets below 35% health.",})]
-		public int DirtyDeeds { get { return _data[71]; } set { _data[71] = value; } }
+        public int DirtyDeeds { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(72, "Hemorrhage", 1, 2, 4, 5, 68, new string[] {
+        [TalentData(72, "Hemorrhage", 1, 2, 4, 5, 68, new string[] {
 @"35 Energy,Melee range,
 Instant
 Requires Melee Weapon
@@ -2862,314 +2922,326 @@ An instant strike that deals 110% weapon damage and causes the target to hemorrh
 			 Rank 2: 18 Damage
 			 Rank 3: 25 Damage
 			 Rank 4: 36 Damage",})]
-		public int Hemorrhage { get { return _data[72]; } set { _data[72] = value; } }
+        public int Hemorrhage { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "Master of Subtlety", 3, 2, 1, 6, -1, new string[] {
+        [TalentData(73, "Master of Subtlety", 3, 2, 1, 6, -1, new string[] {
 @"Attacks made while stealthed and for 6 seconds after breaking stealth cause an additional 4% damage.",
 @"Attacks made while stealthed and for 6 seconds after breaking stealth cause an additional 7% damage.",
 @"Attacks made while stealthed and for 6 seconds after breaking stealth cause an additional 10% damage.",})]
-		public int MasterofSubtlety { get { return _data[73]; } set { _data[73] = value; } }
+        public int MasterOfSubtlety { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(74, "Deadliness", 5, 2, 3, 6, -1, new string[] {
+        [TalentData(74, "Deadliness", 5, 2, 3, 6, -1, new string[] {
 @"Increases your Attack Power by 2%.",
 @"Increases your Attack Power by 4%.",
 @"Increases your Attack Power by 6%.",
 @"Increases your Attack Power by 8%.",
 @"Increases your Attack Power by 10%.",})]
-		public int Deadliness { get { return _data[74]; } set { _data[74] = value; } }
+        public int Deadliness { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(75, "Enveloping Shadows", 3, 2, 1, 7, -1, new string[] {
+        [TalentData(75, "Enveloping Shadows", 3, 2, 1, 7, -1, new string[] {
 @"Increases your chance to avoid area of effect attacks by an additional 5%.",
 @"Increases your chance to avoid area of effect attacks by an additional 10%.",
 @"Increases your chance to avoid area of effect attacks by an additional 15%.",})]
-		public int EnvelopingShadows { get { return _data[75]; } set { _data[75] = value; } }
+        public int EnvelopingShadows { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(76, "Premeditation", 1, 2, 2, 7, 70, new string[] {
+        [TalentData(76, "Premeditation", 1, 2, 2, 7, 70, new string[] {
 @"30 yd range
 Instant,2 min cooldown,
 <span style=color:eb0504>Requires Stealth,
 When used, adds 2 combo points to your target. You must add to or use those combo points within 20 sec or the combo points are lost.",})]
-		public int Premeditation { get { return _data[76]; } set { _data[76] = value; } }
+        public int Premeditation { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(77, "Cheat Death", 3, 2, 3, 7, -1, new string[] {
+        [TalentData(77, "Cheat Death", 3, 2, 3, 7, -1, new string[] {
 @"You have a 33% chance that an attack which would otherwise kill you will instead reduce you to 10% of your maximum health. In addition, all damage taken will be reduced by up to 90% for 3 sec (modified by resilience). This effect cannot occur more than once per minute.",
 @"You have a 66% chance that an attack which would otherwise kill you will instead reduce you to 10% of your maximum health. In addition, all damage taken will be reduced by up to 90% for 3 sec (modified by resilience). This effect cannot occur more than once per minute.",
 @"You have a 100% chance that an attack which would otherwise kill you will instead reduce you to 10% of your maximum health. In addition, all damage taken will be reduced by up to 90% for 3 sec (modified by resilience). This effect cannot occur more than once per minute.",})]
-		public int CheatDeath { get { return _data[77]; } set { _data[77] = value; } }
+        public int CheatDeath { get { return _data[77]; } set { _data[77] = value; } }
 
-		[TalentData(78, "Sinister Calling", 5, 2, 2, 8, 76, new string[] {
+        [TalentData(78, "Sinister Calling", 5, 2, 2, 8, 76, new string[] {
 @"Increases your total Agility by 3% and increases the percentage damage bonus of Backstab and Hemorrhage by an additional 1%.",
 @"Increases your total Agility by 6% and increases the percentage damage bonus of Backstab and Hemorrhage by an additional 2%.",
 @"Increases your total Agility by 9% and increases the percentage damage bonus of Backstab and Hemorrhage by an additional 3%.",
 @"Increases your total Agility by 12% and increases the percentage damage bonus of Backstab and Hemorrhage by an additional 4%.",
 @"Increases your total Agility by 15% and increases the percentage damage bonus of Backstab and Hemorrhage by an additional 5%.",})]
-		public int SinisterCalling { get { return _data[78]; } set { _data[78] = value; } }
+        public int SinisterCalling { get { return _data[78]; } set { _data[78] = value; } }
 
-		[TalentData(79, "Waylay", 2, 2, 3, 8, -1, new string[] {
+        [TalentData(79, "Waylay", 2, 2, 3, 8, -1, new string[] {
 @"Your Ambush critical hits have a 50% chance to reduce the target's melee and ranged attack speed by 30%, movement speed by 70% for 8 sec.",
 @"Your Ambush critical hits have a 100% chance to reduce the target's melee and ranged attack speed by 30%, movement speed by 70% for 8 sec.",})]
-		public int Waylay { get { return _data[79]; } set { _data[79] = value; } }
+        public int Waylay { get { return _data[79]; } set { _data[79] = value; } }
 
-		[TalentData(80, "Honor Among Thieves", 3, 2, 1, 9, -1, new string[] {
+        [TalentData(80, "Honor Among Thieves", 3, 2, 1, 9, -1, new string[] {
 @"When anyone in your group critically hits with a damage or healing spell or ability, you have a 10% chance to gain a combo point on your current target.",
 @"When anyone in your group critically hits with a damage or healing spell or ability, you have a 20% chance to gain a combo point on your current target.",
 @"When anyone in your group critically hits with a damage or healing spell or ability, you have a 30% chance to gain a combo point on your current target.",})]
-		public int HonorAmongThieves { get { return _data[80]; } set { _data[80] = value; } }
+        public int HonorAmongThieves { get { return _data[80]; } set { _data[80] = value; } }
 
-		[TalentData(81, "Shadowstep", 1, 2, 2, 9, -1, new string[] {
+        [TalentData(81, "Shadowstep", 1, 2, 2, 9, -1, new string[] {
 @"10 Energy,25 yd range,
 Instant,30 sec cooldown,
 Attempts to step through the shadows and reappear behind your enemy and increases movement speed by 70% for 3 sec. The damage of your next ability is increased by 20% and the threat caused is reduced by 50%. Lasts 10 sec.",})]
-		public int Shadowstep { get { return _data[81]; } set { _data[81] = value; } }
+        public int Shadowstep { get { return _data[81]; } set { _data[81] = value; } }
 
-		[TalentData(82, "Wrongfully Accused", 2, 2, 3, 9, -1, new string[] {
+        [TalentData(82, "Wrongfully Accused", 2, 2, 3, 9, -1, new string[] {
 @"Whenever an attack is made against you, if the target is not your current target or has not already been attacking you they cause 50% less damage for 3 sec.",
 @"Whenever an attack is made against you, if the target is not your current target or has not already been attacking you they cause 50% less damage for 6 sec.",})]
-		public int WrongfullyAccused { get { return _data[82]; } set { _data[82] = value; } }
+        public int WrongfullyAccused { get { return _data[82]; } set { _data[82] = value; } }
 
-		[TalentData(83, "Slaughter from the Shadows", 5, 2, 2, 10, -1, new string[] {
+        [TalentData(83, "Slaughter from the Shadows", 5, 2, 2, 10, -1, new string[] {
 @"Reduces the energy cost of your Backstab and Ambush abilities by 3.",
 @"Reduces the energy cost of your Backstab and Ambush abilities by 6.",
 @"Reduces the energy cost of your Backstab and Ambush abilities by 9.",
 @"Reduces the energy cost of your Backstab and Ambush abilities by 12.",
 @"Reduces the energy cost of your Backstab and Ambush abilities by 15.",})]
-		public int SlaughterfromtheShadows { get { return _data[83]; } set { _data[83] = value; } }
+        public int SlaughterFromTheShadows { get { return _data[83]; } set { _data[83] = value; } }
 
-		[TalentData(84, "Shadow Dance", 1, 2, 2, 11, -1, new string[] {
+        [TalentData(84, "Shadow Dance", 1, 2, 2, 11, -1, new string[] {
 @"Instant,2 min cooldown,
 Instantly enter stealth and begin the Shadow Dance. For 9 sec you will reenter stealth every 3 sec.",})]
-		public int ShadowDance { get { return _data[84]; } set { _data[84] = value; } }
-	}
+        public int ShadowDance { get { return _data[84]; } set { _data[84] = value; } }
+    }
 
-	public class HunterTalents
-	{
-		private int[] _data = new int[81];
-		public HunterTalents() { }
-		public HunterTalents(string talents)
-		{
-			List<int> data = new List<int>();
-			foreach (Char digit in talents)
-				data.Add(int.Parse(digit.ToString()));
-			data.CopyTo(_data);
-		}
+    public class HunterTalents : ICloneable
+    {
+        private int[] _data = new int[81];
+        public HunterTalents() { }
+        public HunterTalents(string talents)
+        {
+            List<int> data = new List<int>();
+            foreach (Char digit in talents)
+                data.Add(int.Parse(digit.ToString()));
+            data.CopyTo(_data);
+        }
 
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
-		}
+        public override string ToString()
+        {
+            StringBuilder ret = new StringBuilder();
+            foreach (int digit in _data)
+                ret.Append(digit.ToString());
+            return ret.ToString();
+        }
+        object ICloneable.Clone()
+        {
+            HunterTalents clone = (HunterTalents)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            return clone;
+        }
 
-		[TalentData(0, "Improved Aspect of the Hawk", 5, 0, 2, 1, -1, new string[] {
+        public HunterTalents Clone()
+        {
+            return (HunterTalents)((ICloneable)this).Clone();
+        }
+
+
+        [TalentData(0, "Improved Aspect of the Hawk", 5, 0, 2, 1, -1, new string[] {
 @"While Aspect of the Hawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 3% for 12 sec.",
 @"While Aspect of the Hawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 6% for 12 sec.",
 @"While Aspect of the Hawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 9% for 12 sec.",
 @"While Aspect of the Hawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 12% for 12 sec.",
 @"While Aspect of the Hawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 15% for 12 sec.",})]
-		public int ImprovedAspectoftheHawk { get { return _data[0]; } set { _data[0] = value; } }
+        public int ImprovedAspectOfTheHawk { get { return _data[0]; } set { _data[0] = value; } }
 
-		[TalentData(1, "Endurance Training", 5, 0, 3, 1, -1, new string[] {
+        [TalentData(1, "Endurance Training", 5, 0, 3, 1, -1, new string[] {
 @"Increases the Health of your pets by 2% and your total health by 1%.",
 @"Increases the Health of your pets by 4% and your total health by 2%.",
 @"Increases the Health of your pets by 6% and your total health by 3%.",
 @"Increases the Health of your pets by 8% and your total health by 4%.",
 @"Increases the Health of your pets by 10% and your total health by 5%.",})]
-		public int EnduranceTraining { get { return _data[1]; } set { _data[1] = value; } }
+        public int EnduranceTraining { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Focused Fire", 2, 0, 1, 2, -1, new string[] {
+        [TalentData(2, "Focused Fire", 2, 0, 1, 2, -1, new string[] {
 @"All damage caused by you is increased by 1% while your pet is active and the critical strike chance of your pet's special abilities by 10% while Kill Command is active.",
 @"All damage caused by you is increased by 2% while your pet is active and the critical strike chance of your pet's special abilities by 20% while Kill Command is active.",})]
-		public int FocusedFire { get { return _data[2]; } set { _data[2] = value; } }
+        public int FocusedFire { get { return _data[2]; } set { _data[2] = value; } }
 
-		[TalentData(3, "Improved Aspect of the Monkey", 3, 0, 2, 2, -1, new string[] {
+        [TalentData(3, "Improved Aspect of the Monkey", 3, 0, 2, 2, -1, new string[] {
 @"Increases the Dodge bonus of your Aspect of the Monkey by 2%.",
 @"Increases the Dodge bonus of your Aspect of the Monkey by 4%.",
 @"Increases the Dodge bonus of your Aspect of the Monkey by 6%.",})]
-		public int ImprovedAspectoftheMonkey { get { return _data[3]; } set { _data[3] = value; } }
+        public int ImprovedAspectOfTheMonkey { get { return _data[3]; } set { _data[3] = value; } }
 
-		[TalentData(4, "Thick Hide", 3, 0, 3, 2, -1, new string[] {
+        [TalentData(4, "Thick Hide", 3, 0, 3, 2, -1, new string[] {
 @"Increases the armor rating of your pets by 7% and your armor contributions from items by 4%.",
 @"Increases the armor rating of your pets by 14% and your armor contributions from items by 7%.",
 @"Increases the armor rating of your pets by 20% and your armor contributions from items by 10%.",})]
-		public int ThickHide { get { return _data[4]; } set { _data[4] = value; } }
+        public int ThickHide { get { return _data[4]; } set { _data[4] = value; } }
 
-		[TalentData(5, "Improved Revive Pet", 2, 0, 4, 2, -1, new string[] {
+        [TalentData(5, "Improved Revive Pet", 2, 0, 4, 2, -1, new string[] {
 @"Revive Pet's casting time is reduced by 3 sec, mana cost is reduced by 20%, and increases the health your pet returns with by an additional 15%.",
 @"Revive Pet's casting time is reduced by 6 sec, mana cost is reduced by 40%, and increases the health your pet returns with by an additional 30%.",})]
-		public int ImprovedRevivePet { get { return _data[5]; } set { _data[5] = value; } }
+        public int ImprovedRevivePet { get { return _data[5]; } set { _data[5] = value; } }
 
-		[TalentData(6, "Pathfinding", 2, 0, 1, 3, -1, new string[] {
+        [TalentData(6, "Pathfinding", 2, 0, 1, 3, -1, new string[] {
 @"Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by 4%, and increases your speed while mounted by 5%. The mounted movement speed increase does not stack with other effects.",
 @"Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by 8%, and increases your speed while mounted by 10%. The mounted movement speed increase does not stack with other effects.",})]
-		public int Pathfinding { get { return _data[6]; } set { _data[6] = value; } }
+        public int Pathfinding { get { return _data[6]; } set { _data[6] = value; } }
 
-		[TalentData(7, "Aspect Mastery", 1, 0, 2, 3, -1, new string[] {
+        [TalentData(7, "Aspect Mastery", 1, 0, 2, 3, -1, new string[] {
 @"Increases the mana returned from your Aspect of the Viper by 10%, reduces the damage done to you while in Aspect of the Monkey by 10% and increases the attack power bonus gained with Aspect of the Hawk by 50%.",})]
-		public int AspectMastery { get { return _data[7]; } set { _data[7] = value; } }
+        public int AspectMastery { get { return _data[7]; } set { _data[7] = value; } }
 
-		[TalentData(8, "Unleashed Fury", 5, 0, 3, 3, -1, new string[] {
+        [TalentData(8, "Unleashed Fury", 5, 0, 3, 3, -1, new string[] {
 @"Increases the damage done by your pets by 4%.",
 @"Increases the damage done by your pets by 8%.",
 @"Increases the damage done by your pets by 12%.",
 @"Increases the damage done by your pets by 16%.",
 @"Increases the damage done by your pets by 20%.",})]
-		public int UnleashedFury { get { return _data[8]; } set { _data[8] = value; } }
+        public int UnleashedFury { get { return _data[8]; } set { _data[8] = value; } }
 
-		[TalentData(9, "Improved Mend Pet", 2, 0, 2, 4, -1, new string[] {
+        [TalentData(9, "Improved Mend Pet", 2, 0, 2, 4, -1, new string[] {
 @"Reduces the mana cost of your Mend Pet spell by 10% and gives the Mend Pet spell a 25% chance of cleansing 1 Curse, Disease, Magic or Poison effect from the pet each tick.",
 @"Reduces the mana cost of your Mend Pet spell by 20% and gives the Mend Pet spell a 50% chance of cleansing 1 Curse, Disease, Magic or Poison effect from the pet each tick.",})]
-		public int ImprovedMendPet { get { return _data[9]; } set { _data[9] = value; } }
+        public int ImprovedMendPet { get { return _data[9]; } set { _data[9] = value; } }
 
-		[TalentData(10, "Ferocity", 5, 0, 3, 4, -1, new string[] {
+        [TalentData(10, "Ferocity", 5, 0, 3, 4, -1, new string[] {
 @"Increases the critical strike chance of your pets by 2%.",
 @"Increases the critical strike chance of your pets by 4%.",
 @"Increases the critical strike chance of your pets by 6%.",
 @"Increases the critical strike chance of your pets by 8%.",
 @"Increases the critical strike chance of your pets by 10%.",})]
-		public int Ferocity { get { return _data[10]; } set { _data[10] = value; } }
+        public int Ferocity { get { return _data[10]; } set { _data[10] = value; } }
 
-		[TalentData(11, "Spirit Bond", 2, 0, 1, 5, -1, new string[] {
+        [TalentData(11, "Spirit Bond", 2, 0, 1, 5, -1, new string[] {
 @"While your pet is active, you and your pet will regenerate 1% of total health every 10 sec and increases healing done to you and your pet by 5%.",
 @"While your pet is active, you and your pet will regenerate 2% of total health every 10 sec and increases healing done to you and your pet by 10%.",})]
-		public int SpiritBond { get { return _data[11]; } set { _data[11] = value; } }
+        public int SpiritBond { get { return _data[11]; } set { _data[11] = value; } }
 
-		[TalentData(12, "Intimidation", 1, 0, 2, 5, -1, new string[] {
+        [TalentData(12, "Intimidation", 1, 0, 2, 5, -1, new string[] {
 @"202 Mana,100 yd range,
 Instant cast,1 min cooldown,
 Command your pet to intimidate the target on the next successful melee attack, causing a high amount of threat and stunning the target for 3 sec.",})]
-		public int Intimidation { get { return _data[12]; } set { _data[12] = value; } }
+        public int Intimidation { get { return _data[12]; } set { _data[12] = value; } }
 
-		[TalentData(13, "Bestial Discipline", 2, 0, 4, 5, -1, new string[] {
+        [TalentData(13, "Bestial Discipline", 2, 0, 4, 5, -1, new string[] {
 @"Increases the Focus regeneration of your pets by 50%.",
 @"Increases the Focus regeneration of your pets by 100%.",})]
-		public int BestialDiscipline { get { return _data[13]; } set { _data[13] = value; } }
+        public int BestialDiscipline { get { return _data[13]; } set { _data[13] = value; } }
 
-		[TalentData(14, "Animal Handler", 2, 0, 1, 6, -1, new string[] {
+        [TalentData(14, "Animal Handler", 2, 0, 1, 6, -1, new string[] {
 @"Increases your pet's chance to hit by 2% and reduces the cooldown of your Master's Call ability by 5 sec.",
 @"Increases your pet's chance to hit by 4% and reduces the cooldown of your Master's Call ability by 10 sec.",})]
-		public int AnimalHandler { get { return _data[14]; } set { _data[14] = value; } }
+        public int AnimalHandler { get { return _data[14]; } set { _data[14] = value; } }
 
-		[TalentData(15, "Frenzy", 5, 0, 3, 6, 10, new string[] {
+        [TalentData(15, "Frenzy", 5, 0, 3, 6, 10, new string[] {
 @"Gives your pet a 20% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.",
 @"Gives your pet a 40% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.",
 @"Gives your pet a 60% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.",
 @"Gives your pet a 80% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.",
 @"Gives your pet a 100% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.",})]
-		public int Frenzy { get { return _data[15]; } set { _data[15] = value; } }
+        public int Frenzy { get { return _data[15]; } set { _data[15] = value; } }
 
-		[TalentData(16, "Ferocious Inspiration", 3, 0, 1, 7, -1, new string[] {
+        [TalentData(16, "Ferocious Inspiration", 3, 0, 1, 7, -1, new string[] {
 @"When your pet scores a critical hit, all party members have all damage increased by 1% for 10 sec.",
 @"When your pet scores a critical hit, all party members have all damage increased by 2% for 10 sec.",
 @"When your pet scores a critical hit, all party members have all damage increased by 3% for 10 sec.",})]
-		public int FerociousInspiration { get { return _data[16]; } set { _data[16] = value; } }
+        public int FerociousInspiration { get { return _data[16]; } set { _data[16] = value; } }
 
-		[TalentData(17, "Bestial Wrath", 1, 0, 2, 7, 12, new string[] {
+        [TalentData(17, "Bestial Wrath", 1, 0, 2, 7, 12, new string[] {
 @"338 Mana,100 yd range,
 Instant cast,2 min cooldown,
 Send your pet into a rage causing 50% additional damage for 18 sec. While enraged, the beast cannot be stopped unless killed.",})]
-		public int BestialWrath { get { return _data[17]; } set { _data[17] = value; } }
+        public int BestialWrath { get { return _data[17]; } set { _data[17] = value; } }
 
-		[TalentData(18, "Catlike Reflexes", 3, 0, 3, 7, -1, new string[] {
+        [TalentData(18, "Catlike Reflexes", 3, 0, 3, 7, -1, new string[] {
 @"Increases your chance to dodge by 1% and your pet's chance to dodge by an additional 3%.",
 @"Increases your chance to dodge by 2% and your pet's chance to dodge by an additional 6%.",
 @"Increases your chance to dodge by 3% and your pet's chance to dodge by an additional 9%.",})]
-		public int CatlikeReflexes { get { return _data[18]; } set { _data[18] = value; } }
+        public int CatlikeReflexes { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Invigoration", 2, 0, 1, 8, 16, new string[] {
+        [TalentData(19, "Invigoration", 2, 0, 1, 8, 16, new string[] {
 @"When your pet scores a critical hit with a special ability, you instantly regenerate 1% mana.",
 @"When your pet scores a critical hit with a special ability, you instantly regenerate 2% mana.",})]
-		public int Invigoration { get { return _data[19]; } set { _data[19] = value; } }
+        public int Invigoration { get { return _data[19]; } set { _data[19] = value; } }
 
-		[TalentData(20, "Serpent's Swiftness", 5, 0, 3, 8, -1, new string[] {
+        [TalentData(20, "Serpent's Swiftness", 5, 0, 3, 8, -1, new string[] {
 @"Increases ranged combat attack speed by 4% and your pet's melee attack speed by 4%.",
 @"Increases ranged combat attack speed by 8% and your pet's melee attack speed by 8%.",
 @"Increases ranged combat attack speed by 12% and your pet's melee attack speed by 12%.",
 @"Increases ranged combat attack speed by 16% and your pet's melee attack speed by 16%.",
 @"Increases ranged combat attack speed by 20% and your pet's melee attack speed by 20%.",})]
-		public int SerpentsSwiftness { get { return _data[20]; } set { _data[20] = value; } }
+        public int SerpentsSwiftness { get { return _data[20]; } set { _data[20] = value; } }
 
-		[TalentData(21, "Longevity", 3, 0, 1, 9, -1, new string[] {
+        [TalentData(21, "Longevity", 3, 0, 1, 9, -1, new string[] {
 @"Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by 10%.",
 @"Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by 20%.",
 @"Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by 30%.",})]
-		public int Longevity { get { return _data[21]; } set { _data[21] = value; } }
+        public int Longevity { get { return _data[21]; } set { _data[21] = value; } }
 
-		[TalentData(22, "The Beast Within", 1, 0, 2, 9, 17, new string[] {
+        [TalentData(22, "The Beast Within", 1, 0, 2, 9, 17, new string[] {
 @"When your pet is under the effects of Bestial Wrath, you also go into a rage causing 10% additional damage and reducing mana costs of all spells by 20% for 18 sec. While enraged, you do not feel pity or remorse or fear and you cannot be stopped unless killed.",})]
-		public int TheBeastWithin { get { return _data[22]; } set { _data[22] = value; } }
+        public int TheBeastWithin { get { return _data[22]; } set { _data[22] = value; } }
 
-		[TalentData(23, "Cobra Strikes", 3, 0, 3, 9, 20, new string[] {
+        [TalentData(23, "Cobra Strikes", 3, 0, 3, 9, 20, new string[] {
 @"You have a 20% chance when you critically hit with Arcane Shot, Steady Shot or Kill Shot to cause your pet's next 3 special attacks to critically hit.",
 @"You have a 40% chance when you critically hit with Arcane Shot, Steady Shot or Kill Shot to cause your pet's next 3 special attacks to critically hit.",
 @"You have a 60% chance when you critically hit with Arcane Shot, Steady Shot or Kill Shot to cause your pet's next 3 special attacks to critically hit.",})]
-		public int CobraStrikes { get { return _data[23]; } set { _data[23] = value; } }
+        public int CobraStrikes { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Separation Anxiety", 5, 0, 2, 10, -1, new string[] {
+        [TalentData(24, "Separation Anxiety", 5, 0, 2, 10, -1, new string[] {
 @"When your pet is greater than 20 yards from you or is out of line of sight of you, its damage is increased by 4%, and when you and your pet are within 20 yards of each other, you and your pet's movement speed is increased by 2%.",
 @"When your pet is greater than 20 yards from you or is out of line of sight of you, its damage is increased by 8%, and when you and your pet are within 20 yards of each other, you and your pet's movement speed is increased by 4%.",
 @"When your pet is greater than 20 yards from you or is out of line of sight of you, its damage is increased by 12%, and when you and your pet are within 20 yards of each other, you and your pet's movement speed is increased by 6%.",
 @"When your pet is greater than 20 yards from you or is out of line of sight of you, its damage is increased by 16%, and when you and your pet are within 20 yards of each other, you and your pet's movement speed is increased by 8%.",
 @"When your pet is greater than 20 yards from you or is out of line of sight of you, its damage is increased by 20%, and when you and your pet are within 20 yards of each other, you and your pet's movement speed is increased by 10%.",})]
-		public int SeparationAnxiety { get { return _data[24]; } set { _data[24] = value; } }
+        public int SeparationAnxiety { get { return _data[24]; } set { _data[24] = value; } }
 
-		[TalentData(25, "Beast Mastery", 1, 0, 2, 11, -1, new string[] {
+        [TalentData(25, "Beast Mastery", 1, 0, 2, 11, -1, new string[] {
 @"You master the art of Beast training, teaching you the ability to tame Exotic pets and increasing your total amount of Pet Skill points by 4.",})]
-		public int BeastMastery { get { return _data[25]; } set { _data[25] = value; } }
+        public int BeastMastery { get { return _data[25]; } set { _data[25] = value; } }
 
-		[TalentData(26, "Improved Concussive Shot", 2, 1, 1, 1, -1, new string[] {
+        [TalentData(26, "Improved Concussive Shot", 2, 1, 1, 1, -1, new string[] {
 @"Increases the duration of your Concussive Shot's daze effect by 1 sec.",
 @"Increases the duration of your Concussive Shot's daze effect by 2 sec.",})]
-		public int ImprovedConcussiveShot { get { return _data[26]; } set { _data[26] = value; } }
+        public int ImprovedConcussiveShot { get { return _data[26]; } set { _data[26] = value; } }
 
-		[TalentData(27, "Focused Aim", 3, 1, 2, 1, -1, new string[] {
+        [TalentData(27, "Focused Aim", 3, 1, 2, 1, -1, new string[] {
 @"Gives you a 23% chance to avoid interruption caused by damage while casting Aimed Shot and Steady Shot.",
 @"Gives you a 46% chance to avoid interruption caused by damage while casting Aimed Shot and Steady Shot.",
 @"Gives you a 70% chance to avoid interruption caused by damage while casting Aimed Shot and Steady Shot.",})]
-		public int FocusedAim { get { return _data[27]; } set { _data[27] = value; } }
+        public int FocusedAim { get { return _data[27]; } set { _data[27] = value; } }
 
-		[TalentData(28, "Lethal Shots", 5, 1, 3, 1, -1, new string[] {
+        [TalentData(28, "Lethal Shots", 5, 1, 3, 1, -1, new string[] {
 @"Increases your critical strike chance with ranged weapons by 1%.",
 @"Increases your critical strike chance with ranged weapons by 2%.",
 @"Increases your critical strike chance with ranged weapons by 3%.",
 @"Increases your critical strike chance with ranged weapons by 4%.",
 @"Increases your critical strike chance with ranged weapons by 5%.",})]
-		public int LethalShots { get { return _data[28]; } set { _data[28] = value; } }
+        public int LethalShots { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(29, "Careful Aim", 3, 1, 1, 2, -1, new string[] {
+        [TalentData(29, "Careful Aim", 3, 1, 1, 2, -1, new string[] {
 @"Increases your ranged attack power by an amount equal to 33% of your total Intellect.",
 @"Increases your ranged attack power by an amount equal to 66% of your total Intellect.",
 @"Increases your ranged attack power by an amount equal to 100% of your total Intellect.",})]
-		public int CarefulAim { get { return _data[29]; } set { _data[29] = value; } }
+        public int CarefulAim { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(30, "Improved Hunter's Mark", 3, 1, 2, 2, -1, new string[] {
+        [TalentData(30, "Improved Hunter's Mark", 3, 1, 2, 2, -1, new string[] {
 @"Causes 33% of your Hunter's Mark ability's base attack power to apply to melee attack power as well, and reduces the chance your Hunter's Mark ability is dispelled by 10%.",
 @"Causes 66% of your Hunter's Mark ability's base attack power to apply to melee attack power as well, and reduces the chance your Hunter's Mark ability is dispelled by 20%.",
 @"Causes 100% of your Hunter's Mark ability's base attack power to apply to melee attack power as well, and reduces the chance your Hunter's Mark ability is dispelled by 30%.",})]
-		public int ImprovedHuntersMark { get { return _data[30]; } set { _data[30] = value; } }
+        public int ImprovedHuntersMark { get { return _data[30]; } set { _data[30] = value; } }
 
-		[TalentData(31, "Mortal Shots", 5, 1, 3, 2, -1, new string[] {
+        [TalentData(31, "Mortal Shots", 5, 1, 3, 2, -1, new string[] {
 @"Increases your ranged weapon critical strike damage bonus by 6%.",
 @"Increases your ranged weapon critical strike damage bonus by 12%.",
 @"Increases your ranged weapon critical strike damage bonus by 18%.",
 @"Increases your ranged weapon critical strike damage bonus by 24%.",
 @"Increases your ranged weapon critical strike damage bonus by 30%.",})]
-		public int MortalShots { get { return _data[31]; } set { _data[31] = value; } }
+        public int MortalShots { get { return _data[31]; } set { _data[31] = value; } }
 
-		[TalentData(32, "Go for the Throat", 2, 1, 1, 3, -1, new string[] {
+        [TalentData(32, "Go for the Throat", 2, 1, 1, 3, -1, new string[] {
 @"Your ranged critical hits cause your pet to generate 25 Focus.",
 @"Your ranged critical hits cause your pet to generate 50 Focus.",})]
-		public int GofortheThroat { get { return _data[32]; } set { _data[32] = value; } }
+        public int GoForTheThroat { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(33, "Improved Arcane Shot", 5, 1, 2, 3, -1, new string[] {
+        [TalentData(33, "Improved Arcane Shot", 5, 1, 2, 3, -1, new string[] {
 @"Reduces the cooldown of your Arcane Shot by 0.2 sec.",
 @"Reduces the cooldown of your Arcane Shot by 0.4 sec.",
 @"Reduces the cooldown of your Arcane Shot by 0.6 sec.",
 @"Reduces the cooldown of your Arcane Shot by 0.8 sec.",
 @"Reduces the cooldown of your Arcane Shot by 1 sec.",})]
-		public int ImprovedArcaneShot { get { return _data[33]; } set { _data[33] = value; } }
+        public int ImprovedArcaneShot { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(34, "Aimed Shot", 1, 1, 3, 3, 31, new string[] {
+        [TalentData(34, "Aimed Shot", 1, 1, 3, 3, 31, new string[] {
 @"75 Mana,5-35 yd range,
 3 sec cast,
 6 sec cooldown,
@@ -3184,66 +3256,66 @@ An aimed shot that increases ranged damage by 70 and reduces healing done to tha
 		 Rank 5: 260 Mana, 460 Damage
 		 Rank 6: 310 Mana, 600 Damage
 		 Rank 7: 370 Mana, 870 Damage",})]
-		public int AimedShot { get { return _data[34]; } set { _data[34] = value; } }
+        public int AimedShot { get { return _data[34]; } set { _data[34] = value; } }
 
-		[TalentData(35, "Rapid Killing", 2, 1, 4, 3, -1, new string[] {
+        [TalentData(35, "Rapid Killing", 2, 1, 4, 3, -1, new string[] {
 @"Reduces the cooldown of your Rapid Fire ability by 1 min.  In addition, after killing an opponent that yields experience or honor, your next Aimed Shot, Arcane Shot or Auto Shot causes 10% additional damage.  Lasts 20 sec.",
 @"Reduces the cooldown of your Rapid Fire ability by 2 min.  In addition, after killing an opponent that yields experience or honor, your next Aimed Shot, Arcane Shot or Auto Shot causes 20% additional damage.  Lasts 20 sec.",})]
-		public int RapidKilling { get { return _data[35]; } set { _data[35] = value; } }
+        public int RapidKilling { get { return _data[35]; } set { _data[35] = value; } }
 
-		[TalentData(36, "Improved Stings", 3, 1, 2, 4, -1, new string[] {
+        [TalentData(36, "Improved Stings", 3, 1, 2, 4, -1, new string[] {
 @"Increases the damage done by your Serpent Sting and Wyvern Sting by 10% and the mana drained by your Viper Sting by 10%. In addition, reduces the chance Stings will be dispelled by 10%.",
 @"Increases the damage done by your Serpent Sting and Wyvern Sting by 20% and the mana drained by your Viper Sting by 20%. In addition, reduces the chance Stings will be dispelled by 20%.",
 @"Increases the damage done by your Serpent Sting and Wyvern Sting by 30% and the mana drained by your Viper Sting by 30%. In addition, reduces the chance Stings will be dispelled by 30%.",})]
-		public int ImprovedStings { get { return _data[36]; } set { _data[36] = value; } }
+        public int ImprovedStings { get { return _data[36]; } set { _data[36] = value; } }
 
-		[TalentData(37, "Efficiency", 5, 1, 3, 4, -1, new string[] {
+        [TalentData(37, "Efficiency", 5, 1, 3, 4, -1, new string[] {
 @"Reduces the Mana cost of your Shots and Stings by 2%.",
 @"Reduces the Mana cost of your Shots and Stings by 4%.",
 @"Reduces the Mana cost of your Shots and Stings by 6%.",
 @"Reduces the Mana cost of your Shots and Stings by 8%.",
 @"Reduces the Mana cost of your Shots and Stings by 10%.",})]
-		public int Efficiency { get { return _data[37]; } set { _data[37] = value; } }
+        public int Efficiency { get { return _data[37]; } set { _data[37] = value; } }
 
-		[TalentData(38, "Concussive Barrage", 3, 1, 1, 5, -1, new string[] {
+        [TalentData(38, "Concussive Barrage", 3, 1, 1, 5, -1, new string[] {
 @"Your successful Auto Shot and Volley attacks have a 2% chance to Daze the target for 4 sec.",
 @"Your successful Auto Shot and Volley attacks have a 4% chance to Daze the target for 4 sec.",
 @"Your successful Auto Shot and Volley attacks have a 6% chance to Daze the target for 4 sec.",})]
-		public int ConcussiveBarrage { get { return _data[38]; } set { _data[38] = value; } }
+        public int ConcussiveBarrage { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Scatter Shot", 1, 1, 2, 5, -1, new string[] {
+        [TalentData(39, "Scatter Shot", 1, 1, 2, 5, -1, new string[] {
 @"202 Mana,15 yd range,
 Instant,30 sec cooldown,
 Requires Ranged Weapon
 A short-range shot that deals 50% weapon damage and disorients the target for 4 sec. Any damage caused will remove the effect. Turns off your attack when used.",})]
-		public int ScatterShot { get { return _data[39]; } set { _data[39] = value; } }
+        public int ScatterShot { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(40, "Barrage", 3, 1, 3, 5, -1, new string[] {
+        [TalentData(40, "Barrage", 3, 1, 3, 5, -1, new string[] {
 @"Increases the damage done by your Multi-Shot and Volley spells by 4%.",
 @"Increases the damage done by your Multi-Shot and Volley spells by 8%.",
 @"Increases the damage done by your Multi-Shot and Volley spells by 12%.",})]
-		public int Barrage { get { return _data[40]; } set { _data[40] = value; } }
+        public int Barrage { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(41, "Combat Experience", 2, 1, 1, 6, -1, new string[] {
+        [TalentData(41, "Combat Experience", 2, 1, 1, 6, -1, new string[] {
 @"Increases your total Agility by 3% and your total Intellect by 3%.",
 @"Increases your total Agility by 6% and your total Intellect by 6%.",})]
-		public int CombatExperience { get { return _data[41]; } set { _data[41] = value; } }
+        public int CombatExperience { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(42, "Ranged Weapon Specialization", 5, 1, 4, 6, -1, new string[] {
+        [TalentData(42, "Ranged Weapon Specialization", 5, 1, 4, 6, -1, new string[] {
 @"Increases the damage you deal with ranged weapons by 1%.",
 @"Increases the damage you deal with ranged weapons by 2%.",
 @"Increases the damage you deal with ranged weapons by 3%.",
 @"Increases the damage you deal with ranged weapons by 4%.",
 @"Increases the damage you deal with ranged weapons by 5%.",})]
-		public int RangedWeaponSpecialization { get { return _data[42]; } set { _data[42] = value; } }
+        public int RangedWeaponSpecialization { get { return _data[42]; } set { _data[42] = value; } }
 
-		[TalentData(43, "Piercing Shots", 3, 1, 1, 7, -1, new string[] {
+        [TalentData(43, "Piercing Shots", 3, 1, 1, 7, -1, new string[] {
 @"Your Steady Shot and Aimed Shot abilities ignore 2% of your target's armor.",
 @"Your Steady Shot and Aimed Shot abilities ignore 4% of your target's armor.",
 @"Your Steady Shot and Aimed Shot abilities ignore 6% of your target's armor.",})]
-		public int PiercingShots { get { return _data[43]; } set { _data[43] = value; } }
+        public int PiercingShots { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Trueshot Aura", 1, 1, 2, 7, 39, new string[] {
+        [TalentData(44, "Trueshot Aura", 1, 1, 2, 7, 39, new string[] {
 @"Instant cast
 Increases the attack power of party and raid members within 45 yards by 50. Lasts until cancelled.
 
@@ -3251,150 +3323,150 @@ Increases the attack power of party and raid members within 45 yards by 50. Last
 		 Rank 2: 425 Mana, 75 Attack Power
 		 Rank 3: 525 Mana, 100 Attack Power
 		 Rank 4: 620 Mana, 125 Attack Power",})]
-		public int TrueshotAura { get { return _data[44]; } set { _data[44] = value; } }
+        public int TrueshotAura { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(45, "Improved Barrage", 3, 1, 3, 7, 40, new string[] {
+        [TalentData(45, "Improved Barrage", 3, 1, 3, 7, 40, new string[] {
 @"Increases the critical strike chance of your Multi-Shot ability by 4% and gives you a 33% chance to avoid interruption caused by damage while channeling Volley.",
 @"Increases the critical strike chance of your Multi-Shot ability by 8% and gives you a 66% chance to avoid interruption caused by damage while channeling Volley.",
 @"Increases the critical strike chance of your Multi-Shot ability by 12% and gives you a 100% chance to avoid interruption caused by damage while channeling Volley.",})]
-		public int ImprovedBarrage { get { return _data[45]; } set { _data[45] = value; } }
+        public int ImprovedBarrage { get { return _data[45]; } set { _data[45] = value; } }
 
-		[TalentData(46, "Master Marksman", 5, 1, 2, 8, -1, new string[] {
+        [TalentData(46, "Master Marksman", 5, 1, 2, 8, -1, new string[] {
 @"Increases your ranged attack power by 2%.",
 @"Increases your ranged attack power by 4%.",
 @"Increases your ranged attack power by 6%.",
 @"Increases your ranged attack power by 8%.",
 @"Increases your ranged attack power by 10%.",})]
-		public int MasterMarksman { get { return _data[46]; } set { _data[46] = value; } }
+        public int MasterMarksman { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Rapid Recuperation", 3, 1, 3, 8, -1, new string[] {
+        [TalentData(47, "Rapid Recuperation", 3, 1, 3, 8, -1, new string[] {
 @"Reduces the mana and focus cost of all shots and abilities by you and your pet by 20% while under the effect of Rapid Fire, and you gain mana equal to 50% of the damage you do under the effect of Rapid Killing over 6 sec.",
 @"Reduces the mana and focus cost of all shots and abilities by you and your pet by 40% while under the effect of Rapid Fire, and you gain mana equal to 100% of the damage you do under the effect of Rapid Killing over 6 sec.",
 @"Reduces the mana and focus cost of all shots and abilities by you and your pet by 60% while under the effect of Rapid Fire, and you gain mana equal to 150% of the damage you do under the effect of Rapid Killing over 6 sec.",})]
-		public int RapidRecuperation { get { return _data[47]; } set { _data[47] = value; } }
+        public int RapidRecuperation { get { return _data[47]; } set { _data[47] = value; } }
 
-		[TalentData(48, "Wild Quiver", 3, 1, 1, 9, -1, new string[] {
+        [TalentData(48, "Wild Quiver", 3, 1, 1, 9, -1, new string[] {
 @"You have a 4% chance to shoot an additional shot when doing damage with your auto shot, dealing 60% damage.",
 @"You have a 7% chance to shoot an additional shot when doing damage with your auto shot, dealing 60% damage.",
 @"You have a 10% chance to shoot an additional shot when doing damage with your auto shot, dealing 60% damage.",})]
-		public int WildQuiver { get { return _data[48]; } set { _data[48] = value; } }
+        public int WildQuiver { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(49, "Silencing Shot", 1, 1, 2, 9, 46, new string[] {
+        [TalentData(49, "Silencing Shot", 1, 1, 2, 9, 46, new string[] {
 @"302 Mana,5-35 yd range,
 Instant Cast,20 sec cooldown,
 		A shot that deals 50% weapon damage and Silences the target for 3 sec.",})]
-		public int SilencingShot { get { return _data[49]; } set { _data[49] = value; } }
+        public int SilencingShot { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(50, "Improved Steady Shot", 3, 1, 3, 9, -1, new string[] {
+        [TalentData(50, "Improved Steady Shot", 3, 1, 3, 9, -1, new string[] {
 @"Your Steady Shot hits have a 5% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Chimera Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Chimera Shot by 40%.",
 @"Your Steady Shot hits have a 10% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Kill Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Kill Shot by 40%.",
 @"Your Steady Shot hits have a 15% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Kill Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Kill Shot by 40%.",})]
-		public int ImprovedSteadyShot { get { return _data[50]; } set { _data[50] = value; } }
+        public int ImprovedSteadyShot { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Marked for Death", 5, 1, 2, 10, -1, new string[] {
+        [TalentData(51, "Marked for Death", 5, 1, 2, 10, -1, new string[] {
 @"Increases the damage done by your shots and the damage done by your pet's special abilities by 2%, on the marked targets, and increases the critical strike damage bonus of your Aimed Shot, Steady Shot, Kill Shot or Chimera Shot by 2%.",
 @"Increases the damage done by your shots and the damage done by your pet's special abilities by 4%, on the marked targets, and increases the critical strike damage bonus of your Aimed Shot, Steady Shot, Kill Shot or Chimera Shot by 4%.",
 @"Increases the damage done by your shots and the damage done by your pet's special abilities by 6%, on the marked targets, and increases the critical strike damage bonus of your Aimed Shot, Steady Shot, Kill Shot or Chimera Shot by 6%.",
 @"Increases the damage done by your shots and the damage done by your pet's special abilities by 8%, on the marked targets, and increases the critical strike damage bonus of your Aimed Shot, Steady Shot, Kill Shot or Chimera Shot by 8%.",
 @"Increases the damage done by your shots and the damage done by your pet's special abilities by 10%, on the marked targets, and increases the critical strike damage bonus of your Aimed Shot, Steady Shot, Kill Shot or Chimera Shot by 10%.",})]
-		public int MarkedforDeath { get { return _data[51]; } set { _data[51] = value; } }
+        public int MarkedForDeath { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(52, "Chimera Shot", 1, 1, 2, 11, -1, new string[] {
+        [TalentData(52, "Chimera Shot", 1, 1, 2, 11, -1, new string[] {
 @"375 Mana,5-35 yd range,
 Instant cast,10 sec cooldown,Requires Ranged Weapon,
 <br/>You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect:<br/><br/> Serpent Sting - Instantly deals 40% of the damage done by your Serpent Sting.<br/><br/> Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.<br/><br/> Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occur more than once per 1 minute.",})]
-		public int ChimeraShot { get { return _data[52]; } set { _data[52] = value; } }
+        public int ChimeraShot { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(53, "Improved Tracking", 5, 2, 1, 1, -1, new string[] {
+        [TalentData(53, "Improved Tracking", 5, 2, 1, 1, -1, new string[] {
 @"Increases all damage done to the targets that are being tracked 1%.",
 @"Increases all damage done to the targets that are being tracked 2%.",
 @"Increases all damage done to the targets that are being tracked 3%.",
 @"Increases all damage done to the targets that are being tracked 4%.",
 @"Increases all damage done to the targets that are being tracked 5%.",})]
-		public int ImprovedTracking { get { return _data[53]; } set { _data[53] = value; } }
+        public int ImprovedTracking { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(54, "Hawk Eye", 3, 2, 2, 1, -1, new string[] {
+        [TalentData(54, "Hawk Eye", 3, 2, 2, 1, -1, new string[] {
 @"Increases the range of your ranged weapons by 2 yards.",
 @"Increases the range of your ranged weapons by 4 yards.",
 @"Increases the range of your ranged weapons by 6 yards.",})]
-		public int HawkEye { get { return _data[54]; } set { _data[54] = value; } }
+        public int HawkEye { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(55, "Savage Strikes", 2, 2, 3, 1, -1, new string[] {
+        [TalentData(55, "Savage Strikes", 2, 2, 3, 1, -1, new string[] {
 @"Increases the critical strike chance of Raptor Strike and Mongoose Bite by 10%.",
 @"Increases the critical strike chance of Raptor Strike and Mongoose Bite by 20%.",})]
-		public int SavageStrikes { get { return _data[55]; } set { _data[55] = value; } }
+        public int SavageStrikes { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "T.N.T.", 3, 2, 1, 2, -1, new string[] {
+        [TalentData(56, "T.N.T.", 3, 2, 1, 2, -1, new string[] {
 @"Your Immolation Trap, Explosive Trap and Explosive Shot have a 5% chance to stun targets for 2 sec when they deal damage, and increases the critical strike chance of your Explosive Shot and Explosive Trap by 5%.",
 @"Your Immolation Trap, Explosive Trap and Explosive Shot have a 10% chance to stun targets for 2 sec when they deal damage, and increases the critical strike chance of your Explosive Shot and Explosive Trap by 10%.",
 @"Your Immolation Trap, Explosive Trap and Explosive Shot have a 15% chance to stun targets for 2 sec when they deal damage, and increases the critical strike chance of your Explosive Shot and Explosive Trap by 15%.",})]
-		public int TNT { get { return _data[56]; } set { _data[56] = value; } }
+        public int TNT { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(57, "Entrapment", 3, 2, 2, 2, -1, new string[] {
+        [TalentData(57, "Entrapment", 3, 2, 2, 2, -1, new string[] {
 @"Gives your Immolation Trap, Frost Trap, Explosive Trap, and Snake Trap a 8% chance to entrap the target, preventing them from moving for 4 sec.",
 @"Gives your Immolation Trap, Frost Trap, Explosive Trap, and Snake Trap a 16% chance to entrap the target, preventing them from moving for 4 sec.",
 @"Gives your Immolation Trap, Frost Trap, Explosive Trap, and Snake Trap a 25% chance to entrap the target, preventing them from moving for 4 sec.",})]
-		public int Entrapment { get { return _data[57]; } set { _data[57] = value; } }
+        public int Entrapment { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(58, "Improved Wing Clip", 3, 2, 3, 2, -1, new string[] {
+        [TalentData(58, "Improved Wing Clip", 3, 2, 3, 2, -1, new string[] {
 @"Gives your Wing Clip ability a 7% chance to immobilize the target for 5 sec.",
 @"Gives your Wing Clip ability a 14% chance to immobilize the target for 5 sec.",
 @"Gives your Wing Clip ability a 20% chance to immobilize the target for 5 sec.",})]
-		public int ImprovedWingClip { get { return _data[58]; } set { _data[58] = value; } }
+        public int ImprovedWingClip { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(59, "Survival Instincts", 2, 2, 4, 2, -1, new string[] {
+        [TalentData(59, "Survival Instincts", 2, 2, 4, 2, -1, new string[] {
 @"Reduces all damage taken by 2% and increases attack power by 2%.",
 @"Reduces all damage taken by 4% and increases attack power by 4%.",})]
-		public int SurvivalInstincts { get { return _data[59]; } set { _data[59] = value; } }
+        public int SurvivalInstincts { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(60, "Survivalist", 5, 2, 1, 3, -1, new string[] {
+        [TalentData(60, "Survivalist", 5, 2, 1, 3, -1, new string[] {
 @"Increases your Stamina by 2%.",
 @"Increases your Stamina by 4%.",
 @"Increases your Stamina by 6%.",
 @"Increases your Stamina by 8%.",
 @"Increases your Stamina by 10%.",})]
-		public int Survivalist { get { return _data[60]; } set { _data[60] = value; } }
+        public int Survivalist { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Trap Mastery", 1, 2, 2, 3, -1, new string[] {
+        [TalentData(61, "Trap Mastery", 1, 2, 2, 3, -1, new string[] {
 @"Design not implemented (do not report).",})]
-		public int TrapMastery { get { return _data[61]; } set { _data[61] = value; } }
+        public int TrapMastery { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Deflection", 3, 2, 3, 3, -1, new string[] {
+        [TalentData(62, "Deflection", 3, 2, 3, 3, -1, new string[] {
 @"Increases your Parry chance by 2%.",
 @"Increases your Parry chance by 4%.",
 @"Increases your Parry chance by 6%.",})]
-		public int Deflection { get { return _data[62]; } set { _data[62] = value; } }
+        public int Deflection { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(63, "Survival Tactics", 2, 2, 4, 3, -1, new string[] {
+        [TalentData(63, "Survival Tactics", 2, 2, 4, 3, -1, new string[] {
 @"Reduces the chance your Feign Death ability will be resisted by 2%, and reduces the cooldown of your Disengage ability by 2 sec.",
 @"Reduces the chance your Feign Death ability will be resisted by 4%, and reduces the cooldown of your Disengage ability by 4 sec.",})]
-		public int SurvivalTactics { get { return _data[63]; } set { _data[63] = value; } }
+        public int SurvivalTactics { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(64, "Surefooted", 3, 2, 2, 4, -1, new string[] {
+        [TalentData(64, "Surefooted", 3, 2, 2, 4, -1, new string[] {
 @"Increases hit chance by 1% and reduces the duration of movement impairing effects by 16%.",
 @"Increases hit chance by 2% and reduces the duration of movement impairing effects by 25%.",
 @"Increases hit chance by 3% and reduces the duration of movement impairing effects by 50%.",})]
-		public int Surefooted { get { return _data[64]; } set { _data[64] = value; } }
+        public int Surefooted { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(65, "Lock and Load", 3, 2, 4, 4, -1, new string[] {
+        [TalentData(65, "Lock and Load", 3, 2, 4, 4, -1, new string[] {
 @"You have a 33% chance when you trap a target and a 5% chance when you Sting a target to cause your next 3 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo.",
 @"You have a 66% chance when you trap a target and a 10% chance when you Sting a target to cause your next 3 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo.",
 @"You have a 100% chance when you trap a target and a 15% chance when you Sting a target to cause your next 3 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo.",})]
-		public int LockandLoad { get { return _data[65]; } set { _data[65] = value; } }
+        public int LockAndLoad { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(66, "Hunter vs. Wild", 3, 2, 1, 5, 60, new string[] {
+        [TalentData(66, "Hunter vs. Wild", 3, 2, 1, 5, 60, new string[] {
 @"Increases you and your pet's attack power and ranged attack power equal to 10% of your total Stamina.",
 @"Increases you and your pet's attack power and ranged attack power equal to 20% of your total Stamina.",
 @"Increases you and your pet's attack power and ranged attack power equal to 30% of your total Stamina.",})]
-		public int HuntervsWild { get { return _data[66]; } set { _data[66] = value; } }
+        public int HunterVsWild { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(67, "Killer Instinct", 3, 2, 2, 5, -1, new string[] {
+        [TalentData(67, "Killer Instinct", 3, 2, 2, 5, -1, new string[] {
 @"Increases your critical strike chance with all attacks by 1%.",
 @"Increases your critical strike chance with all attacks by 2%.",
 @"Increases your critical strike chance with all attacks by 3%.",})]
-		public int KillerInstinct { get { return _data[67]; } set { _data[67] = value; } }
+        public int KillerInstinct { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(68, "Counterattack", 1, 2, 3, 5, 62, new string[] {
+        [TalentData(68, "Counterattack", 1, 2, 3, 5, 62, new string[] {
 @"45 Mana,Melee range,
 Instant cast,5 sec cooldown,
 A strike that becomes active after parrying an opponent's attack. This attack deals 40 damage and immobilizes the target for 5 sec. Counterattack cannot be blocked, dodged, or parried.
@@ -3403,29 +3475,29 @@ A strike that becomes active after parrying an opponent's attack. This attack de
 		 Rank 2: 65 Mana, 70 Damage
 		 Rank 3: 85 Mana, 110 Damage
 		 Rank 4: 110 Mana, 165 Damage",})]
-		public int Counterattack { get { return _data[68]; } set { _data[68] = value; } }
+        public int Counterattack { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(69, "Lightning Reflexes", 5, 2, 1, 6, -1, new string[] {
+        [TalentData(69, "Lightning Reflexes", 5, 2, 1, 6, -1, new string[] {
 @"Increases your Agility by 3%.",
 @"Increases your Agility by 6%.",
 @"Increases your Agility by 9%.",
 @"Increases your Agility by 12%.",
 @"Increases your Agility by 15%.",})]
-		public int LightningReflexes { get { return _data[69]; } set { _data[69] = value; } }
+        public int LightningReflexes { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(70, "Resourcefulness", 3, 2, 3, 6, -1, new string[] {
+        [TalentData(70, "Resourcefulness", 3, 2, 3, 6, -1, new string[] {
 @"Reduces the mana cost of all traps and melee abilities by 20% and reduces the cooldown of all traps by 2 sec.",
 @"Reduces the mana cost of all traps and melee abilities by 40% and reduces the cooldown of all traps by 4 sec.",
 @"Reduces the mana cost of all traps and melee abilities by 60% and reduces the cooldown of all traps by 6 sec.",})]
-		public int Resourcefulness { get { return _data[70]; } set { _data[70] = value; } }
+        public int Resourcefulness { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Expose Weakness", 3, 2, 1, 7, 69, new string[] {
+        [TalentData(71, "Expose Weakness", 3, 2, 1, 7, 69, new string[] {
 @"Your ranged criticals have a 33% chance to apply an Expose Weakness effect to the target. Expose Weakness increases the Attack Power of all attackers against that target by 25% of your Agility for 7 sec.",
 @"Your ranged criticals have a 66% chance to apply an Expose Weakness effect to the target. Expose Weakness increases the Attack Power of all attackers against that target by 25% of your Agility for 7 sec.",
 @"Your ranged criticals have a 100% chance to apply an Expose Weakness effect to the target. Expose Weakness increases the Attack Power of all attackers against that target by 25% of your Agility for 7 sec.",})]
-		public int ExposeWeakness { get { return _data[71]; } set { _data[71] = value; } }
+        public int ExposeWeakness { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(72, "Wyvern Sting", 1, 2, 2, 7, 67, new string[] {
+        [TalentData(72, "Wyvern Sting", 1, 2, 2, 7, 67, new string[] {
 @"555 Mana,4-41 yd range,
 Instant cast,1 min cooldown,
 A stinging shot that puts the target to sleep for 12 sec. Any damage will cancel the effect. When the target wakes up, the Sting causes 300 Nature damage over 6 sec. Only one Sting per Hunter can be active on the target at a time.
@@ -3433,542 +3505,554 @@ A stinging shot that puts the target to sleep for 12 sec. Any damage will cancel
 		 Trainable Ranks Listed Below:
 		 Rank 2: 155 Mana, 420 Damage
 		 Rank 3: 205 Mana, 600 Damage",})]
-		public int WyvernSting { get { return _data[72]; } set { _data[72] = value; } }
+        public int WyvernSting { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "Thrill of the Hunt", 3, 2, 3, 7, -1, new string[] {
+        [TalentData(73, "Thrill of the Hunt", 3, 2, 3, 7, -1, new string[] {
 @"Gives you a 33% chance to regain 40% of the mana cost of any shot when it critically hits.",
 @"Gives you a 66% chance to regain 40% of the mana cost of any shot when it critically hits.",
 @"Gives you a 100% chance to regain 40% of the mana cost of any shot when it critically hits.",})]
-		public int ThrilloftheHunt { get { return _data[73]; } set { _data[73] = value; } }
+        public int ThrillOfTheHunt { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(74, "Master Tactician", 5, 2, 1, 8, -1, new string[] {
+        [TalentData(74, "Master Tactician", 5, 2, 1, 8, -1, new string[] {
 @"Your successful ranged attacks have a 10% chance to increase your critical strike chance with all attacks by 2% for 8 sec.",
 @"Your successful ranged attacks have a 10% chance to increase your critical strike chance with all attacks by 4% for 8 sec.",
 @"Your successful ranged attacks have a 10% chance to increase your critical strike chance with all attacks by 6% for 8 sec.",
 @"Your successful ranged attacks have a 10% chance to increase your critical strike chance with all attacks by 8% for 8 sec.",
 @"Your successful ranged attacks have a 10% chance to increase your critical strike chance with all attacks by 10% for 8 sec.",})]
-		public int MasterTactician { get { return _data[74]; } set { _data[74] = value; } }
+        public int MasterTactician { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(75, "Noxious stings", 3, 2, 2, 8, 72, new string[] {
+        [TalentData(75, "Noxious stings", 3, 2, 2, 8, 72, new string[] {
 @"If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting lasting 16% of the duration remaining, and increases all damage done by you on targets afflicted by your Serpent Sting by 1%.",
 @"If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting lasting 25% of the duration remaining, and increases all damage done by you on targets afflicted by your Serpent Sting by 2%.",
 @"If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting lasting 50% of the duration remaining, and increases all damage done by you on targets afflicted by your Serpent Sting by 3%.",})]
-		public int Noxiousstings { get { return _data[75]; } set { _data[75] = value; } }
+        public int NoxiousStings { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(76, "Point of No Escape", 3, 2, 1, 9, -1, new string[] {
+        [TalentData(76, "Point of No Escape", 3, 2, 1, 9, -1, new string[] {
 @"Increases the critical strike chance of all attacks on targets affected by your Frost, Freezing and Bear Trap by 2%.",
 @"Increases the critical strike chance of all attacks on targets affected by your Frost, Freezing and Bear Trap by 4%.",
 @"Increases the critical strike chance of all attacks on targets affected by your Frost, Freezing and Bear Trap by 6%.",})]
-		public int PointofNoEscape { get { return _data[76]; } set { _data[76] = value; } }
+        public int PointOfNoEscape { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(77, "Readiness", 1, 2, 2, 9, -1, new string[] {
+        [TalentData(77, "Readiness", 1, 2, 2, 9, -1, new string[] {
 @"Instant,3 min cooldown,
 When activated, this ability immediately finishes the cooldown on your other Hunter abilities.",})]
-		public int Readiness { get { return _data[77]; } set { _data[77] = value; } }
+        public int Readiness { get { return _data[77]; } set { _data[77] = value; } }
 
-		[TalentData(78, "Sniper Training", 3, 2, 4, 9, -1, new string[] {
+        [TalentData(78, "Sniper Training", 3, 2, 4, 9, -1, new string[] {
 @"Increases the damage done by your Steady Shot, Aimed Shot and Explosive Shots by 2% if you are 30 yards or further from your target, and increases the critical strike chance of your Kill Shot ability by 5% on targets at or below 30% health.",
 @"Increases the damage done by your Steady Shot, Aimed Shot and Explosive Shots by 4% if you are 30 yards or further from your target, and increases the critical strike chance of your Kill Shot ability by 10% on targets at or below 30% health.",
 @"Increases the damage done by your Steady Shot, Aimed Shot and Explosive Shots by 6% if you are 30 yards or further from your target, and increases the critical strike chance of your Kill Shot ability by 15% on targets at or below 30% health.",})]
-		public int SniperTraining { get { return _data[78]; } set { _data[78] = value; } }
+        public int SniperTraining { get { return _data[78]; } set { _data[78] = value; } }
 
-		[TalentData(79, "Hunting Party", 5, 2, 3, 10, 73, new string[] {
+        [TalentData(79, "Hunting Party", 5, 2, 3, 10, 73, new string[] {
 @"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 20% chance to restore 2% mana, 10 energy, 4 rage or 10 Runic Power to all members of your party.",
 @"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 40% chance to restore 2% mana, 10 energy, 4 rage or 10 Runic Power to all members of your party.",
 @"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 60% chance to restore 2% mana, 10 energy, 4 rage or 10 Runic Power to all members of your party.",
 @"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 80% chance to restore 2% mana, 10 energy, 4 rage or 10 Runic Power to all members of your party.",
 @"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 100% chance to restore 2% mana, 10 energy, 4 rage or 10 Runic Power to all members of your party.",})]
-		public int HuntingParty { get { return _data[79]; } set { _data[79] = value; } }
+        public int HuntingParty { get { return _data[79]; } set { _data[79] = value; } }
 
-		[TalentData(80, "Explosive Shot", 1, 2, 2, 11, 77, new string[] {
+        [TalentData(80, "Explosive Shot", 1, 2, 2, 11, 77, new string[] {
 @"504 Mana,5-41 yd range,
 Instant Cast,6 sec cooldown,
 Requires Ranged Weapon
 You fire an explosive charge into the target, dealing 416-486 Fire damage to the enemy target, and an additional 104-121 Fire damage to all enemies within 5 yards of the target every second for 2 sec.",})]
-		public int ExplosiveShot { get { return _data[80]; } set { _data[80] = value; } }
-	}
+        public int ExplosiveShot { get { return _data[80]; } set { _data[80] = value; } }
+    }
 
-	public class ShamanTalents
-	{
-		private int[] _data = new int[77];
-		public ShamanTalents() { }
-		public ShamanTalents(string talents)
-		{
-			List<int> data = new List<int>();
-			foreach (Char digit in talents)
-				data.Add(int.Parse(digit.ToString()));
-			data.CopyTo(_data);
-		}
+    public class ShamanTalents : ICloneable
+    {
+        private int[] _data = new int[77];
+        public ShamanTalents() { }
+        public ShamanTalents(string talents)
+        {
+            List<int> data = new List<int>();
+            foreach (Char digit in talents)
+                data.Add(int.Parse(digit.ToString()));
+            data.CopyTo(_data);
+        }
 
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
-		}
+        public override string ToString()
+        {
+            StringBuilder ret = new StringBuilder();
+            foreach (int digit in _data)
+                ret.Append(digit.ToString());
+            return ret.ToString();
+        }
+        object ICloneable.Clone()
+        {
+            ShamanTalents clone = (ShamanTalents)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            return clone;
+        }
 
-		[TalentData(0, "Convection", 5, 0, 2, 1, -1, new string[] {
+        public ShamanTalents Clone()
+        {
+            return (ShamanTalents)((ICloneable)this).Clone();
+        }
+
+
+        [TalentData(0, "Convection", 5, 0, 2, 1, -1, new string[] {
 @"Reduces the mana cost of your Shock, Lightning Bolt, Chain Lightning, Thunder and Lava Burst spells by 2%.",
 @"Reduces the mana cost of your Shock, Lightning Bolt, Chain Lightning, Thunder and Lava Burst spells by 4%.",
 @"Reduces the mana cost of your Shock, Lightning Bolt, Chain Lightning, Thunder and Lava Burst spells by 6%.",
 @"Reduces the mana cost of your Shock, Lightning Bolt, Chain Lightning, Thunder and Lava Burst spells by 8%.",
 @"Reduces the mana cost of your Shock, Lightning Bolt, Chain Lightning, Thunder and Lava Burst spells by 10%.",})]
-		public int Convection { get { return _data[0]; } set { _data[0] = value; } }
+        public int Convection { get { return _data[0]; } set { _data[0] = value; } }
 
-		[TalentData(1, "Concussion", 5, 0, 3, 1, -1, new string[] {
+        [TalentData(1, "Concussion", 5, 0, 3, 1, -1, new string[] {
 @"Increases the damage done by your Lightning Bolt, Chain Lightning, Thunderstorm, Lava Burst and Shock spells by 1%.",
 @"Increases the damage done by your Lightning Bolt, Chain Lightning, Thunderstorm, Lava Burst and Shock spells by 2%.",
 @"Increases the damage done by your Lightning Bolt, Chain Lightning, Thunderstorm, Lava Burst and Shock spells by 3%.",
 @"Increases the damage done by your Lightning Bolt, Chain Lightning, Thunderstorm, Lava Burst and Shock spells by 4%.",
 @"Increases the damage done by your Lightning Bolt, Chain Lightning, Thunderstorm, Lava Burst and Shock spells by 5%.",})]
-		public int Concussion { get { return _data[1]; } set { _data[1] = value; } }
+        public int Concussion { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Call of Flame", 3, 0, 1, 2, -1, new string[] {
+        [TalentData(2, "Call of Flame", 3, 0, 1, 2, -1, new string[] {
 @"Increases the damage done by your Fire Totems by 5%, and damage done by your Lava Burst spell by 2%.",
 @"Increases the damage done by your Fire Totems by 10%, and damage done by your Lava Burst spell by 4%.",
 @"Increases the damage done by your Fire Totems by 15%, and damage done by your Lava Burst spell by 6%.",})]
-		public int CallofFlame { get { return _data[2]; } set { _data[2] = value; } }
+        public int CallOfFlame { get { return _data[2]; } set { _data[2] = value; } }
 
-		[TalentData(3, "Elemental Warding", 3, 0, 2, 2, -1, new string[] {
+        [TalentData(3, "Elemental Warding", 3, 0, 2, 2, -1, new string[] {
 @"Reduces damage taken from Fire, Frost and Nature effects by 4%.",
 @"Reduces damage taken from Fire, Frost and Nature effects by 7%.",
 @"Reduces damage taken from Fire, Frost and Nature effects by 10%.",})]
-		public int ElementalWarding { get { return _data[3]; } set { _data[3] = value; } }
+        public int ElementalWarding { get { return _data[3]; } set { _data[3] = value; } }
 
-		[TalentData(4, "Elemental Devastation", 3, 0, 3, 2, -1, new string[] {
+        [TalentData(4, "Elemental Devastation", 3, 0, 3, 2, -1, new string[] {
 @"Your offensive spell crits will increase your chance to get a critical strike with melee attacks by 3% for 10 sec.",
 @"Your offensive spell crits will increase your chance to get a critical strike with melee attacks by 6% for 10 sec.",
 @"Your offensive spell crits will increase your chance to get a critical strike with melee attacks by 9% for 10 sec.",})]
-		public int ElementalDevastation { get { return _data[4]; } set { _data[4] = value; } }
+        public int ElementalDevastation { get { return _data[4]; } set { _data[4] = value; } }
 
-		[TalentData(5, "Reverberation", 5, 0, 1, 3, -1, new string[] {
+        [TalentData(5, "Reverberation", 5, 0, 1, 3, -1, new string[] {
 @"Reduces the cooldown of your Shock spells by 0.2 sec.",
 @"Reduces the cooldown of your Shock spells by 0.4 sec.",
 @"Reduces the cooldown of your Shock spells by 0.6 sec.",
 @"Reduces the cooldown of your Shock spells by 0.8 sec.",
 @"Reduces the cooldown of your Shock spells by 1 sec.",})]
-		public int Reverberation { get { return _data[5]; } set { _data[5] = value; } }
+        public int Reverberation { get { return _data[5]; } set { _data[5] = value; } }
 
-		[TalentData(6, "Elemental Focus", 1, 0, 2, 3, -1, new string[] {
+        [TalentData(6, "Elemental Focus", 1, 0, 2, 3, -1, new string[] {
 @"After landing a critical strike with a Fire, Frost, or Nature damage spell, you enter a Clearcasting state.  The Clearcasting state reduces the mana cost of your next 2 damage or healing spells by 40%.",})]
-		public int ElementalFocus { get { return _data[6]; } set { _data[6] = value; } }
+        public int ElementalFocus { get { return _data[6]; } set { _data[6] = value; } }
 
-		[TalentData(7, "Call of Thunder", 5, 0, 3, 3, -1, new string[] {
+        [TalentData(7, "Call of Thunder", 5, 0, 3, 3, -1, new string[] {
 @"Increases the critical strike chance of your Lightning Bolt and Chain Lightning spells by an additional 1%.",
 @"Increases the critical strike chance of your Lightning Bolt and Chain Lightning spells by an additional 2%.",
 @"Increases the critical strike chance of your Lightning Bolt and Chain Lightning spells by an additional 3%.",
 @"Increases the critical strike chance of your Lightning Bolt and Chain Lightning spells by an additional 4%.",
 @"Increases the critical strike chance of your Lightning Bolt and Chain Lightning spells by an additional 5%.",})]
-		public int CallofThunder { get { return _data[7]; } set { _data[7] = value; } }
+        public int CallOfThunder { get { return _data[7]; } set { _data[7] = value; } }
 
-		[TalentData(8, "Improved Fire Nova Totem", 2, 0, 1, 4, -1, new string[] {
+        [TalentData(8, "Improved Fire Nova Totem", 2, 0, 1, 4, -1, new string[] {
 @"Reduces the delay before your Fire Nova Totem activates by 1 sec, and your Fire Nova totem has a 50% chance to reduce the movement speed of all targets damaged by your Fire Nova Totem by 75% for 4 sec.",
 @"Reduces the delay before your Fire Nova Totem activates by 2 sec, and your Fire Nova totem has a 100% chance to reduce the movement speed of all targets damaged by your Fire Nova Totem by 75% for 4 sec.",})]
-		public int ImprovedFireNovaTotem { get { return _data[8]; } set { _data[8] = value; } }
+        public int ImprovedFireNovaTotem { get { return _data[8]; } set { _data[8] = value; } }
 
-		[TalentData(9, "Eye of the Storm", 3, 0, 4, 4, -1, new string[] {
+        [TalentData(9, "Eye of the Storm", 3, 0, 4, 4, -1, new string[] {
 @"Gives you a 23% chance to avoid interruption caused by damage while casting Lightning Bolt, Chain Lightning, Lava Burst and Hex spells.",
 @"Gives you a 46% chance to avoid interruption caused by damage while casting Lightning Bolt, Chain Lightning, Lava Burst and Hex spells.",
 @"Gives you a 70% chance to avoid interruption caused by damage while casting Lightning Bolt, Chain Lightning, Lava Burst and Hex spells.",})]
-		public int EyeoftheStorm { get { return _data[9]; } set { _data[9] = value; } }
+        public int EyeOfTheStorm { get { return _data[9]; } set { _data[9] = value; } }
 
-		[TalentData(10, "Storm Reach", 2, 0, 1, 5, -1, new string[] {
+        [TalentData(10, "Storm Reach", 2, 0, 1, 5, -1, new string[] {
 @"Increases the range of your Lightning Bolt and Chain Lightning spells by 3 yards, and increases the radius of your Thunderstorm spell by 10%.",
 @"Increases the range of your Lightning Bolt and Chain Lightning spells by 6 yards, and increases the radius of your Thunderstorm spell by 20%.",})]
-		public int StormReach { get { return _data[10]; } set { _data[10] = value; } }
+        public int StormReach { get { return _data[10]; } set { _data[10] = value; } }
 
-		[TalentData(11, "Elemental Fury", 1, 0, 2, 5, 6, new string[] {
+        [TalentData(11, "Elemental Fury", 1, 0, 2, 5, 6, new string[] {
 @"Increases the critical strike damage bonus of your Searing, Magma, and Fire Nova Totems and your Fire, Frost, and Nature spells by 100%.",})]
-		public int ElementalFury { get { return _data[11]; } set { _data[11] = value; } }
+        public int ElementalFury { get { return _data[11]; } set { _data[11] = value; } }
 
-		[TalentData(12, "Unrelenting Storm", 5, 0, 4, 5, -1, new string[] {
+        [TalentData(12, "Unrelenting Storm", 5, 0, 4, 5, -1, new string[] {
 @"Regenerate mana equal to 2% of your Intellect every 5 sec, even while casting.",
 @"Regenerate mana equal to 4% of your Intellect every 5 sec, even while casting.",
 @"Regenerate mana equal to 6% of your Intellect every 5 sec, even while casting.",
 @"Regenerate mana equal to 8% of your Intellect every 5 sec, even while casting.",
 @"Regenerate mana equal to 10% of your Intellect every 5 sec, even while casting.",})]
-		public int UnrelentingStorm { get { return _data[12]; } set { _data[12] = value; } }
+        public int UnrelentingStorm { get { return _data[12]; } set { _data[12] = value; } }
 
-		[TalentData(13, "Elemental Precision", 3, 0, 1, 6, -1, new string[] {
+        [TalentData(13, "Elemental Precision", 3, 0, 1, 6, -1, new string[] {
 @"Increases your chance to hit with Fire, Frost, and Nature spells by 1% and reduces the threat caused by Fire, Frost, and Nature spells by 10%.",
 @"Increases your chance to hit with Fire, Frost, and Nature spells by 2% and reduces the threat caused by Fire, Frost, and Nature spells by 20%.",
 @"Increases your chance to hit with Fire, Frost, and Nature spells by 3% and reduces the threat caused by Fire, Frost, and Nature spells by 30%.",})]
-		public int ElementalPrecision { get { return _data[13]; } set { _data[13] = value; } }
+        public int ElementalPrecision { get { return _data[13]; } set { _data[13] = value; } }
 
-		[TalentData(14, "Lightning Mastery", 5, 0, 3, 6, 7, new string[] {
+        [TalentData(14, "Lightning Mastery", 5, 0, 3, 6, 7, new string[] {
 @"Reduces the cast time of your Lightning Bolt and Chain Lightning spells by 0.1 sec.",
 @"Reduces the cast time of your Lightning Bolt and Chain Lightning spells by 0.2 sec.",
 @"Reduces the cast time of your Lightning Bolt and Chain Lightning spells by 0.3 sec.",
 @"Reduces the cast time of your Lightning Bolt and Chain Lightning spells by 0.4 sec.",
 @"Reduces the cast time of your Lightning Bolt and Chain Lightning spells by 0.5 sec.",})]
-		public int LightningMastery { get { return _data[14]; } set { _data[14] = value; } }
+        public int LightningMastery { get { return _data[14]; } set { _data[14] = value; } }
 
-		[TalentData(15, "Elemental Mastery", 1, 0, 2, 7, 11, new string[] {
+        [TalentData(15, "Elemental Mastery", 1, 0, 2, 7, 11, new string[] {
 @"Instant,3 min cooldown,
 When activated, this spell gives your next Fire, Frost, or Nature damage spell a 100% critical strike chance and reduces the mana cost by 100%.",})]
-		public int ElementalMastery { get { return _data[15]; } set { _data[15] = value; } }
+        public int ElementalMastery { get { return _data[15]; } set { _data[15] = value; } }
 
-		[TalentData(16, "Elemental Shields", 3, 0, 3, 7, -1, new string[] {
+        [TalentData(16, "Elemental Shields", 3, 0, 3, 7, -1, new string[] {
 @"Reduces the chance you will be critically hit by melee and ranged attacks by 2%.",
 @"Reduces the chance you will be critically hit by melee and ranged attacks by 4%.",
 @"Reduces the chance you will be critically hit by melee and ranged attacks by 6%.",})]
-		public int ElementalShields { get { return _data[16]; } set { _data[16] = value; } }
+        public int ElementalShields { get { return _data[16]; } set { _data[16] = value; } }
 
-		[TalentData(17, "Elemental Oath", 2, 0, 2, 8, 15, new string[] {
+        [TalentData(17, "Elemental Oath", 2, 0, 2, 8, 15, new string[] {
 @"Your spell critical strikes grant your party Elemental Oath, reducing the mana cost of spells and abilities by your party by 1% and increasing critical strike damage by 1%. Stacks up to 3 times. Lasts 15 seconds.",
 @"Your spell critical strikes grant your party Elemental Oath, reducing the mana cost of spells and abilities by your party by 2% and increasing critical strike damage by 2%. Stacks up to 3 times. Lasts 15 seconds.",})]
-		public int ElementalOath { get { return _data[17]; } set { _data[17] = value; } }
+        public int ElementalOath { get { return _data[17]; } set { _data[17] = value; } }
 
-		[TalentData(18, "Lightning Overload", 5, 0, 3, 8, -1, new string[] {
+        [TalentData(18, "Lightning Overload", 5, 0, 3, 8, -1, new string[] {
 @"Gives your Lightning Bolt and Chain Lightning spells a 4% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
 @"Gives your Lightning Bolt and Chain Lightning spells a 8% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
 @"Gives your Lightning Bolt and Chain Lightning spells a 12% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
 @"Gives your Lightning Bolt and Chain Lightning spells a 16% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
 @"Gives your Lightning Bolt and Chain Lightning spells a 20% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",})]
-		public int LightningOverload { get { return _data[18]; } set { _data[18] = value; } }
+        public int LightningOverload { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Astral Shift", 3, 0, 1, 9, -1, new string[] {
+        [TalentData(19, "Astral Shift", 3, 0, 1, 9, -1, new string[] {
 @"When stunned, feared or silenced you shift into the Astral Plane reducing all damage taken by 10% for the duration of the stun, fear or silence effect.",
 @"When stunned, feared or silenced you shift into the Astral Plane reducing all damage taken by 20% for the duration of the stun, fear or silence effect.",
 @"When stunned, feared or silenced you shift into the Astral Plane reducing all damage taken by 30% for the duration of the stun, fear or silence effect.",})]
-		public int AstralShift { get { return _data[19]; } set { _data[19] = value; } }
+        public int AstralShift { get { return _data[19]; } set { _data[19] = value; } }
 
-		[TalentData(20, "Totem of Wrath", 1, 0, 2, 9, -1, new string[] {
+        [TalentData(20, "Totem of Wrath", 1, 0, 2, 9, -1, new string[] {
 @"219 Mana
 Instant cast
 Tools: Fire Totem
 Summons a Totem of Wrath with 5 health at the feet of the caster. The totem increases the damage done by spells and effects by 6% and increases the critical strike chance of spells and effects by 3% to all party and raid members within 30 yards. Lasts 2 min.",})]
-		public int TotemofWrath { get { return _data[20]; } set { _data[20] = value; } }
+        public int TotemOfWrath { get { return _data[20]; } set { _data[20] = value; } }
 
-		[TalentData(21, "Lava Flows", 3, 0, 3, 9, -1, new string[] {
+        [TalentData(21, "Lava Flows", 3, 0, 3, 9, -1, new string[] {
 @"Increases the amount of bonus spell damage on your Flametongue Weapon by an additional 20%, and increases the critical strike damage bonus of your Lava Burst spell by an additional 6%.",
 @"Increases the amount of bonus spell damage on your Flametongue Weapon by an additional 40%, and increases the critical strike damage bonus of your Lava Burst spell by an additional 12%.",
 @"Increases the amount of bonus spell damage on your Flametongue Weapon by an additional 60%, and increases the critical strike damage bonus of your Lava Burst spell by an additional 24%.",})]
-		public int LavaFlows { get { return _data[21]; } set { _data[21] = value; } }
+        public int LavaFlows { get { return _data[21]; } set { _data[21] = value; } }
 
-		[TalentData(22, "Storm, Earth and Fire", 5, 0, 2, 10, -1, new string[] {
+        [TalentData(22, "Storm, Earth and Fire", 5, 0, 2, 10, -1, new string[] {
 @"Increases the damage of your Lightning Bolt spell by an amount equal to 5% of your spell power, your Earth Shock's range is increased by 1 yards and the periodic damage done by your Flame Shock is increased by 20%.",
 @"Increases the damage of your Lightning Bolt spell by an amount equal to 10% of your spell power, your Earth Shock's range is increased by 2 yards and the periodic damage done by your Flame Shock is increased by 40%.",
 @"Increases the damage of your Lightning Bolt spell by an amount equal to 15% of your spell power, your Earth Shock's range is increased by 3 yards and the periodic damage done by your Flame Shock is increased by 60%.",
 @"Increases the damage of your Lightning Bolt spell by an amount equal to 20% of your spell power, your Earth Shock's range is increased by 4 yards and the periodic damage done by your Flame Shock is increased by 80%.",
 @"Increases the damage of your Lightning Bolt spell by an amount equal to 25% of your spell power, your Earth Shock's range is increased by 5 yards and the periodic damage done by your Flame Shock is increased by 100%.",})]
-		public int StormEarthandFire { get { return _data[22]; } set { _data[22] = value; } }
+        public int StormEarthAndFire { get { return _data[22]; } set { _data[22] = value; } }
 
-		[TalentData(23, "Thunderstorm", 1, 0, 2, 11, 22, new string[] {
+        [TalentData(23, "Thunderstorm", 1, 0, 2, 11, 22, new string[] {
 @"Instant,45 sec cooldown,
 You call down a bolt of lightning, energizing you and damaging nearby enemies within 12 yards. Restores 5% mana to you and deals 610 to 694 Nature damage to all nearby enemies, knocking them back 20 yards.",})]
-		public int Thunderstorm { get { return _data[23]; } set { _data[23] = value; } }
+        public int Thunderstorm { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Enhancing Totems", 3, 1, 1, 1, -1, new string[] {
+        [TalentData(24, "Enhancing Totems", 3, 1, 1, 1, -1, new string[] {
 @"Increases the effect of your Strength of Earth and Flametongue Totems by 5%.",
 @"Increases the effect of your Strength of Earth and Flametongue Totems by 10%.",
 @"Increases the effect of your Strength of Earth and Flametongue Totems by 15%.",})]
-		public int EnhancingTotems { get { return _data[24]; } set { _data[24] = value; } }
+        public int EnhancingTotems { get { return _data[24]; } set { _data[24] = value; } }
 
-		[TalentData(25, "Earth's Grasp", 2, 1, 2, 1, -1, new string[] {
+        [TalentData(25, "Earth's Grasp", 2, 1, 2, 1, -1, new string[] {
 @"Increases the health of your Stoneclaw Totem by 25% and the radius of your Earthbind Totem by 10%.",
 @"Increases the health of your Stoneclaw Totem by 50% and the radius of your Earthbind Totem by 20%.",})]
-		public int EarthsGrasp { get { return _data[25]; } set { _data[25] = value; } }
+        public int EarthsGrasp { get { return _data[25]; } set { _data[25] = value; } }
 
-		[TalentData(26, "Ancestral Knowledge", 5, 1, 3, 1, -1, new string[] {
+        [TalentData(26, "Ancestral Knowledge", 5, 1, 3, 1, -1, new string[] {
 @"Increases your intellect by 2%.",
 @"Increases your intellect by 4%.",
 @"Increases your intellect by 6%.",
 @"Increases your intellect by 8%.",
 @"Increases your intellect by 10%.",})]
-		public int AncestralKnowledge { get { return _data[26]; } set { _data[26] = value; } }
+        public int AncestralKnowledge { get { return _data[26]; } set { _data[26] = value; } }
 
-		[TalentData(27, "Guardian Totems", 2, 1, 1, 2, -1, new string[] {
+        [TalentData(27, "Guardian Totems", 2, 1, 1, 2, -1, new string[] {
 @"Increases the amount of damage reduced by your Stoneskin Totem 10% and reduces the cooldown of your Grounding Totem by 1 sec.",
 @"Increases the amount of damage reduced by your Stoneskin Totem 20% and reduces the cooldown of your Grounding Totem by 2 sec.",})]
-		public int GuardianTotems { get { return _data[27]; } set { _data[27] = value; } }
+        public int GuardianTotems { get { return _data[27]; } set { _data[27] = value; } }
 
-		[TalentData(28, "Thundering Strikes", 5, 1, 2, 2, -1, new string[] {
+        [TalentData(28, "Thundering Strikes", 5, 1, 2, 2, -1, new string[] {
 @"Improves your chance to get a critical strike with your weapon attacks by 1%.",
 @"Improves your chance to get a critical strike with your weapon attacks by 2%.",
 @"Improves your chance to get a critical strike with your weapon attacks by 3%.",
 @"Improves your chance to get a critical strike with your weapon attacks by 4%.",
 @"Improves your chance to get a critical strike with your weapon attacks by 5%.",})]
-		public int ThunderingStrikes { get { return _data[28]; } set { _data[28] = value; } }
+        public int ThunderingStrikes { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(29, "Improved Ghost Wolf", 2, 1, 3, 2, -1, new string[] {
+        [TalentData(29, "Improved Ghost Wolf", 2, 1, 3, 2, -1, new string[] {
 @"Reduces the cast time of your Ghost Wolf spell by 1 sec.",
 @"Reduces the cast time of your Ghost Wolf spell by 2 sec.",})]
-		public int ImprovedGhostWolf { get { return _data[29]; } set { _data[29] = value; } }
+        public int ImprovedGhostWolf { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(30, "Improved Shields", 3, 1, 4, 2, -1, new string[] {
+        [TalentData(30, "Improved Shields", 3, 1, 4, 2, -1, new string[] {
 @"Increases the damage done by your Lightning Shield orbs by 5%, increases the amount of mana gained from your Water Shield orbs by 5% and increases the amount of healing done by your Earth Shield orbs by 5%.",
 @"Increases the damage done by your Lightning Shield orbs by 10%, increases the amount of mana gained from your Water Shield orbs by 10% and increases the amount of healing done by your Earth Shield orbs by 10%.",
 @"Increases the damage done by your Lightning Shield orbs by 15%, increases the amount of mana gained from your Water Shield orbs by 15% and increases the amount of healing done by your Earth Shield orbs by 15%.",})]
-		public int ImprovedShields { get { return _data[30]; } set { _data[30] = value; } }
+        public int ImprovedShields { get { return _data[30]; } set { _data[30] = value; } }
 
-		[TalentData(31, "Mental Dexterity", 3, 1, 1, 3, -1, new string[] {
+        [TalentData(31, "Mental Dexterity", 3, 1, 1, 3, -1, new string[] {
 @"Increases the Attack Power by 33% of your intellect.",
 @"Increases the Attack Power by 66% of your intellect.",
 @"Increases the Attack Power by 100% of your intellect.",})]
-		public int MentalDexterity { get { return _data[31]; } set { _data[31] = value; } }
+        public int MentalDexterity { get { return _data[31]; } set { _data[31] = value; } }
 
-		[TalentData(32, "Shamanistic Focus", 1, 1, 3, 3, -1, new string[] {
+        [TalentData(32, "Shamanistic Focus", 1, 1, 3, 3, -1, new string[] {
 @"After landing a melee critical strike, you enter a Focused state. The Focused state reduces the mana cost of your next Shock spell by 60%.",})]
-		public int ShamanisticFocus { get { return _data[32]; } set { _data[32] = value; } }
+        public int ShamanisticFocus { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(33, "Anticipation", 5, 1, 4, 3, -1, new string[] {
+        [TalentData(33, "Anticipation", 5, 1, 4, 3, -1, new string[] {
 @"Increases your chance to dodge by an additional 1%.",
 @"Increases your chance to dodge by an additional 2%",
 @"Increases your chance to dodge by an additional 3%",
 @"Increases your chance to dodge by an additional 4%",
 @"Increases your chance to dodge by an additional 5%",})]
-		public int Anticipation { get { return _data[33]; } set { _data[33] = value; } }
+        public int Anticipation { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(34, "Flurry", 5, 1, 2, 4, 28, new string[] {
+        [TalentData(34, "Flurry", 5, 1, 2, 4, 28, new string[] {
 @"Increases your attack speed by 10% for your next 3 swings after dealing a critical strike.",
 @"Increases your attack speed by 15% for your next 3 swings after dealing a critical strike.",
 @"Increases your attack speed by 20% for your next 3 swings after dealing a critical strike.",
 @"Increases your attack speed by 25% for your next 3 swings after dealing a critical strike.",
 @"Increases your attack speed by 30% for your next 3 swings after dealing a critical strike.",})]
-		public int Flurry { get { return _data[34]; } set { _data[34] = value; } }
+        public int Flurry { get { return _data[34]; } set { _data[34] = value; } }
 
-		[TalentData(35, "Toughness", 5, 1, 3, 4, -1, new string[] {
+        [TalentData(35, "Toughness", 5, 1, 3, 4, -1, new string[] {
 @"Increases your armor value from items by 2%, and reduces the duration of movement slowing effects on you by 10%.",
 @"Increases your armor value from items by 4%, and reduces the duration of movement slowing effects on you by 20%.",
 @"Increases your armor value from items by 6%, and reduces the duration of movement slowing effects on you by 30%.",
 @"Increases your armor value from items by 8%, and reduces the duration of movement slowing effects on you by 40%.",
 @"Increases your armor value from items by 10%, and reduces the duration of movement slowing effects on you by 50%.",})]
-		public int Toughness { get { return _data[35]; } set { _data[35] = value; } }
+        public int Toughness { get { return _data[35]; } set { _data[35] = value; } }
 
-		[TalentData(36, "Improved Windfury Totem", 2, 1, 1, 5, -1, new string[] {
+        [TalentData(36, "Improved Windfury Totem", 2, 1, 1, 5, -1, new string[] {
 @"Increases the melee haste granted by your Windfury totem by 2%.",
 @"Increases the melee haste granted by your Windfury totem by 4%.",})]
-		public int ImprovedWindfuryTotem { get { return _data[36]; } set { _data[36] = value; } }
+        public int ImprovedWindfuryTotem { get { return _data[36]; } set { _data[36] = value; } }
 
-		[TalentData(37, "Spirit Weapons", 1, 1, 2, 5, -1, new string[] {
+        [TalentData(37, "Spirit Weapons", 1, 1, 2, 5, -1, new string[] {
 @"Gives a chance to parry enemy melee attacks and reduces the threat generated by your melee attacks by 30%.",})]
-		public int SpiritWeapons { get { return _data[37]; } set { _data[37] = value; } }
+        public int SpiritWeapons { get { return _data[37]; } set { _data[37] = value; } }
 
-		[TalentData(38, "Elemental Weapons", 3, 1, 3, 5, -1, new string[] {
+        [TalentData(38, "Elemental Weapons", 3, 1, 3, 5, -1, new string[] {
 @"Increases the damage caused by your Rockbiter Weapon by 7%, your Windfury Weapon effect by 13% and increases the damage caused by your Flametongue Weapon and Frostbrand Weapon by 5%.",
 @"Increases the damage caused by your Rockbiter Weapon by 14%, your Windfury Weapon effect by 27% and increases the damage caused by your Flametongue Weapon and Frostbrand Weapon by 10%.",
 @"Increases the damage caused by your Rockbiter Weapon by 20%, your Windfury Weapon effect by 40% and increases the damage caused by your Flametongue Weapon and Frostbrand Weapon by 15%.",})]
-		public int ElementalWeapons { get { return _data[38]; } set { _data[38] = value; } }
+        public int ElementalWeapons { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Mental Quickness", 3, 1, 1, 6, -1, new string[] {
+        [TalentData(39, "Mental Quickness", 3, 1, 1, 6, -1, new string[] {
 @"Reduces the mana cost of your instant cast Shaman spells by 2% and increases your spell power by an amount equal to 10% of your attack power.",
 @"Reduces the mana cost of your instant cast Shaman spells by 4% and increases your spell power by an amount equal to 20% of your attack power.",
 @"Reduces the mana cost of your instant cast Shaman spells by 6% and increases your spell power by an amount equal to 30% of your attack power.",})]
-		public int MentalQuickness { get { return _data[39]; } set { _data[39] = value; } }
+        public int MentalQuickness { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(40, "Weapon Mastery", 5, 1, 4, 6, -1, new string[] {
+        [TalentData(40, "Weapon Mastery", 5, 1, 4, 6, -1, new string[] {
 @"Increases the damage you deal with all weapons by 2%.",
 @"Increases the damage you deal with all weapons by 4%.",
 @"Increases the damage you deal with all weapons by 6%.",
 @"Increases the damage you deal with all weapons by 8%.",
 @"Increases the damage you deal with all weapons by 10%.",})]
-		public int WeaponMastery { get { return _data[40]; } set { _data[40] = value; } }
+        public int WeaponMastery { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(41, "Dual Wield Specialization", 3, 1, 1, 7, 42, new string[] {
+        [TalentData(41, "Dual Wield Specialization", 3, 1, 1, 7, 42, new string[] {
 @"Increases your chance to hit while dual wielding by an additional 2%.",
 @"Increases your chance to hit while dual wielding by an additional 4%.",
 @"Increases your chance to hit while dual wielding by an additional 6%.",})]
-		public int DualWieldSpecialization { get { return _data[41]; } set { _data[41] = value; } }
+        public int DualWieldSpecialization { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(42, "Dual Wield", 1, 1, 2, 7, 37, new string[] {
+        [TalentData(42, "Dual Wield", 1, 1, 2, 7, 37, new string[] {
 @"Allows one-hand and off-hand weapons to be equipped in the off-hand.",})]
-		public int DualWield { get { return _data[42]; } set { _data[42] = value; } }
+        public int DualWield { get { return _data[42]; } set { _data[42] = value; } }
 
-		[TalentData(43, "Stormstrike", 1, 1, 3, 7, 38, new string[] {
+        [TalentData(43, "Stormstrike", 1, 1, 3, 7, 38, new string[] {
 @"329 Mana,Melee Range,
 Instant cast,10 sec cooldown,
 Requires Melee Weapon,
 Instantly attack with both weapons. In addition, the next 2 sources of Nature damage dealt to the target are increased by 20%. Lasts 12 sec.",})]
-		public int Stormstrike { get { return _data[43]; } set { _data[43] = value; } }
+        public int Stormstrike { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Unleashed Rage", 5, 1, 2, 8, -1, new string[] {
+        [TalentData(44, "Unleashed Rage", 5, 1, 2, 8, -1, new string[] {
 @"Causes your critical hits with melee attacks to increase all party members' attack power by 2% if within 20 yards of the Shaman. Lasts 10 sec.",
 @"Causes your critical hits with melee attacks to increase all party members' attack power by 4% if within 20 yards of the Shaman. Lasts 10 sec.",
 @"Causes your critical hits with melee attacks to increase all party members' attack power by 6% if within 20 yards of the Shaman. Lasts 10 sec.",
 @"Causes your critical hits with melee attacks to increase all party members' attack power by 8% if within 20 yards of the Shaman. Lasts 10 sec.",
 @"Causes your critical hits with melee attacks to increase all party members' attack power by 10% if within 20 yards of the Shaman. Lasts 10 sec.",})]
-		public int UnleashedRage { get { return _data[44]; } set { _data[44] = value; } }
+        public int UnleashedRage { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(45, "Improved Stormstrike", 2, 1, 3, 8, 43, new string[] {
+        [TalentData(45, "Improved Stormstrike", 2, 1, 3, 8, 43, new string[] {
 @"Increases the amount of Stormstrike charges by 1, and reduces the cooldown by 1 sec.",
 @"Increases the amount of Stormstrike charges by 2, and reduces the cooldown by 2 sec.",})]
-		public int ImprovedStormstrike { get { return _data[45]; } set { _data[45] = value; } }
+        public int ImprovedStormstrike { get { return _data[45]; } set { _data[45] = value; } }
 
-		[TalentData(46, "Static Shock", 3, 1, 1, 9, -1, new string[] {
+        [TalentData(46, "Static Shock", 3, 1, 1, 9, -1, new string[] {
 @"You have a 2% chance to hit your target with a Lightning Shield Orb charge when you do damage, and increases the number of charges of your Lightning Shield by 1.",
 @"You have a 4% chance to hit your target with a Lightning Shield Orb charge when you do damage, and increases the number of charges of your Lightning Shield by 2.",
 @"You have a 6% chance to hit your target with a Lightning Shield Orb charge when you do damage, and increases the number of charges of your Lightning Shield by 3.",})]
-		public int StaticShock { get { return _data[46]; } set { _data[46] = value; } }
+        public int StaticShock { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Shamanistic Rage", 1, 1, 2, 9, -1, new string[] {
+        [TalentData(47, "Shamanistic Rage", 1, 1, 2, 9, -1, new string[] {
 @"Instant,2 min cooldown,
 Reduces all damage taken by 30% and gives your successful melee attacks a chance to regenerate mana equal to 15% of your attack power.  Lasts 15 sec.",})]
-		public int ShamanisticRage { get { return _data[47]; } set { _data[47] = value; } }
+        public int ShamanisticRage { get { return _data[47]; } set { _data[47] = value; } }
 
-		[TalentData(48, "Spectral Transformation", 2, 1, 3, 9, -1, new string[] {
+        [TalentData(48, "Spectral Transformation", 2, 1, 3, 9, -1, new string[] {
 @"You have a 50% chance to remove all movement impairing effects when your transform into a Ghost Wolf, and your Spirit Wolves to have a 50% chance to be immune to all stun, snare and movement Impairing effects when Summoned.",
 @"You have a 100% chance to remove all movement impairing effects when your transform into a Ghost Wolf, and your Spirit Wolves to have a 100% chance to be immune to all stun, snare and movement Impairing effects when Summoned.",})]
-		public int SpectralTransformation { get { return _data[48]; } set { _data[48] = value; } }
+        public int SpectralTransformation { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(49, "Maelstrom Weapon", 5, 1, 2, 10, -1, new string[] {
+        [TalentData(49, "Maelstrom Weapon", 5, 1, 2, 10, -1, new string[] {
 @"When you critically hit with a melee weapon, you reduce the cast time of your next Lightning Bolt, Chain Lightning or Lava Burst Spell by 4%. Stacks up to 5 times. Lasts 15 seconds.",
 @"When you critically hit with a melee weapon, you reduce the cast time of your next Lightning Bolt, Chain Lightning or Lava Burst Spell by 8%. Stacks up to 5 times. Lasts 15 seconds.",
 @"When you critically hit with a melee weapon, you reduce the cast time of your next Lightning Bolt, Chain Lightning or Lava Burst Spell by 12%. Stacks up to 5 times. Lasts 15 seconds.",
 @"When you critically hit with a melee weapon, you reduce the cast time of your next Lightning Bolt, Chain Lightning or Lava Burst Spell by 16%. Stacks up to 5 times. Lasts 15 seconds.",
 @"When you critically hit with a melee weapon, you reduce the cast time of your next Lightning Bolt, Chain Lightning or Lava Burst Spell by 20%. Stacks up to 5 times. Lasts 15 seconds.",})]
-		public int MaelstromWeapon { get { return _data[49]; } set { _data[49] = value; } }
+        public int MaelstromWeapon { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(50, "Feral Spirit", 1, 1, 2, 11, -1, new string[] {
+        [TalentData(50, "Feral Spirit", 1, 1, 2, 11, -1, new string[] {
 @"527 Mana,30 yd range,
 Instant,2 min cooldown,
 Summons 2 Spirit Wolves under the command of the Shaman, lasting 45 sec.",})]
-		public int FeralSpirit { get { return _data[50]; } set { _data[50] = value; } }
+        public int FeralSpirit { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Improved Healing Wave", 5, 2, 2, 1, -1, new string[] {
+        [TalentData(51, "Improved Healing Wave", 5, 2, 2, 1, -1, new string[] {
 @"Reduces the casting time of your Healing Wave spell by 0.1 sec.",
 @"Reduces the casting time of your Healing Wave spell by 0.2 sec.",
 @"Reduces the casting time of your Healing Wave spell by 0.3 sec.",
 @"Reduces the casting time of your Healing Wave spell by 0.4 sec.",
 @"Reduces the casting time of your Healing Wave spell by 0.5 sec.",})]
-		public int ImprovedHealingWave { get { return _data[51]; } set { _data[51] = value; } }
+        public int ImprovedHealingWave { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(52, "Totemic Focus", 5, 2, 3, 1, -1, new string[] {
+        [TalentData(52, "Totemic Focus", 5, 2, 3, 1, -1, new string[] {
 @"Reduces the Mana cost of your totems by 5%.",
 @"Reduces the Mana cost of your totems by 10%.",
 @"Reduces the Mana cost of your totems by 15%.",
 @"Reduces the Mana cost of your totems by 20%.",
 @"Reduces the Mana cost of your totems by 25%.",})]
-		public int TotemicFocus { get { return _data[52]; } set { _data[52] = value; } }
+        public int TotemicFocus { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(53, "Improved Reincarnation", 2, 2, 1, 2, -1, new string[] {
+        [TalentData(53, "Improved Reincarnation", 2, 2, 1, 2, -1, new string[] {
 @"Reduces the cooldown of your Reincarnation spell by 10 min and increases the amount of health and mana you reincarnate with by an additional 10%.",
 @"Reduces the cooldown of your Reincarnation spell by 20 min and increases the amount of health and mana you reincarnate with by an additional 20%.",})]
-		public int ImprovedReincarnation { get { return _data[53]; } set { _data[53] = value; } }
+        public int ImprovedReincarnation { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(54, "Ancestral Healing", 3, 2, 2, 2, -1, new string[] {
+        [TalentData(54, "Ancestral Healing", 3, 2, 2, 2, -1, new string[] {
 @"Increases your target's armor value by 8% for 15 sec after getting a critical effect from one of your healing spells.",
 @"Increases your target's armor value by 16% for 15 sec after getting a critical effect from one of your healing spells.",
 @"Increases your target's armor value by 25% for 15 sec after getting a critical effect from one of your healing spells.",})]
-		public int AncestralHealing { get { return _data[54]; } set { _data[54] = value; } }
+        public int AncestralHealing { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(55, "Tidal Focus", 5, 2, 3, 2, -1, new string[] {
+        [TalentData(55, "Tidal Focus", 5, 2, 3, 2, -1, new string[] {
 @"Reduces the Mana cost of your healing spells by 1%.",
 @"Reduces the Mana cost of your healing spells by 2%.",
 @"Reduces the Mana cost of your healing spells by 3%.",
 @"Reduces the Mana cost of your healing spells by 4%.",
 @"Reduces the Mana cost of your healing spells by 5%.",})]
-		public int TidalFocus { get { return _data[55]; } set { _data[55] = value; } }
+        public int TidalFocus { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "Improved Water Shield", 3, 2, 1, 3, -1, new string[] {
+        [TalentData(56, "Improved Water Shield", 3, 2, 1, 3, -1, new string[] {
 @"When you gain a critical effect from your Healing Wave or Lesser Healing Wave spells, you have a 33% chance to instantly consume a Water Shield Orb.",
 @"When you gain a critical effect from your Healing Wave or Lesser Healing Wave spells, you have a 66% chance to instantly consume a Water Shield Orb.",
 @"When you gain a critical effect from your Healing Wave or Lesser Healing Wave spells, you have a 100% chance to instantly consume a Water Shield Orb.",})]
-		public int ImprovedWaterShield { get { return _data[56]; } set { _data[56] = value; } }
+        public int ImprovedWaterShield { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(57, "Healing Focus", 3, 2, 2, 3, -1, new string[] {
+        [TalentData(57, "Healing Focus", 3, 2, 2, 3, -1, new string[] {
 @"Gives you a 23% chance to avoid interruption caused by damage while casting any Shaman healing spell.",
 @"Gives you a 46% chance to avoid interruption caused by damage while casting any Shaman healing spell.",
 @"Gives you a 70% chance to avoid interruption caused by damage while casting any Shaman healing spell.",})]
-		public int HealingFocus { get { return _data[57]; } set { _data[57] = value; } }
+        public int HealingFocus { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(58, "Tidal Force", 1, 2, 3, 3, -1, new string[] {
+        [TalentData(58, "Tidal Force", 1, 2, 3, 3, -1, new string[] {
 @"Instant,3 min cooldown,
 Increases the critical effect chance of your Healing Wave, Lesser Healing Wave and Chain heal by 60%. Each critical heal reduces the chance by 20%.",})]
-		public int TidalForce { get { return _data[58]; } set { _data[58] = value; } }
+        public int TidalForce { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(59, "Healing Grace", 3, 2, 4, 3, -1, new string[] {
+        [TalentData(59, "Healing Grace", 3, 2, 4, 3, -1, new string[] {
 @"Reduces the threat generated by your healing spells by 5% and reduces the chance your spells will be dispelled by 10%.",
 @"Reduces the threat generated by your healing spells by 10% and reduces the chance your spells will be dispelled by 20%.",
 @"Reduces the threat generated by your healing spells by 15% and reduces the chance your spells will be dispelled by 30%.",})]
-		public int HealingGrace { get { return _data[59]; } set { _data[59] = value; } }
+        public int HealingGrace { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(60, "Restorative Totems", 5, 2, 2, 4, -1, new string[] {
+        [TalentData(60, "Restorative Totems", 5, 2, 2, 4, -1, new string[] {
 @"Increases the effect of your Mana Spring and Healing Stream Totems by 5%.",
 @"Increases the effect of your Mana Spring and Healing Stream Totems by 10%.",
 @"Increases the effect of your Mana Spring and Healing Stream Totems by 15%.",
 @"Increases the effect of your Mana Spring and Healing Stream Totems by 20%.",
 @"Increases the effect of your Mana Spring and Healing Stream Totems by 25%.",})]
-		public int RestorativeTotems { get { return _data[60]; } set { _data[60] = value; } }
+        public int RestorativeTotems { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Tidal Mastery", 5, 2, 3, 4, -1, new string[] {
+        [TalentData(61, "Tidal Mastery", 5, 2, 3, 4, -1, new string[] {
 @"Increases the critical effect chance of your healing and lightning spells by 1%.",
 @"Increases the critical effect chance of your healing and lightning spells by 2%.",
 @"Increases the critical effect chance of your healing and lightning spells by 3%.",
 @"Increases the critical effect chance of your healing and lightning spells by 4%.",
 @"Increases the critical effect chance of your healing and lightning spells by 5%.",})]
-		public int TidalMastery { get { return _data[61]; } set { _data[61] = value; } }
+        public int TidalMastery { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Healing Way", 3, 2, 1, 5, -1, new string[] {
+        [TalentData(62, "Healing Way", 3, 2, 1, 5, -1, new string[] {
 @"Your Healing Wave spells have a 33% chance to increase the effect of subsequent Healing Wave spells on that target by 6% for 15 sec. This effect will stack up to 3 times.",
 @"Your Healing Wave spells have a 66% chance to increase the effect of subsequent Healing Wave spells on that target by 6% for 15 sec. This effect will stack up to 3 times.",
 @"Your Healing Wave spells have a 100% chance to increase the effect of subsequent Healing Wave spells on that target by 6% for 15 sec. This effect will stack up to 3 times.",})]
-		public int HealingWay { get { return _data[62]; } set { _data[62] = value; } }
+        public int HealingWay { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(63, "Nature's Swiftness", 1, 2, 3, 5, -1, new string[] {
+        [TalentData(63, "Nature's Swiftness", 1, 2, 3, 5, -1, new string[] {
 @"Instant,3 min cooldown,
 When activated, your next Nature spell with a casting time less than 10 sec becomes an instant cast spell.",})]
-		public int NaturesSwiftness { get { return _data[63]; } set { _data[63] = value; } }
+        public int NaturesSwiftness { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(64, "Focused Mind", 3, 2, 4, 5, -1, new string[] {
+        [TalentData(64, "Focused Mind", 3, 2, 4, 5, -1, new string[] {
 @"Reduces the duration of any Silence or Interrupt effects used against the Shaman by 10%. This effect does not stack with other similar effects.",
 @"Reduces the duration of any Silence or Interrupt effects used against the Shaman by 20%. This effect does not stack with other similar effects.",
 @"Reduces the duration of any Silence or Interrupt effects used against the Shaman by 30%. This effect does not stack with other similar effects.",})]
-		public int FocusedMind { get { return _data[64]; } set { _data[64] = value; } }
+        public int FocusedMind { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(65, "Purification", 5, 2, 3, 6, -1, new string[] {
+        [TalentData(65, "Purification", 5, 2, 3, 6, -1, new string[] {
 @"Increases the effectiveness of your healing spells by 2%.",
 @"Increases the effectiveness of your healing spells by 4%.",
 @"Increases the effectiveness of your healing spells by 6%.",
 @"Increases the effectiveness of your healing spells by 8%.",
 @"Increases the effectiveness of your healing spells by 10%.",})]
-		public int Purification { get { return _data[65]; } set { _data[65] = value; } }
+        public int Purification { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(66, "Nature's Guardian", 5, 2, 1, 7, -1, new string[] {
+        [TalentData(66, "Nature's Guardian", 5, 2, 1, 7, -1, new string[] {
 @"Whenever a damaging attack is taken that reduces you below 30% health, you have a 10% chance to heal 10% of your total health and reduce your threat level on that target. 8 second cooldown.",
 @"Whenever a damaging attack is taken that reduces you below 30% health, you have a 20% chance to heal 10% of your total health and reduce your threat level on that target. 8 second cooldown.",
 @"Whenever a damaging attack is taken that reduces you below 30% health, you have a 30% chance to heal 10% of your total health and reduce your threat level on that target. 8 second cooldown.",
 @"Whenever a damaging attack is taken that reduces you below 30% health, you have a 40% chance to heal 10% of your total health and reduce your threat level on that target. 8 second cooldown.",
 @"Whenever a damaging attack is taken that reduces you below 30% health, you have a 50% chance to heal 10% of your total health and reduce your threat level on that target. 8 second cooldown.",})]
-		public int NaturesGuardian { get { return _data[66]; } set { _data[66] = value; } }
+        public int NaturesGuardian { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(67, "Mana Tide Totem", 1, 2, 2, 7, 60, new string[] {
+        [TalentData(67, "Mana Tide Totem", 1, 2, 2, 7, 60, new string[] {
 @"88 Mana
 Instant cast,5 min cooldown,
 Tools: Water Totem
 Summons a Mana Tide Totem with 5 health at the feet of the caster for 12 sec that restores 6% of total mana every 3 seconds to group members within 20 yards.",})]
-		public int ManaTideTotem { get { return _data[67]; } set { _data[67] = value; } }
+        public int ManaTideTotem { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(68, "Cleanse Spirit", 1, 2, 3, 7, 65, new string[] {
+        [TalentData(68, "Cleanse Spirit", 1, 2, 3, 7, 65, new string[] {
 @"307 Mana,40 yd range,
 Instant Cast
 Cleanse the spirit of a friendly target, removing 1 poison effect, 1 disease effect, and 1 curse effect.",})]
-		public int CleanseSpirit { get { return _data[68]; } set { _data[68] = value; } }
+        public int CleanseSpirit { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(69, "Blessing of the Eternals", 2, 2, 1, 8, -1, new string[] {
+        [TalentData(69, "Blessing of the Eternals", 2, 2, 1, 8, -1, new string[] {
 @"Increases the critical effect chance of your spells by 2%, and increases the bonus healing from your Earthliving weapon by 5%.",
 @"Increases the critical effect chance of your spells by 4%, and increases the bonus healing from your Earthliving weapon by 10%.",})]
-		public int BlessingoftheEternals { get { return _data[69]; } set { _data[69] = value; } }
+        public int BlessingOfTheEternals { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(70, "Improved Chain Heal", 2, 2, 2, 8, -1, new string[] {
+        [TalentData(70, "Improved Chain Heal", 2, 2, 2, 8, -1, new string[] {
 @"Increases the amount healed by your Chain Heal spell by 10%.",
 @"Increases the amount healed by your Chain Heal spell by 20%.",})]
-		public int ImprovedChainHeal { get { return _data[70]; } set { _data[70] = value; } }
+        public int ImprovedChainHeal { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Nature's Blessing", 3, 2, 3, 8, -1, new string[] {
+        [TalentData(71, "Nature's Blessing", 3, 2, 3, 8, -1, new string[] {
 @"Increases your healing by an amount equal to 5% of your Intellect.",
 @"Increases your healing by an amount equal to 10% of your Intellect.",
 @"Increases your healing by an amount equal to 15% of your Intellect.",})]
-		public int NaturesBlessing { get { return _data[71]; } set { _data[71] = value; } }
+        public int NaturesBlessing { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(72, "Ancestral Awakening", 3, 2, 1, 9, -1, new string[] {
+        [TalentData(72, "Ancestral Awakening", 3, 2, 1, 9, -1, new string[] {
 @"When you critically heal with your Healing Wave or Lesser Healing Wave, you summon an Ancestral spirit to aid you, instantly healing the lowest health friendly party or raid target within 40 yards for 20% of the amount healed.",
 @"When you critically heal with your Healing Wave or Lesser Healing Wave, you summon an Ancestral spirit to aid you, instantly healing the lowest health friendly party or raid target within 40 yards for 40% of the amount healed.",
 @"When you critically heal with your Healing Wave or Lesser Healing Wave, you summon an Ancestral spirit to aid you, instantly healing the lowest health friendly party or raid target within 40 yards for 60% of the amount healed.",})]
-		public int AncestralAwakening { get { return _data[72]; } set { _data[72] = value; } }
+        public int AncestralAwakening { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "Earth Shield", 1, 2, 3, 9, -1, new string[] {
+        [TalentData(73, "Earth Shield", 1, 2, 3, 9, -1, new string[] {
 @"600 Mana,40 yd range,
 Instant Cast
 Protects the target with an earthen shield, giving a 30% chance of ignoring spell interruption when damaged and causing melee attacks to heal the shielded target for 150. This effect can only occur once every few seconds. 6 charges. Lasts 10 min. Earth Shield can only be placed on one target at a time and only one Elemental Shield can be active on a target at a time.
@@ -3976,153 +4060,165 @@ Protects the target with an earthen shield, giving a 30% chance of ignoring spel
 		 Trainable Ranks Listed Below:
 		 Rank 2: 745 Mana, Heals for 205
 		 Rank 3: 900 Mana, Heals for 270",})]
-		public int EarthShield { get { return _data[73]; } set { _data[73] = value; } }
+        public int EarthShield { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(74, "Improved Earth Shield", 2, 2, 4, 9, 73, new string[] {
+        [TalentData(74, "Improved Earth Shield", 2, 2, 4, 9, 73, new string[] {
 @"Increases the amount of charges for your Earth Shield by 1, and increasing the healing done by your Earth Shield by 5%.",
 @"Increases the amount of charges for your Earth Shield by 2, and increasing the healing done by your Earth Shield by 10%.",})]
-		public int ImprovedEarthShield { get { return _data[74]; } set { _data[74] = value; } }
+        public int ImprovedEarthShield { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(75, "Tidal Waves", 5, 2, 3, 10, -1, new string[] {
+        [TalentData(75, "Tidal Waves", 5, 2, 3, 10, -1, new string[] {
 @"You have a 20% chance after you cast Chain Heal to lower the cast time of your next three Lesser Healing Wave or Healing Wave spells by 30%, and your Healing Wave and Lesser Healing Wave spells gain an additional 5% of your bonus healing effects.",
 @"You have a 40% chance after you cast Chain Heal to lower the cast time of your next three Lesser Healing Wave or Healing Wave spells by 30%, and your Healing Wave and Lesser Healing Wave spells gain an additional 10% of your bonus healing effects.",
 @"You have a 60% chance after you cast Chain Heal to lower the cast time of your next three Lesser Healing Wave or Healing Wave spells by 30%, and your Healing Wave and Lesser Healing Wave spells gain an additional 15% of your bonus healing effects.",
 @"You have a 80% chance after you cast Chain Heal to lower the cast time of your next three Lesser Healing Wave or Healing Wave spells by 30%, and your Healing Wave and Lesser Healing Wave spells gain an additional 20% of your bonus healing effects.",
 @"You have a 100% chance after you cast Chain Heal to lower the cast time of your next three Lesser Healing Wave or Healing Wave spells by 30%, and your Healing Wave and Lesser Healing Wave spells gain an additional 25% of your bonus healing effects.",})]
-		public int TidalWaves { get { return _data[75]; } set { _data[75] = value; } }
+        public int TidalWaves { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(76, "Spirit Link", 1, 2, 2, 11, 70, new string[] {
+        [TalentData(76, "Spirit Link", 1, 2, 2, 11, 70, new string[] {
 @"527 Mana,40 yd range,
 Instant Cast
 You link the friendly target with up to two nearby friendly targets, causing 50% of any damage taken to be distributed to the linked targets. If any target takes a blow greater than 30% of their health, or shared damage would reduce a target's health below 20%, the link is broken. You can only have one link active at a time.",})]
-		public int SpiritLink { get { return _data[76]; } set { _data[76] = value; } }
-	}
+        public int SpiritLink { get { return _data[76]; } set { _data[76] = value; } }
+    }
 
-	public class PaladinTalents
-	{
-		private int[] _data = new int[80];
-		public PaladinTalents() { }
-		public PaladinTalents(string talents)
-		{
-			List<int> data = new List<int>();
-			foreach (Char digit in talents)
-				data.Add(int.Parse(digit.ToString()));
-			data.CopyTo(_data);
-		}
+    public class PaladinTalents : ICloneable
+    {
+        private int[] _data = new int[80];
+        public PaladinTalents() { }
+        public PaladinTalents(string talents)
+        {
+            List<int> data = new List<int>();
+            foreach (Char digit in talents)
+                data.Add(int.Parse(digit.ToString()));
+            data.CopyTo(_data);
+        }
 
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
-		}
+        public override string ToString()
+        {
+            StringBuilder ret = new StringBuilder();
+            foreach (int digit in _data)
+                ret.Append(digit.ToString());
+            return ret.ToString();
+        }
+        object ICloneable.Clone()
+        {
+            PaladinTalents clone = (PaladinTalents)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            return clone;
+        }
 
-		[TalentData(0, "Spiritual Focus", 5, 0, 2, 1, -1, new string[] {
+        public PaladinTalents Clone()
+        {
+            return (PaladinTalents)((ICloneable)this).Clone();
+        }
+
+
+        [TalentData(0, "Spiritual Focus", 5, 0, 2, 1, -1, new string[] {
 @"Gives your Flash of Light and Holy Light spells a 14% chance to not lose casting time when you take damage.",
 @"Gives your Flash of Light and Holy Light spells a 28% chance to not lose casting time when you take damage.",
 @"Gives your Flash of Light and Holy Light spells a 42% chance to not lose casting time when you take damage.",
 @"Gives your Flash of Light and Holy Light spells a 56% chance to not lose casting time when you take damage.",
 @"Gives your Flash of Light and Holy Light spells a 70% chance to not lose casting time when you take damage.",})]
-		public int SpiritualFocus { get { return _data[0]; } set { _data[0] = value; } }
+        public int SpiritualFocus { get { return _data[0]; } set { _data[0] = value; } }
 
-		[TalentData(1, "Seals of the Pure", 5, 0, 3, 1, -1, new string[] {
+        [TalentData(1, "Seals of the Pure", 5, 0, 3, 1, -1, new string[] {
 @"Increases the damage done by your Seal of Righteousness, Seal of Vengeance and Seal of Corruption and their Judgement effects by 3%.",
 @"Increases the damage done by your Seal of Righteousness, Seal of Vengeance and Seal of Corruption and their Judgement effects by 6%.",
 @"Increases the damage done by your Seal of Righteousness, Seal of Vengeance and Seal of Corruption and their Judgement effects by 9%.",
 @"Increases the damage done by your Seal of Righteousness, Seal of Vengeance and Seal of Corruption and their Judgement effects by 12%.",
 @"Increases the damage done by your Seal of Righteousness, Seal of Vengeance and Seal of Corruption and their Judgement effects by 15%.",})]
-		public int SealsofthePure { get { return _data[1]; } set { _data[1] = value; } }
+        public int SealsOfThePure { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Healing Light", 3, 0, 1, 2, -1, new string[] {
+        [TalentData(2, "Healing Light", 3, 0, 1, 2, -1, new string[] {
 @"Increases the amount healed by your Holy Light, Flash of Light and the effectiveness of Holy Shock spells by 4%.",
 @"Increases the amount healed by your Holy Light, Flash of Light and the effectiveness of Holy Shock spells by 8%.",
 @"Increases the amount healed by your Holy Light, Flash of Light and the effectiveness of Holy Shock spells by 12%.",})]
-		public int HealingLight { get { return _data[2]; } set { _data[2] = value; } }
+        public int HealingLight { get { return _data[2]; } set { _data[2] = value; } }
 
-		[TalentData(3, "Divine Intellect", 5, 0, 2, 2, -1, new string[] {
+        [TalentData(3, "Divine Intellect", 5, 0, 2, 2, -1, new string[] {
 @"Increases your total Intellect by 3%.",
 @"Increases your total Intellect by 6%.",
 @"Increases your total Intellect by 9%.",
 @"Increases your total Intellect by 12%.",
 @"Increases your total Intellect by 15%.",})]
-		public int DivineIntellect { get { return _data[3]; } set { _data[3] = value; } }
+        public int DivineIntellect { get { return _data[3]; } set { _data[3] = value; } }
 
-		[TalentData(4, "Unyielding Faith", 2, 0, 3, 2, -1, new string[] {
+        [TalentData(4, "Unyielding Faith", 2, 0, 3, 2, -1, new string[] {
 @"Reduces the duration of all Fear and Disorient effects by 15%.",
 @"Reduces the duration of all Fear and Disorient effects by 30%.",})]
-		public int UnyieldingFaith { get { return _data[4]; } set { _data[4] = value; } }
+        public int UnyieldingFaith { get { return _data[4]; } set { _data[4] = value; } }
 
-		[TalentData(5, "Aura Mastery", 1, 0, 1, 3, -1, new string[] {
+        [TalentData(5, "Aura Mastery", 1, 0, 1, 3, -1, new string[] {
 @"Increases the radius of your Auras to 40 yards.",})]
-		public int AuraMastery { get { return _data[5]; } set { _data[5] = value; } }
+        public int AuraMastery { get { return _data[5]; } set { _data[5] = value; } }
 
-		[TalentData(6, "Illumination", 5, 0, 2, 3, -1, new string[] {
+        [TalentData(6, "Illumination", 5, 0, 2, 3, -1, new string[] {
 @"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell, gives you a 20% chance to gain Mana equal to 60% of the base cost of your spell.",
 @"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell, gives you a 40% chance to gain Mana equal to 60% of the base cost of your spell.",
 @"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell, gives you a 60% chance to gain Mana equal to 60% of the base cost of your spell.",
 @"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell, gives you a 80% chance to gain Mana equal to 60% of the base cost of your spell.",
 @"After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell, gives you a 100% chance to gain Mana equal to 60% of the base cost of your spell.",})]
-		public int Illumination { get { return _data[6]; } set { _data[6] = value; } }
+        public int Illumination { get { return _data[6]; } set { _data[6] = value; } }
 
-		[TalentData(7, "Improved Lay on Hands", 2, 0, 3, 3, -1, new string[] {
+        [TalentData(7, "Improved Lay on Hands", 2, 0, 3, 3, -1, new string[] {
 @"Gives the target of your Lay on Hands spell a 25% bonus to their armor value from items for 15 sec. In addition, the cooldown for your Lay on Hands spell is reduced by 2 min.",
 @"Gives the target of your Lay on Hands spell a 50% bonus to their armor value from items for 15 sec. In addition, the cooldown for your Lay on Hands spell is reduced by 4 min.",})]
-		public int ImprovedLayonHands { get { return _data[7]; } set { _data[7] = value; } }
+        public int ImprovedLayOnHands { get { return _data[7]; } set { _data[7] = value; } }
 
-		[TalentData(8, "Improved Concentration Aura", 3, 0, 1, 4, -1, new string[] {
+        [TalentData(8, "Improved Concentration Aura", 3, 0, 1, 4, -1, new string[] {
 @"Increases the effect of your Concentration Aura by an additional 5% and reduces the duration of any Silence or Interrupt effect used against an affected group member by 10%.  The duration reduction does not stack with any other effects.",
 @"Increases the effect of your Concentration Aura by an additional 10% and reduces the duration of any Silence or Interrupt effect used against an affected group member by 20%.  The duration reduction does not stack with any other effects.",
 @"Increases the effect of your Concentration Aura by an additional 15% and reduces the duration of any Silence or Interrupt effect used against an affected group member by 30%.  The duration reduction does not stack with any other effects.",})]
-		public int ImprovedConcentrationAura { get { return _data[8]; } set { _data[8] = value; } }
+        public int ImprovedConcentrationAura { get { return _data[8]; } set { _data[8] = value; } }
 
-		[TalentData(9, "Improved Blessing of Wisdom", 2, 0, 3, 4, -1, new string[] {
+        [TalentData(9, "Improved Blessing of Wisdom", 2, 0, 3, 4, -1, new string[] {
 @"Increases the effect of your Blessing of Wisdom spell by 10%.",
 @"Increases the effect of your Blessing of Wisdom spell by 20%.",})]
-		public int ImprovedBlessingofWisdom { get { return _data[9]; } set { _data[9] = value; } }
+        public int ImprovedBlessingOfWisdom { get { return _data[9]; } set { _data[9] = value; } }
 
-		[TalentData(10, "Pure of Heart", 2, 0, 1, 5, -1, new string[] {
+        [TalentData(10, "Pure of Heart", 2, 0, 1, 5, -1, new string[] {
 @"Reduces the duration of Curse and Disease effects by 25%.",
 @"Reduces the duration of Curse and Disease effects by 50%.",})]
-		public int PureofHeart { get { return _data[10]; } set { _data[10] = value; } }
+        public int PureOfHeart { get { return _data[10]; } set { _data[10] = value; } }
 
-		[TalentData(11, "Divine Favor", 1, 0, 2, 5, 6, new string[] {
+        [TalentData(11, "Divine Favor", 1, 0, 2, 5, 6, new string[] {
 @"21 Mana
 Instant cast,2 min cooldown,
 When activated, gives your next Flash of Light, Holy Light, or Holy Shock spell a 100% critical effect chance.",})]
-		public int DivineFavor { get { return _data[11]; } set { _data[11] = value; } }
+        public int DivineFavor { get { return _data[11]; } set { _data[11] = value; } }
 
-		[TalentData(12, "Sanctified Light", 3, 0, 3, 5, -1, new string[] {
+        [TalentData(12, "Sanctified Light", 3, 0, 3, 5, -1, new string[] {
 @"Increases the critical effect chance of your Holy Light and Holy Shock spells by 2%.",
 @"Increases the critical effect chance of your Holy Light and Holy Shock spells by 4%.",
 @"Increases the critical effect chance of your Holy Light and Holy Shock spells by 6%.",})]
-		public int SanctifiedLight { get { return _data[12]; } set { _data[12] = value; } }
+        public int SanctifiedLight { get { return _data[12]; } set { _data[12] = value; } }
 
-		[TalentData(13, "Blessed Hands", 2, 0, 4, 5, -1, new string[] {
+        [TalentData(13, "Blessed Hands", 2, 0, 4, 5, -1, new string[] {
 @"Reduces the mana cost and increases the resistance to Dispel effects of all Hand spells by 15%.",
 @"Reduces the mana cost and increases the resistance to Dispel effects of all Hand spells by 30%.",})]
-		public int BlessedHands { get { return _data[13]; } set { _data[13] = value; } }
+        public int BlessedHands { get { return _data[13]; } set { _data[13] = value; } }
 
-		[TalentData(14, "Purifying Power", 2, 0, 1, 6, -1, new string[] {
+        [TalentData(14, "Purifying Power", 2, 0, 1, 6, -1, new string[] {
 @"Reduces the mana cost of your Cleanse, Purify, and Consecration spells by 5% and increases the critical strike chance of your Exorcism and Holy Wrath spells by 10%.",
 @"Reduces the mana cost of your Cleanse, Purify, and Consecration spells by 10% and increases the critical strike chance of your Exorcism and Holy Wrath spells by 20%.",})]
-		public int PurifyingPower { get { return _data[14]; } set { _data[14] = value; } }
+        public int PurifyingPower { get { return _data[14]; } set { _data[14] = value; } }
 
-		[TalentData(15, "Holy Power", 5, 0, 3, 6, -1, new string[] {
+        [TalentData(15, "Holy Power", 5, 0, 3, 6, -1, new string[] {
 @"Increases the critical effect chance of your Holy spells by 1%.",
 @"Increases the critical effect chance of your Holy spells by 2%.",
 @"Increases the critical effect chance of your Holy spells by 3%.",
 @"Increases the critical effect chance of your Holy spells by 4%.",
 @"Increases the critical effect chance of your Holy spells by 5%.",})]
-		public int HolyPower { get { return _data[15]; } set { _data[15] = value; } }
+        public int HolyPower { get { return _data[15]; } set { _data[15] = value; } }
 
-		[TalentData(16, "Light's Grace", 3, 0, 1, 7, -1, new string[] {
+        [TalentData(16, "Light's Grace", 3, 0, 1, 7, -1, new string[] {
 @"Gives your Holy Light spell a 33% chance to reduce the cast time of your next Holy Light spell by 0.5 sec. This effect lasts 15 sec.",
 @"Gives your Holy Light spell a 66% chance to reduce the cast time of your next Holy Light spell by 0.5 sec. This effect lasts 15 sec.",
 @"Gives your Holy Light spell a 100% chance to reduce the cast time of your next Holy Light spell by 0.5 sec. This effect lasts 15 sec.",})]
-		public int LightsGrace { get { return _data[16]; } set { _data[16] = value; } }
+        public int LightsGrace { get { return _data[16]; } set { _data[16] = value; } }
 
-		[TalentData(17, "Holy Shock", 1, 0, 2, 7, 11, new string[] {
+        [TalentData(17, "Holy Shock", 1, 0, 2, 7, 11, new string[] {
 @"Enemy: 20 yd range,
 245 Mana,Friendly: 40 yd range,
 Instant cast,6 sec cooldown,
@@ -4135,141 +4231,141 @@ Blasts the target with Holy energy, causing 314 to 340 Holy damage to an enemy, 
 		 Rank 5: 435 Mana, 904 to 978 Holy Damage or 1258 to 1362 Healing
 		 Rank 6: 435 Mana, 1043 to 1129 Holy Damage or 2065 to 2235 Healing
 		 Rank 7: 435 Mana, 1296 to 1402 Holy Damage or 2401 to 2599 Healing",})]
-		public int HolyShock { get { return _data[17]; } set { _data[17] = value; } }
+        public int HolyShock { get { return _data[17]; } set { _data[17] = value; } }
 
-		[TalentData(18, "Blessed Life", 3, 0, 3, 7, -1, new string[] {
+        [TalentData(18, "Blessed Life", 3, 0, 3, 7, -1, new string[] {
 @"All attacks against you have a 4% chance to cause half damage.",
 @"All attacks against you have a 7% chance to cause half damage.",
 @"All attacks against you have a 10% chance to cause half damage.",})]
-		public int BlessedLife { get { return _data[18]; } set { _data[18] = value; } }
+        public int BlessedLife { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Infusion of Light", 2, 0, 2, 8, 17, new string[] {
+        [TalentData(19, "Infusion of Light", 2, 0, 2, 8, 17, new string[] {
 @"Your Holy Shock critical hits reduce the cast time of your next Holy Light spell by 1.3 secs.",
 @"Your Holy Shock critical hits reduce the cast time of your next Holy Light spell by 2.5 secs.",})]
-		public int InfusionofLight { get { return _data[19]; } set { _data[19] = value; } }
+        public int InfusionOfLight { get { return _data[19]; } set { _data[19] = value; } }
 
-		[TalentData(20, "Holy Guidance", 5, 0, 3, 8, -1, new string[] {
+        [TalentData(20, "Holy Guidance", 5, 0, 3, 8, -1, new string[] {
 @"Increases your spell damage and healing by 7% of your total Intellect.",
 @"Increases your spell damage and healing by 14% of your total Intellect.",
 @"Increases your spell damage and healing by 21% of your total Intellect.",
 @"Increases your spell damage and healing by 28% of your total Intellect.",
 @"Increases your spell damage and healing by 35% of your total Intellect.",})]
-		public int HolyGuidance { get { return _data[20]; } set { _data[20] = value; } }
+        public int HolyGuidance { get { return _data[20]; } set { _data[20] = value; } }
 
-		[TalentData(21, "Sacred Cleansing", 3, 0, 1, 9, -1, new string[] {
+        [TalentData(21, "Sacred Cleansing", 3, 0, 1, 9, -1, new string[] {
 @"Your Cleanse spell has a 10% chance to increase the target's resistance to Disease, Magic and Poison by 30% for 10 sec.",
 @"Your Cleanse spell has a 20% chance to increase the target's resistance to Disease, Magic and Poison by 30% for 10 sec.",
 @"Your Cleanse spell has a 30% chance to increase the target's resistance to Disease, Magic and Poison by 30% for 10 sec.",})]
-		public int SacredCleansing { get { return _data[21]; } set { _data[21] = value; } }
+        public int SacredCleansing { get { return _data[21]; } set { _data[21] = value; } }
 
-		[TalentData(22, "Divine Illumination", 1, 0, 2, 9, -1, new string[] {
+        [TalentData(22, "Divine Illumination", 1, 0, 2, 9, -1, new string[] {
 @"Instant,3 min cooldown,
 Reduces the mana cost of all spells by 50% for 15 sec.",})]
-		public int DivineIllumination { get { return _data[22]; } set { _data[22] = value; } }
+        public int DivineIllumination { get { return _data[22]; } set { _data[22] = value; } }
 
-		[TalentData(23, "Enlightened Judgements", 2, 0, 3, 9, -1, new string[] {
+        [TalentData(23, "Enlightened Judgements", 2, 0, 3, 9, -1, new string[] {
 @"Increases the range of your Judgement spells by 10 yards and increases your chance to hit by 2%.",
 @"Increases the range of your Judgement spells by 20 yards and increases your chance to hit by 4%.",})]
-		public int EnlightenedJudgements { get { return _data[23]; } set { _data[23] = value; } }
+        public int EnlightenedJudgements { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Judgements of the Pure", 5, 0, 2, 10, -1, new string[] {
+        [TalentData(24, "Judgements of the Pure", 5, 0, 2, 10, -1, new string[] {
 @"Your Judgement spells increase your casting and melee haste by 2% for 30 sec.",
 @"Your Judgement spells increase your casting and melee haste by 4% for 30 sec.",
 @"Your Judgement spells increase your casting and melee haste by 6% for 30 sec.",
 @"Your Judgement spells increase your casting and melee haste by 8% for 30 sec.",
 @"Your Judgement spells increase your casting and melee haste by 10% for 30 sec.",})]
-		public int JudgementsofthePure { get { return _data[24]; } set { _data[24] = value; } }
+        public int JudgementsOfThePure { get { return _data[24]; } set { _data[24] = value; } }
 
-		[TalentData(25, "Beacon of Light", 1, 0, 2, 11, -1, new string[] {
+        [TalentData(25, "Beacon of Light", 1, 0, 2, 11, -1, new string[] {
 @"780 Mana,40 yd range,
 1.5 sec cast,
 The target becomes a Beacon of Light, healing all party or raid members within 10 yards for 990 over 15 sec.",})]
-		public int BeaconofLight { get { return _data[25]; } set { _data[25] = value; } }
+        public int BeaconOfLight { get { return _data[25]; } set { _data[25] = value; } }
 
-		[TalentData(26, "Divine Strength", 5, 1, 2, 1, -1, new string[] {
+        [TalentData(26, "Divine Strength", 5, 1, 2, 1, -1, new string[] {
 @"Increases your total Strength by 3%.",
 @"Increases your total Strength by 6%.",
 @"Increases your total Strength by 9%.",
 @"Increases your total Strength by 12%.",
 @"Increases your total Strength by 15%.",})]
-		public int DivineStrength { get { return _data[26]; } set { _data[26] = value; } }
+        public int DivineStrength { get { return _data[26]; } set { _data[26] = value; } }
 
-		[TalentData(27, "Anticipation", 5, 1, 3, 1, -1, new string[] {
+        [TalentData(27, "Anticipation", 5, 1, 3, 1, -1, new string[] {
 @"Increases your chance to dodge by 1%.",
 @"Increases your chance to dodge by 2%.",
 @"Increases your chance to dodge by 3%.",
 @"Increases your chance to dodge by 4%.",
 @"Increases your chance to dodge by 5%.",})]
-		public int Anticipation { get { return _data[27]; } set { _data[27] = value; } }
+        public int Anticipation { get { return _data[27]; } set { _data[27] = value; } }
 
-		[TalentData(28, "Stoicism", 3, 1, 1, 2, -1, new string[] {
+        [TalentData(28, "Stoicism", 3, 1, 1, 2, -1, new string[] {
 @"Reduces the duration of all Stun effects by an additional 10% and reduces the chance your spells will be dispelled by an additional 10%.",
 @"Reduces the duration of all Stun effects by an additional 20% and reduces the chance your spells will be dispelled by an additional 20%.",
 @"Reduces the duration of all Stun effects by an additional 30% and reduces the chance your spells will be dispelled by an additional 30%.",})]
-		public int Stoicism { get { return _data[28]; } set { _data[28] = value; } }
+        public int Stoicism { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(29, "Guardian's Favor", 2, 1, 2, 2, -1, new string[] {
+        [TalentData(29, "Guardian's Favor", 2, 1, 2, 2, -1, new string[] {
 @"Reduces the cooldown of your Hand of Protection by 60 sec and increases the duration of your Hand of Freedom by 2 sec.",
 @"Reduces the cooldown of your Hand of Protection by 120 sec and increases the duration of your Hand of Freedom by 4 sec.",})]
-		public int GuardiansFavor { get { return _data[29]; } set { _data[29] = value; } }
+        public int GuardiansFavor { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(30, "Redoubt", 5, 1, 3, 2, -1, new string[] {
+        [TalentData(30, "Redoubt", 5, 1, 3, 2, -1, new string[] {
 @"Damaging melee and ranged attacks against you have a 10% chance to increase your chance to block by 6%.  Lasts 10 sec or 5 blocks.",
 @"Damaging melee and ranged attacks against you have a 10% chance to increase your chance to block by 12%.  Lasts 10 sec or 5 blocks.",
 @"Damaging melee and ranged attacks against you have a 10% chance to increase your chance to block by 18%.  Lasts 10 sec or 5 blocks.",
 @"Damaging melee and ranged attacks against you have a 10% chance to increase your chance to block by 24%.  Lasts 10 sec or 5 blocks.",
 @"Damaging melee and ranged attacks against you have a 10% chance to increase your chance to block by 30%.  Lasts 10 sec or 5 blocks.",})]
-		public int Redoubt { get { return _data[30]; } set { _data[30] = value; } }
+        public int Redoubt { get { return _data[30]; } set { _data[30] = value; } }
 
-		[TalentData(31, "Blessing of Kings", 1, 1, 1, 3, -1, new string[] {
+        [TalentData(31, "Blessing of Kings", 1, 1, 1, 3, -1, new string[] {
 @"24 Mana,30 yd range,
 Instant cast
 Places a Blessing on the friendly target, increasing total stats by 10% for 10 min. Players may only have one Blessing on them per Paladin at any one time.",})]
-		public int BlessingofKings { get { return _data[31]; } set { _data[31] = value; } }
+        public int BlessingOfKings { get { return _data[31]; } set { _data[31] = value; } }
 
-		[TalentData(32, "Improved Righteous Fury", 3, 1, 2, 3, -1, new string[] {
+        [TalentData(32, "Improved Righteous Fury", 3, 1, 2, 3, -1, new string[] {
 @"While Righteous Fury is active, all damage taken is reduced by 2%.",
 @"While Righteous Fury is active, all damage taken is reduced by 4%.",
 @"While Righteous Fury is active, all damage taken is reduced by 6%.",})]
-		public int ImprovedRighteousFury { get { return _data[32]; } set { _data[32] = value; } }
+        public int ImprovedRighteousFury { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(33, "Shield Specialization", 3, 1, 3, 3, 30, new string[] {
+        [TalentData(33, "Shield Specialization", 3, 1, 3, 3, 30, new string[] {
 @"Increases your block value by 10%.",
 @"Increases your block value by 20%.",
 @"Increases your block value by 30%.",})]
-		public int ShieldSpecialization { get { return _data[33]; } set { _data[33] = value; } }
+        public int ShieldSpecialization { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(34, "Toughness", 5, 1, 4, 3, -1, new string[] {
+        [TalentData(34, "Toughness", 5, 1, 4, 3, -1, new string[] {
 @"Increases your armor value from items by 2% and reduces the duration of all movement slowing effects by 10%.",
 @"Increases your armor value from items by 4% and reduces the duration of all movement slowing effects by 20%.",
 @"Increases your armor value from items by 6% and reduces the duration of all movement slowing effects by 30%.",
 @"Increases your armor value from items by 8% and reduces the duration of all movement slowing effects by 40%.",
 @"Increases your armor value from items by 10% and reduces the duration of all movement slowing effects by 50%.",})]
-		public int Toughness { get { return _data[34]; } set { _data[34] = value; } }
+        public int Toughness { get { return _data[34]; } set { _data[34] = value; } }
 
-		[TalentData(35, "Divine Guardian", 2, 1, 1, 4, -1, new string[] {
+        [TalentData(35, "Divine Guardian", 2, 1, 1, 4, -1, new string[] {
 @"While Divine Shield is active 15% of all damage taken by party or raid members within 30 yards is redirected to the Paladin.",
 @"While Divine Shield is active 30% of all damage taken by party or raid members within 30 yards is redirected to the Paladin.",})]
-		public int DivineGuardian { get { return _data[35]; } set { _data[35] = value; } }
+        public int DivineGuardian { get { return _data[35]; } set { _data[35] = value; } }
 
-		[TalentData(36, "Improved Hammer of Justice", 3, 1, 2, 4, -1, new string[] {
+        [TalentData(36, "Improved Hammer of Justice", 3, 1, 2, 4, -1, new string[] {
 @"Decreases the cooldown of your Hammer of Justice spell by 10 sec.",
 @"Decreases the cooldown of your Hammer of Justice spell by 20 sec.",
 @"Decreases the cooldown of your Hammer of Justice spell by 30 sec.",})]
-		public int ImprovedHammerofJustice { get { return _data[36]; } set { _data[36] = value; } }
+        public int ImprovedHammerOfJustice { get { return _data[36]; } set { _data[36] = value; } }
 
-		[TalentData(37, "Improved Devotion Aura", 3, 1, 3, 4, -1, new string[] {
+        [TalentData(37, "Improved Devotion Aura", 3, 1, 3, 4, -1, new string[] {
 @"Increases the armor bonus of your Devotion Aura by 17% and increases the amount healed on any target affected by Devotion Aura by 1%.",
 @"Increases the armor bonus of your Devotion Aura by 34% and increases the amount healed on any target affected by Devotion Aura by 2%.",
 @"Increases the armor bonus of your Devotion Aura by 50% and increases the amount healed on any target affected by Devotion Aura by 3%.",})]
-		public int ImprovedDevotionAura { get { return _data[37]; } set { _data[37] = value; } }
+        public int ImprovedDevotionAura { get { return _data[37]; } set { _data[37] = value; } }
 
-		[TalentData(38, "Spell Warding", 2, 1, 1, 5, -1, new string[] {
+        [TalentData(38, "Spell Warding", 2, 1, 1, 5, -1, new string[] {
 @"All spell damage taken is reduced by 2%.",
 @"All spell damage taken is reduced by 4%.",})]
-		public int SpellWarding { get { return _data[38]; } set { _data[38] = value; } }
+        public int SpellWarding { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Blessing of Sanctuary", 1, 1, 2, 5, -1, new string[] {
+        [TalentData(39, "Blessing of Sanctuary", 1, 1, 2, 5, -1, new string[] {
 @"60 Mana,30 yd range,
 Instant cast
 Places a Blessing on the friendly target, reducing damage taken from all sources by 3% for 10 min.  In addition, when the target blocks, parries, or dodges a melee attack the target will gain 10 rage, 20 runic power, or 2% of the maximum mana. Players may only have one Blessing on them per Paladin at any one time.
@@ -4279,66 +4375,66 @@ Places a Blessing on the friendly target, reducing damage taken from all sources
 		 Rank 3: 110 Mana, 19 Damage Reduction, 28 Holy Damage
 		 Rank 4: 135 Mana, 24 Damage Reduction, 35 Holy Damage
 		 Rank 5: 180 Mana, 80 Damage Reduction, 46 Holy Damage",})]
-		public int BlessingofSanctuary { get { return _data[39]; } set { _data[39] = value; } }
+        public int BlessingOfSanctuary { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(40, "Reckoning", 5, 1, 3, 5, -1, new string[] {
+        [TalentData(40, "Reckoning", 5, 1, 3, 5, -1, new string[] {
 @"Gives you a 2% chance after being hit by any damaging attack that the next 4 weapon swings within 8 sec will generate an additional attack.",
 @"Gives you a 4% chance after being hit by any damaging attack that the next 4 weapon swings within 8 sec will generate an additional attack.",
 @"Gives you a 6% chance after being hit by any damaging attack that the next 4 weapon swings within 8 sec will generate an additional attack.",
 @"Gives you a 8% chance after being hit by any damaging attack that the next 4 weapon swings within 8 sec will generate an additional attack.",
 @"Gives you a 10% chance after being hit by any damaging attack that the next 4 weapon swings within 8 sec will generate an additional attack.",})]
-		public int Reckoning { get { return _data[40]; } set { _data[40] = value; } }
+        public int Reckoning { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(41, "Sacred Duty", 2, 1, 1, 6, -1, new string[] {
+        [TalentData(41, "Sacred Duty", 2, 1, 1, 6, -1, new string[] {
 @"Increases your total Stamina by 3%, reduces the cooldown of your Divine Shield spell by 30 sec and reduces the attack speed penalty by 50%.",
 @"Increases your total Stamina by 6%, reduces the cooldown of your Divine Shield spell by 60 sec and reduces the attack speed penalty by 100%.",})]
-		public int SacredDuty { get { return _data[41]; } set { _data[41] = value; } }
+        public int SacredDuty { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(42, "One-Handed Weapon Specialization", 5, 1, 3, 6, -1, new string[] {
+        [TalentData(42, "One-Handed Weapon Specialization", 5, 1, 3, 6, -1, new string[] {
 @"Increases all damage you deal when a one-handed melee weapon is equipped by 1%.",
 @"Increases all damage you deal when a one-handed melee weapon is equipped by 2%.",
 @"Increases all damage you deal when a one-handed melee weapon is equipped by 3%.",
 @"Increases all damage you deal when a one-handed melee weapon is equipped by 4%.",
 @"Increases all damage you deal when a one-handed melee weapon is equipped by 5%.",})]
-		public int OneHandedWeaponSpecialization { get { return _data[42]; } set { _data[42] = value; } }
+        public int OneHandedWeaponSpecialization { get { return _data[42]; } set { _data[42] = value; } }
 
-		[TalentData(43, "Improved Holy Shield", 2, 1, 1, 7, 44, new string[] {
+        [TalentData(43, "Improved Holy Shield", 2, 1, 1, 7, 44, new string[] {
 @"Increases damage caused by your Holy Shield by 10% and increases the number of charges of your Holy Shield by 2.",
 @"Increases damage caused by your Holy Shield by 20% and increases the number of charges of your Holy Shield by 4.",})]
-		public int ImprovedHolyShield { get { return _data[43]; } set { _data[43] = value; } }
+        public int ImprovedHolyShield { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Holy Shield", 1, 1, 2, 7, 39, new string[] {
+        [TalentData(44, "Holy Shield", 1, 1, 2, 7, 39, new string[] {
 @"135 Mana
 Instant cast,8 sec cooldown,
 Requires Shields
 Increases chance to block by 30% for 10 sec and deals 67-68 Holy damage for each attack blocked while active. Damage caused by Holy Shield causes 35% additional threat. Each block expends a charge. 6 charges.
 
 ",})]
-		public int HolyShield { get { return _data[44]; } set { _data[44] = value; } }
+        public int HolyShield { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(45, "Ardent Defender", 5, 1, 3, 7, -1, new string[] {
+        [TalentData(45, "Ardent Defender", 5, 1, 3, 7, -1, new string[] {
 @"When you have less than 35% health, all damage taken is reduced by 6%.",
 @"When you have less than 35% health, all damage taken is reduced by 12%.",
 @"When you have less than 35% health, all damage taken is reduced by 18%.",
 @"When you have less than 35% health, all damage taken is reduced by 24%.",
 @"When you have less than 35% health, all damage taken is reduced by 30%.",})]
-		public int ArdentDefender { get { return _data[45]; } set { _data[45] = value; } }
+        public int ArdentDefender { get { return _data[45]; } set { _data[45] = value; } }
 
-		[TalentData(46, "Combat Expertise", 5, 1, 3, 8, -1, new string[] {
+        [TalentData(46, "Combat Expertise", 5, 1, 3, 8, -1, new string[] {
 @"Increases your expertise by 1 and your total Stamina by 2%.",
 @"Increases your expertise by 2 and your total Stamina by 4%.",
 @"Increases your expertise by 3 and your total Stamina by 6%.",
 @"Increases your expertise by 4 and your total Stamina by 8%.",
 @"Increases your expertise by 5 and your total Stamina by 10%.",})]
-		public int CombatExpertise { get { return _data[46]; } set { _data[46] = value; } }
+        public int CombatExpertise { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Touched by the Light", 3, 1, 1, 9, -1, new string[] {
+        [TalentData(47, "Touched by the Light", 3, 1, 1, 9, -1, new string[] {
 @"Increases your spell power by an amount equal to 10% of your Stamina and increases the amount healed by your critical heals by 10%.",
 @"Increases your spell power by an amount equal to 20% of your Stamina and increases the amount healed by your critical heals by 20%.",
 @"Increases your spell power by an amount equal to 30% of your Stamina and increases the amount healed by your critical heals by 30%.",})]
-		public int TouchedbytheLight { get { return _data[47]; } set { _data[47] = value; } }
+        public int TouchedByTheLight { get { return _data[47]; } set { _data[47] = value; } }
 
-		[TalentData(48, "Avenger's Shield", 1, 1, 2, 9, 44, new string[] {
+        [TalentData(48, "Avenger's Shield", 1, 1, 2, 9, 44, new string[] {
 @"500 Mana,30 yd range,
 0.5 sec cast,30 sec cooldown,
 Hurls a holy shield at the enemy, dealing 281 to 343 Holy damage, Dazing them and then jumping to additional nearby enemies. Affects 3 total targets. Lasts 10 sec.
@@ -4347,350 +4443,362 @@ Hurls a holy shield at the enemy, dealing 281 to 343 Holy damage, Dazing them an
 		 Rank 2: 615 Mana, 370-452 Holy Damage
 		 Rank 3: 780 Mana, 494-602 Holy Damage
 		 Rank 4: 1142 Mana, 658-788 Holy Damage",})]
-		public int AvengersShield { get { return _data[48]; } set { _data[48] = value; } }
+        public int AvengersShield { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(49, "Guarded by the Light", 2, 1, 3, 9, -1, new string[] {
+        [TalentData(49, "Guarded by the Light", 2, 1, 3, 9, -1, new string[] {
 @"Reduces the mana cost of your Consecration, Holy Wrath and Avenger's Shield spells by 15%.",
 @"Reduces the mana cost of your Consecration, Holy Wrath and Avenger's Shield spells by 30%.",})]
-		public int GuardedbytheLight { get { return _data[49]; } set { _data[49] = value; } }
+        public int GuardedByTheLight { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(50, "Shield of the Templar", 3, 1, 2, 10, 48, new string[] {
+        [TalentData(50, "Shield of the Templar", 3, 1, 2, 10, 48, new string[] {
 @"Increases the damage and reduces the mana cost of your Holy Shield, Avenger's Shield and Shield of Righteousness spells by 5%.",
 @"Increases the damage and reduces the mana cost of your Holy Shield, Avenger's Shield and Shield of Righteousness spells by 10%.",
 @"Increases the damage and reduces the mana cost of your Holy Shield, Avenger's Shield and Shield of Righteousness spells by 15%.",})]
-		public int ShieldoftheTemplar { get { return _data[50]; } set { _data[50] = value; } }
+        public int ShieldOfTheTemplar { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Judgements of the Just", 2, 1, 3, 10, -1, new string[] {
+        [TalentData(51, "Judgements of the Just", 2, 1, 3, 10, -1, new string[] {
 @"Your Judgement spells also reduce the melee attack speed of the target by 10%.",
 @"Your Judgement spells also reduce the melee attack speed of the target by 20%.",})]
-		public int JudgementsoftheJust { get { return _data[51]; } set { _data[51] = value; } }
+        public int JudgementsOfTheJust { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(52, "Hammer of the Righteous", 1, 1, 2, 11, -1, new string[] {
+        [TalentData(52, "Hammer of the Righteous", 1, 1, 2, 11, -1, new string[] {
 @"263 Mana,Melee Range,
 Instant Cast,6 sec cooldown,
 Requires One-Handed Melee Weapon,<br/>Hammer the current target and up to 2 additional nearby targets, causing 100% of weapon damage as Holy damage. This ability causes high threat.",})]
-		public int HammeroftheRighteous { get { return _data[52]; } set { _data[52] = value; } }
+        public int HammerOfTheRighteous { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(53, "Improved Blessing of Might", 5, 2, 2, 1, -1, new string[] {
+        [TalentData(53, "Improved Blessing of Might", 5, 2, 2, 1, -1, new string[] {
 @"Increases the attack power bonus of your Blessing of Might by 5%.",
 @"Increases the attack power bonus of your Blessing of Might by 10%.",
 @"Increases the attack power bonus of your Blessing of Might by 15%.",
 @"Increases the attack power bonus of your Blessing of Might by 20%.",
 @"Increases the attack power bonus of your Blessing of Might by 25%.",})]
-		public int ImprovedBlessingofMight { get { return _data[53]; } set { _data[53] = value; } }
+        public int ImprovedBlessingOfMight { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(54, "Benediction", 5, 2, 3, 1, -1, new string[] {
+        [TalentData(54, "Benediction", 5, 2, 3, 1, -1, new string[] {
 @"Reduces the Mana cost of your Judgement and Seal spells by 3%.",
 @"Reduces the Mana cost of your Judgement and Seal spells by 6%.",
 @"Reduces the Mana cost of your Judgement and Seal spells by 9%.",
 @"Reduces the Mana cost of your Judgement and Seal spells by 12%.",
 @"Reduces the Mana cost of your Judgement and Seal spells by 15%.",})]
-		public int Benediction { get { return _data[54]; } set { _data[54] = value; } }
+        public int Benediction { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(55, "Improved Judgements", 2, 2, 1, 2, -1, new string[] {
+        [TalentData(55, "Improved Judgements", 2, 2, 1, 2, -1, new string[] {
 @"Decreases the cooldown of your Judgement spells by 1 sec.",
 @"Decreases the cooldown of your Judgement spells by 2 sec.",})]
-		public int ImprovedJudgements { get { return _data[55]; } set { _data[55] = value; } }
+        public int ImprovedJudgements { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "Heart of the Crusader", 3, 2, 2, 2, -1, new string[] {
+        [TalentData(56, "Heart of the Crusader", 3, 2, 2, 2, -1, new string[] {
 @"In addition to the normal effect, your Judgement spells will also increase the critical strike chance of all attacks made against that target by an additional 1%.",
 @"In addition to the normal effect, your Judgement spells will also increase the critical strike chance of all attacks made against that target by an additional 2%.",
 @"In addition to the normal effect, your Judgement spells will also increase the critical strike chance of all attacks made against that target by an additional 3%.",})]
-		public int HeartoftheCrusader { get { return _data[56]; } set { _data[56] = value; } }
+        public int HeartOfTheCrusader { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(57, "Deflection", 5, 2, 3, 2, -1, new string[] {
+        [TalentData(57, "Deflection", 5, 2, 3, 2, -1, new string[] {
 @"Increases your Parry chance by 1%.",
 @"Increases your Parry chance by 2%.",
 @"Increases your Parry chance by 3%.",
 @"Increases your Parry chance by 4%.",
 @"Increases your Parry chance by 5%.",})]
-		public int Deflection { get { return _data[57]; } set { _data[57] = value; } }
+        public int Deflection { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(58, "Vindication", 2, 2, 1, 3, -1, new string[] {
+        [TalentData(58, "Vindication", 2, 2, 1, 3, -1, new string[] {
 @"Gives the Paladin's damaging attacks a chance to reduce the target's attributes by 10% for 15 sec.",
 @"Gives the Paladin's damaging attacks a chance to reduce the target's attributes by 20% for 15 sec.",})]
-		public int Vindication { get { return _data[58]; } set { _data[58] = value; } }
+        public int Vindication { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(59, "Conviction", 5, 2, 2, 3, -1, new string[] {
+        [TalentData(59, "Conviction", 5, 2, 2, 3, -1, new string[] {
 @"Increases your chance to get a critical strike with all spells and attacks by 1%.",
 @"Increases your chance to get a critical strike with all spells and attacks by 2%.",
 @"Increases your chance to get a critical strike with all spells and attacks by 3%.",
 @"Increases your chance to get a critical strike with all spells and attacks by 4%.",
 @"Increases your chance to get a critical strike with all spells and attacks by 5%.",})]
-		public int Conviction { get { return _data[59]; } set { _data[59] = value; } }
+        public int Conviction { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(60, "Seal of Command", 1, 2, 3, 3, -1, new string[] {
+        [TalentData(60, "Seal of Command", 1, 2, 3, 3, -1, new string[] {
 @"57 Mana<br/>Instant cast<br/>Gives the Paladin a chance to deal additional Holy damage equal to 70% of normal weapon damage. Only one seal can be active on the Paladin at any one time. Lasts 30 sec.<br/><br/>	Unleasing this Seal's energy will judge an enemy, instantly causing Holy damage, double if the target is stunned or incapacitated.
 
 ",})]
-		public int SealofCommand { get { return _data[60]; } set { _data[60] = value; } }
+        public int SealOfCommand { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Pursuit of Justice", 2, 2, 4, 3, -1, new string[] {
+        [TalentData(61, "Pursuit of Justice", 2, 2, 4, 3, -1, new string[] {
 @"Reduces the chance you'll be hit by spells by 1% and increases movement and mounted movement speed by 8%.  This does not stack with other movement speed increasing effects.",
 @"Reduces the chance you'll be hit by spells by 2% and increases movement and mounted movement speed by 15%.  This does not stack with other movement speed increasing effects.",})]
-		public int PursuitofJustice { get { return _data[61]; } set { _data[61] = value; } }
+        public int PursuitOfJustice { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Eye for an Eye", 2, 2, 1, 4, -1, new string[] {
+        [TalentData(62, "Eye for an Eye", 2, 2, 1, 4, -1, new string[] {
 @"All criticals against you cause 10% of the damage taken to the attacker as well. The damage caused by Eye for an Eye will not exceed 50% of the Paladin's total health.",
 @"All criticals against you cause 20% of the damage taken to the attacker as well. The damage caused by Eye for an Eye will not exceed 50% of the Paladin's total health.",})]
-		public int EyeforanEye { get { return _data[62]; } set { _data[62] = value; } }
+        public int EyeForAnEye { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(63, "Improved Retribution Aura", 2, 2, 3, 4, -1, new string[] {
+        [TalentData(63, "Improved Retribution Aura", 2, 2, 3, 4, -1, new string[] {
 @"Increases the damage done by your Retribution Aura by 25%.",
 @"Increases the damage done by your Retribution Aura by 50%.",})]
-		public int ImprovedRetributionAura { get { return _data[63]; } set { _data[63] = value; } }
+        public int ImprovedRetributionAura { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(64, "Crusade", 3, 2, 4, 4, -1, new string[] {
+        [TalentData(64, "Crusade", 3, 2, 4, 4, -1, new string[] {
 @"Increases all damage caused against Humanoids, Demons, Undead and Elementals by 1%.",
 @"Increases all damage caused against Humanoids, Demons, Undead and Elementals by 2%.",
 @"Increases all damage caused against Humanoids, Demons, Undead and Elementals by 3%.",})]
-		public int Crusade { get { return _data[64]; } set { _data[64] = value; } }
+        public int Crusade { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(65, "Two-Handed Weapon Specialization", 3, 2, 1, 5, -1, new string[] {
+        [TalentData(65, "Two-Handed Weapon Specialization", 3, 2, 1, 5, -1, new string[] {
 @"Increases the damage you deal with two-handed melee weapons by 2%.",
 @"Increases the damage you deal with two-handed melee weapons by 4%.",
 @"Increases the damage you deal with two-handed melee weapons by 6%.",})]
-		public int TwoHandedWeaponSpecialization { get { return _data[65]; } set { _data[65] = value; } }
+        public int TwoHandedWeaponSpecialization { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(66, "Sanctified Retribution", 1, 2, 3, 5, -1, new string[] {
+        [TalentData(66, "Sanctified Retribution", 1, 2, 3, 5, -1, new string[] {
 @"Damage caused by targets affected by Retribution Aura is increased by 2%.",})]
-		public int SanctifiedRetribution { get { return _data[66]; } set { _data[66] = value; } }
+        public int SanctifiedRetribution { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(67, "Sheath of Light", 3, 2, 4, 5, -1, new string[] {
+        [TalentData(67, "Sheath of Light", 3, 2, 4, 5, -1, new string[] {
 @"Increases your spell power by an amount equal to 10% of your attack power and your critical healing spells heal the target for 20% of the healed amount over 12 seconds.",
 @"Increases your spell power by an amount equal to 20% of your attack power and your critical healing spells heal the target for 40% of the healed amount over 12 seconds.",
 @"Increases your spell power by an amount equal to 30% of your attack power and your critical healing spells heal the target for 60% of the healed amount over 12 seconds.",})]
-		public int SheathofLight { get { return _data[67]; } set { _data[67] = value; } }
+        public int SheathOfLight { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(68, "Vengeance", 5, 2, 2, 6, 59, new string[] {
+        [TalentData(68, "Vengeance", 5, 2, 2, 6, 59, new string[] {
 @"Gives you a 1% bonus to Physical and Holy damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell or ability. This effect stacks up to 2 times",
 @"Gives you a 2% bonus to Physical and Holy damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell or ability. This effect stacks up to 2 times",
 @"Gives you a 3% bonus to Physical and Holy damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell or ability. This effect stacks up to 2 times",
 @"Gives you a 4% bonus to Physical and Holy damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell or ability. This effect stacks up to 2 times",
 @"Gives you a 5% bonus to Physical and Holy damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell or ability. This effect stacks up to 2 times",})]
-		public int Vengeance { get { return _data[68]; } set { _data[68] = value; } }
+        public int Vengeance { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(69, "Judgements of the Wise", 3, 2, 3, 6, -1, new string[] {
+        [TalentData(69, "Judgements of the Wise", 3, 2, 3, 6, -1, new string[] {
 @"Your Judgement spells have a 33% chance to grant up to 10 party or raid members mana regeneration equal to 0.5% of their maximum mana per second.",
 @"Your Judgement spells have a 66% chance to grant up to 10 party or raid members mana regeneration equal to 0.5% of their maximum mana per second.",
 @"Your Judgement spells have a 100% chance to grant up to 10 party or raid members mana regeneration equal to 0.5% of their maximum mana per second.",})]
-		public int JudgementsoftheWise { get { return _data[69]; } set { _data[69] = value; } }
+        public int JudgementsOfTheWise { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(70, "Sanctified Seals", 3, 2, 1, 7, -1, new string[] {
+        [TalentData(70, "Sanctified Seals", 3, 2, 1, 7, -1, new string[] {
 @"Increases your chance to critically hit with all spells and attacks by 1% and reduces the chance your Seals will be dispelled by 33%.",
 @"Increases your chance to critically hit with all spells and attacks by 2% and reduces the chance your Seals will be dispelled by 66%.",
 @"Increases your chance to critically hit with all spells and attacks by 3% and reduces the chance your Seals will be dispelled by 100%.",})]
-		public int SanctifiedSeals { get { return _data[70]; } set { _data[70] = value; } }
+        public int SanctifiedSeals { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Repentance", 1, 2, 2, 7, -1, new string[] {
+        [TalentData(71, "Repentance", 1, 2, 2, 7, -1, new string[] {
 @"395 Mana,20 yd range,
 Instant cast,1 min cooldown,
 Puts the enemy target in a state of meditation, incapacitating them for up to 1 min. Any damage caused will awaken the target. Usable against Demons, Dragonkin, Giants, Humanoids and Undead.",})]
-		public int Repentance { get { return _data[71]; } set { _data[71] = value; } }
+        public int Repentance { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(72, "Divine Purpose", 3, 2, 3, 7, -1, new string[] {
+        [TalentData(72, "Divine Purpose", 3, 2, 3, 7, -1, new string[] {
 @"Reduces your chance to be hit by spells and ranged attacks by 1% and reduces the duration of movement slowing effects by 10%.",
 @"Reduces your chance to be hit by spells and ranged attacks by 2% and reduces the duration of movement slowing effects by 20%.",
 @"Reduces your chance to be hit by spells and ranged attacks by 3% and reduces the duration of movement slowing effects by 30%.",})]
-		public int DivinePurpose { get { return _data[72]; } set { _data[72] = value; } }
+        public int DivinePurpose { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "Fanaticism", 5, 2, 2, 8, 71, new string[] {
+        [TalentData(73, "Fanaticism", 5, 2, 2, 8, 71, new string[] {
 @"Increases the critical strike chance of all Judgements capable of a critical hit by 5% and reduces threat caused by all actions by 6% except when under the effects of Righteous Fury.",
 @"Increases the critical strike chance of all Judgements capable of a critical hit by 10% and reduces threat caused by all actions by 12% except when under the effects of Righteous Fury.",
 @"Increases the critical strike chance of all Judgements capable of a critical hit by 15% and reduces threat caused by all actions by 18% except when under the effects of Righteous Fury.",
 @"Increases the critical strike chance of all Judgements capable of a critical hit by 20% and reduces threat caused by all actions by 24% except when under the effects of Righteous Fury.",
 @"Increases the critical strike chance of all Judgements capable of a critical hit by 25% and reduces threat caused by all actions by 30% except when under the effects of Righteous Fury.",})]
-		public int Fanaticism { get { return _data[73]; } set { _data[73] = value; } }
+        public int Fanaticism { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(74, "Sanctified Wrath", 2, 2, 3, 8, -1, new string[] {
+        [TalentData(74, "Sanctified Wrath", 2, 2, 3, 8, -1, new string[] {
 @"Increases the critical strike chance of Hammer of Wrath by 25%, reduces the cooldown of Avenging Wrath by 30 secs and while affected by Avenging Wrath 25% of all damage caused bypasses damage reduction effects.",
 @"Increases the critical strike chance of Hammer of Wrath by 50%, reduces the cooldown of Avenging Wrath by 60 secs and while affected by Avenging Wrath 50% of all damage caused bypasses damage reduction effects.",})]
-		public int SanctifiedWrath { get { return _data[74]; } set { _data[74] = value; } }
+        public int SanctifiedWrath { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(75, "Swift Retribution", 3, 2, 1, 9, -1, new string[] {
+        [TalentData(75, "Swift Retribution", 3, 2, 1, 9, -1, new string[] {
 @"Your Retribution Aura also increases casting, ranged and melee attack speeds by 1%.",
 @"Your Retribution Aura also increases casting, ranged and melee attack speeds by 2%.",
 @"Your Retribution Aura also increases casting, ranged and melee attack speeds by 3%.",})]
-		public int SwiftRetribution { get { return _data[75]; } set { _data[75] = value; } }
+        public int SwiftRetribution { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(76, "Crusader Strike", 1, 2, 2, 9, -1, new string[] {
+        [TalentData(76, "Crusader Strike", 1, 2, 2, 9, -1, new string[] {
 @"351 Mana,Melee Range,
 Instant cast,6 sec cooldown,
 Requires Melee Weapon
 An instant strike that causes 110% weapon damage.",})]
-		public int CrusaderStrike { get { return _data[76]; } set { _data[76] = value; } }
+        public int CrusaderStrike { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(77, "The Art of War", 3, 2, 3, 9, -1, new string[] {
+        [TalentData(77, "The Art of War", 3, 2, 3, 9, -1, new string[] {
 @"Reduces all damage taken by 1% and gives your Hand of Freedom a 33% chance to remove Stun effects.",
 @"Reduces all damage taken by 2% and gives your Hand of Freedom a 66% chance to remove Stun effects.",
 @"Reduces all damage taken by 3% and gives your Hand of Freedom a 100% chance to remove Stun effects.",})]
-		public int TheArtofWar { get { return _data[77]; } set { _data[77] = value; } }
+        public int TheArtOfWar { get { return _data[77]; } set { _data[77] = value; } }
 
-		[TalentData(78, "Righteous Vengeance", 5, 2, 2, 10, -1, new string[] {
+        [TalentData(78, "Righteous Vengeance", 5, 2, 2, 10, -1, new string[] {
 @"Increases critical damage bonus of your Judgement and Divine Storm spells by 5%.",
 @"Increases critical damage bonus of your Judgement and Divine Storm spells by 10%.",
 @"Increases critical damage bonus of your Judgement and Divine Storm spells by 15%.",
 @"Increases critical damage bonus of your Judgement and Divine Storm spells by 20%.",
 @"Increases critical damage bonus of your Judgement and Divine Storm spells by 25%.",})]
-		public int RighteousVengeance { get { return _data[78]; } set { _data[78] = value; } }
+        public int RighteousVengeance { get { return _data[78]; } set { _data[78] = value; } }
 
-		[TalentData(79, "Divine Storm", 1, 2, 2, 11, -1, new string[] {
+        [TalentData(79, "Divine Storm", 1, 2, 2, 11, -1, new string[] {
 @"878 Mana,Melee Range,
 Instant cast,10 sec cooldown,
 Requires Melee Weapon
 An instant weapon attack that causes Holy damage to up to 4 enemies within 8 yards. The Divine Storm heals up to 3 party or raid members totalling 20% of the damage caused.",})]
-		public int DivineStorm { get { return _data[79]; } set { _data[79] = value; } }
-	}
+        public int DivineStorm { get { return _data[79]; } set { _data[79] = value; } }
+    }
 
-	public class WarriorTalents
-	{
-		private int[] _data = new int[83];
-		public WarriorTalents() { }
-		public WarriorTalents(string talents)
-		{
-			List<int> data = new List<int>();
-			foreach (Char digit in talents)
-				data.Add(int.Parse(digit.ToString()));
-			data.CopyTo(_data);
-		}
+    public class WarriorTalents : ICloneable
+    {
+        private int[] _data = new int[83];
+        public WarriorTalents() { }
+        public WarriorTalents(string talents)
+        {
+            List<int> data = new List<int>();
+            foreach (Char digit in talents)
+                data.Add(int.Parse(digit.ToString()));
+            data.CopyTo(_data);
+        }
 
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
-		}
+        public override string ToString()
+        {
+            StringBuilder ret = new StringBuilder();
+            foreach (int digit in _data)
+                ret.Append(digit.ToString());
+            return ret.ToString();
+        }
+        object ICloneable.Clone()
+        {
+            WarriorTalents clone = (WarriorTalents)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            return clone;
+        }
 
-		[TalentData(0, "Improved Heroic Strike", 3, 0, 1, 1, -1, new string[] {
+        public WarriorTalents Clone()
+        {
+            return (WarriorTalents)((ICloneable)this).Clone();
+        }
+
+
+        [TalentData(0, "Improved Heroic Strike", 3, 0, 1, 1, -1, new string[] {
 @"Reduces the cost of your Heroic Strike ability by 1 rage point.",
 @"Reduces the cost of your Heroic Strike ability by 2 rage points.",
 @"Reduces the cost of your Heroic Strike ability by 3 rage points.",})]
-		public int ImprovedHeroicStrike { get { return _data[0]; } set { _data[0] = value; } }
+        public int ImprovedHeroicStrike { get { return _data[0]; } set { _data[0] = value; } }
 
-		[TalentData(1, "Deflection", 5, 0, 2, 1, -1, new string[] {
+        [TalentData(1, "Deflection", 5, 0, 2, 1, -1, new string[] {
 @"Increases your Parry chance by 1%.",
 @"Increases your Parry chance by 2%.",
 @"Increases your Parry chance by 3%.",
 @"Increases your Parry chance by 4%.",
 @"Increases your Parry chance by 5%.",})]
-		public int Deflection { get { return _data[1]; } set { _data[1] = value; } }
+        public int Deflection { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Improved Rend", 2, 0, 3, 1, -1, new string[] {
+        [TalentData(2, "Improved Rend", 2, 0, 3, 1, -1, new string[] {
 @"Increases the bleed damage done by your Rend ability by 25%.",
 @"Increases the bleed damage done by your Rend ability by 50%.",})]
-		public int ImprovedRend { get { return _data[2]; } set { _data[2] = value; } }
+        public int ImprovedRend { get { return _data[2]; } set { _data[2] = value; } }
 
-		[TalentData(3, "Improved Charge", 2, 0, 1, 2, -1, new string[] {
+        [TalentData(3, "Improved Charge", 2, 0, 1, 2, -1, new string[] {
 @"Increases the amount of rage generated by your Charge ability by 3.",
 @"Increases the amount of rage generated by your Charge ability by 6.",})]
-		public int ImprovedCharge { get { return _data[3]; } set { _data[3] = value; } }
+        public int ImprovedCharge { get { return _data[3]; } set { _data[3] = value; } }
 
-		[TalentData(4, "Iron Will", 3, 0, 2, 2, -1, new string[] {
+        [TalentData(4, "Iron Will", 3, 0, 2, 2, -1, new string[] {
 @"Reduces the duration of all Stun and Charm effects used against you by 10%.",
 @"Reduces the duration of all Stun and Charm effects used against you by 20%.",
 @"Reduces the duration of all Stun and Charm effects used against you by 30%.",})]
-		public int IronWill { get { return _data[4]; } set { _data[4] = value; } }
+        public int IronWill { get { return _data[4]; } set { _data[4] = value; } }
 
-		[TalentData(5, "Improved Thunder Clap", 3, 0, 3, 2, -1, new string[] {
+        [TalentData(5, "Improved Thunder Clap", 3, 0, 3, 2, -1, new string[] {
 @"Reduces the cost of your Thunder Clap ability by 1 rage point and increases the damage by 40% and the slowing effect by an additional 4%.",
 @"Reduces the cost of your Thunder Clap ability by 2 rage points and increases the damage by 70% and the slowing effect by an additional 7%.",
 @"Reduces the cost of your Thunder Clap ability by 4 rage points and increases the damage by 100% and the slowing effect by an additional 10%.",})]
-		public int ImprovedThunderClap { get { return _data[5]; } set { _data[5] = value; } }
+        public int ImprovedThunderClap { get { return _data[5]; } set { _data[5] = value; } }
 
-		[TalentData(6, "Improved Overpower", 2, 0, 1, 3, -1, new string[] {
+        [TalentData(6, "Improved Overpower", 2, 0, 1, 3, -1, new string[] {
 @"Increases the critical strike chance of your Overpower ability by 25%.",
 @"Increases the critical strike chance of your Overpower ability by 50%.",})]
-		public int ImprovedOverpower { get { return _data[6]; } set { _data[6] = value; } }
+        public int ImprovedOverpower { get { return _data[6]; } set { _data[6] = value; } }
 
-		[TalentData(7, "Anger Management", 1, 0, 2, 3, -1, new string[] {
+        [TalentData(7, "Anger Management", 1, 0, 2, 3, -1, new string[] {
 @"Generates 1 rage per 3 seconds.",})]
-		public int AngerManagement { get { return _data[7]; } set { _data[7] = value; } }
+        public int AngerManagement { get { return _data[7]; } set { _data[7] = value; } }
 
-		[TalentData(8, "Impale", 2, 0, 3, 3, -1, new string[] {
+        [TalentData(8, "Impale", 2, 0, 3, 3, -1, new string[] {
 @"Increases the critical strike damage bonus of your abilities in Battle, Defensive, and Berserker stance by 10%.",
 @"Increases the critical strike damage bonus of your abilities in Battle, Defensive, and Berserker stance by 20%.",})]
-		public int Impale { get { return _data[8]; } set { _data[8] = value; } }
+        public int Impale { get { return _data[8]; } set { _data[8] = value; } }
 
-		[TalentData(9, "Deep Wounds", 3, 0, 4, 3, 8, new string[] {
+        [TalentData(9, "Deep Wounds", 3, 0, 4, 3, 8, new string[] {
 @"Your critical strikes cause the opponent to bleed, dealing 20% of your melee weapon's average damage over 12 sec.",
 @"Your critical strikes cause the opponent to bleed, dealing 40% of your melee weapon's average damage over 12 sec.",
 @"Your critical strikes cause the opponent to bleed, dealing 60% of your melee weapon's average damage over 12 sec.",})]
-		public int DeepWounds { get { return _data[9]; } set { _data[9] = value; } }
+        public int DeepWounds { get { return _data[9]; } set { _data[9] = value; } }
 
-		[TalentData(10, "Taste for Blood", 3, 0, 1, 4, -1, new string[] {
+        [TalentData(10, "Taste for Blood", 3, 0, 1, 4, -1, new string[] {
 @"Whenever your Rend ability causes damage, you have a 10% chance of allowing the use of your Overpower ability for 5 sec.",
 @"Whenever your Rend ability causes damage, you have a 20% chance of allowing the use of your Overpower ability for 5 sec.",
 @"Whenever your Rend ability causes damage, you have a 30% chance of allowing the use of your Overpower ability for 5 sec.",})]
-		public int TasteforBlood { get { return _data[10]; } set { _data[10] = value; } }
+        public int TasteForBlood { get { return _data[10]; } set { _data[10] = value; } }
 
-		[TalentData(11, "Two-Handed Weapon Specialization", 5, 0, 2, 4, -1, new string[] {
+        [TalentData(11, "Two-Handed Weapon Specialization", 5, 0, 2, 4, -1, new string[] {
 @"Increases the damage you deal with two-handed melee weapons by 1%.",
 @"Increases the damage you deal with two-handed melee weapons by 2%.",
 @"Increases the damage you deal with two-handed melee weapons by 3%.",
 @"Increases the damage you deal with two-handed melee weapons by 4%.",
 @"Increases the damage you deal with two-handed melee weapons by 5%.",})]
-		public int TwoHandedWeaponSpecialization { get { return _data[11]; } set { _data[11] = value; } }
+        public int TwoHandedWeaponSpecialization { get { return _data[11]; } set { _data[11] = value; } }
 
-		[TalentData(12, "Justified Killing", 2, 0, 3, 4, -1, new string[] {
+        [TalentData(12, "Justified Killing", 2, 0, 3, 4, -1, new string[] {
 @"You gain 3 rage every time you parry an attack.",
 @"You gain 6 rage every time you parry an attack.",})]
-		public int JustifiedKilling { get { return _data[12]; } set { _data[12] = value; } }
+        public int JustifiedKilling { get { return _data[12]; } set { _data[12] = value; } }
 
-		[TalentData(13, "Poleaxe Specialization", 5, 0, 1, 5, -1, new string[] {
+        [TalentData(13, "Poleaxe Specialization", 5, 0, 1, 5, -1, new string[] {
 @"Increases your chance to get a critical strike and the critical damage caused with Axes and Polearms by 1%.",
 @"Increases your chance to get a critical strike and the critical damage caused with Axes and Polearms by 2%.",
 @"Increases your chance to get a critical strike and the critical damage caused with Axes and Polearms by 3%.",
 @"Increases your chance to get a critical strike and the critical damage caused with Axes and Polearms by 4%.",
 @"Increases your chance to get a critical strike and the critical damage caused with Axes and Polearms by 5%.",})]
-		public int PoleaxeSpecialization { get { return _data[13]; } set { _data[13] = value; } }
+        public int PoleaxeSpecialization { get { return _data[13]; } set { _data[13] = value; } }
 
-		[TalentData(14, "Sweeping Strikes", 1, 0, 2, 5, -1, new string[] {
+        [TalentData(14, "Sweeping Strikes", 1, 0, 2, 5, -1, new string[] {
 @"30 Rage
 Instant,30 sec cooldown,
 Requires Battle Stance, Berserker Stance
 Your next 5 melee weapon swings strike an additional nearby opponent.",})]
-		public int SweepingStrikes { get { return _data[14]; } set { _data[14] = value; } }
+        public int SweepingStrikes { get { return _data[14]; } set { _data[14] = value; } }
 
-		[TalentData(15, "Mace Specialization", 5, 0, 3, 5, -1, new string[] {
+        [TalentData(15, "Mace Specialization", 5, 0, 3, 5, -1, new string[] {
 @"Gives your melee attacks a chance to generate 10 rage when using a Mace.",
 @"Gives your melee attacks a chance to generate 10 rage when using a Mace.",
 @"Gives your melee attacks a chance to generate 10 rage when using a Mace.",
 @"Gives your melee attacks a chance to generate 10 rage when using a Mace.",
 @"Gives your melee attacks a chance to generate 10 rage when using a Mace.",})]
-		public int MaceSpecialization { get { return _data[15]; } set { _data[15] = value; } }
+        public int MaceSpecialization { get { return _data[15]; } set { _data[15] = value; } }
 
-		[TalentData(16, "Sword Specialization", 5, 0, 4, 5, -1, new string[] {
+        [TalentData(16, "Sword Specialization", 5, 0, 4, 5, -1, new string[] {
 @"Gives you a 1% chance to get an extra attack on the same target after hitting your target with your Sword.",
 @"Gives you a 2% chance to get an extra attack on the same target after hitting your target with your Sword.",
 @"Gives you a 3% chance to get an extra attack on the same target after hitting your target with your Sword.",
 @"Gives you a 4% chance to get an extra attack on the same target after hitting your target with your Sword.",
 @"Gives you a 5% chance to get an extra attack on the same target after hitting your target with your Sword.",})]
-		public int SwordSpecialization { get { return _data[16]; } set { _data[16] = value; } }
+        public int SwordSpecialization { get { return _data[16]; } set { _data[16] = value; } }
 
-		[TalentData(17, "Improved Intercept", 2, 0, 1, 6, -1, new string[] {
+        [TalentData(17, "Improved Intercept", 2, 0, 1, 6, -1, new string[] {
 @"Reduces the cooldown of your Intercept ability by 5 sec.",
 @"Reduces the cooldown of your Intercept ability by 10 sec.",})]
-		public int ImprovedIntercept { get { return _data[17]; } set { _data[17] = value; } }
+        public int ImprovedIntercept { get { return _data[17]; } set { _data[17] = value; } }
 
-		[TalentData(18, "Improved Hamstring", 3, 0, 3, 6, -1, new string[] {
+        [TalentData(18, "Improved Hamstring", 3, 0, 3, 6, -1, new string[] {
 @"Gives your Hamstring ability a 5% chance to immobilize the target for 5 sec.",
 @"Gives your Hamstring ability a 10% chance to immobilize the target for 5 sec.",
 @"Gives your Hamstring ability a 15% chance to immobilize the target for 5 sec.",})]
-		public int ImprovedHamstring { get { return _data[18]; } set { _data[18] = value; } }
+        public int ImprovedHamstring { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Sudden Death", 3, 0, 4, 6, -1, new string[] {
+        [TalentData(19, "Sudden Death", 3, 0, 4, 6, -1, new string[] {
 @"Your melee critical hits have a 10% chance of allowing the use of Execute regardless of the target's health state.",
 @"Your melee critical hits have a 20% chance of allowing the use of Execute regardless of the target's health state.",
 @"Your melee critical hits have a 30% chance of allowing the use of Execute regardless of the target's health state.",})]
-		public int SuddenDeath { get { return _data[19]; } set { _data[19] = value; } }
+        public int SuddenDeath { get { return _data[19]; } set { _data[19] = value; } }
 
-		[TalentData(20, "Second Wind", 2, 0, 1, 7, -1, new string[] {
+        [TalentData(20, "Second Wind", 2, 0, 1, 7, -1, new string[] {
 @"Whenever you are struck by a Stun or Immobilize effect you will generate 10 rage and 5% of your total health over 10 sec.",
 @"Whenever you are struck by a Stun or Immobilize effect you will generate 20 rage and 10% of your total health over 10 sec.",})]
-		public int SecondWind { get { return _data[20]; } set { _data[20] = value; } }
+        public int SecondWind { get { return _data[20]; } set { _data[20] = value; } }
 
-		[TalentData(21, "Mortal Strike", 1, 0, 2, 7, 14, new string[] {
+        [TalentData(21, "Mortal Strike", 1, 0, 2, 7, 14, new string[] {
 @"30 Rage,Melee range,
 Instant,6 sec cooldown,
 Requires Melee Weapon
@@ -4702,370 +4810,370 @@ A vicious strike that deals weapon damage plus 85 and wounds the target, reducin
 		  Rank 4: +160 Damage
 		  Rank 5: +185 Damage
 		  Rank 6: +210 Damage",})]
-		public int MortalStrike { get { return _data[21]; } set { _data[21] = value; } }
+        public int MortalStrike { get { return _data[21]; } set { _data[21] = value; } }
 
-		[TalentData(22, "Unrelenting Assault", 2, 0, 3, 7, -1, new string[] {
+        [TalentData(22, "Unrelenting Assault", 2, 0, 3, 7, -1, new string[] {
 @"Reduces the cooldown of your Overpower and Revenge abilities by 2 seconds.",
 @"Reduces the cooldown of your Overpower and Revenge abilities by 4 seconds.",})]
-		public int UnrelentingAssault { get { return _data[22]; } set { _data[22] = value; } }
+        public int UnrelentingAssault { get { return _data[22]; } set { _data[22] = value; } }
 
-		[TalentData(23, "Improved Slam", 2, 0, 4, 7, -1, new string[] {
+        [TalentData(23, "Improved Slam", 2, 0, 4, 7, -1, new string[] {
 @"Decreases the casting time of your Slam ability by 0.5 sec.",
 @"Decreases the casting time of your Slam ability by 1 sec.",})]
-		public int ImprovedSlam { get { return _data[23]; } set { _data[23] = value; } }
+        public int ImprovedSlam { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Improved Mortal Strike", 5, 0, 2, 8, 21, new string[] {
+        [TalentData(24, "Improved Mortal Strike", 5, 0, 2, 8, 21, new string[] {
 @"Increases the damage caused by your Mortla Strike ability by 2% and gives your Enraged Assault ability a 6% chance to refresh the cooldown of Mortal Strike.",
 @"Increases the damage caused by your Mortal Strike ability by 4% and gives your Enraged Assault ability a 12% chance to refresh the cooldown of Mortal Strike.",
 @"Increases the damage caused by your Mortal Strike ability by 6% and gives your Enraged Assault ability a 18% chance to refresh the cooldown of Mortal Strike.",
 @"Increases the damage caused by your Mortal Strike ability by 8% and gives your Enraged Assault ability a 24% chance to refresh the cooldown of Mortal Strike.",
 @"Increases the damage caused by your Mortal Strike ability by 10% and gives your Enraged Assault ability a 30% chance to refresh the cooldown of Mortal Strike.",})]
-		public int ImprovedMortalStrike { get { return _data[24]; } set { _data[24] = value; } }
+        public int ImprovedMortalStrike { get { return _data[24]; } set { _data[24] = value; } }
 
-		[TalentData(25, "Strength of Arms", 2, 0, 3, 8, -1, new string[] {
+        [TalentData(25, "Strength of Arms", 2, 0, 3, 8, -1, new string[] {
 @"Increases your Strength and total health by 2%.",
 @"Increases your Strength and total health by 4%.",})]
-		public int StrengthofArms { get { return _data[25]; } set { _data[25] = value; } }
+        public int StrengthOfArms { get { return _data[25]; } set { _data[25] = value; } }
 
-		[TalentData(26, "Trauma", 2, 0, 1, 9, -1, new string[] {
+        [TalentData(26, "Trauma", 2, 0, 1, 9, -1, new string[] {
 @"Your normal melee critical strikes increase the effectiveness of Bleed effects on the target by 15% for 15 sec.",
 @"Your normal melee critical strikes increase the effectiveness of Bleed effects on the target by 30% for 15 sec.",})]
-		public int Trauma { get { return _data[26]; } set { _data[26] = value; } }
+        public int Trauma { get { return _data[26]; } set { _data[26] = value; } }
 
-		[TalentData(27, "Endless Rage", 1, 0, 2, 9, -1, new string[] {
+        [TalentData(27, "Endless Rage", 1, 0, 2, 9, -1, new string[] {
 @"You generate 25% more rage from damage dealt.",})]
-		public int EndlessRage { get { return _data[27]; } set { _data[27] = value; } }
+        public int EndlessRage { get { return _data[27]; } set { _data[27] = value; } }
 
-		[TalentData(28, "Blood Frenzy", 2, 0, 3, 9, -1, new string[] {
+        [TalentData(28, "Blood Frenzy", 2, 0, 3, 9, -1, new string[] {
 @"Your Rend and Deep Wounds abilities also increase all physical damage caused to that target by 1%.",
 @"Your Rend and Deep Wounds abilities also increase all physical damage caused to that target by 2%.",})]
-		public int BloodFrenzy { get { return _data[28]; } set { _data[28] = value; } }
+        public int BloodFrenzy { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(29, "Wrecking Crew", 5, 0, 2, 10, -1, new string[] {
+        [TalentData(29, "Wrecking Crew", 5, 0, 2, 10, -1, new string[] {
 @"Your melee critical hits have a 20% chance to Enrage you, increasing all damage caused by 3% for 12 sec.",
 @"Your melee critical hits have a 40% chance to Enrage you, increasing all damage caused by 6% for 12 sec.",
 @"Your melee critical hits have a 60% chance to Enrage you, increasing all damage caused by 9% for 12 sec.",
 @"Your melee critical hits have a 80% chance to Enrage you, increasing all damage caused by 12% for 12 sec.",
 @"Your melee critical hits have a 100% chance to Enrage you, increasing all damage caused by 15% for 12 sec.",})]
-		public int WreckingCrew { get { return _data[29]; } set { _data[29] = value; } }
+        public int WreckingCrew { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(30, "Bladestorm", 1, 0, 2, 11, -1, new string[] {
+        [TalentData(30, "Bladestorm", 1, 0, 2, 11, -1, new string[] {
 @"25 Rage,Instant,
 1.5 min cooldown,
 Instantly Whirlwind all nearby targets and for the next 4.50 sec you will perform a whilrwind attack every 1.50 seconds. While under the effects of Bladestorm, you can move but cannot perform any other attacks or abilities but you do not feel pity or remorse or fear and you cannot be stopped unless killed.
 
 \ ",})]
-		public int Bladestorm { get { return _data[30]; } set { _data[30] = value; } }
+        public int Bladestorm { get { return _data[30]; } set { _data[30] = value; } }
 
-		[TalentData(31, "Booming Voice", 5, 1, 2, 1, -1, new string[] {
+        [TalentData(31, "Booming Voice", 5, 1, 2, 1, -1, new string[] {
 @"Increases the area of effect and duration of your Battle Shout, Demoralizing Shout, and Commanding Shout by 10%.",
 @"Increases the area of effect and duration of your Battle Shout, Demoralizing Shout, and Commanding Shout by 20%.",
 @"Increases the area of effect and duration of your Battle Shout, Demoralizing Shout, and Commanding Shout by 30%.",
 @"Increases the area of effect and duration of your Battle Shout, Demoralizing Shout, and Commanding Shout by 40%.",
 @"Increases the area of effect and duration of your Battle Shout, Demoralizing Shout, and Commanding Shout by 50%.",})]
-		public int BoomingVoice { get { return _data[31]; } set { _data[31] = value; } }
+        public int BoomingVoice { get { return _data[31]; } set { _data[31] = value; } }
 
-		[TalentData(32, "Cruelty", 5, 1, 3, 1, -1, new string[] {
+        [TalentData(32, "Cruelty", 5, 1, 3, 1, -1, new string[] {
 @"Increases your chance to get a critical strike with melee weapons by 1%.",
 @"Increases your chance to get a critical strike with melee weapons by 2%.",
 @"Increases your chance to get a critical strike with melee weapons by 3%.",
 @"Increases your chance to get a critical strike with melee weapons by 4%.",
 @"Increases your chance to get a critical strike with melee weapons by 5%.",})]
-		public int Cruelty { get { return _data[32]; } set { _data[32] = value; } }
+        public int Cruelty { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(33, "Improved Demoralizing Shout", 5, 1, 2, 2, -1, new string[] {
+        [TalentData(33, "Improved Demoralizing Shout", 5, 1, 2, 2, -1, new string[] {
 @"Increases the melee attack power reduction of your Demoralizing Shout by 8%.",
 @"Increases the melee attack power reduction of your Demoralizing Shout by 16%.",
 @"Increases the melee attack power reduction of your Demoralizing Shout by 24%.",
 @"Increases the melee attack power reduction of your Demoralizing Shout by 32%.",
 @"Increases the melee attack power reduction of your Demoralizing Shout by 40%.",})]
-		public int ImprovedDemoralizingShout { get { return _data[33]; } set { _data[33] = value; } }
+        public int ImprovedDemoralizingShout { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(34, "Unbridled Wrath", 5, 1, 3, 2, -1, new string[] {
+        [TalentData(34, "Unbridled Wrath", 5, 1, 3, 2, -1, new string[] {
 @"Gives you a chance to generate an additional rage point when you deal melee damage with a weapon.",
 @"Gives you a chance to generate an additional rage point when you deal melee damage with a weapon.  Effect occurs more often than Unbridled Wrath (Rank 1).",
 @"Gives you a chance to generate an additional rage point when you deal melee damage with a weapon.  Effect occurs more often than Unbridled Wrath (Rank 2).",
 @"Gives you a chance to generate an additional rage point when you deal melee damage with a weapon.  Effect occurs more often than Unbridled Wrath (Rank 3).",
 @"Gives you a chance to generate an additional rage point when you deal melee damage with a weapon.  Effect occurs more often than Unbridled Wrath (Rank 4).",})]
-		public int UnbridledWrath { get { return _data[34]; } set { _data[34] = value; } }
+        public int UnbridledWrath { get { return _data[34]; } set { _data[34] = value; } }
 
-		[TalentData(35, "Improved Cleave", 3, 1, 1, 3, -1, new string[] {
+        [TalentData(35, "Improved Cleave", 3, 1, 1, 3, -1, new string[] {
 @"Increases the bonus damage done by your Cleave ability by 40%.",
 @"Increases the bonus damage done by your Cleave ability by 80%.",
 @"Increases the bonus damage done by your Cleave ability by 120%.",})]
-		public int ImprovedCleave { get { return _data[35]; } set { _data[35] = value; } }
+        public int ImprovedCleave { get { return _data[35]; } set { _data[35] = value; } }
 
-		[TalentData(36, "Piercing Howl", 1, 1, 2, 3, -1, new string[] {
+        [TalentData(36, "Piercing Howl", 1, 1, 2, 3, -1, new string[] {
 @"10 Rage
 Instant
 Causes all enemies within 10 yards to be Dazed, reducing movement speed by 50% for 6 sec.",})]
-		public int PiercingHowl { get { return _data[36]; } set { _data[36] = value; } }
+        public int PiercingHowl { get { return _data[36]; } set { _data[36] = value; } }
 
-		[TalentData(37, "Blood Craze", 3, 1, 3, 3, -1, new string[] {
+        [TalentData(37, "Blood Craze", 3, 1, 3, 3, -1, new string[] {
 @"Regenerates 2% of your total Health over 6 sec after being the victim of a critical strike.",
 @"Regenerates 4% of your total Health over 6 sec after being the victim of a critical strike.",
 @"Regenerates 6% of your total Health over 6 sec after being the victim of a critical strike.",})]
-		public int BloodCraze { get { return _data[37]; } set { _data[37] = value; } }
+        public int BloodCraze { get { return _data[37]; } set { _data[37] = value; } }
 
-		[TalentData(38, "Commanding Presence", 5, 1, 4, 3, -1, new string[] {
+        [TalentData(38, "Commanding Presence", 5, 1, 4, 3, -1, new string[] {
 @"Increases the melee attack power bonus of your Battle Shout and the health bonus of your Commanding Shout by 5%.",
 @"Increases the melee attack power bonus of your Battle Shout and the health bonus of your Commanding Shout by 10%.",
 @"Increases the melee attack power bonus of your Battle Shout and the health bonus of your Commanding Shout by 15%.",
 @"Increases the melee attack power bonus of your Battle Shout and the health bonus of your Commanding Shout by 20%.",
 @"Increases the melee attack power bonus of your Battle Shout and the health bonus of your Commanding Shout by 25%.",})]
-		public int CommandingPresence { get { return _data[38]; } set { _data[38] = value; } }
+        public int CommandingPresence { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Dual Wield Specialization", 5, 1, 1, 4, -1, new string[] {
+        [TalentData(39, "Dual Wield Specialization", 5, 1, 1, 4, -1, new string[] {
 @"Increases the damage done by your offhand weapon by 5%.",
 @"Increases the damage done by your offhand weapon by 10%.",
 @"Increases the damage done by your offhand weapon by 15%.",
 @"Increases the damage done by your offhand weapon by 20%.",
 @"Increases the damage done by your offhand weapon by 25%.",})]
-		public int DualWieldSpecialization { get { return _data[39]; } set { _data[39] = value; } }
+        public int DualWieldSpecialization { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(40, "Improved Execute", 2, 1, 2, 4, -1, new string[] {
+        [TalentData(40, "Improved Execute", 2, 1, 2, 4, -1, new string[] {
 @"Reduces the rage cost of your Execute ability by 2.",
 @"Reduces the rage cost of your Execute ability by 5.",})]
-		public int ImprovedExecute { get { return _data[40]; } set { _data[40] = value; } }
+        public int ImprovedExecute { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(41, "Enrage", 5, 1, 3, 4, -1, new string[] {
+        [TalentData(41, "Enrage", 5, 1, 3, 4, -1, new string[] {
 @"Gives you a 5% melee damage bonus for 12 sec up to a maximum of 12 swings after being the victim of a critical strike.",
 @"Gives you a 10% melee damage bonus for 12 sec up to a maximum of 12 swings after being the victim of a critical strike.",
 @"Gives you a 15% melee damage bonus for 12 sec up to a maximum of 12 swings after being the victim of a critical strike.",
 @"Gives you a 20% melee damage bonus for 12 sec up to a maximum of 12 swings after being the victim of a critical strike.",
 @"Gives you a 25% melee damage bonus for 12 sec up to a maximum of 12 swings after being the victim of a critical strike.",})]
-		public int Enrage { get { return _data[41]; } set { _data[41] = value; } }
+        public int Enrage { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(42, "Intensify Rage", 3, 1, 1, 5, -1, new string[] {
+        [TalentData(42, "Intensify Rage", 3, 1, 1, 5, -1, new string[] {
 @"Reduces the cooldown of your Bloodrage, Berserker Rage, Recklessness and Death Wish abilities by 11%.",
 @"Reduces the cooldown of your Bloodrage, Berserker Rage, Recklessness and Death Wish abilities by 22%.",
 @"Reduces the cooldown of your Bloodrage, Berserker Rage, Recklessness and Death Wish abilities by 33%.",})]
-		public int IntensifyRage { get { return _data[42]; } set { _data[42] = value; } }
+        public int IntensifyRage { get { return _data[42]; } set { _data[42] = value; } }
 
-		[TalentData(43, "Death Wish", 1, 1, 2, 5, -1, new string[] {
+        [TalentData(43, "Death Wish", 1, 1, 2, 5, -1, new string[] {
 @"10 Rage
 Instant,3 min cooldown,
 When activated, increases your physical damage by 20% but increases all damage taken by 5%. Lasts 30 sec.",})]
-		public int DeathWish { get { return _data[43]; } set { _data[43] = value; } }
+        public int DeathWish { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Weapon Mastery", 2, 1, 3, 5, -1, new string[] {
+        [TalentData(44, "Weapon Mastery", 2, 1, 3, 5, -1, new string[] {
 @"Reduces the chance for your attacks to be dodged by 1% and reduces the duration of all Disarm effects used against you by 25%. This does not stack with other Disarm duration reducing effects.",
 @"Reduces the chance for your attacks to be dodged by 2% and reduces the duration of all Disarm effects used against you by 50%. This does not stack with other Disarm duration reducing effects.",})]
-		public int WeaponMastery { get { return _data[44]; } set { _data[44] = value; } }
+        public int WeaponMastery { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(45, "Improved Berserker Rage", 2, 1, 1, 6, -1, new string[] {
+        [TalentData(45, "Improved Berserker Rage", 2, 1, 1, 6, -1, new string[] {
 @"The Berserker Rage ability will generate 10 rage when used.",
 @"The Berserker Rage ability will generate 20 rage when used.",})]
-		public int ImprovedBerserkerRage { get { return _data[45]; } set { _data[45] = value; } }
+        public int ImprovedBerserkerRage { get { return _data[45]; } set { _data[45] = value; } }
 
-		[TalentData(46, "Flurry", 5, 1, 3, 6, -1, new string[] {
+        [TalentData(46, "Flurry", 5, 1, 3, 6, -1, new string[] {
 @"Increases your attack speed by 5% for your next 3 swings after dealing a melee critical strike.",
 @"Increases your attack speed by 10% for your next 3 swings after dealing a melee critical strike.",
 @"Increases your attack speed by 15% for your next 3 swings after dealing a melee critical strike.",
 @"Increases your attack speed by 20% for your next 3 swings after dealing a melee critical strike.",
 @"Increases your attack speed by 25% for your next 3 swings after dealing a melee critical strike.",})]
-		public int Flurry { get { return _data[46]; } set { _data[46] = value; } }
+        public int Flurry { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Precision", 3, 1, 1, 7, -1, new string[] {
+        [TalentData(47, "Precision", 3, 1, 1, 7, -1, new string[] {
 @"Increases your chance to hit with melee weapons by 1%.",
 @"Increases your chance to hit with melee weapons by 2%.",
 @"Increases your chance to hit with melee weapons by 3%.",})]
-		public int Precision { get { return _data[47]; } set { _data[47] = value; } }
+        public int Precision { get { return _data[47]; } set { _data[47] = value; } }
 
-		[TalentData(48, "Bloodthirst", 1, 1, 2, 7, 43, new string[] {
+        [TalentData(48, "Bloodthirst", 1, 1, 2, 7, 43, new string[] {
 @"30 Rage,Melee range,
 Instant,6 sec cooldown,
 Instantly attack the target causing 256 damage. In addition, the next 5 successful melee attacks will restore 1.5% of max health. This effect lasts 8 sec. Damage is based on your attack power.",})]
-		public int Bloodthirst { get { return _data[48]; } set { _data[48] = value; } }
+        public int Bloodthirst { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(49, "Improved Whirlwind", 2, 1, 4, 7, -1, new string[] {
+        [TalentData(49, "Improved Whirlwind", 2, 1, 4, 7, -1, new string[] {
 @"Reduces the cooldown of your Whirlwind ability by 1 sec.",
 @"Reduces the cooldown of your Whirlwind ability by 2 sec.",})]
-		public int ImprovedWhirlwind { get { return _data[49]; } set { _data[49] = value; } }
+        public int ImprovedWhirlwind { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(50, "Furious Attacks", 2, 1, 1, 8, -1, new string[] {
+        [TalentData(50, "Furious Attacks", 2, 1, 1, 8, -1, new string[] {
 @"Your normal melee attacks have a 50% chance to reduce all healing done to the target by 25% for 8 sec. This can stack up to 2 times.",
 @"Your normal melee attacks have a 100% chance to reduce all healing done to the target by 25% for 8 sec. This can stack up to 2 times.",})]
-		public int FuriousAttacks { get { return _data[50]; } set { _data[50] = value; } }
+        public int FuriousAttacks { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Improved Berserker Stance", 5, 1, 4, 8, -1, new string[] {
+        [TalentData(51, "Improved Berserker Stance", 5, 1, 4, 8, -1, new string[] {
 @"Increases attack power by 2% and reduces threat caused by 2% while in Berserker Stance.",
 @"Increases attack power by 4% and reduces threat caused by 4% while in Berserker Stance.",
 @"Increases attack power by 6% and reduces threat caused by 6% while in Berserker Stance.",
 @"Increases attack power by 8% and reduces threat caused by 8% while in Berserker Stance.",
 @"Increases attack power by 10% and reduces threat caused by 10% while in Berserker Stance.",})]
-		public int ImprovedBerserkerStance { get { return _data[51]; } set { _data[51] = value; } }
+        public int ImprovedBerserkerStance { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(52, "Heroic Leap", 1, 1, 1, 9, -1, new string[] {
+        [TalentData(52, "Heroic Leap", 1, 1, 1, 9, -1, new string[] {
 @"15 Rage,8-25 yd range,
 Instant,45 sec cooldown,
 Leap through the air and slam down on all enemies within 5 yards of the target area, causing 50% weapon damage and stunning them for 2 sec.",})]
-		public int HeroicLeap { get { return _data[52]; } set { _data[52] = value; } }
+        public int HeroicLeap { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(53, "Rampage", 1, 1, 2, 9, 48, new string[] {
+        [TalentData(53, "Rampage", 1, 1, 2, 9, 48, new string[] {
 @"Your melee critical hits cause you to go on a rampage, increasing melee critical hit chance of all party and raid members within 45 yds by 5%. Lasts 10 sec.",})]
-		public int Rampage { get { return _data[53]; } set { _data[53] = value; } }
+        public int Rampage { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(54, "Bloodsurge", 3, 1, 3, 9, 48, new string[] {
+        [TalentData(54, "Bloodsurge", 3, 1, 3, 9, 48, new string[] {
 @"Your Bloodthirst critical hits have a 33% chance of reducing the swing time of your next Slam by 100% for 5 sec.",
 @"Your Bloodthirst critical hits have a 66% chance of reducing the swing time of your next Slam by 100% for 5 sec.",
 @"Your Bloodthirst critical hits have a 100% chance of reducing the swing time of your next Slam by 100% for 5 sec.",})]
-		public int Bloodsurge { get { return _data[54]; } set { _data[54] = value; } }
+        public int Bloodsurge { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(55, "Unending Fury", 5, 1, 2, 10, -1, new string[] {
+        [TalentData(55, "Unending Fury", 5, 1, 2, 10, -1, new string[] {
 @"Reduces the rage cost of your Cleave, Whirlwind and Bloodthirst abilities by 1 and gives your Enraged Assault ability a 6% chance to refresh the cooldown of Bloodthirst.",
 @"Reduces the rage cost of your Cleave, Whirlwind and Bloodthirst abilities by 2 and gives your Enraged Assault ability a 12% chance to refresh the cooldown of Bloodthirst.",
 @"Reduces the rage cost of your Cleave, Whirlwind and Bloodthirst abilities by 3 and gives your Enraged Assault ability a 18% chance to refresh the cooldown of Bloodthirst.",
 @"Reduces the rage cost of your Cleave, Whirlwind and Bloodthirst abilities by 4 and gives your Enraged Assault ability a 24% chance to refresh the cooldown of Bloodthirst.",
 @"Reduces the rage cost of your Cleave, Whirlwind and Bloodthirst abilities by 5 and gives your Enraged Assault ability a 30% chance to refresh the cooldown of Bloodthirst.",})]
-		public int UnendingFury { get { return _data[55]; } set { _data[55] = value; } }
+        public int UnendingFury { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "Titan's Grip", 1, 1, 2, 11, -1, new string[] {
+        [TalentData(56, "Titan's Grip", 1, 1, 2, 11, -1, new string[] {
 @"Allows you to equip two-handed axes, maces and swords in one hand.",})]
-		public int TitansGrip { get { return _data[56]; } set { _data[56] = value; } }
+        public int TitansGrip { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(57, "Improved Bloodrage", 2, 2, 1, 1, -1, new string[] {
+        [TalentData(57, "Improved Bloodrage", 2, 2, 1, 1, -1, new string[] {
 @"Increases the rage generated by your Bloodrage ability by 25%.",
 @"Increases the rage generated by your Bloodrage ability by 50%.",})]
-		public int ImprovedBloodrage { get { return _data[57]; } set { _data[57] = value; } }
+        public int ImprovedBloodrage { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(58, "Shield Specialization", 5, 2, 2, 1, -1, new string[] {
+        [TalentData(58, "Shield Specialization", 5, 2, 2, 1, -1, new string[] {
 @"Increases your chance to block attacks with a shield by 1% and has a 20% chance to generate 1 rage when a block occurs.",
 @"Increases your chance to block attacks with a shield by 2% and has a 40% chance to generate 1 rage when a block occurs.",
 @"Increases your chance to block attacks with a shield by 3% and has a 60% chance to generate 1 rage when a block occurs.",
 @"Increases your chance to block attacks with a shield by 4% and has a 80% chance to generate 1 rage when a block occurs.",
 @"Increases your chance to block attacks with a shield by 5% and has a 100% chance to generate 1 rage when a block occurs.",})]
-		public int ShieldSpecialization { get { return _data[58]; } set { _data[58] = value; } }
+        public int ShieldSpecialization { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(59, "Tactical Mastery", 3, 2, 3, 1, -1, new string[] {
+        [TalentData(59, "Tactical Mastery", 3, 2, 3, 1, -1, new string[] {
 @"You retain up to an additional 5 of your rage points when you change stances. Also greatly increases the threat generated by your Bloodthirst and Mortal Strike abilities when you are in Defensive Stance.",
 @"You retain up to an additional 10 of your rage points when you change stances. Also greatly increases the threat generated by your Bloodthirst and Mortal Strike abilities when you are in Defensive Stance (More effective than Rank 1).",
 @"You retain up to an additional 15 of your rage points when you change stances. Also greatly increases the threat generated by your Bloodthirst and Mortal Strike abilities when you are in Defensive Stance (More effective than Rank 2).",})]
-		public int TacticalMastery { get { return _data[59]; } set { _data[59] = value; } }
+        public int TacticalMastery { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(60, "Incite", 3, 2, 2, 2, -1, new string[] {
+        [TalentData(60, "Incite", 3, 2, 2, 2, -1, new string[] {
 @"Increases the critical strike chance of your Heroic Strike, Thunder Clap and Cleave abilities by 5%.",
 @"Increases the critical strike chance of your Heroic Strike, Thunder Clap and Cleave abilities by 10%.",
 @"Increases the critical strike chance of your Heroic Strike, Thunder Clap and Cleave abilities by 15%.",})]
-		public int Incite { get { return _data[60]; } set { _data[60] = value; } }
+        public int Incite { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Anticipation", 5, 2, 3, 2, -1, new string[] {
+        [TalentData(61, "Anticipation", 5, 2, 3, 2, -1, new string[] {
 @"Increases your chance to dodge by 1%.",
 @"Increases your chance to dodge by 2%.",
 @"Increases your chance to dodge by 3%.",
 @"Increases your chance to dodge by 4%.",
 @"Increases your chance to dodge by 5%.",})]
-		public int Anticipation { get { return _data[61]; } set { _data[61] = value; } }
+        public int Anticipation { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Last Stand", 1, 2, 1, 3, -1, new string[] {
+        [TalentData(62, "Last Stand", 1, 2, 1, 3, -1, new string[] {
 @"Instant,6 min cooldown,
 When activated, this ability temporarily grants you 30% of your maximum hit points for 20 sec. After the effect expires, the health is lost.",})]
-		public int LastStand { get { return _data[62]; } set { _data[62] = value; } }
+        public int LastStand { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(63, "Improved Revenge", 3, 2, 2, 3, -1, new string[] {
+        [TalentData(63, "Improved Revenge", 3, 2, 2, 3, -1, new string[] {
 @"Increases damage of your Revenge ability 8% and gives a 15% to stun the target for 3 sec.",
 @"Increases damage of your Revenge ability 16% and gives a 30% to stun the target for 3 sec.",
 @"Increases damage of your Revenge ability 25% and gives a 45% to stun the target for 3 sec.",})]
-		public int ImprovedRevenge { get { return _data[63]; } set { _data[63] = value; } }
+        public int ImprovedRevenge { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(64, "Improved Shield Block", 2, 2, 3, 3, -1, new string[] {
+        [TalentData(64, "Improved Shield Block", 2, 2, 3, 3, -1, new string[] {
 @"Reduces the cooldown of your Shield Block ability by 5 secs.",
 @"Reduces the cooldown of your Shield Block ability by 10 secs.",})]
-		public int ImprovedShieldBlock { get { return _data[64]; } set { _data[64] = value; } }
+        public int ImprovedShieldBlock { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(65, "Toughness", 5, 2, 4, 3, -1, new string[] {
+        [TalentData(65, "Toughness", 5, 2, 4, 3, -1, new string[] {
 @"Increases your armor value from items by 2%.",
 @"Increases your armor value from items by 4%.",
 @"Increases your armor value from items by 6%.",
 @"Increases your armor value from items by 8%.",
 @"Increases your armor value from items by 10%.",})]
-		public int Toughness { get { return _data[65]; } set { _data[65] = value; } }
+        public int Toughness { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(66, "Improved Sunder Armor", 3, 2, 1, 4, -1, new string[] {
+        [TalentData(66, "Improved Sunder Armor", 3, 2, 1, 4, -1, new string[] {
 @"Reduces the cost of your Sunder Armor and Devastate abilities by 1 rage point.",
 @"Reduces the cost of your Sunder Armor and Devastate abilities by 2 rage points.",
 @"Reduces the cost of your Sunder Armor and Devastate abilities by 3 rage points.",})]
-		public int ImprovedSunderArmor { get { return _data[66]; } set { _data[66] = value; } }
+        public int ImprovedSunderArmor { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(67, "Improved Disarm", 3, 2, 2, 4, -1, new string[] {
+        [TalentData(67, "Improved Disarm", 3, 2, 2, 4, -1, new string[] {
 @"Reduces the cooldown of your Disarm and Shield Break abilities by 5 secs and causes the target to take an additional 4% damage while disarmed.",
 @"Reduces the cooldown of your Disarm and Shield Break abilities by 10 secs and causes the target to take an additional 7% damage while disarmed.",
 @"Reduces the cooldown of your Disarm and Shield Break abilities by 15 secs and causes the target to take an additional 10% damage while disarmed.",})]
-		public int ImprovedDisarm { get { return _data[67]; } set { _data[67] = value; } }
+        public int ImprovedDisarm { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(68, "Improved Taunt", 2, 2, 3, 4, -1, new string[] {
+        [TalentData(68, "Improved Taunt", 2, 2, 3, 4, -1, new string[] {
 @"Reduces the cooldown of your Taunt ability by 1 sec.",
 @"Reduces the cooldown of your Taunt ability by 2 sec.",})]
-		public int ImprovedTaunt { get { return _data[68]; } set { _data[68] = value; } }
+        public int ImprovedTaunt { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(69, "Improved Shield Wall", 2, 2, 1, 5, -1, new string[] {
+        [TalentData(69, "Improved Shield Wall", 2, 2, 1, 5, -1, new string[] {
 @"Reduces the cooldown of your Shield Wall ability by 30 sec.",
 @"Reduces the cooldown of your Shield Wall ability by 60 sec.",})]
-		public int ImprovedShieldWall { get { return _data[69]; } set { _data[69] = value; } }
+        public int ImprovedShieldWall { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(70, "Concussion Blow", 1, 2, 2, 5, -1, new string[] {
+        [TalentData(70, "Concussion Blow", 1, 2, 2, 5, -1, new string[] {
 @"15 Rage,Melee Range,
 Instant,30 sec cooldown,
 Requires Melee Weapon
 Stuns the opponent for 5 sec and deals 142 damage (based on attack power). High threat ability.",})]
-		public int ConcussionBlow { get { return _data[70]; } set { _data[70] = value; } }
+        public int ConcussionBlow { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Improved Shield Bash", 2, 2, 3, 5, -1, new string[] {
+        [TalentData(71, "Improved Shield Bash", 2, 2, 3, 5, -1, new string[] {
 @"Increases damage of your Shield Slam ability by 5% and gives your Shield Bash ability a 50% chance to silence the target for 3 sec.",
 @"Increases damage of your Shield Slam ability by 10% and gives your Shield Bash ability a 100% chance to silence the target for 3 sec.",})]
-		public int ImprovedShieldBash { get { return _data[71]; } set { _data[71] = value; } }
+        public int ImprovedShieldBash { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(72, "Shield Mastery", 3, 2, 1, 6, -1, new string[] {
+        [TalentData(72, "Shield Mastery", 3, 2, 1, 6, -1, new string[] {
 @"Increases the amount of damage absorbed by your shield by 10%.",
 @"Increases the amount of damage absorbed by your shield by 20%.",
 @"Increases the amount of damage absorbed by your shield by 30%.",})]
-		public int ShieldMastery { get { return _data[72]; } set { _data[72] = value; } }
+        public int ShieldMastery { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "One-Handed Weapon Specialization", 5, 2, 3, 6, -1, new string[] {
+        [TalentData(73, "One-Handed Weapon Specialization", 5, 2, 3, 6, -1, new string[] {
 @"Increases physical damage you deal when a one-handed melee weapon is equipped by 2%.",
 @"Increases physical damage you deal when a one-handed melee weapon is equipped by 4%.",
 @"Increases physical damage you deal when a one-handed melee weapon is equipped by 6%.",
 @"Increases physical damage you deal when a one-handed melee weapon is equipped by 8%.",
 @"Increases physical damage you deal when a one-handed melee weapon is equipped by 10%.",})]
-		public int OneHandedWeaponSpecialization { get { return _data[73]; } set { _data[73] = value; } }
+        public int OneHandedWeaponSpecialization { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(74, "Improved Defensive Stance", 3, 2, 1, 7, -1, new string[] {
+        [TalentData(74, "Improved Defensive Stance", 3, 2, 1, 7, -1, new string[] {
 @"Reduces all spell damage taken while in Defensive Stance by 2%.",
 @"Reduces all spell damage taken while in Defensive Stance by 4%.",
 @"Reduces all spell damage taken while in Defensive Stance by 6%.",
 @"Reduces all spell damage taken while in Defensive Stance by 8%.",
 @"Reduces all spell damage taken while in Defensive Stance by 10%.",})]
-		public int ImprovedDefensiveStance { get { return _data[74]; } set { _data[74] = value; } }
+        public int ImprovedDefensiveStance { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(75, "Vigilance", 1, 2, 2, 7, 70, new string[] {
+        [TalentData(75, "Vigilance", 1, 2, 2, 7, 70, new string[] {
 @"30 yd range,
 Instant,
 Focus your protective gaze on a group or raid target, increasing their chance to dodge by 5% and reducing the threat they cause by 10%. In addition, any time they are hit by an attack your Taunt cooldown is refreshed. Lasts until cancelled. This effect can only be on one target a time.",})]
-		public int Vigilance { get { return _data[75]; } set { _data[75] = value; } }
+        public int Vigilance { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(76, "Focused Rage", 3, 2, 3, 7, -1, new string[] {
+        [TalentData(76, "Focused Rage", 3, 2, 3, 7, -1, new string[] {
 @"Reduces the rage cost of your offensive abilities by 1.",
 @"Reduces the rage cost of your offensive abilities by 2.",
 @"Reduces the rage cost of your offensive abilities by 3.",
 @"Reduces the rage cost of your offensive abilities by 4.",
 @"Reduces the rage cost of your offensive abilities by 5.",})]
-		public int FocusedRage { get { return _data[76]; } set { _data[76] = value; } }
+        public int FocusedRage { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(77, "Vitality", 5, 2, 2, 8, -1, new string[] {
+        [TalentData(77, "Vitality", 5, 2, 2, 8, -1, new string[] {
 @"Increases your total Stamina by 1% and your total Strength by 2%.",
 @"Increases your total Stamina by 2% and your total Strength by 4%.",
 @"Increases your total Stamina by 3% and your total Strength by 6%.",
 @"Increases your total Stamina by 4% and your total Strength by 8%.",
 @"Increases your total Stamina by 5% and your total Strength by 10%.",})]
-		public int Vitality { get { return _data[77]; } set { _data[77] = value; } }
+        public int Vitality { get { return _data[77]; } set { _data[77] = value; } }
 
-		[TalentData(78, "Safeguard", 3, 2, 1, 9, -1, new string[] {
+        [TalentData(78, "Safeguard", 3, 2, 1, 9, -1, new string[] {
 @"Reduces damage taken by the target of your Intervene ability by 20% for 6 sec. In addition, your Charge, Intercept and Intervene abilities have a 33% chance to remove all movement impairing effects when used.",
 @"Reduces damage taken by the target of your Intervene ability by 40% for 6 sec. In addition, your Charge, Intercept and Intervene abilities have a 66% chance to remove all movement impairing effects when used.",
 @"Reduces damage taken by the target of your Intervene ability by 60% for 6 sec. In addition, your Charge, Intercept and Intervene abilities have a 100% chance to remove all movement impairing effects when used.",})]
-		public int Safeguard { get { return _data[78]; } set { _data[78] = value; } }
+        public int Safeguard { get { return _data[78]; } set { _data[78] = value; } }
 
-		[TalentData(79, "Devastate", 1, 2, 2, 9, -1, new string[] {
+        [TalentData(79, "Devastate", 1, 2, 2, 9, -1, new string[] {
 @"15 Rage,Melee Range,
 Instant
 Requires One-Handed Melee Weapon
@@ -5077,370 +5185,382 @@ Sunder the target's armor causing the Sunder Armor effect.  In addition, causes 
   Rank 4: +53 Damage
   Rank 5: +63 Damage
 ",})]
-		public int Devastate { get { return _data[79]; } set { _data[79] = value; } }
+        public int Devastate { get { return _data[79]; } set { _data[79] = value; } }
 
-		[TalentData(80, "Critical Block", 3, 2, 3, 9, -1, new string[] {
+        [TalentData(80, "Critical Block", 3, 2, 3, 9, -1, new string[] {
 @"Your successful blocks have a 10% chance to block double the normal amount.",
 @"Your successful blocks have a 20% chance to block double the normal amount.",
 @"Your successful blocks have a 30% chance to block double the normal amount.",})]
-		public int CriticalBlock { get { return _data[80]; } set { _data[80] = value; } }
+        public int CriticalBlock { get { return _data[80]; } set { _data[80] = value; } }
 
-		[TalentData(81, "Sword and Board", 5, 2, 2, 10, 79, new string[] {
+        [TalentData(81, "Sword and Board", 5, 2, 2, 10, 79, new string[] {
 @"When your Devastate and Shield Slam abilities deal damage they have a 2% chance of refreshing the cooldown of your Shield Slam ability and reducing its cost by 100% for 5 sec.",
 @"When your Devastate and Shield Slam abilities deal damage they have a 4% chance of refreshing the cooldown of your Shield Slam ability and reducing its cost by 100% for 5 sec.",
 @"When your Devastate and Shield Slam abilities deal damage they have a 6% chance of refreshing the cooldown of your Shield Slam ability and reducing its cost by 100% for 5 sec.",
 @"When your Devastate and Shield Slam abilities deal damage they have a 8% chance of refreshing the cooldown of your Shield Slam ability and reducing its cost by 100% for 5 sec.",
 @"When your Devastate and Shield Slam abilities deal damage they have a 10% chance of refreshing the cooldown of your Shield Slam ability and reducing its cost by 100% for 5 sec.",})]
-		public int SwordandBoard { get { return _data[81]; } set { _data[81] = value; } }
+        public int SwordAndBoard { get { return _data[81]; } set { _data[81] = value; } }
 
-		[TalentData(82, "Shockwave", 1, 2, 2, 11, -1, new string[] {
+        [TalentData(82, "Shockwave", 1, 2, 2, 11, -1, new string[] {
 @"15 Rage,Melee Range,
 Instant,20 sec cooldown,
 Sends a wave of force in front of the warrior, causing 142 damage (based on attack																																																																																																																																							power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec. This ability causes a high amount of threat.",})]
-		public int Shockwave { get { return _data[82]; } set { _data[82] = value; } }
-	}
+        public int Shockwave { get { return _data[82]; } set { _data[82] = value; } }
+    }
 
-	public class DeathKnightTalents
-	{
-		private int[] _data = new int[85];
-		public DeathKnightTalents() { }
-		public DeathKnightTalents(string talents)
-		{
-			List<int> data = new List<int>();
-			foreach (Char digit in talents)
-				data.Add(int.Parse(digit.ToString()));
-			data.CopyTo(_data);
-		}
+    public class DeathKnightTalents : ICloneable
+    {
+        private int[] _data = new int[85];
+        public DeathKnightTalents() { }
+        public DeathKnightTalents(string talents)
+        {
+            List<int> data = new List<int>();
+            foreach (Char digit in talents)
+                data.Add(int.Parse(digit.ToString()));
+            data.CopyTo(_data);
+        }
 
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
-		}
+        public override string ToString()
+        {
+            StringBuilder ret = new StringBuilder();
+            foreach (int digit in _data)
+                ret.Append(digit.ToString());
+            return ret.ToString();
+        }
+        object ICloneable.Clone()
+        {
+            DeathKnightTalents clone = (DeathKnightTalents)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            return clone;
+        }
 
-		[TalentData(0, "Butchery", 2, 0, 1, 1, -1, new string[] {
+        public DeathKnightTalents Clone()
+        {
+            return (DeathKnightTalents)((ICloneable)this).Clone();
+        }
+
+
+        [TalentData(0, "Butchery", 2, 0, 1, 1, -1, new string[] {
 @"Whenever you kill an enemy that grants experience or honor, you generate up to 10 runic power. In addition, you generate 1 runic power per 5 sec. while in combat.",
 @"Whenever you kill an enemy that grants experience or honor, you generate up to 20 runic power. In addition, you generate 2 runic power per 5 sec. while in combat.",})]
-		public int Butchery { get { return _data[0]; } set { _data[0] = value; } }
+        public int Butchery { get { return _data[0]; } set { _data[0] = value; } }
 
-		[TalentData(1, "Subversion", 3, 0, 2, 1, -1, new string[] {
+        [TalentData(1, "Subversion", 3, 0, 2, 1, -1, new string[] {
 @"Increases the critical strike chance of Blood Strike, Heart Strike and Obliterate by 3%, and reduces threat generated while in Blood or Unholy Presence by 8%.",
 @"Increases the critical strike chance of Blood Strike, Heart Strike and Obliterate by 6%, and reduces threat generated while in Blood or Unholy Presence by 16%.",
 @"Increases the critical strike chance of Blood Strike, Heart Strike and Obliterate by 9%, and reduces threat generated while in Blood or Unholy Presence by 25%.",})]
-		public int Subversion { get { return _data[1]; } set { _data[1] = value; } }
+        public int Subversion { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Blade Barrier", 5, 0, 3, 1, -1, new string[] {
+        [TalentData(2, "Blade Barrier", 5, 0, 3, 1, -1, new string[] {
 @"Whenever you have no Runes active, your Parry chance increases by 2% for the next 8 sec.",
 @"Whenever you have no Runes active, your Parry chance increases by 4% for the next 8 sec.",
 @"Whenever you have no Runes active, your Parry chance increases by 6% for the next 8 sec.",
 @"Whenever you have no Runes active, your Parry chance increases by 8% for the next 8 sec.",
 @"Whenever you have no Runes active, your Parry chance increases by 10% for the next 8 sec.",})]
-		public int BladeBarrier { get { return _data[2]; } set { _data[2] = value; } }
+        public int BladeBarrier { get { return _data[2]; } set { _data[2] = value; } }
 
-		[TalentData(3, "Bladed Armor", 5, 0, 1, 2, -1, new string[] {
+        [TalentData(3, "Bladed Armor", 5, 0, 1, 2, -1, new string[] {
 @"You gain 5 attack power for every 1000 points of your armor value.",
 @"You gain 10 attack power for every 1000 points of your armor value.",
 @"You gain 15 attack power for every 1000 points of your armor value.",
 @"You gain 20 attack power for every 1000 points of your armor value.",
 @"You gain 25 attack power for every 1000 points of your armor value.",})]
-		public int BladedArmor { get { return _data[3]; } set { _data[3] = value; } }
+        public int BladedArmor { get { return _data[3]; } set { _data[3] = value; } }
 
-		[TalentData(4, "Bloody Strikes", 3, 0, 2, 2, -1, new string[] {
+        [TalentData(4, "Bloody Strikes", 3, 0, 2, 2, -1, new string[] {
 @"Increases the bonus damage your Blood Strike and Heart Strike cause to diseased targets by 20%.",
 @"Increases the bonus damage your Blood Strike and Heart Strike cause to diseased targets by 40%.",
 @"Increases the bonus damage your Blood Strike and Heart Strike cause to diseased targets by 60%.",})]
-		public int BloodyStrikes { get { return _data[4]; } set { _data[4] = value; } }
+        public int BloodyStrikes { get { return _data[4]; } set { _data[4] = value; } }
 
-		[TalentData(5, "Two-Handed Weapon Specialization", 2, 0, 3, 2, -1, new string[] {
+        [TalentData(5, "Two-Handed Weapon Specialization", 2, 0, 3, 2, -1, new string[] {
 @"Increases the damage you deal with two-handed melee weapons by 2%.",
 @"Increases the damage you deal with two-handed melee weapons by 4%.",})]
-		public int TwoHandedWeaponSpecialization { get { return _data[5]; } set { _data[5] = value; } }
+        public int TwoHandedWeaponSpecialization { get { return _data[5]; } set { _data[5] = value; } }
 
-		[TalentData(6, "Rune Tap", 1, 0, 1, 3, -1, new string[] {
+        [TalentData(6, "Rune Tap", 1, 0, 1, 3, -1, new string[] {
 @"1 Blood
 ,
 Instant,1 min cooldown,
 Converts 1 Blood Rune into 10% of your maximum health.",})]
-		public int RuneTap { get { return _data[6]; } set { _data[6] = value; } }
+        public int RuneTap { get { return _data[6]; } set { _data[6] = value; } }
 
-		[TalentData(7, "Dark Conviction", 5, 0, 2, 3, -1, new string[] {
+        [TalentData(7, "Dark Conviction", 5, 0, 2, 3, -1, new string[] {
 @"Increases your chance to critically hit with weapons, spells and abilities by 1%.",
 @"Increases your chance to critically hit with weapons, spells and abilities by 2%.",
 @"Increases your chance to critically hit with weapons, spells and abilities by 3%.",
 @"Increases your chance to critically hit with weapons, spells and abilities by 4%.",
 @"Increases your chance to critically hit with weapons, spells and abilities by 5%.",})]
-		public int DarkConviction { get { return _data[7]; } set { _data[7] = value; } }
+        public int DarkConviction { get { return _data[7]; } set { _data[7] = value; } }
 
-		[TalentData(8, "Death Rune Mastery", 3, 0, 3, 3, -1, new string[] {
+        [TalentData(8, "Death Rune Mastery", 3, 0, 3, 3, -1, new string[] {
 @"Whenever you use a Death Strike, there is a 30% chance that the Frost and Unholy Runes will become Death Runes when they activate.",
 @"Whenever you use a Death Strike, there is a 60% chance that the Frost and Unholy Runes will become Death Runes when they activate.",
 @"Whenever you use a Death Strike, there is a 100% chance that the Frost and Unholy Runes will become Death Runes when they activate.",})]
-		public int DeathRuneMastery { get { return _data[8]; } set { _data[8] = value; } }
+        public int DeathRuneMastery { get { return _data[8]; } set { _data[8] = value; } }
 
-		[TalentData(9, "Improved Rune Tap", 3, 0, 1, 4, 6, new string[] {
+        [TalentData(9, "Improved Rune Tap", 3, 0, 1, 4, 6, new string[] {
 @"Increases the health provided by Rune Tap by 15% and lowers its cooldown by 10 sec.",
 @"Increases the health provided by Rune Tap by 30% and lowers its cooldown by 20 sec.",
 @"Increases the health provided by Rune Tap by 45% and lowers its cooldown by 30 sec.",})]
-		public int ImprovedRuneTap { get { return _data[9]; } set { _data[9] = value; } }
+        public int ImprovedRuneTap { get { return _data[9]; } set { _data[9] = value; } }
 
-		[TalentData(10, "Spell Deflection", 3, 0, 3, 4, -1, new string[] {
+        [TalentData(10, "Spell Deflection", 3, 0, 3, 4, -1, new string[] {
 @"You have a chance equal to your Parry chance of taking 10% less damage from a direct damage spell.",
 @"You have a chance equal to your Parry chance of taking 20% less damage from a direct damage spell.",
 @"You have a chance equal to your Parry chance of taking 30% less damage from a direct damage spell.",})]
-		public int SpellDeflection { get { return _data[10]; } set { _data[10] = value; } }
+        public int SpellDeflection { get { return _data[10]; } set { _data[10] = value; } }
 
-		[TalentData(11, "Vendetta", 3, 0, 4, 4, -1, new string[] {
+        [TalentData(11, "Vendetta", 3, 0, 4, 4, -1, new string[] {
 @"Heals you for up to 2% of your total maximum health whenever you kill a target that yields experience or honor.",
 @"Heals you for up to 4% of your total maximum health whenever you kill a target that yields experience or honor.",
 @"Heals you for up to 6% of your total maximum health whenever you kill a target that yields experience or honor.",})]
-		public int Vendetta { get { return _data[11]; } set { _data[11] = value; } }
+        public int Vendetta { get { return _data[11]; } set { _data[11] = value; } }
 
-		[TalentData(12, "Scent of Blood", 3, 0, 1, 5, -1, new string[] {
+        [TalentData(12, "Scent of Blood", 3, 0, 1, 5, -1, new string[] {
 @"You have a 15% chance after being struck by a ranged or melee hit to gain the Scent of Blood effect, causing your next melee hit to generate 5 runic power. This effect cannot occur more often than once every 20 sec.",
 @"You have a 15% chance after being struck by a ranged or melee hit to gain the Scent of Blood effect, causing your next 2 melee hits to generate 5 runic power. This effect cannot occur more often than once every 20 sec.",
 @"You have a 15% chance after being struck by a ranged or melee hit to gain the Scent of Blood effect, causing your next 3 melee hits to generate 5 runic power. This effect cannot occur more often than once every 20 sec.",})]
-		public int ScentofBlood { get { return _data[12]; } set { _data[12] = value; } }
+        public int ScentOfBlood { get { return _data[12]; } set { _data[12] = value; } }
 
-		[TalentData(13, "Veteran of the Third War", 3, 0, 3, 5, -1, new string[] {
+        [TalentData(13, "Veteran of the Third War", 3, 0, 3, 5, -1, new string[] {
 @"Increases your total Strength by 2% and your total Stamina by 1%.",
 @"Increases your total Strength by 4% and your total Stamina by 2%.",
 @"Increases your total Strength by 6% and your total Stamina by 3%.",})]
-		public int VeteranoftheThirdWar { get { return _data[13]; } set { _data[13] = value; } }
+        public int VeteranOfTheThirdWar { get { return _data[13]; } set { _data[13] = value; } }
 
-		[TalentData(14, "Mark of Blood", 1, 0, 4, 5, -1, new string[] {
+        [TalentData(14, "Mark of Blood", 1, 0, 4, 5, -1, new string[] {
 @"1 Blood 1 Unholy,30 yd range,
 Instant,3 min cooldown,
  Place a Mark of Blood on an enemy. Whenever the marked enemy deals damage to a target, that target is healed for 2% of its maximum health. Lasts for 30 sec.",})]
-		public int MarkofBlood { get { return _data[14]; } set { _data[14] = value; } }
+        public int MarkOfBlood { get { return _data[14]; } set { _data[14] = value; } }
 
-		[TalentData(15, "Bloody Vengeance", 5, 0, 2, 6, 7, new string[] {
+        [TalentData(15, "Bloody Vengeance", 5, 0, 2, 6, 7, new string[] {
 @"Gives you a 1% bonus to Physical and Shadow damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell, or ability. This effect stacks up to 3 times.",
 @"Gives you a 2% bonus to Physical and Shadow damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell, or ability. This effect stacks up to 3 times.",
 @"Gives you a 3% bonus to Physical and Shadow damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell, or ability. This effect stacks up to 3 times.",
 @"Gives you a 4% bonus to Physical and Shadow damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell, or ability. This effect stacks up to 3 times.",
 @"Gives you a 5% bonus to Physical and Shadow damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell, or ability. This effect stacks up to 3 times.",})]
-		public int BloodyVengeance { get { return _data[15]; } set { _data[15] = value; } }
+        public int BloodyVengeance { get { return _data[15]; } set { _data[15] = value; } }
 
-		[TalentData(16, "Abomination's Might", 2, 0, 3, 6, -1, new string[] {
+        [TalentData(16, "Abomination's Might", 2, 0, 3, 6, -1, new string[] {
 @"Your Blood Strikes and Heart Strikes have a 25% chance and your Obliterates have a 50% chance to increase the attack power by 10% of raid members within 20 yards by 10 sec.",
 @"Your Blood Strikes and Heart Strikes have a 50% chance and your Obliterates have a 100% chance to increase the attack power by 10% of raid members within 20 yards by 10 sec.",})]
-		public int AbominationsMight { get { return _data[16]; } set { _data[16] = value; } }
+        public int AbominationsMight { get { return _data[16]; } set { _data[16] = value; } }
 
-		[TalentData(17, "Bloodworms", 3, 0, 1, 7, -1, new string[] {
+        [TalentData(17, "Bloodworms", 3, 0, 1, 7, -1, new string[] {
 @"Your Death Strikes have a 3% chance to cause the target to spawn 2-4 Bloodworm. Bloodworms attack your enemies, healing you for the amount of damage they deal for 20 sec or until killed.",
 @"Your Death Strikes have a 6% chance to cause the target to spawn 2-4 Bloodworms. Bloodworms attack your enemies, healing you for the amount of damage they deal for 20 sec or until killed.",
 @"Your Death Strikes have a 9% chance to cause the target to spawn 2-4 Bloodworms. Bloodworms attack your enemies, healing you for the amount of damage they deal for 20 sec or until killed.",})]
-		public int Bloodworms { get { return _data[17]; } set { _data[17] = value; } }
+        public int Bloodworms { get { return _data[17]; } set { _data[17] = value; } }
 
-		[TalentData(18, "Hysteria", 1, 0, 2, 7, -1, new string[] {
+        [TalentData(18, "Hysteria", 1, 0, 2, 7, -1, new string[] {
 @"1 Blood 1 Unholy,30 yd range,
 Instant,2 min cooldown,
  Induces a friendly unit into a killing frenzy for 30 sec, increasing their physical damage by 20%, but causing them to suffer damage equal to 1% of their maximum health every second.",})]
-		public int Hysteria { get { return _data[18]; } set { _data[18] = value; } }
+        public int Hysteria { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Blood Aura", 2, 0, 3, 7, -1, new string[] {
+        [TalentData(19, "Blood Aura", 2, 0, 3, 7, -1, new string[] {
 @"All party or raid members within 45 yards of the Death Knight are healed by 1% of the damage they deal.",
 @"All party or raid members within 45 yards of the Death Knight are healed by 2% of the damage they deal.",})]
-		public int BloodAura { get { return _data[19]; } set { _data[19] = value; } }
+        public int BloodAura { get { return _data[19]; } set { _data[19] = value; } }
 
-		[TalentData(20, "Sudden Doom", 5, 0, 2, 8, -1, new string[] {
+        [TalentData(20, "Sudden Doom", 5, 0, 2, 8, -1, new string[] {
 @"Your Blood Strikes and Heart Strikes have a 4% chance to make your next Death Coil consume no runic power and critically hit if cast within 15 sec.",
 @"Your Blood Strikes and Heart Strikes have a 8% chance to make your next Death Coil consume no runic power and critically hit if cast within 15 sec.",
 @"Your Blood Strikes and Heart Strikes have a 12% chance to make your next Death Coil consume no runic power and critically hit if cast within 15 sec.",
 @"Your Blood Strikes and Heart Strikes have a 16% chance to make your next Death Coil consume no runic power and critically hit if cast within 15 sec.",
 @"Your Blood Strikes and Heart Strikes have a 20% chance to make your next Death Coil consume no runic power and critically hit if cast within 15 sec.",})]
-		public int SuddenDoom { get { return _data[20]; } set { _data[20] = value; } }
+        public int SuddenDoom { get { return _data[20]; } set { _data[20] = value; } }
 
-		[TalentData(21, "Vampiric Blood", 1, 0, 3, 8, -1, new string[] {
+        [TalentData(21, "Vampiric Blood", 1, 0, 3, 8, -1, new string[] {
 @"1 Blood,1 min cooldown,
 Increases the amount of health generated through spells and effects by 50% for 20 sec.",})]
-		public int VampiricBlood { get { return _data[21]; } set { _data[21] = value; } }
+        public int VampiricBlood { get { return _data[21]; } set { _data[21] = value; } }
 
-		[TalentData(22, "Will of the Necropolis", 3, 0, 1, 9, -1, new string[] {
+        [TalentData(22, "Will of the Necropolis", 3, 0, 1, 9, -1, new string[] {
 @"Increases your expertise by 4. When you have less than 35% health, your total armor increases by 10%.",
 @"Increases your expertise by 8. When you have less than 35% health, your total armor increases by 20%.",
 @"Increases your expertise by 12. When you have less than 35% health, your total armor increases by 30%.",})]
-		public int WilloftheNecropolis { get { return _data[22]; } set { _data[22] = value; } }
+        public int WillOfTheNecropolis { get { return _data[22]; } set { _data[22] = value; } }
 
-		[TalentData(23, "Heart Strike", 1, 0, 2, 9, -1, new string[] {
+        [TalentData(23, "Heart Strike", 1, 0, 2, 9, -1, new string[] {
 @"1 Blood,Melee range,
 Instant,
 Requires Melee Weapon,
  A brutal attack that instantly strikes the enemy, causing 60% weapon damage plus 72 for each of the Death Knight's diseases on the target and preventing the target from using haste effects for 10 sec.",})]
-		public int HeartStrike { get { return _data[23]; } set { _data[23] = value; } }
+        public int HeartStrike { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Might of Mograine", 3, 0, 3, 9, -1, new string[] {
+        [TalentData(24, "Might of Mograine", 3, 0, 3, 9, -1, new string[] {
 @"Increases the critical strike damage bonus of your Blood Boil, Blood Strike, Death Strike, Heart Strike, and Obliterate abilities by 15%.",
 @"Increases the critical strike damage bonus of your Blood Boil, Blood Strike, Death Strike, Heart Strike, and Obliterate abilities by 30%.",
 @"Increases the critical strike damage bonus of your Blood Boil, Blood Strike, Death Strike, Heart Strike, and Obliterate abilities by 45%.",})]
-		public int MightofMograine { get { return _data[24]; } set { _data[24] = value; } }
+        public int MightOfMograine { get { return _data[24]; } set { _data[24] = value; } }
 
-		[TalentData(25, "Blood Gorged", 5, 0, 2, 10, -1, new string[] {
+        [TalentData(25, "Blood Gorged", 5, 0, 2, 10, -1, new string[] {
 @"When you are above 75% health, you deal 2% more damage.",
 @"When you are above 75% health, you deal 4% more damage.",
 @"When you are above 75% health, you deal 6% more damage.",
 @"When you are above 75% health, you deal 8% more damage.",
 @"When you are above 75% health, you deal 10% more damage.",})]
-		public int BloodGorged { get { return _data[25]; } set { _data[25] = value; } }
+        public int BloodGorged { get { return _data[25]; } set { _data[25] = value; } }
 
-		[TalentData(26, "Dancing Rune Weapon", 1, 0, 2, 11, -1, new string[] {
+        [TalentData(26, "Dancing Rune Weapon", 1, 0, 2, 11, -1, new string[] {
 @"50 Runic Power,30 yd range,
 Instant,2 min cooldown,
 Requires Melee Weapon,
  Unleashes all available runic power to summon a second rune weapon that fights on its own for 10 sec plus 1 sec per 5 additional runic power, doing the same attacks as the Death Knight.",})]
-		public int DancingRuneWeapon { get { return _data[26]; } set { _data[26] = value; } }
+        public int DancingRuneWeapon { get { return _data[26]; } set { _data[26] = value; } }
 
-		[TalentData(27, "Improved Icy Touch", 3, 1, 1, 1, -1, new string[] {
+        [TalentData(27, "Improved Icy Touch", 3, 1, 1, 1, -1, new string[] {
 @"Your Icy Touch does an additional 10% damage and your Frost Fever reduces melee attack speed by an additional 2%.",
 @"Your Icy Touch does an additional 20% damage and your Frost Fever reduces melee attack speed by an additional 4%.",
 @"Your Icy Touch does an additional 30% damage and your Frost Fever reduces melee attack speed by an additional 6%.",})]
-		public int ImprovedIcyTouch { get { return _data[27]; } set { _data[27] = value; } }
+        public int ImprovedIcyTouch { get { return _data[27]; } set { _data[27] = value; } }
 
-		[TalentData(28, "Glacier Rot", 2, 1, 2, 1, -1, new string[] {
+        [TalentData(28, "Glacier Rot", 2, 1, 2, 1, -1, new string[] {
 @"Diseased enemies take 5% more damage from your Icy Touch, Howling Blast and Frost Strike spells.",
 @"Diseased enemies take 10% more damage from your Icy Touch, Howling Blast and Frost Strike spells.",})]
-		public int GlacierRot { get { return _data[28]; } set { _data[28] = value; } }
+        public int GlacierRot { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(29, "Toughness", 5, 1, 3, 1, -1, new string[] {
+        [TalentData(29, "Toughness", 5, 1, 3, 1, -1, new string[] {
 @"Increases your armor value from items by 3% and reduces the duration of all movement slowing effects by 10%.",
 @"Increases your armor value from items by 6% and reduces the duration of all movement slowing effects by 20%.",
 @"Increases your armor value from items by 9% and reduces the duration of all movement slowing effects by 30%.",
 @"Increases your armor value from items by 12% and reduces the duration of all movement slowing effects by 40%.",
 @"Increases your armor value from items by 15% and reduces the duration of all movement slowing effects by 50%.",})]
-		public int Toughness { get { return _data[29]; } set { _data[29] = value; } }
+        public int Toughness { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(30, "Icy Reach", 2, 1, 2, 2, -1, new string[] {
+        [TalentData(30, "Icy Reach", 2, 1, 2, 2, -1, new string[] {
 @"Increases the range of your Icy Touch, Chains of Ice and Howling Blast by 5 yards.",
 @"Increases the range of your Icy Touch, Chains of Ice and Howling Blast by 10 yards.",})]
-		public int IcyReach { get { return _data[30]; } set { _data[30] = value; } }
+        public int IcyReach { get { return _data[30]; } set { _data[30] = value; } }
 
-		[TalentData(31, "Black Ice", 5, 1, 3, 2, -1, new string[] {
+        [TalentData(31, "Black Ice", 5, 1, 3, 2, -1, new string[] {
 @"Increases your Frost and Shadow spell damage by 3%.",
 @"Increases your Frost and Shadow spell damage by 6%.",
 @"Increases your Frost and Shadow spell damage by 9%.",
 @"Increases your Frost and Shadow spell damage by 12%.",
 @"Increases your Frost and Shadow spell damage by 15%.",})]
-		public int BlackIce { get { return _data[31]; } set { _data[31] = value; } }
+        public int BlackIce { get { return _data[31]; } set { _data[31] = value; } }
 
-		[TalentData(32, "Nerves of Cold Steel", 3, 1, 4, 2, -1, new string[] {
+        [TalentData(32, "Nerves of Cold Steel", 3, 1, 4, 2, -1, new string[] {
 @"Increases your chance to hit with a one-handed melee weapon by 1% and increases the damage done by your offhand weapon by 5%.",
 @"Increases your chance to hit with a one-handed melee weapon by 2% and increases the damage done by your offhand weapon by 10%.",
 @"Increases your chance to hit with a one-handed melee weapon by 3% and increases the damage done by your offhand weapon by 15%.",})]
-		public int NervesofColdSteel { get { return _data[32]; } set { _data[32] = value; } }
+        public int NervesOfColdSteel { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(33, "Icy Talons", 5, 1, 1, 3, 27, new string[] {
+        [TalentData(33, "Icy Talons", 5, 1, 1, 3, 27, new string[] {
 @"You leech heat from victims of your Frost Fever, so that when their melee speed is reduced, yours increases by 4% for for the next 20 sec.",
 @"You leech heat from victims of your Frost Fever, so that when their melee speed is reduced, yours increases by 8% for for the next 20 sec.",
 @"You leech heat from victims of your Frost Fever, so that when their melee speed is reduced, yours increases by 12% for for the next 20 sec.",
 @"You leech heat from victims of your Frost Fever, so that when their melee speed is reduced, yours increases by 16% for for the next 20 sec.",
 @"You leech heat from victims of your Frost Fever, so that when their melee speed is reduced, yours increases by 20% for for the next 20 sec.",})]
-		public int IcyTalons { get { return _data[33]; } set { _data[33] = value; } }
+        public int IcyTalons { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(34, "Lichborne", 1, 1, 2, 3, -1, new string[] {
+        [TalentData(34, "Lichborne", 1, 1, 2, 3, -1, new string[] {
 @"Instant
 ,3 min cooldown,
 Draw upon unholy energy to become undead for 15 sec. While undead, you are immune to Charm, Fear and Sleep effects, and your horrifying visage causes melee attacks to have an additional 25% chance to miss you.",})]
-		public int Lichborne { get { return _data[34]; } set { _data[34] = value; } }
+        public int Lichborne { get { return _data[34]; } set { _data[34] = value; } }
 
-		[TalentData(35, "Annihilation", 3, 1, 3, 3, -1, new string[] {
+        [TalentData(35, "Annihilation", 3, 1, 3, 3, -1, new string[] {
 @"Increases the critical strike chance of your melee special abilities by 1%. In addition, there is a 30% chance that your Obliterate will do its damage without consuming diseases.",
 @"Increases the critical strike chance of your melee special abilities by 2%. In addition, there is a 60% chance that your Obliterate will do its damage without consuming diseases.",
 @"Increases the critical strike chance of your melee special abilities by 3%. In addition, there is a 90% chance that your Obliterate will do its damage without consuming diseases.",})]
-		public int Annihilation { get { return _data[35]; } set { _data[35] = value; } }
+        public int Annihilation { get { return _data[35]; } set { _data[35] = value; } }
 
-		[TalentData(36, "Runic Power Mastery", 3, 1, 2, 4, -1, new string[] {
+        [TalentData(36, "Runic Power Mastery", 3, 1, 2, 4, -1, new string[] {
 @"Increases your maximum Runic Power by 10.",
 @"Increases your maximum Runic Power by 20.",
 @"Increases your maximum Runic Power by 30.",})]
-		public int RunicPowerMastery { get { return _data[36]; } set { _data[36] = value; } }
+        public int RunicPowerMastery { get { return _data[36]; } set { _data[36] = value; } }
 
-		[TalentData(37, "Killing Machine", 5, 1, 3, 4, -1, new string[] {
+        [TalentData(37, "Killing Machine", 5, 1, 3, 4, -1, new string[] {
 @"After landing a critical strike from an autoattack, there is a 20% chance your next Icy Touch, Howling Blast or Frost Strike will be a critical strike.",
 @"After landing a critical strike from an autoattack, there is a 40% chance your next Icy Touch, Howling Blast or Frost Strike will be a critical strike.",
 @"After landing a critical strike from an autoattack, there is a 60% chance your next Icy Touch, Howling Blast or Frost Strike will be a critical strike.",
 @"After landing a critical strike from an autoattack, there is a 80% chance your next Icy Touch, Howling Blast or Frost Strike will be a critical strike.",
 @"After landing a critical strike from an autoattack, there is a 100% chance your next Icy Touch, Howling Blast or Frost Strike will be a critical strike.",})]
-		public int KillingMachine { get { return _data[37]; } set { _data[37] = value; } }
+        public int KillingMachine { get { return _data[37]; } set { _data[37] = value; } }
 
-		[TalentData(38, "Frigid Dreadplate", 3, 1, 2, 5, -1, new string[] {
+        [TalentData(38, "Frigid Dreadplate", 3, 1, 2, 5, -1, new string[] {
 @"Enemies who hit you in melee have a 30% chance to become unsettled, decreasing their chance to hit for 5% for the next 12 sec.",
 @"Enemies who hit you in melee have a 60% chance to become unsettled, decreasing their chance to hit for 5% for the next 12 sec.",
 @"Enemies who hit you in melee have a 100% chance to become unsettled, decreasing their chance to hit for 5% for the next 12 sec.",})]
-		public int FrigidDreadplate { get { return _data[38]; } set { _data[38] = value; } }
+        public int FrigidDreadplate { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Chill of the Grave", 2, 1, 3, 5, -1, new string[] {
+        [TalentData(39, "Chill of the Grave", 2, 1, 3, 5, -1, new string[] {
 @"Your Icy Touch, Chains of Ice and Howling Blast generate 50% additional runic power.",
 @"Your Icy Touch, Chains of Ice and Howling Blast generate 100% additional runic power.",})]
-		public int ChilloftheGrave { get { return _data[39]; } set { _data[39] = value; } }
+        public int ChillOfTheGrave { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(40, "Deathchill", 1, 1, 4, 5, -1, new string[] {
+        [TalentData(40, "Deathchill", 1, 1, 4, 5, -1, new string[] {
 @"Instant
 ,
 2 min cooldown,
 When activated, makes your next Icy Touch, Howling Blast, Frost Strike or Obliterate spell or ability a critical hit, if cast within 6 sec.",})]
-		public int Deathchill { get { return _data[40]; } set { _data[40] = value; } }
+        public int Deathchill { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(41, "Improved Icy Talons", 1, 1, 1, 6, 33, new string[] {
+        [TalentData(41, "Improved Icy Talons", 1, 1, 1, 6, 33, new string[] {
 @"Your Icy Talons effect increases the melee speed of the entire raid by 20% for the next 20 sec.",})]
-		public int ImprovedIcyTalons { get { return _data[41]; } set { _data[41] = value; } }
+        public int ImprovedIcyTalons { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(42, "Merciless Combat", 2, 1, 2, 6, -1, new string[] {
+        [TalentData(42, "Merciless Combat", 2, 1, 2, 6, -1, new string[] {
 @"Your Icy Touch, Howling Blast, Obliterate and Frost Strike do an additional 10% damage when striking targets with less than 35% health.",
 @"Your Icy Touch, Howling Blast, Obliterate and Frost Strike do an additional 20% damage when striking targets with less than 35% health.",})]
-		public int MercilessCombat { get { return _data[42]; } set { _data[42] = value; } }
+        public int MercilessCombat { get { return _data[42]; } set { _data[42] = value; } }
 
-		[TalentData(43, "Rime", 2, 1, 3, 6, -1, new string[] {
+        [TalentData(43, "Rime", 2, 1, 3, 6, -1, new string[] {
 @"Increases the damage of your Icy Touch and Howling Blast by 15%.",
 @"Increases the damage of your Icy Touch and Howling Blast by 30%.",})]
-		public int Rime { get { return _data[43]; } set { _data[43] = value; } }
+        public int Rime { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Chilblains", 3, 1, 4, 6, -1, new string[] {
+        [TalentData(44, "Chilblains", 3, 1, 4, 6, -1, new string[] {
 @"Victims of your Frost Fever disease are Chilled, reducing movement speed by 10% for 6 sec.",
 @"Victims of your Frost Fever disease are Chilled, reducing movement speed by 20% for 6 sec.",
 @"Victims of your Frost Fever disease are Chilled, reducing movement speed by 30% for 6 sec.",})]
-		public int Chilblains { get { return _data[44]; } set { _data[44] = value; } }
+        public int Chilblains { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(45, "Howling Blast", 1, 1, 2, 7, -1, new string[] {
+        [TalentData(45, "Howling Blast", 1, 1, 2, 7, -1, new string[] {
 @"1 Unholy 1 Frost
 ,20 yd range,
  Instant
 ,6 sec cooldown,
 Blast the target with a frigid wind dealing 223 to 241 Frost damage to all enemies within 10 yards. Deals double damage to targets infected with Frost Fever.",})]
-		public int HowlingBlast { get { return _data[45]; } set { _data[45] = value; } }
+        public int HowlingBlast { get { return _data[45]; } set { _data[45] = value; } }
 
-		[TalentData(46, "Frost Aura", 2, 1, 3, 7, -1, new string[] {
+        [TalentData(46, "Frost Aura", 2, 1, 3, 7, -1, new string[] {
 @"All party or raid members within 45 yards of the Death Knight gain 40 spell resistance.",
 @"All party or raid members within 45 yards of the Death Knight gain 80 spell resistance.",})]
-		public int FrostAura { get { return _data[46]; } set { _data[46] = value; } }
+        public int FrostAura { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Endless Winter", 2, 1, 4, 7, 44, new string[] {
+        [TalentData(47, "Endless Winter", 2, 1, 4, 7, 44, new string[] {
 @"Your Chains of Ice has a 50% chance to cause Frost Fever and the cost of your Mind Freeze is reduced to 10 runic power.",
 @"Your Chains of Ice has a 100% chance to cause Frost Fever and the cost of your Mind Freeze is reduced to no runic power.",})]
-		public int EndlessWinter { get { return _data[47]; } set { _data[47] = value; } }
+        public int EndlessWinter { get { return _data[47]; } set { _data[47] = value; } }
 
-		[TalentData(48, "Blood of the North", 3, 1, 2, 8, -1, new string[] {
+        [TalentData(48, "Blood of the North", 3, 1, 2, 8, -1, new string[] {
 @"Whenever you use a Blood Strike, there is a 30% chance that the Blood Rune will become a Death Rune when it activates.",
 @"Whenever you use a Blood Strike, there is a 60% chance that the Blood Rune will become a Death Rune when it activates.",
 @"Whenever you use a Blood Strike, there is a 100% chance that the Blood Rune will become a Death Rune when it activates.",})]
-		public int BloodoftheNorth { get { return _data[48]; } set { _data[48] = value; } }
+        public int BloodOfTheNorth { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(49, "Unbreakable Armor", 1, 1, 3, 8, -1, new string[] {
+        [TalentData(49, "Unbreakable Armor", 1, 1, 3, 8, -1, new string[] {
 @"1 Frost
 ,
 Instant
 ,1 min cooldown,
 Increases your armor by 25%, your total Strength by 10% and your Parry chance by 5% for 20 sec.",})]
-		public int UnbreakableArmor { get { return _data[49]; } set { _data[49] = value; } }
+        public int UnbreakableArmor { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(50, "Acclimation", 3, 1, 1, 9, -1, new string[] {
+        [TalentData(50, "Acclimation", 3, 1, 1, 9, -1, new string[] {
 @"When you are hit by a spell, you have a 10% chance to boost your party's resistance to that type of magic for 18 sec. Stacks up to 3 times.",
 @"When you are hit by a spell, you have a 20% chance to boost your party's resistance to that type of magic for 18 sec. Stacks up to 3 times.",
 @"When you are hit by a spell, you have a 30% chance to boost your party's resistance to that type of magic for 18 sec. Stacks up to 3 times.",})]
-		public int Acclimation { get { return _data[50]; } set { _data[50] = value; } }
+        public int Acclimation { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Frost Strike", 1, 1, 2, 9, -1, new string[] {
+        [TalentData(51, "Frost Strike", 1, 1, 2, 9, -1, new string[] {
 @"40 Runic Power
 ,
 Melee Range,
@@ -5449,201 +5569,201 @@ Instant
 Requires Melee Weapon
 ,
 Instantly strike the enemy, causing 100% weapon damage plus 6 as Frost damage.",})]
-		public int FrostStrike { get { return _data[51]; } set { _data[51] = value; } }
+        public int FrostStrike { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(52, "Guile of Gorefiend", 3, 1, 3, 9, -1, new string[] {
+        [TalentData(52, "Guile of Gorefiend", 3, 1, 3, 9, -1, new string[] {
 @"Increases the critical strike damage bonus of your Blood Strike, Obliterate, Rune Strike, and Frost Strike abilities by 15%, and increases the duration of your Icebound Fortitude by 2 sec.",
 @"Increases the critical strike damage bonus of your Blood Strike, Obliterate, Rune Strike, and Frost Strike abilities by 30%, and increases the duration of your Icebound Fortitude by 4 sec.",
 @"Increases the critical strike damage bonus of your Blood Strike, Obliterate, Rune Strike, and Frost Strike abilities by 45%, and increases the duration of your Icebound Fortitude by 6 sec.",})]
-		public int GuileofGorefiend { get { return _data[52]; } set { _data[52] = value; } }
+        public int GuileOfGorefiend { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(53, "Tundra Stalker", 5, 1, 2, 10, -1, new string[] {
+        [TalentData(53, "Tundra Stalker", 5, 1, 2, 10, -1, new string[] {
 @"Your spells and abilities deal 2% more damage to targets with Frost Fever.",
 @"Your spells and abilities deal 4% more damage to targets with Frost Fever.",
 @"Your spells and abilities deal 6% more damage to targets with Frost Fever.",
 @"Your spells and abilities deal 8% more damage to targets with Frost Fever.",
 @"Your spells and abilities deal 10% more damage to targets with Frost Fever.",})]
-		public int TundraStalker { get { return _data[53]; } set { _data[53] = value; } }
+        public int TundraStalker { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(54, "Hungering Cold", 1, 1, 2, 11, -1, new string[] {
+        [TalentData(54, "Hungering Cold", 1, 1, 2, 11, -1, new string[] {
 @"60 Runic Power
 ,
  Instant
 ,1 min cooldown,
 Purges the earth around the Death Knight of all heat. Enemies within 10 yards are trapped in ice, preventing them from performing any action for 10 sec and infecting them with Frost Fever. Enemies are considered Frozen, but any damage other than diseases will break the ice.",})]
-		public int HungeringCold { get { return _data[54]; } set { _data[54] = value; } }
+        public int HungeringCold { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(55, "Vicious Strikes", 2, 2, 1, 1, -1, new string[] {
+        [TalentData(55, "Vicious Strikes", 2, 2, 1, 1, -1, new string[] {
 @"Increases the critical strike chance by 3% and the critical strike damage bonus by 15% of your Plague Strike, Death Strike and Scourge Strike.",
 @"Increases the critical strike chance by 6% and the critical strike damage bonus by 30% of your Plague Strike, Death Strike and Scourge Strike.",})]
-		public int ViciousStrikes { get { return _data[55]; } set { _data[55] = value; } }
+        public int ViciousStrikes { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "Morbidity", 3, 2, 2, 1, -1, new string[] {
+        [TalentData(56, "Morbidity", 3, 2, 2, 1, -1, new string[] {
 @"Increases the damage and healing of Death Coil by 5% and reduces the cooldown on Death and Decay by 5 sec.",
 @"Increases the damage and healing of Death Coil by 10% and reduces the cooldown on Death and Decay by 10 sec.",
 @"Increases the damage and healing of Death Coil by 15% and reduces the cooldown on Death and Decay by 15 sec.",})]
-		public int Morbidity { get { return _data[56]; } set { _data[56] = value; } }
+        public int Morbidity { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(57, "Anticipation", 5, 2, 3, 1, -1, new string[] {
+        [TalentData(57, "Anticipation", 5, 2, 3, 1, -1, new string[] {
 @"Increases your chance to dodge by 1%.",
 @"Increases your chance to dodge by 2%.",
 @"Increases your chance to dodge by 3%.",
 @"Increases your chance to dodge by 4%.",
 @"Increases your chance to dodge by 5%.",})]
-		public int Anticipation { get { return _data[57]; } set { _data[57] = value; } }
+        public int Anticipation { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(58, "Epidemic", 2, 2, 1, 2, -1, new string[] {
+        [TalentData(58, "Epidemic", 2, 2, 1, 2, -1, new string[] {
 @"Increases the duration of Blood Plague and Frost Fever by 3 sec.",
 @"Increases the duration of Blood Plague and Frost Fever by 6 sec.",})]
-		public int Epidemic { get { return _data[58]; } set { _data[58] = value; } }
+        public int Epidemic { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(59, "Virulence", 3, 2, 2, 2, -1, new string[] {
+        [TalentData(59, "Virulence", 3, 2, 2, 2, -1, new string[] {
 @"Increases your chance to hit with your spells by 1% and reduces the chance that your spells and diseases you cause can be cured by 10%.",
 @"Increases your chance to hit with your spells by 2% and reduces the chance that your spells and diseases you cause can be cured by 20%.",
 @"Increases your chance to hit with your spells by 3% and reduces the chance that your spells and diseases you cause can be cured by 30%.",})]
-		public int Virulence { get { return _data[59]; } set { _data[59] = value; } }
+        public int Virulence { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(60, "Unholy Command", 2, 2, 3, 2, -1, new string[] {
+        [TalentData(60, "Unholy Command", 2, 2, 3, 2, -1, new string[] {
 @"Reduces the cooldown of your Death Grip ability by 5 sec and the cooldown of your Demand ability by 1 sec.",
 @"Reduces the cooldown of your Death Grip ability by 10 sec and the cooldown of your Demand ability by 2 sec.",})]
-		public int UnholyCommand { get { return _data[60]; } set { _data[60] = value; } }
+        public int UnholyCommand { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Ravenous Dead", 3, 2, 4, 2, -1, new string[] {
+        [TalentData(61, "Ravenous Dead", 3, 2, 4, 2, -1, new string[] {
 @"Increases the total Strength of you and your Ghouls by 1% and reduces the cooldown on Raise Dead by 30 sec.",
 @"Increases the total Strength of you and your Ghouls by 2% and reduces the cooldown on Raise Dead by 60 sec.",
 @"Increases the total Strength of you and your Ghouls by 3% and reduces the cooldown on Raise Dead by 90 sec.",})]
-		public int RavenousDead { get { return _data[61]; } set { _data[61] = value; } }
+        public int RavenousDead { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Outbreak", 3, 2, 1, 3, -1, new string[] {
+        [TalentData(62, "Outbreak", 3, 2, 1, 3, -1, new string[] {
 @"Increases the damage of Plague Strike, Pestilence and Blood Boil by 10%.",
 @"Increases the damage of Plague Strike, Pestilence and Blood Boil by 20%.",
 @"Increases the damage of Plague Strike, Pestilence and Blood Boil by 30%.",})]
-		public int Outbreak { get { return _data[62]; } set { _data[62] = value; } }
+        public int Outbreak { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(63, "Necrosis", 5, 2, 2, 3, -1, new string[] {
+        [TalentData(63, "Necrosis", 5, 2, 2, 3, -1, new string[] {
 @"Your auto attacks deal an additional 5% Shadow damage.",
 @"Your auto attacks swings deal an additional 10% Shadow damage.",
 @"Your auto attacks swings deal an additional 15% Shadow damage.",
 @"Your auto attacks swings deal an additional 20% Shadow damage.",
 @"Your auto attacks swings deal an additional 25% Shadow damage.",})]
-		public int Necrosis { get { return _data[63]; } set { _data[63] = value; } }
+        public int Necrosis { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(64, "Corpse Explosion", 1, 2, 3, 3, -1, new string[] {
+        [TalentData(64, "Corpse Explosion", 1, 2, 3, 3, -1, new string[] {
 @"1 Unholy
 ,20 yd range,
 Instant
 ,
 Cause a corpse to explode for 216 Shadow damage to all enemies within 20 yards. Will use a nearby corpse if the target is not a corpse. Does not affect mechanical or elemental corpses.",})]
-		public int CorpseExplosion { get { return _data[64]; } set { _data[64] = value; } }
+        public int CorpseExplosion { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(65, "On a Pale Horse", 2, 2, 2, 4, -1, new string[] {
+        [TalentData(65, "On a Pale Horse", 2, 2, 2, 4, -1, new string[] {
 @"You become as hard to stop as death itself. The duration of all Stun and Fear effects used against you is reduced by 10%, and your mounted speed is increased by 10%. This does not stack with other movement speed increasing effects.",
 @"You become as hard to stop as death itself. The duration of all Stun and Fear effects used against you is reduced by 20%, and your mounted speed is increased by 20%. This does not stack with other movement speed increasing effects.",})]
-		public int OnaPaleHorse { get { return _data[65]; } set { _data[65] = value; } }
+        public int OnAPaleHorse { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(66, "Blood-Caked Blade", 3, 2, 3, 4, -1, new string[] {
+        [TalentData(66, "Blood-Caked Blade", 3, 2, 3, 4, -1, new string[] {
 @"Your auto attacks have a 5% chance to cause a Blood-Caked Strike, which hits for 50% weapon damage for each of your diseases on the target.",
 @"Your auto attacks have a 10% chance to cause a Blood-Caked Strike, which hits for 50% weapon damage for each of your diseases on the target.",
 @"Your auto attacks have a 15% chance to cause a Blood-Caked Strike, which hits for 50% weapon damage for each of your diseases on the target.",})]
-		public int BloodCakedBlade { get { return _data[66]; } set { _data[66] = value; } }
+        public int BloodCakedBlade { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(67, "Shadow of Death", 1, 2, 4, 4, -1, new string[] {
+        [TalentData(67, "Shadow of Death", 1, 2, 4, 4, -1, new string[] {
 @"Increases your total Strength and Stamina by 2%. In addition, whenever you die, you return to keep fighting as a Ghoul for 45 sec.",})]
-		public int ShadowofDeath { get { return _data[67]; } set { _data[67] = value; } }
+        public int ShadowOfDeath { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(68, "Summon Gargoyle", 1, 2, 1, 5, -1, new string[] {
+        [TalentData(68, "Summon Gargoyle", 1, 2, 1, 5, -1, new string[] {
 @"50 Runic Power
 ,30 yd range,
  Instant
 ,3 min cooldown,
 A Gargoyle flies into the area and bombards the target with Nature damage modified by the Death Knight's attack power. Persists for 1 sec per 8 runic power up to 1 min.",})]
-		public int SummonGargoyle { get { return _data[68]; } set { _data[68] = value; } }
+        public int SummonGargoyle { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(69, "Impurity", 5, 2, 2, 5, -1, new string[] {
+        [TalentData(69, "Impurity", 5, 2, 2, 5, -1, new string[] {
 @"Your spells receive an additional 5% benefit from your attack power.",
 @"Your spells receive an additional 10% benefit from your attack power.",
 @"Your spells receive an additional 15% benefit from your attack power.",
 @"Your spells receive an additional 20% benefit from your attack power.",
 @"Your spells receive an additional 25% benefit from your attack power.",})]
-		public int Impurity { get { return _data[69]; } set { _data[69] = value; } }
+        public int Impurity { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(70, "Dirge", 2, 2, 3, 5, -1, new string[] {
+        [TalentData(70, "Dirge", 2, 2, 3, 5, -1, new string[] {
 @"Your Plague Strike, Scourge Strike and Death Strike generate 25% additional runic power.",
 @"Your Plague Strike, Scourge Strike and Death Strike generate 50% additional runic power.",})]
-		public int Dirge { get { return _data[70]; } set { _data[70] = value; } }
+        public int Dirge { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Magic Suppression", 5, 2, 2, 6, -1, new string[] {
+        [TalentData(71, "Magic Suppression", 5, 2, 2, 6, -1, new string[] {
 @"You take 1% less damage from all magic. In addition, your Anti-Magic Shell absorbs an additional 5% of spell damage.",
 @"You take 2% less damage from all magic. In addition, your Anti-Magic Shell absorbs an additional 10% of spell damage.",
 @"You take 3% less damage from all magic. In addition, your Anti-Magic Shell absorbs an additional 15% of spell damage.",
 @"You take 4% less damage from all magic. In addition, your Anti-Magic Shell absorbs an additional 20% of spell damage.",
 @"You take 5% less damage from all magic. In addition, your Anti-Magic Shell absorbs an additional 25% of spell damage.",})]
-		public int MagicSuppression { get { return _data[71]; } set { _data[71] = value; } }
+        public int MagicSuppression { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(72, "Reaping", 3, 2, 3, 6, -1, new string[] {
+        [TalentData(72, "Reaping", 3, 2, 3, 6, -1, new string[] {
 @"Whenever you use Pestilence or Blood Boil there is a 30% chance that the Blood Rune becomes a Death Rune when it activates.",
 @"Whenever you use Pestilence or Blood Boil there is a 60% chance that the Blood Rune becomes a Death Rune when it activates.",
 @"Whenever you use Pestilence or Blood Boil there is a 100% chance that the Blood Rune becomes a Death Rune when it activates.",})]
-		public int Reaping { get { return _data[72]; } set { _data[72] = value; } }
+        public int Reaping { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "Master of Ghouls", 1, 2, 4, 6, 67, new string[] {
+        [TalentData(73, "Master of Ghouls", 1, 2, 4, 6, 67, new string[] {
 @"Ghouls summoned by your Raise Dead spell are considered pets and are under your control.",})]
-		public int MasterofGhouls { get { return _data[73]; } set { _data[73] = value; } }
+        public int MasterOfGhouls { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(74, "Desecration", 5, 2, 1, 7, -1, new string[] {
+        [TalentData(74, "Desecration", 5, 2, 1, 7, -1, new string[] {
 @"Your Plague Strikes have a 20% chance to cause the Desecrated Ground effect for 7 yards around the target. Targets in the area are slowed by 50% by the grasping arms of the dead while you cause 10% additional damage while standing on the unholy ground.",
 @"Your Plague Strikes have a 40% chance to cause the Desecrated Ground effect for 7 yards around the target. Targets in the area are slowed by 50% by the grasping arms of the dead while you cause 10% additional damage while standing on the unholy ground.",
 @"Your Plague Strikes have a 60% chance to cause the Desecrated Ground effect for 7 yards around the target. Targets in the area are slowed by 50% by the grasping arms of the dead while you cause 10% additional damage while standing on the unholy ground.",
 @"Your Plague Strikes have a 80% chance to cause the Desecrated Ground effect for 7 yards around the target. Targets in the area are slowed by 50% by the grasping arms of the dead while you cause 10% additional damage while standing on the unholy ground.",
 @"Your Plague Strikes have a 100% chance to cause the Desecrated Ground effect for 7 yards around the target. Targets in the area are slowed by 50% by the grasping arms of the dead while you cause 10% additional damage while standing on the unholy ground.",})]
-		public int Desecration { get { return _data[74]; } set { _data[74] = value; } }
+        public int Desecration { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(75, "Anti-Magic Zone", 1, 2, 2, 7, 71, new string[] {
+        [TalentData(75, "Anti-Magic Zone", 1, 2, 2, 7, 71, new string[] {
 @"1 Unholy
 ,20 yd range,
  Instant
 ,2 min cooldown,
 Places a large, stationary Anti-Magic Zone that reduces spell damage done to party members inside it by 75%. The Anti-Magic Zone lasts for 30 sec or until it absorbs 10,000 spell damage.",})]
-		public int AntiMagicZone { get { return _data[75]; } set { _data[75] = value; } }
+        public int AntiMagicZone { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(76, "Unholy Aura", 2, 2, 3, 7, -1, new string[] {
+        [TalentData(76, "Unholy Aura", 2, 2, 3, 7, -1, new string[] {
 @"All party or raid members within 45 yards of the Death Knight move 8% faster. This effect does not stack with other movement improving effects.",
 @"All party or raid members within 45 yards of the Death Knight move 15% faster. This effect does not stack with other movement improving effects.",})]
-		public int UnholyAura { get { return _data[76]; } set { _data[76] = value; } }
+        public int UnholyAura { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(77, "Night of the Dead", 2, 2, 1, 8, -1, new string[] {
+        [TalentData(77, "Night of the Dead", 2, 2, 1, 8, -1, new string[] {
 @"Your next 10 Plague Strikes and Scourge Strikes lower the cooldown of Raise Dead by 15 sec and Army of the Dead by 30 sec per strike.",
 @"Your next 10 Plague Strikes and Scourge Strikes lower the cooldown of Raise Dead by 30 sec and Army of the Dead by 60 sec per strike.",})]
-		public int NightoftheDead { get { return _data[77]; } set { _data[77] = value; } }
+        public int NightOfTheDead { get { return _data[77]; } set { _data[77] = value; } }
 
-		[TalentData(78, "Crypt Fever", 3, 2, 2, 8, -1, new string[] {
+        [TalentData(78, "Crypt Fever", 3, 2, 2, 8, -1, new string[] {
 @"Your diseases also cause Crypt Fever, which increases the damage of other diseases on the target by 20%.",
 @"Your diseases also cause Crypt Fever, which increases the damage of other diseases on the target by 40%.",
 @"Your diseases also cause Crypt Fever, which increases the damage of other diseases on the target by 60%.",})]
-		public int CryptFever { get { return _data[78]; } set { _data[78] = value; } }
+        public int CryptFever { get { return _data[78]; } set { _data[78] = value; } }
 
-		[TalentData(79, "Bone Shield", 1, 2, 3, 8, -1, new string[] {
+        [TalentData(79, "Bone Shield", 1, 2, 3, 8, -1, new string[] {
 @"1 Unholy
 ,
 Instant
 ,30 sec cooldown,
 
 The Death Knight is surrounded by 4 whirling bones. While at least 1 bone remains, he takes 40% less damage from all sources and deals 2% more damage with all attacks, spells and abilities. Each spell or attack that lands consumes 1 bone. Lasts 5 mins.",})]
-		public int BoneShield { get { return _data[79]; } set { _data[79] = value; } }
+        public int BoneShield { get { return _data[79]; } set { _data[79] = value; } }
 
-		[TalentData(80, "Wandering Plague", 3, 2, 1, 9, -1, new string[] {
+        [TalentData(80, "Wandering Plague", 3, 2, 1, 9, -1, new string[] {
 @"When your diseases damage an enemy, there is a chance equal to your melee critical strike chance that they will cause 33% additional damage to the target and all enemies within 8 yards. Ignores any target under the effect of a spell that is cancelled by taking damage.",
 @"When your diseases damage an enemy, there is a chance equal to your melee critical strike chance that they will cause 66% additional damage to the target and all enemies within 8 yards. Ignores any target under the effect of a spell that is cancelled by taking damage.",
 @"When your diseases damage an enemy, there is a chance equal to your melee critical strike chance that they will cause 100% additional damage to the target and all enemies within 8 yards. Ignores any target under the effect of a spell that is cancelled by taking damage.",})]
-		public int WanderingPlague { get { return _data[80]; } set { _data[80] = value; } }
+        public int WanderingPlague { get { return _data[80]; } set { _data[80] = value; } }
 
-		[TalentData(81, "Ebon Plaguebringer", 3, 2, 2, 9, 78, new string[] {
+        [TalentData(81, "Ebon Plaguebringer", 3, 2, 2, 9, 78, new string[] {
 @"Your Crypt Fever morphs into Ebon Plague, which increases vulnerability to magic by 4% in addition to increase the damage done by diseases.",
 @"Your Crypt Fever morphs into Ebon Plague, which increases vulnerability to magic by 9% in addition to increase the damage done by diseases.",
 @"Your Crypt Fever morphs into Ebon Plague, which increases vulnerability to magic by 13% in addition to increase the damage done by diseases.",})]
-		public int EbonPlaguebringer { get { return _data[81]; } set { _data[81] = value; } }
+        public int EbonPlaguebringer { get { return _data[81]; } set { _data[81] = value; } }
 
-		[TalentData(82, "Scourge Strike", 1, 2, 3, 9, -1, new string[] {
+        [TalentData(82, "Scourge Strike", 1, 2, 3, 9, -1, new string[] {
 @"1 Unholy 1 Frost
 ,Melee range,
  Instant
@@ -5651,23 +5771,23 @@ The Death Knight is surrounded by 4 whirling bones. While at least 1 bone remain
 Requires Melee Weapon
 ,
 An unholy strike that deals 100% weapon damage as Shadow damage plus 333 and 50% additional damage for each of the Death Knight's diseases on the target.",})]
-		public int ScourgeStrike { get { return _data[82]; } set { _data[82] = value; } }
+        public int ScourgeStrike { get { return _data[82]; } set { _data[82] = value; } }
 
-		[TalentData(83, "Rage of Rivendare", 5, 2, 2, 10, -1, new string[] {
+        [TalentData(83, "Rage of Rivendare", 5, 2, 2, 10, -1, new string[] {
 @"Your spells and abilities deal 2% more damage to targets infected with Blood Plague.",
 @"Your spells and abilities deal 4% more damage to targets infected with Blood Plague.",
 @"Your spells and abilities deal 6% more damage to targets infected with Blood Plague.",
 @"Your spells and abilities deal 8% more damage to targets infected with Blood Plague.",
 @"Your spells and abilities deal 10% more damage to targets infected with Blood Plague.",})]
-		public int RageofRivendare { get { return _data[83]; } set { _data[83] = value; } }
+        public int RageOfRivendare { get { return _data[83]; } set { _data[83] = value; } }
 
-		[TalentData(84, "Unholy Blight", 1, 2, 2, 11, -1, new string[] {
+        [TalentData(84, "Unholy Blight", 1, 2, 2, 11, -1, new string[] {
 @"60 Runic Power
 ,
  Instant
 ,
 A vile swarm of unholy insects surrounds the Death Knight for a 10 yard radius, damaging any enemies caught in the area for 64 Shadow damage per sec. Victims are infected with Blood Plague and the blight itself is considered a second disease while it persists. Lasts 20 sec.",})]
-		public int UnholyBlight { get { return _data[84]; } set { _data[84] = value; } }
-	}
+        public int UnholyBlight { get { return _data[84]; } set { _data[84] = value; } }
+    }
 
 }

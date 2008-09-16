@@ -131,7 +131,7 @@ namespace Rawr.HolyPriest
             calculatedStats.Talents = character.PriestTalents;
 
             calculatedStats.BasicStats.Health = (float)Math.Floor(calculatedStats.BasicStats.Health * (1 + character.PriestTalents.Enlightenment * 0.01f));
-            calculatedStats.BasicStats.Spirit = (float)Math.Floor(calculatedStats.BasicStats.Spirit * (1 + character.PriestTalents.SpiritofRedemption * 0.05f));
+            calculatedStats.BasicStats.Spirit = (float)Math.Floor(calculatedStats.BasicStats.Spirit * (1 + character.PriestTalents.SpiritOfRedemption * 0.05f));
 
             calculatedStats.SpiritRegen = (float)Math.Floor(5 * 0.0093271 * calculatedStats.BasicStats.Spirit * Math.Sqrt(calculatedStats.BasicStats.Intellect));
             

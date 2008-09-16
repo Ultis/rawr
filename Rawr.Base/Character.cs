@@ -349,39 +349,19 @@ namespace Rawr //O O . .
         [XmlIgnore]
         public bool DisableBuffAutoActivation { get; set; }
 
-		[XmlIgnore]
-		public string[] AllTalents
-		{
-			get
-			{
-				return new string[]{
-					SerializableWarriorTalents,
-            		SerializablePaladinTalents,
-            		SerializableHunterTalents,
-            		SerializableRogueTalents,
-            		SerializablePriestTalents,
-            		SerializableShamanTalents,
-            		SerializableMageTalents,
-            		SerializableWarlockTalents,
-            		SerializableDruidTalents,
-            		SerializableDeathKnightTalents
-				};
-			}
-			set
-			{
-				SerializableWarriorTalents = value[0];
-        		SerializablePaladinTalents = value[1];
-        		SerializableHunterTalents = value[2];
-        		SerializableRogueTalents = value[3];
-        		SerializablePriestTalents = value[4];
-        		SerializableShamanTalents = value[5];
-        		SerializableMageTalents = value[6];
-        		SerializableWarlockTalents = value[7];
-        		SerializableDruidTalents = value[8];
-				SerializableDeathKnightTalents = value[9];
-			}
-		}
-
+        public void AssignAllTalentsFromCharacter(Character character)
+        {
+            WarriorTalents = character.WarriorTalents;
+            PaladinTalents = character.PaladinTalents;
+            HunterTalents = character.HunterTalents;
+            RogueTalents = character.RogueTalents;
+            PriestTalents = character.PriestTalents;
+            ShamanTalents = character.ShamanTalents;
+            MageTalents = character.MageTalents;
+            WarlockTalents = character.WarlockTalents;
+            DruidTalents = character.DruidTalents;
+            DeathKnightTalents = character.DeathKnightTalents;
+        }
 
 		//[XmlIgnore]
 		//public TalentTree Talents
@@ -1386,7 +1366,7 @@ namespace Rawr //O O . .
 					clone.ActiveBuffs.Add(buff);
 			clone.CalculationOptions = this.CalculationOptions;
             clone.Class = this.Class;
-            clone.AllTalents = this.AllTalents;
+            clone.AssignAllTalentsFromCharacter(this);
 			clone.EnforceMetagemRequirements = this.EnforceMetagemRequirements;
             clone.CurrentModel = this.CurrentModel;
 			return clone;

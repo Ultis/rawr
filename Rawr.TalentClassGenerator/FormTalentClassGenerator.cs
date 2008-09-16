@@ -142,7 +142,7 @@ namespace Rawr
 
 			//Generate the code
 			StringBuilder code = new StringBuilder();
-			code.AppendFormat("public class {0}\r\n", className);
+			code.AppendFormat("public class {0} : ICloneable\r\n", className);
 			code.Append("{\r\n");
 			code.AppendFormat("private int[] _data = new int[{0}];\r\n", talents.Count);
 			code.AppendFormat("public {0}() {{ }}\r\n", className);
@@ -160,6 +160,16 @@ namespace Rawr
 			code.Append("ret.Append(digit.ToString());\r\n");
 			code.Append("return ret.ToString();\r\n");
 			code.Append("}\r\n");
+            code.Append("object ICloneable.Clone()\r\n");
+            code.Append("{\r\n");
+            code.AppendFormat("{0} clone = ({0})MemberwiseClone();\r\n", className);
+            code.Append("clone._data = (int[])_data.Clone();\r\n");
+            code.Append("return clone;\r\n");
+            code.Append("}\r\n\r\n");
+            code.AppendFormat("public {0} Clone()\r\n", className);
+            code.Append("{\r\n");
+            code.AppendFormat("return ({0})((ICloneable)this).Clone();\r\n", className);
+            code.Append("}\r\n\r\n");
 			foreach (TalentData talent in talents)
 			{
 				code.AppendFormat("\r\n[TalentData({0}, \"{1}\", {2}, {3}, {4}, {5}, {6}, new string[] {{",
@@ -168,15 +178,25 @@ namespace Rawr
 					code.AppendFormat("\r\n@\"{0}\",", descRank);
 				code.Append("})]\r\n");
 				code.AppendFormat("public int {0} {{ get {{ return _data[{1}]; }} set {{ _data[{1}] = value; }} }}\r\n", 
-					talent.Name.Replace(" ", "").Replace(",","").Replace(":","").Replace("'","").Replace("(","").Replace(")","").Replace(".","")
-					.Replace("-",""), talent.Index);				
+					PropertyFromName(talent.Name), talent.Index);				
 			}
 			code.Append("}\r\n\r\n");
 			
 			textBoxCode.Text += code.ToString();
 		}
 
-		private string GetTextBetween(string text, string start, string end)
+        private string PropertyFromName(string name)
+        {
+            name = name.Replace("'", ""); // don't camel word after apostrophe
+            string[] arr = name.Split(new char[] {' ', ',', ':', '(', ')', '.', '-'}, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = Char.ToUpperInvariant(arr[i][0]) + arr[i].Substring(1);
+            }
+            return string.Join("", arr);
+        }
+
+        private string GetTextBetween(string text, string start, string end)
 		{
 			string ret = text.Substring(text.IndexOf(start) + start.Length);
 			ret = ret.Substring(0, ret.IndexOf(end));

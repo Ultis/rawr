@@ -74,27 +74,9 @@ namespace Rawr.Mage
                     "Spell Info:FireballFireBlast",
                     "Spell Info:Frostfire Bolt",
                     "Spell Info:Frostbolt",
-                    "Spell Info:ABAMP*Pause so that AB debuff runs out mid-cast",
                     "Spell Info:ABAM*Spam with no pause",
                     "Spell Info:ABABar*Arcane Missiles on Missile Barrage (after Arcane Barrage)",
                     "Spell Info:ABMBAM*Arcane Missiles on Missile Barrage",
-                    "Spell Info:ABAMCC*AM when AM procs clearcast, ramp up AB before returning to AB-AM",
-                    "Spell Info:ABAM3CC*AM when AM procs clearcast, ramp up with AB-AM",
-                    "Spell Info:AB3AMSc*Prefer pause over longer filler",
-                    "Spell Info:ABAM3Sc*Prefer pause over longer filler",
-                    "Spell Info:ABAM3Sc2*Fill until debuff almost out",
-                    "Spell Info:ABAM3FrB*Prefer pause over longer filler",
-                    "Spell Info:ABAM3FrB2*Fill until debuff almost out",
-                    "Spell Info:ABAM3ScCC*AM when AM procs clearcast",
-                    "Spell Info:ABAM3Sc2CC*AM when AM procs clearcast",
-                    "Spell Info:ABAM3FrBCC*AM when AM procs clearcast",
-                    //"Spell Info:ABAM3FrBCCFail*AM when AM procs clearcast",
-                    "Spell Info:ABAM3FrBScCC*AM when AM procs clearcast",
-                    "Spell Info:ABFrB*Prefer pause over longer filler",
-                    "Spell Info:ABFrB3FrB*Prefer pause over longer filler",
-                    "Spell Info:ABFrB3FrBSc*Fill until debuff almost out, Scorch used at specific haste levels where adding another Frostbolt results in drop of AB debuff and alternative results in relatively large pause",
-                    //"Spell Info:AB3Sc*Fill until debuff almost out",
-                    "Spell Info:ABFB3FBSc*Typically FB-FB-Sc filler",
                     "Spell Info:Arcane Explosion",
                     "Spell Info:Blizzard",
                     "Spell Info:Cone of Cold",
@@ -379,7 +361,7 @@ namespace Rawr.Mage
             {
                 if (calculationOptions.MaintainScorch)
                 {
-                    if (calculationOptions.ImprovedScorch > 0)
+                    if (character.MageTalents.ImprovedScorch > 0)
                     {
                         Buff improvedScorch = Buff.GetBuffByName("Improved Scorch");
                         if (!character.ActiveBuffs.Contains(improvedScorch))
@@ -389,7 +371,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                if (calculationOptions.WintersChill > 0)
+                if (character.MageTalents.WintersChill > 0)
                 {
                     Buff wintersChill = Buff.GetBuffByName("Winter's Chill");
                     if (!character.ActiveBuffs.Contains(wintersChill))
@@ -437,7 +419,7 @@ namespace Rawr.Mage
                         Stamina = 49f,
                         Intellect = 149f,
                         Spirit = 144,
-                        BonusIntellectMultiplier = 0.03f * calculationOptions.ArcaneMind,
+                        BonusIntellectMultiplier = 0.03f * character.MageTalents.ArcaneMind,
                     };
                     break;
                 case Character.CharacterRace.Draenei:
@@ -450,7 +432,7 @@ namespace Rawr.Mage
                         Stamina = 50f,
                         Intellect = 152f,
                         Spirit = 147,
-                        BonusIntellectMultiplier = 0.03f * calculationOptions.ArcaneMind,
+                        BonusIntellectMultiplier = 0.03f * character.MageTalents.ArcaneMind,
                     };
                     break;
                 case Character.CharacterRace.Gnome:
@@ -467,7 +449,7 @@ namespace Rawr.Mage
                                 Intellect = 154f,
                                 Spirit = 145,
                                 ArcaneResistance = 10,
-                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
                         case 71:
@@ -481,7 +463,7 @@ namespace Rawr.Mage
                                 Intellect = 157f,
                                 Spirit = 148f,
                                 ArcaneResistance = 10,
-                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
                         case 72:
@@ -495,7 +477,7 @@ namespace Rawr.Mage
                                 Intellect = 160f,
                                 Spirit = 151f,
                                 ArcaneResistance = 10,
-                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
                         case 73:
@@ -509,7 +491,7 @@ namespace Rawr.Mage
                                 Intellect = 163f,
                                 Spirit = 154f,
                                 ArcaneResistance = 10,
-                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
                         case 74:
@@ -523,7 +505,7 @@ namespace Rawr.Mage
                                 Intellect = 166f,
                                 Spirit = 156f,
                                 ArcaneResistance = 10,
-                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
                         case 75:
@@ -537,7 +519,7 @@ namespace Rawr.Mage
                                 Intellect = 169f,
                                 Spirit = 159f,
                                 ArcaneResistance = 10,
-                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
                         case 76:
@@ -551,7 +533,7 @@ namespace Rawr.Mage
                                 Intellect = 172f,
                                 Spirit = 162f,
                                 ArcaneResistance = 10,
-                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
                         case 77:
@@ -565,7 +547,7 @@ namespace Rawr.Mage
                                 Intellect = 175f,
                                 Spirit = 165f,
                                 ArcaneResistance = 10,
-                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
                         case 78:
@@ -579,7 +561,7 @@ namespace Rawr.Mage
                                 Intellect = 178f,
                                 Spirit = 168f,
                                 ArcaneResistance = 10,
-                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
                         case 79:
@@ -593,7 +575,7 @@ namespace Rawr.Mage
                                 Intellect = 181f,
                                 Spirit = 171f,
                                 ArcaneResistance = 10,
-                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
                         case 80:
@@ -607,7 +589,7 @@ namespace Rawr.Mage
                                 Intellect = 184f,
                                 Spirit = 174f,
                                 ArcaneResistance = 10,
-                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * calculationOptions.ArcaneMind) - 1
+                                BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
                         default:
@@ -625,7 +607,7 @@ namespace Rawr.Mage
                         Stamina = 51f,
                         Intellect = 151f,
                         Spirit = 145,
-                        BonusIntellectMultiplier = 0.03f * calculationOptions.ArcaneMind,
+                        BonusIntellectMultiplier = 0.03f * character.MageTalents.ArcaneMind,
                         BonusSpiritMultiplier = 0.1f
                     };
                     break;
@@ -639,7 +621,7 @@ namespace Rawr.Mage
                         Stamina = 52f,
                         Intellect = 147f,
                         Spirit = 146,
-                        BonusIntellectMultiplier = 0.03f * calculationOptions.ArcaneMind,
+                        BonusIntellectMultiplier = 0.03f * character.MageTalents.ArcaneMind,
                     };
                     break;
                 case Character.CharacterRace.Undead:
@@ -652,7 +634,7 @@ namespace Rawr.Mage
                         Stamina = 52f,
                         Intellect = 149f,
                         Spirit = 150,
-                        BonusIntellectMultiplier = 0.03f * calculationOptions.ArcaneMind,
+                        BonusIntellectMultiplier = 0.03f * character.MageTalents.ArcaneMind,
                     };
                     break;
                 default:
@@ -662,32 +644,20 @@ namespace Rawr.Mage
 
             Stats statsGearEnchantsBuffs = rawStats;
 
-            if (calculationOptions.WotLK && calculationOptions.StudentOfTheMind > 0)
+            if (character.MageTalents.StudentOfTheMind > 0)
             {
-                statsGearEnchantsBuffs.BonusSpiritMultiplier = (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier) * (1.01f + 0.03f * calculationOptions.StudentOfTheMind) - 1;
+                statsGearEnchantsBuffs.BonusSpiritMultiplier = (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier) * (1.01f + 0.03f * character.MageTalents.StudentOfTheMind) - 1;
             }
             if (calculationOptions.EffectSpiritBonus > 0)
             {
                 statsGearEnchantsBuffs.BonusSpiritMultiplier = (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier) * (1f + calculationOptions.EffectSpiritBonus / 100f) - 1;
             }
             Stats statsTotal = statsGearEnchantsBuffs + statsRace;
-            if (calculationOptions.WotLK)
-            {
-                // this might be the same on live
-                statsTotal.Strength = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
-                statsTotal.Agility = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier)) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
-                statsTotal.Intellect = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier)) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
-                statsTotal.Stamina = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
-                statsTotal.Spirit = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Spirit * (1 + statsRace.BonusSpiritMultiplier)) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Spirit * (1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
-            }
-            else
-            {
-                statsTotal.Strength = (float)Math.Floor((Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier)) + statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
-                statsTotal.Agility = (float)Math.Floor((Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier)) + statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier)) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
-                statsTotal.Intellect = (float)Math.Floor((Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier)) + statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier)) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
-                statsTotal.Stamina = (float)Math.Floor((Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier)) + statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
-                statsTotal.Spirit = (float)Math.Floor((Math.Floor(statsRace.Spirit * (1 + statsRace.BonusSpiritMultiplier)) + statsGearEnchantsBuffs.Spirit * (1 + statsRace.BonusSpiritMultiplier)) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
-            }
+            statsTotal.Strength = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
+            statsTotal.Agility = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier)) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier)) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
+            statsTotal.Spirit = (float)Math.Floor(0.00001 + Math.Floor(statsRace.Spirit * (1 + statsRace.BonusSpiritMultiplier)) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) + (float)Math.Floor(0.00001 + statsGearEnchantsBuffs.Spirit * (1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
             statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
@@ -697,10 +667,10 @@ namespace Rawr.Mage
 
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect + statsGearEnchantsBuffs.Mana);
-            statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f + (calculationOptions.WotLK ? 0.5f : 1f) * statsTotal.Intellect * calculationOptions.ArcaneFortitude);
+            statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * character.MageTalents.ArcaneFortitude);
 
-            float magicAbsorption = (calculationOptions.WotLK ? 0.5f * calculationOptions.PlayerLevel : 2.0f) * calculationOptions.MagicAbsorption;
-            int frostWarding = calculationOptions.FrostWarding;
+            float magicAbsorption = 0.5f * calculationOptions.PlayerLevel * character.MageTalents.MagicAbsorption;
+            int frostWarding = character.MageTalents.FrostWarding;
             statsTotal.AllResist += magicAbsorption;
 
             // TODO do similar for Mage Armor and Arcane Shielding
@@ -712,7 +682,7 @@ namespace Rawr.Mage
             if (statsTotal.MageMageArmor > 0)
             {
                 statsTotal.SpellCombatManaRegeneration += 0.3f + (calculationOptions.GlyphOfMageArmor ? 0.2f : 0.0f);
-                statsTotal.AllResist += (calculationOptions.PlayerLevel < 71 ? 18f : (calculationOptions.PlayerLevel < 79 ? 21f : 40f)) * (1 + (calculationOptions.WotLK ? calculationOptions.ImprovedManaShield * 0.25f : 0.0f));
+                statsTotal.AllResist += (calculationOptions.PlayerLevel < 71 ? 18f : (calculationOptions.PlayerLevel < 79 ? 21f : 40f)) * (1 + character.MageTalents.ArcaneShielding * 0.25f);
             }
             if (statsTotal.MageMoltenArmor > 0)
             {
@@ -723,13 +693,13 @@ namespace Rawr.Mage
                 statsTotal.BonusManaGem = (1 + statsTotal.BonusManaGem) * (1 + 0.1f) - 1;
             }
 
-            statsTotal.SpellCombatManaRegeneration += 0.1f * calculationOptions.ArcaneMeditation;
+            statsTotal.SpellCombatManaRegeneration += 0.1f * character.MageTalents.ArcaneMeditation;
 
-            statsTotal.SpellPenetration += 5 * calculationOptions.ArcaneSubtlety;
+            statsTotal.SpellPenetration += 5 * character.MageTalents.ArcaneSubtlety;
 
             statsTotal.Mp5 += calculationOptions.ShadowPriest;
 
-            statsTotal.SpellDamageFromIntellectPercentage += (calculationOptions.WotLK ? 0.03f : 0.05f) * calculationOptions.MindMastery;
+            statsTotal.SpellDamageFromIntellectPercentage += 0.03f * character.MageTalents.MindMastery;
 
             statsTotal.AllResist += statsTotal.MageAllResist;
 
@@ -743,7 +713,7 @@ namespace Rawr.Mage
             statsTotal.ShadowResistance += statsTotal.AllResist + statsTotal.ShadowResistanceBuff;
 
             int playerLevel = calculationOptions.PlayerLevel;
-            float maxHitRate = (calculationOptions.WotLK) ? 1.0f : 0.99f;
+            float maxHitRate = 1.0f;
             float bossHitRate = Math.Min(maxHitRate, ((playerLevel <= calculationOptions.TargetLevel + 2) ? (0.96f - (playerLevel - calculationOptions.TargetLevel) * 0.01f) : (0.94f - (playerLevel - calculationOptions.TargetLevel - 2) * 0.11f)));
             statsTotal.Mp5 -= 5 * calculationOptions.EffectShadowManaDrain * calculationOptions.EffectShadowManaDrainFrequency * bossHitRate * Math.Max(1 - statsTotal.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
 
@@ -761,18 +731,14 @@ namespace Rawr.Mage
             fullResistRate += calculationOptions.EffectHolyOther * (1 - bossHitRate);
             fullResistRate += calculationOptions.EffectShadowManaDrainFrequency * (1 - bossHitRate);
             fullResistRate += calculationOptions.EffectShadowSilenceFrequency * (1 - bossHitRate * Math.Max(1 - statsTotal.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f));
-            statsTotal.Mp5 += 5 * Math.Min(1f, fullResistRate) * 0.01f * calculationOptions.MagicAbsorption * statsTotal.Mana;
+            statsTotal.Mp5 += 5 * Math.Min(1f, fullResistRate) * 0.01f * character.MageTalents.MagicAbsorption * statsTotal.Mana;
 
             return statsTotal;
         }
 
-        private static string[] TalentList = { "ArcaneSubtlety", "ArcaneFocus", "ImprovedArcaneMissiles", "WandSpecialization", "MagicAbsorption", "ArcaneConcentration", "MagicAttunement", "ArcaneImpact", "ArcaneFortitude", "ImprovedManaShield", "ImprovedCounterspell", "ArcaneMeditation", "ImprovedBlink", "PresenceOfMind", "ArcaneMind", "PrismaticCloak", "ArcaneInstability", "ArcanePotency", "EmpoweredArcaneMissiles", "ArcanePower", "SpellPower", "MindMastery", "Slow", "ImprovedFireball", "Impact", "Ignite", "FlameThrowing", "ImprovedFireBlast", "Incinerate", "ImprovedFlamestrike", "Pyroblast", "BurningSoul", "ImprovedScorch", "ImprovedFireWard", "MasterOfElements", "PlayingWithFire", "CriticalMass", "BlastWave", "BlazingSpeed", "FirePower", "Pyromaniac", "Combustion", "MoltenFury", "EmpoweredFireball", "DragonsBreath", "FrostWarding", "ImprovedFrostbolt", "ElementalPrecision", "IceShards", "Frostbite", "ImprovedFrostNova", "Permafrost", "PiercingIce", "IcyVeins", "ImprovedBlizzard", "ArcticReach", "FrostChanneling", "Shatter", "FrozenCore", "ColdSnap", "ImprovedConeOfCold", "IceFloes", "WintersChill", "IceBarrier", "ArcticWinds", "EmpoweredFrostbolt", "SummonWaterElemental" };
-        private static string[] TalentListFriendly = { "Arcane Subtlety", "Arcane Focus", "Improved Arcane Missiles", "Wand Specialization", "Magic Absorption", "Arcane Concentration", "Magic Attunement", "Arcane Impact", "Arcane Fortitude", "Improved Mana Shield", "Improved Counterspell", "Arcane Meditation", "Improved Blink", "Presence of Mind", "Arcane Mind", "Prismatic Cloak", "Arcane Instability", "Arcane Potency", "Empowered Arcane Missiles", "Arcane Power", "Spell Power", "Mind Mastery", "Slow", "Improved Fireball", "Impact", "Ignite", "Flame Throwing", "Improved Fire Blast", "Incinerate", "Improved Flamestrike", "Pyroblast", "Burning Soul", "Improved Scorch", "Improved Fire Ward", "Master of Elements", "Playing with Fire", "Critical Mass", "Blast Wave", "Blazing Speed", "Fire Power", "Pyromaniac", "Combustion", "Molten Fury", "Empowered Fireball", "Dragon's Breath", "Frost Warding", "Improved Frostbolt", "Elemental Precision", "Ice Shards", "Frostbite", "Improved Frost Nova", "Permafrost", "Piercing Ice", "Icy Veins", "Improved Blizzard", "Arctic Reach", "Frost Channeling", "Shatter", "Frozen Core", "Cold Snap", "Improved Cone of Cold", "Ice Floes", "Winter's Chill", "Ice Barrier", "Arctic Winds", "Empowered Frostbolt", "Summon Water Elemental" };
-        private static int[] MaxTalentPoints = { 2, 5, 5, 2, 5, 5, 2, 3, 1, 2, 2, 3, 2, 1, 5, 2, 3, 3, 3, 1, 2, 5, 1, 5, 5, 5, 2, 3, 2, 3, 1, 2, 3, 2, 3, 3, 3, 1, 2, 5, 3, 1, 2, 5, 1, 2, 5, 3, 5, 3, 2, 3, 3, 1, 3, 2, 3, 5, 3, 1, 3, 2, 5, 1, 5, 5, 1 };
-
-        private static string[] TalentListWotLK = {          "ArcaneSubtlety",  "ArcaneFocus",   "ImprovedArcaneMissiles",  "MagicAbsorption",  "ArcaneConcentration",  "MagicAttunement",  "SpellImpact",  "ArcaneFortitude",    "StudentOfTheMind",  "FocusMagic", "ImprovedManaShield",  "ImprovedCounterspell",  "ArcaneMeditation",  "ImprovedBlink",   "PresenceOfMind",   "TormentTheWeak",  "ArcaneMind",  "PrismaticCloak",  "ArcaneInstability",  "ArcanePotency", "EmpoweredArcaneMissiles",  "ArcanePower",  "SpellPower",  "MindMastery", "Slow",   "IncantersAbsorption",  "ArcaneFlows",  "MissileBarrage",  "NetherwindPresence",  "ArcaneBarrage",  "ImprovedFireball", "Impact", "Ignite",  "FlameThrowing",   "ImprovedFireBlast",   "Incinerate",  "ImprovedFlamestrike", "Pyroblast",  "BurningSoul",  "ImprovedScorch",   "ImprovedFireWard",   "MasterOfElements",   "PlayingWithFire",  "CriticalMass",  "BlastWave",  "BlazingSpeed",  "FirePower", "Pyromaniac", "Combustion",  "MoltenFury",  "EmpoweredFireball",   "DragonsBreath",  "FrostWarding",  "ImprovedFrostbolt",  "ElementalPrecision",  "IceShards", "Frostbite",   "ImprovedFrostNova", "Permafrost",  "PiercingIce",  "IcyVeins",  "ImprovedBlizzard",  "ArcticReach",  "FrostChanneling", "Shatter",  "FrozenCore",  "ColdSnap",    "ImprovedConeOfCold",  "IceFloes",   "WintersChill",  "IceBarrier",  "ArcticWinds",  "EmpoweredFrostbolt",   "SummonWaterElemental" };
-        private static string[] TalentListFriendlyWotLK = { "Arcane Subtlety", "Arcane Focus", "Improved Arcane Missiles", "Magic Absorption", "Arcane Concentration", "Magic Attunement", "Spell Impact", "Arcane Fortitude", "Student of the Mind", "Focus Magic",   "Arcane Shielding", "Improved Counterspell", "Arcane Meditation", "Improved Blink", "Presence of Mind", "Torment the Weak", "Arcane Mind", "Prismatic Cloak", "Arcane Instability", "Arcane Potency",      "Arcane Empowerment", "Arcane Power", "Spell Power", "Mind Mastery", "Slow", "Incanter's Absorption", "Arcane Flows", "Missile Barrage", "Netherwind Presence", "Arcane Barrage", "Improved Fireball", "Impact", "Ignite", "Flame Throwing", "Improved Fire Blast", "Incineration", "Improved Flamestrike", "Pyroblast", "Burning Soul", "Improved Scorch", "Improved Fire Ward", "Master of Elements", "Playing with Fire", "Critical Mass", "Blast Wave", "Blazing Speed", "Fire Power", "Pyromaniac", "Combustion", "Molten Fury", "Empowered Fireball", "Dragon's Breath", "Frost Warding", "Improved Frostbolt", "Elemental Precision", "Ice Shards", "Frostbite", "Improved Frost Nova", "Permafrost", "Piercing Ice", "Icy Veins", "Improved Blizzard", "Arctic Reach", "Frost Channeling", "Shatter", "Frozen Core", "Cold Snap", "Improved Cone of Cold", "Ice Floes", "Winter's Chill", "Ice Barrier", "Arctic Winds", "Empowered Frostbolt", "Summon Water Elemental" };
-        private static int[] MaxTalentPointsWotLK = {                       2,              3,                          5,                  2,                      5,                  2,              3,                  3,                     3,             1,                    2,                       2,                   3,                2,                  1,                  3,             5,                 3,                    3,                2,                         3,              1,             2,              5,      1,                       3,              2,                 5,                     3,                1,                   5,        5,        5,                2,                     3,              3,                      3,           1,              2,                 3,                    2,                    3,                   3,               3,            1,               2,            5,            3,            1,             2,                    5,                 1,               2,                    5,                     3,            5,           3,                     2,            3,              3,           1,                   3,              2,                  3,         5,             3,           1,                       3,           3,                5,             1,              5,                     5,                        1 };
+        private static string[] TalentList = {          "ArcaneSubtlety",  "ArcaneFocus",   "ImprovedArcaneMissiles",  "MagicAbsorption",  "ArcaneConcentration",  "MagicAttunement",  "SpellImpact",  "ArcaneFortitude",    "StudentOfTheMind",  "FocusMagic", "ImprovedManaShield",  "ImprovedCounterspell",  "ArcaneMeditation",  "ImprovedBlink",   "PresenceOfMind",   "TormentTheWeak",  "ArcaneMind",  "PrismaticCloak",  "ArcaneInstability",  "ArcanePotency", "EmpoweredArcaneMissiles",  "ArcanePower",  "SpellPower",  "MindMastery", "Slow",   "IncantersAbsorption",  "ArcaneFlows",  "MissileBarrage",  "NetherwindPresence",  "ArcaneBarrage",  "ImprovedFireball", "Impact", "Ignite",  "FlameThrowing",   "ImprovedFireBlast",   "Incinerate",  "ImprovedFlamestrike", "Pyroblast",  "BurningSoul",  "ImprovedScorch",   "ImprovedFireWard",   "MasterOfElements",   "PlayingWithFire",  "CriticalMass",  "BlastWave",  "BlazingSpeed",  "FirePower", "Pyromaniac", "Combustion",  "MoltenFury",  "EmpoweredFireball",   "DragonsBreath",  "FrostWarding",  "ImprovedFrostbolt",  "ElementalPrecision",  "IceShards", "Frostbite",   "ImprovedFrostNova", "Permafrost",  "PiercingIce",  "IcyVeins",  "ImprovedBlizzard",  "ArcticReach",  "FrostChanneling", "Shatter",  "FrozenCore",  "ColdSnap",    "ImprovedConeOfCold",  "IceFloes",   "WintersChill",  "IceBarrier",  "ArcticWinds",  "EmpoweredFrostbolt",   "SummonWaterElemental" };
+        private static string[] TalentListFriendly = { "Arcane Subtlety", "Arcane Focus", "Improved Arcane Missiles", "Magic Absorption", "Arcane Concentration", "Magic Attunement", "Spell Impact", "Arcane Fortitude", "Student of the Mind", "Focus Magic",   "Arcane Shielding", "Improved Counterspell", "Arcane Meditation", "Improved Blink", "Presence of Mind", "Torment the Weak", "Arcane Mind", "Prismatic Cloak", "Arcane Instability", "Arcane Potency",      "Arcane Empowerment", "Arcane Power", "Spell Power", "Mind Mastery", "Slow", "Incanter's Absorption", "Arcane Flows", "Missile Barrage", "Netherwind Presence", "Arcane Barrage", "Improved Fireball", "Impact", "Ignite", "Flame Throwing", "Improved Fire Blast", "Incineration", "Improved Flamestrike", "Pyroblast", "Burning Soul", "Improved Scorch", "Improved Fire Ward", "Master of Elements", "Playing with Fire", "Critical Mass", "Blast Wave", "Blazing Speed", "Fire Power", "Pyromaniac", "Combustion", "Molten Fury", "Empowered Fireball", "Dragon's Breath", "Frost Warding", "Improved Frostbolt", "Elemental Precision", "Ice Shards", "Frostbite", "Improved Frost Nova", "Permafrost", "Piercing Ice", "Icy Veins", "Improved Blizzard", "Arctic Reach", "Frost Channeling", "Shatter", "Frozen Core", "Cold Snap", "Improved Cone of Cold", "Ice Floes", "Winter's Chill", "Ice Barrier", "Arctic Winds", "Empowered Frostbolt", "Summon Water Elemental" };
+        private static int[] MaxTalentPoints = {                       2,              3,                          5,                  2,                      5,                  2,              3,                  3,                     3,             1,                    2,                       2,                   3,                2,                  1,                  3,             5,                 3,                    3,                2,                         3,              1,             2,              5,      1,                       3,              2,                 5,                     3,                1,                   5,        5,        5,                2,                     3,              3,                      3,           1,              2,                 3,                    2,                    3,                   3,               3,            1,               2,            5,            3,            1,             2,                    5,                 1,               2,                    5,                     3,            5,           3,                     2,            3,              3,           1,                   3,              2,                  3,         5,             3,           1,                       3,           3,                5,             1,              5,                     5,                        1 };
          
         private static string[] GlyphList = { "GlyphOfFireball", "GlyphOfFrostbolt", "GlyphOfIceArmor", "GlyphOfImprovedScorch", "GlyphOfMageArmor", "GlyphOfManaGem", "GlyphOfMoltenArmor", "GlyphOfWaterElemental", "GlyphOfArcaneExplosion" };
         private static string[] GlyphListFriendly = { "Glyph of Fireball", "Glyph of Frostbolt", "Glyph of Ice Armor", "Glyph of Improved Scorch", "Glyph of Mage Armor", "Glyph of Mana Gem", "Glyph of Molten Armor", "Glyph of Water Elemental", "Glyph of Arcane Explosion" };
@@ -792,18 +758,9 @@ namespace Rawr.Mage
                     string[] talents;
                     string[] talentsFriendly;
                     int[] maxTalents;
-                    if (calculationOptions.WotLK)
-                    {
-                        talents = TalentListWotLK;
-                        talentsFriendly = TalentListFriendlyWotLK;
-                        maxTalents = MaxTalentPointsWotLK;
-                    }
-                    else
-                    {
-                        talents = TalentList;
-                        talentsFriendly = TalentListFriendly;
-                        maxTalents = MaxTalentPoints;
-                    }
+                    talents = TalentList;
+                    talentsFriendly = TalentListFriendly;
+                    maxTalents = MaxTalentPoints;
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
                     bool savedIncrementalOptimizations = calculationOptions.IncrementalOptimizations;
                     bool savedSmartOptimizations = calculationOptions.SmartOptimization;
@@ -1409,21 +1366,21 @@ namespace Rawr.Mage
             LoadTalentCode(character, talentCode);
         }
 
-        public static void LoadTalentCode(Character character, string talentCode)
+        public static void LoadTalentCode(Character character, string talentCode) // DEPRECATED
         {
             if (talentCode == null || talentCode.Length < 66) return;
-            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+            MageTalents calculationOptions = character.MageTalents;
 
             calculationOptions.ArcaneSubtlety = int.Parse(talentCode.Substring(0, 1));
             calculationOptions.ArcaneFocus = int.Parse(talentCode.Substring(1, 1));
             calculationOptions.ImprovedArcaneMissiles = int.Parse(talentCode.Substring(2, 1));
-            calculationOptions.WandSpecialization = int.Parse(talentCode.Substring(3, 1));
+            //calculationOptions.WandSpecialization = int.Parse(talentCode.Substring(3, 1));
             calculationOptions.MagicAbsorption = int.Parse(talentCode.Substring(4, 1));
             calculationOptions.ArcaneConcentration = int.Parse(talentCode.Substring(5, 1));
             calculationOptions.MagicAttunement = int.Parse(talentCode.Substring(6, 1));
-            calculationOptions.ArcaneImpact = int.Parse(talentCode.Substring(7, 1));
+            calculationOptions.SpellImpact = int.Parse(talentCode.Substring(7, 1));
             calculationOptions.ArcaneFortitude = int.Parse(talentCode.Substring(8, 1));
-            calculationOptions.ImprovedManaShield = int.Parse(talentCode.Substring(9, 1));
+            calculationOptions.ArcaneShielding = int.Parse(talentCode.Substring(9, 1));
             calculationOptions.ImprovedCounterspell = int.Parse(talentCode.Substring(10, 1));
             calculationOptions.ArcaneMeditation = int.Parse(talentCode.Substring(11, 1));
             calculationOptions.ImprovedBlink = int.Parse(talentCode.Substring(12, 1));
@@ -1432,7 +1389,7 @@ namespace Rawr.Mage
             calculationOptions.PrismaticCloak = int.Parse(talentCode.Substring(15, 1));
             calculationOptions.ArcaneInstability = int.Parse(talentCode.Substring(16, 1));
             calculationOptions.ArcanePotency = int.Parse(talentCode.Substring(17, 1));
-            calculationOptions.EmpoweredArcaneMissiles = int.Parse(talentCode.Substring(18, 1));
+            calculationOptions.ArcaneEmpowerment = int.Parse(talentCode.Substring(18, 1));
             calculationOptions.ArcanePower = int.Parse(talentCode.Substring(19, 1));
             calculationOptions.SpellPower = int.Parse(talentCode.Substring(20, 1));
             calculationOptions.MindMastery = int.Parse(talentCode.Substring(21, 1));
@@ -1442,12 +1399,12 @@ namespace Rawr.Mage
             calculationOptions.Ignite = int.Parse(talentCode.Substring(25, 1));
             calculationOptions.FlameThrowing = int.Parse(talentCode.Substring(26, 1));
             calculationOptions.ImprovedFireBlast = int.Parse(talentCode.Substring(27, 1));
-            calculationOptions.Incinerate = int.Parse(talentCode.Substring(28, 1));
-            calculationOptions.ImprovedFlamestrike = int.Parse(talentCode.Substring(29, 1));
+            calculationOptions.Incineration = int.Parse(talentCode.Substring(28, 1));
+            //calculationOptions.ImprovedFlamestrike = int.Parse(talentCode.Substring(29, 1));
             calculationOptions.Pyroblast = int.Parse(talentCode.Substring(30, 1));
             calculationOptions.BurningSoul = int.Parse(talentCode.Substring(31, 1));
             calculationOptions.ImprovedScorch = int.Parse(talentCode.Substring(32, 1));
-            calculationOptions.ImprovedFireWard = int.Parse(talentCode.Substring(33, 1));
+            //calculationOptions.ImprovedFireWard = int.Parse(talentCode.Substring(33, 1));
             calculationOptions.MasterOfElements = int.Parse(talentCode.Substring(34, 1));
             calculationOptions.PlayingWithFire = int.Parse(talentCode.Substring(35, 1));
             calculationOptions.CriticalMass = int.Parse(talentCode.Substring(36, 1));
@@ -1464,7 +1421,7 @@ namespace Rawr.Mage
             calculationOptions.ElementalPrecision = int.Parse(talentCode.Substring(47, 1));
             calculationOptions.IceShards = int.Parse(talentCode.Substring(48, 1));
             calculationOptions.Frostbite = int.Parse(talentCode.Substring(49, 1));
-            calculationOptions.ImprovedFrostNova = int.Parse(talentCode.Substring(50, 1));
+            //calculationOptions.ImprovedFrostNova = int.Parse(talentCode.Substring(50, 1));
             calculationOptions.Permafrost = int.Parse(talentCode.Substring(51, 1));
             calculationOptions.PiercingIce = int.Parse(talentCode.Substring(52, 1));
             calculationOptions.IcyVeins = int.Parse(talentCode.Substring(53, 1));

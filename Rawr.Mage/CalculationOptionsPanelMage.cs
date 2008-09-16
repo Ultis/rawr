@@ -24,6 +24,7 @@ namespace Rawr.Mage
 
 		protected override void LoadCalculationOptions()
 		{
+            if (Character.MageTalents == null) Character.MageTalents = new MageTalents();
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsMage(Character);
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
 
@@ -65,11 +66,6 @@ namespace Rawr.Mage
                 Properties.Settings.Default.DisplayedSMPWarning = true;
                 Properties.Settings.Default.Save();
             }
-        }
-
-        private void checkBoxWotLK_CheckedChanged(object sender, EventArgs e)
-        {
-            if (talents != null) talents.UpdateWotLK();
         }
 
         private void calculationOptionsMageBindingSource_CurrentItemChanged(object sender, EventArgs e)

@@ -528,7 +528,7 @@ namespace Rawr.HolyPriest
 
 		protected void Calculate(Stats stats, PriestTalents talents, int rank)
         {
-            if (talents.CircleofHealing == 0)
+            if (talents.CircleOfHealing == 0)
             {
                 MinHeal = MaxHeal = 0;
                 return;

@@ -978,7 +978,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.IcyVeins) list.Add(item);
             }
-            GroupCooldown(list, 20, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.CalculationOptions.ColdSnap == 1, Cooldown.IcyVeins);
+            GroupCooldown(list, 20, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.IcyVeins);
         }
 
         public List<SequenceGroup> GroupFlameCap()
@@ -2519,7 +2519,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
             ReportMode reportMode = ReportMode.Compact;
 
-            bool coldsnap = SequenceItem.Calculations.CalculationOptions.ColdSnap == 1;
+            bool coldsnap = SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1;
             double coldsnapCooldownDuration = SequenceItem.Calculations.ColdsnapCooldown;
 
             int gemCount = 0;
