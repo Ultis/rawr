@@ -265,7 +265,7 @@ threat and limited threat scaled by the threat scale.",
             float cappedResist = targetLevel * 5;
 
             float impDefStance = 0.9f *
-                (1f - character.Talents.GetTalent("Improved Defensive Stance").PointsInvested * 0.02f);
+                (1f - character.WarriorTalents.ImprovedDefensiveStance * 0.02f);
 
             calculatedStats.NatureSurvivalPoints = (float)(stats.Health / (((1f - (System.Math.Min(cappedResist, stats.NatureResistance + stats.AllResist) / cappedResist) * .75) * impDefStance)));
             calculatedStats.FrostSurvivalPoints = (float)(stats.Health / (((1f - (System.Math.Min(cappedResist, stats.FrostResistance + stats.AllResist) / cappedResist) * .75) * impDefStance)));
@@ -340,7 +340,7 @@ threat and limited threat scaled by the threat scale.",
                 chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 70f) - hitBonus);
 
             float defStanceThreatMod = 1.3f *
-                                       (1 + character.Talents.GetTalent("Defiance").PointsInvested * 0.05f) *
+                                       //(1 + character.WarriorTalents.Defiance * 0.05f) * //TODO: Talent removed in WoW 3.0
                                        (1 + stats.ThreatIncreaseMultiplier);
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 
@@ -590,20 +590,20 @@ threat and limited threat scaled by the threat scale.",
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             //parse talents
-            TalentTree tree = character.Talents;
+            WarriorTalents tree = character.WarriorTalents;
 
             Stats statsTalents = new Stats()
                 {
-                    Parry = tree.GetTalent("Deflection").PointsInvested * 1.0f,
-                    Crit = tree.GetTalent("Cruelty").PointsInvested * 1.0f,
-                    Defense = tree.GetTalent("Anticipation").PointsInvested * 4.0f,
-                    Block = tree.GetTalent("Shield Specialization").PointsInvested * 1.0f,
-                    BonusArmorMultiplier = tree.GetTalent("Toughness").PointsInvested * 0.02f,
-                    BonusBlockValueMultiplier = tree.GetTalent("Shield Mastery").PointsInvested * 0.1f,
-                    BonusPhysicalDamageMultiplier = tree.GetTalent("One-Handed Weapon Specialization").PointsInvested * 0.02f,
-                    BonusStaminaMultiplier = tree.GetTalent("Vitality").PointsInvested * 0.01f,
-                    BonusStrengthMultiplier = tree.GetTalent("Vitality").PointsInvested * 0.02f,
-                    Expertise = tree.GetTalent("Defiance").PointsInvested * 2f,
+                    Parry = tree.Deflection * 1.0f,
+                    Crit = tree.Cruelty * 1.0f,
+                    Defense = tree.Anticipation * 4.0f,
+                    Block = tree.ShieldSpecialization * 1.0f,
+                    BonusArmorMultiplier = tree.Toughness * 0.02f,
+                    BonusBlockValueMultiplier = tree.ShieldMastery * 0.1f,
+                    BonusPhysicalDamageMultiplier = tree.OneHandedWeaponSpecialization * 0.02f,
+                    BonusStaminaMultiplier = tree.Vitality * 0.01f,
+                    BonusStrengthMultiplier = tree.Vitality * 0.02f,
+                    //Expertise = tree.Defiance * 2f, //TODO: Talent removed in WoW 3.0
                 };
 
             float oneProcPerMinAveUptime = 0f;

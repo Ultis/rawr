@@ -48,28 +48,28 @@ namespace Rawr.Hunter
             ComboBox cb = (ComboBox)sender;
             string talent = cb.Tag as string;
 
-			if (Character.Talents.Trees.ContainsKey(cb.Parent.Text) && !String.IsNullOrEmpty(talent))
-			{
-				List<TalentItem> talents = Character.Talents.Trees[cb.Parent.Text];
-				TalentItem item = null;
-				for (int i = 0; i < Character.Talents.Trees[cb.Parent.Text].Count; i++)
-				{
-					if (string.Compare(talents[i].Name.Trim(), talent.Trim(), true) == 0)
-					{
-						item = talents[i];
-						break;
-					}
-				}
+			//if (Character.AllTalents.Trees.ContainsKey(cb.Parent.Text) && !String.IsNullOrEmpty(talent))
+			//{
+			//    List<TalentItem> talents = Character.AllTalents.Trees[cb.Parent.Text];
+			//    TalentItem item = null;
+			//    for (int i = 0; i < Character.AllTalents.Trees[cb.Parent.Text].Count; i++)
+			//    {
+			//        if (string.Compare(talents[i].Name.Trim(), talent.Trim(), true) == 0)
+			//        {
+			//            item = talents[i];
+			//            break;
+			//        }
+			//    }
 
-				if (item != null)
-				{
-					item.PointsInvested = Convert.ToInt32(cb.SelectedItem);
-					if (!calculationSuspended)
-					{
-						Character.OnItemsChanged();
-					}
-				}
-			}
+			//    if (item != null)
+			//    {
+			//        item.PointsInvested = Convert.ToInt32(cb.SelectedItem);
+			//        if (!calculationSuspended)
+			//        {
+			//            Character.OnItemsChanged();
+			//        }
+			//    }
+			//}
         }
 
         private void HunterTalentsForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -98,23 +98,23 @@ namespace Rawr.Hunter
 							ComboBox cb = (ComboBox)cc;
 							string talent = cb.Tag as string;
 
-							if (Character.Talents.Trees.ContainsKey(c.Text) && !String.IsNullOrEmpty(talent))
-							{
-								List<TalentItem> talents =  Character.Talents.Trees[c.Text];
-								TalentItem ti = null;
-								for(int i=0;i<talents.Count;i++)
-								{
-									if (string.Compare(talents[i].Name.Trim(), talent.Trim(), true) == 0)
-									{
-										ti = talents[i];
-										break;
-									}
-								}
-								if (ti != null)
-								{
-									cb.SelectedItem = ti.PointsInvested.ToString();
-								}
-							}
+							//if (Character.AllTalents.Trees.ContainsKey(c.Text) && !String.IsNullOrEmpty(talent))
+							//{
+							//    List<TalentItem> talents =  Character.AllTalents.Trees[c.Text];
+							//    TalentItem ti = null;
+							//    for(int i=0;i<talents.Count;i++)
+							//    {
+							//        if (string.Compare(talents[i].Name.Trim(), talent.Trim(), true) == 0)
+							//        {
+							//            ti = talents[i];
+							//            break;
+							//        }
+							//    }
+							//    if (ti != null)
+							//    {
+							//        cb.SelectedItem = ti.PointsInvested.ToString();
+							//    }
+							//}
 						}
 					}
 				}
@@ -137,23 +137,23 @@ namespace Rawr.Hunter
 						{
 							ComboBox cb = (ComboBox)cc;
 							string talent = cb.Tag as string;
-							if (Character.Talents.Trees.ContainsKey(c.Text) && !String.IsNullOrEmpty(talent))
-							{
-								List<TalentItem> talents = Character.Talents.Trees[c.Text];
-								TalentItem ti = null;
-								for (int i = 0; i < talents.Count; i++)
-								{
-									if (string.Compare(talents[i].Name.Trim(), talent.Trim(), true) == 0)
-									{
-										ti = talents[i];
-										break;
-									}
-								}
-								if (ti != null)
-								{
-									total += ti.PointsInvested;
-								}
-							}
+							//if (Character.AllTalents.Trees.ContainsKey(c.Text) && !String.IsNullOrEmpty(talent))
+							//{
+							//    List<TalentItem> talents = Character.AllTalents.Trees[c.Text];
+							//    TalentItem ti = null;
+							//    for (int i = 0; i < talents.Count; i++)
+							//    {
+							//        if (string.Compare(talents[i].Name.Trim(), talent.Trim(), true) == 0)
+							//        {
+							//            ti = talents[i];
+							//            break;
+							//        }
+							//    }
+							//    if (ti != null)
+							//    {
+							//        total += ti.PointsInvested;
+							//    }
+							//}
 						}
 					}
 					totals.Add(total.ToString());

@@ -104,8 +104,8 @@ namespace Rawr //O O . .
         public int _rangedEnchant { get { return _itemEnchant[(int)CharacterSlot.Ranged]; } set { _itemEnchant[(int)CharacterSlot.Ranged] = value; } }
 		[XmlElement("CalculationOptions")]
 		public SerializableDictionary<string, string> _serializedCalculationOptions = new SerializableDictionary<string, string>();
-        [XmlElement("Talents")]
-        public TalentTree _talents = new TalentTree();
+        //[XmlElement("Talents")]
+        //public TalentTree _talents = new TalentTree();
 		[XmlElement("AvailableItems")]
 		public List<string> _availableItems = new List<string>();
 		[XmlElement("CurrentModel")]
@@ -115,6 +115,58 @@ namespace Rawr //O O . .
 
         public string CalculationToOptimize { get; set; }
         public List<OptimizationRequirement> OptimizationRequirements { get; set; }
+
+		[XmlElement("WarriorTalents")]
+		public string SerializableWarriorTalents { get { return (WarriorTalents ?? new WarriorTalents()).ToString(); } 
+			set { WarriorTalents = new WarriorTalents(value); } }
+		[XmlElement("PaladinTalents")]
+		public string SerializablePaladinTalents { get { return (PaladinTalents ?? new PaladinTalents()).ToString(); } 
+			set { PaladinTalents = new PaladinTalents(value); } }
+        [XmlElement("HunterTalents")]
+		public string SerializableHunterTalents { get { return (HunterTalents ?? new HunterTalents()).ToString(); } 
+			set { HunterTalents = new HunterTalents(value); } }
+        [XmlElement("RogueTalents")]
+		public string SerializableRogueTalents { get { return (RogueTalents ?? new RogueTalents()).ToString(); } 
+			set { RogueTalents = new RogueTalents(value); } }
+        [XmlElement("PriestTalents")]
+		public string SerializablePriestTalents { get { return (PriestTalents ?? new PriestTalents()).ToString(); } 
+			set { PriestTalents = new PriestTalents(value); } }
+        [XmlElement("ShamanTalents")]
+		public string SerializableShamanTalents { get { return (ShamanTalents ?? new ShamanTalents()).ToString(); } 
+			set { ShamanTalents = new ShamanTalents(value); } }
+        [XmlElement("MageTalents")]
+		public string SerializableMageTalents { get { return (MageTalents ?? new MageTalents()).ToString(); } 
+			set { MageTalents = new MageTalents(value); } }
+        [XmlElement("WarlockTalents")]
+		public string SerializableWarlockTalents { get { return (WarlockTalents ?? new WarlockTalents()).ToString(); } 
+			set { WarlockTalents = new WarlockTalents(value); } }
+        [XmlElement("DruidTalents")]
+		public string SerializableDruidTalents { get { return (DruidTalents ?? new DruidTalents()).ToString(); } 
+			set { DruidTalents = new DruidTalents(value); } }
+        [XmlElement("DeathKnightTalents")]
+		public string SerializableDeathKnightTalents { get { return (DeathKnightTalents ?? new DeathKnightTalents()).ToString(); } 
+			set { DeathKnightTalents = new DeathKnightTalents(value); } }
+
+		[XmlIgnore]
+		public WarriorTalents WarriorTalents { get; set; }
+		[XmlIgnore]
+		public PaladinTalents PaladinTalents { get; set; }
+		[XmlIgnore]
+		public HunterTalents HunterTalents { get; set; }
+		[XmlIgnore]
+		public RogueTalents RogueTalents { get; set; }
+		[XmlIgnore]
+		public PriestTalents PriestTalents { get; set; }
+		[XmlIgnore]
+		public ShamanTalents ShamanTalents { get; set; }
+		[XmlIgnore]
+		public MageTalents MageTalents { get; set; }
+		[XmlIgnore]
+		public WarlockTalents WarlockTalents { get; set; }
+		[XmlIgnore]
+		public DruidTalents DruidTalents { get; set; }
+		[XmlIgnore]
+		public DeathKnightTalents DeathKnightTalents { get; set; }
 
         // set to true to suppress ItemsChanged event
         [XmlIgnore]
@@ -297,13 +349,46 @@ namespace Rawr //O O . .
         [XmlIgnore]
         public bool DisableBuffAutoActivation { get; set; }
 
+		[XmlIgnore]
+		public string[] AllTalents
+		{
+			get
+			{
+				return new string[]{
+					SerializableWarriorTalents,
+            		SerializablePaladinTalents,
+            		SerializableHunterTalents,
+            		SerializableRogueTalents,
+            		SerializablePriestTalents,
+            		SerializableShamanTalents,
+            		SerializableMageTalents,
+            		SerializableWarlockTalents,
+            		SerializableDruidTalents,
+            		SerializableDeathKnightTalents
+				};
+			}
+			set
+			{
+				SerializableWarriorTalents = value[0];
+        		SerializablePaladinTalents = value[1];
+        		SerializableHunterTalents = value[2];
+        		SerializableRogueTalents = value[3];
+        		SerializablePriestTalents = value[4];
+        		SerializableShamanTalents = value[5];
+        		SerializableMageTalents = value[6];
+        		SerializableWarlockTalents = value[7];
+        		SerializableDruidTalents = value[8];
+				SerializableDeathKnightTalents = value[9];
+			}
+		}
 
-        [XmlIgnore]
-        public TalentTree Talents
-        {
-            get { return _talents; }
-            set { _talents = value; }
-        }
+
+		//[XmlIgnore]
+		//public TalentTree Talents
+		//{
+		//    get { return _talents; }
+		//    set { _talents = value; }
+		//}
 
         // list of 5-tuples itemid.gem1id.gem2id.gem3id.enchantid, itemid is required, others can use * for wildcard
         // for backward compatibility use just itemid instead of itemid.*.*.*.*
@@ -1057,7 +1142,8 @@ namespace Rawr //O O . .
             Shaman = 7,
             Mage = 8,
             Warlock = 9,
-            Druid = 11
+            Druid = 11,
+            DeathKnight = 12
         }
 
         public enum ItemAvailability
@@ -1300,7 +1386,7 @@ namespace Rawr //O O . .
 					clone.ActiveBuffs.Add(buff);
 			clone.CalculationOptions = this.CalculationOptions;
             clone.Class = this.Class;
-            clone.Talents = this.Talents;
+            clone.AllTalents = this.AllTalents;
 			clone.EnforceMetagemRequirements = this.EnforceMetagemRequirements;
             clone.CurrentModel = this.CurrentModel;
 			return clone;

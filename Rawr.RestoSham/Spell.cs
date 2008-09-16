@@ -195,13 +195,13 @@ namespace Rawr.RestoSham
             
             // Healing Way bonus (assumes full stack) if spec'd for Healing Way:
             
-            int points = CalculationsRestoSham.GetTalentPoints("Healing Way", "Restoration", character.Talents);
-            HealingWay = (points > 0 ? AverageHealed * .18f : 0f);
+            //int points = CalculationsRestoSham.GetTalentPoints("Healing Way", "Restoration", character.AllTalents);
+            HealingWay = (character.ShamanTalents.HealingWay > 0 ? AverageHealed * .18f : 0f);
             
             // Adjust cast time based on Improved Healing Wave talent:
             
-            points = CalculationsRestoSham.GetTalentPoints("Improved Healing Wave", "Restoration", character.Talents);
-            float baseTime = SpellRanks[Rank].CastTime - (.1f * points);
+            //points = CalculationsRestoSham.GetTalentPoints("Improved Healing Wave", "Restoration", character.AllTalents);
+            float baseTime = SpellRanks[Rank].CastTime - (.1f * character.ShamanTalents.ImprovedHealingWave);
             CastTime = baseTime / (1 + (stats.SpellHasteRating / 1570));
           }
 
@@ -250,8 +250,8 @@ namespace Rawr.RestoSham
             // Improved Chain Heal talent:
             
             float impCH = 1.0f;
-            int points = CalculationsRestoSham.GetTalentPoints("Improved Chain Heal", "Restoration", character.Talents);
-            impCH = 1f + .1f * points;
+            //int points = CalculationsRestoSham.GetTalentPoints("Improved Chain Heal", "Restoration", character.AllTalents);
+            impCH = 1f + .1f * character.ShamanTalents.ImprovedChainHeal;
             
             // Skyshatter 4-piece bonus:
             
@@ -383,8 +383,8 @@ namespace Rawr.RestoSham
             // Purification talent:
 
             float purificationBonus = 1.0f;
-            int points = CalculationsRestoSham.GetTalentPoints("Purification", "Restoration", character.Talents);
-            purificationBonus = 1f + .02f * points;
+            //int points = CalculationsRestoSham.GetTalentPoints("Purification", "Restoration", character.AllTalents);
+            purificationBonus = 1f + .02f * character.ShamanTalents.Purification;
 
             // Now get total average heal:
 
@@ -396,7 +396,7 @@ namespace Rawr.RestoSham
             
             // Compute mana cost:
             
-            points = CalculationsRestoSham.GetTalentPoints("Tidal Focus", "Restoration", character.Talents);
+            //points = CalculationsRestoSham.GetTalentPoints("Tidal Focus", "Restoration", character.AllTalents);
             float f = 0.0f;
             if (options.Totems[HealType].ID != 0 && options.Totems[HealType].Effect == TotemEffect.ReduceMana)
               f = options.Totems[HealType].Amount;
@@ -406,7 +406,7 @@ namespace Rawr.RestoSham
             if (HealType == HealSpells.LesserHealingWave)
               f += stats.LHWManaReduction * SpellRanks[Rank].Mana;
               
-            ManaCost = (SpellRanks[Rank].Mana - f) * (1 - .01f * points);
+            ManaCost = (SpellRanks[Rank].Mana - f) * (1 - .01f * character.ShamanTalents.TidalFocus);
           }
         
         

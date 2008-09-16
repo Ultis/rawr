@@ -170,8 +170,8 @@ namespace Rawr.RestoSham
             mp5 += options.SPriestMP5;
             if (character.ActiveBuffsContains("Mana Spring Totem"))
               {
-                int points = GetTalentPoints("Restorative Totems", "Restoration", character.Talents);
-                mp5 += 50f * (points * .05f);
+                //int points = GetTalentPoints("Restorative Totems", "Restoration", character.AllTalents);
+                mp5 += 50f * (character.ShamanTalents.RestorativeTotems * .05f);
                 
                 mp5 += stats.ManaSpringMp5Increase;
               }
@@ -360,7 +360,7 @@ namespace Rawr.RestoSham
           
             // Apply talents to stats:
             
-            ApplyTalents(statsTotal, character.Talents);
+            ApplyTalents(statsTotal, character.ShamanTalents);
             
             // Fight options:
             
@@ -374,46 +374,46 @@ namespace Rawr.RestoSham
         /// <summary>
         /// Adjust a stats object according to any applicable talents.
         /// </summary>
-        private void ApplyTalents(Stats statsTotal, TalentTree talentTree)
+        private void ApplyTalents(Stats statsTotal, ShamanTalents talentTree)
           {
-            int points;
+            //int points;
             
             // Unrelenting Storm: Gives 2% (per talent point) of intellect as mp5:
             
-            points = GetTalentPoints("Unrelenting Storm", "Elemental", talentTree);
-            statsTotal.Mp5 += (float)Math.Round((statsTotal.Intellect * .02f * points), 0);
+            //points = GetTalentPoints("Unrelenting Storm", "Elemental", talentTree);
+            statsTotal.Mp5 += (float)Math.Round((statsTotal.Intellect * .02f * talentTree.UnrelentingStorm), 0);
           
             // Tidal Mastery: Increases crit chance of heals by 1% per talent point:
             
-            points = GetTalentPoints("Tidal Mastery", "Restoration", talentTree);
-            statsTotal.SpellCrit += .01f * points;
+            //points = GetTalentPoints("Tidal Mastery", "Restoration", talentTree);
+            statsTotal.SpellCrit += .01f * talentTree.TidalMastery;
               
             // Nature's Blessing: Adds 10% (per talent point) of intellect as bonus healing:
             
-            points = GetTalentPoints("Nature's Blessing", "Restoration", talentTree);
-            statsTotal.Healing += (float)Math.Round((statsTotal.Intellect * .1f * points), 0);
+            //points = GetTalentPoints("Nature's Blessing", "Restoration", talentTree);
+            statsTotal.Healing += (float)Math.Round((statsTotal.Intellect * .1f * talentTree.NaturesBlessing), 0);
           
             // Ancestral Knowledge: Increases total mana by 1% per talent point.
             
-            points = GetTalentPoints("Ancestral Knowledge", "Enhancement", talentTree);
-            statsTotal.Mana += statsTotal.Mana * (.01f * points);
+            //points = GetTalentPoints("Ancestral Knowledge", "Enhancement", talentTree);
+            statsTotal.Mana += statsTotal.Mana * (.01f * talentTree.AncestralKnowledge);
           }
 
 
         /// <summary>
         /// Search a talent tree for a specified talent and get the number of points invested in that talent.
         /// </summary>
-        public static int GetTalentPoints(string szName, string szTree, TalentTree talents)
-          {
-            if (!talents.Trees.ContainsKey(szTree))
-              return 0;
+		//public static int GetTalentPoints(string szName, string szTree, TalentTree talents)
+		//  {
+		//    if (!talents.Trees.ContainsKey(szTree))
+		//      return 0;
               
-            foreach (TalentItem ti in talents.Trees[szTree])
-              if (ti.Name.Trim().ToLower() == szName.ToLower())
-                return ti.PointsInvested;
+		//    foreach (TalentItem ti in talents.Trees[szTree])
+		//      if (ti.Name.Trim().ToLower() == szName.ToLower())
+		//        return ti.PointsInvested;
                 
-            return 0;
-          }
+		//    return 0;
+		//  }
 
 
         //

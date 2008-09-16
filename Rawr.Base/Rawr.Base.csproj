@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="Character.cs" />
     <Compile Include="CharacterProfilerData.cs" />
+    <Compile Include="ClassTalents.cs" />
     <Compile Include="CustomControls\ExtendedToolTipCheckBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -89,8 +90,6 @@
     <Compile Include="SerializableDictionary.cs" />
     <Compile Include="Stats.cs" />
     <Compile Include="StatusMessaging.cs" />
-    <Compile Include="TalentItem.cs" />
-    <Compile Include="TalentTree.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="WebRequests.cs" />
   </ItemGroup>

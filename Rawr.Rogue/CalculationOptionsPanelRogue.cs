@@ -67,12 +67,12 @@ namespace Rawr.Rogue {
         }
 
         private void buttonTalents_Click(object sender, EventArgs e) {
-            if (Character != null && Character.Talents != null && Character.Talents.Trees != null && Character.Talents.Trees.Count > 0) {
-                talents.Show();
-            }
-            else {
+			//if (Character != null && Character.AllTalents != null && Character.AllTalents.Trees != null && Character.AllTalents.Trees.Count > 0) {
+			//    talents.Show();
+			//}
+            //else {
                 MessageBox.Show("Error: There are no talents, which is a problem you know!");
-            }
+            //}
         }
 
         private void OnCheckedChanged(object sender, EventArgs e) {

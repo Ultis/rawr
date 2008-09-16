@@ -1855,7 +1855,7 @@ namespace Rawr
 			Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, item, enchant, _character.ActiveBuffs, false, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
 			character.Class = _character.Class;
-			character.Talents = _character.Talents;
+			character.AllTalents = _character.AllTalents;
             character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
 			return character;
 		}
@@ -2004,7 +2004,7 @@ namespace Rawr
             Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, item, enchant, _character.ActiveBuffs, false, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
-            character.Talents = _character.Talents;
+            character.AllTalents = _character.AllTalents;
             character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
 
             return character;
@@ -2127,7 +2127,7 @@ namespace Rawr
             //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
-            character.Talents = _character.Talents;
+            character.AllTalents = _character.AllTalents;
             character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
             //character.RecalculateSetBonuses();
             return character;
@@ -2226,7 +2226,7 @@ namespace Rawr
             //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
-            character.Talents = _character.Talents;
+            character.AllTalents = _character.AllTalents;
             character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
             //character.RecalculateSetBonuses();
             return character;
@@ -2290,7 +2290,7 @@ namespace Rawr
             //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
-            character.Talents = _character.Talents;
+            character.AllTalents = _character.AllTalents;
             character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
             //character.RecalculateSetBonuses();
             return character;
@@ -2337,7 +2337,7 @@ namespace Rawr
 			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
-			character.Talents = _character.Talents;
+			character.AllTalents = _character.AllTalents;
             character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
             //character.RecalculateSetBonuses();
 			return character;
@@ -2384,7 +2384,7 @@ namespace Rawr
 			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
-			character.Talents = _character.Talents;
+			character.AllTalents = _character.AllTalents;
             character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
             //character.RecalculateSetBonuses();
 			return character;

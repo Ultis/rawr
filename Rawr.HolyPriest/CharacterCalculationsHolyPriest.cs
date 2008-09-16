@@ -7,14 +7,14 @@ namespace Rawr.HolyPriest
     public class CharacterCalculationsHolyPriest : CharacterCalculationsBase
     {
         private Stats basicStats;
-        private TalentTree talents;
+        private PriestTalents talents;
 
         public float SpiritRegen { get; set; }
         public float RegenInFSR { get; set; }
         public float RegenOutFSR { get; set; }
         public Character.CharacterRace Race { get; set; }
        
-        public TalentTree Talents
+        public PriestTalents Talents
         {
             get { return talents; }
             set { talents = value; }
@@ -73,7 +73,7 @@ namespace Rawr.HolyPriest
             dictValues.Add("Regen OutFSR", RegenOutFSR.ToString("0"));
 
             dictValues.Add("Holy Spell Crit", string.Format("{0}%*{1} Spell Crit rating\n{2} ({2}%) points in Holy Specialization",
-                BasicStats.SpellCrit, BasicStats.SpellCritRating.ToString(), talents.GetTalent("Holy Specialization").PointsInvested));
+                BasicStats.SpellCrit, BasicStats.SpellCritRating.ToString(), talents.HolySpecialization));
             
             dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\n", 
                 Math.Round(BasicStats.SpellHasteRating / 15.7, 2), BasicStats.SpellHasteRating.ToString()));
@@ -88,17 +88,17 @@ namespace Rawr.HolyPriest
             dictValues.Add("Prayer of Mending", new PrayerOfMending(BasicStats, talents).ToString());
             dictValues.Add("Power Word Shield", new PowerWordShield(BasicStats, talents).ToString());
 
-            if (talents.GetTalent("Circle of Healing").PointsInvested > 0)
+            if (talents.CircleofHealing > 0)
                 dictValues.Add("CoH", new CircleOfHealing(BasicStats, talents).ToString());
             else
                 dictValues.Add("CoH", "- *No required talents");
 
-            if (talents.GetTalent("Holy Nova").PointsInvested > 0)
+            if (talents.HolyNova > 0)
                 dictValues.Add("Holy Nova", new HolyNova(BasicStats, talents).ToString());
             else
                 dictValues.Add("Holy Nova", "- *No required talents");
 
-            if (talents.GetTalent("Lightwell").PointsInvested > 0)
+            if (talents.Lightwell > 0)
                 dictValues.Add("Lightwell", new Lightwell(BasicStats, talents).ToString());
             else
                 dictValues.Add("Lightwell", "- *No required talents");

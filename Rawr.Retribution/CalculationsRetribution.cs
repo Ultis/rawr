@@ -796,29 +796,17 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             if (!calcOpts.TalentsSaved)
             {
-                if (character.Talents.Trees.Count > 0)
-                {
-					if (character.Talents.Trees.ContainsKey("Protection"))
-					{
-						calcOpts.Precision = character.Talents.Trees["Protection"][2].PointsInvested;
-					}
-					if (character.Talents.Trees.ContainsKey("Retribution"))
-					{
-						calcOpts.Crusade = character.Talents.Trees["Retribution"][11].PointsInvested;
-						calcOpts.TwoHandedSpec = character.Talents.Trees["Retribution"][12].PointsInvested;
-                        calcOpts.SanctityAura = character.Talents.Trees["Retribution"][13].PointsInvested;
-						calcOpts.ImprovedSanctityAura = character.Talents.Trees["Retribution"][14].PointsInvested;
-						calcOpts.SanctifiedSeals = character.Talents.Trees["Retribution"][17].PointsInvested;
-						calcOpts.Fanaticism = character.Talents.Trees["Retribution"][20].PointsInvested;
-                        calcOpts.Vengeance = character.Talents.Trees["Retribution"][15].PointsInvested;
-						calcOpts.Conviction = character.Talents.Trees["Retribution"][6].PointsInvested;
-					}
-					if (character.Talents.Trees.ContainsKey("Holy"))
-					{
-						calcOpts.DivineStrength = character.Talents.Trees["Holy"][0].PointsInvested;
-					}
-                    calcOpts.TalentsSaved = true;
-                }
+				//calcOpts.Precision = character.PaladinTalents.Precision; //TODO: Talent Removed in 3.0
+				calcOpts.Crusade = character.PaladinTalents.Crusade;
+				calcOpts.TwoHandedSpec = character.PaladinTalents.TwoHandedWeaponSpecialization;
+				//calcOpts.SanctityAura = character.PaladinTalents.SanctityAura; //TODO: Talent Removed in 3.0
+				//calcOpts.ImprovedSanctityAura = character.PaladinTalents.ImprovedSanctityAura; //TODO: Talent Removed in 3.0
+				calcOpts.SanctifiedSeals = character.PaladinTalents.SanctifiedSeals;
+				calcOpts.Fanaticism = character.PaladinTalents.Fanaticism;
+				calcOpts.Vengeance = character.PaladinTalents.Vengeance;
+				calcOpts.Conviction = character.PaladinTalents.Conviction;
+				calcOpts.DivineStrength = character.PaladinTalents.DivineStrength;
+				calcOpts.TalentsSaved = true;
             }
         }
     }

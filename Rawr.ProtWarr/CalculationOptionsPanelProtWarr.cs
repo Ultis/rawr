@@ -98,18 +98,18 @@ namespace Rawr.ProtWarr
 
         private void buttonTalents_Click(object sender, EventArgs e)
         {
-            if ((Character.Talents != null) &&
-                (Character.Talents.Trees != null) &&
-                (Character.Talents.Trees.Count > 0))
-            {
-                TalentForm tf = new TalentForm();
-                tf.SetParameters(Character);
-                tf.Show();
-            }
-            else
-            {
-                MessageBox.Show("No talents found. Please reload from armory");
-            }
+			//if ((Character.AllTalents != null) &&
+			//    (Character.AllTalents.Trees != null) &&
+			//    (Character.AllTalents.Trees.Count > 0))
+			//{
+			//    TalentForm tf = new TalentForm();
+			//    tf.SetParameters(Character);
+			//    tf.Show();
+			//}
+			//else
+			//{
+			//    MessageBox.Show("No talents found. Please reload from armory");
+			//}
         }
 	}
 

@@ -84,9 +84,44 @@ namespace Rawr
 					);
                 
                 character.Class = charClass;
-                
-                //build the talent tree 
-                character.Talents.SetCharacter(character);
+
+				string talentCode = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm)
+					.SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
+				switch (charClass)
+				{
+					case Character.CharacterClass.Warrior:
+						character.WarriorTalents = new WarriorTalents(talentCode);
+						break;
+					case Character.CharacterClass.Paladin:
+						character.PaladinTalents = new PaladinTalents(talentCode);
+						break;
+					case Character.CharacterClass.Hunter:
+						character.HunterTalents = new HunterTalents(talentCode);
+						break;
+					case Character.CharacterClass.Rogue:
+						character.RogueTalents = new RogueTalents(talentCode);
+						break;
+					case Character.CharacterClass.Priest:
+						character.PriestTalents = new PriestTalents(talentCode);
+						break;
+					case Character.CharacterClass.Shaman:
+						character.ShamanTalents = new ShamanTalents(talentCode);
+						break;
+					case Character.CharacterClass.Mage:
+						character.MageTalents = new MageTalents(talentCode);
+						break;
+					case Character.CharacterClass.Warlock:
+						character.WarlockTalents = new WarlockTalents(talentCode);
+						break;
+					case Character.CharacterClass.Druid:
+						character.DruidTalents = new DruidTalents(talentCode);
+						break;
+					case Character.CharacterClass.DeathKnight:
+						character.DeathKnightTalents = new DeathKnightTalents(talentCode);
+						break;
+					default:
+						break;
+				}
 
                 //I will tell you how he lived.
 				return character;

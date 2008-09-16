@@ -47,7 +47,7 @@ namespace Rawr.HolyPriest
         private void tbnTalents_Click(object sender, EventArgs e)
         {
             TalentForm talents = new TalentForm(this);
-            talents.SetParameters(Character.Talents, Character.CharacterClass.Priest);
+            //talents.SetParameters(Character.AllTalents, Character.CharacterClass.Priest);
             talents.Show();
         }
     }

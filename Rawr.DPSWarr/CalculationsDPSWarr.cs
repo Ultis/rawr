@@ -611,7 +611,7 @@ namespace Rawr.DPSWarr
 
             //base
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
-            TalentTree tree = character.Talents;
+            //TalentTree tree = character.AllTalents;
             float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
             float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
             float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));

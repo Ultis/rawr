@@ -547,7 +547,7 @@ namespace Rawr.Rogue {
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
-            TalentTree tree = character.Talents;
+            //TalentTree tree = character.AllTalents;
 
             float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
             float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));

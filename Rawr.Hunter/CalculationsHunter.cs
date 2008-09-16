@@ -315,9 +315,9 @@ namespace Rawr.Hunter
 			//Hasted Speed = Weapon Speed / ( (1+(Haste1 %)) * (1+(Haste2 %)) * (1+(((Haste Rating 1 + Haste Rating 2 + ... )/100)/15.7)) )
 			double totalStaticHaste = QUIVER_SPEED_INCREASE * (1 + (calculatedStats.BasicStats.HasteRating / HASTE_RATING_PER_PERCENT / 100));
 
-			if (character.Talents.Trees.ContainsKey(BEAST_MASTER))
+			//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
 			{
-				totalStaticHaste = totalStaticHaste * (1 + .04 * character.Talents.Trees[BEAST_MASTER][19].PointsInvested);
+				totalStaticHaste = totalStaticHaste * (1 + .04 * character.HunterTalents.SerpentsSwiftness);
 			}
 
 			if (character.Ranged != null)
@@ -337,9 +337,9 @@ namespace Rawr.Hunter
 			SimulationResults quickShotShotsPerSecond = null;
 			double quickShotsUpTime = 0;
 			double quickShotHaste = 0;
-			if (options.Aspect == Aspect.Hawk && character.Talents.Trees.ContainsKey(BEAST_MASTER) && character.Talents.Trees[BEAST_MASTER][0].PointsInvested > 0)
+			if (options.Aspect == Aspect.Hawk && /*character.AllTalents.Trees.ContainsKey(BEAST_MASTER) && */character.HunterTalents.ImprovedAspectoftheHawk > 0)
 			{
-				quickShotHaste = .03 * character.Talents.Trees[BEAST_MASTER][0].PointsInvested;
+				quickShotHaste = .03 * character.HunterTalents.ImprovedAspectoftheHawk;
 				quickShotShotsPerSecond = CalculateShotsPerSecond(options, calculatedStats.BaseAttackSpeed / (1 + quickShotHaste), steadyShotCastTime / (1 + quickShotHaste));
 
 				//Quick Shot Uptime From Cheeky's DPS Spreadsheet with special notation - "By Norwest"
@@ -445,14 +445,14 @@ namespace Rawr.Hunter
 			double petFocusPerSecond = 0;
 			{
 				double petFocusRegenPer4 = 24;
-				if (character.Talents.Trees.ContainsKey(BEAST_MASTER))
+				//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
 				{//Bestial Discipline
-					petFocusRegenPer4 += (12 * character.Talents.Trees[BEAST_MASTER][13].PointsInvested);
+					petFocusRegenPer4 += (12 * character.HunterTalents.BestialDiscipline);
 				}
-				if (character.Talents.Trees.ContainsKey(MARKSMAN))
+				//if (character.AllTalents.Trees.ContainsKey(MARKSMAN))
 				{
 					//Go for the Throat
-					petFocusRegenPer4 += ((weightedTotalShotsPerSecond * 4 * calculatedStats.BasicStats.Crit) * (25 * character.Talents.Trees[MARKSMAN][4].PointsInvested));
+					petFocusRegenPer4 += ((weightedTotalShotsPerSecond * 4 * calculatedStats.BasicStats.Crit) * (25 * character.HunterTalents.GofortheThroat));
 				}
 				petFocusPerSecond = petFocusRegenPer4 / 4f;
 			}
@@ -590,10 +590,10 @@ namespace Rawr.Hunter
 			}
 
 			double petEffectiveAttackSpeed = 2;
-			if (character.Talents.Trees.ContainsKey(BEAST_MASTER))
+			//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
 			{
 				//Serpent's Swiftness
-				petEffectiveAttackSpeed = petEffectiveAttackSpeed / (1 + (.04f * character.Talents.Trees[BEAST_MASTER][19].PointsInvested));
+				petEffectiveAttackSpeed = petEffectiveAttackSpeed / (1 + (.04f * character.HunterTalents.SerpentsSwiftness));
 			}
 
 			//TODO: Make a Pet Talent Form and pull this value from it.
@@ -601,9 +601,9 @@ namespace Rawr.Hunter
 			petEffectiveAttackSpeed = petEffectiveAttackSpeed / 1.3;
 
 
-			if (character.Talents.Trees.ContainsKey(BEAST_MASTER) && character.Talents.Trees[BEAST_MASTER][15].PointsInvested > 0)
+			if (/*character.AllTalents.Trees.ContainsKey(BEAST_MASTER) && */character.HunterTalents.Frenzy > 0)
 			{//Frenzy Calculations
-				double frenzyChance = calculatedStats.PetStats.Crit * character.Talents.Trees[BEAST_MASTER][15].PointsInvested * .2;
+				double frenzyChance = calculatedStats.PetStats.Crit * character.HunterTalents.Frenzy * .2;
 				double frenzySpeed = petEffectiveAttackSpeed / 1.3;
 				double killCommandSpeed = 1 / petKillCommandFrequency;
 				double numberOfAttacksInFrenzy = Math.Floor(8 / frenzySpeed) + 8 / killCommandSpeed + ((petSpecialAttackSpeed > 0) ? (8 / petSpecialAttackSpeed) : 0);
@@ -613,9 +613,9 @@ namespace Rawr.Hunter
 			}
 
 			double ferociousInspirtationEffectBenefit = 0;
-			if (character.Talents.Trees.ContainsKey(BEAST_MASTER) && character.Talents.Trees[BEAST_MASTER][16].PointsInvested > 0)
+			if (/*character.AllTalents.Trees.ContainsKey(BEAST_MASTER) && */character.HunterTalents.FerociousInspiration > 0)
 			{
-				double fiEffect = .01 * character.Talents.Trees[BEAST_MASTER][16].PointsInvested;
+				double fiEffect = .01 * character.HunterTalents.FerociousInspiration;
 				double fiCommandUpTime = 1 - Math.Pow(1 - calculatedStats.PetStats.Crit, (10 / petEffectiveAttackSpeed) + 10 / (1 / petKillCommandFrequency) + ((petSpecialAttackSpeed > 0) ? (10 / petSpecialAttackSpeed) : 0));
 				ferociousInspirtationEffectBenefit = fiEffect * fiCommandUpTime;
 			}
@@ -627,13 +627,13 @@ namespace Rawr.Hunter
 			{
 				petDamageAdjustment = 2 * calculatedStats.PetStats.Crit;
 				petDamageAdjustment += (calculatedStats.PetStats.Hit - calculatedStats.PetStats.Crit - (.05 + (.0004 * (options.TargetLevel * 5 - 350))));
-				if (character.Talents.Trees.ContainsKey(BEAST_MASTER))
+				//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
 				{
 					//Unleashed Fury
-					petDamageAdjustment = (petDamageAdjustment * (character.Talents.Trees[BEAST_MASTER][8].PointsInvested * .04f + 1));
+					petDamageAdjustment = (petDamageAdjustment * (character.HunterTalents.UnleashedFury * .04f + 1));
 
 					//Beastial Wrath
-					if (character.Talents.Trees[BEAST_MASTER][17].PointsInvested > 0)
+					if (character.HunterTalents.BestialWrath > 0)
 					{
 						petDamageAdjustment = petDamageAdjustment * 1.075f;
 					}
@@ -670,9 +670,9 @@ namespace Rawr.Hunter
 					double totalKillCommandBaseDamage = ((APDamage + 60) * cobraReflexesDamageReduction) + 127;
 
 					double totalKillCommandCritChance = calculatedStats.PetStats.Crit;
-					if (character.Talents.Trees.ContainsKey(BEAST_MASTER))
+					//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
 					{//Focus Fire
-						totalKillCommandCritChance += (.1 * character.Talents.Trees[BEAST_MASTER][2].PointsInvested);
+						totalKillCommandCritChance += (.1 * character.HunterTalents.FocusedFire);
 					}
 					//(crit damage * crit percent) + (hit percent - crit percent - dodge percent)
 					double critMissKillCommandAdjustment = (totalKillCommandCritChance * 2) + (calculatedStats.PetStats.Hit - totalKillCommandCritChance - (.05 + (.0004 * (options.TargetLevel * 5 - 350))));
@@ -680,13 +680,13 @@ namespace Rawr.Hunter
 					//TODO: Pet Family from options
 					//base damage * mood * FI * pet family modifier * armor reduction * Avg. BW
 					double totalKillCommandDamage = critMissKillCommandAdjustment * 1.25 * (1 + ferociousInspirtationEffectBenefit) * 1.1 * (1 - petArmorDamageReductionPercentage);
-					if (character.Talents.Trees.ContainsKey(BEAST_MASTER))
+					//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
 					{
 						//Unleashed Fury
-						totalKillCommandDamage = (totalKillCommandDamage * (character.Talents.Trees[BEAST_MASTER][8].PointsInvested * .04f + 1));
+						totalKillCommandDamage = (totalKillCommandDamage * (character.HunterTalents.UnleashedFury * .04f + 1));
 
 						//Beastial Wrath
-						if (character.Talents.Trees[BEAST_MASTER][17].PointsInvested > 0)
+						if (character.HunterTalents.BestialWrath > 0)
 						{
 							totalKillCommandDamage = totalKillCommandDamage * 1.075f;
 						}
@@ -740,9 +740,9 @@ namespace Rawr.Hunter
 
 			#region Critical Hit Damage
 			double criticalHitDamage = 1;
-			if (character.Talents.Trees.ContainsKey(MARKSMAN))
+			//if (character.AllTalents.Trees.ContainsKey(MARKSMAN))
 			{//Mortal Shots
-				criticalHitDamage += (.06 * character.Talents.Trees[MARKSMAN][9].PointsInvested);
+				criticalHitDamage += (.06 * character.HunterTalents.MortalShots);
 			}
 			criticalHitDamage = criticalHitDamage * (1 + calculatedStats.BasicStats.BonusCritMultiplier);
 			//TODO: Slaying bonus talents & Target Resilience
@@ -757,15 +757,15 @@ namespace Rawr.Hunter
 				//TODO: Slaying, Ferocious Inspiration actual cals;
 				double rws = 1; double ff = 1; double bw = 1f; double fi = 1.0282; double slaying = 1;
 
-				if (character.Talents.Trees.ContainsKey(MARKSMAN))
+				//if (character.AllTalents.Trees.ContainsKey(MARKSMAN))
 				{//Ranged Weapon Specialization
-					rws = 1 + (.01 * character.Talents.Trees[MARKSMAN][14].PointsInvested);
+					rws = 1 + (.01 * character.HunterTalents.RangedWeaponSpecialization);
 				}
-				if (character.Talents.Trees.ContainsKey(BEAST_MASTER))
+				//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
 				{//Focused Fire
-					ff = 1 + (.01 * character.Talents.Trees[BEAST_MASTER][2].PointsInvested);
+					ff = 1 + (.01 * character.HunterTalents.FocusedFire);
 
-					if (character.Talents.Trees[BEAST_MASTER][20].PointsInvested > 0)
+					if (character.HunterTalents.TheBeastWithin > 0)
 					{//Beast Within - 15% uptime (assumes always popping it when cd is up) with a 10% damage bonus
 						bw = 1.015;
 					}
@@ -884,7 +884,7 @@ namespace Rawr.Hunter
 			Stats statsBaseGear = GetItemStats(character, additionalItem);
 			Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-			Stats statsTalents = GetBaseTalentStats(character.Talents);
+			Stats statsTalents = GetBaseTalentStats(character.HunterTalents);
 			Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 			statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
@@ -942,13 +942,13 @@ namespace Rawr.Hunter
 			
 			statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ( (statsTotal.Stamina-10) * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
 			//add up health talents, based on health, not base stat, so cannot roll it into Talent Stats
-			if (character.Talents.Trees.ContainsKey(BEAST_MASTER))
-			{//endurence training
-				statsTotal.Health += (float)Math.Round((statsTotal.Health * character.Talents.Trees[BEAST_MASTER][1].PointsInvested * .01f));
+			//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
+			{//endurance training
+				statsTotal.Health += (float)Math.Round((statsTotal.Health * character.HunterTalents.EnduranceTraining * .01f));
 			}
-			if (character.Talents.Trees.ContainsKey(SURVIVAL))
+			//if (character.AllTalents.Trees.ContainsKey(SURVIVAL))
 			{//survivalist
-				statsTotal.Health += (float)Math.Round((statsTotal.Health * character.Talents.Trees[SURVIVAL][8].PointsInvested * .02f));
+				statsTotal.Health += (float)Math.Round((statsTotal.Health * character.HunterTalents.Survivalist * .02f));
 			}
 			
 			
@@ -1006,10 +1006,10 @@ namespace Rawr.Hunter
 				RAP += 155f;
 			}
 
-			if (character.Talents.Trees.ContainsKey(MARKSMAN))
+			//if (character.AllTalents.Trees.ContainsKey(MARKSMAN))
 			{
 				//Careful Aim
-				RAP += (.015f * character.Talents.Trees[MARKSMAN][15].PointsInvested * statsTotal.Intellect);
+				RAP += (.015f * character.HunterTalents.CarefulAim * statsTotal.Intellect);
 			}
 
 
@@ -1206,38 +1206,38 @@ namespace Rawr.Hunter
 		}
 		#endregion
 
-		private Stats GetBaseTalentStats(TalentTree talentTree)
+		private Stats GetBaseTalentStats(HunterTalents talentTree)
 		{
 			Stats talents = new Stats();
 
 
-			if (talentTree.Trees.ContainsKey(MARKSMAN))
+			//if (talentTree.Trees.ContainsKey(MARKSMAN))
 			{
 				//Lethal Shots
-				talents.Crit += (talentTree.Trees[MARKSMAN][1].PointsInvested / 100f);
+				talents.Crit += (talentTree.LethalShots / 100f);
 
 				//Combat Experience
-				int combatExperience = talentTree.Trees[MARKSMAN][13].PointsInvested;
+				int combatExperience = talentTree.CombatExperience;
 				talents.BonusAgilityMultiplier = .01f * combatExperience;
 				talents.BonusIntellectMultiplier = .03f * combatExperience;
 
 				//Master Marksman
-				talents.BonusRangedAttackPowerMultiplier = (.02f * talentTree.Trees[MARKSMAN][18].PointsInvested);
+				talents.BonusRangedAttackPowerMultiplier = (.02f * talentTree.MasterMarksman);
 			}
 
-			if (talentTree.Trees.ContainsKey(SURVIVAL))
+			//if (talentTree.Trees.ContainsKey(SURVIVAL))
 			{
 				//Killer Instincts
-				talents.Crit += (talentTree.Trees[SURVIVAL][14].PointsInvested / 100f);
-				//Killer Instincts
-				talents.Crit += (talentTree.Trees[SURVIVAL][21].PointsInvested / 100f);
+				talents.Crit += (talentTree.KillerInstinct / 100f);
+				//Master Tactition
+				talents.Crit += (talentTree.MasterTactician / 100f);
 				//surefooted
-				talents.Hit += (talentTree.Trees[SURVIVAL][11].PointsInvested / 100f);
+				talents.Hit += (talentTree.Surefooted / 100f);
 				//Lighting Reflexes
-				talents.BonusAgilityMultiplier = ((1 + talents.BonusAgilityMultiplier) * (1 + .03f * talentTree.Trees[SURVIVAL][17].PointsInvested)) - 1;
+				talents.BonusAgilityMultiplier = ((1 + talents.BonusAgilityMultiplier) * (1 + .03f * talentTree.LightningReflexes)) - 1;
 
 				//Survival Instinct
-				talents.BonusRangedAttackPowerMultiplier = ((1 + talents.BonusRangedAttackPowerMultiplier) * (1 + .02f * talentTree.Trees[SURVIVAL][13].PointsInvested)) - 1;
+				talents.BonusRangedAttackPowerMultiplier = ((1 + talents.BonusRangedAttackPowerMultiplier) * (1 + .02f * talentTree.SurvivalInstincts)) - 1;
 
 			}
 
@@ -1365,9 +1365,9 @@ namespace Rawr.Hunter
 			
 			//Pet Hit
 			double petHitChance = .95;
-			if (character.Talents.Trees.ContainsKey(BEAST_MASTER))
-			{
-				petHitChance += (.02 * character.Talents.Trees[BEAST_MASTER][14].PointsInvested);
+			//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
+			{//Animal Handler
+				petHitChance += (.02 * character.HunterTalents.AnimalHandler);
 			}
 			
 			if (character.Race == Character.CharacterRace.Draenei)
@@ -1386,9 +1386,9 @@ namespace Rawr.Hunter
 
 			//Pet Crit
 			petStats.Crit += petStats.Agility / 2560f;
-			if (character.Talents.Trees.ContainsKey(BEAST_MASTER))
+			//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
 			{
-				petStats.Crit += (.02f * character.Talents.Trees[BEAST_MASTER][10].PointsInvested);
+				petStats.Crit += (.02f * character.HunterTalents.Ferocity);
 			}
 			petStats.Crit -= ((options.TargetLevel * 5f - 350f) * .0004f);
 			petStats.Crit += hunterStats.BonusPetCritChance;
