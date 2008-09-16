@@ -1,6 +1,6 @@
-Rawr Beta 16
+Rawr Beta 16.1
 ------------
- Welcome to Rawr b16. This beta contains no new models, but significant improvements to the core application, and many of the models. Unfortunately, support for Fury warriors and Marksman/Survival hunters still isn't ready, but we're actively working on them.
+ Welcome to Rawr b16.1. This beta contains one new model, Rawr.Rogue! Let us know how it works. Additionally, this is expected to be our last version of Rawr aimed at WoW 2.x; all future Rawr development will focus on WoW 3.0, and WotLK. If you have any suggestions/requests for features/fixes in the new version of Rawr, now is the time to let us know! Post on our development site, http://codeplex.com/Rawr/.
 
 Anyway, as usual, thanks very much for testing Rawr. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
 
@@ -23,6 +23,17 @@ FAQ
 
 Version History
 ---------------
+Beta 16.1:
+ - The beginnings of user-controlled item filtering is in. Let me stress that this is just the beginning. Currently it's hidden away in a menu item (Tools>Refine Relevant Items...), and only supports the most basic filtering by item type (Leather vs Mail, Maces vs Swords, etc.). In the future, we expect to expand upon this greatly, by allowing all kinds of filters (such as by source, by item level, etc), and will be making the UI to control this more intuitive. Please post on our development site, let us know what sort of filters you'd like to be able to create
+ - More improvements to the performance and accuracy of the Optimizer
+ - The Add Item dialog now accepts whole links to wowhead or thottbot
+ - Added Flame Armor Kits, Arcane Armor Kits, and Lesser Arcanums of Resilience to the default enchant list
+ - Rawr.Mage:
+   - New custom chart to visualize sequence reconstruction
+   - Couple fixes for sequence reconstruction, especially around handling threat
+ - Rawr.ProtWarr
+   - Blessing of Kings now correctly affects Agility
+
 Beta 16:
  - Significantly improved the performance and accuracy of the Optimizer
  - Added support for importing a character from a Character Profiler saved data file
