@@ -571,7 +571,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         if (jj >= i)
                         {
                             sequence.RemoveRange(k, kk - k);
-                            if (jT > eps)
+                            if (jj < sequence.Count && jT > eps) // only happens in release, wasn't able to track it down
                             {
                                 SplitAt(jj, jT);
                                 jj++;
