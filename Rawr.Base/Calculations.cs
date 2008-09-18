@@ -32,7 +32,7 @@ namespace Rawr
 					_models = new SortedList<string, Type>();
 					_modelIcons = new Dictionary<string, string>();
 
-                    string dir = AppDomain.CurrentDomain.BaseDirectory;
+                    string dir = AppDomain.CurrentDomain.BaseDirectory + "Data";
                     // when running in service the dlls are in relative search path
                     if (AppDomain.CurrentDomain.RelativeSearchPath != null) dir = AppDomain.CurrentDomain.RelativeSearchPath;
 					DirectoryInfo info = new DirectoryInfo(dir);

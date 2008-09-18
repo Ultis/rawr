@@ -2524,7 +2524,7 @@ Heals up to 5 friendly party or raid members within 15 yards of the target for 1
 
 		[TalentData(6, "Relentless Strikes", 1, 0, 1, 3, -1, new string[] {
 @"Your finishing moves have a 20% chance per combo point to restore 25 energy.",})]
-		public int RelentlessStrikes { get { return _data[6]; } set { _data[6] = value; } }
+		public int RelentlessStrikes2 { get { return _data[6]; } set { _data[6] = value; } }
 
 		[TalentData(7, "Improved Expose Armor", 2, 0, 2, 3, -1, new string[] {
 @"Increases the armor reduced by your Expose Armor ability by 25%.",

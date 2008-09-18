@@ -193,11 +193,11 @@ namespace Rawr
 					if (ItemCalculations == null) return new Bitmap(1, 1);
                     if (CustomRendered)
                     {
-                        _prerenderedGraph = new Bitmap(Math.Max(1, this.Width), Math.Max(1, this.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                        _prerenderedGraph = new Bitmap(Math.Min(32767, Math.Max(1, this.Width)), Math.Min(32767, Math.Max(1, this.Height)), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                     }
                     else
                     {
-                        _prerenderedGraph = new Bitmap(Math.Max(1, this.Width), 40 + (ItemCalculations.Length * 36), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                        _prerenderedGraph = new Bitmap(Math.Min(32767, Math.Max(1, this.Width)), Math.Min(32767, 40 + (ItemCalculations.Length * 36)), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                     }
                     Graphics g = Graphics.FromImage(_prerenderedGraph);
                     g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;

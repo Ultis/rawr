@@ -46,7 +46,7 @@ namespace Rawr
 
         static Enchant()
         {
-            _SaveFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "EnchantCache.xml");
+            _SaveFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data\\EnchantCache.xml");
             LoadEnchants();
             SaveEnchants();
         }
