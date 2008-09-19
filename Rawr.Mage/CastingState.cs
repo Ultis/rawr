@@ -277,52 +277,52 @@ namespace Rawr.Mage
                 case 71:
                     spellCritPerInt = 0.0116f;
                     spellCritBase = 0.9075f;
-                    baseRegen = 0.009079f;
+                    baseRegen = 0.008859f;
                     break;
                 case 72:
                     spellCritPerInt = 0.0108f;
                     spellCritBase = 0.9075f;
-                    baseRegen = 0.008838f;
+                    baseRegen = 0.008415f;
                     break;
                 case 73:
                     spellCritPerInt = 0.0101f;
                     spellCritBase = 0.9075f;
-                    baseRegen = 0.008603f;
+                    baseRegen = 0.007993f;
                     break;
                 case 74:
                     spellCritPerInt = 0.0093f;
                     spellCritBase = 0.9075f;
-                    baseRegen = 0.008375f;
+                    baseRegen = 0.007592f;
                     break;
                 case 75:
                     spellCritPerInt = 0.0087f;
                     spellCritBase = 0.9075f;
-                    baseRegen = 0.008152f;
+                    baseRegen = 0.007211f;
                     break;
                 case 76:
                     spellCritPerInt = 0.0081f;
                     spellCritBase = 0.9075f;
-                    baseRegen = 0.007936f;
+                    baseRegen = 0.006849f;
                     break;
                 case 77:
                     spellCritPerInt = 0.0075f;
                     spellCritBase = 0.9075f;
-                    baseRegen = 0.007725f;
+                    baseRegen = 0.006506f;
                     break;
                 case 78:
                     spellCritPerInt = 0.007f;
                     spellCritBase = 0.9075f;
-                    baseRegen = 0.00752f;
+                    baseRegen = 0.006179f;
                     break;
                 case 79:
                     spellCritPerInt = 0.0065f;
                     spellCritBase = 0.9075f;
-                    baseRegen = 0.00732f;
+                    baseRegen = 0.005869f;
                     break;
                 case 80:
                     spellCritPerInt = 0.006f;
                     spellCritBase = 0.9075f;
-                    baseRegen = 0.005575f; // 0.007125f;
+                    baseRegen = 0.005575f;
                     break;
             }
             SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.015f * character.MageTalents.ArcanePotency + (characterStats.SpellCritRating + characterStats.CritRating) / 1400f * levelScalingFactor + characterStats.SpellCrit + characterStats.Crit + character.MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0));
