@@ -75,7 +75,19 @@ namespace Rawr
 				groupBox.BringToFront();
 			}
 
-			foreach (Buff buff in Buff.GetAllRelevantBuffs())
+            List<Buff> buffs = Buff.GetAllRelevantBuffs();
+            List<Buff> missingBuffs = new List<Buff>();
+            foreach (Buff buff in buffs)
+            {
+                if (!string.IsNullOrEmpty(buff.RequiredBuff))
+                {
+                    Buff reqBuff = Buff.GetBuffByName(buff.RequiredBuff);
+                    if (!buffs.Contains(reqBuff)) missingBuffs.Add(reqBuff);
+                }
+            }
+            buffs.AddRange(missingBuffs);
+
+			foreach (Buff buff in buffs)
 			{
                 ExtendedToolTipCheckBox checkBox = new ExtendedToolTipCheckBox();
 				checkBox.Tag = buff;

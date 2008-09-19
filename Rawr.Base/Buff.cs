@@ -479,13 +479,7 @@ namespace Rawr
             {
                 Name = "Heroic Presence",
                 Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { HitRating = 15.769f }
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Inspiring Presence",
-                Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { SpellHitRating = 12.62f }
+                Stats = new Stats() { Hit = 0.01f }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -497,7 +491,7 @@ namespace Rawr
             {
                 Name = "Wrath of Air Totem",
                 Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { SpellDamageRating = 101, Healing = 101 }
+                Stats = new Stats() { SpellHaste = 0.05f }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -976,13 +970,13 @@ namespace Rawr
             {
                 Name = "Improved Scorch",
                 Category = BuffCategory.Debuffs,
-                Stats = new Stats() { BonusFireSpellPowerMultiplier = 0.15f }
+                Stats = new Stats() { SpellCrit = 0.1f }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Winter's Chill",
                 Category = BuffCategory.Debuffs,
-                Stats = new Stats() { SpellFrostCritRating = 11480f / 52f }
+                Stats = new Stats() { SpellCrit = 0.1f }
             });
 			//defaultBuffs.Add(new Buff()
 			//{
@@ -1698,6 +1692,21 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 Name = "Thunderheart 4 Piece Bonus",
+                Stats = null
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Inspiring Presence",
+                Stats = null
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Curse of Shadow",
+                Stats = null
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Improved Curse of Shadow",
                 Stats = null
             });
 

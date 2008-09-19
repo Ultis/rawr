@@ -433,8 +433,8 @@ namespace Rawr.Mage
                 CombustionDuration = ComputeCombustion(FireCritRate);
                 FireCritRate = 3 / CombustionDuration;
             }
-            FrostFireCritRate = FireCritRate + characterStats.SpellFrostCritRating / 22.08f / 100f;
-            FrostCritRate = SpellCrit + characterStats.SpellFrostCritRating / 22.08f / 100f;
+            FrostFireCritRate = FireCritRate;
+            FrostCritRate = SpellCrit;
             NatureCritRate = SpellCrit;
             ShadowCritRate = SpellCrit;
 

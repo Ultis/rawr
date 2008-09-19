@@ -129,13 +129,13 @@ namespace Rawr
         SpellDamageFromSpiritPercentage,
         SpellDamageRating,
         SpellFireDamageRating,
-        SpellFrostCritRating,
         SpellFrostDamageRating,
         SpellHasteFor20SecOnUse2Min,
         SpellHasteFor20SecOnUse5Min,
         SpellHasteFor5SecOnCrit_50,
         SpellHasteFor6SecOnCast_15_45,
         SpellHasteFor6SecOnHit_10_45,
+        SpellHaste,
         SpellHasteRating,
         SpellHit,
         SpellHitRating,
@@ -437,20 +437,11 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
-        [DisplayName("Spell Crit")]
+        [DisplayName("Spell Crit Rating")]
         public float SpellCritRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellCritRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellCritRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Spell Combat Ratings")]
-        [DisplayName("Spell Frost Crit")]
-        public float SpellFrostCritRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellFrostCritRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellFrostCritRating] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -518,7 +509,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
-        [DisplayName("Spell Hit")]
+        [DisplayName("Spell Hit Rating")]
         public float SpellHitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHitRating]; }
@@ -544,11 +535,21 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
-        [DisplayName("Spell Haste")]
+        [DisplayName("Spell Haste Rating")]
         public float SpellHasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellHasteRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Spell Combat Ratings")]
+        [DisplayName("% Spell Haste")]
+        public float SpellHaste
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellHaste]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellHaste] = value; }
         }
 
         // percentage mana generation while casting
@@ -562,6 +563,8 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Crit")]
         [Category("Combat Values")]
         public float Crit
         {
@@ -571,7 +574,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Crit")]
+        [DisplayName("Crit Rating")]
         public float CritRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritRating]; }
@@ -589,7 +592,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Hit")]
+        [DisplayName("Hit Rating")]
         public float HitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HitRating]; }
@@ -597,6 +600,8 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Hit")]
         [Category("Combat Values")]
         public float Hit
         {
@@ -606,7 +611,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Dodge")]
+        [DisplayName("Dodge Rating")]
         public float DodgeRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DodgeRating]; }
@@ -614,6 +619,8 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Dodge")]
         [Category("Combat Values")]
         public float Dodge
         {
@@ -631,7 +638,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Parry")]
+        [DisplayName("Parry Rating")]
         public float ParryRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ParryRating]; }
@@ -640,6 +647,8 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Values")]
+        [Percentage]
+        [DisplayName("% Block")]
         public float Block
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Block]; }
@@ -648,7 +657,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Block")]
+        [DisplayName("Block Rating")]
         public float BlockRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BlockRating]; }
@@ -674,7 +683,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Defense")]
+        [DisplayName("Defense Rating")]
         public float DefenseRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DefenseRating]; }
@@ -700,7 +709,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Expertise")]
+        [DisplayName("Expertise Rating")]
         public float ExpertiseRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ExpertiseRating]; }
@@ -709,7 +718,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
-        [DisplayName("Haste")]
+        [DisplayName("Haste Rating")]
         public float HasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HasteRating]; }
