@@ -325,9 +325,9 @@ namespace Rawr.Mage
                     baseRegen = 0.005575f; // 0.007125f;
                     break;
             }
-            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.015f * character.MageTalents.ArcanePotency + characterStats.SpellCritRating / 1400f * levelScalingFactor + characterStats.SpellCrit + character.MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0));
+            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.015f * character.MageTalents.ArcanePotency + (characterStats.SpellCritRating + characterStats.CritRating) / 1400f * levelScalingFactor + characterStats.SpellCrit + characterStats.Crit + character.MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0));
             if (destructionPotion) SpellCrit += 0.02f;
-            SpellHit = characterStats.SpellHitRating * levelScalingFactor / 800f + characterStats.SpellHit;
+            SpellHit = (characterStats.SpellHitRating + characterStats.HitRating) * levelScalingFactor / 800f + characterStats.SpellHit + characterStats.Hit;
 
             int targetLevel = calculationOptions.TargetLevel;
             int playerLevel = calculationOptions.PlayerLevel;
