@@ -282,6 +282,7 @@ namespace Rawr.Mage
                 drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
                 calculationResult.ColdsnapCooldown = 8 * 60;
                 calculationResult.ArcanePowerCooldown = 180.0 - 30.0 * character.MageTalents.ArcaneFlows;
+                calculationResult.ArcanePowerDuration = 15.0 + (calculationOptions.GlyphOfArcanePower ? 3.0 : 0.0);
                 calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * character.MageTalents.IceFloes + (character.MageTalents.IceFloes == 3 ? 0.01 : 0.00));
                 waterElementalCooldown = 180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0);
 
@@ -986,7 +987,7 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowEvocation, column, calculationResult.EvocationDuration / 480.0);
                     lp.SetElementUnsafe(rowPotion, column, 1.0 / 120.0);
                     lp.SetElementUnsafe(rowManaGem, column, 1.0 / 120.0);
-                    lp.SetElementUnsafe(rowArcanePower, column, 15.0 / calculationResult.ArcanePowerCooldown);
+                    lp.SetElementUnsafe(rowArcanePower, column, calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown);
                     lp.SetElementUnsafe(rowIcyVeins, column, 20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0));
                     lp.SetElementUnsafe(rowMoltenFury, column, calculationOptions.MoltenFuryPercentage);
                     lp.SetElementUnsafe(rowManaGemFlameCap, column, 1f / 120f);
@@ -1170,7 +1171,7 @@ namespace Rawr.Mage
                 ivlength = MaximizeEffectDuration(calculationOptions.FightDuration, 20.0, calculationResult.IcyVeinsCooldown);
             }
 
-            double aplength = MaximizeEffectDuration(calculationOptions.FightDuration, 15.0, calculationResult.ArcanePowerCooldown);
+            double aplength = MaximizeEffectDuration(calculationOptions.FightDuration, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown);
             double mflength = calculationOptions.MoltenFuryPercentage * calculationOptions.FightDuration;
             double dpivstackArea = calculationOptions.FightDuration;
             //if (mfAvailable && heroismAvailable) dpivstackArea -= 120; // only applies if heroism and iv cannot stack
@@ -1256,8 +1257,8 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowManaGem, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             lp.SetRHSUnsafe(rowManaGemOnly, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             if (heroismAvailable) lp.SetRHSUnsafe(rowHeroism, 40);
-            if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? 15.0 / calculationResult.ArcanePowerCooldown * calculationOptions.FightDuration : aplength);
-            if (heroismAvailable && arcanePowerAvailable) lp.SetRHSUnsafe(rowHeroismArcanePower, 15);
+            if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown * calculationOptions.FightDuration : aplength);
+            if (heroismAvailable && arcanePowerAvailable) lp.SetRHSUnsafe(rowHeroismArcanePower, calculationResult.ArcanePowerDuration);
             if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeins, calculationOptions.AverageCooldowns ? (20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0)) * calculationOptions.FightDuration : ivlength);
             if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFury, mflength);
             if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryDestructionPotion, 15);
@@ -1338,7 +1339,7 @@ namespace Rawr.Mage
                 {
                     for (int seg = 0; seg < segments; seg++)
                     {
-                        lp.SetRHSUnsafe(rowSegmentArcanePower + seg, 15.0);
+                        lp.SetRHSUnsafe(rowSegmentArcanePower + seg, calculationResult.ArcanePowerDuration);
                         double cool = calculationResult.ArcanePowerCooldown;
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
@@ -1752,7 +1753,7 @@ namespace Rawr.Mage
                 //lp[rowOffset + 1 * segments + seg, index] = 1;
                 if (state.ArcanePower)
                 {
-                    bound = Math.Min(bound, 15.0);
+                    bound = Math.Min(bound, calculationResult.ArcanePowerDuration);
                     for (int ss = 0; ss < segments; ss++)
                     {
                         double cool = calculationResult.ArcanePowerCooldown;

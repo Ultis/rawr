@@ -108,6 +108,7 @@ namespace Rawr.Mage
         public double IcyVeinsCooldown;
         public double ColdsnapCooldown;
         public double ArcanePowerCooldown;
+        public double ArcanePowerDuration;
 
         public double[] Solution;
         public List<SolutionVariable> SolutionVariable;

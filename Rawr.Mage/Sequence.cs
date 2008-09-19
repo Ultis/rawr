@@ -968,7 +968,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.ArcanePower) list.Add(item);
             }
-            GroupCooldown(list, 15, SequenceItem.Calculations.ArcanePowerCooldown, Cooldown.ArcanePower);
+            GroupCooldown(list, SequenceItem.Calculations.ArcanePowerDuration, SequenceItem.Calculations.ArcanePowerCooldown, Cooldown.ArcanePower);
         }
 
         public void GroupIcyVeins()
@@ -3028,15 +3028,15 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     if (state != null && state.ArcanePower)
                     {
-                        if (time + duration > apTime + 15 + eps)
+                        if (time + duration > apTime + SequenceItem.Calculations.ArcanePowerDuration + eps)
                         {
-                            unexplained += time + duration - apTime - 15;
+                            unexplained += time + duration - apTime - SequenceItem.Calculations.ArcanePowerDuration;
                             if (timing != null) timing.AppendLine("WARNING: Arcane Power duration too long!");
                         }
                     }
-                    else if (duration > 0 && 15 - (time - apTime) > eps)
+                    else if (duration > 0 && SequenceItem.Calculations.ArcanePowerDuration - (time - apTime) > eps)
                     {
-                        //unexplained += Math.Min(duration, 15 - (time - apTime));
+                        //unexplained += Math.Min(duration, SequenceItem.Calculations.ArcanePowerDuration - (time - apTime));
                         if (timing != null) timing.AppendLine("INFO: Arcane Power is still up!");
                     }
                 }
@@ -3192,7 +3192,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 combustionCooldown -= duration;
                 drumsCooldown -= duration;
                 coldsnapCooldown -= duration;
-                if (apTime >= 0 && 15 - (time - apTime) <= eps) apTime = -1;
+                if (apTime >= 0 && SequenceItem.Calculations.ArcanePowerDuration - (time - apTime) <= eps) apTime = -1;
                 if (ivTime >= 0 && 20 - (time - ivTime) <= eps) ivTime = -1;
                 if (heroismTime >= 0 && 40 - (time - heroismTime) <= eps) heroismTime = -1;
                 if (destructionTime >= 0 && 15 - (time - destructionTime) <= eps) destructionTime = -1;

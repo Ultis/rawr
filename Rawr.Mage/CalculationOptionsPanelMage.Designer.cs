@@ -33,6 +33,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -43,6 +44,8 @@
             this.buttonTalents = new System.Windows.Forms.Button();
             this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textBoxFocusMagicRate = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
             this.textBoxSlowedTime = new System.Windows.Forms.TextBox();
             this.label79 = new System.Windows.Forms.Label();
             this.buttonCustomSpellMix = new System.Windows.Forms.Button();
@@ -235,18 +238,17 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.textBoxFocusMagicRate = new System.Windows.Forms.TextBox();
-            this.label36 = new System.Windows.Forms.Label();
+            this.label90 = new System.Windows.Forms.Label();
+            this.checkBoxGlyphOfArcanePower = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -310,6 +312,11 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -452,6 +459,25 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Spells & Buffs";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // textBoxFocusMagicRate
+            // 
+            this.textBoxFocusMagicRate.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FocusMagicTargetCritRate", true));
+            this.textBoxFocusMagicRate.Location = new System.Drawing.Point(112, 414);
+            this.textBoxFocusMagicRate.Name = "textBoxFocusMagicRate";
+            this.textBoxFocusMagicRate.Size = new System.Drawing.Size(75, 20);
+            this.textBoxFocusMagicRate.TabIndex = 194;
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(0, 417);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(104, 13);
+            this.label36.TabIndex = 193;
+            this.label36.Text = "Focus Magic Rate: *";
+            this.toolTipMage.SetToolTip(this.label36, "Normalized Crit rate of Focus Magic target, compute as [1 - (1 - crit chance) ^ (" +
+                    "1 / cast time)] (example 50% crit change, 3 sec cast time => 0.206)");
             // 
             // textBoxSlowedTime
             // 
@@ -2000,6 +2026,8 @@
             // 
             // tabPage7
             // 
+            this.tabPage7.Controls.Add(this.label90);
+            this.tabPage7.Controls.Add(this.checkBoxGlyphOfArcanePower);
             this.tabPage7.Controls.Add(this.label89);
             this.tabPage7.Controls.Add(this.checkBoxGlyphOfIceArmor);
             this.tabPage7.Controls.Add(this.label85);
@@ -2415,29 +2443,25 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // calculationOptionsMageBindingSource
+            // label90
             // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            this.label90.AutoSize = true;
+            this.label90.Location = new System.Drawing.Point(3, 183);
+            this.label90.Name = "label90";
+            this.label90.Size = new System.Drawing.Size(119, 13);
+            this.label90.TabIndex = 189;
+            this.label90.Text = "Glyph of Arcane Power:";
+            this.toolTipMage.SetToolTip(this.label90, "Optimize between mage and molten armor. Disable to improve performance.");
             // 
-            // textBoxFocusMagicRate
+            // checkBoxGlyphOfArcanePower
             // 
-            this.textBoxFocusMagicRate.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FocusMagicTargetCritRate", true));
-            this.textBoxFocusMagicRate.Location = new System.Drawing.Point(112, 414);
-            this.textBoxFocusMagicRate.Name = "textBoxFocusMagicRate";
-            this.textBoxFocusMagicRate.Size = new System.Drawing.Size(75, 20);
-            this.textBoxFocusMagicRate.TabIndex = 194;
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(0, 417);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(104, 13);
-            this.label36.TabIndex = 193;
-            this.label36.Text = "Focus Magic Rate: *";
-            this.toolTipMage.SetToolTip(this.label36, "Normalized Crit rate of Focus Magic target, compute as [1 - (1 - crit chance) ^ (" +
-                    "1 / cast time)] (example 50% crit change, 3 sec cast time => 0.206)");
+            this.checkBoxGlyphOfArcanePower.AutoSize = true;
+            this.checkBoxGlyphOfArcanePower.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcanePower", true));
+            this.checkBoxGlyphOfArcanePower.Location = new System.Drawing.Point(140, 183);
+            this.checkBoxGlyphOfArcanePower.Name = "checkBoxGlyphOfArcanePower";
+            this.checkBoxGlyphOfArcanePower.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxGlyphOfArcanePower.TabIndex = 188;
+            this.checkBoxGlyphOfArcanePower.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2450,6 +2474,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2462,7 +2487,6 @@
             this.tabPage7.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -2677,6 +2701,8 @@
         private System.Windows.Forms.CheckBox checkBoxGlyphOfIceArmor;
         private System.Windows.Forms.TextBox textBoxFocusMagicRate;
         private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label90;
+        private System.Windows.Forms.CheckBox checkBoxGlyphOfArcanePower;
 
     }
 }

@@ -403,7 +403,7 @@ namespace Rawr.Mage
                 // ap
                 if (valid && arcanePowerAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.ArcanePower, 15.0, calculationResult.ArcanePowerCooldown, true, 15.0);
+                    valid = ValidateCooldown(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, true, 15.0);
                 }
                 // iv
                 if (valid && icyVeinsAvailable)
