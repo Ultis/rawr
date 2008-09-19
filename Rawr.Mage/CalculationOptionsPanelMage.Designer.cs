@@ -33,7 +33,6 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -236,15 +235,18 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.textBoxFocusMagicRate = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -308,11 +310,6 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -407,6 +404,8 @@
             // tabPage2
             // 
             this.tabPage2.AutoScroll = true;
+            this.tabPage2.Controls.Add(this.textBoxFocusMagicRate);
+            this.tabPage2.Controls.Add(this.label36);
             this.tabPage2.Controls.Add(this.textBoxSlowedTime);
             this.tabPage2.Controls.Add(this.label79);
             this.tabPage2.Controls.Add(this.buttonCustomSpellMix);
@@ -2416,6 +2415,30 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            // 
+            // textBoxFocusMagicRate
+            // 
+            this.textBoxFocusMagicRate.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FocusMagicTargetCritRate", true));
+            this.textBoxFocusMagicRate.Location = new System.Drawing.Point(112, 414);
+            this.textBoxFocusMagicRate.Name = "textBoxFocusMagicRate";
+            this.textBoxFocusMagicRate.Size = new System.Drawing.Size(75, 20);
+            this.textBoxFocusMagicRate.TabIndex = 194;
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(0, 417);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(104, 13);
+            this.label36.TabIndex = 193;
+            this.label36.Text = "Focus Magic Rate: *";
+            this.toolTipMage.SetToolTip(this.label36, "Normalized Crit rate of Focus Magic target, compute as [1 - (1 - crit chance) ^ (" +
+                    "1 / cast time)] (example 50% crit change, 3 sec cast time => 0.206)");
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2427,7 +2450,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2440,6 +2462,7 @@
             this.tabPage7.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -2652,6 +2675,8 @@
         private System.Windows.Forms.CheckBox checkBoxGlyphOfWaterElemental;
         private System.Windows.Forms.Label label89;
         private System.Windows.Forms.CheckBox checkBoxGlyphOfIceArmor;
+        private System.Windows.Forms.TextBox textBoxFocusMagicRate;
+        private System.Windows.Forms.Label label36;
 
     }
 }

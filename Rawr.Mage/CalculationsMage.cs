@@ -735,10 +735,6 @@ namespace Rawr.Mage
 
             return statsTotal;
         }
-
-        private static string[] TalentList = {          "ArcaneSubtlety",  "ArcaneFocus",   "ImprovedArcaneMissiles",  "MagicAbsorption",  "ArcaneConcentration",  "MagicAttunement",  "SpellImpact",  "ArcaneFortitude",    "StudentOfTheMind",  "FocusMagic", "ImprovedManaShield",  "ImprovedCounterspell",  "ArcaneMeditation",  "ImprovedBlink",   "PresenceOfMind",   "TormentTheWeak",  "ArcaneMind",  "PrismaticCloak",  "ArcaneInstability",  "ArcanePotency", "EmpoweredArcaneMissiles",  "ArcanePower",  "SpellPower",  "MindMastery", "Slow",   "IncantersAbsorption",  "ArcaneFlows",  "MissileBarrage",  "NetherwindPresence",  "ArcaneBarrage",  "ImprovedFireball", "Impact", "Ignite",  "FlameThrowing",   "ImprovedFireBlast",   "Incinerate",  "ImprovedFlamestrike", "Pyroblast",  "BurningSoul",  "ImprovedScorch",   "ImprovedFireWard",   "MasterOfElements",   "PlayingWithFire",  "CriticalMass",  "BlastWave",  "BlazingSpeed",  "FirePower", "Pyromaniac", "Combustion",  "MoltenFury",  "EmpoweredFireball",   "DragonsBreath",  "FrostWarding",  "ImprovedFrostbolt",  "ElementalPrecision",  "IceShards", "Frostbite",   "ImprovedFrostNova", "Permafrost",  "PiercingIce",  "IcyVeins",  "ImprovedBlizzard",  "ArcticReach",  "FrostChanneling", "Shatter",  "FrozenCore",  "ColdSnap",    "ImprovedConeOfCold",  "IceFloes",   "WintersChill",  "IceBarrier",  "ArcticWinds",  "EmpoweredFrostbolt",   "SummonWaterElemental" };
-        private static string[] TalentListFriendly = { "Arcane Subtlety", "Arcane Focus", "Improved Arcane Missiles", "Magic Absorption", "Arcane Concentration", "Magic Attunement", "Spell Impact", "Arcane Fortitude", "Student of the Mind", "Focus Magic",   "Arcane Shielding", "Improved Counterspell", "Arcane Meditation", "Improved Blink", "Presence of Mind", "Torment the Weak", "Arcane Mind", "Prismatic Cloak", "Arcane Instability", "Arcane Potency",      "Arcane Empowerment", "Arcane Power", "Spell Power", "Mind Mastery", "Slow", "Incanter's Absorption", "Arcane Flows", "Missile Barrage", "Netherwind Presence", "Arcane Barrage", "Improved Fireball", "Impact", "Ignite", "Flame Throwing", "Improved Fire Blast", "Incineration", "Improved Flamestrike", "Pyroblast", "Burning Soul", "Improved Scorch", "Improved Fire Ward", "Master of Elements", "Playing with Fire", "Critical Mass", "Blast Wave", "Blazing Speed", "Fire Power", "Pyromaniac", "Combustion", "Molten Fury", "Empowered Fireball", "Dragon's Breath", "Frost Warding", "Improved Frostbolt", "Elemental Precision", "Ice Shards", "Frostbite", "Improved Frost Nova", "Permafrost", "Piercing Ice", "Icy Veins", "Improved Blizzard", "Arctic Reach", "Frost Channeling", "Shatter", "Frozen Core", "Cold Snap", "Improved Cone of Cold", "Ice Floes", "Winter's Chill", "Ice Barrier", "Arctic Winds", "Empowered Frostbolt", "Summon Water Elemental" };
-        private static int[] MaxTalentPoints = {                       2,              3,                          5,                  2,                      5,                  2,              3,                  3,                     3,             1,                    2,                       2,                   3,                2,                  1,                  3,             5,                 3,                    3,                2,                         3,              1,             2,              5,      1,                       3,              2,                 5,                     3,                1,                   5,        5,        5,                2,                     3,              3,                      3,           1,              2,                 3,                    2,                    3,                   3,               3,            1,               2,            5,            3,            1,             2,                    5,                 1,               2,                    5,                     3,            5,           3,                     2,            3,              3,           1,                   3,              2,                  3,         5,             3,           1,                       3,           3,                5,             1,              5,                     5,                        1 };
          
         private static string[] GlyphList = { "GlyphOfFireball", "GlyphOfFrostbolt", "GlyphOfIceArmor", "GlyphOfImprovedScorch", "GlyphOfMageArmor", "GlyphOfManaGem", "GlyphOfMoltenArmor", "GlyphOfWaterElemental", "GlyphOfArcaneExplosion" };
         private static string[] GlyphListFriendly = { "Glyph of Fireball", "Glyph of Frostbolt", "Glyph of Ice Armor", "Glyph of Improved Scorch", "Glyph of Mage Armor", "Glyph of Mana Gem", "Glyph of Molten Armor", "Glyph of Water Elemental", "Glyph of Arcane Explosion" };
@@ -754,13 +750,8 @@ namespace Rawr.Mage
             {
                 case "Talents (per talent point)":
                     CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+                    MageTalents talents = character.MageTalents;
 
-                    string[] talents;
-                    string[] talentsFriendly;
-                    int[] maxTalents;
-                    talents = TalentList;
-                    talentsFriendly = TalentListFriendly;
-                    maxTalents = MaxTalentPoints;
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
                     bool savedIncrementalOptimizations = calculationOptions.IncrementalOptimizations;
                     bool savedSmartOptimizations = calculationOptions.SmartOptimization;
@@ -768,51 +759,58 @@ namespace Rawr.Mage
                     calculationOptions.IncrementalOptimizations = false;
                     calculationOptions.SmartOptimization = true;
 
-                    for (int index = 0; index < talents.Length; index++ )
+                    Type t = typeof(MageTalents);
+                    foreach (System.Reflection.PropertyInfo info in t.GetProperties())
                     {
-                        string talent = talents[index];
-                        int maxPoints = maxTalents[index];
-                        int currentPoints = calculationOptions.GetTalentByName(talent);
-
-                        if (currentPoints > 0)
+                        object[] attributes = info.GetCustomAttributes(typeof(TalentDataAttribute), false);
+                        if (attributes.Length > 0)
                         {
-                            calculationOptions.SetTalentByName(talent, 0);
-                            calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                            TalentDataAttribute talentData = (TalentDataAttribute)attributes[0];
 
-                            comparison = CreateNewComparisonCalculation();
-                            comparison.Name = string.Format("{0} ({1})", talentsFriendly[index], currentPoints);
-                            comparison.Equipped = true;
-                            comparison.OverallPoints = (currentCalc.OverallPoints - calc.OverallPoints) / (float)currentPoints;
-                            subPoints = new float[calc.SubPoints.Length];
-                            for (int i = 0; i < calc.SubPoints.Length; i++)
+                            string talent = talentData.Name;
+                            int maxPoints = talentData.MaxPoints;
+                            int currentPoints = (int)info.GetValue(talents, null);
+
+                            if (currentPoints > 0)
                             {
-                                subPoints[i] = (currentCalc.SubPoints[i] - calc.SubPoints[i]) / (float)currentPoints;
+                                info.SetValue(talents, 0, null);
+                                calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+
+                                comparison = CreateNewComparisonCalculation();
+                                comparison.Name = string.Format("{0} ({1})", talent, currentPoints);
+                                comparison.Equipped = true;
+                                comparison.OverallPoints = (currentCalc.OverallPoints - calc.OverallPoints) / (float)currentPoints;
+                                subPoints = new float[calc.SubPoints.Length];
+                                for (int i = 0; i < calc.SubPoints.Length; i++)
+                                {
+                                    subPoints[i] = (currentCalc.SubPoints[i] - calc.SubPoints[i]) / (float)currentPoints;
+                                }
+                                comparison.SubPoints = subPoints;
+
+                                comparisonList.Add(comparison);
                             }
-                            comparison.SubPoints = subPoints;
 
-                            comparisonList.Add(comparison);
-                        }
-
-                        if (currentPoints < maxTalents[index])
-                        {
-                            calculationOptions.SetTalentByName(talent, maxTalents[index]);
-                            calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
-
-                            comparison = CreateNewComparisonCalculation();
-                            comparison.Name = string.Format("{0} ({1})", talentsFriendly[index], maxTalents[index]);
-                            comparison.Equipped = false;
-                            comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints) / (float)(maxTalents[index] - currentPoints);
-                            subPoints = new float[calc.SubPoints.Length];
-                            for (int i = 0; i < calc.SubPoints.Length; i++)
+                            if (currentPoints < maxPoints)
                             {
-                                subPoints[i] = (calc.SubPoints[i] - currentCalc.SubPoints[i]) / (float)(maxTalents[index] - currentPoints);
+                                info.SetValue(talents, maxPoints, null);
+                                calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+
+                                comparison = CreateNewComparisonCalculation();
+                                comparison.Name = string.Format("{0} ({1})", talent, maxPoints);
+                                comparison.Equipped = false;
+                                comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints) / (float)(maxPoints - currentPoints);
+                                subPoints = new float[calc.SubPoints.Length];
+                                for (int i = 0; i < calc.SubPoints.Length; i++)
+                                {
+                                    subPoints[i] = (calc.SubPoints[i] - currentCalc.SubPoints[i]) / (float)(maxPoints - currentPoints);
+                                }
+                                comparison.SubPoints = subPoints;
+
+                                comparisonList.Add(comparison);
                             }
-                            comparison.SubPoints = subPoints;
 
-                            comparisonList.Add(comparison);
+                            info.SetValue(talents, currentPoints, null);
                         }
-
-                        calculationOptions.SetTalentByName(talent, currentPoints);
                     }
 
                     calculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
@@ -1373,7 +1371,7 @@ namespace Rawr.Mage
 
             calculationOptions.ArcaneSubtlety = int.Parse(talentCode.Substring(0, 1));
             calculationOptions.ArcaneFocus = int.Parse(talentCode.Substring(1, 1));
-            calculationOptions.ImprovedArcaneMissiles = int.Parse(talentCode.Substring(2, 1));
+            calculationOptions.ArcaneStability = int.Parse(talentCode.Substring(2, 1));
             //calculationOptions.WandSpecialization = int.Parse(talentCode.Substring(3, 1));
             calculationOptions.MagicAbsorption = int.Parse(talentCode.Substring(4, 1));
             calculationOptions.ArcaneConcentration = int.Parse(talentCode.Substring(5, 1));
@@ -1522,12 +1520,15 @@ namespace Rawr.Mage
                 MageIceArmor = stats.MageIceArmor,
                 MageMageArmor = stats.MageMageArmor,
                 MageMoltenArmor = stats.MageMoltenArmor,
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                SpellHit = stats.SpellHit,
+                SpellCrit = stats.SpellCrit,                
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.SpellHasteFor20SecOnUse5Min + stats.AldorRegaliaInterruptProtection + stats.SpellDamageFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.ManaRestorePerCast_5_15 + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor;
+            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellCritRating + stats.SpellDamageRating + stats.SpellFireDamageRating + stats.SpellHasteRating + stats.SpellHitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneSpellPowerMultiplier + stats.BonusFireSpellPowerMultiplier + stats.BonusFrostSpellPowerMultiplier + stats.SpellFrostCritRating + stats.ArcaneBlastBonus + stats.SpellDamageFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor15SecOnManaGem + stats.BonusManaGem + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellDamageFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.SpellHasteFor20SecOnUse5Min + stats.AldorRegaliaInterruptProtection + stats.SpellDamageFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.ManaRestorePerCast_5_15 + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit;
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + stats.Healing + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.Hit + stats.HitRating + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating;
             return (mageStats > 0 || ((stats.Health + stats.Stamina + stats.Armor) > 0 && ignoreStats == 0.0f));
         }

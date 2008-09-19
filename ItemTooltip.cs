@@ -217,7 +217,7 @@ namespace Rawr
                             foreach (System.Reflection.PropertyInfo info in positiveStats.Keys)
                             {
                                 float value = positiveStats[info];
-                                if (Stats.IsMultiplicative(info))
+                                if (Stats.IsPercentage(info))
                                     value *= 100;
                                 value = (float)Math.Round(value * 100f) / 100f;
                                 g.DrawString(string.Format("{0}{1}", value, Extensions.DisplayName(info)), _fontStats, SystemBrushes.InfoText, xPos, yPos);

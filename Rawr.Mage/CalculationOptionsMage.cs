@@ -112,6 +112,7 @@ namespace Rawr.Mage
         public float DrinkingTime { get; set; }
         public float TargetDamage { get; set; }
         public bool FarmingMode { get; set; }
+        public float FocusMagicTargetCritRate { get; set; }
 
         public List<SpellWeight> CustomSpellMix { get; set; }
         public bool CustomSpellMixEnabled { get; set; }
@@ -266,6 +267,7 @@ namespace Rawr.Mage
             BurstImpacts = 5f;
             //ChanceToLiveLimit = 99f;
             PlayerLevel = 70;
+            FocusMagicTargetCritRate = 0.2f;
         }
 
         public CalculationOptionsMage(Character character)

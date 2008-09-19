@@ -563,7 +563,12 @@ namespace Rawr
                 Stats = new Stats() { MageIceArmor = 1f },
                 ConflictingBuffs = new string[] { "Armor" }
             });
-
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Replenishment",
+                Category = BuffCategory.ClassBuffs,
+                Stats = new Stats() { ManaRestoreFromMaxManaPerSecond = 0.0025f },
+            });
 
             //what can i say... you're crazy
             defaultBuffs.Add(new Buff()
@@ -1009,7 +1014,7 @@ namespace Rawr
             {
                 Name = "Misery",
                 Category = BuffCategory.Debuffs,
-                Stats = new Stats() { BonusSpellPowerMultiplier = 0.05f },
+                Stats = new Stats() { SpellHit = 0.03f },
             });
             defaultBuffs.Add(new Buff()
             {

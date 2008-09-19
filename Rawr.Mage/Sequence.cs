@@ -1342,15 +1342,27 @@ namespace Rawr.Mage.SequenceReconstruction
             const double eps = 0.000001;
             List<SequenceItem> groupedItems = new List<SequenceItem>();
             foreach (SequenceItem item in sequence)
+            {
                 if (item.Group.Count > 0)
+                {
                     groupedItems.Add(item);
-
+                }
+            }
             compactTotalTime = double.PositiveInfinity;
             compactGroupSplits = int.MaxValue;
             compactLastDestro = double.NegativeInfinity;
             //SortGroups_AddRemainingItems(new List<SequenceItem>(), new List<double>(), groupedItems);
             groupedItems.Sort((x, y) => x.Segment.CompareTo(y.Segment));
             SortGroups_Compute(groupedItems);
+            if (compactItems == null)
+            {
+                // if SMP fails to produce a feasible solution then remove all segment information
+                foreach (SequenceItem item in sequence)
+                {
+                    item.Segment = 0;
+                }
+                SortGroups_Compute(groupedItems);
+            }
             if (compactItems != null)
             {
                 for (int i = 0; i < compactItems.Count; i++)
@@ -2333,6 +2345,11 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         nextGem = nextFlameCapMin + 180.0;
                         gem = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem), 4);
+                        if (nextGem > fight)
+                        {
+                            nextGem = fight;
+                            potTime = 0.0;
+                        }
                     }
                 }
                 if (potTime > 0 && !double.IsPositiveInfinity(nextDestructionPotion))
@@ -2341,6 +2358,11 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         nextPot = nextDestructionPotionMin + 120.0;
                         pot = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaPotion) * 3000, Math.Max(time, nextPot), 3);
+                        if (nextPot > fight)
+                        {
+                            nextPot = fight;
+                            potTime = 0.0;
+                        }
                     }
                 }
                 if (potTime > 0 && gemTime > 0)
@@ -2399,7 +2421,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     time = pot;
                     nextPot = pot + 120;
                     potTime -= 1.0;
-                    if (potTime <= eps)
+                    if (potTime <= eps || nextPot > fight)
                     {
                         nextPot = fight;
                         potTime = 0.0;
@@ -2420,7 +2442,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     nextGem = gem + 120;
                     gemCount++;
                     gemTime -= 1.0;
-                    if (gemTime <= eps)
+                    if (gemTime <= eps || nextGem > fight)
                     {
                         nextGem = fight;
                         gemTime = 0.0;
@@ -2448,7 +2470,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     time = evo + Math.Min(EvocationDuration, evoTime);
                     nextEvo = evo + 60 * 8;
                     evoTime -= EvocationDuration;
-                    if (evoTime <= eps)
+                    if (evoTime <= eps || nextEvo > fight)
                     {
                         evoTime = 0.0;
                         nextEvo = fight;

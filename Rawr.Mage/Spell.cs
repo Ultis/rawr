@@ -1266,8 +1266,9 @@ namespace Rawr.Mage
         public override void Calculate(CastingState castingState)
         {
             base.Calculate(castingState);
-            CostModifier += 0.75f * costDebuff + castingState.BaseStats.ArcaneBlastBonus * 0.25f;
-            SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus * 0.25f + 0.25f * timeDebuff + 0.002f * castingState.MageTalents.SpellImpact);
+            InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
+            CostModifier += 3.00f * costDebuff + castingState.BaseStats.ArcaneBlastBonus * 0.25f;
+            SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus * 0.25f + 0.15f * timeDebuff + 0.002f * castingState.MageTalents.SpellImpact);
             SpellDamageCoefficient += 0.03f * castingState.MageTalents.ArcaneEmpowerment; // TODO change talent name
             CritRate += 0.02f * castingState.MageTalents.Incineration;
             //CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
@@ -1427,7 +1428,7 @@ namespace Rawr.Mage
             if (barrage) BaseCastTime -= 2.5f;
             SpellDamageCoefficient += 0.15f * castingState.MageTalents.ArcaneEmpowerment;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
-            InterruptProtection += 0.2f * castingState.MageTalents.ImprovedArcaneMissiles;
+            InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
             CalculateDerivedStats(castingState);
         }
     }

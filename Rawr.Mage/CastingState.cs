@@ -322,12 +322,12 @@ namespace Rawr.Mage
                 case 80:
                     spellCritPerInt = 0.006f;
                     spellCritBase = 0.9075f;
-                    baseRegen = 0.007125f;
+                    baseRegen = 0.005575f; // 0.007125f;
                     break;
             }
-            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.015f * character.MageTalents.ArcanePotency + characterStats.SpellCritRating / 1400f * levelScalingFactor + characterStats.SpellCrit;
+            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.015f * character.MageTalents.ArcanePotency + characterStats.SpellCritRating / 1400f * levelScalingFactor + characterStats.SpellCrit + character.MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0));
             if (destructionPotion) SpellCrit += 0.02f;
-            SpellHit = characterStats.SpellHitRating * levelScalingFactor / 800f;
+            SpellHit = characterStats.SpellHitRating * levelScalingFactor / 800f + characterStats.SpellHit;
 
             int targetLevel = calculationOptions.TargetLevel;
             int playerLevel = calculationOptions.PlayerLevel;
@@ -342,10 +342,23 @@ namespace Rawr.Mage
             SpiritRegen = 0.001f + characterStats.Spirit * baseRegen * (float)Math.Sqrt(characterStats.Intellect);
             ManaRegen = SpiritRegen + characterStats.Mp5 / 5f + SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration;
             ManaRegen5SR = SpiritRegen * characterStats.SpellCombatManaRegeneration + characterStats.Mp5 / 5f + SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration;
-            ManaRegenDrinking = ManaRegen + 240f;
             HealthRegen = 0.0312f * characterStats.Spirit + characterStats.Hp5 / 5f;
             HealthRegenCombat = characterStats.Hp5 / 5f;
-            HealthRegenEating = ManaRegen + 250f;
+            if (playerLevel < 75)
+            {
+                ManaRegenDrinking = ManaRegen + 240f;
+                HealthRegenEating = HealthRegen + 250f;
+            }
+            else if (playerLevel < 80)
+            {
+                ManaRegenDrinking = ManaRegen + 306f;
+                HealthRegenEating = HealthRegen + 440f;
+            }
+            else
+            {
+                ManaRegenDrinking = ManaRegen + 432f;
+                HealthRegenEating = HealthRegen + 500f;
+            }
             MeleeMitigation = (1 - 1 / (1 + 0.1f * characterStats.Armor / (8.5f * (70 + 4.5f * (70 - 59)) + 40)));
             Defense = 350 + characterStats.DefenseRating / 2.37f;
             int molten = (armor == "Molten Armor") ? 1 : 0;

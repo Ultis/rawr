@@ -666,13 +666,13 @@ You disperse into pure shadow energy, reducing all damage taken by 90%. You are 
 @"Increases your chance to hit and reduces the mana cost of your Arcane spells by 3%.",})]
 		public int ArcaneFocus { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Improved Arcane Missiles", 5, 0, 3, 1, -1, new string[] {
+		[TalentData(2, "Arcane Stability", 5, 0, 3, 1, -1, new string[] {
 @"Gives you a 20% chance to avoid interruption caused by damage while channeling Arcane Missiles.",
 @"Gives you a 40% chance to avoid interruption caused by damage while channeling Arcane Missiles.",
 @"Gives you a 60% chance to avoid interruption caused by damage while channeling Arcane Missiles.",
 @"Gives you a 80% chance to avoid interruption caused by damage while channeling Arcane Missiles.",
 @"Gives you a 100% chance to avoid interruption caused by damage while channeling Arcane Missiles.",})]
-		public int ImprovedArcaneMissiles { get { return _data[2]; } set { _data[2] = value; } }
+		public int ArcaneStability { get { return _data[2]; } set { _data[2] = value; } }
 
 		[TalentData(3, "Arcane Fortitude", 3, 0, 1, 2, -1, new string[] {
 @"Increases your armor by an amount equal to 50% of your Intellect.",

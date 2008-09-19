@@ -1900,7 +1900,7 @@ namespace Rawr.Mage
                         list.Add(SpellId.ArcaneBlast33);
                         if (character.MageTalents.ImprovedFrostbolt > 0) list.Add(SpellId.Frostbolt);
                         if (character.MageTalents.ImprovedFireball > 0) list.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
-                        if (character.MageTalents.ImprovedArcaneMissiles + character.MageTalents.ArcaneEmpowerment > 0) list.Add(SpellId.ArcaneMissiles);
+                        if (character.MageTalents.ArcaneStability + character.MageTalents.ArcaneEmpowerment > 0) list.Add(SpellId.ArcaneMissiles);
                     }
                     else
                     {

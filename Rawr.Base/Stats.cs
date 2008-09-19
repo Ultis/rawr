@@ -89,6 +89,7 @@ namespace Rawr
         ManaRestorePerCast,
         ManaRestorePerCast_5_15,
         ManaRestorePerHit,
+        ManaRestoreFromMaxManaPerSecond,
         MangleCostReduction,
         MementoProc,
         Miss,
@@ -136,6 +137,7 @@ namespace Rawr
         SpellHasteFor6SecOnCast_15_45,
         SpellHasteFor6SecOnHit_10_45,
         SpellHasteRating,
+        SpellHit,
         SpellHitRating,
         SpellNatureDamageRating,
         SpellPenetration,
@@ -424,8 +426,9 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.MageAllResist] = value; }
         }
 
+        [Percentage]
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Crit")]
+        [DisplayName("% Spell Crit")]
         public float SpellCrit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellCrit]; }
@@ -520,6 +523,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHitRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellHitRating] = value; }
+        }
+
+        [Percentage]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Spell Hit")]
+        public float SpellHit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellHit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellHit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -874,6 +886,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCast_5_15]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCast_5_15] = value; }
+        }
+
+        [Percentage]
+        [DisplayName("% Max Mana / Sec")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ManaRestoreFromMaxManaPerSecond
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerSecond]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerSecond] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1556,7 +1577,7 @@ namespace Rawr
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
-		[Multiplicative] /*its not really multiplicative, but it is stored as .02 instead of 2 because crit is % based 0-1, so this attribute makes it display correctly */ 
+		[Percentage] /*its not really multiplicative, but it is stored as .02 instead of 2 because crit is % based 0-1, so this attribute makes it display correctly */ 
 		[DisplayName("% Extra Pet Crit Chance")]
 		public float BonusPetCritChance
 		{
@@ -1565,7 +1586,7 @@ namespace Rawr
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
-		[Multiplicative] /*Same as above*/
+		[Percentage] /*Same as above*/
 		[DisplayName("% Extra Steady Shot Crit")]
 		public float BonusSteadyShotCrit
 		{
@@ -1674,7 +1695,7 @@ namespace Rawr
 
         #region MultiplicativeStats
         // threat dealt is damage * (1 + ThreatIncreaseMultiplier) * (1 - ThreatReductionMultiplier)
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Threat Increase")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float ThreatIncreaseMultiplier
@@ -1684,7 +1705,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% CStrike Dmg")]
         public float BonusCrusaderStrikeDamageMultiplier
         {
@@ -1693,7 +1714,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("Bonus Bleed Damage Multiplier")]
         public float BonusBleedDamageMultiplier {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusBleedDamageMultiplier]; }
@@ -1701,7 +1722,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Mangle (Bear) Threat")]
         public float BonusMangleBearThreat
         {
@@ -1710,7 +1731,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Shield Slam Damage")]
         public float BonusShieldSlamDamage
         {
@@ -1720,7 +1741,7 @@ namespace Rawr
 
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         public float BonusMageNukeMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMageNukeMultiplier]; }
@@ -1728,7 +1749,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         public float BonusWarlockNukeMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier]; }
@@ -1736,7 +1757,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         public float BonusWarlockDotDamageMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockDotDamageMultiplier]; }
@@ -1744,7 +1765,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Agility")]
         public float BonusAgilityMultiplier
         {
@@ -1753,7 +1774,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Strength")]
         public float BonusStrengthMultiplier
         {
@@ -1762,7 +1783,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Stamina")]
         public float BonusStaminaMultiplier
         {
@@ -1771,7 +1792,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Health")]
         public float BonusHealthMultiplier
         {
@@ -1780,7 +1801,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Int")]
         public float BonusIntellectMultiplier
         {
@@ -1789,7 +1810,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Armor")]
         public float BonusArmorMultiplier
         {
@@ -1798,7 +1819,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Block Value")]
         public float BonusBlockValueMultiplier
         {
@@ -1807,7 +1828,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% AP")]
         public float BonusAttackPowerMultiplier
         {
@@ -1816,7 +1837,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% SP")]
         public float BonusSpellPowerMultiplier
         {
@@ -1825,7 +1846,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Fire Damage")]
         public float BonusFireSpellPowerMultiplier
         {
@@ -1834,7 +1855,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Shadow Damage")]
         public float BonusShadowSpellPowerMultiplier
         {
@@ -1843,7 +1864,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Arcane Damage")]
         public float BonusArcaneSpellPowerMultiplier
         {
@@ -1852,7 +1873,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Nature Damage")]
         public float BonusNatureSpellPowerMultiplier
         {
@@ -1861,7 +1882,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Frost Damage")]
         public float BonusFrostSpellPowerMultiplier
         {
@@ -1870,7 +1891,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Spirit")]
         public float BonusSpiritMultiplier
         {
@@ -1879,7 +1900,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Crit Dmg")]
         public float BonusCritMultiplier
         {
@@ -1888,7 +1909,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Spell Crit Dmg")]
         public float BonusSpellCritMultiplier
         {
@@ -1897,7 +1918,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Rip Dmg")]
         public float BonusRipDamageMultiplier
         {
@@ -1906,7 +1927,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Swipe Dmg")]
         public float BonusSwipeDamageMultiplier
         {
@@ -1916,7 +1937,7 @@ namespace Rawr
 
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Physical Dmg")]
         public float BonusPhysicalDamageMultiplier
         {
@@ -1934,7 +1955,7 @@ namespace Rawr
         }
 		
 		[System.ComponentModel.DefaultValueAttribute(0f)]
-		[Multiplicative]
+		[Percentage]
 		public float BonusRangedAttackPowerMultiplier
 		{
 			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRangedAttackPowerMultiplier]; }
@@ -1942,7 +1963,7 @@ namespace Rawr
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
-		[Multiplicative]
+		[Percentage]
 		[DisplayName("% Bonus Steady Shot Damage")]
 		public float BonusSteadyShotDamageMultiplier
 		{
@@ -1951,7 +1972,7 @@ namespace Rawr
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
-		[Multiplicative]
+		[Percentage]
 		[DisplayName("% Bonus Pet Damage")]
 		public float BonusPetDamageMultiplier
 		{
@@ -1972,7 +1993,7 @@ namespace Rawr
         }*/
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% reduce the mana cost of PoH")]
         public float BonusPoHManaCostReductionMultiplier
         {
@@ -1981,7 +2002,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% increases the healing from Greater Heal")]
         public float BonusGHHealingMultiplier
         {
@@ -1993,7 +2014,7 @@ namespace Rawr
 
         #region InverseMultiplicativeStats
         // threat dealt is damage * (1 + ThreatIncreaseMultiplier) * (1 - ThreatReductionMultiplier)
-        [Multiplicative]
+        [Percentage]
         [DisplayName("% Threat Reduction")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float ThreatReductionMultiplier
@@ -2265,7 +2286,7 @@ namespace Rawr
                 float value = (float) info.GetValue(this, null);
                 if (value != 0)
                 {
-                    if (IsMultiplicative(info))
+                    if (IsPercentage(info))
                     {
                         value *= 100;
                     }
@@ -2290,7 +2311,7 @@ namespace Rawr
 
         #region Multiplicative Handling
         private static PropertyInfo[] _propertyInfoCache = null;
-        private static List<PropertyInfo> _multiplicativeProperties = new List<PropertyInfo>();
+        private static List<PropertyInfo> _percentageProperties = new List<PropertyInfo>();
         private static int AdditiveStatCount = 0;
         private static int MultiplicativeStatCount = 0;
         private static int InverseMultiplicativeStatCount = 0;
@@ -2311,9 +2332,9 @@ namespace Rawr
 
             foreach (PropertyInfo info in _propertyInfoCache)
             {
-                if (info.GetCustomAttributes(typeof(MultiplicativeAttribute), false).Length > 0)
+                if (info.GetCustomAttributes(typeof(PercentageAttribute), false).Length > 0)
                 {
-                    _multiplicativeProperties.Add(info);
+                    _percentageProperties.Add(info);
                 }
             }
 
@@ -2331,9 +2352,9 @@ namespace Rawr
             }
         }
 
-        public static bool IsMultiplicative(PropertyInfo info)
+        public static bool IsPercentage(PropertyInfo info)
         {
-            return _multiplicativeProperties.Contains(info);
+            return _percentageProperties.Contains(info);
         }
         #endregion
 
@@ -2381,7 +2402,7 @@ namespace Rawr
     public delegate bool StatFilter(float value);
 
     [AttributeUsage(AttributeTargets.Property)]
-    public class MultiplicativeAttribute : Attribute
+    public class PercentageAttribute : Attribute
     {
     }
 
