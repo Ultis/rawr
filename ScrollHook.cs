@@ -21,11 +21,11 @@ namespace Rawr
             c.MouseClick -= FixScroll;
             foreach (Control child in c.Controls)
             {
-                hookRec(child);
+                unhookRec(child);
             }
         }
 
-        static void FixScroll(object sender, MouseEventArgs e)
+        private static void FixScroll(object sender, MouseEventArgs e)
         {
             Control c = sender as Control;
             if (c != null)
