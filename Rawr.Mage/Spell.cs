@@ -1818,6 +1818,8 @@ namespace Rawr.Mage
                 chain1.AddSpell(ABar, castingState);
                 chain1.Calculate(castingState);
 
+                commonChain = chain1;
+
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
                 DamagePerSecond = chain1.DamagePerSecond;
@@ -1833,17 +1835,30 @@ namespace Rawr.Mage
                 chain1.Calculate(castingState);
 
                 //AB-ABar-MBAM 0.15
-                chain2 = new SpellCycle(3);
+                chain2 = new SpellCycle(4);
                 chain2.AddSpell(AB, castingState);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
+                chain2.AddSpell(ABar, castingState);
                 chain2.Calculate(castingState);
+
+                commonChain = chain2;
 
                 CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
                 CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
                 DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
                 ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
                 ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            }
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
             }
         }
 

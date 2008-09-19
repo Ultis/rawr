@@ -340,8 +340,8 @@ namespace Rawr.Mage
             FrostFireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ElementalPrecision);
 
             SpiritRegen = 0.001f + characterStats.Spirit * baseRegen * (float)Math.Sqrt(characterStats.Intellect);
-            ManaRegen = SpiritRegen + characterStats.Mp5 / 5f + SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration;
-            ManaRegen5SR = SpiritRegen * characterStats.SpellCombatManaRegeneration + characterStats.Mp5 / 5f + SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration;
+            ManaRegen = SpiritRegen + characterStats.Mp5 / 5f + SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration + characterStats.ManaRestoreFromMaxManaPerSecond * characterStats.Mana;
+            ManaRegen5SR = SpiritRegen * characterStats.SpellCombatManaRegeneration + characterStats.Mp5 / 5f + SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration + characterStats.ManaRestoreFromMaxManaPerSecond * characterStats.Mana;
             HealthRegen = 0.0312f * characterStats.Spirit + characterStats.Hp5 / 5f;
             HealthRegenCombat = characterStats.Hp5 / 5f;
             if (playerLevel < 75)
@@ -388,6 +388,7 @@ namespace Rawr.Mage
             {
                 CastingSpeed *= 1.3f;
             }
+            CastingSpeed *= (1f + characterStats.SpellHaste);
             CastingSpeed *= (1f + 0.02f * character.MageTalents.NetherwindPresence);
 
             Latency = calculationOptions.Latency;
