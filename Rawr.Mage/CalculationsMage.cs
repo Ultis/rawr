@@ -575,7 +575,7 @@ namespace Rawr.Mage
                         case 80:
                             statsRace = new Stats()
                             {
-                                Health = 4284f,
+                                Health = 6783f,
                                 Mana = 2988f,
                                 Strength = 31f,
                                 Agility = 46f,

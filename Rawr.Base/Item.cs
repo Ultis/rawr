@@ -856,6 +856,10 @@ namespace Rawr
                     volatileRequirements = true;
                     meetsRequirements = yellowGems >= 1 && blueGems >= 2;
                     break;
+                case 41378:
+                    volatileRequirements = true;
+                    meetsRequirements = yellowGems >= 2 && blueGems >= 1;
+                    break;
                 default:
                     meetsRequirements = true;
                     break;
