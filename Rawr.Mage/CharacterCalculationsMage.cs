@@ -23,6 +23,7 @@ namespace Rawr.Mage
         AfterFightRegen,
         ManaOverflow,
         Spell,
+        SummonWaterElemental
     }
 
     public struct SolutionVariable
@@ -80,10 +81,10 @@ namespace Rawr.Mage
 
         public Character Character { get; set; }
 
-        public bool WaterElemental { get; set; }
-        public float WaterElementalDps { get; set; }
-        public float WaterElementalDuration { get; set; }
-        public float WaterElementalDamage { get; set; }
+        //public bool WaterElemental { get; set; }
+        //public float WaterElementalDps { get; set; }
+        //public float WaterElementalDuration { get; set; }
+        //public float WaterElementalDamage { get; set; }
 
         public float StartingMana { get; set; }
 
@@ -109,6 +110,7 @@ namespace Rawr.Mage
         public double ColdsnapCooldown;
         public double ArcanePowerCooldown;
         public double ArcanePowerDuration;
+        public double WaterElementalCooldown;
 
         public double[] Solution;
         public List<SolutionVariable> SolutionVariable;
@@ -124,6 +126,7 @@ namespace Rawr.Mage
         public int ColumnTimeExtension = -1;
         public int ColumnAfterFightRegen = -1;
         public int ColumnManaOverflow = -1;
+        public int ColumnSummonWaterElemental = -1;
 
         public float ChanceToDie { get; set; }
         public float MeanIncomingDps { get; set; }
@@ -229,6 +232,7 @@ namespace Rawr.Mage
                 }
             }
             sequence.GroupIcyVeins(); // should come after trinkets because of coldsnap
+            sequence.GroupWaterElemental();
             sequence.GroupDrumsOfBattle();
             list = sequence.GroupFlameCap();
             // very very special case for now
@@ -353,6 +357,7 @@ namespace Rawr.Mage
             double manaPotion = 0;
             double manaGem = 0;
             double drums = 0;
+            double we = 0;
             bool segmentedOutput = false;
             Dictionary<string, SpellContribution> byspell = new Dictionary<string, SpellContribution>();
             for (int i = 0; i < SolutionVariable.Count; i++)
@@ -388,6 +393,10 @@ namespace Rawr.Mage
                             break;
                         case VariableType.AfterFightRegen:
                             sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", Solution[i]));
+                            break;
+                        case VariableType.SummonWaterElemental:
+                            we += Solution[i];
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseState.GlobalCooldown, SolutionVariable[i].Segment));
                             break;
                         case VariableType.Wand:
                         case VariableType.Spell:
@@ -425,6 +434,10 @@ namespace Rawr.Mage
                 {
                     sb.AppendLine(String.Format("{0}: {1:F}x", "Drums of Battle", drums / BaseState.GlobalCooldown));
                 }
+                if (we > 0)
+                {
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Summon Water Elemental", we / BaseState.GlobalCooldown));
+                }
                 foreach (KeyValuePair<string, double> kvp in combinedSolution)
                 {
                     Spell s = SolutionVariable[combinedSolutionData[kvp.Key]].Spell;
@@ -438,7 +451,7 @@ namespace Rawr.Mage
                     }
                 }
             }
-            if (WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", WaterElementalDuration / 45f));
+            //if (WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", WaterElementalDuration / 45f));
             dictValues.Add("Spell Cycles", sb.ToString());
             sb = new StringBuilder("*");
             List<SpellContribution> contribList = new List<SpellContribution>(byspell.Values);

@@ -15,7 +15,9 @@ namespace Rawr.Mage
         Trinket1,
         Trinket2,
         DrumsOfBattle,
-        Combustion
+        Combustion,
+        WaterElemental,
+        ManaGemEffect
     }
 
     public sealed class CastingState
@@ -130,6 +132,8 @@ namespace Rawr.Mage
                 hex = (hex << 1) + (MoltenFury ? 1 : 0);
                 hex = (hex << 1) + (Trinket1 ? 1 : 0);
                 hex = (hex << 1) + (Trinket2 ? 1 : 0);
+                hex = (hex << 1) + (WaterElemental ? 1 : 0);
+                hex = (hex << 1) + (ManaGemEffect ? 1 : 0);
                 return hex;
             }
         }
@@ -158,6 +162,10 @@ namespace Rawr.Mage
                     return Trinket1;
                 case Cooldown.Trinket2:
                     return Trinket2;
+                case Cooldown.WaterElemental:
+                    return WaterElemental;
+                case Cooldown.ManaGemEffect:
+                    return ManaGemEffect;
                 default:
                     return false;
             }
@@ -171,11 +179,13 @@ namespace Rawr.Mage
         public bool FlameCap { get; set; }
         public bool Trinket1 { get; set; }
         public bool Trinket2 { get; set; }
+        public bool ManaGemEffect { get; set; }
         public bool ManaGemActivation { get; set; }
         public bool DrumsOfBattle { get; set; }
         public bool Combustion { get; set; }
-        public float CombustionDuration { get; set; }
+        public bool WaterElemental { get; set; }
 
+        public float CombustionDuration { get; set; }
         public float SpellDamageRating { get; set; }
         public float SpellHasteRating { get; set; }
         public float Mp5OnCastFor20Sec { get; set; }
@@ -198,6 +208,8 @@ namespace Rawr.Mage
                     if (Trinket1) buffList.Add(calculations.Trinket1Name);
                     if (Trinket2) buffList.Add(calculations.Trinket2Name);
                     if (DestructionPotion) buffList.Add("Destruction Potion");
+                    if (WaterElemental) buffList.Add("Water Elemental");
+                    // TODO mana gem effect
 
                     buffLabel = string.Join("+", buffList.ToArray());
                 }
@@ -222,7 +234,7 @@ namespace Rawr.Mage
             return duration;
         }
 
-        public CastingState(CharacterCalculationsMage calculations, Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, int incrementalSetIndex)
+        public CastingState(CharacterCalculationsMage calculations, Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect, int incrementalSetIndex)
         {
             this.calculations = calculations;
             IncrementalSetIndex = incrementalSetIndex;
@@ -379,6 +391,8 @@ namespace Rawr.Mage
             Trinket2 = trinket2;
             Combustion = combustion;
             DrumsOfBattle = drums;
+            WaterElemental = waterElemental;
+            ManaGemEffect = manaGemEffect;
 
             if (icyVeins)
             {

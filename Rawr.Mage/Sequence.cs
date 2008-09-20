@@ -443,7 +443,9 @@ namespace Rawr.Mage.SequenceReconstruction
                 for (k = lastHigh; k < sequence.Count; k++)
                 {
                     // make sure item is low mps and can be moved back
-                    if ((sequence[k].SuperGroup.Mps <= 0 || (!extraMode && sequence[k].SuperGroup.Mps <= maxMps)) && MinTime(k, j) <= tjj + jT) break;
+                    //if ((sequence[k].SuperGroup.Mps <= 0 || (!extraMode && sequence[k].SuperGroup.Mps <= maxMps)) && MinTime(k, j) <= tjj + jT) break;
+                    // the only thing really required to have mana drop is for mps to be lower than at jj
+                    if (sequence[k].SuperGroup != sequence[jj].SuperGroup && sequence[k].SuperGroup.Mps < sequence[jj].Mps - eps) break;
                     // everything we skip will have to be pushed so make sure there is space
                     maxPush = Math.Min(maxPush, sequence[k].MaxTime - tkk);
                     tkk += sequence[k].Duration;
@@ -978,7 +980,17 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.IcyVeins) list.Add(item);
             }
-            GroupCooldown(list, 20, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.IcyVeins);
+            GroupCooldown(list, 20.0, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.IcyVeins);
+        }
+
+        public void GroupWaterElemental()
+        {
+            List<SequenceItem> list = new List<SequenceItem>();
+            foreach (SequenceItem item in sequence)
+            {
+                if (item.CastingState.WaterElemental) list.Add(item);
+            }
+            GroupCooldown(list, 45.0, SequenceItem.Calculations.WaterElementalCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.WaterElemental);
         }
 
         public List<SequenceGroup> GroupFlameCap()
@@ -1617,6 +1629,11 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 tail = 0;
                                                 break;
                                             }
+                                            if (item.CastingState.WaterElemental && item.VariableType != VariableType.SummonWaterElemental && itemList[j].VariableType == VariableType.SummonWaterElemental)
+                                            {
+                                                tail = 0;
+                                                break;
+                                            }
                                             if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
                                             {
                                                 if (itemList[index[i - 1]].CastingState.DrumsOfBattle && !item.CastingState.DrumsOfBattle && itemList[j].CastingState.DrumsOfBattle)
@@ -2153,46 +2170,87 @@ namespace Rawr.Mage.SequenceReconstruction
                     if (targetmana != lastTargetMana)
                     {
                         // count mana till end of super group
+                        // account for to be used consumables (don't assume evo during super group unless we haven't placed the first one, in that case it will actually be placed before the super group)
+                        if (evoTime > 0 && nextEvo == 0.0)
+                        {
+                            targetmana += EvocationRegen * Math.Min(evoTime, EvocationDuration);
+                        }
+                        if (sequence[sequence.Count - 1].SuperGroup == super) targetmana += ghostMana;
+                        double _potTime = potTime;
+                        double _nextPot = nextPot;
+                        double _gemTime = gemTime;
+                        double _nextGem = nextGem;
+                        int _gemCount = gemCount;
+                        if (targetmana - sequence[i].Mps * (sequence[i].Duration - (targetTime - t)) < -eps)
+                        {
+                            // targetmana / sequence[i].Mps = timeFromTargetTime
+                            double oomt = targetTime + targetmana / sequence[i].Mps;
+                            while (_potTime > eps && _nextPot < oomt + eps && targetmana - sequence[i].Mps * (sequence[i].Duration - (targetTime - t)) < -eps)
+                            {
+                                targetmana += (1 + BaseStats.BonusManaPotion) * 2400;
+                                _potTime -= 1.0;
+                                _nextPot += 120.0;
+                                oomt = targetTime + targetmana / sequence[i].Mps;
+                            }
+                            while (_gemTime > eps && _nextGem < oomt + eps && targetmana - sequence[i].Mps * (sequence[i].Duration - (targetTime - t)) < -eps)
+                            {
+                                targetmana += (1 + BaseStats.BonusManaGem) * gemValue[_gemCount];
+                                _gemTime -= 1.0;
+                                _nextGem += 120.0;
+                                _gemCount++;
+                                oomt = targetTime + targetmana / sequence[i].Mps;
+                            }
+                            if (targetmana - sequence[i].Mps * (sequence[i].Duration - (targetTime - t)) < -eps)
+                            {
+                                double regenTime = t + sequence[i].Duration;
+                                if (_potTime > eps && _nextPot < regenTime) regenTime = _nextPot;
+                                if (_gemTime > eps && _nextGem < regenTime) regenTime = _nextGem;
+                                // we run oom and regen options are not ready
+                                minMps = -(BaseStats.Mana - mana) / (targetTime - time);
+                                extraMana = -(targetmana - sequence[i].Mps * (regenTime - targetTime));
+                                lastTargetMana = tmana;
+                                goto Retry;
+                            }
+                        }
                         targetmana -= sequence[i].Mps * (sequence[i].Duration - (targetTime - t));
                         t += sequence[i].Duration;
                         i++;
                         while (i < sequence.Count && sequence[i].SuperGroup == super)
                         {
+                            if (targetmana - sequence[i].Mps * sequence[i].Duration < -eps)
+                            {
+                                // targetmana / sequence[i].Mps = timeFromTargetTime
+                                double oomt = t + targetmana / sequence[i].Mps;
+                                while (_potTime > eps && _nextPot < oomt + eps && targetmana - sequence[i].Mps * sequence[i].Duration < -eps)
+                                {
+                                    targetmana += (1 + BaseStats.BonusManaPotion) * 2400;
+                                    _potTime -= 1.0;
+                                    _nextPot += 120.0;
+                                    oomt = t + targetmana / sequence[i].Mps;
+                                }
+                                while (_gemTime > eps && _nextGem < oomt + eps && targetmana - sequence[i].Mps * sequence[i].Duration < -eps)
+                                {
+                                    targetmana += (1 + BaseStats.BonusManaGem) * gemValue[_gemCount];
+                                    _gemTime -= 1.0;
+                                    _nextGem += 120.0;
+                                    _gemCount++;
+                                    oomt = t + targetmana / sequence[i].Mps;
+                                }
+                                if (targetmana - sequence[i].Mps * sequence[i].Duration < -eps)
+                                {
+                                    double regenTime = t + sequence[i].Duration;
+                                    if (_potTime > eps && _nextPot < regenTime) regenTime = _nextPot;
+                                    if (_gemTime > eps && _nextGem < regenTime) regenTime = _nextGem;
+                                    // we run oom and regen options are not ready
+                                    minMps = -(BaseStats.Mana - mana) / (targetTime - time);
+                                    extraMana = -(targetmana - sequence[i].Mps * (regenTime - t));
+                                    lastTargetMana = tmana;
+                                    goto Retry;
+                                }
+                            }
                             targetmana -= sequence[i].Mps * sequence[i].Duration;
                             t += sequence[i].Duration;
                             i++;
-                        }
-                        // account for to be used consumables (don't assume evo during super group unless we haven't placed the first one, in that case it will actually be placed before the super group)
-                        double manaUsed = mana;
-                        for (double _potTime = potTime, _nextPot = nextPot; _potTime > eps && _nextPot < t; _potTime -= 1.0, _nextPot += 120.0)
-                        {
-                            targetmana += (1 + BaseStats.BonusManaPotion) * 2400;
-                        }
-                        int _gemCount = gemCount;
-                        for (double _gemTime = gemTime, _nextGem = nextGem; _gemTime > eps && _nextGem < t; _gemTime -= 1.0, _nextGem += 120.0, _gemCount++)
-                        {
-                            targetmana += (1 + BaseStats.BonusManaGem) * gemValue[_gemCount];
-                        }
-                        /*if (potTime > 0 && nextPot < t)
-                        {
-                            targetmana += (1 + BasicStats.BonusManaPotion) * 2400;
-                        }
-                        if (gemTime > 0 && nextGem < t)
-                        {
-                            targetmana += (1 + BasicStats.BonusManaGem) * gemValue[gemCount];
-                        }*/
-                        if (evoTime > 0 && nextEvo == 0.0)
-                        {
-                            targetmana += EvocationRegen * Math.Min(evoTime, EvocationDuration);
-                        }
-                        if (t >= fight) targetmana += ghostMana;
-                        if (targetmana < -eps)
-                        {
-                            //maxMps = (mana - (tmana - targetmana)) / (targetTime - time);
-                            minMps = -(BaseStats.Mana - mana) / (targetTime - time);
-                            extraMana = -targetmana;
-                            lastTargetMana = tmana;
-                            goto Retry;
                         }
                     }
                     else
@@ -2554,6 +2612,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double drumsCooldown = 0;
             double apCooldown = 0;
             double ivCooldown = 0;
+            double weCooldown = 0;
             double combustionCooldown = 0;
             double coldsnapCooldown = 0;
             double trinket1time = -1;
@@ -2566,17 +2625,19 @@ namespace Rawr.Mage.SequenceReconstruction
             double heroismTime = -1;
             double apTime = -1;
             double ivTime = -1;
+            double weTime = -1;
             bool potionWarning = false;
             bool gemWarning = false;
             bool trinket1warning = false;
             bool trinket2warning = false;
             bool apWarning = false;
             bool ivWarning = false;
+            bool weWarning = false;
             bool combustionWarning = false;
             bool drumsWarning = false;
             bool manaWarning = false;
             double combustionLeft = 0;
-            double lastIVstart = 0;
+            double lastIVWEstart = 0;
 
             double unexplained = 0;
 
@@ -3068,8 +3129,14 @@ namespace Rawr.Mage.SequenceReconstruction
                         {
                             if (coldsnap && coldsnapCooldown <= (ivTime + 20 - time) + eps)
                             {
-                                double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVstart);
-                                ivTime += 20;
+                                double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
+                                ivTime += 20.0;
+                                if (weTime > 0)
+                                {
+                                    // TODO think
+                                    weTime += 45.0;
+                                    weCooldown += 45.0;
+                                }
                                 ivCooldown += 20;
                                 coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
                             }
@@ -3100,19 +3167,19 @@ namespace Rawr.Mage.SequenceReconstruction
                         {
                             if (coldsnap && ivCooldown > eps && coldsnapCooldown <= eps)
                             {
-                                double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVstart);
+                                double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
                                 coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
                             }
                             if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Icy Veins (" + Math.Round(manabefore).ToString() + " mana)");
                             ivCooldown = SequenceItem.Calculations.IcyVeinsCooldown;
                             ivTime = time;
                             ivWarning = false;
-                            lastIVstart = time;
+                            lastIVWEstart = time;
                             if (duration > 20.0)
                             {
                                 if (coldsnap && coldsnapCooldown <= 20.0 + eps)
                                 {
-                                    double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVstart);
+                                    double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
                                     ivTime += 20;
                                     ivCooldown += 20;
                                     coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
@@ -3121,6 +3188,73 @@ namespace Rawr.Mage.SequenceReconstruction
                                 {
                                     unexplained += time + duration - ivTime - 20;
                                     if (timing != null) timing.AppendLine("WARNING: Icy Veins duration too long!");
+                                }
+                            }
+                        }
+                    }
+                }
+                // Water Elemental
+                if (weTime >= 0)
+                {
+                    if (state != null && state.WaterElemental)
+                    {
+                        if (time + duration > weTime + 45.0 + eps)
+                        {
+                            if (coldsnap && coldsnapCooldown <= (weTime + 45.0 - time) + eps)
+                            {
+                                double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
+                                weTime += 20;
+                                weCooldown += 20;
+                                coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
+                            }
+                            if (time + duration > weTime + 45.0 + eps)
+                            {
+                                unexplained += time + duration - weTime - 45.0;
+                                if (timing != null) timing.AppendLine("WARNING: Water Elemental duration too long!");
+                            }
+                        }
+                    }
+                    else if (duration > 0 && 45.0 - (time - weTime) > eps)
+                    {
+                        //unexplained += Math.Min(duration, 45 - (time - ivTime));
+                        if (timing != null) timing.AppendLine("INFO: Water Elemental is still up!");
+                    }
+                }
+                else
+                {
+                    if (state != null && state.WaterElemental)
+                    {
+                        if (weCooldown > eps && (!coldsnap || coldsnapCooldown > eps))
+                        {
+                            unexplained += duration;
+                            if (timing != null && !ivWarning) timing.AppendLine("WARNING: Water Elemental cooldown not ready!");
+                            weWarning = true;
+                        }
+                        else
+                        {
+                            if (coldsnap && weCooldown > eps && coldsnapCooldown <= eps)
+                            {
+                                double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
+                                coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
+                            }
+                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Water Elemental (" + Math.Round(manabefore).ToString() + " mana)");
+                            weCooldown = SequenceItem.Calculations.WaterElementalCooldown;
+                            weTime = time;
+                            weWarning = false;
+                            lastIVWEstart = time;
+                            if (duration > 45.0)
+                            {
+                                if (coldsnap && coldsnapCooldown <= 45.0 + eps)
+                                {
+                                    double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
+                                    weTime += 45.0;
+                                    weCooldown += 45.0;
+                                    coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
+                                }
+                                if (time + duration > weTime + 45.0 + eps)
+                                {
+                                    unexplained += time + duration - weTime - 45.0;
+                                    if (timing != null) timing.AppendLine("WARNING: Water Elemental duration too long!");
                                 }
                             }
                         }
@@ -3155,6 +3289,10 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     label = "Activation";
                 }
+                else if (type == VariableType.SummonWaterElemental)
+                {
+                    label = "Summon";
+                }
                 else if (type == VariableType.Drinking)
                 {
                     label = "Drink";
@@ -3185,6 +3323,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 time += duration;
                 apCooldown -= duration;
                 ivCooldown -= duration;
+                weCooldown -= duration;
                 potionCooldown -= duration;
                 gemCooldown -= duration;
                 trinket1Cooldown -= duration;
@@ -3194,6 +3333,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 coldsnapCooldown -= duration;
                 if (apTime >= 0 && SequenceItem.Calculations.ArcanePowerDuration - (time - apTime) <= eps) apTime = -1;
                 if (ivTime >= 0 && 20 - (time - ivTime) <= eps) ivTime = -1;
+                if (weTime >= 0 && 45.0 - (time - weTime) <= eps) weTime = -1;
                 if (heroismTime >= 0 && 40 - (time - heroismTime) <= eps) heroismTime = -1;
                 if (destructionTime >= 0 && 15 - (time - destructionTime) <= eps) destructionTime = -1;
                 if (flameCapTime >= 0 && 60 - (time - flameCapTime) <= eps) flameCapTime = -1;

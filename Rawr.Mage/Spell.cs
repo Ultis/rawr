@@ -234,7 +234,7 @@ namespace Rawr.Mage
         public float MaxCritDamage;
         public float DotDamage;
 
-        protected static Dictionary<int, int> BaseMana = new Dictionary<int, int>();
+        public static Dictionary<int, int> BaseMana = new Dictionary<int, int>();
         static BaseSpell()
         {
             BaseMana[70] = 2241;
@@ -311,6 +311,7 @@ namespace Rawr.Mage
         public float Cost;
 
         private CastingState castingState;
+        private Waterbolt waterbolt;
 
         public virtual void Calculate(CastingState castingState)
         {
@@ -574,6 +575,11 @@ namespace Rawr.Mage
             DamagePerSecond = AverageDamage / CastTime;
             ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
 
+            if (castingState.WaterElemental)
+            {
+                waterbolt = new Waterbolt(castingState, RawSpellDamage); // TODO should be frost damage
+                DamagePerSecond += waterbolt.DamagePerSecond;
+            }
             if (!EffectProc && castingState.BaseStats.LightningCapacitorProc > 0)
             {
                 BaseSpell LightningBolt = (BaseSpell)castingState.GetSpell(SpellId.LightningBolt);
@@ -637,6 +643,16 @@ namespace Rawr.Mage
             }
             contrib.Hits += HitProcs * duration / CastTime;
             contrib.Damage += AverageDamage * duration / CastTime;
+            if (waterbolt != null)
+            {
+                if (!dict.TryGetValue(waterbolt.Name, out contrib))
+                {
+                    contrib = new SpellContribution() { Name = waterbolt.Name };
+                    dict[waterbolt.Name] = contrib;
+                }
+                contrib.Hits += duration / waterbolt.CastTime;
+                contrib.Damage += waterbolt.DamagePerSecond * duration;
+            }
             if (!EffectProc && castingState.BaseStats.LightningCapacitorProc > 0)
             {
                 BaseSpell LightningBolt = (BaseSpell)castingState.GetSpell(SpellId.LightningBolt);
@@ -670,6 +686,55 @@ namespace Rawr.Mage
     }
 
     #region Base Spells
+    class Waterbolt : Spell
+    {
+        public Waterbolt(CastingState castingState, float playerSpellDamage)
+        {
+            Name = "Waterbolt";
+            Character character = castingState.CalculationOptions.Character;
+            CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
+            int playerLevel = calculationOptions.PlayerLevel;
+            int targetLevel = calculationOptions.TargetLevel;
+            // 45 sec, 3 min cooldown + cold snap
+            // 2.5 sec Waterbolt, affected by heroism, totems, 0.4x frost damage from character
+            // TODO recheck all buffs that apply
+            float spellHit = 0;
+            float spellCrit = 0.05f;
+            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Totem of Wrath"))) spellCrit += 0.03f;
+            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Inspiring Presence"))) spellHit += 0.01f;
+            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Misery"))) spellHit += 0.03f;
+            float hitRate = Math.Min(1.00f, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + spellHit);
+            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Winter's Chill")) || character.MageTalents.WintersChill > 0 || character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Scorch")) || character.MageTalents.ImprovedScorch > 0) spellCrit += 0.1f;
+            float multiplier = hitRate;
+            float haste = 1.0f;
+            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Curse of the Elements"))) multiplier *= 1.1f;
+            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Curse of the Elements"))) multiplier *= 1.13f / 1.1f;
+            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Misery"))) haste *= 1.05f;
+            if (castingState.Heroism) haste *= 1.3f;
+            float realResistance = calculationOptions.FrostResist;
+            float partialResistFactor = (realResistance == 1) ? 0 : (1 - realResistance - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f));
+            multiplier *= partialResistFactor;
+
+            CastTime = 2.5f / haste;
+            CostPerSecond = 0.0f;
+            DamagePerSecond = (521.5f + (0.4f * playerSpellDamage + (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath of Air")) ? 101 : 0)) * 2.5f / 3.5f) * multiplier * (1 + 0.5f * spellCrit) / 2.5f * haste;
+            ThreatPerSecond = 0.0f;
+            ManaRegenPerSecond = 0.0f;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            SpellContribution contrib;
+            if (!dict.TryGetValue(Name, out contrib))
+            {
+                contrib = new SpellContribution() { Name = Name };
+                dict[Name] = contrib;
+            }
+            contrib.Hits += duration / CastTime;
+            contrib.Damage += DamagePerSecond * duration;
+        }
+    }
+
     class Wand : BaseSpell
     {
         public Wand(CastingState castingState, MagicSchool school, int minDamage, int maxDamage, float speed)

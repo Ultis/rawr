@@ -260,7 +260,7 @@ namespace Rawr.Mage
                     sb.AppendLine(String.Format("{0}: {1:F} sec", kvp.Key, kvp.Value));
                 }
             }
-            if (calculations.WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", calculations.WaterElementalDuration / 45f));
+            //if (calculations.WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", calculations.WaterElementalDuration / 45f));
 
             // sequence
             string sequence = dict["Sequence"];
@@ -448,7 +448,6 @@ namespace Rawr.Mage
                                 Stamina = 50f,
                                 Intellect = 154f,
                                 Spirit = 145,
-                                ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
@@ -462,7 +461,6 @@ namespace Rawr.Mage
                                 Stamina = 51f,
                                 Intellect = 157f,
                                 Spirit = 148f,
-                                ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
@@ -476,7 +474,6 @@ namespace Rawr.Mage
                                 Stamina = 52f,
                                 Intellect = 160f,
                                 Spirit = 151f,
-                                ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
@@ -490,7 +487,6 @@ namespace Rawr.Mage
                                 Stamina = 53f,
                                 Intellect = 163f,
                                 Spirit = 154f,
-                                ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
@@ -504,7 +500,6 @@ namespace Rawr.Mage
                                 Stamina = 53f,
                                 Intellect = 166f,
                                 Spirit = 156f,
-                                ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
@@ -518,7 +513,6 @@ namespace Rawr.Mage
                                 Stamina = 54f,
                                 Intellect = 169f,
                                 Spirit = 159f,
-                                ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
@@ -532,7 +526,6 @@ namespace Rawr.Mage
                                 Stamina = 55f,
                                 Intellect = 172f,
                                 Spirit = 162f,
-                                ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
@@ -546,7 +539,6 @@ namespace Rawr.Mage
                                 Stamina = 56f,
                                 Intellect = 175f,
                                 Spirit = 165f,
-                                ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
@@ -560,7 +552,6 @@ namespace Rawr.Mage
                                 Stamina = 56f,
                                 Intellect = 178f,
                                 Spirit = 168f,
-                                ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
@@ -574,7 +565,6 @@ namespace Rawr.Mage
                                 Stamina = 57f,
                                 Intellect = 181f,
                                 Spirit = 171f,
-                                ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
@@ -588,7 +578,6 @@ namespace Rawr.Mage
                                 Stamina = 58f,
                                 Intellect = 184f,
                                 Spirit = 174f,
-                                ArcaneResistance = 10,
                                 BonusIntellectMultiplier = 1.05f * (1 + 0.03f * character.MageTalents.ArcaneMind) - 1
                             };
                             break;
@@ -1037,6 +1026,7 @@ namespace Rawr.Mage
 
         public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
+            height -= 2;
             switch (chartName)
             {
                 case "Sequence Reconstruction":
@@ -1057,8 +1047,8 @@ namespace Rawr.Mage
                         Font fontLegend = new Font("Verdana", 10f, GraphicsUnit.Pixel);
                         int legendY = 2;
 
-                        string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Destruction Potion", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Name : "Trinket 2", "Drums of Battle", "Combustion" };
-                        Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.Orange, Color.Aqua, Color.Blue, Color.Brown, Color.OrangeRed };
+                        string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Destruction Potion", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Name : "Trinket 2", "Drums of Battle", "Combustion", "Water Elemental" };
+                        Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.Orange, Color.Aqua, Color.Blue, Color.Brown, Color.OrangeRed, Color.DarkCyan };
                         Brush[] brushSubPoints = new Brush[cooldownColors.Length];
                         Color[] colorSubPointsA = new Color[cooldownColors.Length];
                         Color[] colorSubPointsB = new Color[cooldownColors.Length];

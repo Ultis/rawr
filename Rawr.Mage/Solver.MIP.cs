@@ -410,6 +410,16 @@ namespace Rawr.Mage
                 {
                     valid = ValidateCooldown(Cooldown.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0);
                 }
+                // water elemental
+                if (valid && waterElementalAvailable)
+                {
+                    valid = ValidateIntegralConsumableOverall(VariableType.SummonWaterElemental, calculationResult.BaseState.GlobalCooldown);
+                }
+                if (valid && waterElementalAvailable)
+                {
+                    valid = ValidateCooldown(Cooldown.WaterElemental, 45.0 + (coldsnapAvailable ? 45.0 : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? 45.0 : 0.0), true, 45.0);
+                }
+                // coldsnap
                 if (valid && icyVeinsAvailable && coldsnapAvailable)
                 {
                     valid = ValidateColdsnap();
@@ -482,6 +492,10 @@ namespace Rawr.Mage
                 if (valid && calculationOptions.DrumsOfBattle)
                 {
                     valid = ValidateActivation(Cooldown.DrumsOfBattle, 30.0, 120.0, VariableType.DrumsOfBattle);
+                }
+                if (valid && waterElementalAvailable)
+                {
+                    //valid = ValidateActivation(Cooldown.WaterElemental, 45.0, calculationResult.WaterElementalCooldown, VariableType.SummonWaterElemental);
                 }
             }
 
@@ -1529,6 +1543,9 @@ namespace Rawr.Mage
                     break;
                 case VariableType.DrumsOfBattle:
                     row = rowDrumsOfBattle;
+                    break;
+                case VariableType.SummonWaterElemental:
+                    row = rowSummonWaterElementalCount;
                     break;
             }
             if (!valid)
