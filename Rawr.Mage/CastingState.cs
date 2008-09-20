@@ -578,6 +578,33 @@ namespace Rawr.Mage
                 case SpellId.ArcaneBlast30:
                     s = new ArcaneBlast(this, 3, 0);
                     break;
+                case SpellId.ArcaneBlast0Hit:
+                    s = new ArcaneBlast(this, 0, 0, true);
+                    break;
+                case SpellId.ArcaneBlast1Hit:
+                    s = new ArcaneBlast(this, 1, 1, true);
+                    break;
+                case SpellId.ArcaneBlast2Hit:
+                    s = new ArcaneBlast(this, 2, 2, true);
+                    break;
+                case SpellId.ArcaneBlast3Hit:
+                    s = new ArcaneBlast(this, 3, 3, true);
+                    break;
+                case SpellId.ArcaneBlast0Miss:
+                    s = new ArcaneBlast(this, 0, 0, false);
+                    break;
+                case SpellId.ArcaneBlast1Miss:
+                    s = new ArcaneBlast(this, 1, 1, false);
+                    break;
+                case SpellId.ArcaneBlast2Miss:
+                    s = new ArcaneBlast(this, 2, 2, false);
+                    break;
+                case SpellId.ArcaneBlast3Miss:
+                    s = new ArcaneBlast(this, 3, 3, false);
+                    break;
+                case SpellId.ArcaneBlastSpam:
+                    s = new AB(this);
+                    break;
                 case SpellId.ABAM:
                     s = new ABAM(this);
                     break;

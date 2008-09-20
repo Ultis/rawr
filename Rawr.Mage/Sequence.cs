@@ -3227,7 +3227,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         if (weCooldown > eps && (!coldsnap || coldsnapCooldown > eps))
                         {
                             unexplained += duration;
-                            if (timing != null && !ivWarning) timing.AppendLine("WARNING: Water Elemental cooldown not ready!");
+                            if (timing != null && !weWarning) timing.AppendLine("WARNING: Water Elemental cooldown not ready!");
                             weWarning = true;
                         }
                         else

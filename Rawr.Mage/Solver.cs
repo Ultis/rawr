@@ -2006,7 +2006,7 @@ namespace Rawr.Mage
                     }
                     else if (character.MageTalents.SpellPower > 0)
                     {
-                        list.Add(SpellId.ArcaneBlast33);
+                        list.Add(SpellId.ArcaneBlastSpam);
                         if (character.MageTalents.ImprovedFrostbolt > 0) list.Add(SpellId.Frostbolt);
                         if (character.MageTalents.ImprovedFireball > 0) list.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
                         if (character.MageTalents.ArcaneStability + character.MageTalents.ArcaneEmpowerment > 0) list.Add(SpellId.ArcaneMissiles);
@@ -2017,7 +2017,7 @@ namespace Rawr.Mage
                         list.Add(SpellId.Scorch);
                         list.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
                         list.Add(SpellId.Frostbolt);
-                        list.Add(SpellId.ArcaneBlast33);
+                        list.Add(SpellId.ArcaneBlastSpam);
                     }
                 }
                 else
@@ -2027,7 +2027,7 @@ namespace Rawr.Mage
                     list.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
                     list.Add(SpellId.FireballFireBlast);
                     list.Add(SpellId.Frostbolt);
-                    list.Add(SpellId.ArcaneBlast33);
+                    list.Add(SpellId.ArcaneBlastSpam);
                 }
                 if (calculationOptions.ABCycles)
                 {

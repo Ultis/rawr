@@ -64,6 +64,7 @@ namespace Rawr.Mage
                     "Spell Info:Arcane Missiles",
                     "Spell Info:MBAM*Missile Barrage Arcane Missiles",
                     "Spell Info:Arcane Blast*Spammed",
+                    "Spell Info:Arcane Blast(3)*Full debuff stack",
                     "Spell Info:Arcane Blast(0)*Non-debuffed",
                     "Spell Info:Arcane Barrage*Requires talent points",
                     "Spell Info:Scorch",
