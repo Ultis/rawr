@@ -1059,11 +1059,9 @@ The target becomes a Living Bomb, taking 612 Fire damage over 12 sec. After 12 s
 @"Reduces the cooldown of your Frost Nova, Cone of Cold, Ice Block and Icy Veins spells by 20%.",})]
 		public int IceFloes { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Ice Shards", 5, 2, 1, 2, -1, new string[] {
-@"Increases the critical strike damage bonus of your Frost spells by 20%.",
-@"Increases the critical strike damage bonus of your Frost spells by 40%.",
-@"Increases the critical strike damage bonus of your Frost spells by 60%.",
-@"Increases the critical strike damage bonus of your Frost spells by 80%.",
+		[TalentData(61, "Ice Shards", 3, 2, 1, 2, -1, new string[] {
+@"Increases the critical strike damage bonus of your Frost spells by 33%.",
+@"Increases the critical strike damage bonus of your Frost spells by 66%.",
 @"Increases the critical strike damage bonus of your Frost spells by 100%.",})]
 		public int IceShards { get { return _data[61]; } set { _data[61] = value; } }
 

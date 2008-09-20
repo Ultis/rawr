@@ -1955,9 +1955,7 @@ namespace Rawr.Mage
             "0",
             "1",
             "2",
-            "3",
-            "4",
-            "5"});
+            "3"});
             this.comboBoxIceShards.Location = new System.Drawing.Point(155, 96);
             this.comboBoxIceShards.Name = "comboBoxIceShards";
             this.comboBoxIceShards.Size = new System.Drawing.Size(50, 21);

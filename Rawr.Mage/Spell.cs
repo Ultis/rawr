@@ -81,6 +81,9 @@ namespace Rawr.Mage
         ABAM,
         ABMBAM,
         ABABar,
+        FBABar,
+        FrBABar,
+        FFBABar,
         ABAMP,
         AB3AMSc,
         ABAM3Sc,
@@ -335,7 +338,7 @@ namespace Rawr.Mage
             DirectDamageModifier = 1;
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.Pyromaniac);
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost || MagicSchool == MagicSchool.FrostFire) CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.ElementalPrecision);
-            if (MagicSchool == MagicSchool.Frost) CostAmplifier *= (1.0f - 0.05f * castingState.MageTalents.FrostChanneling);
+            if (castingState.MageTalents.FrostChanneling > 0) CostAmplifier *= (1.0f - 0.01f - 0.03f * castingState.MageTalents.FrostChanneling);
             if (MagicSchool == MagicSchool.Arcane) CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.ArcaneFocus);
             if (castingState.ArcanePower) CostModifier += 0.3f;
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) AffectedByFlameCap = true;
@@ -1933,6 +1936,255 @@ namespace Rawr.Mage
                 //AB-ABar-MBAM 0.15
                 chain2 = new SpellCycle(4);
                 chain2.AddSpell(AB, castingState);
+                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM, castingState);
+                chain2.AddSpell(ABar, castingState);
+                chain2.Calculate(castingState);
+
+                commonChain = chain2;
+
+                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
+                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            }
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            if (chain2 == null)
+            {
+                chain1.AddSpellContribution(dict, duration);
+            }
+            else
+            {
+                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
+                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+            }
+        }
+    }
+
+    class FBABar : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        float MB;
+
+        public FBABar(CastingState castingState)
+        {
+            Name = "FBABar";
+            ABCycle = true;
+
+            Spell FB = castingState.GetSpell(SpellId.Fireball);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+
+            MB = 0.03f * castingState.MageTalents.MissileBarrage;
+
+            if (MB == 0.0)
+            {
+                // if we don't have barrage then this degenerates to FB-ABar
+                chain1 = new SpellCycle(2);
+                chain1.AddSpell(FB, castingState);
+                chain1.AddSpell(ABar, castingState);
+                chain1.Calculate(castingState);
+
+                commonChain = chain1;
+
+                CastTime = chain1.CastTime;
+                CostPerSecond = chain1.CostPerSecond;
+                DamagePerSecond = chain1.DamagePerSecond;
+                ThreatPerSecond = chain1.ThreatPerSecond;
+                ManaRegenPerSecond = chain1.ManaRegenPerSecond;
+            }
+            else
+            {
+                //FB-ABar 0.85
+                chain1 = new SpellCycle(2);
+                chain1.AddSpell(FB, castingState);
+                chain1.AddSpell(ABar, castingState);
+                chain1.Calculate(castingState);
+
+                //FB-ABar-MBAM-ABar 0.15
+                chain2 = new SpellCycle(4);
+                chain2.AddSpell(FB, castingState);
+                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM, castingState);
+                chain2.AddSpell(ABar, castingState);
+                chain2.Calculate(castingState);
+
+                commonChain = chain2;
+
+                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
+                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            }
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            if (chain2 == null)
+            {
+                chain1.AddSpellContribution(dict, duration);
+            }
+            else
+            {
+                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
+                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+            }
+        }
+    }
+
+    class FrBABar : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        float MB;
+
+        public FrBABar(CastingState castingState)
+        {
+            Name = "FrBABar";
+            ABCycle = true;
+
+            Spell FrB = castingState.GetSpell(SpellId.Frostbolt);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+
+            MB = 0.03f * castingState.MageTalents.MissileBarrage;
+
+            if (MB == 0.0)
+            {
+                // if we don't have barrage then this degenerates to FrB-ABar
+                chain1 = new SpellCycle(2);
+                chain1.AddSpell(FrB, castingState);
+                chain1.AddSpell(ABar, castingState);
+                chain1.Calculate(castingState);
+
+                commonChain = chain1;
+
+                CastTime = chain1.CastTime;
+                CostPerSecond = chain1.CostPerSecond;
+                DamagePerSecond = chain1.DamagePerSecond;
+                ThreatPerSecond = chain1.ThreatPerSecond;
+                ManaRegenPerSecond = chain1.ManaRegenPerSecond;
+            }
+            else
+            {
+                //FB-ABar 0.85
+                chain1 = new SpellCycle(2);
+                chain1.AddSpell(FrB, castingState);
+                chain1.AddSpell(ABar, castingState);
+                chain1.Calculate(castingState);
+
+                //FB-ABar-MBAM-ABar 0.15
+                chain2 = new SpellCycle(4);
+                chain2.AddSpell(FrB, castingState);
+                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM, castingState);
+                chain2.AddSpell(ABar, castingState);
+                chain2.Calculate(castingState);
+
+                commonChain = chain2;
+
+                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
+                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            }
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            if (chain2 == null)
+            {
+                chain1.AddSpellContribution(dict, duration);
+            }
+            else
+            {
+                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
+                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+            }
+        }
+    }
+
+    class FFBABar : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        float MB;
+
+        public FFBABar(CastingState castingState)
+        {
+            Name = "FFBABar";
+            ABCycle = true;
+
+            Spell FFB = castingState.GetSpell(SpellId.FrostfireBolt);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+
+            MB = 0.03f * castingState.MageTalents.MissileBarrage;
+
+            if (MB == 0.0)
+            {
+                // if we don't have barrage then this degenerates to FB-ABar
+                chain1 = new SpellCycle(2);
+                chain1.AddSpell(FFB, castingState);
+                chain1.AddSpell(ABar, castingState);
+                chain1.Calculate(castingState);
+
+                commonChain = chain1;
+
+                CastTime = chain1.CastTime;
+                CostPerSecond = chain1.CostPerSecond;
+                DamagePerSecond = chain1.DamagePerSecond;
+                ThreatPerSecond = chain1.ThreatPerSecond;
+                ManaRegenPerSecond = chain1.ManaRegenPerSecond;
+            }
+            else
+            {
+                //FB-ABar 0.85
+                chain1 = new SpellCycle(2);
+                chain1.AddSpell(FFB, castingState);
+                chain1.AddSpell(ABar, castingState);
+                chain1.Calculate(castingState);
+
+                //FB-ABar-MBAM-ABar 0.15
+                chain2 = new SpellCycle(4);
+                chain2.AddSpell(FFB, castingState);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
                 chain2.AddSpell(ABar, castingState);

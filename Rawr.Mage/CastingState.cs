@@ -436,8 +436,8 @@ namespace Rawr.Mage
 
             ArcaneCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
             FireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
-            FrostCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.2f * character.MageTalents.IceShards + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
-            FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.2f * character.MageTalents.IceShards + 0.25f * character.MageTalents.SpellPower)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
+            FrostCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
+            FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
             NatureCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
             ShadowCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
 
@@ -613,6 +613,15 @@ namespace Rawr.Mage
                     break;
                 case SpellId.ABABar:
                     s = new ABABar(this);
+                    break;
+                case SpellId.FBABar:
+                    s = new FBABar(this);
+                    break;
+                case SpellId.FrBABar:
+                    s = new FrBABar(this);
+                    break;
+                case SpellId.FFBABar:
+                    s = new FFBABar(this);
                     break;
                 case SpellId.ABAMP:
                     s = new ABAMP(this);

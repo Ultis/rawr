@@ -2034,6 +2034,9 @@ namespace Rawr.Mage
                     list.Add(SpellId.ABAM);
                     if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABABar);
                     if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABMBAM);
+                    if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FBABar);
+                    if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrBABar);
+                    if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
                 }
                 if (calculationOptions.AoeDuration > 0)
                 {
