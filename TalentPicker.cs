@@ -71,7 +71,7 @@ namespace Rawr
 					{
 						TalentDataAttribute talentData = talentDatas[0];
 						//_startIndexes[talentData.Tree] = Math.Min(_startIndexes[talentData.Tree], talentData.Index);
-						TalentPickerItem item = new TalentPickerItem(_character.Class, talentData.Name, _treeNames[talentData.Tree],
+						TalentPickerItem item = new TalentPickerItem(_character.Class, talentData.Name, _treeNames[talentData.Tree], talentData.Description,
 							false, talentData.Index, talentData.Prerequisite, talentData.Row, talentData.Column, (int)pi.GetValue(Talents, null), talentData.MaxPoints);
 						item.Location = new Point(-45 + (talentData.Column * 63), -57 + (talentData.Row * 65));
 						switch (talentData.Tree)

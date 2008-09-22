@@ -10,19 +10,37 @@ namespace Rawr
 {
 	public partial class TalentPickerItem : UserControl
 	{
-		public TalentPickerItem()
+		private ToolTip _toolTip = new ToolTip();
+		//public TalentPickerItem()
+		//{
+		//    InitializeComponent();
+		//    this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+		//}
+
+		void TalentPickerItem_MouseEnter(object sender, EventArgs e)
 		{
-			InitializeComponent();
-			this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+			string text = string.Format("{0}\r\nRank {1}/{2}\r\n\r\n", TalentName, CurrentRank, MaxRank);
+			if (CurrentRank == 0) text += Description[0];
+			else if (CurrentRank == MaxRank) text += Description[MaxRank - 1];
+			else text += string.Format("{0}\r\n\r\nNext Rank:\r\n{1}", Description[CurrentRank - 1], Description[CurrentRank]);
+			
+			_toolTip.Show(text, this, 48, 24);
 		}
 
-		public TalentPickerItem(Character.CharacterClass charClass, string talentName, string talentTree, bool available, int index, 
+		void TalentPickerItem_MouseLeave(object sender, EventArgs e)
+		{
+			_toolTip.Hide(this);
+		}
+
+		public TalentPickerItem(Character.CharacterClass charClass, string talentName, string talentTree, string[] description, bool available, int index, 
 			int prerequisite, int row, int column, int currentRank, int maxRank)
 		{
 			InitializeComponent();
+			this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
 			_characterClass = charClass;
 			_talentName = talentName;
 			_talentTree = talentTree;
+			_description = description;
 			_available = available;
 			_index = index;
 			_prerequisite = prerequisite;
@@ -31,6 +49,8 @@ namespace Rawr
 			_currentRank = currentRank;
 			_maxRank = maxRank;
 			UpdateTalentPickerItem();
+			this.panelOverlay.MouseLeave += new EventHandler(TalentPickerItem_MouseLeave);
+			this.panelOverlay.MouseEnter += new EventHandler(TalentPickerItem_MouseEnter);
 		}
 
 		private Character.CharacterClass _characterClass = Character.CharacterClass.Druid;
@@ -80,6 +100,8 @@ namespace Rawr
 			}
 		}
 
+		private string[] _description = new string[] { "" };
+		public string[] Description { get { return _description; } set { _description = value; } }
 		private int _index = 0;
 		public int Index { get { return _index; } set { _index = value; } }
 		private int _prerequisite = -1;
@@ -176,6 +198,7 @@ namespace Rawr
 					else
 						CurrentRank = Math.Min(CurrentRank + 1, MaxRank);
 				}
+				TalentPickerItem_MouseEnter(null, null);
 			}
 		}
 	}
