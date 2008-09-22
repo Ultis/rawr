@@ -17,7 +17,6 @@ namespace Rawr
 			InitializeComponent();		
 			BuildControls();
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
-            ScrollHook.hookRec(this);
 		}
 
 		void Calculations_ModelChanged(object sender, EventArgs e)
@@ -98,6 +97,7 @@ namespace Rawr
 				groupBox.Bounds = new Rectangle(6, groupY, 202, labelY);
 				groupY += labelY + 6;
 			}
+            ScrollHook.hookRec(this);
 			this.ResumeLayout();
 		}
 

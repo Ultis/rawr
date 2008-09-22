@@ -139,6 +139,7 @@ namespace Rawr
 					groupBox.Controls.Add(labelImproved);
 				}
 			}
+            ScrollHook.hookRec(this);
 			this.ResumeLayout();
 		}
 
