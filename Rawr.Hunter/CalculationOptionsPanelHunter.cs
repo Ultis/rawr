@@ -97,7 +97,7 @@ namespace Rawr.Hunter
         {
             options.EnforceMetaGem = chkEnforceMetaGemRequirements.Checked;
 			Character.EnforceMetagemRequirements = options.EnforceMetaGem;
-			Character.OnItemsChanged();
+			Character.OnCalculationsInvalidated();
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -105,7 +105,7 @@ namespace Rawr.Hunter
             if (!loadingOptions)
             {
                 options.TargetLevel = int.Parse(cmbTargetLevel.SelectedItem.ToString());
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -114,7 +114,7 @@ namespace Rawr.Hunter
 			if (!loadingOptions && comboActiveAspect.SelectedItem != null)
 			{
 				options.Aspect = (Aspect)comboActiveAspect.SelectedItem;
-				Character.OnItemsChanged(); 
+				Character.OnCalculationsInvalidated(); 
 			}
 		}
 
@@ -123,7 +123,7 @@ namespace Rawr.Hunter
 			if (!loadingOptions && comboShotRotation.SelectedItem != null)
 			{
 				options.ShotRotation = (ShotRotation)comboShotRotation.SelectedItem;
-				Character.OnItemsChanged();
+				Character.OnCalculationsInvalidated();
 			}
 		}
 
@@ -132,7 +132,7 @@ namespace Rawr.Hunter
             if (!loadingOptions && comboPetFamily.SelectedItem != null)
             {
                 options.PetFamily = (PetFamily)comboPetFamily.SelectedItem;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -141,7 +141,7 @@ namespace Rawr.Hunter
             if (!loadingOptions && comboPetPriority1.SelectedItem != null)
             {
                 options.PetPriority1 = (PetAttacks)comboPetPriority1.SelectedItem;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -150,7 +150,7 @@ namespace Rawr.Hunter
             if (!loadingOptions && comboPetPriority2.SelectedItem != null)
             {
                 options.PetPriority2 = (PetAttacks)comboPetPriority2.SelectedItem;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -159,7 +159,7 @@ namespace Rawr.Hunter
             if (!loadingOptions && comboPetPriority3.SelectedItem != null)
             {
                 options.PetPriority3 = (PetAttacks)comboPetPriority3.SelectedItem;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 

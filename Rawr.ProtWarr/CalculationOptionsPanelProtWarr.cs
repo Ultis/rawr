@@ -78,7 +78,7 @@ namespace Rawr.ProtWarr
                 calcOpts.ShieldBlockUptime = trackBarShieldBlockUptime.Value;
 				calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
 
-				Character.OnItemsChanged();
+				Character.OnCalculationsInvalidated();
 			}
 		}
 
@@ -86,14 +86,14 @@ namespace Rawr.ProtWarr
 		{
 			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
 			Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
-			Character.OnItemsChanged();
+			Character.OnCalculationsInvalidated();
 		}
 
         private void checkBoxUseShieldBlock_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
 			calcOpts.UseShieldBlock = checkBoxUseShieldBlock.Checked;
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void buttonTalents_Click(object sender, EventArgs e)

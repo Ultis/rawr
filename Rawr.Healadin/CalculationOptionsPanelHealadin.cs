@@ -48,7 +48,7 @@ namespace Rawr.Healadin
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 calcOpts.Length = (float)cmbLength.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -62,7 +62,7 @@ namespace Rawr.Healadin
                     calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -72,7 +72,7 @@ namespace Rawr.Healadin
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 calcOpts.ManaTime = (float)cmbManaTime.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -86,7 +86,7 @@ namespace Rawr.Healadin
                     calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -97,7 +97,7 @@ namespace Rawr.Healadin
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 lblActivity.Text = trkActivity.Value + "%";
                 calcOpts.Activity = trkActivity.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -107,7 +107,7 @@ namespace Rawr.Healadin
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 calcOpts.Spriest = (float)cmbSpriest.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -117,7 +117,7 @@ namespace Rawr.Healadin
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 calcOpts.Spiritual = (float)cmbSpiritual.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -127,7 +127,7 @@ namespace Rawr.Healadin
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 calcOpts.BoL = chkBoL.Checked;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
 
         }
@@ -140,7 +140,7 @@ namespace Rawr.Healadin
                 calcOpts.Ratio = trkRatio.Value / 100f;
                 labHL1.Text = (100 - trkRatio.Value).ToString() + "%";
                 labHL2.Text = trkRatio.Value.ToString() + "%";
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -150,7 +150,7 @@ namespace Rawr.Healadin
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 calcOpts.Rank1 = (int)nubHL1.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -160,7 +160,7 @@ namespace Rawr.Healadin
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 calcOpts.Rank2 = (int)nubHL2.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 

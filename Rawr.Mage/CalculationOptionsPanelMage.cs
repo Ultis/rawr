@@ -40,7 +40,7 @@ namespace Rawr.Mage
 		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
 		{
 			Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
-            if (!loading) Character.OnItemsChanged();
+            if (!loading) Character.OnCalculationsInvalidated();
         }
 
         private void buttonTalents_Click(object sender, EventArgs e)
@@ -70,7 +70,7 @@ namespace Rawr.Mage
 
         private void calculationOptionsMageBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (!loading) Character.OnItemsChanged();
+            if (!loading) Character.OnCalculationsInvalidated();
         }
 
         private void buttonCustomSpellMix_Click(object sender, EventArgs e)

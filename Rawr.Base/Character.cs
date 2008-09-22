@@ -22,7 +22,7 @@ namespace Rawr //O O . .
         public CharacterRace _race = CharacterRace.NightElf;
         [XmlElement("Class")]
         public CharacterClass _class = CharacterClass.Druid;
-        [XmlIgnore()]
+        [XmlIgnore]
         public List<Buff> _activeBuffs = new List<Buff>();
         [XmlElement("ActiveBuffs")]
         public List<string> _activeBuffsXml = new List<string>();
@@ -117,56 +117,99 @@ namespace Rawr //O O . .
         public List<OptimizationRequirement> OptimizationRequirements { get; set; }
 
 		[XmlElement("WarriorTalents")]
-		public string SerializableWarriorTalents { get { return (WarriorTalents ?? new WarriorTalents()).ToString(); } 
+		public string SerializableWarriorTalents { get { return WarriorTalents.ToString(); } 
 			set { WarriorTalents = new WarriorTalents(value); } }
 		[XmlElement("PaladinTalents")]
-		public string SerializablePaladinTalents { get { return (PaladinTalents ?? new PaladinTalents()).ToString(); } 
+		public string SerializablePaladinTalents { get { return PaladinTalents.ToString(); } 
 			set { PaladinTalents = new PaladinTalents(value); } }
         [XmlElement("HunterTalents")]
-		public string SerializableHunterTalents { get { return (HunterTalents ?? new HunterTalents()).ToString(); } 
+		public string SerializableHunterTalents { get { return HunterTalents.ToString(); } 
 			set { HunterTalents = new HunterTalents(value); } }
         [XmlElement("RogueTalents")]
-		public string SerializableRogueTalents { get { return (RogueTalents ?? new RogueTalents()).ToString(); } 
+		public string SerializableRogueTalents { get { return RogueTalents.ToString(); } 
 			set { RogueTalents = new RogueTalents(value); } }
         [XmlElement("PriestTalents")]
-		public string SerializablePriestTalents { get { return (PriestTalents ?? new PriestTalents()).ToString(); } 
+		public string SerializablePriestTalents { get { return PriestTalents.ToString(); } 
 			set { PriestTalents = new PriestTalents(value); } }
         [XmlElement("ShamanTalents")]
-		public string SerializableShamanTalents { get { return (ShamanTalents ?? new ShamanTalents()).ToString(); } 
+		public string SerializableShamanTalents { get { return ShamanTalents.ToString(); } 
 			set { ShamanTalents = new ShamanTalents(value); } }
         [XmlElement("MageTalents")]
-		public string SerializableMageTalents { get { return (MageTalents ?? new MageTalents()).ToString(); } 
+		public string SerializableMageTalents { get { return MageTalents.ToString(); } 
 			set { MageTalents = new MageTalents(value); } }
         [XmlElement("WarlockTalents")]
-		public string SerializableWarlockTalents { get { return (WarlockTalents ?? new WarlockTalents()).ToString(); } 
+		public string SerializableWarlockTalents { get { return WarlockTalents.ToString(); } 
 			set { WarlockTalents = new WarlockTalents(value); } }
         [XmlElement("DruidTalents")]
-		public string SerializableDruidTalents { get { return (DruidTalents ?? new DruidTalents()).ToString(); } 
+		public string SerializableDruidTalents { get { return DruidTalents.ToString(); } 
 			set { DruidTalents = new DruidTalents(value); } }
         [XmlElement("DeathKnightTalents")]
-		public string SerializableDeathKnightTalents { get { return (DeathKnightTalents ?? new DeathKnightTalents()).ToString(); } 
+		public string SerializableDeathKnightTalents { get { return DeathKnightTalents.ToString(); } 
 			set { DeathKnightTalents = new DeathKnightTalents(value); } }
 
 		[XmlIgnore]
-		public WarriorTalents WarriorTalents { get; set; }
+		private WarriorTalents _warriorTalents = null;
 		[XmlIgnore]
-		public PaladinTalents PaladinTalents { get; set; }
+		private PaladinTalents _paladinTalents = null;
 		[XmlIgnore]
-		public HunterTalents HunterTalents { get; set; }
+		private HunterTalents _hunterTalents = null;
 		[XmlIgnore]
-		public RogueTalents RogueTalents { get; set; }
+		private RogueTalents _rogueTalents = null;
 		[XmlIgnore]
-		public PriestTalents PriestTalents { get; set; }
+		private PriestTalents _priestTalents = null;
 		[XmlIgnore]
-		public ShamanTalents ShamanTalents { get; set; }
+		private ShamanTalents _shamanTalents = null;
 		[XmlIgnore]
-		public MageTalents MageTalents { get; set; }
+		private MageTalents _mageTalents = null;
 		[XmlIgnore]
-		public WarlockTalents WarlockTalents { get; set; }
+		private WarlockTalents _warlockTalents = null;
 		[XmlIgnore]
-		public DruidTalents DruidTalents { get; set; }
+		private DruidTalents _druidTalents = null;
 		[XmlIgnore]
-		public DeathKnightTalents DeathKnightTalents { get; set; }
+		private DeathKnightTalents _deathKnightTalents = null;
+
+		[XmlIgnore]
+		public WarriorTalents WarriorTalents { get { return _warriorTalents ?? new WarriorTalents(); } set { _warriorTalents = value; } }
+		[XmlIgnore]
+		public PaladinTalents PaladinTalents { get { return _paladinTalents ?? new PaladinTalents(); } set { _paladinTalents = value; } }
+		[XmlIgnore]
+		public HunterTalents HunterTalents { get { return _hunterTalents ?? new HunterTalents(); } set { _hunterTalents = value; } }
+		[XmlIgnore]
+		public RogueTalents RogueTalents { get { return _rogueTalents ?? new RogueTalents(); } set { _rogueTalents = value; } }
+		[XmlIgnore]
+		public PriestTalents PriestTalents { get { return _priestTalents ?? new PriestTalents(); } set { _priestTalents = value; } }
+		[XmlIgnore]
+		public ShamanTalents ShamanTalents { get { return _shamanTalents ?? new ShamanTalents(); } set { _shamanTalents = value; } }
+		[XmlIgnore]
+		public MageTalents MageTalents { get { return _mageTalents ?? new MageTalents(); } set { _mageTalents = value; } }
+		[XmlIgnore]
+		public WarlockTalents WarlockTalents { get { return _warlockTalents ?? new WarlockTalents(); } set { _warlockTalents = value; } }
+		[XmlIgnore]
+		public DruidTalents DruidTalents { get { return _druidTalents ?? new DruidTalents(); } set { _druidTalents = value; } }
+		[XmlIgnore]
+		public DeathKnightTalents DeathKnightTalents { get { return _deathKnightTalents ?? new DeathKnightTalents(); } set { _deathKnightTalents = value; } }
+
+		[XmlIgnore]
+		public TalentsBase CurrentTalents
+		{
+			get
+			{
+				switch (Class)
+				{
+					case CharacterClass.Warrior: return WarriorTalents;
+					case CharacterClass.Paladin: return PaladinTalents;
+					case CharacterClass.Hunter: return HunterTalents;
+					case CharacterClass.Rogue: return RogueTalents;
+					case CharacterClass.Priest: return PriestTalents;
+					case CharacterClass.Shaman: return ShamanTalents;
+					case CharacterClass.Mage: return MageTalents;
+					case CharacterClass.Warlock: return WarlockTalents;
+					case CharacterClass.Druid: return DruidTalents;
+					case CharacterClass.DeathKnight: return DeathKnightTalents;
+					default: return DruidTalents;
+				}
+			}
+		}
 
         // set to true to suppress ItemsChanged event
         [XmlIgnore]
@@ -200,7 +243,7 @@ namespace Rawr //O O . .
                 if (_race != value)
                 {
                     _race = value;
-                    OnItemsChanged();
+                    OnCalculationsInvalidated();
                 }
             }
         }
@@ -209,7 +252,11 @@ namespace Rawr //O O . .
         public Character.CharacterClass Class
         {
             get { return _class; }
-            set { _class = value; }
+			set
+			{
+				_class = value;
+				OnClassChanged();
+			}
         }
 
 
@@ -851,17 +898,24 @@ namespace Rawr //O O . .
 				AvailableItemsChanged(this, EventArgs.Empty);
 		}
 		
-		public event EventHandler ItemsChanged;
-		public void OnItemsChanged()
+		public event EventHandler CalculationsInvalidated;
+		public void OnCalculationsInvalidated()
 		{
             gemCountValid = false; // invalidate gem counts
             if (IsLoading) return;
 			RecalculateSetBonuses();
 
-			if (ItemsChanged != null) ItemsChanged(this, EventArgs.Empty);
+			if (CalculationsInvalidated != null) CalculationsInvalidated(this, EventArgs.Empty);
 		}
 
-        private void RecalculateSetBonusesFromCache()
+		public event EventHandler ClassChanged;
+		public void OnClassChanged()
+		{
+			if (ClassChanged != null)
+				ClassChanged(this, EventArgs.Empty);
+		}
+
+		private void RecalculateSetBonusesFromCache()
         {
             //Compute Set Bonuses
             Dictionary<string, int> setCounts = new Dictionary<string, int>();
@@ -944,7 +998,7 @@ namespace Rawr //O O . .
                     if (_itemCached[i] != null && _trackEquippedItemChanges) _itemCached[i].IdsChanged -= new EventHandler(_itemCached_IdsChanged);
                     _itemCached[i] = value;
                     if (_itemCached[i] != null && _trackEquippedItemChanges) _itemCached[i].IdsChanged += new EventHandler(_itemCached_IdsChanged);
-                    OnItemsChanged();
+                    OnCalculationsInvalidated();
                 }
             }
         }

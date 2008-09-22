@@ -261,7 +261,7 @@ namespace Rawr
             _character.ShouldersEnchant = _itemCharacter.ShouldersEnchant;
             _character.WristEnchant = _itemCharacter.WristEnchant;
             _character.IsLoading = false;
-            _character.OnItemsChanged();
+            _character.OnCalculationsInvalidated();
         }
 
 		void _menuItemRefresh_Click(object sender, EventArgs e)

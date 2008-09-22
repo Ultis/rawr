@@ -108,12 +108,12 @@ namespace Rawr
 			{
 				if (_character != null)
 				{
-					_character.ItemsChanged -= new EventHandler(_character_ItemsChanged);
+					_character.CalculationsInvalidated -= new EventHandler(_character_ItemsChanged);
 				}
 				_character = value;
 				if (_character != null)
 				{
-					_character.ItemsChanged += new EventHandler(_character_ItemsChanged);
+					_character.CalculationsInvalidated += new EventHandler(_character_ItemsChanged);
 					SelectedItem = _character[CharacterSlot];
 				}
 			}

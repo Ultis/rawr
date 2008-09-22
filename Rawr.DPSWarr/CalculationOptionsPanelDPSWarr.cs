@@ -67,7 +67,7 @@ namespace Rawr.DPSWarr
         {
 			CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
 			calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void trackBarFightLength_Scroll(object sender, EventArgs e)
@@ -75,14 +75,14 @@ namespace Rawr.DPSWarr
 			CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
 			calcOpts.FightLength = trackBarFightLength.Value;
             lblLength.Text = trackBarFightLength.Value.ToString();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void txtArmor_TextChanged(object sender, EventArgs e)
         {
 			CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
 			calcOpts.BossArmor = int.Parse(txtArmor.Text);
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void btnTalents_Click(object sender, EventArgs e)
@@ -271,21 +271,21 @@ namespace Rawr.DPSWarr
         private void checkBoxMeta_CheckedChanged(object sender, EventArgs e)
         {
 			Character.EnforceMetagemRequirements = checkBoxMeta.Checked;
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void radioButtonAldor_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
 			calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void radioButtonScryer_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
 			calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void rbBerserker_CheckedChanged(object sender, EventArgs e)
@@ -299,14 +299,14 @@ namespace Rawr.DPSWarr
             {
 				calcOpts.Stance = 0;
             }
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void txtslamLatency_TextChanged(object sender, EventArgs e)
         {
 			CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
 			calcOpts.SlamLatency = float.Parse(txtslamLatency.Text, System.Globalization.CultureInfo.InvariantCulture);
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void flurryCheck_CheckedChanged(object sender, EventArgs e)
@@ -320,7 +320,7 @@ namespace Rawr.DPSWarr
             {
 				calcOpts.FlurryUptime = 0;
             }
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
     }
 

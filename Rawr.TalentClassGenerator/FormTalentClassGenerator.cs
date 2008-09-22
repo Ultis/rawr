@@ -58,6 +58,19 @@ namespace Rawr
 		public string[] Description { get { return _description; } }
 	}
 
+	public abstract class TalentsBase
+	{
+		public abstract int[] Data { get; }
+
+		public override string ToString()
+		{
+			StringBuilder ret = new StringBuilder();
+			foreach (int digit in Data)
+				ret.Append(digit.ToString());
+			return ret.ToString();
+		}
+	}
+
 ";
 			foreach (string className in new string[] { "priest", "mage", "warlock", 
 				"druid", "rogue", "hunter", "shaman", "paladin", "warrior", "deathknight" })
@@ -142,9 +155,10 @@ namespace Rawr
 
 			//Generate the code
 			StringBuilder code = new StringBuilder();
-			code.AppendFormat("public class {0} : ICloneable\r\n", className);
+			code.AppendFormat("public class {0} : TalentsBase, ICloneable\r\n", className);
 			code.Append("{\r\n");
 			code.AppendFormat("private int[] _data = new int[{0}];\r\n", talents.Count);
+			code.Append("public override int[] Data { get { return _data; } }");
 			code.AppendFormat("public {0}() {{ }}\r\n", className);
 			code.AppendFormat("public {0}(string talents)\r\n", className);
 			code.Append("{\r\n");
@@ -153,13 +167,13 @@ namespace Rawr
 			code.Append("data.Add(int.Parse(digit.ToString()));\r\n");
 			code.Append("data.CopyTo(_data);\r\n");
 			code.Append("}\r\n");
-			code.AppendFormat("\r\npublic override string ToString()\r\n", className);
-			code.Append("{\r\n");
-			code.Append("StringBuilder ret = new StringBuilder();\r\n");
-			code.Append("foreach (int digit in _data)\r\n");
-			code.Append("ret.Append(digit.ToString());\r\n");
-			code.Append("return ret.ToString();\r\n");
-			code.Append("}\r\n");
+			//code.AppendFormat("\r\npublic override string ToString()\r\n", className);
+			//code.Append("{\r\n");
+			//code.Append("StringBuilder ret = new StringBuilder();\r\n");
+			//code.Append("foreach (int digit in _data)\r\n");
+			//code.Append("ret.Append(digit.ToString());\r\n");
+			//code.Append("return ret.ToString();\r\n");
+			//code.Append("}\r\n");
             code.Append("object ICloneable.Clone()\r\n");
             code.Append("{\r\n");
             code.AppendFormat("{0} clone = ({0})MemberwiseClone();\r\n", className);

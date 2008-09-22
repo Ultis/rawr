@@ -129,7 +129,7 @@ namespace Rawr.ProtWarr
 
         private void TalentForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Char.OnItemsChanged();
+            Char.OnCalculationsInvalidated();
         }
     }
 }

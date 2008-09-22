@@ -62,7 +62,7 @@ namespace Rawr.Rogue {
                 calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
                 calcOpts.TargetArmor = trackBarTargetArmor.Value;
 
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 

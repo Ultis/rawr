@@ -40,7 +40,7 @@ namespace Rawr.HolyPriest
                 CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
                 lblActivity.Text = trkActivity.Value + "%";
                 calcOpts.TimeInFSR = trkActivity.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
         

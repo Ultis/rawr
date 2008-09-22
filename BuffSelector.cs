@@ -153,13 +153,13 @@ namespace Rawr
 			{
 				if (_character != null)
 				{
-					_character.ItemsChanged -= new EventHandler(Character_ItemsChanged);
+					_character.CalculationsInvalidated -= new EventHandler(Character_ItemsChanged);
 				}
 				_character = value;
 				
 				if (Character != null)
 				{
-					_character.ItemsChanged += new EventHandler(Character_ItemsChanged);
+					_character.CalculationsInvalidated += new EventHandler(Character_ItemsChanged);
 					LoadBuffsFromCharacter();
 				}
 
@@ -201,7 +201,7 @@ namespace Rawr
 			{
 				UpdateEnabledStates();
 				UpdateCharacterBuffs();
-				Character.OnItemsChanged();
+				Character.OnCalculationsInvalidated();
 			}
 		}
 

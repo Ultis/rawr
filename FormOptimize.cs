@@ -255,7 +255,7 @@ namespace Rawr
 					_character.RangedEnchant = bestCharacter.RangedEnchant;
 					_character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
 					_character.WristEnchant = bestCharacter.WristEnchant;
-					_character.OnItemsChanged();
+					_character.OnCalculationsInvalidated();
 					Close();
 				}
 				else

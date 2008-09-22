@@ -46,7 +46,7 @@ namespace Rawr.Tankadin
             {
                 CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
                 calcOpts.TargetLevel = int.Parse(cmbTargetLevel.SelectedItem.ToString());
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -56,7 +56,7 @@ namespace Rawr.Tankadin
             {
                 CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
                 calcOpts.NumberAttackers = (int)nubAttackers.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -66,7 +66,7 @@ namespace Rawr.Tankadin
             {
                 CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
                 calcOpts.AttackSpeed = (float)nubAtkSpeed.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -77,7 +77,7 @@ namespace Rawr.Tankadin
                 CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
                 calcOpts.TargetArmor = trackBarTargetArmor.Value;
                 labelTargetArmor.Text = trackBarTargetArmor.Value.ToString();
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -88,7 +88,7 @@ namespace Rawr.Tankadin
                 CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
                 calcOpts.ThreatScale = trackBarThreatScale.Value;
                 labelThreatScale.Text = trackBarThreatScale.Value.ToString();
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -99,7 +99,7 @@ namespace Rawr.Tankadin
                 CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
                 calcOpts.MitigationScale = trackBarMitigationScale.Value;
                 labelMitigationScale.Text = trackBarMitigationScale.Value.ToString();
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -110,7 +110,7 @@ namespace Rawr.Tankadin
                 CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
                 calcOpts.AverageHit = trackBarBossAttackValue.Value;
                 labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 

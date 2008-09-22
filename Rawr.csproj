@@ -329,6 +329,12 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="TalentPicker.resx">
+      <DependentUpon>TalentPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TalentPickerItem.resx">
+      <DependentUpon>TalentPickerItem.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\Options\OptimizerSettings.resx">
       <DependentUpon>OptimizerSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -352,6 +358,21 @@
       <DependentUpon>Recent.settings</DependentUpon>
     </Compile>
     <Compile Include="ScrollHook.cs" />
+    <Compile Include="TalentPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TalentPicker.Designer.cs">
+      <DependentUpon>TalentPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TalentPickerArrow.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TalentPickerItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TalentPickerItem.Designer.cs">
+      <DependentUpon>TalentPickerItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\Options\OptimizerSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -377,9 +398,42 @@
     <None Include="ReadMe.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\across-left-green.gif" />
+    <None Include="Resources\across-left-grey.gif" />
+    <None Include="Resources\across-left-yellow.gif" />
+    <None Include="Resources\across-right-green.gif" />
+    <None Include="Resources\across-right-grey.gif" />
+    <None Include="Resources\across-right-yellow.gif" />
     <Content Include="Resources\Diamond2.png" />
     <Content Include="Resources\Diamond3.png" />
     <Content Include="Resources\Diamond4.png" />
+    <None Include="Resources\down-4-yellow.gif" />
+    <None Include="Resources\down-4-grey.gif" />
+    <None Include="Resources\down-4-green.gif" />
+    <None Include="Resources\down-3-yellow.gif" />
+    <None Include="Resources\down-3-grey.gif" />
+    <None Include="Resources\down-3-green.gif" />
+    <None Include="Resources\down-2-right-yellow.gif" />
+    <None Include="Resources\down-2-right-grey.gif" />
+    <None Include="Resources\down-2-right-green.gif" />
+    <None Include="Resources\down-2-left-yellow.gif" />
+    <None Include="Resources\down-2-left-grey.gif" />
+    <None Include="Resources\down-2-left-green.gif" />
+    <None Include="Resources\down-2-yellow.gif" />
+    <None Include="Resources\down-2-grey.gif" />
+    <None Include="Resources\down-1-yellow.gif" />
+    <None Include="Resources\down-1-grey.gif" />
+    <None Include="Resources\down-1-green.gif" />
+    <None Include="Resources\down-right-yellow.gif" />
+    <None Include="Resources\down-right-grey.gif" />
+    <None Include="Resources\down-right-green.gif" />
+    <None Include="Resources\down-left-yellow.gif" />
+    <None Include="Resources\down-left-grey.gif" />
+    <None Include="Resources\down-left-green.gif" />
+    <None Include="Resources\down-2-green.gif" />
+    <None Include="Resources\icon-over-yellow.gif" />
+    <None Include="Resources\icon-over-grey.gif" />
+    <None Include="Resources\icon-over-green.gif" />
     <None Include="BatchCharacterList.datasource" />
     <None Include="Properties\Optimizer.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

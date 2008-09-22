@@ -75,7 +75,7 @@ namespace Rawr.Mage
             }
             set
             {
-                value.ItemsChanged += new EventHandler(Character_ItemsChanged);
+                value.CalculationsInvalidated += new EventHandler(Character_ItemsChanged);
                 _character = value;
             }
         }
@@ -275,7 +275,7 @@ namespace Rawr.Mage
             : this()
         {
             _character = character;
-            character.ItemsChanged += new EventHandler(Character_ItemsChanged);
+            character.CalculationsInvalidated += new EventHandler(Character_ItemsChanged);
         }
 
         string ICalculationOptionBase.GetXml()

@@ -119,7 +119,7 @@ namespace Rawr
 			{
 				if (_character != null)
 				{
-					_character.ItemsChanged -= new EventHandler(_character_ItemsChanged);
+					_character.CalculationsInvalidated -= new EventHandler(_character_ItemsChanged);
 					_character.AvailableItemsChanged -= new EventHandler(_character_AvailableItemsChanged);
                 }
 				_character = value; 
@@ -131,7 +131,7 @@ namespace Rawr
 					Character.CurrentModel = null;
 					
 					Calculations.CalculationOptionsPanel.Character = _character;
-					ItemToolTip.Instance.Character = FormItemSelection.Character = 
+					ItemToolTip.Instance.Character = FormItemSelection.Character = talentPicker1.Character =
 						ItemEnchantContextualMenu.Instance.Character = ItemContextualMenu.Instance.Character = buffSelector1.Character = itemComparison1.Character = 
 						itemButtonBack.Character = itemButtonChest.Character = itemButtonFeet.Character =
 						itemButtonFinger1.Character = itemButtonFinger2.Character = itemButtonHands.Character =
@@ -143,7 +143,7 @@ namespace Rawr
 						itemButtonWrist.Character = _character;
 					//Ahhh ahhh ahhh ahhh ahhh ahhh ahhh ahhh...
 
-					_character.ItemsChanged += new EventHandler(_character_ItemsChanged);
+					_character.CalculationsInvalidated += new EventHandler(_character_ItemsChanged);
 					_character.AvailableItemsChanged += new EventHandler(_character_AvailableItemsChanged);
 					_loadingCharacter = true;
 
@@ -154,7 +154,7 @@ namespace Rawr
 
 					_loadingCharacter = false;
                     _character.IsLoading = false;
-					_character.OnItemsChanged();
+					_character.OnCalculationsInvalidated();
 				}
 			}
 		}
@@ -795,7 +795,7 @@ namespace Rawr
 				Character.OffHandEnchant = comboBoxEnchantOffHand.SelectedItem as Enchant;
 				Character.RangedEnchant = comboBoxEnchantRanged.SelectedItem as Enchant;
 				Character.WristEnchant = comboBoxEnchantWrists.SelectedItem as Enchant;
-				Character.OnItemsChanged();
+				Character.OnCalculationsInvalidated();
 			}   //...Fire!
 		}
 
@@ -804,7 +804,7 @@ namespace Rawr
 			if (!_loadingCharacter)
 			{
 				Character.Race = (Character.CharacterRace)Enum.Parse(typeof(Character.CharacterRace), comboBoxRace.Text);
-				Character.OnItemsChanged();
+				Character.OnCalculationsInvalidated();
 			}
 		}
 
@@ -813,7 +813,7 @@ namespace Rawr
 			if (!_loadingCharacter)
 			{
 				Character.Region = (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion), comboBoxRegion.Text);
-				Character.OnItemsChanged();
+				Character.OnCalculationsInvalidated();
 			}
 		}
 

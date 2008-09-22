@@ -32,12 +32,12 @@ namespace Rawr
 			{
 				if (_character != null)
 				{
-					_character.ItemsChanged -= new EventHandler(CharacterItemCache_ItemsChanged);
+					_character.CalculationsInvalidated -= new EventHandler(CharacterItemCache_ItemsChanged);
 				}
 				_character = value;
 				if (_character != null)
 				{
-					_character.ItemsChanged += new EventHandler(CharacterItemCache_ItemsChanged);
+					_character.CalculationsInvalidated += new EventHandler(CharacterItemCache_ItemsChanged);
 				}
 			}
 		}

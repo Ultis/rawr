@@ -49,13 +49,13 @@ namespace Rawr.Rogue {
 
             CalculationsRogue.LoadTalentCode(Character, talentCode);
             LoadCalculationOptions();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void buttonImportTalentPreset_Click(object sender, EventArgs e) {
             CalculationsRogue.LoadTalentSpec(Character, (string)comboBoxTalentPreset.SelectedItem);
             LoadCalculationOptions();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void OnSelectedIndexChanged(object sender, EventArgs e) {
@@ -64,7 +64,7 @@ namespace Rawr.Rogue {
             string talent = cb.Name.Substring(8);
             options.SetTalentByName(talent, int.Parse(cb.SelectedItem.ToString()));
             if (!calculationSuspended) {
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 

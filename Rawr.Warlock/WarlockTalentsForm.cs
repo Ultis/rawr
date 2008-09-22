@@ -92,7 +92,7 @@ namespace Rawr.Warlock
             calculationOptions.SetTalentByName(talent, int.Parse(cb.SelectedItem.ToString()));
             if (!calculationSuspended)
             {
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
                 ComputeTalentTotals();
             }
         }
@@ -115,14 +115,14 @@ namespace Rawr.Warlock
 
             CalculationsWarlock.LoadTalentCode(Character, talentCode);
             LoadCalculationOptions();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void buttonImportTalentPreset_Click(object sender, EventArgs e)
         {
             CalculationsWarlock.LoadTalentSpec(Character, (string)comboBoxTalentPreset.SelectedItem);
             LoadCalculationOptions();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
     }
 }

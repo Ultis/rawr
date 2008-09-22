@@ -68,7 +68,7 @@ namespace Rawr
 				calcOpts.ThreatScale = (float)numericUpDownThreatValue.Value;
 				Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
 
-				Character.OnItemsChanged();
+				Character.OnCalculationsInvalidated();
 			}
         }
 		private void comboBoxThreatValue_SelectedIndexChanged(object sender, EventArgs e)

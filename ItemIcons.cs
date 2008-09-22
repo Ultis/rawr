@@ -44,7 +44,35 @@ namespace Rawr
                 }
                 return _smallIcons;
             }
-        }
+		}
+
+		private static ImageList _talentIcons = null;
+		public static ImageList TalentIcons
+		{
+			get
+			{
+				if (_talentIcons == null)
+				{
+					_talentIcons = new ImageList();
+					_talentIcons.ImageSize = new Size(45, 47);
+					_talentIcons.ColorDepth = ColorDepth.Depth24Bit;
+				}
+				return _talentIcons;
+			}
+		}
+
+		private static Dictionary<string, Image> _talentTreeBackgrounds = null;
+		public static Dictionary<string, Image> TalentTreeBackgrounds
+		{
+			get
+			{
+				if (_talentTreeBackgrounds == null)
+				{
+					_talentTreeBackgrounds = new Dictionary<string, Image>();
+				}
+				return _talentTreeBackgrounds;
+			}
+		}
 
         public static void CacheAllIcons(Item[] items)
         {
@@ -173,12 +201,166 @@ namespace Rawr
             return returnImage;
         }
 
-        private static Image ScaleByPercent(Image imgPhoto, int Percent)
+		public static Image GetTalentIcon(Character.CharacterClass charClass, string talentTree, string talentName)
+		{
+			Image returnImage = null;
+			string key = string.Format("{0}-{1}-{2}", charClass, talentTree, talentName);
+			if (TalentIcons.Images.ContainsKey(key))
+			{
+				returnImage = TalentIcons.Images[key];
+			}
+			else
+			{
+				string pathToIcon = null;
+				try
+				{
+					WebRequestWrapper wrapper = new WebRequestWrapper();
+					if (!string.IsNullOrEmpty(talentTree) && !string.IsNullOrEmpty(talentName))
+					{
+						pathToIcon = wrapper.DownloadTalentIcon(charClass, talentTree, talentName);
+						//just in case the network code is in a disconnected mode. (e.g. no network traffic sent, so no network exception)
+					}
+
+					if (pathToIcon == null)
+					{
+						pathToIcon = wrapper.DownloadTempImage();
+					}
+				}
+				catch (Exception)
+				{
+					//Log.Write(ex.Message);
+					//Log.Write(ex.StackTrace);
+					//log.Error("Exception trying to retrieve an icon from the armory", ex);
+				}
+				if (!string.IsNullOrEmpty(pathToIcon))
+				{
+					int retry = 0;
+					do
+					{
+						try
+						{
+							using (Stream fileStream = File.Open(pathToIcon, FileMode.Open, FileAccess.Read, FileShare.Read))
+							{
+								returnImage = Image.FromStream(fileStream);
+							}
+						}
+						catch
+						{
+							returnImage = null;
+							//possibly still downloading, give it a second
+							Thread.Sleep(TimeSpan.FromSeconds(1));
+							if (retry >= 3)
+							{
+								//log.Error("Exception trying to load an icon from local", ex);
+								MessageBox.Show(
+									"Rawr encountered an error while attempting to load a saved image. If you encounter this error multiple times, please ensure that Rawr is unzipped in a location that you have full file read/write access, such as your Desktop, or My Documents.");
+								//Log.Write(ex.Message);
+								//Log.Write(ex.StackTrace);
+#if DEBUG
+								throw;
+#endif
+							}
+						}
+						retry++;
+					} while (returnImage == null && retry < 5);
+
+					if (returnImage != null)
+					{
+						returnImage = Offset(returnImage, new Size(2, 2));
+						TalentIcons.Images.Add(key, returnImage);
+					}
+				}
+			}
+			return returnImage;
+		}
+
+		public static Image GetTalentTreeBackground(Character.CharacterClass charClass, string talentTree)
+		{
+			Image returnImage = null;
+			string key = string.Format("{0}-{1}", charClass, talentTree);
+			if (TalentTreeBackgrounds.ContainsKey(key))
+			{
+				returnImage = TalentTreeBackgrounds[key];
+			}
+			else
+			{
+				string pathToIcon = null;
+				try
+				{
+					WebRequestWrapper wrapper = new WebRequestWrapper();
+					if (!string.IsNullOrEmpty(talentTree))
+					{
+						pathToIcon = wrapper.DownloadTalentIcon(charClass, talentTree);
+						//just in case the network code is in a disconnected mode. (e.g. no network traffic sent, so no network exception)
+					}
+
+					if (pathToIcon == null)
+					{
+						pathToIcon = wrapper.DownloadTempImage();
+					}
+				}
+				catch (Exception)
+				{
+					//Log.Write(ex.Message);
+					//Log.Write(ex.StackTrace);
+					//log.Error("Exception trying to retrieve an icon from the armory", ex);
+				}
+				if (!string.IsNullOrEmpty(pathToIcon))
+				{
+					int retry = 0;
+					do
+					{
+						try
+						{
+							using (Stream fileStream = File.Open(pathToIcon, FileMode.Open, FileAccess.Read, FileShare.Read))
+							{
+								returnImage = Image.FromStream(fileStream);
+							}
+						}
+						catch
+						{
+							returnImage = null;
+							//possibly still downloading, give it a second
+							Thread.Sleep(TimeSpan.FromSeconds(1));
+							if (retry >= 3)
+							{
+								//log.Error("Exception trying to load an icon from local", ex);
+								MessageBox.Show(
+									"Rawr encountered an error while attempting to load a saved image. If you encounter this error multiple times, please ensure that Rawr is unzipped in a location that you have full file read/write access, such as your Desktop, or My Documents.");
+								//Log.Write(ex.Message);
+								//Log.Write(ex.StackTrace);
+#if DEBUG
+								throw;
+#endif
+							}
+						}
+						retry++;
+					} while (returnImage == null && retry < 5);
+
+					if (returnImage != null)
+					{
+						TalentTreeBackgrounds.Add(key, returnImage);
+					}
+				}
+			}
+			return returnImage;
+		}
+
+		private static Image Offset(Image img, Size offset)
+		{
+			Bitmap bmp = new Bitmap(img.Width + offset.Width, img.Height + offset.Height, PixelFormat.Format32bppArgb);
+			Graphics g = Graphics.FromImage(bmp);
+			g.DrawImageUnscaled(img, offset.Width, offset.Height);
+			g.Dispose();
+			return bmp;
+		}
+
+		private static Image ScaleByPercent(Image img, int Percent)
         {
             float nPercent = ((float) Percent/100);
 
-            int sourceWidth = imgPhoto.Width;
-            int sourceHeight = imgPhoto.Height;
+            int sourceWidth = img.Width;
+            int sourceHeight = img.Height;
             int sourceX = 0;
             int sourceY = 0;
 
@@ -189,13 +371,13 @@ namespace Rawr
 
             Bitmap bmPhoto = new Bitmap(destWidth, destHeight,
                                         PixelFormat.Format24bppRgb);
-            bmPhoto.SetResolution(imgPhoto.HorizontalResolution,
-                                  imgPhoto.VerticalResolution);
+            bmPhoto.SetResolution(img.HorizontalResolution,
+                                  img.VerticalResolution);
 
             Graphics grPhoto = Graphics.FromImage(bmPhoto);
             grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-            grPhoto.DrawImage(imgPhoto,
+            grPhoto.DrawImage(img,
                               new Rectangle(destX, destY, destWidth, destHeight),
                               new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
                               GraphicsUnit.Pixel);

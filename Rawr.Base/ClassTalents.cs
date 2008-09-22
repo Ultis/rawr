@@ -38,24 +38,29 @@ namespace Rawr
 		public string[] Description { get { return _description; } }
 	}
 
-	public class PriestTalents : ICloneable
+	public abstract class TalentsBase
+	{
+		public abstract int[] Data { get; }
+
+		public override string ToString()
+		{
+			StringBuilder ret = new StringBuilder();
+			foreach (int digit in Data)
+				ret.Append(digit.ToString());
+			return ret.ToString();
+		}
+	}
+
+	public class PriestTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[81];
-		public PriestTalents() { }
+		public override int[] Data { get { return _data; } }public PriestTalents() { }
 		public PriestTalents(string talents)
 		{
 			List<int> data = new List<int>();
 			foreach (Char digit in talents)
 				data.Add(int.Parse(digit.ToString()));
 			data.CopyTo(_data);
-		}
-
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
 		}
 		object ICloneable.Clone()
 		{
@@ -618,24 +623,16 @@ You disperse into pure shadow energy, reducing all damage taken by 90%. You are 
 		public int Dispersion { get { return _data[80]; } set { _data[80] = value; } }
 	}
 
-	public class MageTalents : ICloneable
+	public class MageTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[86];
-		public MageTalents() { }
+		public override int[] Data { get { return _data; } }public MageTalents() { }
 		public MageTalents(string talents)
 		{
 			List<int> data = new List<int>();
 			foreach (Char digit in talents)
 				data.Add(int.Parse(digit.ToString()));
 			data.CopyTo(_data);
-		}
-
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
 		}
 		object ICloneable.Clone()
 		{
@@ -666,7 +663,7 @@ You disperse into pure shadow energy, reducing all damage taken by 90%. You are 
 @"Increases your chance to hit and reduces the mana cost of your Arcane spells by 3%.",})]
 		public int ArcaneFocus { get { return _data[1]; } set { _data[1] = value; } }
 
-		[TalentData(2, "Arcane Stability", 5, 0, 3, 1, -1, new string[] {
+		[TalentData(2, "Improved Arcane Missiles", 5, 0, 3, 1, -1, new string[] {
 @"Gives you a 20% chance to avoid interruption caused by damage while channeling Arcane Missiles.",
 @"Gives you a 40% chance to avoid interruption caused by damage while channeling Arcane Missiles.",
 @"Gives you a 60% chance to avoid interruption caused by damage while channeling Arcane Missiles.",
@@ -1059,9 +1056,11 @@ The target becomes a Living Bomb, taking 612 Fire damage over 12 sec. After 12 s
 @"Reduces the cooldown of your Frost Nova, Cone of Cold, Ice Block and Icy Veins spells by 20%.",})]
 		public int IceFloes { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Ice Shards", 3, 2, 1, 2, -1, new string[] {
-@"Increases the critical strike damage bonus of your Frost spells by 33%.",
-@"Increases the critical strike damage bonus of your Frost spells by 66%.",
+		[TalentData(61, "Ice Shards", 5, 2, 1, 2, -1, new string[] {
+@"Increases the critical strike damage bonus of your Frost spells by 20%.",
+@"Increases the critical strike damage bonus of your Frost spells by 40%.",
+@"Increases the critical strike damage bonus of your Frost spells by 60%.",
+@"Increases the critical strike damage bonus of your Frost spells by 80%.",
 @"Increases the critical strike damage bonus of your Frost spells by 100%.",})]
 		public int IceShards { get { return _data[61]; } set { _data[61] = value; } }
 
@@ -1225,24 +1224,16 @@ Causes 694 to 806 Frost damage and stuns the target for 5 sec. Only usable on Fr
 		public int DeepFreeze { get { return _data[85]; } set { _data[85] = value; } }
 	}
 
-	public class WarlockTalents : ICloneable
+	public class WarlockTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[80];
-		public WarlockTalents() { }
+		public override int[] Data { get { return _data; } }public WarlockTalents() { }
 		public WarlockTalents(string talents)
 		{
 			List<int> data = new List<int>();
 			foreach (Char digit in talents)
 				data.Add(int.Parse(digit.ToString()));
 			data.CopyTo(_data);
-		}
-
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
 		}
 		object ICloneable.Clone()
 		{
@@ -1860,24 +1851,16 @@ Shadowfury is unleashed, causing 357 to 422 Shadow damage and stunning all enemi
 		public int ChaosBolt { get { return _data[79]; } set { _data[79] = value; } }
 	}
 
-	public class DruidTalents : ICloneable
+	public class DruidTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[83];
-		public DruidTalents() { }
+		public override int[] Data { get { return _data; } }public DruidTalents() { }
 		public DruidTalents(string talents)
 		{
 			List<int> data = new List<int>();
 			foreach (Char digit in talents)
 				data.Add(int.Parse(digit.ToString()));
 			data.CopyTo(_data);
-		}
-
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
 		}
 		object ICloneable.Clone()
 		{
@@ -2447,24 +2430,16 @@ Heals up to 5 friendly party or raid members within 15 yards of the target for 1
 		public int Flourish { get { return _data[82]; } set { _data[82] = value; } }
 	}
 
-	public class RogueTalents : ICloneable
+	public class RogueTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[85];
-		public RogueTalents() { }
+		public override int[] Data { get { return _data; } }public RogueTalents() { }
 		public RogueTalents(string talents)
 		{
 			List<int> data = new List<int>();
 			foreach (Char digit in talents)
 				data.Add(int.Parse(digit.ToString()));
 			data.CopyTo(_data);
-		}
-
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
 		}
 		object ICloneable.Clone()
 		{
@@ -2522,7 +2497,7 @@ Heals up to 5 friendly party or raid members within 15 yards of the target for 1
 
 		[TalentData(6, "Relentless Strikes", 1, 0, 1, 3, -1, new string[] {
 @"Your finishing moves have a 20% chance per combo point to restore 25 energy.",})]
-		public int RelentlessStrikes2 { get { return _data[6]; } set { _data[6] = value; } }
+		public int RelentlessStrikes { get { return _data[6]; } set { _data[6] = value; } }
 
 		[TalentData(7, "Improved Expose Armor", 2, 0, 2, 3, -1, new string[] {
 @"Increases the armor reduced by your Expose Armor ability by 25%.",
@@ -2852,7 +2827,7 @@ Step through the shadows from enemy to enemy within 10 yards, attacking an enemy
 @"Your finishing moves have a 12% chance per combo point to restore 25 energy.",
 @"Your finishing moves have a 16% chance per combo point to restore 25 energy.",
 @"Your finishing moves have a 20% chance per combo point to restore 25 energy.",})]
-		public int RelentlessStrikes { get { return _data[57]; } set { _data[57] = value; } }
+		public int RelentlessStrikes2 { get { return _data[57]; } set { _data[57] = value; } }
 
 		[TalentData(58, "Master of Deception", 5, 2, 2, 1, -1, new string[] {
 @"Reduces the chance enemies have to detect you while in Stealth mode.",
@@ -3024,24 +2999,16 @@ Instantly enter stealth and begin the Shadow Dance. For 9 sec you will reenter s
 		public int ShadowDance { get { return _data[84]; } set { _data[84] = value; } }
 	}
 
-	public class HunterTalents : ICloneable
+	public class HunterTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[81];
-		public HunterTalents() { }
+		public override int[] Data { get { return _data; } }public HunterTalents() { }
 		public HunterTalents(string talents)
 		{
 			List<int> data = new List<int>();
 			foreach (Char digit in talents)
 				data.Add(int.Parse(digit.ToString()));
 			data.CopyTo(_data);
-		}
-
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
 		}
 		object ICloneable.Clone()
 		{
@@ -3588,24 +3555,16 @@ You fire an explosive charge into the target, dealing 416-486 Fire damage to the
 		public int ExplosiveShot { get { return _data[80]; } set { _data[80] = value; } }
 	}
 
-	public class ShamanTalents : ICloneable
+	public class ShamanTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[77];
-		public ShamanTalents() { }
+		public override int[] Data { get { return _data; } }public ShamanTalents() { }
 		public ShamanTalents(string talents)
 		{
 			List<int> data = new List<int>();
 			foreach (Char digit in talents)
 				data.Add(int.Parse(digit.ToString()));
 			data.CopyTo(_data);
-		}
-
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
 		}
 		object ICloneable.Clone()
 		{
@@ -4115,24 +4074,16 @@ You link the friendly target with up to two nearby friendly targets, causing 50%
 		public int SpiritLink { get { return _data[76]; } set { _data[76] = value; } }
 	}
 
-	public class PaladinTalents : ICloneable
+	public class PaladinTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[80];
-		public PaladinTalents() { }
+		public override int[] Data { get { return _data; } }public PaladinTalents() { }
 		public PaladinTalents(string talents)
 		{
 			List<int> data = new List<int>();
 			foreach (Char digit in talents)
 				data.Add(int.Parse(digit.ToString()));
 			data.CopyTo(_data);
-		}
-
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
 		}
 		object ICloneable.Clone()
 		{
@@ -4676,24 +4627,16 @@ An instant weapon attack that causes Holy damage to up to 4 enemies within 8 yar
 		public int DivineStorm { get { return _data[79]; } set { _data[79] = value; } }
 	}
 
-	public class WarriorTalents : ICloneable
+	public class WarriorTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[83];
-		public WarriorTalents() { }
+		public override int[] Data { get { return _data; } }public WarriorTalents() { }
 		public WarriorTalents(string talents)
 		{
 			List<int> data = new List<int>();
 			foreach (Char digit in talents)
 				data.Add(int.Parse(digit.ToString()));
 			data.CopyTo(_data);
-		}
-
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
 		}
 		object ICloneable.Clone()
 		{
@@ -5251,24 +5194,16 @@ Sends a wave of force in front of the warrior, causing 142 damage (based on atta
 		public int Shockwave { get { return _data[82]; } set { _data[82] = value; } }
 	}
 
-	public class DeathKnightTalents : ICloneable
+	public class DeathKnightTalents : TalentsBase, ICloneable
 	{
 		private int[] _data = new int[85];
-		public DeathKnightTalents() { }
+		public override int[] Data { get { return _data; } }public DeathKnightTalents() { }
 		public DeathKnightTalents(string talents)
 		{
 			List<int> data = new List<int>();
 			foreach (Char digit in talents)
 				data.Add(int.Parse(digit.ToString()));
 			data.CopyTo(_data);
-		}
-
-		public override string ToString()
-		{
-			StringBuilder ret = new StringBuilder();
-			foreach (int digit in _data)
-				ret.Append(digit.ToString());
-			return ret.ToString();
 		}
 		object ICloneable.Clone()
 		{

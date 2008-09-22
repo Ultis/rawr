@@ -116,7 +116,7 @@ namespace Rawr
 					if (radioButtonFinisher.Checked)
 						calcOpts.Finisher = radioButtonFinisher.Tag.ToString();
 
-				Character.OnItemsChanged();
+				Character.OnCalculationsInvalidated();
 			}
 		}
 

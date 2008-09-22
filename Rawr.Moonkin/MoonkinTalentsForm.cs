@@ -202,7 +202,7 @@ namespace Rawr.Moonkin
                 //ComboBox cb = (ComboBox)sender;
                 //string talent = cb.Name.Substring(3);
                 //Character.CalculationOptions[talent] = cb.SelectedItem.ToString();
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 

@@ -175,7 +175,7 @@ namespace Rawr.RestoSham
                     cboCHTotem.SelectedIndex = 0;
                   }
                 ((CalculationOptionsRestoSham)(Character.CalculationOptions)).Totems[HealSpells.LesserHealingWave] = totem;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
           }
 
@@ -192,7 +192,7 @@ namespace Rawr.RestoSham
                     cboCHTotem.SelectedIndex = 0;
                   }
                 ((CalculationOptionsRestoSham)(Character.CalculationOptions)).Totems[HealSpells.HealingWave] = totem;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
           }
 
@@ -209,7 +209,7 @@ namespace Rawr.RestoSham
                     cboHWTotem.SelectedIndex = 0;
                   }
                 ((CalculationOptionsRestoSham)(Character.CalculationOptions)).Totems[HealSpells.ChainHeal] = totem;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
           }
 
@@ -228,7 +228,7 @@ namespace Rawr.RestoSham
                     else if (cboLHWTotem.SelectedIndex != 0)
                       cboCHTotem.SelectedIndex = 0;
                   }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
           }
 
@@ -242,7 +242,7 @@ namespace Rawr.RestoSham
             if (Character != null && !_bLoading)
               {
                 ((CalculationOptionsRestoSham)(Character.CalculationOptions)).HWDownrank.MaxRank = (int)cboHWMaxRank.SelectedItem;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
             SetHWComboBoxes();
           }
@@ -252,7 +252,7 @@ namespace Rawr.RestoSham
             if (Character != null && !_bLoading)
               {
                 ((CalculationOptionsRestoSham)(Character.CalculationOptions)).HWDownrank.MinRank = (int)cboHWMinRank.SelectedItem;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
             SetHWComboBoxes();
           }
@@ -267,7 +267,7 @@ namespace Rawr.RestoSham
             if (Character != null && !_bLoading)
               {
                 ((CalculationOptionsRestoSham)(Character.CalculationOptions)).CHDownrank.MaxRank = (int)cboCHMaxRank.SelectedItem;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
             SetCHComboBoxes();
           }
@@ -277,7 +277,7 @@ namespace Rawr.RestoSham
             if (Character != null && !_bLoading)
               {
                 ((CalculationOptionsRestoSham)(Character.CalculationOptions)).CHDownrank.MinRank = (int)cboCHMinRank.SelectedItem;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
             SetCHComboBoxes();
           }
@@ -287,7 +287,7 @@ namespace Rawr.RestoSham
             if (!_bLoading)
               {
                 ((CalculationOptionsRestoSham)(Character.CalculationOptions)).HWDownrank.Ratio = 100 - trkHW.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
             lblHWMaxPct.Text = String.Format("{0}%", 100 - trkHW.Value);
             lblHWMinPct.Text = String.Format("{0}%", trkHW.Value);
@@ -298,7 +298,7 @@ namespace Rawr.RestoSham
             if (!_bLoading)
               {
                 ((CalculationOptionsRestoSham)(Character.CalculationOptions)).CHDownrank.Ratio = 100 - trkCH.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
             lblCHMaxPct.Text = String.Format("{0}%", 100 - trkCH.Value);
             lblCHMinPct.Text = String.Format("{0}%", trkCH.Value);
@@ -316,7 +316,7 @@ namespace Rawr.RestoSham
             NumericField info = txtBox.Tag as NumericField;
             
             this[info.PropertyName] = float.Parse(txtBox.Text);
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
           }
           
           
@@ -389,7 +389,7 @@ namespace Rawr.RestoSham
             if (!_bLoading)
               {
                 this["NumCHTargets"] = cboNumCHTargets.SelectedIndex + 1;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
           }
 
@@ -398,7 +398,7 @@ namespace Rawr.RestoSham
             if (!_bLoading)
               {
                 this["ManaTideEveryCD"] = chkManaTide.Checked;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
           }
 
@@ -407,7 +407,7 @@ namespace Rawr.RestoSham
             if (!_bLoading)
               {
                 this["WaterShield"] = chkWaterShield.Checked;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
           }
 
@@ -416,7 +416,7 @@ namespace Rawr.RestoSham
             if (!_bLoading)
               {
                 this["ESRank"] = cboESRank.SelectedIndex + 1;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
           }
 
@@ -433,7 +433,7 @@ namespace Rawr.RestoSham
             if (!_bLoading)
               {
                 this["ExaltedFaction"] = faction;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
           }
 
@@ -445,7 +445,7 @@ namespace Rawr.RestoSham
             if (!chkExalted.Checked)
               {
                 this["ExaltedFaction"] = Faction.None;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
                 return;
               }
             
@@ -454,7 +454,7 @@ namespace Rawr.RestoSham
             else if (!_bLoading)
               {
                 this["ExaltedFaction"] = (radioAldor.Checked ? Faction.Aldor : Faction.Scryers);
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
               }
           }
       }

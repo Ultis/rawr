@@ -75,14 +75,14 @@ namespace Rawr.Retribution
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.Seal = rbSoC.Checked ? 0 : 1;
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void rbSoB_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.Seal = rbSoB.Checked ? 1 : 0;
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void checkBoxConsecration_CheckedChanged(object sender, EventArgs e)
@@ -99,21 +99,21 @@ namespace Rawr.Retribution
                 cbConsRank.Enabled = false;
                 calcOpts.ConsecRank = 0;
             }
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void cbConsRank_SelectedIndexChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.ConsecRank = int.Parse(cbConsRank.SelectedItem.ToString().Substring(5, 1));
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void cbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.TargetLevel = int.Parse(cbTargetLevel.SelectedItem.ToString());
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void tbFightLength_Scroll(object sender, EventArgs e)
@@ -121,14 +121,14 @@ namespace Rawr.Retribution
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.FightLength = tbFightLength.Value;
             lblFightLengthNum.Text = tbFightLength.Value.ToString();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void checkBoxExorcism_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.Exorcism = checkBoxExorcism.Checked;
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void btnTalents_Click(object sender, EventArgs e)
@@ -266,21 +266,21 @@ namespace Rawr.Retribution
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			Character.EnforceMetagemRequirements = checkBoxMeta.Checked;
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void rbAldor_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.ShattrathFaction = rbAldor.Checked ? "Aldor" : "Scryer";
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void rbScryer_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
 			calcOpts.ShattrathFaction = rbAldor.Checked ? "Aldor" : "Scryer";
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void tbExposeWeakness_ValueChanged(object sender, EventArgs e)
@@ -288,7 +288,7 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.ExposeWeaknessAPValue = tbExposeWeakness.Value;
             lblExposeWeaknessNum.Text = tbExposeWeakness.Value.ToString();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void tbBloodlust_ValueChanged(object sender, EventArgs e)
@@ -296,7 +296,7 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.Bloodlust = tbBloodlust.Value;
             lblBloodlustNum.Text = tbBloodlust.Value.ToString();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void tbDrumsOfBattle_ValueChanged(object sender, EventArgs e)
@@ -304,7 +304,7 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.DrumsOfBattle = tbDrumsOfBattle.Value;
             lblDrumsOfBattleNum.Text = tbDrumsOfBattle.Value.ToString();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void tbDrumsOfWar_ValueChanged(object sender, EventArgs e)
@@ -312,7 +312,7 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.DrumsOfWar = tbDrumsOfWar.Value;
             lblDrumsOfWarNum.Text = tbDrumsOfWar.Value.ToString();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void tbFerociousInspiration_ValueChanged(object sender, EventArgs e)
@@ -320,14 +320,14 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.FerociousInspiration = tbFerociousInspiration.Value;
             lblFerociousInspirationNum.Text = tbFerociousInspiration.Value.ToString();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void nudTargetArmor_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.BossArmor = (int)nudTargetArmor.Value;
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
     }
 

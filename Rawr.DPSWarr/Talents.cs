@@ -65,7 +65,7 @@ namespace Rawr.DPSWarr
 				calcOpts.ImpSlam = int.Parse((comboBoxImpSlam.SelectedItem ?? "0").ToString());
 
 				calcOpts.TalentsSaved = true;
-				Character.OnItemsChanged();
+				Character.OnCalculationsInvalidated();
 			}
         }
         

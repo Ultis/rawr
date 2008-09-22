@@ -66,8 +66,8 @@ namespace Rawr
             string CharacterSheetURI { get; }
             string ItemToolTipSheetURI { get; }
             string ItemUpgradeURI { get; }
-            string WoWTalentIconURI { get; }
-            string ItemInfoURI { get; }
+			string TalentIconURI { get; }
+			string ItemInfoURI { get; }
         }
 
         public interface ICacheSettingsProvider
@@ -185,10 +185,10 @@ namespace Rawr
                 get { return Rawr.Properties.NetworkSettings.Default.ItemUpgradeURI; }
             }
 
-            public string WoWTalentIconURI
+            public string TalentIconURI
             {
-                get { return Rawr.Properties.NetworkSettings.Default.WoWTalentIconURI; }
-            }
+                get { return Rawr.Properties.NetworkSettings.Default.TalentIconURI; }
+			}
 
             public string ItemInfoURI
             {
@@ -323,17 +323,22 @@ namespace Rawr
 		/// <param name="talentTree">name of the talent tree</param>
 		/// <param name="talentName">name of the talent</param>
 		/// <returns>The full path to the downloaded icon.  Null is returned if no icon could be downloaded</returns>
+		public string DownloadTalentIcon(Character.CharacterClass charClass, string talentTree) { return DownloadTalentIcon(charClass, talentTree, "background"); }
 		public string DownloadTalentIcon(Character.CharacterClass charClass, string talentTree, string talentName)
 		{
-			string imageName = talentTree + "_" + talentName + ".jpg";
-            string fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower()+"\\"+imageName);
+			//foreach (string illegalCharacter in new string[] { " ", "'" })
+			talentTree = talentTree.Replace(" ", "");
+			talentName = talentName.Replace(" ", "");
+			string imageName = talentName + ".jpg";
+			string fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower() + "\\" + talentTree + "\\" + imageName);
 
 			if (!String.IsNullOrEmpty(talentTree) && !String.IsNullOrEmpty(talentName))
 			{
 				//0 = class, 1=tree, 2=talentname - all lowercase
 				//@"http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
-                string uri = string.Format(NetworkSettingsProvider.WoWTalentIconURI, charClass.ToString().ToLower(),
-												talentTree.ToLower(),talentName.ToLower());
+				//http://www.worldofwarcraft.com/shared/global/talents//wrath/druid/images/balance/brambles.jpg
+				string uri = string.Format(NetworkSettingsProvider.TalentIconURI, charClass.ToString().ToLower(),
+												talentTree.ToLower(), talentName.ToLower());
 				DownloadFile(uri, fullPathToSave, CONTENT_JPG);
 			}
 			if (!File.Exists(fullPathToSave))

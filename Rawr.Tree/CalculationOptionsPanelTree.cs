@@ -88,7 +88,7 @@ namespace Rawr.Tree
             {
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
                 calcOpts.FightLength = (float)cmbLength.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -102,7 +102,7 @@ namespace Rawr.Tree
                     calcOpts.ManaPotAmt = float.Parse(cmbManaAmt.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -112,7 +112,7 @@ namespace Rawr.Tree
             {
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
                 calcOpts.ManaPotDelay = (float)cmbManaTime.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -126,7 +126,7 @@ namespace Rawr.Tree
                     calcOpts.ManaPotAmt = float.Parse(cmbManaAmt.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -136,7 +136,7 @@ namespace Rawr.Tree
             {
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
                 calcOpts.Spriest = (float)cmbSpriest.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -150,7 +150,7 @@ namespace Rawr.Tree
                     calcOpts.Intensity = int.Parse(cmbIntensity.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -164,7 +164,7 @@ namespace Rawr.Tree
                     calcOpts.NaturalPerfection = int.Parse(cmbNaturalPerfection.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -178,7 +178,7 @@ namespace Rawr.Tree
                     calcOpts.ImprovedRejuvenation = int.Parse(cmbImprovedRejuvenation.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -192,7 +192,7 @@ namespace Rawr.Tree
                     calcOpts.ImprovedRegrowth = int.Parse(cmbImprovedRegrowth.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -206,7 +206,7 @@ namespace Rawr.Tree
                     calcOpts.GiftOfNature = int.Parse(cmbGiftOfNature.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -220,7 +220,7 @@ namespace Rawr.Tree
                     calcOpts.EmpoweredRejuvenation = int.Parse(cmbEmpoweredRejuvenation.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -234,7 +234,7 @@ namespace Rawr.Tree
                     calcOpts.TreeOfLife = int.Parse(cmbTreeOfLife.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -244,7 +244,7 @@ namespace Rawr.Tree
             {
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
                 calcOpts.SurvScalingAbove = (float)upDownSurvScalingAbove.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -254,7 +254,7 @@ namespace Rawr.Tree
             {
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
                 calcOpts.SurvScalingBelow = (float)upDownSurvScalingBelow.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -264,7 +264,7 @@ namespace Rawr.Tree
             {
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
                 calcOpts.InnervateDelay = (float)upDownInnervate.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -274,7 +274,7 @@ namespace Rawr.Tree
             {
                 CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
                 calcOpts.TargetHealth = (float) upDownTargetHealth.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -323,7 +323,7 @@ namespace Rawr.Tree
 
                 calcOpts.availableSpells[selIx] = spells;
                 
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -335,7 +335,7 @@ namespace Rawr.Tree
 
                 calcOpts.InnervateSelf = chkInnervate.Checked;
 
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -347,7 +347,7 @@ namespace Rawr.Tree
 
                 calcOpts.MaxCycleDuration = (float) upDownMaxCycleDuration.Value;
 
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -359,7 +359,7 @@ namespace Rawr.Tree
 
                 calcOpts.NumCyclesPerRotation = int.Parse(cmbNumCyclesPerRotation.Text);
 
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -368,7 +368,7 @@ namespace Rawr.Tree
             if (!loading)
             {
                 Character.EnforceMetagemRequirements = enforceMeta.Checked;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -380,7 +380,7 @@ namespace Rawr.Tree
 
                 calcOpts.ShattrathFaction = "None";
 
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -392,7 +392,7 @@ namespace Rawr.Tree
 
                 calcOpts.ShattrathFaction = "Scryer";
 
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -404,7 +404,7 @@ namespace Rawr.Tree
 
                 calcOpts.ShattrathFaction = "Aldor";
 
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -416,7 +416,7 @@ namespace Rawr.Tree
 
                 calcOpts.AverageHealingScaling = (float)upDownAvgHeal.Value;
 
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -430,7 +430,7 @@ namespace Rawr.Tree
                     calcOpts.Naturalist = int.Parse(cmbNaturalist.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -444,7 +444,7 @@ namespace Rawr.Tree
                     calcOpts.EmpoweredTouch = int.Parse(cmbEmpoweredTouch.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -458,7 +458,7 @@ namespace Rawr.Tree
                     calcOpts.TranquilSpirit = int.Parse(cmbTranquilSpirit.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -472,7 +472,7 @@ namespace Rawr.Tree
                     calcOpts.Moonglow = int.Parse(cmbMoonglow.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -486,7 +486,7 @@ namespace Rawr.Tree
                     calcOpts.LunarGuidance = int.Parse(cmbLunarGuidance.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -500,7 +500,7 @@ namespace Rawr.Tree
                     calcOpts.Dreamstate = int.Parse(cmbDreamstate.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -514,7 +514,7 @@ namespace Rawr.Tree
                     calcOpts.HotW = int.Parse(cmbHeartOfTheWild.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -528,7 +528,7 @@ namespace Rawr.Tree
                     calcOpts.SotF = int.Parse(cmbSurvivalOfTheFittest.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -542,7 +542,7 @@ namespace Rawr.Tree
                     calcOpts.NurturingInstinct = int.Parse(cmbNurturingInstinct.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -556,7 +556,7 @@ namespace Rawr.Tree
                     calcOpts.LivingSpirit = int.Parse(cmbLivingSpirit.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 

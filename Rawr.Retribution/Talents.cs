@@ -63,7 +63,7 @@ namespace Rawr.Retribution
                 case "SanctifiedSeals": calcOpts.SanctifiedSeals = cb.SelectedIndex; break;
                 case "Vengeance": calcOpts.Vengeance = cb.SelectedIndex; break;
 			}
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
 			calcOpts.TalentsSaved = true;
         }
     }

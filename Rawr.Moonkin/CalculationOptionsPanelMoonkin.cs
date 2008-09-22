@@ -87,28 +87,28 @@ namespace Rawr.Moonkin
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.TargetLevel = int.Parse(cmbTargetLevel.SelectedItem.ToString());
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void txtLatency_TextChanged(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.Latency = float.Parse(txtLatency.Text);
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void chkMetagem_Leave(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			Character.EnforceMetagemRequirements = chkMetagem.Checked;
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void txtFightLength_Leave(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.FightLength = float.Parse(txtFightLength.Text);
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void chkInnervate_CheckedChanged(object sender, EventArgs e)
@@ -116,14 +116,14 @@ namespace Rawr.Moonkin
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.Innervate = chkInnervate.Checked;
             txtInnervateDelay.Enabled = chkInnervate.Checked;
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void txtShadowPriest_Leave(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.ShadowPriest = float.Parse(txtShadowPriest.Text);
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void chkManaPots_CheckedChanged(object sender, EventArgs e)
@@ -132,42 +132,42 @@ namespace Rawr.Moonkin
 			calcOpts.ManaPots = chkManaPots.Checked;
             cmbPotType.Enabled = chkManaPots.Checked;
             txtManaPotDelay.Enabled = chkManaPots.Checked;
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void cmbPotType_SelectedIndexChanged(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.ManaPotType = cmbPotType.SelectedItem.ToString();
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void txtInnervateDelay_Leave(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.InnervateDelay = float.Parse(txtInnervateDelay.Text);
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void txtManaPotDelay_Leave(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.ManaPotDelay = float.Parse(txtManaPotDelay.Text);
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void txtInnervateWeaponInt_Leave(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.InnervateWeaponInt = float.Parse(txtInnervateWeaponInt.Text);
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void txtInnervateWeaponSpi_Leave(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.InnervateWeaponSpi = float.Parse(txtInnervateWeaponSpi.Text);
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void chkInnervateWeapon_CheckedChanged(object sender, EventArgs e)
@@ -176,14 +176,14 @@ namespace Rawr.Moonkin
 			calcOpts.InnervateWeapon = chkInnervateWeapon.Checked;
             txtInnervateWeaponInt.Enabled = chkInnervateWeapon.Checked;
             txtInnervateWeaponSpi.Enabled = chkInnervateWeapon.Checked;
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
 
         private void rdbScryer_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.AldorScryer = rdbScryer.Checked ? "Scryer" : "Aldor";
-            Character.OnItemsChanged();
+            Character.OnCalculationsInvalidated();
         }
     }
 
