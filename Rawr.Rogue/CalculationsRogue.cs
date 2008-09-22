@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 
 namespace Rawr.Rogue {
-    [System.ComponentModel.DisplayName("Rogue|Ability_Rogue_SliceDice")]
-    public class CalculationsRogue : CalculationsBase {
+	[Rawr.Calculations.RawrModelInfo("Rogue", "Ability_Rogue_SliceDice", Character.CharacterClass.Rogue)]
+	public class CalculationsRogue : CalculationsBase {
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel {
             get {

@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Rawr.Mage
 {
-	[System.ComponentModel.DisplayName("Mage|Spell_Holy_MagicalSentry")]
+	[Rawr.Calculations.RawrModelInfo("Mage", "Spell_Holy_MagicalSentry", Character.CharacterClass.Mage)]
     public sealed class CalculationsMage : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;

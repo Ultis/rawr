@@ -13,8 +13,8 @@ namespace Rawr.Hunter
 	/// wowwiki and from Cheeky's DPS spreadsheet. The pieces that I calculated 
 	/// out on my own (and then verified against known sources) are easily overshadowed by those two sources.
 	/// </summary>
-    [System.ComponentModel.DisplayName("Hunter|Inv_Weapon_Bow_07")]
-    public class CalculationsHunter : CalculationsBase
+	[Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", Character.CharacterClass.Hunter)]
+	public class CalculationsHunter : CalculationsBase
     {
 		#region Talent Constants
 		private const string BEAST_MASTER = "Beast Mastery";

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr
 {
-	[System.ComponentModel.DisplayName("Bear|Ability_Racial_BearForm")]
+	[Rawr.Calculations.RawrModelInfo("Bear", "Ability_Racial_BearForm", Character.CharacterClass.Druid)]
 	public class CalculationsBear : CalculationsBase
 	{
 		//my insides all turned to ash / so slow

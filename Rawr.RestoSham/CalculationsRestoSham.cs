@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Rawr.RestoSham
   {
-    [System.ComponentModel.DisplayName("RestoSham|Spell_Nature_Magicimmunity")]
-    class CalculationsRestoSham : CalculationsBase
+	[Rawr.Calculations.RawrModelInfo("RestoSham", "Spell_Nature_Magicimmunity", Character.CharacterClass.Shaman)]
+	class CalculationsRestoSham : CalculationsBase
       {
         //
         // Colors of the ratings we track:

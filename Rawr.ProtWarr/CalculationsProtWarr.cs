@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.ProtWarr
 {
-    [System.ComponentModel.DisplayName("ProtWarr|Ability_Warrior_DefensiveStance")]
+	[Rawr.Calculations.RawrModelInfo("ProtWarr", "Ability_Warrior_DefensiveStance", Character.CharacterClass.Warrior)]
 	public class CalculationsProtWarr : CalculationsBase
 	{
 		private CalculationOptionsPanelBase _calculationOptionsPanel = null;

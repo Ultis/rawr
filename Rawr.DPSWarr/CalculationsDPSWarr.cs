@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Rawr.DPSWarr
 {
-	[System.ComponentModel.DisplayName("DPSWarr|Ability_Rogue_Ambush")]
-    class CalculationsDPSWarr : CalculationsBase
+	[Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", Character.CharacterClass.Warrior)]
+	class CalculationsDPSWarr : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>

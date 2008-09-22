@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Rawr.Tankadin
 {
-    [System.ComponentModel.DisplayName("Tankadin|Spell_Holy_AvengersShield")]
-    public class CalculationsTankadin : CalculationsBase
+	[Rawr.Calculations.RawrModelInfo("Tankadin", "Spell_Holy_AvengersShield", Character.CharacterClass.Paladin)]
+	public class CalculationsTankadin : CalculationsBase
     {
         //my insides all turned to ash / so slow
         //and blew away as i collapsed / so cold

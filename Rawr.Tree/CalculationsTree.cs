@@ -5,8 +5,8 @@ using Rawr;
 
 namespace Rawr.Tree
 {
-    [System.ComponentModel.DisplayName("Tree|Ability_Druid_TreeofLife")]
-    public class CalculationsTree : CalculationsBase
+	[Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", Character.CharacterClass.Druid)]
+	public class CalculationsTree : CalculationsBase
     {
         public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Druid; } }
 

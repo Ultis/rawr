@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Rawr.Warlock
 {
-	[System.ComponentModel.DisplayName("Warlock|Spell_Nature_FaerieFire")]
-    class CalculationsWarlock : CalculationsBase
+	[Rawr.Calculations.RawrModelInfo("Warlock", "Spell_Nature_FaerieFire", Character.CharacterClass.Warlock)]
+	class CalculationsWarlock : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>

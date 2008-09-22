@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Rawr.Healadin
 {
-	[System.ComponentModel.DisplayName("Healadin|Spell_Holy_HolyBolt")]
-    public class CalculationsHealadin : CalculationsBase
+	[Rawr.Calculations.RawrModelInfo("Healadin", "Spell_Holy_HolyBolt", Character.CharacterClass.Paladin)]
+	public class CalculationsHealadin : CalculationsBase
     {
         
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;

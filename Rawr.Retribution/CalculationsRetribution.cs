@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-	[System.ComponentModel.DisplayName("Retribution|Spell_Holy_AuraOfLight")]
-    class CalculationsRetribution : CalculationsBase
+	[Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_AuraOfLight", Character.CharacterClass.Paladin)]
+	class CalculationsRetribution : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>

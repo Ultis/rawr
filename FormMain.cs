@@ -77,16 +77,16 @@ namespace Rawr
 			}
 			UpdateRecentCharacterMenuItems();
 
-			ToolStripMenuItem modelsToolStripMenuItem = new ToolStripMenuItem("Models");
-			menuStripMain.Items.Add(modelsToolStripMenuItem);
-			foreach (KeyValuePair<string, Type> kvp in Calculations.Models)
-			{
-				ToolStripMenuItem modelToolStripMenuItem = new ToolStripMenuItem(kvp.Key);
-				modelToolStripMenuItem.Click += new EventHandler(modelToolStripMenuItem_Click);
-				modelToolStripMenuItem.Checked = kvp.Value == Calculations.Instance.GetType();
-				modelToolStripMenuItem.Tag = kvp;
-				modelsToolStripMenuItem.DropDownItems.Add(modelToolStripMenuItem);
-			}
+			//ToolStripMenuItem modelsToolStripMenuItem = new ToolStripMenuItem("Models");
+			//menuStripMain.Items.Add(modelsToolStripMenuItem);
+			//foreach (KeyValuePair<string, Type> kvp in Calculations.Models)
+			//{
+			//    ToolStripMenuItem modelToolStripMenuItem = new ToolStripMenuItem(kvp.Key);
+			//    modelToolStripMenuItem.Click += new EventHandler(modelToolStripMenuItem_Click);
+			//    modelToolStripMenuItem.Checked = kvp.Value == Calculations.Instance.GetType();
+			//    modelToolStripMenuItem.Tag = kvp;
+			//    modelsToolStripMenuItem.DropDownItems.Add(modelToolStripMenuItem);
+			//}
 
 			this.Shown += new EventHandler(FormMain_Shown);
 			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
@@ -109,7 +109,10 @@ namespace Rawr
 			{
 				if (_character == null)
 				{
-					Character = new Character();
+					Character character = new Character();
+					character.CurrentModel = ConfigModel;
+					character.Class = Calculations.ModelClasses[character.CurrentModel];
+					Character = character;
 					_characterPath = string.Empty;
 					_unsavedChanges = false;
 				}
@@ -119,6 +122,7 @@ namespace Rawr
 			{
 				if (_character != null)
 				{
+					_character.ClassChanged -= new EventHandler(_character_ClassChanged);
 					_character.CalculationsInvalidated -= new EventHandler(_character_ItemsChanged);
 					_character.AvailableItemsChanged -= new EventHandler(_character_AvailableItemsChanged);
                 }
@@ -143,6 +147,7 @@ namespace Rawr
 						itemButtonWrist.Character = _character;
 					//Ahhh ahhh ahhh ahhh ahhh ahhh ahhh ahhh...
 
+					_character.ClassChanged += new EventHandler(_character_ClassChanged);
 					_character.CalculationsInvalidated += new EventHandler(_character_ItemsChanged);
 					_character.AvailableItemsChanged += new EventHandler(_character_AvailableItemsChanged);
 					_loadingCharacter = true;
@@ -151,12 +156,36 @@ namespace Rawr
 					textBoxRealm.Text = Character.Realm;
 					comboBoxRegion.Text = Character.Region.ToString();
 					comboBoxRace.Text = Character.Race.ToString();
+					if (comboBoxClass.Text != Character.Class.ToString())
+					{
+						comboBoxClass.Text = Character.Class.ToString();
+						_character_ClassChanged(null, null);
+					}
 
 					_loadingCharacter = false;
                     _character.IsLoading = false;
 					_character.OnCalculationsInvalidated();
 				}
 			}
+		}
+
+		void _character_ClassChanged(object sender, EventArgs e)
+		{
+			_unsavedChanges = true;
+			string oldModel = (string)comboBoxModel.SelectedValue;
+			if (string.IsNullOrEmpty(oldModel)) oldModel = ConfigModel;
+			comboBoxModel.Items.Clear();
+			List<string> items = new List<string>();
+			foreach (KeyValuePair<string, Character.CharacterClass> kvp in Calculations.ModelClasses)
+			{
+				if (kvp.Value == _character.Class)
+				{
+					items.Add(kvp.Key);
+				}
+			}
+			comboBoxModel.Items.AddRange(items.ToArray());
+			if (items.Contains(oldModel)) comboBoxModel.SelectedIndex = items.IndexOf(oldModel);
+			else if (comboBoxModel.Items.Count > 0) comboBoxModel.SelectedIndex = 0;
 		}
 
         private void SetTitle()
@@ -1206,6 +1235,19 @@ namespace Rawr
                 FinishedProcessing();
             }
         }
+
+		private void comboBoxModel_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			LoadModel((string)comboBoxModel.SelectedItem);
+		}
+
+		private void comboBoxClass_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (!_loadingCharacter && _character != null)
+			{
+				Character.Class = (Character.CharacterClass)Enum.Parse(typeof(Character.CharacterClass), comboBoxClass.Text);
+			}
+		}
 
         //private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
 		//{

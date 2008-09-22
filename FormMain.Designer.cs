@@ -39,11 +39,15 @@ namespace Rawr
 			this.label32 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.comboBoxRegion = new System.Windows.Forms.ComboBox();
+			this.comboBoxModel = new System.Windows.Forms.ComboBox();
+			this.comboBoxClass = new System.Windows.Forms.ComboBox();
 			this.comboBoxRace = new System.Windows.Forms.ComboBox();
 			this.textBoxName = new System.Windows.Forms.TextBox();
 			this.textBoxRealm = new System.Windows.Forms.TextBox();
 			this.label19 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
 			this.label21 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.label23 = new System.Windows.Forms.Label();
 			this.label25 = new System.Windows.Forms.Label();
 			this.tabPageTalents = new System.Windows.Forms.TabPage();
@@ -305,10 +309,10 @@ namespace Rawr
 			this.calculationDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)));
 			this.calculationDisplay1.AutoScroll = true;
-			this.calculationDisplay1.Location = new System.Drawing.Point(0, 134);
+			this.calculationDisplay1.Location = new System.Drawing.Point(0, 105);
 			this.calculationDisplay1.Name = "calculationDisplay1";
 			this.calculationDisplay1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-			this.calculationDisplay1.Size = new System.Drawing.Size(300, 427);
+			this.calculationDisplay1.Size = new System.Drawing.Size(302, 456);
 			this.calculationDisplay1.TabIndex = 5;
 			// 
 			// label32
@@ -324,16 +328,20 @@ namespace Rawr
 			// groupBox3
 			// 
 			this.groupBox3.Controls.Add(this.comboBoxRegion);
+			this.groupBox3.Controls.Add(this.comboBoxModel);
+			this.groupBox3.Controls.Add(this.comboBoxClass);
 			this.groupBox3.Controls.Add(this.comboBoxRace);
 			this.groupBox3.Controls.Add(this.textBoxName);
 			this.groupBox3.Controls.Add(this.textBoxRealm);
 			this.groupBox3.Controls.Add(this.label19);
+			this.groupBox3.Controls.Add(this.label2);
 			this.groupBox3.Controls.Add(this.label21);
+			this.groupBox3.Controls.Add(this.label1);
 			this.groupBox3.Controls.Add(this.label23);
 			this.groupBox3.Controls.Add(this.label25);
 			this.groupBox3.Location = new System.Drawing.Point(6, 6);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(288, 122);
+			this.groupBox3.Size = new System.Drawing.Size(291, 93);
 			this.groupBox3.TabIndex = 3;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Character Definition";
@@ -346,12 +354,44 @@ namespace Rawr
             "US",
             "EU",
             "KR",
-            "TW"});
-			this.comboBoxRegion.Location = new System.Drawing.Point(105, 69);
+            "TW",
+            "CN"});
+			this.comboBoxRegion.Location = new System.Drawing.Point(243, 27);
 			this.comboBoxRegion.Name = "comboBoxRegion";
-			this.comboBoxRegion.Size = new System.Drawing.Size(91, 21);
+			this.comboBoxRegion.Size = new System.Drawing.Size(42, 21);
 			this.comboBoxRegion.TabIndex = 4;
 			this.comboBoxRegion.SelectedIndexChanged += new System.EventHandler(this.comboBoxRegion_SelectedIndexChanged);
+			// 
+			// comboBoxModel
+			// 
+			this.comboBoxModel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxModel.FormattingEnabled = true;
+			this.comboBoxModel.Location = new System.Drawing.Point(200, 65);
+			this.comboBoxModel.Name = "comboBoxModel";
+			this.comboBoxModel.Size = new System.Drawing.Size(85, 21);
+			this.comboBoxModel.TabIndex = 4;
+			this.comboBoxModel.SelectedIndexChanged += new System.EventHandler(this.comboBoxModel_SelectedIndexChanged);
+			// 
+			// comboBoxClass
+			// 
+			this.comboBoxClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxClass.FormattingEnabled = true;
+			this.comboBoxClass.Items.AddRange(new object[] {
+            "Druid",
+            "Priest",
+            "Mage",
+            "Warlock",
+            "Rogue",
+            "Hunter",
+            "Shaman",
+            "Paladin",
+            "Warrior",
+            "DeathKnight"});
+			this.comboBoxClass.Location = new System.Drawing.Point(103, 65);
+			this.comboBoxClass.Name = "comboBoxClass";
+			this.comboBoxClass.Size = new System.Drawing.Size(91, 21);
+			this.comboBoxClass.TabIndex = 4;
+			this.comboBoxClass.SelectedIndexChanged += new System.EventHandler(this.comboBoxClass_SelectedIndexChanged);
 			// 
 			// comboBoxRace
 			// 
@@ -368,7 +408,7 @@ namespace Rawr
             "Undead",
             "Draenei",
             "BloodElf"});
-			this.comboBoxRace.Location = new System.Drawing.Point(105, 94);
+			this.comboBoxRace.Location = new System.Drawing.Point(6, 65);
 			this.comboBoxRace.Name = "comboBoxRace";
 			this.comboBoxRace.Size = new System.Drawing.Size(91, 21);
 			this.comboBoxRace.TabIndex = 4;
@@ -376,53 +416,77 @@ namespace Rawr
 			// 
 			// textBoxName
 			// 
-			this.textBoxName.Location = new System.Drawing.Point(105, 19);
+			this.textBoxName.Location = new System.Drawing.Point(6, 27);
 			this.textBoxName.Name = "textBoxName";
-			this.textBoxName.Size = new System.Drawing.Size(91, 20);
+			this.textBoxName.Size = new System.Drawing.Size(135, 20);
 			this.textBoxName.TabIndex = 3;
 			this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
 			// 
 			// textBoxRealm
 			// 
-			this.textBoxRealm.Location = new System.Drawing.Point(105, 45);
+			this.textBoxRealm.Location = new System.Drawing.Point(147, 27);
 			this.textBoxRealm.Name = "textBoxRealm";
-			this.textBoxRealm.Size = new System.Drawing.Size(91, 20);
+			this.textBoxRealm.Size = new System.Drawing.Size(90, 20);
 			this.textBoxRealm.TabIndex = 3;
 			this.textBoxRealm.TextChanged += new System.EventHandler(this.textBoxRealm_TextChanged);
 			// 
 			// label19
 			// 
 			this.label19.AutoSize = true;
-			this.label19.Location = new System.Drawing.Point(6, 22);
+			this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label19.Location = new System.Drawing.Point(6, 16);
 			this.label19.Name = "label19";
-			this.label19.Size = new System.Drawing.Size(38, 13);
+			this.label19.Size = new System.Drawing.Size(33, 12);
 			this.label19.TabIndex = 1;
 			this.label19.Text = "Name:";
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label2.Location = new System.Drawing.Point(200, 50);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(34, 12);
+			this.label2.TabIndex = 1;
+			this.label2.Text = "Model:";
 			// 
 			// label21
 			// 
 			this.label21.AutoSize = true;
-			this.label21.Location = new System.Drawing.Point(6, 48);
+			this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label21.Location = new System.Drawing.Point(145, 16);
 			this.label21.Name = "label21";
-			this.label21.Size = new System.Drawing.Size(40, 13);
+			this.label21.Size = new System.Drawing.Size(35, 12);
 			this.label21.TabIndex = 1;
 			this.label21.Text = "Realm:";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(103, 50);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(32, 12);
+			this.label1.TabIndex = 1;
+			this.label1.Text = "Class:";
 			// 
 			// label23
 			// 
 			this.label23.AutoSize = true;
-			this.label23.Location = new System.Drawing.Point(6, 72);
+			this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label23.Location = new System.Drawing.Point(241, 16);
 			this.label23.Name = "label23";
-			this.label23.Size = new System.Drawing.Size(44, 13);
+			this.label23.Size = new System.Drawing.Size(37, 12);
 			this.label23.TabIndex = 1;
 			this.label23.Text = "Region:";
 			// 
 			// label25
 			// 
 			this.label25.AutoSize = true;
-			this.label25.Location = new System.Drawing.Point(6, 97);
+			this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label25.Location = new System.Drawing.Point(6, 50);
 			this.label25.Name = "label25";
-			this.label25.Size = new System.Drawing.Size(36, 13);
+			this.label25.Size = new System.Drawing.Size(30, 12);
 			this.label25.TabIndex = 1;
 			this.label25.Text = "Race:";
 			// 
@@ -1848,6 +1912,10 @@ namespace Rawr
         private System.Windows.Forms.ToolStripMenuItem refineEquipmentParametersToolStripMenuItem;
 		private System.Windows.Forms.TabPage tabPageTalents;
 		private TalentPicker talentPicker1;
+		private System.Windows.Forms.ComboBox comboBoxModel;
+		private System.Windows.Forms.ComboBox comboBoxClass;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label label1;
         
     }
 }

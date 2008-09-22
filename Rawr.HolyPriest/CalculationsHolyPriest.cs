@@ -5,8 +5,8 @@ using Rawr;
 
 namespace Rawr.HolyPriest
 {
-    [System.ComponentModel.DisplayName("HolyPriest|Spell_Holy_Renew")]
-    public class CalculationsHolyPriest : CalculationsBase 
+	[Rawr.Calculations.RawrModelInfo("HolyPriest", "Spell_Holy_Renew", Character.CharacterClass.Priest)]
+	public class CalculationsHolyPriest : CalculationsBase 
     {
         public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Priest; } }
 

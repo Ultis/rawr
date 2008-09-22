@@ -22,6 +22,19 @@ namespace Rawr
 			}
 		}
 
+		private static Dictionary<string, Character.CharacterClass> _modelClasses = null;
+		public static Dictionary<string, Character.CharacterClass> ModelClasses
+		{
+			get
+			{
+				if (_modelClasses == null)
+				{
+					Models.ToString();
+				}
+				return _modelClasses;
+			}
+		}
+
 		private static SortedList<string, Type> _models = null;
 		public static SortedList<string, Type> Models
 		{
@@ -31,6 +44,7 @@ namespace Rawr
 				{
 					_models = new SortedList<string, Type>();
 					_modelIcons = new Dictionary<string, string>();
+					_modelClasses = new Dictionary<string, Character.CharacterClass>();
 
                     string dir = AppDomain.CurrentDomain.BaseDirectory + "Data";
                     // when running in service the dlls are in relative search path
@@ -46,12 +60,13 @@ namespace Rawr
 							{
 								if (type.IsSubclassOf(typeof(CalculationsBase)))
 								{
-									DisplayNameAttribute[] displayNameAttributes = type.GetCustomAttributes(typeof(DisplayNameAttribute), false) as DisplayNameAttribute[];
+									RawrModelInfoAttribute[] modelInfos = type.GetCustomAttributes(typeof(RawrModelInfoAttribute), false) as RawrModelInfoAttribute[];
 									string[] displayName = type.Name.Split('|');
-									if (displayNameAttributes.Length > 0)
-										displayName = displayNameAttributes[0].DisplayName.Split('|');
-									_models[displayName[0]] = type;
-									_modelIcons[displayName[0]] = displayName[1];
+									//if (displayNameAttributes.Length > 0)
+									//	displayName = displayNameAttributes[0].DisplayName.Split('|');
+									_models[modelInfos[0].Name] = type;
+									_modelIcons[modelInfos[0].Name] = modelInfos[0].IconPath;
+									_modelClasses[modelInfos[0].Name] = modelInfos[0].TargetClass;
 								}
 							}
 						}
@@ -84,7 +99,8 @@ namespace Rawr
 
         private static Dictionary<Type, CalculationsBase> ModelCache = new Dictionary<Type, CalculationsBase>();
 
-        public static CalculationsBase GetModel(Type type)
+        public static CalculationsBase GetModel(string model) { return GetModel(Models[model]); }
+		public static CalculationsBase GetModel(Type type)
         {
             CalculationsBase model;
             if (!ModelCache.TryGetValue(type, out model))
@@ -94,14 +110,35 @@ namespace Rawr
             }
             return model;
         }
-        public static CalculationsBase GetModel(string model) { return GetModel(Models[model]); }
-
+        
 		public static void LoadModel(Type type) { LoadModel(GetModel(type)); }
 		public static void LoadModel(CalculationsBase model)
 		{
-            OnModelChanging();
-            Instance = model;
-			OnModelChanged();
+			if (Instance != model)
+			{
+				OnModelChanging();
+				Instance = model;
+				OnModelChanged();
+			}
+		}
+
+		[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+		public sealed class RawrModelInfoAttribute : Attribute
+		{
+			public RawrModelInfoAttribute(string name, string iconPath, Character.CharacterClass targetClass)
+			{
+				_name = name;
+				_iconPath = iconPath;
+				_targetClass = targetClass;
+			}
+
+			private readonly string _name;
+			private readonly string _iconPath;
+			private readonly Character.CharacterClass _targetClass;
+
+			public string Name { get { return _name; } }
+			public string IconPath { get { return _iconPath; } }
+			public Character.CharacterClass TargetClass { get { return _targetClass; } }
 		}
 
 		private static CalculationsBase _instance;

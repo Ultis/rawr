@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Rawr.Moonkin
 {
-    [System.ComponentModel.DisplayName("Moonkin|Spell_Nature_ForceOfNature")]
-    class CalculationsMoonkin : CalculationsBase
+	[Rawr.Calculations.RawrModelInfo("Moonkin", "Spell_Nature_ForceOfNature", Character.CharacterClass.Druid)]
+	class CalculationsMoonkin : CalculationsBase
     {
         public static float hitRatingConversionFactor = 800f * (41.0f / 26.0f);
         public static float hasteRatingConversionFactor = 1000f * (41.0f / 26.0f);
