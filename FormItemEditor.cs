@@ -12,6 +12,7 @@ namespace Rawr
 	public partial class FormItemEditor : Form, IFormItemSelectionProvider
 	{
 		private bool _firstLoad = true;
+        private bool _loadingItem = false;
 
 		private FormItemSelection _formItemSelection;
 		public FormItemSelection FormItemSelection
@@ -59,15 +60,20 @@ namespace Rawr
 				_equippedSlots = _character.GetEquippedSlots(selectedItem);
 					
 				textBoxName.DataBindings.Clear();
-				textBoxIcon.DataBindings.Clear();
+                textBoxSetName.DataBindings.Clear();
+                textBoxIcon.DataBindings.Clear();
+                textBoxNote.DataBindings.Clear();
 
 				numericUpDownId.DataBindings.Clear();
 				numericUpDownMin.DataBindings.Clear();
 				numericUpDownMax.DataBindings.Clear();
 				numericUpDownSpeed.DataBindings.Clear();
                 numericUpDownBonus1.DataBindings.Clear();
-				comboBoxSlot.DataBindings.Clear();
-				comboBoxType.DataBindings.Clear();
+                checkBoxUnique.DataBindings.Clear();
+                comboBoxDamageType.DataBindings.Clear();
+                comboBoxSlot.DataBindings.Clear();
+                comboBoxQuality.DataBindings.Clear();
+                comboBoxType.DataBindings.Clear();
 				comboBoxSocket1.DataBindings.Clear();
 				comboBoxSocket2.DataBindings.Clear();
 				comboBoxSocket3.DataBindings.Clear();
@@ -78,23 +84,39 @@ namespace Rawr
 
 				if (selectedItem != null)
 				{
-					textBoxName.DataBindings.Add("Text", selectedItem, "Name");
-					textBoxIcon.DataBindings.Add("Text", selectedItem, "IconPath");
+                    _loadingItem = true;
+                    textBoxName.DataBindings.Add("Text", selectedItem, "Name");
+                    textBoxSetName.DataBindings.Add("Text", selectedItem, "SetName");
+                    textBoxIcon.DataBindings.Add("Text", selectedItem, "IconPath");
 					numericUpDownId.DataBindings.Add("Value", selectedItem, "Id");
 					numericUpDownMin.DataBindings.Add("Value", selectedItem, "MinDamage");
 					numericUpDownMax.DataBindings.Add("Value", selectedItem, "MaxDamage");
 					numericUpDownSpeed.DataBindings.Add("Value", selectedItem, "Speed");
 
-					comboBoxSlot.DataBindings.Add("Text", selectedItem, "SlotString");
+                    checkBoxUnique.DataBindings.Add("Checked", selectedItem, "Unique");
+                    comboBoxQuality.DataBindings.Add("Text", selectedItem, "Quality");
+                    comboBoxSlot.DataBindings.Add("Text", selectedItem, "SlotString");
 					comboBoxType.DataBindings.Add("Text", selectedItem, "TypeString");
-					comboBoxSocket1.DataBindings.Add("Text", selectedItem.Sockets, "Color1String");
+                    comboBoxDamageType.DataBindings.Add("Text", selectedItem, "DamageType");
+                    comboBoxSocket1.DataBindings.Add("Text", selectedItem.Sockets, "Color1String");
 					comboBoxSocket2.DataBindings.Add("Text", selectedItem.Sockets, "Color2String");
 					comboBoxSocket3.DataBindings.Add("Text", selectedItem.Sockets, "Color3String");
 					itemButtonGem1.DataBindings.Add("SelectedItemId", selectedItem, "Gem1Id");
 					itemButtonGem2.DataBindings.Add("SelectedItemId", selectedItem, "Gem2Id");
 					itemButtonGem3.DataBindings.Add("SelectedItemId", selectedItem, "Gem3Id");
 
+                    textBoxSource.Text = selectedItem.LocationInfo.Description;
+                    textBoxNote.DataBindings.Add("Text", selectedItem.LocationInfo, "Note");
+
                     propertyGridStats.SelectedObject = selectedItem.Stats;
+
+                    string requiredClassesString = "";
+                    if (selectedItem.RequiredClasses != null) requiredClassesString = selectedItem.RequiredClasses;
+                    string[] requiredClasses = requiredClassesString.Split('|');
+                    for (int i = 0; i < checkedListBoxRequiredClasses.Items.Count; i++)
+                    {
+                        checkedListBoxRequiredClasses.SetItemChecked(i, Array.IndexOf<string>(requiredClasses, (string)checkedListBoxRequiredClasses.Items[i]) >= 0);
+                    }
 
                     var socketBonuses = selectedItem.Sockets.Stats.Values(x=> x > 0).GetEnumerator();
                     if (!socketBonuses.MoveNext())
@@ -125,6 +147,7 @@ namespace Rawr
                         }
 */
                     }
+                    _loadingItem = false;
 				}
 			}
 		}
@@ -573,6 +596,31 @@ namespace Rawr
 					_changingItemCache = false;
 				}
 			}
-		}
-	}
+        }
+
+        private void checkedListBoxRequiredClasses_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (!_loadingItem)
+            {
+                Item selectedItem = _selectedItem.Tag as Item;
+                List<string> requiredClasses = new List<string>();
+                foreach (string requiredClass in checkedListBoxRequiredClasses.CheckedItems)
+                {
+                    requiredClasses.Add(requiredClass);
+                }
+                if (e.NewValue == CheckState.Checked)
+                {
+                    requiredClasses.Add((string)checkedListBoxRequiredClasses.Items[e.Index]);
+                }
+                else
+                {
+                    requiredClasses.Remove((string)checkedListBoxRequiredClasses.Items[e.Index]);
+                }
+                if (selectedItem != null)
+                {
+                    selectedItem.RequiredClasses = string.Join("|", requiredClasses.ToArray());
+                }
+            }
+        }
+    }
 }

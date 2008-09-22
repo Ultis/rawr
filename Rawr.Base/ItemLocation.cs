@@ -60,6 +60,8 @@ namespace Rawr
         [XmlIgnore]
         public ItemSource Source{get;set;}
 
+        public string Note { get; set; }
+
         private string _description;
         [XmlIgnore]
         public virtual string Description
@@ -867,6 +869,9 @@ namespace Rawr
             {
                 item = new ItemLocation("Failed - " + e.Message);
             }
+            ItemLocation prev = null;
+            _allLocations.TryGetValue(itemId, out prev);
+            if (prev != null) item.Note = prev.Note;
             _allLocations[itemId] = item;
 
             return item;
