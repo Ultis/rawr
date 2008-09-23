@@ -21,7 +21,7 @@ namespace Rawr
 		{
 			string text = string.Format("{0}\r\nRank {1}/{2}\r\n\r\n", TalentName, CurrentRank, MaxRank);
 			if (CurrentRank == 0) text += Description[0];
-			else if (CurrentRank == MaxRank) text += Description[MaxRank - 1];
+			else if (CurrentRank >= MaxRank) text += Description[MaxRank - 1];
 			else text += string.Format("{0}\r\n\r\nNext Rank:\r\n{1}", Description[CurrentRank - 1], Description[CurrentRank]);
 			
 			_toolTip.Show(text, this, 48, 24);
