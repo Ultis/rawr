@@ -25,94 +25,33 @@ namespace Rawr.Tankadin
                 Character.CalculationOptions = new CalculationOptionsTankadin();
 
             CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
-            cmbTargetLevel.SelectedIndex = calcOpts.TargetLevel-70;
-            nubAtkSpeed.Value = (decimal)calcOpts.AttackSpeed;
-            nubAttackers.Value = (decimal)calcOpts.NumberAttackers;
-            trackBarBossAttackValue.Value = calcOpts.AverageHit;
-            trackBarMitigationScale.Value = calcOpts.MitigationScale;
-            trackBarTargetArmor.Value = calcOpts.TargetArmor;
-            trackBarThreatScale.Value = calcOpts.ThreatScale;
-            labelBossAttackValue.Text = calcOpts.AverageHit.ToString();
-            labelMitigationScale.Text = calcOpts.MitigationScale.ToString();
-            labelTargetArmor.Text = calcOpts.TargetArmor.ToString();
-            labelThreatScale.Text = calcOpts.ThreatScale.ToString();
+            nudPlayerLevel.Value = (decimal)calcOpts.PlayerLevel;
+            nudTargetLevel.Value = (decimal)calcOpts.TargetLevel;
+           
             _loadingCalculationOptions = false;
 
         }
 
-        private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
+        private void nudPlayerLevel_ValueChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
-                calcOpts.TargetLevel = int.Parse(cmbTargetLevel.SelectedItem.ToString());
+                calcOpts.PlayerLevel = (int)nudPlayerLevel.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
 
-        private void nubAttackers_ValueChanged(object sender, EventArgs e)
+        private void nudTargetLevel_ValueChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
-                calcOpts.NumberAttackers = (int)nubAttackers.Value;
+                calcOpts.TargetLevel = (int)nudTargetLevel.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
 
-        private void nubAtkSpeed_ValueChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
-                calcOpts.AttackSpeed = (float)nubAtkSpeed.Value;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void trackBarTargetArmor_Scroll(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
-                calcOpts.TargetArmor = trackBarTargetArmor.Value;
-                labelTargetArmor.Text = trackBarTargetArmor.Value.ToString();
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void trackBarThreatScale_Scroll(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
-                calcOpts.ThreatScale = trackBarThreatScale.Value;
-                labelThreatScale.Text = trackBarThreatScale.Value.ToString();
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void trackBarMitigationScale_Scroll(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
-                calcOpts.MitigationScale = trackBarMitigationScale.Value;
-                labelMitigationScale.Text = trackBarMitigationScale.Value.ToString();
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void trackBarBossAttackValue_Scroll(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
-                calcOpts.AverageHit = trackBarBossAttackValue.Value;
-                labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
-                Character.OnCalculationsInvalidated();
-            }
-        }
 
     }
 
@@ -131,6 +70,7 @@ namespace Rawr.Tankadin
 
         public bool EnforceMetagemRequirements = false;
         public int TargetLevel = 73;
+        public int PlayerLevel = 70;
         public int AverageHit = 20000;
         public float AttackSpeed = 2;
         public int NumberAttackers = 1;
