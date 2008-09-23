@@ -52,83 +52,25 @@ namespace Rawr.Tankadin
             set { _targetLevel = value; }
         }
 
-        private float _defense;
-        public float Defense
-        {
-            get { return _defense; }
-            set { _defense = value; }
-        }
+        public float Armor { get; set; }
+        public float ArmorReduction { get; set; }
+        public float DamageReduction { get; set; }
+        public float Defense { get; set; }
+        public float Dodge { get; set; }
+        public float Miss { get; set; }
+        public float Parry { get; set; }
+        public float Block { get; set; }
+        public float BlockValue { get; set; }
+        public float Mitigation { get; set; }
+        public float Avoidance { get; set; }
+        public float DamageTaken { get; set; }
+        public float CritAvoidance { get; set; }
 
-        private float _dodge;
-        public float Dodge
-        {
-            get { return _dodge; }
-            set { _dodge = value; }
-        }
-
-        private float _miss;
-        public float Miss
-        {
-            get { return _miss; }
-            set { _miss = value; }
-        }
-
-        private float _parry;
-        public float Parry
-        {
-            get { return _parry; }
-            set { _parry = value; }
-        }
-
-        private float _block;
-        public float Block
-        {
-            get { return _block; }
-            set { _block = value; }
-        }
-
-        private float _blockvalue;
-        public float BlockValue
-        {
-            get { return _blockvalue; }
-            set { _blockvalue = value; }
-        }
-        
-        private float _mitigation;
-        public float Mitigation
-        {
-            get { return _mitigation; }
-            set { _mitigation = value; }
-        }
-
-        private float _avoidance;
-        public float Avoidance
-        {
-            get { return _avoidance; }
-            set { _avoidance = value; }
-        }
-
-        private float _totalMitigation;
-        public float TotalMitigation
-        {
-            get { return _totalMitigation; }
-            set { _totalMitigation = value; }
-        }
-
-        private float _damageTaken;
-        public float DamageTaken
-        {
-            get { return _damageTaken; }
-            set { _damageTaken = value; }
-        }
-
-        private float _critAvoidance;
-        public float CritAvoidance
-        {
-            get { return _critAvoidance; }
-            set { _critAvoidance = value; }
-        }
-
+        public float ToMiss { get; set; }
+        public float ToDodge { get; set; }
+        public float ToParry { get; set; }
+        public float ToResist { get; set; }
+        public float ToLand { get; set; }
 
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
