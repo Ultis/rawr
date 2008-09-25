@@ -32,8 +32,20 @@
             this.nudPlayerLevel = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.nudTargetLevel = new System.Windows.Forms.NumericUpDown();
+            this.trackBarMitigationScale = new System.Windows.Forms.TrackBar();
+            this.trackBarThreatScale = new System.Windows.Forms.TrackBar();
+            this.trackBarBossAttackValue = new System.Windows.Forms.TrackBar();
+            this.lblMitigationScaleText = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.lblThreatScaleText = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.lblBossAttack = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.lblMitigationScaleValue = new System.Windows.Forms.Label();
+            this.lblThreatScaleValue = new System.Windows.Forms.Label();
+            this.lblBossAttackValue = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudPlayerLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarMitigationScale)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThreatScale)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).BeginInit();
             this.SuspendLayout();
             // 
             // lblPlayerLevel
@@ -47,7 +59,7 @@
             // 
             // nudPlayerLevel
             // 
-            this.nudPlayerLevel.Location = new System.Drawing.Point(87, 4);
+            this.nudPlayerLevel.Location = new System.Drawing.Point(86, 3);
             this.nudPlayerLevel.Maximum = new decimal(new int[] {
             80,
             0,
@@ -79,7 +91,7 @@
             // 
             // nudTargetLevel
             // 
-            this.nudTargetLevel.Location = new System.Drawing.Point(87, 31);
+            this.nudTargetLevel.Location = new System.Drawing.Point(86, 30);
             this.nudTargetLevel.Maximum = new decimal(new int[] {
             83,
             0,
@@ -100,18 +112,141 @@
             0});
             this.nudTargetLevel.ValueChanged += new System.EventHandler(this.nudTargetLevel_ValueChanged);
             // 
+            // trackBarMitigationScale
+            // 
+            this.trackBarMitigationScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarMitigationScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarMitigationScale.LargeChange = 1000;
+            this.trackBarMitigationScale.Location = new System.Drawing.Point(72, 158);
+            this.trackBarMitigationScale.Maximum = 15000;
+            this.trackBarMitigationScale.Minimum = 1000;
+            this.trackBarMitigationScale.Name = "trackBarMitigationScale";
+            this.trackBarMitigationScale.Size = new System.Drawing.Size(134, 45);
+            this.trackBarMitigationScale.SmallChange = 50;
+            this.trackBarMitigationScale.TabIndex = 11;
+            this.trackBarMitigationScale.TickFrequency = 1000;
+            this.trackBarMitigationScale.Value = 4000;
+            this.trackBarMitigationScale.Scroll += new System.EventHandler(this.trackBarMitigationScale_Scroll);
+            // 
+            // trackBarThreatScale
+            // 
+            this.trackBarThreatScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarThreatScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarThreatScale.Location = new System.Drawing.Point(72, 107);
+            this.trackBarThreatScale.Name = "trackBarThreatScale";
+            this.trackBarThreatScale.Size = new System.Drawing.Size(134, 45);
+            this.trackBarThreatScale.TabIndex = 8;
+            this.trackBarThreatScale.Value = 1;
+            this.trackBarThreatScale.Scroll += new System.EventHandler(this.trackBarThreatScale_Scroll);
+            // 
+            // trackBarBossAttackValue
+            // 
+            this.trackBarBossAttackValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarBossAttackValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarBossAttackValue.LargeChange = 5000;
+            this.trackBarBossAttackValue.Location = new System.Drawing.Point(72, 56);
+            this.trackBarBossAttackValue.Maximum = 50000;
+            this.trackBarBossAttackValue.Minimum = 500;
+            this.trackBarBossAttackValue.Name = "trackBarBossAttackValue";
+            this.trackBarBossAttackValue.Size = new System.Drawing.Size(134, 45);
+            this.trackBarBossAttackValue.SmallChange = 500;
+            this.trackBarBossAttackValue.TabIndex = 5;
+            this.trackBarBossAttackValue.TickFrequency = 2500;
+            this.trackBarBossAttackValue.Value = 20000;
+            this.trackBarBossAttackValue.Scroll += new System.EventHandler(this.trackBarBossAttackValue_Scroll);
+            // 
+            // lblMitigationScaleText
+            // 
+            this.lblMitigationScaleText.Location = new System.Drawing.Point(5, 158);
+            this.lblMitigationScaleText.Name = "lblMitigationScaleText";
+            this.lblMitigationScaleText.Size = new System.Drawing.Size(61, 45);
+            this.lblMitigationScaleText.TabIndex = 10;
+            this.lblMitigationScaleText.Text = "Mitigation Scale: *";
+            this.lblMitigationScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblMitigationScaleText.ToolTipText = "Mitigation Points scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows m" +
+                "ore accurate changes";
+            // 
+            // lblThreatScaleText
+            // 
+            this.lblThreatScaleText.Location = new System.Drawing.Point(2, 107);
+            this.lblThreatScaleText.Name = "lblThreatScaleText";
+            this.lblThreatScaleText.Size = new System.Drawing.Size(64, 45);
+            this.lblThreatScaleText.TabIndex = 7;
+            this.lblThreatScaleText.Text = "Threat Scale: *";
+            this.lblThreatScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblThreatScaleText.ToolTipText = "Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurat" +
+                "e changes";
+            // 
+            // lblBossAttack
+            // 
+            this.lblBossAttack.Location = new System.Drawing.Point(2, 56);
+            this.lblBossAttack.Name = "lblBossAttack";
+            this.lblBossAttack.Size = new System.Drawing.Size(64, 45);
+            this.lblBossAttack.TabIndex = 4;
+            this.lblBossAttack.Text = "Boss Attack: *";
+            this.lblBossAttack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblBossAttack.ToolTipText = "Boss attack value before armor. Used to determine the value of Block Value.";
+            // 
+            // lblMitigationScaleValue
+            // 
+            this.lblMitigationScaleValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblMitigationScaleValue.AutoSize = true;
+            this.lblMitigationScaleValue.Location = new System.Drawing.Point(72, 190);
+            this.lblMitigationScaleValue.Name = "lblMitigationScaleValue";
+            this.lblMitigationScaleValue.Size = new System.Drawing.Size(31, 13);
+            this.lblMitigationScaleValue.TabIndex = 12;
+            this.lblMitigationScaleValue.Text = "4000";
+            // 
+            // lblThreatScaleValue
+            // 
+            this.lblThreatScaleValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblThreatScaleValue.AutoSize = true;
+            this.lblThreatScaleValue.Location = new System.Drawing.Point(72, 139);
+            this.lblThreatScaleValue.Name = "lblThreatScaleValue";
+            this.lblThreatScaleValue.Size = new System.Drawing.Size(31, 13);
+            this.lblThreatScaleValue.TabIndex = 9;
+            this.lblThreatScaleValue.Text = "4000";
+            // 
+            // lblBossAttackValue
+            // 
+            this.lblBossAttackValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblBossAttackValue.AutoSize = true;
+            this.lblBossAttackValue.Location = new System.Drawing.Point(72, 88);
+            this.lblBossAttackValue.Name = "lblBossAttackValue";
+            this.lblBossAttackValue.Size = new System.Drawing.Size(31, 13);
+            this.lblBossAttackValue.TabIndex = 6;
+            this.lblBossAttackValue.Text = "4000";
+            // 
             // CalculationOptionsPanelTankadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblBossAttackValue);
+            this.Controls.Add(this.lblThreatScaleValue);
+            this.Controls.Add(this.lblMitigationScaleValue);
+            this.Controls.Add(this.trackBarMitigationScale);
+            this.Controls.Add(this.trackBarThreatScale);
+            this.Controls.Add(this.trackBarBossAttackValue);
+            this.Controls.Add(this.lblMitigationScaleText);
+            this.Controls.Add(this.lblThreatScaleText);
+            this.Controls.Add(this.lblBossAttack);
             this.Controls.Add(this.nudTargetLevel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.nudPlayerLevel);
             this.Controls.Add(this.lblPlayerLevel);
             this.Name = "CalculationOptionsPanelTankadin";
-            this.Size = new System.Drawing.Size(210, 375);
+            this.Size = new System.Drawing.Size(209, 375);
             ((System.ComponentModel.ISupportInitialize)(this.nudPlayerLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarMitigationScale)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThreatScale)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -123,6 +258,15 @@
         private System.Windows.Forms.NumericUpDown nudPlayerLevel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown nudTargetLevel;
+        private System.Windows.Forms.TrackBar trackBarMitigationScale;
+        private System.Windows.Forms.TrackBar trackBarThreatScale;
+        private System.Windows.Forms.TrackBar trackBarBossAttackValue;
+        private Rawr.CustomControls.ExtendedToolTipLabel lblMitigationScaleText;
+        private Rawr.CustomControls.ExtendedToolTipLabel lblThreatScaleText;
+        private Rawr.CustomControls.ExtendedToolTipLabel lblBossAttack;
+        private System.Windows.Forms.Label lblMitigationScaleValue;
+        private System.Windows.Forms.Label lblThreatScaleValue;
+        private System.Windows.Forms.Label lblBossAttackValue;
 
     }
 }

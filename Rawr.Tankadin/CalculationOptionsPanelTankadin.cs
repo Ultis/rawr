@@ -27,7 +27,12 @@ namespace Rawr.Tankadin
             CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
             nudPlayerLevel.Value = (decimal)calcOpts.PlayerLevel;
             nudTargetLevel.Value = (decimal)calcOpts.TargetLevel;
-           
+            trackBarBossAttackValue.Value = calcOpts.AverageHit;
+            lblBossAttackValue.Text = calcOpts.AverageHit.ToString();
+            trackBarMitigationScale.Value = calcOpts.MitigationScale;
+            lblMitigationScaleValue.Text = calcOpts.MitigationScale.ToString();
+            trackBarThreatScale.Value = calcOpts.ThreatScale;
+            lblThreatScaleValue.Text = calcOpts.ThreatScale.ToString();
             _loadingCalculationOptions = false;
 
         }
@@ -48,6 +53,39 @@ namespace Rawr.Tankadin
             {
                 CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
                 calcOpts.TargetLevel = (int)nudTargetLevel.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trackBarBossAttackValue_Scroll(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
+                calcOpts.AverageHit = trackBarBossAttackValue.Value;
+                lblBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trackBarThreatScale_Scroll(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
+                calcOpts.ThreatScale = trackBarThreatScale.Value;
+                lblThreatScaleValue.Text = trackBarThreatScale.Value.ToString();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trackBarMitigationScale_Scroll(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
+                calcOpts.MitigationScale = trackBarMitigationScale.Value;
+                lblMitigationScaleValue.Text = trackBarMitigationScale.Value.ToString();
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -75,7 +113,7 @@ namespace Rawr.Tankadin
         public float AttackSpeed = 2;
         public int NumberAttackers = 1;
         public int TargetArmor = 6600;
-        public int ThreatScale = 100;
+        public int ThreatScale = 5;
         public int MitigationScale = 4000;
     }
 
