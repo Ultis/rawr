@@ -317,6 +317,8 @@ you are being killed by burst damage, focus on Survival Points.",
                     break;
             }
             // Derived stats base amount, common to all races
+            statsRace.Dodge = .0065f;
+            statsRace.Parry = .05f;
             statsRace.AttackPower = 190f;
             statsRace.Health = 3197f;
             statsRace.Mana = 2673f;
@@ -345,11 +347,11 @@ you are being killed by burst damage, focus on Survival Points.",
             stats.BlockValue = (float)Math.Round((stats.BlockValue + stats.Strength / 2f) * (1 + stats.BonusBlockValueMultiplier) * (1f + talents.Redoubt * .1f));
             stats.Block += .05f + stats.Defense * .0004f + ConvertBlock(stats.BlockRating, lvl);
 
-            float fullDodge = stats.Dodge + stats.Defense * .0004f + AgiToDodge(stats.Agility - statsRace.Agility, lvl) + ConvertDodge(stats.DodgeRating, lvl);
-            stats.Dodge = .0065f + character.PaladinTalents.Anticipation * .01f + AgiToDodge(statsRace.Agility, lvl) + DRDodge(fullDodge);
+            float fullDodge = stats.Defense * .0004f + AgiToDodge(stats.Agility - statsRace.Agility, lvl) + ConvertDodge(stats.DodgeRating, lvl);
+            stats.Dodge = stats.Dodge + character.PaladinTalents.Anticipation * .01f + AgiToDodge(statsRace.Agility, lvl) + DRDodge(fullDodge);
 
-            float fullParry = stats.Parry stats.Defense * .0004f + ConvertParry(stats.ParryRating, lvl);
-            stats.Parry = .05f + character.PaladinTalents.Deflection * .01f + DRParry(fullParry);
+            float fullParry = stats.Defense * .0004f + ConvertParry(stats.ParryRating, lvl);
+            stats.Parry = stats.Parry + character.PaladinTalents.Deflection * .01f + DRParry(fullParry);
 
             stats.SpellDamageRating += stats.Stamina * .1f * talents.TouchedByTheLight;
             return stats;
