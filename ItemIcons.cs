@@ -212,9 +212,9 @@ namespace Rawr
 			else
 			{
 				string pathToIcon = null;
+				WebRequestWrapper wrapper = new WebRequestWrapper();
 				try
 				{
-					WebRequestWrapper wrapper = new WebRequestWrapper();
 					if (!string.IsNullOrEmpty(talentTree) && !string.IsNullOrEmpty(talentName))
 					{
 						pathToIcon = wrapper.DownloadTalentIcon(charClass, talentTree, talentName);
@@ -228,6 +228,7 @@ namespace Rawr
 				}
 				catch (Exception)
 				{
+					pathToIcon = wrapper.DownloadTempImage();
 					//Log.Write(ex.Message);
 					//Log.Write(ex.StackTrace);
 					//log.Error("Exception trying to retrieve an icon from the armory", ex);

@@ -499,7 +499,7 @@ namespace Rawr
 							}
 							catch (Exception ex)
 							{
-								CheckExecptionForFatalError(ex);
+								CheckExceptionForFatalError(ex);
 								//if on a client file download, there is an exception, 
 								//it will create a 0 byte file. We don't want that empty file.
 								if (File.Exists(localPath))
@@ -523,14 +523,14 @@ namespace Rawr
 		/// continuing to issue requests could cause serious problems for the user.
 		/// </summary>
 		/// <param name="ex"></param>
-		private void CheckExecptionForFatalError(Exception ex)
+		private void CheckExceptionForFatalError(Exception ex)
 		{
 			//Log.Write("Exception trying to download: "+ ex);
             //Log.Write(ex.StackTrace);
 			if (ex.Message.Contains("407") /*proxy auth required */
 				|| ex.Message.Contains("403") /*proxy info probably wrong, if we keep issuing requests, they will probably get locked out*/
 				|| ex.Message.Contains("timed out") /*either proxy required and firewall dropped the request, or armory is down*/
-				|| ex.Message.Contains("invalid content type") /*unexpected content type returned*/
+				//|| ex.Message.Contains("invalid content type") /*unexpected content type returned*/
 				|| ex.Message.Contains("The remote name could not be resolved") /* DNS problems*/
                 )
 			{
@@ -558,7 +558,7 @@ namespace Rawr
 					}
 					catch (Exception ex)
 					{
-						CheckExecptionForFatalError(ex);
+						CheckExceptionForFatalError(ex);
 					}
 				}
 				retry++;
@@ -649,7 +649,7 @@ namespace Rawr
                         }
                         catch (Exception ex)
                         {
-                            CheckExecptionForFatalError(ex);
+                            CheckExceptionForFatalError(ex);
                             dl.error = ex.Message;
                             _failedRequests.Add(dl);
                         }
