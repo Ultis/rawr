@@ -59,45 +59,93 @@ namespace Rawr.Tankadin
         public float ToParry { get; set; }
         public float ToResist { get; set; }
         public float ToLand { get; set; }
+        public float ToCrit { get; set; }
+        public float ToSpellCrit { get; set; }
 
+        public float ShoRDamage { get; set; }
+        public float ShoRThreat { get; set; }
+
+        public float ASDamage { get; set; }
+        public float ASThreat { get; set; }
+
+        public float ConsDamage { get; set; }
+        public float ConsThreat { get; set; }
+        public float ConsDuration { get; set; }
+
+        public float HotRDamage { get; set; }
+        public float HotRThreat { get; set; }
+
+        public float SoRDamage { get; set; }
+        public float SoRThreat { get; set; }
+        public float SoCDamage { get; set; }
+        public float SoCThreat { get; set; }
+
+        public float HSDamage { get; set; }
+        public float HSThreat { get; set; }
+        public float HSProcs { get; set; }
+
+        public float JudgementCD { get; set; }
+        
+        public float JoRDamage { get; set; }
+        public float JoRThreat { get; set; }
+        public float JoCDamage { get; set; }
+        public float JoCThreat { get; set; }
+
+        public float WhiteDamage { get; set; }
+        public float WhiteThreat { get; set; }
+
+        public float Rot1TPS { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
 			dict.Add("Health", BasicStats.Health.ToString());
-			dict.Add("Armor", string.Format("{0}*{1}% Damage Reduction", BasicStats.Armor, Math.Round(ArmorReduction*100,2)));
+            dict.Add("Armor", string.Format("{0}*{1}% Damage Reduction", BasicStats.Armor, Math.Round(ArmorReduction * 100f, 2)));
 			dict.Add("Stamina", BasicStats.Stamina.ToString());
 			dict.Add("Agility", BasicStats.Agility.ToString());
-			dict.Add("Defense", Defense.ToString());
+            dict.Add("Defense", Math.Round(Defense + 350f).ToString());
 			dict.Add("Attack Power", BasicStats.AttackPower.ToString());
             dict.Add("Spell Damage", BasicStats.SpellDamageRating.ToString());
             dict.Add("Block Value", BlockValue.ToString());
-			dict.Add("Miss", string.Format("{0}%", Math.Round(Miss * 100, 2)));
-			dict.Add("Dodge", string.Format("{0}%", Math.Round(Dodge * 100, 2)));
-			dict.Add("Parry", string.Format("{0}%", Math.Round(Parry * 100, 2)));
-			dict.Add("Block", string.Format("{0}%", Math.Round(Block * 100, 2)));
-			dict.Add("Crit", string.Format("{0}%", Math.Round(Crit * 100, 2)));
-			dict.Add("Hit", string.Format("{0}%", Math.Round(Hit * 100, 2)));
-			dict.Add("Avoidance", string.Format("{0}%", Math.Round(Avoidance * 100, 2)));
-            dict.Add("Mitigation", string.Format("{0}%", Math.Round((1f - Mitigation) * 100, 2)));
-			dict.Add("Damage Taken", string.Format("{0}", Math.Round(DamageTaken, 2)));
+			dict.Add("Miss", string.Format("{0}%", Math.Round(Miss * 100f, 2)));
+			dict.Add("Dodge", string.Format("{0}%", Math.Round(Dodge * 100f, 2)));
+			dict.Add("Parry", string.Format("{0}%", Math.Round(Parry * 100f, 2)));
+			dict.Add("Block", string.Format("{0}%", Math.Round(Block * 100f, 2)));
+			dict.Add("Crit", string.Format("{0}%", Math.Round(Crit * 100f, 2)));
+			dict.Add("Hit", string.Format("{0}%", Math.Round(Hit * 100f, 2)));
+			dict.Add("Avoidance", string.Format("{0}%", Math.Round(Avoidance * 100f, 2)));
+            dict.Add("Mitigation", string.Format("{0}%", Math.Round((1f - Mitigation) * 100f, 2)));
+            dict.Add("Damage Taken", string.Format("{0}%", Math.Round(DamageTaken * 100f, 2)));
 			dict.Add("Damage When Hit", string.Format("{0}*{1} on blocks\n{2} normal", 
 				Math.Round(DamageWhenHit), Math.Round(DamagePerBlock), Math.Round(DamagePerHit)));
             if (CritAvoidance == .05f)
                 dict.Add("Chance to be Crit", string.Format("{0}%*Exactly enough defense rating/resilience to be uncrittable.",
-                    Math.Round((.05f - CritAvoidance) * 100, 2)));
+                    Math.Round((.05f - CritAvoidance) * 100f, 2)));
             else if (CritAvoidance < .05f)
                 dict.Add("Chance to be Crit", string.Format("{0}%*CRITTABLE! Short by {1} defense rating or {2} resilience to be uncrittable.",
-                    Math.Round((.05f - CritAvoidance) * 100, 2), "<nyi>", "<nyi>"));
+                    Math.Round((.05f - CritAvoidance) * 100f, 2), "<nyi>", "<nyi>"));
             else
                 dict.Add("Chance to be Crit", string.Format("{0}%*Uncrittable. {1} defense rating or {2} resilience over the cap.",
-                    Math.Round((.05f - CritAvoidance) * 100, 2), "<nyi>", "<nyi>"));
-			dict.Add("Overall Points", OverallPoints.ToString());
+                    Math.Round((.05f - CritAvoidance) * 100f, 2), "<nyi>", "<nyi>"));
+/*			dict.Add("Overall Points", OverallPoints.ToString());
 			dict.Add("Mitigation Points", MitigationPoints.ToString());
 			dict.Add("Survival Points", SurvivalPoints.ToString());
-			dict.Add("Threat Points", ThreatPoints.ToString());
-
+			dict.Add("Threat Points", ThreatPoints.ToString());*/
+            dict.Add("Chance to Hit", string.Format("{0}%*{1}% miss\n{2}% dodge\n{3}% parry", Math.Round(ToLand * 100f, 2), Math.Round(ToMiss * 100f, 2),
+                Math.Round(ToDodge * 100, 2), Math.Round(ToParry * 100f, 2)));
+            dict.Add("Chance to Crit", string.Format("{0}%", Math.Round(ToCrit * 100f, 2)));
+            dict.Add("Consecrate", string.Format("{0} threat*{1} damage per hit", Math.Round(ConsThreat), Math.Round(ConsDamage/ConsDuration)));
+            dict.Add("ShoR", string.Format("{0} threat*{1} damage", Math.Round(ShoRThreat), Math.Round(ShoRDamage)));
+            dict.Add("HotR", string.Format("{0} threat*{1} damage", Math.Round(HotRThreat), Math.Round(HotRDamage)));
+            dict.Add("Avenger's Shield", string.Format("{0} threat*{1} damage", Math.Round(ASThreat), Math.Round(ASDamage)));
+            dict.Add("Holy Shield", string.Format("{0} threat*{1} damage", Math.Round(HSThreat), Math.Round(HSDamage)));
+            dict.Add("SoR", string.Format("{0} tps*{1} damage", Math.Round(SoRThreat), Math.Round(SoRDamage)));
+            dict.Add("JoR", string.Format("{0} threat*{1} damage", Math.Round(JoRThreat), Math.Round(JoRDamage)));
+            dict.Add("SoC", string.Format("{0} tps*{1} damage per tick", Math.Round(SoCThreat), Math.Round(SoCDamage)));
+            dict.Add("JoC", string.Format("{0} threat*{1} damage", Math.Round(JoCThreat), Math.Round(JoCDamage)));
+            dict.Add("White Damage", string.Format("{0} tps*{1} damage", Math.Round(WhiteThreat), Math.Round(WhiteDamage)));
+            dict.Add("Total Threat", string.Format("{0} tps", Math.Round(Rot1TPS)));
             return dict;
         }
     }
