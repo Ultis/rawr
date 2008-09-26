@@ -965,7 +965,7 @@ namespace Rawr.Mage
                         }
                         lp.SetLHS(rowSegment + seg, segmentDuration);
                         //lp.SetConstraintRHS(row, -segmentDuration);
-                        //lp.ForceRecalculation(true);
+                        lp.ForceRecalculation(true);
                         HeapPush(lp);
                         return false;
                     }
