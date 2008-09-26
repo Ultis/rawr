@@ -1366,9 +1366,9 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
-            CostModifier += 3.00f * costDebuff + castingState.BaseStats.ArcaneBlastBonus * 0.25f;
+            CostModifier += 2.00f * costDebuff + castingState.BaseStats.ArcaneBlastBonus * 0.25f;
             SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus * 0.25f + 0.15f * timeDebuff + 0.002f * castingState.MageTalents.SpellImpact);
-            SpellDamageCoefficient += 0.03f * castingState.MageTalents.ArcaneEmpowerment; // TODO change talent name
+            SpellDamageCoefficient += 0.03f * castingState.MageTalents.ArcaneEmpowerment;
             CritRate += 0.02f * castingState.MageTalents.Incineration;
             //CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
             CalculateDerivedStats(castingState);
@@ -2461,7 +2461,7 @@ namespace Rawr.Mage
                 Spell AB1H = castingState.GetSpell(SpellId.ArcaneBlast1Hit);
                 Spell AB2H = castingState.GetSpell(SpellId.ArcaneBlast2Hit);
                 Spell AB3H = castingState.GetSpell(SpellId.ArcaneBlast3Hit);
-                Spell AB0M = castingState.GetSpell(SpellId.ArcaneBlast0Miss);
+                AB0M = castingState.GetSpell(SpellId.ArcaneBlast0Miss);
                 Spell AB1M = castingState.GetSpell(SpellId.ArcaneBlast1Miss);
                 Spell AB2M = castingState.GetSpell(SpellId.ArcaneBlast2Miss);
                 Spell AB3M = castingState.GetSpell(SpellId.ArcaneBlast3Miss);

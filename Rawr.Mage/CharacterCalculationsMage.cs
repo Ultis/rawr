@@ -360,7 +360,7 @@ namespace Rawr.Mage
             double manaGem = 0;
             double drums = 0;
             double we = 0;
-            bool segmentedOutput = false;
+            bool segmentedOutput = true;
             Dictionary<string, SpellContribution> byspell = new Dictionary<string, SpellContribution>();
             for (int i = 0; i < SolutionVariable.Count; i++)
             {

@@ -1265,14 +1265,17 @@ namespace Rawr.Mage
                                 if (on && !sequence[i].CastingState.GetCooldown((Cooldown)cooldown) && !sequence[i].IsManaPotionOrGem)
                                 {
                                     on = false;
-                                    RectangleF rect = new RectangleF(graphStart + graphWidth * timeOn / maxScale, height - 44 + cooldown * 4, graphWidth * (time - timeOn) / maxScale, 4);
-                                    brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rect, colorSubPointsA[cooldown], colorSubPointsB[cooldown], 67f);
-                                    brushSubPointFill.InterpolationColors = blendSubPoint;
+                                    if (time > timeOn)
+                                    {
+                                        RectangleF rect = new RectangleF(graphStart + graphWidth * timeOn / maxScale, height - 44 + cooldown * 4, graphWidth * (time - timeOn) / maxScale, 4);
+                                        brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rect, colorSubPointsA[cooldown], colorSubPointsB[cooldown], 67f);
+                                        brushSubPointFill.InterpolationColors = blendSubPoint;
 
-                                    g.FillRectangle(brushSubPointFill, rect);
-                                    g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
-                                    g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
-                                    g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
+                                        g.FillRectangle(brushSubPointFill, rect);
+                                        g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
+                                        g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
+                                        g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
+                                    }
                                 }
                                 else if (!on && sequence[i].CastingState.GetCooldown((Cooldown)cooldown))
                                 {

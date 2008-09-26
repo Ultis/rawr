@@ -960,7 +960,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.Combustion) list.Add(item);
             }
-            GroupCooldown(list, 0, 180.0 + 15.0, true, false, Cooldown.Combustion);
+            GroupCooldown(list, 0, 180.0 + 15.0, true, false, Cooldown.Combustion, VariableType.None, 0.0);
         }
 
         public void GroupArcanePower()
@@ -980,7 +980,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.IcyVeins) list.Add(item);
             }
-            GroupCooldown(list, 20.0, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.IcyVeins);
+            GroupCooldown(list, 20.0, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.IcyVeins, VariableType.None, 0.0);
         }
 
         public void GroupWaterElemental()
@@ -990,7 +990,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.WaterElemental) list.Add(item);
             }
-            GroupCooldown(list, 45.0, SequenceItem.Calculations.WaterElementalCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.WaterElemental);
+            GroupCooldown(list, 45.0, SequenceItem.Calculations.WaterElementalCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.WaterElemental, VariableType.SummonWaterElemental, SequenceItem.Calculations.BaseState.GlobalCooldown);
         }
 
         public List<SequenceGroup> GroupFlameCap()
@@ -1020,26 +1020,12 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.DrumsOfBattle) list.Add(item);
             }
-            List<SequenceGroup> groups = GroupCooldown(list, 30, 120, Cooldown.DrumsOfBattle);
-            if (!SequenceItem.Calculations.CalculationOptions.DisplaySegmentCooldowns)
-            {
-                double drums = RemoveIndex(VariableType.DrumsOfBattle);
-                for (int i = 0; i < groups.Count; i++)
-                {
-                    // TODO take advantage of segmentation data if available
-                    //double drum = Math.Min(drums, SequenceItem.Calculations.GlobalCooldown);
-                    SequenceItem item = InsertIndex(SequenceItem.Calculations.ColumnDrumsOfBattle, drums / groups.Count, 0);
-                    item.Segment = groups[i].Segment;
-                    item.Group.Add(groups[i]);
-                    groups[i].Add(item);
-                    //drums -= drum;
-                }
-            }
+            List<SequenceGroup> groups = GroupCooldown(list, 30, 120, false, false, Cooldown.DrumsOfBattle, VariableType.DrumsOfBattle, SequenceItem.Calculations.BaseState.GlobalCooldown);
         }
 
         private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, Cooldown type)
         {
-            return GroupCooldown(cooldownItems, maxDuration, cooldown, false, false, type);
+            return GroupCooldown(cooldownItems, maxDuration, cooldown, false, false, type, VariableType.None, 0.0);
         }
 
         private bool ItemsCompatible(List<SequenceItem> item1, List<SequenceItem> item2, double maxCooldown)
@@ -1081,7 +1067,7 @@ namespace Rawr.Mage.SequenceReconstruction
             return true;
         }
 
-        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool combustionMode, bool coldSnapMode, Cooldown type)
+        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool combustionMode, bool coldSnapMode, Cooldown type, VariableType activation, double activationDuration)
         {
             const double eps = 0.00001;
             List<SequenceGroup> existingGroup = new List<SequenceGroup>();
@@ -1193,7 +1179,8 @@ namespace Rawr.Mage.SequenceReconstruction
             for (int i = 0; i < partialGroups.Count; i++)
             {
                 SequenceGroup group = partialGroups[i];
-                double gap = 0;
+                double gap = 0.0;
+                double activationGap = 0.0;
                 if (combustionMode)
                 {
                     double tempSum = 0;
@@ -1204,10 +1191,19 @@ namespace Rawr.Mage.SequenceReconstruction
                 else
                 {
                     gap = maxDuration - group.Duration;
+                    if (activationDuration > 0.0)
+                    {
+                        activationGap = activationDuration;
+                        foreach (SequenceItem item in group.Item)
+                        {
+                            if (item.VariableType == activation) activationGap -= item.Duration;
+                        }
+                    }
                 }
                 if (gap < -eps && coldSnapMode)
                 {
                     gap += maxDuration;
+                    activationGap += activationDuration;
                 }
                 if (gap > eps)
                 {
@@ -1216,7 +1212,8 @@ namespace Rawr.Mage.SequenceReconstruction
                     for (int j = i + 1; j < partialGroups.Count; j++)
                     {
                         SequenceGroup subgroup = partialGroups[j];
-                        double gapReduction = 0;
+                        double gapReduction = 0.0;
+                        double activationGapReduction = 0.0;
                         if (combustionMode)
                         {
                             double tempSum = 0;
@@ -1227,10 +1224,18 @@ namespace Rawr.Mage.SequenceReconstruction
                         else
                         {
                             gapReduction = subgroup.Duration;
+                            if (activationDuration > 0.0)
+                            {
+                                foreach (SequenceItem item in group.Item)
+                                {
+                                    if (item.VariableType == activation) activationGapReduction += item.Duration;
+                                }
+                            }
                         }
-                        if (subgroup.Duration > 0 && gapReduction <= gap + eps && Math.Abs(group.Segment - subgroup.Segment) < maxSegDistance && ItemsCompatible(group.Item, subgroup.Item, 0))
+                        if (subgroup.Duration > 0 && gapReduction <= gap + eps && activationGapReduction <= activationGap + eps && gap - gapReduction >= activationGap - activationGapReduction - eps && Math.Abs(group.Segment - subgroup.Segment) < maxSegDistance && ItemsCompatible(group.Item, subgroup.Item, 0))
                         {
                             gap -= gapReduction;
+                            activationGap -= activationGapReduction;
                             group.AddRange(subgroup.Item);
                             partialGroups.RemoveAt(j);
                             j--;
@@ -1252,7 +1257,8 @@ namespace Rawr.Mage.SequenceReconstruction
                             SequenceItem item = unchained[j];
                             if (group.Segment == -1 || Math.Abs(group.Segment - item.Segment) < maxSegDistance)
                             {
-                                double gapReduction = 0;
+                                double gapReduction = 0.0;
+                                double activationGapReduction = 0.0;
                                 if (combustionMode)
                                 {
                                     gapReduction = item.Duration / (item.CastingState.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
@@ -1260,29 +1266,43 @@ namespace Rawr.Mage.SequenceReconstruction
                                 else
                                 {
                                     gapReduction = item.Duration;
+                                    if (activationDuration > 0.0 && item.VariableType == activation) activationGapReduction = item.Duration;
                                 }
-                                if (gapReduction <= gap + eps)
+                                if (gapReduction <= gap + eps && activationGapReduction <= activationGap + eps && gap - gapReduction >= activationGap - activationGapReduction - eps)
                                 {
                                     gap -= gapReduction;
+                                    activationGap -= activationGapReduction;
                                     group.Add(item);
                                     unchained.RemoveAt(j);
                                     j--;
                                     if (gap < eps) break;
                                 }
-                                else
+                                else if ((activationGapReduction > eps && activationGap > eps) || (activationGapReduction == 0.0 && gap > activationGap + eps))
                                 {
                                     double split = 0;
                                     if (combustionMode)
                                     {
                                         split = gap * (item.CastingState.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
                                     }
+                                    else if (activationGapReduction > eps && activationGap > eps)
+                                    {
+                                        split = activationGap;
+                                    }
                                     else
                                     {
-                                        split = gap;
+                                        split = gap - activationGap;
                                     }
                                     group.Add(Split(item, split));
-                                    gap = 0;
-                                    break;
+                                    if (activationDuration > 0.0 && item.VariableType == activation)
+                                    {
+                                        activationGap -= split;
+                                        gap -= split;
+                                    }
+                                    else
+                                    {
+                                        gap = activationGap;
+                                        if (gap < eps) break;
+                                    }
                                 }
                             }
                         }
@@ -1690,8 +1710,10 @@ namespace Rawr.Mage.SequenceReconstruction
                                     if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[i - 1]].Duration;
                                     time = Math.Max(time, item.MinTime);
                                     // check constraints
-                                    List<int> coldsnapStarts = new List<int>();
-                                    SequenceGroup coldsnapGroup = null;
+                                    List<int> icyVeinsStarts = new List<int>();
+                                    List<int> waterElementalStarts = new List<int>();
+                                    SequenceGroup icyVeinsGroup = null;
+                                    SequenceGroup waterElementalGroup = null;
                                     foreach (SequenceGroup group in item.Group)
                                     {
                                         foreach (CooldownConstraint constraint in group.Constraint)
@@ -1709,9 +1731,10 @@ namespace Rawr.Mage.SequenceReconstruction
                                             }
                                             else
                                             {
-                                                coldsnapGroup = group;
                                                 // if we're in group with already placed item then no need to redo all this
                                                 if (i > 0 && itemList[index[i - 1]].Group.Contains(group)) continue;
+                                                if (constraint.Type == Cooldown.IcyVeins) icyVeinsGroup = group;
+                                                if (constraint.Type == Cooldown.WaterElemental) waterElementalGroup = group;
                                                 int minIndex = i;
                                                 foreach (SequenceItem coldsnapItem in constraint.Group.Item)
                                                 {
@@ -1722,7 +1745,8 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 }
                                                 if (minIndex < i)
                                                 {
-                                                    coldsnapStarts.Add(minIndex);
+                                                    if (constraint.Type == Cooldown.IcyVeins) icyVeinsStarts.Add(minIndex);
+                                                    if (constraint.Type == Cooldown.WaterElemental) waterElementalStarts.Add(minIndex);
                                                 }
                                             }
                                         }
@@ -1730,29 +1754,34 @@ namespace Rawr.Mage.SequenceReconstruction
                                     bool valid = true;
                                     // we absolutely can't come faster than time
                                     // now check coldsnap constraints
-                                    // the constraints should link to all the other icy veins groups
+                                    // the constraints should link to all the other icy veins/water elemental groups
                                     // look at the ones that were placed already and sort them by order index
                                     // if the last one that needed coldsnap is farther than coldsnap cooldown then we can use it again
                                     // if we don't need to use coldsnap anyway then adjust coldsnap to 0
-                                    if (coldsnapStarts.Count > 0)
+                                    if (icyVeinsGroup != null || waterElementalGroup != null)
                                     {
                                         // this is only called for first coldsnap item in group
-                                        coldsnapStarts.Sort();
+                                        icyVeinsStarts.Sort();
+                                        waterElementalStarts.Sort();
                                         int lastColdsnap = -1;
                                         for (int j = 0; j < i; j++)
                                         {
                                             if (coldsnap[j] == 1) lastColdsnap = j;
                                         }
-                                        if (coldsnapGroup.Duration > 20.0 + eps)
+                                        if ((icyVeinsGroup != null && icyVeinsGroup.Duration > 20.0 + eps) || (waterElementalGroup != null && waterElementalGroup.Duration > 45.0 + eps))
                                         {
                                             // we need internal coldsnap
                                             if (coldsnap[i] == 1)
                                             {
-                                                double normalTime = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
+                                                double normalTime = time;
+                                                if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
+                                                if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
                                                 double coldsnapReady = 0;
                                                 if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
                                                 // we have to do first one on normal time and have coldsnap ready in the middle
-                                                time = Math.Max(normalTime, coldsnapReady - 20.0);
+                                                time = normalTime;
+                                                if (icyVeinsGroup != null) time = Math.Max(time, coldsnapReady - 20.0);
+                                                if (waterElementalGroup != null) time = Math.Max(time, coldsnapReady - 45.0);
                                                 coldsnapTime[i] = Math.Max(time, coldsnapReady);
                                             }
                                             else
@@ -1761,7 +1790,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 valid = false;
                                             }
                                         }
-                                        else if (time - constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] >= SequenceItem.Calculations.IcyVeinsCooldown - eps)
+                                        else if ((icyVeinsGroup == null || icyVeinsStarts.Count == 0 || time - constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] >= SequenceItem.Calculations.IcyVeinsCooldown - eps) && (waterElementalGroup == null || waterElementalStarts.Count == 0 || time - constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] >= SequenceItem.Calculations.WaterElementalCooldown - eps))
                                         {
                                             // don't need coldsnap and can start right at time
                                             coldsnap[i] = 0;
@@ -1769,12 +1798,14 @@ namespace Rawr.Mage.SequenceReconstruction
                                         else if (coldsnap[i] == 1)
                                         {
                                             // use coldsnap
-                                            double normalTime = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
+                                            double normalTime = time;
+                                            if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
+                                            if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
                                             double coldsnapReady = 0;
                                             if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
                                             if (coldsnapReady >= normalTime)
                                             {
-                                                // coldsnap won't be ready until IV will be back anyway, so we don't actually need it
+                                                // coldsnap won't be ready until IV/WE will be back anyway, so we don't actually need it
                                                 coldsnap[i] = 0;
                                                 time = normalTime;
                                             }
@@ -1782,28 +1813,19 @@ namespace Rawr.Mage.SequenceReconstruction
                                             {
                                                 // go now or when coldsnap is ready
                                                 time = Math.Max(coldsnapReady, time);
-                                                coldsnapTime[i] = Math.Max(coldsnapReady, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]]);
+                                                coldsnapTime[i] = coldsnapReady;
+                                                if (icyVeinsStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]]);
+                                                if (waterElementalStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]]);
                                             }
                                         }
                                         else
                                         {
                                             // we are not allowed to use coldsnap even if we could
                                             // make sure to adjust by coldsnap constraints
-                                            time = Math.Max(time, constructionTime[coldsnapStarts[coldsnapStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
-                                        }
-                                    }
-                                    else if (coldsnapGroup != null && coldsnapGroup.Duration > 20.0 + eps)
-                                    {
-                                        // need internal coldsnap, this is first IV item being placed so all cooldowns are ready
-                                        // but we need to use coldsnap
-                                        if (coldsnap[i] == 1)
-                                        {
-                                            coldsnapTime[i] = time;
-                                        }
-                                        else
-                                        {
-                                            // can't do without coldsnap
-                                            valid = false;
+                                            double normalTime = time;
+                                            if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
+                                            if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                            time = normalTime;
                                         }
                                     }
                                     else
@@ -2614,18 +2636,34 @@ namespace Rawr.Mage.SequenceReconstruction
             double ivCooldown = 0;
             double weCooldown = 0;
             double combustionCooldown = 0;
-            double coldsnapCooldown = 0;
-            double trinket1time = -1;
-            double trinket2time = -1;
-            double flameCapTime = -1;
-            double drumsTime = -1;
-            double destructionTime = -1;
-            double combustionTime = -1;
-            double moltenFuryTime = -1;
-            double heroismTime = -1;
-            double apTime = -1;
-            double ivTime = -1;
-            double weTime = -1;
+
+            double trinket1time = double.NegativeInfinity;
+            double trinket2time = double.NegativeInfinity;
+            double flameCapTime = double.NegativeInfinity;
+            double drumsTime = double.NegativeInfinity;
+            double destructionTime = double.NegativeInfinity;
+            double combustionTime = double.NegativeInfinity;
+            double moltenFuryTime = double.NegativeInfinity;
+            double heroismTime = double.NegativeInfinity;
+            double apTime = double.NegativeInfinity;
+            double ivTime = double.NegativeInfinity;
+            double weTime = double.NegativeInfinity;
+
+            bool trinket1Active = false;
+            bool trinket2Active = false;
+            bool flameCapActive = false;
+            bool drumsActive = false;
+            bool destructionActive = false;
+            bool combustionActive = false;
+            bool moltenFuryActive = false;
+            bool heroismActive = false;
+            bool apActive = false;
+            bool ivActive = false;
+            bool weActive = false;
+
+            double coldsnapTimeMin = double.NegativeInfinity;
+            double coldsnapTimeMax = double.NegativeInfinity;
+
             bool potionWarning = false;
             bool gemWarning = false;
             bool trinket1warning = false;
@@ -2636,8 +2674,8 @@ namespace Rawr.Mage.SequenceReconstruction
             bool combustionWarning = false;
             bool drumsWarning = false;
             bool manaWarning = false;
+
             double combustionLeft = 0;
-            double lastIVWEstart = 0;
 
             double unexplained = 0;
 
@@ -2656,7 +2694,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (sequence[i].IsManaPotionOrGem) duration = 0;
                 double manabefore = mana;
                 bool cooldownContinuation = false;
-                if (!(drumsTime == -1 && flameCapTime == -1 && destructionTime == -1 && trinket1time == -1 && trinket2time == -1 && heroismTime == -1 && moltenFuryTime == -1 && combustionTime == -1 && apTime == -1 && ivTime == -1))
+                if (drumsActive || flameCapActive || destructionActive || trinket1Active || trinket2Active || heroismActive || moltenFuryActive || combustionActive || apActive || ivActive)
                 {
                     cooldownContinuation = true;
                 }
@@ -2809,9 +2847,10 @@ namespace Rawr.Mage.SequenceReconstruction
                         drumsCooldown = 120;
                         drumsTime = time;
                         drumsWarning = false;
+                        drumsActive = true;
                     }
                 }
-                else if (drumsTime >= 0)
+                else if (drumsActive)
                 {
                     if (state != null && state.DrumsOfBattle)
                     {
@@ -2836,7 +2875,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                 }
                 // Flame Cap
-                if (flameCapTime >= 0)
+                if (flameCapActive)
                 {
                     if (state != null && state.FlameCap)
                     {
@@ -2868,11 +2907,12 @@ namespace Rawr.Mage.SequenceReconstruction
                             gemCooldown = 180;
                             flameCapTime = time;
                             gemWarning = false;
+                            flameCapActive = true;
                         }
                     }
                 }
                 // Destruction Potion
-                if (destructionTime >= 0)
+                if (destructionActive)
                 {
                     if (state != null && state.DestructionPotion)
                     {
@@ -2904,11 +2944,12 @@ namespace Rawr.Mage.SequenceReconstruction
                             potionCooldown = 120;
                             destructionTime = time;
                             potionWarning = false;
+                            destructionActive = true;
                         }
                     }
                 }
                 // Trinket1
-                if (trinket1time >= 0)
+                if (trinket1Active)
                 {
                     if (state != null && state.Trinket1)
                     {
@@ -2940,11 +2981,12 @@ namespace Rawr.Mage.SequenceReconstruction
                             trinket1Cooldown = SequenceItem.Calculations.Trinket1Cooldown;
                             trinket1time = time;
                             trinket1warning = false;
+                            trinket1Active = true;
                         }
                     }
                 }
                 // Trinket2
-                if (trinket2time >= 0)
+                if (trinket2Active)
                 {
                     if (state != null && state.Trinket2)
                     {
@@ -2976,11 +3018,12 @@ namespace Rawr.Mage.SequenceReconstruction
                             trinket2Cooldown = SequenceItem.Calculations.Trinket2Cooldown;
                             trinket2time = time;
                             trinket2warning = false;
+                            trinket2Active = true;
                         }
                     }
                 }
                 // Heroism
-                if (heroismTime >= 0)
+                if (heroismActive)
                 {
                     if (state != null && state.Heroism)
                     {
@@ -3010,11 +3053,12 @@ namespace Rawr.Mage.SequenceReconstruction
                             if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Heroism (" + Math.Round(manabefore).ToString() + " mana)");
                             heroismUsed = true;
                             heroismTime = time;
+                            heroismActive = true;
                         }
                     }
                 }
                 // Molten Fury
-                if (moltenFuryTime >= 0)
+                if (moltenFuryActive)
                 {
                     if (!(state != null && state.MoltenFury) && duration > 0)
                     {
@@ -3035,11 +3079,12 @@ namespace Rawr.Mage.SequenceReconstruction
                         {
                             if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Molten Fury (" + Math.Round(manabefore).ToString() + " mana)");
                             moltenFuryTime = time;
+                            moltenFuryActive = true;
                         }
                     }
                 }
                 // Combustion
-                if (combustionTime >= 0)
+                if (combustionActive)
                 {
                     if (state != null && state.Combustion)
                     {
@@ -3081,11 +3126,12 @@ namespace Rawr.Mage.SequenceReconstruction
                             combustionTime = time;
                             combustionWarning = false;
                             combustionLeft -= duration / (state.CombustionDuration * spell.CastTime / spell.CastProcs);
+                            combustionActive = true;
                         }
                     }
                 }
                 // Arcane Power
-                if (apTime >= 0)
+                if (apActive)
                 {
                     if (state != null && state.ArcanePower)
                     {
@@ -3117,28 +3163,74 @@ namespace Rawr.Mage.SequenceReconstruction
                             apCooldown = SequenceItem.Calculations.ArcanePowerCooldown;
                             apTime = time;
                             apWarning = false;
+                            apActive = true;
                         }
                     }
                 }
                 // Icy Veins
-                if (ivTime >= 0)
+                if (!ivActive && state != null && state.IcyVeins)
+                {
+                    if (ivCooldown > eps && coldsnap)
+                    {
+                        // we need to coldsnap somewhere from [ivTime] and [time]
+                        double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, ivTime);
+                        double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, time);
+                        if (restrictedColdsnapMax > restrictedColdsnapMin + eps)
+                        {
+                            // we can reuse last coldsnap
+                            coldsnapTimeMin = restrictedColdsnapMin;
+                            coldsnapTimeMax = restrictedColdsnapMax;
+                            ivCooldown = 0.0;
+                        }
+                        else if (coldsnapCooldownDuration - (time - coldsnapTimeMin) <= eps)
+                        {
+                            // coldsnap is ready
+                            coldsnapTimeMin = Math.Max(coldsnapTimeMin + coldsnapCooldownDuration, ivTime);
+                            coldsnapTimeMax = time;
+                            ivCooldown = 0.0;
+                        }
+                    }
+                    if (ivCooldown > eps)
+                    {
+                        unexplained += duration;
+                        if (timing != null && !ivWarning) timing.AppendLine("WARNING: Icy Veins cooldown not ready!");
+                        ivWarning = true;
+                    }
+                    else
+                    {
+                        if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Icy Veins (" + Math.Round(manabefore).ToString() + " mana)");
+                        ivCooldown = SequenceItem.Calculations.IcyVeinsCooldown;
+                        ivTime = time;
+                        ivWarning = false;
+                        ivActive = true;
+                    }
+                }
+                if (ivActive)
                 {
                     if (state != null && state.IcyVeins)
                     {
                         if (time + duration > ivTime + 20 + eps)
                         {
-                            if (coldsnap && coldsnapCooldown <= (ivTime + 20 - time) + eps)
+                            if (coldsnap)
                             {
-                                double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
-                                ivTime += 20.0;
-                                if (weTime > 0)
+                                // we need to coldsnap somewhere from [ivTime] and [ivTime + 20]
+                                double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, ivTime);
+                                double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, ivTime + 20.0);
+                                if (restrictedColdsnapMax > restrictedColdsnapMin + eps)
                                 {
-                                    // TODO think
-                                    weTime += 45.0;
-                                    weCooldown += 45.0;
+                                    // we can reuse last coldsnap
+                                    coldsnapTimeMin = restrictedColdsnapMin;
+                                    coldsnapTimeMax = restrictedColdsnapMax;
+                                    ivTime += 20.0;
+                                    ivCooldown += 20.0;
                                 }
-                                ivCooldown += 20;
-                                coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
+                                else if (coldsnapCooldownDuration + coldsnapTimeMin <= ivTime + 20 + eps)
+                                {
+                                    coldsnapTimeMin = Math.Max(coldsnapTimeMin + coldsnapCooldownDuration, ivTime);
+                                    coldsnapTimeMax = ivTime + 20.0;
+                                    ivTime += 20.0;
+                                    ivCooldown += 20.0;
+                                }
                             }
                             if (time + duration > ivTime + 20 + eps)
                             {
@@ -3153,59 +3245,70 @@ namespace Rawr.Mage.SequenceReconstruction
                         if (timing != null) timing.AppendLine("INFO: Icy Veins is still up!");
                     }
                 }
-                else
+                // Water Elemental
+                if (!weActive && state != null && state.WaterElemental)
                 {
-                    if (state != null && state.IcyVeins)
+                    if (weCooldown > eps && coldsnap)
                     {
-                        if (ivCooldown > eps && (!coldsnap || coldsnapCooldown > eps))
+                        // we need to coldsnap somewhere from [weTime] and [time]
+                        double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, weTime);
+                        double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, time);
+                        if (restrictedColdsnapMax > restrictedColdsnapMin + eps)
                         {
-                            unexplained += duration;
-                            if (timing != null && !ivWarning) timing.AppendLine("WARNING: Icy Veins cooldown not ready!");
-                            ivWarning = true;
+                            // we can reuse last coldsnap
+                            coldsnapTimeMin = restrictedColdsnapMin;
+                            coldsnapTimeMax = restrictedColdsnapMax;
+                            weCooldown = 0.0;
                         }
-                        else
+                        else if (coldsnapCooldownDuration - (time - coldsnapTimeMin) <= eps)
                         {
-                            if (coldsnap && ivCooldown > eps && coldsnapCooldown <= eps)
-                            {
-                                double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
-                                coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
-                            }
-                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Icy Veins (" + Math.Round(manabefore).ToString() + " mana)");
-                            ivCooldown = SequenceItem.Calculations.IcyVeinsCooldown;
-                            ivTime = time;
-                            ivWarning = false;
-                            lastIVWEstart = time;
-                            if (duration > 20.0)
-                            {
-                                if (coldsnap && coldsnapCooldown <= 20.0 + eps)
-                                {
-                                    double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
-                                    ivTime += 20;
-                                    ivCooldown += 20;
-                                    coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
-                                }
-                                if (time + duration > ivTime + 20.0 + eps)
-                                {
-                                    unexplained += time + duration - ivTime - 20;
-                                    if (timing != null) timing.AppendLine("WARNING: Icy Veins duration too long!");
-                                }
-                            }
+                            // coldsnap is ready
+                            coldsnapTimeMin = Math.Max(coldsnapTimeMin + coldsnapCooldownDuration, weTime);
+                            coldsnapTimeMax = time;
+                            weCooldown = 0.0;
                         }
                     }
+                    if (weCooldown > eps)
+                    {
+                        unexplained += duration;
+                        if (timing != null && !weWarning) timing.AppendLine("WARNING: Water Elemental cooldown not ready!");
+                        weWarning = true;
+                    }
+                    else
+                    {
+                        if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Water Elemental (" + Math.Round(manabefore).ToString() + " mana)");
+                        weCooldown = SequenceItem.Calculations.WaterElementalCooldown;
+                        weTime = time;
+                        weWarning = false;
+                        weActive = true;
+                    }
                 }
-                // Water Elemental
-                if (weTime >= 0)
+                if (weActive)
                 {
                     if (state != null && state.WaterElemental)
                     {
                         if (time + duration > weTime + 45.0 + eps)
                         {
-                            if (coldsnap && coldsnapCooldown <= (weTime + 45.0 - time) + eps)
+                            if (coldsnap)
                             {
-                                double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
-                                weTime += 20;
-                                weCooldown += 20;
-                                coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
+                                // we need to coldsnap somewhere from [weTime] and [weTime + 45]
+                                double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, weTime);
+                                double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, weTime + 45);
+                                if (restrictedColdsnapMax > restrictedColdsnapMin + eps)
+                                {
+                                    // we can reuse last coldsnap
+                                    coldsnapTimeMin = restrictedColdsnapMin;
+                                    coldsnapTimeMax = restrictedColdsnapMax;
+                                    weTime += 45.0;
+                                    weCooldown += 45.0;
+                                }
+                                else if (coldsnapCooldownDuration - (time - coldsnapTimeMin) <= (weTime + 45.0 - time) + eps)
+                                {
+                                    coldsnapTimeMin = Math.Max(coldsnapTimeMin + coldsnapCooldownDuration, weTime);
+                                    coldsnapTimeMax = weTime + 45.0;
+                                    weTime += 45.0;
+                                    weCooldown += 45.0;
+                                }
                             }
                             if (time + duration > weTime + 45.0 + eps)
                             {
@@ -3216,48 +3319,8 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                     else if (duration > 0 && 45.0 - (time - weTime) > eps)
                     {
-                        //unexplained += Math.Min(duration, 45 - (time - ivTime));
+                        //unexplained += Math.Min(duration, 45 - (time - weTime));
                         if (timing != null) timing.AppendLine("INFO: Water Elemental is still up!");
-                    }
-                }
-                else
-                {
-                    if (state != null && state.WaterElemental)
-                    {
-                        if (weCooldown > eps && (!coldsnap || coldsnapCooldown > eps))
-                        {
-                            unexplained += duration;
-                            if (timing != null && !weWarning) timing.AppendLine("WARNING: Water Elemental cooldown not ready!");
-                            weWarning = true;
-                        }
-                        else
-                        {
-                            if (coldsnap && weCooldown > eps && coldsnapCooldown <= eps)
-                            {
-                                double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
-                                coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
-                            }
-                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Water Elemental (" + Math.Round(manabefore).ToString() + " mana)");
-                            weCooldown = SequenceItem.Calculations.WaterElementalCooldown;
-                            weTime = time;
-                            weWarning = false;
-                            lastIVWEstart = time;
-                            if (duration > 45.0)
-                            {
-                                if (coldsnap && coldsnapCooldown <= 45.0 + eps)
-                                {
-                                    double coldsnapActivation = Math.Max(time + coldsnapCooldown, lastIVWEstart);
-                                    weTime += 45.0;
-                                    weCooldown += 45.0;
-                                    coldsnapCooldown = coldsnapCooldownDuration - (time - coldsnapActivation);
-                                }
-                                if (time + duration > weTime + 45.0 + eps)
-                                {
-                                    unexplained += time + duration - weTime - 45.0;
-                                    if (timing != null) timing.AppendLine("WARNING: Water Elemental duration too long!");
-                                }
-                            }
-                        }
                     }
                 }
                 // Move time forward
@@ -3266,7 +3329,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     double aftertime = data[0];
                     if (aftertime >= time && aftertime <= time + duration)
                     {
-                        if (drumsTime == -1 && flameCapTime == -1 && destructionTime == -1 && trinket1time == -1 && trinket2time == -1 && heroismTime == -1 && moltenFuryTime == -1 && combustionTime == -1 && apTime == -1 && ivTime == -1)
+                        if (!drumsActive && !flameCapActive && !destructionActive && !trinket1Active && !trinket2Active && !heroismActive && !moltenFuryActive && !combustionActive && !apActive && !ivActive)
                         {
                             return aftertime;
                         }
@@ -3330,16 +3393,15 @@ namespace Rawr.Mage.SequenceReconstruction
                 trinket2Cooldown -= duration;
                 combustionCooldown -= duration;
                 drumsCooldown -= duration;
-                coldsnapCooldown -= duration;
-                if (apTime >= 0 && SequenceItem.Calculations.ArcanePowerDuration - (time - apTime) <= eps) apTime = -1;
-                if (ivTime >= 0 && 20 - (time - ivTime) <= eps) ivTime = -1;
-                if (weTime >= 0 && 45.0 - (time - weTime) <= eps) weTime = -1;
-                if (heroismTime >= 0 && 40 - (time - heroismTime) <= eps) heroismTime = -1;
-                if (destructionTime >= 0 && 15 - (time - destructionTime) <= eps) destructionTime = -1;
-                if (flameCapTime >= 0 && 60 - (time - flameCapTime) <= eps) flameCapTime = -1;
-                if (trinket1time >= 0 && Trinket1Duration - (time - trinket1time) <= eps) trinket1time = -1;
-                if (trinket2time >= 0 && Trinket2Duration - (time - trinket2time) <= eps) trinket2time = -1;
-                if (drumsTime >= 0 && 30 - (time - drumsTime) <= 0) drumsTime = -1;
+                if (apActive && SequenceItem.Calculations.ArcanePowerDuration - (time - apTime) <= eps) apActive = false;
+                if (ivActive && 20 - (time - ivTime) <= eps) ivActive = false;
+                if (weActive && 45.0 - (time - weTime) <= eps) weActive = false;
+                if (heroismActive && 40 - (time - heroismTime) <= eps) heroismActive = false;
+                if (destructionActive && 15 - (time - destructionTime) <= eps) destructionActive = false;
+                if (flameCapActive && 60 - (time - flameCapTime) <= eps) flameCapActive = false;
+                if (trinket1Active && Trinket1Duration - (time - trinket1time) <= eps) trinket1Active = false;
+                if (trinket2Active && Trinket2Duration - (time - trinket2time) <= eps) trinket2Active = false;
+                if (drumsActive && 30 - (time - drumsTime) <= 0) drumsActive = false;
             }
             if (timing != null && unexplained > 0)
             {

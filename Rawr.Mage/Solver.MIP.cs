@@ -1592,44 +1592,115 @@ namespace Rawr.Mage
         private bool ValidateColdsnap()
         {
             const double eps = 0.000001;
-            double[] segCount = new double[segments];
+            double[] ivCount = new double[segments];
+            double[] weCount = new double[segments];
             for (int outseg = 0; outseg < segments; outseg++)
             {
-                double s = 0.0;
                 for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
                 {
                     CastingState state = calculationResult.SolutionVariable[index].State;
                     if (state != null && state.GetCooldown(Cooldown.IcyVeins))
                     {
-                        s += solution[index];
+                        ivCount[outseg] += solution[index];
+                    }
+                    if (state != null && state.GetCooldown(Cooldown.WaterElemental))
+                    {
+                        weCount[outseg] += solution[index];
                     }
                 }
-                segCount[outseg] = s;
+            }
+            for (int index = 0; index < segmentColumn[0]; index++)
+            {
+                CastingState state = calculationResult.SolutionVariable[index].State;
+                //if (state != null && state.GetCooldown(Cooldown.IcyVeins))
+                //{
+                //    ivCount[calculationResult.SolutionVariable[index].Segment] += solution[index];
+                //}
+                if (state != null && state.GetCooldown(Cooldown.WaterElemental))
+                {
+                    weCount[calculationResult.SolutionVariable[index].Segment] += solution[index];
+                }
             }
             // everything is valid, except possibly coldsnap so we can assume the effects are nicely packed
             // check where coldsnaps are needed, similar to evaluation in sequence reconstruction
             bool ivActive = false;
-            double lastIVstart = 0.0;
-            double coldsnapTimer = 0.0;
+            bool weActive = false;
+            double lastIVstart = double.NegativeInfinity;
+            double lastWEstart = double.NegativeInfinity;
             double ivCooldown = 0.0;
+            double weCooldown = 0.0;
             bool valid = true;
-            double coldsnapActivation = 0.0;
+            double coldsnapTimeMin = double.NegativeInfinity;
+            double coldsnapTimeMax = double.NegativeInfinity;
             for (int seg = 0; seg < segments; seg++)
             {
+                if (!ivActive && ivCount[seg] > eps)
+                {
+                    if (ivCooldown + ivCount[seg] > segmentDuration + eps)
+                    {
+                        // we need to coldsnap somewhere from [lastIVstart] and [(seg + 1) * segmentDuration - ivCount[seg]]
+                        double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, lastIVstart);
+                        double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, (seg + 1) * segmentDuration - ivCount[seg]);
+                        if (restrictedColdsnapMax > restrictedColdsnapMin + eps)
+                        {
+                            // we can reuse last coldsnap
+                            coldsnapTimeMin = restrictedColdsnapMin;
+                            coldsnapTimeMax = restrictedColdsnapMax;
+                            ivCooldown = 0.0;
+                        }
+                        else if (calculationResult.ColdsnapCooldown - ((seg + 1) * segmentDuration - ivCount[seg] - coldsnapTimeMin) <= eps)
+                        {
+                            // coldsnap is ready
+                            coldsnapTimeMin = Math.Max(coldsnapTimeMin + calculationResult.ColdsnapCooldown, lastIVstart);
+                            coldsnapTimeMax = (seg + 1) * segmentDuration - ivCount[seg];
+                            ivCooldown = 0.0;
+                        }
+                        else
+                        {
+                            // coldsnap is not ready
+                            valid = false;
+                            break;
+                        }
+                        double ivActivation = Math.Max(coldsnapTimeMin, seg * segmentDuration);
+                        ivCooldown = calculationResult.IcyVeinsCooldown + ivActivation - seg * segmentDuration;
+                        ivActive = true;
+                        lastIVstart = ivActivation;
+                    }
+                    else
+                    {
+                        // start as soon as possible
+                        double ivActivation = Math.Max(seg * segmentDuration + ivCooldown, seg * segmentDuration);
+                        if (seg + 1 < segments && ivCount[seg + 1] > 0) ivActivation = (seg + 1) * segmentDuration - ivCount[seg];
+                        ivCooldown = calculationResult.IcyVeinsCooldown + ivActivation - seg * segmentDuration;
+                        ivActive = true;
+                        lastIVstart = ivActivation;
+                    }
+                }
                 if (ivActive)
                 {
-                    if (segCount[seg] > 0.0)
+                    if (ivCount[seg] > 0.0)
                     {
-                        if (seg * segmentDuration + segCount[seg] > lastIVstart + 20.0 + eps)
+                        if (seg * segmentDuration + ivCount[seg] > lastIVstart + 20.0 + eps)
                         {
-                            if (coldsnapTimer <= (lastIVstart + 20.0 - seg * segmentDuration) + eps)
+                            // we need to coldsnap somewhere from [ivTime] and [ivTime + 20]
+                            double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, lastIVstart);
+                            double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, lastIVstart + 20.0);
+                            if (restrictedColdsnapMax > restrictedColdsnapMin + eps)
                             {
-                                coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapTimer, lastIVstart);
+                                // we can reuse last coldsnap
+                                coldsnapTimeMin = restrictedColdsnapMin;
+                                coldsnapTimeMax = restrictedColdsnapMax;
                                 lastIVstart += 20.0;
                                 ivCooldown += 20.0;
-                                coldsnapTimer = calculationResult.ColdsnapCooldown - (seg * segmentDuration - coldsnapActivation);
                             }
-                            if (seg * segmentDuration + segCount[seg] > lastIVstart + 20.0 + eps)
+                            else if (calculationResult.ColdsnapCooldown + coldsnapTimeMin <= lastIVstart + 20.0 + eps)
+                            {
+                                coldsnapTimeMin = Math.Max(coldsnapTimeMin + calculationResult.ColdsnapCooldown, lastIVstart);
+                                coldsnapTimeMax = lastIVstart + 20.0;
+                                lastIVstart += 20.0;
+                                ivCooldown += 20.0;
+                            }
+                            if (seg * segmentDuration + ivCount[seg] > lastIVstart + 20.0 + eps)
                             {
                                 // we need to coldsnap iv, but it is on cooldown
                                 valid = false;
@@ -1642,67 +1713,93 @@ namespace Rawr.Mage
                         ivActive = false;
                     }
                 }
-                else
+                if (!weActive && weCount[seg] > eps)
                 {
-                    if (segCount[seg] > 0.0)
+                    if (weCooldown + weCount[seg] > segmentDuration + eps)
                     {
-                        if (ivCooldown + segCount[seg] > segmentDuration + eps && coldsnapTimer + segCount[seg] > segmentDuration + eps)
+                        // we need to coldsnap somewhere from [lastWEstart] and [(seg + 1) * segmentDuration - weCount[seg]]
+                        double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, lastWEstart);
+                        double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, (seg + 1) * segmentDuration - weCount[seg]);
+                        if (restrictedColdsnapMax > restrictedColdsnapMin + eps)
                         {
-                            // iv cooldown not ready and coldsnap won't be ready in time
-                            valid = false;
-                            break;
+                            // we can reuse last coldsnap
+                            coldsnapTimeMin = restrictedColdsnapMin;
+                            coldsnapTimeMax = restrictedColdsnapMax;
+                            weCooldown = 0.0;
+                        }
+                        else if (calculationResult.ColdsnapCooldown - ((seg + 1) * segmentDuration - weCount[seg] - coldsnapTimeMin) <= eps)
+                        {
+                            // coldsnap is ready
+                            coldsnapTimeMin = Math.Max(coldsnapTimeMin + calculationResult.ColdsnapCooldown, lastWEstart);
+                            coldsnapTimeMax = (seg + 1) * segmentDuration - weCount[seg];
+                            weCooldown = 0.0;
                         }
                         else
                         {
-                            if (ivCooldown + segCount[seg] > segmentDuration + eps && coldsnapTimer + segCount[seg] <= segmentDuration + eps)
+                            // coldsnap is not ready
+                            valid = false;
+                            break;
+                        }
+                        double weActivation = Math.Max(coldsnapTimeMin, seg * segmentDuration);
+                        weCooldown = calculationResult.WaterElementalCooldown + weActivation - seg * segmentDuration;
+                        weActive = true;
+                        lastWEstart = weActivation;
+                    }
+                    else
+                    {
+                        // start as soon as possible
+                        double weActivation = Math.Max(seg * segmentDuration + weCooldown, seg * segmentDuration);
+                        if (seg + 1 < segments && weCount[seg + 1] > 0) weActivation = (seg + 1) * segmentDuration - weCount[seg];
+                        weCooldown = calculationResult.WaterElementalCooldown + weActivation - seg * segmentDuration;
+                        weActive = true;
+                        lastWEstart = weActivation;
+                    }
+                }
+                if (weActive)
+                {
+                    if (weCount[seg] > 0.0)
+                    {
+                        if (seg * segmentDuration + weCount[seg] > lastWEstart + 45.0 + eps)
+                        {
+                            // we need to coldsnap somewhere from [weTime] and [weTime + 45]
+                            double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, lastWEstart);
+                            double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, lastWEstart + 45.0);
+                            if (restrictedColdsnapMax > restrictedColdsnapMin + eps)
                             {
-                                // iv not ready, but we can coldsnap
-                                coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapTimer, lastIVstart);
-                                coldsnapTimer = calculationResult.ColdsnapCooldown - (seg * segmentDuration - coldsnapActivation);
-                                double ivActivation = Math.Max(coldsnapActivation, seg * segmentDuration);
-                                ivCooldown = calculationResult.IcyVeinsCooldown + ivActivation - seg * segmentDuration;
-                                ivActive = true;
-                                lastIVstart = ivActivation;
+                                // we can reuse last coldsnap
+                                coldsnapTimeMin = restrictedColdsnapMin;
+                                coldsnapTimeMax = restrictedColdsnapMax;
+                                lastWEstart += 45.0;
+                                weCooldown += 45.0;
                             }
-                            else
+                            else if (calculationResult.ColdsnapCooldown + coldsnapTimeMin <= lastWEstart + 45.0 + eps)
                             {
-                                // start as soon as possible
-                                double ivActivation = Math.Max(seg * segmentDuration + ivCooldown, seg * segmentDuration);
-                                if (seg + 1 < segments && segCount[seg + 1] > 0) ivActivation = (seg + 1) * segmentDuration - segCount[seg];
-                                ivCooldown = calculationResult.IcyVeinsCooldown + ivActivation - seg * segmentDuration;
-                                ivActive = true;
-                                lastIVstart = ivActivation;
+                                coldsnapTimeMin = Math.Max(coldsnapTimeMin + calculationResult.ColdsnapCooldown, lastWEstart);
+                                coldsnapTimeMax = lastWEstart + 45.0;
+                                lastWEstart += 45.0;
+                                weCooldown += 45.0;
                             }
-                            if (segCount[seg] > 20.0 + eps)
+                            if (seg * segmentDuration + weCount[seg] > lastWEstart + 45.0 + eps)
                             {
-                                if (coldsnapTimer <= (lastIVstart + 20.0 - seg * segmentDuration) + eps)
-                                {
-                                    coldsnapActivation = Math.Max(seg * segmentDuration + coldsnapTimer, lastIVstart);
-                                    lastIVstart += 20.0;
-                                    ivCooldown += 20.0;
-                                    coldsnapTimer = calculationResult.ColdsnapCooldown - (seg * segmentDuration - coldsnapActivation);
-                                }
-                                if (seg * segmentDuration + segCount[seg] > lastIVstart + 20.0 + eps)
-                                {
-                                    // we need to coldsnap iv, but it is on cooldown
-                                    valid = false;
-                                    break;
-                                }
+                                // we need to coldsnap iv, but it is on cooldown
+                                valid = false;
+                                break;
                             }
                         }
                     }
                     else
                     {
-                        ivActive = false;
+                        weActive = false;
                     }
                 }
-                coldsnapTimer -= segmentDuration;
                 ivCooldown -= segmentDuration;
+                weCooldown -= segmentDuration;
             }
             if (!valid)
             {
+                return true; // TEMP
                 EnsureColdsnapConstraints();
-                int coldsnapSegment = (int)(coldsnapActivation / segmentDuration);
+                int coldsnapSegment = (int)(coldsnapTimeMin / segmentDuration);
                 // branch on whether we have coldsnap in this segment or not
                 SolverLP coldsnapUsedIntra = lp.Clone();
                 SolverLP coldsnapUsedExtra = lp.Clone();

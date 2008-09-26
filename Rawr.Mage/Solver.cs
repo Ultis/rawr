@@ -1447,7 +1447,7 @@ namespace Rawr.Mage
                     }
                     for (int seg = 0; seg < segments; seg++)
                     {
-                        lp.SetRHSUnsafe(rowSegmentSummonWaterElemental + seg, calculationResult.BaseState.GlobalCooldown);
+                        lp.SetRHSUnsafe(rowSegmentSummonWaterElemental + seg, calculationResult.BaseState.GlobalCooldown + (coldsnapAvailable ? calculationResult.BaseState.GlobalCooldown : 0.0));
                         double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? 45.0 : 0.0);
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
