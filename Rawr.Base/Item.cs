@@ -562,6 +562,37 @@ namespace Rawr
 			//Blue = 108
 		}
 
+		public static Item.ItemSlot GetItemSlotByCharacterSlot(Character.CharacterSlot slot)
+		{
+			switch (slot)
+			{
+				case Character.CharacterSlot.Projectile: return Item.ItemSlot.Projectile;
+				case Character.CharacterSlot.Head: return Item.ItemSlot.Head;
+				case Character.CharacterSlot.Neck: return Item.ItemSlot.Neck;
+				case Character.CharacterSlot.Shoulders: return Item.ItemSlot.Shoulders;
+				case Character.CharacterSlot.Chest: return Item.ItemSlot.Chest;
+				case Character.CharacterSlot.Waist: return Item.ItemSlot.Waist;
+				case Character.CharacterSlot.Legs: return Item.ItemSlot.Legs;
+				case Character.CharacterSlot.Feet: return Item.ItemSlot.Feet;
+				case Character.CharacterSlot.Wrist: return Item.ItemSlot.Wrist;
+				case Character.CharacterSlot.Hands: return Item.ItemSlot.Hands;
+				case Character.CharacterSlot.Finger1: return Item.ItemSlot.Finger;
+				case Character.CharacterSlot.Finger2: return Item.ItemSlot.Finger;
+				case Character.CharacterSlot.Trinket1: return Item.ItemSlot.Trinket;
+				case Character.CharacterSlot.Trinket2: return Item.ItemSlot.Trinket;
+				case Character.CharacterSlot.Back: return Item.ItemSlot.Back;
+				case Character.CharacterSlot.MainHand: return Item.ItemSlot.MainHand;
+				case Character.CharacterSlot.OffHand: return Item.ItemSlot.OffHand;
+				case Character.CharacterSlot.Ranged: return Item.ItemSlot.Ranged;
+				case Character.CharacterSlot.ProjectileBag: return Item.ItemSlot.ProjectileBag;
+				case Character.CharacterSlot.Tabard: return Item.ItemSlot.Tabard;
+				case Character.CharacterSlot.Shirt: return Item.ItemSlot.Shirt;
+				case Character.CharacterSlot.Gems: return Item.ItemSlot.Prismatic;
+				case Character.CharacterSlot.Metas: return Item.ItemSlot.Meta;
+				default: return Item.ItemSlot.None;
+			}
+		}
+
         public bool IsGem
         {
             get

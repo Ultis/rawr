@@ -121,6 +121,12 @@
     <Compile Include="FormRelevantItemRefinement.Designer.cs">
       <DependentUpon>FormRelevantItemRefinement.cs</DependentUpon>
     </Compile>
+    <Compile Include="ItemButtonWithEnchant.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ItemButtonWithEnchant.Designer.cs">
+      <DependentUpon>ItemButtonWithEnchant.cs</DependentUpon>
+    </Compile>
     <Compile Include="ItemEnchantContextualMenu.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -315,6 +321,9 @@
     <EmbeddedResource Include="FormUpgradeComparison.resx">
       <DependentUpon>FormUpgradeComparison.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ItemButtonWithEnchant.resx">
+      <DependentUpon>ItemButtonWithEnchant.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ItemComparison.resx">
       <SubType>Designer</SubType>

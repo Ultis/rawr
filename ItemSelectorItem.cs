@@ -207,6 +207,17 @@ namespace Rawr
 			e.Graphics.DrawImageUnscaled(PrerenderedImage, 0, 0);
 		}
 
+		private bool _isEnchant = false;
+		public bool IsEnchant
+		{
+			get { return _isEnchant; }
+			set
+			{
+				_isEnchant = value;
+				Height = value ? 24 : 43;
+			}
+		}
+
 		private Bitmap _prerenderedImage = null;
 		public Bitmap PrerenderedImage
 		{
@@ -227,13 +238,18 @@ namespace Rawr
 					else if (_itemCalculation.Equipped)
 						g.FillRectangle(BrushEquipped, 2, 2, this.Width - 4, this.Height - 4);
 
-					g.DrawImageUnscaled(ItemIcons.GetItemIcon(_itemCalculation.Item, true), 5, 5);
+					if (!string.IsNullOrEmpty(_itemCalculation.Item.IconPath))
+						g.DrawImageUnscaled(ItemIcons.GetItemIcon(_itemCalculation.Item, true), 5, 5);
 					int gemCount = (_itemCalculation.Item.Sockets.Color1 == Item.ItemSlot.None ? 0 : 1) +
 						(_itemCalculation.Item.Sockets.Color2 == Item.ItemSlot.None ? 0 : 1) +
 							(_itemCalculation.Item.Sockets.Color3 == Item.ItemSlot.None ? 0 : 1);
-					g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor), 
-						new RectangleF(41, 0, this.Width - 49 - (gemCount * 31), this.Height - 3), StringFormatItemName);
-
+					if (IsEnchant)
+						g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
+							new RectangleF(4, 0, this.Width - 14 - (gemCount * 31), this.Height - 3), StringFormatItemName);
+					else
+						g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
+							new RectangleF(41, 0, this.Width - 49 - (gemCount * 31), this.Height - 3), StringFormatItemName);
+					
 					if (_itemCalculation.Item.Sockets.Color1 != Item.ItemSlot.None)
 					{
 						switch (_itemCalculation.Item.Sockets.Color1)
@@ -314,7 +330,7 @@ namespace Rawr
 						if (sort == i || sort < 0)
 						{
 							subPointWidth = (int)Math.Floor((float)maxWidth * (_itemCalculation.SubPoints[i] / _maxRating));
-							g.FillRectangle(new SolidBrush(subPointColors[i]), new Rectangle(startX, 38, subPointWidth, 2));
+								g.FillRectangle(new SolidBrush(subPointColors[i]), new Rectangle(startX, this.Height - 5, subPointWidth, 2));
 							startX += subPointWidth;
 						}
 					}

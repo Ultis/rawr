@@ -58,34 +58,34 @@ namespace Rawr
 			this.comboBoxEnchantLegs = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantChest = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantHands = new System.Windows.Forms.ComboBox();
-			this.itemButtonBack = new Rawr.ItemButton();
-			this.itemButtonChest = new Rawr.ItemButton();
+			this.itemButtonBack = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonChest = new Rawr.ItemButtonWithEnchant();
 			this.comboBoxEnchantRanged = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantBack = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantOffHand = new System.Windows.Forms.ComboBox();
-			this.itemButtonFeet = new Rawr.ItemButton();
+			this.itemButtonFeet = new Rawr.ItemButtonWithEnchant();
 			this.comboBoxEnchantMainHand = new System.Windows.Forms.ComboBox();
-			this.itemButtonFinger1 = new Rawr.ItemButton();
+			this.itemButtonFinger1 = new Rawr.ItemButtonWithEnchant();
 			this.comboBoxEnchantWrists = new System.Windows.Forms.ComboBox();
 			this.comboBoxEnchantShoulders = new System.Windows.Forms.ComboBox();
-			this.itemButtonFinger2 = new Rawr.ItemButton();
-			this.itemButtonHands = new Rawr.ItemButton();
-			this.itemButtonHead = new Rawr.ItemButton();
-			this.itemButtonRanged = new Rawr.ItemButton();
-			this.itemButtonLegs = new Rawr.ItemButton();
+			this.itemButtonFinger2 = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonHands = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonHead = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonRanged = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonLegs = new Rawr.ItemButtonWithEnchant();
 			this.itemButtonNeck = new Rawr.ItemButton();
 			this.comboBoxEnchantHead = new System.Windows.Forms.ComboBox();
 			this.itemButtonProjectileBag = new Rawr.ItemButton();
 			this.itemButtonProjectile = new Rawr.ItemButton();
-			this.itemButtonOffHand = new Rawr.ItemButton();
+			this.itemButtonOffHand = new Rawr.ItemButtonWithEnchant();
 			this.itemButtonShirt = new Rawr.ItemButton();
-			this.itemButtonShoulders = new Rawr.ItemButton();
+			this.itemButtonShoulders = new Rawr.ItemButtonWithEnchant();
 			this.itemButtonTabard = new Rawr.ItemButton();
 			this.itemButtonTrinket1 = new Rawr.ItemButton();
 			this.itemButtonTrinket2 = new Rawr.ItemButton();
 			this.itemButtonWaist = new Rawr.ItemButton();
-			this.itemButtonMainHand = new Rawr.ItemButton();
-			this.itemButtonWrist = new Rawr.ItemButton();
+			this.itemButtonMainHand = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonWrist = new Rawr.ItemButtonWithEnchant();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.itemComparison1 = new Rawr.ItemComparison();
 			this.toolStripItemComparison = new System.Windows.Forms.ToolStrip();
@@ -247,10 +247,11 @@ namespace Rawr
 			this.comboBoxEnchantFinger2.DropDownWidth = 260;
 			this.comboBoxEnchantFinger2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantFinger2.FormattingEnabled = true;
-			this.comboBoxEnchantFinger2.Location = new System.Drawing.Point(396, 533);
+			this.comboBoxEnchantFinger2.Location = new System.Drawing.Point(384, 672);
 			this.comboBoxEnchantFinger2.Name = "comboBoxEnchantFinger2";
 			this.comboBoxEnchantFinger2.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantFinger2.TabIndex = 1;
+			this.comboBoxEnchantFinger2.Visible = false;
 			this.comboBoxEnchantFinger2.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// comboBoxEnchantFeet
@@ -259,10 +260,11 @@ namespace Rawr
 			this.comboBoxEnchantFeet.DropDownWidth = 260;
 			this.comboBoxEnchantFeet.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantFeet.FormattingEnabled = true;
-			this.comboBoxEnchantFeet.Location = new System.Drawing.Point(396, 341);
+			this.comboBoxEnchantFeet.Location = new System.Drawing.Point(384, 675);
 			this.comboBoxEnchantFeet.Name = "comboBoxEnchantFeet";
 			this.comboBoxEnchantFeet.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantFeet.TabIndex = 1;
+			this.comboBoxEnchantFeet.Visible = false;
 			this.comboBoxEnchantFeet.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// comboBoxEnchantFinger1
@@ -271,10 +273,11 @@ namespace Rawr
 			this.comboBoxEnchantFinger1.DropDownWidth = 260;
 			this.comboBoxEnchantFinger1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantFinger1.FormattingEnabled = true;
-			this.comboBoxEnchantFinger1.Location = new System.Drawing.Point(396, 437);
+			this.comboBoxEnchantFinger1.Location = new System.Drawing.Point(384, 675);
 			this.comboBoxEnchantFinger1.Name = "comboBoxEnchantFinger1";
 			this.comboBoxEnchantFinger1.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantFinger1.TabIndex = 1;
+			this.comboBoxEnchantFinger1.Visible = false;
 			this.comboBoxEnchantFinger1.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// tabControlCharacter
@@ -547,10 +550,11 @@ namespace Rawr
 			this.comboBoxEnchantLegs.DropDownWidth = 260;
 			this.comboBoxEnchantLegs.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantLegs.FormattingEnabled = true;
-			this.comboBoxEnchantLegs.Location = new System.Drawing.Point(396, 245);
+			this.comboBoxEnchantLegs.Location = new System.Drawing.Point(384, 675);
 			this.comboBoxEnchantLegs.Name = "comboBoxEnchantLegs";
 			this.comboBoxEnchantLegs.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantLegs.TabIndex = 1;
+			this.comboBoxEnchantLegs.Visible = false;
 			this.comboBoxEnchantLegs.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// comboBoxEnchantChest
@@ -559,10 +563,11 @@ namespace Rawr
 			this.comboBoxEnchantChest.DropDownWidth = 260;
 			this.comboBoxEnchantChest.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantChest.FormattingEnabled = true;
-			this.comboBoxEnchantChest.Location = new System.Drawing.Point(3, 437);
+			this.comboBoxEnchantChest.Location = new System.Drawing.Point(384, 675);
 			this.comboBoxEnchantChest.Name = "comboBoxEnchantChest";
 			this.comboBoxEnchantChest.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantChest.TabIndex = 1;
+			this.comboBoxEnchantChest.Visible = false;
 			this.comboBoxEnchantChest.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// comboBoxEnchantHands
@@ -571,10 +576,11 @@ namespace Rawr
 			this.comboBoxEnchantHands.DropDownWidth = 260;
 			this.comboBoxEnchantHands.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantHands.FormattingEnabled = true;
-			this.comboBoxEnchantHands.Location = new System.Drawing.Point(396, 73);
+			this.comboBoxEnchantHands.Location = new System.Drawing.Point(384, 675);
 			this.comboBoxEnchantHands.Name = "comboBoxEnchantHands";
 			this.comboBoxEnchantHands.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantHands.TabIndex = 1;
+			this.comboBoxEnchantHands.Visible = false;
 			this.comboBoxEnchantHands.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// itemButtonBack
@@ -582,13 +588,12 @@ namespace Rawr
 			this.itemButtonBack.Character = null;
 			this.itemButtonBack.CharacterSlot = Rawr.Character.CharacterSlot.Back;
 			this.itemButtonBack.ItemIcon = null;
-			this.itemButtonBack.Location = new System.Drawing.Point(3, 271);
+			this.itemButtonBack.Location = new System.Drawing.Point(3, 257);
 			this.itemButtonBack.Name = "itemButtonBack";
 			this.itemButtonBack.SelectedItem = null;
 			this.itemButtonBack.SelectedItemId = 0;
-			this.itemButtonBack.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonBack.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonBack.TabIndex = 2;
-			this.itemButtonBack.Text = "Back";
 			this.itemButtonBack.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonChest
@@ -596,13 +601,12 @@ namespace Rawr
 			this.itemButtonChest.Character = null;
 			this.itemButtonChest.CharacterSlot = Rawr.Character.CharacterSlot.Chest;
 			this.itemButtonChest.ItemIcon = null;
-			this.itemButtonChest.Location = new System.Drawing.Point(3, 367);
+			this.itemButtonChest.Location = new System.Drawing.Point(3, 346);
 			this.itemButtonChest.Name = "itemButtonChest";
 			this.itemButtonChest.SelectedItem = null;
 			this.itemButtonChest.SelectedItemId = 0;
-			this.itemButtonChest.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonChest.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonChest.TabIndex = 2;
-			this.itemButtonChest.Text = "Chest";
 			this.itemButtonChest.UseVisualStyleBackColor = true;
 			// 
 			// comboBoxEnchantRanged
@@ -612,10 +616,11 @@ namespace Rawr
 			this.comboBoxEnchantRanged.DropDownWidth = 260;
 			this.comboBoxEnchantRanged.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantRanged.FormattingEnabled = true;
-			this.comboBoxEnchantRanged.Location = new System.Drawing.Point(258, 685);
+			this.comboBoxEnchantRanged.Location = new System.Drawing.Point(384, 670);
 			this.comboBoxEnchantRanged.Name = "comboBoxEnchantRanged";
 			this.comboBoxEnchantRanged.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantRanged.TabIndex = 1;
+			this.comboBoxEnchantRanged.Visible = false;
 			this.comboBoxEnchantRanged.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// comboBoxEnchantBack
@@ -624,10 +629,11 @@ namespace Rawr
 			this.comboBoxEnchantBack.DropDownWidth = 260;
 			this.comboBoxEnchantBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantBack.FormattingEnabled = true;
-			this.comboBoxEnchantBack.Location = new System.Drawing.Point(3, 341);
+			this.comboBoxEnchantBack.Location = new System.Drawing.Point(384, 675);
 			this.comboBoxEnchantBack.Name = "comboBoxEnchantBack";
 			this.comboBoxEnchantBack.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantBack.TabIndex = 1;
+			this.comboBoxEnchantBack.Visible = false;
 			this.comboBoxEnchantBack.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// comboBoxEnchantOffHand
@@ -637,10 +643,11 @@ namespace Rawr
 			this.comboBoxEnchantOffHand.DropDownWidth = 260;
 			this.comboBoxEnchantOffHand.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantOffHand.FormattingEnabled = true;
-			this.comboBoxEnchantOffHand.Location = new System.Drawing.Point(173, 685);
+			this.comboBoxEnchantOffHand.Location = new System.Drawing.Point(384, 675);
 			this.comboBoxEnchantOffHand.Name = "comboBoxEnchantOffHand";
 			this.comboBoxEnchantOffHand.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantOffHand.TabIndex = 1;
+			this.comboBoxEnchantOffHand.Visible = false;
 			this.comboBoxEnchantOffHand.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// itemButtonFeet
@@ -648,13 +655,12 @@ namespace Rawr
 			this.itemButtonFeet.Character = null;
 			this.itemButtonFeet.CharacterSlot = Rawr.Character.CharacterSlot.Feet;
 			this.itemButtonFeet.ItemIcon = null;
-			this.itemButtonFeet.Location = new System.Drawing.Point(396, 271);
+			this.itemButtonFeet.Location = new System.Drawing.Point(396, 257);
 			this.itemButtonFeet.Name = "itemButtonFeet";
 			this.itemButtonFeet.SelectedItem = null;
 			this.itemButtonFeet.SelectedItemId = 0;
-			this.itemButtonFeet.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonFeet.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonFeet.TabIndex = 2;
-			this.itemButtonFeet.Text = "Feet";
 			this.itemButtonFeet.UseVisualStyleBackColor = true;
 			// 
 			// comboBoxEnchantMainHand
@@ -664,10 +670,11 @@ namespace Rawr
 			this.comboBoxEnchantMainHand.DropDownWidth = 260;
 			this.comboBoxEnchantMainHand.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantMainHand.FormattingEnabled = true;
-			this.comboBoxEnchantMainHand.Location = new System.Drawing.Point(88, 685);
+			this.comboBoxEnchantMainHand.Location = new System.Drawing.Point(394, 675);
 			this.comboBoxEnchantMainHand.Name = "comboBoxEnchantMainHand";
 			this.comboBoxEnchantMainHand.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantMainHand.TabIndex = 1;
+			this.comboBoxEnchantMainHand.Visible = false;
 			this.comboBoxEnchantMainHand.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// itemButtonFinger1
@@ -675,13 +682,12 @@ namespace Rawr
 			this.itemButtonFinger1.Character = null;
 			this.itemButtonFinger1.CharacterSlot = Rawr.Character.CharacterSlot.Finger1;
 			this.itemButtonFinger1.ItemIcon = null;
-			this.itemButtonFinger1.Location = new System.Drawing.Point(396, 367);
+			this.itemButtonFinger1.Location = new System.Drawing.Point(396, 346);
 			this.itemButtonFinger1.Name = "itemButtonFinger1";
 			this.itemButtonFinger1.SelectedItem = null;
 			this.itemButtonFinger1.SelectedItemId = 0;
-			this.itemButtonFinger1.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonFinger1.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonFinger1.TabIndex = 2;
-			this.itemButtonFinger1.Text = "Finger1";
 			this.itemButtonFinger1.UseVisualStyleBackColor = true;
 			// 
 			// comboBoxEnchantWrists
@@ -690,10 +696,11 @@ namespace Rawr
 			this.comboBoxEnchantWrists.DropDownWidth = 260;
 			this.comboBoxEnchantWrists.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantWrists.FormattingEnabled = true;
-			this.comboBoxEnchantWrists.Location = new System.Drawing.Point(3, 685);
+			this.comboBoxEnchantWrists.Location = new System.Drawing.Point(394, 675);
 			this.comboBoxEnchantWrists.Name = "comboBoxEnchantWrists";
 			this.comboBoxEnchantWrists.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantWrists.TabIndex = 1;
+			this.comboBoxEnchantWrists.Visible = false;
 			this.comboBoxEnchantWrists.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// comboBoxEnchantShoulders
@@ -702,10 +709,11 @@ namespace Rawr
 			this.comboBoxEnchantShoulders.DropDownWidth = 260;
 			this.comboBoxEnchantShoulders.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantShoulders.FormattingEnabled = true;
-			this.comboBoxEnchantShoulders.Location = new System.Drawing.Point(3, 245);
+			this.comboBoxEnchantShoulders.Location = new System.Drawing.Point(384, 673);
 			this.comboBoxEnchantShoulders.Name = "comboBoxEnchantShoulders";
 			this.comboBoxEnchantShoulders.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantShoulders.TabIndex = 1;
+			this.comboBoxEnchantShoulders.Visible = false;
 			this.comboBoxEnchantShoulders.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// itemButtonFinger2
@@ -713,13 +721,12 @@ namespace Rawr
 			this.itemButtonFinger2.Character = null;
 			this.itemButtonFinger2.CharacterSlot = Rawr.Character.CharacterSlot.Finger2;
 			this.itemButtonFinger2.ItemIcon = null;
-			this.itemButtonFinger2.Location = new System.Drawing.Point(396, 463);
+			this.itemButtonFinger2.Location = new System.Drawing.Point(396, 435);
 			this.itemButtonFinger2.Name = "itemButtonFinger2";
 			this.itemButtonFinger2.SelectedItem = null;
 			this.itemButtonFinger2.SelectedItemId = 0;
-			this.itemButtonFinger2.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonFinger2.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonFinger2.TabIndex = 2;
-			this.itemButtonFinger2.Text = "Finger2";
 			this.itemButtonFinger2.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonHands
@@ -731,9 +738,8 @@ namespace Rawr
 			this.itemButtonHands.Name = "itemButtonHands";
 			this.itemButtonHands.SelectedItem = null;
 			this.itemButtonHands.SelectedItemId = 0;
-			this.itemButtonHands.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonHands.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonHands.TabIndex = 2;
-			this.itemButtonHands.Text = "Hands";
 			this.itemButtonHands.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonHead
@@ -745,9 +751,8 @@ namespace Rawr
 			this.itemButtonHead.Name = "itemButtonHead";
 			this.itemButtonHead.SelectedItem = null;
 			this.itemButtonHead.SelectedItemId = 0;
-			this.itemButtonHead.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonHead.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonHead.TabIndex = 2;
-			this.itemButtonHead.Text = "Head";
 			this.itemButtonHead.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonRanged
@@ -760,9 +765,8 @@ namespace Rawr
 			this.itemButtonRanged.Name = "itemButtonRanged";
 			this.itemButtonRanged.SelectedItem = null;
 			this.itemButtonRanged.SelectedItemId = 0;
-			this.itemButtonRanged.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonRanged.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonRanged.TabIndex = 2;
-			this.itemButtonRanged.Text = "Idol";
 			this.itemButtonRanged.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonLegs
@@ -770,13 +774,12 @@ namespace Rawr
 			this.itemButtonLegs.Character = null;
 			this.itemButtonLegs.CharacterSlot = Rawr.Character.CharacterSlot.Legs;
 			this.itemButtonLegs.ItemIcon = null;
-			this.itemButtonLegs.Location = new System.Drawing.Point(396, 175);
+			this.itemButtonLegs.Location = new System.Drawing.Point(396, 168);
 			this.itemButtonLegs.Name = "itemButtonLegs";
 			this.itemButtonLegs.SelectedItem = null;
 			this.itemButtonLegs.SelectedItemId = 0;
-			this.itemButtonLegs.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonLegs.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonLegs.TabIndex = 2;
-			this.itemButtonLegs.Text = "Legs";
 			this.itemButtonLegs.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonNeck
@@ -784,7 +787,7 @@ namespace Rawr
 			this.itemButtonNeck.Character = null;
 			this.itemButtonNeck.CharacterSlot = Rawr.Character.CharacterSlot.Neck;
 			this.itemButtonNeck.ItemIcon = null;
-			this.itemButtonNeck.Location = new System.Drawing.Point(3, 99);
+			this.itemButtonNeck.Location = new System.Drawing.Point(3, 92);
 			this.itemButtonNeck.Name = "itemButtonNeck";
 			this.itemButtonNeck.SelectedItem = null;
 			this.itemButtonNeck.SelectedItemId = 0;
@@ -799,10 +802,11 @@ namespace Rawr
 			this.comboBoxEnchantHead.DropDownWidth = 260;
 			this.comboBoxEnchantHead.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxEnchantHead.FormattingEnabled = true;
-			this.comboBoxEnchantHead.Location = new System.Drawing.Point(3, 73);
+			this.comboBoxEnchantHead.Location = new System.Drawing.Point(384, 675);
 			this.comboBoxEnchantHead.Name = "comboBoxEnchantHead";
 			this.comboBoxEnchantHead.Size = new System.Drawing.Size(70, 20);
 			this.comboBoxEnchantHead.TabIndex = 1;
+			this.comboBoxEnchantHead.Visible = false;
 			this.comboBoxEnchantHead.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// itemButtonProjectileBag
@@ -845,9 +849,8 @@ namespace Rawr
 			this.itemButtonOffHand.Name = "itemButtonOffHand";
 			this.itemButtonOffHand.SelectedItem = null;
 			this.itemButtonOffHand.SelectedItemId = 0;
-			this.itemButtonOffHand.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonOffHand.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonOffHand.TabIndex = 2;
-			this.itemButtonOffHand.Text = "OffHand";
 			this.itemButtonOffHand.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonShirt
@@ -855,7 +858,7 @@ namespace Rawr
 			this.itemButtonShirt.Character = null;
 			this.itemButtonShirt.CharacterSlot = Rawr.Character.CharacterSlot.Shirt;
 			this.itemButtonShirt.ItemIcon = null;
-			this.itemButtonShirt.Location = new System.Drawing.Point(3, 463);
+			this.itemButtonShirt.Location = new System.Drawing.Point(3, 435);
 			this.itemButtonShirt.Name = "itemButtonShirt";
 			this.itemButtonShirt.SelectedItem = null;
 			this.itemButtonShirt.SelectedItemId = 0;
@@ -869,13 +872,12 @@ namespace Rawr
 			this.itemButtonShoulders.Character = null;
 			this.itemButtonShoulders.CharacterSlot = Rawr.Character.CharacterSlot.Shoulders;
 			this.itemButtonShoulders.ItemIcon = null;
-			this.itemButtonShoulders.Location = new System.Drawing.Point(3, 175);
+			this.itemButtonShoulders.Location = new System.Drawing.Point(3, 168);
 			this.itemButtonShoulders.Name = "itemButtonShoulders";
 			this.itemButtonShoulders.SelectedItem = null;
 			this.itemButtonShoulders.SelectedItemId = 0;
-			this.itemButtonShoulders.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonShoulders.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonShoulders.TabIndex = 2;
-			this.itemButtonShoulders.Text = "Shoulders";
 			this.itemButtonShoulders.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonTabard
@@ -883,7 +885,7 @@ namespace Rawr
 			this.itemButtonTabard.Character = null;
 			this.itemButtonTabard.CharacterSlot = Rawr.Character.CharacterSlot.Tabard;
 			this.itemButtonTabard.ItemIcon = null;
-			this.itemButtonTabard.Location = new System.Drawing.Point(3, 539);
+			this.itemButtonTabard.Location = new System.Drawing.Point(3, 511);
 			this.itemButtonTabard.Name = "itemButtonTabard";
 			this.itemButtonTabard.SelectedItem = null;
 			this.itemButtonTabard.SelectedItemId = 0;
@@ -897,7 +899,7 @@ namespace Rawr
 			this.itemButtonTrinket1.Character = null;
 			this.itemButtonTrinket1.CharacterSlot = Rawr.Character.CharacterSlot.Trinket1;
 			this.itemButtonTrinket1.ItemIcon = null;
-			this.itemButtonTrinket1.Location = new System.Drawing.Point(396, 559);
+			this.itemButtonTrinket1.Location = new System.Drawing.Point(396, 524);
 			this.itemButtonTrinket1.Name = "itemButtonTrinket1";
 			this.itemButtonTrinket1.SelectedItem = null;
 			this.itemButtonTrinket1.SelectedItemId = 0;
@@ -911,7 +913,7 @@ namespace Rawr
 			this.itemButtonTrinket2.Character = null;
 			this.itemButtonTrinket2.CharacterSlot = Rawr.Character.CharacterSlot.Trinket2;
 			this.itemButtonTrinket2.ItemIcon = null;
-			this.itemButtonTrinket2.Location = new System.Drawing.Point(396, 635);
+			this.itemButtonTrinket2.Location = new System.Drawing.Point(396, 600);
 			this.itemButtonTrinket2.Name = "itemButtonTrinket2";
 			this.itemButtonTrinket2.SelectedItem = null;
 			this.itemButtonTrinket2.SelectedItemId = 0;
@@ -925,7 +927,7 @@ namespace Rawr
 			this.itemButtonWaist.Character = null;
 			this.itemButtonWaist.CharacterSlot = Rawr.Character.CharacterSlot.Waist;
 			this.itemButtonWaist.ItemIcon = null;
-			this.itemButtonWaist.Location = new System.Drawing.Point(396, 99);
+			this.itemButtonWaist.Location = new System.Drawing.Point(396, 92);
 			this.itemButtonWaist.Name = "itemButtonWaist";
 			this.itemButtonWaist.SelectedItem = null;
 			this.itemButtonWaist.SelectedItemId = 0;
@@ -944,9 +946,8 @@ namespace Rawr
 			this.itemButtonMainHand.Name = "itemButtonMainHand";
 			this.itemButtonMainHand.SelectedItem = null;
 			this.itemButtonMainHand.SelectedItemId = 0;
-			this.itemButtonMainHand.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonMainHand.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonMainHand.TabIndex = 2;
-			this.itemButtonMainHand.Text = "MainHand";
 			this.itemButtonMainHand.UseVisualStyleBackColor = true;
 			// 
 			// itemButtonWrist
@@ -954,13 +955,12 @@ namespace Rawr
 			this.itemButtonWrist.Character = null;
 			this.itemButtonWrist.CharacterSlot = Rawr.Character.CharacterSlot.Wrist;
 			this.itemButtonWrist.ItemIcon = null;
-			this.itemButtonWrist.Location = new System.Drawing.Point(3, 615);
+			this.itemButtonWrist.Location = new System.Drawing.Point(3, 587);
 			this.itemButtonWrist.Name = "itemButtonWrist";
 			this.itemButtonWrist.SelectedItem = null;
 			this.itemButtonWrist.SelectedItemId = 0;
-			this.itemButtonWrist.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonWrist.Size = new System.Drawing.Size(70, 83);
 			this.itemButtonWrist.TabIndex = 2;
-			this.itemButtonWrist.Text = "Wrists";
 			this.itemButtonWrist.UseVisualStyleBackColor = true;
 			// 
 			// groupBox4
@@ -1770,24 +1770,24 @@ namespace Rawr
 
         #endregion
 
-        private ItemButton itemButtonHead;
+        private ItemButtonWithEnchant itemButtonHead;
         private ItemButton itemButtonNeck;
-        private ItemButton itemButtonShoulders;
-        private ItemButton itemButtonChest;
+		private ItemButtonWithEnchant itemButtonShoulders;
+		private ItemButtonWithEnchant itemButtonChest;
         private ItemButton itemButtonShirt;
         private ItemButton itemButtonTabard;
-        private ItemButton itemButtonWrist;
-        private ItemButton itemButtonMainHand;
+		private ItemButtonWithEnchant itemButtonWrist;
+		private ItemButtonWithEnchant itemButtonMainHand;
         private ItemButton itemButtonTrinket1;
-        private ItemButton itemButtonRanged;
-        private ItemButton itemButtonFinger2;
-        private ItemButton itemButtonFinger1;
-        private ItemButton itemButtonFeet;
-        private ItemButton itemButtonLegs;
+		private ItemButtonWithEnchant itemButtonRanged;
+		private ItemButtonWithEnchant itemButtonFinger2;
+		private ItemButtonWithEnchant itemButtonFinger1;
+		private ItemButtonWithEnchant itemButtonFeet;
+		private ItemButtonWithEnchant itemButtonLegs;
         private ItemButton itemButtonWaist;
-        private ItemButton itemButtonHands;
-        private ItemButton itemButtonOffHand;
-        private ItemButton itemButtonBack;
+		private ItemButtonWithEnchant itemButtonHands;
+		private ItemButtonWithEnchant itemButtonOffHand;
+		private ItemButtonWithEnchant itemButtonBack;
         private ItemButton itemButtonTrinket2;
         private System.Windows.Forms.MenuStrip menuStripMain;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;

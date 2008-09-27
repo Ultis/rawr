@@ -621,7 +621,7 @@ namespace Rawr //O O . .
 			}
 		}
 
-        private static Item.ItemSlot[] characterSlot2ItemSlot = new Item.ItemSlot[] { Item.ItemSlot.Projectile, Item.ItemSlot.Head, Item.ItemSlot.Neck, Item.ItemSlot.Shoulders, Item.ItemSlot.Chest, Item.ItemSlot.Waist, Item.ItemSlot.Legs, Item.ItemSlot.Feet, Item.ItemSlot.Wrist, Item.ItemSlot.Hands, Item.ItemSlot.Finger, Item.ItemSlot.Finger, Item.ItemSlot.Trinket, Item.ItemSlot.Trinket, Item.ItemSlot.Back, Item.ItemSlot.MainHand, Item.ItemSlot.OffHand, Item.ItemSlot.Ranged, Item.ItemSlot.ProjectileBag, Item.ItemSlot.Tabard, Item.ItemSlot.Shirt };
+        //private static Item.ItemSlot[] characterSlot2ItemSlot = new Item.ItemSlot[] { Item.ItemSlot.Projectile, Item.ItemSlot.Head, Item.ItemSlot.Neck, Item.ItemSlot.Shoulders, Item.ItemSlot.Chest, Item.ItemSlot.Waist, Item.ItemSlot.Legs, Item.ItemSlot.Feet, Item.ItemSlot.Wrist, Item.ItemSlot.Hands, Item.ItemSlot.Finger, Item.ItemSlot.Finger, Item.ItemSlot.Trinket, Item.ItemSlot.Trinket, Item.ItemSlot.Back, Item.ItemSlot.MainHand, Item.ItemSlot.OffHand, Item.ItemSlot.Ranged, Item.ItemSlot.ProjectileBag, Item.ItemSlot.Tabard, Item.ItemSlot.Shirt };
         public Enchant GetEnchantBySlot(Character.CharacterSlot slot)
         {
             int i = (int)slot;
@@ -629,7 +629,7 @@ namespace Rawr //O O . .
             Enchant e = _itemEnchantCached[i];
             if (e == null)
             {
-                e = _itemEnchantCached[i] = Enchant.FindEnchant(_itemEnchant[i], characterSlot2ItemSlot[i]);
+				e = _itemEnchantCached[i] = Enchant.FindEnchant(_itemEnchant[i], Item.GetItemSlotByCharacterSlot(slot));
             }
             return e;
         }
@@ -732,7 +732,8 @@ namespace Rawr //O O . .
             if (i < 0 || i > 20) return;
             _itemEnchant[i] = enchant == null ? 0 : enchant.Id;
             _itemEnchantCached[i] = enchant;
-        }
+			OnCalculationsInvalidated();
+		}
 
         private static CharacterSlot[] _characterSlots;
         public static CharacterSlot[] CharacterSlots

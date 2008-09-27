@@ -30,6 +30,13 @@ namespace Rawr
 			}
 		}
 
+		private CharacterCalculationsBase _currentCalculations;
+		public CharacterCalculationsBase CurrentCalculations
+		{
+			get { return _currentCalculations; }
+			set { _currentCalculations = value; }
+		}
+
 		private ComparisonCalculationBase[] _itemCalculations;
 		public ComparisonCalculationBase[] ItemCalculations
 		{
@@ -96,7 +103,7 @@ namespace Rawr
 			Items = ItemCache.Instance.RelevantItems;
 			Character.CharacterSlot characterSlot = _characterSlot;
 			_characterSlot = Character.CharacterSlot.None;
-			LoadGearBySlot(characterSlot);
+			LoadItemsBySlot(characterSlot);
 		}
 
 		void FormItemSelection_Activated(object sender, EventArgs e)
@@ -127,9 +134,27 @@ namespace Rawr
 		public void Show(ItemButton button, Character.CharacterSlot slot)
 		{
 			_button = button;
+			if (_buttonEnchant != null)
+			{
+				_characterSlot = Character.CharacterSlot.None;
+				_buttonEnchant = null;
+			}
 			this.SetAutoLocation(button);
-			this.LoadGearBySlot(slot);
-            base.Show();
+			this.LoadItemsBySlot(slot);
+			base.Show();
+		}
+
+		public void Show(ItemButtonWithEnchant button, Character.CharacterSlot slot)
+		{
+			_buttonEnchant = button;
+			if (_button != null)
+			{
+				_characterSlot = Character.CharacterSlot.None;
+				_button = null;
+			}
+			this.SetAutoLocation(button);
+			this.LoadEnchantsBySlot(slot);
+			base.Show();
 		}
 
 		public void SetAutoLocation(Control ctrl)
@@ -170,9 +195,10 @@ namespace Rawr
 
 		private Character.CharacterSlot _characterSlot = Character.CharacterSlot.None;
 		private ItemButton _button;
-		public void LoadGearBySlot(Character.CharacterSlot slot)
+		private ItemButtonWithEnchant _buttonEnchant;
+		public void LoadItemsBySlot(Character.CharacterSlot slot)
 		{
-			if (slot != _characterSlot)
+			if (_characterSlot != slot)
 			{
 				_characterSlot = slot;
 				List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
@@ -185,6 +211,21 @@ namespace Rawr
 							itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
 						}
 					}
+				}
+				itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
+				ItemCalculations = itemCalculations.ToArray();
+			}
+		}
+
+		private void LoadEnchantsBySlot(Character.CharacterSlot slot)
+		{
+			if (_characterSlot != slot)
+			{
+				_characterSlot = slot;
+				List<ComparisonCalculationBase> itemCalculations = null;
+				if (Character != null && CurrentCalculations != null)
+				{
+					itemCalculations = Calculations.GetEnchantCalculations(Item.GetItemSlotByCharacterSlot(slot), Character, CurrentCalculations);
 				}
 				itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
 				ItemCalculations = itemCalculations.ToArray();
@@ -229,7 +270,17 @@ namespace Rawr
 			{
 				ItemSelectorItem ctrl = panelItems.Controls[i] as ItemSelectorItem;
                 ComparisonCalculationBase calc = this.ItemCalculations[i];
-				calc.Equipped = calc.Item == _button.SelectedItem;
+				if (_button != null)
+				{
+					calc.Equipped = calc.Item == _button.SelectedItem;
+					ctrl.IsEnchant = false;
+
+				}
+				if (_buttonEnchant != null)
+				{
+					calc.Equipped = Math.Abs(calc.Item.Id % 10000) == _buttonEnchant.SelectedEnchantId;
+					ctrl.IsEnchant = true;
+				}
 				ctrl.ItemCalculation = calc;
 				ctrl.Sort = this.Sort;
 				ctrl.HideToolTip();
@@ -257,7 +308,10 @@ namespace Rawr
 
 		public void Select(Item item)
 		{
-			_button.SelectedItem = item;
+			if (_button != null)
+				_button.SelectedItem = item;
+			if (_buttonEnchant != null)
+				_buttonEnchant.SelectedEnchantId = Math.Abs(item.Id % 10000);
 			_characterSlot = Character.CharacterSlot.None;
 			ItemToolTip.Instance.Hide(this);
 			this.Hide();

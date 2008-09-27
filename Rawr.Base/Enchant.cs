@@ -26,6 +26,20 @@ namespace Rawr
 		/// The name of the enchant.
 		/// </summary>
 		public string Name;
+
+		/// <summary>
+		/// A shortened version of the enchant's Name.
+		/// </summary>
+		public string ShortName
+		{
+			get
+			{
+				string shortName = Name.Replace("Glyph of the ", "").Replace("Glyph of ", "").Replace("Inscription of the ", "")
+					.Replace("Inscription of ", "").Replace("Greater", "Great").Replace("Exceptional", "Excep")
+					.Replace("Armor Kit", "ArmKit").Replace("Arcanum of ", "").Replace(" Leg Armor", "").Replace(" Scope", "").Replace(" Spellthread", "");
+				return shortName.Substring(0, Math.Min(shortName.Length, 12));
+			}
+		}
 		
 		/// <summary>
 		/// The slot that the enchant is applied to. If the enchant is available on multiple slots,

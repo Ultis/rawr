@@ -213,24 +213,24 @@ namespace Rawr
 			_unsavedChanges = true;
 		}
 
-		private void ItemEnchantsChanged()
-		{
-			_loadingCharacter = true;
-			comboBoxEnchantBack.SelectedItem = Character.BackEnchant;
-			comboBoxEnchantChest.SelectedItem = Character.ChestEnchant;
-			comboBoxEnchantFeet.SelectedItem = Character.FeetEnchant;
-			comboBoxEnchantFinger1.SelectedItem = Character.Finger1Enchant;
-			comboBoxEnchantFinger2.SelectedItem = Character.Finger2Enchant;
-			comboBoxEnchantHands.SelectedItem = Character.HandsEnchant;
-			comboBoxEnchantHead.SelectedItem = Character.HeadEnchant;
-			comboBoxEnchantLegs.SelectedItem = Character.LegsEnchant;
-			comboBoxEnchantShoulders.SelectedItem = Character.ShouldersEnchant;
-			comboBoxEnchantMainHand.SelectedItem = Character.MainHandEnchant;
-			comboBoxEnchantOffHand.SelectedItem = Character.OffHandEnchant;
-			comboBoxEnchantRanged.SelectedItem = Character.RangedEnchant;
-			comboBoxEnchantWrists.SelectedItem = Character.WristEnchant;
-			_loadingCharacter = false;
-		}
+		//private void ItemEnchantsChanged()
+		//{
+		//    _loadingCharacter = true;
+		//    comboBoxEnchantBack.SelectedItem = Character.BackEnchant;
+		//    comboBoxEnchantChest.SelectedItem = Character.ChestEnchant;
+		//    comboBoxEnchantFeet.SelectedItem = Character.FeetEnchant;
+		//    comboBoxEnchantFinger1.SelectedItem = Character.Finger1Enchant;
+		//    comboBoxEnchantFinger2.SelectedItem = Character.Finger2Enchant;
+		//    comboBoxEnchantHands.SelectedItem = Character.HandsEnchant;
+		//    comboBoxEnchantHead.SelectedItem = Character.HeadEnchant;
+		//    comboBoxEnchantLegs.SelectedItem = Character.LegsEnchant;
+		//    comboBoxEnchantShoulders.SelectedItem = Character.ShouldersEnchant;
+		//    comboBoxEnchantMainHand.SelectedItem = Character.MainHandEnchant;
+		//    comboBoxEnchantOffHand.SelectedItem = Character.OffHandEnchant;
+		//    comboBoxEnchantRanged.SelectedItem = Character.RangedEnchant;
+		//    comboBoxEnchantWrists.SelectedItem = Character.WristEnchant;
+		//    _loadingCharacter = false;
+		//}
 
 		void _character_ItemsChanged(object sender, EventArgs e)
 		{
@@ -252,7 +252,7 @@ namespace Rawr
 				itemButtonTabard.UpdateSelectedItem(); itemButtonTrinket1.UpdateSelectedItem(); itemButtonTrinket2.UpdateSelectedItem();
 				itemButtonWaist.UpdateSelectedItem(); itemButtonMainHand.UpdateSelectedItem(); itemButtonOffHand.UpdateSelectedItem();
 				itemButtonProjectile.UpdateSelectedItem(); itemButtonProjectileBag.UpdateSelectedItem(); itemButtonWrist.UpdateSelectedItem();
-				ItemEnchantsChanged();
+				//ItemEnchantsChanged();
 			}
 			//and the clouds above move closer / looking so dissatisfied
 			Calculations.ClearCache();
@@ -260,7 +260,7 @@ namespace Rawr
 			_calculatedStats = calcs;
 
 			LoadComparisonData();
-
+			FormItemSelection.CurrentCalculations = calcs;
 			calculationDisplay1.SetCalculations(calcs);
 
 			this.Cursor = Cursors.Default;
@@ -411,32 +411,32 @@ namespace Rawr
 				toolStripDropDownButtonSort.DropDownItems.Add(toolStripMenuItemSubPoint);
 			}
 
-			comboBoxEnchantBack.Items.Clear();
-			comboBoxEnchantChest.Items.Clear();
-			comboBoxEnchantFeet.Items.Clear();
-			comboBoxEnchantFinger1.Items.Clear();
-			comboBoxEnchantFinger2.Items.Clear();
-			comboBoxEnchantHands.Items.Clear();
-			comboBoxEnchantHead.Items.Clear();
-			comboBoxEnchantLegs.Items.Clear();
-			comboBoxEnchantShoulders.Items.Clear();
-			comboBoxEnchantMainHand.Items.Clear();
-			comboBoxEnchantOffHand.Items.Clear();
-			comboBoxEnchantRanged.Items.Clear();
-			comboBoxEnchantWrists.Items.Clear();
-			comboBoxEnchantBack.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Back).ToArray());
-			comboBoxEnchantChest.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Chest).ToArray());
-			comboBoxEnchantFeet.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Feet).ToArray());
-			comboBoxEnchantFinger1.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
-			comboBoxEnchantFinger2.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
-			comboBoxEnchantHands.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Hands).ToArray());
-			comboBoxEnchantHead.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Head).ToArray());
-			comboBoxEnchantLegs.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Legs).ToArray());
-			comboBoxEnchantShoulders.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Shoulders).ToArray());
-			comboBoxEnchantMainHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.MainHand).ToArray());
-			comboBoxEnchantOffHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.OffHand).ToArray());
-			comboBoxEnchantRanged.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Ranged).ToArray());
-			comboBoxEnchantWrists.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Wrist).ToArray());
+			//comboBoxEnchantBack.Items.Clear();
+			//comboBoxEnchantChest.Items.Clear();
+			//comboBoxEnchantFeet.Items.Clear();
+			//comboBoxEnchantFinger1.Items.Clear();
+			//comboBoxEnchantFinger2.Items.Clear();
+			//comboBoxEnchantHands.Items.Clear();
+			//comboBoxEnchantHead.Items.Clear();
+			//comboBoxEnchantLegs.Items.Clear();
+			//comboBoxEnchantShoulders.Items.Clear();
+			//comboBoxEnchantMainHand.Items.Clear();
+			//comboBoxEnchantOffHand.Items.Clear();
+			//comboBoxEnchantRanged.Items.Clear();
+			//comboBoxEnchantWrists.Items.Clear();
+			//comboBoxEnchantBack.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Back).ToArray());
+			//comboBoxEnchantChest.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Chest).ToArray());
+			//comboBoxEnchantFeet.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Feet).ToArray());
+			//comboBoxEnchantFinger1.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
+			//comboBoxEnchantFinger2.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
+			//comboBoxEnchantHands.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Hands).ToArray());
+			//comboBoxEnchantHead.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Head).ToArray());
+			//comboBoxEnchantLegs.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Legs).ToArray());
+			//comboBoxEnchantShoulders.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Shoulders).ToArray());
+			//comboBoxEnchantMainHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.MainHand).ToArray());
+			//comboBoxEnchantOffHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.OffHand).ToArray());
+			//comboBoxEnchantRanged.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Ranged).ToArray());
+			//comboBoxEnchantWrists.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Wrist).ToArray());
 
 			Calculations.CalculationOptionsPanel.Dock = DockStyle.Fill;
 			tabPageOptions.Controls.Clear();
@@ -809,23 +809,23 @@ namespace Rawr
 
 		private void comboBoxEnchant_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (!_loadingCharacter)
-			{   //If I was in World War II, they'd call me S-
-				Character.BackEnchant = comboBoxEnchantBack.SelectedItem as Enchant;
-				Character.ChestEnchant = comboBoxEnchantChest.SelectedItem as Enchant;
-				Character.FeetEnchant = comboBoxEnchantFeet.SelectedItem as Enchant;
-				Character.Finger1Enchant = comboBoxEnchantFinger1.SelectedItem as Enchant;
-				Character.Finger2Enchant = comboBoxEnchantFinger2.SelectedItem as Enchant;
-				Character.HandsEnchant = comboBoxEnchantHands.SelectedItem as Enchant;
-				Character.HeadEnchant = comboBoxEnchantHead.SelectedItem as Enchant;
-				Character.LegsEnchant = comboBoxEnchantLegs.SelectedItem as Enchant;
-				Character.ShouldersEnchant = comboBoxEnchantShoulders.SelectedItem as Enchant;
-				Character.MainHandEnchant = comboBoxEnchantMainHand.SelectedItem as Enchant;
-				Character.OffHandEnchant = comboBoxEnchantOffHand.SelectedItem as Enchant;
-				Character.RangedEnchant = comboBoxEnchantRanged.SelectedItem as Enchant;
-				Character.WristEnchant = comboBoxEnchantWrists.SelectedItem as Enchant;
-				Character.OnCalculationsInvalidated();
-			}   //...Fire!
+			//if (!_loadingCharacter)
+			//{   //If I was in World War II, they'd call me S-
+			//    Character.BackEnchant = comboBoxEnchantBack.SelectedItem as Enchant;
+			//    Character.ChestEnchant = comboBoxEnchantChest.SelectedItem as Enchant;
+			//    Character.FeetEnchant = comboBoxEnchantFeet.SelectedItem as Enchant;
+			//    Character.Finger1Enchant = comboBoxEnchantFinger1.SelectedItem as Enchant;
+			//    Character.Finger2Enchant = comboBoxEnchantFinger2.SelectedItem as Enchant;
+			//    Character.HandsEnchant = comboBoxEnchantHands.SelectedItem as Enchant;
+			//    Character.HeadEnchant = comboBoxEnchantHead.SelectedItem as Enchant;
+			//    Character.LegsEnchant = comboBoxEnchantLegs.SelectedItem as Enchant;
+			//    Character.ShouldersEnchant = comboBoxEnchantShoulders.SelectedItem as Enchant;
+			//    Character.MainHandEnchant = comboBoxEnchantMainHand.SelectedItem as Enchant;
+			//    Character.OffHandEnchant = comboBoxEnchantOffHand.SelectedItem as Enchant;
+			//    Character.RangedEnchant = comboBoxEnchantRanged.SelectedItem as Enchant;
+			//    Character.WristEnchant = comboBoxEnchantWrists.SelectedItem as Enchant;
+			//    Character.OnCalculationsInvalidated();
+			//}   //...Fire!
 		}
 
 		private void comboBoxRace_SelectedIndexChanged(object sender, EventArgs e)
