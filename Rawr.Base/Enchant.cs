@@ -35,9 +35,9 @@ namespace Rawr
 			get
 			{
 				string shortName = Name.Replace("Glyph of the ", "").Replace("Glyph of ", "").Replace("Inscription of the ", "")
-					.Replace("Inscription of ", "").Replace("Greater", "Great").Replace("Exceptional", "Excep")
+					.Replace("Inscription of ", "").Replace("Greater", "Great").Replace("Exceptional", "Excep").Replace("Defense", "Def")
 					.Replace("Armor Kit", "ArmKit").Replace("Arcanum of ", "").Replace(" Leg Armor", "").Replace(" Scope", "").Replace(" Spellthread", "");
-				return shortName.Substring(0, Math.Min(shortName.Length, 12));
+				return shortName.Substring(0, Math.Min(shortName.Length, 13));
 			}
 		}
 		
