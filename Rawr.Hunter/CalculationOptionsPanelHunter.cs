@@ -12,7 +12,6 @@ namespace Rawr.Hunter
     {
         #region Instance Variables
 
-        private HunterTalentsForm hunterTalents = null;
         private bool loadingOptions = false;
 		private CalculationOptionsHunter options = null;
         #endregion
@@ -22,15 +21,6 @@ namespace Rawr.Hunter
         public CalculationOptionsPanelHunter()
         {
             InitializeComponent();
-            hunterTalents = new HunterTalentsForm(this);
-			foreach(Enum e in Enum.GetValues(typeof(Aspect)))
-			{
-				comboActiveAspect.Items.Add(e);
-			}
-			foreach (Enum e in Enum.GetValues(typeof(ShotRotation)))
-			{
-				comboShotRotation.Items.Add(e);
-			}
             foreach (Enum e in Enum.GetValues(typeof(PetFamily)))
             {
                 comboPetFamily.Items.Add(e);
@@ -71,8 +61,6 @@ namespace Rawr.Hunter
 				}
 			}
             chkEnforceMetaGemRequirements.Checked = options.EnforceMetaGem;
-			comboActiveAspect.SelectedItem = options.Aspect;
-			comboShotRotation.SelectedItem = options.ShotRotation;
             comboPetFamily.SelectedItem = options.PetFamily;
             comboPetPriority1.SelectedItem = options.PetPriority1;
             comboPetPriority2.SelectedItem = options.PetPriority2;
@@ -83,15 +71,6 @@ namespace Rawr.Hunter
         #endregion
 
         #region Event Handlers
-
-        private void btnTalents_Click(object sender, EventArgs e)
-        {
-			if (hunterTalents == null || hunterTalents.IsDisposed)
-			{
-				hunterTalents = new HunterTalentsForm(this);
-			}
-            hunterTalents.Show();
-        }
 
         private void chkEnforceMetaGemRequirements_CheckedChanged(object sender, EventArgs e)
         {
@@ -108,24 +87,6 @@ namespace Rawr.Hunter
                 Character.OnCalculationsInvalidated();
             }
         }
-
-		private void comboActiveAspect_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (!loadingOptions && comboActiveAspect.SelectedItem != null)
-			{
-				options.Aspect = (Aspect)comboActiveAspect.SelectedItem;
-				Character.OnCalculationsInvalidated(); 
-			}
-		}
-
-		private void comboShotRotation_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (!loadingOptions && comboShotRotation.SelectedItem != null)
-			{
-				options.ShotRotation = (ShotRotation)comboShotRotation.SelectedItem;
-				Character.OnCalculationsInvalidated();
-			}
-		}
 
         private void comboPetFamily_SelectedIndexChanged(object sender, EventArgs e)
         {

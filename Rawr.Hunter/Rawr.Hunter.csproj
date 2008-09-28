@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{748DD530-B2A7-4459-9BE8-58BDB52C6183}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -92,19 +92,10 @@
     <Compile Include="CharacterCalculationsHunter.cs" />
     <Compile Include="ComparisonCalculationHunter.cs" />
     <Compile Include="HunterEnums.cs" />
-    <Compile Include="HunterTalentsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="HunterTalentsForm.designer.cs">
-      <DependentUpon>HunterTalentsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CalculationOptionsPanelHunter.resx">
       <DependentUpon>CalculationOptionsPanelHunter.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="HunterTalentsForm.resx">
-      <DependentUpon>HunterTalentsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -124,6 +115,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ShotRotations.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

@@ -17,12 +17,42 @@ namespace Rawr.Hunter
 		private double _PetBaseDPS;
 		private double _PetSpecialDPS;
 		private double _PetKillCommandDPS;
+        private double _autoshotDPS;
+        private double _steadySpamDPS;
+        private double _arcane3xSteadyDPS;
+        private double _arcane2xSteadyDPS;
 
 		public float BaseAttackSpeed
 		{
 			get { return _baseAttackSpeed; }
 			set { _baseAttackSpeed = value; }
 		}
+
+        public double AutoshotDPS
+        {
+            get { return _autoshotDPS; }
+            set { _autoshotDPS = value; }
+        }
+
+        public double SteadySpamDPS
+        {
+            get { return _steadySpamDPS; }
+            set { _steadySpamDPS = value; }
+        }
+
+        public double Arcane3xSteadyDPS
+        {
+            get { return _arcane3xSteadyDPS; }
+            set { _arcane3xSteadyDPS = value; }
+        }
+
+        public double Arcane2xSteadyDPS
+        {
+            get { return _arcane2xSteadyDPS; }
+            set { _arcane2xSteadyDPS = value; }
+        }
+
+
 		public override float OverallPoints
 		{
 			get { return _overallPoints; }
@@ -85,6 +115,7 @@ namespace Rawr.Hunter
 			set { _PetKillCommandDPS = value; }
 		}
 
+
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -113,6 +144,11 @@ namespace Rawr.Hunter
 			dictValues.Add("Hunter Total DPS", HunterDpsPoints.ToString("F2"));
 			dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
 			dictValues.Add("Overall DPS", OverallPoints.ToString("F2"));
+
+            dictValues.Add("Autoshot DPS", AutoshotDPS.ToString("F2"));
+            dictValues.Add("Steady Spam", SteadySpamDPS.ToString("F2"));
+            dictValues.Add("AS 3xSteady", Arcane3xSteadyDPS.ToString("F2"));
+            dictValues.Add("AS 2xSteady", Arcane2xSteadyDPS.ToString("F2"));
 			return dictValues;
 		}
 
