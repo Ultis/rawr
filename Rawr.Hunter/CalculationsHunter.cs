@@ -58,6 +58,7 @@ namespace Rawr.Hunter
                 "Intermediate Stats:Steady Spam",
                 "Intermediate Stats:AS 3xSteady",
                 "Intermediate Stats:AS 2xSteady",
+                "Intermediate Stats:SerpASSteady",
 				"Complex Calculated Stats:Hunter Total DPS",
 				"Complex Calculated Stats:Pet DPS",
 				"Complex Calculated Stats:Overall DPS"
@@ -283,7 +284,7 @@ namespace Rawr.Hunter
 
 			character.EnforceMetagemRequirements = options.EnforceMetaGem;
 
-            double hawkRAPBonus = 155.0f; // TODO: Level80
+            double hawkRAPBonus = 155.0f * (1.0 + 0.5 * character.HunterTalents.AspectMastery); // TODO: Level80
 
             #region Remove Any Incorrect Modelling
             bool hasDST = false;
@@ -398,6 +399,11 @@ namespace Rawr.Hunter
 
                 autoshotDmg *= talentModifiers;
 
+                double targetArmor = options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration;
+                double armorReduction = (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
+
+                autoshotDmg *= 1.0 - armorReduction;
+
                 calculatedStats.AutoshotDPS = autoshotDmg / (calculatedStats.BaseAttackSpeed * (1.0 - quickShotsUpTime) + (calculatedStats.BaseAttackSpeed / (1.0f + quickShotHaste)) * quickShotsUpTime);
 
             }
@@ -407,12 +413,12 @@ namespace Rawr.Hunter
 
             #region Rotations
 
-            ShotRotationCalculator rotation = new ShotRotationCalculator(character, calculatedStats, hawkRAPBonus, totalStaticHaste, effectiveRAPAgainstMob, abilitiesCritDmgModifier, weaponDamageAverage, ammoDamage, talentModifiers);
+            ShotRotationCalculator rotation = new ShotRotationCalculator(character, calculatedStats, options, totalStaticHaste, effectiveRAPAgainstMob, abilitiesCritDmgModifier, weaponDamageAverage, ammoDamage, talentModifiers);
 
             calculatedStats.SteadySpamDPS = rotation.SteadyRotation().DPS;
             calculatedStats.Arcane3xSteadyDPS = rotation.ASSteadyRotation(3).DPS;
             calculatedStats.Arcane2xSteadyDPS = rotation.ASSteadyRotation(2).DPS;
-
+            calculatedStats.SerpASSteady = rotation.ASSteadySerpentRotation().DPS;
             #endregion
 
 
@@ -552,10 +558,6 @@ namespace Rawr.Hunter
 		#endregion //overrides 
 
         #region Private Functions
-
-		#region Shot Rotation DPS
-
-		#endregion
 
 		private Stats GetBaseTalentStats(HunterTalents talentTree)
 		{

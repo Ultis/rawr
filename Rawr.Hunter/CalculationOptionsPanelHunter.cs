@@ -126,5 +126,14 @@ namespace Rawr.Hunter
 
         #endregion
 
+        private void trackBarTargetArmor_Scroll(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.TargetArmor = trackBarTargetArmor.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 }

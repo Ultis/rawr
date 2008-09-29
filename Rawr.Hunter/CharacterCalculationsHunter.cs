@@ -21,6 +21,7 @@ namespace Rawr.Hunter
         private double _steadySpamDPS;
         private double _arcane3xSteadyDPS;
         private double _arcane2xSteadyDPS;
+        private double _serpASSteadyDPS;
 
 		public float BaseAttackSpeed
 		{
@@ -52,6 +53,11 @@ namespace Rawr.Hunter
             set { _arcane2xSteadyDPS = value; }
         }
 
+        public double SerpASSteady
+        {
+            get { return _serpASSteadyDPS; }
+            set { _serpASSteadyDPS = value; }
+        }
 
 		public override float OverallPoints
 		{
@@ -149,6 +155,7 @@ namespace Rawr.Hunter
             dictValues.Add("Steady Spam", SteadySpamDPS.ToString("F2"));
             dictValues.Add("AS 3xSteady", Arcane3xSteadyDPS.ToString("F2"));
             dictValues.Add("AS 2xSteady", Arcane2xSteadyDPS.ToString("F2"));
+            dictValues.Add("SerpASSteady", SerpASSteady.ToString("F2"));
 			return dictValues;
 		}
 

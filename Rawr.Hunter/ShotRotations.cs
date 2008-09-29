@@ -19,6 +19,7 @@ namespace Rawr.Hunter
     {
         Character character;
         CharacterCalculationsHunter calculatedStats;
+        CalculationOptionsHunter options;
         double hawkRAPBonus;
         double totalStaticHaste;
         double effectiveRAPAgainstMob;
@@ -26,19 +27,23 @@ namespace Rawr.Hunter
         double weaponDamageAverage;
         double ammoDamage;
         double talentModifiers;
+        double armorReduction;
 
 
-        public ShotRotationCalculator(Character character, CharacterCalculationsHunter calculatedStats, double hawkRAPBonus, double totalStaticHaste, double effectiveRAPAgainstMob, double abilitiesCritDmgModifier, double weaponDamageAverage, double ammoDamage, double talentModifiers)
+        public ShotRotationCalculator(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, double totalStaticHaste, double effectiveRAPAgainstMob, double abilitiesCritDmgModifier, double weaponDamageAverage, double ammoDamage, double talentModifiers)
         {
             this.character = character;
             this.calculatedStats = calculatedStats;
-            this.hawkRAPBonus = hawkRAPBonus;
+            this.options = options;
+            this.hawkRAPBonus = 155 * (1.0 + 0.5 * character.HunterTalents.AspectMastery); // TODO: Level80
             this.totalStaticHaste = totalStaticHaste;
             this.effectiveRAPAgainstMob = effectiveRAPAgainstMob;
             this.abilitiesCritDmgModifier = abilitiesCritDmgModifier;
             this.weaponDamageAverage = weaponDamageAverage;
             this.ammoDamage = ammoDamage;
             this.talentModifiers = talentModifiers;
+            double targetArmor = options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration;
+            this.armorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
         }
 
 
@@ -69,6 +74,27 @@ namespace Rawr.Hunter
         }
 
 
+        public RotationInfo ASSteadySerpentRotation()
+        {
+            RotationInfo info = new RotationInfo();
+
+            ShotSerpentSting(info);
+            ShotArcane(info, 2); // 2 may not be right in every situation
+            ShotSteady(info);
+            ShotSteady(info);
+            ShotSteady(info);
+            ShotArcane(info, 3);
+            ShotSteady(info);
+            ShotSteady(info);
+            if (info.rotationTime < 13.5) // enough haste for gcd cap on steady?
+            {
+                ShotSteady(info);
+            }
+
+            return info;
+
+        }
+
         protected void ShotSteady(RotationInfo info)
         {
             double critHitModifier = (calculatedStats.BasicStats.Crit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
@@ -78,7 +104,7 @@ namespace Rawr.Hunter
 
             double steadyShotCastTime = 2.0 / totalStaticHaste;
 
-            info.rotationDmg += steadyShotDmg;
+            info.rotationDmg += steadyShotDmg * armorReduction;
             info.rotationTime += steadyShotCastTime > 1.5 ? steadyShotCastTime : 1.5;
         }
 
@@ -96,6 +122,18 @@ namespace Rawr.Hunter
 
             arcaneShotDmg *= critHitModifier * talentModifiers * asTalentModifiers;
             info.rotationDmg += arcaneShotDmg;
+            info.rotationTime += 1.5;
+        }
+
+        protected void ShotSerpentSting(RotationInfo info)
+        {
+            double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * 0.20 + 660; // TODO: Level80
+
+            double serpentTalentModifiers = 1.0 + character.HunterTalents.ImprovedStings * 0.10;
+
+            serpentStingDmg *= calculatedStats.BasicStats.Hit * talentModifiers * serpentTalentModifiers;
+
+            info.rotationDmg += serpentStingDmg;
             info.rotationTime += 1.5;
         }
     }

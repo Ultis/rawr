@@ -40,7 +40,10 @@
             this.comboPetPriority1 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.comboPetFamily = new System.Windows.Forms.ComboBox();
+            this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBoxPetOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -88,7 +91,7 @@
             this.groupBoxPetOptions.Controls.Add(this.comboPetPriority1);
             this.groupBoxPetOptions.Controls.Add(this.label4);
             this.groupBoxPetOptions.Controls.Add(this.comboPetFamily);
-            this.groupBoxPetOptions.Location = new System.Drawing.Point(6, 72);
+            this.groupBoxPetOptions.Location = new System.Drawing.Point(6, 145);
             this.groupBoxPetOptions.Name = "groupBoxPetOptions";
             this.groupBoxPetOptions.Size = new System.Drawing.Size(194, 150);
             this.groupBoxPetOptions.TabIndex = 8;
@@ -163,10 +166,35 @@
             this.comboPetFamily.Size = new System.Drawing.Size(114, 21);
             this.comboPetFamily.TabIndex = 0;
             // 
+            // trackBarTargetArmor
+            // 
+            this.trackBarTargetArmor.LargeChange = 1000;
+            this.trackBarTargetArmor.Location = new System.Drawing.Point(79, 65);
+            this.trackBarTargetArmor.Maximum = 9000;
+            this.trackBarTargetArmor.Minimum = 3000;
+            this.trackBarTargetArmor.Name = "trackBarTargetArmor";
+            this.trackBarTargetArmor.Size = new System.Drawing.Size(120, 45);
+            this.trackBarTargetArmor.SmallChange = 100;
+            this.trackBarTargetArmor.TabIndex = 2;
+            this.trackBarTargetArmor.TickFrequency = 300;
+            this.trackBarTargetArmor.Value = 7700;
+            this.trackBarTargetArmor.Scroll += new System.EventHandler(this.trackBarTargetArmor_Scroll);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(5, 69);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(71, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Target Armor:";
+            // 
             // CalculationOptionsPanelHunter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.trackBarTargetArmor);
             this.Controls.Add(this.groupBoxPetOptions);
             this.Controls.Add(this.chkEnforceMetaGemRequirements);
             this.Controls.Add(this.cmbTargetLevel);
@@ -175,6 +203,7 @@
             this.Size = new System.Drawing.Size(206, 413);
             this.groupBoxPetOptions.ResumeLayout(false);
             this.groupBoxPetOptions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -194,5 +223,7 @@
         private System.Windows.Forms.ComboBox comboPetPriority3;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TrackBar trackBarTargetArmor;
+        private System.Windows.Forms.Label label2;
     }
 }
