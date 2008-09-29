@@ -249,6 +249,68 @@ namespace Rawr
         internal float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
         internal float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
         internal float[] _rawNoStackData = new float[NonStackingStatCount];
+
+        //internal float[] _sparseData;
+        internal int[] _sparseIndices;
+        internal int _sparseAdditiveCount;
+        internal int _sparseMultiplicativeCount;
+        internal int _spareInverseMultiplicativeCount;
+        internal int _sparseNoStackCount;
+
+        public void InvalidateSparseData()
+        {
+            //_sparseData = null;
+            _sparseIndices = null;
+        }
+
+        public void GenerateSparseData()
+        {
+            //List<float> data = new List<float>();
+            List<int> indices = new List<int>();
+            _sparseAdditiveCount = 0;
+            for (int i = 0; i < _rawAdditiveData.Length; i++)
+            {
+                if (_rawAdditiveData[i] != 0.0f)
+                {
+                    _sparseAdditiveCount++;
+                    //data.Add(_rawAdditiveData[i]);
+                    indices.Add(i);
+                }
+            }
+            _sparseMultiplicativeCount = 0;
+            for (int i = 0; i < _rawMultiplicativeData.Length; i++)
+            {
+                if (_rawMultiplicativeData[i] != 0.0f)
+                {
+                    _sparseMultiplicativeCount++;
+                    //data.Add(_rawMultiplicativeData[i]);
+                    indices.Add(i);
+                }
+            }
+            _spareInverseMultiplicativeCount = 0;
+            for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
+            {
+                if (_rawInverseMultiplicativeData[i] != 0.0f)
+                {
+                    _spareInverseMultiplicativeCount++;
+                    //data.Add(_rawInverseMultiplicativeData[i]);
+                    indices.Add(i);
+                }
+            }
+            _sparseNoStackCount = 0;
+            for (int i = 0; i < _rawNoStackData.Length; i++)
+            {
+                if (_rawNoStackData[i] != 0.0f)
+                {
+                    _sparseNoStackCount++;
+                    //data.Add(_rawNoStackData[i]);
+                    indices.Add(i);
+                }
+            }
+            //_sparseData = data.ToArray();
+            _sparseIndices = indices.ToArray();
+        }
+        
         /// <summary>
         /// The properties for each stat. In order to add additional stats for Rawr to track,
         /// first add properties here, for each stat. Apply a Category attribute to assign it to
@@ -2181,39 +2243,75 @@ namespace Rawr
 
         public void AccumulateUnsafe(Stats data)
         {
-            fixed (float* add = data._rawAdditiveData)
+            AccumulateUnsafe(data, false);
+        }
+
+        public void AccumulateUnsafe(Stats data, bool generateSparseIfNeeded)
+        {
+            if (generateSparseIfNeeded && data._sparseIndices == null) data.GenerateSparseData();
+            if (data._sparseIndices != null)
             {
-                float* pa = pRawAdditiveData;
-                float* paend = pa + AdditiveStatCount;
-                float* pa2 = add;
-                for (; pa < paend; pa++, pa2++)
+                int i = 0;
+                for (int a = 0; a < data._sparseAdditiveCount; a++, i++)
                 {
-                    *pa += *pa2;
+                    int index = data._sparseIndices[i];
+                    pRawAdditiveData[index] += data._rawAdditiveData[index];
+                }
+                for (int a = 0; a < data._sparseMultiplicativeCount; a++, i++)
+                {
+                    int index = data._sparseIndices[i];
+                    float* pa = pRawMultiplicativeData + index;
+                    *pa = (1 + *pa) * (1 + data._rawMultiplicativeData[index]) - 1;
+                }
+                for (int a = 0; a < data._spareInverseMultiplicativeCount; a++, i++)
+                {
+                    int index = data._sparseIndices[i];
+                    _rawInverseMultiplicativeData[index] = 1 - (1 - _rawInverseMultiplicativeData[index]) * (1 - data._rawInverseMultiplicativeData[index]);
+                }
+                for (int a = 0; a < data._sparseNoStackCount; a++, i++)
+                {
+                    int index = data._sparseIndices[i];
+                    float* pa = pRawNoStackData + index;
+                    float value = data._rawNoStackData[index];
+                    if (value > *pa) *pa = value;
                 }
             }
-            fixed (float* add = data._rawMultiplicativeData)
+            else
             {
-                float* pa = pRawMultiplicativeData;
-                float* paend = pa + MultiplicativeStatCount;
-                float* pa2 = add;
-                for (; pa < paend; pa++, pa2++)
+                fixed (float* add = data._rawAdditiveData)
                 {
-                    *pa = (1 + *pa) * (1 + *pa2) - 1;
+                    float* pa = pRawAdditiveData;
+                    float* paend = pa + AdditiveStatCount;
+                    float* pa2 = add;
+                    for (; pa < paend; pa++, pa2++)
+                    {
+                        *pa += *pa2;
+                    }
                 }
-            }
-            float[] arr = data._rawInverseMultiplicativeData;
-            for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
-            {
-                _rawInverseMultiplicativeData[i] = 1 - (1 - _rawInverseMultiplicativeData[i]) * (1 - arr[i]);
-            }
-            fixed (float* add = data._rawNoStackData)
-            {
-                float* pa = pRawNoStackData;
-                float* paend = pa + NonStackingStatCount;
-                float* pa2 = add;
-                for (; pa < paend; pa++, pa2++)
+                fixed (float* add = data._rawMultiplicativeData)
                 {
-                    if (*pa2 > *pa) *pa = *pa2;
+                    float* pa = pRawMultiplicativeData;
+                    float* paend = pa + MultiplicativeStatCount;
+                    float* pa2 = add;
+                    for (; pa < paend; pa++, pa2++)
+                    {
+                        *pa = (1 + *pa) * (1 + *pa2) - 1;
+                    }
+                }
+                float[] arr = data._rawInverseMultiplicativeData;
+                for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
+                {
+                    _rawInverseMultiplicativeData[i] = 1 - (1 - _rawInverseMultiplicativeData[i]) * (1 - arr[i]);
+                }
+                fixed (float* add = data._rawNoStackData)
+                {
+                    float* pa = pRawNoStackData;
+                    float* paend = pa + NonStackingStatCount;
+                    float* pa2 = add;
+                    for (; pa < paend; pa++, pa2++)
+                    {
+                        if (*pa2 > *pa) *pa = *pa2;
+                    }
                 }
             }
         }

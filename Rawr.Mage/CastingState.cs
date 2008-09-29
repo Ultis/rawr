@@ -24,29 +24,9 @@ namespace Rawr.Mage
     {
         private CharacterCalculationsMage calculations;
 
-        public CalculationOptionsMage CalculationOptions
-        {
-            get
-            {
-                return calculations.CalculationOptions;
-            }
-        }
-
-        public MageTalents MageTalents
-        {
-            get
-            {
-                return calculations.Character.MageTalents;
-            }
-        }
-
-        public Stats BaseStats
-        {
-            get
-            {
-                return calculations.BaseStats;
-            }
-        }
+        public CalculationOptionsMage CalculationOptions { get; private set; }
+        public MageTalents MageTalents { get; private set; }
+        public Stats BaseStats { get; private set; }
 
         public float SpellCrit { get; set; }
         public float SpellHit { get; set; }
@@ -236,6 +216,9 @@ namespace Rawr.Mage
 
         public CastingState(CharacterCalculationsMage calculations, Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect, int incrementalSetIndex)
         {
+            MageTalents = calculations.Character.MageTalents;
+            BaseStats = calculations.BaseStats;
+            CalculationOptions = calculations.CalculationOptions;
             this.calculations = calculations;
             IncrementalSetIndex = incrementalSetIndex;
 
@@ -461,7 +444,19 @@ namespace Rawr.Mage
             FrostFireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.05f) * (1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
             NatureThreatMultiplier = threatFactor;
             ShadowThreatMultiplier = threatFactor;
+
+            if (BaseStats.LightningCapacitorProc > 0)
+            {
+                LightningBolt = (LightningBolt)GetSpell(SpellId.LightningBolt);
+            }
+            if (BaseStats.ShatteredSunAcumenProc > 0 && !CalculationOptions.Aldor)
+            {
+                ArcaneBolt = (ArcaneBolt)GetSpell(SpellId.ArcaneBolt);
+            }
         }
+
+        public ArcaneBolt ArcaneBolt { get; set; }
+        public LightningBolt LightningBolt { get; set; }
 
         private static int SpellIdCount;
 

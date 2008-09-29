@@ -222,7 +222,7 @@ namespace Rawr.Mage
         }
     }
 
-    abstract class BaseSpell : Spell
+    public abstract class BaseSpell : Spell
     {
         public bool Instant;
         public bool Binary;
@@ -599,7 +599,7 @@ namespace Rawr.Mage
             }
             if (!ForceMiss && !EffectProc && castingState.BaseStats.LightningCapacitorProc > 0)
             {
-                BaseSpell LightningBolt = (BaseSpell)castingState.GetSpell(SpellId.LightningBolt);
+                BaseSpell LightningBolt = castingState.LightningBolt;
                 //discrete model
                 int hitsInsideCooldown = (int)(2.5f / (CastTime / HitProcs));
                 float avgCritsPerHit = CritRate * TargetProcs / HitProcs;
@@ -613,7 +613,7 @@ namespace Rawr.Mage
             }
             if (!ForceMiss && !EffectProc && castingState.BaseStats.ShatteredSunAcumenProc > 0 && !castingState.CalculationOptions.Aldor)
             {
-                BaseSpell ArcaneBolt = (BaseSpell)castingState.GetSpell(SpellId.ArcaneBolt);
+                BaseSpell ArcaneBolt = castingState.ArcaneBolt;
                 float boltDps = ArcaneBolt.AverageDamage / (45f + CastTime / HitProcs / 0.1f);
                 DamagePerSecond += boltDps;
                 ThreatPerSecond += boltDps * castingState.ArcaneThreatMultiplier;
@@ -672,7 +672,7 @@ namespace Rawr.Mage
             }
             if (!EffectProc && castingState.BaseStats.LightningCapacitorProc > 0)
             {
-                BaseSpell LightningBolt = (BaseSpell)castingState.GetSpell(SpellId.LightningBolt);
+                BaseSpell LightningBolt = castingState.LightningBolt;
                 if (!dict.TryGetValue(LightningBolt.Name, out contrib))
                 {
                     contrib = new SpellContribution() { Name = LightningBolt.Name };
@@ -689,7 +689,7 @@ namespace Rawr.Mage
             }
             if (!EffectProc && castingState.BaseStats.ShatteredSunAcumenProc > 0 && !castingState.CalculationOptions.Aldor)
             {
-                BaseSpell ArcaneBolt = (BaseSpell)castingState.GetSpell(SpellId.ArcaneBolt);
+                BaseSpell ArcaneBolt = castingState.ArcaneBolt;
                 if (!dict.TryGetValue(ArcaneBolt.Name, out contrib))
                 {
                     contrib = new SpellContribution() { Name = ArcaneBolt.Name };
@@ -703,7 +703,7 @@ namespace Rawr.Mage
     }
 
     #region Base Spells
-    class Waterbolt : Spell
+    public class Waterbolt : Spell
     {
         public Waterbolt(CastingState castingState, float playerSpellDamage)
         {
@@ -752,7 +752,7 @@ namespace Rawr.Mage
         }
     }
 
-    class Wand : BaseSpell
+    public class Wand : BaseSpell
     {
         public Wand(CastingState castingState, MagicSchool school, int minDamage, int maxDamage, float speed)
             : base("Wand", false, false, false, false, 0, 30, 0, 0, school, minDamage, maxDamage, 0, 1, 0, 0, 0, 0, false)
@@ -785,7 +785,7 @@ namespace Rawr.Mage
         }
     }
 
-    class FireBlast : BaseSpell
+    public class FireBlast : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -835,7 +835,7 @@ namespace Rawr.Mage
         }
     }
 
-    class Scorch : BaseSpell
+    public class Scorch : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -892,7 +892,7 @@ namespace Rawr.Mage
         }
     }
 
-    class Flamestrike : BaseSpell
+    public class Flamestrike : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -936,7 +936,7 @@ namespace Rawr.Mage
         }
     }
 
-    class FrostNova : BaseSpell
+    public class FrostNova : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -985,7 +985,7 @@ namespace Rawr.Mage
         }
     }
 
-    class Frostbolt : BaseSpell
+    public class Frostbolt : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -1060,7 +1060,7 @@ namespace Rawr.Mage
         }
     }
 
-    class Fireball : BaseSpell
+    public class Fireball : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -1119,7 +1119,7 @@ namespace Rawr.Mage
         }
     }
 
-    class FrostfireBolt : BaseSpell
+    public class FrostfireBolt : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -1168,7 +1168,7 @@ namespace Rawr.Mage
         }
     }
 
-    class Pyroblast : BaseSpell
+    public class Pyroblast : BaseSpell
     {
         public Pyroblast(CastingState castingState, bool pom)
             : base("Pyroblast", false, false, false, false, 500, 35, 6f, 0, MagicSchool.Fire, 939, 1191, 356)
@@ -1193,7 +1193,7 @@ namespace Rawr.Mage
     //776 + k*992>=983
     //
     //0.20866935483870967741935483870968 <= k <= 0.21471774193548387096774193548387
-    class ConeOfCold : BaseSpell
+    public class ConeOfCold : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -1239,7 +1239,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ArcaneBarrage : BaseSpell
+    public class ArcaneBarrage : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -1281,7 +1281,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ArcaneBlast : BaseSpell
+    public class ArcaneBlast : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -1466,7 +1466,7 @@ namespace Rawr.Mage
     // 702/(1.03*1.03*1.05) <= 338.83792857142857142857142857128 + x <= 703/(1.03*1.03*1.05)
 
     // x := 291.9
-    class ArcaneMissiles : BaseSpell
+    public class ArcaneMissiles : BaseSpell
     {
         private bool barrage;
 
@@ -1532,7 +1532,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ArcaneExplosion : BaseSpell
+    public class ArcaneExplosion : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -1578,7 +1578,7 @@ namespace Rawr.Mage
         }
     }
 
-    class BlastWave : BaseSpell
+    public class BlastWave : BaseSpell
     {
         public BlastWave(CastingState castingState)
             : base("Blast Wave", false, false, true, true, 645, 0, 0, 30, MagicSchool.Fire, 616, 724, 0, 0.1357f)
@@ -1590,7 +1590,7 @@ namespace Rawr.Mage
         }
     }
 
-    class DragonsBreath : BaseSpell
+    public class DragonsBreath : BaseSpell
     {
         public DragonsBreath(CastingState castingState)
             : base("Dragon's Breath", false, false, true, true, 700, 0, 0, 20, MagicSchool.Fire, 680, 790, 0, 0.1357f)
@@ -1601,7 +1601,7 @@ namespace Rawr.Mage
         }
     }
 
-    class Blizzard : BaseSpell
+    public class Blizzard : BaseSpell
     {
         public static Dictionary<int, SpellData> SpellData = new Dictionary<int, SpellData>();
         public static Dictionary<int, int> MaxRank = new Dictionary<int, int>();
@@ -1645,7 +1645,7 @@ namespace Rawr.Mage
     }
 
     // lightning capacitor
-    class LightningBolt : BaseSpell
+    public class LightningBolt : BaseSpell
     {
         public LightningBolt(CastingState castingState)
             : base("Lightning Bolt", false, false, true, false, 0, 30, 0, 0, MagicSchool.Nature, 694, 806, 0, 0, 0, 0, 0, 0, false)
@@ -1663,7 +1663,7 @@ namespace Rawr.Mage
     }
 
     // Shattered Sun Pendant of Acumen
-    class ArcaneBolt : BaseSpell
+    public class ArcaneBolt : BaseSpell
     {
         public ArcaneBolt(CastingState castingState)
             : base("Arcane Bolt", false, false, true, false, 0, 50, 0, 0, MagicSchool.Arcane, 333, 367, 0, 0, 0, 0, 0, 0, false)

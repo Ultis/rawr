@@ -697,7 +697,11 @@ namespace Rawr
                 if (Gem3 != null && Gem3.MeetsRequirements(character, out volatileGem)) totalItemStats.AccumulateUnsafe(Gem3.Stats);
                 volatileItem = volatileItem || volatileGem;
                 if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(Sockets.Stats);
-                if (!volatileItem) cachedTotalStats = totalItemStats;
+                if (!volatileItem)
+                {
+                    cachedTotalStats = totalItemStats;
+                    cachedTotalStats.GenerateSparseData();
+                }
             }
 			return totalItemStats;
 		}

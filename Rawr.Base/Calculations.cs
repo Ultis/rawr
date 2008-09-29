@@ -693,21 +693,21 @@ namespace Rawr
             fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
             {
                 stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
-                stats.AccumulateUnsafe(character.BackEnchant.Stats);
-                stats.AccumulateUnsafe(character.ChestEnchant.Stats);
-                stats.AccumulateUnsafe(character.FeetEnchant.Stats);
-                stats.AccumulateUnsafe(character.Finger1Enchant.Stats);
-                stats.AccumulateUnsafe(character.Finger2Enchant.Stats);
-                stats.AccumulateUnsafe(character.HandsEnchant.Stats);
-                stats.AccumulateUnsafe(character.HeadEnchant.Stats);
-                stats.AccumulateUnsafe(character.LegsEnchant.Stats);
-                stats.AccumulateUnsafe(character.ShouldersEnchant.Stats);
+                stats.AccumulateUnsafe(character.BackEnchant.Stats, true);
+                stats.AccumulateUnsafe(character.ChestEnchant.Stats, true);
+                stats.AccumulateUnsafe(character.FeetEnchant.Stats, true);
+                stats.AccumulateUnsafe(character.Finger1Enchant.Stats, true);
+                stats.AccumulateUnsafe(character.Finger2Enchant.Stats, true);
+                stats.AccumulateUnsafe(character.HandsEnchant.Stats, true);
+                stats.AccumulateUnsafe(character.HeadEnchant.Stats, true);
+                stats.AccumulateUnsafe(character.LegsEnchant.Stats, true);
+                stats.AccumulateUnsafe(character.ShouldersEnchant.Stats, true);
                 if (character.MainHand != null &&
                     (character.MainHandEnchant.Slot == Item.ItemSlot.OneHand ||
                     (character.MainHandEnchant.Slot == Item.ItemSlot.TwoHand &&
                     character.MainHand.Slot == Item.ItemSlot.TwoHand)))
                 {
-                    stats.AccumulateUnsafe(character.MainHandEnchant.Stats);
+                    stats.AccumulateUnsafe(character.MainHandEnchant.Stats, true);
                 }
                 if (character.OffHand != null && (character.MainHand == null || character.MainHand.Slot != Item.ItemSlot.TwoHand) &&
                     (
@@ -727,10 +727,10 @@ namespace Rawr
                     )
                    )
                 {
-                    stats.AccumulateUnsafe(character.OffHandEnchant.Stats);
+                    stats.AccumulateUnsafe(character.OffHandEnchant.Stats, true);
                 }
-                stats.AccumulateUnsafe(character.RangedEnchant.Stats);
-                stats.AccumulateUnsafe(character.WristEnchant.Stats);
+                stats.AccumulateUnsafe(character.RangedEnchant.Stats, true);
+                stats.AccumulateUnsafe(character.WristEnchant.Stats, true);
                 stats.EndUnsafe();
             }
         }
@@ -763,7 +763,7 @@ namespace Rawr
                 foreach (Buff buff in buffs)
                     if (buff != null)
                     {
-                        stats.AccumulateUnsafe(buff.Stats);
+                        stats.AccumulateUnsafe(buff.Stats, true);
                     }
                 stats.EndUnsafe();
             }
