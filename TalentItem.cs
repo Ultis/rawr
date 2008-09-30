@@ -152,17 +152,17 @@ namespace Rawr
         public void Draw(Graphics g)
         {
             int y = 8 + Row * 65;
-            int x = 8 + Col * 62;
+            int x = 8 + Col * 65;
 
             String rank = string.Format("{0}/{1}", _currentRank, _maxRank);
             Font font = new Font("Verdana", 8);
 
             Brush brush;
             if (_currentRank == _maxRank) brush = Brushes.Yellow;
-            else if (_talentTree.TotalPoints() < _row * 5) brush = Brushes.Gray;
+            else if (_talentTree.TotalPoints() < _row * 5) brush = Brushes.White;
             else brush = Brushes.Lime;
 
-            if (_icon != null) g.DrawImageUnscaled(_icon, x, y);
+            g.DrawImageUnscaled(_icon, x, y);
             g.DrawImageUnscaled(_overlay, x, y);
             g.DrawString(rank, font, brush, x + 31, y + 39);
 
@@ -171,56 +171,100 @@ namespace Rawr
                 Image arrowImage = null;
                 int preRow = _row - _prereq.Row;
                 int preCol = _col - _prereq.Col;
-                if (_prereq._currentRank == _prereq._maxRank && _talentTree.TotalPoints() >= _row * 5)
+                int color;
+                if (_currentRank == _maxRank) color = 2;
+                else if (_talentTree.TotalPoints() < _row * 5) color = 0;
+                else color = 1;
+
+                int offsetX = 0;
+                int offsetY = 0;
+
+                if (preCol == 0)
                 {
-                    if (preCol == 0)
+                    if (preRow == 1)
                     {
-                        if (preRow == 1) arrowImage = Properties.Resources.down_1_yellow;
-                        if (preRow == 2) arrowImage = Properties.Resources.down_2_yellow;
-                        if (preRow == 3) arrowImage = Properties.Resources.down_3_yellow;
-                        if (preRow == 4) arrowImage = Properties.Resources.down_4_yellow;
+                        if (color == 2) arrowImage = Properties.Resources.down_1_yellow;
+                        else if (color == 1) arrowImage = Properties.Resources.down_1_green;
+                        else arrowImage = Properties.Resources.down_1_grey;
                     }
-                    else if (preCol == -1)
+                    else if (preRow == 2)
                     {
-                        if (preRow == 0) arrowImage = Properties.Resources.across_left_yellow;
-                        if (preRow == 1) arrowImage = Properties.Resources.down_left_yellow;
-                        if (preRow == 2) arrowImage = Properties.Resources.down_2_left_yellow;
+                        if (color == 2) arrowImage = Properties.Resources.down_2_yellow;
+                        else if (color == 1) arrowImage = Properties.Resources.down_2_green;
+                        else arrowImage = Properties.Resources.down_2_grey;
                     }
-                    else if (preCol == 1)
+                    else if (preRow == 3)
                     {
-                        if (preRow == 0) arrowImage = Properties.Resources.across_right_yellow;
-                        if (preRow == 1) arrowImage = Properties.Resources.down_right_yellow;
-                        if (preRow == 2) arrowImage = Properties.Resources.down_2_right_yellow;
+                        if (color == 2) arrowImage = Properties.Resources.down_3_yellow;
+                        else if (color == 1) arrowImage = Properties.Resources.down_3_green;
+                        else arrowImage = Properties.Resources.down_3_grey;
+                    }
+                    else if (preRow == 4)
+                    {
+                        if (color == 2) arrowImage = Properties.Resources.down_4_yellow;
+                        else if (color == 1) arrowImage = Properties.Resources.down_4_green;
+                        else arrowImage = Properties.Resources.down_4_grey;
+                    }
+                    offsetX = 13;
+                    offsetY = 47 - (preRow * 65);
+                }
+                else if (preCol == -1)
+                {
+                    if (preRow == 0)
+                    {
+                        if (color == 0) arrowImage = Properties.Resources.across_left_grey;
+                        else if (color == 1) arrowImage = Properties.Resources.across_left_green;
+                        else arrowImage = Properties.Resources.across_left_yellow;
+                        offsetX = 43;
+                        offsetY = 14;
+                    }
+                    else if (preRow == 1)
+                    {
+                        if (color == 0) arrowImage = Properties.Resources.down_left_grey;
+                        else if (color == 1) arrowImage = Properties.Resources.down_left_green;
+                        else arrowImage = Properties.Resources.down_left_yellow;
+                        offsetX = 14;
+                        offsetY = -45;
+                    }
+                    else if (preRow == 2)
+                    {
+                        if (color == 0) arrowImage = Properties.Resources.down_2_left_grey;
+                        else if (color == 1) arrowImage = Properties.Resources.down_2_left_green;
+                        else arrowImage = Properties.Resources.down_2_left_yellow;
+                        offsetX = 14;
+                        offsetY = -110;
                     }
                 }
-                else
+                else if (preCol == 1)
                 {
-                    if (preCol == 0)
+                    if (preRow == 0)
                     {
-                        if (preRow == 1) arrowImage = Properties.Resources.down_1_grey;
-                        if (preRow == 2) arrowImage = Properties.Resources.down_2_grey;
-                        if (preRow == 3) arrowImage = Properties.Resources.down_3_grey;
-                        if (preRow == 4) arrowImage = Properties.Resources.down_4_grey;
+                        if (color == 0) arrowImage = Properties.Resources.across_right_grey;
+                        else if (color == 1) arrowImage = Properties.Resources.across_right_green;
+                        else arrowImage = Properties.Resources.across_right_yellow;
+                        offsetX = -20;
+                        offsetY = 17;
                     }
-                    else if (preCol == -1)
+                    else if (preRow == 1)
                     {
-                        if (preRow == 0) arrowImage = Properties.Resources.across_left_grey;
-                        if (preRow == 1) arrowImage = Properties.Resources.down_left_grey;
-                        if (preRow == 2) arrowImage = Properties.Resources.down_2_left_grey;
+                        if (color == 0) arrowImage = Properties.Resources.down_right_grey;
+                        else if (color == 1) arrowImage = Properties.Resources.down_right_green;
+                        else arrowImage = Properties.Resources.down_right_yellow;
+                        offsetX = -20;// 45;
+                        offsetY = -45;// 20;
                     }
-                    else if (preCol == 1)
+                    else if (preRow == 2)
                     {
-                        if (preRow == 0) arrowImage = Properties.Resources.across_right_grey;
-                        if (preRow == 1) arrowImage = Properties.Resources.down_right_grey;
-                        if (preRow == 2) arrowImage = Properties.Resources.down_2_right_grey;
+                        if (color == 0) arrowImage = Properties.Resources.down_2_right_grey;
+                        else if (color == 1) arrowImage = Properties.Resources.down_2_right_green;
+                        else arrowImage = Properties.Resources.down_2_right_yellow;
+                        offsetX = -20;
+                        offsetY = -110;// 20;
                     }
                 }
                 if (arrowImage != null)
                 {
-                    if (preRow == 0 && preCol == -1) g.DrawImageUnscaled(arrowImage, x + _icon.Width - 8, y + 13);
-                    else if (preRow == 0 && preCol == 1) g.DrawImageUnscaled(arrowImage, x + 8, y + 13);
-                    else g.DrawImageUnscaled(arrowImage, x + 13, y - arrowImage.Height + 8);
-                    
+                    g.DrawImageUnscaled(arrowImage, x + offsetX, y + offsetY);                 
                 }
             }
 

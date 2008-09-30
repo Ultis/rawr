@@ -67,8 +67,8 @@ namespace Rawr
                     {
                         _prerenderedGraph = new Bitmap(Math.Min(32767, Math.Max(1, this.Width)), Math.Min(32767, Math.Max(1, background.Height)), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                         Graphics g = Graphics.FromImage(_prerenderedGraph);
-                        //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                        //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
 
 
                         g.DrawImageUnscaled(background, 0, 0);
@@ -107,8 +107,16 @@ namespace Rawr
                 TalentItem talent = _talents[_mouseRow, _mouseCol];
                 if (talent != null)
                 {
-                    if (e.Button == MouseButtons.Right) talent.CurrentRank--;
-                    else if (e.Button == MouseButtons.Left) talent.CurrentRank++;
+                    if (e.Button == MouseButtons.Right)
+                    {
+                        if (Control.ModifierKeys == Keys.Shift) talent.CurrentRank = 0;
+                        else talent.CurrentRank--;
+                    }
+                    else if (e.Button == MouseButtons.Left)
+                    {
+                        if (Control.ModifierKeys == Keys.Shift) talent.CurrentRank = talent.MaxRank;
+                        else talent.CurrentRank++;
+                    }
                     Redraw();
                 }
             }
@@ -138,7 +146,7 @@ namespace Rawr
         private void TalentTree_MouseMove(object sender, MouseEventArgs e)
         {
             int row =  ((e.Y - 8) % 65 > 48) ? -1 : (e.Y - 8) / 65;
-            int col = ((e.X - 8) % 62 > 47) ? -1 : (e.X - 8) / 62;
+            int col = ((e.X - 8) % 65 > 47) ? -1 : (e.X - 8) / 65;
             if (row >= 0 && row <= 10 && col >= 0 && col <= 3)
             {
                 if (row != _mouseRow || col != _mouseCol)
@@ -146,7 +154,7 @@ namespace Rawr
                     TalentItem talent = _talents[row, col];
                     if (talent != null)
                     {
-                        _toolTip.Show(talent.TooltipText(), this, col * 63 + 65, row * 65 + 24);
+                        _toolTip.Show(talent.TooltipText(), this, col * 65 + 65, row * 65 + 24);
                     }
                     else { _toolTip.Hide(this); }
                 }
@@ -159,7 +167,7 @@ namespace Rawr
         void item_CurrentRankChanged(object sender, EventArgs e)
         {
             TalentItem item = sender as TalentItem;
-            if (_mouseRow == item.Row && _mouseCol == item.Col) _toolTip.Show(item.TooltipText(), this, _mouseCol * 63 + 65, _mouseRow * 65 + 24);
+            if (_mouseRow == item.Row && _mouseCol == item.Col) _toolTip.Show(item.TooltipText(), this, _mouseCol * 65 + 65, _mouseRow * 65 + 24);
         }
     }
 }
