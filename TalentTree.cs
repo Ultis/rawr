@@ -31,8 +31,13 @@ namespace Rawr
             }
         }
 
-        private int _points;
-        public int Points { get { return _points; } set { _points = value; } }
+        private int[] _points = new int[11];
+        public int[] Points { get { return _points; } }
+        public int TotalPoints() {
+            int retval = 0;
+            for (int i = 0; i < 11; i++) retval += _points[i]; 
+            return retval;
+        }
 
         public TalentTree() : this(Character.CharacterClass.Paladin, "Holy") { }
 
@@ -48,7 +53,7 @@ namespace Rawr
         {
             talent.CurrentRankChanged += new EventHandler(item_CurrentRankChanged);
             _talents[talent.Row, talent.Col] = talent;
-            _points += talent.CurrentRank;
+            _points[talent.Row] += talent.CurrentRank;
         }
 
         private Bitmap _prerenderedGraph = null;
@@ -117,7 +122,7 @@ namespace Rawr
 
         public void Reset()
         {
-            _points = 0;
+            for (int i = 0; i < 11; i++) _points[i] = 0; 
             _prerenderedGraph = null;
             foreach (TalentItem talent in _talents)
             {

@@ -117,9 +117,9 @@ namespace Rawr
         void item_CurrentRankChanged(object sender, EventArgs e)
         {
             TalentItem item = sender as TalentItem;
-            tabPageTree1.Text = string.Format("{0} ({1})", _treeNames[0], talentTree1.Points);
-            tabPageTree2.Text = string.Format("{0} ({1})", _treeNames[1], talentTree2.Points);
-            tabPageTree3.Text = string.Format("{0} ({1})", _treeNames[2], talentTree3.Points);
+            tabPageTree1.Text = string.Format("{0} ({1})", _treeNames[0], talentTree1.TotalPoints());
+            tabPageTree2.Text = string.Format("{0} ({1})", _treeNames[1], talentTree2.TotalPoints());
+            tabPageTree3.Text = string.Format("{0} ({1})", _treeNames[2], talentTree3.TotalPoints());
             if (item != null)
             {
                 Talents.Data[item.Index] = item.CurrentRank;

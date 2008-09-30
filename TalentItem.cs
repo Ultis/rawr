@@ -61,17 +61,43 @@ namespace Rawr
             get { return _currentRank; }
             set
             {
-                if (_locked == 0 && value >= 0 && value <= _maxRank && _talentTree.Points >= _row * 5 && (_prereq == null || _prereq._currentRank == _prereq._maxRank))
+                if (_locked == 0 && value >= 0 && value <= _maxRank && _talentTree.TotalPoints() >= _row * 5 && 
+                    (_prereq == null || _prereq._currentRank == _prereq._maxRank))
                 {
                     if (_prereq != null) {
                         if (_currentRank > 0 && value == 0) _prereq._locked--;
                         else if (_currentRank == 0 && value > 0) _prereq._locked++;
                     }
-                    _talentTree.Points = _talentTree.Points - _currentRank + value;
-                    _currentRank = value;
-                    UpdateOverlay();
-                    UpdateIcon();
-                    OnCurrentRankChanged();
+                    int i = 1;
+                    if (value < _currentRank)
+                    {
+                        int pts = 0;
+                        for (i = 0; i <=_row; i++) pts += _talentTree.Points[i];
+                        pts = pts - _currentRank + value;
+                        for (i = _row + 1; i < 11; i++)
+                        {
+                            if (_talentTree.Points[i] > 0)
+                            {
+                                if (pts >= i * 5)
+                                {
+                                    pts += _talentTree.Points[i];
+                                }
+                                else
+                                {
+                                    i = -1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (i >= 0)
+                    {
+                        _talentTree.Points[_row] = _talentTree.Points[_row] - _currentRank + value;
+                        _currentRank = value;
+                        UpdateOverlay();
+                        UpdateIcon();
+                        OnCurrentRankChanged();
+                    }
                 }
             }
         }
@@ -133,7 +159,7 @@ namespace Rawr
 
             Brush brush;
             if (_currentRank == _maxRank) brush = Brushes.Yellow;
-            else if (_talentTree.Points < _row * 5) brush = Brushes.Gray;
+            else if (_talentTree.TotalPoints() < _row * 5) brush = Brushes.Gray;
             else brush = Brushes.Lime;
 
             if (_icon != null) g.DrawImageUnscaled(_icon, x, y);
@@ -145,7 +171,7 @@ namespace Rawr
                 Image arrowImage = null;
                 int preRow = _row - _prereq.Row;
                 int preCol = _col - _prereq.Col;
-                if (_prereq._currentRank == _prereq._maxRank && _talentTree.Points >= _row * 5)
+                if (_prereq._currentRank == _prereq._maxRank && _talentTree.TotalPoints() >= _row * 5)
                 {
                     if (preCol == 0)
                     {
