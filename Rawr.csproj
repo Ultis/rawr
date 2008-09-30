@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A0F124AB-2A3C-488C-A8AB-38FC5444CB37}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -341,8 +341,9 @@
     <EmbeddedResource Include="TalentPicker.resx">
       <DependentUpon>TalentPicker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TalentPickerItem.resx">
-      <DependentUpon>TalentPickerItem.cs</DependentUpon>
+    <EmbeddedResource Include="TalentTree.resx">
+      <DependentUpon>TalentTree.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\Options\OptimizerSettings.resx">
       <DependentUpon>OptimizerSettings.cs</DependentUpon>
@@ -367,20 +368,18 @@
       <DependentUpon>Recent.settings</DependentUpon>
     </Compile>
     <Compile Include="ScrollHook.cs" />
+    <Compile Include="TalentItem.cs" />
     <Compile Include="TalentPicker.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="TalentPicker.Designer.cs">
       <DependentUpon>TalentPicker.cs</DependentUpon>
     </Compile>
-    <Compile Include="TalentPickerArrow.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="TalentPickerItem.cs">
+    <Compile Include="TalentTree.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TalentPickerItem.Designer.cs">
-      <DependentUpon>TalentPickerItem.cs</DependentUpon>
+    <Compile Include="TalentTree.Designer.cs">
+      <DependentUpon>TalentTree.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Options\OptimizerSettings.cs">
       <SubType>UserControl</SubType>
