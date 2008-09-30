@@ -33,14 +33,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution", "Rawr.Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ProtWarr", "Rawr.ProtWarr\Rawr.ProtWarr.csproj", "{CB6E88BD-726A-4E0F-B265-6DE6F92669CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Test", "Rawr.Test\Rawr.Test.csproj", "{6C44D73B-1D7D-43C7-85B4-9580D91718E4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A470AAC-4DAC-4DED-9E32-1CD2ABCEF796}"
-	ProjectSection(SolutionItems) = preProject
-		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-		Rawr.vsmdi = Rawr.vsmdi
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Tankadin", "Rawr.Tankadin\Rawr.Tankadin.csproj", "{53627E83-015D-462C-BEF9-939443C37298}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSWarr", "Rawr.DPSWarr\Rawr.DPSWarr.csproj", "{BB4394D2-6FEC-4610-BFFE-B6A95DE54142}"
@@ -49,49 +41,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Tree", "Rawr.Tree\Rawr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Hunter", "Rawr.Hunter\Rawr.Hunter.csproj", "{748DD530-B2A7-4459-9BE8-58BDB52C6183}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Silverlight", "Rawr.Silverlight\Rawr.Silverlight.csproj", "{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{35A74646-694E-42A1-8541-1E3363CCB851} = {35A74646-694E-42A1-8541-1E3363CCB851}
-	EndProjectSection
-EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Rawr.Silverlight.Web", "Rawr.Silverlight.Web", "{625E6639-8278-471F-99C3-01A8CB2E60F0}"
-	ProjectSection(WebsiteProperties) = preProject
-		SccProjectName = "SAK"
-		SccAuxPath = "SAK"
-		SccLocalPath = "SAK"
-		SccProvider = "SAK"
-		TargetFramework = "3.5"
-		Debug.AspNetCompiler.VirtualPath = "/Rawr.Silverlight.Web"
-		Debug.AspNetCompiler.PhysicalPath = "Rawr.Silverlight.Web\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Rawr.Silverlight.Web\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/Rawr.Silverlight.Web"
-		Release.AspNetCompiler.PhysicalPath = "Rawr.Silverlight.Web\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Rawr.Silverlight.Web\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "4904"
-		DefaultWebSiteLanguage = "Visual C#"
-		StartServerOnDebug = "false"
-		ProjOutputReferences = "{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}|ClientBin|false;"
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.WCFService", "Rawr.WCFService\Rawr.WCFService.csproj", "{35A74646-694E-42A1-8541-1E3363CCB851}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Silverlight.Controls", "Rawr.Silverlight.Controls\Rawr.Silverlight.Controls.csproj", "{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.RestoSham", "Rawr.RestoSham\Rawr.RestoSham.csproj", "{CE44F58E-AE57-4969-8819-0AD7F8362881}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.HolyPriest", "Rawr.HolyPriest\Rawr.HolyPriest.csproj", "{95E3AFED-1207-45FB-9B22-64DCFD1279B3}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 23
+		SccNumberOfProjects = 18
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -139,29 +95,12 @@ Global
 		SccProjectUniqueName15 = Rawr.Hunter\\Rawr.Hunter.csproj
 		SccProjectName15 = Rawr.Hunter
 		SccLocalPath15 = Rawr.Hunter
-		SccProjectUniqueName16 = Rawr.Silverlight\\Rawr.Silverlight.csproj
-		SccProjectName16 = Rawr.Silverlight
-		SccLocalPath16 = Rawr.Silverlight
-		SccWebProject17 = true
-		SccProjectUniqueName17 = Rawr.Silverlight.Web
-		SccLocalPath17 = .
-		SccProjectFilePathRelativizedFromConnection17 = Rawr.Silverlight.Web\\
-		SccProjectEnlistmentChoice17 = 2
-		SccProjectUniqueName18 = Rawr.WCFService\\Rawr.WCFService.csproj
-		SccProjectName18 = Rawr.WCFService
-		SccLocalPath18 = Rawr.WCFService
-		SccProjectUniqueName19 = Rawr.Silverlight.Controls\\Rawr.Silverlight.Controls.csproj
-		SccProjectName19 = Rawr.Silverlight.Controls
-		SccLocalPath19 = Rawr.Silverlight.Controls
-		SccProjectUniqueName20 = Rawr.RestoSham\\Rawr.RestoSham.csproj
-		SccProjectName20 = Rawr.RestoSham
-		SccLocalPath20 = Rawr.RestoSham
-		SccProjectUniqueName21 = Rawr.Test\\Rawr.Test.csproj
-		SccProjectName21 = Rawr.Test
-		SccLocalPath21 = Rawr.Test
-		SccProjectUniqueName22 = Rawr.HolyPriest\\Rawr.HolyPriest.csproj
-		SccProjectName22 = Rawr.HolyPriest
-		SccLocalPath22 = Rawr.HolyPriest
+		SccProjectUniqueName16 = Rawr.RestoSham\\Rawr.RestoSham.csproj
+		SccProjectName16 = Rawr.RestoSham
+		SccLocalPath16 = Rawr.RestoSham
+		SccProjectUniqueName17 = Rawr.HolyPriest\\Rawr.HolyPriest.csproj
+		SccProjectName17 = Rawr.HolyPriest
+		SccLocalPath17 = Rawr.HolyPriest
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -212,8 +151,6 @@ Global
 		{CB6E88BD-726A-4E0F-B265-6DE6F92669CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB6E88BD-726A-4E0F-B265-6DE6F92669CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB6E88BD-726A-4E0F-B265-6DE6F92669CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C44D73B-1D7D-43C7-85B4-9580D91718E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C44D73B-1D7D-43C7-85B4-9580D91718E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53627E83-015D-462C-BEF9-939443C37298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{53627E83-015D-462C-BEF9-939443C37298}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53627E83-015D-462C-BEF9-939443C37298}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -230,14 +167,6 @@ Global
 		{748DD530-B2A7-4459-9BE8-58BDB52C6183}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{748DD530-B2A7-4459-9BE8-58BDB52C6183}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{748DD530-B2A7-4459-9BE8-58BDB52C6183}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0232FFFA-2373-4F02-A76A-FFFB44CCD66D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{625E6639-8278-471F-99C3-01A8CB2E60F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{625E6639-8278-471F-99C3-01A8CB2E60F0}.Release|Any CPU.ActiveCfg = Debug|.NET
-		{35A74646-694E-42A1-8541-1E3363CCB851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35A74646-694E-42A1-8541-1E3363CCB851}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{077CF19E-227A-4AF7-AAFC-F95CDDC8211D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE44F58E-AE57-4969-8819-0AD7F8362881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CE44F58E-AE57-4969-8819-0AD7F8362881}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE44F58E-AE57-4969-8819-0AD7F8362881}.Release|Any CPU.ActiveCfg = Release|Any CPU
