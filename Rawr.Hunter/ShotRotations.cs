@@ -79,25 +79,95 @@ namespace Rawr.Hunter
             RotationInfo info = new RotationInfo();
 
             ShotSerpentSting(info);
-            ShotArcane(info, 2); // 2 may not be right in every situation
+            ShotArcane(info, 3);
             ShotSteady(info);
             ShotSteady(info);
             ShotSteady(info);
             ShotArcane(info, 3);
             ShotSteady(info);
             ShotSteady(info);
-            if (info.rotationTime < 13.5) // enough haste for gcd cap on steady?
+            ShotSteady(info);
+
+            return info;
+
+        }
+
+        public RotationInfo ExpSteadySerpRotation()
+        {
+            RotationInfo info = new RotationInfo();
+            ShotSerpentSting(info);
+            ShotExplosive(info);
+            ShotSteady(info);
+            ShotSteady(info);
+            ShotSteady(info);
+            ShotExplosive(info);
+            ShotSteady(info);
+            ShotSteady(info);
+            ShotSteady(info);
+            return info;
+        }
+
+        public RotationInfo ChimASSteadyRotation()
+        {
+            RotationInfo info = new RotationInfo();
+            ShotChimera(info, 4);
+            ShotArcane(info, 0);
+            ShotSteady(info);
+            ShotSteady(info);
+            ShotSteady(info);
+            ShotSteady(info);
+
+            if (info.rotationTime < 10.0)
             {
-                ShotSteady(info);
+                info.rotationTime = 10.0;
             }
 
             return info;
 
         }
 
+        protected void ShotChimera(RotationInfo info, int steadyshots)
+        {
+            double chimCritDmgModifier = abilitiesCritDmgModifier + 0.02 * character.HunterTalents.MarkedForDeath;
+            double critHitModifier = (calculatedStats.BasicStats.Crit * chimCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+
+            double chimeraDmg = weaponDamageAverage * 1.25;
+
+            double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * 0.20 + 660; // TODO: Level80
+            double serpentTalentModifiers = 1.0 + character.HunterTalents.ImprovedStings * 0.10;
+            serpentStingDmg *= serpentTalentModifiers;
+            
+            chimeraDmg += serpentStingDmg * 0.4;
+
+            double impSteadyChance = 1.0 - Math.Pow(1.0 - character.HunterTalents.ImprovedSteadyShot * 0.05, steadyshots);
+            chimeraDmg *= 1.0 + 0.15 * impSteadyChance;
+
+            chimeraDmg *= critHitModifier * talentModifiers;
+
+            info.rotationDmg += chimeraDmg;
+            info.rotationTime += 1.5;
+
+        }
+
+        protected void ShotExplosive(RotationInfo info)
+        {
+            double explosiveCrit = calculatedStats.BasicStats.Crit + 0.03 * character.HunterTalents.TNT + 0.02 * character.HunterTalents.SurvivalInstincts;
+            double critHitModifier = (explosiveCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+
+            double explosiveShotDmg = 0.08 * (effectiveRAPAgainstMob + hawkRAPBonus) + 238; // TODO: Level80
+
+            explosiveShotDmg *= critHitModifier * talentModifiers;
+
+
+            info.rotationDmg += explosiveShotDmg * 3.0;
+            info.rotationTime += 1.5;
+
+        }
+
         protected void ShotSteady(RotationInfo info)
         {
-            double critHitModifier = (calculatedStats.BasicStats.Crit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+            double steadyCritDmgModifier = abilitiesCritDmgModifier + 0.02 * character.HunterTalents.MarkedForDeath;
+            double critHitModifier = (calculatedStats.BasicStats.Crit * steadyCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
             double steadyShotDmg = weaponDamageAverage + ammoDamage + (effectiveRAPAgainstMob + hawkRAPBonus) * 0.20 + 108; // TODO: Level80
 
             steadyShotDmg *= critHitModifier * talentModifiers;

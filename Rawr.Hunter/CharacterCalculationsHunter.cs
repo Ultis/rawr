@@ -14,6 +14,7 @@ namespace Rawr.Hunter
 		private Stats _petStats;
 		private float _RAP;
 		private float _baseAttackSpeed;
+        private float _steadySpeed;
 		private double _PetBaseDPS;
 		private double _PetSpecialDPS;
 		private double _PetKillCommandDPS;
@@ -22,12 +23,20 @@ namespace Rawr.Hunter
         private double _arcane3xSteadyDPS;
         private double _arcane2xSteadyDPS;
         private double _serpASSteadyDPS;
+        private double _expSteadySerpDPS;
+        private double _chimASSteadyDPS;
 
 		public float BaseAttackSpeed
 		{
 			get { return _baseAttackSpeed; }
 			set { _baseAttackSpeed = value; }
 		}
+
+        public float SteadySpeed
+        {
+            get { return _steadySpeed; }
+            set { _steadySpeed = value; }
+        }
 
         public double AutoshotDPS
         {
@@ -53,10 +62,22 @@ namespace Rawr.Hunter
             set { _arcane2xSteadyDPS = value; }
         }
 
-        public double SerpASSteady
+        public double SerpASSteadyDPS
         {
             get { return _serpASSteadyDPS; }
             set { _serpASSteadyDPS = value; }
+        }
+
+        public double ExpSteadySerpDPS
+        {
+            get { return _expSteadySerpDPS; }
+            set { _expSteadySerpDPS = value; }
+        }
+
+        public double ChimASSteadyDPS
+        {
+            get { return _chimASSteadyDPS; }
+            set { _chimASSteadyDPS = value; }
         }
 
 		public override float OverallPoints
@@ -147,6 +168,7 @@ namespace Rawr.Hunter
 			dictValues.Add("Pet KC DPS", PetKillCommandDPS.ToString("F2"));
 			dictValues.Add("Ranged AP", BasicStats.RangedAttackPower.ToString("F0"));
 			dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
+            dictValues.Add("Steady Speed", SteadySpeed.ToString("F2"));
 			dictValues.Add("Hunter Total DPS", HunterDpsPoints.ToString("F2"));
 			dictValues.Add("Pet DPS", PetDpsPoints.ToString("F2"));
 			dictValues.Add("Overall DPS", OverallPoints.ToString("F2"));
@@ -155,7 +177,37 @@ namespace Rawr.Hunter
             dictValues.Add("Steady Spam", SteadySpamDPS.ToString("F2"));
             dictValues.Add("AS 3xSteady", Arcane3xSteadyDPS.ToString("F2"));
             dictValues.Add("AS 2xSteady", Arcane2xSteadyDPS.ToString("F2"));
-            dictValues.Add("SerpASSteady", SerpASSteady.ToString("F2"));
+
+            String serpRota = @"*Serpent Sting
+Arcane Shot
+Steady Shot
+Steady Shot
+Steady Shot
+Arcane Shot
+Steady Shot
+Steady Shot
+Steady Shot";
+            dictValues.Add("SerpASSteady", SerpASSteadyDPS.ToString("F2") + serpRota);
+
+            String expRota = @"*Serpent Sting
+Explosive Shot
+Steady Shot
+Steady Shot
+Steady Shot
+Explosive Shot
+Steady Shot
+Steady Shot
+Steady Shot";
+            dictValues.Add("ExpSteadySerp", ExpSteadySerpDPS.ToString("F2") + expRota);
+
+            String chimRota = @"*Chimera Shot
+Arcane Shot
+Steady Shot
+Steady Shot
+Steady Shot
+Steady Shot";
+
+            dictValues.Add("ChimASSteady", ChimASSteadyDPS.ToString("F2") + chimRota);
 			return dictValues;
 		}
 
@@ -176,3 +228,5 @@ namespace Rawr.Hunter
 		}
     }
 }
+
+

@@ -24,6 +24,38 @@ namespace Rawr.Hunter
 		#endregion	
 		
 
+
+        /**
+         * Implemented Talents:
+         * 
+         ***** Beast Mastery:
+         * Improved Aspect of the Hawk
+         * Focus Fire+
+         * Aspect Mastery+
+         * Serpent's Swiftness
+         * 
+         ***** Marksmanship:
+         * Lethal Shots
+         * Mortal Shots
+         * Careful Aim
+         * Improved Arcane Shot
+         * Improved Stings+
+         * Combat Experience
+         * Master Marksman+
+         * Wild Quiver
+         * Improved Steady Shot+
+         * Chimera Shot
+         * 
+         ***** Survival:
+         * Survival Instincts
+         * Survivalist
+         * Surefooted
+         * Hunter vs. Wild+
+         * Killer Instinct
+         * Lightning Reflexes
+         * Explosive Shot
+         */
+
 		private CalculationOptionsPanelBase calculationOptionsPanel = null;
         private string[] characterDisplayCalculationLabels = null;
         private string[] customChartNames = null;
@@ -48,6 +80,7 @@ namespace Rawr.Hunter
 				"Basic Calculated Stats:Crit Percentage",
 				"Basic Calculated Stats:Ranged AP",
 				"Basic Calculated Stats:Attack Speed",
+                "Basic Calculated Stats:Steady Speed",
 				"Pet Stats:Pet Attack Power",
 				"Pet Stats:Pet Hit Percentage",
 				"Pet Stats:Pet Crit Percentage",
@@ -59,6 +92,8 @@ namespace Rawr.Hunter
                 "Intermediate Stats:AS 3xSteady",
                 "Intermediate Stats:AS 2xSteady",
                 "Intermediate Stats:SerpASSteady",
+                "Intermediate Stats:ExpSteadySerp*Only with Explosive Shot Talent",
+                "Intermediate Stats:ChimASSteady*Only with Chimera Shot Talent and Serpent Sting up",
 				"Complex Calculated Stats:Hunter Total DPS",
 				"Complex Calculated Stats:Pet DPS",
 				"Complex Calculated Stats:Overall DPS"
@@ -315,6 +350,7 @@ namespace Rawr.Hunter
                 normalAutoshotsPerSecond = 1.0 / calculatedStats.BaseAttackSpeed;
             }
 
+            calculatedStats.SteadySpeed = (float)(2.0 / totalStaticHaste);
 
             #endregion
 
@@ -415,14 +451,35 @@ namespace Rawr.Hunter
 
             ShotRotationCalculator rotation = new ShotRotationCalculator(character, calculatedStats, options, totalStaticHaste, effectiveRAPAgainstMob, abilitiesCritDmgModifier, weaponDamageAverage, ammoDamage, talentModifiers);
 
+            double bestDPS = 0.0;
+
             calculatedStats.SteadySpamDPS = rotation.SteadyRotation().DPS;
+            bestDPS = Math.Max(calculatedStats.SteadySpamDPS, bestDPS);
+
             calculatedStats.Arcane3xSteadyDPS = rotation.ASSteadyRotation(3).DPS;
+            bestDPS = Math.Max(calculatedStats.Arcane3xSteadyDPS, bestDPS);
+
             calculatedStats.Arcane2xSteadyDPS = rotation.ASSteadyRotation(2).DPS;
-            calculatedStats.SerpASSteady = rotation.ASSteadySerpentRotation().DPS;
+            bestDPS = Math.Max(calculatedStats.Arcane2xSteadyDPS, bestDPS);
+
+            calculatedStats.SerpASSteadyDPS = rotation.ASSteadySerpentRotation().DPS;
+            bestDPS = Math.Max(calculatedStats.SerpASSteadyDPS, bestDPS);
+
+            calculatedStats.ExpSteadySerpDPS = rotation.ExpSteadySerpRotation().DPS;
+            if (character.HunterTalents.ExplosiveShot > 0)
+            {
+                bestDPS = Math.Max(calculatedStats.ExpSteadySerpDPS, bestDPS);
+            }
+
+            calculatedStats.ChimASSteadyDPS = rotation.ChimASSteadyRotation().DPS;
+            if (character.HunterTalents.ChimeraShot > 0)
+            {
+                bestDPS = Math.Max(calculatedStats.ChimASSteadyDPS, bestDPS);
+            }
             #endregion
 
 
-            calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + calculatedStats.SteadySpamDPS);
+            calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + bestDPS);
             calculatedStats.PetDpsPoints = 0.0f;
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints + calculatedStats.PetDpsPoints;
 
