@@ -600,6 +600,9 @@ namespace Rawr.Mage
                 case SpellId.ArcaneBlastSpam:
                     s = new AB(this);
                     break;
+                case SpellId.ABarAM:
+                    s = new ABarAM(this);
+                    break;
                 case SpellId.ABAM:
                     s = new ABAM(this);
                     break;

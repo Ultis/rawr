@@ -78,6 +78,7 @@ namespace Rawr.Mage
         ArcaneBlast1Miss,
         ArcaneBlast2Miss,
         ArcaneBlast3Miss,
+        ABarAM,
         ABAM,
         ABMBAM,
         ABABar,
@@ -813,7 +814,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             Cooldown -= 0.5f * castingState.MageTalents.ImprovedFireBlast;
             CritRate += 0.02f * castingState.MageTalents.Incineration;
-            SpellModifier *= (1 + 0.002f * castingState.MageTalents.SpellImpact);
+            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
             CalculateDerivedStats(castingState);
         }
     }
@@ -859,6 +860,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             CritRate += 0.02f * castingState.MageTalents.Incineration;
+            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1036,6 +1038,7 @@ namespace Rawr.Mage
             BaseCastTime -= 0.1f * castingState.MageTalents.ImprovedFireball;
             SpellDamageCoefficient += 0.03f * castingState.MageTalents.EmpoweredFireball;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
+            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1130,7 +1133,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             AoeDamageCap = 6500;
             int ImprovedConeOfCold = castingState.MageTalents.ImprovedConeOfCold;
-            SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0) + 0.002f * castingState.MageTalents.SpellImpact);
+            SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0) + 0.02f * castingState.MageTalents.SpellImpact);
             CritRate += 0.02f * castingState.MageTalents.Incineration;
             CalculateDerivedStats(castingState);
         }
@@ -1239,7 +1242,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
             CostModifier += 2.00f * costDebuff + castingState.BaseStats.ArcaneBlastBonus * 0.25f;
-            SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus * 0.25f + 0.15f * timeDebuff + 0.002f * castingState.MageTalents.SpellImpact);
+            SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus * 0.25f + 0.15f * timeDebuff + 0.02f * castingState.MageTalents.SpellImpact);
             SpellDamageCoefficient += 0.03f * castingState.MageTalents.ArcaneEmpowerment;
             CritRate += 0.02f * castingState.MageTalents.Incineration;
             //CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
@@ -1419,7 +1422,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             if (castingState.CalculationOptions.GlyphOfArcaneExplosion) CostAmplifier *= 0.9f;
             //CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
-            SpellModifier *= (1 + 0.002f * castingState.MageTalents.SpellImpact); // bugged currently
+            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact); // bugged currently
             AoeDamageCap = 10180;
             CalculateDerivedStats(castingState);
         }
@@ -1432,7 +1435,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             AoeDamageCap = 9440;
-            SpellModifier *= (1 + 0.002f * castingState.MageTalents.SpellImpact);
+            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1675,7 +1678,7 @@ namespace Rawr.Mage
             Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = 0.03f * castingState.MageTalents.MissileBarrage;
+            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
 
             if (MB == 0.0)
             {
@@ -1727,6 +1730,73 @@ namespace Rawr.Mage
         }
     }
 
+    class ABarAM : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        float MB;
+
+        public ABarAM(CastingState castingState)
+        {
+            Name = "ABarAM";
+            ABCycle = true;
+
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+
+            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
+
+            if (MB == 0.0)
+            {
+                // if we don't have barrage then this degenerates to ABar-AM
+                chain1 = new SpellCycle(2);
+                chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(AM, castingState);
+                chain1.Calculate(castingState);
+
+                CastTime = chain1.CastTime;
+                CostPerSecond = chain1.CostPerSecond;
+                DamagePerSecond = chain1.DamagePerSecond;
+                ThreatPerSecond = chain1.ThreatPerSecond;
+                ManaRegenPerSecond = chain1.ManaRegenPerSecond;
+            }
+            else
+            {
+                //AB-AM 0.85
+                chain1 = new SpellCycle(2);
+                chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(AM, castingState);
+                chain1.Calculate(castingState);
+
+                //AB-MBAM 0.15
+                chain2 = new SpellCycle(2);
+                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM, castingState);
+                chain2.Calculate(castingState);
+
+                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
+                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            if (chain2 == null)
+            {
+                chain1.AddSpellContribution(dict, duration);
+            }
+            else
+            {
+                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
+                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+            }
+        }
+    }
+
     class ABABar : Spell
     {
         SpellCycle chain1;
@@ -1742,7 +1812,7 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = 0.03f * castingState.MageTalents.MissileBarrage;
+            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
 
             if (MB == 0.0)
             {
@@ -1762,27 +1832,32 @@ namespace Rawr.Mage
             }
             else
             {
-                //AB-ABar 0.85
+                // ABar-MBAM         0.2
+                // ABar-AB           0.8*0.8
+                // ABar-AB-ABar-MBAM 0.8*0.2
+
+                // ABar-MBAM         (2-MB)*MB
+                // ABar-AB           (1-MB)
+                
+                //AB-ABar 0.8 * 0.8
                 chain1 = new SpellCycle(2);
-                chain1.AddSpell(AB, castingState);
                 chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(AB, castingState);
                 chain1.Calculate(castingState);
 
-                //AB-ABar-MBAM 0.15
-                chain2 = new SpellCycle(4);
-                chain2.AddSpell(AB, castingState);
+                //ABar-MBAM
+                chain2 = new SpellCycle(2);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
-                chain2.AddSpell(ABar, castingState);
                 chain2.Calculate(castingState);
 
-                commonChain = chain2;
+                commonChain = chain1;
 
-                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
-                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                CastTime = (1 - MB) * chain1.CastTime + (2 - MB) * MB * chain2.CastTime;
+                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + (2 - MB) * MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
             }
         }
 
@@ -1805,7 +1880,7 @@ namespace Rawr.Mage
             else
             {
                 chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+                chain2.AddSpellContribution(dict, (2 - MB) * MB * chain2.CastTime / CastTime * duration);
             }
         }
     }
@@ -1825,7 +1900,7 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = 0.03f * castingState.MageTalents.MissileBarrage;
+            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
 
             if (MB == 0.0)
             {
@@ -1845,27 +1920,23 @@ namespace Rawr.Mage
             }
             else
             {
-                //FB-ABar 0.85
                 chain1 = new SpellCycle(2);
-                chain1.AddSpell(FB, castingState);
                 chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(FB, castingState);
                 chain1.Calculate(castingState);
 
-                //FB-ABar-MBAM-ABar 0.15
-                chain2 = new SpellCycle(4);
-                chain2.AddSpell(FB, castingState);
+                chain2 = new SpellCycle(2);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
-                chain2.AddSpell(ABar, castingState);
                 chain2.Calculate(castingState);
 
                 commonChain = chain2;
 
-                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
-                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                CastTime = (1 - MB) * chain1.CastTime + (2 - MB) * MB * chain2.CastTime;
+                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + (2 - MB) * MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
             }
         }
 
@@ -1888,7 +1959,7 @@ namespace Rawr.Mage
             else
             {
                 chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+                chain2.AddSpellContribution(dict, (2 - MB) * MB * chain2.CastTime / CastTime * duration);
             }
         }
     }
@@ -1908,7 +1979,7 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = 0.03f * castingState.MageTalents.MissileBarrage;
+            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
 
             if (MB == 0.0)
             {
@@ -1928,27 +1999,23 @@ namespace Rawr.Mage
             }
             else
             {
-                //FB-ABar 0.85
                 chain1 = new SpellCycle(2);
-                chain1.AddSpell(FrB, castingState);
                 chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(FrB, castingState);
                 chain1.Calculate(castingState);
 
-                //FB-ABar-MBAM-ABar 0.15
-                chain2 = new SpellCycle(4);
-                chain2.AddSpell(FrB, castingState);
+                chain2 = new SpellCycle(2);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
-                chain2.AddSpell(ABar, castingState);
                 chain2.Calculate(castingState);
 
                 commonChain = chain2;
 
-                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
-                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                CastTime = (1 - MB) * chain1.CastTime + (2 - MB) * MB * chain2.CastTime;
+                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + (2 - MB) * MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
             }
         }
 
@@ -1971,7 +2038,7 @@ namespace Rawr.Mage
             else
             {
                 chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+                chain2.AddSpellContribution(dict, (2 - MB) * MB * chain2.CastTime / CastTime * duration);
             }
         }
     }
@@ -1991,7 +2058,7 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = 0.03f * castingState.MageTalents.MissileBarrage;
+            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
 
             if (MB == 0.0)
             {
@@ -2011,27 +2078,23 @@ namespace Rawr.Mage
             }
             else
             {
-                //FB-ABar 0.85
                 chain1 = new SpellCycle(2);
-                chain1.AddSpell(FFB, castingState);
                 chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(FFB, castingState);
                 chain1.Calculate(castingState);
 
-                //FB-ABar-MBAM-ABar 0.15
                 chain2 = new SpellCycle(4);
-                chain2.AddSpell(FFB, castingState);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
-                chain2.AddSpell(ABar, castingState);
                 chain2.Calculate(castingState);
 
                 commonChain = chain2;
 
-                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
-                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                CastTime = (1 - MB) * chain1.CastTime + (2 - MB) * MB * chain2.CastTime;
+                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + (2 - MB) * MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
             }
         }
 
@@ -2054,7 +2117,7 @@ namespace Rawr.Mage
             else
             {
                 chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+                chain2.AddSpellContribution(dict, (2 - MB) * MB * chain2.CastTime / CastTime * duration);
             }
         }
     }
@@ -2216,12 +2279,13 @@ namespace Rawr.Mage
             AB3 = (BaseSpell)castingState.GetSpell(SpellId.ArcaneBlast33);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = 0.03f * castingState.MageTalents.MissileBarrage;
+            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
             hit = AB3.HitRate;
             miss = 1 - hit;
 
             if (MB == 0.0)
             {
+                // TODO take hit rate into account
                 // if we don't have barrage then this degenerates to AB
                 CastTime = AB3.CastTime;
                 CostPerSecond = AB3.CostPerSecond;
@@ -2231,6 +2295,7 @@ namespace Rawr.Mage
             }
             else if (AB3.CastTime + MBAM.CastTime < 3.0)
             {
+                // TODO take hit rate into account
                 //AB3 0.85
 
                 //AB3-MBAM 0.15
