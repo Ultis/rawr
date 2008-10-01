@@ -401,7 +401,7 @@ namespace Rawr.Mage
             }
             if (moltenFury)
             {
-                ArcaneSpellModifier *= (1 + 0.1f * character.MageTalents.MoltenFury);
+                ArcaneSpellModifier *= (1 + 0.06f * character.MageTalents.MoltenFury);
             }
             FireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower);
             FrostSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds);

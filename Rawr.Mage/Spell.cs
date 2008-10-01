@@ -412,7 +412,7 @@ namespace Rawr.Mage
                 }
                 if (castingState.MageTalents.MoltenFury > 0)
                 {
-                    SpellModifier *= (1 + 0.1f * castingState.MageTalents.MoltenFury * castingState.CalculationOptions.MoltenFuryPercentage);
+                    SpellModifier *= (1 + 0.06f * castingState.MageTalents.MoltenFury * castingState.CalculationOptions.MoltenFuryPercentage);
                 }
                 if (MagicSchool == MagicSchool.Fire) SpellModifier *= (1 + 0.02f * castingState.MageTalents.FirePower);
                 if (MagicSchool == MagicSchool.Frost) SpellModifier *= (1 + 0.02f * castingState.MageTalents.PiercingIce);
@@ -812,7 +812,7 @@ namespace Rawr.Mage
         public override void Calculate(CastingState castingState)
         {
             base.Calculate(castingState);
-            Cooldown -= 0.5f * castingState.MageTalents.ImprovedFireBlast;
+            Cooldown -= 1.0f * castingState.MageTalents.ImprovedFireBlast;
             CritRate += 0.02f * castingState.MageTalents.Incineration;
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
             CalculateDerivedStats(castingState);
@@ -892,7 +892,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             AoeDamageCap = 7830;
-            //CritRate += 0.05f * castingState.CalculationOptions.ImprovedFlamestrike;
+            CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
             CalculateDerivedStats(castingState);
         }
     }
@@ -988,9 +988,9 @@ namespace Rawr.Mage
                 DirectDamageModifier *= 1.05f;
             }
             BaseCastTime -= 0.1f * castingState.MageTalents.ImprovedFrostbolt;
-            CritRate += 0.01f * castingState.MageTalents.EmpoweredFrostbolt;
+            CritRate += 0.02f * castingState.MageTalents.EmpoweredFrostbolt;
             InterruptProtection += castingState.BaseStats.AldorRegaliaInterruptProtection;
-            SpellDamageCoefficient += 0.02f * castingState.MageTalents.EmpoweredFrostbolt;
+            SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFrostbolt;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
             CalculateDerivedStats(castingState);
         }
@@ -1036,7 +1036,7 @@ namespace Rawr.Mage
             DotDuration = 8;
             InterruptProtection += castingState.BaseStats.AldorRegaliaInterruptProtection;
             BaseCastTime -= 0.1f * castingState.MageTalents.ImprovedFireball;
-            SpellDamageCoefficient += 0.03f * castingState.MageTalents.EmpoweredFireball;
+            SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFireball;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
             CalculateDerivedStats(castingState);
@@ -1095,6 +1095,7 @@ namespace Rawr.Mage
             DotDuration = 12;
             SpellDamageCoefficient = 1.15f;
             DotDamageCoefficient = 0.2f;
+            CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
             CalculateDerivedStats(castingState);
         }
     }
@@ -1421,7 +1422,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             if (castingState.CalculationOptions.GlyphOfArcaneExplosion) CostAmplifier *= 0.9f;
-            //CritRate += 0.02f * castingState.CalculationOptions.ArcaneImpact;
+            CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact); // bugged currently
             AoeDamageCap = 10180;
             CalculateDerivedStats(castingState);
@@ -1436,6 +1437,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             AoeDamageCap = 9440;
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
+            CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
             CalculateDerivedStats(castingState);
         }
     }
@@ -1447,6 +1449,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             AoeDamageCap = 10100;
+            CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
             CalculateDerivedStats(castingState);
         }
     }
@@ -1478,6 +1481,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             AoeDamageCap = 28950;
+            CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
             CalculateDerivedStats(castingState);
         }
     }

@@ -990,7 +990,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.WaterElemental) list.Add(item);
             }
-            GroupCooldown(list, 45.0, SequenceItem.Calculations.WaterElementalCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.WaterElemental, VariableType.SummonWaterElemental, SequenceItem.Calculations.BaseState.GlobalCooldown);
+            GroupCooldown(list, SequenceItem.Calculations.WaterElementalDuration, SequenceItem.Calculations.WaterElementalCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Cooldown.WaterElemental, VariableType.SummonWaterElemental, SequenceItem.Calculations.BaseState.GlobalCooldown);
         }
 
         public List<SequenceGroup> GroupFlameCap()
@@ -1781,7 +1781,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 // we have to do first one on normal time and have coldsnap ready in the middle
                                                 time = normalTime;
                                                 if (icyVeinsGroup != null) time = Math.Max(time, coldsnapReady - 20.0);
-                                                if (waterElementalGroup != null) time = Math.Max(time, coldsnapReady - 45.0);
+                                                if (waterElementalGroup != null) time = Math.Max(time, coldsnapReady - SequenceItem.Calculations.WaterElementalDuration);
                                                 coldsnapTime[i] = Math.Max(time, coldsnapReady);
                                             }
                                             else
@@ -3262,37 +3262,37 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     if (state != null && state.WaterElemental)
                     {
-                        if (time + duration > weTime + 45.0 + eps)
+                        if (time + duration > weTime + SequenceItem.Calculations.WaterElementalDuration + eps)
                         {
                             if (coldsnap)
                             {
                                 // we need to coldsnap somewhere from [weTime] and [weTime + 45]
                                 double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, weTime);
-                                double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, weTime + 45);
+                                double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, weTime + SequenceItem.Calculations.WaterElementalDuration);
                                 if (restrictedColdsnapMax > restrictedColdsnapMin + eps)
                                 {
                                     // we can reuse last coldsnap
                                     coldsnapTimeMin = restrictedColdsnapMin;
                                     coldsnapTimeMax = restrictedColdsnapMax;
-                                    weTime += 45.0;
-                                    weCooldown += 45.0;
+                                    weTime += SequenceItem.Calculations.WaterElementalDuration;
+                                    weCooldown += SequenceItem.Calculations.WaterElementalDuration;
                                 }
-                                else if (coldsnapCooldownDuration - (time - coldsnapTimeMin) <= (weTime + 45.0 - time) + eps)
+                                else if (coldsnapCooldownDuration - (time - coldsnapTimeMin) <= (weTime + SequenceItem.Calculations.WaterElementalDuration - time) + eps)
                                 {
                                     coldsnapTimeMin = Math.Max(coldsnapTimeMin + coldsnapCooldownDuration, weTime);
-                                    coldsnapTimeMax = weTime + 45.0;
-                                    weTime += 45.0;
-                                    weCooldown += 45.0;
+                                    coldsnapTimeMax = weTime + SequenceItem.Calculations.WaterElementalDuration;
+                                    weTime += SequenceItem.Calculations.WaterElementalDuration;
+                                    weCooldown += SequenceItem.Calculations.WaterElementalDuration;
                                 }
                             }
-                            if (time + duration > weTime + 45.0 + eps)
+                            if (time + duration > weTime + SequenceItem.Calculations.WaterElementalDuration + eps)
                             {
-                                unexplained += time + duration - weTime - 45.0;
+                                unexplained += time + duration - weTime - SequenceItem.Calculations.WaterElementalDuration;
                                 if (timing != null) timing.AppendLine("WARNING: Water Elemental duration too long!");
                             }
                         }
                     }
-                    else if (duration > 0 && 45.0 - (time - weTime) > eps)
+                    else if (duration > 0 && SequenceItem.Calculations.WaterElementalDuration - (time - weTime) > eps)
                     {
                         //unexplained += Math.Min(duration, 45 - (time - weTime));
                         if (timing != null) timing.AppendLine("INFO: Water Elemental is still up!");

@@ -115,6 +115,7 @@ namespace Rawr.Mage
         public double ArcanePowerCooldown;
         public double ArcanePowerDuration;
         public double WaterElementalCooldown;
+        public double WaterElementalDuration;
 
         public double[] Solution;
         public List<SolutionVariable> SolutionVariable;

@@ -417,7 +417,7 @@ namespace Rawr.Mage
                 }
                 if (valid && waterElementalAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.WaterElemental, 45.0 + (coldsnapAvailable ? 45.0 : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? 45.0 : 0.0), true, 45.0);
+                    valid = ValidateCooldown(Cooldown.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? 45.0 : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration);
                 }
                 // coldsnap
                 if (valid && icyVeinsAvailable && coldsnapAvailable)

@@ -238,7 +238,7 @@ namespace Rawr.Mage
             FightDuration = 300;
             ShadowPriest = 175;
             HeroismAvailable = true;
-            MoltenFuryPercentage = 0.15f;
+            MoltenFuryPercentage = 0.3f;
             DestructionPotion = true;
             FlameCap = true;
             ABCycles = true;

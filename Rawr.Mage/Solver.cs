@@ -285,11 +285,12 @@ namespace Rawr.Mage
                 drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
                 waterElementalAvailable = !calculationOptions.DisableCooldowns && (character.MageTalents.SummonWaterElemental == 1);
                 manaGemEffectAvailable = false; // Naxx set bonus, treat as trinket with on mana gem effect
-                calculationResult.ColdsnapCooldown = 8 * 60;
+                calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * character.MageTalents.ColdAsIce);
                 calculationResult.ArcanePowerCooldown = 180.0 - 30.0 * character.MageTalents.ArcaneFlows;
                 calculationResult.ArcanePowerDuration = 15.0 + (calculationOptions.GlyphOfArcanePower ? 3.0 : 0.0);
                 calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * character.MageTalents.IceFloes + (character.MageTalents.IceFloes == 3 ? 0.01 : 0.00));
-                calculationResult.WaterElementalCooldown = 180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0);
+                calculationResult.WaterElementalCooldown = (180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * character.MageTalents.ColdAsIce);
+                calculationResult.WaterElementalDuration = 45.0 + 5.0 * character.MageTalents.ImprovedWaterElemental;
                 if (calculationOptions.PlayerLevel < 77)
                 {
                     calculationResult.ManaGemValue = 2400.0;
@@ -1016,7 +1017,7 @@ namespace Rawr.Mage
                             {
                                 for (int ss = 0; ss < segments; ss++)
                                 {
-                                    double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? 45.0 : 0.0);
+                                    double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0);
                                     int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                                     if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                                     if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentWaterElemental + ss, column, 1.0);
@@ -1024,7 +1025,7 @@ namespace Rawr.Mage
                                 }
                                 for (int ss = 0; ss < segments; ss++)
                                 {
-                                    double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? 45.0 : 0.0);
+                                    double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0);
                                     int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                                     if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                                     if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentSummonWaterElemental + ss, column, 1.0);
@@ -1195,8 +1196,8 @@ namespace Rawr.Mage
             double weDuration = 0.0;
             if (waterElementalAvailable)
             {
-                weDuration = MaximizeEffectDuration(calculationOptions.FightDuration, 45.0, calculationResult.WaterElementalCooldown);
-                if (coldsnapAvailable) weDuration = MaximizeColdsnapDuration(calculationOptions.FightDuration, calculationResult.ColdsnapCooldown, 45.0, calculationResult.WaterElementalCooldown, out coldsnapCount);
+                weDuration = MaximizeEffectDuration(calculationOptions.FightDuration, calculationResult.WaterElementalDuration, calculationResult.WaterElementalCooldown);
+                if (coldsnapAvailable) weDuration = MaximizeColdsnapDuration(calculationOptions.FightDuration, calculationResult.ColdsnapCooldown, calculationResult.WaterElementalDuration, calculationResult.WaterElementalCooldown, out coldsnapCount);
             }
 
             double combustionCount = combustionAvailable ? (1 + (int)((calculationOptions.FightDuration - 15f) / 195f)) : 0;
@@ -1209,8 +1210,8 @@ namespace Rawr.Mage
             else if (waterElementalAvailable && coldsnapAvailable)
             {
                 // TODO recheck this logic
-                double wecount = (weDuration / 45.0);
-                if (wecount >= Math.Floor(wecount) + 20.0 / 45.0)
+                double wecount = (weDuration / calculationResult.WaterElementalDuration);
+                if (wecount >= Math.Floor(wecount) + 20.0 / calculationResult.WaterElementalDuration)
                     ivlength = Math.Ceiling(wecount) * 20.0;
                 else
                     ivlength = Math.Floor(wecount) * 20.0;
@@ -1364,9 +1365,9 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowDrumsOfBattle, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration * calculationResult.BaseState.GlobalCooldown / 120.0 : calculationResult.BaseState.GlobalCooldown * (1 + (int)((calculationOptions.FightDuration - 30) / 120)));
             if (waterElementalAvailable)
             {
-                double duration = calculationOptions.AverageCooldowns ? (45.0 / calculationResult.WaterElementalCooldown + (coldsnapAvailable ? 45.0 / calculationResult.ColdsnapCooldown : 0.0)) * calculationOptions.FightDuration : weDuration;
+                double duration = calculationOptions.AverageCooldowns ? (calculationResult.WaterElementalDuration / calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration / calculationResult.ColdsnapCooldown : 0.0)) * calculationOptions.FightDuration : weDuration;
                 lp.SetRHSUnsafe(rowWaterElemental, duration);
-                lp.SetRHSUnsafe(rowSummonWaterElementalCount, calculationResult.BaseState.GlobalCooldown * Math.Ceiling(duration / 45.0));
+                lp.SetRHSUnsafe(rowSummonWaterElementalCount, calculationResult.BaseState.GlobalCooldown * Math.Ceiling(duration / calculationResult.WaterElementalDuration));
             }
             lp.SetRHSUnsafe(rowTargetDamage, -calculationOptions.TargetDamage);
 
@@ -1445,14 +1446,14 @@ namespace Rawr.Mage
                 {
                     for (int seg = 0; seg < segments; seg++)
                     {
-                        lp.SetRHSUnsafe(rowSegmentWaterElemental + seg, 45.0 + (coldsnapAvailable ? 45.0 : 0.0));
-                        double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? 45.0 : 0.0);
+                        lp.SetRHSUnsafe(rowSegmentWaterElemental + seg, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0));
+                        double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0);
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                     for (int seg = 0; seg < segments; seg++)
                     {
                         lp.SetRHSUnsafe(rowSegmentSummonWaterElemental + seg, calculationResult.BaseState.GlobalCooldown + (coldsnapAvailable ? calculationResult.BaseState.GlobalCooldown : 0.0));
-                        double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? 45.0 : 0.0);
+                        double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0);
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
@@ -1671,14 +1672,14 @@ namespace Rawr.Mage
                     for (int seg = 0; seg < segments; seg++)
                     {
                         rowCount++;
-                        double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? 45.0 : 0.0);
+                        double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0);
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                     rowSegmentSummonWaterElemental = rowCount;
                     for (int seg = 0; seg < segments; seg++)
                     {
                         rowCount++;
-                        double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? 45.0 : 0.0);
+                        double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0);
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
@@ -1835,7 +1836,7 @@ namespace Rawr.Mage
             if (state.DrumsOfBattle && state.Heroism) lp.SetElementUnsafe(rowHeroismDrumsOfBattle, column, 1.0);
             if (state.DrumsOfBattle && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsDrumsOfBattle, column, 1.0);
             if (state.DrumsOfBattle && state.ArcanePower) lp.SetElementUnsafe(rowArcanePowerDrumsOfBattle, column, 1.0);
-            if (state.WaterElemental) lp.SetElementUnsafe(rowSummonWaterElemental, column, 1 / (45.0 - calculationResult.BaseState.GlobalCooldown));
+            if (state.WaterElemental) lp.SetElementUnsafe(rowSummonWaterElemental, column, 1 / (calculationResult.WaterElementalDuration - calculationResult.BaseState.GlobalCooldown));
             lp.SetElementUnsafe(rowThreat, column, spell.ThreatPerSecond);
             tpsList.Add(spell.ThreatPerSecond);
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
@@ -1877,7 +1878,7 @@ namespace Rawr.Mage
                 {
                     for (int ss = 0; ss < segments; ss++)
                     {
-                        double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? 45.0 : 0.0);
+                        double cool = calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0);
                         int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                         if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentWaterElemental + ss, column, 1.0);
