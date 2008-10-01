@@ -260,8 +260,6 @@ namespace Rawr.Mage
 
                 bool savedSmartOptimization = calculationOptions.SmartOptimization;
                 bool savedABCycles = calculationOptions.ABCycles;
-                bool savedDestructionPotion = calculationOptions.DestructionPotion;
-                bool savedFlameCap = calculationOptions.FlameCap;
 
                 //if (useSMP) calculationOptions.SmartOptimization = true;
                 segments = (segmentCooldowns) ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
@@ -292,22 +290,30 @@ namespace Rawr.Mage
                 calculationResult.ArcanePowerDuration = 15.0 + (calculationOptions.GlyphOfArcanePower ? 3.0 : 0.0);
                 calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * character.MageTalents.IceFloes + (character.MageTalents.IceFloes == 3 ? 0.01 : 0.00));
                 calculationResult.WaterElementalCooldown = 180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0);
+                if (calculationOptions.PlayerLevel < 77)
+                {
+                    calculationResult.ManaGemValue = 2400.0;
+                    calculationResult.MaxManaGemValue = 2460.0;
+                }
+                else
+                {
+                    calculationResult.ManaGemValue = 3415.0;
+                    calculationResult.MaxManaGemValue = 3500.0;
+                }
+                if (calculationOptions.PlayerLevel <= 70)
+                {
+                    calculationResult.ManaPotionValue = 2400.0;
+                    calculationResult.MaxManaPotionValue = 3000.0;
+                }
+                else
+                {
+                    calculationResult.ManaPotionValue = 4300.0;
+                    calculationResult.MaxManaPotionValue = 4400.0;
+                }
+
 
                 trinket1OnManaGem = false;
                 trinket2OnManaGem = false;
-
-                if (calculationOptions.SmartOptimization)
-                {
-                    if (character.MageTalents.SpellPower == 0)
-                    {
-                        calculationOptions.ABCycles = false;
-                    }
-                    else
-                    {
-                        calculationOptions.DestructionPotion = false;
-                        calculationOptions.FlameCap = false;
-                    }
-                }
 
                 #region Setup Trinkets
                 if (trinket1Available)
@@ -422,8 +428,6 @@ namespace Rawr.Mage
 
                 calculationOptions.SmartOptimization = savedSmartOptimization;
                 calculationOptions.ABCycles = savedABCycles;
-                calculationOptions.DestructionPotion = savedDestructionPotion;
-                calculationOptions.FlameCap = savedFlameCap;
 
                 return calculationResult;
             }
@@ -679,7 +683,7 @@ namespace Rawr.Mage
                         evocationDuration = characterStats.Mana / calculationResult.EvocationRegen;
                         calculationResult.EvocationDuration = evocationDuration;
                     }
-                    calculationResult.MaxEvocation = (int)Math.Max(1, (1 + Math.Floor((calculationOptions.FightDuration - 200f) / 480f)));
+                    calculationResult.MaxEvocation = (int)Math.Max(1, (1 + Math.Floor((calculationOptions.FightDuration - 200f) / 300f)));
                     for (int segment = 0; segment < evocationSegments; segment++)
                     {
                         calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = calculationResult.BaseState });
@@ -714,11 +718,11 @@ namespace Rawr.Mage
                     }
                 }
                 // mana potion
+                calculationResult.MaxManaPotion = 1;
                 if (calculationOptions.ManaPotionEnabled)
                 {
                     int manaPotionSegments = (segmentCooldowns && (destructionPotionAvailable || restrictManaUse)) ? segments : 1;
-                    calculationResult.MaxManaPotion = 1 + (int)((calculationOptions.FightDuration - 30f) / 120f);
-                    manaRegen = -(1 + characterStats.BonusManaPotion) * 2400f;
+                    manaRegen = -(1 + characterStats.BonusManaPotion) * calculationResult.ManaPotionValue;
                     for (int segment = 0; segment < manaPotionSegments; segment++)
                     {
                         calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaPotion, Segment = segment });
@@ -730,7 +734,7 @@ namespace Rawr.Mage
                         lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
                         lp.SetElementUnsafe(rowPotion, column, 1.0);
                         lp.SetElementUnsafe(rowManaPotion, column, 1.0);
-                        lp.SetElementUnsafe(rowThreat, column, tps = (1 + characterStats.BonusManaPotion) * 2400f * 0.5f * threatFactor);
+                        lp.SetElementUnsafe(rowThreat, column, tps = (1 + characterStats.BonusManaPotion) * calculationResult.ManaPotionValue * 0.5f * threatFactor);
                         calculationResult.ManaPotionTps = tps;
                         lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
                         lp.SetCostUnsafe(column, 0.0);
@@ -767,8 +771,8 @@ namespace Rawr.Mage
                 if (calculationOptions.ManaGemEnabled)
                 {
                     int manaGemSegments = (segmentCooldowns && (flameCapAvailable || restrictManaUse)) ? segments : 1;
-                    calculationResult.MaxManaGem = Math.Min(5, 1 + (int)((calculationOptions.FightDuration - 30f) / 120f));
-                    double manaGemRegenAvg = (1 + characterStats.BonusManaGem) * (-Math.Min(3, 1 + (int)((calculationOptions.FightDuration - 30f) / 120f)) * 2400f - ((calculationOptions.FightDuration >= 390) ? 1100f : 0f) - ((calculationOptions.FightDuration >= 510) ? 850 : 0)) / (calculationResult.MaxManaGem);
+                    calculationResult.MaxManaGem = Math.Min(3, 1 + (int)((calculationOptions.FightDuration - 30f) / 120f));
+                    double manaGemRegen = -(1 + characterStats.BonusManaGem) * calculationResult.ManaGemValue;
                     for (int segment = 0; segment < manaGemSegments; segment++)
                     {
                         calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaGem, Segment = segment });
@@ -776,13 +780,13 @@ namespace Rawr.Mage
                         lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
                         lp.SetColumnUpperBound(column, (manaGemSegments > 1) ? 1.0 : calculationResult.MaxManaGem);
                         if (segment == 0) calculationResult.ColumnManaGem = column;
-                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaGemRegenAvg);
-                        lp.SetElementUnsafe(rowManaRegen, column, manaGemRegenAvg);
+                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaGemRegen);
+                        lp.SetElementUnsafe(rowManaRegen, column, manaGemRegen);
                         lp.SetElementUnsafe(rowManaGem, column, 1.0);
                         lp.SetElementUnsafe(rowManaGemOnly, column, 1.0);
                         lp.SetElementUnsafe(rowManaGemFlameCap, column, 1.0);
                         lp.SetElementUnsafe(rowTrinketManaGem, column, -1.0);
-                        lp.SetElementUnsafe(rowThreat, column, tps = -manaGemRegenAvg * 0.5f * threatFactor);
+                        lp.SetElementUnsafe(rowThreat, column, tps = -manaGemRegen * 0.5f * threatFactor);
                         calculationResult.ManaGemTps = tps;
                         lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
                         lp.SetCostUnsafe(column, 0.0);
@@ -802,8 +806,8 @@ namespace Rawr.Mage
                         {
                             for (int ss = segment; ss < segments - 1; ss++)
                             {
-                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaGemRegenAvg);
-                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaGemRegenAvg);
+                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaGemRegen);
+                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaGemRegen);
                             }
                         }
                         if (restrictThreat)
@@ -1061,8 +1065,8 @@ namespace Rawr.Mage
                     lp.SetColumnUpperBound(column, calculationOptions.FightDuration);
                     lp.SetElementUnsafe(rowFightDuration, column, 1.0);
                     lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                    lp.SetElementUnsafe(rowEvocation, column, calculationResult.EvocationDuration / 480.0);
-                    lp.SetElementUnsafe(rowPotion, column, 1.0 / 120.0);
+                    lp.SetElementUnsafe(rowEvocation, column, calculationResult.EvocationDuration / 300.0);
+                    //lp.SetElementUnsafe(rowPotion, column, 1.0 / 120.0);
                     lp.SetElementUnsafe(rowManaGem, column, 1.0 / 120.0);
                     lp.SetElementUnsafe(rowArcanePower, column, calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown);
                     lp.SetElementUnsafe(rowIcyVeins, column, 20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0));
@@ -1302,8 +1306,8 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowFightDuration, calculationOptions.FightDuration);
             lp.SetRHSUnsafe(rowTimeExtension, -calculationOptions.FightDuration);
             lp.SetRHSUnsafe(rowEvocation, calculationResult.EvocationDuration * calculationResult.MaxEvocation);
-            lp.SetRHSUnsafe(rowPotion, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaPotion);
-            lp.SetRHSUnsafe(rowManaPotion, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaPotion);
+            lp.SetRHSUnsafe(rowPotion, calculationResult.MaxManaPotion);
+            lp.SetRHSUnsafe(rowManaPotion, calculationResult.MaxManaPotion);
             lp.SetRHSUnsafe(rowManaGem, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             lp.SetRHSUnsafe(rowManaGemOnly, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             if (heroismAvailable) lp.SetRHSUnsafe(rowHeroism, 40);
@@ -1319,7 +1323,7 @@ namespace Rawr.Mage
             {
                 lp.SetRHSUnsafe(rowManaGemFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : Math.Max(((int)((calculationOptions.FightDuration - 60.0) / 60.0)) * 0.5 + 1.5, calculationResult.MaxManaGem));
             }
-            else if (calculationOptions.FlameCap && !(!calculationOptions.SmartOptimization && character.MageTalents.SpellPower > 0))
+            else if (flameCapAvailable && !(!calculationOptions.SmartOptimization && character.MageTalents.SpellPower > 0))
             {
                 lp.SetRHSUnsafe(rowManaGemFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : ((int)(calculationOptions.FightDuration / 180.0 + 2.0 / 3.0)) * 3.0 / 2.0);
             }
@@ -1528,11 +1532,8 @@ namespace Rawr.Mage
             rowManaRegen = rowCount++;
             rowFightDuration = rowCount++;
             if (calculationOptions.EvocationEnabled && (needsTimeExtension || restrictManaUse || integralMana)) rowEvocation = rowCount++;
-            if (calculationOptions.ManaPotionEnabled)
-            {
-                rowPotion = rowCount++;
-                if (integralMana) rowManaPotion = rowCount++;
-            }
+            if (calculationOptions.ManaPotionEnabled || destructionPotionAvailable) rowPotion = rowCount++;
+            if (calculationOptions.ManaPotionEnabled && integralMana) rowManaPotion = rowCount++;
             if (calculationOptions.ManaGemEnabled)
             {
                 rowManaGem = rowCount++;

@@ -197,7 +197,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         double kd = kitem.Duration;
                         if (kitem.CastingState.ManaGemActivation && (k == 0 || (!sequence[j].SuperGroup.Item[k - 1].CastingState.ManaGemActivation && sequence[j].SuperGroup.Item[k - 1].VariableType != VariableType.ManaGem && sequence[j].SuperGroup.Item[k - 1].VariableType != VariableType.ManaPotion)))
                         {
-                            projectMana += 2400.0 * (1 + BaseStats.BonusManaGem);
+                            projectMana += SequenceItem.Calculations.ManaGemValue * (1 + BaseStats.BonusManaGem);
                             if (projectMana - BaseStats.Mana > overflowBuffer)
                             {
                                 overflowBuffer = projectMana - BaseStats.Mana;
@@ -1992,9 +1992,10 @@ namespace Rawr.Mage.SequenceReconstruction
             double gemTime = RemoveIndex(VariableType.ManaGem);
             double evoTime = RemoveIndex(VariableType.Evocation);
             bool gemActivated = (SequenceItem.Calculations.BaseStats.SpellDamageFor15SecOnManaGem > 0);
-            float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
-            float[] gemMaxValue = new float[] { 2460f, 2460f, 2460f, 1127f, 871f };
-            int gemCount = 0;
+            double gemValue = SequenceItem.Calculations.ManaGemValue;
+            double gemMaxValue = SequenceItem.Calculations.MaxManaGemValue;
+            double potValue = SequenceItem.Calculations.ManaPotionValue;
+            double potMaxValue = SequenceItem.Calculations.MaxManaPotionValue;
             double time = 0;
             double nextGem = 0;
             double nextPot = 0;
@@ -2011,23 +2012,6 @@ namespace Rawr.Mage.SequenceReconstruction
             do
             {
             DoStart:
-                // verify we're not leaking mana
-                /*double verifyDeficit = -ManaCheck();
-                for (double _potTime = potTime; _potTime > eps; _potTime -= ManaPotionTime)
-                {
-                    verifyDeficit -= (1 + BasicStats.BonusManaPotion) * 2400;
-                }
-                int _gemCount = gemCount;
-                for (double _gemTime = gemTime; _gemTime > eps; _gemTime -= ManaPotionTime, _gemCount++)
-                {
-                    verifyDeficit -= (1 + BasicStats.BonusManaGem) * gemValue[_gemCount];
-                }
-                verifyDeficit -= EvocationRegen * evoTime;
-                if (verifyDeficit < 0.0) verifyDeficit = 0.0;
-                if (Math.Abs(verifyDeficit - ghostMana) > eps)
-                {
-                    verifyDeficit = 0.0;
-                }*/
                 double mana = Evaluate(null, EvaluationMode.ManaAtTime, time);
                 double maxMps = double.PositiveInfinity;
                 if (!((potTime > 0 && nextPot == 0) || (gemTime > 0 && nextGem == 0) || (evoTime > 0 && nextEvo == 0)))
@@ -2035,12 +2019,11 @@ namespace Rawr.Mage.SequenceReconstruction
                     double m = mana + ghostMana;
                     for (double _potTime = potTime; _potTime > eps; _potTime -= 1.0)
                     {
-                        m += (1 + BaseStats.BonusManaPotion) * 2400;
+                        m += (1 + BaseStats.BonusManaPotion) * potValue;
                     }
-                    int __gemCount = gemCount;
-                    for (double _gemTime = gemTime; _gemTime > eps; _gemTime -= 1.0, __gemCount++)
+                    for (double _gemTime = gemTime; _gemTime > eps; _gemTime -= 1.0)
                     {
-                        m += (1 + BaseStats.BonusManaGem) * gemValue[__gemCount];
+                        m += (1 + BaseStats.BonusManaGem) * gemValue;
                     }
                     m += EvocationRegen * evoTime;
                     maxMps = m / (fight - time);
@@ -2050,7 +2033,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (nextGem > time && gemTime > 0)
                 {
                     double m = mana;
-                    if (potTime > 0 && nextPot < nextGem) m += (1 + BaseStats.BonusManaPotion) * 2400;
+                    if (potTime > 0 && nextPot < nextGem) m += (1 + BaseStats.BonusManaPotion) * potValue;
                     if (evoTime > 0 && nextEvo < nextGem) m += EvocationRegen * Math.Min(evoTime, EvocationDuration);
                     double mps = m / (nextGem - time);
                     if (mps < maxMps)
@@ -2062,7 +2045,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (nextPot > time && potTime > 0)
                 {
                     double m = mana;
-                    if (gemTime > 0 && nextGem < nextPot) m += (1 + BaseStats.BonusManaGem) * gemValue[gemCount];
+                    if (gemTime > 0 && nextGem < nextPot) m += (1 + BaseStats.BonusManaGem) * gemValue;
                     if (evoTime > 0 && nextEvo < nextPot) m += EvocationRegen * Math.Min(evoTime, EvocationDuration);
                     double mps = m / (nextPot - time);
                     if (mps < maxMps)
@@ -2074,8 +2057,8 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (nextEvo > time && evoTime > 0)
                 {
                     double m = mana;
-                    if (potTime > 0 && nextPot < nextEvo) m += (1 + BaseStats.BonusManaPotion) * 2400;
-                    if (gemTime > 0 && nextGem < nextEvo) m += (1 + BaseStats.BonusManaGem) * gemValue[gemCount];
+                    if (potTime > 0 && nextPot < nextEvo) m += (1 + BaseStats.BonusManaPotion) * potValue;
+                    if (gemTime > 0 && nextGem < nextEvo) m += (1 + BaseStats.BonusManaGem) * gemValue;
                     double mps = m / (nextEvo - time);
                     if (mps < maxMps)
                     {
@@ -2092,7 +2075,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     else
                     {
                         targetTime = nextPot;
-                        minMps = ((1 + BaseStats.BonusManaPotion) * 3000 - (BaseStats.Mana - mana)) / (targetTime - time);
+                        minMps = ((1 + BaseStats.BonusManaPotion) * potMaxValue - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
                 }
                 else if (gemTime > 0 && (nextGem <= nextEvo || nextGem == 0 || evoTime <= 0))
@@ -2104,7 +2087,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     else
                     {
                         targetTime = nextGem;
-                        minMps = ((1 + BaseStats.BonusManaGem) * gemMaxValue[gemCount] - (BaseStats.Mana - mana)) / (targetTime - time);
+                        minMps = ((1 + BaseStats.BonusManaGem) * gemMaxValue - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
                 }
                 else if (evoTime > 0)
@@ -2202,24 +2185,22 @@ namespace Rawr.Mage.SequenceReconstruction
                         double _nextPot = nextPot;
                         double _gemTime = gemTime;
                         double _nextGem = nextGem;
-                        int _gemCount = gemCount;
                         if (targetmana - sequence[i].Mps * (sequence[i].Duration - (targetTime - t)) < -eps)
                         {
                             // targetmana / sequence[i].Mps = timeFromTargetTime
                             double oomt = targetTime + targetmana / sequence[i].Mps;
                             while (_potTime > eps && _nextPot < oomt + eps && targetmana - sequence[i].Mps * (sequence[i].Duration - (targetTime - t)) < -eps)
                             {
-                                targetmana += (1 + BaseStats.BonusManaPotion) * 2400;
+                                targetmana += (1 + BaseStats.BonusManaPotion) * potValue;
                                 _potTime -= 1.0;
                                 _nextPot += 120.0;
                                 oomt = targetTime + targetmana / sequence[i].Mps;
                             }
                             while (_gemTime > eps && _nextGem < oomt + eps && targetmana - sequence[i].Mps * (sequence[i].Duration - (targetTime - t)) < -eps)
                             {
-                                targetmana += (1 + BaseStats.BonusManaGem) * gemValue[_gemCount];
+                                targetmana += (1 + BaseStats.BonusManaGem) * gemValue;
                                 _gemTime -= 1.0;
                                 _nextGem += 120.0;
-                                _gemCount++;
                                 oomt = targetTime + targetmana / sequence[i].Mps;
                             }
                             if (targetmana - sequence[i].Mps * (sequence[i].Duration - (targetTime - t)) < -eps)
@@ -2245,17 +2226,16 @@ namespace Rawr.Mage.SequenceReconstruction
                                 double oomt = t + targetmana / sequence[i].Mps;
                                 while (_potTime > eps && _nextPot < oomt + eps && targetmana - sequence[i].Mps * sequence[i].Duration < -eps)
                                 {
-                                    targetmana += (1 + BaseStats.BonusManaPotion) * 2400;
+                                    targetmana += (1 + BaseStats.BonusManaPotion) * potValue;
                                     _potTime -= 1.0;
                                     _nextPot += 120.0;
                                     oomt = t + targetmana / sequence[i].Mps;
                                 }
                                 while (_gemTime > eps && _nextGem < oomt + eps && targetmana - sequence[i].Mps * sequence[i].Duration < -eps)
                                 {
-                                    targetmana += (1 + BaseStats.BonusManaGem) * gemValue[_gemCount];
+                                    targetmana += (1 + BaseStats.BonusManaGem) * gemValue;
                                     _gemTime -= 1.0;
                                     _nextGem += 120.0;
-                                    _gemCount++;
                                     oomt = t + targetmana / sequence[i].Mps;
                                 }
                                 if (targetmana - sequence[i].Mps * sequence[i].Duration < -eps)
@@ -2375,8 +2355,8 @@ namespace Rawr.Mage.SequenceReconstruction
                 double pot = nextPot;
                 double evo = nextEvo;
                 bool evoMoved = false;
-                if (gemTime > 0) gem = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem), 4);
-                if (potTime > 0) pot = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaPotion) * 3000, Math.Max(time, nextPot), 3);
+                if (gemTime > 0) gem = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaGem) * gemMaxValue, Math.Max(time, nextGem), 4);
+                if (potTime > 0) pot = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaPotion) * potMaxValue, Math.Max(time, nextPot), 3);
                 if (evoTime > 0)
                 {
                     evo = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - EvocationRegen * Math.Min(evoTime, EvocationDuration), Math.Max(time, nextEvo), 2);
@@ -2424,7 +2404,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     if (gem > nextFlameCap - 120.0 + eps && gem < nextFlameCap)
                     {
                         nextGem = nextFlameCapMin + 180.0;
-                        gem = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaGem) * gemMaxValue[gemCount], Math.Max(time, nextGem), 4);
+                        gem = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaGem) * gemMaxValue, Math.Max(time, nextGem), 4);
                         if (nextGem > fight)
                         {
                             nextGem = fight;
@@ -2437,7 +2417,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     if (pot > nextDestructionPotion - 120.0 + eps && pot < nextDestructionPotion)
                     {
                         nextPot = nextDestructionPotionMin + 120.0;
-                        pot = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaPotion) * 3000, Math.Max(time, nextPot), 3);
+                        pot = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaPotion) * potMaxValue, Math.Max(time, nextPot), 3);
                         if (nextPot > fight)
                         {
                             nextPot = fight;
@@ -2475,7 +2455,6 @@ namespace Rawr.Mage.SequenceReconstruction
                             InsertIndex(SequenceItem.Calculations.ColumnManaGem, Math.Min(1.0, gemTime), t);
                             time = Math.Min(t + 0.01, t + d / 2); // block activation from moving
                             nextGem = t + 120;
-                            gemCount++;
                             gemTime -= 1.0;
                             if (gemTime <= eps)
                             {
@@ -2520,7 +2499,6 @@ namespace Rawr.Mage.SequenceReconstruction
                     InsertIndex(SequenceItem.Calculations.ColumnManaGem, Math.Min(1.0, gemTime), gem);
                     time = gem;
                     nextGem = gem + 120;
-                    gemCount++;
                     gemTime -= 1.0;
                     if (gemTime <= eps || nextGem > fight)
                     {
@@ -2548,7 +2526,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                     InsertIndex(SequenceItem.Calculations.ColumnEvocation, Math.Min(EvocationDuration, evoTime), evo);
                     time = evo + Math.Min(EvocationDuration, evoTime);
-                    nextEvo = evo + 60 * 8;
+                    nextEvo = evo + 60 * 5;
                     evoTime -= EvocationDuration;
                     if (evoTime <= eps || nextEvo > fight)
                     {
@@ -2566,7 +2544,6 @@ namespace Rawr.Mage.SequenceReconstruction
         public double ManaCheck()
         {
             const double eps = 0.000001;
-            float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
             double mana = SequenceItem.Calculations.StartingMana;
             for (int i = 0; i < sequence.Count; i++)
             {
@@ -2577,15 +2554,14 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     for (double _potTime = duration; _potTime > eps; _potTime -= 1.0)
                     {
-                        mana += (1 + BaseStats.BonusManaPotion) * 2400;
+                        mana += (1 + BaseStats.BonusManaPotion) * SequenceItem.Calculations.ManaPotionValue;
                     }
                 }
                 else if (type == VariableType.ManaGem)
                 {
-                    int _gemCount = 0;
-                    for (double _gemTime = duration; _gemTime > eps; _gemTime -= 1.0, _gemCount++)
+                    for (double _gemTime = duration; _gemTime > eps; _gemTime -= 1.0)
                     {
-                        mana += (1 + BaseStats.BonusManaGem) * gemValue[_gemCount];
+                        mana += (1 + BaseStats.BonusManaGem) * SequenceItem.Calculations.ManaGemValue;
                     }
                 }
                 else if (type == VariableType.Evocation)
@@ -2617,7 +2593,6 @@ namespace Rawr.Mage.SequenceReconstruction
             const double eps = 0.00001;
             double time = 0;
             double mana = SequenceItem.Calculations.StartingMana;
-            float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
 
             ReportMode reportMode = ReportMode.Compact;
 
@@ -2778,7 +2753,7 @@ namespace Rawr.Mage.SequenceReconstruction
                             if (timing != null) timing.AppendLine("WARNING: Potion ammount too big!");
                         }
                         if (timing != null) timing.AppendLine(TimeFormat(time) + ": Mana Potion (" + Math.Round(mana).ToString() + " mana)");
-                        mana += (1 + BaseStats.BonusManaPotion) * 2400;
+                        mana += (1 + BaseStats.BonusManaPotion) * SequenceItem.Calculations.ManaPotionValue;
                         potionCooldown = 120;
                         potionWarning = false;
                     }
@@ -2799,7 +2774,7 @@ namespace Rawr.Mage.SequenceReconstruction
                             if (timing != null) timing.AppendLine("WARNING: Gem ammount too big!");
                         }
                         if (timing != null) timing.AppendLine(TimeFormat(time) + ": Mana Gem (" + Math.Round(mana).ToString() + " mana)");
-                        mana += (1 + BaseStats.BonusManaGem) * gemValue[gemCount];
+                        mana += (1 + BaseStats.BonusManaGem) * SequenceItem.Calculations.ManaGemValue;
                         gemCount++;
                         gemCooldown = 120;
                         gemWarning = false;
@@ -2822,7 +2797,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                         if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (" + Math.Round(mana).ToString() + " mana)");
                         mana += Math.Min(EvocationDuration, duration) * EvocationRegen;
-                        evocationCooldown = 60 * 8;
+                        evocationCooldown = 60 * 5;
                     }
                 }
                 if (mana < 0) mana = 0;

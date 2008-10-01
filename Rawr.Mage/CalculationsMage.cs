@@ -1158,14 +1158,14 @@ namespace Rawr.Mage
                         #endregion
 
                         List<SequenceReconstruction.SequenceItem> sequence = calculationOptions.SequenceReconstruction.sequence;
+                        CharacterCalculationsMage calculations = calculationOptions.Calculations;
 
-                        float mana = calculationOptions.Calculations.StartingMana;
-                        float[] gemValue = new float[] { 2400f, 2400f, 2400f, 1100f, 850f };
+                        float mana = calculations.StartingMana;
                         int gemCount = 0;
                         float time = 0;
                         Color manaFill = Color.FromArgb(50, Color.Blue);
                         float lastMana = mana;
-                        float maxMana = calculationOptions.Calculations.BaseStats.Mana;
+                        float maxMana = calculations.BaseStats.Mana;
                         float maxDps = 0;
                         for (int i = 0; i < sequence.Count; i++)
                         {
@@ -1181,12 +1181,12 @@ namespace Rawr.Mage
                                 duration = 0;
                                 if (sequence[i].VariableType == VariableType.ManaGem)
                                 {
-                                    mana += (1 + calculationOptions.Calculations.BaseStats.BonusManaGem) * gemValue[gemCount];
+                                    mana += (float)((1 + calculations.BaseStats.BonusManaGem) * calculations.ManaGemValue);
                                     gemCount++;
                                 }
                                 else if (sequence[i].VariableType == VariableType.ManaPotion)
                                 {
-                                    mana += (1 + calculationOptions.Calculations.BaseStats.BonusManaPotion) * 2400;
+                                    mana += (float)((1 + calculations.BaseStats.BonusManaPotion) * calculations.ManaPotionValue);
                                 }
                                 if (mana < 0) mana = 0;
                                 if (mana > maxMana)

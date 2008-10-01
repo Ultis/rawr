@@ -430,12 +430,12 @@ namespace Rawr.Mage
                     valid = ValidateCooldown(Cooldown.Combustion, 15.0, 180.0 + 15.0); // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                 }
                 // flamecap
-                if (valid && calculationOptions.FlameCap)
+                if (valid && flameCapAvailable)
                 {
                     valid = ValidateCooldown(Cooldown.FlameCap, 60.0, 180.0, integralMana, 60.0);
                 }
                 // destruction
-                if (valid && calculationOptions.DestructionPotion)
+                if (valid && destructionPotionAvailable)
                 {
                     valid = ValidateCooldown(Cooldown.DestructionPotion, 15, 120);
                 }
@@ -473,7 +473,7 @@ namespace Rawr.Mage
 
             if (segmentCooldowns)
             {
-                if (valid && calculationOptions.FlameCap)
+                if (valid && flameCapAvailable)
                 {
                     valid = ValidateFlamecap();
                 }
@@ -2682,7 +2682,7 @@ namespace Rawr.Mage
 
                     double overflow = solution[calculationResult.ColumnManaOverflow];
 
-                    if (120.0 * totalGem - overflow / manaBurn + segCount[firstSeg] > (firstSeg * segmentDuration + segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
+                    if (120.0 * totalGem - overflow / manaBurn + segCount[firstSeg] > (firstSeg * segmentDuration + segmentDuration) - calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
                     {
                         // no gem
                         SolverLP nogem = lp.Clone();
@@ -2698,7 +2698,7 @@ namespace Rawr.Mage
                         // restrict flame cap/overflow
                         if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap with gem at 0");
                         int row = lp.AddConstraint(false);
-                        lp.SetConstraintRHS(row, (firstSeg * segmentDuration + segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
+                        lp.SetConstraintRHS(row, (firstSeg * segmentDuration + segmentDuration) - calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
                         for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                         {
                             CastingState state = calculationResult.SolutionVariable[index].State;
@@ -2740,7 +2740,7 @@ namespace Rawr.Mage
 
                     double overflow = solution[calculationResult.ColumnManaOverflow + segments - 1];
 
-                    if (120.0 * totalGem - overflow / manaBurn - segCount[lastSeg] > (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
+                    if (120.0 * totalGem - overflow / manaBurn - segCount[lastSeg] > (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
                     {
                         // no gem
                         SolverLP nogem = lp.Clone();
@@ -2756,7 +2756,7 @@ namespace Rawr.Mage
                         // restrict flame cap/overflow
                         if (lp.Log != null) lp.Log.AppendLine("Restrict flame cap with gem at end");
                         int row = lp.AddConstraint(false);
-                        lp.SetConstraintRHS(row, (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
+                        lp.SetConstraintRHS(row, (calculationOptions.FightDuration - 60.0 - lastSeg * segmentDuration - segmentDuration) - calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
                         for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                         {
                             CastingState state = calculationResult.SolutionVariable[index].State;
@@ -2928,7 +2928,7 @@ namespace Rawr.Mage
 
                 double overflow = solution[calculationResult.ColumnManaOverflow];
 
-                if (trinketCount[0] - overflow / manaBurn > segmentDuration - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
+                if (trinketCount[0] - overflow / manaBurn > segmentDuration - calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
                 {
                     // no gem/trinket at 0
                     SolverLP nogem = lp.Clone();
@@ -2949,7 +2949,7 @@ namespace Rawr.Mage
                     // restrict SCB/overflow
                     if (lp.Log != null) lp.Log.AppendLine("Restrict SCB at 0");
                     int row = lp.AddConstraint(false);
-                    lp.SetConstraintRHS(row, segmentDuration - 2400.0 * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
+                    lp.SetConstraintRHS(row, segmentDuration - calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
                     for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                     {
                         CastingState state = calculationResult.SolutionVariable[index].State;

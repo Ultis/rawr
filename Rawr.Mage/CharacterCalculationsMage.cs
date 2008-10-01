@@ -105,6 +105,10 @@ namespace Rawr.Mage
         public double EvocationTps;
         public double ManaGemTps;
         public double ManaPotionTps;
+        public double ManaGemValue;
+        public double MaxManaGemValue;
+        public double ManaPotionValue;
+        public double MaxManaPotionValue;
 
         public double IcyVeinsCooldown;
         public double ColdsnapCooldown;
@@ -224,7 +228,7 @@ namespace Rawr.Mage
                 }
 
                 double overflow = Solution[ColumnManaOverflow];
-                double tmin = (2400.0 * (1 + BaseStats.BonusManaGem) - overflow) / manaBurn;
+                double tmin = (ManaGemValue * (1 + BaseStats.BonusManaGem) - overflow) / manaBurn;
 
                 foreach (SequenceGroup g in list)
                 {
@@ -360,7 +364,7 @@ namespace Rawr.Mage
             double manaGem = 0;
             double drums = 0;
             double we = 0;
-            bool segmentedOutput = true;
+            bool segmentedOutput = false;
             Dictionary<string, SpellContribution> byspell = new Dictionary<string, SpellContribution>();
             for (int i = 0; i < SolutionVariable.Count; i++)
             {

@@ -1533,7 +1533,7 @@ namespace Rawr.Mage
         public float SpellCount = 0;
 
         private List<Spell> spellList;
-        private FSRCalc fsr = new FSRCalc();
+        private FSRCalc fsr;
 
         public SpellCycle()
         {
