@@ -603,6 +603,9 @@ namespace Rawr.Mage
                 case SpellId.ABarAM:
                     s = new ABarAM(this);
                     break;
+                case SpellId.ABP:
+                    s = new ABP(this);
+                    break;
                 case SpellId.ABAM:
                     s = new ABAM(this);
                     break;

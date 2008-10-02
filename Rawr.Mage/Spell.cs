@@ -79,6 +79,7 @@ namespace Rawr.Mage
         ArcaneBlast2Miss,
         ArcaneBlast3Miss,
         ABarAM,
+        ABP,
         ABAM,
         ABMBAM,
         ABABar,
@@ -537,7 +538,8 @@ namespace Rawr.Mage
             Cost = (float)Math.Floor(Math.Floor(BaseCost * CostAmplifier) * CostModifier); // glyph and talent amplifiers are rounded down
 
             CritRate = Math.Min(1, CritRate);
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost) Cost *= (1f - CritRate * 0.1f * castingState.MageTalents.MasterOfElements);
+            //Cost *= (1f - CritRate * 0.1f * castingState.MageTalents.MasterOfElements);
+            if (!Channeled) Cost -= CritRate * BaseCost * 0.1f * castingState.MageTalents.MasterOfElements; // from what I know MOE works on base cost
 
             CostPerSecond = Cost / CastTime;
 
@@ -1662,6 +1664,23 @@ namespace Rawr.Mage
             AddSpell(AB, castingState);
             AddSpell(AM, castingState);
             AddPause(8 - AM.CastTime - AB.CastTime + castingState.Latency);
+
+            Calculate(castingState);
+        }
+    }
+
+    class ABP : SpellCycle
+    {
+        public ABP(CastingState castingState)
+            : base(3)
+        {
+            Name = "ABP";
+            ABCycle = true;
+
+            Spell AB = castingState.GetSpell(SpellId.ArcaneBlast00);
+
+            AddSpell(AB, castingState);
+            AddPause(3 - AB.CastTime + castingState.Latency);
 
             Calculate(castingState);
         }

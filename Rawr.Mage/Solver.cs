@@ -2034,6 +2034,7 @@ namespace Rawr.Mage
                 if (calculationOptions.ABCycles)
                 {
                     list.Add(SpellId.ABAM);
+                    //list.Add(SpellId.ABP);
                     if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABABar);
                     if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABarAM);
                     if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABMBAM);

@@ -75,6 +75,7 @@ namespace Rawr.Mage
                     "Spell Info:FireballFireBlast",
                     "Spell Info:Frostfire Bolt",
                     "Spell Info:Frostbolt",
+                    "Spell Info:ABP*Pause to let debuff drop",
                     "Spell Info:ABAM",
                     "Spell Info:ABarAM",
                     "Spell Info:ABABar*Arcane Missiles on Missile Barrage (after Arcane Barrage)",

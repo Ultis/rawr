@@ -2029,7 +2029,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     maxMps = m / (fight - time);
                 }
                 double minMps = double.NegativeInfinity;
-                double targetTime = fight;
+                double targetTime = sequence[sequence.Count - 1].Timestamp + sequence[sequence.Count - 1].Duration;
                 if (nextGem > time && gemTime > 0)
                 {
                     double m = mana;
@@ -2466,7 +2466,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         t += d;
                     }
                 }
-                if (potTime > 0 && (((forcePot && !forceGem) || gemActivated || pot <= gem || gemTime <= 0 || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (forcePot || !forceGem)) && (pot <= evo || nextPot == 0 || evoTime <= 0))
+                if (potTime > 0 && (((forcePot && !forceGem) || gemActivated || pot <= gem || gemTime <= 0 || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (forcePot || !forceGem)) && ((pot <= evo && nextEvo > 300.0) || evoTime <= 0))
                 {
                     if (pot > targetTime + 0.00001)
                     {
@@ -2477,6 +2477,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         goto Retry;
                     }
                     InsertIndex(SequenceItem.Calculations.ColumnManaPotion, Math.Min(1.0, potTime), pot);
+                    ComputeTimestamps();
                     time = pot;
                     nextPot = pot + 120;
                     potTime -= 1.0;
@@ -2497,6 +2498,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         goto Retry;
                     }
                     InsertIndex(SequenceItem.Calculations.ColumnManaGem, Math.Min(1.0, gemTime), gem);
+                    ComputeTimestamps();
                     time = gem;
                     nextGem = gem + 120;
                     gemTime -= 1.0;
@@ -2525,6 +2527,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         goto Retry;
                     }
                     InsertIndex(SequenceItem.Calculations.ColumnEvocation, Math.Min(EvocationDuration, evoTime), evo);
+                    ComputeTimestamps();
                     time = evo + Math.Min(EvocationDuration, evoTime);
                     nextEvo = evo + 60 * 5;
                     evoTime -= EvocationDuration;
@@ -3368,6 +3371,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 trinket2Cooldown -= duration;
                 combustionCooldown -= duration;
                 drumsCooldown -= duration;
+                evocationCooldown -= duration;
                 if (apActive && SequenceItem.Calculations.ArcanePowerDuration - (time - apTime) <= eps) apActive = false;
                 if (ivActive && 20 - (time - ivTime) <= eps) ivActive = false;
                 if (weActive && 45.0 - (time - weTime) <= eps) weActive = false;
