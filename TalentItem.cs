@@ -117,7 +117,11 @@ namespace Rawr
         public TalentItem Prereq
         {
             get { return _prereq; }
-            set { _prereq = value; }
+            set {
+                if (_currentRank > 0 && _prereq != null) _prereq._locked--;
+                _prereq = value;
+                if (_currentRank > 0 && _prereq != null) _prereq._locked++;
+            }
         }
 
         private Image _icon;
@@ -144,7 +148,7 @@ namespace Rawr
             _description = description;
             _currentRank = currentRank;
             _maxRank = maxRank;
-            _prereq = prereq;
+            Prereq = prereq;
             UpdateIcon();
             UpdateOverlay();
         }
@@ -159,8 +163,8 @@ namespace Rawr
 
             Brush brush;
             if (_currentRank == _maxRank) brush = Brushes.Yellow;
-            else if (_talentTree.TotalPoints() < _row * 5) brush = Brushes.White;
-            else brush = Brushes.Lime;
+            else if (_talentTree.TotalPoints() >= _row * 5 && (_prereq == null || _prereq._currentRank == _prereq._maxRank)) brush = Brushes.Lime;
+            else brush = Brushes.White;
 
             g.DrawImageUnscaled(_icon, x, y);
             g.DrawImageUnscaled(_overlay, x, y);
@@ -173,8 +177,8 @@ namespace Rawr
                 int preCol = _col - _prereq.Col;
                 int color;
                 if (_currentRank == _maxRank) color = 2;
-                else if (_talentTree.TotalPoints() < _row * 5) color = 0;
-                else color = 1;
+                else if (_talentTree.TotalPoints() >= _row * 5 && (_prereq == null || _prereq._currentRank == _prereq._maxRank)) color = 1;
+                else color = 0;
 
                 int offsetX = 0;
                 int offsetY = 0;
@@ -285,6 +289,11 @@ namespace Rawr
             else text += string.Format("{0}\r\n\r\nNext Rank:\r\n{1}", Description[CurrentRank - 1], Description[CurrentRank]);
 
             return text;
+        }
+
+        public override string ToString()
+        {
+            return _talentName + "(" + _currentRank + "/" + _maxRank + ")";
         }
 
     }

@@ -29,8 +29,8 @@
 		private void InitializeComponent()
 		{
             this.panelTop = new System.Windows.Forms.Panel();
+            this.talentSpecButton = new System.Windows.Forms.Button();
             this.comboBoxTalentSpec = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.tabPageTree3 = new System.Windows.Forms.TabPage();
             this.talentTree3 = new Rawr.TalentTree();
             this.tabControlMain = new System.Windows.Forms.TabControl();
@@ -47,8 +47,8 @@
             // 
             // panelTop
             // 
+            this.panelTop.Controls.Add(this.talentSpecButton);
             this.panelTop.Controls.Add(this.comboBoxTalentSpec);
-            this.panelTop.Controls.Add(this.label1);
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
@@ -56,25 +56,31 @@
             this.panelTop.Size = new System.Drawing.Size(297, 24);
             this.panelTop.TabIndex = 1;
             // 
+            // talentSpecButton
+            // 
+            this.talentSpecButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.talentSpecButton.Location = new System.Drawing.Point(241, 0);
+            this.talentSpecButton.Name = "talentSpecButton";
+            this.talentSpecButton.Size = new System.Drawing.Size(56, 21);
+            this.talentSpecButton.TabIndex = 3;
+            this.talentSpecButton.Text = "Save";
+            this.talentSpecButton.UseVisualStyleBackColor = true;
+            this.talentSpecButton.Click += new System.EventHandler(this.talentSpecButton_Click);
+            // 
             // comboBoxTalentSpec
             // 
-            this.comboBoxTalentSpec.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBoxTalentSpec.Dock = System.Windows.Forms.DockStyle.Left;
             this.comboBoxTalentSpec.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTalentSpec.FormattingEnabled = true;
-            this.comboBoxTalentSpec.Location = new System.Drawing.Point(71, 0);
+            this.comboBoxTalentSpec.Items.AddRange(new object[] {
+            "Custom"});
+            this.comboBoxTalentSpec.Location = new System.Drawing.Point(0, 0);
             this.comboBoxTalentSpec.Name = "comboBoxTalentSpec";
-            this.comboBoxTalentSpec.Size = new System.Drawing.Size(226, 21);
+            this.comboBoxTalentSpec.Size = new System.Drawing.Size(241, 21);
             this.comboBoxTalentSpec.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(71, 21);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Talent Spec: ";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.comboBoxTalentSpec.Validating += new System.ComponentModel.CancelEventHandler(this.comboBoxTalentSpec_Validating);
+            this.comboBoxTalentSpec.SelectedIndexChanged += new System.EventHandler(this.comboBoxTalentSpec_SelectedIndexChanged);
+            this.comboBoxTalentSpec.Validated += new System.EventHandler(this.comboBoxTalentSpec_Validated);
             // 
             // tabPageTree3
             // 
@@ -181,8 +187,7 @@
 		#endregion
 
         private System.Windows.Forms.Panel panelTop;
-		private System.Windows.Forms.ComboBox comboBoxTalentSpec;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBoxTalentSpec;
         private System.Windows.Forms.TabPage tabPageTree3;
         private System.Windows.Forms.TabControl tabControlMain;
         private System.Windows.Forms.TabPage tabPageTree1;
@@ -190,5 +195,6 @@
         private TalentTree talentTree1;
         private TalentTree talentTree3;
         private TalentTree talentTree2;
+        private System.Windows.Forms.Button talentSpecButton;
 	}
 }

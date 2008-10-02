@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A0F124AB-2A3C-488C-A8AB-38FC5444CB37}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -126,6 +126,12 @@
     </Compile>
     <Compile Include="FormRelevantItemRefinement.Designer.cs">
       <DependentUpon>FormRelevantItemRefinement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSaveTalentSpec.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSaveTalentSpec.Designer.cs">
+      <DependentUpon>FormSaveTalentSpec.cs</DependentUpon>
     </Compile>
     <Compile Include="ItemButtonWithEnchant.cs">
       <SubType>UserControl</SubType>
@@ -268,6 +274,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormChooseCharacter.resx">
       <DependentUpon>FormChooseCharacter.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEnterId.resx">
       <SubType>Designer</SubType>
@@ -302,6 +309,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormRelevantItemRefinement.resx">
       <DependentUpon>FormRelevantItemRefinement.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSplash.resx">
       <SubType>Designer</SubType>
@@ -327,12 +335,17 @@
       <DependentUpon>Status.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormSaveTalentSpec.resx">
+      <DependentUpon>FormSaveTalentSpec.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormUpgradeComparison.resx">
       <DependentUpon>FormUpgradeComparison.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ItemButtonWithEnchant.resx">
       <DependentUpon>ItemButtonWithEnchant.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ItemComparison.resx">
       <SubType>Designer</SubType>
@@ -349,6 +362,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TalentPicker.resx">
       <DependentUpon>TalentPicker.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="TalentTree.resx">
       <DependentUpon>TalentTree.cs</DependentUpon>
@@ -376,6 +390,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Recent.settings</DependentUpon>
     </Compile>
+    <Compile Include="SavedTalentSpec.cs" />
     <Compile Include="ScrollHook.cs" />
     <Compile Include="TalentItem.cs" />
     <Compile Include="TalentPicker.cs">

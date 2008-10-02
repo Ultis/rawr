@@ -6,16 +6,68 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace Rawr
 {
 	public partial class TalentPicker : UserControl
 	{
+
+        private static readonly string _SavedFilePath;
+        static TalentPicker()
+        {
+            _SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data\\Talents.xml");
+        }
+
 		public TalentPicker()
 		{
+            LoadTalentSpecs();
 			InitializeComponent();
 			this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
 		}
+
+        private List<SavedTalentSpec> _savedTalents;
+        private void LoadTalentSpecs()
+        {
+            try
+            {
+                if (File.Exists(_SavedFilePath))
+                {
+                    using (StreamReader reader = new StreamReader(_SavedFilePath, Encoding.UTF8))
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(List<SavedTalentSpec>));
+                        _savedTalents = (List<SavedTalentSpec>)serializer.Deserialize(reader);
+                        reader.Close();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                ;
+            }
+            if (_savedTalents == null)
+            {
+                _savedTalents = new List<SavedTalentSpec>(10);
+            }
+        }
+        private void SaveTalentSpecs()
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(_SavedFilePath, false, Encoding.UTF8))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(List<SavedTalentSpec>));
+                    serializer.Serialize(writer, _savedTalents);
+                    writer.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex.Message);
+                Log.Write(ex.StackTrace);
+            }
+        }
 
 		private Character _character = null;
 		public Character Character
@@ -34,6 +86,7 @@ namespace Rawr
                     talentTree1.CharacterClass = value.Class;
                     talentTree2.CharacterClass = value.Class;
                     talentTree3.CharacterClass = value.Class;
+                    UpdateSavedTalents();
 					Talents = _character.CurrentTalents;
 				}
 			}
@@ -51,9 +104,24 @@ namespace Rawr
 		}
 
 		void _character_ClassChanged(object sender, EventArgs e)
-		{
+        {
+            UpdateSavedTalents();
 			Talents = _character.CurrentTalents;
 		}
+
+        private void UpdateSavedTalents()
+        {
+            if (_character != null)
+            {
+                List<SavedTalentSpec> classTalents = new List<SavedTalentSpec>();
+                classTalents.Add(new SavedTalentSpec("Custom", null));
+                foreach (SavedTalentSpec spec in _savedTalents)
+                {
+                    if (spec.Class == _character.Class) classTalents.Add(spec);
+                }
+                comboBoxTalentSpec.DataSource = classTalents;
+            }
+        }
 
 		private List<string> _treeNames = new List<string>();
 		private void UpdateTrees()
@@ -109,6 +177,7 @@ namespace Rawr
                     item.CurrentRankChanged -= new EventHandler(item_CurrentRankChanged);
                 }
             }
+            _talentPickerItems = new TalentItem[100];
             talentTree1.Reset();
             talentTree2.Reset();
             talentTree3.Reset();
@@ -125,6 +194,66 @@ namespace Rawr
                 Talents.Data[item.Index] = item.CurrentRank;
                 _character.OnCalculationsInvalidated();
             }
+            bool found = false;
+            foreach (SavedTalentSpec saved in _savedTalents)
+            {
+                if (saved.Class == _character.Class && saved.Equals(_talents))
+                {
+                    comboBoxTalentSpec.SelectedItem = saved;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) comboBoxTalentSpec.SelectedIndex = 0;
         }
+
+        private void comboBoxTalentSpec_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxTalentSpec.SelectedIndex == 0)
+            {
+                talentSpecButton.Text = "Save";
+            }
+            else
+            {
+                talentSpecButton.Text = "Delete";
+                Talents = ((SavedTalentSpec)comboBoxTalentSpec.SelectedItem).TalentSpec();
+            }
+        }
+
+        private void talentSpecButton_Click(object sender, EventArgs e)
+        {
+            if (comboBoxTalentSpec.SelectedIndex == 0)
+            {
+                List<SavedTalentSpec> classTalents = new List<SavedTalentSpec>();
+                foreach (SavedTalentSpec spec in _savedTalents)
+                {
+                    if (spec.Class == _character.Class) classTalents.Add(spec);
+                }
+                FormSaveTalentSpec form = new FormSaveTalentSpec(classTalents);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    SavedTalentSpec spec = form.TalentSpec();
+                    String specName = form.TalentSpecName();
+                    if (spec == null)
+                    {
+                        spec = new SavedTalentSpec(specName, _talents);
+                        _savedTalents.Add(spec);
+                    }
+                    else spec.Spec = _talents.ToString();
+                    UpdateSavedTalents();
+                    comboBoxTalentSpec.SelectedItem = spec;
+                    SaveTalentSpecs();
+                }
+                form.Dispose();
+            }
+            else
+            {
+                _savedTalents.Remove((SavedTalentSpec)comboBoxTalentSpec.SelectedItem);
+                UpdateSavedTalents();
+                comboBoxTalentSpec.SelectedIndex = 0;
+                SaveTalentSpecs();
+            }
+        }
+
 	}
 }

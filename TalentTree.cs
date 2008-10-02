@@ -11,8 +11,7 @@ namespace Rawr
     public partial class TalentTree : UserControl
     {
         private TalentItem[,] _talents = new TalentItem[11, 4];
-
-        private Image background;
+        private Image _background;
 
         private Character.CharacterClass _characterClass;
         public Character.CharacterClass CharacterClass
@@ -27,7 +26,7 @@ namespace Rawr
             get { return _treeName; }
             set { 
                 _treeName = value;
-                background = ItemIcons.GetTalentTreeBackground(_characterClass, _treeName);
+                _background = ItemIcons.GetTalentTreeBackground(_characterClass, _treeName);
             }
         }
 
@@ -63,15 +62,15 @@ namespace Rawr
             {
                 if (_prerenderedGraph == null)
                 {
-                    if (background != null)
+                    if (_background != null)
                     {
-                        _prerenderedGraph = new Bitmap(Math.Min(32767, Math.Max(1, this.Width)), Math.Min(32767, Math.Max(1, background.Height)), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                        _prerenderedGraph = new Bitmap(Math.Min(32767, Math.Max(1, this.Width)), Math.Min(32767, Math.Max(1, _background.Height)), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                         Graphics g = Graphics.FromImage(_prerenderedGraph);
                         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                         g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
 
 
-                        g.DrawImageUnscaled(background, 0, 0);
+                        g.DrawImageUnscaled(_background, 0, 0);
 
                         foreach (TalentItem talent in _talents)
                         {
@@ -82,9 +81,6 @@ namespace Rawr
                         }
 
                         g.Dispose();
-                        //_scrollBar.Maximum = _prerenderedGraph.Height - 1;
-                        //_scrollBar.SmallChange = 32;
-                        //_scrollBar.LargeChange = _scrollBar.Height;
                     }
                 }
                 return _prerenderedGraph;
@@ -94,7 +90,7 @@ namespace Rawr
         protected override void OnPaint(PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            e.Graphics.DrawImageUnscaled(PrerenderedGraph, 0, 0 - 0);//(_scrollBar != null ? _scrollBar.Value : 0));
+            e.Graphics.DrawImageUnscaled(PrerenderedGraph, 0, 0 - 0);
         }
 
         private int _mouseRow = -1;
@@ -169,5 +165,7 @@ namespace Rawr
             TalentItem item = sender as TalentItem;
             if (_mouseRow == item.Row && _mouseCol == item.Col) _toolTip.Show(item.TooltipText(), this, _mouseCol * 65 + 65, _mouseRow * 65 + 24);
         }
+
+
     }
 }
