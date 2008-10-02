@@ -78,9 +78,7 @@
             this.comboBoxTalentSpec.Name = "comboBoxTalentSpec";
             this.comboBoxTalentSpec.Size = new System.Drawing.Size(241, 21);
             this.comboBoxTalentSpec.TabIndex = 1;
-            this.comboBoxTalentSpec.Validating += new System.ComponentModel.CancelEventHandler(this.comboBoxTalentSpec_Validating);
             this.comboBoxTalentSpec.SelectedIndexChanged += new System.EventHandler(this.comboBoxTalentSpec_SelectedIndexChanged);
-            this.comboBoxTalentSpec.Validated += new System.EventHandler(this.comboBoxTalentSpec_Validated);
             // 
             // tabPageTree3
             // 
