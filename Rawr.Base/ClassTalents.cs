@@ -3072,7 +3072,7 @@ Instantly enter stealth and begin the Shadow Dance. For 9 sec you will reenter s
 		public int Pathfinding { get { return _data[6]; } set { _data[6] = value; } }
 
 		[TalentData(7, "Aspect Mastery", 1, 0, 2, 3, -1, new string[] {
-@"Increases the mana returned from your Aspect of the Viper by 10%, reduces the damage done to you while in Aspect of the Monkey by 10% and increases the attack power bonus gained with Aspect of the Hawk by 50%.",})]
+@"Increases the mana returned from your Aspect of the Viper by 10%, reduces the damage done to you while in Aspect of the Monkey by 5% and increases the attack power bonus gained with Aspect of the Hawk by 30%.",})]
 		public int AspectMastery { get { return _data[7]; } set { _data[7] = value; } }
 
 		[TalentData(8, "Unleashed Fury", 5, 0, 3, 3, -1, new string[] {
@@ -3172,13 +3172,13 @@ Send your pet into a rage causing 50% additional damage for 18 sec. While enrage
 @"You have a 60% chance when you critically hit with Arcane Shot, Steady Shot or Kill Shot to cause your pet's next 3 special attacks to critically hit.",})]
 		public int CobraStrikes { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Separation Anxiety", 5, 0, 2, 10, -1, new string[] {
-@"When your pet is greater than 20 yards from you or is out of line of sight of you, its damage is increased by 4%, and when you and your pet are within 20 yards of each other, you and your pet's movement speed is increased by 2%.",
-@"When your pet is greater than 20 yards from you or is out of line of sight of you, its damage is increased by 8%, and when you and your pet are within 20 yards of each other, you and your pet's movement speed is increased by 4%.",
-@"When your pet is greater than 20 yards from you or is out of line of sight of you, its damage is increased by 12%, and when you and your pet are within 20 yards of each other, you and your pet's movement speed is increased by 6%.",
-@"When your pet is greater than 20 yards from you or is out of line of sight of you, its damage is increased by 16%, and when you and your pet are within 20 yards of each other, you and your pet's movement speed is increased by 8%.",
-@"When your pet is greater than 20 yards from you or is out of line of sight of you, its damage is increased by 20%, and when you and your pet are within 20 yards of each other, you and your pet's movement speed is increased by 10%.",})]
-		public int SeparationAnxiety { get { return _data[24]; } set { _data[24] = value; } }
+		[TalentData(24, "Kindred Spirits", 5, 0, 2, 10, -1, new string[] {
+@"Increases your pet's damage by 4% and you and your pet's movement speed by 2% while your pet is active. This does not stack with other movement speed increasing effects.",
+@"Increases your pet's damage by 8% and you and your pet's movement speed by 4% while your pet is active. This does not stack with other movement speed increasing effects.",
+@"Increases your pet's damage by 12% and you and your pet's movement speed by 6% while your pet is active. This does not stack with other movement speed increasing effects.",
+@"Increases your pet's damage by 16% and you and your pet's movement speed by 8% while your pet is active. This does not stack with other movement speed increasing effects.",
+@"Increases your pet's damage by 20% and you and your pet's movement speed by 10% while your pet is active. This does not stack with other movement speed increasing effects.",})]
+		public int KindredSpirits { get { return _data[24]; } set { _data[24] = value; } }
 
 		[TalentData(25, "Beast Mastery", 1, 0, 2, 11, -1, new string[] {
 @"You master the art of Beast training, teaching you the ability to tame Exotic pets and increasing your total amount of Pet Skill points by 4.",})]
@@ -3190,9 +3190,9 @@ Send your pet into a rage causing 50% additional damage for 18 sec. While enrage
 		public int ImprovedConcussiveShot { get { return _data[26]; } set { _data[26] = value; } }
 
 		[TalentData(27, "Focused Aim", 3, 1, 2, 1, -1, new string[] {
-@"Gives you a 23% chance to avoid interruption caused by damage while casting Aimed Shot and Steady Shot.",
-@"Gives you a 46% chance to avoid interruption caused by damage while casting Aimed Shot and Steady Shot.",
-@"Gives you a 70% chance to avoid interruption caused by damage while casting Aimed Shot and Steady Shot.",})]
+@"Reduces the pushback suffered from damaging attacks while casting Steady Shot by 23%, and increases your chance to hit by 1%.",
+@"Reduces the pushback suffered from damaging attacks while casting Steady Shot by 46%, and increases your chance to hit by 2%.",
+@"Reduces the pushback suffered from damaging attacks while casting Steady Shot by 70%, and increases your chance to hit by 3%.",})]
 		public int FocusedAim { get { return _data[27]; } set { _data[27] = value; } }
 
 		[TalentData(28, "Lethal Shots", 5, 1, 3, 1, -1, new string[] {
@@ -3210,9 +3210,9 @@ Send your pet into a rage causing 50% additional damage for 18 sec. While enrage
 		public int CarefulAim { get { return _data[29]; } set { _data[29] = value; } }
 
 		[TalentData(30, "Improved Hunter's Mark", 3, 1, 2, 2, -1, new string[] {
-@"Causes 33% of your Hunter's Mark ability's base attack power to apply to melee attack power as well, and reduces the chance your Hunter's Mark ability is dispelled by 10%.",
-@"Causes 66% of your Hunter's Mark ability's base attack power to apply to melee attack power as well, and reduces the chance your Hunter's Mark ability is dispelled by 20%.",
-@"Causes 100% of your Hunter's Mark ability's base attack power to apply to melee attack power as well, and reduces the chance your Hunter's Mark ability is dispelled by 30%.",})]
+@"Increases the bonus attack power granted by your Hunter's Mark ability by 10%, and reduces the mana cost of your Hunter's Mark ability by 33%.",
+@"Increases the bonus attack power granted by your Hunter's Mark ability by 20%, and reduces the mana cost of your Hunter's Mark ability by 66%.",
+@"Increases the bonus attack power granted by your Hunter's Mark ability by 30%, and reduces the mana cost of your Hunter's Mark ability by 100%.",})]
 		public int ImprovedHuntersMark { get { return _data[30]; } set { _data[30] = value; } }
 
 		[TalentData(31, "Mortal Shots", 5, 1, 3, 2, -1, new string[] {
@@ -3228,22 +3228,21 @@ Send your pet into a rage causing 50% additional damage for 18 sec. While enrage
 @"Your ranged critical hits cause your pet to generate 50 Focus.",})]
 		public int GoForTheThroat { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(33, "Improved Arcane Shot", 5, 1, 2, 3, -1, new string[] {
-@"Reduces the cooldown of your Arcane Shot by 0.2 sec.",
-@"Reduces the cooldown of your Arcane Shot by 0.4 sec.",
-@"Reduces the cooldown of your Arcane Shot by 0.6 sec.",
-@"Reduces the cooldown of your Arcane Shot by 0.8 sec.",
-@"Reduces the cooldown of your Arcane Shot by 1 sec.",})]
+		[TalentData(33, "Improved Arcane Shot", 3, 1, 2, 3, -1, new string[] {
+@"Increases the damage done by your Arcane Shot by 5%.",
+@"Increases the damage done by your Arcane Shot by 10%.",
+@"Increases the damage done by your Arcane Shot by 15%.",})]
 		public int ImprovedArcaneShot { get { return _data[33]; } set { _data[33] = value; } }
 
 		[TalentData(34, "Aimed Shot", 1, 1, 3, 3, 31, new string[] {
 @"75 Mana,5-35 yd range,
-3 sec cast,
-6 sec cooldown,
+Instant cast,
+10 sec cooldown,
 
 Requires Ranged Weapon
 An aimed shot that increases ranged damage by 70 and reduces healing done to that target by 50%. Lasts 10 sec.
-
+        
+         TODO: Update Damage and Mana
 		 Trainable Ranks Listed Below:
 		 Rank 2: 115 Mana, 125 Damage
 		 Rank 3: 160 Mana, 200 Damage
@@ -3254,8 +3253,8 @@ An aimed shot that increases ranged damage by 70 and reduces healing done to tha
 		public int AimedShot { get { return _data[34]; } set { _data[34] = value; } }
 
 		[TalentData(35, "Rapid Killing", 2, 1, 4, 3, -1, new string[] {
-@"Reduces the cooldown of your Rapid Fire ability by 1 min.  In addition, after killing an opponent that yields experience or honor, your next Aimed Shot, Arcane Shot or Auto Shot causes 10% additional damage.  Lasts 20 sec.",
-@"Reduces the cooldown of your Rapid Fire ability by 2 min.  In addition, after killing an opponent that yields experience or honor, your next Aimed Shot, Arcane Shot or Auto Shot causes 20% additional damage.  Lasts 20 sec.",})]
+@"Reduces the cooldown of your Rapid Fire ability by 1 min. In addition, after killing an opponent that yields experience or honor, your next Aimed Shot, Arcane Shot or Chimera Shot causes 10% additional damage.  Lasts 20 sec.",
+@"Reduces the cooldown of your Rapid Fire ability by 2 min. In addition, after killing an opponent that yields experience or honor, your next Aimed Shot, Arcane Shot or Chimera Shot causes 20% additional damage.  Lasts 20 sec.",})]
 		public int RapidKilling { get { return _data[35]; } set { _data[35] = value; } }
 
 		[TalentData(36, "Improved Stings", 3, 1, 2, 4, -1, new string[] {
@@ -3278,12 +3277,10 @@ An aimed shot that increases ranged damage by 70 and reduces healing done to tha
 @"Your successful Auto Shot and Volley attacks have a 6% chance to Daze the target for 4 sec.",})]
 		public int ConcussiveBarrage { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Scatter Shot", 1, 1, 2, 5, -1, new string[] {
-@"202 Mana,15 yd range,
-Instant,30 sec cooldown,
-Requires Ranged Weapon
-A short-range shot that deals 50% weapon damage and disorients the target for 4 sec. Any damage caused will remove the effect. Turns off your attack when used.",})]
-		public int ScatterShot { get { return _data[39]; } set { _data[39] = value; } }
+        [TalentData(39, "Readiness", 1, 1, 2, 5, -1, new string[] {
+@"Instant,3 min cooldown,
+When activated, this ability immediately finishes the cooldown on your other Hunter abilities.",})]
+        public int Readiness { get { return _data[39]; } set { _data[39] = value; } }
 
 		[TalentData(40, "Barrage", 3, 1, 3, 5, -1, new string[] {
 @"Increases the damage done by your Multi-Shot and Volley spells by 4%.",
@@ -3292,8 +3289,8 @@ A short-range shot that deals 50% weapon damage and disorients the target for 4 
 		public int Barrage { get { return _data[40]; } set { _data[40] = value; } }
 
 		[TalentData(41, "Combat Experience", 2, 1, 1, 6, -1, new string[] {
-@"Increases your total Agility by 3% and your total Intellect by 3%.",
-@"Increases your total Agility by 6% and your total Intellect by 6%.",})]
+@"Increases your total Agility by 2% and your total Intellect by 2%.",
+@"Increases your total Agility by 4% and your total Intellect by 4%.",})]
 		public int CombatExperience { get { return _data[41]; } set { _data[41] = value; } }
 
 		[TalentData(42, "Ranged Weapon Specialization", 5, 1, 4, 6, -1, new string[] {
@@ -3312,12 +3309,7 @@ A short-range shot that deals 50% weapon damage and disorients the target for 4 
 
 		[TalentData(44, "Trueshot Aura", 1, 1, 2, 7, 39, new string[] {
 @"Instant cast
-Increases the attack power of party and raid members within 45 yards by 50. Lasts until cancelled.
-
-		 Trainable Ranks Listed Below:
-		 Rank 2: 425 Mana, 75 Attack Power
-		 Rank 3: 525 Mana, 100 Attack Power
-		 Rank 4: 620 Mana, 125 Attack Power",})]
+Increases the attack power of party and raid members within 45 yards by 10%. Lasts until cancelled.",})]
 		public int TrueshotAura { get { return _data[44]; } set { _data[44] = value; } }
 
 		[TalentData(45, "Improved Barrage", 3, 1, 3, 7, 40, new string[] {
@@ -3327,17 +3319,16 @@ Increases the attack power of party and raid members within 45 yards by 50. Last
 		public int ImprovedBarrage { get { return _data[45]; } set { _data[45] = value; } }
 
 		[TalentData(46, "Master Marksman", 5, 1, 2, 8, -1, new string[] {
-@"Increases your ranged attack power by 2%.",
-@"Increases your ranged attack power by 4%.",
-@"Increases your ranged attack power by 6%.",
-@"Increases your ranged attack power by 8%.",
-@"Increases your ranged attack power by 10%.",})]
+@"Increases your critical strike chance by 1%, and reduces the Mana cost of your Steady Shot by 5%.",
+@"Increases your critical strike chance by 2%, and reduces the Mana cost of your Steady Shot by 10%.",
+@"Increases your critical strike chance by 3%, and reduces the Mana cost of your Steady Shot by 15%.",
+@"Increases your critical strike chance by 4%, and reduces the Mana cost of your Steady Shot by 20%.",
+@"Increases your critical strike chance by 5%, and reduces the Mana cost of your Steady Shot by 25%.",})]
 		public int MasterMarksman { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(47, "Rapid Recuperation", 3, 1, 3, 8, -1, new string[] {
-@"Reduces the mana and focus cost of all shots and abilities by you and your pet by 20% while under the effect of Rapid Fire, and you gain mana equal to 50% of the damage you do under the effect of Rapid Killing over 6 sec.",
-@"Reduces the mana and focus cost of all shots and abilities by you and your pet by 40% while under the effect of Rapid Fire, and you gain mana equal to 100% of the damage you do under the effect of Rapid Killing over 6 sec.",
-@"Reduces the mana and focus cost of all shots and abilities by you and your pet by 60% while under the effect of Rapid Fire, and you gain mana equal to 150% of the damage you do under the effect of Rapid Killing over 6 sec.",})]
+		[TalentData(47, "Rapid Recuperation", 2, 1, 3, 8, -1, new string[] {
+@"Reduces the mana and focus cost of all shots and abilities by you and your pet by 30% while under the effect of Rapid Fire, and you gain 1% of your mana every 2 sec for 6 sec when you gain Rapid Killing.",
+@"Reduces the mana and focus cost of all shots and abilities by you and your pet by 60% while under the effect of Rapid Fire, and you gain 2% of your mana every 2 sec for 6 sec when you gain Rapid Killing.",})]
 		public int RapidRecuperation { get { return _data[47]; } set { _data[47] = value; } }
 
 		[TalentData(48, "Wild Quiver", 3, 1, 1, 9, -1, new string[] {
@@ -3353,9 +3344,9 @@ Instant Cast,20 sec cooldown,
 		public int SilencingShot { get { return _data[49]; } set { _data[49] = value; } }
 
 		[TalentData(50, "Improved Steady Shot", 3, 1, 3, 9, -1, new string[] {
-@"Your Steady Shot hits have a 5% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Chimera Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Chimera Shot by 40%.",
-@"Your Steady Shot hits have a 10% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Kill Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Kill Shot by 40%.",
-@"Your Steady Shot hits have a 15% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Kill Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Kill Shot by 40%.",})]
+@"Your Steady Shot hits have a 5% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Chimera Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Chimera Shot by 20%.",
+@"Your Steady Shot hits have a 10% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Chimera Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Chimera Shot by 20%.",
+@"Your Steady Shot hits have a 15% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Chimera Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Chimera Shot by 20%.",})]
 		public int ImprovedSteadyShot { get { return _data[50]; } set { _data[50] = value; } }
 
 		[TalentData(51, "Marked for Death", 5, 1, 2, 10, -1, new string[] {
@@ -3369,15 +3360,16 @@ Instant Cast,20 sec cooldown,
 		[TalentData(52, "Chimera Shot", 1, 1, 2, 11, -1, new string[] {
 @"375 Mana,5-35 yd range,
 Instant cast,10 sec cooldown,Requires Ranged Weapon,
-<br/>You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect:<br/><br/> Serpent Sting - Instantly deals 40% of the damage done by your Serpent Sting.<br/><br/> Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.<br/><br/> Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occur more than once per 1 minute.",})]
+TODO: Update Damage
+You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect:<br/><br/> Serpent Sting - Instantly deals 40% of the damage done by your Serpent Sting.<br/><br/> Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.<br/><br/> Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occur more than once per 1 minute.",})]
 		public int ChimeraShot { get { return _data[52]; } set { _data[52] = value; } }
 
 		[TalentData(53, "Improved Tracking", 5, 2, 1, 1, -1, new string[] {
-@"Increases all damage done to the targets that are being tracked 1%.",
-@"Increases all damage done to the targets that are being tracked 2%.",
-@"Increases all damage done to the targets that are being tracked 3%.",
-@"Increases all damage done to the targets that are being tracked 4%.",
-@"Increases all damage done to the targets that are being tracked 5%.",})]
+@"Increases all non-periodic damage done to targets that are being tracked 1%.",
+@"Increases all non-periodic damage done to targets that are being tracked 2%.",
+@"Increases all non-periodic damage done to targets that are being tracked 3%.",
+@"Increases all non-periodic damage done to targets that are being tracked 4%.",
+@"Increases all non-periodic damage done to targets that are being tracked 5%.",})]
 		public int ImprovedTracking { get { return _data[53]; } set { _data[53] = value; } }
 
 		[TalentData(54, "Hawk Eye", 3, 2, 2, 1, -1, new string[] {
@@ -3387,15 +3379,15 @@ Instant cast,10 sec cooldown,Requires Ranged Weapon,
 		public int HawkEye { get { return _data[54]; } set { _data[54] = value; } }
 
 		[TalentData(55, "Savage Strikes", 2, 2, 3, 1, -1, new string[] {
-@"Increases the critical strike chance of Raptor Strike and Mongoose Bite by 10%.",
-@"Increases the critical strike chance of Raptor Strike and Mongoose Bite by 20%.",})]
+@"Increases the critical strike chance of Raptor Strike, Mongoose Bite and Counterattack by 10%.",
+@"Increases the critical strike chance of Raptor Strike, Mongoose Bite and Counterattack by 20%.",})]
 		public int SavageStrikes { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "T.N.T.", 3, 2, 1, 2, -1, new string[] {
-@"Your Immolation Trap, Explosive Trap and Explosive Shot have a 5% chance to stun targets for 2 sec when they deal damage, and increases the critical strike chance of your Explosive Shot and Explosive Trap by 5%.",
-@"Your Immolation Trap, Explosive Trap and Explosive Shot have a 10% chance to stun targets for 2 sec when they deal damage, and increases the critical strike chance of your Explosive Shot and Explosive Trap by 10%.",
-@"Your Immolation Trap, Explosive Trap and Explosive Shot have a 15% chance to stun targets for 2 sec when they deal damage, and increases the critical strike chance of your Explosive Shot and Explosive Trap by 15%.",})]
-		public int TNT { get { return _data[56]; } set { _data[56] = value; } }
+        [TalentData(56, "Surefooted", 3, 2, 1, 2, -1, new string[] {
+@"Reduces the duration of movement impairing effects by 10%.",
+@"Reduces the duration of movement impairing effects by 20%.",
+@"Reduces the duration of movement impairing effects by 30%.",})]
+        public int Surefooted { get { return _data[56]; } set { _data[56] = value; } }
 
 		[TalentData(57, "Entrapment", 3, 2, 2, 2, -1, new string[] {
 @"Gives your Immolation Trap, Frost Trap, Explosive Trap, and Snake Trap a 8% chance to entrap the target, preventing them from moving for 4 sec.",
@@ -3410,8 +3402,8 @@ Instant cast,10 sec cooldown,Requires Ranged Weapon,
 		public int ImprovedWingClip { get { return _data[58]; } set { _data[58] = value; } }
 
 		[TalentData(59, "Survival Instincts", 2, 2, 4, 2, -1, new string[] {
-@"Reduces all damage taken by 2% and increases attack power by 2%.",
-@"Reduces all damage taken by 4% and increases attack power by 4%.",})]
+@"Reduces all damage taken by 2% and increases the critical strike chance of your Arcane Shot, Steady Shot, and Explosive Shot by 2%.",
+@"Reduces all damage taken by 4% and increases the critical strike chance of your Arcane Shot, Steady Shot, and Explosive Shot by 4%.",})]
 		public int SurvivalInstincts { get { return _data[59]; } set { _data[59] = value; } }
 
 		[TalentData(60, "Survivalist", 5, 2, 1, 3, -1, new string[] {
@@ -3422,14 +3414,17 @@ Instant cast,10 sec cooldown,Requires Ranged Weapon,
 @"Increases your Stamina by 10%.",})]
 		public int Survivalist { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Trap Mastery", 1, 2, 2, 3, -1, new string[] {
-@"Design not implemented (do not report).",})]
-		public int TrapMastery { get { return _data[61]; } set { _data[61] = value; } }
+        [TalentData(61, "Scatter Shot", 1, 2, 2, 3, -1, new string[] {
+@"202 Mana,15 yd range,
+Instant,30 sec cooldown,
+Requires Ranged Weapon
+A short-range shot that deals 50% weapon damage and disorients the target for 4 sec. Any damage caused will remove the effect. Turns off your attack when used.",})]
+        public int ScatterShot { get { return _data[61]; } set { _data[61] = value; } }
 
 		[TalentData(62, "Deflection", 3, 2, 3, 3, -1, new string[] {
-@"Increases your Parry chance by 2%.",
-@"Increases your Parry chance by 4%.",
-@"Increases your Parry chance by 6%.",})]
+@"Increases your chance to parry by 1%, and reduces the duration of all Disarm effects used against you by 16%. This does not stack with other Disarm duration reducing effects.",
+@"Increases your chance to parry by 2%, and reduces the duration of all Disarm effects used against you by 25%. This does not stack with other Disarm duration reducing effects.",
+@"Increases your chance to parry by 3%, and reduces the duration of all Disarm effects used against you by 50%. This does not stack with other Disarm duration reducing effects.",})]
 		public int Deflection { get { return _data[62]; } set { _data[62] = value; } }
 
 		[TalentData(63, "Survival Tactics", 2, 2, 4, 3, -1, new string[] {
@@ -3437,16 +3432,16 @@ Instant cast,10 sec cooldown,Requires Ranged Weapon,
 @"Reduces the chance your Feign Death ability will be resisted by 4%, and reduces the cooldown of your Disengage ability by 4 sec.",})]
 		public int SurvivalTactics { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(64, "Surefooted", 3, 2, 2, 4, -1, new string[] {
-@"Increases hit chance by 1% and reduces the duration of movement impairing effects by 16%.",
-@"Increases hit chance by 2% and reduces the duration of movement impairing effects by 25%.",
-@"Increases hit chance by 3% and reduces the duration of movement impairing effects by 50%.",})]
-		public int Surefooted { get { return _data[64]; } set { _data[64] = value; } }
+        [TalentData(64, "T.N.T.", 3, 2, 2, 4, -1, new string[] {
+@"Your Immolation Trap, Explosive Trap and Explosive Shot have a 5% chance to stun targets for 2 sec when they deal damage, and increases the critical strike chance of your Explosive Shot and Explosive Trap by 3%.",
+@"Your Immolation Trap, Explosive Trap and Explosive Shot have a 10% chance to stun targets for 2 sec when they deal damage, and increases the critical strike chance of your Explosive Shot and Explosive Trap by 6%.",
+@"Your Immolation Trap, Explosive Trap and Explosive Shot have a 15% chance to stun targets for 2 sec when they deal damage, and increases the critical strike chance of your Explosive Shot and Explosive Trap by 9%.",})]
+        public int TNT { get { return _data[64]; } set { _data[64] = value; } }
 
 		[TalentData(65, "Lock and Load", 3, 2, 4, 4, -1, new string[] {
-@"You have a 33% chance when you trap a target and a 5% chance when you Sting a target to cause your next 3 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo.",
-@"You have a 66% chance when you trap a target and a 10% chance when you Sting a target to cause your next 3 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo.",
-@"You have a 100% chance when you trap a target and a 15% chance when you Sting a target to cause your next 3 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo.",})]
+@"You have a 33% chance when you trap a target and a 2% chance when you deal periodic damage with your Serpent Sting to cause your next 2 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo.",
+@"You have a 66% chance when you trap a target and a 4% chance when you deal periodic damage with your Serpent Sting to cause your next 2 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo.",
+@"You have a 100% chance when you trap a target and a 6% chance when you deal periodic damage with your Serpent Sting to cause your next 2 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo.",})]
 		public int LockAndLoad { get { return _data[65]; } set { _data[65] = value; } }
 
 		[TalentData(66, "Hunter vs. Wild", 3, 2, 1, 5, 60, new string[] {
@@ -3528,10 +3523,11 @@ A stinging shot that puts the target to sleep for 12 sec. Any damage will cancel
 @"Increases the critical strike chance of all attacks on targets affected by your Frost, Freezing and Bear Trap by 6%.",})]
 		public int PointOfNoEscape { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(77, "Readiness", 1, 2, 2, 9, -1, new string[] {
-@"Instant,3 min cooldown,
-When activated, this ability immediately finishes the cooldown on your other Hunter abilities.",})]
-		public int Readiness { get { return _data[77]; } set { _data[77] = value; } }
+        [TalentData(77, "Trap Mastery", 1, 2, 2, 9, -1, new string[] {
+@"Frost Trap and Freezing Trap - Increases the duration by 30%.
+Immolation and Explosive Trap - Increases the damage done by 30%.
+Snake Trap - Increases the number of snakes summoned by 30%.",})]
+        public int TrapMastery { get { return _data[77]; } set { _data[77] = value; } }
 
 		[TalentData(78, "Sniper Training", 3, 2, 4, 9, -1, new string[] {
 @"Increases the damage done by your Steady Shot, Aimed Shot and Explosive Shots by 2% if you are 30 yards or further from your target, and increases the critical strike chance of your Kill Shot ability by 5% on targets at or below 30% health.",
@@ -3540,17 +3536,18 @@ When activated, this ability immediately finishes the cooldown on your other Hun
 		public int SniperTraining { get { return _data[78]; } set { _data[78] = value; } }
 
 		[TalentData(79, "Hunting Party", 5, 2, 3, 10, 73, new string[] {
-@"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 20% chance to restore 2% mana, 10 energy, 4 rage or 10 Runic Power to all members of your party.",
-@"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 40% chance to restore 2% mana, 10 energy, 4 rage or 10 Runic Power to all members of your party.",
-@"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 60% chance to restore 2% mana, 10 energy, 4 rage or 10 Runic Power to all members of your party.",
-@"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 80% chance to restore 2% mana, 10 energy, 4 rage or 10 Runic Power to all members of your party.",
-@"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 100% chance to restore 2% mana, 10 energy, 4 rage or 10 Runic Power to all members of your party.",})]
+@"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 20% chance to grant up to 10 party or raid members mana regeneration equal to 0.25% of the maximum mana per second. Lasts for 15 sec.",
+@"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 40% chance to grant up to 10 party or raid members mana regeneration equal to 0.25% of the maximum mana per second. Lasts for 15 sec.",
+@"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 60% chance to grant up to 10 party or raid members mana regeneration equal to 0.25% of the maximum mana per second. Lasts for 15 sec.",
+@"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 80% chance to grant up to 10 party or raid members mana regeneration equal to 0.25% of the maximum mana per second. Lasts for 15 sec.",
+@"Your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 100% chance to grant up to 10 party or raid members mana regeneration equal to 0.25% of the maximum mana per second. Lasts for 15 sec.",})]
 		public int HuntingParty { get { return _data[79]; } set { _data[79] = value; } }
 
 		[TalentData(80, "Explosive Shot", 1, 2, 2, 11, 77, new string[] {
 @"504 Mana,5-41 yd range,
 Instant Cast,6 sec cooldown,
 Requires Ranged Weapon
+TODO: Update Damage
 You fire an explosive charge into the target, dealing 416-486 Fire damage to the enemy target, and an additional 104-121 Fire damage to all enemies within 5 yards of the target every second for 2 sec.",})]
 		public int ExplosiveShot { get { return _data[80]; } set { _data[80] = value; } }
 	}
