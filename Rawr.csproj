@@ -115,6 +115,12 @@
     <Compile Include="FormChooseCharacter.designer.cs">
       <DependentUpon>FormChooseCharacter.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormMassGemReplacement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMassGemReplacement.Designer.cs">
+      <DependentUpon>FormMassGemReplacement.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormRelevantItemRefinement.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -286,6 +292,9 @@
     <EmbeddedResource Include="FormMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMassGemReplacement.resx">
+      <DependentUpon>FormMassGemReplacement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormOptimize.resx">
       <DependentUpon>FormOptimize.cs</DependentUpon>

@@ -81,8 +81,11 @@ namespace Rawr
 			{
 				_selectedEnchant = Character.GetEnchantBySlot(CharacterSlot);
 			}
-			buttonEnchant.Text = SelectedEnchant.ShortName;
-			itemButtonItem.UpdateSelectedItem();
+            if (SelectedEnchant != null)
+            {
+                buttonEnchant.Text = SelectedEnchant.ShortName;
+            }
+            itemButtonItem.UpdateSelectedItem();
 		}
 
 		private void buttonEnchant_Click(object sender, EventArgs e)

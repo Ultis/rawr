@@ -364,12 +364,9 @@ namespace Rawr
         }
 
 		void recentCharacterMenuItem_Click(object sender, EventArgs e)
-		{
-			if (PromptToSaveBeforeClosing())
-			{
-                LoadSavedCharacter((sender as ToolStripMenuItem).Tag.ToString());
-			}
-		}
+        {
+
+        }
 
 	
 		private void modelToolStripMenuItem_Click(object sender, EventArgs e)
@@ -502,7 +499,15 @@ namespace Rawr
 
         }
 
-		private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)
+    void defaultGemControlToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            //FormMassGemReplacement GemControl = new FormMassGemReplacement();
+            //GemControl.ShowDialog(this);
+
+        }
+		
+        private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			FormItemEditor itemEditor = new FormItemEditor(Character);
 			itemEditor.ShowDialog(this);
