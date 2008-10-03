@@ -231,8 +231,8 @@ namespace Rawr
             {
                 Talents.Data[item.Index] = item.CurrentRank;
             }
-            _character.OnCalculationsInvalidated();
             UpdateSavedTalents();
+            _character.OnCalculationsInvalidated();
         }
 
         private void comboBoxTalentSpec_SelectedIndexChanged(object sender, EventArgs e)
