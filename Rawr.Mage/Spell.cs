@@ -540,6 +540,7 @@ namespace Rawr.Mage
             CritRate = Math.Min(1, CritRate);
             //Cost *= (1f - CritRate * 0.1f * castingState.MageTalents.MasterOfElements);
             if (!Channeled) Cost -= CritRate * BaseCost * 0.1f * castingState.MageTalents.MasterOfElements; // from what I know MOE works on base cost
+            if (!Channeled && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire)) Cost += CritRate * BaseCost * 0.01f * castingState.MageTalents.Burnout;
 
             CostPerSecond = Cost / CastTime;
 

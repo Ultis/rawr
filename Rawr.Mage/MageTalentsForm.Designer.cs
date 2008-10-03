@@ -90,6 +90,8 @@ namespace Rawr.Mage
             this.comboBoxArcaneSubtlety = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBoxFire = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.comboBoxWorldInFlames = new System.Windows.Forms.ComboBox();
             this.comboBoxDragonsBreath = new System.Windows.Forms.ComboBox();
             this.label25 = new System.Windows.Forms.Label();
             this.comboBoxEmpoweredFireball = new System.Windows.Forms.ComboBox();
@@ -179,8 +181,8 @@ namespace Rawr.Mage
             this.buttonImportBlizzardCode = new System.Windows.Forms.Button();
             this.comboBoxTalentPreset = new System.Windows.Forms.ComboBox();
             this.buttonImportTalentPreset = new System.Windows.Forms.Button();
-            this.comboBoxWorldInFlames = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
+            this.comboBoxBurnout = new System.Windows.Forms.ComboBox();
+            this.label36 = new System.Windows.Forms.Label();
             this.groupBoxArcane.SuspendLayout();
             this.groupBoxFire.SuspendLayout();
             this.groupBoxFrost.SuspendLayout();
@@ -968,6 +970,8 @@ namespace Rawr.Mage
             // 
             // groupBoxFire
             // 
+            this.groupBoxFire.Controls.Add(this.label36);
+            this.groupBoxFire.Controls.Add(this.comboBoxBurnout);
             this.groupBoxFire.Controls.Add(this.label8);
             this.groupBoxFire.Controls.Add(this.comboBoxWorldInFlames);
             this.groupBoxFire.Controls.Add(this.comboBoxDragonsBreath);
@@ -1016,6 +1020,24 @@ namespace Rawr.Mage
             this.groupBoxFire.TabIndex = 1;
             this.groupBoxFire.TabStop = false;
             this.groupBoxFire.Text = "Fire";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 644);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(82, 13);
+            this.label8.TabIndex = 53;
+            this.label8.Text = "World in Flames";
+            // 
+            // comboBoxWorldInFlames
+            // 
+            this.comboBoxWorldInFlames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxWorldInFlames.FormattingEnabled = true;
+            this.comboBoxWorldInFlames.Location = new System.Drawing.Point(155, 644);
+            this.comboBoxWorldInFlames.Name = "comboBoxWorldInFlames";
+            this.comboBoxWorldInFlames.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxWorldInFlames.TabIndex = 52;
             // 
             // comboBoxDragonsBreath
             // 
@@ -2111,23 +2133,30 @@ namespace Rawr.Mage
             this.buttonImportTalentPreset.UseVisualStyleBackColor = true;
             this.buttonImportTalentPreset.Click += new System.EventHandler(this.buttonImportTalentPreset_Click);
             // 
-            // comboBoxWorldInFlames
+            // comboBoxBurnout
             // 
-            this.comboBoxWorldInFlames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxWorldInFlames.FormattingEnabled = true;
-            this.comboBoxWorldInFlames.Location = new System.Drawing.Point(155, 644);
-            this.comboBoxWorldInFlames.Name = "comboBoxWorldInFlames";
-            this.comboBoxWorldInFlames.Size = new System.Drawing.Size(50, 21);
-            this.comboBoxWorldInFlames.TabIndex = 52;
+            this.comboBoxBurnout.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBurnout.FormattingEnabled = true;
+            this.comboBoxBurnout.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.comboBoxBurnout.Location = new System.Drawing.Point(155, 681);
+            this.comboBoxBurnout.Name = "comboBoxBurnout";
+            this.comboBoxBurnout.Size = new System.Drawing.Size(50, 21);
+            this.comboBoxBurnout.TabIndex = 54;
             // 
-            // label8
+            // label36
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 644);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(82, 13);
-            this.label8.TabIndex = 53;
-            this.label8.Text = "World in Flames";
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(6, 681);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(44, 13);
+            this.label36.TabIndex = 55;
+            this.label36.Text = "Burnout";
             // 
             // MageTalentsForm
             // 
@@ -2312,5 +2341,7 @@ namespace Rawr.Mage
         private System.Windows.Forms.ComboBox comboBoxColdAsIce;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox comboBoxWorldInFlames;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.ComboBox comboBoxBurnout;
     }
 }
