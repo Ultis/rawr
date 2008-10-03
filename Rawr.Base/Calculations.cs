@@ -230,7 +230,7 @@ namespace Rawr
 		{
 			return Instance.GetBuffsStats(buffs);
 		}
-		public static ComparisonCalculationBase GetCharacerComparisonCalculations(CharacterCalculationsBase baseCalculations,
+		public static ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase baseCalculations,
 			Character character, string name, bool equipped)
 		{
 			return Instance.GetCharacterComparisonCalculations(baseCalculations, character, name, equipped);
