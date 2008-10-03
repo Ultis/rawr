@@ -948,6 +948,10 @@ namespace Rawr
 							itemComparison1.LoadAvailableGear(_calculatedStats);
 							break;
 
+                        case "Talents":
+                            itemComparison1.LoadTalents(talentPicker1);
+                            break;
+
 						case "Custom":
 							itemComparison1.LoadCustomChart(tag[1]);
 							break;

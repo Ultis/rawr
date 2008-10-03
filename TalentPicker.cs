@@ -86,8 +86,8 @@ namespace Rawr
                     talentTree1.CharacterClass = value.Class;
                     talentTree2.CharacterClass = value.Class;
                     talentTree3.CharacterClass = value.Class;
+                    Talents = _character.CurrentTalents;
                     UpdateSavedTalents();
-					Talents = _character.CurrentTalents;
 				}
 			}
 		}
@@ -105,21 +105,59 @@ namespace Rawr
 
 		void _character_ClassChanged(object sender, EventArgs e)
         {
+            Talents = _character.CurrentTalents;
             UpdateSavedTalents();
-			Talents = _character.CurrentTalents;
 		}
 
+
+        public SavedTalentSpec CustomSpec { get; set; }
+        public List<SavedTalentSpec> SpecsFor(Character.CharacterClass charClass)
+        {
+            List<SavedTalentSpec> classTalents = new List<SavedTalentSpec>();
+            foreach (SavedTalentSpec spec in _savedTalents)
+            {
+                if (spec.Class == _character.Class)
+                {
+                    classTalents.Add(spec);
+                }
+            }
+            if (((SavedTalentSpec)comboBoxTalentSpec.SelectedItem).Spec == null)
+            {
+                CustomSpec = new SavedTalentSpec("Custom", _talents);
+                classTalents.Add(CustomSpec);
+            }
+            return classTalents;
+        }
+
+        public SavedTalentSpec CurrentSpec()
+        {
+            if (((SavedTalentSpec)comboBoxTalentSpec.SelectedItem).Spec == null) return CustomSpec;
+            return (SavedTalentSpec)comboBoxTalentSpec.SelectedItem;
+        }
+
+        private bool _updateSaved = false;
         private void UpdateSavedTalents()
         {
             if (_character != null)
             {
                 List<SavedTalentSpec> classTalents = new List<SavedTalentSpec>();
-                classTalents.Add(new SavedTalentSpec("Custom", null));
+                SavedTalentSpec current = null;
                 foreach (SavedTalentSpec spec in _savedTalents)
                 {
-                    if (spec.Class == _character.Class) classTalents.Add(spec);
+                    if (spec.Class == _character.Class) { 
+                        classTalents.Add(spec);
+                        if (spec.Equals(_talents)) current = spec;
+                    }
                 }
+                if (current == null)
+                {
+                    current = new SavedTalentSpec("Custom", null);
+                    classTalents.Add(current);
+                }
+                _updateSaved = true;
                 comboBoxTalentSpec.DataSource = classTalents;
+                comboBoxTalentSpec.SelectedItem = current;
+                _updateSaved = false;
             }
         }
 
@@ -192,37 +230,27 @@ namespace Rawr
             if (item != null)
             {
                 Talents.Data[item.Index] = item.CurrentRank;
-                _character.OnCalculationsInvalidated();
             }
-            bool found = false;
-            foreach (SavedTalentSpec saved in _savedTalents)
-            {
-                if (saved.Class == _character.Class && saved.Equals(_talents))
-                {
-                    comboBoxTalentSpec.SelectedItem = saved;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) comboBoxTalentSpec.SelectedIndex = 0;
+            _character.OnCalculationsInvalidated();
+            UpdateSavedTalents();
         }
 
         private void comboBoxTalentSpec_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxTalentSpec.SelectedIndex == 0)
+            if (((SavedTalentSpec)comboBoxTalentSpec.SelectedItem).Spec == null)
             {
                 talentSpecButton.Text = "Save";
             }
             else
             {
                 talentSpecButton.Text = "Delete";
-                Talents = ((SavedTalentSpec)comboBoxTalentSpec.SelectedItem).TalentSpec();
+                if (!_updateSaved) Talents = ((SavedTalentSpec)comboBoxTalentSpec.SelectedItem).TalentSpec();
             }
         }
 
         private void talentSpecButton_Click(object sender, EventArgs e)
         {
-            if (comboBoxTalentSpec.SelectedIndex == 0)
+            if (((SavedTalentSpec)comboBoxTalentSpec.SelectedItem).Spec == null)
             {
                 List<SavedTalentSpec> classTalents = new List<SavedTalentSpec>();
                 foreach (SavedTalentSpec spec in _savedTalents)
@@ -241,8 +269,8 @@ namespace Rawr
                     }
                     else spec.Spec = _talents.ToString();
                     UpdateSavedTalents();
-                    comboBoxTalentSpec.SelectedItem = spec;
                     SaveTalentSpecs();
+                    _character.OnCalculationsInvalidated();
                 }
                 form.Dispose();
             }
@@ -250,8 +278,8 @@ namespace Rawr
             {
                 _savedTalents.Remove((SavedTalentSpec)comboBoxTalentSpec.SelectedItem);
                 UpdateSavedTalents();
-                comboBoxTalentSpec.SelectedIndex = 0;
                 SaveTalentSpecs();
+                _character.OnCalculationsInvalidated();
             }
         }
 

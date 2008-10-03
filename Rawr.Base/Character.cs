@@ -209,6 +209,23 @@ namespace Rawr //O O . .
 					default: return DruidTalents;
 				}
 			}
+            set
+			{
+				switch (Class)
+				{
+                    case CharacterClass.Warrior: WarriorTalents = value as WarriorTalents; break;
+                    case CharacterClass.Paladin: PaladinTalents = value as PaladinTalents; break;
+                    case CharacterClass.Hunter: HunterTalents = value as HunterTalents; break;
+                    case CharacterClass.Rogue: RogueTalents = value as RogueTalents; break;
+                    case CharacterClass.Priest: PriestTalents = value as PriestTalents; break;
+                    case CharacterClass.Shaman: ShamanTalents = value as ShamanTalents; break;
+                    case CharacterClass.Mage: MageTalents = value as MageTalents; break;
+                    case CharacterClass.Warlock: WarlockTalents = value as WarlockTalents; break;
+                    case CharacterClass.Druid: DruidTalents = value as DruidTalents; break;
+                    case CharacterClass.DeathKnight: DeathKnightTalents = value as DeathKnightTalents; break;
+                    default: DruidTalents = value as DruidTalents; break;
+				}
+			}
 		}
 
         // set to true to suppress ItemsChanged event

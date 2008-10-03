@@ -255,6 +255,43 @@ namespace Rawr
             comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
         }
 
+        public void LoadTalents(TalentPicker picker)
+        {
+            List<ComparisonCalculationBase> talentCalculations = new List<ComparisonCalculationBase>();
+            if (Items != null && Character != null)
+            {
+                Character baseChar = Character.Clone();
+                switch (baseChar.Class)
+                {
+                    case Character.CharacterClass.Warrior: baseChar.WarriorTalents = new WarriorTalents(); break;
+                    case Character.CharacterClass.Paladin: baseChar.PaladinTalents = new PaladinTalents(); break;
+                    case Character.CharacterClass.Hunter: baseChar.HunterTalents = new HunterTalents(); break;
+                    case Character.CharacterClass.Rogue: baseChar.RogueTalents = new RogueTalents(); break;
+                    case Character.CharacterClass.Priest: baseChar.PriestTalents = new PriestTalents(); break;
+                    case Character.CharacterClass.Shaman: baseChar.ShamanTalents = new ShamanTalents(); break;
+                    case Character.CharacterClass.Mage: baseChar.MageTalents = new MageTalents(); break;
+                    case Character.CharacterClass.Warlock: baseChar.WarlockTalents = new WarlockTalents(); break;
+                    case Character.CharacterClass.Druid: baseChar.DruidTalents = new DruidTalents(); break;
+                    case Character.CharacterClass.DeathKnight: baseChar.DeathKnightTalents = new DeathKnightTalents(); break;
+                    default: baseChar.DruidTalents = new DruidTalents(); break;
+                }
+                CharacterCalculationsBase currentCalculations = Calculations.GetCharacterCalculations(baseChar);
+                Character newChar;
+                foreach (SavedTalentSpec spec in picker.SpecsFor(Character.Class))
+                {
+                    newChar = Character.Clone();
+                    newChar.CurrentTalents = spec.TalentSpec();
+                    talentCalculations.Add(Calculations.GetCharacterComparisonCalculations(currentCalculations, newChar, spec.Name, spec == picker.CurrentSpec()));
+                    //talentCalculations.Add(Calculations.GetCharacterComparisonCalculations(currentCalculations, newChar, spec.Name, ));
+                }
+            }
+
+            comparisonGraph1.RoundValues = true;
+            comparisonGraph1.CustomRendered = false;
+            comparisonGraph1.ItemCalculations = talentCalculations.ToArray();
+            comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
+        }
+
         public void LoadCustomChart(string chartName)
         {
             comparisonGraph1.RoundValues = true;
