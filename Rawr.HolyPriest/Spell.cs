@@ -631,11 +631,11 @@ namespace Rawr.HolyPriest
 
 		protected void Calculate(Stats stats, PriestTalents talents, int rank)
         {
-            if (talents.HolyNova == 0)
-            {
-                MinHeal = MaxHeal = 0;
-                return;
-            }
+            //if (talents.HolyNova == 0)
+			//{
+			//    MinHeal = MaxHeal = 0;
+			//    return;
+			//}
 
             Rank = rank;
             Range = 10;

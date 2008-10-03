@@ -93,10 +93,10 @@ namespace Rawr.HolyPriest
             else
                 dictValues.Add("CoH", "- *No required talents");
 
-            if (talents.HolyNova > 0)
+            //if (talents.HolyNova > 0)
                 dictValues.Add("Holy Nova", new HolyNova(BasicStats, talents).ToString());
-            else
-                dictValues.Add("Holy Nova", "- *No required talents");
+            //else
+            //    dictValues.Add("Holy Nova", "- *No required talents");
 
             if (talents.Lightwell > 0)
                 dictValues.Add("Lightwell", new Lightwell(BasicStats, talents).ToString());
