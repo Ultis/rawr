@@ -659,6 +659,24 @@ namespace Rawr
 			return buffCalcs;
 		}
 
+		public virtual ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase baseCalculations, 
+			Character character, string name, bool equipped)
+		{
+			CharacterCalculationsBase characterCalculations = GetCharacterCalculations(character);
+			ComparisonCalculationBase comparisonCalculations = CreateNewComparisonCalculation();
+			comparisonCalculations.Name = name;
+			comparisonCalculations.Item = new Item() { Name = name };
+			comparisonCalculations.Equipped = equipped;
+			comparisonCalculations.OverallPoints = characterCalculations.OverallPoints - baseCalculations.OverallPoints;
+			float[] subPoints = new float[characterCalculations.SubPoints.Length];
+			for (int i = 0; i < characterCalculations.SubPoints.Length; i++)
+			{
+				subPoints[i] = characterCalculations.SubPoints[i] - baseCalculations.SubPoints[i];
+			}
+			comparisonCalculations.SubPoints = subPoints;
+			return comparisonCalculations;
+		}
+
         public unsafe virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
 		{
 			List<Item> items = new List<Item>(new Item[] {character.Back, character.Chest, character.Feet, character.Finger1,
