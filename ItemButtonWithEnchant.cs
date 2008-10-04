@@ -13,6 +13,10 @@ namespace Rawr
 		public ItemButtonWithEnchant()
 		{
 			InitializeComponent();
+			buttonEnchant.MouseEnter += new EventHandler(buttonEnchant_MouseEnter);
+			buttonEnchant.MouseLeave += new EventHandler(buttonEnchant_MouseLeave);
+
+			ItemToolTip.Instance.SetToolTip(this, "");
 		}
 
 		public override string Text { get { return itemButtonItem.Text; } set { itemButtonItem.Text = value; } }
@@ -91,6 +95,26 @@ namespace Rawr
 		private void buttonEnchant_Click(object sender, EventArgs e)
 		{
 			(this.FindForm() as IFormItemSelectionProvider).FormItemSelection.Show(this, CharacterSlot);
+		}
+
+		void buttonEnchant_MouseLeave(object sender, EventArgs e)
+		{
+			ItemToolTip.Instance.Hide(this);
+		}
+
+		void buttonEnchant_MouseEnter(object sender, EventArgs e)
+		{
+			if (SelectedItem != null)
+			{
+				int tipX = this.Width;
+				Item itemEnchant = new Item(SelectedEnchant.Name, Item.ItemQuality.Temp, Item.ItemType.None,
+					-1 * (SelectedEnchant.Id + (10000 * (int)SelectedEnchant.Slot)), null, Item.ItemSlot.None, null, false, SelectedEnchant.Stats, new Sockets(), 0, 0, 0, 0, 0,
+					Item.ItemDamageType.Physical, 0, null);
+				
+				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
+					tipX = -249;
+				ItemToolTip.Instance.Show(itemEnchant, this, new Point(tipX, itemButtonItem.Height));
+			}
 		}
 	}
 }

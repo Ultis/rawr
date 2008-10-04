@@ -8,35 +8,6 @@ namespace Rawr
 {
 	public class ItemButton : Button
 	{
-		public Point GetTooltipLocation()
-		{
-			//get
-			//{
-				//ItemTooltip tooltip = ItemTooltip.Instance;
-				//foreach (Control ctrl in this.FindForm().Controls)
-				//    if (ctrl is ItemTooltip)
-				//    {
-				//        tooltip = ctrl as ItemTooltip;
-				//        break;
-				//    }
-				//if (tooltip == null)
-				//{
-				//    tooltip = new ItemTooltip();
-				//    this.FindForm().Controls.Add(tooltip);
-				//}
-
-				System.Drawing.Point p = (this.Parent.PointToScreen(this.Location)); //this.FindForm().PointToClient
-				p.X += this.Width + 2;
-				p.Y += 2;
-				//tooltip.Location = p;
-				//tooltip.Visible = false;
-
-				//return tooltip;
-			//}
-				return p;
-		}
-
-		//private ContextMenuStrip menu = new ContextMenuStrip();
 		public ItemButton()
 		{
 			this.Size = new System.Drawing.Size(70, 70);
