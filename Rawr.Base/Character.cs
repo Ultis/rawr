@@ -112,6 +112,7 @@ namespace Rawr //O O . .
 		public string _currentModel;
 		[XmlElement("EnforceMetagemRequirements")]
 		public bool _enforceMetagemRequirements = false;
+		public int Level { get { return 70; } }
 
         public string CalculationToOptimize { get; set; }
         public List<OptimizationRequirement> OptimizationRequirements { get; set; }
