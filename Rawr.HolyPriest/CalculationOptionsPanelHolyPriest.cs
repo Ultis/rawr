@@ -43,13 +43,6 @@ namespace Rawr.HolyPriest
                 Character.OnCalculationsInvalidated();
             }
         }
-        
-        private void tbnTalents_Click(object sender, EventArgs e)
-        {
-            TalentForm talents = new TalentForm(this);
-            //talents.SetParameters(Character.AllTalents, Character.CharacterClass.Priest);
-            talents.Show();
-        }
     }
 
     [Serializable]
