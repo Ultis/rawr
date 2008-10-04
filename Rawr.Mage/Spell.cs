@@ -994,7 +994,7 @@ namespace Rawr.Mage
             CritRate += 0.02f * castingState.MageTalents.EmpoweredFrostbolt;
             InterruptProtection += castingState.BaseStats.AldorRegaliaInterruptProtection;
             SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFrostbolt;
-            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
+            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.CalculationOptions.SlowedTime);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1041,7 +1041,7 @@ namespace Rawr.Mage
             BaseCastTime -= 0.1f * castingState.MageTalents.ImprovedFireball;
             SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFireball;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
-            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
+            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.CalculationOptions.SlowedTime);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1077,6 +1077,7 @@ namespace Rawr.Mage
                 this.BaseCastTime = 0.0f;
             }
             Calculate(castingState);
+            SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.CalculationOptions.SlowedTime);
             SpammedDot = true;
             DotDuration = 9;
             CalculateDerivedStats(castingState);
@@ -1169,6 +1170,7 @@ namespace Rawr.Mage
             : base("Arcane Barrage", false, false, true, false, 30, 0, 3, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             Calculate(castingState);
+            SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.CalculationOptions.SlowedTime);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1392,7 +1394,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             if (barrage) BaseCastTime -= 2.5f;
             SpellDamageCoefficient += 0.15f * castingState.MageTalents.ArcaneEmpowerment;
-            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
+            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.CalculationOptions.SlowedTime);
             InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
             CalculateDerivedStats(castingState);
         }
@@ -1702,7 +1704,7 @@ namespace Rawr.Mage
             Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
+            MB = 0.04f * castingState.MageTalents.MissileBarrage;
 
             if (MB == 0.0)
             {
@@ -1769,7 +1771,7 @@ namespace Rawr.Mage
             Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
+            MB = 0.04f * castingState.MageTalents.MissileBarrage;
 
             if (MB == 0.0)
             {
@@ -1836,7 +1838,7 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
+            MB = 0.04f * castingState.MageTalents.MissileBarrage;
 
             if (MB == 0.0)
             {
@@ -1924,7 +1926,7 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
+            MB = 0.04f * castingState.MageTalents.MissileBarrage;
 
             if (MB == 0.0)
             {
@@ -2003,7 +2005,7 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
+            MB = 0.04f * castingState.MageTalents.MissileBarrage;
 
             if (MB == 0.0)
             {
@@ -2082,7 +2084,7 @@ namespace Rawr.Mage
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
+            MB = 0.04f * castingState.MageTalents.MissileBarrage;
 
             if (MB == 0.0)
             {
@@ -2303,7 +2305,7 @@ namespace Rawr.Mage
             AB3 = (BaseSpell)castingState.GetSpell(SpellId.ArcaneBlast33);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
-            MB = ((castingState.MageTalents.MissileBarrage == 5) ? 0.2f : 0.03f * castingState.MageTalents.MissileBarrage);
+            MB = 0.04f * castingState.MageTalents.MissileBarrage;
             hit = AB3.HitRate;
             miss = 1 - hit;
 
