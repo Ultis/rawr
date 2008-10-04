@@ -7,19 +7,19 @@ namespace Rawr.HolyPriest
     public class CharacterCalculationsHolyPriest : CharacterCalculationsBase
     {
         private Stats basicStats;
-        private PriestTalents talents;
+        private Character character;
 
         public float SpiritRegen { get; set; }
         public float RegenInFSR { get; set; }
         public float RegenOutFSR { get; set; }
         public Character.CharacterRace Race { get; set; }
-       
-        public PriestTalents Talents
-        {
-            get { return talents; }
-            set { talents = value; }
-        }
 
+        public Character Character
+        {
+            get { return character; }
+            set { character = value; }
+        }
+      
         public Stats BasicStats
         {
             get { return basicStats; }
@@ -73,38 +73,35 @@ namespace Rawr.HolyPriest
             dictValues.Add("Regen OutFSR", RegenOutFSR.ToString("0"));
 
             dictValues.Add("Holy Spell Crit", string.Format("{0}%*{1} Spell Crit rating\n{2} ({2}%) points in Holy Specialization",
-                BasicStats.SpellCrit, BasicStats.SpellCritRating.ToString(), talents.HolySpecialization));
+                BasicStats.SpellCrit, BasicStats.SpellCritRating.ToString(), character.PriestTalents.HolySpecialization));
             
             dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\n", 
                 Math.Round(BasicStats.SpellHasteRating / 15.7, 2), BasicStats.SpellHasteRating.ToString()));
             dictValues.Add("Global Cooldown", Spell.GetGlobalCooldown(BasicStats).ToString("0.00"));
 
-            dictValues.Add("Renew", new Renew(BasicStats, talents).ToString());
-            dictValues.Add("Flash Heal", new FlashHeal(BasicStats, talents).ToString());
-            dictValues.Add("Greater Heal", new GreaterHeal(BasicStats, talents).ToString());
-            dictValues.Add("Heal", new Heal(BasicStats, talents).ToString());
-            dictValues.Add("PoH", new PrayerOfHealing(BasicStats, talents).ToString());
-            dictValues.Add("Binding Heal", new BindingHeal(BasicStats, talents).ToString());
-            dictValues.Add("Prayer of Mending", new PrayerOfMending(BasicStats, talents).ToString());
-            dictValues.Add("Power Word Shield", new PowerWordShield(BasicStats, talents).ToString());
+            dictValues.Add("Renew", new Renew(BasicStats, character).ToString());
+            dictValues.Add("Flash Heal", new FlashHeal(BasicStats, character).ToString());
+            dictValues.Add("Greater Heal", new GreaterHeal(BasicStats, character).ToString());
+            dictValues.Add("Heal", new Heal(BasicStats, character).ToString());
+            dictValues.Add("PoH", new PrayerOfHealing(BasicStats, character).ToString());
+            dictValues.Add("Binding Heal", new BindingHeal(BasicStats, character).ToString());
+            dictValues.Add("Prayer of Mending", new PrayerOfMending(BasicStats, character).ToString());
+            dictValues.Add("Power Word Shield", new PowerWordShield(BasicStats, character).ToString());
+            dictValues.Add("Holy Nova", new HolyNova(BasicStats, character).ToString());
 
-            if (talents.CircleOfHealing > 0)
-                dictValues.Add("CoH", new CircleOfHealing(BasicStats, talents).ToString());
+            if (character.PriestTalents.CircleOfHealing > 0)
+                dictValues.Add("CoH", new CircleOfHealing(BasicStats, character).ToString());
             else
                 dictValues.Add("CoH", "- *No required talents");
 
-            //if (talents.HolyNova > 0)
-                dictValues.Add("Holy Nova", new HolyNova(BasicStats, talents).ToString());
-            //else
-            //    dictValues.Add("Holy Nova", "- *No required talents");
 
-            if (talents.Lightwell > 0)
-                dictValues.Add("Lightwell", new Lightwell(BasicStats, talents).ToString());
+            if (character.PriestTalents.Lightwell > 0)
+                dictValues.Add("Lightwell", new Lightwell(BasicStats, character).ToString());
             else
                 dictValues.Add("Lightwell", "- *No required talents");
             
             if(Race == Character.CharacterRace.Draenei)
-                dictValues.Add("Gift of the Naaru", new GiftOfTheNaaru(BasicStats, talents).ToString());
+                dictValues.Add("Gift of the Naaru", new GiftOfTheNaaru(BasicStats, character).ToString());
             else
                 dictValues.Add("Gift of the Naaru", "-");
 
