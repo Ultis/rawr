@@ -365,7 +365,10 @@ namespace Rawr
 
 		void recentCharacterMenuItem_Click(object sender, EventArgs e)
         {
-
+			if (PromptToSaveBeforeClosing())
+			{
+				LoadSavedCharacter((sender as ToolStripMenuItem).Tag.ToString());
+			}
         }
 
 	
