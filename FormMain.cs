@@ -30,8 +30,9 @@ namespace Rawr
 		private List<ToolStripMenuItem> _customChartMenuItems = new List<ToolStripMenuItem>();
 		private Status _statusForm;
 		private string _formatWindowTitle = "Rawr (Beta {0})";
-       
+		private System.Threading.Timer _timerCheckForUpdates;
         private FormMassGemReplacement _gemControl;
+
         private FormRelevantItemRefinement _itemRefinement;
         public FormRelevantItemRefinement ItemRefinement
         {
