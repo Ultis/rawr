@@ -47,12 +47,12 @@ namespace Rawr.RestoSham
             values.Add("Stamina", Math.Round(BasicStats.Stamina, 0).ToString());
             values.Add("Intellect", BasicStats.Intellect.ToString());
             values.Add("Spirit", BasicStats.Spirit.ToString());
-            values.Add("Healing", BasicStats.Healing.ToString());
+            values.Add("Healing", (BasicStats.SpellPower * 1.88f).ToString());
             values.Add("Mana", Math.Round(BasicStats.Mana, 0).ToString());
             values.Add("MP5 (in FSR)", BasicStats.Mp5.ToString());
             values.Add("MP5 (outside FSR)", Math.Round(Mp5OutsideFSR, 0).ToString());
             values.Add("Heal Spell Crit", string.Format("{0}%*{1} spell crit rating",
-                       Math.Round(SpellCrit * 100, 2), BasicStats.SpellCritRating.ToString()));
+                       Math.Round(SpellCrit * 100, 2), BasicStats.CritRating.ToString()));
             values.Add("Spell Haste", string.Format("{0}%*{1} spell haste rating",
                        Math.Round(BasicStats.SpellHasteRating / 15.7, 2), BasicStats.SpellHasteRating.ToString()));
             values.Add("Total Mana Pool", Math.Round(TotalManaPool, 0).ToString());

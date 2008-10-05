@@ -342,14 +342,14 @@ namespace Rawr.Warlock
 			calculations.CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
 
             int targetLevel = calculations.CalculationOptions.TargetLevel;
-            calculations.HitPercent = calculations.BasicStats.SpellHitRating / 12.62f;
-            calculations.CritPercent = calculations.BasicStats.SpellCritRating / 22.08f;
+            calculations.HitPercent = calculations.BasicStats.HitRating / 12.62f;
+            calculations.CritPercent = calculations.BasicStats.CritRating / 22.08f;
             calculations.HastePercent = calculations.BasicStats.SpellHasteRating / 15.77f;
             calculations.GlobalCooldown = 1.5f / (1 + 0.01f * calculations.HastePercent);
             if (calculations.GlobalCooldown < 1)
                 calculations.GlobalCooldown = 1;
-            calculations.ShadowDamage = calculations.BasicStats.SpellDamageRating + calculations.BasicStats.SpellShadowDamageRating;
-            calculations.FireDamage = calculations.BasicStats.SpellDamageRating + calculations.BasicStats.SpellFireDamageRating;
+            calculations.ShadowDamage = calculations.BasicStats.SpellPower + calculations.BasicStats.SpellShadowDamageRating;
+            calculations.FireDamage = calculations.BasicStats.SpellPower + calculations.BasicStats.SpellFireDamageRating;
 
             calculations.SpellRotation = new WarlockSpellRotation(calculations);
             calculations.SpellRotation.Calculate(false);
@@ -364,20 +364,20 @@ namespace Rawr.Warlock
             totalStats.SpellFireDamageRating += totalStats.BonusWarlockSchoolDamageOnCast * (1 - (float)Math.Pow(0.95, 15 * calculations.SpellRotation.FireSpellsPerSecond));
 
             //Spellstrike 2 piece bonus
-            totalStats.SpellDamageRating += totalStats.SpellDamageFor10SecOnHit_5 * (1 - (float)Math.Pow(0.95, 10 * calculations.SpellRotation.SpellsPerSecond));
+            totalStats.SpellPower += totalStats.SpellDamageFor10SecOnHit_5 * (1 - (float)Math.Pow(0.95, 10 * calculations.SpellRotation.SpellsPerSecond));
             
             //Quagmirran's Eye
             totalStats.HasteRating += totalStats.SpellHasteFor6SecOnHit_10_45 * 6 / (45 + 9 / calculations.SpellRotation.SpellsPerSecond);
 
             //Band of the Eternal Sage
-            totalStats.SpellDamageRating += totalStats.SpellDamageFor10SecOnHit_10_45 * 10 / (45 + 9 / calculations.SpellRotation.SpellsPerSecond);
+            totalStats.SpellPower += totalStats.SpellDamageFor10SecOnHit_10_45 * 10 / (45 + 9 / calculations.SpellRotation.SpellsPerSecond);
 
             calculations.HastePercent = totalStats.SpellHasteRating / 15.77f;
             calculations.GlobalCooldown = 1.5f / (1 + 0.01f * calculations.HastePercent);
             if (calculations.GlobalCooldown < 1)
                 calculations.GlobalCooldown = 1;
-            calculations.ShadowDamage = totalStats.SpellDamageRating + totalStats.SpellShadowDamageRating;
-            calculations.FireDamage = totalStats.SpellDamageRating + totalStats.SpellFireDamageRating;
+            calculations.ShadowDamage = totalStats.SpellPower + totalStats.SpellShadowDamageRating;
+            calculations.FireDamage = totalStats.SpellPower + totalStats.SpellFireDamageRating;
 
             float dps = calculations.SpellRotation.Calculate(true);
             //calculations.SpellRotation.CalculateDps();
@@ -525,13 +525,13 @@ namespace Rawr.Warlock
             statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit * (1 - 0.01f * options.DemonicEmbrace));
 
             //spell damage
-            statsTotal.SpellDamageRating += statsTotal.SpellDamageFor20SecOnUse2Min / 6;
-            statsTotal.SpellDamageRating += statsTotal.SpellDamageFor15SecOnUse90Sec * 15 / 90;
-            statsTotal.SpellDamageRating += statsTotal.SpellDamageFor15SecOnUse2Min * 15 / 120;
-            statsTotal.SpellDamageRating += 100 + options.DemonicAegis * 10; //assume Fel Armor
+            statsTotal.SpellPower += statsTotal.SpellDamageFor20SecOnUse2Min / 6;
+            statsTotal.SpellPower += statsTotal.SpellDamageFor15SecOnUse90Sec * 15 / 90;
+            statsTotal.SpellPower += statsTotal.SpellDamageFor15SecOnUse2Min * 15 / 120;
+            statsTotal.SpellPower += 100 + options.DemonicAegis * 10; //assume Fel Armor
 
             //spell crit rating
-            statsTotal.SpellCritRating += (1.701f + statsTotal.Intellect / 82 + options.DemonicTactics + options.Backlash + options.Devastation) * 22.08f;
+            statsTotal.CritRating += (1.701f + statsTotal.Intellect / 82 + options.DemonicTactics + options.Backlash + options.Devastation) * 22.08f;
 
             //spell haste rating
             statsTotal.SpellHasteRating += statsTotal.DrumsOfBattle * 30 / 120;
@@ -628,12 +628,12 @@ namespace Rawr.Warlock
                 case "Stats vs Spell Damage":
                     itemList = new Item[] 
                     {
-                        new Item() { Stats = new Stats() { SpellDamageRating = 1 } },
+                        new Item() { Stats = new Stats() { SpellPower = 1 } },
                         new Item() { Stats = new Stats() { SpellShadowDamageRating = 1 } }, 
                         new Item() { Stats = new Stats() { SpellFireDamageRating = 1 } }, 
-                        new Item() { Stats = new Stats() { SpellCritRating = 1 } },
+                        new Item() { Stats = new Stats() { CritRating = 1 } },
                         new Item() { Stats = new Stats() { SpellHasteRating = 1 } },
-                        new Item() { Stats = new Stats() { SpellHitRating = 1 } },
+                        new Item() { Stats = new Stats() { HitRating = 1 } },
                         new Item() { Stats = new Stats() { Mp5 = 1 } }
                     };
                     statList = new string[] 
@@ -685,12 +685,12 @@ namespace Rawr.Warlock
                 case "Stats (Item Budget)":
                     itemList = new Item[] 
                     {
-                        new Item() { Stats = new Stats() { SpellDamageRating = 11.7f } },
+                        new Item() { Stats = new Stats() { SpellPower = 11.7f } },
                         new Item() { Stats = new Stats() { SpellShadowDamageRating = 14.3f } }, 
                         new Item() { Stats = new Stats() { SpellFireDamageRating = 14.3f } }, 
-                        new Item() { Stats = new Stats() { SpellCritRating = 10 } },
+                        new Item() { Stats = new Stats() { CritRating = 10 } },
                         new Item() { Stats = new Stats() { SpellHasteRating = 10 } },
-                        new Item() { Stats = new Stats() { SpellHitRating = 10 } },
+                        new Item() { Stats = new Stats() { HitRating = 10 } },
                         new Item() { Stats = new Stats() { Mp5 = 4 } }
                     };
                     statList = new string[] 
@@ -793,15 +793,15 @@ namespace Rawr.Warlock
                 Health = stats.Health,
                 Mp5 = stats.Mp5,
                 Resilience = stats.Resilience,
-                SpellCritRating = stats.SpellCritRating,
-                SpellDamageRating = stats.SpellDamageRating,
+                CritRating = stats.CritRating,
+                SpellPower = stats.SpellPower,
                 SpellFireDamageRating = stats.SpellFireDamageRating,
                 SpellShadowDamageRating = stats.SpellShadowDamageRating,
                 SpellArcaneDamageRating = stats.SpellArcaneDamageRating,
                 SpellFrostDamageRating = stats.SpellFrostDamageRating,
                 SpellPenetration = stats.SpellPenetration,
                 SpellHasteRating = stats.SpellHasteRating,
-                SpellHitRating = stats.SpellHitRating,
+                HitRating = stats.HitRating,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
@@ -846,10 +846,10 @@ namespace Rawr.Warlock
                 + stats.Intellect
                 + stats.Spirit
                 + stats.Mp5
-                + stats.SpellCritRating
+                + stats.CritRating
                 + stats.SpellHasteRating
-                + stats.SpellHitRating
-                + stats.SpellDamageRating
+                + stats.HitRating
+                + stats.SpellPower
                 + stats.SpellFireDamageRating
                 + stats.SpellShadowDamageRating
                 + stats.BonusStaminaMultiplier

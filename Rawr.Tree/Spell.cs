@@ -212,8 +212,8 @@ namespace Rawr.Tree
             BaseMaxHeal = 600;
             BaseHealCoefficient = 0.3429f; // http://www.wowwiki.com/Spell_Damage_Coefficients
 
-            BaseCritPercent = stats.SpellCritRating / 22.08f;
-            Healing = stats.Healing;
+            BaseCritPercent = stats.CritRating / 22.08f;
+            Healing = stats.SpellPower * 1.88f;
             BaseRange = 40;
 
             ParseTalents(character, stats);
@@ -265,8 +265,8 @@ namespace Rawr.Tree
             BaseMaxHeal = 0;
             BaseHealCoefficient = 0; // http://www.wowwiki.com/Spell_Damage_Coefficients
 
-            BaseCritPercent = stats.SpellCritRating / 22.08f;
-            Healing = stats.Healing;
+            BaseCritPercent = stats.CritRating / 22.08f;
+            Healing = stats.SpellPower * 1.88f;
             BaseRange = 40;
 
             HoTHealingBonus += stats.RejuvenationHealBonus;
@@ -302,8 +302,8 @@ namespace Rawr.Tree
             BaseMaxHeal = 1355;
             BaseHealCoefficient = 0.289f; // http://www.wowwiki.com/Spell_Damage_Coefficients
 
-            BaseCritPercent = stats.SpellCritRating / 22.08f;
-            Healing = stats.Healing;
+            BaseCritPercent = stats.CritRating / 22.08f;
+            Healing = stats.SpellPower * 1.88f;
             BaseRange = 40;
 
             Cost -= (int) stats.ReduceRegrowthCost;
@@ -340,8 +340,8 @@ namespace Rawr.Tree
             BaseMaxHeal = 3197;
             BaseHealCoefficient = 1f; // http://www.wowwiki.com/Spell_Damage_Coefficients
 
-            BaseCritPercent = stats.SpellCritRating / 22.08f;
-            Healing = stats.Healing;
+            BaseCritPercent = stats.CritRating / 22.08f;
+            Healing = stats.SpellPower * 1.88f;
             BaseRange = 40;
 
             Cost -= (int) stats.ReduceHealingTouchCost;

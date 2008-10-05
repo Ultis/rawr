@@ -67,13 +67,13 @@ namespace Rawr.HolyPriest
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0"));
-            dictValues.Add("Healing", Math.Floor(BasicStats.Healing).ToString("0"));
+            dictValues.Add("Healing", Math.Floor(BasicStats.SpellPower * 1.88f).ToString("0"));
             dictValues.Add("Mp5", Math.Floor(BasicStats.Mp5).ToString("0"));
             dictValues.Add("Regen InFSR", RegenInFSR.ToString("0"));
             dictValues.Add("Regen OutFSR", RegenOutFSR.ToString("0"));
 
             dictValues.Add("Holy Spell Crit", string.Format("{0}%*{1} Spell Crit rating\n{2} ({2}%) points in Holy Specialization",
-                BasicStats.SpellCrit, BasicStats.SpellCritRating.ToString(), character.PriestTalents.HolySpecialization));
+                BasicStats.SpellCrit, BasicStats.CritRating.ToString(), character.PriestTalents.HolySpecialization));
             
             dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\n", 
                 Math.Round(BasicStats.SpellHasteRating / 15.7, 2), BasicStats.SpellHasteRating.ToString()));

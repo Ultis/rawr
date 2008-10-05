@@ -310,12 +310,12 @@ namespace Rawr.Retribution
 
                 // Spell Crit: Base 3.26%  **TODO: include intellect
                 spellCrits = .0326f;
-                spellCrits += stats.SpellCritRating / 2208f;
+                spellCrits += stats.CritRating / 2208f;
                 spellCrits += stats.SpellCrit;
 
                 // Resists: Base 17%, Minimum 1%
                 spellResist = .17f;
-                spellResist -= stats.SpellHitRating / 1262f;
+                spellResist -= stats.HitRating / 1262f;
                 spellResist -= stats.Hit;
                 if (spellResist < .01f) spellResist = .01f;
 
@@ -467,12 +467,12 @@ namespace Rawr.Retribution
                 // Consecration damage pre-resists
                 switch (consRank) // Rank damage + coeff * level reduction * spelldamage
                 {
-                    case 1: consAvgDam = 64f + consCoeff * (35f / 70f) * stats.SpellDamageRating; break;
-                    case 2: consAvgDam = 120f + consCoeff * (45f / 70f) * stats.SpellDamageRating; break;
-                    case 3: consAvgDam = 184f + consCoeff * (55f / 70f) * stats.SpellDamageRating; break;
-                    case 4: consAvgDam = 280f + consCoeff * (65f / 70f) * stats.SpellDamageRating; break;
-                    case 5: consAvgDam = 384f + consCoeff * stats.SpellDamageRating; break;
-                    case 6: consAvgDam = 512f + consCoeff * stats.SpellDamageRating; break;
+                    case 1: consAvgDam = 64f + consCoeff * (35f / 70f) * stats.SpellPower; break;
+                    case 2: consAvgDam = 120f + consCoeff * (45f / 70f) * stats.SpellPower; break;
+                    case 3: consAvgDam = 184f + consCoeff * (55f / 70f) * stats.SpellPower; break;
+                    case 4: consAvgDam = 280f + consCoeff * (65f / 70f) * stats.SpellPower; break;
+                    case 5: consAvgDam = 384f + consCoeff * stats.SpellPower; break;
+                    case 6: consAvgDam = 512f + consCoeff * stats.SpellPower; break;
                 }
                 consAvgDam = consAvgDam * holyDamMult + consCoeff * jotc;
 
@@ -491,7 +491,7 @@ namespace Rawr.Retribution
                 float exorCD = 18f, exorCoeff = 0.429f, exorAvgDmg = 0f;
 
                 // Exorcism damage per spell hit
-                exorAvgDmg = 665f + exorCoeff * stats.SpellDamageRating;
+                exorAvgDmg = 665f + exorCoeff * stats.SpellPower;
                 exorAvgDmg = exorAvgDmg * holyDamMult + exorCoeff * jotc;
 
                 // Exorcism average damage per cast
@@ -618,7 +618,7 @@ namespace Rawr.Retribution
             if (calcOpts.DrumsOfWar)
             {
                 statsBuffs.AttackPower += drumsUptime * 60f;
-                statsBuffs.SpellDamageRating += drumsUptime * 30f;
+                statsBuffs.SpellPower += drumsUptime * 30f;
             }
 
             // Drums of Battle - 80 Haste
@@ -665,10 +665,10 @@ namespace Rawr.Retribution
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
 
             statsTotal.SpellCrit = statsGearEnchantsBuffs.SpellCrit;
-            statsTotal.SpellCritRating = statsGearEnchantsBuffs.SpellCritRating;
-            statsTotal.SpellHitRating = statsGearEnchantsBuffs.SpellHitRating;
-            statsTotal.SpellDamageRating = statsGearEnchantsBuffs.SpellDamageRating;
-            statsTotal.SpellDamageRating += statsGearEnchantsBuffs.SpellDamageFromSpiritPercentage * statsGearEnchantsBuffs.Spirit;
+            statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
+            statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
+            statsTotal.SpellPower = statsGearEnchantsBuffs.SpellPower;
+            statsTotal.SpellPower += statsGearEnchantsBuffs.SpellDamageFromSpiritPercentage * statsGearEnchantsBuffs.Spirit;
 
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
             statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
@@ -703,7 +703,7 @@ namespace Rawr.Retribution
                         new Item() { Stats = new Stats() { ExpertiseRating = 10 } },
                         new Item() { Stats = new Stats() { HasteRating = 10 } },
                         new Item() { Stats = new Stats() { ArmorPenetration = 66.67f } },
-                        new Item() { Stats = new Stats() { SpellDamageRating = 11.7f } },
+                        new Item() { Stats = new Stats() { SpellPower = 11.7f } },
                     };
                     string[] statList = new string[] {
                         "Strength",
@@ -769,9 +769,9 @@ namespace Rawr.Retribution
                 HasteRating = stats.HasteRating,
                 WeaponDamage = stats.WeaponDamage,
 
-                SpellCritRating = stats.SpellCritRating,
-                SpellHitRating = stats.SpellHitRating,
-                SpellDamageRating = stats.SpellDamageRating,
+                //CritRating = stats.CritRating,
+                //HitRating = stats.HitRating,
+                SpellPower = stats.SpellPower,
                 SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
 
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -801,7 +801,7 @@ namespace Rawr.Retribution
         {
             return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower +
                 stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage + 
-                stats.SpellCritRating + stats.SpellHitRating + stats.SpellDamageRating + stats.SpellDamageFromSpiritPercentage +
+                stats.CritRating + stats.HitRating + stats.SpellPower + stats.SpellDamageFromSpiritPercentage +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusSpellPowerMultiplier +
                 stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust + stats.ExposeWeakness +

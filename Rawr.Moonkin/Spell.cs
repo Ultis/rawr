@@ -775,7 +775,7 @@ namespace Rawr.Moonkin
         {
             // Try to reset the cached results dictionary on each call
             cachedResults = new Dictionary<string, RotationData>();
-            float effectiveSpellHit = calcs.BasicStats.SpellHitRating;
+            float effectiveSpellHit = calcs.BasicStats.HitRating;
 			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
 			bool naturesGrace = calcOpts.NaturesGrace > 0 ? true : false;
             float fightLength = calcs.FightLength * 60.0f;
@@ -816,7 +816,7 @@ namespace Rawr.Moonkin
                 Spell.GlobalCooldown = 1.5f;
                 float effectiveArcaneDamage = calcs.ArcaneDamage;
                 float effectiveNatureDamage = calcs.NatureDamage;
-                float effectiveSpellCrit = calcs.BasicStats.SpellCritRating;
+                float effectiveSpellCrit = calcs.BasicStats.CritRating;
                 float effectiveSpellHaste = calcs.BasicStats.SpellHasteRating;
                 float effectiveMana = GetEffectiveManaPool(character, calcs);
 

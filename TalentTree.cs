@@ -67,7 +67,7 @@ namespace Rawr
                         _prerenderedGraph = new Bitmap(Math.Min(32767, Math.Max(1, this.Width)), Math.Min(32767, Math.Max(1, _background.Height)), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                         Graphics g = Graphics.FromImage(_prerenderedGraph);
                         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
 
                         g.DrawImageUnscaled(_background, 0, 0);

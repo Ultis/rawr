@@ -196,7 +196,7 @@ namespace Rawr.HolyPriest
         {
             Rank = rank;
             MinHeal = MaxHeal = (baseSpellTable[Rank - 1].MinHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef))
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef))
                 * (1 + character.PriestTalents.ImprovedRenew * 0.05f) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
@@ -257,12 +257,12 @@ namespace Rawr.HolyPriest
         {
             Rank = rank;
             MinHeal = (baseSpellTable[Rank - 1].MinHeal +
-                stats.Healing * (1 - baseSpellTable[Rank - 1].RankCoef) 
+                stats.SpellPower * 1.88f * (1 - baseSpellTable[Rank - 1].RankCoef) 
                 * (character.PriestTalents.EmpoweredHealing * 0.02f + HealingCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
             MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
-                stats.Healing * (1 - baseSpellTable[Rank - 1].RankCoef) 
+                stats.SpellPower * 1.88f * (1 - baseSpellTable[Rank - 1].RankCoef) 
                 * (character.PriestTalents.EmpoweredHealing * 0.02f + HealingCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
@@ -310,10 +310,10 @@ namespace Rawr.HolyPriest
         {
             Rank = rank;
             MinHeal = (baseSpellTable[Rank - 1].MinHeal + 
-                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
             MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
             ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCostBase / 100f * BaseMana[character.Level]
@@ -365,13 +365,13 @@ namespace Rawr.HolyPriest
         {
             Rank = rank;
             MinHeal = (baseSpellTable[Rank - 1].MinHeal + 
-                stats.Healing * (1 - baseSpellTable[Rank - 1].RankCoef) 
+                stats.SpellPower * 1.88f * (1 - baseSpellTable[Rank - 1].RankCoef) 
                 * (character.PriestTalents.EmpoweredHealing * 0.04f + HealingCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f) 
                 * (1 + stats.BonusGHHealingMultiplier);
 
             MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
-                stats.Healing * (1 - baseSpellTable[Rank - 1].RankCoef) 
+                stats.SpellPower * 1.88f * (1 - baseSpellTable[Rank - 1].RankCoef) 
                 * (character.PriestTalents.EmpoweredHealing * 0.04f + HealingCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f) 
                 * (1 + stats.BonusGHHealingMultiplier);
@@ -452,10 +452,10 @@ namespace Rawr.HolyPriest
             Range = 30;
 
             MinHeal = (baseSpellTable[rank - 1].MinHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
             MaxHeal = (baseSpellTable[rank - 1].MaxHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
             ManaCost = (int)Math.Round(baseSpellTable[rank - 1].ManaCostBase / 100f * BaseMana[character.Level]
@@ -557,10 +557,10 @@ namespace Rawr.HolyPriest
             Rank = rank;
             Range = 15;
             MinHeal = (baseSpellTable[Rank - 1].MinHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
             MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
             ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCostBase / 100f * BaseMana[character.Level]
@@ -662,10 +662,10 @@ namespace Rawr.HolyPriest
             Range = 10;
             
             MinHeal = (baseSpellTable[Rank - 1].MinHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
             MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
             ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCostBase / 100f * BaseMana[character.Level]
@@ -744,11 +744,11 @@ namespace Rawr.HolyPriest
             Rank = rank;
 
             MinHeal = (baseSpellTable[Rank - 1].MinHeal +
-                stats.Healing * (1 - baseSpellTable[Rank - 1].RankCoef) 
+                stats.SpellPower * 1.88f * (1 - baseSpellTable[Rank - 1].RankCoef) 
                 * (character.PriestTalents.EmpoweredHealing * 0.02f + HealingCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
-            MaxHeal = (baseSpellTable[Rank - 1].MaxHeal + stats.Healing
+            MaxHeal = (baseSpellTable[Rank - 1].MaxHeal + stats.SpellPower * 1.88f
                 * (1 - baseSpellTable[Rank - 1].RankCoef) 
                 * (character.PriestTalents.EmpoweredHealing * 0.02f + HealingCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
@@ -835,10 +835,10 @@ namespace Rawr.HolyPriest
             Rank = rank;
 
             MinHeal = (baseSpellTable[Rank - 1].MinHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
             MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
             ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCostBase / 100f * BaseMana[character.Level]
@@ -916,7 +916,7 @@ namespace Rawr.HolyPriest
         {
             Rank = rank;
             MinHeal = (baseSpellTable[Rank - 1].MinHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f);
             MaxHeal = MinHeal;
 
@@ -985,7 +985,7 @@ namespace Rawr.HolyPriest
 
             Rank = rank;
             MinHeal = (baseSpellTable[Rank - 1].MinHeal +
-                stats.Healing * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
+                stats.SpellPower * 1.88f * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
             MaxHeal = MinHeal;
 
@@ -1023,7 +1023,7 @@ namespace Rawr.HolyPriest
         {
             Rank = rank;
             MinHeal = MaxHeal = (baseSpellTable[Rank - 1].MinHeal +
-                stats.Healing * HealingCoef)
+                stats.SpellPower * 1.88f * HealingCoef)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
             ManaCost = (int)Math.Round(ManaCostBase / 100f * BaseMana[character.Level]);
         }

@@ -252,7 +252,7 @@ namespace Rawr.Healadin
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Round((1.1f * (statsTotal.Intellect)) * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (0.35f * statsTotal.Intellect) + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
+			statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower * 1.88f + (0.35f * statsTotal.Intellect) + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit)) / 1.88f;
             statsTotal.Mana = statsTotal.Mana + (statsTotal.Intellect * 15);
             statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
             return statsTotal;
@@ -343,8 +343,8 @@ namespace Rawr.Healadin
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
                 Mp5 = stats.Mp5,
-                Healing = stats.Healing,
-                SpellCritRating = stats.SpellCritRating,
+                SpellPower = stats.SpellPower,
+                CritRating = stats.CritRating,
                 SpellHasteRating = stats.SpellHasteRating,
                 Health = stats.Health,
                 Mana = stats.Mana,
@@ -365,7 +365,7 @@ namespace Rawr.Healadin
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
+            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower * 1.88f + stats.CritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.FoLMultiplier + stats.FoLHeal + stats.FoLCrit + stats.FoLBoL + stats.HLBoL + stats.HLCost
                 + stats.HLCrit + stats.HLHeal + stats.MementoProc + stats.AverageHeal) > 0;

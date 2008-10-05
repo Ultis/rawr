@@ -237,35 +237,35 @@ you are being killed by burst damage, focus on Survival Points.",
             cs.ShoRThreat = cs.ShoRDamage * holyThreatMod * (cs.ToLand + cs.ToCrit);
 
             //Avenger's Shield
-            cs.ASDamage = ((playerLevel >= 80 ? 940f : 680f) + .07f * stats.AttackPower + .07f * stats.SpellDamageRating) * damageMulti * SotT;
+            cs.ASDamage = ((playerLevel >= 80 ? 940f : 680f) + .07f * stats.AttackPower + .07f * stats.SpellPower) * damageMulti * SotT;
             cs.ASThreat = cs.ASDamage * holyThreatMod * (1f - cs.ToMiss + cs.ToCrit);
 
             //Consecration
             cs.ConsDuration = 8f;
             cs.ConsDamage = cs.ConsDuration * ((playerLevel >= 75 ? (playerLevel >= 80 ? 113f : 87f) : 72f)
-                + .04f * stats.SpellDamageRating + .04f * stats.AttackPower) * damageMulti;
+                + .04f * stats.SpellPower + .04f * stats.AttackPower) * damageMulti;
             cs.ConsThreat = cs.ConsDamage * holyThreatMod;
 
             //Seal of Righteousness
-            cs.SoRDamage = ws * (.028f * stats.AttackPower + .055f * stats.SpellDamageRating) * damageMulti;
+            cs.SoRDamage = ws * (.028f * stats.AttackPower + .055f * stats.SpellPower) * damageMulti;
             cs.SoRThreat = cs.SoRDamage / ws * cs.ToLand * holyThreatMod;
 
             //Judgement of Righteousness
-            cs.JoRDamage = (1 + .25f * stats.AttackPower + .4f * stats.SpellDamageRating) * damageMulti;
+            cs.JoRDamage = (1 + .25f * stats.AttackPower + .4f * stats.SpellPower) * damageMulti;
             cs.JoRThreat = cs.JoRDamage * holyThreatMod * (cs.ToResist + cs.ToSpellCrit);
 
             //Seal of Corruption
-            cs.SoCDamage = (0.016f * stats.SpellDamageRating + 0.032f * stats.AttackPower) * damageMulti * 5f;
+            cs.SoCDamage = (0.016f * stats.SpellPower + 0.032f * stats.AttackPower) * damageMulti * 5f;
             cs.SoCThreat = cs.SoCDamage * holyThreatMod / 3f;
 
             //Judgement of Corruption
-            cs.JoCDamage = (1f + 0.28f * stats.SpellDamageRating + 0.175f * stats.AttackPower) * 1.5f * damageMulti;
+            cs.JoCDamage = (1f + 0.28f * stats.SpellPower + 0.175f * stats.AttackPower) * 1.5f * damageMulti;
             cs.JoCThreat = cs.JoCDamage * holyThreatMod * (cs.ToResist + cs.ToSpellCrit);
 
             //Holy Shield
             //TODO Implement correct number of blocks, currently just uses 4
             cs.HSDamage = ((playerLevel >= 75 ? (playerLevel >= 80 ? 211f : 181f) : 160f) 
-                + .056f * stats.AttackPower + .09f * stats.SpellDamageRating) * damageMulti * SotT;
+                + .056f * stats.AttackPower + .09f * stats.SpellPower) * damageMulti * SotT;
             cs.HSProcs = 4;
             cs.HSThreat = cs.HSDamage * cs.HSProcs * (cs.ToResist + cs.ToSpellCrit) * holyThreatMod;
 
@@ -360,12 +360,12 @@ you are being killed by burst damage, focus on Survival Points.",
             stats.Armor = (float)Math.Round((stats.Armor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier) * (1f + talents.Toughness * .02f));
 
             stats.Hit = ConvertHit(stats.HitRating, lvl);
-            stats.SpellHit = ConvertSpellHit(stats.HitRating + stats.SpellHitRating, lvl) + stats.SpellHit; 
+            stats.SpellHit = ConvertSpellHit(stats.HitRating + stats.HitRating, lvl) + stats.SpellHit; 
             stats.Expertise += (float)Math.Round(talents.CombatExpertise * 2 + ConvertExpertise(stats.ExpertiseRating, lvl));
 
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctifiedSeals * .01f;
             stats.Crit = stats.Crit + ConvertCrit(stats.CritRating, lvl) + ConvertAgi(stats.Agility, lvl) + talentCrit;
-            stats.SpellCrit = stats.SpellCrit + ConvertCrit(stats.CritRating + stats.SpellCritRating, lvl) + ConvertInt(stats.Intellect, lvl) + talentCrit;
+            stats.SpellCrit = stats.SpellCrit + ConvertCrit(stats.CritRating + stats.CritRating, lvl) + ConvertInt(stats.Intellect, lvl) + talentCrit;
 
             stats.Defense += ConvertDefense(stats.DefenseRating, lvl);
             stats.BlockValue = (float)Math.Round((stats.BlockValue + stats.Strength / 2f) * (1 + stats.BonusBlockValueMultiplier) * (1f + talents.Redoubt * .1f));
@@ -377,7 +377,7 @@ you are being killed by burst damage, focus on Survival Points.",
             float fullParry = stats.Defense * .0004f + ConvertParry(stats.ParryRating, lvl);
             stats.Parry = stats.Parry + character.PaladinTalents.Deflection * .01f + DRParry(fullParry);
 
-            stats.SpellDamageRating += stats.Stamina * .1f * talents.TouchedByTheLight;
+            stats.SpellPower += stats.Stamina * .1f * talents.TouchedByTheLight;
             return stats;
         }
 
@@ -410,7 +410,7 @@ you are being killed by burst damage, focus on Survival Points.",
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 Health = stats.Health,
                 Miss = stats.Miss,
-                SpellDamageRating = stats.SpellDamageRating,
+                SpellPower = stats.SpellPower,
                 HitRating = stats.HitRating,
                 HasteRating = stats.HasteRating,
                 ArmorPenetration = stats.ArmorPenetration,
@@ -423,7 +423,7 @@ you are being killed by burst damage, focus on Survival Points.",
             return (stats.Agility + stats.Armor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
                 stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health +
                 stats.Miss + stats.Resilience + stats.Stamina + stats.ParryRating + stats.BlockRating + stats.BlockValue +
-                stats.SpellHitRating + stats.SpellDamageRating + stats.HitRating + stats.ArmorPenetration + stats.WeaponDamage + stats.Strength +
+                stats.HitRating + stats.SpellPower + stats.HitRating + stats.ArmorPenetration + stats.WeaponDamage + stats.Strength +
                 stats.AttackPower) > 0;
         }
     }

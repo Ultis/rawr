@@ -124,7 +124,7 @@ namespace Rawr.Tree
             calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
 
             calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect / 80) +
-                (calculatedStats.BasicStats.SpellCritRating / 22.08) + 1.85 + calcOpts.NaturalPerfection, 2);
+                (calculatedStats.BasicStats.CritRating / 22.08) + 1.85 + calcOpts.NaturalPerfection, 2);
 
             calculatedStats.BasicStats.SpellCombatManaRegeneration += 0.1f * calcOpts.Intensity;
 
@@ -271,8 +271,8 @@ namespace Rawr.Tree
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + calcOpts.LivingSpirit * 0.05f));
 
             float lunarGuidance = (calcOpts.LunarGuidance == 3 ? 0.25f : calcOpts.LunarGuidance * 0.08f);
-            statsTotal.SpellDamageRating = (float)Math.Round(statsTotal.SpellDamageRating + statsTotal.Intellect * lunarGuidance);
-            statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit) + (statsTotal.Intellect * lunarGuidance) + (calcOpts.NurturingInstinct * 0.5f * statsTotal.Agility));
+            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + statsTotal.Intellect * lunarGuidance);
+			statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower * 1.88f + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit) + (statsTotal.Intellect * lunarGuidance) + (calcOpts.NurturingInstinct * 0.5f * statsTotal.Agility)) / 1.88f;
             statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
 
             statsTotal.Health = (float)Math.Round(((statsTotal.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
@@ -320,13 +320,13 @@ namespace Rawr.Tree
                     
 
                     return new ComparisonCalculationBase[] { 
-						GetRelativeValue (new Stats() {Healing = 22}, 5, 10, "22 Healing", character, calcBaseValue),
+						GetRelativeValue (new Stats() {SpellPower = 22 / 1.88f}, 5, 10, "22 Healing", character, calcBaseValue),
                         GetRelativeValue (new Stats() {Mp5 = 4}, 5, 10, "4 Mp5", character, calcBaseValue),
                         GetRelativeValue (new Stats() {SpellHasteRating = 10}, 1, 15, "10 Spell Haste", character, calcBaseValue),
                         GetRelativeValue (new Stats() {Spirit = 10}, 5, 10, "10 Spirit", character, calcBaseValue),
                         GetRelativeValue (new Stats() {Intellect = 10}, 5, 10, "10 Intellect", character, calcBaseValue),
-                        GetRelativeValue (new Stats() {Healing = 11, Spirit = 5}, 5, 10, "11 Healing 5 Spirit", character, calcBaseValue),
-                        GetRelativeValue (new Stats() {Healing = 11, Intellect = 5}, 5, 10, "11 Healing 5 Intellect", character, calcBaseValue),
+                        GetRelativeValue (new Stats() {SpellPower = 11 / 1.88f, Spirit = 5}, 5, 10, "11 Healing 5 Spirit", character, calcBaseValue),
+                        GetRelativeValue (new Stats() {SpellPower = 11 / 1.88f, Intellect = 5}, 5, 10, "11 Healing 5 Intellect", character, calcBaseValue),
 					};
                 default:
                     return new ComparisonCalculationBase[0];
@@ -340,8 +340,8 @@ namespace Rawr.Tree
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
                 Mp5 = stats.Mp5,
-                Healing = stats.Healing,
-                SpellCritRating = stats.SpellCritRating,
+                SpellPower = stats.SpellPower,
+                CritRating = stats.CritRating,
                 SpellHasteRating = stats.SpellHasteRating,
                 Health = stats.Health,
                 Mana = stats.Mana,
@@ -373,7 +373,7 @@ namespace Rawr.Tree
 
         public override bool HasRelevantStats(Stats stats)
         {
-            if (stats.Spirit + stats.Mp5 + stats.Healing
+            if (stats.Spirit + stats.Mp5 + stats.SpellPower * 1.88f
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal
                 + stats.ManaRestorePerCast_5_15 + stats.LifebloomFinalHealBonus + stats.RegrowthExtraTicks

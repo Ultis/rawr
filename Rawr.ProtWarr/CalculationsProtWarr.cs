@@ -243,18 +243,18 @@ threat and limited threat scaled by the threat scale.",
 
             float crits = Math.Max(5f + levelDifference - calculatedStats.CritReduction, 0f);
             float blocked = Math.Min(100f - (crits + (calculatedStats.DodgePlusMissPlusParry)), calculatedStats.Block);
-            float crushes = targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (calculatedStats.DodgePlusMissPlusParryPlusBlock)), 15f) - stats.CrushChanceReduction, 0f) : 0f;
-            float hits = Math.Max(100f - (crits + crushes + blocked + (calculatedStats.DodgePlusMissPlusParry)), 0f);
+            //float crushes = targetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (calculatedStats.DodgePlusMissPlusParryPlusBlock)), 15f) - stats.CritChanceReduction, 0f) : 0f;
+            float hits = Math.Max(100f - (crits + /*crushes + */blocked + (calculatedStats.DodgePlusMissPlusParry)), 0f);
 
-            calculatedStats.CrushChance = crushes;
+            //calculatedStats.CrushChance = crushes;
 
             float damagePerBossAttack = calcOpts.BossAttackValue;
             //Apply armor and multipliers for each attack type...
             crits *= (100f - calculatedStats.CappedMitigation) * .02f;
-            crushes *= (100f - calculatedStats.CappedMitigation) * .015f;
+            //crushes *= (100f - calculatedStats.CappedMitigation) * .015f;
             hits *= (100f - calculatedStats.CappedMitigation) * .01f;
             blocked *= (100f - calculatedStats.CappedMitigation) * .01f * (1f - Math.Max((calculatedStats.BlockValue / (damagePerBossAttack * (100f - calculatedStats.CappedMitigation) / 100)), 0f));
-            calculatedStats.DamageTaken = blocked + hits + crushes + crits;
+            calculatedStats.DamageTaken = blocked + hits + /*crushes + */crits;
             calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
 
             int mitigationScale = calcOpts.MitigationScale;
@@ -704,7 +704,7 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.LotPCritRating = statsBuffs.LotPCritRating;
             statsTotal.Health = health;
 			statsTotal.Miss = statsRace.Miss + statsBaseGear.Miss + statsBuffs.Miss;
-            statsTotal.CrushChanceReduction = statsGearEnchantsBuffs.CrushChanceReduction + statsRace.CrushChanceReduction;
+            statsTotal.CritChanceReduction = statsGearEnchantsBuffs.CritChanceReduction + statsRace.CritChanceReduction;
             statsTotal.NatureResistance = statsGearEnchantsBuffs.NatureResistance + statsRace.NatureResistance + statsGearEnchantsBuffs.NatureResistanceBuff;
 			statsTotal.FireResistance = statsGearEnchantsBuffs.FireResistance + statsRace.FireResistance + statsGearEnchantsBuffs.FireResistanceBuff;
 			statsTotal.FrostResistance = statsGearEnchantsBuffs.FrostResistance + statsRace.FrostResistance + statsGearEnchantsBuffs.FrostResistanceBuff;
@@ -1032,7 +1032,7 @@ threat and limited threat scaled by the threat scale.",
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 				Health = stats.Health,
 				Miss = stats.Miss,
-				CrushChanceReduction = stats.CrushChanceReduction,
+				CritChanceReduction = stats.CritChanceReduction,
 				AllResist = stats.AllResist,
 				ArcaneResistance = stats.ArcaneResistance,
 				NatureResistance = stats.NatureResistance,
@@ -1086,7 +1086,7 @@ threat and limited threat scaled by the threat scale.",
 					stats.FrostResistanceBuff + stats.ShadowResistanceBuff + 
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage +
-                    stats.BonusCritMultiplier + stats.CrushChanceReduction +
+                    stats.BonusCritMultiplier + stats.CritChanceReduction +
                     stats.ThreatIncreaseMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusBlockValueMultiplier +
                     stats.LotPCritRating + stats.WindfuryAPBonus +
                     stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant +

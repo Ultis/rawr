@@ -260,8 +260,8 @@ namespace Rawr
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/natureResist")) { stats.NatureResistance = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/shadowResist")) { stats.ShadowResistance = int.Parse(node.InnerText); }
 
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusCritSpellRating")) { stats.SpellCritRating = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHitSpellRating")) { stats.SpellHitRating = int.Parse(node.InnerText); }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusCritSpellRating")) { stats.CritRating = int.Parse(node.InnerText); }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHitSpellRating")) { stats.HitRating = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHasteSpellRating")) { stats.SpellHasteRating = int.Parse(node.InnerText); }
 
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusMana")) { stats.Mana = int.Parse(node.InnerText); }
@@ -352,8 +352,8 @@ namespace Rawr
                             }
                             else
                             {
-                                stats.SpellDamageRating += damageIncrease;
-                                stats.Healing += damageIncrease;
+                                stats.SpellPower += damageIncrease;
+                                //stats.SpellPower * 1.88f += damageIncrease;
                             }
                         }
                         else if (spellDesc.StartsWith("Increases your Spirit by "))
@@ -478,7 +478,7 @@ namespace Rawr
                         else if (spellDesc.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell damage for the next 10 sec., stacking up to 10 times."))
                         {
                             stats.AttackPower += 120; //Crusade = 120ap
-                            stats.SpellDamageRating += 80;
+                            stats.SpellPower += 80;
                         }
                         else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance to inject poison"))
                             stats.WeaponDamage += 2f; //Romulo's = 4dmg
@@ -653,17 +653,17 @@ namespace Rawr
                         {
                             spellDesc = spellDesc.Substring("Increases damage and healing done by magical spells and effects by up to".Length);
                             spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
-                            stats.SpellDamageRating += int.Parse(spellDesc);
-                            stats.Healing += int.Parse(spellDesc);
+                            stats.SpellPower += int.Parse(spellDesc);
+                            //stats.SpellPower * 1.88f += int.Parse(spellDesc);
                         }
                         // Increases healing done by up to 375 and damage done by up to 125 for all magical spells and effects.
                         else if (spellDesc.StartsWith("Increases healing done by up to "))
                         {
-                            stats.Healing += int.Parse(spellDesc.Split(' ')[6]);
+							stats.SpellPower += int.Parse(spellDesc.Split(' ')[6]) / 1.88f;
                             spellDesc = spellDesc.Substring(spellDesc.IndexOf("damage done by up to "));
                             spellDesc = spellDesc.Substring("damage done by up to ".Length);
                             spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" for all magical spells and effects."));
-                            stats.SpellDamageRating += int.Parse(spellDesc);
+                            //stats.SpellPower += int.Parse(spellDesc);
                         }
                         else if (spellDesc.StartsWith("Increases damage done by Shadow spells and effects by up to"))
                         {
@@ -705,7 +705,7 @@ namespace Rawr
                         {
                             spellDesc = spellDesc.Substring("Improves spell critical strike rating by".Length);
                             spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
-                            stats.SpellCritRating += int.Parse(spellDesc);
+                            stats.CritRating += int.Parse(spellDesc);
                         }
                         else if (spellDesc.StartsWith("Increases your spell penetration by"))
                         {
@@ -717,7 +717,7 @@ namespace Rawr
                         {
                             spellDesc = spellDesc.Substring("Increases your spell hit rating by ".Length);
                             spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
-                            stats.SpellHitRating += int.Parse(spellDesc);
+                            stats.HitRating += int.Parse(spellDesc);
                         }
                         // Restores 7 mana per 5 sec.
                         // Check to see if the desc contains the token 'mana'.  Items like Frostwolf Insignia
@@ -1065,9 +1065,9 @@ namespace Rawr
 								//case "Healing and +2 Spell Damage":
 								//case "Healing and +1 Spell Damage":
 									if (socketBonusValue == 0)
-										sockets.Stats.Healing = int.Parse(socketBonuses[0].Substring(0, socketBonuses[0].IndexOf(' ')));
+										sockets.Stats.SpellPower = int.Parse(socketBonuses[0].Substring(0, socketBonuses[0].IndexOf(' '))) / 1.88f;
 									else
-										sockets.Stats.Healing = socketBonusValue;
+										sockets.Stats.SpellPower = socketBonusValue / 1.88f;
 									break;
 								case "Crit Rating":
 								case "Crit Strike Rating":
@@ -1086,7 +1086,7 @@ namespace Rawr
 									sockets.Stats.Resilience = socketBonusValue;
 									break;
 								case "Spell Damage":
-									sockets.Stats.SpellDamageRating = socketBonusValue;
+									sockets.Stats.SpellPower = socketBonusValue;
 									//sockets.Stats.Healing = socketBonusValue;
 									break;
 								//case "Spell Damage and Healing":
@@ -1094,7 +1094,7 @@ namespace Rawr
 								//    sockets.Stats.Healing = socketBonusValue;
 								//    break;
 								case "Spell Hit Rating":
-									sockets.Stats.SpellHitRating = socketBonusValue;
+									sockets.Stats.HitRating = socketBonusValue;
 									break;
 								case "Intellect":
 									sockets.Stats.Intellect = socketBonusValue;
@@ -1104,7 +1104,7 @@ namespace Rawr
 								case "Spell Critical":
 								case "Spell Critical Rating":
 								case "Spell Critical Strike Rating":
-									sockets.Stats.SpellCritRating = socketBonusValue;
+									sockets.Stats.CritRating = socketBonusValue;
 									break;
 								case "Spell Haste Rating":
 									sockets.Stats.SpellHasteRating = socketBonusValue;
@@ -1143,7 +1143,7 @@ namespace Rawr
 					{
                         if (gemBonus == "Spell Damage +6")
                         {
-                            stats.SpellDamageRating = 6.0f;
+                            stats.SpellPower = 6.0f;
                         }
                         else if (gemBonus == "Stamina +6")
                         {
@@ -1206,7 +1206,7 @@ namespace Rawr
                                         stats.DefenseRating = gemBonusValue;
                                         break;
 									case "Healing":
-										stats.Healing = gemBonusValue;
+										stats.SpellPower = gemBonusValue / 1.88f;
 										break;
 									//case "Healing +4 Spell Damage":
 									//    stats.Healing = gemBonusValue;
@@ -1252,24 +1252,24 @@ namespace Rawr
                                         stats.Resilience = gemBonusValue;
                                         break;
                                     case "Spell Hit Rating":
-                                        stats.SpellHitRating = gemBonusValue;
+                                        stats.HitRating = gemBonusValue;
                                         break;
                                     case "Spell Haste Rating":
                                         stats.SpellHasteRating = gemBonusValue;
                                         break;
                                     case "Spell Damage":
                                     case "Spell Damage and Healing":
-                                        stats.SpellDamageRating = gemBonusValue;
+                                        stats.SpellPower = gemBonusValue;
                                         // Because Spell Damage is parsed on Teardrop (Red Gem), but not on Runed (Red Gem)
                                         // We need to add Healing from Spell Damage if and only if we have not already parsed a healing bonus
-                                        if (stats.Healing == 0)
-                                            stats.Healing = gemBonusValue;
+                                        if (stats.SpellPower == 0)
+											stats.SpellPower = gemBonusValue / 1.88f;
                                         break;
                                     case "Spell Crit":
                                     case "Spell Crit Rating":
                                     case "Spell Critical":
                                     case "Spell Critical Rating":
-                                        stats.SpellCritRating = gemBonusValue;
+                                        stats.CritRating = gemBonusValue;
                                         break;
                                     case "Mana every 5 seconds":
                                     case "Mana ever 5 Sec":
@@ -1334,6 +1334,8 @@ namespace Rawr
                     RequiredClasses = string.Join("|", requiredClasses.ToArray()),
                     Unique=unique
                 };
+
+				item.Stats.ConvertStatsToWotLKEquivalents();
 
                 return item;
 			}

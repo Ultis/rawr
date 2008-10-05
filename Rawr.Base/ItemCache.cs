@@ -324,6 +324,7 @@ namespace Rawr
 			}
 			foreach (Item item in listItems)
 			{
+				item.Stats.ConvertStatsToWotLKEquivalents();
 				AddItem(item, true, false);
 			}
 

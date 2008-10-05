@@ -66,7 +66,7 @@ namespace Rawr.Healadin
         public void Calculate(Stats stats, bool di)
         {
             float bonus, multi, bol = 0, cost;
-            spellCrit = .08336f + stats.Intellect / 8000 + stats.SpellCritRating / 2208;
+            spellCrit = .08336f + stats.Intellect / 8000 + stats.CritRating / 2208;
             castTime = baseCastTime / (1 + stats.SpellHasteRating / 1570);
             
             if (name.Equals("Holy Light"))
@@ -85,7 +85,7 @@ namespace Rawr.Healadin
                 if (bolBonus > 0) bol = bolBonus + stats.FoLBoL;
                 cost = 0;
             }
-            float plusheal = stats.Healing + stats.AverageHeal + bonus;
+            float plusheal = stats.SpellPower * 1.88f + stats.AverageHeal + bonus;
             avgHeal = multi * (baseHeal + ((plusheal * coef) + bol) * downrank);
             hps = avgHeal * (1 + .5f * spellCrit) / castTime;
             mps = (baseMana * (di ? .5f : 1f) - cost - .6f * baseMana * spellCrit - stats.ManaRestorePerCast) / castTime;

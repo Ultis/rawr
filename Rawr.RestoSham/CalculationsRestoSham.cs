@@ -151,7 +151,7 @@ namespace Rawr.RestoSham
             calcStats.BasicStats = stats;
             
             calcStats.Mp5OutsideFSR = 5f * (.001f + (float)Math.Sqrt((double)stats.Intellect) * stats.Spirit * .009327f) + stats.Mp5;
-            calcStats.SpellCrit = .022f + ((stats.Intellect / 80f) / 100) + ((stats.SpellCritRating / 22.08f) / 100) +
+            calcStats.SpellCrit = .022f + ((stats.Intellect / 80f) / 100) + ((stats.CritRating / 22.08f) / 100) +
                                   stats.SpellCrit;
           
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
@@ -273,14 +273,14 @@ namespace Rawr.RestoSham
                 
                 // Now, we have to recalculate the amount healed based on the proc's addition to healing bonus:
                 
-                stats.Healing += ssHeal;
+                stats.SpellPower += ssHeal / 1.88f;
                 calcStats.AverageHeal = 0f;
                 foreach (HealSpell spell in list)
                   {
                     spell.Calcluate(stats, character);
                     calcStats.AverageHeal += spell.AverageHealed * spell.Weight;
                   }
-                stats.Healing -= ssHeal;
+                stats.SpellPower -= ssHeal / 1.88f;
               }
             
             calcStats.TotalHealed = (numHeals * calcStats.AverageHeal) + esHeal;
@@ -292,7 +292,7 @@ namespace Rawr.RestoSham
             if (options.ExaltedFaction == Faction.Scryers && stats.ShatteredSunRestoProc > 0)
               {
                 float numProcs = (float)Math.Round((options.FightLength / 60f) / 45f, 0) + 1f;
-                float crit = .022f + ((stats.Intellect / 80f) / 100) + ((stats.SpellCritRating / 22.08f) / 100) +
+                float crit = .022f + ((stats.Intellect / 80f) / 100) + ((stats.CritRating / 22.08f) / 100) +
                                   stats.SpellCrit;
                 float critRate = 1 + 0.5f * crit;
                 float ssHealed = numProcs * 650 * critRate;
@@ -354,7 +354,7 @@ namespace Rawr.RestoSham
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect)) * (1 + statsTotal.BonusIntellectMultiplier);
             statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Healing = (float)Math.Round(statsTotal.Healing);
+            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower);
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1 + statsTotal.BonusHealthMultiplier);
           
@@ -391,7 +391,7 @@ namespace Rawr.RestoSham
             // Nature's Blessing: Adds 10% (per talent point) of intellect as bonus healing:
             
             //points = GetTalentPoints("Nature's Blessing", "Restoration", talentTree);
-            statsTotal.Healing += (float)Math.Round((statsTotal.Intellect * .1f * talentTree.NaturesBlessing), 0);
+			statsTotal.SpellPower += (float)Math.Round((statsTotal.Intellect * .1f * talentTree.NaturesBlessing), 0) / 1.88f;
           
             // Ancestral Knowledge: Increases total mana by 1% per talent point.
             
@@ -453,9 +453,9 @@ namespace Rawr.RestoSham
                   StatRelativeWeight[] stats = new StatRelativeWeight[] {
                       new StatRelativeWeight("Int", new Stats() { Intellect = 1f }),
                       new StatRelativeWeight("Spirit", new Stats() { Spirit = 1f }),
-                      new StatRelativeWeight("+Heal", new Stats() { Healing = 1f }),
+                      new StatRelativeWeight("+Heal", new Stats() { SpellPower = 1f / 1.88f}),
                       new StatRelativeWeight("Mp5", new Stats() { Mp5 = 1f }),
-                      new StatRelativeWeight("Spell Crit", new Stats() { SpellCritRating = 1f })};
+                      new StatRelativeWeight("Spell Crit", new Stats() { CritRating = 1f })};
                       
                   // Get the percentage total healing is changed by a change in a single stat:
                   
@@ -549,8 +549,8 @@ namespace Rawr.RestoSham
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
                 Mp5 = stats.Mp5,
-                Healing = stats.Healing,
-                SpellCritRating = stats.SpellCritRating,
+                SpellPower = stats.SpellPower,
+                CritRating = stats.CritRating,
                 SpellHasteRating = stats.SpellHasteRating,
                 Health = stats.Health,
                 Mana = stats.Mana,
@@ -568,7 +568,7 @@ namespace Rawr.RestoSham
 
         public override bool HasRelevantStats(Stats stats)
           {
-            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating +
+            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower * 1.88f + stats.CritRating +
                     stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier +
                     stats.BonusManaPotion + stats.CHManaReduction + stats.CHHealIncrease + stats.LHWManaReduction +
                     stats.ManaSpringMp5Increase + stats.ManaRestorePerCast_5_15 + stats.ShatteredSunRestoProc) > 0;

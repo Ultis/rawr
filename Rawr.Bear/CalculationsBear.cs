@@ -198,42 +198,53 @@ you are being killed by burst damage, focus on Survival Points.",
 		{
 			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
 			int targetLevel = calcOpts.TargetLevel;
+			int characterLevel = (int)Math.Floor(calcOpts.TargetLevel / 10f);
 			Stats stats = GetCharacterStats(character, additionalItem);
-			float levelDifference = (targetLevel - 70f) * 0.2f;
+			float levelDifference = (targetLevel - characterLevel) * 0.2f;
+			
 			CharacterCalculationsBear calculatedStats = new CharacterCalculationsBear();
 			calculatedStats.BasicStats = stats;
 			calculatedStats.Race = character.Race;
 			calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
 			calculatedStats.TargetLevel = targetLevel;
+			
 			float defSkill = (float)Math.Floor(stats.DefenseRating / (123f / 52f));
-			calculatedStats.Miss = 5f + (defSkill * 0.04f) + stats.Miss - levelDifference;
-			calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, stats.Agility / 14.7059f + (stats.DodgeRating / (984f / 52f)) + (defSkill * 0.04f) - levelDifference);
-			calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f; //(stats.Armor / (stats.Armor + 11959.5f)) * 100f; for only 73s
-			calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
-			calculatedStats.DodgePlusMiss = calculatedStats.Dodge + calculatedStats.Miss;
-			calculatedStats.CritReduction = (defSkill * 0.04f) + stats.Resilience / (2050f / 52f);
-			calculatedStats.CappedCritReduction = Math.Min(2f + levelDifference, calculatedStats.CritReduction);
+			float dodgePreDR = stats.Agility / 20f + (stats.DodgeRating / (984f / 52f)) + (defSkill * 0.04f);
+			float missPreDR = (defSkill * 0.04f);
+			float dodgePostDR = 1f / (1f / 116.890707f + 0.972f / dodgePreDR);
+			float missPostDR = 1f / (1f / 116.890707f + 0.972f / missPreDR);
+			float dodgeTotal = stats.Dodge - levelDifference + dodgePostDR;
+			float missTotal = stats.Miss - levelDifference + missPostDR;
+
+			calculatedStats.Miss = missTotal;
+			calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, dodgeTotal);
+			calculatedStats.Mitigation = Math.Min(75f, (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f) * (1 - stats.DamageTakenMultiplier);
+			calculatedStats.AvoidancePreDR = calculatedStats.Dodge + calculatedStats.Miss;
+			calculatedStats.AvoidancePostDR = calculatedStats.Dodge + calculatedStats.Miss;
+			calculatedStats.CritReduction = (defSkill * 0.04f) + stats.Resilience / (2050f / 52f) + stats.CritChanceReduction;
+			calculatedStats.CappedCritReduction = Math.Min(5f + levelDifference, calculatedStats.CritReduction);
+
 			//Out of 100 attacks, you'll take...
-			float crits = Math.Min(Math.Max(0f, 100f - calculatedStats.DodgePlusMiss), (2f + levelDifference) - calculatedStats.CappedCritReduction);
-			float crushes = targetLevel == 73 ? Math.Max(0f, Math.Min(15f, 100f - (crits + calculatedStats.DodgePlusMiss)) - stats.CrushChanceReduction) : 0f;
-			float hits = Math.Max(0f, 100f - (crits + crushes + calculatedStats.DodgePlusMiss));
+			float crits = Math.Min(Math.Max(0f, 100f - calculatedStats.AvoidancePostDR), (2f + levelDifference) - calculatedStats.CappedCritReduction);
+			//float crushes = targetLevel == 73 ? Math.Max(0f, Math.Min(15f, 100f - (crits + calculatedStats.AvoidancePreDR)) - stats.CritChanceReduction) : 0f;
+			float hits = Math.Max(0f, 100f - (crits + calculatedStats.AvoidancePostDR));
 			//Apply armor and multipliers for each attack type...
-			crits *= (100f - calculatedStats.CappedMitigation) * .02f;
-			crushes *= (100f - calculatedStats.CappedMitigation) * .015f;
-			hits *= (100f - calculatedStats.CappedMitigation) * .01f;
-			calculatedStats.DamageTaken = hits + crushes + crits;
+			crits *= (100f - calculatedStats.Mitigation) * .02f;
+			//crushes *= (100f - calculatedStats.Mitigation) * .015f;
+			hits *= (100f - calculatedStats.Mitigation) * .01f;
+			calculatedStats.DamageTaken = hits + crits;
 			calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
 
-			calculatedStats.SurvivalPoints = (stats.Health / (1f - (calculatedStats.CappedMitigation / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
+			calculatedStats.SurvivalPoints = (stats.Health / (1f - (calculatedStats.Mitigation / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
 			calculatedStats.MitigationPoints = (7000f * (1f / (calculatedStats.DamageTaken / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
 
             float cappedResist = targetLevel * 5;
 
-            calculatedStats.NatureSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.NatureResistance + stats.AllResist) / cappedResist) * .75)));
-            calculatedStats.FrostSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FrostResistance + stats.AllResist) / cappedResist) * .75)));
-            calculatedStats.FireSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FireResistance + stats.AllResist) / cappedResist) * .75)));
-            calculatedStats.ShadowSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ShadowResistance + stats.AllResist) / cappedResist) * .75)));
-            calculatedStats.ArcaneSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ArcaneResistance + stats.AllResist) / cappedResist) * .75)));
+            calculatedStats.NatureSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.NatureResistance) / cappedResist) * .75)));
+            calculatedStats.FrostSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FrostResistance) / cappedResist) * .75)));
+            calculatedStats.FireSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FireResistance) / cappedResist) * .75)));
+            calculatedStats.ShadowSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ShadowResistance) / cappedResist) * .75)));
+            calculatedStats.ArcaneSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ArcaneResistance) / cappedResist) * .75)));
 
             CalculateThreat(stats, targetLevel, calculatedStats, calcOpts);
 
@@ -495,77 +506,149 @@ you are being killed by burst damage, focus on Survival Points.",
                     Health = 3434, 
                     Agility = 75, 
                     Stamina = 82, 
-                    DodgeRating = 59, 
+                    Dodge = 4.951f,
+					Miss = 7,
                     NatureResistance = 10,
 					Strength = 73f, 
-					AttackPower = 225f,
-					BonusCritMultiplier = 0.1f,
-					CritRating = 264.0768f, 
-					BonusAttackPowerMultiplier = 0.0f,
-					BonusAgilityMultiplier = 0.03f,
-					BonusStrengthMultiplier = 0.03f,
-                    BonusStaminaMultiplier = 0.03f
+					AttackPower = 120,
+					Crit = 5f,
+					//BonusCritMultiplier = 0.1f,
+					//CritRating = 264.0768f, 
+					//BonusAttackPowerMultiplier = 0.0f,
+					//BonusAgilityMultiplier = 0.03f,
+					//BonusStrengthMultiplier = 0.03f,
+					//BonusStaminaMultiplier = 0.03f
                 } :
 				new Stats() { 
                     Health = 3434, 
                     Agility = 65, 
                     Stamina = 85, 
-                    DodgeRating = 40, 
+                    Dodge = 4.951f,
+					Miss = 5,
                     NatureResistance = 10,
-					Strength = 81f, 
-					AttackPower = 295f,
-					BonusCritMultiplier = 0.1f,
-					CritRating = 264.0768f, 
-					BonusAttackPowerMultiplier = 0.0f,
-					BonusAgilityMultiplier = 0.03f,
-                    BonusStrengthMultiplier = 0.03f,
-                    BonusStaminaMultiplier = 0.03f
+					Strength = 81, 
+					AttackPower = 190,
+					Crit = 5f,
+					//BonusCritMultiplier = 0.1f,
+					//CritRating = 264.0768f, 
+					//BonusAttackPowerMultiplier = 0.0f,
+					//BonusAgilityMultiplier = 0.03f,
+					//BonusStrengthMultiplier = 0.03f,
+					//BonusStaminaMultiplier = 0.03f
                 };
 
-			Stats statsBaseGear = GetItemStats(character, additionalItem);
+			
+
+			/* TODO:
+			 * Threat-only:
+			 * Genesis (5: 5% damage buff to lacerate dot)
+			 * Ferocity (5: -5rage cost to Maul, Swipe, Mangle)
+			 --* Feral Instinct (3: 30% damage buff to Swipe)
+			 * Savage Fury (2: 20% damage buff to Mangle, Maul)
+			 --* Sharpened Claws (3: 6% crit)
+			 * Shredding Attacks (2: -2rage cost to Lacerate)
+			 -* Predatory Strikes (3:  105 ap, plus 20% of weapon ap)
+			 * Primal Fury (2: 5rage on crits)
+			 --* Primal Precision (2: 10 expertise)
+			 --* Leader of the Pack (1: 5% crit)
+			 --* Predatory Instincts (3: 15% damage buff to crits)
+			 * King of the Jungle (3: 15% damage buff during Enrage)
+			 * Mangle (1: Mangle)
+			 * Improved Mangle (3: -1.5sec cooldown to Mangle)
+			 * Rend and Tear (5: 20% damage buff to Maul)
+			 * Berserk (1: Berserk)
+			 --* Naturalist (5: 10% damage)
+			 * Omen of Clarity (1: Omen of Clarity)
+			 --* Master Shapeshifter (2: 4% damage)
+			 * 
+			 * Mitigation/Survival:
+			 --* Thick Hide (3: 10% armor buff)
+			 --* Feral Swiftness (2: 4% dodge)
+			 -* Natural Reaction (3: 6% dodge, 3 rage on dodges)
+			 --* Heart of the Wild (5: 20% sta)
+			 --* Survival of the Fittest (3: 6% stats, 6% anticrit)
+			 -* Mother Bear (3: 6% ap, 12% less damage taken)
+			 * 
+			*/
+
+			Stats statsItems = GetItemStats(character, additionalItem);
 			Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-			
-          
-            Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
-			
-			statsBaseGear.Agility += statsEnchants.Agility;
-			statsBaseGear.DefenseRating += statsEnchants.DefenseRating;
-			statsBaseGear.DodgeRating += statsEnchants.DodgeRating;
-			statsBaseGear.Resilience += statsEnchants.Resilience;
-			statsBaseGear.Stamina += statsEnchants.Stamina;
+			statsItems.Armor *= (5f * (1f + 0.02f * character.DruidTalents.ThickHide));
+
+			DruidTalents talents = character.DruidTalents;
+			Stats statsTalents = new Stats()
+			{
+				Crit = 2 * talents.SharpenedClaws + 5 * talents.LeaderOfThePack,
+				Dodge = 2 * talents.FeralSwiftness + 2 * talents.NaturalReaction,
+				BonusStaminaMultiplier = (1 + 0.04f * talents.HeartOfTheWild) * (1 + 0.02f * talents.SurvivalOfTheFittest) - 1,
+				BonusAgilityMultiplier = 0.02f * talents.SurvivalOfTheFittest,
+				BonusStrengthMultiplier = 0.02f * talents.SurvivalOfTheFittest,
+				CritChanceReduction = 0.02f * talents.SurvivalOfTheFittest,
+				BonusAttackPowerMultiplier = 0.02f * talents.MotherBear,
+				BonusPhysicalDamageMultiplier = (1 + 0.02f * talents.Naturalist) * (1 + 0.02f * talents.MasterShapeshifter) - 1,
+				Expertise = 5 * talents.PrimalPrecision,
+				AttackPower = 35 * talents.PredatoryStrikes,
+				BonusSwipeDamageMultiplier = 0.1f * talents.FeralInstinct,
+				BonusCritMultiplier = 0.05f * talents.PredatoryInstincts,
+				DamageTakenMultiplier = 1f - (0.04f * talents.MotherBear),
+			};
+
+			Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;
+
+			statsTotal.Stamina *= (1 + statsTotal.BonusStaminaMultiplier);
+			statsTotal.Strength *= (1 + statsTotal.BonusStrengthMultiplier);
+			statsTotal.Agility *= (1 + statsTotal.BonusAgilityMultiplier);
+			statsTotal.AttackPower += statsTotal.Strength * 2;
+			statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
+			statsTotal.Health += (statsTotal.Stamina * 10f) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f);
+			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
+			statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
+			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
+			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
+			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
+
+			return statsTotal;
+			/*
+			statsItems.Agility += statsEnchants.Agility;
+			statsItems.DefenseRating += statsEnchants.DefenseRating;
+			statsItems.DodgeRating += statsEnchants.DodgeRating;
+			statsItems.Resilience += statsEnchants.Resilience;
+			statsItems.Stamina += statsEnchants.Stamina;
 
 			statsBuffs.Health += statsEnchants.Health;
 			statsBuffs.Armor += statsEnchants.Armor;
 
 			float agiBase = (float)Math.Floor(statsRace.Agility * (1+ statsRace.BonusAgilityMultiplier));
-            float agiBonus = (float) Math.Floor((statsBaseGear.Agility + statsBuffs.Agility) * (1 + statsRace.BonusAgilityMultiplier));
-            float staBase = (float) Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier) * 1.25f);
-            float strBase = (float) Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
+            float agiBonus = (float) Math.Floor((statsItems.Agility + statsBuffs.Agility) * (1 + statsRace.BonusAgilityMultiplier));
+            
+			float strBase = (float) Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float strBonus = (float) Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            float staBonus = (statsBaseGear.Stamina + statsBuffs.Stamina) * (1 + statsRace.BonusStaminaMultiplier) * 1.25f;
+            
+			float staBase = (float) Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier) * 1.25f);
+            float staBonus = (statsItems.Stamina + statsBuffs.Stamina) * (1 + statsRace.BonusStaminaMultiplier) * 1.25f;
             float staHotW = (statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier) * 1.25f + staBonus) * 0.2f;
 			staBonus = (float)Math.Round(Math.Floor(staBonus) + staHotW);
 
 			Stats statsTotal = new Stats();
 			statsTotal.Stamina = staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier));
-			statsTotal.DefenseRating = statsRace.DefenseRating + statsBaseGear.DefenseRating + statsBuffs.DefenseRating;
-			statsTotal.DodgeRating = statsRace.DodgeRating + statsBaseGear.DodgeRating + statsBuffs.DodgeRating;
-			statsTotal.Resilience = statsRace.Resilience + statsBaseGear.Resilience + statsBuffs.Resilience;
-			statsTotal.Health = (float)Math.Round(((statsRace.Health + statsBaseGear.Health + statsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
-			statsTotal.Miss = statsRace.Miss + statsBaseGear.Miss + statsBuffs.Miss;
+			statsTotal.DefenseRating = statsRace.DefenseRating + statsItems.DefenseRating + statsBuffs.DefenseRating;
+			statsTotal.DodgeRating = statsRace.DodgeRating + statsItems.DodgeRating + statsBuffs.DodgeRating;
+			statsTotal.Resilience = statsRace.Resilience + statsItems.Resilience + statsBuffs.Resilience;
+			statsTotal.Health = (float)Math.Round(((statsRace.Health + statsItems.Health + statsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
+			statsTotal.Miss = statsRace.Miss + statsItems.Miss + statsBuffs.Miss;
 			statsTotal.CrushChanceReduction = statsBuffs.CrushChanceReduction;
-            statsTotal.NatureResistance = statsEnchants.NatureResistance + statsRace.NatureResistance + statsBaseGear.NatureResistance + statsBuffs.NatureResistance +
-				statsEnchants.NatureResistanceBuff + statsRace.NatureResistanceBuff + statsBaseGear.NatureResistanceBuff + statsBuffs.NatureResistanceBuff;
-			statsTotal.FireResistance = statsEnchants.FireResistance + statsRace.FireResistance + statsBaseGear.FireResistance + statsBuffs.FireResistance +
-				statsEnchants.FireResistanceBuff + statsRace.FireResistanceBuff + statsBaseGear.FireResistanceBuff + statsBuffs.FireResistanceBuff;
-			statsTotal.FrostResistance = statsEnchants.FrostResistance + statsRace.FrostResistance + statsBaseGear.FrostResistance + statsBuffs.FrostResistance +
-				statsEnchants.FrostResistanceBuff + statsRace.FrostResistanceBuff + statsBaseGear.FrostResistanceBuff + statsBuffs.FrostResistanceBuff;
-			statsTotal.ShadowResistance = statsEnchants.ShadowResistance + statsRace.ShadowResistance + statsBaseGear.ShadowResistance + statsBuffs.ShadowResistance +
-				statsEnchants.ShadowResistanceBuff + statsRace.ShadowResistanceBuff + statsBaseGear.ShadowResistanceBuff + statsBuffs.ShadowResistanceBuff;
-			statsTotal.ArcaneResistance = statsEnchants.ArcaneResistance + statsRace.ArcaneResistance + statsBaseGear.ArcaneResistance + statsBuffs.ArcaneResistance +
-				statsEnchants.ArcaneResistanceBuff + statsRace.ArcaneResistanceBuff + statsBaseGear.ArcaneResistanceBuff + statsBuffs.ArcaneResistanceBuff;
-            statsTotal.AllResist = statsEnchants.AllResist + statsRace.AllResist + statsBaseGear.AllResist + statsBuffs.AllResist;
+            statsTotal.NatureResistance = statsEnchants.NatureResistance + statsRace.NatureResistance + statsItems.NatureResistance + statsBuffs.NatureResistance +
+				statsEnchants.NatureResistanceBuff + statsRace.NatureResistanceBuff + statsItems.NatureResistanceBuff + statsBuffs.NatureResistanceBuff;
+			statsTotal.FireResistance = statsEnchants.FireResistance + statsRace.FireResistance + statsItems.FireResistance + statsBuffs.FireResistance +
+				statsEnchants.FireResistanceBuff + statsRace.FireResistanceBuff + statsItems.FireResistanceBuff + statsBuffs.FireResistanceBuff;
+			statsTotal.FrostResistance = statsEnchants.FrostResistance + statsRace.FrostResistance + statsItems.FrostResistance + statsBuffs.FrostResistance +
+				statsEnchants.FrostResistanceBuff + statsRace.FrostResistanceBuff + statsItems.FrostResistanceBuff + statsBuffs.FrostResistanceBuff;
+			statsTotal.ShadowResistance = statsEnchants.ShadowResistance + statsRace.ShadowResistance + statsItems.ShadowResistance + statsBuffs.ShadowResistance +
+				statsEnchants.ShadowResistanceBuff + statsRace.ShadowResistanceBuff + statsItems.ShadowResistanceBuff + statsBuffs.ShadowResistanceBuff;
+			statsTotal.ArcaneResistance = statsEnchants.ArcaneResistance + statsRace.ArcaneResistance + statsItems.ArcaneResistance + statsBuffs.ArcaneResistance +
+				statsEnchants.ArcaneResistanceBuff + statsRace.ArcaneResistanceBuff + statsItems.ArcaneResistanceBuff + statsBuffs.ArcaneResistanceBuff;
+            statsTotal.AllResist = statsEnchants.AllResist + statsRace.AllResist + statsItems.AllResist + statsBuffs.AllResist;
 
 
 			
@@ -588,7 +671,7 @@ you are being killed by burst damage, focus on Survival Points.",
             statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
             statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
 
-            statsTotal.Armor = (float) Math.Round(((statsBaseGear.Armor * 5.5f) + statsRace.Armor + statsBuffs.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
+            statsTotal.Armor = (float) Math.Round(((statsItems.Armor * 5.5f) + statsRace.Armor + statsBuffs.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
 
             statsTotal.TerrorProc = statsGearEnchantsBuffs.TerrorProc;
             statsTotal.BonusSwipeDamageMultiplier = statsGearEnchantsBuffs.BonusSwipeDamageMultiplier;
@@ -599,7 +682,7 @@ you are being killed by burst damage, focus on Survival Points.",
             statsTotal.BonusSwipeDamageMultiplier = statsGearEnchantsBuffs.BonusSwipeDamageMultiplier;
             statsTotal.BloodlustProc = statsGearEnchantsBuffs.BloodlustProc;
             
-			return statsTotal;
+			return statsTotal;*/
 		}
 
 		public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
@@ -622,8 +705,8 @@ you are being killed by burst damage, focus on Survival Points.",
 						calcHit.Name = "Hit";
 
 						float crits = 2f + (0.2f * (currentCalculationsBear.TargetLevel - 70)) - currentCalculationsBear.CappedCritReduction;
-						float crushes = currentCalculationsBear.TargetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (currentCalculationsBear.DodgePlusMiss)), 15f) - currentCalculationsBear.BasicStats.CrushChanceReduction, 0f) : 0f;
-						float hits = Math.Max(100f - (Math.Max(0f, crits) + Math.Max(crushes, 0) + (currentCalculationsBear.DodgePlusMiss)), 0f);
+						float crushes = currentCalculationsBear.TargetLevel == 73 ? Math.Max(Math.Min(100f - (crits + (currentCalculationsBear.AvoidancePreDR)), 15f) - currentCalculationsBear.BasicStats.CritChanceReduction, 0f) : 0f;
+						float hits = Math.Max(100f - (Math.Max(0f, crits) + Math.Max(crushes, 0) + (currentCalculationsBear.AvoidancePreDR)), 0f);
 						
 						calcMiss.OverallPoints = calcMiss.MitigationPoints = currentCalculationsBear.Miss;
 						calcDodge.OverallPoints = calcDodge.MitigationPoints = currentCalculationsBear.Dodge;
@@ -895,7 +978,7 @@ you are being killed by burst damage, focus on Survival Points.",
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 				Health = stats.Health,
 				Miss = stats.Miss,
-				CrushChanceReduction = stats.CrushChanceReduction,
+				CritChanceReduction = stats.CritChanceReduction,
 				AllResist = stats.AllResist,
 				ArcaneResistance = stats.ArcaneResistance,
 				NatureResistance = stats.NatureResistance,
@@ -935,7 +1018,7 @@ you are being killed by burst damage, focus on Survival Points.",
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff +
-				stats.FrostResistanceBuff + stats.ShadowResistanceBuff + stats.CrushChanceReduction
+				stats.FrostResistanceBuff + stats.ShadowResistanceBuff + stats.CritChanceReduction
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
                  + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamage + stats.BonusSwipeDamageMultiplier
@@ -1019,18 +1102,18 @@ you are being killed by burst damage, focus on Survival Points.",
 			set { _mitigation = value; }
 		}
 
-		private float _cappedMitigation;
-		public float CappedMitigation
+		private float _avoidancePreDR;
+		public float AvoidancePreDR
 		{
-			get { return _cappedMitigation; }
-			set { _cappedMitigation = value; }
+			get { return _avoidancePreDR; }
+			set { _avoidancePreDR = value; }
 		}
 
-		private float _dodgePlusMiss;
-		public float DodgePlusMiss
+		private float _avoidancePostDR;
+		public float AvoidancePostDR
 		{
-			get { return _dodgePlusMiss; }
-			set { _dodgePlusMiss = value; }
+			get { return _avoidancePostDR; }
+			set { _avoidancePostDR = value; }
 		}
 
 		private float _totalMitigation;
@@ -1061,13 +1144,13 @@ you are being killed by burst damage, focus on Survival Points.",
 			set { _cappedCritReduction = value; }
 		}
 
+
         private float _missedAttacks;
 	    public float MissedAttacks
 	    {
 		    get { return _missedAttacks; }
 		    set { _missedAttacks = value; }
 	    }
-
        
         private float _dodgedAttacks;
 	    public float DodgedAttacks
@@ -1194,7 +1277,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			else
 				dictValues.Add("Mitigation", Mitigation.ToString()
 					+ string.Format("%*Short of the armor cap by {0} armor.", armorCap - BasicStats.Armor));
-			dictValues.Add("Dodge + Miss", DodgePlusMiss.ToString() + "%");
+			dictValues.Add("Dodge + Miss", AvoidancePreDR.ToString() + "%");
 			dictValues.Add("Total Mitigation", TotalMitigation.ToString() + "%");
 			dictValues.Add("Damage Taken", DamageTaken.ToString() + "%");
 			if (defToCap == 0 && resToCap == 0)
@@ -1264,7 +1347,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			{
 				case "Health": return BasicStats.Health;
 				case "Mitigation % from Armor": return Mitigation;
-				case "Avoidance %": return DodgePlusMiss;
+				case "Avoidance %": return AvoidancePreDR;
 				case "% Chance to be Crit": return ((2f + (0.2f * (TargetLevel - 70))) - CritReduction);
 				case "Nature Survival": return NatureSurvivalPoints;
 				case "Fire Survival": return FireSurvivalPoints;

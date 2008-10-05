@@ -150,7 +150,7 @@ namespace Rawr.Retribution
                 new Stats() { ExpertiseRating = 10 },
                 new Stats() { HasteRating = 10 },
                 new Stats() { ArmorPenetration = 66.667f },
-                new Stats() { SpellDamageRating = 11.17f },
+                new Stats() { SpellPower = 11.17f },
             };
 
             for (int index = 0; index < statsList.Length; index++)

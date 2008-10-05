@@ -503,7 +503,7 @@ namespace Rawr
             {
                 Name = "Totem of Wrath",
                 Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { SpellCritRating = 22.08f * 3f, SpellHitRating = 12.62f * 3f }
+                Stats = new Stats() { CritRating = 22.08f * 3f, HitRating = 12.62f * 3f }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -515,7 +515,7 @@ namespace Rawr
             {
                 Name = "Moonkin Aura",
                 Category = BuffCategory.ClassBuffs,
-                Stats = new Stats() { SpellCritRating = 22.08f * 5f }
+                Stats = new Stats() { CritRating = 22.08f * 5f }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -640,14 +640,14 @@ namespace Rawr
             {
                 Name = "Adept's Elixir",
                 Category = BuffCategory.ElixirsAndFlasks,
-                Stats = new Stats() { SpellDamageRating = 24, Healing = 24, SpellCritRating = 24 },
+                Stats = new Stats() { SpellPower = 24, CritRating = 24 },
                 ConflictingBuffs = new string[] { "Battle Elixir" }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Elixir of Healing Power",
                 Category = BuffCategory.ElixirsAndFlasks,
-                Stats = new Stats() { Healing = 50 },
+				Stats = new Stats() { SpellPower = 50 / 1.88f },
                 ConflictingBuffs = new string[] { "Battle Elixir" }
             });
             defaultBuffs.Add(new Buff()
@@ -717,7 +717,7 @@ namespace Rawr
             {
                 Name = "Flask of Supreme Power",
                 Category = BuffCategory.ElixirsAndFlasks,
-                Stats = new Stats() { SpellDamageRating = 70 },
+                Stats = new Stats() { SpellPower = 70 },
                 ConflictingBuffs = new string[] { "Battle Elixir", "Guardian Elixir" }
             });
 
@@ -815,28 +815,28 @@ namespace Rawr
             {
                 Name = "Superior Wizard Oil",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { Healing = 42, SpellDamageRating = 42 },
+                Stats = new Stats() { SpellPower = 42 },
                 ConflictingBuffs = new string[] { "Temporary Weapon Enchantment" }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Brilliant Wizard Oil",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { SpellDamageRating = 36, SpellCritRating = 14 },
+                Stats = new Stats() { SpellPower = 36, CritRating = 14 },
                 ConflictingBuffs = new string[] { "Temporary Weapon Enchantment" }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "20 Spell Crit Food",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { SpellCritRating = 20, Spirit = 20 },
+                Stats = new Stats() { CritRating = 20, Spirit = 20 },
                 ConflictingBuffs = new string[] { "Food" }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "23 Spell Damage Food",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { SpellDamageRating = 23, Spirit = 20 },
+                Stats = new Stats() { SpellPower = 23, Spirit = 20 },
                 ConflictingBuffs = new string[] { "Food" }
             });
             defaultBuffs.Add(new Buff()
@@ -850,7 +850,7 @@ namespace Rawr
             {
                 Name = "Brilliant Mana Oil",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { Mp5 = 12, Healing = 22 },
+				Stats = new Stats() { Mp5 = 12, SpellPower = 22 / 1.88f },
                 ConflictingBuffs = new string[] { "Temporary Weapon Enchantment" }
             });
             defaultBuffs.Add(new Buff()
@@ -864,7 +864,7 @@ namespace Rawr
             {
                 Name = "44 Healing Food",
                 Category = BuffCategory.OtherConsumables,
-                Stats = new Stats() { Healing = 44, Spirit = 20 },
+				Stats = new Stats() { SpellPower = 44 / 1.88f, Spirit = 20 },
                 ConflictingBuffs = new string[] { "Food" }
             });
 
@@ -900,7 +900,7 @@ namespace Rawr
 			{
 				Name = "Crushless Mob",
 				Category = BuffCategory.Debuffs,
-				Stats = new Stats() { CrushChanceReduction = 15f },
+				Stats = new Stats() { CritChanceReduction = 15f },
 				Type = BuffType.ShortDurationDW
 			});
             defaultBuffs.Add(new Buff() {
@@ -964,7 +964,7 @@ namespace Rawr
 			{
 				Name = "Improved Judgement of the Crusade",
 				Category = BuffCategory.Debuffs,
-				Stats = new Stats() { CritRating = 3444f / 52f, SpellCritRating = 3444f / 52f }
+				Stats = new Stats() { Crit = 3, SpellCrit = 3 }
 			});
             defaultBuffs.Add(new Buff()
             {

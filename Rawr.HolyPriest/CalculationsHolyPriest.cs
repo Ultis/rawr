@@ -140,11 +140,11 @@ namespace Rawr.HolyPriest
             calculatedStats.RegenOutFSR = calculatedStats.BasicStats.Mp5 + calculatedStats.SpiritRegen;
 
             calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect / 80) +
-                (calculatedStats.BasicStats.SpellCritRating / 22.08) + 1.24 + character.PriestTalents.HolySpecialization, 2);
+                (calculatedStats.BasicStats.CritRating / 22.08) + 1.24 + character.PriestTalents.HolySpecialization, 2);
 
-            calculatedStats.BasicStats.Healing += calculatedStats.BasicStats.Spirit * character.PriestTalents.SpiritualGuidance * 0.05f;
+            calculatedStats.BasicStats.SpellPower += calculatedStats.BasicStats.Spirit * character.PriestTalents.SpiritualGuidance * 0.05f / 1.88f;
             
-            calculatedStats.HealPoints = calculatedStats.BasicStats.Healing
+            calculatedStats.HealPoints = calculatedStats.BasicStats.SpellPower * 1.88f
                 + (calculatedStats.BasicStats.HealingDoneFor15SecOnUse2Min * 15f / 120f)
                 + (calculatedStats.BasicStats.HealingDoneFor15SecOnUse90Sec * 15f / 90f)
                 + (calculatedStats.BasicStats.HealingDoneFor20SecOnUse2Min * 20f / 120f)
@@ -271,7 +271,7 @@ namespace Rawr.HolyPriest
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
+			statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower * 1.88f + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit)) / 1.88f;
             statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
             statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
 
@@ -460,8 +460,8 @@ namespace Rawr.HolyPriest
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
                 Mp5 = stats.Mp5,
-                Healing = stats.Healing,
-                SpellCritRating = stats.SpellCritRating,
+                SpellPower = stats.SpellPower,
+                CritRating = stats.CritRating,
                 SpellHasteRating = stats.SpellHasteRating,
                 Health = stats.Health,
                 Mana = stats.Mana,
@@ -488,7 +488,7 @@ namespace Rawr.HolyPriest
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.Healing + stats.SpellCritRating
+            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower * 1.88f + stats.CritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.ManaregenFor8SecOnUse5Min
                 + stats.BonusPoHManaCostReductionMultiplier + stats.SpellCombatManaRegeneration

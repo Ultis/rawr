@@ -117,13 +117,13 @@ namespace Rawr.Tree
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", BasicStats.Spirit.ToString());
             dictValues.Add("Healing", String.Format("{0}*{1} Spell Damage" + (BasicStats.AverageHeal > 0 ? "\n{2} Average Bonus Healing" : ""),
-                BasicStats.Healing, BasicStats.SpellDamageRating, BasicStats.AverageHeal));
+                BasicStats.SpellPower * 1.88f, BasicStats.SpellPower, BasicStats.AverageHeal));
             dictValues.Add("Mp5", string.Format("{0}*{1} mp5 outside the 5-second rule",
                 (int) (5*IS5SRRegenRaw),
                 (int) (5*OS5SRRegenRaw)));
 
             dictValues.Add("Spell Crit", string.Format("{0}%*{1} Spell Crit rating",
-                BasicStats.SpellCrit, BasicStats.SpellCritRating.ToString()));
+                BasicStats.SpellCrit, BasicStats.CritRating.ToString()));
             
             dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\nGlobal cooldown is {2} seconds", 
                 Math.Round(BasicStats.SpellHasteRating / 15.7, 2),

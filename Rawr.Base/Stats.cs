@@ -45,8 +45,8 @@ namespace Rawr
         Crit,
         CritRating,
         CritMeleeRating,
-        CrushChanceReduction,
-        Defense,
+		CritChanceReduction,
+		Defense,
         DefenseRating,
         Dodge,
         DodgeRating,
@@ -178,7 +178,8 @@ namespace Rawr
         ManaregenOver20SecOnUse5Min,
         ManacostReduceWithin15OnHealingCast,
         BangleProc,
-        FullManaRegenFor15SecOnSpellcast
+        FullManaRegenFor15SecOnSpellcast,
+		SpellPower
     }
 
     enum MultiplicativeStat : int
@@ -223,6 +224,7 @@ namespace Rawr
     enum InverseMultiplicativeStat : int
     {
         ThreatReductionMultiplier,
+		DamageTakenMultiplier
     }
 
     enum NonStackingStat : int
@@ -509,11 +511,20 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Damage")]
-        public float SpellDamageRating
+		public float SpellDamageRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellDamageRating] = value; }
-        }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Category("Spell Combat Ratings")]
+		[DisplayName("Spell Power")]
+		public float SpellPower
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.SpellPower]; }
+			set { _rawAdditiveData[(int)AdditiveStat.SpellPower] = value; }
+		}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
@@ -1414,10 +1425,10 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float CrushChanceReduction
+        public float CritChanceReduction
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.CrushChanceReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CrushChanceReduction] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.CritChanceReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CritChanceReduction] = value; }
         }
 
 
@@ -2093,7 +2104,16 @@ namespace Rawr
             get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ThreatReductionMultiplier]; }
             set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ThreatReductionMultiplier] = value; }
         }
-        #endregion
+		
+		[Percentage]
+		[DisplayName("% Damage Taken")]
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		public float DamageTakenMultiplier
+		{
+			get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.DamageTakenMultiplier]; }
+			set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.DamageTakenMultiplier] = value; }
+		}
+		#endregion
 
         #region NoStackStats
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2415,6 +2435,15 @@ namespace Rawr
             clone._rawNoStackData = (float[]) clone._rawNoStackData.Clone();
             return clone;
         }
+
+		public void ConvertStatsToWotLKEquivalents()
+		{
+			HitRating = Math.Max(HitRating, SpellHitRating);
+			CritRating = Math.Max(CritRating, SpellCritRating);
+			SpellPower = Math.Max(SpellPower, Math.Max(SpellDamageRating, (float)Math.Floor(Healing / 1.88f)));
+			
+			SpellHitRating = SpellCritRating = SpellDamageRating = Healing = 0;
+		}
 
         #region Multiplicative Handling
         private static PropertyInfo[] _propertyInfoCache = null;

@@ -201,8 +201,8 @@ namespace Rawr
                     }
                     Graphics g = Graphics.FromImage(_prerenderedGraph);
                     g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                    g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-
+                    g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+					g.FillRectangle(Brushes.White, 0, 0, _prerenderedGraph.Width, _prerenderedGraph.Height);
                     if (CustomRendered)
                     {
                         Calculations.RenderCustomChart(_character, CustomRenderedChartName, g, _prerenderedGraph.Width, _prerenderedGraph.Height);

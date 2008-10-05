@@ -51,7 +51,7 @@ namespace Rawr.RestoSham
 
             // Bonus amount (Earth Shield not subject to downrank penalties?):
 
-            float bonus = stats.Healing;
+            float bonus = stats.SpellPower * 1.88f;
             bonus *= SpellCoefficient;
             
             AverageHealed = (baseHeal + bonus) * 6;
@@ -109,7 +109,7 @@ namespace Rawr.RestoSham
           {
             // Gift of the Naaru gets no benefit from talents, but does get the full +heal bonus:
             
-            float bonus = stats.Healing * SpellCoefficient;
+            float bonus = stats.SpellPower * 1.88f * SpellCoefficient;
             this.AverageHealed = SpellRanks[Rank].MaxHeal + bonus;
           }
 
@@ -367,7 +367,7 @@ namespace Rawr.RestoSham
             
             // Bonus amount:
 
-            float bonus = stats.Healing;
+            float bonus = stats.SpellPower * 1.88f;
             if (options.Totems[HealType].ID != 0 && options.Totems[HealType].Effect == TotemEffect.BonusHeal)
               bonus += options.Totems[HealType].Amount;
             bonus *= SpellCoefficient;
@@ -376,7 +376,7 @@ namespace Rawr.RestoSham
 
             // Crit rate:
 
-            float crit = .022f + ((stats.Intellect / 80f) / 100) + ((stats.SpellCritRating / 22.08f) / 100) +
+            float crit = .022f + ((stats.Intellect / 80f) / 100) + ((stats.CritRating / 22.08f) / 100) +
                                   stats.SpellCrit;
             float critRate = 1 + 0.5f * crit;
 
