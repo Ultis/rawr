@@ -30,17 +30,37 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.OkButton = new System.Windows.Forms.Button();
+            this.buttonAddGemming = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button8 = new System.Windows.Forms.Button();
-            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.button7 = new System.Windows.Forms.Button();
+            this.removeButton1 = new System.Windows.Forms.Button();
             this.metaButton1 = new Rawr.ItemButton();
             this.blueButton1 = new Rawr.ItemButton();
             this.yellowButton1 = new Rawr.ItemButton();
             this.redButton1 = new Rawr.ItemButton();
+            this.button7 = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.removeButton2 = new System.Windows.Forms.Button();
+            this.metaButton2 = new Rawr.ItemButton();
+            this.blueButton2 = new Rawr.ItemButton();
+            this.yellowButton2 = new Rawr.ItemButton();
+            this.redButton2 = new Rawr.ItemButton();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.removeButton3 = new System.Windows.Forms.Button();
+            this.metaButton3 = new Rawr.ItemButton();
+            this.blueButton3 = new Rawr.ItemButton();
+            this.yellowButton3 = new Rawr.ItemButton();
+            this.redButton3 = new Rawr.ItemButton();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.removeButton4 = new System.Windows.Forms.Button();
+            this.metaButton4 = new Rawr.ItemButton();
+            this.blueButton4 = new Rawr.ItemButton();
+            this.yellowButton4 = new Rawr.ItemButton();
+            this.redButton4 = new Rawr.ItemButton();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -63,77 +83,65 @@
             this.checkBox1.Text = "Delete non-listed\r\nGemmings";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
-            // button5
+            // OkButton
             // 
-            this.button5.Location = new System.Drawing.Point(382, 89);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(86, 33);
-            this.button5.TabIndex = 10;
-            this.button5.Text = "Done";
-            this.button5.UseVisualStyleBackColor = true;
+            this.OkButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.OkButton.Location = new System.Drawing.Point(382, 89);
+            this.OkButton.Name = "OkButton";
+            this.OkButton.Size = new System.Drawing.Size(45, 33);
+            this.OkButton.TabIndex = 10;
+            this.OkButton.Text = "OK";
+            this.OkButton.UseVisualStyleBackColor = true;
+            this.OkButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
-            // button6
+            // buttonAddGemming
             // 
-            this.button6.Location = new System.Drawing.Point(382, 43);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(86, 40);
-            this.button6.TabIndex = 11;
-            this.button6.Text = "Add another Gemming";
-            this.button6.UseVisualStyleBackColor = true;
+            this.buttonAddGemming.Location = new System.Drawing.Point(382, 43);
+            this.buttonAddGemming.Name = "buttonAddGemming";
+            this.buttonAddGemming.Size = new System.Drawing.Size(102, 41);
+            this.buttonAddGemming.TabIndex = 11;
+            this.buttonAddGemming.Text = "Add another Gemming";
+            this.buttonAddGemming.UseVisualStyleBackColor = true;
+            this.buttonAddGemming.Click += new System.EventHandler(this.buttonAddGemming_Click);
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button8);
-            this.groupBox1.Controls.Add(this.vScrollBar1);
+            this.groupBox1.Controls.Add(this.removeButton1);
             this.groupBox1.Controls.Add(this.metaButton1);
             this.groupBox1.Controls.Add(this.blueButton1);
             this.groupBox1.Controls.Add(this.yellowButton1);
             this.groupBox1.Controls.Add(this.redButton1);
             this.groupBox1.Location = new System.Drawing.Point(4, 43);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(337, 91);
+            this.groupBox1.Size = new System.Drawing.Size(337, 80);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Gemmings";
+            this.groupBox1.Tag = 1;
+            this.groupBox1.Text = "Gemming #1";
             // 
-            // button8
+            // removeButton1
             // 
-            this.button8.Location = new System.Drawing.Point(258, 38);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(61, 19);
-            this.button8.TabIndex = 5;
-            this.button8.Text = "Remove";
-            this.button8.UseVisualStyleBackColor = true;
-            // 
-            // vScrollBar1
-            // 
-            this.vScrollBar1.Location = new System.Drawing.Point(319, 7);
-            this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(18, 80);
-            this.vScrollBar1.TabIndex = 4;
-            this.vScrollBar1.Visible = false;
-            this.vScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(382, 128);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(86, 28);
-            this.button7.TabIndex = 13;
-            this.button7.Text = "Cancel";
-            this.button7.UseVisualStyleBackColor = true;
+            this.removeButton1.Location = new System.Drawing.Point(267, 34);
+            this.removeButton1.Name = "removeButton1";
+            this.removeButton1.Size = new System.Drawing.Size(56, 19);
+            this.removeButton1.TabIndex = 4;
+            this.removeButton1.Tag = 1;
+            this.removeButton1.Text = "Remove";
+            this.removeButton1.UseVisualStyleBackColor = true;
+            this.removeButton1.Click += new System.EventHandler(this.buttonRemoveGemming_Click);
             // 
             // metaButton1
             // 
             this.metaButton1.Character = null;
             this.metaButton1.CharacterSlot = Rawr.Character.CharacterSlot.Metas;
             this.metaButton1.ItemIcon = null;
-            this.metaButton1.Location = new System.Drawing.Point(195, 20);
+            this.metaButton1.Location = new System.Drawing.Point(197, 17);
             this.metaButton1.Name = "metaButton1";
             this.metaButton1.SelectedItem = null;
             this.metaButton1.SelectedItemId = 0;
             this.metaButton1.Size = new System.Drawing.Size(57, 56);
             this.metaButton1.TabIndex = 3;
+            this.metaButton1.Tag = 1;
             this.metaButton1.Text = "Meta";
             this.metaButton1.UseVisualStyleBackColor = true;
             // 
@@ -143,12 +151,13 @@
             this.blueButton1.Character = null;
             this.blueButton1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
             this.blueButton1.ItemIcon = null;
-            this.blueButton1.Location = new System.Drawing.Point(132, 20);
+            this.blueButton1.Location = new System.Drawing.Point(134, 17);
             this.blueButton1.Name = "blueButton1";
             this.blueButton1.SelectedItem = null;
             this.blueButton1.SelectedItemId = 0;
             this.blueButton1.Size = new System.Drawing.Size(57, 56);
             this.blueButton1.TabIndex = 2;
+            this.blueButton1.Tag = 1;
             this.blueButton1.Text = "Blue";
             this.blueButton1.UseVisualStyleBackColor = false;
             // 
@@ -158,12 +167,13 @@
             this.yellowButton1.Character = null;
             this.yellowButton1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
             this.yellowButton1.ItemIcon = null;
-            this.yellowButton1.Location = new System.Drawing.Point(69, 19);
+            this.yellowButton1.Location = new System.Drawing.Point(71, 17);
             this.yellowButton1.Name = "yellowButton1";
             this.yellowButton1.SelectedItem = null;
             this.yellowButton1.SelectedItemId = 0;
             this.yellowButton1.Size = new System.Drawing.Size(57, 56);
             this.yellowButton1.TabIndex = 1;
+            this.yellowButton1.Tag = 1;
             this.yellowButton1.Text = "Yellow";
             this.yellowButton1.UseVisualStyleBackColor = false;
             // 
@@ -173,29 +183,314 @@
             this.redButton1.Character = null;
             this.redButton1.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
             this.redButton1.ItemIcon = null;
-            this.redButton1.Location = new System.Drawing.Point(6, 19);
+            this.redButton1.Location = new System.Drawing.Point(8, 17);
             this.redButton1.Name = "redButton1";
             this.redButton1.SelectedItem = null;
             this.redButton1.SelectedItemId = 0;
             this.redButton1.Size = new System.Drawing.Size(57, 56);
             this.redButton1.TabIndex = 0;
+            this.redButton1.Tag = 1;
             this.redButton1.Text = "Red";
             this.redButton1.UseVisualStyleBackColor = false;
+            // 
+            // button7
+            // 
+            this.button7.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.button7.Location = new System.Drawing.Point(436, 89);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(51, 33);
+            this.button7.TabIndex = 13;
+            this.button7.Text = "Cancel";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.CancelButton_Click);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.removeButton2);
+            this.groupBox2.Controls.Add(this.metaButton2);
+            this.groupBox2.Controls.Add(this.blueButton2);
+            this.groupBox2.Controls.Add(this.yellowButton2);
+            this.groupBox2.Controls.Add(this.redButton2);
+            this.groupBox2.Location = new System.Drawing.Point(4, 128);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(337, 80);
+            this.groupBox2.TabIndex = 14;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Tag = 2;
+            this.groupBox2.Text = "Gemming #2";
+            // 
+            // removeButton2
+            // 
+            this.removeButton2.Location = new System.Drawing.Point(267, 34);
+            this.removeButton2.Name = "removeButton2";
+            this.removeButton2.Size = new System.Drawing.Size(56, 19);
+            this.removeButton2.TabIndex = 4;
+            this.removeButton2.Tag = 2;
+            this.removeButton2.Text = "Remove";
+            this.removeButton2.UseVisualStyleBackColor = true;
+            this.removeButton2.Click += new System.EventHandler(this.buttonRemoveGemming_Click);
+            // 
+            // metaButton2
+            // 
+            this.metaButton2.Character = null;
+            this.metaButton2.CharacterSlot = Rawr.Character.CharacterSlot.Metas;
+            this.metaButton2.ItemIcon = null;
+            this.metaButton2.Location = new System.Drawing.Point(197, 17);
+            this.metaButton2.Name = "metaButton2";
+            this.metaButton2.SelectedItem = null;
+            this.metaButton2.SelectedItemId = 0;
+            this.metaButton2.Size = new System.Drawing.Size(57, 56);
+            this.metaButton2.TabIndex = 3;
+            this.metaButton2.Tag = 2;
+            this.metaButton2.Text = "Meta";
+            this.metaButton2.UseVisualStyleBackColor = true;
+            // 
+            // blueButton2
+            // 
+            this.blueButton2.BackColor = System.Drawing.Color.Blue;
+            this.blueButton2.Character = null;
+            this.blueButton2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.blueButton2.ItemIcon = null;
+            this.blueButton2.Location = new System.Drawing.Point(134, 17);
+            this.blueButton2.Name = "blueButton2";
+            this.blueButton2.SelectedItem = null;
+            this.blueButton2.SelectedItemId = 0;
+            this.blueButton2.Size = new System.Drawing.Size(57, 56);
+            this.blueButton2.TabIndex = 2;
+            this.blueButton2.Tag = 2;
+            this.blueButton2.Text = "Blue";
+            this.blueButton2.UseVisualStyleBackColor = false;
+            // 
+            // yellowButton2
+            // 
+            this.yellowButton2.BackColor = System.Drawing.Color.Yellow;
+            this.yellowButton2.Character = null;
+            this.yellowButton2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.yellowButton2.ItemIcon = null;
+            this.yellowButton2.Location = new System.Drawing.Point(71, 17);
+            this.yellowButton2.Name = "yellowButton2";
+            this.yellowButton2.SelectedItem = null;
+            this.yellowButton2.SelectedItemId = 0;
+            this.yellowButton2.Size = new System.Drawing.Size(57, 56);
+            this.yellowButton2.TabIndex = 1;
+            this.yellowButton2.Tag = 2;
+            this.yellowButton2.Text = "Yellow";
+            this.yellowButton2.UseVisualStyleBackColor = false;
+            // 
+            // redButton2
+            // 
+            this.redButton2.BackColor = System.Drawing.Color.Red;
+            this.redButton2.Character = null;
+            this.redButton2.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.redButton2.ItemIcon = null;
+            this.redButton2.Location = new System.Drawing.Point(8, 17);
+            this.redButton2.Name = "redButton2";
+            this.redButton2.SelectedItem = null;
+            this.redButton2.SelectedItemId = 0;
+            this.redButton2.Size = new System.Drawing.Size(57, 56);
+            this.redButton2.TabIndex = 0;
+            this.redButton2.Tag = 2;
+            this.redButton2.Text = "Red";
+            this.redButton2.UseVisualStyleBackColor = false;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.removeButton3);
+            this.groupBox3.Controls.Add(this.metaButton3);
+            this.groupBox3.Controls.Add(this.blueButton3);
+            this.groupBox3.Controls.Add(this.yellowButton3);
+            this.groupBox3.Controls.Add(this.redButton3);
+            this.groupBox3.Location = new System.Drawing.Point(4, 213);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(337, 80);
+            this.groupBox3.TabIndex = 13;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Tag = 3;
+            this.groupBox3.Text = "Gemming #3";
+            // 
+            // removeButton3
+            // 
+            this.removeButton3.Location = new System.Drawing.Point(267, 34);
+            this.removeButton3.Name = "removeButton3";
+            this.removeButton3.Size = new System.Drawing.Size(56, 19);
+            this.removeButton3.TabIndex = 4;
+            this.removeButton3.Tag = 3;
+            this.removeButton3.Text = "Remove";
+            this.removeButton3.UseVisualStyleBackColor = true;
+            this.removeButton3.Click += new System.EventHandler(this.buttonRemoveGemming_Click);
+            // 
+            // metaButton3
+            // 
+            this.metaButton3.Character = null;
+            this.metaButton3.CharacterSlot = Rawr.Character.CharacterSlot.Metas;
+            this.metaButton3.ItemIcon = null;
+            this.metaButton3.Location = new System.Drawing.Point(197, 17);
+            this.metaButton3.Name = "metaButton3";
+            this.metaButton3.SelectedItem = null;
+            this.metaButton3.SelectedItemId = 0;
+            this.metaButton3.Size = new System.Drawing.Size(57, 56);
+            this.metaButton3.TabIndex = 3;
+            this.metaButton3.Tag = 3;
+            this.metaButton3.Text = "Meta";
+            this.metaButton3.UseVisualStyleBackColor = true;
+            // 
+            // blueButton3
+            // 
+            this.blueButton3.BackColor = System.Drawing.Color.Blue;
+            this.blueButton3.Character = null;
+            this.blueButton3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.blueButton3.ItemIcon = null;
+            this.blueButton3.Location = new System.Drawing.Point(134, 17);
+            this.blueButton3.Name = "blueButton3";
+            this.blueButton3.SelectedItem = null;
+            this.blueButton3.SelectedItemId = 0;
+            this.blueButton3.Size = new System.Drawing.Size(57, 56);
+            this.blueButton3.TabIndex = 2;
+            this.blueButton3.Tag = 3;
+            this.blueButton3.Text = "Blue";
+            this.blueButton3.UseVisualStyleBackColor = false;
+            // 
+            // yellowButton3
+            // 
+            this.yellowButton3.BackColor = System.Drawing.Color.Yellow;
+            this.yellowButton3.Character = null;
+            this.yellowButton3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.yellowButton3.ItemIcon = null;
+            this.yellowButton3.Location = new System.Drawing.Point(71, 17);
+            this.yellowButton3.Name = "yellowButton3";
+            this.yellowButton3.SelectedItem = null;
+            this.yellowButton3.SelectedItemId = 0;
+            this.yellowButton3.Size = new System.Drawing.Size(57, 56);
+            this.yellowButton3.TabIndex = 1;
+            this.yellowButton3.Tag = 3;
+            this.yellowButton3.Text = "Yellow";
+            this.yellowButton3.UseVisualStyleBackColor = false;
+            // 
+            // redButton3
+            // 
+            this.redButton3.BackColor = System.Drawing.Color.Red;
+            this.redButton3.Character = null;
+            this.redButton3.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.redButton3.ItemIcon = null;
+            this.redButton3.Location = new System.Drawing.Point(8, 17);
+            this.redButton3.Name = "redButton3";
+            this.redButton3.SelectedItem = null;
+            this.redButton3.SelectedItemId = 0;
+            this.redButton3.Size = new System.Drawing.Size(57, 56);
+            this.redButton3.TabIndex = 0;
+            this.redButton3.Tag = 3;
+            this.redButton3.Text = "Red";
+            this.redButton3.UseVisualStyleBackColor = false;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.removeButton4);
+            this.groupBox4.Controls.Add(this.metaButton4);
+            this.groupBox4.Controls.Add(this.blueButton4);
+            this.groupBox4.Controls.Add(this.yellowButton4);
+            this.groupBox4.Controls.Add(this.redButton4);
+            this.groupBox4.Location = new System.Drawing.Point(4, 298);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(337, 80);
+            this.groupBox4.TabIndex = 13;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Tag = 4;
+            this.groupBox4.Text = "Gemming #4";
+            // 
+            // removeButton4
+            // 
+            this.removeButton4.Location = new System.Drawing.Point(267, 34);
+            this.removeButton4.Name = "removeButton4";
+            this.removeButton4.Size = new System.Drawing.Size(56, 19);
+            this.removeButton4.TabIndex = 4;
+            this.removeButton4.Tag = 4;
+            this.removeButton4.Text = "Remove";
+            this.removeButton4.UseVisualStyleBackColor = true;
+            this.removeButton4.Click += new System.EventHandler(this.buttonRemoveGemming_Click);
+            // 
+            // metaButton4
+            // 
+            this.metaButton4.Character = null;
+            this.metaButton4.CharacterSlot = Rawr.Character.CharacterSlot.Metas;
+            this.metaButton4.ItemIcon = null;
+            this.metaButton4.Location = new System.Drawing.Point(197, 17);
+            this.metaButton4.Name = "metaButton4";
+            this.metaButton4.SelectedItem = null;
+            this.metaButton4.SelectedItemId = 0;
+            this.metaButton4.Size = new System.Drawing.Size(57, 56);
+            this.metaButton4.TabIndex = 3;
+            this.metaButton4.Tag = 4;
+            this.metaButton4.Text = "Meta";
+            this.metaButton4.UseVisualStyleBackColor = true;
+            // 
+            // blueButton4
+            // 
+            this.blueButton4.BackColor = System.Drawing.Color.Blue;
+            this.blueButton4.Character = null;
+            this.blueButton4.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.blueButton4.ItemIcon = null;
+            this.blueButton4.Location = new System.Drawing.Point(134, 17);
+            this.blueButton4.Name = "blueButton4";
+            this.blueButton4.SelectedItem = null;
+            this.blueButton4.SelectedItemId = 0;
+            this.blueButton4.Size = new System.Drawing.Size(57, 56);
+            this.blueButton4.TabIndex = 2;
+            this.blueButton4.Tag = 4;
+            this.blueButton4.Text = "Blue";
+            this.blueButton4.UseVisualStyleBackColor = false;
+            // 
+            // yellowButton4
+            // 
+            this.yellowButton4.BackColor = System.Drawing.Color.Yellow;
+            this.yellowButton4.Character = null;
+            this.yellowButton4.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.yellowButton4.ItemIcon = null;
+            this.yellowButton4.Location = new System.Drawing.Point(71, 17);
+            this.yellowButton4.Name = "yellowButton4";
+            this.yellowButton4.SelectedItem = null;
+            this.yellowButton4.SelectedItemId = 0;
+            this.yellowButton4.Size = new System.Drawing.Size(57, 56);
+            this.yellowButton4.TabIndex = 1;
+            this.yellowButton4.Tag = 4;
+            this.yellowButton4.Text = "Yellow";
+            this.yellowButton4.UseVisualStyleBackColor = false;
+            // 
+            // redButton4
+            // 
+            this.redButton4.BackColor = System.Drawing.Color.Red;
+            this.redButton4.Character = null;
+            this.redButton4.CharacterSlot = Rawr.Character.CharacterSlot.Gems;
+            this.redButton4.ItemIcon = null;
+            this.redButton4.Location = new System.Drawing.Point(8, 17);
+            this.redButton4.Name = "redButton4";
+            this.redButton4.SelectedItem = null;
+            this.redButton4.SelectedItemId = 0;
+            this.redButton4.Size = new System.Drawing.Size(57, 56);
+            this.redButton4.TabIndex = 0;
+            this.redButton4.Tag = 4;
+            this.redButton4.Text = "Red";
+            this.redButton4.UseVisualStyleBackColor = false;
             // 
             // FormMassGemReplacement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(496, 160);
+            this.ClientSize = new System.Drawing.Size(496, 128);
+            this.Controls.Add(this.groupBox4);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
+            this.Controls.Add(this.buttonAddGemming);
+            this.Controls.Add(this.OkButton);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label1);
             this.Name = "FormMassGemReplacement";
             this.Text = "FormMassGemReplacement";
             this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -209,11 +504,28 @@
         private Rawr.ItemButton metaButton1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button OkButton;
+        private System.Windows.Forms.Button buttonAddGemming;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.VScrollBar vScrollBar1;
         private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button removeButton1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button removeButton2;
+        private ItemButton metaButton2;
+        private ItemButton blueButton2;
+        private ItemButton yellowButton2;
+        private ItemButton redButton2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button removeButton3;
+        private ItemButton metaButton3;
+        private ItemButton blueButton3;
+        private ItemButton yellowButton3;
+        private ItemButton redButton3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button removeButton4;
+        private ItemButton metaButton4;
+        private ItemButton blueButton4;
+        private ItemButton yellowButton4;
+        private ItemButton redButton4;
     }
 }
