@@ -1768,7 +1768,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                         {
                                             if (coldsnap[j] == 1) lastColdsnap = j;
                                         }
-                                        if ((icyVeinsGroup != null && icyVeinsGroup.Duration > 20.0 + eps) || (waterElementalGroup != null && waterElementalGroup.Duration > 45.0 + eps))
+                                        if ((icyVeinsGroup != null && icyVeinsGroup.Duration > 20.0 + eps) || (waterElementalGroup != null && waterElementalGroup.Duration > SequenceItem.Calculations.WaterElementalDuration + eps))
                                         {
                                             // we need internal coldsnap
                                             if (coldsnap[i] == 1)
@@ -3374,7 +3374,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 evocationCooldown -= duration;
                 if (apActive && SequenceItem.Calculations.ArcanePowerDuration - (time - apTime) <= eps) apActive = false;
                 if (ivActive && 20 - (time - ivTime) <= eps) ivActive = false;
-                if (weActive && 45.0 - (time - weTime) <= eps) weActive = false;
+                if (weActive && SequenceItem.Calculations.WaterElementalDuration - (time - weTime) <= eps) weActive = false;
                 if (heroismActive && 40 - (time - heroismTime) <= eps) heroismActive = false;
                 if (destructionActive && 15 - (time - destructionTime) <= eps) destructionActive = false;
                 if (flameCapActive && 60 - (time - flameCapTime) <= eps) flameCapActive = false;

@@ -275,6 +275,10 @@ namespace Rawr.Mage
                 {
                     lp = currentNode.Lp;
                     solution = lp.Solve();
+                    if (currentNode.Depth > 100)
+                    {
+                        lp = lp; // investigate
+                    }
                     bool valid = IsLpValid();
                     if (valid)
                     {
@@ -417,7 +421,7 @@ namespace Rawr.Mage
                 }
                 if (valid && waterElementalAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? 45.0 : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration);
+                    valid = ValidateCooldown(Cooldown.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration);
                 }
                 // coldsnap
                 if (valid && icyVeinsAvailable && coldsnapAvailable)
@@ -1632,12 +1636,21 @@ namespace Rawr.Mage
             bool valid = true;
             double coldsnapTimeMin = double.NegativeInfinity;
             double coldsnapTimeMax = double.NegativeInfinity;
+            List<double> ivStart = new List<double>();
+            List<double> weStart = new List<double>();
+            double e1t1 = double.NegativeInfinity;
+            double e1t2 = double.NegativeInfinity;
+            Cooldown e1 = Cooldown.IcyVeins;
+            double e2t1 = double.NegativeInfinity;
+            double e2t2 = double.NegativeInfinity;
+            Cooldown e2 = Cooldown.IcyVeins;
             for (int seg = 0; seg < segments; seg++)
             {
                 if (!ivActive && ivCount[seg] > eps)
                 {
                     if (ivCooldown + ivCount[seg] > segmentDuration + eps)
                     {
+                        bool reuse = false;
                         // we need to coldsnap somewhere from [lastIVstart] and [(seg + 1) * segmentDuration - ivCount[seg]]
                         double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, lastIVstart);
                         double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, (seg + 1) * segmentDuration - ivCount[seg]);
@@ -1647,6 +1660,7 @@ namespace Rawr.Mage
                             coldsnapTimeMin = restrictedColdsnapMin;
                             coldsnapTimeMax = restrictedColdsnapMax;
                             ivCooldown = 0.0;
+                            reuse = true;
                         }
                         else if (calculationResult.ColdsnapCooldown - ((seg + 1) * segmentDuration - ivCount[seg] - coldsnapTimeMin) <= eps)
                         {
@@ -1658,10 +1672,28 @@ namespace Rawr.Mage
                         else
                         {
                             // coldsnap is not ready
+                            ivStart.Add((seg + 1) * segmentDuration - ivCount[seg]);
+                            e1 = e2;
+                            e1t1 = e2t1;
+                            e1t2 = e2t2;
+                            e2 = Cooldown.IcyVeins;
+                            e2t1 = ivStart[ivStart.Count - 2];
+                            e2t2 = ivStart[ivStart.Count - 1];
                             valid = false;
                             break;
                         }
                         double ivActivation = Math.Max(coldsnapTimeMin, seg * segmentDuration);
+                        if (seg + 1 < segments && ivCount[seg + 1] > 0) ivActivation = Math.Max(coldsnapTimeMin, (seg + 1) * segmentDuration - ivCount[seg]);
+                        ivStart.Add(ivActivation);
+                        if (!reuse)
+                        {
+                            e1 = e2;
+                            e1t1 = e2t1;
+                            e1t2 = e2t2;
+                            e2 = Cooldown.IcyVeins;
+                            e2t1 = ivStart[ivStart.Count - 2];
+                            e2t2 = ivStart[ivStart.Count - 1];
+                        }
                         ivCooldown = calculationResult.IcyVeinsCooldown + ivActivation - seg * segmentDuration;
                         ivActive = true;
                         lastIVstart = ivActivation;
@@ -1671,6 +1703,7 @@ namespace Rawr.Mage
                         // start as soon as possible
                         double ivActivation = Math.Max(seg * segmentDuration + ivCooldown, seg * segmentDuration);
                         if (seg + 1 < segments && ivCount[seg + 1] > 0) ivActivation = (seg + 1) * segmentDuration - ivCount[seg];
+                        ivStart.Add(ivActivation);
                         ivCooldown = calculationResult.IcyVeinsCooldown + ivActivation - seg * segmentDuration;
                         ivActive = true;
                         lastIVstart = ivActivation;
@@ -1691,6 +1724,13 @@ namespace Rawr.Mage
                                 coldsnapTimeMin = restrictedColdsnapMin;
                                 coldsnapTimeMax = restrictedColdsnapMax;
                                 lastIVstart += 20.0;
+                                ivStart.Add(lastIVstart);
+                                //e1 = e2;
+                                //e1t1 = e2t1;
+                                //e1t2 = e2t2;
+                                //e2 = Cooldown.IcyVeins;
+                                //e2t1 = ivStart[ivStart.Count - 2];
+                                //e2t2 = ivStart[ivStart.Count - 1];
                                 ivCooldown += 20.0;
                             }
                             else if (calculationResult.ColdsnapCooldown + coldsnapTimeMin <= lastIVstart + 20.0 + eps)
@@ -1698,11 +1738,33 @@ namespace Rawr.Mage
                                 coldsnapTimeMin = Math.Max(coldsnapTimeMin + calculationResult.ColdsnapCooldown, lastIVstart);
                                 coldsnapTimeMax = lastIVstart + 20.0;
                                 lastIVstart += 20.0;
+                                if (ivCount[seg] >= 20.0 - eps && ivCount[seg] <= 20.0 + eps)
+                                {
+                                    // VERY VERY special case, experimental
+                                    // this IV has room to move around a bit and placing it at the very start
+                                    // in many cases causes bad coldsnap interaction with WE, so nudge it a bit
+                                    coldsnapTimeMax += calculationResult.BaseState.GlobalCooldown;
+                                    lastIVstart += calculationResult.BaseState.GlobalCooldown;
+                                }
+                                ivStart.Add(lastIVstart);
+                                e1 = e2;
+                                e1t1 = e2t1;
+                                e1t2 = e2t2;
+                                e2 = Cooldown.IcyVeins;
+                                e2t1 = ivStart[ivStart.Count - 2];
+                                e2t2 = ivStart[ivStart.Count - 1];
                                 ivCooldown += 20.0;
                             }
                             if (seg * segmentDuration + ivCount[seg] > lastIVstart + 20.0 + eps)
                             {
                                 // we need to coldsnap iv, but it is on cooldown
+                                ivStart.Add(lastIVstart + 20.0);
+                                e1 = e2;
+                                e1t1 = e2t1;
+                                e1t2 = e2t2;
+                                e2 = Cooldown.IcyVeins;
+                                e2t1 = ivStart[ivStart.Count - 2];
+                                e2t2 = ivStart[ivStart.Count - 1];
                                 valid = false;
                                 break;
                             }
@@ -1717,6 +1779,7 @@ namespace Rawr.Mage
                 {
                     if (weCooldown + weCount[seg] > segmentDuration + eps)
                     {
+                        bool reuse = false;
                         // we need to coldsnap somewhere from [lastWEstart] and [(seg + 1) * segmentDuration - weCount[seg]]
                         double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, lastWEstart);
                         double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, (seg + 1) * segmentDuration - weCount[seg]);
@@ -1726,6 +1789,7 @@ namespace Rawr.Mage
                             coldsnapTimeMin = restrictedColdsnapMin;
                             coldsnapTimeMax = restrictedColdsnapMax;
                             weCooldown = 0.0;
+                            reuse = true;
                         }
                         else if (calculationResult.ColdsnapCooldown - ((seg + 1) * segmentDuration - weCount[seg] - coldsnapTimeMin) <= eps)
                         {
@@ -1737,10 +1801,28 @@ namespace Rawr.Mage
                         else
                         {
                             // coldsnap is not ready
+                            weStart.Add((seg + 1) * segmentDuration - weCount[seg]);
+                            e1 = e2;
+                            e1t1 = e2t1;
+                            e1t2 = e2t2;
+                            e2 = Cooldown.WaterElemental;
+                            e2t1 = weStart[weStart.Count - 2];
+                            e2t2 = weStart[weStart.Count - 1];
                             valid = false;
                             break;
                         }
                         double weActivation = Math.Max(coldsnapTimeMin, seg * segmentDuration);
+                        if (seg + 1 < segments && weCount[seg + 1] > 0) weActivation = Math.Max(coldsnapTimeMin, (seg + 1) * segmentDuration - weCount[seg]);
+                        weStart.Add(weActivation);
+                        if (!reuse)
+                        {
+                            e1 = e2;
+                            e1t1 = e2t1;
+                            e1t2 = e2t2;
+                            e2 = Cooldown.WaterElemental;
+                            e2t1 = weStart[weStart.Count - 2];
+                            e2t2 = weStart[weStart.Count - 1];
+                        }
                         weCooldown = calculationResult.WaterElementalCooldown + weActivation - seg * segmentDuration;
                         weActive = true;
                         lastWEstart = weActivation;
@@ -1750,6 +1832,7 @@ namespace Rawr.Mage
                         // start as soon as possible
                         double weActivation = Math.Max(seg * segmentDuration + weCooldown, seg * segmentDuration);
                         if (seg + 1 < segments && weCount[seg + 1] > 0) weActivation = (seg + 1) * segmentDuration - weCount[seg];
+                        weStart.Add(weActivation);
                         weCooldown = calculationResult.WaterElementalCooldown + weActivation - seg * segmentDuration;
                         weActive = true;
                         lastWEstart = weActivation;
@@ -1759,29 +1842,50 @@ namespace Rawr.Mage
                 {
                     if (weCount[seg] > 0.0)
                     {
-                        if (seg * segmentDuration + weCount[seg] > lastWEstart + 45.0 + eps)
+                        if (seg * segmentDuration + weCount[seg] > lastWEstart + calculationResult.WaterElementalDuration + eps)
                         {
                             // we need to coldsnap somewhere from [weTime] and [weTime + 45]
                             double restrictedColdsnapMin = Math.Max(coldsnapTimeMin, lastWEstart);
-                            double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, lastWEstart + 45.0);
+                            double restrictedColdsnapMax = Math.Min(coldsnapTimeMax, lastWEstart + calculationResult.WaterElementalDuration);
                             if (restrictedColdsnapMax > restrictedColdsnapMin + eps)
                             {
                                 // we can reuse last coldsnap
                                 coldsnapTimeMin = restrictedColdsnapMin;
                                 coldsnapTimeMax = restrictedColdsnapMax;
-                                lastWEstart += 45.0;
-                                weCooldown += 45.0;
+                                lastWEstart += calculationResult.WaterElementalDuration;
+                                weStart.Add(lastWEstart);
+                                //e1 = e2;
+                                //e1t1 = e2t1;
+                                //e1t2 = e2t2;
+                                //e2 = Cooldown.WaterElemental;
+                                //e2t1 = weStart[weStart.Count - 2];
+                                //e2t2 = weStart[weStart.Count - 1];
+                                weCooldown += calculationResult.WaterElementalDuration;
                             }
-                            else if (calculationResult.ColdsnapCooldown + coldsnapTimeMin <= lastWEstart + 45.0 + eps)
+                            else if (calculationResult.ColdsnapCooldown + coldsnapTimeMin <= lastWEstart + calculationResult.WaterElementalDuration + eps)
                             {
                                 coldsnapTimeMin = Math.Max(coldsnapTimeMin + calculationResult.ColdsnapCooldown, lastWEstart);
-                                coldsnapTimeMax = lastWEstart + 45.0;
-                                lastWEstart += 45.0;
-                                weCooldown += 45.0;
+                                coldsnapTimeMax = lastWEstart + calculationResult.WaterElementalDuration;
+                                lastWEstart += calculationResult.WaterElementalDuration;
+                                weStart.Add(lastWEstart);
+                                e1 = e2;
+                                e1t1 = e2t1;
+                                e1t2 = e2t2;
+                                e2 = Cooldown.WaterElemental;
+                                e2t1 = weStart[weStart.Count - 2];
+                                e2t2 = weStart[weStart.Count - 1];
+                                weCooldown += calculationResult.WaterElementalDuration;
                             }
-                            if (seg * segmentDuration + weCount[seg] > lastWEstart + 45.0 + eps)
+                            if (seg * segmentDuration + weCount[seg] > lastWEstart + calculationResult.WaterElementalDuration + eps)
                             {
                                 // we need to coldsnap iv, but it is on cooldown
+                                weStart.Add(lastWEstart + calculationResult.WaterElementalDuration);
+                                e1 = e2;
+                                e1t1 = e2t1;
+                                e1t2 = e2t2;
+                                e2 = Cooldown.WaterElemental;
+                                e2t1 = weStart[weStart.Count - 2];
+                                e2t2 = weStart[weStart.Count - 1];
                                 valid = false;
                                 break;
                             }
@@ -1797,83 +1901,248 @@ namespace Rawr.Mage
             }
             if (!valid)
             {
-                return true; // TEMP
-                EnsureColdsnapConstraints();
-                int coldsnapSegment = (int)(coldsnapTimeMin / segmentDuration);
-                // branch on whether we have coldsnap in this segment or not
-                SolverLP coldsnapUsedIntra = lp.Clone();
-                SolverLP coldsnapUsedExtra = lp.Clone();
-                SolverLP zerolp = lp.Clone();
-                // if we don't use coldsnap then this segment should be either zeroed or we have to restrict the segments until next iv (I think (tm))
-                if (lp.Log != null) lp.Log.AppendLine("No coldsnap in " + coldsnapSegment + ", restrict segments until next IV");
-                for (int seg = coldsnapSegment; seg < Math.Min(coldsnapSegment + (int)Math.Ceiling(calculationResult.IcyVeinsCooldown / segmentDuration) + 1, segments + (int)(180.0 / segmentDuration) - 1); seg++) // it's possible we're overrestricting here, might have to add another branch where we go to one less but zero out seg+1
+                // there are three possible constructions that are not valid
+                // 3 consecutive activations of same cooldown
+                // 2 pairs of activations of same cooldown
+                // 2 pairs of activations of different cooldowns
+                // each configuration has a different way to resolve infeasibility
+
+                // TODO right now this should have an exhaustive coverage of all the cases
+                // but might not be ideal for branching, examine branching behavior and optimize
+
+                // in some cases reusing of coldsnap for two effects will miss the fact that we have coldsnap problem within the same cooldown
+                // those should have priority, because if they are not resolved they cause problem with estimating cross cooldown behavior
+                if (e1 != e2)
                 {
-                    lp.UpdateColdsnapDuration(seg, 20.0);
-                }
-                HeapPush(lp);
-                if (zerolp.Log != null) zerolp.Log.AppendLine("No coldsnap in " + coldsnapSegment + ", zero segment");
-                for (int index = segmentColumn[coldsnapSegment]; index < segmentColumn[coldsnapSegment + 1]; index++)
-                {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    if (state != null && state.GetCooldown(Cooldown.IcyVeins)) zerolp.EraseColumn(index);
-                }
-                HeapPush(zerolp);
-                // coldsnap used extra
-                // the segments for the duration of one IV can be loose, but all after that have to be restricted until coldsnap is ready
-                // TODO this needs some heavy testing, I don't see what case this corresponded to, removing for now
-                int firstRestrictedSeg = coldsnapSegment + 1 + (int)Math.Ceiling(calculationResult.IcyVeinsCooldown / segmentDuration);
-                int nextPossibleColdsnap = coldsnapSegment + (int)(calculationResult.ColdsnapCooldown / segmentDuration);
-                int segLimit = Math.Min(segments + (int)(calculationResult.IcyVeinsCooldown / segmentDuration) - 1, nextPossibleColdsnap);
-                /*if (coldsnapUsedExtra.Log != null) coldsnapUsedExtra.Log.AppendLine("Use coldsnap in " + coldsnapSegment + ", extra");
-                coldsnapUsedExtra.UpdateColdsnapDuration(coldsnapSegment, 20.0);
-                for (int seg = firstRestrictedSeg; seg < segLimit; seg++)
-                {
-                    coldsnapUsedExtra.UpdateColdsnapDuration(seg, 20.0);
-                }
-                HeapPush(coldsnapUsedExtra);*/
-                if (coldsnapUsedIntra.Log != null) coldsnapUsedIntra.Log.AppendLine("Use coldsnap in " + coldsnapSegment + ", intra");
-                for (int seg = Math.Min(coldsnapSegment + 2, segments - 1); seg < coldsnapSegment + (int)(calculationResult.IcyVeinsCooldown / segmentDuration); seg++)
-                {
-                    for (int index = segmentColumn[seg]; index < segmentColumn[seg + 1]; index++)
+                    int firstColdsnap = -1;
+                    for (int i = 0; i < ivStart.Count - 1; i++)
                     {
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (state != null && state.GetCooldown(Cooldown.IcyVeins)) coldsnapUsedIntra.EraseColumn(index);
-                    }
-                }
-                for (int seg = firstRestrictedSeg; seg < segLimit; seg++)
-                {
-                    coldsnapUsedIntra.UpdateColdsnapDuration(seg, 20.0);
-                }
-                // additionally need a constraint that restricts where the next IV can start, due to coarse grained resolution of fragmentation
-                // warning: this part of code relies on seg duration = 30
-                if (coldsnapSegment + (int)(calculationResult.IcyVeinsCooldown / segmentDuration) < segments)
-                {
-                    int row = coldsnapUsedIntra.AddConstraint(false);
-                    int outseg = coldsnapSegment;
-                    for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                    {
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (state != null && state.GetCooldown(Cooldown.IcyVeins))
+                        if (ivStart[i + 1] - ivStart[i] < calculationResult.IcyVeinsCooldown - eps)
                         {
-                            coldsnapUsedIntra.SetConstraintElement(row, index, -1.0);
+                            if (firstColdsnap == -1)
+                            {
+                                firstColdsnap = i;
+                            }
+                            else
+                            {
+                                if (ivStart[i + 1] - ivStart[firstColdsnap] < calculationResult.ColdsnapCooldown - eps)
+                                {
+                                    // we have intra cooldown problem
+                                    e1t1 = ivStart[firstColdsnap];
+                                    e1t2 = ivStart[firstColdsnap + 1];
+                                    e2t1 = ivStart[i];
+                                    e2t2 = ivStart[i + 1];
+                                    e1 = Cooldown.IcyVeins;
+                                    e2 = Cooldown.IcyVeins;
+                                    break;
+                                }
+                                else
+                                {
+                                    firstColdsnap = i;
+                                }
+                            }
                         }
                     }
-                    outseg = coldsnapSegment + (int)(calculationResult.IcyVeinsCooldown / segmentDuration); // TODO rethink for seg != 30
-                    for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
+                    if (e1 != e2)
                     {
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (state != null && state.GetCooldown(Cooldown.IcyVeins))
+                        firstColdsnap = -1;
+                        for (int i = 0; i < weStart.Count - 1; i++)
                         {
-                            coldsnapUsedIntra.SetConstraintElement(row, index, 1.0);
+                            if (weStart[i + 1] - weStart[i] < calculationResult.WaterElementalCooldown - eps)
+                            {
+                                if (firstColdsnap == -1)
+                                {
+                                    firstColdsnap = i;
+                                }
+                                else
+                                {
+                                    if (weStart[i + 1] - weStart[firstColdsnap] < calculationResult.ColdsnapCooldown - eps)
+                                    {
+                                        // we have intra cooldown problem
+                                        e1t1 = weStart[firstColdsnap];
+                                        e1t2 = weStart[firstColdsnap + 1];
+                                        e2t1 = weStart[i];
+                                        e2t2 = weStart[i + 1];
+                                        e1 = Cooldown.WaterElemental;
+                                        e2 = Cooldown.WaterElemental;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        firstColdsnap = i;
+                                    }
+                                }
+                            }
                         }
                     }
-                    coldsnapUsedIntra.SetConstraintRHS(row, -20.0);
-                    coldsnapUsedIntra.ForceRecalculation(true);
                 }
-                HeapPush(coldsnapUsedIntra);
+
+                if (e1 == e2)
+                {
+                    // 2 pairs of activations of same cooldown, t3 can be equal to t2
+                    double t1 = e1t1;
+                    double t2 = e1t2;
+                    double t3 = e2t1;
+                    double t4 = e2t2;
+                    Cooldown e = e1;
+                    double c = (e == Cooldown.IcyVeins) ? calculationResult.IcyVeinsCooldown : calculationResult.WaterElementalCooldown;
+                    double d = (e == Cooldown.IcyVeins) ? 20.0 : calculationResult.WaterElementalDuration;
+
+                    // branch on one of the conditions responsible for infeasibility
+                    // t2 - t1 < c1
+                    RemoveColdsnapActivation(t1, e, c, d);
+                    // t4 - t3 < c2
+                    RemoveColdsnapActivation(t3, e, c, d);
+                    // t4 - t1 < cs
+                    // cs is at least 384 sec
+                    // notice that t3 >= t2, then t4 - t1 <= (t4 - t3) + (t2 - t1)
+                    // to break this condition at least one of pairs has to be at min 192 sec apart
+                    // since IV and WE cooldown is 180 sec at most this means that breaking this
+                    // constraint automatically breaks one of the other constraints also
+                }
+                else
+                {
+                    // 2 pairs of activations of different cooldowns
+                    double t1 = e1t1;
+                    double t2 = e1t2;
+                    double t3 = e2t1;
+                    double t4 = e2t2;
+                    double c1 = (e1 == Cooldown.IcyVeins) ? calculationResult.IcyVeinsCooldown : calculationResult.WaterElementalCooldown;
+                    double d1 = (e1 == Cooldown.IcyVeins) ? 20.0 : calculationResult.WaterElementalDuration;
+                    double c2 = (e2 == Cooldown.IcyVeins) ? calculationResult.IcyVeinsCooldown : calculationResult.WaterElementalCooldown;
+                    double d2 = (e2 == Cooldown.IcyVeins) ? 20.0 : calculationResult.WaterElementalDuration;
+
+                    // branch on one of the conditions responsible for infeasibility
+                    // t2 - t1 < c1
+                    RemoveColdsnapActivation(t1, e1, c1, d1);
+                    // t4 - t3 < c2
+                    RemoveColdsnapActivation(t3, e2, c2, d2);
+                    // t3 >= t2
+                    // [----]             [-----]
+                    //                      [------------][-------------]
+                    int seg2 = (int)((t2 + eps) / segmentDuration);
+                    int seg3 = (int)((t3 + eps) / segmentDuration);
+                    // assume e2 will start in seg3, if it does not that is already examined in t4 - t3 < c2 case
+                    // so in this case we have to force e1 to not start before seg3
+                    SolverLP branchlp = lp.Clone();
+                    if (branchlp.Log != null) branchlp.Log.AppendLine("Force shared coldsnap activation after " + seg3);
+                    if (seg2 < seg3) DisableCooldown(branchlp, e1, seg2, seg3 - 1);
+                    // make sure t2 is after t3
+                    // but it has to be at least a gcd later, or we won't have enough room to coldsnap
+                    // t2 = (seg3 + 1) * segmentDuration - count1[seg3]
+                    // t3 = (seg3 + 1) * segmentDuration - count2[seg3]
+                    // count1[seg3] - count2[seg3] <= - gcd
+                    int row = branchlp.AddConstraint(false);
+                    SetCooldownElements(branchlp, row, e1, seg3, 1.0);
+                    SetCooldownElements(branchlp, row, e2, seg3, -1.0);
+                    branchlp.SetConstraintRHS(row, -calculationResult.BaseState.GlobalCooldown);
+                    branchlp.ForceRecalculation(true);
+                    HeapPush(branchlp);
+                    if (e2 == Cooldown.IcyVeins)
+                    {
+                        // in this case we have an additional option to nudge IV not to cross segments
+                        branchlp = lp.Clone();
+                        if (branchlp.Log != null) branchlp.Log.AppendLine("Force shared coldsnap activation after " + seg3 + ", nudge IV");
+                        if (seg2 < seg3) DisableCooldown(branchlp, e1, seg2, seg3 - 1);
+                        DisableCooldown(branchlp, e2, seg3 + 1);
+                        HeapPush(branchlp);
+                    }
+                    // t4 - t1 < cs
+                    // cs is at least 384 sec
+                    // if t3 >= t2, then similar to above at least one pair has to be 192 sec apart
+                    // if not then the t3 >= t2 condition is broken, so we can ignore this constraint in this case also
+                }
                 return false;
             }
             return valid;
+        }
+
+        private void RemoveColdsnapActivation(double firstEffectActivation, Cooldown effect, double effectCooldown, double effectDuration)
+        {
+            const double eps = 0.000001;
+            int seg1 = (int)((firstEffectActivation + eps) / segmentDuration);
+            int seg2 = seg1 + (int)((effectCooldown + eps) / segmentDuration);
+            SolverLP branchlp;
+
+            // if first activation stays in seg1 then restrict the next activation
+            RestrictConsecutiveActivation(effect, effectCooldown, effectDuration, seg1);
+            // if first activation moves to seg1 - 1
+            RestrictConsecutiveActivation(effect, effectCooldown, effectDuration, seg1 - 1);
+            // otherwise effect is either started at or before seg1 - 2
+            // in this case the last segment with effect is (seg1 - 1) + d / segmentDuration
+            int segmin = (int)Math.Ceiling((seg1 - 1) + effectDuration / segmentDuration - eps);
+            if (segmin > seg1)
+            {
+                branchlp = lp.Clone();
+                if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict coldsnap after " + effect + " at " + seg1 + ", move first activation left");
+                DisableCooldown(branchlp, effect, segmin, (seg1 - 1) + (int)((effectCooldown + eps) / segmentDuration));
+                HeapPush(branchlp);
+            }
+            // or there is no effect in seg1
+            branchlp = lp.Clone();
+            if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict coldsnap after " + effect + " at " + seg1 + ", remove effect");
+            DisableCooldown(branchlp, effect, seg1);
+            HeapPush(branchlp);
+        }
+
+        private void RestrictConsecutiveActivation(Cooldown effect, double effectCooldown, double effectDuration, int firstActivationSegment)
+        {
+            const double eps = 0.000001;
+            SolverLP branchlp = lp.Clone();
+            int seg2 = firstActivationSegment + (int)((effectCooldown + eps) / segmentDuration);
+            if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + firstActivationSegment);
+            // first make sure that second activation is not too close
+            int row = branchlp.AddConstraint(false);
+            SetCooldownElements(branchlp, row, effect, firstActivationSegment, seg2 - 1, 1.0);
+            branchlp.SetConstraintRHS(row, effectDuration);
+            // make sure there is enough distance between the activations
+            // t1 = (seg1 + 1) * segmentDuration - count[seg1]
+            // t2 = (seg2 + 1) * segmentDuration - count[seg2]
+            // this will potentially overrestrict for IV because effect duration is less than segment duration
+            // in that case make another case for t1 = seg1 * segmentDuration, but must make sure that seg1 + 1 does not have IV
+            // count[seg2] - count[seg1] <= (seg2 - seg1) * segmentDuration - c
+            row = branchlp.AddConstraint(false);
+            SetCooldownElements(branchlp, row, effect, firstActivationSegment, -1.0);
+            SetCooldownElements(branchlp, row, effect, seg2, 1.0);
+            branchlp.SetConstraintRHS(row, (seg2 - firstActivationSegment) * segmentDuration - effectCooldown);
+            branchlp.ForceRecalculation(true);
+            HeapPush(branchlp);
+        }
+
+        private void SetCooldownElements(SolverLP branchlp, int row, Cooldown cooldown, int segment, double value)
+        {
+            SetCooldownElements(branchlp, row, cooldown, segment, segment, value);
+        }
+
+        private void SetCooldownElements(SolverLP branchlp, int row, Cooldown cooldown, int minSegment, int maxSegment, double value)
+        {
+            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+            {
+                CastingState state = calculationResult.SolutionVariable[index].State;
+                if (state != null && state.GetCooldown(cooldown))
+                {
+                    int seg = calculationResult.SolutionVariable[index].Segment;
+                    if (seg >= minSegment && seg <= maxSegment) branchlp.SetConstraintElement(row, index, value);
+                }
+            }
+        }
+
+        private void DisableCooldown(SolverLP branchlp, Cooldown cooldown, int segment)
+        {
+            DisableCooldown(branchlp, cooldown, segment, segment);
+        }
+
+        private void DisableCooldown(SolverLP branchlp, Cooldown cooldown, int minSegment, int maxSegment)
+        {
+            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+            {
+                CastingState state = calculationResult.SolutionVariable[index].State;
+                if (state != null && state.GetCooldown(cooldown))
+                {
+                    int seg = calculationResult.SolutionVariable[index].Segment;
+                    if (seg >= minSegment && seg <= maxSegment) branchlp.EraseColumn(index);
+                }
+            }
         }
 
         private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration)

@@ -111,6 +111,21 @@ namespace Rawr.Mage
             //_betaBackup = new double[maxRows];
         }
 
+        private static void ExtendArrays()
+        {
+            _d = new double[maxRows];
+            _x = new double[maxRows];
+            _w = new double[maxRows];
+            _ww = new double[maxRows];
+            _u = new double[maxRows];
+            _c = new double[maxCols];
+            double[] tmp = new double[maxCols + maxRows];
+            _cost.CopyTo(tmp, 0);
+            _cost = tmp;
+            tmp = new double[maxCols + maxRows];
+            _costWorking.CopyTo(tmp, 0);
+            _costWorking = tmp;
+        }
 
         public LP Clone()
         {
@@ -295,6 +310,11 @@ namespace Rawr.Mage
             }
             numExtraConstraints++;
             rows++;
+            if (rows > maxRows)
+            {
+                maxRows = rows + 10;
+                ExtendArrays();
+            }
             double[] newArray = new double[(cols + 1) * numExtraConstraints];
             if (extraConstraints != null) Array.Copy(extraConstraints, newArray, cols * (numExtraConstraints - 1));
             extraConstraints = newArray;

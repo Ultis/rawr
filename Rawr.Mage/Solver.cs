@@ -1190,7 +1190,7 @@ namespace Rawr.Mage
 
         private void SetProblemRHS()
         {
-            int coldsnapCount = coldsnapAvailable ? (1 + (int)((calculationOptions.FightDuration - 45f) / calculationResult.ColdsnapCooldown)) : 0;
+            int coldsnapCount = coldsnapAvailable ? (1 + (int)((calculationOptions.FightDuration - calculationResult.WaterElementalDuration) / calculationResult.ColdsnapCooldown)) : 0;
 
             // water elemental
             double weDuration = 0.0;

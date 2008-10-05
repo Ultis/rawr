@@ -302,10 +302,10 @@ namespace Rawr.Mage
             dictValues.Add("Armor", BaseStats.Armor.ToString());
             dictValues.Add("Health", BaseStats.Health.ToString());
             dictValues.Add("Mana", BaseStats.Mana.ToString());
-            dictValues.Add("Spell Crit Rate", String.Format("{0:F}%*{1} Spell Crit Rating", 100 * BaseState.SpellCrit, BaseStats.CritRating));
-            dictValues.Add("Spell Hit Rate", String.Format("{0:F}%*{1} Spell Hit Rating", 100 * BaseState.SpellHit, BaseStats.HitRating));
+            dictValues.Add("Crit Rate", String.Format("{0:F}%*{1} Crit Rating", 100 * BaseState.SpellCrit, BaseStats.CritRating));
+            dictValues.Add("Hit Rate", String.Format("{0:F}%*{1} Hit Rating", 100 * BaseState.SpellHit, BaseStats.HitRating));
             dictValues.Add("Spell Penetration", BaseStats.SpellPenetration.ToString());
-            dictValues.Add("Casting Speed", String.Format("{0}*{1} Spell Haste Rating", BaseState.CastingSpeed, BaseState.SpellHasteRating));
+            dictValues.Add("Casting Speed", String.Format("{0}*{1} Haste Rating", BaseState.CastingSpeed, BaseState.SpellHasteRating));
             dictValues.Add("Arcane Damage", BaseState.ArcaneDamage.ToString());
             dictValues.Add("Fire Damage", BaseState.FireDamage.ToString());
             dictValues.Add("Frost Damage", BaseState.FrostDamage.ToString());
@@ -489,10 +489,10 @@ namespace Rawr.Mage
                     return BaseStats.ArcaneResistance;
                 case "Chance to Live":
                     return 100 * (1 - ChanceToDie);
-                case "Spell Hit Rating":
+                case "Hit Rating":
                     return BaseStats.HitRating;
-                case "Spell Haste Rating":
-                    return BaseStats.SpellHasteRating;
+                case "Haste Rating":
+                    return BaseStats.HasteRating;
                 case "PVP Trinket":
                     return BaseStats.PVPTrinket;
                 case "Movement Speed":

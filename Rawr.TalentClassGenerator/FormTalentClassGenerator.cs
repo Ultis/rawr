@@ -168,7 +168,7 @@ namespace Rawr
 			code.Append("List<int> data = new List<int>();\r\n");
 			code.Append("foreach (Char digit in talents)\r\n");
 			code.Append("data.Add(int.Parse(digit.ToString()));\r\n");
-			code.Append("data.CopyTo(_data);\r\n");
+            code.Append("data.CopyTo(0, _data, 0, Math.Min(_data.Length, data.Count));\r\n");
 			code.Append("}\r\n");
 			//code.AppendFormat("\r\npublic override string ToString()\r\n", className);
 			//code.Append("{\r\n");
