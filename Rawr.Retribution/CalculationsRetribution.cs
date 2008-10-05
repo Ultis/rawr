@@ -516,16 +516,17 @@ namespace Rawr.Retribution
             calcs.JudgementDPS = dpsJudgement;
             calcs.ConsecrationDPS = dpsConsecration;
             calcs.ExorcismDPS = dpsExorcism;
-            calcs.DivineStormDPS = dpsCrusader;
+            calcs.DivineStormDPS = dpsDivineStorm;
 
-            calcs.DPSPoints = dpsWhite + dpsSeal + dpsWindfury + dpsCrusader + dpsJudgement + dpsConsecration + dpsExorcism;
+            calcs.DPSPoints = dpsWhite + dpsSeal + dpsWindfury + dpsCrusader + dpsJudgement + dpsConsecration + dpsExorcism + dpsDivineStorm;
             calcs.OverallPoints = calcs.DPSPoints;
 
             #region Hammer of Wrath
             {
                 if (calcOpts.HammerOfWrath)
                 {
-
+                    float howHit = 0f, how70Base = 771, spdmgMult = 0.15f, apMult = 0.15f;
+                    howHit = how70Base + spdmgMult * stats.SpellDamageRating + apMult * stats.AttackPower;
                 }
             }
             #endregion
