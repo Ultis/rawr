@@ -35,6 +35,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "TalentTree";
+            this.MouseLeave += new System.EventHandler(this.TalentTree_MouseLeave);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TalentTree_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TalentTree_MouseUp);
             this.ResumeLayout(false);

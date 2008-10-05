@@ -135,7 +135,7 @@ namespace Rawr
             this.allLongDurationBuffsNoDWToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.currentBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.talentsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.talentSpecsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.currentGearEnchantsBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.directUpgradesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
@@ -177,6 +177,7 @@ namespace Rawr
             this.updateItemCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.talentsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -509,6 +510,7 @@ namespace Rawr
             // talentPicker1
             // 
             this.talentPicker1.Character = null;
+            this.talentPicker1.CustomSpec = null;
             this.talentPicker1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.talentPicker1.Location = new System.Drawing.Point(3, 3);
             this.talentPicker1.Name = "talentPicker1";
@@ -1085,6 +1087,7 @@ namespace Rawr
             this.allLongDurationBuffsNoDWToolStripMenuItem,
             this.currentBuffsToolStripMenuItem,
             this.toolStripSeparator7,
+            this.talentSpecsMenuItem,
             this.talentsMenuItem,
             this.currentGearEnchantsBuffsToolStripMenuItem,
             this.directUpgradesMenuItem,
@@ -1439,13 +1442,13 @@ namespace Rawr
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(248, 6);
             // 
-            // talentsMenuItem
+            // talentSpecsMenuItem
             // 
-            this.talentsMenuItem.Name = "talentsMenuItem";
-            this.talentsMenuItem.Size = new System.Drawing.Size(251, 22);
-            this.talentsMenuItem.Tag = "Talents";
-            this.talentsMenuItem.Text = "Talents";
-            this.talentsMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            this.talentSpecsMenuItem.Name = "talentSpecsMenuItem";
+            this.talentSpecsMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.talentSpecsMenuItem.Tag = "TalentSpecs";
+            this.talentSpecsMenuItem.Text = "Talent Specs";
+            this.talentSpecsMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
             // 
             // currentGearEnchantsBuffsToolStripMenuItem
             // 
@@ -1780,6 +1783,14 @@ namespace Rawr
             this.optionsToolStripMenuItem.Text = "Options...";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
+            // talentsMenuItem
+            // 
+            this.talentsMenuItem.Name = "talentsMenuItem";
+            this.talentsMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.talentsMenuItem.Tag = "Talents";
+            this.talentsMenuItem.Text = "Talents";
+            this.talentsMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1962,6 +1973,7 @@ namespace Rawr
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolStripMenuItem defaultGemControlToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem talentSpecsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem talentsMenuItem;
         
     }

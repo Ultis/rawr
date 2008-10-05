@@ -951,8 +951,12 @@ namespace Rawr
 							itemComparison1.LoadAvailableGear(_calculatedStats);
 							break;
 
+                        case "TalentSpecs":
+                            itemComparison1.LoadTalentSpecs(talentPicker1);
+                            break;
+
                         case "Talents":
-                            itemComparison1.LoadTalents(talentPicker1);
+                            itemComparison1.LoadTalents();
                             break;
 
 						case "Custom":

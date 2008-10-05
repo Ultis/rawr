@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Text;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Rawr
@@ -255,7 +256,53 @@ namespace Rawr
             comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
         }
 
-        public void LoadTalents(TalentPicker picker)
+        public void LoadTalents()
+        {
+            List<ComparisonCalculationBase> talentCalculations = new List<ComparisonCalculationBase>();
+            Character baseChar = Character.Clone();
+            Character newChar = Character.Clone();
+            TalentsBase newTalents;
+            switch (baseChar.Class)
+            {
+                case Character.CharacterClass.Warrior: newTalents = new WarriorTalents(baseChar.CurrentTalents.ToString()); break;
+                case Character.CharacterClass.Paladin: newTalents = new PaladinTalents(baseChar.CurrentTalents.ToString()); break;
+                case Character.CharacterClass.Hunter: newTalents = new HunterTalents(baseChar.CurrentTalents.ToString()); break;
+                case Character.CharacterClass.Rogue: newTalents = new RogueTalents(baseChar.CurrentTalents.ToString()); break;
+                case Character.CharacterClass.Priest: newTalents = new PriestTalents(baseChar.CurrentTalents.ToString()); break;
+                case Character.CharacterClass.Shaman: newTalents = new ShamanTalents(baseChar.CurrentTalents.ToString()); break;
+                case Character.CharacterClass.Mage: newTalents = new MageTalents(baseChar.CurrentTalents.ToString()); break;
+                case Character.CharacterClass.Warlock: newTalents = new WarlockTalents(baseChar.CurrentTalents.ToString()); break;
+                case Character.CharacterClass.Druid: newTalents = new DruidTalents(baseChar.CurrentTalents.ToString()); break;
+                case Character.CharacterClass.DeathKnight: newTalents = new DeathKnightTalents(baseChar.CurrentTalents.ToString()); break;
+                default: newTalents = new DruidTalents(baseChar.CurrentTalents.ToString()); break;
+            }
+            newChar.CurrentTalents = newTalents;
+            CharacterCalculationsBase currentCalc;
+            int orig;
+            foreach (PropertyInfo pi in baseChar.CurrentTalents.GetType().GetProperties())
+            {
+                TalentDataAttribute[] talentDatas = pi.GetCustomAttributes(typeof(TalentDataAttribute), true) as TalentDataAttribute[];
+                if (talentDatas.Length > 0)
+                {
+                    TalentDataAttribute talentData = talentDatas[0];
+                    orig = baseChar.CurrentTalents.Data[talentData.Index];
+                    baseChar.CurrentTalents.Data[talentData.Index] = 0;
+                    newChar.CurrentTalents.Data[talentData.Index] = talentData.MaxPoints;
+                    currentCalc = Calculations.GetCharacterCalculations(baseChar);
+                    talentCalculations.Add(Calculations.GetCharacterComparisonCalculations(currentCalc, newChar, talentData.Name,
+                        talentData.MaxPoints == (int)pi.GetValue(baseChar.CurrentTalents, null)));
+                    baseChar.CurrentTalents.Data[talentData.Index] = orig;
+                    newChar.CurrentTalents.Data[talentData.Index] = orig;
+                }
+            }
+
+            comparisonGraph1.RoundValues = true;
+            comparisonGraph1.CustomRendered = false;
+            comparisonGraph1.ItemCalculations = talentCalculations.ToArray();
+            comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
+        }
+
+        public void LoadTalentSpecs(TalentPicker picker)
         {
             List<ComparisonCalculationBase> talentCalculations = new List<ComparisonCalculationBase>();
             if (Items != null && Character != null)

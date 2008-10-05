@@ -141,8 +141,8 @@ namespace Rawr
         private ToolTip _toolTip = new ToolTip();
         private void TalentTree_MouseMove(object sender, MouseEventArgs e)
         {
-            int row =  ((e.Y - 8) % 65 > 48) ? -1 : (e.Y - 8) / 65;
-            int col = ((e.X - 8) % 65 > 47) ? -1 : (e.X - 8) / 65;
+            int row =  ((e.Y - 8) % 65 > 48 || e.Y < 8) ? -1 : (e.Y - 8) / 65;
+            int col = ((e.X - 8) % 65 > 47 || e.X < 8) ? -1 : (e.X - 8) / 65;
             if (row >= 0 && row <= 10 && col >= 0 && col <= 3)
             {
                 if (row != _mouseRow || col != _mouseCol)
@@ -164,6 +164,13 @@ namespace Rawr
         {
             TalentItem item = sender as TalentItem;
             if (_mouseRow == item.Row && _mouseCol == item.Col) _toolTip.Show(item.TooltipText(), this, _mouseCol * 65 + 65, _mouseRow * 65 + 24);
+        }
+
+        private void TalentTree_MouseLeave(object sender, EventArgs e)
+        {
+            _toolTip.Hide(this);
+            _mouseRow = -1;
+            _mouseCol = -1;
         }
 
 

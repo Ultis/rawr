@@ -146,8 +146,8 @@ namespace Rawr
             _col = col;
             _index = index;
             _description = description;
-            _currentRank = currentRank;
             _maxRank = maxRank;
+            _currentRank = currentRank > maxRank ? maxRank : currentRank;
             Prereq = prereq;
             UpdateIcon();
             UpdateOverlay();
