@@ -416,16 +416,16 @@ namespace Rawr //O O . .
 
         public void AssignAllTalentsFromCharacter(Character character)
         {
-            WarriorTalents = character.WarriorTalents;
-            PaladinTalents = character.PaladinTalents;
-            HunterTalents = character.HunterTalents;
-            RogueTalents = character.RogueTalents;
-            PriestTalents = character.PriestTalents;
-            ShamanTalents = character.ShamanTalents;
-            MageTalents = character.MageTalents;
-            WarlockTalents = character.WarlockTalents;
-            DruidTalents = character.DruidTalents;
-            DeathKnightTalents = character.DeathKnightTalents;
+            WarriorTalents = character.WarriorTalents.Clone();
+            PaladinTalents = character.PaladinTalents.Clone();
+            HunterTalents = character.HunterTalents.Clone();
+            RogueTalents = character.RogueTalents.Clone();
+            PriestTalents = character.PriestTalents.Clone();
+            ShamanTalents = character.ShamanTalents.Clone();
+            MageTalents = character.MageTalents.Clone();
+            WarlockTalents = character.WarlockTalents.Clone();
+            DruidTalents = character.DruidTalents.Clone();
+            DeathKnightTalents = character.DeathKnightTalents.Clone();
         }
 
 		//[XmlIgnore]

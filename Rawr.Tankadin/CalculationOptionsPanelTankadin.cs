@@ -113,8 +113,8 @@ namespace Rawr.Tankadin
         public float AttackSpeed = 2;
         public int NumberAttackers = 1;
         public int TargetArmor = 6600;
-        public int ThreatScale = 5;
-        public int MitigationScale = 4000;
+        public int ThreatScale = 30;
+        public int MitigationScale = 7000;
     }
 
 }

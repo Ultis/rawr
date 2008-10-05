@@ -122,7 +122,7 @@
             this.trackBarMitigationScale.Maximum = 15000;
             this.trackBarMitigationScale.Minimum = 1000;
             this.trackBarMitigationScale.Name = "trackBarMitigationScale";
-            this.trackBarMitigationScale.Size = new System.Drawing.Size(134, 45);
+            this.trackBarMitigationScale.Size = new System.Drawing.Size(222, 45);
             this.trackBarMitigationScale.SmallChange = 50;
             this.trackBarMitigationScale.TabIndex = 11;
             this.trackBarMitigationScale.TickFrequency = 1000;
@@ -134,11 +134,14 @@
             this.trackBarThreatScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarThreatScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarThreatScale.LargeChange = 10;
             this.trackBarThreatScale.Location = new System.Drawing.Point(72, 107);
+            this.trackBarThreatScale.Maximum = 100;
             this.trackBarThreatScale.Name = "trackBarThreatScale";
-            this.trackBarThreatScale.Size = new System.Drawing.Size(134, 45);
+            this.trackBarThreatScale.Size = new System.Drawing.Size(222, 45);
             this.trackBarThreatScale.TabIndex = 8;
-            this.trackBarThreatScale.Value = 1;
+            this.trackBarThreatScale.TickFrequency = 10;
+            this.trackBarThreatScale.Value = 50;
             this.trackBarThreatScale.Scroll += new System.EventHandler(this.trackBarThreatScale_Scroll);
             // 
             // trackBarBossAttackValue
@@ -151,7 +154,7 @@
             this.trackBarBossAttackValue.Maximum = 50000;
             this.trackBarBossAttackValue.Minimum = 500;
             this.trackBarBossAttackValue.Name = "trackBarBossAttackValue";
-            this.trackBarBossAttackValue.Size = new System.Drawing.Size(134, 45);
+            this.trackBarBossAttackValue.Size = new System.Drawing.Size(222, 45);
             this.trackBarBossAttackValue.SmallChange = 500;
             this.trackBarBossAttackValue.TabIndex = 5;
             this.trackBarBossAttackValue.TickFrequency = 2500;
@@ -241,7 +244,7 @@
             this.Controls.Add(this.nudPlayerLevel);
             this.Controls.Add(this.lblPlayerLevel);
             this.Name = "CalculationOptionsPanelTankadin";
-            this.Size = new System.Drawing.Size(209, 375);
+            this.Size = new System.Drawing.Size(297, 375);
             ((System.ComponentModel.ISupportInitialize)(this.nudPlayerLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMitigationScale)).EndInit();
