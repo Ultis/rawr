@@ -30,8 +30,8 @@ namespace Rawr
 		private List<ToolStripMenuItem> _customChartMenuItems = new List<ToolStripMenuItem>();
 		private Status _statusForm;
 		private string _formatWindowTitle = "Rawr (Beta {0})";
-		private System.Threading.Timer _timerCheckForUpdates;
-
+       
+        private FormMassGemReplacement _gemControl;
         private FormRelevantItemRefinement _itemRefinement;
         public FormRelevantItemRefinement ItemRefinement
         {
@@ -40,6 +40,16 @@ namespace Rawr
                 if (_itemRefinement == null || _itemRefinement.IsDisposed)
                     _itemRefinement = new FormRelevantItemRefinement(null);
                 return _itemRefinement;
+            }
+        }
+
+        public FormMassGemReplacement GemControl
+        {
+            get
+            {
+                if (_gemControl == null || _gemControl.IsDisposed)
+                    _gemControl = new FormMassGemReplacement();
+                return _gemControl;
             }
         }
 
@@ -96,29 +106,6 @@ namespace Rawr
 
 			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
-		}
-
-		private bool _checkForUpdatesEnabled = true;
-		void _timerCheckForUpdates_Callback(object data)
-		{
-			if (_checkForUpdatesEnabled)
-			{
-				string latestVersion = new Rawr.WebRequestWrapper().GetLatestVersionString();
-				if (!string.IsNullOrEmpty(latestVersion))
-				{
-					string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-					if (currentVersion != latestVersion)
-					{
-						_checkForUpdatesEnabled = false;
-						DialogResult result = MessageBox.Show(string.Format("A new version of Rawr has been released, version {0}! Would you like to open goto the Rawr site to download the new version?",
-							latestVersion), "New Version Released!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-						if (result == DialogResult.Yes)
-						{
-							Help.ShowHelp(null, "http://www.codeplex.com/Rawr");
-						}
-					}
-				}
-			}
 		}
 
         void Calculations_ModelChanging(object sender, EventArgs e)
@@ -494,8 +481,6 @@ namespace Rawr
 			Character.ToString();//Load the saved character
 
 			StatusMessaging.Ready = true;
-			_timerCheckForUpdates = new System.Threading.Timer(new System.Threading.TimerCallback(_timerCheckForUpdates_Callback));
-			_timerCheckForUpdates.Change(3000, 1000 * 60 * 60 * 8); //Check for updates 3 sec after the form loads, and then again every 8 hours
 		}
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
@@ -530,8 +515,8 @@ namespace Rawr
     void defaultGemControlToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            //FormMassGemReplacement GemControl = new FormMassGemReplacement();
-            //GemControl.ShowDialog(this);
+          //  FormMassGemReplacement GemControl = new FormMassGemReplacement();
+           // GemControl.ShowDialog(this);
 
         }
 		
@@ -976,12 +961,8 @@ namespace Rawr
 							itemComparison1.LoadAvailableGear(_calculatedStats);
 							break;
 
-                        case "TalentSpecs":
-                            itemComparison1.LoadTalentSpecs(talentPicker1);
-                            break;
-
                         case "Talents":
-                            itemComparison1.LoadTalents();
+                            itemComparison1.LoadTalents(talentPicker1);
                             break;
 
 						case "Custom":
